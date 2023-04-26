@@ -16,7 +16,7 @@ export enum TimeScale {
 const Calendar = () => {
   const [focusDate, setFocusDate] = useState<Date>(new Date());
   const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
-    TimeScale.WEEK
+    TimeScale.MONTH
   );
 
   return (

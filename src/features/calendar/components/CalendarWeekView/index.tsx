@@ -1,55 +1,68 @@
 import _ from 'lodash';
 import { Box } from '@mui/system';
-import { Grid, Typography } from '@mui/material';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import { Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 
 import theme from 'theme';
+
+import messageIds from 'zui/l10n/messageIds';
 
 export interface DayHeaderProps {
   date: Dayjs;
   focused: boolean;
 }
 
+const TIME_COLUMN_WIDTH = '3em';
+const HOUR_HEIGHT = 5;
+const MARGINS_BETWEEN_COLUMNS = '0.7em';
+const MARGIN_AFTER_TIME_COLUMN = '0.3em';
+
 const DayHeader = ({ date, focused }: DayHeaderProps) => {
   return (
     <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-around',
-        width: '100%',
-      }}
+      display="flex"
+      justifyContent="space-between"
+      marginBottom="0.7em"
+      marginRight={MARGINS_BETWEEN_COLUMNS}
+      width="100%"
     >
       <Box
-        sx={{
-          alignItems: 'center',
-          color: theme.palette.grey,
-          display: 'flex',
-          fontSize: '0.7em',
-          justifyContent: 'flex-start',
-        }}
+        alignItems="center"
+        display="flex"
+        justifyContent="flex-start"
+        width="2em"
       >
-        <Typography sx={{ fontStyle: 'bold' }}>{date.format('ddd')}</Typography>
+        <Typography
+          color={theme.palette.grey[500]}
+          fontSize="1em"
+          fontStyle="bold"
+        >
+          {
+            // Localized short-format weeekday
+            date.toDate().toLocaleDateString(undefined, { weekday: 'short' })
+          }
+        </Typography>
       </Box>
-      <Box
-        sx={{
-          textAlign: 'center',
-        }}
-      >
+      <Box>
         <Box
+          display="flex"
           sx={{
+            alignItems: 'center',
             backgroundColor: focused ? theme.palette.statusColors.blue : '',
             borderRadius: '50%',
             color: focused ? 'white' : 'inherit',
-            fontSize: '1.2em',
-            height: '1.7em',
-            textAlign: 'center',
-            width: '1.7em',
+            height: '2.1em',
+            justifyContent: 'center',
+            width: '2.1em',
           }}
         >
-          {date.format('D')}
+          <Typography color={focused ? 'white' : 'inherit'} fontSize="1.2em">
+            {date.format('D')}
+          </Typography>
         </Box>
       </Box>
-      <Box></Box>
+      <Box width="2em"></Box>
     </Box>
   );
 };
@@ -58,10 +71,7 @@ export interface CalendarWeekViewProps {
   focusDate: Date;
 }
 
-const TIME_COLUMN_WIDTH = '3em';
-
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
-  const isoWeek = require('dayjs/plugin/isoWeek');
   dayjs.extend(isoWeek);
   const correctWeek =
     dayjs(focusDate).isoWeekday() == 7
@@ -70,32 +80,29 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
   const week = dayjs(correctWeek).isoWeek();
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 0,
-        height: '100%',
-      }}
-    >
+    <Box display="flex" flexDirection="column" flexGrow={0} height="100%">
       <Box display="flex" flexDirection="row">
         <Box
+          alignItems="flex-start"
+          display="flex"
+          flexDirection="row"
+          marginRight={MARGIN_AFTER_TIME_COLUMN}
           sx={{
-            alignItems: 'flex-end',
-            display: 'flex',
+            color: theme.palette.grey[500],
+            fontSize: '1em',
+            marginTop: '1.3em',
             width: TIME_COLUMN_WIDTH,
           }}
         >
-          {'w' + week + ''}
+          {week}
         </Box>
         <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexGrow: 1,
-            justifyContent: 'space-around',
-            marginTop: '1em',
-          }}
+          display="flex"
+          flexDirection="row"
+          flexGrow={1}
+          justifyContent="space-between"
+          marginRight={MARGINS_BETWEEN_COLUMNS}
+          marginTop="1em"
         >
           {_.range(7).map((weekday: number) => {
             const weekdayDate = dayjs(correctWeek).day(weekday + 1);
@@ -121,10 +128,25 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
           overflow: 'auto',
         }}
       >
-        <Box sx={{ marginTop: '2em', width: TIME_COLUMN_WIDTH }}>
-          {_.range(24).map((hour: number) => (
-            <Box key={hour} sx={{ height: '5em' }}>
-              <Box display="flex" width={TIME_COLUMN_WIDTH}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          sx={{
+            color: theme.palette.grey[500],
+            fontSize: '1em',
+            height: `${HOUR_HEIGHT * 24}em`,
+            marginRight: MARGIN_AFTER_TIME_COLUMN,
+            marginTop: `${HOUR_HEIGHT - 0.8}em`,
+            width: TIME_COLUMN_WIDTH,
+          }}
+        >
+          {_.range(1, 24).map((hour: number) => (
+            <Box key={hour} sx={{ height: `${HOUR_HEIGHT}em` }}>
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                width={TIME_COLUMN_WIDTH}
+              >
                 {hour}.00
               </Box>
             </Box>
@@ -135,10 +157,10 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
             <Box
               key={weekday}
               flexGrow={1}
-              height="120em"
+              height={`${HOUR_HEIGHT * 24}em`}
               sx={{
-                backgroundImage: `repeating-linear-gradient(180deg, black 0, ${theme.palette.divider} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} 5em)`,
-                marginLeft: '1em',
+                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
+                marginRight: MARGINS_BETWEEN_COLUMNS,
               }}
             ></Box>
           );
