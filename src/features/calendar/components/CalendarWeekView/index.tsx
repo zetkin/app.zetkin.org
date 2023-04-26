@@ -27,7 +27,6 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
       justifyContent="space-between"
       marginBottom="0.7em"
       marginRight={MARGINS_BETWEEN_COLUMNS}
-      sx={{ backgroundColor: date.date() % 2 == 0 ? 'blue' : 'green' }}
       width="100%"
     >
       <Box
