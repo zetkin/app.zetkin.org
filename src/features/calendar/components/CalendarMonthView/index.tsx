@@ -3,27 +3,8 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import React from 'react';
 
-import CalendarMonthViewDay from './CalendarMonthViewDay';
-
-type CalendarWeekNumberProps = {
-  weekNr: number;
-};
-
-const CalendarWeekNumber = ({ weekNr }: CalendarWeekNumberProps) => {
-  return (
-    <>
-      <Box
-        color="#9f9f9f"
-        fontSize="0.75rem"
-        height="100%"
-        padding="7px"
-        width="100%"
-      >
-        {weekNr}
-      </Box>
-    </>
-  );
-};
+import Day from './Day';
+import WeekNumber from './WeekNumber';
 
 type Props = {
   focusDate: Date;
@@ -64,25 +45,25 @@ const CalendarMonthView = ({ focusDate }: Props) => {
   return (
     <>
       <Box
-        bgcolor="#f5f5f5"
         display="grid"
         flexGrow="1"
         gap="8px"
         gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
         gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
-        margin="12px"
       >
         {[...Array(numberOfRows)].map((_, rowIndex) =>
           [...Array(numberOfColumns + 1)].map((_, columnIndex) => (
             <React.Fragment key={`${rowIndex * numberOfColumns + columnIndex}`}>
+              {/* First item in each row is the week number */}
               {columnIndex === 0 && (
-                <CalendarWeekNumber weekNr={getWeekNumber(rowIndex)} />
+                <WeekNumber weekNr={getWeekNumber(rowIndex)} />
               )}
-              {columnIndex !== 0 && (
-                <CalendarMonthViewDay
+              {/* Following items are days */}
+              {columnIndex > 0 && (
+                <Day
                   currentDate={currentDate}
                   dayIndex={getDayIndex(rowIndex, columnIndex - 1)}
-                  firstDateOfCalendar={firstDayOfCalendar}
+                  firstDateOfCalendar={firstDayOfCalendar.toDate()}
                   focusDate={focusDate}
                 />
               )}

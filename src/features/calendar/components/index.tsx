@@ -42,7 +42,7 @@ const Calendar = () => {
         />
       </Box>
 
-      <Box display="flex" flexDirection="column" flexGrow={1}>
+      <Box display="flex" flexDirection="column" flexGrow={1} marginTop={2}>
         {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
         {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
         {selectedTimeScale === TimeScale.MONTH && (
