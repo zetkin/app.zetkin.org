@@ -4,6 +4,8 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
+  eventCreate,
+  eventCreated,
   eventLoad,
   eventLoaded,
   eventsLoad,
@@ -48,6 +50,8 @@ export type ZetkinEventPatchBody = Partial<
   organization_id?: number;
 };
 
+export type ZetkinEventPostBody = ZetkinEventPatchBody;
+
 export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 export default class EventsRepo {
@@ -90,6 +94,19 @@ export default class EventsRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  async createEvent(
+    eventBody: ZetkinEventPostBody,
+    orgId: number
+  ): Promise<ZetkinEvent> {
+    this._store.dispatch(eventCreate());
+    const event = await this._apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
+      `/api/orgs/${orgId}/actions`,
+      eventBody
+    );
+    this._store.dispatch(eventCreated(event));
+    return event;
   }
 
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {

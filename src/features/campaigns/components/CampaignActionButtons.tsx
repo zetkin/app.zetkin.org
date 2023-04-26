@@ -5,6 +5,7 @@ import {
   AssignmentOutlined,
   CheckBoxOutlined,
   Delete,
+  Event,
   HeadsetMic,
   Settings,
 } from '@mui/icons-material';
@@ -26,6 +27,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import EventDataModel from 'features/events/models/EventDataModel';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -54,6 +56,9 @@ const CampaignActionButtons: React.FunctionComponent<
   const model = useModel(
     (env) => new CampaignDataModel(env, parseInt(orgId as string), campaign.id)
   );
+  const eventModel = useModel(
+    (env) => new EventDataModel(env, parseInt(orgId as string), campaign.id)
+  );
 
   // Mutations
   const patchCampaignMutation = useMutation(
@@ -79,6 +84,21 @@ const CampaignActionButtons: React.FunctionComponent<
       },
     });
   };
+  const handleCreateEvent = () => {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() + 1);
+
+    eventModel.createEvent(
+      //TO DO:give null to ids when API supports it.
+      {
+        activity_id: 1,
+        location_id: 1,
+        start_time: startDate.toISOString(),
+        end_time: startDate.toISOString(),
+        campaign_id: campaign.id,
+      }
+    );
+  };
   const handleCreateCallAssignment = () => {
     const assignment = {
       goal_filters: [],
@@ -103,6 +123,11 @@ const CampaignActionButtons: React.FunctionComponent<
       <Box>
         <ZUIButtonMenu
           items={[
+            {
+              icon: <Event />,
+              label: messages.linkGroup.createEvent(),
+              onClick: handleCreateEvent,
+            },
             {
               icon: <HeadsetMic />,
               label: messages.linkGroup.createCallAssignment(),
