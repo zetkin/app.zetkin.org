@@ -61,7 +61,10 @@ export interface ZetkinEventResponse {
 }
 
 export interface ZetkinEvent {
-  activity: { id: number; title: string };
+  activity: {
+    id: number;
+    title: string;
+  };
   campaign: {
     id: number;
     title: string;
@@ -84,8 +87,6 @@ export interface ZetkinEvent {
     id: number;
     title: string;
   };
-  userBooked?: boolean;
-  userResponse?: boolean;
   url?: string;
 }
 
