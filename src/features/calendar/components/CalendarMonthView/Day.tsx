@@ -3,21 +3,13 @@ import theme from 'theme';
 import { useIntl } from 'react-intl';
 import { Box, ButtonBase, Typography } from '@mui/material';
 
-type CalendarMonthViewDayProps = {
-  currentDate: Date;
-  dayIndex: number;
-  firstDateOfCalendar: Date;
+type DayProps = {
+  date: Date;
   focusDate: Date;
 };
-const CalendarMonthViewDay = ({
-  focusDate,
-  currentDate,
-  firstDateOfCalendar,
-  dayIndex,
-}: CalendarMonthViewDayProps) => {
-  const date = dayjs(firstDateOfCalendar).add(dayIndex, 'day');
-  const isSameMonth = date.month() === focusDate.getMonth();
-  const isToday = date.isSame(currentDate, 'day');
+const Day = ({ date, focusDate }: DayProps) => {
+  const isSameMonth = dayjs(date).month() === focusDate.getMonth();
+  const isToday = dayjs(date).isSame(new Date(), 'day');
   const { locale } = useIntl();
 
   let textColor = theme.palette.text.secondary;
@@ -49,7 +41,7 @@ const CalendarMonthViewDay = ({
         >
           <Box marginLeft="5px">
             <Typography color={textColor} fontSize=".8rem">
-              {date.toDate().toLocaleDateString(locale, { day: 'numeric' })}
+              {date.toLocaleDateString(locale, { day: 'numeric' })}
             </Typography>
           </Box>
         </Box>
@@ -58,4 +50,4 @@ const CalendarMonthViewDay = ({
   );
 };
 
-export default CalendarMonthViewDay;
+export default Day;
