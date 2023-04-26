@@ -6,8 +6,6 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import theme from 'theme';
 
-import messageIds from 'zui/l10n/messageIds';
-
 export interface DayHeaderProps {
   date: Dayjs;
   focused: boolean;
