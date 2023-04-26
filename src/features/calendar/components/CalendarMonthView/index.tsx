@@ -34,32 +34,36 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
       gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
       gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
     >
-      {[...Array(numberOfRows)].map((_, rowIndex) =>
-        [...Array(numberOfColumns + 1)].map((_, columnIndex) => {
-          //First item in each column is the week number
-          if (columnIndex === 0) {
+      {
+        // Creates 6 rows
+        [...Array(numberOfRows)].map((_, rowIndex) =>
+          // Creates 8 columns in each row
+          [...Array(numberOfColumns + 1)].map((_, columnIndex) => {
+            //First item in each row is the week number
+            if (columnIndex === 0) {
+              return (
+                <WeekNumber
+                  key={rowIndex * numberOfColumns + columnIndex}
+                  weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
+                />
+              );
+            }
+
+            const date = dayjs(firstDayOfCalendar)
+              .add(getDayIndex(rowIndex, columnIndex, numberOfColumns), 'day')
+              .toDate();
+
+            // Remaining items in each row are the 7 days
             return (
-              <WeekNumber
+              <Day
                 key={rowIndex * numberOfColumns + columnIndex}
-                weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
+                date={date}
+                isInFocusMonth={dayjs(date).month() === focusDate.getMonth()}
               />
             );
-          }
-
-          const date = dayjs(firstDayOfCalendar)
-            .add(getDayIndex(rowIndex, columnIndex, numberOfColumns), 'day')
-            .toDate();
-
-          // Remaining items are days
-          return (
-            <Day
-              key={rowIndex * numberOfColumns + columnIndex}
-              date={date}
-              isInFocusMonth={dayjs(date).month() === focusDate.getMonth()}
-            />
-          );
-        })
-      )}
+          })
+        )
+      }
     </Box>
   );
 };
