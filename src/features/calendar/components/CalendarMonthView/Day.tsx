@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import theme from 'theme';
+import { useIntl } from 'react-intl';
 import { Box, ButtonBase, Typography } from '@mui/material';
 
 type CalendarMonthViewDayProps = {
@@ -17,6 +18,7 @@ const CalendarMonthViewDay = ({
   const date = dayjs(firstDateOfCalendar).add(dayIndex, 'day');
   const isSameMonth = date.month() === focusDate.getMonth();
   const isToday = date.isSame(currentDate, 'day');
+  const { locale } = useIntl();
 
   let textColor = theme.palette.text.secondary;
   if (isToday) {
@@ -47,7 +49,7 @@ const CalendarMonthViewDay = ({
         >
           <Box marginLeft="5px">
             <Typography color={textColor} fontSize=".8rem">
-              {date.toDate().toLocaleDateString('sv', { day: 'numeric' })}
+              {date.toDate().toLocaleDateString(locale, { day: 'numeric' })}
             </Typography>
           </Box>
         </Box>
