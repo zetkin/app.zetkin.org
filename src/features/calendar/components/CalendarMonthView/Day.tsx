@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
+import { FormattedDate } from 'react-intl';
 import theme from 'theme';
-import { useIntl } from 'react-intl';
-import { Box, ButtonBase, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 type DayProps = {
   date: Date;
@@ -9,7 +9,6 @@ type DayProps = {
 };
 const Day = ({ date, isInFocusMonth }: DayProps) => {
   const isToday = dayjs(date).isSame(new Date(), 'day');
-  const { locale } = useIntl();
 
   let textColor = theme.palette.text.secondary;
   if (isToday) {
@@ -19,33 +18,22 @@ const Day = ({ date, isInFocusMonth }: DayProps) => {
   }
 
   return (
-    <>
-      <ButtonBase
-        sx={{
-          background: 'none',
-          border: 'none',
-          outline: 'none',
-          padding: '0',
-        }}
-      >
-        <Box
-          alignItems="start"
-          bgcolor={isInFocusMonth ? '#eee' : 'none'}
-          border="2px solid #eeeeee"
-          borderColor={isToday ? theme.palette.primary.main : 'eee'}
-          display="flex"
-          flexDirection="column"
-          height="100%"
-          width="100%"
-        >
-          <Box marginLeft="5px">
-            <Typography color={textColor} fontSize=".8rem">
-              {date.toLocaleDateString(locale, { day: 'numeric' })}
-            </Typography>
-          </Box>
-        </Box>
-      </ButtonBase>
-    </>
+    <Box
+      alignItems="start"
+      bgcolor={isInFocusMonth ? '#eee' : 'none'}
+      border="2px solid #eeeeee"
+      borderColor={isToday ? theme.palette.primary.main : 'eee'}
+      display="flex"
+      flexDirection="column"
+      height="100%"
+      width="100%"
+    >
+      <Box marginLeft="5px">
+        <Typography color={textColor} fontSize=".8rem">
+          <FormattedDate day="numeric" value={date} />
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 
