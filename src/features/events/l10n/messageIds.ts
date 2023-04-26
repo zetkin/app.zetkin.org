@@ -5,6 +5,7 @@ export default makeMessages('feat.events', {
     header: m('Contact'),
     noContact: m('No Contact Assigned!'),
     removeButton: m('Remove'),
+    selectPlaceholder: m('Select a contact person'),
   },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),

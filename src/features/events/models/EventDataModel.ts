@@ -91,8 +91,21 @@ export default class EventDataModel extends ModelBase {
     );
   }
 
+  removeContact() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      contact_id: null,
+    });
+  }
+
   sendReminders() {
     this._repo.sendReminders(this._orgId, this._eventId);
+  }
+
+  async setContact(contactId: number) {
+    await this._repo.addParticipant(this._orgId, this._eventId, contactId);
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      contact_id: contactId,
+    });
   }
 
   setLocation(location: ZetkinLocation) {
