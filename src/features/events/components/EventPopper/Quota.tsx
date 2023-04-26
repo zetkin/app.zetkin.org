@@ -9,7 +9,7 @@ interface QuotaProps {
 const Quota: FC<QuotaProps> = ({ numerator, denominator }) => {
   return (
     <Typography
-      color={denominator > numerator ? 'red' : 'secondary'}
+      color={denominator > numerator ? 'error' : 'secondary'}
     >{`${numerator}/${denominator}`}</Typography>
   );
 };
