@@ -6,6 +6,9 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import theme from 'theme';
 
+import messageIds from '../../l10n/messageIds';
+import { useMessages } from 'core/i18n';
+
 export interface DayHeaderProps {
   date: Dayjs;
   focused: boolean;
@@ -20,9 +23,11 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
   return (
     <Box
       display="flex"
+      flexGrow={1}
       justifyContent="space-between"
       marginBottom="0.7em"
       marginRight={MARGINS_BETWEEN_COLUMNS}
+      sx={{ backgroundColor: date.date() % 2 == 0 ? 'blue' : 'green' }}
       width="100%"
     >
       <Box
@@ -70,6 +75,7 @@ export interface CalendarWeekViewProps {
 }
 
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
+  const messages = useMessages(messageIds);
   dayjs.extend(isoWeek);
   const correctWeek =
     dayjs(focusDate).isoWeekday() == 7
@@ -79,28 +85,30 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
 
   return (
     <Box display="flex" flexDirection="column" flexGrow={0} height="100%">
-      <Box display="flex" flexDirection="row">
+      <Box display="flex" flexDirection="row" justifyContent="flex-end">
         <Box
           alignItems="flex-start"
           display="flex"
           flexDirection="row"
+          justifyContent="flex-end"
           marginRight={MARGIN_AFTER_TIME_COLUMN}
           sx={{
-            color: theme.palette.grey[500],
+            color: theme.palette.statusColors.red,
             fontSize: '1em',
+            fontWeight: 'bold',
             marginTop: '1.3em',
             width: TIME_COLUMN_WIDTH,
           }}
         >
+          {messages.weekCalendar.week()}
           {week}
         </Box>
         <Box
           display="flex"
           flexDirection="row"
           flexGrow={1}
-          justifyContent="space-between"
-          marginRight={MARGINS_BETWEEN_COLUMNS}
           marginTop="1em"
+          width="100%"
         >
           {_.range(7).map((weekday: number) => {
             const weekdayDate = dayjs(correctWeek).day(weekday + 1);

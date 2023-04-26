@@ -11,4 +11,7 @@ export default makeMessages('feat.calendar', {
     month: m('Month'),
     week: m('Week'),
   },
+  weekCalendar: {
+    week: m('w'),
+  },
 });
