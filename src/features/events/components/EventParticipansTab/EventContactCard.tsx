@@ -1,8 +1,8 @@
 import CloseIcon from '@mui/icons-material/Close';
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
 import FaceRetouchingOffOutlinedIcon from '@mui/icons-material/FaceRetouchingOffOutlined';
-import { FC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
+import { FC, useContext } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -10,6 +10,7 @@ import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUICard from 'zui/ZUICard';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
 interface EventContactCardProps {
@@ -24,6 +25,7 @@ const EventContactCard: FC<EventContactCardProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const handleSelectedPerson = (personId: number) => {
     model.setContact(personId);
@@ -74,20 +76,43 @@ const EventContactCard: FC<EventContactCardProps> = ({
                 </Typography>
               </>
             ) : (
-              <ZUIPersonSelect
-                onChange={(person) => {
-                  handleSelectedPerson(person.id);
-                }}
-                placeholder={messages.eventContactCard.selectPlaceholder()}
-                selectedPerson={null}
-                variant="outlined"
-              />
+              <Box sx={{ display: 'grid' }}>
+                <Box
+                  m={1}
+                  sx={{
+                    '& input': {
+                      alignSelf: 'self-start',
+                      minWidth: '100px !important',
+                      width: '200px !important',
+                    },
+                  }}
+                >
+                  <ZUIPersonSelect
+                    onChange={(person) => {
+                      handleSelectedPerson(person.id);
+                    }}
+                    placeholder={messages.eventContactCard.selectPlaceholder()}
+                    selectedPerson={null}
+                    variant="outlined"
+                  />
+                </Box>
+              </Box>
             )}
           </Box>
         }
       >
         {data.contact && (
-          <Button onClick={() => model.removeContact()} variant="text">
+          <Button
+            onClick={() => {
+              showConfirmDialog({
+                onSubmit: () => {
+                  model.removeContact();
+                },
+                warningText: messages.eventContactCard.warningText(),
+              });
+            }}
+            variant="text"
+          >
             <CloseIcon />
             {messages.eventContactCard.removeButton()}
           </Button>

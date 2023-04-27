@@ -1,5 +1,6 @@
+import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import EventDataModel from 'features/events/models/EventDataModel';
@@ -46,9 +47,43 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
           return <Typography>{params.row.person.name}</Typography>;
         } else {
           return (
-            <Typography>
-              {params.row.first_name + ' ' + params.row.last_name}
-            </Typography>
+            <>
+              {model.getData().data?.contact?.id === params.row.id ? (
+                <Typography>
+                  {params.row.first_name + ' ' + params.row.last_name}
+                  <Tooltip
+                    title={messages.eventParticipantsList.contactTooltip()}
+                  >
+                    <FaceOutlinedIcon
+                      sx={{ marginLeft: '8px', verticalAlign: 'bottom' }}
+                    />
+                  </Tooltip>
+                </Typography>
+              ) : (
+                <Typography
+                  sx={{
+                    '&:hover svg': { display: 'inline-block' },
+                    cursor: 'pointer',
+                  }}
+                >
+                  {params.row.first_name + ' ' + params.row.last_name}
+
+                  <Tooltip
+                    title={messages.eventParticipantsList.participantTooltip()}
+                  >
+                    <FaceOutlinedIcon
+                      onClick={() => model.setContact(params.row.id)}
+                      sx={{
+                        display: 'none',
+                        marginLeft: '8px',
+                        opacity: '50%',
+                        verticalAlign: 'bottom',
+                      }}
+                    />
+                  </Tooltip>
+                </Typography>
+              )}
+            </>
           );
         }
       },

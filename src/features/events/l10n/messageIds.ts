@@ -6,6 +6,9 @@ export default makeMessages('feat.events', {
     noContact: m('No Contact Assigned!'),
     removeButton: m('Remove'),
     selectPlaceholder: m('Select a contact person'),
+    warningText: m(
+      'The contact will be removed but continue as a participant. '
+    ),
   },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
@@ -38,12 +41,14 @@ export default makeMessages('feat.events', {
     columnName: m('Name'),
     columnNotified: m('Notified'),
     columnPhone: m('Phone'),
+    contactTooltip: m('Contact Person'),
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
     ),
     descriptionSignups: m(
       'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
     ),
+    participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
   },
   form: {
