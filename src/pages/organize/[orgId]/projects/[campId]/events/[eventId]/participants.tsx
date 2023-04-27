@@ -4,6 +4,7 @@ import { Grid } from '@mui/material';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventParticipantsList from 'features/events/components/EventParticipansTab/EventParticipantsList';
+import EventParticipantsFilter from 'features/events/components/EventParticipansTab/EventParticipantsFilter';
 import { PageWithLayout } from 'utils/types';
 import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
 import { scaffold } from 'utils/next';
@@ -51,6 +52,9 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
             <Grid container spacing={2}>
               <Grid item md={8} xs={12}>
                 <ParticipantSummaryCard model={dataModel} />
+              </Grid>
+              <Grid container item justifyContent="flex-end" md={12}>
+                <EventParticipantsFilter model={dataModel} />
               </Grid>
             </Grid>
             <EventParticipantsList
