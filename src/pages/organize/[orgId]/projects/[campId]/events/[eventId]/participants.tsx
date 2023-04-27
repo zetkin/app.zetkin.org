@@ -59,12 +59,11 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               model={dataModel}
               orgId={parseInt(orgId)}
             />
-     
+
             <Grid container item justifyContent="flex-end" md={12}>
               <AddPersonButton model={dataModel} />
             </Grid>
-          </Grid>
-               </>
+          </>
         );
       }}
     </ZUIFuture>
