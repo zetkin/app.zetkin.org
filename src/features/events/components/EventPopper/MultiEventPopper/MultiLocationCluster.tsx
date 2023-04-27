@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 import ClusterBody from './ClusterBody';
+import ClusterHeader from './ClusterHeader';
 import EventDataModel from 'features/events/models/EventDataModel';
-import StatusDot from '../StatusDot';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import MultiEventListItem, { CLUSTER_TYPE } from './MultiEventListItem';
@@ -23,13 +23,7 @@ const MultiLocationCluster: FC<MultiLocationClusterProps> = ({
 
   return (
     <Box>
-      <Typography variant="h5">
-        {events[0].title || events[0].activity.title}
-      </Typography>
-      <Box alignItems="center" display="flex">
-        <StatusDot state={model.state} />
-        <Typography color="secondary">{events[0].activity.title}</Typography>
-      </Box>
+      <ClusterHeader event={events[0]} state={model.state} />
       <ClusterBody clusterType={CLUSTER_TYPE.LOCATION} events={events} />
       <Divider />
       <Box paddingTop={1}>
