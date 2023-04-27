@@ -6,9 +6,6 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import theme from 'theme';
 
-import messageIds from '../../l10n/messageIds';
-import { useMessages } from 'core/i18n';
-
 export interface DayHeaderProps {
   date: Dayjs;
   focused: boolean;
@@ -35,11 +32,7 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
         justifyContent="flex-start"
         width="2em"
       >
-        <Typography
-          color={theme.palette.grey[500]}
-          fontSize="1em"
-          fontStyle="bold"
-        >
+        <Typography color={theme.palette.grey[500]} variant="subtitle2">
           {
             // Localized short-format weeekday
             date.toDate().toLocaleDateString(undefined, { weekday: 'short' })
@@ -51,7 +44,7 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
           display="flex"
           sx={{
             alignItems: 'center',
-            backgroundColor: focused ? theme.palette.statusColors.blue : '',
+            backgroundColor: focused ? theme.palette.primary.main : null,
             borderRadius: '50%',
             color: focused ? 'white' : 'inherit',
             height: '2.1em',
@@ -74,13 +67,11 @@ export interface CalendarWeekViewProps {
 }
 
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
-  const messages = useMessages(messageIds);
   dayjs.extend(isoWeek);
   const correctWeek =
     dayjs(focusDate).isoWeekday() == 7
       ? dayjs(focusDate).add(-1, 'day')
       : focusDate;
-  const week = dayjs(correctWeek).isoWeek();
 
   return (
     <Box display="flex" flexDirection="column" flexGrow={0} height="100%">
@@ -91,17 +82,8 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
           flexDirection="row"
           justifyContent="flex-end"
           marginRight={MARGIN_AFTER_TIME_COLUMN}
-          sx={{
-            color: theme.palette.statusColors.red,
-            fontSize: '1em',
-            fontWeight: 'bold',
-            marginTop: '1.3em',
-            width: TIME_COLUMN_WIDTH,
-          }}
-        >
-          {messages.weekCalendar.week()}
-          {week}
-        </Box>
+          width={TIME_COLUMN_WIDTH}
+        ></Box>
         <Box
           display="flex"
           flexDirection="row"
