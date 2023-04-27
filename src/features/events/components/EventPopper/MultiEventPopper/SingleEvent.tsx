@@ -13,10 +13,10 @@ import {
 } from '@mui/icons-material';
 import { Box, Button, Checkbox, Link, Typography } from '@mui/material';
 
-import LocationName from '../LocationName';
+import LocationName from '../../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
-import Quota from './Quota';
-import StatusDot from './StatusDot';
+import Quota from '../Quota';
+import StatusDot from '../StatusDot';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';

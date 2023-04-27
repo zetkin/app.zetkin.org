@@ -3,7 +3,7 @@ import { Box, Divider, Typography } from '@mui/material';
 
 import ClusterBody from './ClusterBody';
 import EventDataModel from 'features/events/models/EventDataModel';
-import StatusDot from './StatusDot';
+import StatusDot from '../StatusDot';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import MultiEventListItem, { CLUSTER_TYPE } from './MultiEventListItem';

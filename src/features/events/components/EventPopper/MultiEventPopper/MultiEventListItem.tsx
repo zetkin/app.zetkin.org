@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
-import { WarningSlot } from '../EventWarningIcons';
+import { WarningSlot } from '../../EventWarningIcons';
 import { Box, Checkbox, Typography } from '@mui/material';
 import {
   ChevronRightOutlined,
@@ -11,9 +11,9 @@ import {
 } from '@mui/icons-material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
-import LocationName from '../LocationName';
+import LocationName from '../../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
-import StatusDot from './StatusDot';
+import StatusDot from '../StatusDot';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';

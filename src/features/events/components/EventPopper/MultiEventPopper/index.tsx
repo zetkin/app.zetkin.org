@@ -15,7 +15,7 @@ import MultiLocationIcon from 'zui/icons/MultiLocation';
 import MultiShiftCluster from './MultiShiftCluster';
 import SingleEvent from './SingleEvent';
 import { useMessages } from 'core/i18n';
-import { ZetkinEvent } from '../../../../utils/types/zetkin';
+import { ZetkinEvent } from '../../../../../utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import { ArrowBack, SplitscreenOutlined } from '@mui/icons-material';
 

@@ -3,7 +3,7 @@ import { Box, Checkbox, Typography } from '@mui/material';
 import { People, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from './MultiEventListItem';
-import LocationName from '../LocationName';
+import LocationName from '../../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
