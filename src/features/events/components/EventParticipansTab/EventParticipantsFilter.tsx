@@ -1,6 +1,8 @@
-import { TextField, useAutocomplete } from '@mui/material';
-import EventDataModel from 'features/events/models/EventDataModel';
+import { IconButton, TextField, useAutocomplete } from '@mui/material';
 import Fuse from 'fuse.js';
+import SearchIcon from '@mui/icons-material/Search';
+
+import EventDataModel from 'features/events/models/EventDataModel';
 
 interface EventParticipansFilterProps {
   model: EventDataModel;
@@ -9,6 +11,7 @@ const EventParticipantsFilter = ({ model }: EventParticipansFilterProps) => {
   const participantsList = model.getParticipants().data ?? [];
   const participants = new Fuse(participantsList, {
     // findAllMatches: true,
+    shouldSort: true,
     keys: [
       { name: 'first_name', weight: 1.0 },
       { name: 'last_name', weight: 0.8 },
@@ -48,6 +51,9 @@ const EventParticipantsFilter = ({ model }: EventParticipansFilterProps) => {
       size="small"
       variant="outlined"
       onChange={(e) => filterInput(e.target.value)}
+      InputProps={{
+        startAdornment: <SearchIcon sx={{ mr: 1 }} color="secondary" />,
+      }}
     />
   );
 };
