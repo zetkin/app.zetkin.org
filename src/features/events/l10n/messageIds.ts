@@ -1,6 +1,9 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  common: {
+    noLocation: m('No physical location'),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),

@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 
 import { EventState } from 'features/events/models/EventDataModel';
+import LocationName from '../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import StatusDot from './StatusDot';
 import { useMessages } from 'core/i18n';
@@ -96,7 +97,9 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
           </Box>
           <Box display="flex" flexDirection="column">
             <Typography fontWeight="bold" sx={{ paddingLeft: 1 }}>
-              {clusterType == CLUSTER_TYPE.LOCATION && event.location.title}
+              {clusterType == CLUSTER_TYPE.LOCATION && (
+                <LocationName location={event.location} />
+              )}
               {clusterType == CLUSTER_TYPE.SHIFT && timeSpan}
               {clusterType == CLUSTER_TYPE.ARBITRARY &&
                 (event.title || event.activity.title)}
@@ -104,7 +107,9 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
             {clusterType === CLUSTER_TYPE.ARBITRARY && (
               <Box alignItems="center" display="flex">
                 <StatusDot state={state} />
-                <Typography variant="body2">{`${timeSpan}, ${event.location.title}`}</Typography>
+                <Typography variant="body2">{`${timeSpan}, ${(
+                  <LocationName location={event.location} />
+                )}`}</Typography>
               </Box>
             )}
           </Box>

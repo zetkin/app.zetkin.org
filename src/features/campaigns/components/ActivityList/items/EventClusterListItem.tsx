@@ -8,6 +8,7 @@ import {
 
 import ActivityListItem from './ActivityListItem';
 import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
+import LocationName from 'features/events/components/LocationName';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
@@ -77,7 +78,7 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
             },
             {
               icon: <PlaceOutlined fontSize="inherit" />,
-              label: location.title,
+              label: <LocationName location={location} />,
             },
           ]}
           size="sm"

@@ -14,6 +14,7 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 
 import { EventState } from 'features/events/models/EventDataModel';
+import LocationName from '../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -147,7 +148,9 @@ const SingleEvent: FC<SingleEventProps> = ({
             size="xs"
           />
         </Box>
-        <Typography color="secondary">{event.location.title}</Typography>
+        <Typography color="secondary">
+          <LocationName location={event.location} />
+        </Typography>
       </Box>
 
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>

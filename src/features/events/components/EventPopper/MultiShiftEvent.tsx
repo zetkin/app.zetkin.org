@@ -3,6 +3,7 @@ import { Box, Checkbox, Divider, Typography } from '@mui/material';
 import { People, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
 import { EventState } from 'features/events/models/EventDataModel';
+import LocationName from '../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -37,7 +38,7 @@ const MultiShiftEvent: FC<MultiShiftEventProps> = ({ events }) => {
         <Box alignItems="center" display="flex">
           <PlaceOutlined color="secondary" fontSize="small" />
           <Typography color="secondary" paddingLeft={1} variant="body2">
-            {events[0].location.title}
+            <LocationName location={events[0].location} />
           </Typography>
         </Box>
       </Box>
