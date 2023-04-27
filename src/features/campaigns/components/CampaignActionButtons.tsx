@@ -26,8 +26,8 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 
-import messageIds from '../l10n/messageIds';
 import EventDataModel from 'features/events/models/EventDataModel';
+import messageIds from '../l10n/messageIds';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -84,18 +84,21 @@ const CampaignActionButtons: React.FunctionComponent<
       },
     });
   };
+
   const handleCreateEvent = () => {
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() + 1);
+    const defaultStart = new Date();
+    defaultStart.setDate(defaultStart.getDate() + 1);
+
+    const defaultEnd = new Date(defaultStart.getTime() + 60 * 60 * 1000);
 
     eventModel.createEvent(
       //TO DO:give null to ids when API supports it.
       {
         activity_id: 1,
-        location_id: 1,
-        start_time: startDate.toISOString(),
-        end_time: startDate.toISOString(),
         campaign_id: campaign.id,
+        end_time: defaultEnd.toISOString(),
+        location_id: 1,
+        start_time: defaultStart.toISOString(),
       }
     );
   };

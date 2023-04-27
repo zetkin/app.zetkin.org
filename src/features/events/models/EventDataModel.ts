@@ -1,10 +1,10 @@
 import Environment from 'core/env/Environment';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import EventsRepo, {
   ZetkinEventPatchBody,
   ZetkinEventPostBody,
 } from '../repo/EventsRepo';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
 import {
   ZetkinEvent,
   ZetkinEventParticipant,

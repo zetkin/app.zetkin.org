@@ -102,7 +102,7 @@ export default class EventsRepo {
   ): Promise<ZetkinEvent> {
     this._store.dispatch(eventCreate());
     const event = await this._apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
-      `/api/orgs/${orgId}/actions`,
+      `/api/orgs/${orgId}/campaigns/${eventBody.campaign_id}/actions`,
       eventBody
     );
     this._store.dispatch(eventCreated(event));
