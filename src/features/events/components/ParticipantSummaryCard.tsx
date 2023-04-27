@@ -170,7 +170,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
             display="flex"
             justifyContent="space-between"
             marginBottom={1}
-          ></Box>
+          />
         </Box>
       </ZUICard>
     </Box>

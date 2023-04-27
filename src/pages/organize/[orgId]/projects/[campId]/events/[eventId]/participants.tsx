@@ -57,7 +57,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               data={data}
               model={dataModel}
               orgId={parseInt(orgId)}
-            ></EventParticipantsList>
+            />
           </>
         );
       }}
