@@ -26,10 +26,10 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
   const messages = useMessages(messageIds);
 
   const reqParticipants = eventData?.num_participants_required ?? 0;
-  const availParticipants = model.getAvailParticipants();
-  const remindedParticipants = model.getRemindedParticipants();
+  const availParticipants = model.getNumAvailParticipants();
+  const remindedParticipants = model.getNumRemindedParticipants();
 
-  const signedParticipants = model.getSignedParticipants();
+  const signedParticipants = model.getNumSignedParticipants();
   const contactPerson = eventData?.contact;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(

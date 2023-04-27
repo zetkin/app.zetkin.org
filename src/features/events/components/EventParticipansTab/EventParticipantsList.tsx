@@ -146,10 +146,10 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
 
   return (
     <Box>
-      {model.getSignedParticipants() > 0 && (
+      {model.getNumSignedParticipants() > 0 && (
         <ZUIEventParticipantsList
           chipColor={theme.palette.grey[500]}
-          chipNumber={model.getSignedParticipants().toString()}
+          chipNumber={model.getNumSignedParticipants().toString()}
           columns={columns}
           description={messages.eventParticipantsList.descriptionSignups()}
           rows={model.getPendingSignUps() ?? []}
@@ -159,7 +159,7 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
       <ZUIEventParticipantsList
         chipColor={model.getParticipantStatus()}
         chipNumber={
-          model.getAvailParticipants() + '/' + data.num_participants_required
+          model.getNumAvailParticipants() + '/' + data.num_participants_required
         }
         columns={columns}
         description={messages.eventParticipantsList.descriptionBooked()}
