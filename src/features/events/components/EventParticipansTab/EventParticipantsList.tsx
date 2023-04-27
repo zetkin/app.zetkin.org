@@ -1,6 +1,6 @@
 import { FC } from 'react';
+import { GridColDef } from '@mui/x-data-grid-pro';
 import { Box, Button, Typography } from '@mui/material';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -9,7 +9,7 @@ import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUINumberChip from 'zui/ZUINumberChip';
+import ZUIEventParticipantsList from 'zui/ZUIEventParticipantLists';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 interface EventParticipantsListProps {
@@ -147,66 +147,24 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
   return (
     <Box>
       {model.getSignedParticipants() > 0 && (
-        <>
-          <Box
-            sx={{
-              '& div': { backgroundColor: 'transparent' },
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'row',
-              marginBottom: '15px',
-              marginTop: '15px',
-            }}
-          >
-            <Typography mr={2} variant="h4">
-              {messages.eventParticipantsList.signUps()}
-            </Typography>
-            <ZUINumberChip
-              color={theme.palette.grey[500]}
-              outlined={true}
-              value={model.getSignedParticipants()}
-            />
-          </Box>
-          <Typography mb={2} variant="body1">
-            {messages.eventParticipantsList.descriptionSignups()}
-          </Typography>
-          <DataGridPro
-            autoHeight
-            checkboxSelection
-            columns={columns}
-            rows={model.getPendingSignUps() ?? []}
-          />
-        </>
-      )}
-
-      <Box
-        sx={{
-          '& div': { backgroundColor: 'transparent' },
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          marginTop: '15px',
-        }}
-      >
-        <Typography mb={2} mr={2} variant="h4">
-          {messages.eventParticipantsList.bookedParticipants()}
-        </Typography>
-        <ZUINumberChip
-          color={model.getParticipantStatus()}
-          outlined={true}
-          value={
-            model.getAvailParticipants() + '/' + data.num_participants_required
-          }
+        <ZUIEventParticipantsList
+          chipColor={theme.palette.grey[500]}
+          chipNumber={model.getSignedParticipants().toString()}
+          columns={columns}
+          description={messages.eventParticipantsList.descriptionSignups()}
+          rows={model.getPendingSignUps() ?? []}
+          title={messages.eventParticipantsList.signUps()}
         />
-      </Box>
-      <Typography mb={2} variant="body1">
-        {messages.eventParticipantsList.descriptionBooked()}
-      </Typography>
-      <DataGridPro
-        autoHeight
-        checkboxSelection
+      )}
+      <ZUIEventParticipantsList
+        chipColor={model.getParticipantStatus()}
+        chipNumber={
+          model.getAvailParticipants() + '/' + data.num_participants_required
+        }
         columns={columns}
+        description={messages.eventParticipantsList.descriptionBooked()}
         rows={model.getParticipants().data ?? []}
+        title={messages.eventParticipantsList.bookedParticipants()}
       />
     </Box>
   );
