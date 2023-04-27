@@ -7,6 +7,7 @@ import {
 } from '@mui/icons-material';
 
 import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
+import LocationLabel from 'features/events/components/LocationLabel';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import OverviewListItem from './OverviewListItem';
 import { removeOffset } from 'utils/dateUtils';
@@ -82,7 +83,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
             },
             {
               icon: <PlaceOutlined fontSize="inherit" />,
-              label: location.title,
+              label: <LocationLabel location={location} />,
             },
           ]}
           size="sm"

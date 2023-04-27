@@ -87,7 +87,7 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
         }
 
         if (
-          event.location.id == lastClusterEvent.location.id &&
+          event.location?.id == lastClusterEvent.location?.id &&
           event.start_time == lastClusterEvent.end_time
         ) {
           pendingClusters[i] = {
@@ -103,7 +103,7 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
         if (
           lastClusterEvent.activity.id == event.activity.id &&
           lastClusterEvent.title == event.title &&
-          lastClusterEvent.location.id == event.location.id &&
+          lastClusterEvent.location?.id == event.location?.id &&
           lastClusterEvent.end_time == event.start_time
         ) {
           pendingClusters[i].events.push(event);
