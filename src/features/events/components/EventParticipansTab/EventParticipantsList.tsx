@@ -27,6 +27,7 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
 
   const columns: GridColDef[] = [
     {
+      align: 'center',
       disableColumnMenu: true,
       field: 'avatar',
       headerName: '',
@@ -34,6 +35,9 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
       renderCell: (params) => (
         <ZUIAvatar orgId={orgId} personId={params.row.id} />
       ),
+      resizable: false,
+      sortable: false,
+      width: 20,
     },
     {
       disableColumnMenu: true,
@@ -52,6 +56,8 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           );
         }
       },
+      resizable: false,
+      sortable: false,
     },
     {
       disableColumnMenu: true,
@@ -66,6 +72,8 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           return <Typography>{params.row.phone}</Typography>;
         }
       },
+      resizable: false,
+      sortable: false,
     },
     {
       disableColumnMenu: true,
@@ -73,6 +81,8 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
       flex: 1,
       headerName: messages.eventParticipantsList.columnEmail(),
       hideSortIcons: true,
+      resizable: false,
+      sortable: false,
       valueGetter: (params) => {
         if (params.row.person) {
           return '';
@@ -94,6 +104,8 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
         }
       },
+      resizable: false,
+      sortable: false,
     },
     {
       align: 'right',
@@ -127,6 +139,8 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           );
         }
       },
+      resizable: false,
+      sortable: false,
     },
   ];
 
