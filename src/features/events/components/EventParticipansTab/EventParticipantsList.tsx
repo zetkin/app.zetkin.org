@@ -12,13 +12,13 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
-interface EventParticipansListProps {
+interface EventParticipantsListProps {
   data: ZetkinEvent;
   model: EventDataModel;
   orgId: number;
 }
 
-const EventParticipansList: FC<EventParticipansListProps> = ({
+const EventParticipantsList: FC<EventParticipantsListProps> = ({
   data,
   model,
   orgId,
@@ -201,4 +201,4 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
   );
 };
 
-export default EventParticipansList;
+export default EventParticipantsList;

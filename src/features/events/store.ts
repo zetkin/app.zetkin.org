@@ -109,7 +109,6 @@ const eventsSlice = createSlice({
       action: PayloadAction<[number, ZetkinEventParticipant]>
     ) => {
       const [eventId, participant] = action.payload;
-      state.participantsByEventId[eventId].items;
       state.participantsByEventId[eventId].items = state.participantsByEventId[
         eventId
       ].items

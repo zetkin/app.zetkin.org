@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
-import EventParticipansList from 'features/events/components/EventParticipansTab/EventParticipantsList';
+import EventParticipantsList from 'features/events/components/EventParticipansTab/EventParticipantsList';
 import { PageWithLayout } from 'utils/types';
 import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
 import { scaffold } from 'utils/next';
@@ -53,11 +53,11 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
                 <ParticipantSummaryCard model={dataModel} />
               </Grid>
             </Grid>
-            <EventParticipansList
+            <EventParticipantsList
               data={data}
               model={dataModel}
               orgId={parseInt(orgId)}
-            ></EventParticipansList>
+            ></EventParticipantsList>
           </>
         );
       }}
