@@ -1,13 +1,16 @@
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
-import { FormControl, InputBase, Tooltip } from '@mui/material';
+import { FormControl, InputBase, Theme, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
+import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
-import messageIds from 'zui/l10n/messageIds';
+interface StyleProps {
+  showBorder: boolean | undefined;
+}
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   input: {
     '&:focus, &:hover': {
       borderColor: lighten(theme.palette.primary.main, 0.65),
@@ -15,8 +18,11 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
     border: '2px dotted transparent',
+    borderColor: ({ showBorder }) =>
+      showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
     borderRadius: 10,
-    paddingRight: 10,
+    paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
+    paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
     transition: 'all 0.2s ease',
   },
   inputRoot: {
@@ -48,19 +54,27 @@ export interface ZUIEditTextinPlaceProps {
   onChange: (newValue: string) => void;
   placeholder?: string;
   value: string;
+  showBorder?: boolean;
+  onBlur?: () => void;
+  onFocus?: () => void;
+  tooltipContent?: string;
 }
 
 const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   allowEmpty = false,
   disabled,
+  onBlur,
   onChange,
+  onFocus,
   placeholder,
+  showBorder,
+  tooltipContent,
   value,
 }) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>(value);
 
-  const classes = useStyles();
+  const classes = useStyles({ showBorder });
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const messages = useMessages(messageIds);
@@ -88,11 +102,15 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
       inputRef.current?.focus();
     } else {
       inputRef.current?.blur();
+      if (onBlur) {
+        onBlur();
+      }
     }
   }, [editing]);
 
   const startEditing = () => {
     setEditing(true);
+    setBorderOnTypeEdit();
   };
 
   const cancelEditing = () => {
@@ -119,7 +137,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     }
   };
 
-  const onBlur = () => {
+  const handleBlur = () => {
     if (editing) {
       if (!!text || allowEmpty) {
         if (text === value) {
@@ -131,9 +149,18 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     }
   };
 
+  const setBorderOnTypeEdit = () => {
+    if (onFocus !== undefined) {
+      onFocus();
+    }
+  };
+
   const tooltipText = () => {
     if (text || allowEmpty) {
       if (editing) {
+        if (!text && tooltipContent) {
+          return tooltipContent;
+        }
         return '';
       } else {
         return messages.editTextInPlace.tooltip.edit();
@@ -144,8 +171,17 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   };
 
   return (
-    <Tooltip arrow disableHoverListener={editing} title={tooltipText()}>
-      <FormControl style={{ overflow: 'hidden' }} variant="standard">
+    <Tooltip
+      arrow
+      disableHoverListener={editing}
+      placement="top"
+      title={tooltipText()}
+    >
+      <FormControl
+        onClick={(e) => e.stopPropagation()}
+        style={{ overflow: 'hidden' }}
+        variant="standard"
+      >
         <span ref={spanRef} className={classes.span}>
           {text || placeholder}
         </span>
@@ -156,13 +192,13 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
           }}
           disabled={disabled}
           inputRef={inputRef}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           onChange={(e) => setText(e.target.value)}
           onFocus={startEditing}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           readOnly={!editing}
-          value={text}
+          value={editing ? text : text || placeholder}
         />
       </FormControl>
     </Tooltip>

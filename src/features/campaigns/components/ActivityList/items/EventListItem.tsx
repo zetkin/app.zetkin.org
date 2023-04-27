@@ -66,10 +66,14 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
                 />
               ),
             },
-            {
-              icon: <PlaceOutlined fontSize="inherit" />,
-              label: data.location.title,
-            },
+            ...(data.location
+              ? [
+                  {
+                    icon: <PlaceOutlined fontSize="inherit" />,
+                    label: data.location.title,
+                  },
+                ]
+              : []),
           ]}
           size="sm"
         />

@@ -21,12 +21,18 @@ import {
   participantsReminded,
   respondentsLoad,
   respondentsLoaded,
+  typeAdd,
+  typeAdded,
+  typesLoad,
+  typesLoaded,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
+  ZetkinActivity,
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinEventResponse,
+  ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -38,7 +44,7 @@ export type ZetkinEventPatchBody = Partial<
 > & {
   activity_id?: number;
   campaign_id?: number;
-  location_id?: number;
+  location_id?: number | null;
   organization_id?: number;
 };
 
@@ -72,6 +78,15 @@ export default class EventsRepo {
     this._store.dispatch(participantAdded([eventId, participant]));
   }
 
+  addType(orgId: number, data: ZetkinEventTypePostBody) {
+    this._store.dispatch(typeAdd([orgId, data]));
+    this._apiClient
+      .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, data)
+      .then((event) => {
+        this._store.dispatch(typeAdded(event));
+      });
+  }
+
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
@@ -85,6 +100,16 @@ export default class EventsRepo {
       actionOnSuccess: (events) => eventsLoaded(events),
       loader: () =>
         this._apiClient.get<ZetkinEvent[]>(`/api/orgs/${orgId}/actions`),
+    });
+  }
+
+  getAllTypes(orgId: number) {
+    const state = this._store.getState();
+    return loadListIfNecessary(state.events.typeList, this._store, {
+      actionOnLoad: () => typesLoad(orgId),
+      actionOnSuccess: (data) => typesLoaded([orgId, data]),
+      loader: () =>
+        this._apiClient.get<ZetkinActivity[]>(`/api/orgs/${orgId}/activities`),
     });
   }
 

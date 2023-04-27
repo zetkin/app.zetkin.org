@@ -1,17 +1,34 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import {
+  RemoteItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
+import {
+  ZetkinActivity,
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinEventResponse,
+  ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
+
+export type EventStats = {
+  id: number;
+  numBooked: number;
+  numPending: number;
+  numReminded: number;
+  numSignups: number;
+};
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
+  statsByEventId: Record<number, RemoteItem<EventStats>>;
+  typeList: RemoteList<ZetkinActivity>;
 }
 
 const initialState: EventsStoreSlice = {
@@ -19,6 +36,8 @@ const initialState: EventsStoreSlice = {
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
+  statsByEventId: {},
+  typeList: remoteList(),
 };
 
 const eventsSlice = createSlice({
@@ -127,7 +146,6 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId] = remoteList(participants);
       state.participantsByEventId[eventId].loaded = new Date().toISOString();
     },
-
     participantsReminded: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.participantsByEventId[eventId].items.map((item) => {
@@ -152,6 +170,40 @@ const eventsSlice = createSlice({
       state.respondentsByEventId[eventId] = remoteList(respondents);
       state.respondentsByEventId[eventId].loaded = new Date().toISOString();
     },
+    statsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.statsByEventId[eventId] = remoteItem<EventStats>(eventId);
+      state.statsByEventId[eventId].isLoading = true;
+    },
+    statsLoaded: (state, action: PayloadAction<[number, EventStats]>) => {
+      const [eventId, stats] = action.payload;
+      state.statsByEventId[eventId].data = stats;
+      state.statsByEventId[eventId].isLoading = false;
+      state.statsByEventId[eventId].loaded = new Date().toISOString();
+    },
+    typeAdd: (
+      state,
+      /* eslint-disable-next-line */
+      action: PayloadAction<[number, ZetkinEventTypePostBody]>
+    ) => {
+      state.typeList.isLoading = true;
+    },
+    typeAdded: (state, action: PayloadAction<ZetkinActivity>) => {
+      const data = action.payload;
+
+      state.typeList.items = state.typeList.items.concat([
+        remoteItem(data.id, { data: data, isLoading: false }),
+      ]);
+    },
+    /* eslint-disable-next-line */
+    typesLoad: (state, action: PayloadAction<number>) => {
+      state.typeList.isLoading = true;
+    },
+    typesLoaded: (state, action: PayloadAction<[number, ZetkinActivity[]]>) => {
+      const [, eventTypes] = action.payload;
+      state.typeList = remoteList(eventTypes);
+      state.typeList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -174,4 +226,10 @@ export const {
   participantsReminded,
   respondentsLoad,
   respondentsLoaded,
+  statsLoad,
+  statsLoaded,
+  typeAdd,
+  typeAdded,
+  typesLoad,
+  typesLoaded,
 } = eventsSlice.actions;

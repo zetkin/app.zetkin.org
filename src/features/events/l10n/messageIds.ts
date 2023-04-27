@@ -9,6 +9,9 @@ export default makeMessages('feat.events', {
       signedUp: m('Signed up'),
     },
   },
+  common: {
+    noLocation: m('No physical location'),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
@@ -59,8 +62,11 @@ export default makeMessages('feat.events', {
     infoText: m(
       'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
     ),
+    move: m('Move'),
+    moveInstructions: m('Drag the pin to select location.'),
     noDescription: m('No description'),
     save: m('Save'),
+    saveLocation: m('Save location'),
     searchBox: m('Find location'),
     title: m('Location name'),
     useLocation: m('Use location'),
@@ -89,5 +95,12 @@ export default makeMessages('feat.events', {
   tabs: {
     overview: m('Overview'),
     participants: m('Participants'),
+  },
+  tooltipContent: m('Untitled events will display type as title'),
+  type: {
+    createType: m<{ type: string }>('Create "{type}"'),
+    tooltip: m('Click to change type'),
+    uncategorized: m('Uncategorized'),
+    untitled: m('Untitled Event'),
   },
 });
