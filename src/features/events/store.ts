@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  RemoteItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import {
   ZetkinActivity,
   ZetkinEvent,
@@ -9,12 +14,21 @@ import {
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
+export type EventStats = {
+  id: number;
+  numBooked: number;
+  numPending: number;
+  numReminded: number;
+  numSignups: number;
+};
+
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
-  typeList: RemoteList<ZetkinActivity>;
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
+  statsByEventId: Record<number, RemoteItem<EventStats>>;
+  typeList: RemoteList<ZetkinActivity>;
 }
 
 const initialState: EventsStoreSlice = {
@@ -22,6 +36,7 @@ const initialState: EventsStoreSlice = {
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
+  statsByEventId: {},
   typeList: remoteList(),
 };
 
@@ -161,6 +176,17 @@ const eventsSlice = createSlice({
       state.respondentsByEventId[eventId] = remoteList(respondents);
       state.respondentsByEventId[eventId].loaded = new Date().toISOString();
     },
+    statsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.statsByEventId[eventId] = remoteItem<EventStats>(eventId);
+      state.statsByEventId[eventId].isLoading = true;
+    },
+    statsLoaded: (state, action: PayloadAction<[number, EventStats]>) => {
+      const [eventId, stats] = action.payload;
+      state.statsByEventId[eventId].data = stats;
+      state.statsByEventId[eventId].isLoading = false;
+      state.statsByEventId[eventId].loaded = new Date().toISOString();
+    },
     typeAdd: (
       state,
       /* eslint-disable-next-line */
@@ -208,6 +234,8 @@ export const {
   participantsReminded,
   respondentsLoad,
   respondentsLoaded,
+  statsLoad,
+  statsLoaded,
   typeAdd,
   typeAdded,
   typesLoad,

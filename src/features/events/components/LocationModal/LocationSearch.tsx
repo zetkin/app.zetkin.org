@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, IconButton, TextField } from '@mui/material';
 
 import messageIds from 'features/events/l10n/messageIds';
+import { MyLocation } from '@mui/icons-material';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
@@ -9,11 +10,13 @@ interface LocationSearchProps {
   onChange: (value: ZetkinLocation) => void;
   onInputChange: (value: string) => void;
   onTextFieldChange: (value: string) => void;
+  onClickGeolocate: () => void;
   options: ZetkinLocation[];
 }
 
 const LocationSearch: FC<LocationSearchProps> = ({
   onChange,
+  onClickGeolocate,
   onInputChange,
   onTextFieldChange,
   options,
@@ -30,6 +33,13 @@ const LocationSearch: FC<LocationSearchProps> = ({
       renderInput={(params) => (
         <TextField
           {...params}
+          InputProps={{
+            endAdornment: (
+              <IconButton onClick={onClickGeolocate}>
+                <MyLocation />
+              </IconButton>
+            ),
+          }}
           label={messages.locationModal.searchBox()}
           onChange={(ev) => onTextFieldChange(ev.target.value)}
           sx={{
@@ -38,6 +48,11 @@ const LocationSearch: FC<LocationSearchProps> = ({
           }}
         />
       )}
+      sx={{
+        '& .MuiOutlinedInput-root': {
+          paddingRight: '10px!important',
+        },
+      }}
     />
   );
 };

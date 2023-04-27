@@ -91,6 +91,13 @@ const Map: FC<MapProps> = ({
             );
           }
 
+          if (pendingLocation) {
+            map.setView(
+              { lat: pendingLocation.lat, lng: pendingLocation.lng },
+              17
+            );
+          }
+
           map.on('click', (evt) => {
             const lat = evt.latlng.lat;
             const lng = evt.latlng.lng;
