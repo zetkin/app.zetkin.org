@@ -109,11 +109,9 @@ const eventsSlice = createSlice({
       action: PayloadAction<[number, ZetkinEventParticipant]>
     ) => {
       const [eventId, participant] = action.payload;
-      state.participantsByEventId[eventId].items = state.participantsByEventId[
-        eventId
-      ].items
-        .filter((item) => item.id !== participant.id)
-        .concat([remoteItem(participant.id, { data: participant })]);
+      state.participantsByEventId[eventId].items.push(
+        remoteItem(participant.id, { data: participant })
+      );
     },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
