@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 
+import AddPersonButton from 'features/events/components/EventParticipantsTab/AddPersonButton';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventParticipantsList from 'features/events/components/EventParticipansTab/EventParticipantsList';
@@ -58,7 +59,12 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               model={dataModel}
               orgId={parseInt(orgId)}
             />
-          </>
+     
+            <Grid container item justifyContent="flex-end" md={12}>
+              <AddPersonButton model={dataModel} />
+            </Grid>
+          </Grid>
+               </>
         );
       }}
     </ZUIFuture>
