@@ -6,7 +6,7 @@ export default makeMessages('feat.events', {
     addPlaceholder: m('Start typing to add participant'),
     status: {
       booked: m('Already booked'),
-      signedUp: m('Already Signed up'),
+      signedUp: m('Signed up'),
     },
   },
   eventOverviewCard: {

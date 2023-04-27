@@ -1,7 +1,7 @@
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { useState } from 'react';
 import { Box, IconButton, Popover } from '@mui/material';
 import { EmojiPeople, People } from '@mui/icons-material';
-import { useRef, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from '../../l10n/messageIds';
@@ -21,8 +21,6 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
   const handleSelectedPerson = (personId: number) => {
     model.addParticipant(personId);
   };
-
-  const selectInputRef = useRef<HTMLInputElement>();
 
   return (
     <>
@@ -67,7 +65,8 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
             }}
           >
             {({ data: { participants, respondents } }) => {
-              const settingStatus = (personId: number) => {
+              const getOptionExtraLabel = (personId: number) => {
+                //TO DO : Add cancelled statement here when API supports it.
                 if (
                   participants.some(
                     (participant) => participant.id === personId
@@ -114,9 +113,8 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
                       )
                     }
                     getOptionExtraLabel={(option) => {
-                      return settingStatus(option.id);
+                      return getOptionExtraLabel(option.id);
                     }}
-                    inputRef={selectInputRef}
                     name="person"
                     onChange={(person) => {
                       handleSelectedPerson(person.id);
