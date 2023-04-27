@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import NextLink from 'next/link';
 import { useIntl } from 'react-intl';
 import { WarningSlot } from '../EventWarningIcons';
-import { Box, Checkbox, Link, Typography } from '@mui/material';
+import { Box, Checkbox, Typography } from '@mui/material';
 import {
   ChevronRightOutlined,
   EmojiPeople,
@@ -11,13 +10,14 @@ import {
   People,
 } from '@mui/icons-material';
 
-import { EventState } from 'features/events/models/EventDataModel';
+import EventDataModel from 'features/events/models/EventDataModel';
 import LocationName from '../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import StatusDot from './StatusDot';
 import { useMessages } from 'core/i18n';
+import useModel from 'core/useModel';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
-import { ZetkinEvent, ZetkinEventParticipant } from 'utils/types/zetkin';
 
 export enum CLUSTER_TYPE {
   ARBITRARY = 'arbitrary',
@@ -29,19 +29,23 @@ interface MultiEventListItemProps {
   clusterType: CLUSTER_TYPE;
   compact: boolean;
   event: ZetkinEvent;
-  participants: ZetkinEventParticipant[];
-  state: EventState;
+  onEventClick: (id: number) => void;
 }
 
 const MultiEventListItem: FC<MultiEventListItemProps> = ({
   clusterType,
   compact,
   event,
-  participants,
-  state,
+  onEventClick,
 }) => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
+  const model = useModel(
+    (env) => new EventDataModel(env, event.organization.id, event.id)
+  );
+
+  const participants = model.getParticipants().data || [];
+  const state = model.state;
 
   const warningIcons: (JSX.Element | null)[] = [null, null, null];
 
@@ -148,16 +152,10 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
               size="sm"
             />
           </Box>
-          <NextLink
-            href={`/organize/${event.organization.id}/${
-              event.campaign ? `projects/${event.campaign.id}` : 'standalone'
-            }/events/${event.id}`}
-            passHref
-          >
-            <Link color="inherit">
-              <ChevronRightOutlined />
-            </Link>
-          </NextLink>
+          <ChevronRightOutlined
+            onClick={() => onEventClick(event.id)}
+            sx={{ cursor: 'pointer' }}
+          />
         </Box>
       </Box>
     </Box>

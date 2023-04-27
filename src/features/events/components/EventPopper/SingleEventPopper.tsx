@@ -174,7 +174,7 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
                   size="xs"
                 />
               </Box>
-              <Typography color="secondary">
+              <Typography color="secondary" variant="body2">
                 <ZUITimeSpan
                   end={new Date(event.end_time)}
                   start={new Date(event.start_time)}
@@ -195,11 +195,10 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
                   size="xs"
                 />
               </Box>
-              <Typography color="secondary">
+              <Typography color="secondary" variant="body2">
                 <LocationName location={event.location} />
               </Typography>
             </Box>
-
             <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
               <Box sx={{ mb: 0.4 }}>
                 <ZUIIconLabel
@@ -223,7 +222,11 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
                   />
                 </ZUIPersonHoverCard>
               ) : (
-                <Typography color="secondary" fontStyle="italic">
+                <Typography
+                  color="secondary"
+                  fontStyle="italic"
+                  variant="body2"
+                >
                   {messages.eventPopper.noContact()}
                 </Typography>
               )}
@@ -234,7 +237,9 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
                   {messages.eventPopper.description().toUpperCase()}
                 </Typography>
                 <Box className={classes.description}>
-                  <Typography color="secondary">{event.info_text}</Typography>
+                  <Typography color="secondary" variant="body2">
+                    {event.info_text}
+                  </Typography>
                 </Box>
               </Box>
             )}
@@ -242,7 +247,7 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
               alignItems="center"
               display="flex"
               justifyContent="flex-end"
-              sx={{ mb: 4 }}
+              marginBottom={2}
             >
               <NextLink
                 href={`/organize/${event.organization.id}/${

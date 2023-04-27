@@ -11,22 +11,22 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Link, Typography } from '@mui/material';
 
-import { EventState } from 'features/events/models/EventDataModel';
 import LocationName from '../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
+import StatusDot from './StatusDot';
+import useModel from 'core/useModel';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import {
-  ZetkinEvent,
-  ZetkinEventParticipant,
-  ZetkinEventResponse,
-} from 'utils/types/zetkin';
+import EventDataModel, {
+  EventState,
+} from 'features/events/models/EventDataModel';
 
 const useStyles = makeStyles(() => ({
   description: {
@@ -45,9 +45,6 @@ interface SingleEventProps {
   onCancel: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   onDelete: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   onPublish: () => void;
-  participants: ZetkinEventParticipant[];
-  respondents: ZetkinEventResponse[];
-  state: EventState;
 }
 
 const SingleEvent: FC<SingleEventProps> = ({
@@ -55,12 +52,18 @@ const SingleEvent: FC<SingleEventProps> = ({
   onPublish,
   onCancel,
   onDelete,
-  state,
-  respondents,
-  participants,
 }) => {
   const messages = useMessages(messageIds);
   const classes = useStyles();
+
+  const model = useModel(
+    (env) => new EventDataModel(env, event.organization.id, event.id)
+  );
+
+  const participants = model.getParticipants().data || [];
+  const respondents = model.getRespondents().data || [];
+  const state = model.state;
+
   const remindedParticipants =
     participants?.filter((p) => p.reminder_sent != null).length ?? 0;
   const availableParticipants = participants?.length ?? 0;
@@ -69,6 +72,18 @@ const SingleEvent: FC<SingleEventProps> = ({
       .length ?? 0;
   return (
     <>
+      <Box alignItems="center" display="flex">
+        <Checkbox size="medium" />
+        <Typography variant="h5">
+          {event.title || event.activity.title}
+        </Typography>
+      </Box>
+      <Box alignItems="center" display="flex" sx={{ ml: 1 }}>
+        <StatusDot state={state} />
+        <Typography color="secondary" sx={{ ml: 1 }}>
+          {event.activity.title}
+        </Typography>
+      </Box>
       <Box
         alignItems="center"
         display="flex"
@@ -130,7 +145,7 @@ const SingleEvent: FC<SingleEventProps> = ({
             size="xs"
           />
         </Box>
-        <Typography color="secondary">
+        <Typography color="secondary" variant="body2">
           <ZUITimeSpan
             end={new Date(event.end_time)}
             start={new Date(event.start_time)}
@@ -148,11 +163,10 @@ const SingleEvent: FC<SingleEventProps> = ({
             size="xs"
           />
         </Box>
-        <Typography color="secondary">
+        <Typography color="secondary" variant="body2">
           <LocationName location={event.location} />
         </Typography>
       </Box>
-
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
@@ -173,7 +187,7 @@ const SingleEvent: FC<SingleEventProps> = ({
             />
           </ZUIPersonHoverCard>
         ) : (
-          <Typography color="secondary" fontStyle="italic">
+          <Typography color="secondary" fontStyle="italic" variant="body2">
             {messages.eventPopper.noContact()}
           </Typography>
         )}
@@ -184,7 +198,9 @@ const SingleEvent: FC<SingleEventProps> = ({
             {messages.eventPopper.description().toUpperCase()}
           </Typography>
           <Box className={classes.description}>
-            <Typography color="secondary">{event.info_text}</Typography>
+            <Typography color="secondary" variant="body2">
+              {event.info_text}
+            </Typography>
           </Box>
         </Box>
       )}
@@ -192,7 +208,7 @@ const SingleEvent: FC<SingleEventProps> = ({
         alignItems="center"
         display="flex"
         justifyContent="flex-end"
-        sx={{ mb: 4 }}
+        marginBottom={2}
       >
         <NextLink
           href={`/organize/${event.organization.id}/${
