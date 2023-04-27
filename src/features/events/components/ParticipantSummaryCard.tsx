@@ -50,10 +50,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
         status={
           <Box display="flex">
             <ZUINumberChip
-              color={model.getParticipantStatus(
-                availParticipants,
-                reqParticipants
-              )}
+              color={model.getParticipantStatus()}
               outlined={true}
               size="sm"
               value={`${availParticipants}/${reqParticipants}`}

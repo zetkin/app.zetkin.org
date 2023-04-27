@@ -178,10 +178,7 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           {messages.eventParticipantsList.bookedParticipants()}
         </Typography>
         <ZUINumberChip
-          color={model.getParticipantStatus(
-            data.num_participants_available,
-            data.num_participants_required
-          )}
+          color={model.getParticipantStatus()}
           outlined={true}
           value={
             model.getAvailParticipants() + '/' + data.num_participants_required

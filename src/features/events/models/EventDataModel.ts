@@ -44,10 +44,9 @@ export default class EventDataModel extends ModelBase {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
 
-  getParticipantStatus = (
-    availParticipants: number,
-    reqParticipants: number
-  ) => {
+  getParticipantStatus = () => {
+    const availParticipants = this.getAvailParticipants();
+    const reqParticipants = this.getData().data?.num_participants_required ?? 0;
     const diff = reqParticipants - availParticipants;
 
     if (diff <= 0) {
