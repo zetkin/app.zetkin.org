@@ -33,11 +33,3 @@ export const getDayIndex = (
 export const getWeekNumber = (firstDayOfCalendar: Date, rowIndex: number) => {
   return dayjs(firstDayOfCalendar).add(rowIndex, 'week').isoWeek();
 };
-
-/**
- * Returns an array of numbers whos values match their index, beginning at 0
- * and ending with the provided number. Does not work for negative numbers.
- */
-export const range = (number: number): number[] => {
-  return [...Array(number).keys()];
-};
