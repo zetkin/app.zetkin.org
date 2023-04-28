@@ -2,7 +2,7 @@ import Environment from 'core/env/Environment';
 import EventsRepo from '../repo/EventsRepo';
 import { ModelBase } from 'core/models';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { dateIsBefore, isBefore, isSameDate } from 'utils/dateUtils';
+import { dateIsBefore, isAfter, isSameDate } from 'utils/dateUtils';
 import {
   ErrorFuture,
   IFuture,
@@ -45,8 +45,8 @@ export class EventsModel extends ModelBase {
 
       return (
         isSameDate(start, eventStart) ||
-        (isBefore(start, eventStart) && dateIsBefore(start, eventEnd)) ||
-        (dateIsBefore(start, eventStart) && isBefore(end, eventStart))
+        (dateIsBefore(start, eventStart) && isAfter(start, eventEnd)) ||
+        (isAfter(start, eventStart) && dateIsBefore(end, eventStart))
       );
     });
 

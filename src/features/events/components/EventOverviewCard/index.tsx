@@ -32,7 +32,7 @@ import { useMessages } from 'core/i18n';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
-  isBefore,
+  dateIsBefore,
   isSameDate,
   isValidDate,
   removeOffset,
@@ -143,7 +143,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               setInvalidFormat(false);
                               setStartDate(dayjs(newValue));
                               if (
-                                isBefore(newValue.toDate(), endDate.toDate())
+                                dateIsBefore(
+                                  newValue.toDate(),
+                                  endDate.toDate()
+                                )
                               ) {
                                 setEndDate(newValue);
                               }
@@ -243,7 +246,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             if (newValue && isValidDate(newValue.toDate())) {
                               if (
                                 newValue &&
-                                isBefore(startDate.toDate(), newValue.toDate())
+                                dateIsBefore(
+                                  startDate.toDate(),
+                                  newValue.toDate()
+                                )
                               ) {
                                 setInvalidFormat(false);
                                 setStartDate(newValue);
