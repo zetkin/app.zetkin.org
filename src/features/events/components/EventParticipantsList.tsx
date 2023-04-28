@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 
-import AddPersonButton from './AddPersonButton';
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
@@ -23,37 +22,30 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
   const messages = useMessages(messageIds);
 
   return (
-    <>
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-        <AddPersonButton model={model} />
-      </Box>
-      <Box>
-        {model.getNumSignedParticipants() > 0 && (
-          <ParticipantListSection
-            chipColor={theme.palette.grey[500]}
-            chipNumber={model.getNumSignedParticipants().toString()}
-            description={messages.eventParticipantsList.descriptionSignups()}
-            model={model}
-            orgId={orgId}
-            rows={model.getPendingSignUps() ?? []}
-            title={messages.eventParticipantsList.signUps()}
-          />
-        )}
+    <Box>
+      {model.getNumSignedParticipants() > 0 && (
         <ParticipantListSection
-          chipColor={model.getParticipantStatus()}
-          chipNumber={
-            model.getNumAvailParticipants() +
-            '/' +
-            data.num_participants_required
-          }
-          description={messages.eventParticipantsList.descriptionBooked()}
+          chipColor={theme.palette.grey[500]}
+          chipNumber={model.getNumSignedParticipants().toString()}
+          description={messages.eventParticipantsList.descriptionSignups()}
           model={model}
           orgId={orgId}
-          rows={model.getParticipants().data ?? []}
-          title={messages.eventParticipantsList.bookedParticipants()}
+          rows={model.getPendingSignUps() ?? []}
+          title={messages.eventParticipantsList.signUps()}
         />
-      </Box>
-    </>
+      )}
+      <ParticipantListSection
+        chipColor={model.getParticipantStatus()}
+        chipNumber={
+          model.getNumAvailParticipants() + '/' + data.num_participants_required
+        }
+        description={messages.eventParticipantsList.descriptionBooked()}
+        model={model}
+        orgId={orgId}
+        rows={model.getParticipants().data ?? []}
+        title={messages.eventParticipantsList.bookedParticipants()}
+      />
+    </Box>
   );
 };
 
