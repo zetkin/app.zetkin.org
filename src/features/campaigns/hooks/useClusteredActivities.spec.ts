@@ -27,7 +27,7 @@ const mockEventData: ZetkinEvent = {
     title: 'My campaign',
   },
   contact: null,
-  end_time: '1857-07-05T13:37:00.000Z',
+  end_time: '1857-07-05T14:37:00.000Z',
   id: 1,
   info_text: '',
   location: {
