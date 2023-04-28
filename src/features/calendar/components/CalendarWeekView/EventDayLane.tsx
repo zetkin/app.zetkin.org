@@ -24,7 +24,7 @@ const EventDayLane: FC<EventDayLaneProps> = ({ children, onCreate }) => {
     function handleMouseDown(ev: MouseEvent) {
       const div = ev.currentTarget as HTMLDivElement;
       const rect = div.getBoundingClientRect();
-      startRatio = (ev.clientY - rect.top) / rect.height;
+      startRatio = snapToGrid((ev.clientY - rect.top) / rect.height);
 
       setDragging(true);
 
@@ -37,7 +37,7 @@ const EventDayLane: FC<EventDayLaneProps> = ({ children, onCreate }) => {
       if (div) {
         const rect = div.getBoundingClientRect();
         const dragRatio = (ev.clientY - rect.top) / rect.height;
-        height = dragRatio - startRatio;
+        height = snapToGrid(dragRatio - startRatio);
 
         if (ghostRef.current) {
           ghostRef.current.style.top = startRatio * 100 + '%';
@@ -92,5 +92,9 @@ const EventDayLane: FC<EventDayLaneProps> = ({ children, onCreate }) => {
     </Box>
   );
 };
+
+function snapToGrid(ratio: number, gridSteps: number = 24 * 6) {
+  return Math.round(ratio * gridSteps) / gridSteps;
+}
 
 export default EventDayLane;
