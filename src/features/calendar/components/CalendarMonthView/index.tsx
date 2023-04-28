@@ -5,10 +5,11 @@ import Day from './Day';
 import dayjs from 'dayjs';
 import range from 'utils/range';
 import WeekNumber from './WeekNumber';
-import { getDayIndex, getDaysBeforeFirstDay, getWeekNumber } from './utils';
+import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
 
 export const numberOfRows = 6;
-export const numberOfColumns = 7;
+export const numberOfDayColumns = 7;
+export const numberOfGridColumns = 8;
 
 type CalendarMonthViewProps = {
   focusDate: Date;
@@ -29,37 +30,40 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
       display="grid"
       flexGrow="1"
       gap="8px"
-      gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
+      gridTemplateColumns={`auto repeat(${numberOfDayColumns}, 1fr)`}
       gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
     >
       {
         // Creates 6 rows
         range(numberOfRows).map((rowIndex) =>
           // Creates 8 items in each row
-          range(numberOfColumns + 1).map((columnIndex) => {
+          range(numberOfGridColumns).map((columnIndex) => {
+            const gridItemKey = columnIndex + rowIndex * numberOfGridColumns;
+
             // First item in each row is the week number
             if (columnIndex === 0) {
               return (
                 <WeekNumber
-                  key={getDayIndex(rowIndex, columnIndex, numberOfColumns)}
+                  key={gridItemKey}
                   weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
                 />
               );
             }
 
             // Remaining items in each row are days
+            const dayIndex = columnIndex - 1 + rowIndex * numberOfDayColumns; // Index of the day within the day grid
             const date = dayjs(firstDayOfCalendar)
-              .add(getDayIndex(rowIndex, columnIndex, numberOfColumns), 'day')
+              .add(dayIndex, 'day')
               .toDate();
 
             const isInFocusMonth = date.getMonth() === focusDate.getMonth();
 
             return (
-              <React.Fragment
-                key={getDayIndex(rowIndex, columnIndex, numberOfColumns)}
-              >
-                <Day date={date} isInFocusMonth={isInFocusMonth} />
-              </React.Fragment>
+              <Day
+                key={gridItemKey}
+                date={date}
+                isInFocusMonth={isInFocusMonth}
+              />
             );
           })
         )

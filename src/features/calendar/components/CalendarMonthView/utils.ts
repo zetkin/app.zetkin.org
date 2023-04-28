@@ -17,17 +17,6 @@ export const getDaysBeforeFirstDay = (firstDayOfMonth: Date): number => {
 };
 
 /**
- * Returns the index of the day within the grid.
- */
-export const getDayIndex = (
-  rowIndex: number,
-  columnIndex: number,
-  numberOfColumns: number
-): number => {
-  return columnIndex + rowIndex * numberOfColumns;
-};
-
-/**
  * Returns the week number for a row in the grid.
  */
 export const getWeekNumber = (firstDayOfCalendar: Date, rowIndex: number) => {
