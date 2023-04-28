@@ -265,6 +265,22 @@ describe('useClusteredActivities()', () => {
     expect((result.current[2] as ClusteredEvent).events[0].id).toBe(3);
   });
 
+  it('does nothing with two identical events but with no physical locations', () => {
+    const { result } = renderHook(() =>
+      useClusteredActivities([
+        mockEvent(1, {
+          location: null,
+        }),
+        mockEvent(2, {
+          location: null,
+        }),
+      ])
+    );
+    expect(result.current.length).toBe(2);
+    expect(result.current[0].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect(result.current[1].kind).toBe(CLUSTER_TYPE.SINGLE);
+  });
+
   it('should cluster events that are related and at the same time but not in the same location', () => {
     const { result } = renderHook(() =>
       useClusteredActivities([
