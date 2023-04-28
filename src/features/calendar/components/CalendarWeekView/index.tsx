@@ -1,57 +1,14 @@
-import _ from 'lodash';
 import { Box } from '@mui/system';
+import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Typography } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
 
+import DayHeader from './DayHeader';
+import range from 'utils/range';
 import theme from 'theme';
 
 dayjs.extend(isoWeek);
-
-export interface DayHeaderProps {
-  date: Dayjs;
-  focused: boolean;
-}
-
-const DayHeader = ({ date, focused }: DayHeaderProps) => {
-  return (
-    <Box display="flex" justifyContent="space-between" width="100%">
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="flex-start"
-        width="2em"
-      >
-        <Typography color={theme.palette.grey[500]} variant="subtitle2">
-          {
-            // Localized short-format weeekday
-            date.toDate().toLocaleDateString(undefined, { weekday: 'short' })
-          }
-        </Typography>
-      </Box>
-      <Box>
-        <Box
-          display="flex"
-          sx={{
-            alignItems: 'center',
-            backgroundColor: focused ? theme.palette.primary.main : null,
-            borderRadius: '50%',
-            color: focused ? 'white' : 'inherit',
-            height: '2.1em',
-            justifyContent: 'center',
-            width: '2.1em',
-          }}
-        >
-          <Typography color={focused ? 'white' : 'inherit'} fontSize="1.2em">
-            {date.format('D')}
-          </Typography>
-        </Box>
-      </Box>
-      <Box width="2em"></Box>
-    </Box>
-  );
-};
 
 const HOUR_HEIGHT = 5;
 
@@ -80,7 +37,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
         </Typography>
       </Box>
       {/* Day headers across the top */}
-      {_.range(7).map((weekday: number) => {
+      {range(7).map((weekday: number) => {
         const weekdayDate = focusWeekStartDay.day(weekday + 1);
         return (
           <DayHeader
@@ -94,7 +51,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
       })}
       {/* Hours column */}
       <Box>
-        {_.range(0, 24).map((hour: number) => {
+        {range(24).map((hour: number) => {
           const time = dayjs().set('hour', hour).set('minute', 0);
           return (
             <Box key={hour} display="flex" height={`${HOUR_HEIGHT}em`}>
@@ -111,7 +68,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
         })}
       </Box>
       {/* Day columns */}
-      {_.range(7).map((weekday: number) => {
+      {range(7).map((weekday: number) => {
         return (
           <Box
             key={weekday}
