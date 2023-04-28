@@ -24,7 +24,7 @@ export class EventsModel extends ModelBase {
     return this._repo.getAllEvents(this._orgId);
   }
 
-  getEventsInTimespan(
+  getParallelEvents(
     startString: string,
     endString: string
   ): IFuture<ZetkinEvent[]> {

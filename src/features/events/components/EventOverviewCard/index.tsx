@@ -99,7 +99,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     ? [...locations, 'CREATE_NEW_LOCATION']
     : ['CREATE_NEW_LOCATION'];
 
-  const events = eventsModel.getEventsInTimespan(
+  const events = eventsModel.getParallelEvents(
     data.start_time,
     data.end_time
   ).data;
