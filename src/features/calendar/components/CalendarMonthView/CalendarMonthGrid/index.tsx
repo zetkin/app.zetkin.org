@@ -3,29 +3,40 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 import WeekNumber from './WeekNumber';
-import { getDayIndex, getWeekNumber, range } from '../utils';
+import {
+  getDayIndex,
+  getDaysBeforeFirstDay,
+  getWeekNumber,
+  range,
+} from '../utils';
 
 export const numberOfRows = 6;
 export const numberOfColumns = 7;
 
 export interface CalendarMonthGridProps {
-  /**
-   * Used to generate the week numbers
-   */
-  firstDayOfCalendar: Date;
+  focusDate: Date;
   /**
    * Renders each day in the calendar view in order
    */
-  renderDay: (date: Date) => React.ReactElement;
+  renderDay: (date: Date, isInFocusMonth: boolean) => React.ReactElement;
 }
 
 /**
  * Renders a grid of dates spanning 6 weeks. Each week shows the week number in the year.
  */
 const CalendarMonthGrid = ({
-  firstDayOfCalendar,
+  focusDate,
   renderDay,
 }: CalendarMonthGridProps) => {
+  const firstDayOfMonth: Date = new Date(
+    focusDate.getFullYear(),
+    focusDate.getMonth(),
+    1
+  );
+  const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
+    .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')
+    .toDate();
+
   return (
     <Box
       display="grid"
@@ -54,13 +65,15 @@ const CalendarMonthGrid = ({
               .add(getDayIndex(rowIndex, columnIndex, numberOfColumns), 'day')
               .toDate();
 
+            const isInFocusMonth = date.getMonth() === focusDate.getMonth();
+
             return (
               <React.Fragment
                 key={getDayIndex(rowIndex, columnIndex, numberOfColumns)}
               >
                 {
                   // Render the day with the provided date
-                  renderDay(date)
+                  renderDay(date, isInFocusMonth)
                 }
               </React.Fragment>
             );
