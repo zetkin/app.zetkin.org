@@ -386,7 +386,7 @@ const CalendarBar = ({
               position="absolute"
               top={`${top}%`}
               width={1}
-            ></Box>
+            />
           </Tooltip>
         </Link>
       </NextLink>

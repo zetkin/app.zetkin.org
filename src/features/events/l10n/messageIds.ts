@@ -35,6 +35,22 @@ export default makeMessages('feat.events', {
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
+  eventParticipantsList: {
+    bookedParticipants: m('Booked Participants'),
+    buttonBook: m('Book'),
+    buttonCancel: m('Cancel'),
+    columnEmail: m('Email'),
+    columnName: m('Name'),
+    columnNotified: m('Notified'),
+    columnPhone: m('Phone'),
+    descriptionBooked: m(
+      'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
+    ),
+    descriptionSignups: m(
+      'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
+    ),
+    signUps: m('Sign-ups'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),

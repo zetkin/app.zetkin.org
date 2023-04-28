@@ -322,7 +322,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 .endDate()
                                 .toUpperCase()}
                             </Typography>
-                            <Box mb={3}></Box>
+                            <Box mb={3} />
                           </Box>
                         );
                       }

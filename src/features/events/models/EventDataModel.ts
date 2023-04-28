@@ -1,5 +1,6 @@
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
+import theme from 'theme';
 import EventsRepo, {
   ZetkinEventPatchBody,
   ZetkinEventPostBody,
@@ -56,8 +57,51 @@ export default class EventDataModel extends ModelBase {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
 
+  getNumAvailParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants ? participants.length : 0;
+  }
+
+  getNumRemindedParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants?.filter((p) => p.reminder_sent != null).length ?? 0;
+  }
+
+  getNumSignedParticipants(): number {
+    const participants = this.getParticipants().data;
+    const respondents = this.getRespondents().data;
+    return (
+      respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
+        .length ?? 0
+    );
+  }
+
+  getParticipantStatus = () => {
+    const availParticipants = this.getNumAvailParticipants();
+    const reqParticipants = this.getData().data?.num_participants_required ?? 0;
+    const diff = reqParticipants - availParticipants;
+
+    if (diff <= 0) {
+      return theme.palette.statusColors.green;
+    } else if (diff === 1) {
+      return theme.palette.statusColors.orange;
+    } else {
+      return theme.palette.statusColors.red;
+    }
+  };
+
   getParticipants(): IFuture<ZetkinEventParticipant[]> {
     return this._repo.getEventParticipants(this._orgId, this._eventId);
+  }
+
+  getPendingSignUps(): ZetkinEventResponse[] {
+    const participants = this.getParticipants().data;
+    const respondents = this.getRespondents().data;
+
+    return (
+      respondents?.filter((r) => !participants?.some((p) => p.id === r.id)) ||
+      []
+    );
   }
 
   getRespondents(): IFuture<ZetkinEventResponse[]> {
