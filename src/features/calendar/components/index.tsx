@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
@@ -42,12 +42,20 @@ const Calendar = () => {
         />
       </Box>
 
-      <Box display="flex" flexDirection="column" flexGrow={1} overflow="auto">
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexGrow={1}
+        marginTop={2}
+        overflow="auto"
+      >
         {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
         {selectedTimeScale === TimeScale.WEEK && (
           <CalendarWeekView focusDate={focusDate} />
         )}
-        {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
+        {selectedTimeScale === TimeScale.MONTH && (
+          <CalendarMonthView focusDate={focusDate} />
+        )}
       </Box>
     </Box>
   );

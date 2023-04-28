@@ -14,6 +14,7 @@ export interface CalendarNavBarProps {
 }
 
 const CalendarNavBar = ({
+  focusDate,
   onChangeFocusDate,
   onChangeTimeScale,
   onStepBackward,
@@ -22,7 +23,7 @@ const CalendarNavBar = ({
 }: CalendarNavBarProps) => {
   return (
     <Box display="flex" justifyContent="space-between">
-      <Box>
+      <Box alignItems="center" display="flex" gap="4px">
         <Button
           color="primary"
           onClick={() => onChangeFocusDate(new Date())}
@@ -36,6 +37,9 @@ const CalendarNavBar = ({
         <IconButton onClick={onStepForward}>
           <ArrowForward />
         </IconButton>
+        {/* Placeholders just to know which date we're on. */}
+        <Box>{focusDate.toLocaleDateString('en', { month: 'long' })}</Box>
+        <Box>{focusDate.toLocaleDateString('en', { year: 'numeric' })}</Box>
       </Box>
 
       <ButtonGroup>
