@@ -47,7 +47,7 @@ export type ZetkinEventPatchBody = Partial<
   activity_id?: number;
   campaign_id?: number;
   contact_id?: number | null;
-  location_id?: number;
+  location_id?: number | null;
   organization_id?: number;
 };
 
