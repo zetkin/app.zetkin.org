@@ -22,6 +22,10 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
       ? dayjs(focusDate).add(-1, 'day')
       : dayjs(focusDate);
 
+  const dayDates = range(7).map((weekday) => {
+    return focusWeekStartDay.day(weekday + 1).toDate();
+  });
+
   return (
     <Box
       columnGap={1}
@@ -37,15 +41,12 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
         </Typography>
       </Box>
       {/* Day headers across the top */}
-      {range(7).map((weekday: number) => {
-        const weekdayDate = focusWeekStartDay.day(weekday + 1);
+      {dayDates.map((weekdayDate) => {
         return (
           <DayHeader
-            key={weekday}
+            key={weekdayDate.toISOString()}
             date={weekdayDate}
-            focused={
-              new Date().toDateString() == weekdayDate.toDate().toDateString()
-            }
+            focused={new Date().toDateString() == weekdayDate.toDateString()}
           />
         );
       })}
@@ -68,10 +69,10 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
         })}
       </Box>
       {/* Day columns */}
-      {range(7).map((weekday: number) => {
+      {dayDates.map((date) => {
         return (
           <Box
-            key={weekday}
+            key={date.toISOString()}
             flexGrow={1}
             height={`${HOUR_HEIGHT * 24}em`}
             sx={{
