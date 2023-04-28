@@ -179,10 +179,11 @@ function doesMultipleLocationEventsMatch(
   event2: ZetkinEvent
 ): boolean {
   return (
-    event1.activity === event2?.activity &&
-    event1.campaign === event2?.campaign &&
+    event1.location?.id !== event2.location?.id &&
+    event1.activity.id === event2?.activity.id &&
+    event1.campaign?.id === event2?.campaign?.id &&
     event1.start_time === event2?.start_time &&
     event1.end_time === event2?.end_time &&
-    event1.organization === event2?.organization
+    event1.organization.id === event2?.organization.id
   );
 }
