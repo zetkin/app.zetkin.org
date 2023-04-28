@@ -1,6 +1,17 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  addPerson: {
+    addButton: m('Add person'),
+    addPlaceholder: m('Start typing to add participant'),
+    status: {
+      booked: m('Already booked'),
+      signedUp: m('Signed up'),
+    },
+  },
+  common: {
+    noLocation: m('No physical location'),
+  },
   eventContactCard: {
     header: m('Contact'),
     noContact: m('No Contact Assigned!'),
@@ -78,8 +89,11 @@ export default makeMessages('feat.events', {
     infoText: m(
       'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
     ),
+    move: m('Move'),
+    moveInstructions: m('Drag the pin to select location.'),
     noDescription: m('No description'),
     save: m('Save'),
+    saveLocation: m('Save location'),
     searchBox: m('Find location'),
     title: m('Location name'),
     useLocation: m('Use location'),

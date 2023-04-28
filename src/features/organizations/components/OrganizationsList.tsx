@@ -27,7 +27,7 @@ const OrganizationsList = ({ model }: UserOrganizationsProps) => {
                     <Avatar
                       src={`/api/orgs/${org.id}/avatar`}
                       style={{ margin: '15px' }}
-                    ></Avatar>
+                    />
                     <NextLink href={`/organize/${org.id}`} passHref>
                       <Link underline="hover">{org.title}</Link>
                     </NextLink>

@@ -26,10 +26,10 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
   const messages = useMessages(messageIds);
 
   const reqParticipants = eventData?.num_participants_required ?? 0;
-  const availParticipants = model.getAvailParticipants();
-  const remindedParticipants = model.getRemindedParticipants();
+  const availParticipants = model.getNumAvailParticipants();
+  const remindedParticipants = model.getNumRemindedParticipants();
 
-  const signedParticipants = model.getSignedParticipants();
+  const signedParticipants = model.getNumSignedParticipants();
   const contactPerson = eventData?.contact;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
@@ -50,10 +50,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
         status={
           <Box display="flex">
             <ZUINumberChip
-              color={model.getParticipantStatus(
-                availParticipants,
-                reqParticipants
-              )}
+              color={model.getParticipantStatus()}
               outlined={true}
               size="sm"
               value={`${availParticipants}/${reqParticipants}`}
@@ -173,7 +170,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
             display="flex"
             justifyContent="space-between"
             marginBottom={1}
-          ></Box>
+          />
         </Box>
       </ZUICard>
     </Box>

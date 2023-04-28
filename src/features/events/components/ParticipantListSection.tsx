@@ -1,33 +1,44 @@
+import EventDataModel from '../models/EventDataModel';
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
 import { FC } from 'react';
-import { Box, Button, Tooltip, Typography } from '@mui/material';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
-import theme from 'theme';
 import { useMessages } from 'core/i18n';
-import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUINumberChip from 'zui/ZUINumberChip';
+import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
-interface EventParticipansListProps {
-  data: ZetkinEvent;
+import { Box, Button, Tooltip, Typography } from '@mui/material';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import {
+  ZetkinEventParticipant,
+  ZetkinEventResponse,
+} from 'utils/types/zetkin';
+
+interface ParticipantListSectionListProps {
+  chipColor: string;
+  chipNumber: string;
+  description: string;
   model: EventDataModel;
   orgId: number;
+  rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
+  title: string;
 }
 
-const EventParticipansList: FC<EventParticipansListProps> = ({
-  data,
-  model,
+const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
+  chipColor,
+  chipNumber,
+  description,
   orgId,
+  model,
+  rows,
+  title,
 }) => {
   const messages = useMessages(messageIds);
 
   const columns: GridColDef[] = [
     {
+      align: 'center',
       disableColumnMenu: true,
       field: 'avatar',
       headerName: '',
@@ -35,6 +46,9 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       renderCell: (params) => (
         <ZUIAvatar orgId={orgId} personId={params.row.id} />
       ),
+      resizable: false,
+      sortable: false,
+      width: 20,
     },
     {
       disableColumnMenu: true,
@@ -72,7 +86,9 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
                     title={messages.eventParticipantsList.participantTooltip()}
                   >
                     <FaceOutlinedIcon
-                      onClick={() => model.setContact(params.row.id)}
+                      onClick={noPropagate(() =>
+                        model.setContact(params.row.id)
+                      )}
                       sx={{
                         display: 'none',
                         marginLeft: '8px',
@@ -87,6 +103,8 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
           );
         }
       },
+      resizable: false,
+      sortable: false,
     },
     {
       disableColumnMenu: true,
@@ -101,6 +119,8 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
           return <Typography>{params.row.phone}</Typography>;
         }
       },
+      resizable: false,
+      sortable: false,
     },
     {
       disableColumnMenu: true,
@@ -108,6 +128,8 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       flex: 1,
       headerName: messages.eventParticipantsList.columnEmail(),
       hideSortIcons: true,
+      resizable: false,
+      sortable: false,
       valueGetter: (params) => {
         if (params.row.person) {
           return '';
@@ -129,6 +151,8 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
           return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
         }
       },
+      resizable: false,
+      sortable: false,
     },
     {
       align: 'right',
@@ -162,78 +186,39 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
           );
         }
       },
+      resizable: false,
+      sortable: false,
     },
   ];
 
   return (
-    <Box>
-      {model.getSignedParticipants() > 0 && (
-        <>
-          <Box
-            sx={{
-              '& div': { backgroundColor: 'transparent' },
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'row',
-              marginBottom: '15px',
-              marginTop: '15px',
-            }}
-          >
-            <Typography mr={2} variant="h4">
-              {messages.eventParticipantsList.signUps()}
-            </Typography>
-            <ZUINumberChip
-              color={theme.palette.grey[500]}
-              outlined={true}
-              value={model.getSignedParticipants()}
-            />
-          </Box>
-          <Typography mb={2} variant="body1">
-            {messages.eventParticipantsList.descriptionSignups()}
-          </Typography>
-          <DataGridPro
-            autoHeight
-            checkboxSelection
-            columns={columns}
-            rows={model.getPendingSignUps() ?? []}
-          />
-        </>
-      )}
-
+    <>
       <Box
         sx={{
           '& div': { backgroundColor: 'transparent' },
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'row',
+          marginBottom: '15px',
           marginTop: '15px',
         }}
       >
-        <Typography mb={2} mr={2} variant="h4">
-          {messages.eventParticipantsList.bookedParticipants()}
+        <Typography mr={2} variant="h4">
+          {title}
         </Typography>
-        <ZUINumberChip
-          color={model.getParticipantStatus(
-            data.num_participants_available,
-            data.num_participants_required
-          )}
-          outlined={true}
-          value={
-            model.getAvailParticipants() + '/' + data.num_participants_required
-          }
-        />
+        <ZUINumberChip color={chipColor} outlined={true} value={chipNumber} />
       </Box>
       <Typography mb={2} variant="body1">
-        {messages.eventParticipantsList.descriptionBooked()}
+        {description}
       </Typography>
       <DataGridPro
         autoHeight
         checkboxSelection
         columns={columns}
-        rows={model.getParticipants().data ?? []}
+        rows={rows ?? []}
       />
-    </Box>
+    </>
   );
 };
 
-export default EventParticipansList;
+export default ParticipantListSection;

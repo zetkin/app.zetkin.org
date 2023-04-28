@@ -28,6 +28,10 @@ export default class LocationsModel extends ModelBase {
     });
   }
 
+  setLocationLatLng(locationId: number, lat: number, lng: number) {
+    this._repo.updateLocation(this._orgId, locationId, { lat, lng });
+  }
+
   setLocationTitle(locationId: number, title: string) {
     this._repo.updateLocation(this._orgId, locationId, { title });
   }
