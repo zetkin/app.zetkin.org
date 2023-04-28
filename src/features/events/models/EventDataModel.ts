@@ -1,10 +1,14 @@
 import Environment from 'core/env/Environment';
-import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import EventsRepo, { ZetkinEventPatchBody } from '../repo/EventsRepo';
+import EventsRepo, {
+  ZetkinEventPatchBody,
+  ZetkinEventPostBody,
+} from '../repo/EventsRepo';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
 import {
   ZetkinEvent,
   ZetkinEventParticipant,
+  ZetkinEventResponse,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -18,15 +22,34 @@ export enum EventState {
 }
 
 export default class EventDataModel extends ModelBase {
+  private _env: Environment;
   private _eventId: number;
   private _orgId: number;
   private _repo: EventsRepo;
 
+  addParticipant(personId: number) {
+    this._repo.addParticipant(this._orgId, this._eventId, personId);
+  }
+
   constructor(env: Environment, orgId: number, eventId: number) {
     super();
+    this._env = env;
     this._orgId = orgId;
     this._eventId = eventId;
     this._repo = new EventsRepo(env);
+  }
+  createEvent(eventBody: ZetkinEventPostBody): IFuture<ZetkinEvent> {
+    const promise = this._repo
+      .createEvent(eventBody, this._orgId)
+      .then((event: ZetkinEvent) => {
+        this._env.router.push(
+          `/organize/${this._orgId}/projects/${event.campaign!.id}/events/${
+            event.id
+          }`
+        );
+        return event;
+      });
+    return new PromiseFuture(promise);
   }
 
   getData(): IFuture<ZetkinEvent> {
@@ -35,6 +58,14 @@ export default class EventDataModel extends ModelBase {
 
   getParticipants(): IFuture<ZetkinEventParticipant[]> {
     return this._repo.getEventParticipants(this._orgId, this._eventId);
+  }
+
+  getRespondents(): IFuture<ZetkinEventResponse[]> {
+    return this._repo.getEventRespondents(this._orgId, this._eventId);
+  }
+
+  sendReminders() {
+    this._repo.sendReminders(this._orgId, this._eventId);
   }
 
   setLocation(location: ZetkinLocation) {
@@ -51,6 +82,12 @@ export default class EventDataModel extends ModelBase {
 
   setTitle(title: string) {
     this._repo.updateEvent(this._orgId, this._eventId, { title });
+  }
+
+  setType(id: number) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      activity_id: id,
+    });
   }
 
   get state(): EventState {

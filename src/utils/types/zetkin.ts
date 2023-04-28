@@ -78,7 +78,7 @@ export interface ZetkinEvent {
     lat: number;
     lng: number;
     title: string;
-  };
+  } | null;
   num_participants_required: number;
   num_participants_available: number;
   start_time: string;
@@ -355,6 +355,10 @@ export interface ZetkinActivity {
   id: number;
   title: string;
   info_text: string | null;
+}
+
+export interface ZetkinEventTypePostBody {
+  title: string;
 }
 
 export interface ZetkinTagGroup {

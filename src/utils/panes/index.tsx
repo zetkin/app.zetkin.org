@@ -10,6 +10,7 @@ import {
 } from 'react';
 
 import Pane from './Pane';
+import useResizablePane from 'utils/panes/useResizablePane';
 
 type PaneDef = {
   render: () => ReactNode;
@@ -32,6 +33,7 @@ const PaneContext = createContext<PaneContextData>({
 
 type PaneProviderProps = {
   children: ReactNode;
+  fixedHeight: boolean;
 };
 
 const useStyles = makeStyles({
@@ -40,18 +42,24 @@ const useStyles = makeStyles({
     position: 'absolute',
     right: 16,
     top: 16,
-    zIndex: 10,
+    zIndex: 9999,
   },
   paper: {
     height: '100%',
   },
 });
 
-export const PaneProvider: FC<PaneProviderProps> = ({ children }) => {
+export const PaneProvider: FC<PaneProviderProps> = ({
+  children,
+  fixedHeight,
+}) => {
   const paneRef = useRef<PaneDef | null>(null);
   const [open, setOpen] = useState(false);
   const styles = useStyles();
   const [key, setKey] = useState(0);
+
+  const { paneContainerRef, slideRef, updatePaneHeight } =
+    useResizablePane(fixedHeight);
 
   return (
     <PaneContext.Provider
@@ -64,33 +72,47 @@ export const PaneProvider: FC<PaneProviderProps> = ({ children }) => {
         },
       }}
     >
-      <Slide
-        key={key}
-        className={styles.container}
-        direction="left"
-        in={!!paneRef.current && open}
+      <Box
+        ref={paneContainerRef}
+        style={{
+          height: fixedHeight ? '100%' : 'auto',
+        }}
       >
-        <Box>
-          <Paper
-            className={styles.paper}
-            elevation={2}
-            sx={{
-              width: paneRef.current?.width ?? 200,
-            }}
-          >
-            {paneRef.current && (
-              <Pane
-                onClose={() => {
-                  setOpen(false);
-                }}
-              >
-                {paneRef.current.render()}
-              </Pane>
-            )}
-          </Paper>
-        </Box>
-      </Slide>
-      {children}
+        <Slide
+          key={key}
+          ref={slideRef}
+          className={styles.container}
+          direction="left"
+          in={!!paneRef.current && open}
+          onEnter={() => {
+            updatePaneHeight();
+          }}
+          onEntered={() => {
+            updatePaneHeight();
+          }}
+        >
+          <Box>
+            <Paper
+              className={styles.paper}
+              elevation={2}
+              sx={{
+                width: paneRef.current?.width ?? 200,
+              }}
+            >
+              {paneRef.current && (
+                <Pane
+                  onClose={() => {
+                    setOpen(false);
+                  }}
+                >
+                  {paneRef.current.render()}
+                </Pane>
+              )}
+            </Paper>
+          </Box>
+        </Slide>
+        {children}
+      </Box>
     </PaneContext.Provider>
   );
 };
