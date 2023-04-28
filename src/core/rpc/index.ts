@@ -3,6 +3,7 @@ import { RPCRouter } from './router';
 import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
 import { createNewViewRouteDef } from 'features/views/rpc/createNew/server';
 import { deleteFolderRouteDef } from 'features/views/rpc/deleteFolder';
+import { getEventStatsDef } from 'features/events/rpc/getEventStats';
 import { getOrganizerActionViewRouteDef } from 'features/views/rpc/getOrganizerActionView/server';
 import { getSurveyStatsDef } from 'features/surveys/rpc/getSurveyStats';
 import { getTaskStatsRouteDef } from 'features/tasks/rpc/getTaskStats';
@@ -16,6 +17,7 @@ export function createRPCRouter() {
   rpcRouter.register(getSurveyStatsDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);
+  rpcRouter.register(getEventStatsDef);
 
   return rpcRouter;
 }

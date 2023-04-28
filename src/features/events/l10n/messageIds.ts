@@ -1,6 +1,17 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  addPerson: {
+    addButton: m('Add person'),
+    addPlaceholder: m('Start typing to add participant'),
+    status: {
+      booked: m('Already booked'),
+      signedUp: m('Signed up'),
+    },
+  },
+  common: {
+    noLocation: m('No physical location'),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
