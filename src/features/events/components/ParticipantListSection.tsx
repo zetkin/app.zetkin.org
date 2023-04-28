@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import ZUINumberChip from './ZUINumberChip';
+import ZUINumberChip from '../../../zui/ZUINumberChip';
 
 import { Box, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
@@ -8,7 +8,7 @@ import {
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
 
-interface ZUIEventParticipantsListProps {
+interface ParticipantListSectionListProps {
   chipColor: string;
   chipNumber: string;
   columns: GridColDef[];
@@ -17,7 +17,7 @@ interface ZUIEventParticipantsListProps {
   title: string;
 }
 
-const ZUIEventParticipantsList: FC<ZUIEventParticipantsListProps> = ({
+const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   chipColor,
   chipNumber,
   columns,
@@ -55,4 +55,4 @@ const ZUIEventParticipantsList: FC<ZUIEventParticipantsListProps> = ({
   );
 };
 
-export default ZUIEventParticipantsList;
+export default ParticipantListSection;

@@ -1,10 +1,10 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 
-import AddPersonButton from 'features/events/components/EventParticipantsTab/AddPersonButton';
+import AddPersonButton from 'features/events/components/AddPersonButton';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
-import EventParticipantsList from 'features/events/components/EventParticipansTab/EventParticipantsList';
+import EventParticipantsList from 'features/events/components/EventParticipantsList';
 import { PageWithLayout } from 'utils/types';
 import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
 import { scaffold } from 'utils/next';

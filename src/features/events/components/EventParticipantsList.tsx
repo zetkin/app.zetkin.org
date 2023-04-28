@@ -2,14 +2,15 @@ import { FC } from 'react';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { Box, Button, Typography } from '@mui/material';
 
+import AddPersonButton from './AddPersonButton';
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
+import ParticipantListSection from 'features/events/components/ParticipantListSection';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUIEventParticipantsList from 'zui/ZUIEventParticipantLists';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 interface EventParticipantsListProps {
@@ -145,28 +146,35 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
   ];
 
   return (
-    <Box>
-      {model.getNumSignedParticipants() > 0 && (
-        <ZUIEventParticipantsList
-          chipColor={theme.palette.grey[500]}
-          chipNumber={model.getNumSignedParticipants().toString()}
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+        <AddPersonButton model={model} />
+      </Box>
+      <Box>
+        {model.getNumSignedParticipants() > 0 && (
+          <ParticipantListSection
+            chipColor={theme.palette.grey[500]}
+            chipNumber={model.getNumSignedParticipants().toString()}
+            columns={columns}
+            description={messages.eventParticipantsList.descriptionSignups()}
+            rows={model.getPendingSignUps() ?? []}
+            title={messages.eventParticipantsList.signUps()}
+          />
+        )}
+        <ParticipantListSection
+          chipColor={model.getParticipantStatus()}
+          chipNumber={
+            model.getNumAvailParticipants() +
+            '/' +
+            data.num_participants_required
+          }
           columns={columns}
-          description={messages.eventParticipantsList.descriptionSignups()}
-          rows={model.getPendingSignUps() ?? []}
-          title={messages.eventParticipantsList.signUps()}
+          description={messages.eventParticipantsList.descriptionBooked()}
+          rows={model.getParticipants().data ?? []}
+          title={messages.eventParticipantsList.bookedParticipants()}
         />
-      )}
-      <ZUIEventParticipantsList
-        chipColor={model.getParticipantStatus()}
-        chipNumber={
-          model.getNumAvailParticipants() + '/' + data.num_participants_required
-        }
-        columns={columns}
-        description={messages.eventParticipantsList.descriptionBooked()}
-        rows={model.getParticipants().data ?? []}
-        title={messages.eventParticipantsList.bookedParticipants()}
-      />
-    </Box>
+      </Box>
+    </>
   );
 };
 
