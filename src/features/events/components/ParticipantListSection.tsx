@@ -1,7 +1,13 @@
+import EventDataModel from '../models/EventDataModel';
 import { FC } from 'react';
+import messageIds from 'features/events/l10n/messageIds';
+import noPropagate from 'utils/noPropagate';
+import { useMessages } from 'core/i18n';
+import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
   ZetkinEventParticipant,
@@ -11,8 +17,9 @@ import {
 interface ParticipantListSectionListProps {
   chipColor: string;
   chipNumber: string;
-  columns: GridColDef[];
   description: string;
+  model: EventDataModel;
+  orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
   title: string;
 }
@@ -20,11 +27,133 @@ interface ParticipantListSectionListProps {
 const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   chipColor,
   chipNumber,
-  columns,
   description,
+  orgId,
+  model,
   rows,
   title,
 }) => {
+  const messages = useMessages(messageIds);
+
+  const columns: GridColDef[] = [
+    {
+      align: 'center',
+      disableColumnMenu: true,
+      field: 'avatar',
+      headerName: '',
+      hideSortIcons: true,
+      renderCell: (params) => (
+        <ZUIAvatar orgId={orgId} personId={params.row.id} />
+      ),
+      resizable: false,
+      sortable: false,
+      width: 20,
+    },
+    {
+      disableColumnMenu: true,
+      field: 'name',
+      flex: 1,
+      headerName: messages.eventParticipantsList.columnName(),
+      hideSortIcons: true,
+      renderCell: (params) => {
+        if (params.row.person) {
+          return <Typography>{params.row.person.name}</Typography>;
+        } else {
+          return (
+            <Typography>
+              {params.row.first_name + ' ' + params.row.last_name}
+            </Typography>
+          );
+        }
+      },
+      resizable: false,
+      sortable: false,
+    },
+    {
+      disableColumnMenu: true,
+      field: 'phone',
+      flex: 1,
+      headerName: messages.eventParticipantsList.columnPhone(),
+      hideSortIcons: true,
+      renderCell: (params) => {
+        if (params.row.person) {
+          return <Typography>{''}</Typography>;
+        } else {
+          return <Typography>{params.row.phone}</Typography>;
+        }
+      },
+      resizable: false,
+      sortable: false,
+    },
+    {
+      disableColumnMenu: true,
+      field: 'email',
+      flex: 1,
+      headerName: messages.eventParticipantsList.columnEmail(),
+      hideSortIcons: true,
+      resizable: false,
+      sortable: false,
+      valueGetter: (params) => {
+        if (params.row.person) {
+          return '';
+        } else {
+          return `${params.row.email}`;
+        }
+      },
+    },
+    {
+      disableColumnMenu: true,
+      field: 'notified',
+      flex: 1,
+      headerName: messages.eventParticipantsList.columnNotified(),
+      hideSortIcons: true,
+      renderCell: (params) => {
+        if (params.row.person) {
+          return <ZUIRelativeTime datetime={params.row.response_date} />;
+        } else {
+          return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
+        }
+      },
+      resizable: false,
+      sortable: false,
+    },
+    {
+      align: 'right',
+      disableColumnMenu: true,
+      field: 'cancel',
+      flex: 1,
+      headerName: '',
+      hideSortIcons: true,
+      renderCell: (params) => {
+        if (params.row.person) {
+          return (
+            <>
+              <Button sx={{ marginRight: '10px' }} variant="text">
+                {messages.eventParticipantsList.buttonCancel()}
+              </Button>
+              <Button
+                onClick={noPropagate(() => {
+                  model.addParticipant(params.row.id);
+                })}
+                variant="outlined"
+              >
+                {messages.eventParticipantsList.buttonBook()}
+              </Button>
+            </>
+          );
+        } else {
+          return (
+            <Button variant="text">
+              {messages.eventParticipantsList.buttonCancel()}
+            </Button>
+          );
+        }
+      },
+      resizable: false,
+      sortable: false,
+    },
+  ];
+
   return (
     <>
       <Box
