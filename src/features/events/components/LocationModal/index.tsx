@@ -13,7 +13,7 @@ import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import MoveLocationCard from './MoveLocationCard';
 import { useMessages } from 'core/i18n';
-import { ZetkinLocation } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
   cardIsFullHeight: boolean;
@@ -40,6 +40,8 @@ export type PendingLocation = {
 };
 
 interface LocationModalProps {
+  currentEventId: number;
+  events: ZetkinEvent[];
   locations: ZetkinLocation[];
   model: LocationsModel;
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
@@ -51,6 +53,8 @@ interface LocationModalProps {
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
+  currentEventId,
+  events,
   locations,
   model,
   onCreateLocation,
@@ -85,8 +89,9 @@ const LocationModal: FC<LocationModalProps> = ({
 
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
-      <Box padding={2}>
+      <Box border={1} padding={2}>
         <Map
+          currentEventId={currentEventId}
           inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
@@ -107,6 +112,7 @@ const LocationModal: FC<LocationModalProps> = ({
             setNewLatLng({ lat, lng })
           }
           pendingLocation={pendingLocation}
+          relatedEvents={events}
           searchString={searchString}
           selectedLocation={selectedLocation}
         />
@@ -154,6 +160,11 @@ const LocationModal: FC<LocationModalProps> = ({
                 onSelectLocation(selectedLocation);
                 onMapClose();
               }}
+              relatedEvents={events.filter(
+                (event) =>
+                  event.location?.id === selectedLocation.id &&
+                  event.id !== currentEventId
+              )}
             />
           )}
           {pendingLocation && !selectedLocation && (
