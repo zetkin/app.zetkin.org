@@ -162,7 +162,7 @@ const LocationModal: FC<LocationModalProps> = ({
               }}
               relatedEvents={events.filter(
                 (event) =>
-                  event.location.id === selectedLocation.id &&
+                  event.location?.id === selectedLocation.id &&
                   event.id !== currentEventId
               )}
             />

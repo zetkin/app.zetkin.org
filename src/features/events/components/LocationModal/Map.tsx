@@ -112,7 +112,7 @@ const Map: FC<MapProps> = ({
                 const isSelectedMarker = selectedLocation?.id == location.id;
                 const noOfRelevantEvents = relatedEvents.filter(
                   (event) =>
-                    event.location.id === location.id &&
+                    event.location?.id === location.id &&
                     event.id !== currentEventId
                 ).length;
                 return (
