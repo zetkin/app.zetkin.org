@@ -5,8 +5,16 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Typography } from '@mui/material';
 
 import DayHeader from './DayHeader';
+import { EnvContext } from 'core/env/EnvContext';
+import { eventCreated } from 'features/events/store';
+import EventDayLane from './EventDayLane';
 import range from 'utils/range';
 import theme from 'theme';
+import { useContext } from 'react';
+import { useRouter } from 'next/router';
+import { useStore } from 'react-redux';
+import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
 
 dayjs.extend(isoWeek);
 
@@ -17,6 +25,7 @@ export interface CalendarWeekViewProps {
 }
 
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
+  const createAndNavigate = useCreateEvent();
   const focusWeekStartDay =
     dayjs(focusDate).isoWeekday() == 7
       ? dayjs(focusDate).add(-1, 'day')
@@ -79,7 +88,30 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
               backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
               marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
             }}
-          ></Box>
+          >
+            <EventDayLane
+              onCreate={(startTime, endTime) => {
+                const startDate = new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate(),
+                  startTime[0],
+                  startTime[1]
+                );
+                const endDate = new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate(),
+                  endTime[0],
+                  endTime[1]
+                );
+
+                createAndNavigate(startDate, endDate);
+              }}
+            >
+              {/* TODO: Put events here */}
+            </EventDayLane>
+          </Box>
         );
       })}
     </Box>
@@ -87,3 +119,34 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
 };
 
 export default CalendarWeekView;
+
+function useCreateEvent() {
+  const router = useRouter();
+  const { orgId } = router.query;
+  const env = useContext(EnvContext);
+  const store = useStore();
+
+  async function createAndNavigate(startDate: Date, endDate: Date) {
+    if (env) {
+      const event = await env.apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
+        // TODO: Don't hardcode campaign ID
+        `/api/orgs/${orgId}/campaigns/1/actions`,
+        {
+          // TODO: Use null when possible for activity, campaign and location
+          activity_id: 1,
+          end_time: endDate.toISOString(),
+          location_id: 1,
+          start_time: startDate.toISOString(),
+        }
+      );
+
+      store.dispatch(eventCreated(event));
+
+      const campaignId = event.campaign?.id ?? 'standalone';
+      const url = `/organize/${orgId}/projects/${campaignId}/events/${event.id}`;
+      router.push(url);
+    }
+  }
+
+  return createAndNavigate;
+}
