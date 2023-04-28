@@ -46,7 +46,7 @@ interface LocationModalProps {
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
   open: boolean;
-  locationId?: number;
+  locationId?: number | null;
 }
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
@@ -122,6 +122,19 @@ const LocationModal: FC<LocationModalProps> = ({
                 }
                 setSelectedLocationId(location.id);
                 setSearchString('');
+              }}
+              onClickGeolocate={() => {
+                if ('geolocation' in navigator) {
+                  navigator.geolocation.getCurrentPosition(
+                    // Success getting location
+                    (position) => {
+                      setPendingLocation({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                      });
+                    }
+                  );
+                }
               }}
               onInputChange={(value) => setSearchString(value || '')}
               onTextFieldChange={(value) => setSearchString(value)}

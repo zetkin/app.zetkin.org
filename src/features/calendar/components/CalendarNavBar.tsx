@@ -30,7 +30,7 @@ const CalendarNavBar = ({
 }: CalendarNavBarProps) => {
   return (
     <Box display="flex" justifyContent="space-between">
-      <Box>
+      <Box alignItems="center" display="flex" gap="4px">
         <Button
           color="primary"
           onClick={() => onChangeFocusDate(new Date())}
