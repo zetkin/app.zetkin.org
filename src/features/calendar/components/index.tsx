@@ -20,27 +20,25 @@ const Calendar = () => {
   );
 
   return (
-    <Box display="flex" flexDirection="column" height={1} padding={1}>
-      <Box>
-        <CalendarNavBar
-          focusDate={focusDate}
-          onChangeFocusDate={(date) => {
-            setFocusDate(date);
-          }}
-          onChangeTimeScale={(timeScale) => {
-            setSelectedTimeScale(timeScale);
-          }}
-          onStepBackward={() => {
-            setFocusDate(
-              dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
-            );
-          }}
-          onStepForward={() => {
-            setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
-          }}
-          timeScale={selectedTimeScale}
-        />
-      </Box>
+    <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
+      <CalendarNavBar
+        focusDate={focusDate}
+        onChangeFocusDate={(date) => {
+          setFocusDate(date);
+        }}
+        onChangeTimeScale={(timeScale) => {
+          setSelectedTimeScale(timeScale);
+        }}
+        onStepBackward={() => {
+          setFocusDate(
+            dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
+          );
+        }}
+        onStepForward={() => {
+          setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
+        }}
+        timeScale={selectedTimeScale}
+      />
 
       <Box
         display="flex"
