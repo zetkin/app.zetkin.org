@@ -88,11 +88,14 @@ const CampaignActionButtons: React.FunctionComponent<
   const handleCreateEvent = () => {
     const defaultStart = new Date();
     defaultStart.setDate(defaultStart.getDate() + 1);
+    defaultStart.setMinutes(0);
+    defaultStart.setSeconds(0);
+    defaultStart.setMilliseconds(0);
 
     const defaultEnd = new Date(defaultStart.getTime() + 60 * 60 * 1000);
 
     eventModel.createEvent(
-      //TO DO:give null to ids when API supports it.
+      //TODO:give null to activity, location ids when API supports it.
       {
         activity_id: 1,
         campaign_id: campaign.id,
