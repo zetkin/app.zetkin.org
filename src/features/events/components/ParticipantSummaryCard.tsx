@@ -48,7 +48,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
       <ZUICard
         header={messages.participantSummaryCard.header()}
         status={
-          <Box display="flex">
+          <Box display="flex" mb={4}>
             <ZUINumberChip
               color={model.getParticipantStatus()}
               outlined={true}

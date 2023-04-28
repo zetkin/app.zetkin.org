@@ -33,6 +33,7 @@ const EventContactCard: FC<EventContactCardProps> = ({
 
   return (
     <Box
+      mb={2}
       sx={{
         '& div': {
           flexDirection: 'column',
@@ -79,6 +80,8 @@ const EventContactCard: FC<EventContactCardProps> = ({
               <Box sx={{ display: 'grid' }}>
                 <Box
                   m={1}
+                  mb={3}
+                  mt={3}
                   sx={{
                     '& input': {
                       alignSelf: 'self-start',
@@ -111,6 +114,7 @@ const EventContactCard: FC<EventContactCardProps> = ({
                 warningText: messages.eventContactCard.warningText(),
               });
             }}
+            size="small"
             variant="text"
           >
             <CloseIcon />
