@@ -1,6 +1,17 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  addPerson: {
+    addButton: m('Add person'),
+    addPlaceholder: m('Start typing to add participant'),
+    status: {
+      booked: m('Already booked'),
+      signedUp: m('Signed up'),
+    },
+  },
+  common: {
+    noLocation: m('No physical location'),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
@@ -23,6 +34,22 @@ export default makeMessages('feat.events', {
     pending: m('Pending sign-ups'),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
+  },
+  eventParticipantsList: {
+    bookedParticipants: m('Booked Participants'),
+    buttonBook: m('Book'),
+    buttonCancel: m('Cancel'),
+    columnEmail: m('Email'),
+    columnName: m('Name'),
+    columnNotified: m('Notified'),
+    columnPhone: m('Phone'),
+    descriptionBooked: m(
+      'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
+    ),
+    descriptionSignups: m(
+      'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
+    ),
+    signUps: m('Sign-ups'),
   },
   form: {
     activity: m('Activity'),
@@ -64,6 +91,15 @@ export default makeMessages('feat.events', {
     title: m('Location name'),
     useLocation: m('Use location'),
   },
+  participantSummaryCard: {
+    bookButton: m('Book all'),
+    booked: m('Notifications'),
+    header: m('Participants'),
+    pending: m('Pending sign-ups'),
+    remindButton: m('Remind all'),
+    reqParticipantsHelperText: m('The minimum number of participants required'),
+    reqParticipantsLabel: m('Required participants'),
+  },
   state: {
     cancelled: m('Cancelled'),
     draft: m('Draft'),
@@ -79,5 +115,12 @@ export default makeMessages('feat.events', {
   tabs: {
     overview: m('Overview'),
     participants: m('Participants'),
+  },
+  tooltipContent: m('Untitled events will display type as title'),
+  type: {
+    createType: m<{ type: string }>('Create "{type}"'),
+    tooltip: m('Click to change type'),
+    uncategorized: m('Uncategorized'),
+    untitled: m('Untitled Event'),
   },
 });

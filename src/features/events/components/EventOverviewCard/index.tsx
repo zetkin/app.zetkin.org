@@ -57,7 +57,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   const [editable, setEditable] = useState(false);
   const [link, setLink] = useState(data.url);
   const [infoText, setInfoText] = useState(data.info_text);
-  const [locationId, setLocationId] = useState<number>(data.location.id);
+  const [locationId, setLocationId] = useState<number | null>(
+    data.location?.id ?? null
+  );
 
   const [startDate, setStartDate] = useState<Dayjs>(
     dayjs(removeOffset(data.start_time))
@@ -95,9 +97,13 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       },
     });
 
-  const options: (ZetkinLocation | 'CREATE_NEW_LOCATION')[] = locations
-    ? [...locations, 'CREATE_NEW_LOCATION']
-    : ['CREATE_NEW_LOCATION'];
+  const options: (
+    | ZetkinLocation
+    | 'CREATE_NEW_LOCATION'
+    | 'NO_PHYSICAL_LOCATION'
+  )[] = locations
+    ? [...locations, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
+    : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
   const events = eventsModel.getParallelEvents(
     data.start_time,
@@ -180,7 +186,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     }}
                     value={dayjs(startDate).format()}
                   />
-
                   <ZUIPreviewableInput
                     {...previewableProps}
                     renderInput={(props) => {
@@ -226,7 +231,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     value={dayjs(startDate).format()}
                   />
                 </Grid>
-
                 <Grid id={'wrap'} ml={1} sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
                     {...previewableProps}
@@ -320,14 +324,13 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 .endDate()
                                 .toUpperCase()}
                             </Typography>
-                            <Box mb={3}></Box>
+                            <Box mb={3} />
                           </Box>
                         );
                       }
                     }}
                     value={dayjs(endDate).format()}
                   />
-
                   <ZUIPreviewableInput
                     {...previewableProps}
                     renderInput={(props) => {
@@ -377,13 +380,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                   />
                 </Grid>
               </Grid>
-
               <Divider
                 flexItem
                 orientation="vertical"
                 sx={{ marginBottom: '10px', marginLeft: '10px' }}
               />
-
               <Grid sx={{ marginLeft: '10px' }} xs>
                 <Grid item sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
@@ -396,12 +397,18 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             fullWidth
                             getOptionLabel={(option) =>
                               option === 'CREATE_NEW_LOCATION'
-                                ? messages.locationModal.createLocation()
+                                ? messages.eventOverviewCard.createLocation()
+                                : option === 'NO_PHYSICAL_LOCATION'
+                                ? messages.eventOverviewCard.noLocation()
                                 : option.title
                             }
                             onChange={(ev, option) => {
                               if (option === 'CREATE_NEW_LOCATION') {
                                 setLocationModalOpen(true);
+                                return;
+                              }
+                              if (option === 'NO_PHYSICAL_LOCATION') {
+                                setLocationId(null);
                                 return;
                               }
                               const location = locations?.find(
@@ -429,15 +436,24 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   <Add sx={{ marginRight: 2 }} />
                                   {messages.eventOverviewCard.createLocation()}
                                 </li>
+                              ) : option === 'NO_PHYSICAL_LOCATION' ? (
+                                <li {...params}>
+                                  {messages.eventOverviewCard.noLocation()}
+                                </li>
                               ) : (
                                 <li {...params}>{option.title}</li>
                               )
                             }
-                            value={options?.find(
-                              (location) =>
-                                location !== 'CREATE_NEW_LOCATION' &&
-                                location.id === locationId
-                            )}
+                            value={
+                              locationId === null
+                                ? 'NO_PHYSICAL_LOCATION'
+                                : options?.find(
+                                    (location) =>
+                                      location !== 'CREATE_NEW_LOCATION' &&
+                                      location !== 'NO_PHYSICAL_LOCATION' &&
+                                      location.id === locationId
+                                  )
+                            }
                           />
                           <MapIcon
                             color="secondary"
@@ -514,10 +530,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         );
                       }
                     }}
-                    value={locationId}
+                    value={locationId ?? ''}
                   />
                 </Grid>
-
                 <Grid item mt={2}>
                   <ZUIPreviewableInput
                     {...previewableProps}
