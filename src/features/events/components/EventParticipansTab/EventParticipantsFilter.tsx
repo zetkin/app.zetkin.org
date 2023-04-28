@@ -1,4 +1,4 @@
-import { IconButton, TextField, useAutocomplete } from '@mui/material';
+import { TextField } from '@mui/material';
 import Fuse from 'fuse.js';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -9,40 +9,37 @@ interface EventParticipansFilterProps {
 }
 const EventParticipantsFilter = ({ model }: EventParticipansFilterProps) => {
   const participantsList = model.getParticipants().data ?? [];
-  const participants = new Fuse(participantsList, {
-    // findAllMatches: true,
-    shouldSort: true,
-    keys: [
-      { name: 'first_name', weight: 1.0 },
-      { name: 'last_name', weight: 0.8 },
-      'phone',
-      'email',
-    ],
-    // keys: ['first_name', 'last_name', 'phone', 'email'],
-    // threshold: 0.4,
-  });
-  //   const { getInputProps, getListboxProps, getRootProps, groupedOptions } =
-  //     useAutocomplete({
-  //       filterOptions: (options, { inputValue }) => {
-  //         const searchedParticipants = participants.search(inputValue);
-  //         console.log(searchedParticipants, ' resu');
-  //         return searchedParticipants;
-  //       },
-  //       //   getOptionLabel: (option) => option.title,
-  //       //   inputValue: inputValue,
-  //       open: true,
-  //       options: [model.getParticipants()],
-  //     });
+  const newParticipantsList = participantsList.map((item) => ({
+    ...item,
+    name: `${item.first_name} ${item.last_name}`,
+  }));
 
-  //   const tfProps = getInputProps();
+  const participantsFuseList = new Fuse(newParticipantsList, {
+    includeScore: true,
+    keys: ['first_name', 'last_name', 'phone', 'email'],
+    threshold: 0.4,
+  });
 
   const filterInput = (input: string) => {
-    const searchedParticipants = participants.search(input);
-    console.info(`=-----------------------`);
-    searchedParticipants.forEach((item) =>
-      console.info(`${item.item.first_name}, ${item.item.last_name}`)
-    );
+    const token = input.split(/\s+/);
+    return participantsFuseList
+      .search({
+        $and: token.map((searchToken: string) => {
+          const orFields: Fuse.Expression[] = [
+            { first_name: searchToken },
+            { last_name: searchToken },
+            { email: searchToken },
+            { phone: searchToken },
+          ];
+
+          return {
+            $or: orFields,
+          };
+        }),
+      })
+      .map((fuseResult) => fuseResult.item);
   };
+
   return (
     <TextField
       autoFocus={true}
