@@ -10,13 +10,14 @@ export interface DayHeaderProps {
 
 const DayHeader = ({ date, focused }: DayHeaderProps) => {
   return (
-    <Box display="flex" justifyContent="space-between" width="100%">
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="flex-start"
-        width="2em"
-      >
+    <Box
+      display="grid"
+      gridTemplateColumns="repeat(3, 1fr)"
+      gridTemplateRows="1fr"
+      width="100%"
+    >
+      {/* Day string */}
+      <Box alignItems="center" display="flex" justifyContent="flex-start">
         <Typography color={theme.palette.grey[500]} variant="subtitle2">
           {
             // Localized short-format weeekday
@@ -24,16 +25,18 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
           }
         </Typography>
       </Box>
-      <Box>
+      {/* Day number */}
+      <Box alignItems="center" display="flex" justifyContent={'space-around'}>
+        {/* Circle */}
         <Box
+          alignItems="center"
           display="flex"
+          justifyContent="center"
           sx={{
-            alignItems: 'center',
             backgroundColor: focused ? theme.palette.primary.main : null,
             borderRadius: '50%',
             color: focused ? 'white' : 'inherit',
             height: '2.1em',
-            justifyContent: 'center',
             width: '2.1em',
           }}
         >
@@ -42,7 +45,8 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
           </Typography>
         </Box>
       </Box>
-      <Box width="2em"></Box>
+      {/* Empty */}
+      <Box />
     </Box>
   );
 };
