@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-import Calendar from 'features/calendar/oldComponents';
+import Calendar from 'features/calendar/components';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
@@ -92,19 +92,10 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
   campId,
 }) => {
   const messages = useMessages(messageIds);
-  const eventsQuery = useQuery(
-    ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId, campId)
-  );
   const campaignQuery = useQuery(
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
-  const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
-
-  const events = eventsQuery.data || [];
-  const tasks = tasksQuery.data || [];
-  const campaigns = campaignQuery.data ? [campaignQuery.data] : [];
 
   return (
     <>
@@ -113,12 +104,7 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
           {`${campaignQuery.data?.title} - ${messages.layout.calendar()}`}
         </title>
       </Head>
-      <Calendar
-        baseHref={`/organize/${orgId}/projects/${campId}/calendar`}
-        campaigns={campaigns}
-        events={events}
-        tasks={tasks}
-      />
+      <Calendar />
     </>
   );
 };
