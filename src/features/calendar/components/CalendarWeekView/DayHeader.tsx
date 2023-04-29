@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 
 import theme from 'theme';
@@ -19,10 +20,7 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
       {/* Day string */}
       <Box alignItems="center" display="flex" justifyContent="flex-start">
         <Typography color={theme.palette.grey[500]} variant="subtitle2">
-          {
-            // Localized short-format weeekday
-            date.toDate().toLocaleDateString(undefined, { weekday: 'short' })
-          }
+          <FormattedDate value={date.toDate()} weekday="short" />
         </Typography>
       </Box>
       {/* Day number */}
