@@ -11,6 +11,7 @@ import theme from 'theme';
 dayjs.extend(isoWeek);
 
 const HOUR_HEIGHT = 5;
+const HOUR_COLUMN_WIDTH = '50px';
 
 export interface CalendarWeekViewProps {
   focusDate: Date;
@@ -28,7 +29,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
       <Box
         columnGap={1}
         display="grid"
-        gridTemplateColumns={'50px repeat(7, 1fr)'}
+        gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
         gridTemplateRows={'1fr'}
       >
         {/* Empty */}
@@ -50,7 +51,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
       <Box
         columnGap={1}
         display="grid"
-        gridTemplateColumns={'50px repeat(7, 1fr)'}
+        gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
         gridTemplateRows={'1fr'}
         height="100%"
         marginTop={2}
