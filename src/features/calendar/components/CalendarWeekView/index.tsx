@@ -23,65 +23,77 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
       : dayjs(focusDate);
 
   return (
-    <Box
-      columnGap={1}
-      display="grid"
-      gridTemplateColumns={'auto repeat(7, 1fr)'}
-      gridTemplateRows={'auto 1fr'}
-      rowGap={1}
-    >
-      {/* Week Number */}
-      <Box alignItems="center" display="flex">
-        <Typography color={theme.palette.grey[500]} variant="caption">
-          {focusWeekStartDay.isoWeek()}
-        </Typography>
-      </Box>
-      {/* Day headers across the top */}
-      {range(7).map((weekday: number) => {
-        const weekdayDate = focusWeekStartDay.day(weekday + 1);
-        return (
-          <DayHeader
-            key={weekday}
-            date={weekdayDate}
-            focused={
-              new Date().toDateString() == weekdayDate.toDate().toDateString()
-            }
-          />
-        );
-      })}
-      {/* Hours column */}
-      <Box>
-        {range(24).map((hour: number) => {
-          const time = dayjs().set('hour', hour).set('minute', 0);
+    <>
+      {/* Headers across the top */}
+      <Box
+        columnGap={1}
+        display="grid"
+        gridTemplateColumns={'50px repeat(7, 1fr)'}
+        gridTemplateRows={'1fr'}
+      >
+        {/* Empty */}
+        <Box />
+        {range(7).map((weekday: number) => {
+          const weekdayDate = focusWeekStartDay.day(weekday + 1);
           return (
-            <Box key={hour} display="flex" height={`${HOUR_HEIGHT}em`}>
-              <Typography color={theme.palette.grey[500]} variant="caption">
-                <FormattedTime
-                  hour="numeric"
-                  hour12={false}
-                  minute="numeric"
-                  value={time.toDate()}
-                />
-              </Typography>
-            </Box>
+            <DayHeader
+              key={weekday}
+              date={weekdayDate}
+              focused={
+                new Date().toDateString() == weekdayDate.toDate().toDateString()
+              }
+            />
           );
         })}
       </Box>
-      {/* Day columns */}
-      {range(7).map((weekday: number) => {
-        return (
-          <Box
-            key={weekday}
-            flexGrow={1}
-            height={`${HOUR_HEIGHT * 24}em`}
-            sx={{
-              backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
-              marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
-            }}
-          ></Box>
-        );
-      })}
-    </Box>
+      {/* Week grid */}
+      <Box
+        columnGap={1}
+        display="grid"
+        gridTemplateColumns={'50px repeat(7, 1fr)'}
+        gridTemplateRows={'1fr'}
+        height="100%"
+        marginTop={2}
+        overflow="scroll"
+      >
+        {/* Hours column */}
+        <Box>
+          {range(24).map((hour: number) => {
+            const time = dayjs().set('hour', hour).set('minute', 0);
+            return (
+              <Box
+                key={hour}
+                display="flex"
+                height={`${HOUR_HEIGHT}em`}
+                justifyContent="flex-end"
+              >
+                <Typography color={theme.palette.grey[500]} variant="caption">
+                  <FormattedTime
+                    hour="numeric"
+                    hour12={false}
+                    minute="numeric"
+                    value={time.toDate()}
+                  />
+                </Typography>
+              </Box>
+            );
+          })}
+        </Box>
+        {/* Day columns */}
+        {range(7).map((weekday: number) => {
+          return (
+            <Box
+              key={weekday}
+              height={`${HOUR_HEIGHT * 24}em`}
+              sx={{
+                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
+                marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
+              }}
+            ></Box>
+          );
+        })}
+      </Box>
+    </>
   );
 };
 
