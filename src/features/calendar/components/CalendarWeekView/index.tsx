@@ -5,16 +5,14 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Typography } from '@mui/material';
 
 import DayHeader from './DayHeader';
-import { EnvContext } from 'core/env/EnvContext';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import range from 'utils/range';
 import theme from 'theme';
-import { useContext } from 'react';
-import { useRouter } from 'next/router';
 import { useStore } from 'react-redux';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
+import { useEnv, useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(isoWeek);
 
@@ -121,31 +119,29 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
 export default CalendarWeekView;
 
 function useCreateEvent() {
-  const router = useRouter();
-  const { orgId } = router.query;
-  const env = useContext(EnvContext);
+  const env = useEnv();
   const store = useStore();
+  const { campId, orgId } = useNumericRouteParams();
 
   async function createAndNavigate(startDate: Date, endDate: Date) {
-    if (env) {
-      const event = await env.apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
-        // TODO: Don't hardcode campaign ID
-        `/api/orgs/${orgId}/campaigns/1/actions`,
-        {
-          // TODO: Use null when possible for activity, campaign and location
-          activity_id: 1,
-          end_time: endDate.toISOString(),
-          location_id: 1,
-          start_time: startDate.toISOString(),
-        }
-      );
+    const event = await env.apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
+      campId
+        ? `/api/orgs/${orgId}/campaigns/${campId}/actions`
+        : `/api/orgs/${orgId}/actions`,
+      {
+        // TODO: Use null when possible for activity, campaign and location
+        activity_id: 1,
+        end_time: endDate.toISOString(),
+        location_id: 1,
+        start_time: startDate.toISOString(),
+      }
+    );
 
-      store.dispatch(eventCreated(event));
+    store.dispatch(eventCreated(event));
 
-      const campaignId = event.campaign?.id ?? 'standalone';
-      const url = `/organize/${orgId}/projects/${campaignId}/events/${event.id}`;
-      router.push(url);
-    }
+    const campaignId = event.campaign?.id ?? 'standalone';
+    const url = `/organize/${orgId}/projects/${campaignId}/events/${event.id}`;
+    env.router.push(url);
   }
 
   return createAndNavigate;
