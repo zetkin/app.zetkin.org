@@ -35,6 +35,7 @@ export interface CalendarWeekViewProps {
 }
 
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
+  const [creating, setCreating] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
@@ -172,7 +173,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
                         transition: 'opacity 0.2s',
                       }}
                     />
-                    {ghostAnchorEl && (
+                    {ghostAnchorEl && !creating && (
                       <Menu
                         anchorEl={ghostAnchorEl}
                         anchorOrigin={{
@@ -190,9 +191,15 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
                         }}
                       >
                         <MenuItem
-                          onClick={() => {
+                          onClick={async () => {
+                            setCreating(true);
                             setGhostAnchorEl(null);
-                            createAndNavigate(pendingEvent[0], pendingEvent[1]);
+                            await createAndNavigate(
+                              pendingEvent[0],
+                              pendingEvent[1]
+                            );
+                            setPendingEvent(null);
+                            setCreating(false);
                           }}
                         >
                           <ListItemIcon>
