@@ -28,6 +28,7 @@ import { useEnv, useNumericRouteParams } from 'core/hooks';
 dayjs.extend(isoWeek);
 
 const HOUR_HEIGHT = 5;
+const HOUR_COLUMN_WIDTH = '50px';
 
 export interface CalendarWeekViewProps {
   focusDate: Date;
@@ -49,156 +50,169 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
   });
 
   return (
-    <Box
-      columnGap={1}
-      display="grid"
-      gridTemplateColumns={'auto repeat(7, 1fr)'}
-      gridTemplateRows={'auto 1fr'}
-      rowGap={1}
-    >
-      {/* Week Number */}
-      <Box alignItems="center" display="flex">
-        <Typography color={theme.palette.grey[500]} variant="caption">
-          {focusWeekStartDay.isoWeek()}
-        </Typography>
-      </Box>
-      {/* Day headers across the top */}
-      {dayDates.map((weekdayDate) => {
-        return (
-          <DayHeader
-            key={weekdayDate.toISOString()}
-            date={weekdayDate}
-            focused={new Date().toDateString() == weekdayDate.toDateString()}
-          />
-        );
-      })}
-      {/* Hours column */}
-      <Box>
-        {range(24).map((hour: number) => {
-          const time = dayjs().set('hour', hour).set('minute', 0);
+    <>
+      {/* Headers across the top */}
+      <Box
+        columnGap={1}
+        display="grid"
+        gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
+        gridTemplateRows={'1fr'}
+      >
+        {/* Empty */}
+        <Box />
+        {dayDates.map((weekdayDate: Date, weekday: number) => {
           return (
-            <Box key={hour} display="flex" height={`${HOUR_HEIGHT}em`}>
-              <Typography color={theme.palette.grey[500]} variant="caption">
-                <FormattedTime
-                  hour="numeric"
-                  hour12={false}
-                  minute="numeric"
-                  value={time.toDate()}
-                />
-              </Typography>
+            <DayHeader
+              key={weekday}
+              date={weekdayDate}
+              focused={new Date().toDateString() == weekdayDate.toDateString()}
+            />
+          );
+        })}
+      </Box>
+      {/* Week grid */}
+      <Box
+        columnGap={1}
+        display="grid"
+        gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
+        gridTemplateRows={'1fr'}
+        height="100%"
+        marginTop={2}
+        overflow="scroll"
+      >
+        {/* Hours column */}
+        <Box>
+          {range(24).map((hour: number) => {
+            const time = dayjs().set('hour', hour).set('minute', 0);
+            return (
+              <Box
+                key={hour}
+                display="flex"
+                height={`${HOUR_HEIGHT}em`}
+                justifyContent="flex-end"
+              >
+                <Typography color={theme.palette.grey[500]} variant="caption">
+                  <FormattedTime
+                    hour="numeric"
+                    hour12={false}
+                    minute="numeric"
+                    value={time.toDate()}
+                  />
+                </Typography>
+              </Box>
+            );
+          })}
+        </Box>
+        {/* Day columns */}
+        {dayDates.map((date: Date, index: number) => {
+          const pendingTop = pendingEvent
+            ? (pendingEvent[0].getUTCHours() * 60 +
+                pendingEvent[0].getMinutes()) /
+              (24 * 60)
+            : 0;
+          const pendingHeight = pendingEvent
+            ? (pendingEvent[1].getUTCHours() * 60 +
+                pendingEvent[1].getMinutes()) /
+                (24 * 60) -
+              pendingTop
+            : 0;
+          return (
+            <Box
+              key={date.toISOString()}
+              flexGrow={1}
+              height={`${HOUR_HEIGHT * 24}em`}
+              sx={{
+                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
+                marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
+              }}
+            >
+              <EventDayLane
+                onCreate={(startTime, endTime) => {
+                  const startDate = new Date(
+                    Date.UTC(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate(),
+                      startTime[0],
+                      startTime[1]
+                    )
+                  );
+
+                  const endDate = new Date(
+                    Date.UTC(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate(),
+                      endTime[0],
+                      endTime[1]
+                    )
+                  );
+
+                  setPendingEvent([startDate, endDate]);
+                }}
+                onDragStart={() => setPendingEvent(null)}
+              >
+                {pendingEvent && isSameDate(date, pendingEvent[0]) && (
+                  <>
+                    <Box
+                      ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
+                      sx={{
+                        backgroundColor: 'white',
+                        borderColor: theme.palette.grey['500'],
+                        borderRadius: '0.5em',
+                        borderStyle: 'solid',
+                        borderWidth: 2,
+                        height: pendingHeight * 100 + '%',
+                        left: 0,
+                        opacity: 0.7,
+                        pointerEvents: 'none',
+                        position: 'absolute',
+                        right: 0,
+                        top: pendingTop * 100 + '%',
+                        transition: 'opacity 0.2s',
+                      }}
+                    />
+                    {ghostAnchorEl && (
+                      <Menu
+                        anchorEl={ghostAnchorEl}
+                        anchorOrigin={{
+                          horizontal: index > 3 ? 'left' : 'right',
+                          vertical: 'top',
+                        }}
+                        onClose={() => {
+                          setPendingEvent(null);
+                          setGhostAnchorEl(null);
+                        }}
+                        open={true}
+                        transformOrigin={{
+                          horizontal: index > 3 ? 'right' : 'left',
+                          vertical: 'top',
+                        }}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            setGhostAnchorEl(null);
+                            createAndNavigate(pendingEvent[0], pendingEvent[1]);
+                          }}
+                        >
+                          <ListItemIcon>
+                            <Event />
+                          </ListItemIcon>
+                          <ListItemText>
+                            <Msg id={messageIds.createMenu.singleEvent} />
+                          </ListItemText>
+                        </MenuItem>
+                      </Menu>
+                    )}
+                  </>
+                )}
+                {/* TODO: Put events here */}
+              </EventDayLane>
             </Box>
           );
         })}
       </Box>
-      {/* Day columns */}
-      {dayDates.map((date, index) => {
-        const pendingTop = pendingEvent
-          ? (pendingEvent[0].getUTCHours() * 60 +
-              pendingEvent[0].getMinutes()) /
-            (24 * 60)
-          : 0;
-        const pendingHeight = pendingEvent
-          ? (pendingEvent[1].getUTCHours() * 60 +
-              pendingEvent[1].getMinutes()) /
-              (24 * 60) -
-            pendingTop
-          : 0;
-        return (
-          <Box
-            key={date.toISOString()}
-            flexGrow={1}
-            height={`${HOUR_HEIGHT * 24}em`}
-            sx={{
-              backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
-              marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
-            }}
-          >
-            <EventDayLane
-              onCreate={(startTime, endTime) => {
-                const startDate = new Date(
-                  Date.UTC(
-                    date.getFullYear(),
-                    date.getMonth(),
-                    date.getDate(),
-                    startTime[0],
-                    startTime[1]
-                  )
-                );
-
-                const endDate = new Date(
-                  Date.UTC(
-                    date.getFullYear(),
-                    date.getMonth(),
-                    date.getDate(),
-                    endTime[0],
-                    endTime[1]
-                  )
-                );
-
-                setPendingEvent([startDate, endDate]);
-              }}
-              onDragStart={() => setPendingEvent(null)}
-            >
-              {pendingEvent && isSameDate(date, pendingEvent[0]) && (
-                <>
-                  <Box
-                    ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
-                    sx={{
-                      backgroundColor: 'white',
-                      borderColor: theme.palette.grey['500'],
-                      borderRadius: '0.5em',
-                      borderStyle: 'solid',
-                      borderWidth: 2,
-                      height: pendingHeight * 100 + '%',
-                      left: 0,
-                      opacity: 0.7,
-                      pointerEvents: 'none',
-                      position: 'absolute',
-                      right: 0,
-                      top: pendingTop * 100 + '%',
-                      transition: 'opacity 0.2s',
-                    }}
-                  />
-                  {ghostAnchorEl && (
-                    <Menu
-                      anchorEl={ghostAnchorEl}
-                      anchorOrigin={{
-                        horizontal: index > 3 ? 'left' : 'right',
-                        vertical: 'top',
-                      }}
-                      onClose={() => {
-                        setPendingEvent(null);
-                        setGhostAnchorEl(null);
-                      }}
-                      open={true}
-                      transformOrigin={{
-                        horizontal: index > 3 ? 'right' : 'left',
-                        vertical: 'top',
-                      }}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          setGhostAnchorEl(null);
-                          createAndNavigate(pendingEvent[0], pendingEvent[1]);
-                        }}
-                      >
-                        <ListItemIcon>
-                          <Event />
-                        </ListItemIcon>
-                        <ListItemText>
-                          <Msg id={messageIds.createMenu.singleEvent} />
-                        </ListItemText>
-                      </MenuItem>
-                    </Menu>
-                  )}
-                </>
-              )}
-              {/* TODO: Put events here */}
-            </EventDayLane>
-          </Box>
-        );
-      })}
-    </Box>
+    </>
   );
 };
 
