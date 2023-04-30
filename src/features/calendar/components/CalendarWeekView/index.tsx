@@ -2,11 +2,22 @@ import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { Typography } from '@mui/material';
+import { useState } from 'react';
+import {
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 
 import DayHeader from './DayHeader';
+import { Event } from '@mui/icons-material';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
+import { isSameDate } from 'utils/dateUtils';
+import messageIds from 'features/calendar/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import theme from 'theme';
 import { useStore } from 'react-redux';
@@ -23,6 +34,10 @@ export interface CalendarWeekViewProps {
 }
 
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
+  const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
+  const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
+    null
+  );
   const createAndNavigate = useCreateEvent();
   const focusWeekStartDay =
     dayjs(focusDate).isoWeekday() == 7
@@ -76,7 +91,18 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
         })}
       </Box>
       {/* Day columns */}
-      {dayDates.map((date) => {
+      {dayDates.map((date, index) => {
+        const pendingTop = pendingEvent
+          ? (pendingEvent[0].getUTCHours() * 60 +
+              pendingEvent[0].getMinutes()) /
+            (24 * 60)
+          : 0;
+        const pendingHeight = pendingEvent
+          ? (pendingEvent[1].getUTCHours() * 60 +
+              pendingEvent[1].getMinutes()) /
+              (24 * 60) -
+            pendingTop
+          : 0;
         return (
           <Box
             key={date.toISOString()}
@@ -90,23 +116,83 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
             <EventDayLane
               onCreate={(startTime, endTime) => {
                 const startDate = new Date(
-                  date.getFullYear(),
-                  date.getMonth(),
-                  date.getDate(),
-                  startTime[0],
-                  startTime[1]
-                );
-                const endDate = new Date(
-                  date.getFullYear(),
-                  date.getMonth(),
-                  date.getDate(),
-                  endTime[0],
-                  endTime[1]
+                  Date.UTC(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate(),
+                    startTime[0],
+                    startTime[1]
+                  )
                 );
 
-                createAndNavigate(startDate, endDate);
+                const endDate = new Date(
+                  Date.UTC(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate(),
+                    endTime[0],
+                    endTime[1]
+                  )
+                );
+
+                setPendingEvent([startDate, endDate]);
               }}
+              onDragStart={() => setPendingEvent(null)}
             >
+              {pendingEvent && isSameDate(date, pendingEvent[0]) && (
+                <>
+                  <Box
+                    ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
+                    sx={{
+                      backgroundColor: 'white',
+                      borderColor: theme.palette.grey['500'],
+                      borderRadius: '0.5em',
+                      borderStyle: 'solid',
+                      borderWidth: 2,
+                      height: pendingHeight * 100 + '%',
+                      left: 0,
+                      opacity: 0.7,
+                      pointerEvents: 'none',
+                      position: 'absolute',
+                      right: 0,
+                      top: pendingTop * 100 + '%',
+                      transition: 'opacity 0.2s',
+                    }}
+                  />
+                  {ghostAnchorEl && (
+                    <Menu
+                      anchorEl={ghostAnchorEl}
+                      anchorOrigin={{
+                        horizontal: index > 3 ? 'left' : 'right',
+                        vertical: 'top',
+                      }}
+                      onClose={() => {
+                        setPendingEvent(null);
+                        setGhostAnchorEl(null);
+                      }}
+                      open={true}
+                      transformOrigin={{
+                        horizontal: index > 3 ? 'right' : 'left',
+                        vertical: 'top',
+                      }}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          setGhostAnchorEl(null);
+                          createAndNavigate(pendingEvent[0], pendingEvent[1]);
+                        }}
+                      >
+                        <ListItemIcon>
+                          <Event />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Msg id={messageIds.createMenu.singleEvent} />
+                        </ListItemText>
+                      </MenuItem>
+                    </Menu>
+                  )}
+                </>
+              )}
               {/* TODO: Put events here */}
             </EventDayLane>
           </Box>

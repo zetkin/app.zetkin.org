@@ -4,13 +4,19 @@ import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 type EventDayLaneProps = {
   children?: ReactNode;
   onCreate: (startTime: [number, number], endTime: [number, number]) => void;
+  onDragStart?: () => void;
 };
 
-const EventDayLane: FC<EventDayLaneProps> = ({ children, onCreate }) => {
+const EventDayLane: FC<EventDayLaneProps> = ({
+  children,
+  onCreate,
+  onDragStart,
+}) => {
   const [dragging, setDragging] = useState(false);
   const laneRef = useRef<HTMLDivElement>();
   const ghostRef = useRef<HTMLDivElement>();
   const onCreateRef = useRef(onCreate);
+  const onDragStartRef = useRef(onDragStart);
   const theme = useTheme();
 
   useEffect(() => {
@@ -25,6 +31,10 @@ const EventDayLane: FC<EventDayLaneProps> = ({ children, onCreate }) => {
       const div = ev.currentTarget as HTMLDivElement;
       const rect = div.getBoundingClientRect();
       startRatio = snapToGrid((ev.clientY - rect.top) / rect.height);
+
+      if (onDragStartRef.current) {
+        onDragStartRef.current();
+      }
 
       setDragging(true);
 
