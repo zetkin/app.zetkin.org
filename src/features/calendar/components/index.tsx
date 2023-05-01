@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
@@ -21,33 +21,41 @@ const Calendar = () => {
 
   return (
     <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
-      <Box>
-        <CalendarNavBar
-          focusDate={focusDate}
-          onChangeFocusDate={(date) => {
-            setFocusDate(date);
-          }}
-          onChangeTimeScale={(timeScale) => {
-            setSelectedTimeScale(timeScale);
-          }}
-          onStepBackward={() => {
-            setFocusDate(
-              dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
-            );
-          }}
-          onStepForward={() => {
-            setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
-          }}
-          timeScale={selectedTimeScale}
-        />
-      </Box>
+      <CalendarNavBar
+        focusDate={focusDate}
+        onChangeFocusDate={(date) => {
+          setFocusDate(date);
+        }}
+        onChangeTimeScale={(timeScale) => {
+          setSelectedTimeScale(timeScale);
+        }}
+        onStepBackward={() => {
+          setFocusDate(
+            dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
+          );
+        }}
+        onStepForward={() => {
+          setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
+        }}
+        timeScale={selectedTimeScale}
+      />
 
-      <Box display="flex" flexDirection="column" flexGrow={1}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexGrow={1}
+        marginTop={2}
+        overflow="auto"
+      >
         {selectedTimeScale === TimeScale.DAY && (
           <CalendarDayView focusDate={focusDate} />
         )}
-        {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
-        {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
+        {selectedTimeScale === TimeScale.WEEK && (
+          <CalendarWeekView focusDate={focusDate} />
+        )}
+        {selectedTimeScale === TimeScale.MONTH && (
+          <CalendarMonthView focusDate={focusDate} />
+        )}
       </Box>
     </Box>
   );

@@ -28,9 +28,11 @@ const EventListItem = ({
             {` - `}
             <ZUIDateTime datetime={removeOffset(end_time)} />
           </Typography>
-          <Typography color="textPrimary" variant="body2">
-            {location.title}
-          </Typography>
+          {location && (
+            <Typography color="textPrimary" variant="body2">
+              {location.title}
+            </Typography>
+          )}
         </ListItemText>
       </ListItem>
     </Link>
