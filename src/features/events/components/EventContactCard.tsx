@@ -21,17 +21,89 @@ interface EventContactCardProps {
   orgId: number;
 }
 
+interface ContactDetailsProps {
+  contact: { id: number; name: string };
+  model: EventDataModel;
+  orgId: number;
+}
+
+interface ContactSelectProps {
+  model: EventDataModel;
+}
+
+const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
+  const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+
+  return (
+    <>
+      <Box m={1} sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        <ZUIAvatar orgId={orgId} personId={contact.id} />
+      </Box>
+      <Typography sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        {contact.name}
+      </Typography>
+      <Box m={1}>
+        <Button
+          onClick={() => {
+            showConfirmDialog({
+              onSubmit: () => {
+                model.removeContact();
+              },
+              warningText: messages.eventContactCard.warningText({
+                name: contact!.name,
+              }),
+            });
+          }}
+          size="small"
+          startIcon={<Close />}
+          variant="text"
+        >
+          {messages.eventContactCard.removeButton()}
+        </Button>
+      </Box>
+    </>
+  );
+};
+
+const ContactSelect: FC<ContactSelectProps> = ({ model }) => {
+  const messages = useMessages(messageIds);
+  const handleSelectedPerson = (personId: number) => {
+    model.setContact(personId);
+  };
+
+  return (
+    <Box sx={{ display: 'grid' }}>
+      <Box
+        m={1}
+        mb={3}
+        mt={3}
+        sx={{
+          '& input': {
+            alignSelf: 'self-start',
+            minWidth: '200px !important',
+          },
+        }}
+      >
+        <ZUIPersonSelect
+          onChange={(person) => {
+            handleSelectedPerson(person.id);
+          }}
+          placeholder={messages.eventContactCard.selectPlaceholder()}
+          selectedPerson={null}
+          variant="outlined"
+        />
+      </Box>
+    </Box>
+  );
+};
+
 const EventContactCard: FC<EventContactCardProps> = ({
   data,
   model,
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-
-  const handleSelectedPerson = (personId: number) => {
-    model.setContact(personId);
-  };
 
   return (
     <Box
@@ -64,67 +136,19 @@ const EventContactCard: FC<EventContactCardProps> = ({
         }
         status={
           <Box>
-            {data.contact?.id ? (
-              <>
-                <Box
-                  m={1}
-                  sx={{ display: 'inline-block', verticalAlign: 'middle' }}
-                >
-                  <ZUIAvatar orgId={orgId} personId={data.contact.id} />
-                </Box>
-                <Typography
-                  sx={{ display: 'inline-block', verticalAlign: 'middle' }}
-                >
-                  {data.contact.name}
-                </Typography>
-              </>
+            {data.contact ? (
+              <ContactDetails
+                contact={data.contact}
+                model={model}
+                orgId={orgId}
+              />
             ) : (
-              <Box sx={{ display: 'grid' }}>
-                <Box
-                  m={1}
-                  mb={3}
-                  mt={3}
-                  sx={{
-                    '& input': {
-                      alignSelf: 'self-start',
-                      minWidth: '100px !important',
-                      width: '200px !important',
-                    },
-                  }}
-                >
-                  <ZUIPersonSelect
-                    onChange={(person) => {
-                      handleSelectedPerson(person.id);
-                    }}
-                    placeholder={messages.eventContactCard.selectPlaceholder()}
-                    selectedPerson={null}
-                    variant="outlined"
-                  />
-                </Box>
-              </Box>
+              <ContactSelect model={model} />
             )}
           </Box>
         }
       >
-        {data.contact && (
-          <Button
-            onClick={() => {
-              showConfirmDialog({
-                onSubmit: () => {
-                  model.removeContact();
-                },
-                warningText: messages.eventContactCard.warningText({
-                  name: data!.contact!.name,
-                }),
-              });
-            }}
-            size="small"
-            startIcon={<Close />}
-            variant="text"
-          >
-            {messages.eventContactCard.removeButton()}
-          </Button>
-        )}
+        {''}
       </ZUICard>
     </Box>
   );

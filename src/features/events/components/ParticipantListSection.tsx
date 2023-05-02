@@ -74,12 +74,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
                   </Tooltip>
                 </Typography>
               ) : (
-                <Typography
-                  sx={{
-                    '&:hover svg': { display: 'inline-block' },
-                    cursor: 'pointer',
-                  }}
-                >
+                <Typography>
                   {params.row.first_name + ' ' + params.row.last_name}
 
                   <Tooltip
@@ -216,6 +211,12 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         checkboxSelection
         columns={columns}
         rows={rows ?? []}
+        sx={{
+          '& .MuiDataGrid-row:hover': {
+            '&:hover svg': { display: 'inline-block' },
+            cursor: 'pointer',
+          },
+        }}
       />
     </>
   );
