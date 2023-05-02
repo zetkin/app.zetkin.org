@@ -38,8 +38,19 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
         <Typography color={theme.palette.secondary.main} component={'div'}>
           <Box alignItems="center" display="flex" gap={0.5}>
             <Schedule />
-            <FormattedTime value={event.start_time} /> -
-            <FormattedTime value={event.end_time} />
+            <FormattedTime
+              hour="numeric"
+              hour12={false}
+              minute="numeric"
+              value={event.start_time}
+            />
+            &nbsp;-&nbsp;
+            <FormattedTime
+              hour="numeric"
+              hour12={false}
+              minute="numeric"
+              value={event.end_time}
+            />
           </Box>
         </Typography>
         {/* Location */}
