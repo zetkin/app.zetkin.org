@@ -28,6 +28,7 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   eventPopper: {
+    backToEvents: m('Back to event list'),
     backToLocations: m('Back to locations'),
     backToShifts: m('Back to shift list'),
     booked: m('Booked'),
@@ -37,8 +38,10 @@ export default makeMessages('feat.events', {
     delete: m('Delete'),
     description: m('Description'),
     eventPageLink: m('Go to event page'),
+    events: m('Events'),
     location: m('Location'),
     locations: m('Locations'),
+    multiEvent: m('Multiple events'),
     multiLocation: m('Multi-location event'),
     multiShift: m('Multi-shift event'),
     noContact: m('No contact person has been assigned'),

@@ -11,7 +11,7 @@ import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 
 interface ClusterBodyProps {
-  clusterType: CLUSTER_TYPE.SHIFT | CLUSTER_TYPE.LOCATION;
+  clusterType: CLUSTER_TYPE;
   events: ZetkinEvent[];
 }
 
@@ -24,6 +24,13 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
   const totalParticipantsRequired = events
     .map((event) => event.num_participants_required)
     .reduce((sum, value) => sum + value);
+
+  let type = messages.eventPopper.locations();
+  if (clusterType === CLUSTER_TYPE.SHIFT) {
+    type = messages.eventPopper.shifts();
+  } else if (clusterType === CLUSTER_TYPE.ARBITRARY) {
+    type = messages.eventPopper.events();
+  }
 
   return (
     <>
@@ -54,13 +61,11 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
       >
         <Box alignItems="center" display="flex">
           <Checkbox sx={{ padding: '0px' }} />
-          <Typography color="secondary" paddingLeft={1} variant="body2">{`${
-            events.length
-          } ${
-            clusterType === CLUSTER_TYPE.SHIFT
-              ? messages.eventPopper.shifts()
-              : messages.eventPopper.locations()
-          }`}</Typography>
+          <Typography
+            color="secondary"
+            paddingLeft={1}
+            variant="body2"
+          >{`${events.length} ${type}`}</Typography>
         </Box>
         <Box paddingRight={5}>
           <ZUIIconLabel

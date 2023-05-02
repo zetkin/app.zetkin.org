@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import React, { FC, useState } from 'react';
 
+import ArbitraryCluster from './ArbitraryCluster';
 import { CLUSTER_TYPE } from './MultiEventListItem';
 import messageIds from 'features/events/l10n/messageIds';
 import MultiLocationCluster from './MultiLocationCluster';
@@ -17,7 +18,11 @@ import SingleEvent from './SingleEvent';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from '../../../../../utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
-import { ArrowBack, SplitscreenOutlined } from '@mui/icons-material';
+import {
+  ArrowBack,
+  EventOutlined,
+  SplitscreenOutlined,
+} from '@mui/icons-material';
 
 interface MultiEventPopperProps {
   anchorEl: HTMLElement | null;
@@ -38,8 +43,13 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
   const messages = useMessages(messageIds);
 
   let topRightIcon = <MultiLocationIcon color="secondary" fontSize="small" />;
-  if (clusterType === CLUSTER_TYPE.LOCATION) {
+  let topRightMessage = messages.eventPopper.locations();
+  if (clusterType === CLUSTER_TYPE.SHIFT) {
     topRightIcon = <SplitscreenOutlined color="secondary" fontSize="small" />;
+    topRightMessage = messages.eventPopper.shifts();
+  } else if (clusterType === CLUSTER_TYPE.ARBITRARY) {
+    topRightIcon = <EventOutlined color="secondary" fontSize="small" />;
+    topRightMessage = messages.eventPopper.events();
   }
 
   return (
@@ -50,7 +60,7 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
           setSingleEvent(null);
         }}
       >
-        <Paper sx={{ padding: 2, width: '340px' }}>
+        <Paper sx={{ padding: 2, width: '480px' }}>
           <Box display="flex" flexDirection="column">
             <Box
               display="flex"
@@ -59,10 +69,13 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
             >
               <Box>
                 {!singleEvent && (
-                  <Typography variant="h5">
-                    {clusterType === CLUSTER_TYPE.LOCATION
-                      ? messages.eventPopper.multiLocation()
-                      : messages.eventPopper.multiShift()}
+                  <Typography color="secondary" variant="h5">
+                    {clusterType === CLUSTER_TYPE.LOCATION &&
+                      messages.eventPopper.multiLocation()}
+                    {clusterType === CLUSTER_TYPE.SHIFT &&
+                      messages.eventPopper.multiShift()}
+                    {clusterType === CLUSTER_TYPE.ARBITRARY &&
+                      messages.eventPopper.multiEvent()}
                   </Typography>
                 )}
                 {singleEvent && (
@@ -70,21 +83,19 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
                     onClick={() => setSingleEvent(null)}
                     startIcon={<ArrowBack />}
                   >
-                    {clusterType === CLUSTER_TYPE.SHIFT &&
-                      messages.eventPopper.backToShifts()}
                     {clusterType === CLUSTER_TYPE.LOCATION &&
                       messages.eventPopper.backToLocations()}
+                    {clusterType === CLUSTER_TYPE.SHIFT &&
+                      messages.eventPopper.backToShifts()}
+                    {clusterType === CLUSTER_TYPE.ARBITRARY &&
+                      messages.eventPopper.backToEvents()}
                   </Button>
                 )}
               </Box>
               <ZUIIconLabel
                 color="secondary"
                 icon={topRightIcon}
-                label={`${events.length} ${
-                  clusterType === CLUSTER_TYPE.LOCATION
-                    ? messages.eventPopper.locations()
-                    : messages.eventPopper.shifts()
-                }`}
+                label={`${events.length} ${topRightMessage}`}
                 size="sm"
               />
             </Box>
@@ -109,6 +120,17 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
             )}
             {!singleEvent && clusterType === CLUSTER_TYPE.LOCATION && (
               <MultiLocationCluster
+                events={events}
+                onEventClick={(id: number) => {
+                  const event = events.find((event) => event.id === id);
+                  if (event) {
+                    setSingleEvent(event);
+                  }
+                }}
+              />
+            )}
+            {!singleEvent && clusterType === CLUSTER_TYPE.ARBITRARY && (
+              <ArbitraryCluster
                 events={events}
                 onEventClick={(id: number) => {
                   const event = events.find((event) => event.id === id);

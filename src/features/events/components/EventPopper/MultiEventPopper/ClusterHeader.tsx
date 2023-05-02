@@ -17,7 +17,7 @@ const ClusterHeader: FC<ClusterHeaderProps> = ({ event, state }) => {
         {event.title || event.activity.title}
       </Typography>
       <Box alignItems="center" display="flex">
-        <StatusDot state={state} />
+        {<StatusDot state={state} />}
         <Typography color="secondary">{event.activity.title}</Typography>
       </Box>
     </>

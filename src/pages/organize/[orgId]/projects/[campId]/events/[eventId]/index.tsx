@@ -1,14 +1,17 @@
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { GetServerSideProps } from 'next';
-import { Grid } from '@mui/material';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import { useState } from 'react';
+import { Button, Grid } from '@mui/material';
 
+import { CLUSTER_TYPE } from 'features/events/components/EventPopper/MultiEventPopper/MultiEventListItem';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventParticipantsCard';
 import LocationsModel from 'features/events/models/LocationsModel';
+import MultiEventPopper from 'features/events/components/EventPopper/MultiEventPopper';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -60,26 +63,45 @@ const EventPage: PageWithLayout<EventPageProps> = ({
   const locationsModel = useModel(
     (env) => new LocationsModel(env, parseInt(orgId))
   );
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const event = dataModel.getData().data;
+  if (!event) {
+    return null;
+  }
 
   return (
-    <ZUIFuture future={dataModel.getData()}>
-      {(data) => {
-        return (
-          <Grid container spacing={2}>
-            <Grid item md={8} xs={12}>
-              <EventOverviewCard
-                data={data}
-                dataModel={dataModel}
-                locationsModel={locationsModel}
-              />
+    <>
+      <Button
+        onClick={(evt) => setAnchorEl(anchorEl ? null : evt.currentTarget)}
+      >
+        Click
+      </Button>
+      <MultiEventPopper
+        anchorEl={anchorEl}
+        clusterType={CLUSTER_TYPE.SHIFT}
+        events={[event, event, event, event, event, event, event, event, event]}
+        onClickAway={() => setAnchorEl(null)}
+        open={!!anchorEl}
+      />
+      <ZUIFuture future={dataModel.getData()}>
+        {(data) => {
+          return (
+            <Grid container spacing={2}>
+              <Grid item md={8} xs={12}>
+                <EventOverviewCard
+                  data={data}
+                  dataModel={dataModel}
+                  locationsModel={locationsModel}
+                />
+              </Grid>
+              <Grid item md={4} xs={6}>
+                <EventParticipantsCard campId={campId} model={dataModel} />
+              </Grid>
             </Grid>
-            <Grid item md={4} xs={6}>
-              <EventParticipantsCard campId={campId} model={dataModel} />
-            </Grid>
-          </Grid>
-        );
-      }}
-    </ZUIFuture>
+          );
+        }}
+      </ZUIFuture>
+    </>
   );
 };
 

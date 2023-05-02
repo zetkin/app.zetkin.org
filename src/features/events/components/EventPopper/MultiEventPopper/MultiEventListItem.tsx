@@ -89,34 +89,22 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   )}`;
 
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" paddingBottom={1}>
       <Box
         alignItems="flex-start"
         display="flex"
         justifyContent="space-between"
       >
-        <Box display="flex">
-          <Box>
-            <Checkbox sx={{ padding: '0px' }} />
-          </Box>
-          <Box display="flex" flexDirection="column">
-            <Typography fontWeight="bold" sx={{ paddingLeft: 1 }}>
-              {clusterType == CLUSTER_TYPE.LOCATION && (
-                <LocationName location={event.location} />
-              )}
-              {clusterType == CLUSTER_TYPE.SHIFT && timeSpan}
-              {clusterType == CLUSTER_TYPE.ARBITRARY &&
-                (event.title || event.activity.title)}
-            </Typography>
-            {clusterType === CLUSTER_TYPE.ARBITRARY && (
-              <Box alignItems="center" display="flex">
-                <StatusDot state={state} />
-                <Typography variant="body2">{`${timeSpan}, ${(
-                  <LocationName location={event.location} />
-                )}`}</Typography>
-              </Box>
+        <Box alignItems="center" display="flex">
+          <Checkbox sx={{ padding: '0px' }} />
+          <Typography paddingLeft={1}>
+            {clusterType == CLUSTER_TYPE.LOCATION && (
+              <LocationName location={event.location} />
             )}
-          </Box>
+            {clusterType == CLUSTER_TYPE.SHIFT && timeSpan}
+            {clusterType == CLUSTER_TYPE.ARBITRARY &&
+              (event.title || event.activity.title)}
+          </Typography>
         </Box>
         <Box alignItems="center" display="flex">
           <Box display="flex">
@@ -158,6 +146,17 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
           />
         </Box>
       </Box>
+      {clusterType === CLUSTER_TYPE.ARBITRARY && (
+        <Box display="flex" paddingLeft={3}>
+          <Box paddingTop={0.6}>
+            <StatusDot state={state} />
+          </Box>
+          <Typography color="secondary" variant="body2">
+            {`${timeSpan}, `}
+            <LocationName location={event.location} />
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };
