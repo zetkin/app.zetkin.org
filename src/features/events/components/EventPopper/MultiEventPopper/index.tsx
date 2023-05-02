@@ -112,39 +112,41 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
                 onPublish={() => null}
               />
             )}
-            {!singleEvent && clusterType === CLUSTER_TYPE.SHIFT && (
-              <MultiShiftCluster
-                events={events}
-                onEventClick={(id: number) => {
-                  const event = events.find((event) => event.id === id);
-                  if (event) {
-                    setSingleEvent(event);
-                  }
-                }}
-              />
-            )}
-            {!singleEvent && clusterType === CLUSTER_TYPE.LOCATION && (
-              <MultiLocationCluster
-                events={events}
-                onEventClick={(id: number) => {
-                  const event = events.find((event) => event.id === id);
-                  if (event) {
-                    setSingleEvent(event);
-                  }
-                }}
-              />
-            )}
-            {!singleEvent && clusterType === CLUSTER_TYPE.ARBITRARY && (
-              <ArbitraryCluster
-                events={events}
-                onEventClick={(id: number) => {
-                  const event = events.find((event) => event.id === id);
-                  if (event) {
-                    setSingleEvent(event);
-                  }
-                }}
-              />
-            )}
+            <Box maxHeight="500px" overflow="scroll">
+              {!singleEvent && clusterType === CLUSTER_TYPE.SHIFT && (
+                <MultiShiftCluster
+                  events={events}
+                  onEventClick={(id: number) => {
+                    const event = events.find((event) => event.id === id);
+                    if (event) {
+                      setSingleEvent(event);
+                    }
+                  }}
+                />
+              )}
+              {!singleEvent && clusterType === CLUSTER_TYPE.LOCATION && (
+                <MultiLocationCluster
+                  events={events}
+                  onEventClick={(id: number) => {
+                    const event = events.find((event) => event.id === id);
+                    if (event) {
+                      setSingleEvent(event);
+                    }
+                  }}
+                />
+              )}
+              {!singleEvent && clusterType === CLUSTER_TYPE.ARBITRARY && (
+                <ArbitraryCluster
+                  events={events}
+                  onEventClick={(id: number) => {
+                    const event = events.find((event) => event.id === id);
+                    if (event) {
+                      setSingleEvent(event);
+                    }
+                  }}
+                />
+              )}
+            </Box>
           </Box>
         </Paper>
       </ClickAwayListener>
