@@ -53,14 +53,19 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
   }
 
   return (
-    <Popper anchorEl={anchorEl} open={open} placement="right">
+    <Popper
+      anchorEl={anchorEl}
+      open={open}
+      placement="right"
+      sx={{ width: '480px' }}
+    >
       <ClickAwayListener
         onClickAway={() => {
           onClickAway();
           setSingleEvent(null);
         }}
       >
-        <Paper sx={{ padding: 2, width: '480px' }}>
+        <Paper sx={{ padding: 2 }}>
           <Box display="flex" flexDirection="column">
             <Box
               display="flex"

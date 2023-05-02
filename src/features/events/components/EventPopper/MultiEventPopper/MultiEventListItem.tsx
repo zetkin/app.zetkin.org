@@ -89,18 +89,26 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   )}`;
 
   return (
-    <Box display="flex" flexDirection="column" paddingBottom={1}>
-      <Box alignItems="flex-start" display="flex">
+    <Box display="flex" flexDirection="column" paddingBottom={1} width="100%">
+      <Box display="flex">
         <Checkbox sx={{ padding: '0px' }} />
         <Box
           display="flex"
-          flex={1}
+          flexGrow={1}
           justifyContent="space-between"
           onClick={() => onEventClick(event.id)}
           sx={{ cursor: 'pointer' }}
         >
-          <Box alignItems="center" display="flex">
-            <Typography paddingLeft={1}>
+          <Box maxWidth="220px">
+            <Typography
+              paddingLeft={1}
+              sx={{
+                margin: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {clusterType == CLUSTER_TYPE.LOCATION && (
                 <LocationName location={event.location} />
               )}
