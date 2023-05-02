@@ -35,7 +35,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
         {/* Title */}
         <Typography>{event.title || event.activity.title}</Typography>
         {/* Time */}
-        <Typography color={theme.palette.secondary.main}>
+        <Typography color={theme.palette.secondary.main} component={'div'}>
           <Box alignItems="center" display="flex" gap={0.5}>
             <Schedule />
             <FormattedTime value={event.start_time} /> -
@@ -44,7 +44,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
         </Typography>
         {/* Location */}
         {event.location && (
-          <Typography color={theme.palette.secondary.main}>
+          <Typography color={theme.palette.secondary.main} component={'div'}>
             <Box alignItems="center" display="flex" gap={0.5}>
               <PlaceOutlined />
               {event.location?.title}
