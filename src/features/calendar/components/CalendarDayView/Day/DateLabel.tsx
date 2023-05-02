@@ -15,7 +15,7 @@ const DateLabel = ({ date }: { date: Date }) => {
         backgroundColor: isToday ? theme.palette.primary.main : undefined,
         borderRadius: '20%/50%',
         color: isToday ? 'white' : 'inherit',
-        padding: '10px 15px',
+        padding: '8px 12px',
       }}
     >
       <Typography fontSize="1.4em" variant="h4">
