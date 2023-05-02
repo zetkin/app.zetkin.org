@@ -1,10 +1,11 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 
+import AddPersonButton from 'features/events/components/AddPersonButton';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
-import EventParticipantsList from 'features/events/components/EventParticipansTab/EventParticipantsList';
-import EventParticipantsFilter from 'features/events/components/EventParticipansTab/EventParticipantsFilter';
+import EventParticipantsFilter from 'features/events/components/EventParticipantsFilter';
+import EventParticipantsList from 'features/events/components/EventParticipantsList';
 import { PageWithLayout } from 'utils/types';
 import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
 import { scaffold } from 'utils/next';
@@ -53,9 +54,11 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               <Grid item md={8} xs={12}>
                 <ParticipantSummaryCard model={dataModel} />
               </Grid>
-              <Grid container item justifyContent="flex-end" md={12}>
-                <EventParticipantsFilter model={dataModel} />
-              </Grid>
+              {/* <Grid container item justifyContent="flex-end" md={12}></Grid> */}
+            </Grid>
+            <Grid container item justifyContent="flex-end" md={12}>
+              <EventParticipantsFilter model={dataModel} />
+              <AddPersonButton model={dataModel} />
             </Grid>
             <EventParticipantsList
               data={data}

@@ -1,27 +1,37 @@
+import EventDataModel from '../models/EventDataModel';
 import { FC } from 'react';
-import { GridColDef } from '@mui/x-data-grid-pro';
-import { Box, Button, Typography } from '@mui/material';
-
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
-import theme from 'theme';
 import { useMessages } from 'core/i18n';
-import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUIEventParticipantsList from 'zui/ZUIEventParticipantLists';
+import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
-interface EventParticipantsListProps {
-  data: ZetkinEvent;
+import { Box, Button, Typography } from '@mui/material';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import {
+  ZetkinEventParticipant,
+  ZetkinEventResponse,
+} from 'utils/types/zetkin';
+
+interface ParticipantListSectionListProps {
+  chipColor: string;
+  chipNumber: string;
+  description: string;
   model: EventDataModel;
   orgId: number;
+  rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
+  title: string;
 }
 
-const EventParticipantsList: FC<EventParticipantsListProps> = ({
-  data,
-  model,
+const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
+  chipColor,
+  chipNumber,
+  description,
   orgId,
+  model,
+  rows,
+  title,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -145,29 +155,33 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
   ];
 
   return (
-    <Box>
-      {model.getSignedParticipants() > 0 && (
-        <ZUIEventParticipantsList
-          chipColor={theme.palette.grey[500]}
-          chipNumber={model.getSignedParticipants().toString()}
-          columns={columns}
-          description={messages.eventParticipantsList.descriptionSignups()}
-          rows={model.getPendingSignUps() ?? []}
-          title={messages.eventParticipantsList.signUps()}
-        />
-      )}
-      <ZUIEventParticipantsList
-        chipColor={model.getParticipantStatus()}
-        chipNumber={
-          model.getAvailParticipants() + '/' + data.num_participants_required
-        }
+    <>
+      <Box
+        sx={{
+          '& div': { backgroundColor: 'transparent' },
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          marginBottom: '15px',
+          marginTop: '15px',
+        }}
+      >
+        <Typography mr={2} variant="h4">
+          {title}
+        </Typography>
+        <ZUINumberChip color={chipColor} outlined={true} value={chipNumber} />
+      </Box>
+      <Typography mb={2} variant="body1">
+        {description}
+      </Typography>
+      <DataGridPro
+        autoHeight
+        checkboxSelection
         columns={columns}
-        description={messages.eventParticipantsList.descriptionBooked()}
-        rows={model.getParticipants().data ?? []}
-        title={messages.eventParticipantsList.bookedParticipants()}
+        rows={rows ?? []}
       />
-    </Box>
+    </>
   );
 };
 
-export default EventParticipantsList;
+export default ParticipantListSection;

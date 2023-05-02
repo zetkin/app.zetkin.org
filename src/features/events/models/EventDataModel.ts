@@ -1,8 +1,11 @@
 import Environment from 'core/env/Environment';
-import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import theme from 'theme';
-import EventsRepo, { ZetkinEventPatchBody } from '../repo/EventsRepo';
+import EventsRepo, {
+  ZetkinEventPatchBody,
+  ZetkinEventPostBody,
+} from '../repo/EventsRepo';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
 import {
   ZetkinEvent,
   ZetkinEventParticipant,
@@ -20,6 +23,7 @@ export enum EventState {
 }
 
 export default class EventDataModel extends ModelBase {
+  private _env: Environment;
   private _eventId: number;
   private _orgId: number;
   private _repo: EventsRepo;
@@ -30,22 +34,50 @@ export default class EventDataModel extends ModelBase {
 
   constructor(env: Environment, orgId: number, eventId: number) {
     super();
+    this._env = env;
     this._orgId = orgId;
     this._eventId = eventId;
     this._repo = new EventsRepo(env);
   }
-
-  getAvailParticipants(): number {
-    const participants = this.getParticipants().data;
-    return participants ? participants.length : 0;
+  createEvent(eventBody: ZetkinEventPostBody): IFuture<ZetkinEvent> {
+    const promise = this._repo
+      .createEvent(eventBody, this._orgId)
+      .then((event: ZetkinEvent) => {
+        this._env.router.push(
+          `/organize/${this._orgId}/projects/${event.campaign!.id}/events/${
+            event.id
+          }`
+        );
+        return event;
+      });
+    return new PromiseFuture(promise);
   }
 
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
 
+  getNumAvailParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants ? participants.length : 0;
+  }
+
+  getNumRemindedParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants?.filter((p) => p.reminder_sent != null).length ?? 0;
+  }
+
+  getNumSignedParticipants(): number {
+    const participants = this.getParticipants().data;
+    const respondents = this.getRespondents().data;
+    return (
+      respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
+        .length ?? 0
+    );
+  }
+
   getParticipantStatus = () => {
-    const availParticipants = this.getAvailParticipants();
+    const availParticipants = this.getNumAvailParticipants();
     const reqParticipants = this.getData().data?.num_participants_required ?? 0;
     const diff = reqParticipants - availParticipants;
 
@@ -72,22 +104,8 @@ export default class EventDataModel extends ModelBase {
     );
   }
 
-  getRemindedParticipants(): number {
-    const participants = this.getParticipants().data;
-    return participants?.filter((p) => p.reminder_sent != null).length ?? 0;
-  }
-
   getRespondents(): IFuture<ZetkinEventResponse[]> {
     return this._repo.getEventRespondents(this._orgId, this._eventId);
-  }
-
-  getSignedParticipants(): number {
-    const participants = this.getParticipants().data;
-    const respondents = this.getRespondents().data;
-    return (
-      respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
-        .length ?? 0
-    );
   }
 
   sendReminders() {
