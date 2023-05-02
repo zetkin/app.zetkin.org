@@ -6,6 +6,7 @@ import theme from 'theme';
 
 const DateLabel = ({ date }: { date: Date }) => {
   const isToday = dayjs(date).isSame(dayjs(), 'day');
+  const isThePast = dayjs(date).isBefore(dayjs(), 'day');
   return (
     <Box
       alignItems="center"
@@ -14,7 +15,14 @@ const DateLabel = ({ date }: { date: Date }) => {
       sx={{
         backgroundColor: isToday ? theme.palette.primary.main : undefined,
         borderRadius: '20%/50%',
-        color: isToday ? 'white' : 'inherit',
+        color: isToday
+          ? // White colour if today
+            'white'
+          : isThePast
+          ? // Grey if it's the past
+            theme.palette.secondary.main
+          : // Default colour if it's the future
+            'inherit',
         padding: '8px 12px',
       }}
     >

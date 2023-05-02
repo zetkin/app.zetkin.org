@@ -4,6 +4,7 @@ import { CampaignActivity } from 'features/campaigns/models/CampaignActivitiesMo
 import { dateIsEqualOrBefore } from 'utils/dateUtils';
 import Day from './Day';
 import groupActivitiesByDate from './utils';
+import PreviousDayPrompt from './PreviousDayPrompt';
 
 export interface CalendarDayViewProps {
   activities: CampaignActivity[];
@@ -18,6 +19,11 @@ const CalendarDayView = ({ activities, focusDate }: CalendarDayViewProps) => {
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
+      <PreviousDayPrompt
+        onClickShowMore={() => {
+          return;
+        }}
+      />
       {/* List of days with events */}
       {todayAndFutureActivitiesDates.map((date, index) => {
         const daysEvents = activitiesByDate[date];
