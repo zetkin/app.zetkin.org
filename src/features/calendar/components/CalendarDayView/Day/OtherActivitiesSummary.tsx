@@ -1,13 +1,12 @@
 import Box from '@mui/material/Box';
-import { DayInfo } from './types';
 
-export interface CalendarDayOtherActivitiesProps {
+import { DayInfo } from '../types';
+
+export interface OtherActivitiesSummaryProps {
   dayInfo: DayInfo;
 }
 
-const CalendarDayOtherActivities = ({
-  dayInfo,
-}: CalendarDayOtherActivitiesProps) => {
+const OtherActivitiesSummary = ({ dayInfo }: OtherActivitiesSummaryProps) => {
   const infoTexts = [];
   if (dayInfo.activities_starts.length > 0) {
     infoTexts.push(`${dayInfo.activities_starts.length} activities starts`);
@@ -30,4 +29,4 @@ const CalendarDayOtherActivities = ({
   );
 };
 
-export default CalendarDayOtherActivities;
+export default OtherActivitiesSummary;

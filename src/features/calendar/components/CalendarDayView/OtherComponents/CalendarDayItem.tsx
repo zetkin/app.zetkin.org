@@ -1,8 +1,7 @@
 import Box from '@mui/material/Box';
 
 import CalendarDayDate from './CalendarDayDate';
-import CalendarDayOtherActivities from './CalendarDayOtherActivities';
-import { DayInfo } from './types';
+import { DayInfo } from '../types';
 import CalendarDayViewActivity, {
   STATUS_COLORS,
 } from './CalendarDayViewActivity';
@@ -48,10 +47,6 @@ const CalendarDayItem = ({
           width: '100%',
         }}
       >
-        {(dayInfo.activities_starts.length > 0 ||
-          dayInfo.activities_ends.length > 0) && (
-          <CalendarDayOtherActivities dayInfo={dayInfo} />
-        )}
         {dayInfo.events.map((event, index) => (
           // TODO: Use statusColor in reasonable way
           <CalendarDayViewActivity
