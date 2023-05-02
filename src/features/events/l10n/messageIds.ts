@@ -17,8 +17,8 @@ export default makeMessages('feat.events', {
     noContact: m('No Contact Assigned!'),
     removeButton: m('Remove'),
     selectPlaceholder: m('Select a contact person'),
-    warningText: m(
-      'The contact will be removed but continue as a participant. '
+    warningText: m<{ name: string }>(
+      '{name} will no longer be the contact person, but will remain booked on the event as a participant'
     ),
   },
   eventOverviewCard: {

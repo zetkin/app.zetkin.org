@@ -1,7 +1,9 @@
-import CloseIcon from '@mui/icons-material/Close';
-import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
-import FaceRetouchingOffOutlinedIcon from '@mui/icons-material/FaceRetouchingOffOutlined';
 import { Box, Button, Typography } from '@mui/material';
+import {
+  Close,
+  FaceOutlined,
+  FaceRetouchingOffOutlined,
+} from '@mui/icons-material';
 import { FC, useContext } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
@@ -47,12 +49,12 @@ const EventContactCard: FC<EventContactCardProps> = ({
           <Box>
             {model.getData().data?.contact?.id ? (
               <Box>
-                <FaceOutlinedIcon sx={{ margin: 1, verticalAlign: 'middle' }} />
+                <FaceOutlined sx={{ margin: 1, verticalAlign: 'middle' }} />
                 {messages.eventContactCard.header()}
               </Box>
             ) : (
               <Box>
-                <FaceRetouchingOffOutlinedIcon
+                <FaceRetouchingOffOutlined
                   sx={{ margin: 1, verticalAlign: 'middle' }}
                 />
                 {messages.eventContactCard.noContact()}
@@ -111,13 +113,15 @@ const EventContactCard: FC<EventContactCardProps> = ({
                 onSubmit: () => {
                   model.removeContact();
                 },
-                warningText: messages.eventContactCard.warningText(),
+                warningText: messages.eventContactCard.warningText({
+                  name: data!.contact!.name,
+                }),
               });
             }}
             size="small"
+            startIcon={<Close />}
             variant="text"
           >
-            <CloseIcon />
             {messages.eventContactCard.removeButton()}
           </Button>
         )}
