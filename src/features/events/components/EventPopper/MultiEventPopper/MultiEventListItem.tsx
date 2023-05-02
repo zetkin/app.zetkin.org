@@ -90,60 +90,61 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" paddingBottom={1}>
-      <Box
-        alignItems="flex-start"
-        display="flex"
-        justifyContent="space-between"
-      >
-        <Box alignItems="center" display="flex">
-          <Checkbox sx={{ padding: '0px' }} />
-          <Typography paddingLeft={1}>
-            {clusterType == CLUSTER_TYPE.LOCATION && (
-              <LocationName location={event.location} />
-            )}
-            {clusterType == CLUSTER_TYPE.SHIFT && timeSpan}
-            {clusterType == CLUSTER_TYPE.ARBITRARY &&
-              (event.title || event.activity.title)}
-          </Typography>
-        </Box>
-        <Box alignItems="center" display="flex">
-          <Box display="flex">
-            {warningIcons.map((icon, idx) => {
-              if (icon) {
-                return icon;
-              }
-              if (!compact) {
-                return <WarningSlot key={idx} />;
-              }
-            })}
+      <Box alignItems="flex-start" display="flex">
+        <Checkbox sx={{ padding: '0px' }} />
+        <Box
+          display="flex"
+          flex={1}
+          justifyContent="space-between"
+          onClick={() => onEventClick(event.id)}
+          sx={{ cursor: 'pointer' }}
+        >
+          <Box alignItems="center" display="flex">
+            <Typography paddingLeft={1}>
+              {clusterType == CLUSTER_TYPE.LOCATION && (
+                <LocationName location={event.location} />
+              )}
+              {clusterType == CLUSTER_TYPE.SHIFT && timeSpan}
+              {clusterType == CLUSTER_TYPE.ARBITRARY &&
+                (event.title || event.activity.title)}
+            </Typography>
           </Box>
-          <Box paddingRight={2}>
-            <ZUIIconLabel
-              color={
-                event.num_participants_available <
-                event.num_participants_required
-                  ? 'error'
-                  : 'secondary'
-              }
-              icon={
-                <People
-                  color={
-                    event.num_participants_available <
-                    event.num_participants_required
-                      ? 'error'
-                      : 'secondary'
-                  }
-                  fontSize="small"
-                />
-              }
-              label={`${event.num_participants_available}/${event.num_participants_required}`}
-              size="sm"
-            />
+          <Box alignItems="center" display="flex">
+            <Box display="flex">
+              {warningIcons.map((icon, idx) => {
+                if (icon) {
+                  return icon;
+                }
+                if (!compact) {
+                  return <WarningSlot key={idx} />;
+                }
+              })}
+            </Box>
+            <Box paddingRight={2}>
+              <ZUIIconLabel
+                color={
+                  event.num_participants_available <
+                  event.num_participants_required
+                    ? 'error'
+                    : 'secondary'
+                }
+                icon={
+                  <People
+                    color={
+                      event.num_participants_available <
+                      event.num_participants_required
+                        ? 'error'
+                        : 'secondary'
+                    }
+                    fontSize="small"
+                  />
+                }
+                label={`${event.num_participants_available}/${event.num_participants_required}`}
+                size="sm"
+              />
+            </Box>
+            <ChevronRightOutlined />
           </Box>
-          <ChevronRightOutlined
-            onClick={() => onEventClick(event.id)}
-            sx={{ cursor: 'pointer' }}
-          />
         </Box>
       </Box>
       {clusterType === CLUSTER_TYPE.ARBITRARY && (
