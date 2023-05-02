@@ -12,6 +12,10 @@ export default makeMessages('feat.events', {
   common: {
     noLocation: m('No physical location'),
   },
+  eventActionButtons: {
+    publish: m('Publish'),
+    unpublish: m('Unpublish'),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
