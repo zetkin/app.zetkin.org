@@ -54,7 +54,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               <Grid item md={8} xs={12}>
                 <ParticipantSummaryCard model={dataModel} />
               </Grid>
-              <Grid item md={4} xs={8}>
+              <Grid item md={4} xs={12}>
                 <EventContactCard
                   data={data}
                   model={dataModel}

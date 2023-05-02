@@ -114,7 +114,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       hideSortIcons: true,
       renderCell: (params) => {
         if (params.row.person) {
-          return <Typography>{''}</Typography>;
+          return <Typography>{params.row.person.phone}</Typography>;
         } else {
           return <Typography>{params.row.phone}</Typography>;
         }
@@ -132,7 +132,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       sortable: false,
       valueGetter: (params) => {
         if (params.row.person) {
-          return '';
+          return `${params.row.person.email}`;
         } else {
           return `${params.row.email}`;
         }
