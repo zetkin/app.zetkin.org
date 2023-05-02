@@ -85,7 +85,12 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
     respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
       .length ?? 0;
   return (
-    <Popper anchorEl={anchorEl} open={open} placement="right">
+    <Popper
+      anchorEl={anchorEl}
+      open={open}
+      placement="right"
+      sx={{ width: '480px' }}
+    >
       <ClickAwayListener onClickAway={onClickAway}>
         <Paper sx={{ padding: 2, width: '340px' }}>
           <Box display="flex" flexDirection="column">
