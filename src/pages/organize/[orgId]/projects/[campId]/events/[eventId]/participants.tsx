@@ -54,9 +54,14 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               <Grid item md={8} xs={12}>
                 <ParticipantSummaryCard model={dataModel} />
               </Grid>
-              {/* <Grid container item justifyContent="flex-end" md={12}></Grid> */}
             </Grid>
-            <Grid container item justifyContent="flex-end" md={12}>
+            <Grid
+              container
+              item
+              justifyContent="flex-end"
+              md={12}
+              style={{ marginBottom: '40px', marginTop: '30px' }}
+            >
               <EventParticipantsFilter model={dataModel} />
               <AddPersonButton model={dataModel} />
             </Grid>
