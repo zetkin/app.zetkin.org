@@ -6,7 +6,7 @@ import EventDataModel from '../models/EventDataModel';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
+import ZUIDatePicker from 'zui/ZUIDatePicker';
 
 import messageIds from '../l10n/messageIds';
 
@@ -33,11 +33,8 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const handleUnpublish = () => {
     model.setPublished(null);
   };
-  const handleChangeDates = (
-    startDate: string | null,
-    endDate: string | null
-  ) => {
-    model.setPublishedCancelled(startDate, endDate);
+  const handleChangeDate = (date: string | null) => {
+    model.setPublished(date);
   };
 
   return (
@@ -54,11 +51,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
         )}
       </Box>
       <Box>
-        <ZUIDateRangePicker
-          endDate={event.cancelled}
-          onChange={handleChangeDates}
-          startDate={event.published}
-        />
+        <ZUIDatePicker date={event.published} onChange={handleChangeDate} />
       </Box>
     </Box>
   );

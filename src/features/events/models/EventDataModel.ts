@@ -63,13 +63,6 @@ export default class EventDataModel extends ModelBase {
     });
   }
 
-  setPublishedCancelled(startDate: string | null, endDate: string | null) {
-    this._repo.updateEvent(this._orgId, this._eventId, {
-      cancelled: endDate ? new Date(endDate).toISOString() : null,
-      published: startDate ? new Date(startDate).toISOString() : null,
-    });
-  }
-
   setReqParticipants(reqParticipants: number) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       num_participants_required: reqParticipants,
