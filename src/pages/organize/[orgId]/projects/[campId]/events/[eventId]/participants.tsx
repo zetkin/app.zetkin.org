@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 
 import AddPersonButton from 'features/events/components/AddPersonButton';
+import EventContactCard from 'features/events/components/EventContactCard';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventParticipantsList from 'features/events/components/EventParticipantsList';
@@ -52,6 +53,13 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
             <Grid container spacing={2}>
               <Grid item md={8} xs={12}>
                 <ParticipantSummaryCard model={dataModel} />
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <EventContactCard
+                  data={data}
+                  model={dataModel}
+                  orgId={parseInt(orgId)}
+                />
               </Grid>
             </Grid>
             <Grid container item justifyContent="flex-end" md={12}>
