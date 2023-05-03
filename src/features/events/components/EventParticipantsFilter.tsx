@@ -1,11 +1,11 @@
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
 import { IconButton, TextField } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import { useMessages } from 'core/i18n';
-import { useState } from 'react';
 
 interface EventParticipansFilterProps {
   onFilterChange: (value: string) => void;
