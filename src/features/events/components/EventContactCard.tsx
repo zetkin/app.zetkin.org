@@ -51,7 +51,7 @@ const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
                 model.removeContact();
               },
               warningText: messages.eventContactCard.warningText({
-                name: contact!.name,
+                name: contact.name,
               }),
             });
           }}
@@ -73,7 +73,7 @@ const ContactSelect: FC<ContactSelectProps> = ({ model }) => {
   };
 
   return (
-    <Box sx={{ display: 'grid' }}>
+    <Box>
       <Box
         m={1}
         mb={3}
