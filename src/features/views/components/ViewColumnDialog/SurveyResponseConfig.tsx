@@ -66,7 +66,8 @@ const SurveyResponseConfig = ({
   };
 
   const makeOptionColumns = (
-    selectedOption: string | SURVEY_QUESTION_OPTIONS
+    selectedOption: string | SURVEY_QUESTION_OPTIONS,
+    surveyId: number
   ) => {
     if (
       selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
@@ -94,7 +95,7 @@ const SurveyResponseConfig = ({
           return {
             config: {
               option_id: option.id,
-              survey_id: selectedQuestion.id,
+              survey_id: surveyId,
             },
             title: option.text,
             type: COLUMN_TYPE.SURVEY_OPTION,
@@ -111,7 +112,7 @@ const SurveyResponseConfig = ({
           {
             config: {
               option_id: optionSelected.id,
-              survey_id: selectedQuestion.id,
+              survey_id: surveyId,
             },
             title: optionSelected.text,
             type: COLUMN_TYPE.SURVEY_OPTION,
@@ -195,9 +196,14 @@ const SurveyResponseConfig = ({
               <TextField
                 label={messages.columnDialog.choices.surveyResponse.optionsLabel()}
                 onChange={(evt) => {
-                  const columns = makeOptionColumns(evt.target.value);
-                  if (columns !== undefined) {
-                    onOutputConfigured(columns);
+                  if (surveyId) {
+                    const columns = makeOptionColumns(
+                      evt.target.value,
+                      surveyId
+                    );
+                    if (columns !== undefined) {
+                      onOutputConfigured(columns);
+                    }
                   }
                 }}
                 select
