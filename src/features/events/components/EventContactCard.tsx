@@ -43,7 +43,7 @@ const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
       <Typography sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
         {contact.name}
       </Typography>
-      <Box m={1}>
+      <Box mb={1}>
         <Button
           onClick={() => {
             showConfirmDialog({
@@ -73,27 +73,15 @@ const ContactSelect: FC<ContactSelectProps> = ({ model }) => {
   };
 
   return (
-    <Box>
-      <Box
-        m={1}
-        mb={3}
-        mt={3}
-        sx={{
-          '& input': {
-            alignSelf: 'self-start',
-            minWidth: '200px !important',
-          },
+    <Box m={1} mb={5} mt={3}>
+      <ZUIPersonSelect
+        onChange={(person) => {
+          handleSelectedPerson(person.id);
         }}
-      >
-        <ZUIPersonSelect
-          onChange={(person) => {
-            handleSelectedPerson(person.id);
-          }}
-          placeholder={messages.eventContactCard.selectPlaceholder()}
-          selectedPerson={null}
-          variant="outlined"
-        />
-      </Box>
+        placeholder={messages.eventContactCard.selectPlaceholder()}
+        selectedPerson={null}
+        variant="outlined"
+      />
     </Box>
   );
 };
@@ -106,16 +94,7 @@ const EventContactCard: FC<EventContactCardProps> = ({
   const messages = useMessages(messageIds);
 
   return (
-    <Box
-      mb={2}
-      sx={{
-        '& div': {
-          flexDirection: 'column',
-          flexWrap: 'wrap',
-        },
-        display: 'block',
-      }}
-    >
+    <Box mb={2}>
       <ZUICard
         header={
           <Box>
@@ -134,21 +113,12 @@ const EventContactCard: FC<EventContactCardProps> = ({
             )}
           </Box>
         }
-        status={
-          <Box>
-            {data.contact ? (
-              <ContactDetails
-                contact={data.contact}
-                model={model}
-                orgId={orgId}
-              />
-            ) : (
-              <ContactSelect model={model} />
-            )}
-          </Box>
-        }
       >
-        {''}
+        {data.contact ? (
+          <ContactDetails contact={data.contact} model={model} orgId={orgId} />
+        ) : (
+          <ContactSelect model={model} />
+        )}
       </ZUICard>
     </Box>
   );
