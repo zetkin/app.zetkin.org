@@ -6,18 +6,28 @@ import messageIds from 'features/events/l10n/messageIds';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import {
+  ZetkinEvent,
+  ZetkinEventParticipant,
+  ZetkinEventResponse,
+} from 'utils/types/zetkin';
 
 interface EventParticipantsListProps {
   data: ZetkinEvent;
   model: EventDataModel;
   orgId: number;
+  filterCleared: boolean;
+  filteredParticipants: ZetkinEventParticipant[];
+  filteredSignUp: ZetkinEventResponse[];
 }
 
 const EventParticipantsList: FC<EventParticipantsListProps> = ({
   data,
   model,
   orgId,
+  filterCleared,
+  filteredParticipants,
+  filteredSignUp,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -30,7 +40,11 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           description={messages.eventParticipantsList.descriptionSignups()}
           model={model}
           orgId={orgId}
-          rows={model.getPendingSignUps() ?? []}
+          rows={
+            filteredSignUp && !filterCleared
+              ? filteredSignUp
+              : model.getPendingSignUps() ?? []
+          }
           title={messages.eventParticipantsList.signUps()}
         />
       )}
@@ -42,7 +56,11 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
         description={messages.eventParticipantsList.descriptionBooked()}
         model={model}
         orgId={orgId}
-        rows={model.getParticipants().data ?? []}
+        rows={
+          filteredParticipants && !filterCleared
+            ? filteredParticipants
+            : model.getParticipants().data ?? []
+        }
         title={messages.eventParticipantsList.bookedParticipants()}
       />
     </Box>
