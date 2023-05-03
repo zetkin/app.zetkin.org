@@ -229,12 +229,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event }) => {
       </Box>
       <Box alignItems="center" display="flex" justifyContent="flex-end">
         {showPublishButton && (
-          <Button
-            onClick={() => {
-              model.publish();
-            }}
-            variant="contained"
-          >
+          <Button onClick={() => model.publish()} variant="contained">
             {messages.eventPopper.publish()}
           </Button>
         )}

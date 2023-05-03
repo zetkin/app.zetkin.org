@@ -1,6 +1,6 @@
-import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import {
   AccessTime,
   ArrowForward,
@@ -20,6 +20,7 @@ import {
   Popper,
   Typography,
 } from '@mui/material';
+import { FC, useContext } from 'react';
 
 import LocationName from '../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
@@ -28,6 +29,7 @@ import StatusDot from './StatusDot';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -52,22 +54,18 @@ const useStyles = makeStyles(() => ({
 interface SingleEventPopperProps {
   anchorEl: HTMLElement | null;
   event: ZetkinEvent;
-  onCancel: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   onClickAway: () => void;
-  onDelete: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
-  onPublish: () => void;
   open: boolean;
 }
 
 const SingleEventPopper: FC<SingleEventPopperProps> = ({
   anchorEl,
   event,
-  onCancel,
   onClickAway,
-  onDelete,
-  onPublish,
   open,
 }) => {
+  const router = useRouter();
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const classes = useStyles();
   const messages = useMessages(messageIds);
   const model = useModel(
@@ -77,6 +75,11 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
   const participants = model.getParticipants().data || [];
   const respondents = model.getRespondents().data || [];
   const state = model.state;
+
+  const showPublishButton =
+    state == EventState.DRAFT ||
+    state == EventState.SCHEDULED ||
+    state == EventState.CANCELLED;
 
   const remindedParticipants =
     participants?.filter((p) => p.reminder_sent != null).length ?? 0;
@@ -273,17 +276,40 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
               </NextLink>
             </Box>
             <Box alignItems="center" display="flex" justifyContent="flex-end">
-              {state == EventState.DRAFT ||
-                state == EventState.SCHEDULED ||
-                (state == EventState.CANCELLED && (
-                  <Button onClick={onPublish} variant="contained">
-                    {messages.eventPopper.publish()}
-                  </Button>
-                ))}
+              {showPublishButton && (
+                <Button onClick={() => model.publish()} variant="contained">
+                  {messages.eventPopper.publish()}
+                </Button>
+              )}
               <ZUIEllipsisMenu
                 items={[
-                  { label: messages.eventPopper.delete(), onSelect: onDelete },
-                  { label: messages.eventPopper.cancel(), onSelect: onCancel },
+                  {
+                    label: messages.eventPopper.delete(),
+                    onSelect: () =>
+                      showConfirmDialog({
+                        onSubmit: () => {
+                          model.delete();
+                          router.push(
+                            `/organize/${event.organization.id}${
+                              event.campaign
+                                ? `/projects/${event.campaign.id}`
+                                : ''
+                            }`
+                          );
+                        },
+                        title: messages.eventPopper.confirmDelete(),
+                        warningText: messages.eventPopper.deleteWarning(),
+                      }),
+                  },
+                  {
+                    label: messages.eventPopper.cancel(),
+                    onSelect: () =>
+                      showConfirmDialog({
+                        onSubmit: () => model.cancel(),
+                        title: messages.eventPopper.confirmCancel(),
+                        warningText: messages.eventPopper.cancelWarning(),
+                      }),
+                  },
                 ]}
               />
             </Box>
