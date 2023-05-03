@@ -62,6 +62,9 @@ export default makeMessages('feat.events', {
     participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
   },
+  eventRelatedCard: {
+    header: m('Related events'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),
