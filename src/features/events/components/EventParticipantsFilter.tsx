@@ -118,14 +118,18 @@ const EventParticipantsFilter = ({
       color="primary"
       InputProps={{
         endAdornment: (
-          <IconButton>
-            <ClearIcon
-              onClick={() => {
-                setUserInput('');
-                onFilterCleared(true);
-              }}
-            />
-          </IconButton>
+          <>
+            {userInput && (
+              <IconButton>
+                <ClearIcon
+                  onClick={() => {
+                    setUserInput('');
+                    onFilterCleared(true);
+                  }}
+                />
+              </IconButton>
+            )}
+          </>
         ),
         startAdornment: <SearchIcon color="secondary" sx={{ mr: 1 }} />,
       }}
