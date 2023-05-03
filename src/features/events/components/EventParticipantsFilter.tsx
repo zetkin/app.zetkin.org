@@ -97,8 +97,8 @@ const EventParticipantsFilter = ({
             const orFields: Fuse.Expression[] = [
               { first_name: searchToken },
               { last_name: searchToken },
-              { email: searchToken },
               { phone: searchToken },
+              { email: searchToken },
             ];
 
             return {
@@ -115,7 +115,6 @@ const EventParticipantsFilter = ({
 
   return (
     <TextField
-      color="primary"
       InputProps={{
         endAdornment: (
           <>
@@ -142,7 +141,6 @@ const EventParticipantsFilter = ({
       size="small"
       sx={{ width: '230px' }}
       value={userInput}
-      variant="outlined"
     />
   );
 };
