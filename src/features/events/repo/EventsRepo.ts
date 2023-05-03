@@ -6,6 +6,7 @@ import { Store } from 'core/store';
 import {
   eventCreate,
   eventCreated,
+  eventDeleted,
   eventLoad,
   eventLoaded,
   eventsLoad,
@@ -46,8 +47,10 @@ export type ZetkinEventPatchBody = Partial<
 > & {
   activity_id?: number;
   campaign_id?: number;
+  cancelled?: string;
   location_id?: number | null;
   organization_id?: number;
+  published?: string;
 };
 
 export type ZetkinEventPostBody = ZetkinEventPatchBody;
@@ -107,6 +110,11 @@ export default class EventsRepo {
     );
     this._store.dispatch(eventCreated(event));
     return event;
+  }
+
+  async deleteEvent(orgId: number, eventId: number) {
+    await this._apiClient.delete(`/api/orgs/${orgId}/actions/${eventId}`);
+    this._store.dispatch(eventDeleted(eventId));
   }
 
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {

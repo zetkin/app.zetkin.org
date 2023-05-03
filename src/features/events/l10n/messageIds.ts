@@ -57,9 +57,17 @@ export default makeMessages('feat.events', {
     backToShifts: m('Back to shift list'),
     booked: m('Booked'),
     cancel: m('Cancel'),
+    cancelWarning: m(
+      'If you do, remember to notify all participants and sign-ups that the event has been cancelled!'
+    ),
+    confirmCancel: m('Are you sure you want to cancel this event?'),
+    confirmDelete: m('Are you sure you want to delete this event?'),
     contactPerson: m('Contact person'),
     dateAndTime: m('Date & Time'),
     delete: m('Delete'),
+    deleteWarning: m(
+      'Once the event has been deleted you will not be able to access it again.'
+    ),
     description: m('Description'),
     eventPageLink: m('Go to event page'),
     events: m('Events'),

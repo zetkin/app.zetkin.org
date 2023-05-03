@@ -32,6 +32,12 @@ export default class EventDataModel extends ModelBase {
     this._repo.addParticipant(this._orgId, this._eventId, personId);
   }
 
+  cancel() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: new Date().toISOString(),
+    });
+  }
+
   constructor(env: Environment, orgId: number, eventId: number) {
     super();
     this._env = env;
@@ -51,6 +57,10 @@ export default class EventDataModel extends ModelBase {
         return event;
       });
     return new PromiseFuture(promise);
+  }
+
+  delete() {
+    return this._repo.deleteEvent(this._orgId, this._eventId);
   }
 
   getData(): IFuture<ZetkinEvent> {
@@ -108,6 +118,12 @@ export default class EventDataModel extends ModelBase {
     return this._repo.getEventRespondents(this._orgId, this._eventId);
   }
 
+  publish() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      published: new Date().toISOString(),
+    });
+  }
+
   sendReminders() {
     this._repo.sendReminders(this._orgId, this._eventId);
   }
@@ -140,23 +156,28 @@ export default class EventDataModel extends ModelBase {
       return EventState.UNKNOWN;
     }
 
-    if (data.start_time) {
-      const startTime = new Date(data.start_time);
-      const now = new Date();
+    if (!data.published && data.cancelled) {
+      return EventState.CANCELLED;
+    }
+    const now = new Date();
 
-      if (startTime > now) {
-        return EventState.SCHEDULED;
-      } else {
-        if (data.end_time) {
-          const endTime = new Date(data.end_time);
-
-          if (endTime < now) {
-            return EventState.ENDED;
-          }
+    if (data.published) {
+      const published = new Date(data.published);
+      if (data.cancelled) {
+        const cancelled = new Date(data.cancelled);
+        if (cancelled > published) {
+          return EventState.CANCELLED;
         }
-
-        return EventState.OPEN;
       }
+      if (data.end_time) {
+        const endTime = new Date(data.end_time);
+        if (endTime < now) {
+          return EventState.ENDED;
+        }
+      }
+      return EventState.OPEN;
+    } else if (data.start_time && new Date(data.start_time) > now) {
+      return EventState.SCHEDULED;
     } else {
       return EventState.DRAFT;
     }
