@@ -55,17 +55,22 @@ const EventParticipantsFilter = ({
       const signUpFuseList = new Fuse(signUpList, {
         includeScore: true,
         keys: [
-          'person.first_name',
-          'person.last_name',
-          'person.phone',
-          'person.email',
+          { name: 'person.first_name', weight: 1.0 },
+          { name: 'person.last_name', weight: 0.8 },
+          { name: 'person.phone', weight: 0.8 },
+          { name: 'person.email', weight: 0.8 },
         ],
         threshold: 0.4,
       });
 
       const participantsFuseList = new Fuse(participantsList, {
         includeScore: true,
-        keys: ['first_name', 'last_name', 'phone', 'email'],
+        keys: [
+          { name: 'first_name', weight: 1.0 },
+          { name: 'last_name', weight: 0.8 },
+          { name: 'phone', weight: 0.8 },
+          { name: 'email', weight: 0.8 },
+        ],
         threshold: 0.4,
       });
 
