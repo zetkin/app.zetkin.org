@@ -120,13 +120,13 @@ const EventParticipantsFilter = ({
         endAdornment: (
           <>
             {userInput && (
-              <IconButton>
-                <ClearIcon
-                  onClick={() => {
-                    setUserInput('');
-                    onFilterCleared(true);
-                  }}
-                />
+              <IconButton
+                onClick={() => {
+                  setUserInput('');
+                  onFilterCleared(true);
+                }}
+              >
+                <ClearIcon />
               </IconButton>
             )}
           </>
