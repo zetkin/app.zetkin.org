@@ -7,6 +7,7 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
+import { filterList } from '../utils/participantsFilterUtils';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
@@ -18,6 +19,7 @@ interface ParticipantListSectionListProps {
   chipColor: string;
   chipNumber: string;
   description: string;
+  filterState: string;
   model: EventDataModel;
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
@@ -28,6 +30,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   chipColor,
   chipNumber,
   description,
+  filterState,
   orgId,
   model,
   rows,
@@ -178,7 +181,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         autoHeight
         checkboxSelection
         columns={columns}
-        rows={rows ?? []}
+        rows={filterState ? filterList(rows, filterState) : rows ?? []}
       />
     </>
   );

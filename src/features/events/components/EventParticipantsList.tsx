@@ -6,28 +6,20 @@ import messageIds from 'features/events/l10n/messageIds';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
-import {
-  ZetkinEvent,
-  ZetkinEventParticipant,
-  ZetkinEventResponse,
-} from 'utils/types/zetkin';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 interface EventParticipantsListProps {
   data: ZetkinEvent;
+  filterState: string;
   model: EventDataModel;
   orgId: number;
-  filterCleared: boolean;
-  filteredParticipants: ZetkinEventParticipant[];
-  filteredSignUp: ZetkinEventResponse[];
 }
 
 const EventParticipantsList: FC<EventParticipantsListProps> = ({
   data,
+  filterState,
   model,
   orgId,
-  filterCleared,
-  filteredParticipants,
-  filteredSignUp,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -38,13 +30,10 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           chipColor={theme.palette.grey[500]}
           chipNumber={model.getNumSignedParticipants().toString()}
           description={messages.eventParticipantsList.descriptionSignups()}
+          filterState={filterState}
           model={model}
           orgId={orgId}
-          rows={
-            filteredSignUp && !filterCleared
-              ? filteredSignUp
-              : model.getPendingSignUps() ?? []
-          }
+          rows={model.getPendingSignUps() ?? []}
           title={messages.eventParticipantsList.signUps()}
         />
       )}
@@ -54,13 +43,10 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           model.getNumAvailParticipants() + '/' + data.num_participants_required
         }
         description={messages.eventParticipantsList.descriptionBooked()}
+        filterState={filterState}
         model={model}
         orgId={orgId}
-        rows={
-          filteredParticipants && !filterCleared
-            ? filteredParticipants
-            : model.getParticipants().data ?? []
-        }
+        rows={model.getParticipants().data ?? []}
         title={messages.eventParticipantsList.bookedParticipants()}
       />
     </Box>

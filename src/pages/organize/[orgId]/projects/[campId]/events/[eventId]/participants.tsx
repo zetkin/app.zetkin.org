@@ -12,10 +12,6 @@ import ParticipantSummaryCard from 'features/events/components/ParticipantSummar
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
-import {
-  ZetkinEventParticipant,
-  ZetkinEventResponse,
-} from 'utils/types/zetkin';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -46,13 +42,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
   eventId,
   orgId,
 }) => {
-  const [isFilterCleared, setIsFilterCleared] = useState<boolean>(true);
-  const [filteredParticipants, setFilteredParticipants] = useState<
-    ZetkinEventParticipant[]
-  >([]);
-  const [filteredSignUp, setFilteredSignUp] = useState<ZetkinEventResponse[]>(
-    []
-  );
+  const [filterState, setFilterState] = useState<string>('');
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
@@ -75,18 +65,13 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               style={{ marginBottom: '40px', marginTop: '30px' }}
             >
               <EventParticipantsFilter
-                model={dataModel}
-                onFilterCleared={(value) => setIsFilterCleared(value)}
-                onFilterParticipants={(list) => setFilteredParticipants(list)}
-                onFilterSignUp={(list) => setFilteredSignUp(list)}
+                onFilterChange={(value) => setFilterState(value)}
               />
               <AddPersonButton model={dataModel} />
             </Grid>
             <EventParticipantsList
               data={data}
-              filterCleared={isFilterCleared}
-              filteredParticipants={filteredParticipants}
-              filteredSignUp={filteredSignUp}
+              filterState={filterState}
               model={dataModel}
               orgId={parseInt(orgId)}
             />
