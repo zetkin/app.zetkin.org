@@ -1,8 +1,10 @@
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
 
-import { TimeScale } from '.';
+import MonthSelect from './MonthSelect';
+import { TimeScale } from '../index';
+import YearSelect from './YearSelect';
 
 export interface CalendarNavBarProps {
   focusDate: Date;
@@ -37,9 +39,14 @@ const CalendarNavBar = ({
         <IconButton onClick={onStepForward}>
           <ArrowForward />
         </IconButton>
-        {/* Placeholders just to know which date we're on. */}
-        <Box>{focusDate.toLocaleDateString('en', { month: 'long' })}</Box>
-        <Box>{focusDate.toLocaleDateString('en', { year: 'numeric' })}</Box>
+        <MonthSelect
+          focusDate={focusDate}
+          onChange={(date) => onChangeFocusDate(date)}
+        />
+        <YearSelect
+          focusDate={focusDate}
+          onChange={(date) => onChangeFocusDate(date)}
+        />
       </Box>
 
       <ButtonGroup>
