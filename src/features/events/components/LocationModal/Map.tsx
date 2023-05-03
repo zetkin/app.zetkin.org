@@ -1,35 +1,29 @@
 import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
-import { ZetkinLocation } from 'utils/types/zetkin';
+import BasicMarker from './BasicMarker';
+import SelectedMarker from './SelectedMarker';
+import { useTheme } from '@mui/material';
 import {
-  icon,
+  divIcon,
   latLngBounds,
   Map as MapType,
   Marker as MarkerType,
 } from 'leaflet';
-
-const selectedIcon = icon({
-  iconAnchor: [12, 32],
-  iconSize: [25, 32],
-  iconUrl: '/selectedMarker.png',
-});
-
-const basicIcon = icon({
-  iconAnchor: [12, 32],
-  iconSize: [25, 32],
-  iconUrl: '/basicMarker.png',
-});
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface MapProps {
+  currentEventId: number;
   inMoveState: boolean;
   locations: ZetkinLocation[];
   onMapClick: (latlng: Pick<ZetkinLocation, 'lat' | 'lng'>) => void;
   onMarkerClick: (locationId: number) => void;
   onMarkerDragEnd: (lat: number, lng: number) => void;
   pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'> | null;
+  relatedEvents: ZetkinEvent[];
   searchString: string;
   selectedLocation?: ZetkinLocation;
 }
@@ -44,15 +38,18 @@ const MapWrapper = ({
 };
 
 const Map: FC<MapProps> = ({
+  currentEventId,
   inMoveState,
   locations,
   onMapClick,
   onMarkerClick,
   onMarkerDragEnd,
   pendingLocation,
+  relatedEvents,
   selectedLocation,
   searchString,
 }) => {
+  const theme = useTheme();
   const [newPosition, setNewPosition] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -113,6 +110,11 @@ const Map: FC<MapProps> = ({
               />
               {filteredLocations.map((location) => {
                 const isSelectedMarker = selectedLocation?.id == location.id;
+                const noOfRelevantEvents = relatedEvents.filter(
+                  (event) =>
+                    event.location?.id === location.id &&
+                    event.id !== currentEventId
+                ).length;
                 return (
                   <Marker
                     key={location.id}
@@ -122,6 +124,7 @@ const Map: FC<MapProps> = ({
                     draggable={inMoveState && isSelectedMarker}
                     eventHandlers={{
                       click: (evt) => {
+                        evt.originalEvent.stopPropagation();
                         setNewPosition(null);
                         map.setView(evt.latlng, 17);
                         onMarkerClick(location.id);
@@ -137,7 +140,22 @@ const Map: FC<MapProps> = ({
                         }
                       },
                     }}
-                    icon={isSelectedMarker ? selectedIcon : basicIcon}
+                    icon={
+                      isSelectedMarker
+                        ? divIcon({
+                            className: '',
+                            html: renderToStaticMarkup(<SelectedMarker />),
+                          })
+                        : divIcon({
+                            className: '',
+                            html: renderToStaticMarkup(
+                              <BasicMarker
+                                color={theme.palette.primary.main}
+                                events={noOfRelevantEvents}
+                              />
+                            ),
+                          })
+                    }
                     position={
                       isSelectedMarker && newPosition && inMoveState
                         ? newPosition
@@ -148,7 +166,10 @@ const Map: FC<MapProps> = ({
               })}
               {pendingLocation && (
                 <Marker
-                  icon={selectedIcon}
+                  icon={divIcon({
+                    className: '',
+                    html: renderToStaticMarkup(<SelectedMarker />),
+                  })}
                   position={[pendingLocation.lat, pendingLocation.lng]}
                 />
               )}

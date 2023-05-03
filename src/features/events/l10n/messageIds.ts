@@ -1,6 +1,14 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  addPerson: {
+    addButton: m('Add person'),
+    addPlaceholder: m('Start typing to add participant'),
+    status: {
+      booked: m('Already booked'),
+      signedUp: m('Signed up'),
+    },
+  },
   common: {
     noLocation: m('No physical location'),
   },
@@ -26,6 +34,22 @@ export default makeMessages('feat.events', {
     pending: m('Pending sign-ups'),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
+  },
+  eventParticipantsList: {
+    bookedParticipants: m('Booked Participants'),
+    buttonBook: m('Book'),
+    buttonCancel: m('Cancel'),
+    columnEmail: m('Email'),
+    columnName: m('Name'),
+    columnNotified: m('Notified'),
+    columnPhone: m('Phone'),
+    descriptionBooked: m(
+      'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
+    ),
+    descriptionSignups: m(
+      'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
+    ),
+    signUps: m('Sign-ups'),
   },
   eventPopper: {
     backToEvents: m('Back to event list'),
@@ -85,6 +109,10 @@ export default makeMessages('feat.events', {
     move: m('Move'),
     moveInstructions: m('Drag the pin to select location.'),
     noDescription: m('No description'),
+    noRelatedEvents: m(
+      'There are no other events happening here around this time.'
+    ),
+    relatedEvents: m('Other events here around this time'),
     save: m('Save'),
     saveLocation: m('Save location'),
     searchBox: m('Find location'),
