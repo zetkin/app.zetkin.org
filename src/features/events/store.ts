@@ -14,6 +14,13 @@ import {
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
+export enum EVENT_FILTER {
+  MISSING = 'Contact person missing',
+  OVERBOOKED = 'Overbooked',
+  PENDING = 'Signups pending',
+  UNDERBOOKED = 'Underbooked',
+  UNSENT = 'Unsent notifications',
+}
 export type EventStats = {
   id: number;
   numBooked: number;

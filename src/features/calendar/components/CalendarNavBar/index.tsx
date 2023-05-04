@@ -1,9 +1,14 @@
 import { Box } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
+import EventFilterPane from './EventFilterPane';
+import messageIds from 'features/calendar/l10n/messageIds';
 import MonthSelect from './MonthSelect';
+import { Msg } from 'core/i18n';
 import { TimeScale } from '../index';
+import { usePanes } from 'utils/panes';
 import YearSelect from './YearSelect';
 
 export interface CalendarNavBarProps {
@@ -23,6 +28,8 @@ const CalendarNavBar = ({
   onStepForward,
   timeScale,
 }: CalendarNavBarProps) => {
+  const { openPane } = usePanes();
+
   return (
     <Box display="flex" justifyContent="space-between">
       <Box alignItems="center" display="flex" gap="4px">
@@ -31,7 +38,7 @@ const CalendarNavBar = ({
           onClick={() => onChangeFocusDate(new Date())}
           variant="outlined"
         >
-          Today
+          <Msg id={messageIds.today} />
         </Button>
         <IconButton onClick={onStepBackward}>
           <ArrowBack />
@@ -48,27 +55,43 @@ const CalendarNavBar = ({
           onChange={(date) => onChangeFocusDate(date)}
         />
       </Box>
-
-      <ButtonGroup>
+      <Box>
+        <ButtonGroup>
+          <Button
+            onClick={() => onChangeTimeScale(TimeScale.DAY)}
+            variant={timeScale === TimeScale.DAY ? 'contained' : 'outlined'}
+          >
+            <Msg id={messageIds.ranges.day} />
+          </Button>
+          <Button
+            onClick={() => onChangeTimeScale(TimeScale.WEEK)}
+            variant={timeScale === TimeScale.WEEK ? 'contained' : 'outlined'}
+          >
+            <Msg id={messageIds.ranges.week} />
+          </Button>
+          <Button
+            onClick={() => onChangeTimeScale(TimeScale.MONTH)}
+            variant={timeScale === TimeScale.MONTH ? 'contained' : 'outlined'}
+          >
+            <Msg id={messageIds.ranges.month} />
+          </Button>
+        </ButtonGroup>
         <Button
-          onClick={() => onChangeTimeScale(TimeScale.DAY)}
-          variant={timeScale === TimeScale.DAY ? 'contained' : 'outlined'}
+          startIcon={<FilterListIcon />}
+          variant="outlined"
+          sx={{ ml: 2 }}
+          onClick={() =>
+            openPane({
+              render() {
+                return <EventFilterPane />;
+              },
+              width: 400,
+            })
+          }
         >
-          Day
+          <Msg id={messageIds.eventFilter.filter} />
         </Button>
-        <Button
-          onClick={() => onChangeTimeScale(TimeScale.WEEK)}
-          variant={timeScale === TimeScale.WEEK ? 'contained' : 'outlined'}
-        >
-          Week
-        </Button>
-        <Button
-          onClick={() => onChangeTimeScale(TimeScale.MONTH)}
-          variant={timeScale === TimeScale.MONTH ? 'contained' : 'outlined'}
-        >
-          Month
-        </Button>
-      </ButtonGroup>
+      </Box>
     </Box>
   );
 };
