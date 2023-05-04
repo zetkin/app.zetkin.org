@@ -44,6 +44,14 @@ const eventsSlice = createSlice({
   initialState,
   name: 'events',
   reducers: {
+    eventCreate: (state) => {
+      state.eventList.isLoading = true;
+    },
+    eventCreated: (state, action: PayloadAction<ZetkinEvent>) => {
+      const event = action.payload;
+      state.eventList.isLoading = false;
+      state.eventList.items.push(remoteItem(event.id, { data: event }));
+    },
     eventLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.eventList.items.find((item) => item.id == id);
@@ -124,11 +132,9 @@ const eventsSlice = createSlice({
       action: PayloadAction<[number, ZetkinEventParticipant]>
     ) => {
       const [eventId, participant] = action.payload;
-      state.participantsByEventId[eventId].items = state.participantsByEventId[
-        eventId
-      ].items
-        .filter((item) => item.id !== participant.id)
-        .concat([remoteItem(participant.id, { data: participant })]);
+      state.participantsByEventId[eventId].items.push(
+        remoteItem(participant.id, { data: participant })
+      );
     },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
@@ -209,6 +215,8 @@ const eventsSlice = createSlice({
 
 export default eventsSlice;
 export const {
+  eventCreate,
+  eventCreated,
   eventLoad,
   eventLoaded,
   eventsLoad,

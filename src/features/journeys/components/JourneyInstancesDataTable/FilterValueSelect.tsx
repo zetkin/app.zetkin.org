@@ -17,7 +17,7 @@ const FilterValueSelect: JSXElementConstructor<
         value={item.value}
         variant="standard"
       >
-        <option value=""></option>
+        <option value="" />
         {options?.map((option) => (
           <option key={option.id} value={option.id}>
             {option.title}

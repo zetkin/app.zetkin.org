@@ -94,7 +94,7 @@ const ActivityListItem = ({
   return (
     <Box className={classes.container}>
       <Box className={classes.left}>
-        <Box className={classes.dot}></Box>
+        <Box className={classes.dot} />
         <PrimaryIcon className={classes.primaryIcon} />
         <Box>
           <NextLink href={href} passHref>

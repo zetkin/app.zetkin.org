@@ -16,6 +16,15 @@ export default makeMessages('feat.events', {
     publish: m('Publish'),
     unpublish: m('Unpublish'),
   },
+  eventContactCard: {
+    header: m('Contact'),
+    noContact: m('No Contact Assigned!'),
+    removeButton: m('Remove'),
+    selectPlaceholder: m('Select a contact person'),
+    warningText: m<{ name: string }>(
+      '{name} will no longer be the contact person, but will remain booked on the event as a participant'
+    ),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
@@ -38,6 +47,24 @@ export default makeMessages('feat.events', {
     pending: m('Pending sign-ups'),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
+  },
+  eventParticipantsList: {
+    bookedParticipants: m('Booked Participants'),
+    buttonBook: m('Book'),
+    buttonCancel: m('Cancel'),
+    columnEmail: m('Email'),
+    columnName: m('Name'),
+    columnNotified: m('Notified'),
+    columnPhone: m('Phone'),
+    contactTooltip: m('Contact Person'),
+    descriptionBooked: m(
+      'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
+    ),
+    descriptionSignups: m(
+      'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
+    ),
+    participantTooltip: m('Make contact person'),
+    signUps: m('Sign-ups'),
   },
   form: {
     activity: m('Activity'),
@@ -69,6 +96,10 @@ export default makeMessages('feat.events', {
     move: m('Move'),
     moveInstructions: m('Drag the pin to select location.'),
     noDescription: m('No description'),
+    noRelatedEvents: m(
+      'There are no other events happening here around this time.'
+    ),
+    relatedEvents: m('Other events here around this time'),
     save: m('Save'),
     saveLocation: m('Save location'),
     searchBox: m('Find location'),

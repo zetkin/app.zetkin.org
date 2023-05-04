@@ -8,6 +8,7 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventParticipantsCard';
+import { EventsModel } from 'features/events/models/EventsModel';
 import LocationsModel from 'features/events/models/LocationsModel';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -56,7 +57,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
-
+  const eventsModel = useModel((env) => new EventsModel(env, parseInt(orgId)));
   const locationsModel = useModel(
     (env) => new LocationsModel(env, parseInt(orgId))
   );
@@ -70,6 +71,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({
               <EventOverviewCard
                 data={data}
                 dataModel={dataModel}
+                eventsModel={eventsModel}
                 locationsModel={locationsModel}
               />
             </Grid>
