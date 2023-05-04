@@ -3,7 +3,9 @@ import { FlagOutlined } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 
 import CallAssignmentOverviewListItem from './items/CallAssignmentOverviewListItem';
+import EventClusterOverviewListItem from './items/EventClusterOverviewListItem';
 import EventOverviewListItem from './items/EventOverviewListItem';
+import isEventCluster from 'features/campaigns/utils/isEventCluster';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyOverviewListItem from './items/SurveyOverviewListItem';
 import TaskOverviewListItem from './items/TaskOverviewListItem';
@@ -14,6 +16,9 @@ import {
   CampaignActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 import { Msg, useMessages } from 'core/i18n';
+import useClusteredActivities, {
+  CLUSTER_TYPE,
+} from 'features/campaigns/hooks/useClusteredActivities';
 
 type OverviewListProps = {
   activities: CampaignActivity[];
@@ -27,11 +32,13 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
   header,
 }) => {
   const messages = useMessages(messageIds);
-  const truncActivities = activities.slice(0, 6);
-  const numExtra = activities.length - truncActivities.length;
+  const clustered = useClusteredActivities(activities);
+  const truncActivities = clustered.slice(0, 6);
+  const numExtra = clustered.length - truncActivities.length;
+
   return (
     <ZUICard header={header}>
-      {activities.length === 0 && (
+      {clustered.length === 0 && (
         <ZUIEmptyState
           message={messages.activitiesOverview.empty()}
           renderIcon={(props) => <FlagOutlined {...props} />}
@@ -48,14 +55,21 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
               />
             </Box>
           );
-        } else if (activity.kind === ACTIVITIES.EVENT) {
+        } else if (isEventCluster(activity)) {
           return (
-            <Box key={`ca-${activity.data.id}`}>
+            <Box key={`cluster-${activity.events[0].id}`}>
               {index > 0 && <Divider />}
-              <EventOverviewListItem
-                activity={activity}
-                focusDate={focusDate}
-              />
+              {activity.kind == CLUSTER_TYPE.SINGLE ? (
+                <EventOverviewListItem
+                  event={activity.events[0]}
+                  focusDate={focusDate}
+                />
+              ) : (
+                <EventClusterOverviewListItem
+                  cluster={activity}
+                  focusDate={focusDate}
+                />
+              )}
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {

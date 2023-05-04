@@ -66,3 +66,19 @@ export function isInFuture(datestring: string): boolean {
 export function isSameDate(first: Date, second: Date): boolean {
   return first.toISOString().slice(0, 10) == second.toISOString().slice(0, 10);
 }
+
+export function isValidDate(date: Date): boolean {
+  if (date && !isNaN(date.getTime())) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function dateIsAfter(first: Date, second: Date): boolean {
+  return first.toISOString().slice(0, 10) < second.toISOString().slice(0, 10);
+}
+
+export function dateIsBefore(first: Date, second: Date): boolean {
+  return first.toISOString().slice(0, 10) > second.toISOString().slice(0, 10);
+}

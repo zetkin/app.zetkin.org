@@ -26,7 +26,7 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
-      activity={activity}
+      endDate={activity.endDate}
       endNumber={submissionCount}
       focusDate={focusDate}
       href={`/organize/${survey.organization.id}/projects/${
@@ -34,6 +34,7 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
       }/surveys/${survey.id}`}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
+      startDate={activity.startDate}
       statusBar={
         stats?.submissionCount ? (
           <ZUIStackedStatusBar

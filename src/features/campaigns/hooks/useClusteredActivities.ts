@@ -1,3 +1,4 @@
+import isEventCluster from '../utils/isEventCluster';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
@@ -8,12 +9,11 @@ import {
   TaskActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 
-
 export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',
   MULTI_SHIFT = 'multishift',
   SINGLE = 'single',
-  ARBITRARY = 'arbitrary'
+  ARBITRARY = 'arbitrary',
 }
 
 export type MultiShiftEventCluster = {
@@ -42,7 +42,9 @@ export type NonEventActivity =
   | TaskActivity;
 export type ClusteredActivity = ClusteredEvent | NonEventActivity;
 
-export function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
+export function clusterEvents(
+  eventActivities: EventActivity[]
+): ClusteredEvent[] {
   const sortedEvents = eventActivities
     .map((activity) => activity.data)
     .sort((a, b) => {
@@ -88,7 +90,7 @@ export function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[
         }
 
         if (
-          event.location.id == lastClusterEvent.location.id &&
+          event.location?.id == lastClusterEvent.location?.id &&
           event.start_time == lastClusterEvent.end_time
         ) {
           pendingClusters[i] = {
@@ -98,13 +100,11 @@ export function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[
           return;
         }
 
-        if (
-          doesMultipleLocationEventsMatch(lastClusterEvent, event)
-        ) {
+        if (doesMultipleLocationEventsMatch(lastClusterEvent, event)) {
           pendingClusters[i] = {
             events: [...cluster.events, event],
-            kind: CLUSTER_TYPE.MULTI_LOCATION
-          }
+            kind: CLUSTER_TYPE.MULTI_LOCATION,
+          };
           return;
         }
       } else if (cluster.kind == CLUSTER_TYPE.MULTI_SHIFT) {
@@ -114,7 +114,7 @@ export function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[
         if (
           lastClusterEvent.activity.id == event.activity.id &&
           lastClusterEvent.title == event.title &&
-          lastClusterEvent.location.id == event.location.id &&
+          lastClusterEvent.location?.id == event.location?.id &&
           lastClusterEvent.end_time == event.start_time
         ) {
           pendingClusters[i].events.push(event);
@@ -155,10 +155,10 @@ export default function useClusteredActivities(
   const clusteredEvents: ClusteredActivity[] = clusterEvents(eventActivities);
 
   return clusteredEvents.concat(otherActivities).sort((a, b) => {
-    const aStart = isCluster(a)
+    const aStart = isEventCluster(a)
       ? new Date(a.events[0].start_time)
       : a.startDate;
-    const bStart = isCluster(b)
+    const bStart = isEventCluster(b)
       ? new Date(b.events[0].start_time)
       : b.startDate;
 
@@ -174,18 +174,18 @@ export default function useClusteredActivities(
   });
 }
 
-function isCluster(activity: ClusteredActivity): activity is ClusteredEvent {
+function doesMultipleLocationEventsMatch(
+  event1: ZetkinEvent,
+  event2: ZetkinEvent
+): boolean {
   return (
-    activity.kind == CLUSTER_TYPE.SINGLE ||
-    activity.kind == CLUSTER_TYPE.MULTI_LOCATION ||
-    activity.kind == CLUSTER_TYPE.MULTI_SHIFT
-  );
-}
-
-function doesMultipleLocationEventsMatch(event1: ZetkinEvent, event2: ZetkinEvent): boolean {
-  return (event1.activity === event2?.activity &&
-    event1.campaign === event2?.campaign &&
+    !!event1.location &&
+    !!event2.location &&
+    event1.location.id !== event2.location.id &&
+    event1.activity.id === event2?.activity.id &&
+    event1.campaign?.id === event2?.campaign?.id &&
     event1.start_time === event2?.start_time &&
     event1.end_time === event2?.end_time &&
-    event1.organization === event2?.organization)
+    event1.organization.id === event2?.organization.id
+  );
 }

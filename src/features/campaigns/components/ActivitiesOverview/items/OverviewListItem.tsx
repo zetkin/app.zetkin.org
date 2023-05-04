@@ -69,7 +69,9 @@ interface OverviewListItemProps {
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
 
-  activity: CampaignActivity;
+  endDate: CampaignActivity['endDate'];
+  startDate: CampaignActivity['startDate'];
+
   focusDate: Date | null;
   href: string;
   meta?: JSX.Element;
@@ -81,9 +83,10 @@ interface OverviewListItemProps {
 }
 
 const OverviewListItem = ({
-  activity,
   PrimaryIcon,
   SecondaryIcon,
+  endDate,
+  startDate,
   focusDate,
   href,
   meta,
@@ -93,8 +96,7 @@ const OverviewListItem = ({
   statusBar,
   subtitle,
 }: OverviewListItemProps) => {
-  const { endDate, startDate } = activity;
-  const color = getStatusColor(activity);
+  const color = getStatusColor(startDate, endDate);
   const classes = useStyles({ color });
 
   const now = new Date();
@@ -217,9 +219,11 @@ const OverviewListItem = ({
 
 export default OverviewListItem;
 
-function getStatusColor(activity: CampaignActivity): STATUS_COLORS {
+function getStatusColor(
+  startDate: Date | null,
+  endDate: Date | null
+): STATUS_COLORS {
   const now = new Date();
-  const { endDate, startDate } = activity;
 
   if (startDate) {
     if (startDate > now) {
