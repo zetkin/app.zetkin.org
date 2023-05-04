@@ -20,7 +20,6 @@ const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, model }) => {
   return (
     <Box mt={2}>
       <ZUICard header={messages.eventRelatedCard.header()}>
-        <Divider />
         <ZUIFuture
           future={model.getParallelEvents(data.start_time, data.end_time)}
         >
