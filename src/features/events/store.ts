@@ -144,9 +144,14 @@ const eventsSlice = createSlice({
       const item = state.participantsByEventId[eventId].items.find(
         (item) => item.id === participant.id
       );
+
       if (item) {
         item.data = { ...item.data, ...participant };
         item.mutating = [];
+      } else {
+        state.participantsByEventId[eventId].items.push(
+          remoteItem(participant.id, { data: participant })
+        );
       }
     },
     participantsLoad: (state, action: PayloadAction<number>) => {
