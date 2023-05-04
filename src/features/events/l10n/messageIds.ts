@@ -115,6 +115,7 @@ export default makeMessages('feat.events', {
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
+  search: m('Search'),
   state: {
     cancelled: m('Cancelled'),
     draft: m('Draft'),
