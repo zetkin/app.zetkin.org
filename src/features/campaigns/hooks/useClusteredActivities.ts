@@ -13,6 +13,7 @@ export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',
   MULTI_SHIFT = 'multishift',
   SINGLE = 'single',
+  ARBITRARY = 'arbitrary',
 }
 
 export type MultiShiftEventCluster = {
@@ -41,7 +42,9 @@ export type NonEventActivity =
   | TaskActivity;
 export type ClusteredActivity = ClusteredEvent | NonEventActivity;
 
-function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
+export function clusterEvents(
+  eventActivities: EventActivity[]
+): ClusteredEvent[] {
   const sortedEvents = eventActivities
     .map((activity) => activity.data)
     .sort((a, b) => {
@@ -96,6 +99,14 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
           };
           return;
         }
+
+        if (doesMultipleLocationEventsMatch(lastClusterEvent, event)) {
+          pendingClusters[i] = {
+            events: [...cluster.events, event],
+            kind: CLUSTER_TYPE.MULTI_LOCATION,
+          };
+          return;
+        }
       } else if (cluster.kind == CLUSTER_TYPE.MULTI_SHIFT) {
         // If activity and location is the same, and this event
         // starts right after the last event in the group ends,
@@ -106,6 +117,11 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
           lastClusterEvent.location?.id == event.location?.id &&
           lastClusterEvent.end_time == event.start_time
         ) {
+          pendingClusters[i].events.push(event);
+          return;
+        }
+      } else if (cluster.kind == CLUSTER_TYPE.MULTI_LOCATION) {
+        if (doesMultipleLocationEventsMatch(lastClusterEvent, event)) {
           pendingClusters[i].events.push(event);
           return;
         }
@@ -156,4 +172,20 @@ export default function useClusteredActivities(
 
     return aStart.getTime() - bStart.getTime();
   });
+}
+
+function doesMultipleLocationEventsMatch(
+  event1: ZetkinEvent,
+  event2: ZetkinEvent
+): boolean {
+  return (
+    !!event1.location &&
+    !!event2.location &&
+    event1.location.id !== event2.location.id &&
+    event1.activity.id === event2?.activity.id &&
+    event1.campaign?.id === event2?.campaign?.id &&
+    event1.start_time === event2?.start_time &&
+    event1.end_time === event2?.end_time &&
+    event1.organization.id === event2?.organization.id
+  );
 }
