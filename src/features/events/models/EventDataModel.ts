@@ -134,6 +134,13 @@ export default class EventDataModel extends ModelBase {
     });
   }
 
+  setPublished(published: string | null) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: null,
+      published: published ? new Date(published).toISOString() : null,
+    });
+  }
+
   setReqParticipants(reqParticipants: number) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       num_participants_required: reqParticipants,

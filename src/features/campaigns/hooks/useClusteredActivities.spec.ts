@@ -26,6 +26,7 @@ const mockEventData: ZetkinEvent = {
     id: 1,
     title: 'My campaign',
   },
+  cancelled: null,
   contact: null,
   end_time: '1857-07-05T13:37:00.000Z',
   id: 1,
@@ -42,6 +43,7 @@ const mockEventData: ZetkinEvent = {
     id: 1,
     title: 'KPD',
   },
+  published: '1857-07-05T13:37:00.000Z',
   start_time: '1857-07-05T13:37:00.000Z',
 };
 

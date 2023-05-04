@@ -12,6 +12,10 @@ export default makeMessages('feat.events', {
   common: {
     noLocation: m('No physical location'),
   },
+  eventActionButtons: {
+    publish: m('Publish'),
+    unpublish: m('Unpublish'),
+  },
   eventContactCard: {
     header: m('Contact'),
     noContact: m('No Contact Assigned!'),
