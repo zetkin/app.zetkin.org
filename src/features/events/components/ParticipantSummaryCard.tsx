@@ -28,6 +28,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
   const reqParticipants = eventData?.num_participants_required ?? 0;
   const availParticipants = model.getNumAvailParticipants();
   const remindedParticipants = model.getNumRemindedParticipants();
+  const cancelledParticipants = model.getNumCancelledParticipants();
 
   const signedParticipants = model.getNumSignedParticipants();
   const contactPerson = eventData?.contact;
@@ -163,6 +164,14 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
                   <Msg id={messageIds.participantSummaryCard.remindButton} />
                 </Button>
               )}
+            </Box>
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <Typography color={'secondary'}>
+              {messages.participantSummaryCard.cancelled()}
+            </Typography>
+            <Box display="flex">
+              <Typography variant="h4">{`${cancelledParticipants}`}</Typography>
             </Box>
           </Box>
           <Box

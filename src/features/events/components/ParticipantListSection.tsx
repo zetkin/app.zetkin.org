@@ -22,6 +22,7 @@ interface ParticipantListSectionListProps {
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
   title: string;
+  type: 'booked' | 'cancelled' | 'signups';
 }
 
 const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
@@ -32,6 +33,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   model,
   rows,
   title,
+  type,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -125,10 +127,16 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       headerName: '',
       hideSortIcons: true,
       renderCell: (params) => {
-        if (params.row.person) {
+        if (type == 'signups') {
           return (
             <>
-              <Button sx={{ marginRight: '10px' }} variant="text">
+              <Button
+                onClick={noPropagate(() => {
+                  model.cancelParticipant(params.row.id);
+                })}
+                sx={{ marginRight: '10px' }}
+                variant="text"
+              >
                 {messages.eventParticipantsList.buttonCancel()}
               </Button>
               <Button
@@ -141,10 +149,26 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               </Button>
             </>
           );
-        } else {
+        } else if (type == 'booked') {
           return (
-            <Button variant="text">
+            <Button
+              onClick={noPropagate(() => {
+                model.cancelParticipant(params.row.id);
+              })}
+              variant="text"
+            >
               {messages.eventParticipantsList.buttonCancel()}
+            </Button>
+          );
+        } else if (type == 'cancelled') {
+          return (
+            <Button
+              onClick={noPropagate(() => {
+                model.reBookParticipant(params.row.id);
+              })}
+              variant="text"
+            >
+              {messages.eventParticipantsList.buttonBook()}
             </Button>
           );
         }

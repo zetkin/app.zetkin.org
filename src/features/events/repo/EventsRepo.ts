@@ -21,6 +21,7 @@ import {
   participantsLoad,
   participantsLoaded,
   participantsReminded,
+  participantUpdated,
   respondentsLoad,
   respondentsLoaded,
   typeAdd,
@@ -223,6 +224,23 @@ export default class EventsRepo {
       .patch<ZetkinLocation>(`/api/orgs/${orgId}/locations/${locationId}`, data)
       .then((location) => {
         this._store.dispatch(locationUpdated(location));
+      });
+  }
+
+  updateParticipant(
+    orgId: number,
+    eventId: number,
+    personId: number,
+    data: Partial<ZetkinEventParticipant>
+  ) {
+    return this._apiClient
+      .put<ZetkinEventParticipant>(
+        `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`,
+        data
+      )
+      .then((participant) => {
+        this._store.dispatch(participantUpdated([eventId, participant]));
+        return participant;
       });
   }
 }

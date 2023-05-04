@@ -136,6 +136,19 @@ const eventsSlice = createSlice({
         remoteItem(participant.id, { data: participant })
       );
     },
+    participantUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinEventParticipant]>
+    ) => {
+      const [eventId, participant] = action.payload;
+      const item = state.participantsByEventId[eventId].items.find(
+        (item) => item.id === participant.id
+      );
+      if (item) {
+        item.data = { ...item.data, ...participant };
+        item.mutating = [];
+      }
+    },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       if (!state.participantsByEventId[eventId]) {
@@ -229,6 +242,7 @@ export const {
   locationsLoad,
   locationsLoaded,
   participantAdded,
+  participantUpdated,
   participantsLoad,
   participantsLoaded,
   participantsReminded,
