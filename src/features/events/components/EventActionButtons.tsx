@@ -1,6 +1,6 @@
-import { Box } from '@mui/material';
-import { Button } from '@mui/material';
 import { Delete } from '@mui/icons-material';
+import { useRouter } from 'next/router';
+import { Box, Button } from '@mui/material';
 import React, { useContext } from 'react';
 
 import EventDataModel from '../models/EventDataModel';
@@ -20,11 +20,11 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   event,
 }) => {
   const messages = useMessages(messageIds);
-  const eventId = event.id;
   const orgId = event.organization.id;
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const router = useRouter();
 
-  const model = useModel((env) => new EventDataModel(env, orgId, eventId));
+  const model = useModel((env) => new EventDataModel(env, orgId, event.id));
 
   const published =
     !!event.published && new Date(event.published) <= new Date();
@@ -42,6 +42,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
 
   const handleDelete = () => {
     model.deleteEvent();
+    router.push(`/organize/${orgId}/projects/${event.campaign?.id || ''} `);
   };
 
   return (
