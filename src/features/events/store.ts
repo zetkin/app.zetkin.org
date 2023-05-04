@@ -52,6 +52,12 @@ const eventsSlice = createSlice({
       state.eventList.isLoading = false;
       state.eventList.items.push(remoteItem(event.id, { data: event }));
     },
+    eventDeleted: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.eventList.items = state.eventList.items.filter(
+        (item) => item.id != eventId
+      );
+    },
     eventLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.eventList.items.find((item) => item.id == id);
@@ -217,6 +223,7 @@ export default eventsSlice;
 export const {
   eventCreate,
   eventCreated,
+  eventDeleted,
   eventLoad,
   eventLoaded,
   eventsLoad,

@@ -53,6 +53,10 @@ export default class EventDataModel extends ModelBase {
     return new PromiseFuture(promise);
   }
 
+  deleteEvent() {
+    this._repo.deleteEvent(this._orgId, this._eventId);
+  }
+
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
