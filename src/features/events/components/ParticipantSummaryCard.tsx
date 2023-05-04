@@ -49,7 +49,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
       <ZUICard
         header={messages.participantSummaryCard.header()}
         status={
-          <Box display="flex">
+          <Box display="flex" mb={4}>
             <ZUINumberChip
               color={model.getParticipantStatus()}
               outlined={true}
@@ -132,6 +132,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
                       model.addParticipant(r.person.id);
                     });
                   }}
+                  size="small"
                   startIcon={<Check />}
                   sx={{
                     marginLeft: 2,
@@ -155,6 +156,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
                   onClick={() => {
                     model.sendReminders();
                   }}
+                  size="small"
                   startIcon={<Check />}
                   sx={{
                     marginLeft: 2,
