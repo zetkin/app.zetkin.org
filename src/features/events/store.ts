@@ -153,6 +153,16 @@ const eventsSlice = createSlice({
           remoteItem(participant.id, { data: participant })
         );
       }
+
+      if (participant.cancelled) {
+        // If cancelled participant was contact for event, also remove contact
+        const event = state.eventList.items.find(
+          (e) => e?.data?.id === eventId
+        );
+        if (event?.data) {
+          event.data.contact = null;
+        }
+      }
     },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;

@@ -242,13 +242,6 @@ export default class EventsRepo {
       .then((participant) => {
         this._store.dispatch(participantUpdated([eventId, participant]));
 
-        // Get event and check if participant is the contact
-        if (participant.cancelled) {
-          const event = this.getEvent(orgId, eventId).data;
-          if (event?.contact?.id === personId) {
-            this._store.dispatch(eventUpdated({ ...event, contact: null }));
-          }
-        }
         return participant;
       });
   }
