@@ -1,11 +1,10 @@
-import { Dayjs } from 'dayjs';
 import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 
 import theme from 'theme';
 
 export interface DayHeaderProps {
-  date: Dayjs;
+  date: Date;
   focused: boolean;
 }
 
@@ -20,7 +19,7 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
       {/* Day string */}
       <Box alignItems="center" display="flex" justifyContent="flex-start">
         <Typography color={theme.palette.grey[500]} variant="subtitle2">
-          <FormattedDate value={date.toDate()} weekday="short" />
+          <FormattedDate value={date} weekday="short" />
         </Typography>
       </Box>
       {/* Day number */}
@@ -39,7 +38,7 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
           }}
         >
           <Typography color={focused ? 'white' : 'inherit'} fontSize="1.2em">
-            {date.format('D')}
+            <FormattedDate day="numeric" value={date} />
           </Typography>
         </Box>
       </Box>

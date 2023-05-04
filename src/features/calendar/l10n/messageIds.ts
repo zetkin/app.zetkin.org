@@ -1,6 +1,9 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.calendar', {
+  createMenu: {
+    singleEvent: m('Create single event'),
+  },
   moreEvents: m<{ numEvents: number }>(
     '{numEvents, plural, one {# more event} other {# more events}}'
   ),
