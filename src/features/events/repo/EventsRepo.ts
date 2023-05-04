@@ -234,6 +234,7 @@ export default class EventsRepo {
     personId: number,
     data: Partial<ZetkinEventParticipant>
   ) {
+    console.log('Update a participant');
     return this._apiClient
       .put<ZetkinEventParticipant>(
         `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`,
@@ -241,6 +242,17 @@ export default class EventsRepo {
       )
       .then((participant) => {
         this._store.dispatch(participantUpdated([eventId, participant]));
+
+        console.log('A participant was updated');
+        // Get event and check if participant is the contact
+        if (participant.cancelled) {
+          console.log('A participant was cancelled');
+          const event = this.getEvent(orgId, eventId).data;
+          if (event?.contact?.id === personId) {
+            console.log('Cancelled participant was the contact');
+            this._store.dispatch(eventUpdated({ ...event, contact: null }));
+          }
+        }
         return participant;
       });
   }

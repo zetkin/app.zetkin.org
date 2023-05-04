@@ -79,6 +79,7 @@ const eventsSlice = createSlice({
       }
     },
     eventUpdated: (state, action: PayloadAction<ZetkinEvent>) => {
+      console.log('Event will be updated: ', action.payload);
       const event = action.payload;
       const item = state.eventList.items.find((item) => item.id == event.id);
       if (item) {
