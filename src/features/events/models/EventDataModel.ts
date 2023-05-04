@@ -34,6 +34,10 @@ export default class EventDataModel extends ModelBase {
     this._repo = new EventsRepo(env);
   }
 
+  deleteEvent() {
+    this._repo.deleteEvent(this._orgId, this._eventId);
+  }
+
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
   }

@@ -4,6 +4,7 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
+  eventDeleted,
   eventLoad,
   eventLoaded,
   eventsLoad,
@@ -90,6 +91,11 @@ export default class EventsRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  async deleteEvent(orgId: number, eventId: number) {
+    await this._apiClient.delete(`/api/orgs/${orgId}/actions/${eventId}`);
+    this._store.dispatch(eventDeleted(eventId));
   }
 
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {

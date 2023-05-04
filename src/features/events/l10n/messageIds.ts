@@ -13,8 +13,10 @@ export default makeMessages('feat.events', {
     noLocation: m('No physical location'),
   },
   eventActionButtons: {
+    delete: m('Delete'),
     publish: m('Publish'),
     unpublish: m('Unpublish'),
+    warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
   },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
