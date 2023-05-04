@@ -49,12 +49,8 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
       />
       {model.getNumCancelledParticipants() > 0 && (
         <ParticipantListSection
-          chipColor={model.getParticipantStatus()}
-          chipNumber={
-            model.getNumAvailParticipants() +
-            '/' +
-            data.num_participants_required
-          }
+          chipColor={theme.palette.grey[500]}
+          chipNumber={model.getNumCancelledParticipants().toString()}
           description={messages.eventParticipantsList.descriptionCancelled()}
           model={model}
           orgId={orgId}
