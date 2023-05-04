@@ -1,5 +1,7 @@
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+
+import EventGhost from './EventGhost';
 
 type EventDayLaneProps = {
   children?: ReactNode;
@@ -14,10 +16,9 @@ const EventDayLane: FC<EventDayLaneProps> = ({
 }) => {
   const [dragging, setDragging] = useState(false);
   const laneRef = useRef<HTMLDivElement>();
-  const ghostRef = useRef<HTMLDivElement>();
+  const ghostRef = useRef<HTMLDivElement>(null);
   const onCreateRef = useRef(onCreate);
   const onDragStartRef = useRef(onDragStart);
-  const theme = useTheme();
 
   useEffect(() => {
     onCreateRef.current = onCreate;
@@ -82,23 +83,7 @@ const EventDayLane: FC<EventDayLaneProps> = ({
   return (
     <Box ref={laneRef} height="100%" sx={{ position: 'relative' }} width="100%">
       {children}
-      <Box
-        ref={ghostRef}
-        sx={{
-          backgroundColor: 'white',
-          borderColor: theme.palette.grey['500'],
-          borderRadius: '0.5em',
-          borderStyle: 'solid',
-          borderWidth: 2,
-          boxShadow: '4px 4px 10px rgba(0,0,0,0.2)',
-          left: 0,
-          opacity: dragging ? 0.7 : 0,
-          pointerEvents: 'none',
-          position: 'absolute',
-          right: 0,
-          transition: 'opacity 0.2s',
-        }}
-      />
+      <EventGhost ref={ghostRef} elevated opacity={dragging ? 0.7 : 0} />
     </Box>
   );
 };

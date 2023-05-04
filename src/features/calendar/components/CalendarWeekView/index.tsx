@@ -15,6 +15,7 @@ import DayHeader from './DayHeader';
 import { Event } from '@mui/icons-material';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
+import EventGhost from './EventGhost';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -155,23 +156,10 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
               >
                 {pendingEvent && isSameDate(date, pendingEvent[0]) && (
                   <>
-                    <Box
+                    <EventGhost
                       ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
-                      sx={{
-                        backgroundColor: 'white',
-                        borderColor: theme.palette.grey['500'],
-                        borderRadius: '0.5em',
-                        borderStyle: 'solid',
-                        borderWidth: 2,
-                        height: pendingHeight * 100 + '%',
-                        left: 0,
-                        opacity: 0.7,
-                        pointerEvents: 'none',
-                        position: 'absolute',
-                        right: 0,
-                        top: pendingTop * 100 + '%',
-                        transition: 'opacity 0.2s',
-                      }}
+                      height={pendingHeight * 100 + '%'}
+                      y={pendingTop * 100 + '%'}
                     />
                     {ghostAnchorEl && !creating && (
                       <Menu
