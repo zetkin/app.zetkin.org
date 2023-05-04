@@ -10,7 +10,7 @@ export function doArbitraryClustering(
   events: EventActivity[]
 ): ClusteredEvent[] {
   const clusteredEvents = clusterEvents(events);
-  const clusterTimeSpans: clusterTimeSpan[] = [];
+  const clusterTimeSpans: ClusterTimeSpan[] = [];
   for (let i = 0; i < clusteredEvents.length; i++) {
     const activeCluster = clusteredEvents[i];
     let startTime: string;
@@ -27,7 +27,6 @@ export function doArbitraryClustering(
       startTime,
     });
   }
-  console.log(clusterTimeSpans);
   return clusteredEvents;
 }
 

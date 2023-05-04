@@ -6,7 +6,7 @@ import {
 import {
   doArbitraryClustering,
   isEventsOverlaping,
-} from './clusterdEventsForWeekCalender';
+} from './clusterEventsForWeekCalender';
 
 const mockEventData: ZetkinEvent = {
   activity: {
