@@ -26,10 +26,11 @@ const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, model }) => {
           {(data) => {
             return (
               <>
-                {data.map((event) => {
+                {data.map((event, index) => {
                   return (
                     <>
-                      <Divider />
+                      {index > 0 ? <Divider /> : ''}
+
                       <Box m={1}>
                         <RelatedEventCard event={event} />
                       </Box>
@@ -40,7 +41,6 @@ const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, model }) => {
             );
           }}
         </ZUIFuture>
-        <Divider />
       </ZUICard>
     </Box>
   );
