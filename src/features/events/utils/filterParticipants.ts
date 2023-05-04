@@ -6,12 +6,11 @@ import {
 
 type ListType = ZetkinEventParticipant | ZetkinEventResponse;
 
-//TODO filter cancelled list when API supports it
-export function filterList(
+export default function filterParticipants(
   list: ZetkinEventResponse[] | ZetkinEventParticipant[],
-  filterState: string
+  filterString: string
 ) {
-  const tokens = filterState.trim().split(/\s+/);
+  const tokens = filterString.trim().split(/\s+/);
 
   //when list is a sign up list
   if (list.some((obj) => Object.keys(obj).includes('person'))) {

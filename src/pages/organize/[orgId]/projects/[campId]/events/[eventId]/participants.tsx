@@ -43,7 +43,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
   eventId,
   orgId,
 }) => {
-  const [filterState, setFilterState] = useState<string>('');
+  const [filterString, setFilterString] = useState<string>('');
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
@@ -73,13 +73,13 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               style={{ marginBottom: '40px', marginTop: '30px' }}
             >
               <EventParticipantsFilter
-                onFilterChange={(value) => setFilterState(value)}
+                onFilterChange={(value) => setFilterString(value)}
               />
               <AddPersonButton model={dataModel} />
             </Grid>
             <EventParticipantsList
               data={data}
-              filterState={filterState}
+              filterString={filterString}
               model={dataModel}
               orgId={parseInt(orgId)}
             />
