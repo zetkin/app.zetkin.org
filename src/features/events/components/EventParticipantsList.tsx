@@ -10,12 +10,14 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 
 interface EventParticipantsListProps {
   data: ZetkinEvent;
+  filterString: string;
   model: EventDataModel;
   orgId: number;
 }
 
 const EventParticipantsList: FC<EventParticipantsListProps> = ({
   data,
+  filterString,
   model,
   orgId,
 }) => {
@@ -28,6 +30,7 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           chipColor={theme.palette.grey[500]}
           chipNumber={model.getNumSignedParticipants().toString()}
           description={messages.eventParticipantsList.descriptionSignups()}
+          filterString={filterString}
           model={model}
           orgId={orgId}
           rows={model.getPendingSignUps() ?? []}
@@ -41,6 +44,7 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           model.getNumAvailParticipants() + '/' + data.num_participants_required
         }
         description={messages.eventParticipantsList.descriptionBooked()}
+        filterString={filterString}
         model={model}
         orgId={orgId}
         rows={model.getBookedParticipants()}
@@ -52,6 +56,7 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           chipColor={theme.palette.grey[500]}
           chipNumber={model.getNumCancelledParticipants().toString()}
           description={messages.eventParticipantsList.descriptionCancelled()}
+          filterString={filterString}
           model={model}
           orgId={orgId}
           rows={model.getCancelledParticipants()}

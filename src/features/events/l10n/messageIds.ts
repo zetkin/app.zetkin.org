@@ -12,6 +12,12 @@ export default makeMessages('feat.events', {
   common: {
     noLocation: m('No physical location'),
   },
+  eventActionButtons: {
+    delete: m('Delete'),
+    publish: m('Publish'),
+    unpublish: m('Unpublish'),
+    warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
+  },
   eventContactCard: {
     header: m('Contact'),
     noContact: m('No Contact Assigned!'),
@@ -116,6 +122,7 @@ export default makeMessages('feat.events', {
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
+  search: m('Search'),
   state: {
     cancelled: m('Cancelled'),
     draft: m('Draft'),

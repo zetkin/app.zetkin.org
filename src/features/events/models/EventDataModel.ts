@@ -66,6 +66,10 @@ export default class EventDataModel extends ModelBase {
     return new PromiseFuture(promise);
   }
 
+  deleteEvent() {
+    this._repo.deleteEvent(this._orgId, this._eventId);
+  }
+
   getBookedParticipants() {
     const participants = this.getParticipants().data;
     return participants?.filter((p) => p.cancelled == null) ?? [];
@@ -171,6 +175,13 @@ export default class EventDataModel extends ModelBase {
   setLocation(location: ZetkinLocation) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       location_id: location.id,
+    });
+  }
+
+  setPublished(published: string | null) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: null,
+      published: published ? new Date(published).toISOString() : null,
     });
   }
 
