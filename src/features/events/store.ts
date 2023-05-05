@@ -14,13 +14,20 @@ import {
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
-export enum EVENT_FILTER {
+export enum ACTION_FILTER_OPTIONS {
   MISSING = 'Contact person missing',
-  OVERBOOKED = 'Overbooked',
+  UNSENT = 'Unsent notifications',
   PENDING = 'Signups pending',
   UNDERBOOKED = 'Underbooked',
-  UNSENT = 'Unsent notifications',
+  OVERBOOKED = 'Overbooked',
 }
+export enum STATE_FILTER_OPTIONS {
+  CANCELLED = 'Cancelled',
+  DRAFT = 'Draft',
+  PUBLISHED = 'Published',
+  SCHEDULED = 'Scheduled',
+}
+
 export type EventStats = {
   id: number;
   numBooked: number;
@@ -28,9 +35,19 @@ export type EventStats = {
   numReminded: number;
   numSignups: number;
 };
+export type EventFilterOptions = ACTION_FILTER_OPTIONS | STATE_FILTER_OPTIONS;
 
+type FilterType = {
+  selectedFilter: string;
+  selectedFilterValue: EventFilterOptions;
+};
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
+  filters: {
+    selectedActions: ACTION_FILTER_OPTIONS[];
+    selectedStates: STATE_FILTER_OPTIONS[];
+    selectedTypes: number[];
+  };
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
@@ -40,6 +57,7 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
+  filters: { selectedActions: [], selectedStates: [], selectedTypes: [] },
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
@@ -99,6 +117,21 @@ const eventsSlice = createSlice({
     eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
+    },
+    filterAdded: (state, action: PayloadAction<FilterType>) => {
+      const { selectedFilter, selectedFilterValue } = action.payload;
+
+      if (selectedFilter === 'actions') {
+        state.filters.selectedActions.push(
+          selectedFilterValue as ACTION_FILTER_OPTIONS
+        );
+      }
+
+      if (selectedFilter === 'states') {
+        state.filters.selectedStates.push(
+          selectedFilterValue as STATE_FILTER_OPTIONS
+        );
+      }
     },
     locationAdded: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
@@ -232,6 +265,7 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
+  filterAdded,
   locationUpdate,
   locationUpdated,
   locationAdded,

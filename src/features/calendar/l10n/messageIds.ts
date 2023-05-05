@@ -5,12 +5,27 @@ export default makeMessages('feat.calendar', {
     filter: m('Filter'),
     reset: m('Reset Filters'),
     type: m('Type to filter content'),
-    onAction: {
-      title: m('Filter on action needed'),
-    },
+
     toggle: {
       all: m('All'),
       none: m('None'),
+    },
+    filterOptions: {
+      actionFilters: {
+        missing: m('Contact person missing'),
+        overbooked: m('Overbooked'),
+        pending: m('Signups pending'),
+        title: m('Filter on action needed'),
+        underbooked: m('Underbooked'),
+        unsent: m('Unsent notifications'),
+      },
+      stateFilters: {
+        cancelled: m('Cancelled'),
+        draft: m('Draft'),
+        published: m('Published'),
+        scheduled: m('Scheduled'),
+        title: m('Filter on publish State'),
+      },
     },
   },
   moreEvents: m<{ numEvents: number }>(

@@ -13,10 +13,6 @@ const AllAndNoneToggle = () => {
         <Msg id={messageIds.eventFilter.toggle.none} />
       </Button>
     </Box>
-    // <ButtonGroup variant="text" sx={{border:'none'}}>
-    //   <Button>eee</Button>
-    //   <Button>eee</Button>
-    // </ButtonGroup>
   );
 };
 
