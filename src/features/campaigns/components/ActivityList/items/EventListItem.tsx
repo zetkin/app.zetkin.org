@@ -39,6 +39,8 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
     color = STATUS_COLORS.RED;
   } else if (state === EventState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
+  } else if (state === EventState.CANCELLED) {
+    color = STATUS_COLORS.ORANGE;
   }
 
   return (
