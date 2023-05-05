@@ -3,7 +3,7 @@ import {
   Button,
   ClickAwayListener,
   Paper,
-  Popper,
+  Popover,
   Typography,
 } from '@mui/material';
 import React, { FC, useState } from 'react';
@@ -24,8 +24,8 @@ import {
   SplitscreenOutlined,
 } from '@mui/icons-material';
 
-interface MultiEventPopperProps {
-  anchorEl: HTMLElement | null;
+export interface MultiEventPopperProps {
+  anchorPosition: { left: number; top: number } | undefined;
   clusterType: CLUSTER_TYPE;
   events: ZetkinEvent[];
   onClickAway: () => void;
@@ -33,7 +33,7 @@ interface MultiEventPopperProps {
 }
 
 const MultiEventPopper: FC<MultiEventPopperProps> = ({
-  anchorEl,
+  anchorPosition,
   clusterType,
   events,
   onClickAway,
@@ -53,10 +53,10 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
   }
 
   return (
-    <Popper
-      anchorEl={anchorEl}
+    <Popover
+      anchorPosition={anchorPosition}
+      anchorReference="anchorPosition"
       open={open}
-      placement="right"
       sx={{ width: '480px' }}
     >
       <ClickAwayListener
@@ -143,7 +143,7 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
           </Box>
         </Paper>
       </ClickAwayListener>
-    </Popper>
+    </Popover>
   );
 };
 export default MultiEventPopper;

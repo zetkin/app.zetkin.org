@@ -17,7 +17,7 @@ import {
   ClickAwayListener,
   Link,
   Paper,
-  Popper,
+  Popover,
   Typography,
 } from '@mui/material';
 import { FC, useContext } from 'react';
@@ -51,15 +51,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface SingleEventPopperProps {
-  anchorEl: HTMLElement | null;
+export interface SingleEventPopperProps {
+  anchorPosition: { left: number; top: number } | undefined;
   event: ZetkinEvent;
   onClickAway: () => void;
   open: boolean;
 }
 
 const SingleEventPopper: FC<SingleEventPopperProps> = ({
-  anchorEl,
+  anchorPosition,
   event,
   onClickAway,
   open,
@@ -88,10 +88,10 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
     respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
       .length ?? 0;
   return (
-    <Popper
-      anchorEl={anchorEl}
+    <Popover
+      anchorPosition={anchorPosition}
+      anchorReference="anchorPosition"
       open={open}
-      placement="right"
       sx={{ width: '480px' }}
     >
       <ClickAwayListener onClickAway={onClickAway}>
@@ -316,7 +316,7 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
           </Box>
         </Paper>
       </ClickAwayListener>
-    </Popper>
+    </Popover>
   );
 };
 

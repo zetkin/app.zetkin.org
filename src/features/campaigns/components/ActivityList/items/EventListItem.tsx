@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { FC } from 'react';
 import {
   EventOutlined,
@@ -7,6 +8,7 @@ import {
 } from '@mui/icons-material';
 
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import useModel from 'core/useModel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
@@ -24,6 +26,7 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
   const model = useModel((env) => new EventDataModel(env, orgId, eventId));
   const state = model.state;
   const data = model.getData().data;
+  const { openSingleEventPopper } = useEventPopper();
 
   if (!data) {
     return null;
@@ -39,47 +42,51 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
   }
 
   return (
-    <ActivityListItem
-      color={color}
-      endNumber={`${data.num_participants_available} / ${data.num_participants_required}`}
-      endNumberColor={
-        data.num_participants_available < data.num_participants_required
-          ? 'error'
-          : undefined
+    <Box
+      onClick={(evt) =>
+        openSingleEventPopper({ left: evt.clientX, top: evt.clientY }, data)
       }
-      href={`/organize/${orgId}/projects/${
-        data.campaign?.id ?? 'standalone'
-      }/events/${eventId}`}
-      meta={<EventWarningIcons model={model} />}
-      PrimaryIcon={EventOutlined}
-      SecondaryIcon={Group}
-      subtitle={
-        <ZUIIconLabelRow
-          color="secondary"
-          iconLabels={[
-            {
-              icon: <ScheduleOutlined fontSize="inherit" />,
-              label: (
-                <ZUITimeSpan
-                  end={new Date(data.end_time)}
-                  start={new Date(data.start_time)}
-                />
-              ),
-            },
-            ...(data.location
-              ? [
-                  {
-                    icon: <PlaceOutlined fontSize="inherit" />,
-                    label: data.location.title,
-                  },
-                ]
-              : []),
-          ]}
-          size="sm"
-        />
-      }
-      title={data.title || data.activity.title}
-    />
+      sx={{ cursor: 'pointer' }}
+    >
+      <ActivityListItem
+        color={color}
+        endNumber={`${data.num_participants_available} / ${data.num_participants_required}`}
+        endNumberColor={
+          data.num_participants_available < data.num_participants_required
+            ? 'error'
+            : undefined
+        }
+        meta={<EventWarningIcons model={model} />}
+        PrimaryIcon={EventOutlined}
+        SecondaryIcon={Group}
+        subtitle={
+          <ZUIIconLabelRow
+            color="secondary"
+            iconLabels={[
+              {
+                icon: <ScheduleOutlined fontSize="inherit" />,
+                label: (
+                  <ZUITimeSpan
+                    end={new Date(data.end_time)}
+                    start={new Date(data.start_time)}
+                  />
+                ),
+              },
+              ...(data.location
+                ? [
+                    {
+                      icon: <PlaceOutlined fontSize="inherit" />,
+                      label: data.location.title,
+                    },
+                  ]
+                : []),
+            ]}
+            size="sm"
+          />
+        }
+        title={data.title || data.activity.title}
+      />
+    </Box>
   );
 };
 

@@ -72,7 +72,7 @@ export type AcitivityListItemProps = {
   color: STATUS_COLORS;
   endNumber: string | number;
   endNumberColor?: ZUIIconLabelProps['color'];
-  href: string;
+  href?: string;
   meta?: JSX.Element;
   subtitle?: JSX.Element;
   title: string;
@@ -97,13 +97,16 @@ const ActivityListItem = ({
         <Box className={classes.dot} />
         <PrimaryIcon className={classes.primaryIcon} />
         <Box>
-          <NextLink href={href} passHref>
-            <Link underline="none">
-              <Typography color={theme.palette.text.primary}>
-                {title}
-              </Typography>
-            </Link>
-          </NextLink>
+          {href && (
+            <NextLink href={href} passHref>
+              <Link underline="none">
+                <Typography color={theme.palette.text.primary}>
+                  {title}
+                </Typography>
+              </Link>
+            </NextLink>
+          )}
+          {!href && <Typography>{title}</Typography>}
           {subtitle && (
             <Box>
               <Typography variant="body2">{subtitle}</Typography>
