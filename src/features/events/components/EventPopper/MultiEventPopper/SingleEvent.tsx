@@ -44,9 +44,10 @@ const useStyles = makeStyles(() => ({
 
 interface SingleEventProps {
   event: ZetkinEvent;
+  onClickAway: () => void;
 }
 
-const SingleEvent: FC<SingleEventProps> = ({ event }) => {
+const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const router = useRouter();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
@@ -79,6 +80,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event }) => {
         showConfirmDialog({
           onSubmit: () => {
             model.deleteEvent();
+            onClickAway();
             router.push(
               `/organize/${event.organization.id}${
                 event.campaign ? `/projects/${event.campaign.id}` : ''
@@ -95,7 +97,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event }) => {
       label: messages.eventPopper.cancel(),
       onSelect: () =>
         showConfirmDialog({
-          onSubmit: () => model.cancel(),
+          onSubmit: () => {
+            model.cancel();
+            onClickAway();
+          },
           title: messages.eventPopper.confirmCancel(),
           warningText: messages.eventPopper.cancelWarning(),
         }),
@@ -260,7 +265,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event }) => {
       </Box>
       <Box alignItems="center" display="flex" justifyContent="flex-end">
         {showPublishButton && (
-          <Button onClick={() => model.publish()} variant="contained">
+          <Button
+            onClick={() => {
+              model.publish();
+              onClickAway();
+            }}
+            variant="contained"
+          >
             {messages.eventPopper.publish()}
           </Button>
         )}

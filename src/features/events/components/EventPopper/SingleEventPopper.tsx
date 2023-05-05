@@ -95,6 +95,7 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
         showConfirmDialog({
           onSubmit: () => {
             model.deleteEvent();
+            onClickAway();
             router.push(
               `/organize/${event.organization.id}${
                 event.campaign ? `/projects/${event.campaign.id}` : ''
@@ -111,7 +112,10 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
       label: messages.eventPopper.cancel(),
       onSelect: () =>
         showConfirmDialog({
-          onSubmit: () => model.cancel(),
+          onSubmit: () => {
+            model.cancel();
+            onClickAway();
+          },
           title: messages.eventPopper.confirmCancel(),
           warningText: messages.eventPopper.cancelWarning(),
         }),
@@ -307,7 +311,13 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
             </Box>
             <Box alignItems="center" display="flex" justifyContent="flex-end">
               {showPublishButton && (
-                <Button onClick={() => model.publish()} variant="contained">
+                <Button
+                  onClick={() => {
+                    model.publish();
+                    onClickAway();
+                  }}
+                  variant="contained"
+                >
                   {messages.eventPopper.publish()}
                 </Button>
               )}
