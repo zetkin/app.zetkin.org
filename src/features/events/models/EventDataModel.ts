@@ -59,8 +59,8 @@ export default class EventDataModel extends ModelBase {
     return new PromiseFuture(promise);
   }
 
-  delete() {
-    return this._repo.deleteEvent(this._orgId, this._eventId);
+  deleteEvent() {
+    this._repo.deleteEvent(this._orgId, this._eventId);
   }
 
   getData(): IFuture<ZetkinEvent> {
@@ -123,14 +123,36 @@ export default class EventDataModel extends ModelBase {
       published: new Date().toISOString(),
     });
   }
+  removeContact() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      contact_id: null,
+    });
+  }
 
   sendReminders() {
     this._repo.sendReminders(this._orgId, this._eventId);
   }
 
+  async setContact(contactId: number) {
+    const eventParticipantsList = this.getParticipants().data;
+    if (!eventParticipantsList?.find((item) => item.id == contactId)) {
+      await this._repo.addParticipant(this._orgId, this._eventId, contactId);
+    }
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      contact_id: contactId,
+    });
+  }
+
   setLocation(location: ZetkinLocation) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       location_id: location.id,
+    });
+  }
+
+  setPublished(published: string | null) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: null,
+      published: published ? new Date(published).toISOString() : null,
     });
   }
 

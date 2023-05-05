@@ -47,10 +47,11 @@ export type ZetkinEventPatchBody = Partial<
 > & {
   activity_id?: number;
   campaign_id?: number;
-  cancelled?: string;
+  cancelled?: string | null;
+  contact_id?: number | null;
   location_id?: number | null;
   organization_id?: number;
-  published?: string;
+  published?: string | null;
 };
 
 export type ZetkinEventPostBody = ZetkinEventPatchBody;

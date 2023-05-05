@@ -240,7 +240,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event }) => {
               onSelect: () =>
                 showConfirmDialog({
                   onSubmit: () => {
-                    model.delete();
+                    model.deleteEvent();
                     router.push(
                       `/organize/${event.organization.id}${
                         event.campaign ? `/projects/${event.campaign.id}` : ''

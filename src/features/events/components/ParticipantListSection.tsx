@@ -1,4 +1,5 @@
 import EventDataModel from '../models/EventDataModel';
+import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
 import { FC } from 'react';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
@@ -7,7 +8,8 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
-import { Box, Button, Typography } from '@mui/material';
+import filterParticipants from '../utils/filterParticipants';
+import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
   ZetkinEventParticipant,
@@ -18,6 +20,7 @@ interface ParticipantListSectionListProps {
   chipColor: string;
   chipNumber: string;
   description: string;
+  filterString: string;
   model: EventDataModel;
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
@@ -28,6 +31,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   chipColor,
   chipNumber,
   description,
+  filterString,
   orgId,
   model,
   rows,
@@ -60,9 +64,40 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           return <Typography>{params.row.person.name}</Typography>;
         } else {
           return (
-            <Typography>
-              {params.row.first_name + ' ' + params.row.last_name}
-            </Typography>
+            <>
+              {model.getData().data?.contact?.id === params.row.id ? (
+                <Typography>
+                  {params.row.first_name + ' ' + params.row.last_name}
+                  <Tooltip
+                    title={messages.eventParticipantsList.contactTooltip()}
+                  >
+                    <FaceOutlinedIcon
+                      sx={{ marginLeft: '8px', verticalAlign: 'bottom' }}
+                    />
+                  </Tooltip>
+                </Typography>
+              ) : (
+                <Typography>
+                  {params.row.first_name + ' ' + params.row.last_name}
+
+                  <Tooltip
+                    title={messages.eventParticipantsList.participantTooltip()}
+                  >
+                    <FaceOutlinedIcon
+                      onClick={noPropagate(() =>
+                        model.setContact(params.row.id)
+                      )}
+                      sx={{
+                        display: 'none',
+                        marginLeft: '8px',
+                        opacity: '50%',
+                        verticalAlign: 'bottom',
+                      }}
+                    />
+                  </Tooltip>
+                </Typography>
+              )}
+            </>
           );
         }
       },
@@ -77,7 +112,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       hideSortIcons: true,
       renderCell: (params) => {
         if (params.row.person) {
-          return <Typography>{''}</Typography>;
+          return <Typography>{params.row.person.phone}</Typography>;
         } else {
           return <Typography>{params.row.phone}</Typography>;
         }
@@ -95,7 +130,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       sortable: false,
       valueGetter: (params) => {
         if (params.row.person) {
-          return '';
+          return `${params.row.person.email}`;
         } else {
           return `${params.row.email}`;
         }
@@ -178,7 +213,15 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         autoHeight
         checkboxSelection
         columns={columns}
-        rows={rows ?? []}
+        rows={
+          filterString ? filterParticipants(rows, filterString) : rows ?? []
+        }
+        sx={{
+          '& .MuiDataGrid-row:hover': {
+            '&:hover svg': { display: 'inline-block' },
+            cursor: 'pointer',
+          },
+        }}
       />
     </>
   );

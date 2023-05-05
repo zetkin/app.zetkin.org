@@ -69,7 +69,7 @@ export interface ZetkinEvent {
     id: number;
     title: string;
   } | null;
-  cancelled?: string;
+  cancelled: string | null;
   contact?: null | { id: number; name: string };
   end_time: string;
   id: number;
@@ -82,7 +82,7 @@ export interface ZetkinEvent {
   } | null;
   num_participants_required: number;
   num_participants_available: number;
-  published?: string;
+  published: string | null;
   start_time: string;
   title?: string;
   organization: {

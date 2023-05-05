@@ -53,9 +53,9 @@ const eventsSlice = createSlice({
       state.eventList.items.push(remoteItem(event.id, { data: event }));
     },
     eventDeleted: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
+      const eventId = action.payload;
       state.eventList.items = state.eventList.items.filter(
-        (event) => event.id == id
+        (item) => item.id != eventId
       );
     },
     eventLoad: (state, action: PayloadAction<number>) => {
