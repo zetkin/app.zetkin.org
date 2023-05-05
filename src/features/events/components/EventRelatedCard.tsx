@@ -3,7 +3,7 @@ import { Box, Divider } from '@mui/material';
 
 import { EventsModel } from '../models/EventsModel';
 import messageIds from 'features/events/l10n/messageIds';
-import RelatedEventCard from './LocationModal/RelatedEventCard';
+import RelatedEvent from './RelatedEvent';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUICard from 'zui/ZUICard';
@@ -32,7 +32,7 @@ const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, model }) => {
                           {index > 0 && (
                             <Divider sx={{ marginBottom: 1, marginTop: 1 }} />
                           )}
-                          <RelatedEventCard event={event} />
+                          <RelatedEvent event={event} />
                         </Box>
                       );
                     })}
