@@ -57,7 +57,6 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
       anchorPosition={anchorPosition}
       anchorReference="anchorPosition"
       open={open}
-      sx={{ width: '480px' }}
     >
       <ClickAwayListener
         onClickAway={() => {
@@ -65,7 +64,7 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
           setSingleEvent(null);
         }}
       >
-        <Paper sx={{ padding: 2 }}>
+        <Paper sx={{ minHeight: '400px', padding: 2, width: '480px' }}>
           <Box display="flex" flexDirection="column">
             <Box
               display="flex"
@@ -106,7 +105,7 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
             </Box>
             {singleEvent && <SingleEvent event={singleEvent} />}
             <Box maxHeight="500px" overflow="scroll">
-              {!singleEvent && clusterType === CLUSTER_TYPE.MULTI_LOCATION && (
+              {!singleEvent && clusterType === CLUSTER_TYPE.MULTI_SHIFT && (
                 <MultiShiftCluster
                   events={events}
                   onEventClick={(id: number) => {

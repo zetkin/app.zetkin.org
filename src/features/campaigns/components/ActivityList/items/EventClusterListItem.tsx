@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { FC } from 'react';
 import {
   Group,
@@ -14,6 +15,7 @@ import { Msg } from 'core/i18n';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import {
@@ -26,76 +28,86 @@ interface EventListeItemProps {
 }
 
 const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
+  const { openMultiEventPopper } = useEventPopper();
   const {
     allHaveContacts,
-    campaignId,
     color,
     endTime,
-    eventId,
     location,
     numBooked,
     numParticipantsRequired,
     numPending,
     numReminded,
     statsLoading,
-    orgId,
     startTime,
     title,
   } = useEventClusterData(cluster);
 
   return (
-    <ActivityListItem
-      color={color}
-      endNumber={`${numBooked} / ${numParticipantsRequired}`}
-      endNumberColor={numBooked < numParticipantsRequired ? 'error' : undefined}
-      href={`/organize/${orgId}/projects/${campaignId}/events/${eventId}`}
-      meta={
-        <EventWarningIconsSansModel
-          compact={false}
-          hasContact={allHaveContacts}
-          numParticipants={numBooked}
-          numRemindersSent={numReminded}
-          numSignups={numPending}
-          participantsLoading={statsLoading}
-        />
+    <Box
+      onClick={(evt) =>
+        openMultiEventPopper(
+          cluster.kind,
+          { left: evt.clientX, top: evt.clientY },
+          cluster.events
+        )
       }
-      PrimaryIcon={
-        cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
-          ? MultiLocationIcon
-          : SplitscreenOutlined
-      }
-      SecondaryIcon={Group}
-      subtitle={
-        <ZUIIconLabelRow
-          color="secondary"
-          iconLabels={[
-            {
-              icon: <ScheduleOutlined fontSize="inherit" />,
-              label: (
-                <ZUITimeSpan
-                  end={new Date(removeOffset(endTime))}
-                  start={new Date(removeOffset(startTime))}
-                />
-              ),
-            },
-            {
-              icon: <PlaceOutlined fontSize="inherit" />,
-              label:
-                cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ? (
-                  <Msg
-                    id={messageIds.activityList.eventItem.locations}
-                    values={{ count: cluster.events.length }}
+      sx={{ cursor: 'pointer' }}
+    >
+      <ActivityListItem
+        color={color}
+        endNumber={`${numBooked} / ${numParticipantsRequired}`}
+        endNumberColor={
+          numBooked < numParticipantsRequired ? 'error' : undefined
+        }
+        meta={
+          <EventWarningIconsSansModel
+            compact={false}
+            hasContact={allHaveContacts}
+            numParticipants={numBooked}
+            numRemindersSent={numReminded}
+            numSignups={numPending}
+            participantsLoading={statsLoading}
+          />
+        }
+        PrimaryIcon={
+          cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
+            ? MultiLocationIcon
+            : SplitscreenOutlined
+        }
+        SecondaryIcon={Group}
+        subtitle={
+          <ZUIIconLabelRow
+            color="secondary"
+            iconLabels={[
+              {
+                icon: <ScheduleOutlined fontSize="inherit" />,
+                label: (
+                  <ZUITimeSpan
+                    end={new Date(removeOffset(endTime))}
+                    start={new Date(removeOffset(startTime))}
                   />
-                ) : (
-                  <LocationLabel location={location} />
                 ),
-            },
-          ]}
-          size="sm"
-        />
-      }
-      title={title}
-    />
+              },
+              {
+                icon: <PlaceOutlined fontSize="inherit" />,
+                label:
+                  cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ? (
+                    <Msg
+                      id={messageIds.activityList.eventItem.locations}
+                      values={{ count: cluster.events.length }}
+                    />
+                  ) : (
+                    <LocationLabel location={location} />
+                  ),
+              },
+            ]}
+            size="sm"
+          />
+        }
+        title={title}
+      />
+    </Box>
   );
 };
 

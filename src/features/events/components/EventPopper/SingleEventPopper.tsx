@@ -92,10 +92,9 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
       anchorPosition={anchorPosition}
       anchorReference="anchorPosition"
       open={open}
-      sx={{ width: '480px' }}
     >
       <ClickAwayListener onClickAway={onClickAway}>
-        <Paper sx={{ padding: 2, width: '340px' }}>
+        <Paper sx={{ padding: 2, width: '480px' }}>
           <Box display="flex" flexDirection="column">
             <Box alignItems="center" display="flex">
               <Checkbox size="medium" />
