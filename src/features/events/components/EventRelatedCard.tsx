@@ -18,31 +18,28 @@ const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, model }) => {
   const messages = useMessages(messageIds);
 
   return (
-    <Box mt={2}>
-      <ZUICard header={messages.eventRelatedCard.header()}>
-        <ZUIFuture
-          future={model.getParallelEvents(data.start_time, data.end_time)}
-        >
-          {(data) => {
-            return (
-              <>
-                {data.map((event, index) => {
-                  return (
-                    <>
-                      {index > 0 ? <Divider /> : ''}
-
+    <ZUIFuture future={model.getRelatedEvents(data)}>
+      {(data) => {
+        return (
+          <>
+            {data.map((event, index) => {
+              return (
+                <Box key={event.id} mt={2}>
+                  <ZUICard header={messages.eventRelatedCard.header()}>
+                    {index > 0 ? <Divider /> : ''}
+                    {data.length > 0 && (
                       <Box m={1}>
                         <RelatedEventCard event={event} />
                       </Box>
-                    </>
-                  );
-                })}
-              </>
-            );
-          }}
-        </ZUIFuture>
-      </ZUICard>
-    </Box>
+                    )}
+                  </ZUICard>
+                </Box>
+              );
+            })}
+          </>
+        );
+      }}
+    </ZUIFuture>
   );
 };
 
