@@ -4,6 +4,9 @@ import { ZetkinEventParticipant } from '../../types/zetkin';
 
 const eventParticipant: ZetkinEventParticipant = {
   ...mockPerson(),
+  attended: null,
+  cancelled: null,
+  noshow: null,
   reminder_sent: '2022-05-16T07:00:00+00:00',
 };
 const mockEventParticipant = (

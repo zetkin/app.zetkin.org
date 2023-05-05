@@ -8,6 +8,7 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventParticipantsCard';
+import EventRelatedCard from 'features/events/components/EventRelatedCard';
 import { EventsModel } from 'features/events/models/EventsModel';
 import LocationsModel from 'features/events/models/LocationsModel';
 import useModel from 'core/useModel';
@@ -67,27 +68,26 @@ const EventPage: PageWithLayout<EventPageProps> = ({
   }
 
   return (
-    <>
-      <ZUIFuture future={dataModel.getData()}>
-        {(data) => {
-          return (
-            <Grid container spacing={2}>
-              <Grid item md={8} xs={12}>
-                <EventOverviewCard
-                  data={data}
-                  dataModel={dataModel}
-                  eventsModel={eventsModel}
-                  locationsModel={locationsModel}
-                />
-              </Grid>
-              <Grid item md={4} xs={6}>
-                <EventParticipantsCard campId={campId} model={dataModel} />
-              </Grid>
+    <ZUIFuture future={dataModel.getData()}>
+      {(data) => {
+        return (
+          <Grid container spacing={2}>
+            <Grid item md={8} xs={12}>
+              <EventOverviewCard
+                data={data}
+                dataModel={dataModel}
+                eventsModel={eventsModel}
+                locationsModel={locationsModel}
+              />
             </Grid>
-          );
-        }}
-      </ZUIFuture>
-    </>
+            <Grid item md={4} xs={6}>
+              <EventParticipantsCard campId={campId} model={dataModel} />
+              <EventRelatedCard data={data} model={eventsModel} />
+            </Grid>
+          </Grid>
+        );
+      }}
+    </ZUIFuture>
   );
 };
 

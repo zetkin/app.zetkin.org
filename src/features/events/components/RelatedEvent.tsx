@@ -7,11 +7,11 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 
-interface RelatedEventCardProps {
+interface RelatedEventProps {
   event: ZetkinEvent;
 }
 
-const RelatedEventCard: FC<RelatedEventCardProps> = ({ event }) => {
+const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
   return (
     <Box display="flex" flexDirection="column">
       <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -45,4 +45,4 @@ const RelatedEventCard: FC<RelatedEventCardProps> = ({ event }) => {
   );
 };
 
-export default RelatedEventCard;
+export default RelatedEvent;
