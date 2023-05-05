@@ -165,7 +165,7 @@ const eventsSlice = createSlice({
         const event = state.eventList.items.find(
           (e) => e?.data?.id === eventId
         );
-        if (event?.data) {
+        if (event?.data && event?.data?.contact?.id == participant.id) {
           event.data.contact = null;
         }
       }
