@@ -71,6 +71,37 @@ const SingleEvent: FC<SingleEventProps> = ({ event }) => {
   const signedParticipants =
     respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
       .length ?? 0;
+
+  const ellipsisMenuItems = [
+    {
+      label: messages.eventPopper.delete(),
+      onSelect: () =>
+        showConfirmDialog({
+          onSubmit: () => {
+            model.deleteEvent();
+            router.push(
+              `/organize/${event.organization.id}${
+                event.campaign ? `/projects/${event.campaign.id}` : ''
+              }`
+            );
+          },
+          title: messages.eventPopper.confirmDelete(),
+          warningText: messages.eventPopper.deleteWarning(),
+        }),
+    },
+  ];
+  if (state !== EventState.CANCELLED) {
+    ellipsisMenuItems.push({
+      label: messages.eventPopper.cancel(),
+      onSelect: () =>
+        showConfirmDialog({
+          onSubmit: () => model.cancel(),
+          title: messages.eventPopper.confirmCancel(),
+          warningText: messages.eventPopper.cancelWarning(),
+        }),
+    });
+  }
+
   return (
     <>
       <Box alignItems="center" display="flex">
@@ -233,35 +264,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event }) => {
             {messages.eventPopper.publish()}
           </Button>
         )}
-        <ZUIEllipsisMenu
-          items={[
-            {
-              label: messages.eventPopper.delete(),
-              onSelect: () =>
-                showConfirmDialog({
-                  onSubmit: () => {
-                    model.deleteEvent();
-                    router.push(
-                      `/organize/${event.organization.id}${
-                        event.campaign ? `/projects/${event.campaign.id}` : ''
-                      }`
-                    );
-                  },
-                  title: messages.eventPopper.confirmDelete(),
-                  warningText: messages.eventPopper.deleteWarning(),
-                }),
-            },
-            {
-              label: messages.eventPopper.cancel(),
-              onSelect: () =>
-                showConfirmDialog({
-                  onSubmit: () => model.cancel(),
-                  title: messages.eventPopper.confirmCancel(),
-                  warningText: messages.eventPopper.cancelWarning(),
-                }),
-            },
-          ]}
-        />
+        <ZUIEllipsisMenu items={ellipsisMenuItems} />
       </Box>
     </>
   );
