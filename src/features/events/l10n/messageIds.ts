@@ -54,6 +54,7 @@ export default makeMessages('feat.events', {
     bookedParticipants: m('Booked Participants'),
     buttonBook: m('Book'),
     buttonCancel: m('Cancel'),
+    cancelledParticipants: m('Cancelled Participants'),
     columnEmail: m('Email'),
     columnName: m('Name'),
     columnNotified: m('Notified'),
@@ -61,6 +62,9 @@ export default makeMessages('feat.events', {
     contactTooltip: m('Contact Person'),
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
+    ),
+    descriptionCancelled: m(
+      "These people have cancelled their participation for some reason. We keep them here so you don't try to book them again."
     ),
     descriptionSignups: m(
       'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
@@ -111,6 +115,7 @@ export default makeMessages('feat.events', {
   participantSummaryCard: {
     bookButton: m('Book all'),
     booked: m('Notifications'),
+    cancelled: m('Cancelled'),
     header: m('Participants'),
     pending: m('Pending sign-ups'),
     remindButton: m('Remind all'),

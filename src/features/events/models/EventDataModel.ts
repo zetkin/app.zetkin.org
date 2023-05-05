@@ -32,6 +32,18 @@ export default class EventDataModel extends ModelBase {
     this._repo.addParticipant(this._orgId, this._eventId, personId);
   }
 
+  cancelParticipant(personId: number): IFuture<ZetkinEventParticipant> {
+    const promise = this._repo.updateParticipant(
+      this._orgId,
+      this._eventId,
+      personId,
+      {
+        status: 'cancelled',
+      }
+    );
+    return new PromiseFuture(promise);
+  }
+
   constructor(env: Environment, orgId: number, eventId: number) {
     super();
     this._env = env;
@@ -39,6 +51,7 @@ export default class EventDataModel extends ModelBase {
     this._eventId = eventId;
     this._repo = new EventsRepo(env);
   }
+
   createEvent(eventBody: ZetkinEventPostBody): IFuture<ZetkinEvent> {
     const promise = this._repo
       .createEvent(eventBody, this._orgId)
@@ -57,18 +70,39 @@ export default class EventDataModel extends ModelBase {
     this._repo.deleteEvent(this._orgId, this._eventId);
   }
 
+  getBookedParticipants() {
+    const participants = this.getParticipants().data;
+    return participants?.filter((p) => p.cancelled == null) ?? [];
+  }
+
+  getCancelledParticipants() {
+    const participants = this.getParticipants().data;
+    return participants?.filter((p) => p.cancelled != null) ?? [];
+  }
+
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
 
   getNumAvailParticipants(): number {
     const participants = this.getParticipants().data;
-    return participants ? participants.length : 0;
+    return participants
+      ? participants.filter((p) => p.cancelled == null).length
+      : 0;
+  }
+
+  getNumCancelledParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants?.filter((p) => p.cancelled != null).length ?? 0;
   }
 
   getNumRemindedParticipants(): number {
     const participants = this.getParticipants().data;
-    return participants?.filter((p) => p.reminder_sent != null).length ?? 0;
+    return (
+      participants?.filter(
+        (p) => p.reminder_sent != null && p.cancelled == null
+      ).length ?? 0
+    );
   }
 
   getNumSignedParticipants(): number {
@@ -110,6 +144,12 @@ export default class EventDataModel extends ModelBase {
 
   getRespondents(): IFuture<ZetkinEventResponse[]> {
     return this._repo.getEventRespondents(this._orgId, this._eventId);
+  }
+
+  reBookParticipant(personId: number) {
+    this._repo.updateParticipant(this._orgId, this._eventId, personId, {
+      status: null,
+    });
   }
 
   removeContact() {
