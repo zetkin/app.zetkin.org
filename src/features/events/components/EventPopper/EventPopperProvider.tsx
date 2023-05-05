@@ -1,6 +1,6 @@
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
 
-import { CLUSTER_TYPE } from './MultiEventPopper/MultiEventListItem';
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import MultiEventPopper from './MultiEventPopper';
 import SingleEventPopper from './SingleEventPopper';
 import { ZetkinEvent } from 'utils/types/zetkin';

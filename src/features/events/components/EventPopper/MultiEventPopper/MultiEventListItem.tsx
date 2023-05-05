@@ -10,6 +10,7 @@ import {
   People,
 } from '@mui/icons-material';
 
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
 import LocationName from '../../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
@@ -18,12 +19,6 @@ import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
-
-export enum CLUSTER_TYPE {
-  ARBITRARY = 'arbitrary',
-  LOCATION = 'location',
-  SHIFT = 'shift',
-}
 
 interface MultiEventListItemProps {
   clusterType: CLUSTER_TYPE;
@@ -109,10 +104,10 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
                 whiteSpace: 'nowrap',
               }}
             >
-              {clusterType == CLUSTER_TYPE.LOCATION && (
+              {clusterType == CLUSTER_TYPE.MULTI_LOCATION && (
                 <LocationName location={event.location} />
               )}
-              {clusterType == CLUSTER_TYPE.SHIFT && timeSpan}
+              {clusterType == CLUSTER_TYPE.MULTI_SHIFT && timeSpan}
               {clusterType == CLUSTER_TYPE.ARBITRARY &&
                 (event.title || event.activity.title)}
             </Typography>

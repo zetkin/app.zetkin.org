@@ -9,7 +9,7 @@ import {
 import React, { FC, useState } from 'react';
 
 import ArbitraryCluster from './ArbitraryCluster';
-import { CLUSTER_TYPE } from './MultiEventListItem';
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import messageIds from 'features/events/l10n/messageIds';
 import MultiLocationCluster from './MultiLocationCluster';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
@@ -44,7 +44,7 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
 
   let topRightIcon = <MultiLocationIcon color="secondary" fontSize="small" />;
   let topRightMessage = messages.eventPopper.locations();
-  if (clusterType === CLUSTER_TYPE.SHIFT) {
+  if (clusterType === CLUSTER_TYPE.MULTI_SHIFT) {
     topRightIcon = <SplitscreenOutlined color="secondary" fontSize="small" />;
     topRightMessage = messages.eventPopper.shifts();
   } else if (clusterType === CLUSTER_TYPE.ARBITRARY) {
@@ -75,9 +75,9 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
               <Box>
                 {!singleEvent && (
                   <Typography color="secondary" variant="h5">
-                    {clusterType === CLUSTER_TYPE.LOCATION &&
+                    {clusterType === CLUSTER_TYPE.MULTI_LOCATION &&
                       messages.eventPopper.multiLocation()}
-                    {clusterType === CLUSTER_TYPE.SHIFT &&
+                    {clusterType === CLUSTER_TYPE.MULTI_SHIFT &&
                       messages.eventPopper.multiShift()}
                     {clusterType === CLUSTER_TYPE.ARBITRARY &&
                       messages.eventPopper.multiEvent()}
@@ -88,9 +88,9 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
                     onClick={() => setSingleEvent(null)}
                     startIcon={<ArrowBack />}
                   >
-                    {clusterType === CLUSTER_TYPE.LOCATION &&
+                    {clusterType === CLUSTER_TYPE.MULTI_LOCATION &&
                       messages.eventPopper.backToLocations()}
-                    {clusterType === CLUSTER_TYPE.SHIFT &&
+                    {clusterType === CLUSTER_TYPE.MULTI_SHIFT &&
                       messages.eventPopper.backToShifts()}
                     {clusterType === CLUSTER_TYPE.ARBITRARY &&
                       messages.eventPopper.backToEvents()}
@@ -106,7 +106,7 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
             </Box>
             {singleEvent && <SingleEvent event={singleEvent} />}
             <Box maxHeight="500px" overflow="scroll">
-              {!singleEvent && clusterType === CLUSTER_TYPE.SHIFT && (
+              {!singleEvent && clusterType === CLUSTER_TYPE.MULTI_LOCATION && (
                 <MultiShiftCluster
                   events={events}
                   onEventClick={(id: number) => {
@@ -117,7 +117,7 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
                   }}
                 />
               )}
-              {!singleEvent && clusterType === CLUSTER_TYPE.LOCATION && (
+              {!singleEvent && clusterType === CLUSTER_TYPE.MULTI_LOCATION && (
                 <MultiLocationCluster
                   events={events}
                   onEventClick={(id: number) => {

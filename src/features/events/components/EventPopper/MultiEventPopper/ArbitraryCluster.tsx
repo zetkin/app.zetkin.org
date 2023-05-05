@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { Box, Divider } from '@mui/material';
 
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import ClusterBody from './ClusterBody';
+import MultiEventListItem from './MultiEventListItem';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import MultiEventListItem, { CLUSTER_TYPE } from './MultiEventListItem';
 
 interface ArbitraryClusterProps {
   events: ZetkinEvent[];

@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import { Box, Divider } from '@mui/material';
 
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import ClusterBody from './ClusterBody';
 import ClusterHeader from './ClusterHeader';
 import EventDataModel from 'features/events/models/EventDataModel';
+import MultiEventListItem from './MultiEventListItem';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import MultiEventListItem, { CLUSTER_TYPE } from './MultiEventListItem';
 
 interface MultiShiftClusterProps {
   events: ZetkinEvent[];
@@ -24,14 +25,14 @@ const MultiShiftCluster: FC<MultiShiftClusterProps> = ({
   return (
     <Box>
       <ClusterHeader event={events[0]} state={model.state} />
-      <ClusterBody clusterType={CLUSTER_TYPE.SHIFT} events={events} />
+      <ClusterBody clusterType={CLUSTER_TYPE.MULTI_SHIFT} events={events} />
       <Divider />
       <Box paddingTop={1}>
         {events.map((event) => {
           return (
             <MultiEventListItem
               key={event.id}
-              clusterType={CLUSTER_TYPE.SHIFT}
+              clusterType={CLUSTER_TYPE.MULTI_SHIFT}
               compact={false}
               event={event}
               onEventClick={(id: number) => onEventClick(id)}

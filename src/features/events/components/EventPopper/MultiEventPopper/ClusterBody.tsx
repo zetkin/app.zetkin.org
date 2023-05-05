@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { People, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
-import { CLUSTER_TYPE } from './MultiEventListItem';
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import LocationName from '../../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -26,7 +26,7 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
     .reduce((sum, value) => sum + value);
 
   let type = messages.eventPopper.locations();
-  if (clusterType === CLUSTER_TYPE.SHIFT) {
+  if (clusterType === CLUSTER_TYPE.MULTI_SHIFT) {
     type = messages.eventPopper.shifts();
   } else if (clusterType === CLUSTER_TYPE.ARBITRARY) {
     type = messages.eventPopper.events();
@@ -44,7 +44,7 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
             />
           </Typography>
         </Box>
-        {clusterType === CLUSTER_TYPE.SHIFT && (
+        {clusterType === CLUSTER_TYPE.MULTI_SHIFT && (
           <Box alignItems="center" display="flex">
             <PlaceOutlined color="secondary" fontSize="small" />
             <Typography color="secondary" paddingLeft={1} variant="body2">
