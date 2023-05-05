@@ -35,15 +35,19 @@ export type EventStats = {
   numReminded: number;
   numSignups: number;
 };
-export type EventFilterOptions = ACTION_FILTER_OPTIONS | STATE_FILTER_OPTIONS;
+export type EventFilterOptions =
+  | ACTION_FILTER_OPTIONS[]
+  | STATE_FILTER_OPTIONS[]
+  | number[];
 
 type FilterType = {
-  selectedFilter: string;
+  filterCategory: string;
   selectedFilterValue: EventFilterOptions;
 };
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   filters: {
+    [key: string]: EventFilterOptions;
     selectedActions: ACTION_FILTER_OPTIONS[];
     selectedStates: STATE_FILTER_OPTIONS[];
     selectedTypes: number[];
@@ -119,17 +123,43 @@ const eventsSlice = createSlice({
       state.eventList.loaded = new Date().toISOString();
     },
     filterAdded: (state, action: PayloadAction<FilterType>) => {
-      const { selectedFilter, selectedFilterValue } = action.payload;
-
-      if (selectedFilter === 'actions') {
-        state.filters.selectedActions.push(
-          selectedFilterValue as ACTION_FILTER_OPTIONS
+      const { filterCategory, selectedFilterValue } = action.payload;
+      if (filterCategory === 'actions') {
+        const item = state.filters.selectedActions.includes(
+          selectedFilterValue[0] as ACTION_FILTER_OPTIONS
+        );
+        if (!item) {
+          state.filters[filterCategory] = state.filters.selectedActions.concat(
+            selectedFilterValue as ACTION_FILTER_OPTIONS[]
+          );
+        }
+      }
+      if (filterCategory === 'states') {
+        const item = state.filters.selectedStates.includes(
+          selectedFilterValue[0] as STATE_FILTER_OPTIONS
+        );
+        if (!item) {
+          state.filters.selectedStates = state.filters.selectedStates.concat(
+            selectedFilterValue as STATE_FILTER_OPTIONS[]
+          );
+        }
+      }
+      // state.filters[filterCategory] = state.filters[filterCategory].concat(
+      //   selectedFilterValue as EventFilterOptions
+      // );
+    },
+    filterRemoved: (state, action: PayloadAction<FilterType>) => {
+      const { filterCategory, selectedFilterValue } = action.payload;
+      if (filterCategory === 'actions') {
+        state.filters.selectedActions = state.filters.selectedActions.filter(
+          (item) =>
+            !(selectedFilterValue as ACTION_FILTER_OPTIONS[]).includes(item)
         );
       }
-
-      if (selectedFilter === 'states') {
-        state.filters.selectedStates.push(
-          selectedFilterValue as STATE_FILTER_OPTIONS
+      if (filterCategory === 'states') {
+        state.filters.selectedStates = state.filters.selectedStates.filter(
+          (item) =>
+            !(selectedFilterValue as STATE_FILTER_OPTIONS[]).includes(item)
         );
       }
     },
@@ -266,6 +296,7 @@ export const {
   eventUpdate,
   eventUpdated,
   filterAdded,
+  filterRemoved,
   locationUpdate,
   locationUpdated,
   locationAdded,

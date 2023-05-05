@@ -18,25 +18,53 @@ import {
   ACTION_FILTER_OPTIONS,
   EventFilterOptions,
   filterAdded,
+  filterRemoved,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
-import { useStore } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import { RootState } from 'core/store';
 
 const EventFilterPane = () => {
   const messages = useMessages(messageIds);
   const store = useStore<RootState>();
-  const state = store.getState();
+  const state = useSelector((state: RootState) => state.events.filters); // <-- subscribe to changes
 
   const handleCheckBox = (
     e: React.ChangeEvent<HTMLInputElement>,
-    selectedFilter: string
+    filterCategory: string
   ) => {
     const { name } = e.target;
+
+    if (
+      state.selectedActions.includes(name as ACTION_FILTER_OPTIONS) ||
+      state.selectedStates.includes(name as STATE_FILTER_OPTIONS)
+    ) {
+      store.dispatch(
+        filterRemoved({
+          filterCategory,
+          selectedFilterValue: [name] as EventFilterOptions,
+        })
+      );
+    } else {
+      store.dispatch(
+        filterAdded({
+          filterCategory,
+          selectedFilterValue: [name] as EventFilterOptions,
+        })
+      );
+    }
+  };
+
+  const handleSelectAll = (filterCategory: string) => {
+    const options = Object.values(
+      filterCategory === 'actions'
+        ? ACTION_FILTER_OPTIONS
+        : STATE_FILTER_OPTIONS
+    );
     store.dispatch(
       filterAdded({
-        selectedFilter,
-        selectedFilterValue: name as EventFilterOptions,
+        filterCategory,
+        selectedFilterValue: options as EventFilterOptions,
       })
     );
   };
@@ -71,7 +99,10 @@ const EventFilterPane = () => {
                   id={messageIds.eventFilter.filterOptions.actionFilters.title}
                 />
               </Typography>
-              <AllAndNoneToggle />
+              <AllAndNoneToggle
+                filterCategory="actions"
+                onClickAll={(filterCategory) => handleSelectAll(filterCategory)}
+              />
             </Box>
             <>
               {Object.entries(ACTION_FILTER_OPTIONS).map((options) => {
@@ -93,11 +124,9 @@ const EventFilterPane = () => {
                     key={enumValue}
                     control={
                       <Checkbox
-                        checked={state.events.filters.selectedActions.includes(
-                          enumValue
-                        )}
+                        checked={state.selectedActions.includes(enumValue)}
                         name={enumValue}
-                        onChange={(e) => handleCheckBox(e, 'actions')}
+                        onChange={(e) => handleCheckBox(e, 'selectedActions')}
                       />
                     }
                     label={message[1]()}
@@ -118,7 +147,10 @@ const EventFilterPane = () => {
                   id={messageIds.eventFilter.filterOptions.stateFilters.title}
                 />
               </Typography>
-              <AllAndNoneToggle />
+              <AllAndNoneToggle
+                filterCategory="states"
+                onClickAll={(filterCategory) => handleSelectAll(filterCategory)}
+              />
             </Box>
             <>
               {Object.entries(STATE_FILTER_OPTIONS).map((options) => {
@@ -140,11 +172,9 @@ const EventFilterPane = () => {
                     key={enumValue}
                     control={
                       <Checkbox
-                        checked={state.events.filters.selectedStates.includes(
-                          enumValue
-                        )}
+                        checked={state.selectedStates.includes(enumValue)}
                         name={enumValue}
-                        onChange={(e) => handleCheckBox(e, 'states')}
+                        onChange={(e) => handleCheckBox(e, 'selectedStates')}
                       />
                     }
                     label={message[1]()}
