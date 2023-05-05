@@ -185,6 +185,9 @@ export default class EventDataModel extends ModelBase {
 
     if (data.published) {
       const published = new Date(data.published);
+      if (published > now) {
+        return EventState.SCHEDULED;
+      }
       if (data.cancelled) {
         const cancelled = new Date(data.cancelled);
         if (cancelled > published) {
@@ -198,8 +201,6 @@ export default class EventDataModel extends ModelBase {
         }
       }
       return EventState.OPEN;
-    } else if (data.start_time && new Date(data.start_time) > now) {
-      return EventState.SCHEDULED;
     } else {
       return EventState.DRAFT;
     }
