@@ -14,8 +14,8 @@ export enum TimeScale {
   MONTH = 'month',
 }
 
-function isValidDate(date: Date) {
-  return date instanceof Date && !isNaN(date as unknown as number);
+function isValidDate(date: Date | unknown) {
+  return date instanceof Date && !isNaN(date.getTime());
 }
 
 function getTimeScale(timeScaleStr: string) {
