@@ -41,6 +41,14 @@ export default class EventDataModel extends ModelBase {
         status: 'cancelled',
       }
     );
+
+    const contactId = this.getData().data?.contact?.id;
+    if (contactId == personId) {
+      this._repo.updateEvent(this._orgId, this._eventId, {
+        contact_id: null,
+      });
+    }
+
     return new PromiseFuture(promise);
   }
 
