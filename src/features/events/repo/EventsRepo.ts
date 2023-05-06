@@ -77,10 +77,7 @@ export default class EventsRepo {
   async addParticipant(orgId: number, eventId: number, personId: number) {
     const participant = await this._apiClient.put<ZetkinEventParticipant>(
       `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`,
-      {
-        id: personId,
-        reminder_sent: null,
-      }
+      {}
     );
     this._store.dispatch(participantAdded([eventId, participant]));
   }
