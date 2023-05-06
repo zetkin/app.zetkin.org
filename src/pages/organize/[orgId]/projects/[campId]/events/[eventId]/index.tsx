@@ -90,6 +90,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({
 EventPage.getLayout = function getLayout(page, props) {
   return (
     <EventLayout
+      key={props.eventId}
       campaignId={props.campId}
       eventId={props.eventId}
       orgId={props.orgId}
