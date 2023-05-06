@@ -193,6 +193,7 @@ const eventsSlice = createSlice({
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
         }
       });
+      state.participantsByEventId[eventId].isStale = true;
     },
     respondentsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
