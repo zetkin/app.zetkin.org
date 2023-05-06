@@ -6,8 +6,9 @@ import { Box, Typography } from '@mui/material';
 type DayProps = {
   date: Date;
   isInFocusMonth: boolean;
+  onClick: (date: Date) => void;
 };
-const Day = ({ date, isInFocusMonth }: DayProps) => {
+const Day = ({ date, isInFocusMonth, onClick }: DayProps) => {
   const isToday = dayjs(date).isSame(new Date(), 'day');
 
   let textColor = theme.palette.text.secondary;
@@ -26,6 +27,10 @@ const Day = ({ date, isInFocusMonth }: DayProps) => {
       display="flex"
       flexDirection="column"
       height="100%"
+      onClick={() => onClick(date)}
+      sx={{
+        cursor: 'pointer',
+      }}
       width="100%"
     >
       <Box marginLeft="5px">

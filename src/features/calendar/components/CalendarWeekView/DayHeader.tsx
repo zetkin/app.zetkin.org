@@ -6,14 +6,19 @@ import theme from 'theme';
 export interface DayHeaderProps {
   date: Date;
   focused: boolean;
+  onClick: () => void;
 }
 
-const DayHeader = ({ date, focused }: DayHeaderProps) => {
+const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
   return (
     <Box
       display="grid"
       gridTemplateColumns="repeat(3, 1fr)"
       gridTemplateRows="1fr"
+      onClick={() => onClick()}
+      sx={{
+        cursor: 'pointer',
+      }}
       width="100%"
     >
       {/* Day string */}

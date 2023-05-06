@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
@@ -13,11 +14,61 @@ export enum TimeScale {
   MONTH = 'month',
 }
 
+function isValidDate(date: Date) {
+  return date instanceof Date && !isNaN(date as unknown as number);
+}
+
+function getTimeScale(timeScaleStr: string) {
+  let timeScale = TimeScale.MONTH;
+  if (
+    timeScaleStr !== undefined &&
+    Object.values(TimeScale).includes(timeScaleStr as TimeScale)
+  ) {
+    timeScale = timeScaleStr as TimeScale;
+  }
+  return timeScale;
+}
+
+function getDateFromString(focusDateStr: string) {
+  let date = new Date();
+  if (focusDateStr) {
+    const d = new Date(focusDateStr);
+    if (isValidDate(d)) {
+      date = d;
+    }
+  }
+  return date;
+}
+
 const Calendar = () => {
-  const [focusDate, setFocusDate] = useState<Date>(new Date());
+  const router = useRouter();
+
+  const focusDateStr = router.query.focusDate as string;
+  const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
+
+  const timeScaleStr = router.query.timeScale as string;
   const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
-    TimeScale.MONTH
+    getTimeScale(timeScaleStr)
   );
+
+  useEffect(() => {
+    setFocusDate(getDateFromString(focusDateStr));
+  }, [focusDateStr]);
+
+  useEffect(() => {
+    setSelectedTimeScale(getTimeScale(timeScaleStr));
+  }, [timeScaleStr]);
+
+  useEffect(() => {
+    router.query.focusDate = dayjs(focusDate).format('YYYY-MM-DD');
+    router.query.timeScale = selectedTimeScale;
+    router.push(router, undefined, { shallow: true });
+  }, [focusDate, selectedTimeScale]);
+
+  function navigateTo(timeScale: TimeScale, date: Date) {
+    setSelectedTimeScale(timeScale);
+    setFocusDate(date);
+  }
 
   return (
     <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
@@ -49,10 +100,17 @@ const Calendar = () => {
       >
         {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
         {selectedTimeScale === TimeScale.WEEK && (
-          <CalendarWeekView focusDate={focusDate} />
+          <CalendarWeekView
+            focusDate={focusDate}
+            onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+          />
         )}
         {selectedTimeScale === TimeScale.MONTH && (
-          <CalendarMonthView focusDate={focusDate} />
+          <CalendarMonthView
+            focusDate={focusDate}
+            onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+            onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
+          />
         )}
       </Box>
     </Box>
