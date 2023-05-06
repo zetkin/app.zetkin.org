@@ -15,7 +15,7 @@ import {
   Typography,
   useAutocomplete,
 } from '@mui/material';
-import { FC, HTMLAttributes, useState } from 'react';
+import { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import { usePersonSelect } from './ZUIPersonSelect';
@@ -45,9 +45,9 @@ const ZUIPersonGridEditCell: FC<{
   const styles = useStyles({ isRestrictedMode });
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searching, setSearching] = useState(false);
-
   const orgId = parseInt(query.orgId as string);
-
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const listRef = useRef<HTMLUListElement>(null);
   const personSelect = usePersonSelect({
     initialValue: '',
     onChange: (person) => {
@@ -97,8 +97,75 @@ const ZUIPersonGridEditCell: FC<{
               .includes(autoComplete.inputValue.toLocaleLowerCase())
         );
 
+  // Scroll (if necessary) when navigating using keyboard
+  useEffect(() => {
+    const listElem = listRef.current;
+    const suggestedPeopleIndex = activeIndex + 1;
+    const searchResultsIndex = activeIndex + 1 - suggestedPeople.length;
+
+    if (listElem) {
+      //const bottomOffset = listElem.scrollTop + listElem.clientHeight;
+
+      // Get element in list, either among the suggestedPeople or the searchResults
+      const itemElem =
+        suggestedPeopleIndex < suggestedPeople.length + 1
+          ? (listElem.children[suggestedPeopleIndex] as HTMLElement)
+          : (listElem.children[suggestedPeople.length + 1].children[
+              searchResultsIndex
+            ] as HTMLElement);
+
+      // TODO: Add appropriate scroll
+
+      const listRect = listElem.getBoundingClientRect();
+      const itemRect = itemElem.getBoundingClientRect();
+
+      //console.log('List rectangle: ' + listRect.bottom);
+      //console.log('Item rectangle: ' + itemRect.bottom);
+
+      // Item below scroller
+      if (itemRect.bottom > listRect.bottom) {
+        const diff = itemRect.bottom - listRect.bottom;
+        listElem.scrollTop += diff;
+      }
+
+      // Item above scroller
+      /*if (itemRect.bottom < listRect.top) {
+        console.log('Above!');
+        const diff = itemRect.top - listRect.top;
+        listElem.scrollTop += diff;
+      }*/
+    }
+  }, [listRef, activeIndex]);
+
   return (
     <Box
+      onKeyDown={(ev) => {
+        if (filteredSuggestedPeople.length + searchResults.length > 0) {
+          if (ev.code == 'ArrowUp') {
+            const nextIndex = activeIndex - 1;
+            setActiveIndex(
+              nextIndex >= 0
+                ? nextIndex
+                : filteredSuggestedPeople.length + searchResults.length - 1
+            );
+          } else if (ev.code == 'ArrowDown') {
+            const nextIndex = activeIndex + 1;
+            setActiveIndex(
+              nextIndex < filteredSuggestedPeople.length + searchResults.length
+                ? nextIndex
+                : 0
+            );
+          } else if (ev.code == 'Enter') {
+            if (activeIndex < filteredSuggestedPeople.length) {
+              onUpdate(filteredSuggestedPeople[activeIndex]);
+            } else {
+              onUpdate(
+                searchResults[activeIndex - filteredSuggestedPeople.length]
+              );
+            }
+          }
+        }
+      }}
       onMouseEnter={(ev) => {
         setAnchorEl(ev.currentTarget);
       }}
@@ -191,6 +258,7 @@ const ZUIPersonGridEditCell: FC<{
                     </Box>
                   )}
                   <List
+                    ref={listRef}
                     className={styles.searchingList}
                     sx={{
                       display:
@@ -205,7 +273,7 @@ const ZUIPersonGridEditCell: FC<{
                         >
                           {suggestedPeopleLabel}
                         </ListSubheader>
-                        {filteredSuggestedPeople.map((option) => (
+                        {filteredSuggestedPeople.map((option, index) => (
                           <PersonListItem
                             key={option.id}
                             itemProps={{
@@ -215,6 +283,10 @@ const ZUIPersonGridEditCell: FC<{
                             }}
                             orgId={orgId}
                             person={option}
+                            selected={
+                              activeIndex < filteredSuggestedPeople.length &&
+                              index == activeIndex
+                            }
                           />
                         ))}
                       </>
@@ -255,6 +327,10 @@ const ZUIPersonGridEditCell: FC<{
                               itemProps={optProps}
                               orgId={orgId}
                               person={option}
+                              selected={
+                                index + filteredSuggestedPeople.length ==
+                                activeIndex
+                              }
                             />
                           );
                         })}
@@ -277,11 +353,13 @@ const PersonListItem: FC<{
   itemProps: HTMLAttributes<HTMLLIElement>;
   orgId: number;
   person: ZetkinPerson;
-}> = ({ itemProps, orgId, person }) => {
+  selected: boolean;
+}> = ({ itemProps, orgId, person, selected }) => {
   return (
     <ListItem
       {...itemProps}
       disablePadding
+      selected={selected}
       sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
     >
       <Box
