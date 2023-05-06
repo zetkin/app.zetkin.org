@@ -189,11 +189,10 @@ const eventsSlice = createSlice({
     participantsReminded: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.participantsByEventId[eventId].items.map((item) => {
-        if (item.data && item.data?.reminder_sent !== null) {
+        if (item.data && item.data?.reminder_sent == null) {
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
         }
       });
-      state.participantsByEventId[eventId].isStale = true;
     },
     respondentsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
