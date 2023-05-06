@@ -235,7 +235,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       </Typography>
       <DataGridPro
         autoHeight
-        checkboxSelection
+        checkboxSelection={false}
         columns={columns}
         rows={
           filterString ? filterParticipants(rows, filterString) : rows ?? []
