@@ -123,9 +123,13 @@ async function fetchElements(
       `/orgs/${orgId}/people/views/${fieldValue}`
     ).then((res) => res.json());
 
-    const folders = await fetchFolders(orgId, apiFetch);
     const folderId = view.data?.folder?.id;
-    const folderElements = getFoldersAsElements(basePath, folders, folderId);
+    const folderElements = await fetchFolders(
+      folderId,
+      basePath,
+      orgId,
+      apiFetch
+    );
 
     return [
       ...folderElements,
@@ -188,12 +192,13 @@ async function fetchElements(
       },
     ];
   } else if (fieldName == 'folderId') {
-    const folders = await fetchFolders(orgId, apiFetch);
     const folderId = parseInt(fieldValue);
-    const folderElements = folderId
-      ? getFoldersAsElements(basePath, folders, folderId)
-      : [];
-
+    const folderElements = await fetchFolders(
+      folderId,
+      basePath,
+      orgId,
+      apiFetch
+    );
     return folderElements;
   }
 
@@ -201,19 +206,15 @@ async function fetchElements(
 }
 
 async function fetchFolders(
+  folderId: number,
+  basePath: string,
   orgId: string,
   apiFetch: ApiFetch
-): Promise<ZetkinViewFolder[]> {
-  return await apiFetch(`/orgs/${orgId}/people/view_folders`)
+): Promise<BreadcrumbElement[]> {
+  const folders = await apiFetch(`/orgs/${orgId}/people/view_folders`)
     .then((res) => res.json())
     .then((envelope) => envelope.data as ZetkinViewFolder[]);
-}
 
-const getFoldersAsElements = (
-  basePath: string,
-  folders: ZetkinViewFolder[],
-  folderId: number
-): BreadcrumbElement[] => {
   let nextAncestor = folders.find((folder) => folder.id == folderId);
 
   const ancestors: ZetkinViewFolder[] = [];
@@ -229,7 +230,7 @@ const getFoldersAsElements = (
   return ancestors
     .reverse()
     .map((folder) => getFolderAsElement(folder, basePath));
-};
+}
 
 const getFolderAsElement = (folder: ZetkinViewFolder, basePath: string) => {
   return {
