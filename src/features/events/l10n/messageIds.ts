@@ -122,6 +122,9 @@ export default makeMessages('feat.events', {
     header: m('Participants'),
     pending: m('Pending sign-ups'),
     remindButton: m('Remind all'),
+    remindButtondisabledTooltip: m(
+      'You have to assign a contact person before sending reminders'
+    ),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
