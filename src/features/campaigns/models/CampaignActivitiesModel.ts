@@ -222,10 +222,10 @@ export default class CampaignActivitiesModel extends ModelBase {
       return new ErrorFuture(activities.error);
     }
 
-    const now = new Date();
+    const nowDate = new getUTCDateWithoutTime(new Date());
     const filtered = activities.data?.filter(
       (activity) =>
-        activity.startDate && activity.endDate && activity.endDate < now
+        activity.startDate && activity.endDate && activity.endDate < nowDate
     );
 
     return new ResolvedFuture(filtered || []);
@@ -260,9 +260,9 @@ export default class CampaignActivitiesModel extends ModelBase {
       return new ErrorFuture(activities.error);
     }
 
-    const now = new Date();
+    const nowDate = new getUTCDateWithoutTime(new Date());
     const filtered = activities.data?.filter(
-      (activity) => !activity.endDate || activity.endDate > now
+      (activity) => !activity.endDate || activity.endDate >= nowDate
     );
 
     return new ResolvedFuture(filtered || []);
