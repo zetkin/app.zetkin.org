@@ -29,12 +29,12 @@ const useStyles = makeStyles<
     color: ({ color, outlined }) =>
       outlined ? color : theme.palette.getContrastText(color),
     display: 'flex',
+    flexShrink: 0,
     fontSize: ({ size }) => FONT_SIZES[size],
     lineHeight: 'normal',
     marginRight: '0.1em',
     overflow: 'hidden',
     padding: '0.2em 0.7em',
-    flexShrink: 0,
   },
 }));
 
