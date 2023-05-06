@@ -34,6 +34,7 @@ const useStyles = makeStyles<
     marginRight: '0.1em',
     overflow: 'hidden',
     padding: '0.2em 0.7em',
+    flexShrink: 0,
   },
 }));
 
