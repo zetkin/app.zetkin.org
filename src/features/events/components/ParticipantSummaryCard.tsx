@@ -5,6 +5,7 @@ import {
   Paper,
   Popper,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { Check, Settings } from '@mui/icons-material';
@@ -151,20 +152,34 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
             <Box display="flex">
               <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
               {remindedParticipants < availParticipants && (
-                <Button
-                  disabled={contactPerson == null}
-                  onClick={() => {
-                    model.sendReminders();
-                  }}
-                  size="small"
-                  startIcon={<Check />}
-                  sx={{
-                    marginLeft: 2,
-                  }}
-                  variant="outlined"
+                <Tooltip
+                  arrow
+                  placement="top-start"
+                  title={
+                    contactPerson == null
+                      ? messages.participantSummaryCard.remindButtondisabledTooltip()
+                      : ''
+                  }
                 >
-                  <Msg id={messageIds.participantSummaryCard.remindButton} />
-                </Button>
+                  <span>
+                    <Button
+                      disabled={contactPerson == null}
+                      onClick={() => {
+                        model.sendReminders();
+                      }}
+                      size="small"
+                      startIcon={<Check />}
+                      sx={{
+                        marginLeft: 2,
+                      }}
+                      variant="outlined"
+                    >
+                      <Msg
+                        id={messageIds.participantSummaryCard.remindButton}
+                      />
+                    </Button>
+                  </span>
+                </Tooltip>
               )}
             </Box>
           </Box>
