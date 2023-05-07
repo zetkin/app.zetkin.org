@@ -16,7 +16,9 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
         backgroundColor: '#eeeeee',
       }}
     >
-      <DateLabel date={date} />
+      <Box display="flex" width={'200px'}>
+        <DateLabel date={date} />
+      </Box>
       {/* Remaining space for list of events */}
       <Box
         display="flex"
