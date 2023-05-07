@@ -52,14 +52,24 @@ const Calendar = () => {
                 setSelectedTimeScale(timeScale);
               }}
               onStepBackward={() => {
-                setFocusDate(
-                  dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
-                );
+                // Steps back to the last day with an event on day view
+                if (selectedTimeScale === TimeScale.DAY && lastDayWithEvent) {
+                  setFocusDate(lastDayWithEvent[0]);
+                } else {
+                  setFocusDate(
+                    dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
+                  );
+                }
               }}
               onStepForward={() => {
-                setFocusDate(
-                  dayjs(focusDate).add(1, selectedTimeScale).toDate()
-                );
+                // Steps forward to the next day with an event on day view
+                if (selectedTimeScale === TimeScale.DAY && lastDayWithEvent) {
+                  setFocusDate(new Date(futureDays[1][0]));
+                } else {
+                  setFocusDate(
+                    dayjs(focusDate).add(1, selectedTimeScale).toDate()
+                  );
+                }
               }}
               timeScale={selectedTimeScale}
             />
