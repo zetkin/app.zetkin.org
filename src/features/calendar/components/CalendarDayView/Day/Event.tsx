@@ -13,6 +13,9 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
 
+  const needsParticipants =
+    event.num_participants_required > event.num_participants_available;
+
   return (
     <Box
       display="flex"
@@ -67,8 +70,8 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
       <Box alignItems="center" display="flex" gap={1}>
         <EventWarningIcons compact model={model} />
-        <People />
-        <Typography>
+        <People color={needsParticipants ? 'error' : 'inherit'} />
+        <Typography color={needsParticipants ? 'error' : 'inherit'}>
           {event.num_participants_available}/{event.num_participants_required}
         </Typography>
       </Box>
