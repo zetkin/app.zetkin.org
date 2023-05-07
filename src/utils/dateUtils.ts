@@ -74,10 +74,11 @@ export function isValidDate(date: Date): boolean {
     return false;
   }
 }
-export function dateIsBefore(first: Date, second: Date): boolean {
-  return first.toISOString().slice(0, 10) > second.toISOString().slice(0, 10);
+
+export function dateIsAfter(first: Date, second: Date): boolean {
+  return first.toISOString().slice(0, 10) < second.toISOString().slice(0, 10);
 }
 
-export function dateIsEqualOrBefore(first: Date, second: Date): boolean {
-  return first.toISOString().slice(0, 10) >= second.toISOString().slice(0, 10);
+export function dateIsBefore(first: Date, second: Date): boolean {
+  return first.toISOString().slice(0, 10) > second.toISOString().slice(0, 10);
 }
