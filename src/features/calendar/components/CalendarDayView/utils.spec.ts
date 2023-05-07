@@ -5,9 +5,9 @@ import {
   CampaignActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 
-const CURRENT_DATE = '2023-05-01';
-const DATE_AFTER_CURRENT_DATE = '2023-05-02';
-const DATE_BEFORE_CURRENT_DATE = '2023-04-30';
+const CURRENT_DATE = '2023-05-01T12:00:00';
+const DATE_AFTER_CURRENT_DATE = '2023-05-02T12:00:00';
+const DATE_BEFORE_CURRENT_DATE = '2023-04-30T12:00:00';
 jest.useFakeTimers('modern');
 jest.setSystemTime(new Date(CURRENT_DATE));
 
@@ -16,10 +16,7 @@ describe('getPreviousDayWithActivities()', () => {
     const activities: CampaignActivity[] = [
       {
         // Do we need to access the dates internally ever? I think YES for events
-        data: mockEvent({
-          end_time: DATE_AFTER_CURRENT_DATE,
-          start_time: DATE_AFTER_CURRENT_DATE,
-        }),
+        data: mockEvent(),
         endDate: new Date(DATE_AFTER_CURRENT_DATE),
         kind: ACTIVITIES.EVENT,
         startDate: new Date(DATE_AFTER_CURRENT_DATE),
@@ -34,27 +31,21 @@ describe('getPreviousDayWithActivities()', () => {
       const activities: CampaignActivity[] = [
         // Event before current date
         {
-          data: mockEvent({
-            end_time: DATE_BEFORE_CURRENT_DATE,
-            start_time: DATE_BEFORE_CURRENT_DATE,
-          }),
+          data: mockEvent(),
           endDate: new Date(DATE_BEFORE_CURRENT_DATE),
           kind: ACTIVITIES.EVENT,
           startDate: new Date(DATE_BEFORE_CURRENT_DATE),
         },
         // Event after current date
         {
-          data: mockEvent({
-            end_time: DATE_AFTER_CURRENT_DATE,
-            start_time: DATE_AFTER_CURRENT_DATE,
-          }),
+          data: mockEvent(),
           endDate: new Date(DATE_AFTER_CURRENT_DATE),
           kind: ACTIVITIES.EVENT,
           startDate: new Date(DATE_AFTER_CURRENT_DATE),
         },
         // Event even earlier than the first
         {
-          data: mockEvent({ end_time: '2023-01-01', start_time: '2023-01-01' }),
+          data: mockEvent(),
           endDate: new Date('2023-01-01'),
           kind: ACTIVITIES.EVENT,
           startDate: new Date('2023-01-01'),
@@ -71,27 +62,21 @@ describe('getPreviousDayWithActivities()', () => {
       const activities: CampaignActivity[] = [
         // Event after current date
         {
-          data: mockEvent({
-            end_time: DATE_AFTER_CURRENT_DATE,
-            start_time: DATE_AFTER_CURRENT_DATE,
-          }),
+          data: mockEvent(),
           endDate: new Date(DATE_AFTER_CURRENT_DATE),
           kind: ACTIVITIES.EVENT,
           startDate: new Date(DATE_AFTER_CURRENT_DATE),
         },
         // Event that starts long ago but ends right before the current date
         {
-          data: mockEvent({
-            end_time: DATE_BEFORE_CURRENT_DATE,
-            start_time: '2023-01-01',
-          }),
+          data: mockEvent(),
           endDate: new Date(DATE_BEFORE_CURRENT_DATE),
           kind: ACTIVITIES.EVENT,
           startDate: new Date('2023-01-01'),
         },
         // Event that starts and ends before the current date
         {
-          data: mockEvent({ end_time: '2023-07-01', start_time: '2023-02-01' }),
+          data: mockEvent(),
           endDate: new Date('2023-07-01'),
           kind: ACTIVITIES.EVENT,
           startDate: new Date('2023-02-01'),
@@ -103,6 +88,28 @@ describe('getPreviousDayWithActivities()', () => {
       );
       expect(previous?.toDateString()).toEqual(
         new Date(DATE_BEFORE_CURRENT_DATE).toDateString()
+      );
+    });
+    it('when the there are events on the current day, before the current time', () => {
+      const activities: CampaignActivity[] = [
+        // Event before current date on same date
+        {
+          data: mockEvent(),
+          endDate: new Date('2023-05-01T11:00'),
+          kind: ACTIVITIES.EVENT,
+          startDate: new Date('2023-05-01T10:00'),
+        },
+        // Event before current date but starting on previous day and ending on current date
+        {
+          data: mockEvent(),
+          endDate: new Date('2023-01-01T10:00:00'),
+          kind: ACTIVITIES.EVENT,
+          startDate: new Date('2023-04-28T10:00:00'),
+        },
+      ];
+      const previous = getPreviousDayWithActivities(activities, new Date());
+      expect(previous?.toDateString()).toEqual(
+        new Date('2023-04-28T10:00:00').toDateString()
       );
     });
   });

@@ -20,7 +20,7 @@ const PreviousDayPrompt = ({
         justifyContent="center"
       >
         <Typography color={theme.palette.secondary.main}>
-          There were X activities on the previous active day
+          Show the last day with activities
         </Typography>
         <Button
           endIcon={<KeyboardArrowUp />}

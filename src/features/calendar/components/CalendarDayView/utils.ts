@@ -1,63 +1,12 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import dayjs, { Dayjs } from 'dayjs';
 
-import { DayInfo } from './types';
+import { NonEventActivity } from 'features/campaigns/hooks/useClusteredActivities';
 import {
   ACTIVITIES,
   CampaignActivity,
+  EventActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
-
-const groupActivitiesByDate = (activities: CampaignActivity[]) => {
-  // Group all by date
-  const activitiesByDate: { [key: string]: DayInfo } = {};
-  for (let i = 0; i < activities.length; i++) {
-    const activity = activities[i];
-    if (activity.kind == ACTIVITIES.EVENT) {
-      const dateString = new Date(activity.data.start_time)
-        .toISOString()
-        .slice(0, 10);
-      if (!(dateString in activitiesByDate)) {
-        activitiesByDate[dateString] = {
-          activities_ends: [],
-          activities_starts: [],
-          events: [],
-        };
-      }
-
-      activitiesByDate[dateString].events.push(activity.data);
-    } else {
-      if (activity.startDate != null) {
-        const dateString = new Date(activity.startDate)
-          .toISOString()
-          .slice(0, 10);
-        if (!(dateString in activitiesByDate)) {
-          activitiesByDate[dateString] = {
-            activities_ends: [],
-            activities_starts: [],
-            events: [],
-          };
-        }
-        activitiesByDate[dateString].activities_starts.push(activity);
-      }
-      if (activity.endDate != null) {
-        const dateString = new Date(activity.endDate)
-          .toISOString()
-          .slice(0, 10);
-        if (!(dateString in activitiesByDate)) {
-          activitiesByDate[dateString] = {
-            activities_ends: [],
-            activities_starts: [],
-            events: [],
-          };
-        }
-        activitiesByDate[dateString].activities_ends.push(activity);
-      }
-    }
-  }
-
-  return activitiesByDate;
-};
-
-export default groupActivitiesByDate;
 
 /**
  * Loops through activities and if an event with any date before the provided date
@@ -73,9 +22,8 @@ export const getPreviousDayWithActivities = (
     const endDate = dayjs(activity.endDate);
     const targetDate = dayjs(target);
 
-    const datesBeforeTarget = [startDate, endDate].filter((date) =>
-      // Need to improve this so it counts the date as before midnight of the target day
-      date.isBefore(targetDate.add(1, 'day'))
+    const datesBeforeTarget = [startDate, endDate].filter(
+      (date) => !date.isSame(targetDate, 'day') && date.isBefore(targetDate)
     );
 
     // Out of the activity dates which are before the target, return the date nearest the target
@@ -99,4 +47,111 @@ export const getPreviousDayWithActivities = (
     return lastDate;
   }, null);
   return previousDay;
+};
+
+const makeIsoDateString = (date: Date): string | null => {
+  try {
+    return date.toISOString().slice(0, 10);
+  } catch {
+    return null;
+  }
+};
+
+export interface DaySummary {
+  endingActivities: NonEventActivity[];
+  events: EventActivity[] | never[];
+  startingActivities: NonEventActivity[];
+}
+
+export const getActivitiesByDate = (
+  activities: CampaignActivity[]
+): Record<string, DaySummary> => {
+  const dateHashmap: Record<string, DaySummary> = {};
+
+  // Events
+  activities
+    .filter((activity) => activity.kind === ACTIVITIES.EVENT)
+    .forEach(
+      // @ts-ignore
+      (event: EventActivity) => {
+        const startTime = dayjs(event.data.start_time);
+        const isoDateString = makeIsoDateString(startTime.toDate());
+        const endTime = dayjs(event.data.end_time);
+        if (isoDateString) {
+          // If single day event
+          if (startTime.isSame(endTime, 'day')) {
+            // If date already in hashmap
+            if (isoDateString in dateHashmap) {
+              const targetDate = dateHashmap[isoDateString];
+              dateHashmap[isoDateString] = {
+                ...targetDate,
+                events: [...targetDate.events, event],
+              };
+            } else {
+              // If date not yet in hashmap
+              dateHashmap[isoDateString] = {
+                endingActivities: [],
+                events: [event],
+                startingActivities: [],
+              };
+            }
+          }
+        }
+      }
+    );
+
+  // Non events
+  activities
+    .filter((event) => event.kind !== ACTIVITIES.EVENT)
+    .forEach(
+      // @ts-ignore
+      (activity: NonEventActivity) => {
+        const startTime = dayjs(activity.startDate);
+        const startTimeIsoDateString = makeIsoDateString(startTime.toDate());
+        const endTime = dayjs(activity.endDate);
+        const endTimeIsoDateString = makeIsoDateString(endTime.toDate());
+
+        // Assign activity start time to date hashmap
+        if (startTimeIsoDateString) {
+          if (startTimeIsoDateString in dateHashmap) {
+            const startTimeTargetDate = dateHashmap[startTimeIsoDateString];
+            dateHashmap[startTimeIsoDateString] = {
+              ...startTimeTargetDate,
+              startingActivities: [
+                ...startTimeTargetDate.startingActivities,
+                activity,
+              ],
+            };
+          } else {
+            dateHashmap[startTimeIsoDateString] = {
+              endingActivities: [],
+              events: [],
+              startingActivities: [activity],
+            };
+          }
+        }
+
+        // Assign activity end time to date hashmap
+        if (endTimeIsoDateString) {
+          if (endTimeIsoDateString in dateHashmap) {
+            const endTimeTargetDate = dateHashmap[endTimeIsoDateString];
+            dateHashmap[endTimeIsoDateString] = {
+              ...endTimeTargetDate,
+              startingActivities: [
+                ...endTimeTargetDate.startingActivities,
+                activity,
+              ],
+            };
+          } else {
+            dateHashmap[endTimeIsoDateString] = {
+              endingActivities: [activity],
+              events: [],
+              startingActivities: [],
+            };
+          }
+        }
+      }
+    );
+
+  return dateHashmap;
 };

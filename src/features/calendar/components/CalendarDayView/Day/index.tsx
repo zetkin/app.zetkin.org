@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
 
 import DateLabel from './DateLabel';
-import { DayInfo } from '../types';
+import { DaySummary } from '../utils';
 import Event from './Event';
 
-const Day = ({ date, dayInfo }: { date: Date; dayInfo: DayInfo }) => {
+const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
   return (
     <Box
       alignItems="flex-start"
@@ -26,7 +26,7 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DayInfo }) => {
         justifyItems="flex-start"
       >
         {dayInfo.events.map((event, index) => {
-          return <Event key={index} event={event} />;
+          return <Event key={index} event={event.data} />;
         })}
       </Box>
     </Box>
