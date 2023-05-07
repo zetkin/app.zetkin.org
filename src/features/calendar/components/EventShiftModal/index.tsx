@@ -1,9 +1,12 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import MapIcon from '@mui/icons-material/Map';
+import { TimePicker } from '@mui/x-date-pickers-pro';
 import { Add, Close } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
+  Button,
   Dialog,
   TextField,
   Typography,
@@ -57,9 +60,66 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const [eventParticipants, setEventParticipants] = useState<number | null>(
     null
   );
+  const [eventStartTime, setEventStartTime] = useState<Date>(dates[0]);
+  const [eventEndTime, setEventEndTime] = useState<Date>(dates[1]);
+  const [eventShifts, setEventShifts] = useState<Date[]>([
+    dates[0],
+    dayjs(dates[0])
+      .add(dayjs(dates[1]).diff(dayjs(dates[0]), 'minute') / 2, 'minute')
+      .toDate(),
+  ]);
+
+  function updateShifts(noShifts: number) {
+    const newShifts: Date[] = [];
+    for (let i = 0; i < noShifts; i++) {
+      newShifts.push(
+        dayjs(eventStartTime)
+          .add(
+            (dayjs(eventEndTime).diff(dayjs(eventStartTime), 'minute') /
+              noShifts) *
+              i,
+            'minute'
+          )
+          .toDate()
+      );
+    }
+    setEventShifts(newShifts);
+  }
+
+  function durationHoursMins(start: Date, end: Date) {
+    const diffMinute = dayjs(end).diff(dayjs(start), 'minute');
+    const diffHour = dayjs(end).diff(dayjs(start), 'hour');
+
+    if (diffMinute < 60) {
+      return (
+        <Typography>
+          {messages.eventShiftModal.minutes({
+            no: diffMinute,
+          })}
+        </Typography>
+      );
+    } else {
+      if (diffMinute % 60 == 0) {
+        return (
+          <Typography>
+            {messages.eventShiftModal.hours({
+              no: diffHour,
+            })}
+          </Typography>
+        );
+      } else {
+        return (
+          <Typography>
+            {diffHour} {messages.eventShiftModal.hoursShort()} {diffMinute % 60}{' '}
+            {messages.eventShiftModal.minutesShort()}
+          </Typography>
+        );
+      }
+    }
+  }
 
   return (
-    <Dialog fullWidth maxWidth="lg" onClose={close} open={open}>
+    <Dialog fullWidth maxWidth="md" onClose={close} open={open}>
       <Box display="flex" justifyContent="space-between" padding={2}>
         <Typography variant="h4">
           {messages.eventShiftModal.header()}
@@ -75,7 +135,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         />
       </Box>
       <Box display="flex">
-        <Box padding={1}>
+        <Box flex={1} margin={1}>
           <Box></Box>
           <ZUIFutures
             futures={{
@@ -270,7 +330,188 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             value={eventParticipants === null ? '' : eventParticipants}
           />
         </Box>
-        <Box></Box>
+        <Box flex={1} margin={1}>
+          <Typography margin={1} variant="subtitle2">
+            {messages.eventShiftModal.event().toUpperCase()}
+          </Typography>
+          <Box display="flex" flex="space-between">
+            <Box flex={1} margin={1}>
+              <TimePicker
+                ampm={false}
+                inputFormat="HH:mm"
+                label={messages.eventShiftModal.start()}
+                onChange={(newValue) => {
+                  if (newValue && isValidDate(newValue.toDate())) {
+                    setInvalidFormat(false);
+                    setEventStartTime(dayjs(newValue).toDate());
+                  } else {
+                    setInvalidFormat(true);
+                  }
+                }}
+                open={false}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      inputProps={{
+                        ...params.inputProps,
+                      }}
+                    />
+                  );
+                }}
+                value={dayjs(eventStartTime)}
+              />
+            </Box>
+
+            <Box flex={1} margin={1}>
+              <TimePicker
+                ampm={false}
+                inputFormat="HH:mm"
+                label={messages.eventShiftModal.end()}
+                onChange={(newValue) => {
+                  if (
+                    newValue &&
+                    isValidDate(newValue.toDate()) &&
+                    newValue.isAfter(eventStartTime)
+                  ) {
+                    setInvalidFormat(false);
+                    setEventEndTime(dayjs(newValue).toDate());
+                  } else {
+                    setInvalidFormat(true);
+                  }
+                }}
+                open={false}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      inputProps={{
+                        ...params.inputProps,
+                      }}
+                    />
+                  );
+                }}
+                value={dayjs(eventEndTime)}
+              />
+            </Box>
+
+            <Box flex={1} margin={1}>
+              <Typography variant="subtitle2">
+                {messages.eventShiftModal.eventDuration().toUpperCase()}
+              </Typography>
+              <Box>{durationHoursMins(eventStartTime, eventEndTime)}</Box>
+            </Box>
+          </Box>
+          <Typography marginLeft={1} marginTop={1} variant="subtitle2">
+            {messages.eventShiftModal.shiftsHeader().toUpperCase()}
+          </Typography>
+          <Box
+            alignItems="center"
+            display="flex"
+            marginBottom={1}
+            marginLeft={1}
+          >
+            <Typography flex={3}>
+              {messages.eventShiftModal.shifts({ no: eventShifts.length })}
+            </Typography>
+            <Box flex={4}>
+              <Button
+                onClick={() => {
+                  updateShifts(eventShifts.length + 1);
+                }}
+                startIcon={<Add />}
+                sx={{ margin: 1 }}
+                variant="outlined"
+              >
+                {messages.eventShiftModal.addShift().toUpperCase()}
+              </Button>
+              {eventShifts.length > 2 && (
+                <Button
+                  onClick={() => {
+                    updateShifts(2);
+                  }}
+                  sx={{ margin: 1 }}
+                  variant="outlined"
+                >
+                  {messages.eventShiftModal.clear().toUpperCase()}
+                </Button>
+              )}
+            </Box>
+          </Box>
+          {eventShifts.map((shift, index) => {
+            return (
+              <Box key={index} alignItems="center" display="flex" margin={1}>
+                <TimePicker
+                  ampm={false}
+                  inputFormat="HH:mm"
+                  label={messages.eventShiftModal.shiftStart({ no: index + 1 })}
+                  onChange={(newValue) => {
+                    if (
+                      newValue &&
+                      isValidDate(newValue.toDate()) &&
+                      newValue.isAfter(eventShifts[index - 1]) &&
+                      (eventShifts.length - index > 1
+                        ? newValue.isBefore(eventShifts[index + 1])
+                        : newValue.isBefore(eventEndTime))
+                    ) {
+                      setInvalidFormat(false);
+                      setEventShifts([
+                        ...eventShifts.slice(0, index),
+                        dayjs(newValue).toDate(),
+                        ...eventShifts.slice(index + 1),
+                      ]);
+                    } else {
+                      setInvalidFormat(true);
+                    }
+                  }}
+                  open={false}
+                  renderInput={(params) => {
+                    return (
+                      <TextField
+                        {...params}
+                        inputProps={{
+                          ...params.inputProps,
+                        }}
+                      />
+                    );
+                  }}
+                  value={dayjs(shift)}
+                />
+                <Box margin={1}>
+                  <Typography variant="subtitle2">
+                    {messages.eventShiftModal.shiftDuration().toUpperCase()}
+                  </Typography>
+                  {durationHoursMins(
+                    shift,
+                    eventShifts.length - index > 1
+                      ? eventShifts[index + 1]
+                      : eventEndTime
+                  )}
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="flex-end"
+        margin={1}
+      >
+        <Typography color="secondary" margin={1}>
+          {messages.eventShiftModal.noEvents({ no: eventShifts.length })}
+        </Typography>
+        <Box margin={1}>
+          <Button size="large" variant="text">
+            {messages.eventShiftModal.draft().toUpperCase()}
+          </Button>
+        </Box>
+        <Box margin={1}>
+          <Button size="large" variant="contained">
+            {messages.eventShiftModal.publish().toUpperCase()}
+          </Button>
+        </Box>
       </Box>
     </Dialog>
   );
