@@ -123,54 +123,46 @@ const eventsSlice = createSlice({
     },
     filterAdded: (state, action: PayloadAction<FilterType>) => {
       const { filterCategory, selectedFilterValue } = action.payload;
-      const selectedAll = selectedFilterValue.length > 0;
+      const selectedFilterLength = selectedFilterValue.length;
 
       if (filterCategory === 'actions') {
-        const item = state.filters.selectedActions.filter((item) =>
-          (selectedFilterValue as ACTION_FILTER_OPTIONS[]).includes(item)
-        );
-        state.filters.selectedActions = state.filters.selectedActions
-          .filter(
-            (item) =>
-              !(selectedFilterValue as ACTION_FILTER_OPTIONS[]).includes(item)
-          )
-          .concat(
-            item.length !== 0 && selectedFilterValue.length === 1
-              ? []
-              : (selectedFilterValue as ACTION_FILTER_OPTIONS[])
+        const filterArr = selectedFilterValue as ACTION_FILTER_OPTIONS[];
+
+        if (selectedFilterLength === 0) {
+          state.filters.selectedActions = [];
+        }
+        if (selectedFilterLength !== 0) {
+          const item = state.filters.selectedActions.filter((item) =>
+            filterArr.includes(item)
           );
+          state.filters.selectedActions = state.filters.selectedActions
+            .filter((item) => !filterArr.includes(item))
+            .concat(
+              item.length !== 0 && selectedFilterLength === 1 ? [] : filterArr
+            );
+        }
       }
+
       if (filterCategory === 'states') {
-        const item = state.filters.selectedActions.filter((item) =>
-          (selectedFilterValue as ACTION_FILTER_OPTIONS[]).includes(item)
-        );
-        state.filters.selectedStates = state.filters.selectedStates
-          .filter(
-            (item) =>
-              !(selectedFilterValue as STATE_FILTER_OPTIONS[]).includes(item)
-          )
-          .concat(
-            item.length !== 0 && selectedFilterValue.length === 1
-              ? []
-              : (selectedFilterValue as STATE_FILTER_OPTIONS[])
+        const filterArr = selectedFilterValue as STATE_FILTER_OPTIONS[];
+
+        if (selectedFilterLength === 0) {
+          state.filters.selectedStates = [];
+        }
+
+        if (selectedFilterLength !== 0) {
+          const item = state.filters.selectedStates.filter((item) =>
+            filterArr.includes(item)
           );
+          state.filters.selectedStates = state.filters.selectedStates
+            .filter((item) => !filterArr.includes(item))
+            .concat(
+              item.length !== 0 && selectedFilterLength === 1 ? [] : filterArr
+            );
+        }
       }
     },
-    filterRemoved: (state, action: PayloadAction<FilterType>) => {
-      const { filterCategory, selectedFilterValue } = action.payload;
-      if (filterCategory === 'actions') {
-        state.filters.selectedActions = state.filters.selectedActions.filter(
-          (item) =>
-            !(selectedFilterValue as ACTION_FILTER_OPTIONS[]).includes(item)
-        );
-      }
-      if (filterCategory === 'states') {
-        state.filters.selectedStates = state.filters.selectedStates.filter(
-          (item) =>
-            !(selectedFilterValue as STATE_FILTER_OPTIONS[]).includes(item)
-        );
-      }
-    },
+
     locationAdded: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
       state.locationList.items = state.locationList.items
@@ -304,7 +296,6 @@ export const {
   eventUpdate,
   eventUpdated,
   filterAdded,
-  filterRemoved,
   locationUpdate,
   locationUpdated,
   locationAdded,

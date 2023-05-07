@@ -18,7 +18,6 @@ import {
   ACTION_FILTER_OPTIONS,
   EventFilterOptions,
   filterAdded,
-  filterRemoved,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
 import { useSelector, useStore } from 'react-redux';
@@ -34,25 +33,6 @@ const EventFilterPane = () => {
     filterCategory: string
   ) => {
     const { name } = e.target;
-
-    // if (
-    //   state.selectedActions.includes(name as ACTION_FILTER_OPTIONS) ||
-    //   state.selectedStates.includes(name as STATE_FILTER_OPTIONS)
-    // ) {
-    //   store.dispatch(
-    //     filterRemoved({
-    //       filterCategory,
-    //       selectedFilterValue: [name] as EventFilterOptions,
-    //     })
-    //   );
-    // } else {
-    //   store.dispatch(
-    //     filterAdded({
-    //       filterCategory,
-    //       selectedFilterValue: [name] as EventFilterOptions,
-    //     })
-    //   );
-    // }
     store.dispatch(
       filterAdded({
         filterCategory,
@@ -71,6 +51,15 @@ const EventFilterPane = () => {
       filterAdded({
         filterCategory,
         selectedFilterValue: options as EventFilterOptions,
+      })
+    );
+  };
+
+  const handleSelectNone = (filterCategory: string) => {
+    store.dispatch(
+      filterAdded({
+        filterCategory,
+        selectedFilterValue: [] as EventFilterOptions,
       })
     );
   };
@@ -108,6 +97,9 @@ const EventFilterPane = () => {
               <AllAndNoneToggle
                 filterCategory="actions"
                 onClickAll={(filterCategory) => handleSelectAll(filterCategory)}
+                onClickNone={(filterCategory) =>
+                  handleSelectNone(filterCategory)
+                }
               />
             </Box>
             <>
@@ -156,6 +148,9 @@ const EventFilterPane = () => {
               <AllAndNoneToggle
                 filterCategory="states"
                 onClickAll={(filterCategory) => handleSelectAll(filterCategory)}
+                onClickNone={(filterCategory) =>
+                  handleSelectNone(filterCategory)
+                }
               />
             </Box>
             <>
