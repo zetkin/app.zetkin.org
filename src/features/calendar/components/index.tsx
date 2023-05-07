@@ -48,7 +48,10 @@ const Calendar = () => {
         overflow="auto"
       >
         {selectedTimeScale === TimeScale.DAY && (
-          <CalendarDayView focusDate={focusDate} />
+          <CalendarDayView
+            focusDate={focusDate}
+            onClickPreviousDay={(date) => setFocusDate(date)}
+          />
         )}
         {selectedTimeScale === TimeScale.WEEK && (
           <CalendarWeekView focusDate={focusDate} />

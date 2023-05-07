@@ -4,16 +4,20 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
 import Day from './Day';
-import { getActivitiesByDate } from './utils';
 import PreviousDayPrompt from './PreviousDayPrompt';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
+import { getActivitiesByDate, getPreviousDay } from './utils';
 
 export interface CalendarDayViewProps {
   focusDate: Date;
+  onClickPreviousDay: (date: Date) => void;
 }
 
-const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
+const CalendarDayView = ({
+  focusDate,
+  onClickPreviousDay,
+}: CalendarDayViewProps) => {
   const { orgId } = useRouter().query;
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId as string))
@@ -31,14 +35,19 @@ const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
             );
           }
         );
+        const previousActivityDay = getPreviousDay(activitiesByDate, focusDate);
 
         return (
           <Box display="flex" flexDirection="column" gap={2}>
-            <PreviousDayPrompt
-              onClickShowMore={() => {
-                return;
-              }}
-            />
+            {previousActivityDay && (
+              <PreviousDayPrompt
+                date={previousActivityDay[0]}
+                daySummary={previousActivityDay[1]}
+                onClickShowMore={() => {
+                  onClickPreviousDay(previousActivityDay[0]);
+                }}
+              />
+            )}
             {/* List of days with events */}
             {futureDays.map(([dateString, daySummary], index) => {
               return (

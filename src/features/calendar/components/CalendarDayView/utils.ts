@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 import { NonEventActivity } from 'features/campaigns/hooks/useClusteredActivities';
 import {
@@ -8,53 +8,43 @@ import {
   EventActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 
-/**
- * Loops through activities and if an event with any date before the provided date
- * is found, returns the date nearest to the provided date. If no date is found,
- * returns `null`.
- */
-export const getPreviousDayWithActivities = (
-  activities: CampaignActivity[],
-  target: Date
-): Date | null => {
-  const previousDay = activities.reduce((lastDate: Date | null, activity) => {
-    const startDate = dayjs(activity.startDate);
-    const endDate = dayjs(activity.endDate);
-    const targetDate = dayjs(target);
-
-    const datesBeforeTarget = [startDate, endDate].filter(
-      (date) => !date.isSame(targetDate, 'day') && date.isBefore(targetDate)
-    );
-
-    // Out of the activity dates which are before the target, return the date nearest the target
-    const closestDate = datesBeforeTarget.reduce(
-      (closest: Dayjs | undefined, date) => {
-        if (date.isAfter(closest)) {
-          return date;
-        }
-        return closest;
-      },
-      datesBeforeTarget[0]
-    );
-
-    if (closestDate) {
-      if (!lastDate || closestDate.isAfter(lastDate)) {
-        // Sets this as the lastdate
-        return closestDate.toDate();
-      }
-    }
-
-    return lastDate;
-  }, null);
-  return previousDay;
-};
-
 const makeIsoDateString = (date: Date): string | null => {
   try {
     return date.toISOString().slice(0, 10);
   } catch {
     return null;
   }
+};
+
+export const getPreviousDay = (
+  activities: Record<string, DaySummary>,
+  target: Date
+): [Date, DaySummary] | null => {
+  const dates = Object.keys(activities).map(
+    (dateString) => new Date(dateString)
+  );
+  const datesBeforeTarget = dates.filter(
+    (date) => !dayjs(date).isSame(target, 'day') && dayjs(date).isBefore(target)
+  );
+
+  const closestDateBeforeTarget = datesBeforeTarget.reduce(
+    (previousClosestDate: Date | undefined, date) => {
+      if (dayjs(date).isAfter(previousClosestDate)) {
+        return date;
+      }
+      return previousClosestDate;
+    },
+    datesBeforeTarget[0]
+  );
+
+  const closestDateIsoString =
+    closestDateBeforeTarget && makeIsoDateString(closestDateBeforeTarget);
+
+  if (closestDateIsoString) {
+    return [closestDateBeforeTarget, activities[closestDateIsoString]];
+  }
+
+  return null;
 };
 
 export interface DaySummary {
