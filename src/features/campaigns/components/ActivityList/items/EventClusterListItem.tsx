@@ -28,7 +28,7 @@ interface EventListeItemProps {
 }
 
 const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
-  const { openMultiEventPopper } = useEventPopper();
+  const { openEventPopper } = useEventPopper();
   const {
     allHaveContacts,
     color,
@@ -46,11 +46,7 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
   return (
     <Box
       onClick={(evt) =>
-        openMultiEventPopper(
-          cluster.kind,
-          { left: evt.clientX, top: evt.clientY },
-          cluster.events
-        )
+        openEventPopper(cluster, { left: evt.clientX, top: evt.clientY })
       }
       sx={{ cursor: 'pointer' }}
     >
