@@ -4,7 +4,7 @@ import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
 
 function assertOk(res: Response) {
   if (!res.ok) {
-    throw new Error('Error during request');
+    throw new Error(`Error during request: ${res.status}, ${res.url}`);
   }
 }
 
