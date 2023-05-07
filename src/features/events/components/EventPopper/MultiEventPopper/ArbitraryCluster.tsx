@@ -25,7 +25,6 @@ const ArbitraryCluster: FC<ArbitraryClusterProps> = ({
             <MultiEventListItem
               key={event.id}
               clusterType={CLUSTER_TYPE.ARBITRARY}
-              compact={false}
               event={event}
               onEventClick={(id: number) => onEventClick(id)}
             />

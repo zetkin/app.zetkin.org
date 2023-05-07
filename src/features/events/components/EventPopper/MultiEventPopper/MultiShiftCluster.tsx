@@ -33,7 +33,6 @@ const MultiShiftCluster: FC<MultiShiftClusterProps> = ({
             <MultiEventListItem
               key={event.id}
               clusterType={CLUSTER_TYPE.MULTI_SHIFT}
-              compact={false}
               event={event}
               onEventClick={(id: number) => onEventClick(id)}
             />

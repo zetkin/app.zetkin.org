@@ -1,84 +1,33 @@
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
-import { WarningSlot } from '../../EventWarningIcons';
 import { Box, Checkbox, Typography } from '@mui/material';
-import {
-  ChevronRightOutlined,
-  EmojiPeople,
-  FaceRetouchingOff,
-  MailOutline,
-  People,
-} from '@mui/icons-material';
+import { ChevronRightOutlined, People } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
+import EventWarningIcons from '../../EventWarningIcons';
 import LocationName from '../../LocationName';
-import messageIds from 'features/events/l10n/messageIds';
 import StatusDot from '../StatusDot';
-import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 
 interface MultiEventListItemProps {
   clusterType: CLUSTER_TYPE;
-  compact: boolean;
   event: ZetkinEvent;
   onEventClick: (id: number) => void;
 }
 
 const MultiEventListItem: FC<MultiEventListItemProps> = ({
   clusterType,
-  compact,
   event,
   onEventClick,
 }) => {
   const intl = useIntl();
-  const messages = useMessages(messageIds);
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
-
-  const participants = model.getParticipants().data || [];
   const state = model.state;
-
-  const warningIcons: (JSX.Element | null)[] = [null, null, null];
-
-  if (!event.contact) {
-    warningIcons[0] = (
-      <WarningSlot
-        key="contact"
-        icon={<FaceRetouchingOff color="error" fontSize="small" />}
-        tooltip={messages.eventPopper.noContact()}
-      />
-    );
-  }
-
-  const numBooked = participants.length;
-  if (event.num_participants_available > numBooked) {
-    warningIcons[1] = (
-      <WarningSlot
-        key="signups"
-        icon={<EmojiPeople color="error" fontSize="small" />}
-        tooltip={messages.eventPopper.pendingSignups()}
-      />
-    );
-  }
-
-  const reminded = participants.filter((p) => !!p.reminder_sent);
-  const numReminded = reminded.length;
-  if (numReminded < participants.length) {
-    warningIcons[2] = (
-      <WarningSlot
-        key="reminders"
-        icon={<MailOutline color="error" fontSize="small" />}
-        tooltip={messages.eventPopper.unsentReminders({
-          numMissing: participants.length - numReminded,
-        })}
-      />
-    );
-  }
-
   const timeSpan = `${intl.formatTime(event.start_time)}-${intl.formatTime(
     event.end_time
   )}`;
@@ -113,16 +62,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
             </Typography>
           </Box>
           <Box alignItems="center" display="flex">
-            <Box display="flex">
-              {warningIcons.map((icon, idx) => {
-                if (icon) {
-                  return icon;
-                }
-                if (!compact) {
-                  return <WarningSlot key={idx} />;
-                }
-              })}
-            </Box>
+            <EventWarningIcons model={model} />
             <Box paddingRight={2}>
               <ZUIIconLabel
                 color={

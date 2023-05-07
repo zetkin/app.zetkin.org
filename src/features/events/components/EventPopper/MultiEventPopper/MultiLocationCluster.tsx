@@ -33,7 +33,6 @@ const MultiLocationCluster: FC<MultiLocationClusterProps> = ({
             <MultiEventListItem
               key={event.id}
               clusterType={CLUSTER_TYPE.MULTI_LOCATION}
-              compact={false}
               event={event}
               onEventClick={(id: number) => onEventClick(id)}
             />
