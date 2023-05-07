@@ -1,18 +1,18 @@
 import { FormattedTime } from 'react-intl';
 import { Box, Typography } from '@mui/material';
-import {
-  EmojiPeople,
-  FaceRetouchingOff,
-  MailOutline,
-  People,
-  PlaceOutlined,
-  Schedule,
-} from '@mui/icons-material';
+import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
+import EventDataModel from 'features/events/models/EventDataModel';
+import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import theme from 'theme';
+import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
+  const model = useModel(
+    (env) => new EventDataModel(env, event.organization.id, event.id)
+  );
+
   return (
     <Box
       display="flex"
@@ -64,10 +64,9 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
         )}
       </Box>
       {/* Icons */}
+
       <Box alignItems="center" display="flex" gap={1}>
-        <EmojiPeople color="error" />
-        <FaceRetouchingOff color="error" />
-        <MailOutline color="error" />
+        <EventWarningIcons compact model={model} />
         <People />
         <Typography>
           {event.num_participants_available}/{event.num_participants_required}
