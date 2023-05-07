@@ -25,7 +25,7 @@ const PreviousDayPrompt = ({
         justifyContent="center"
       >
         <Typography color={theme.palette.secondary.main}>
-          Show the last day with activities {daySummary.events.length}
+          There were {daySummary.events.length} events on the last active day
         </Typography>
         <Button
           endIcon={<KeyboardArrowUp />}
