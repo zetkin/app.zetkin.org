@@ -3,6 +3,8 @@ import { Box, Button, Typography } from '@mui/material';
 
 import DateLabel from './Day/DateLabel';
 import { DaySummary } from '../utils';
+import messageIds from 'features/calendar/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import theme from 'theme';
 
 const PreviousDayPrompt = ({
@@ -25,14 +27,17 @@ const PreviousDayPrompt = ({
         justifyContent="center"
       >
         <Typography color={theme.palette.secondary.main}>
-          There were {daySummary.events.length} events on the last active day
+          <Msg
+            id={messageIds.lastDayWithEvents}
+            values={{ numEvents: daySummary.events.length }}
+          />
         </Typography>
         <Button
           endIcon={<KeyboardArrowUp />}
           onClick={onClickShowMore}
           variant="text"
         >
-          Show
+          <Msg id={messageIds.showMore} />
         </Button>
       </Box>
     </Box>
