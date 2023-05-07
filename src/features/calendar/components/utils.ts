@@ -2,6 +2,7 @@
 import dayjs from 'dayjs';
 
 import { NonEventActivity } from 'features/campaigns/hooks/useClusteredActivities';
+import range from 'utils/range';
 import {
   ACTIVITIES,
   CampaignActivity,
@@ -65,6 +66,28 @@ export interface DaySummary {
   startingActivities: NonEventActivity[];
 }
 
+const applyToHashmap = (
+  dateHashmap: Record<string, DaySummary>,
+  key: string,
+  event: EventActivity
+) => {
+  // If date already in hashmap
+  if (key in dateHashmap) {
+    const targetProperty = dateHashmap[key];
+    dateHashmap[key] = {
+      ...targetProperty,
+      events: [...targetProperty.events, event],
+    };
+  } else {
+    // If date not yet in dateHashmap
+    dateHashmap[key] = {
+      endingActivities: [],
+      events: [event],
+      startingActivities: [],
+    };
+  }
+};
+
 export const getActivitiesByDay = (
   activities: CampaignActivity[]
 ): Record<string, DaySummary> => {
@@ -82,21 +105,86 @@ export const getActivitiesByDay = (
         if (isoDateString) {
           // If single day event
           if (startTime.isSame(endTime, 'day')) {
-            // If date already in hashmap
-            if (isoDateString in dateHashmap) {
-              const targetDate = dateHashmap[isoDateString];
-              dateHashmap[isoDateString] = {
-                ...targetDate,
-                events: [...targetDate.events, event],
-              };
-            } else {
-              // If date not yet in hashmap
-              dateHashmap[isoDateString] = {
-                endingActivities: [],
-                events: [event],
-                startingActivities: [],
-              };
-            }
+            applyToHashmap(dateHashmap, isoDateString, event);
+          } else {
+            // If multi day event
+            const eventDays =
+              Math.abs(startTime.diff(endTime, 'hours')) / 24 + 1; // Number of days the event spans
+
+            // Multi day events are added to each date they span.
+            // The first day goes from the start time to 24:00
+            // Complete days in the middle go from 00:00 - 24:00
+            // The last day goes from 00:00 - the end time
+            range(eventDays).forEach((dayIndex) => {
+              const dayOfEvent = startTime.add(dayIndex, 'day');
+              const dayOfEventIsoDate = makeIsoDateString(dayOfEvent.toDate());
+              if (!dayOfEventIsoDate) {
+                return;
+              }
+
+              if (dayIndex === 0) {
+                // First day of multi day event
+                const firstDayEvent = {
+                  ...event,
+                  data: {
+                    ...event.data,
+                    end_time: dayOfEvent
+                      .hour(24)
+                      .minute(0)
+                      .second(0)
+                      .millisecond(0)
+                      .toISOString(),
+                  },
+                };
+
+                applyToHashmap(dateHashmap, dayOfEventIsoDate, firstDayEvent);
+              }
+              if (
+                // Complete day within multi day event
+                !dayOfEvent.isSame(startTime, 'day') &&
+                !dayOfEvent.isSame(endTime, 'day')
+              ) {
+                const completeDayEvent = {
+                  ...event,
+                  data: {
+                    ...event.data,
+                    end_time: dayOfEvent
+                      .hour(24)
+                      .minute(0)
+                      .second(0)
+                      .millisecond(0)
+                      .toISOString(),
+                    start_time: dayOfEvent
+                      .hour(0)
+                      .minute(0)
+                      .second(0)
+                      .millisecond(0)
+                      .toISOString(),
+                  },
+                };
+                applyToHashmap(
+                  dateHashmap,
+                  dayOfEventIsoDate,
+                  completeDayEvent
+                );
+              }
+              if (dayIndex === eventDays - 1) {
+                // Final day of multi day event
+                const finalDayEvent = {
+                  ...event,
+                  data: {
+                    ...event.data,
+                    start_time: dayOfEvent
+                      .hour(0)
+                      .minute(0)
+                      .second(0)
+                      .millisecond(0)
+                      .toISOString(),
+                  },
+                };
+                applyToHashmap(dateHashmap, dayOfEventIsoDate, finalDayEvent);
+              }
+            });
           }
         }
       }
