@@ -67,10 +67,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     state == EventState.CANCELLED;
 
   const remindedParticipants =
-    participants?.filter((p) => p.reminder_sent != null).length ?? 0;
-  const availableParticipants = participants?.length ?? 0;
+    participants.filter((p) => p.reminder_sent != null).length ?? 0;
+  const availableParticipants = participants.length ?? 0;
   const signedParticipants =
-    respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
+    respondents.filter((r) => !participants.some((p) => p.id === r.id))
       .length ?? 0;
 
   const ellipsisMenuItems = [
