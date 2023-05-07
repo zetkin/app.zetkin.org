@@ -255,12 +255,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           passHref
         >
           <Link underline="none">
-            <Box alignItems="center" display="flex">
-              <Typography sx={{ fontSize: '0.8em', paddingRight: 1 }}>
-                {messages.eventPopper.eventPageLink().toUpperCase()}
-              </Typography>
-              <ArrowForward color="primary" sx={{ fontSize: '1em' }} />
-            </Box>
+            <Button
+              endIcon={<ArrowForward />}
+              onClick={onClickAway}
+              variant="text"
+            >
+              {messages.eventPopper.eventPageLink().toUpperCase()}
+            </Button>
           </Link>
         </NextLink>
       </Box>
