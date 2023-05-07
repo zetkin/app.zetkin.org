@@ -17,7 +17,7 @@ import AllAndNoneToggle from './AllAndNoneToggle';
 import {
   ACTION_FILTER_OPTIONS,
   EventFilterOptions,
-  filterAdded,
+  filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
 import { useSelector, useStore } from 'react-redux';
@@ -34,9 +34,9 @@ const EventFilterPane = () => {
   ) => {
     const { name } = e.target;
     store.dispatch(
-      filterAdded({
+      filterUpdated({
         filterCategory,
-        selectedFilterValue: [name] as EventFilterOptions,
+        selectedFilterValue: [name as EventFilterOptions],
       })
     );
   };
@@ -48,18 +48,18 @@ const EventFilterPane = () => {
         : STATE_FILTER_OPTIONS
     );
     store.dispatch(
-      filterAdded({
+      filterUpdated({
         filterCategory,
-        selectedFilterValue: options as EventFilterOptions,
+        selectedFilterValue: options,
       })
     );
   };
 
   const handleSelectNone = (filterCategory: string) => {
     store.dispatch(
-      filterAdded({
+      filterUpdated({
         filterCategory,
-        selectedFilterValue: [] as EventFilterOptions,
+        selectedFilterValue: [],
       })
     );
   };

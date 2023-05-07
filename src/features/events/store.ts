@@ -36,13 +36,13 @@ export type EventStats = {
   numSignups: number;
 };
 export type EventFilterOptions =
-  | ACTION_FILTER_OPTIONS[]
-  | STATE_FILTER_OPTIONS[]
-  | number[];
+  | ACTION_FILTER_OPTIONS
+  | STATE_FILTER_OPTIONS
+  | number;
 
 type FilterType = {
   filterCategory: string;
-  selectedFilterValue: EventFilterOptions;
+  selectedFilterValue: EventFilterOptions[];
 };
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
@@ -121,45 +121,44 @@ const eventsSlice = createSlice({
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
-    filterAdded: (state, action: PayloadAction<FilterType>) => {
+    filterUpdated: (state, action: PayloadAction<FilterType>) => {
       const { filterCategory, selectedFilterValue } = action.payload;
-      const selectedFilterLength = selectedFilterValue.length;
 
       if (filterCategory === 'actions') {
-        const filterArr = selectedFilterValue as ACTION_FILTER_OPTIONS[];
-
-        if (selectedFilterLength === 0) {
-          state.filters.selectedActions = [];
-        }
-        if (selectedFilterLength !== 0) {
-          const item = state.filters.selectedActions.filter((item) =>
-            filterArr.includes(item)
-          );
-          state.filters.selectedActions = state.filters.selectedActions
-            .filter((item) => !filterArr.includes(item))
-            .concat(
-              item.length !== 0 && selectedFilterLength === 1 ? [] : filterArr
-            );
-        }
+        state.filters.selectedActions = filterOptions(
+          selectedFilterValue,
+          state.filters.selectedActions
+        ) as ACTION_FILTER_OPTIONS[];
       }
 
       if (filterCategory === 'states') {
-        const filterArr = selectedFilterValue as STATE_FILTER_OPTIONS[];
+        state.filters.selectedStates = filterOptions(
+          selectedFilterValue,
+          state.filters.selectedStates
+        ) as STATE_FILTER_OPTIONS[];
+      }
 
-        if (selectedFilterLength === 0) {
-          state.filters.selectedStates = [];
+      function filterOptions(
+        selectedFilterValue: EventFilterOptions[],
+        selectedFilterItems: EventFilterOptions[]
+      ) {
+        const selectedFilterValueLength = selectedFilterValue.length;
+
+        if (selectedFilterValueLength === 0) {
+          return [];
         }
 
-        if (selectedFilterLength !== 0) {
-          const item = state.filters.selectedStates.filter((item) =>
-            filterArr.includes(item)
+        const foundSelectedFilter = selectedFilterItems.find((item) =>
+          selectedFilterValue.includes(item)
+        );
+
+        return selectedFilterItems
+          .filter((item) => !selectedFilterValue.includes(item))
+          .concat(
+            foundSelectedFilter && selectedFilterValueLength === 1
+              ? []
+              : selectedFilterValue
           );
-          state.filters.selectedStates = state.filters.selectedStates
-            .filter((item) => !filterArr.includes(item))
-            .concat(
-              item.length !== 0 && selectedFilterLength === 1 ? [] : filterArr
-            );
-        }
       }
     },
 
@@ -295,7 +294,7 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
-  filterAdded,
+  filterUpdated,
   locationUpdate,
   locationUpdated,
   locationAdded,
