@@ -1,14 +1,13 @@
 import Box from '@mui/material/Box';
-import { useRouter } from 'next/router';
-
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
-import ZUIFuture from 'zui/ZUIFuture';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 
 import Day from './Day';
 import { getActivitiesByDate } from './utils';
 import PreviousDayPrompt from './PreviousDayPrompt';
 import useModel from 'core/useModel';
-// import dayjs from 'dayjs';
+import ZUIFuture from 'zui/ZUIFuture';
 
 export interface CalendarDayViewProps {
   focusDate: Date;
@@ -23,6 +22,16 @@ const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
     <ZUIFuture future={model.getAllActivities()}>
       {(data) => {
         const activitiesByDate = getActivitiesByDate(data);
+        const futureDays = Object.entries(activitiesByDate).filter(
+          ([dateString]) => {
+            const activityDay = dayjs(dateString);
+            return (
+              activityDay.isSame(focusDate, 'day') ||
+              activityDay.isAfter(focusDate)
+            );
+          }
+        );
+
         return (
           <Box display="flex" flexDirection="column" gap={2}>
             <PreviousDayPrompt
@@ -31,17 +40,15 @@ const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
               }}
             />
             {/* List of days with events */}
-            {Object.entries(activitiesByDate).map(
-              ([dateString, daySummary], index) => {
-                return (
-                  <Day
-                    key={index}
-                    date={new Date(dateString)}
-                    dayInfo={daySummary}
-                  />
-                );
-              }
-            )}
+            {futureDays.map(([dateString, daySummary], index) => {
+              return (
+                <Day
+                  key={index}
+                  date={new Date(dateString)}
+                  dayInfo={daySummary}
+                />
+              );
+            })}
           </Box>
         );
       }}
