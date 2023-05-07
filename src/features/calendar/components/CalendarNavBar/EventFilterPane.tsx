@@ -35,24 +35,30 @@ const EventFilterPane = () => {
   ) => {
     const { name } = e.target;
 
-    if (
-      state.selectedActions.includes(name as ACTION_FILTER_OPTIONS) ||
-      state.selectedStates.includes(name as STATE_FILTER_OPTIONS)
-    ) {
-      store.dispatch(
-        filterRemoved({
-          filterCategory,
-          selectedFilterValue: [name] as EventFilterOptions,
-        })
-      );
-    } else {
-      store.dispatch(
-        filterAdded({
-          filterCategory,
-          selectedFilterValue: [name] as EventFilterOptions,
-        })
-      );
-    }
+    // if (
+    //   state.selectedActions.includes(name as ACTION_FILTER_OPTIONS) ||
+    //   state.selectedStates.includes(name as STATE_FILTER_OPTIONS)
+    // ) {
+    //   store.dispatch(
+    //     filterRemoved({
+    //       filterCategory,
+    //       selectedFilterValue: [name] as EventFilterOptions,
+    //     })
+    //   );
+    // } else {
+    //   store.dispatch(
+    //     filterAdded({
+    //       filterCategory,
+    //       selectedFilterValue: [name] as EventFilterOptions,
+    //     })
+    //   );
+    // }
+    store.dispatch(
+      filterAdded({
+        filterCategory,
+        selectedFilterValue: [name] as EventFilterOptions,
+      })
+    );
   };
 
   const handleSelectAll = (filterCategory: string) => {
@@ -126,7 +132,7 @@ const EventFilterPane = () => {
                       <Checkbox
                         checked={state.selectedActions.includes(enumValue)}
                         name={enumValue}
-                        onChange={(e) => handleCheckBox(e, 'selectedActions')}
+                        onChange={(e) => handleCheckBox(e, 'actions')}
                       />
                     }
                     label={message[1]()}
@@ -174,7 +180,7 @@ const EventFilterPane = () => {
                       <Checkbox
                         checked={state.selectedStates.includes(enumValue)}
                         name={enumValue}
-                        onChange={(e) => handleCheckBox(e, 'selectedStates')}
+                        onChange={(e) => handleCheckBox(e, 'states')}
                       />
                     }
                     label={message[1]()}

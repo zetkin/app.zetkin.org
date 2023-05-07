@@ -16,7 +16,7 @@ const AllAndNoneToggle = ({
       <Button variant="text" onClick={() => onClickAll(filterCategory)}>
         <Msg id={messageIds.eventFilter.toggle.all} />
       </Button>
-      <Button disabled variant="text">
+      <Button variant="text" onClick={() => onClickAll(filterCategory)}>
         <Msg id={messageIds.eventFilter.toggle.none} />
       </Button>
     </Box>
