@@ -10,6 +10,7 @@ import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitie
 import useModel from 'core/useModel';
 import { useRouter } from 'next/router';
 import ZUIFuture from 'zui/ZUIFuture';
+import { getActivitiesByDay, getFutureDays, getPreviousDay } from './utils';
 
 export enum TimeScale {
   DAY = 'day',
@@ -31,6 +32,10 @@ const Calendar = () => {
   return (
     <ZUIFuture future={model.getAllActivities()}>
       {(data) => {
+        const activitiesByDay = getActivitiesByDay(data);
+        const futureDays = getFutureDays(activitiesByDay, focusDate);
+        const lastDayWithEvent = getPreviousDay(activitiesByDay, focusDate);
+
         return (
           <Box
             display="flex"
@@ -68,9 +73,10 @@ const Calendar = () => {
             >
               {selectedTimeScale === TimeScale.DAY && (
                 <CalendarDayView
-                  activities={data}
+                  activities={futureDays}
                   focusDate={focusDate}
                   onClickPreviousDay={(date) => setFocusDate(date)}
+                  previousActivityDay={lastDayWithEvent}
                 />
               )}
               {selectedTimeScale === TimeScale.WEEK && (
@@ -86,15 +92,5 @@ const Calendar = () => {
     </ZUIFuture>
   );
 };
-{
-  /* 
-const CalendarWrapper = () => {
-  return (
-    <CalendarContextProvider>
-      <Calendar />
-    </CalendarContextProvider>
-  );
-}; */
-}
 
 export default Calendar;

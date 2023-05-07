@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 
 import DateLabel from './DateLabel';
-import { DaySummary } from '../utils';
+import { DaySummary } from '../../utils';
 import Event from './Event';
 
 const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {

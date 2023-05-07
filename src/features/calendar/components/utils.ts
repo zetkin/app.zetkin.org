@@ -16,6 +16,18 @@ const makeIsoDateString = (date: Date): string | null => {
   }
 };
 
+export const getFutureDays = (
+  activitiesHashMap: Record<string, DaySummary>,
+  targetDate: Date
+): [string, DaySummary][] => {
+  return Object.entries(activitiesHashMap).filter(([dateString]) => {
+    const activityDay = dayjs(dateString);
+    return (
+      activityDay.isSame(targetDate, 'day') || activityDay.isAfter(targetDate)
+    );
+  });
+};
+
 export const getPreviousDay = (
   activities: Record<string, DaySummary>,
   target: Date
@@ -53,7 +65,7 @@ export interface DaySummary {
   startingActivities: NonEventActivity[];
 }
 
-export const getActivitiesByDate = (
+export const getActivitiesByDay = (
   activities: CampaignActivity[]
 ): Record<string, DaySummary> => {
   const dateHashmap: Record<string, DaySummary> = {};

@@ -2,7 +2,7 @@ import { KeyboardArrowUp } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 
 import DateLabel from './Day/DateLabel';
-import { DaySummary } from './utils';
+import { DaySummary } from '../utils';
 import theme from 'theme';
 
 const PreviousDayPrompt = ({
