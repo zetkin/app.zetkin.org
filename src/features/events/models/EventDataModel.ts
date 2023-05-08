@@ -32,6 +32,12 @@ export default class EventDataModel extends ModelBase {
     this._repo.addParticipant(this._orgId, this._eventId, personId);
   }
 
+  attendedParticipant(personId: number) {
+    this._repo.updateParticipant(this._orgId, this._eventId, personId, {
+      status: 'attended',
+    });
+  }
+
   cancelParticipant(personId: number): IFuture<ZetkinEventParticipant> {
     const promise = this._repo.updateParticipant(
       this._orgId,
@@ -144,6 +150,12 @@ export default class EventDataModel extends ModelBase {
 
   getRespondents(): IFuture<ZetkinEventResponse[]> {
     return this._repo.getEventRespondents(this._orgId, this._eventId);
+  }
+
+  noShowParticipant(personId: number) {
+    this._repo.updateParticipant(this._orgId, this._eventId, personId, {
+      status: 'noshow',
+    });
   }
 
   reBookParticipant(personId: number) {

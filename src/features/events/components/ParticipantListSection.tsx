@@ -1,20 +1,97 @@
-import EventDataModel from '../models/EventDataModel';
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
 import { FC } from 'react';
-import messageIds from 'features/events/l10n/messageIds';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+
+import EventDataModel from '../models/EventDataModel';
+import filterParticipants from '../utils/filterParticipants';
 import noPropagate from 'utils/noPropagate';
 import { useMessages } from 'core/i18n';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-
-import filterParticipants from '../utils/filterParticipants';
-import { Box, Button, Tooltip, Typography } from '@mui/material';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
+
+import messageIds from 'features/events/l10n/messageIds';
+
+type attendance = 'noshow' | 'attended' | 'cancelled';
+
+interface ButtonOption {
+  value?: attendance;
+  callback: () => void;
+  longTitle?: string;
+  title: string;
+  variant: 'text' | 'outlined' | 'contained' | undefined;
+}
+
+const Buttons: FC<{ options: ButtonOption[] }> = ({ options }) => {
+  return (
+    <FormControl
+      sx={{
+        columnGap: '0.5em',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+      }}
+    >
+      {options.map((option) => (
+        <Button
+          key={option.value}
+          onClick={noPropagate(() => option.callback())}
+          size="small"
+          variant={option.variant}
+        >
+          {option.title}
+        </Button>
+      ))}
+    </FormControl>
+  );
+};
+
+const Dropdown: FC<{
+  label: string;
+  options: ButtonOption[];
+  value: attendance;
+}> = ({ options, value, label }) => {
+  return (
+    <FormControl
+      size="small"
+      sx={{ m: 1, minWidth: '15em' }}
+      variant="outlined"
+    >
+      <InputLabel id={'attendance-select-label'}>{label}</InputLabel>
+      <Select
+        label={label}
+        labelId={'attendance-select-label'}
+        onChange={(event) => {
+          const selected = options.find(
+            (option) => option.value == event.target.value
+          );
+          selected?.callback();
+        }}
+        value={value}
+      >
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.longTitle || option.title}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
 
 interface ParticipantListSectionListProps {
   chipColor: string;
@@ -164,47 +241,90 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       renderCell: (params) => {
         if (type == 'signups') {
           return (
-            <>
-              <Button
-                onClick={noPropagate(() => {
-                  model.cancelParticipant(params.row.id);
-                })}
-                sx={{ marginRight: '10px' }}
-                variant="text"
-              >
-                {messages.eventParticipantsList.buttonCancel()}
-              </Button>
-              <Button
-                onClick={noPropagate(() => {
-                  model.addParticipant(params.row.id);
-                })}
-                variant="outlined"
-              >
-                {messages.eventParticipantsList.buttonBook()}
-              </Button>
-            </>
+            <Buttons
+              options={[
+                {
+                  callback: () => {
+                    model.cancelParticipant(params.row.id);
+                  },
+                  title: messages.eventParticipantsList.buttonCancel(),
+                  variant: 'text',
+                },
+              ]}
+            />
           );
         } else if (type == 'booked') {
-          return (
-            <Button
-              onClick={noPropagate(() => {
-                model.cancelParticipant(params.row.id);
-              })}
-              variant="text"
-            >
-              {messages.eventParticipantsList.buttonCancel()}
-            </Button>
-          );
+          const event = model.getData().data;
+          if (event && new Date(event.start_time) < new Date()) {
+            const options: ButtonOption[] = [
+              {
+                callback: () => {
+                  model.cancelParticipant(params.row.id);
+                },
+                title: messages.eventParticipantsList.buttonCancelled(),
+                value: 'cancelled',
+                variant: 'text',
+              },
+              {
+                callback: () => {
+                  model.noShowParticipant(params.row.id);
+                },
+                longTitle: messages.eventParticipantsList.dropDownNoshow(),
+                title: messages.eventParticipantsList.buttonNoshow(),
+                value: 'noshow',
+                variant: 'text',
+              },
+              {
+                callback: () => {
+                  model.attendedParticipant(params.row.id);
+                },
+                longTitle: messages.eventParticipantsList.dropDownAttended(),
+                title: messages.eventParticipantsList.buttonAttended(),
+                value: 'attended',
+                variant: 'outlined',
+              },
+            ];
+
+            if (params.row.noshow || params.row.attended) {
+              const value = params.row.attended ? 'attended' : 'noshow';
+              return (
+                <Dropdown
+                  label={messages.eventParticipantsList.attendance()}
+                  options={options}
+                  value={value}
+                />
+              );
+            } else {
+              return <Buttons options={options} />;
+            }
+          } else {
+            return (
+              <Buttons
+                options={[
+                  {
+                    callback: () => {
+                      model.cancelParticipant(params.row.id);
+                    },
+                    title: messages.eventParticipantsList.buttonCancel(),
+                    variant: 'text',
+                  },
+                ]}
+              />
+            );
+          }
         } else if (type == 'cancelled') {
           return (
-            <Button
-              onClick={noPropagate(() => {
-                model.reBookParticipant(params.row.id);
-              })}
-              variant="text"
-            >
-              {messages.eventParticipantsList.buttonBook()}
-            </Button>
+            <Buttons
+              options={[
+                {
+                  callback: () => {
+                    model.reBookParticipant(params.row.id);
+                  },
+                  title: messages.eventParticipantsList.buttonBook(),
+                  variant: 'text',
+                },
+              ]}
+            />
           );
         }
       },
