@@ -13,6 +13,7 @@ interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
     alignItems: 'center',
+    cursor: 'pointer',
     display: 'flex',
     justifyContent: 'space-between',
     padding: '1.0em 0.5em',
@@ -72,8 +73,9 @@ export type AcitivityListItemProps = {
   color: STATUS_COLORS;
   endNumber: string | number;
   endNumberColor?: ZUIIconLabelProps['color'];
-  href?: string;
+  href: string;
   meta?: JSX.Element;
+  onEventItemClick?: (x: number, y: number) => void;
   subtitle?: JSX.Element;
   title: string;
 };
@@ -84,6 +86,7 @@ const ActivityListItem = ({
   href,
   color,
   meta,
+  onEventItemClick,
   subtitle,
   title,
   endNumber,
@@ -92,39 +95,44 @@ const ActivityListItem = ({
   const classes = useStyles({ color });
 
   return (
-    <Box className={classes.container}>
-      <Box className={classes.left}>
-        <Box className={classes.dot} />
-        <PrimaryIcon className={classes.primaryIcon} />
+    <NextLink href={href}>
+      <Box
+        className={classes.container}
+        onClick={(evt) => {
+          if (onEventItemClick) {
+            evt.preventDefault();
+            onEventItemClick(evt.clientX, evt.clientY);
+          }
+        }}
+      >
+        <Box className={classes.left}>
+          <Box className={classes.dot} />
+          <PrimaryIcon className={classes.primaryIcon} />
+          <Box>
+            <Link underline="none">
+              <Typography color={theme.palette.text.primary}>
+                {title}
+              </Typography>
+            </Link>
+            {subtitle && (
+              <Box>
+                <Typography variant="body2">{subtitle}</Typography>
+              </Box>
+            )}
+          </Box>
+        </Box>
+        <Box className={classes.meta}>{meta}</Box>
         <Box>
-          {href && (
-            <NextLink href={href} passHref>
-              <Link underline="none">
-                <Typography color={theme.palette.text.primary}>
-                  {title}
-                </Typography>
-              </Link>
-            </NextLink>
-          )}
-          {!href && <Typography>{title}</Typography>}
-          {subtitle && (
-            <Box>
-              <Typography variant="body2">{subtitle}</Typography>
-            </Box>
-          )}
+          <Box className={classes.endNumber}>
+            <ZUIIconLabel
+              color={endNumberColor}
+              icon={<SecondaryIcon color={endNumberColor} />}
+              label={endNumber.toString()}
+            />
+          </Box>
         </Box>
       </Box>
-      <Box className={classes.meta}>{meta}</Box>
-      <Box>
-        <Box className={classes.endNumber}>
-          <ZUIIconLabel
-            color={endNumberColor}
-            icon={<SecondaryIcon color={endNumberColor} />}
-            label={endNumber.toString()}
-          />
-        </Box>
-      </Box>
-    </Box>
+    </NextLink>
   );
 };
 

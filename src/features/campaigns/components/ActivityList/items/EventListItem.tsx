@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { FC } from 'react';
 import {
   EventOutlined,
@@ -36,61 +35,60 @@ const EventListItem: FC<EventListeItemProps> = ({ cluster }) => {
   } = useEventClusterData(cluster);
   const { openEventPopper } = useEventPopper();
 
+  const event = cluster.events[0];
+
   return (
-    <Box
-      onClick={(evt) =>
-        openEventPopper(cluster, { left: evt.clientX, top: evt.clientY })
+    <ActivityListItem
+      color={color}
+      endNumber={`${numParticipantsAvailable} / ${numParticipantsRequired}`}
+      endNumberColor={
+        numParticipantsAvailable < numParticipantsRequired ? 'error' : undefined
       }
-      sx={{ cursor: 'pointer' }}
-    >
-      <ActivityListItem
-        color={color}
-        endNumber={`${numParticipantsAvailable} / ${numParticipantsRequired}`}
-        endNumberColor={
-          numParticipantsAvailable < numParticipantsRequired
-            ? 'error'
-            : undefined
-        }
-        meta={
-          <EventWarningIconsSansModel
-            compact={false}
-            hasContact={allHaveContacts}
-            numParticipants={numBooked}
-            numRemindersSent={numReminded}
-            numSignups={numPending}
-            participantsLoading={statsLoading}
-          />
-        }
-        PrimaryIcon={EventOutlined}
-        SecondaryIcon={Group}
-        subtitle={
-          <ZUIIconLabelRow
-            color="secondary"
-            iconLabels={[
-              {
-                icon: <ScheduleOutlined fontSize="inherit" />,
-                label: (
-                  <ZUITimeSpan
-                    end={new Date(endTime)}
-                    start={new Date(startTime)}
-                  />
-                ),
-              },
-              ...(location
-                ? [
-                    {
-                      icon: <PlaceOutlined fontSize="inherit" />,
-                      label: location.title,
-                    },
-                  ]
-                : []),
-            ]}
-            size="sm"
-          />
-        }
-        title={title}
-      />
-    </Box>
+      href={`/organize/${event.organization.id}/projects/${
+        event.campaign?.id ?? 'standalone'
+      }/events/${event.id}`}
+      meta={
+        <EventWarningIconsSansModel
+          compact={false}
+          hasContact={allHaveContacts}
+          numParticipants={numBooked}
+          numRemindersSent={numReminded}
+          numSignups={numPending}
+          participantsLoading={statsLoading}
+        />
+      }
+      onEventItemClick={(x: number, y: number) => {
+        openEventPopper(cluster, { left: x, top: y });
+      }}
+      PrimaryIcon={EventOutlined}
+      SecondaryIcon={Group}
+      subtitle={
+        <ZUIIconLabelRow
+          color="secondary"
+          iconLabels={[
+            {
+              icon: <ScheduleOutlined fontSize="inherit" />,
+              label: (
+                <ZUITimeSpan
+                  end={new Date(endTime)}
+                  start={new Date(startTime)}
+                />
+              ),
+            },
+            ...(location
+              ? [
+                  {
+                    icon: <PlaceOutlined fontSize="inherit" />,
+                    label: location.title,
+                  },
+                ]
+              : []),
+          ]}
+          size="sm"
+        />
+      }
+      title={title}
+    />
   );
 };
 

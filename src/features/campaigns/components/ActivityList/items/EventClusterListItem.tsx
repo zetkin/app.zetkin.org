@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { FC } from 'react';
 import {
   Group,
@@ -31,79 +30,77 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
   const { openEventPopper } = useEventPopper();
   const {
     allHaveContacts,
+    campaignId,
     color,
     endTime,
+    eventId,
     location,
     numBooked,
     numParticipantsRequired,
     numPending,
     numReminded,
+    orgId,
     statsLoading,
     startTime,
     title,
   } = useEventClusterData(cluster);
 
   return (
-    <Box
-      onClick={(evt) =>
-        openEventPopper(cluster, { left: evt.clientX, top: evt.clientY })
+    <ActivityListItem
+      color={color}
+      endNumber={`${numBooked} / ${numParticipantsRequired}`}
+      endNumberColor={numBooked < numParticipantsRequired ? 'error' : undefined}
+      href={`/organize/${orgId}/projects/${campaignId}/events/${eventId}`}
+      meta={
+        <EventWarningIconsSansModel
+          compact={false}
+          hasContact={allHaveContacts}
+          numParticipants={numBooked}
+          numRemindersSent={numReminded}
+          numSignups={numPending}
+          participantsLoading={statsLoading}
+        />
       }
-      sx={{ cursor: 'pointer' }}
-    >
-      <ActivityListItem
-        color={color}
-        endNumber={`${numBooked} / ${numParticipantsRequired}`}
-        endNumberColor={
-          numBooked < numParticipantsRequired ? 'error' : undefined
-        }
-        meta={
-          <EventWarningIconsSansModel
-            compact={false}
-            hasContact={allHaveContacts}
-            numParticipants={numBooked}
-            numRemindersSent={numReminded}
-            numSignups={numPending}
-            participantsLoading={statsLoading}
-          />
-        }
-        PrimaryIcon={
-          cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
-            ? MultiLocationIcon
-            : SplitscreenOutlined
-        }
-        SecondaryIcon={Group}
-        subtitle={
-          <ZUIIconLabelRow
-            color="secondary"
-            iconLabels={[
-              {
-                icon: <ScheduleOutlined fontSize="inherit" />,
-                label: (
-                  <ZUITimeSpan
-                    end={new Date(removeOffset(endTime))}
-                    start={new Date(removeOffset(startTime))}
+      onEventItemClick={(x: number, y: number) => {
+        openEventPopper(cluster, { left: x, top: y });
+      }}
+      PrimaryIcon={
+        cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
+          ? MultiLocationIcon
+          : SplitscreenOutlined
+      }
+      SecondaryIcon={Group}
+      subtitle={
+        <ZUIIconLabelRow
+          color="secondary"
+          iconLabels={[
+            {
+              icon: <ScheduleOutlined fontSize="inherit" />,
+              label: (
+                <ZUITimeSpan
+                  end={new Date(removeOffset(endTime))}
+                  start={new Date(removeOffset(startTime))}
+                />
+              ),
+            },
+            {
+              icon: <PlaceOutlined fontSize="inherit" />,
+              label:
+                cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ? (
+                  <Msg
+                    id={messageIds.activityList.eventItem.locations}
+                    values={{ count: cluster.events.length }}
                   />
+                ) : (
+                  <LocationLabel location={location} />
                 ),
-              },
-              {
-                icon: <PlaceOutlined fontSize="inherit" />,
-                label:
-                  cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ? (
-                    <Msg
-                      id={messageIds.activityList.eventItem.locations}
-                      values={{ count: cluster.events.length }}
-                    />
-                  ) : (
-                    <LocationLabel location={location} />
-                  ),
-              },
-            ]}
-            size="sm"
-          />
-        }
-        title={title}
-      />
-    </Box>
+            },
+          ]}
+          size="sm"
+        />
+      }
+      title={title}
+    />
   );
 };
 
