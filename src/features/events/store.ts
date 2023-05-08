@@ -138,6 +138,13 @@ const eventsSlice = createSlice({
         ) as STATE_FILTER_OPTIONS[];
       }
 
+      if (filterCategory === 'types') {
+        state.filters.selectedTypes = filterOptions(
+          selectedFilterValue,
+          state.filters.selectedTypes
+        ) as number[];
+      }
+
       function filterOptions(
         selectedFilterValue: EventFilterOptions[],
         selectedFilterItems: EventFilterOptions[]

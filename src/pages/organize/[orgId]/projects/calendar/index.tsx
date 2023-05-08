@@ -72,7 +72,7 @@ type AllCampaignsCalendarPageProps = {
 
 const AllCampaignsCalendarPage: PageWithLayout<
   AllCampaignsCalendarPageProps
-> = () => {
+> = ({ orgId }) => {
   const messages = useMessages(messageIds);
   // const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
   // const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
@@ -86,7 +86,7 @@ const AllCampaignsCalendarPage: PageWithLayout<
       <Head>
         <title>{messages.layout.calendar()}</title>
       </Head>
-      <Calendar />
+      <Calendar orgId={parseInt(orgId)} />
     </>
   );
 };

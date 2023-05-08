@@ -22,11 +22,17 @@ import {
 } from 'features/events/store';
 import { useSelector, useStore } from 'react-redux';
 import { RootState } from 'core/store';
-
-const EventFilterPane = () => {
+import useModel from 'core/useModel';
+import EventTypesModel from 'features/events/models/EventTypesModel';
+import ZUIFuture from 'zui/ZUIFuture';
+interface EventFilterPaneProps {
+  orgId: number;
+}
+const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const messages = useMessages(messageIds);
   const store = useStore<RootState>();
-  const state = useSelector((state: RootState) => state.events.filters); // <-- subscribe to changes
+  const state = useSelector((state: RootState) => state.events.filters);
+  const typesModel = useModel((env) => new EventTypesModel(env, orgId));
 
   const handleCheckBox = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -36,30 +42,11 @@ const EventFilterPane = () => {
     store.dispatch(
       filterUpdated({
         filterCategory,
-        selectedFilterValue: [name as EventFilterOptions],
-      })
-    );
-  };
-
-  const handleSelectAll = (filterCategory: string) => {
-    const options = Object.values(
-      filterCategory === 'actions'
-        ? ACTION_FILTER_OPTIONS
-        : STATE_FILTER_OPTIONS
-    );
-    store.dispatch(
-      filterUpdated({
-        filterCategory,
-        selectedFilterValue: options,
-      })
-    );
-  };
-
-  const handleSelectNone = (filterCategory: string) => {
-    store.dispatch(
-      filterUpdated({
-        filterCategory,
-        selectedFilterValue: [],
+        selectedFilterValue: [
+          filterCategory === 'types'
+            ? parseInt(name)
+            : (name as EventFilterOptions),
+        ],
       })
     );
   };
@@ -96,10 +83,7 @@ const EventFilterPane = () => {
               </Typography>
               <AllAndNoneToggle
                 filterCategory="actions"
-                onClickAll={(filterCategory) => handleSelectAll(filterCategory)}
-                onClickNone={(filterCategory) =>
-                  handleSelectNone(filterCategory)
-                }
+                selectedFilterLength={state.selectedActions.length}
               />
             </Box>
             <>
@@ -147,10 +131,7 @@ const EventFilterPane = () => {
               </Typography>
               <AllAndNoneToggle
                 filterCategory="states"
-                onClickAll={(filterCategory) => handleSelectAll(filterCategory)}
-                onClickNone={(filterCategory) =>
-                  handleSelectNone(filterCategory)
-                }
+                selectedFilterLength={state.selectedStates.length}
               />
             </Box>
             <>
@@ -184,6 +165,47 @@ const EventFilterPane = () => {
                 );
               })}
             </>
+          </FormGroup>
+          <FormGroup sx={{ mb: 2 }}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography variant="body1" color="secondary">
+                <Msg
+                  id={messageIds.eventFilter.filterOptions.stateFilters.title}
+                />
+              </Typography>
+              <AllAndNoneToggle
+                filterCategory="states"
+                selectedFilterLength={state.selectedStates.length}
+              />
+            </Box>
+            <ZUIFuture future={typesModel.getTypes()}>
+              {(data) => {
+                return (
+                  <>
+                    {data.map((type) => {
+                      return (
+                        <FormControlLabel
+                          key={type.id}
+                          control={
+                            <Checkbox
+                              checked={state.selectedTypes.includes(type.id)}
+                              name={`${type.id}`}
+                              onChange={(e) => handleCheckBox(e, 'types')}
+                            />
+                          }
+                          label={type.title}
+                          sx={{ pl: 1 }}
+                        />
+                      );
+                    })}
+                  </>
+                );
+              }}
+            </ZUIFuture>
           </FormGroup>
         </Box>
       </Box>

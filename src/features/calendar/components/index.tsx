@@ -13,8 +13,10 @@ export enum TimeScale {
   WEEK = 'week',
   MONTH = 'month',
 }
-
-const Calendar = () => {
+interface CalendarProps {
+  orgId: number;
+}
+const Calendar = ({ orgId }: CalendarProps) => {
   const [focusDate, setFocusDate] = useState<Date>(new Date());
   const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
     TimeScale.MONTH
@@ -30,6 +32,7 @@ const Calendar = () => {
         onChangeTimeScale={(timeScale) => {
           setSelectedTimeScale(timeScale);
         }}
+        orgId={orgId}
         onStepBackward={() => {
           setFocusDate(
             dayjs(focusDate).subtract(1, selectedTimeScale).toDate()

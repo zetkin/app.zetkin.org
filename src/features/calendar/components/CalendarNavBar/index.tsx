@@ -1,14 +1,12 @@
 import { Box } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
-import FilterListIcon from '@mui/icons-material/FilterList';
 
-import EventFilterPane from './EventFilterPane';
+import CalendarEventFilter from '../CalendarEventFilter';
 import messageIds from 'features/calendar/l10n/messageIds';
 import MonthSelect from './MonthSelect';
 import { Msg } from 'core/i18n';
 import { TimeScale } from '../index';
-import { usePanes } from 'utils/panes';
 import YearSelect from './YearSelect';
 
 export interface CalendarNavBarProps {
@@ -17,6 +15,7 @@ export interface CalendarNavBarProps {
   onChangeTimeScale: (timeScale: TimeScale) => void;
   onStepBackward: () => void;
   onStepForward: () => void;
+  orgId: number;
   timeScale: TimeScale;
 }
 
@@ -26,10 +25,9 @@ const CalendarNavBar = ({
   onChangeTimeScale,
   onStepBackward,
   onStepForward,
+  orgId,
   timeScale,
 }: CalendarNavBarProps) => {
-  const { openPane } = usePanes();
-
   return (
     <Box display="flex" justifyContent="space-between">
       <Box alignItems="center" display="flex" gap="4px">
@@ -76,21 +74,7 @@ const CalendarNavBar = ({
             <Msg id={messageIds.ranges.month} />
           </Button>
         </ButtonGroup>
-        <Button
-          startIcon={<FilterListIcon />}
-          variant="outlined"
-          sx={{ ml: 2 }}
-          onClick={() =>
-            openPane({
-              render() {
-                return <EventFilterPane />;
-              },
-              width: 400,
-            })
-          }
-        >
-          <Msg id={messageIds.eventFilter.filter} />
-        </Button>
+        <CalendarEventFilter orgId={orgId} />
       </Box>
     </Box>
   );
