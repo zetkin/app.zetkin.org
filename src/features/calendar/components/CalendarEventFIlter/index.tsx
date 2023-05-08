@@ -1,9 +1,11 @@
 import { Button } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import messageIds from 'features/calendar/l10n/messageIds';
-import { usePanes } from 'utils/panes';
+
 import EventFilterPane from './EventFilterPane';
+import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { usePanes } from 'utils/panes';
+
 interface CalendarEventFIlterProps {
   orgId: number;
 }
@@ -12,9 +14,6 @@ const CalendarEventFilter = ({ orgId }: CalendarEventFIlterProps) => {
 
   return (
     <Button
-      startIcon={<FilterListIcon />}
-      variant="outlined"
-      sx={{ ml: 2 }}
       onClick={() =>
         openPane({
           render() {
@@ -23,6 +22,9 @@ const CalendarEventFilter = ({ orgId }: CalendarEventFIlterProps) => {
           width: 400,
         })
       }
+      startIcon={<FilterListIcon />}
+      sx={{ ml: 2 }}
+      variant="outlined"
     >
       <Msg id={messageIds.eventFilter.filter} />
     </Button>

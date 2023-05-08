@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { useState } from 'react';
@@ -32,7 +31,6 @@ const Calendar = ({ orgId }: CalendarProps) => {
         onChangeTimeScale={(timeScale) => {
           setSelectedTimeScale(timeScale);
         }}
-        orgId={orgId}
         onStepBackward={() => {
           setFocusDate(
             dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
@@ -41,6 +39,7 @@ const Calendar = ({ orgId }: CalendarProps) => {
         onStepForward={() => {
           setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
         }}
+        orgId={orgId}
         timeScale={selectedTimeScale}
       />
 

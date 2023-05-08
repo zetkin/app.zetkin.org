@@ -3,21 +3,23 @@ import React, { useEffect, useState } from 'react';
 
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { RootState } from 'core/store';
+import { useStore } from 'react-redux';
 import {
   ACTION_FILTER_OPTIONS,
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
-import { useStore } from 'react-redux';
-import { RootState } from 'core/store';
 
 interface AllAndNoneToggleProps {
   filterCategory: string;
   selectedFilterLength: number;
+  types?: number[];
 }
 const AllAndNoneToggle = ({
   filterCategory,
   selectedFilterLength,
+  types,
 }: AllAndNoneToggleProps) => {
   const [disabledAll, setDisabledAll] = useState<boolean>(false);
   const [disabledNone, setDisabledNone] = useState<boolean>(false);
@@ -28,18 +30,20 @@ const AllAndNoneToggle = ({
 
   useEffect(() => {
     selectedFilterLength === 0 ? setDisabledNone(true) : setDisabledNone(false);
+    const maxLength = types
+      ? types.length
+      : Object.keys(selectedCategory).length;
 
-    selectedFilterLength === Object.keys(selectedCategory).length
+    selectedFilterLength === maxLength
       ? setDisabledAll(true)
       : setDisabledAll(false);
   }, [selectedFilterLength]);
 
   const handleSelectAll = (filterCategory: string) => {
-    const options = Object.values(selectedCategory);
     store.dispatch(
       filterUpdated({
         filterCategory,
-        selectedFilterValue: options,
+        selectedFilterValue: types ? types : Object.values(selectedCategory),
       })
     );
   };
@@ -57,19 +61,19 @@ const AllAndNoneToggle = ({
     <Box display="flex">
       <Button
         disabled={disabledAll}
-        variant="text"
         onClick={() => {
           handleSelectAll(filterCategory);
         }}
+        variant="text"
       >
         <Msg id={messageIds.eventFilter.toggle.all} />
       </Button>
       <Button
         disabled={disabledNone}
-        variant="text"
         onClick={() => {
           handleSelectNone(filterCategory);
         }}
+        variant="text"
       >
         <Msg id={messageIds.eventFilter.toggle.none} />
       </Button>

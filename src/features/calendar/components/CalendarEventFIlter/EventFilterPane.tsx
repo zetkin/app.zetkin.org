@@ -1,4 +1,4 @@
-import FilterListIcon from '@mui/icons-material/FilterList';
+import { FilterList } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -9,22 +9,24 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useSelector, useStore } from 'react-redux';
 
-import PaneHeader from 'utils/panes/PaneHeader';
-import messageIds from 'features/calendar/l10n/messageIds';
-import { Msg, useMessages } from 'core/i18n';
 import AllAndNoneToggle from './AllAndNoneToggle';
+import EventTypesModel from 'features/events/models/EventTypesModel';
+import messageIds from 'features/calendar/l10n/messageIds';
+import PaneHeader from 'utils/panes/PaneHeader';
+import { RootState } from 'core/store';
+import useModel from 'core/useModel';
+import { useState } from 'react';
+import ZUIFuture from 'zui/ZUIFuture';
 import {
   ACTION_FILTER_OPTIONS,
   EventFilterOptions,
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
-import { useSelector, useStore } from 'react-redux';
-import { RootState } from 'core/store';
-import useModel from 'core/useModel';
-import EventTypesModel from 'features/events/models/EventTypesModel';
-import ZUIFuture from 'zui/ZUIFuture';
+import { Msg, useMessages } from 'core/i18n';
+
 interface EventFilterPaneProps {
   orgId: number;
 }
@@ -33,6 +35,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const store = useStore<RootState>();
   const state = useSelector((state: RootState) => state.events.filters);
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
+  const [expand, setExpand] = useState(false);
 
   const handleCheckBox = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -54,7 +57,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   return (
     <>
       <PaneHeader title={messages.eventFilter.filter()} />
-      <Button variant="outlined" size="small" color="warning">
+      <Button color="warning" size="small" variant="outlined">
         <Msg id={messageIds.eventFilter.reset} />
       </Button>
       <Box sx={{ mt: 2 }}>
@@ -63,20 +66,20 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <FilterListIcon />
+                <FilterList />
               </InputAdornment>
             ),
           }}
           placeholder={messages.eventFilter.type()}
         />
-        <Box sx={{ mt: 2 }} display="flex" flexDirection="column">
+        <Box display="flex" flexDirection="column" sx={{ mt: 2 }}>
           <FormGroup sx={{ mb: 2 }}>
             <Box
+              alignItems="center"
               display="flex"
               justifyContent="space-between"
-              alignItems="center"
             >
-              <Typography variant="body1" color="secondary">
+              <Typography color="secondary" variant="body1">
                 <Msg
                   id={messageIds.eventFilter.filterOptions.actionFilters.title}
                 />
@@ -99,7 +102,9 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                   (entry) => entry[0] === lowerCaseKey
                 );
 
-                if (!message) return;
+                if (!message) {
+                  return null;
+                }
 
                 return (
                   <FormControlLabel
@@ -120,11 +125,11 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
           </FormGroup>
           <FormGroup sx={{ mb: 2 }}>
             <Box
+              alignItems="center"
               display="flex"
               justifyContent="space-between"
-              alignItems="center"
             >
-              <Typography variant="body1" color="secondary">
+              <Typography color="secondary" variant="body1">
                 <Msg
                   id={messageIds.eventFilter.filterOptions.stateFilters.title}
                 />
@@ -147,7 +152,9 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                   (entry) => entry[0] === lowerCaseKey
                 );
 
-                if (!message) return;
+                if (!message) {
+                  return null;
+                }
 
                 return (
                   <FormControlLabel
@@ -167,26 +174,31 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
             </>
           </FormGroup>
           <FormGroup sx={{ mb: 2 }}>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography variant="body1" color="secondary">
-                <Msg
-                  id={messageIds.eventFilter.filterOptions.stateFilters.title}
-                />
-              </Typography>
-              <AllAndNoneToggle
-                filterCategory="states"
-                selectedFilterLength={state.selectedStates.length}
-              />
-            </Box>
             <ZUIFuture future={typesModel.getTypes()}>
               {(data) => {
+                const types = expand ? data : data.slice(0, 5);
                 return (
                   <>
-                    {data.map((type) => {
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
+                      <Typography color="secondary" variant="body1">
+                        <Msg
+                          id={
+                            messageIds.eventFilter.filterOptions.eventTypes
+                              .title
+                          }
+                        />
+                      </Typography>
+                      <AllAndNoneToggle
+                        filterCategory="types"
+                        selectedFilterLength={state.selectedTypes.length}
+                        types={data.map((item) => item.id)}
+                      />
+                    </Box>
+                    {types.map((type) => {
                       return (
                         <FormControlLabel
                           key={type.id}
@@ -202,6 +214,24 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                         />
                       );
                     })}
+                    <Button
+                      onClick={() => setExpand(!expand)}
+                      sx={{ display: 'flex', justifyContent: 'flex-start' }}
+                      variant="text"
+                    >
+                      {expand && <Msg id={messageIds.eventFilter.collapse} />}
+                      {!expand && (
+                        <Typography
+                          sx={{ textDecoration: 'underline' }}
+                          variant="body2"
+                        >
+                          <Msg
+                            id={messageIds.eventFilter.expand}
+                            values={{ numOfOptions: data.length - 5 }}
+                          />
+                        </Typography>
+                      )}
+                    </Button>
                   </>
                 );
               }}
