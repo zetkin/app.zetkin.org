@@ -32,6 +32,12 @@ export default class EventDataModel extends ModelBase {
     this._repo.addParticipant(this._orgId, this._eventId, personId);
   }
 
+  cancelEvent(currendDate: string) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: currendDate,
+    });
+  }
+
   cancelParticipant(personId: number): IFuture<ZetkinEventParticipant> {
     const promise = this._repo.updateParticipant(
       this._orgId,
@@ -158,6 +164,12 @@ export default class EventDataModel extends ModelBase {
     });
   }
 
+  restoreEvent() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: null,
+    });
+  }
+
   sendReminders() {
     this._repo.sendReminders(this._orgId, this._eventId);
   }
@@ -213,6 +225,8 @@ export default class EventDataModel extends ModelBase {
 
       if (startTime > now) {
         return EventState.SCHEDULED;
+      } else if (data.cancelled) {
+        return EventState.CANCELLED;
       } else {
         if (data.end_time) {
           const endTime = new Date(data.end_time);
