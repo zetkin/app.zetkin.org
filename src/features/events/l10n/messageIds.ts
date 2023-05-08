@@ -13,10 +13,18 @@ export default makeMessages('feat.events', {
     noLocation: m('No physical location'),
   },
   eventActionButtons: {
+    cancel: m('Cancel'),
     delete: m('Delete'),
     publish: m('Publish'),
+    restore: m('Restore'),
     unpublish: m('Unpublish'),
     warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
+    warningCancel: m<{ eventTitle: string }>(
+      '"{eventTitle}" will be canceled.'
+    ),
+    warningRestore: m<{ eventTitle: string }>(
+      '"{eventTitle}" will be restored.'
+    ),
   },
   eventContactCard: {
     header: m('Contact'),
