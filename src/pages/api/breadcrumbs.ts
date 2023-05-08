@@ -4,13 +4,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ZetkinViewFolder } from 'features/views/components/types';
 
 interface LabeledBreadcrumbElement {
-  folderId?: number;
   href: string;
   label: string;
 }
 
 interface LocalizedBreadcrumbElement {
-  folderId?: number;
   href: string;
   labelMsg: string;
 }
@@ -134,7 +132,6 @@ async function fetchElements(
     return [
       ...folderElements,
       {
-        folderId,
         href: basePath + '/' + fieldValue,
         label: view.data.title,
       },
