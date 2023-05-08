@@ -182,7 +182,7 @@ async function fetchElements(
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: event.data.title,
+        label: event.data.title || event.data.activity.title,
       },
     ];
   } else if (fieldName == 'folderId') {
