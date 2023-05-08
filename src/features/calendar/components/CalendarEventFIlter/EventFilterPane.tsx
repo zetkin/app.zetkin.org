@@ -225,7 +225,9 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
           <FormGroup sx={{ mb: 2 }}>
             <ZUIFuture future={typesModel.getTypes()}>
               {(data) => {
-                const types = expand ? data : data.slice(0, 5);
+                const types =
+                  expand || data.length <= 5 ? data : data.slice(0, 5);
+
                 return (
                   <>
                     <Box
@@ -271,7 +273,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                       variant="text"
                     >
                       {expand && <Msg id={messageIds.eventFilter.collapse} />}
-                      {!expand && (
+                      {!expand && data.length - 5 > 0 && (
                         <Typography
                           sx={{ textDecoration: 'underline' }}
                           variant="body2"
