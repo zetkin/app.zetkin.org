@@ -14,10 +14,6 @@ export enum TimeScale {
   MONTH = 'month',
 }
 
-function isValidDate(date: Date | unknown) {
-  return date instanceof Date && !isNaN(date.getTime());
-}
-
 function getTimeScale(timeScaleStr: string) {
   let timeScale = TimeScale.MONTH;
   if (
@@ -32,9 +28,9 @@ function getTimeScale(timeScaleStr: string) {
 function getDateFromString(focusDateStr: string) {
   let date = new Date();
   if (focusDateStr) {
-    const d = new Date(focusDateStr);
-    if (isValidDate(d)) {
-      date = d;
+    const d = dayjs(focusDateStr);
+    if (d.isValid()) {
+      date = d.toDate();
     }
   }
   return date;
