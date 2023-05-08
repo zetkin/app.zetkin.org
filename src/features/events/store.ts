@@ -40,16 +40,18 @@ export type EventFilterOptions =
   | STATE_FILTER_OPTIONS
   | number;
 
-type FilterType = {
-  filterCategory: string;
-  selectedFilterValue: EventFilterOptions[];
-};
+export type FilterCategoryType =
+  | 'selectedActions'
+  | 'selectedStates'
+  | 'selectedTypes';
+
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   filters: {
     selectedActions: ACTION_FILTER_OPTIONS[];
     selectedStates: STATE_FILTER_OPTIONS[];
     selectedTypes: number[];
+    text: string;
   };
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
@@ -60,7 +62,12 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
-  filters: { selectedActions: [], selectedStates: [], selectedTypes: [] },
+  filters: {
+    selectedActions: [],
+    selectedStates: [],
+    selectedTypes: [],
+    text: '',
+  },
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
@@ -121,24 +128,39 @@ const eventsSlice = createSlice({
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
-    filterUpdated: (state, action: PayloadAction<FilterType>) => {
+    filterTextAdded: (
+      state,
+      action: PayloadAction<{
+        filterText: string;
+      }>
+    ) => {
+      const { filterText } = action.payload;
+      state.filters.text = filterText;
+    },
+    filterUpdated: (
+      state,
+      action: PayloadAction<{
+        filterCategory: FilterCategoryType;
+        selectedFilterValue: EventFilterOptions[];
+      }>
+    ) => {
       const { filterCategory, selectedFilterValue } = action.payload;
 
-      if (filterCategory === 'actions') {
+      if (filterCategory === 'selectedActions') {
         state.filters.selectedActions = filterOptions(
           selectedFilterValue,
           state.filters.selectedActions
         ) as ACTION_FILTER_OPTIONS[];
       }
 
-      if (filterCategory === 'states') {
+      if (filterCategory === 'selectedStates') {
         state.filters.selectedStates = filterOptions(
           selectedFilterValue,
           state.filters.selectedStates
         ) as STATE_FILTER_OPTIONS[];
       }
 
-      if (filterCategory === 'types') {
+      if (filterCategory === 'selectedTypes') {
         state.filters.selectedTypes = filterOptions(
           selectedFilterValue,
           state.filters.selectedTypes
@@ -168,7 +190,6 @@ const eventsSlice = createSlice({
           );
       }
     },
-
     locationAdded: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
       state.locationList.items = state.locationList.items
@@ -301,6 +322,7 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
+  filterTextAdded,
   filterUpdated,
   locationUpdate,
   locationUpdated,

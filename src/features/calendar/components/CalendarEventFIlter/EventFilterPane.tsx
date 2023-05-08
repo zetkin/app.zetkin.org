@@ -1,14 +1,15 @@
-import { FilterList } from '@mui/icons-material';
 import {
   Box,
   Button,
   Checkbox,
   FormControlLabel,
   FormGroup,
+  IconButton,
   InputAdornment,
   TextField,
   Typography,
 } from '@mui/material';
+import { Clear, FilterList } from '@mui/icons-material';
 import { useSelector, useStore } from 'react-redux';
 
 import AllAndNoneToggle from './AllAndNoneToggle';
@@ -16,12 +17,15 @@ import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/calendar/l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
 import { RootState } from 'core/store';
+import useDebounce from 'utils/hooks/useDebounce';
 import useModel from 'core/useModel';
 import { useState } from 'react';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
   ACTION_FILTER_OPTIONS,
   EventFilterOptions,
+  FilterCategoryType,
+  filterTextAdded,
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
@@ -36,17 +40,18 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const state = useSelector((state: RootState) => state.events.filters);
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
   const [expand, setExpand] = useState(false);
+  const [userInput, setUserInput] = useState<string>('');
 
   const handleCheckBox = (
     e: React.ChangeEvent<HTMLInputElement>,
-    filterCategory: string
+    filterCategory: FilterCategoryType
   ) => {
     const { name } = e.target;
     store.dispatch(
       filterUpdated({
         filterCategory,
         selectedFilterValue: [
-          filterCategory === 'types'
+          filterCategory === 'selectedTypes'
             ? parseInt(name)
             : (name as EventFilterOptions),
         ],
@@ -54,23 +59,67 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
     );
   };
 
+  const resetFilters = () => {
+    const filterCategories: FilterCategoryType[] = [
+      'selectedActions',
+      'selectedStates',
+      'selectedTypes',
+    ];
+    filterCategories.map((filterCategory) =>
+      store.dispatch(
+        filterUpdated({
+          filterCategory: filterCategory,
+          selectedFilterValue: [],
+        })
+      )
+    );
+  };
+
+  const debouncedFinishedTyping = useDebounce(async (value: string) => {
+    store.dispatch(filterTextAdded({ filterText: value }));
+  }, 400);
+
   return (
     <>
       <PaneHeader title={messages.eventFilter.filter()} />
-      <Button color="warning" size="small" variant="outlined">
+      <Button
+        color="warning"
+        onClick={resetFilters}
+        size="small"
+        variant="outlined"
+      >
         <Msg id={messageIds.eventFilter.reset} />
       </Button>
       <Box sx={{ mt: 2 }}>
         <TextField
           fullWidth
           InputProps={{
+            endAdornment: (
+              <>
+                {userInput && (
+                  <IconButton
+                    onClick={() => {
+                      setUserInput('');
+                      debouncedFinishedTyping('');
+                    }}
+                  >
+                    <Clear />
+                  </IconButton>
+                )}
+              </>
+            ),
             startAdornment: (
               <InputAdornment position="start">
                 <FilterList />
               </InputAdornment>
             ),
           }}
+          onChange={(e) => {
+            setUserInput(e.target.value);
+            debouncedFinishedTyping(e.target.value);
+          }}
           placeholder={messages.eventFilter.type()}
+          value={userInput}
         />
         <Box display="flex" flexDirection="column" sx={{ mt: 2 }}>
           <FormGroup sx={{ mb: 2 }}>
@@ -85,7 +134,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                 />
               </Typography>
               <AllAndNoneToggle
-                filterCategory="actions"
+                filterCategory="selectedActions"
                 selectedFilterLength={state.selectedActions.length}
               />
             </Box>
@@ -113,7 +162,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                       <Checkbox
                         checked={state.selectedActions.includes(enumValue)}
                         name={enumValue}
-                        onChange={(e) => handleCheckBox(e, 'actions')}
+                        onChange={(e) => handleCheckBox(e, 'selectedActions')}
                       />
                     }
                     label={message[1]()}
@@ -135,7 +184,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                 />
               </Typography>
               <AllAndNoneToggle
-                filterCategory="states"
+                filterCategory="selectedStates"
                 selectedFilterLength={state.selectedStates.length}
               />
             </Box>
@@ -163,7 +212,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                       <Checkbox
                         checked={state.selectedStates.includes(enumValue)}
                         name={enumValue}
-                        onChange={(e) => handleCheckBox(e, 'states')}
+                        onChange={(e) => handleCheckBox(e, 'selectedStates')}
                       />
                     }
                     label={message[1]()}
@@ -193,7 +242,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                         />
                       </Typography>
                       <AllAndNoneToggle
-                        filterCategory="types"
+                        filterCategory="selectedTypes"
                         selectedFilterLength={state.selectedTypes.length}
                         types={data.map((item) => item.id)}
                       />
@@ -206,7 +255,9 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                             <Checkbox
                               checked={state.selectedTypes.includes(type.id)}
                               name={`${type.id}`}
-                              onChange={(e) => handleCheckBox(e, 'types')}
+                              onChange={(e) =>
+                                handleCheckBox(e, 'selectedTypes')
+                              }
                             />
                           }
                           label={type.title}

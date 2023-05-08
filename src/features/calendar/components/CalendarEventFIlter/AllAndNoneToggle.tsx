@@ -7,12 +7,13 @@ import { RootState } from 'core/store';
 import { useStore } from 'react-redux';
 import {
   ACTION_FILTER_OPTIONS,
+  FilterCategoryType,
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
 
 interface AllAndNoneToggleProps {
-  filterCategory: string;
+  filterCategory: FilterCategoryType;
   selectedFilterLength: number;
   types?: number[];
 }
@@ -26,7 +27,9 @@ const AllAndNoneToggle = ({
   const store = useStore<RootState>();
 
   const selectedCategory =
-    filterCategory === 'actions' ? ACTION_FILTER_OPTIONS : STATE_FILTER_OPTIONS;
+    filterCategory === 'selectedActions'
+      ? ACTION_FILTER_OPTIONS
+      : STATE_FILTER_OPTIONS;
 
   useEffect(() => {
     selectedFilterLength === 0 ? setDisabledNone(true) : setDisabledNone(false);
@@ -39,7 +42,7 @@ const AllAndNoneToggle = ({
       : setDisabledAll(false);
   }, [selectedFilterLength]);
 
-  const handleSelectAll = (filterCategory: string) => {
+  const handleSelectAll = (filterCategory: FilterCategoryType) => {
     store.dispatch(
       filterUpdated({
         filterCategory,
@@ -48,7 +51,7 @@ const AllAndNoneToggle = ({
     );
   };
 
-  const handleSelectNone = (filterCategory: string) => {
+  const handleSelectNone = (filterCategory: FilterCategoryType) => {
     store.dispatch(
       filterUpdated({
         filterCategory,
