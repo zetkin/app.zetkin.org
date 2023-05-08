@@ -122,12 +122,9 @@ async function fetchElements(
     ).then((res) => res.json());
 
     const folderId = view.data?.folder?.id;
-    const folderElements = await fetchFolders(
-      folderId,
-      basePath,
-      orgId,
-      apiFetch
-    );
+    const folderElements = folderId
+      ? await fetchFolders(folderId, basePath, orgId, apiFetch)
+      : [];
 
     return [
       ...folderElements,
