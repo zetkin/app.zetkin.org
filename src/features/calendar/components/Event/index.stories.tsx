@@ -1,43 +1,44 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import Calendar from '.';
+import Calendar from '..';
 import mockEvent from 'utils/testing/mocks/mockEvent';
-import ReferendumSignatureCollection from '../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import VisitReferendumWebsite from '../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/VisitReferendumWebsite';
-import * as Event from './Event';
+import MultiLocation from './MultiLocation';
+import MultiShift from './MultiShift';
+import ReferendumSignatureCollection from '../../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import Single from './Single';
+import VisitReferendumWebsite from '../../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/VisitReferendumWebsite';
 
 export default {
   component: Calendar,
   title: 'Calendar',
 } as ComponentMeta<typeof Calendar>;
 
-
-const SingleEvent: ComponentStory<typeof Event.Single> = (args) => (
-  <Event.Single
+const SingleEvent: ComponentStory<typeof Single> = (args) => (
+  <Single
     event={args.event}
+    height={args.height}
     remindersNotSent={args.remindersNotSent}
     unbookedSignups={args.unbookedSignups}
-    height={args.height}
   />
-)
+);
 
-const MultiLocationEvent: ComponentStory<typeof Event.MultiLocation> = (args) => (
-  <Event.MultiLocation
+const MultiLocationEvent: ComponentStory<typeof MultiLocation> = (args) => (
+  <MultiLocation
     events={args.events}
+    height={args.height}
     remindersNotSent={args.remindersNotSent}
     unbookedSignups={args.unbookedSignups}
-    height={args.height}
   />
-)
+);
 
-const MultiShiftEvent: ComponentStory<typeof Event.MultiShift> = (args) => (
-  <Event.MultiShift
+const MultiShiftEvent: ComponentStory<typeof MultiShift> = (args) => (
+  <MultiShift
     events={args.events}
+    height={args.height}
     remindersNotSent={args.remindersNotSent}
     unbookedSignups={args.unbookedSignups}
-    height={args.height}
   />
-)
+);
 
 const Template: ComponentStory<typeof Calendar> = (args) => (
   <Calendar
@@ -56,10 +57,9 @@ basic.args = {
   tasks: [VisitReferendumWebsite],
 };
 
-export const singleEvent = SingleEvent.bind({})
+export const singleEvent = SingleEvent.bind({});
 singleEvent.args = {
   event: mockEvent({
-    title: 'Zetkin Code Camp 2023',
     cancelled: '2023-01-01',
     location: {
       id: 1,
@@ -67,72 +67,73 @@ singleEvent.args = {
       lng: 12.284873,
       title: 'Hööööör',
     },
+    num_participants_available: 16,
     num_participants_required: 20,
-    num_participants_available: 16
+    title: 'Zetkin Code Camp 2023',
   }),
+  height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
-  height: 200,
-}
+};
 
-export const multiLocationEvent = MultiLocationEvent.bind({})
+export const multiLocationEvent = MultiLocationEvent.bind({});
 multiLocationEvent.args = {
   events: [
     mockEvent({
-      title: 'Zetkin Code Camp 2023',
       location: {
         id: 1,
         lat: 51.192702,
         lng: 12.284873,
         title: 'Hööööör',
       },
+      num_participants_available: 16,
       num_participants_required: 20,
-      num_participants_available: 16
+      title: 'Zetkin Code Camp 2023',
     }),
     mockEvent({
-      title: 'Zetkin Code Camp 2023',
       location: {
         id: 1,
         lat: 51.192702,
         lng: 12.284873,
         title: 'Malmö',
       },
+      num_participants_available: 16,
       num_participants_required: 20,
-      num_participants_available: 16
-    })
+      title: 'Zetkin Code Camp 2023',
+    }),
   ],
+  height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
-  height: 200,
-}
+};
 
-export const multiShiftEvent = MultiShiftEvent.bind({})
+export const multiShiftEvent = MultiShiftEvent.bind({});
 multiShiftEvent.args = {
   events: [
     mockEvent({
-      title: 'Zetkin Code Camp 2023',
       location: {
         id: 1,
         lat: 51.192702,
         lng: 12.284873,
         title: 'Hööööör',
       },
+      num_participants_available: 16,
       num_participants_required: 20,
-      num_participants_available: 16
+      title: 'Zetkin Code Camp 2023',
     }),
     mockEvent({
-      title: 'Zetkin Code Camp 2023',
       location: {
         id: 1,
         lat: 51.192702,
         lng: 12.284873,
         title: 'Malmö',
       },
+      num_participants_available: 16,
       num_participants_required: 20,
-      num_participants_available: 16
-    })
+      title: 'Zetkin Code Camp 2023',
+    }),
   ],
+  height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
-  height: 200,
-}
+};
