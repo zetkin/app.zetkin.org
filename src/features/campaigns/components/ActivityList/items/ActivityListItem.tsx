@@ -1,7 +1,7 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
+import { Box, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 
 import theme from 'theme';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
@@ -95,43 +95,43 @@ const ActivityListItem = ({
   const classes = useStyles({ color });
 
   return (
-    <NextLink href={href}>
-      <Box
-        className={classes.container}
-        onClick={(evt) => {
-          if (onEventItemClick) {
-            evt.preventDefault();
-            onEventItemClick(evt.clientX, evt.clientY);
-          }
-        }}
-      >
-        <Box className={classes.left}>
-          <Box className={classes.dot} />
-          <PrimaryIcon className={classes.primaryIcon} />
-          <Box>
-            <Link underline="none">
+    <NextLink href={href} passHref>
+      <a style={{ textDecoration: 'none' }}>
+        <Box
+          className={classes.container}
+          onClick={(evt) => {
+            if (onEventItemClick) {
+              evt.preventDefault();
+              onEventItemClick(evt.clientX, evt.clientY);
+            }
+          }}
+        >
+          <Box className={classes.left}>
+            <Box className={classes.dot} />
+            <PrimaryIcon className={classes.primaryIcon} />
+            <Box>
               <Typography color={theme.palette.text.primary}>
                 {title}
               </Typography>
-            </Link>
-            {subtitle && (
-              <Box>
-                <Typography variant="body2">{subtitle}</Typography>
-              </Box>
-            )}
+              {subtitle && (
+                <Box>
+                  <Typography variant="body2">{subtitle}</Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box className={classes.meta}>{meta}</Box>
+          <Box>
+            <Box className={classes.endNumber}>
+              <ZUIIconLabel
+                color={endNumberColor}
+                icon={<SecondaryIcon color={endNumberColor} />}
+                label={endNumber.toString()}
+              />
+            </Box>
           </Box>
         </Box>
-        <Box className={classes.meta}>{meta}</Box>
-        <Box>
-          <Box className={classes.endNumber}>
-            <ZUIIconLabel
-              color={endNumberColor}
-              icon={<SecondaryIcon color={endNumberColor} />}
-              label={endNumber.toString()}
-            />
-          </Box>
-        </Box>
-      </Box>
+      </a>
     </NextLink>
   );
 };
