@@ -38,6 +38,12 @@ export default class EventDataModel extends ModelBase {
     });
   }
 
+  cancel() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: new Date().toISOString(),
+    });
+  }
+
   cancelParticipant(personId: number): IFuture<ZetkinEventParticipant> {
     const promise = this._repo.updateParticipant(
       this._orgId,
@@ -158,6 +164,12 @@ export default class EventDataModel extends ModelBase {
     });
   }
 
+  publish() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      published: new Date().toISOString(),
+    });
+  }
+
   reBookParticipant(personId: number) {
     this._repo.updateParticipant(this._orgId, this._eventId, personId, {
       status: null,
@@ -219,23 +231,29 @@ export default class EventDataModel extends ModelBase {
       return EventState.UNKNOWN;
     }
 
-    if (data.start_time) {
-      const startTime = new Date(data.start_time);
-      const now = new Date();
+    if (!data.published && data.cancelled) {
+      return EventState.CANCELLED;
+    }
+    const now = new Date();
 
-      if (startTime > now) {
+    if (data.published) {
+      const published = new Date(data.published);
+      if (published > now) {
         return EventState.SCHEDULED;
-      } else {
-        if (data.end_time) {
-          const endTime = new Date(data.end_time);
-
-          if (endTime < now) {
-            return EventState.ENDED;
-          }
-        }
-
-        return EventState.OPEN;
       }
+      if (data.cancelled) {
+        const cancelled = new Date(data.cancelled);
+        if (cancelled > published) {
+          return EventState.CANCELLED;
+        }
+      }
+      if (data.end_time) {
+        const endTime = new Date(data.end_time);
+        if (endTime < now) {
+          return EventState.ENDED;
+        }
+      }
+      return EventState.OPEN;
     } else {
       return EventState.DRAFT;
     }

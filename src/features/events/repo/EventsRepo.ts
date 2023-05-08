@@ -48,9 +48,11 @@ export type ZetkinEventPatchBody = Partial<
 > & {
   activity_id?: number;
   campaign_id?: number;
+  cancelled?: string | null;
   contact_id?: number | null;
   location_id?: number | null;
   organization_id?: number;
+  published?: string | null;
 };
 
 export type ZetkinEventPostBody = ZetkinEventPatchBody;
@@ -77,10 +79,7 @@ export default class EventsRepo {
   async addParticipant(orgId: number, eventId: number, personId: number) {
     const participant = await this._apiClient.put<ZetkinEventParticipant>(
       `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`,
-      {
-        id: personId,
-        reminder_sent: null,
-      }
+      {}
     );
     this._store.dispatch(participantAdded([eventId, participant]));
   }

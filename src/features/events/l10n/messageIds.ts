@@ -78,6 +78,45 @@ export default makeMessages('feat.events', {
     participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
   },
+  eventPopper: {
+    backToEvents: m('Back to event list'),
+    backToLocations: m('Back to locations'),
+    backToShifts: m('Back to shift list'),
+    booked: m('Booked'),
+    cancel: m('Cancel'),
+    cancelWarning: m(
+      'If you do, remember to notify all participants and sign-ups that the event has been cancelled!'
+    ),
+    confirmCancel: m('Are you sure you want to cancel this event?'),
+    confirmDelete: m('Are you sure you want to delete this event?'),
+    contactPerson: m('Contact person'),
+    dateAndTime: m('Date & Time'),
+    delete: m('Delete'),
+    deleteWarning: m(
+      'Once the event has been deleted you will not be able to access it again.'
+    ),
+    description: m('Description'),
+    eventPageLink: m('Go to event page'),
+    events: m('Events'),
+    location: m('Location'),
+    locations: m('Locations'),
+    multiEvent: m('Multiple events'),
+    multiLocation: m('Multi-location event'),
+    multiShift: m('Multi-shift event'),
+    noContact: m('No contact person has been assigned'),
+    notified: m('Notified'),
+    pendingSignups: m('There are pending signups'),
+    publish: m('Publish'),
+    reminded: m('Reminded'),
+    shifts: m('Shifts'),
+    signups: m('Signups'),
+    unsentReminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
+  },
+  eventRelatedCard: {
+    header: m('Related events'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),
@@ -125,6 +164,9 @@ export default makeMessages('feat.events', {
     header: m('Participants'),
     pending: m('Pending sign-ups'),
     remindButton: m('Remind all'),
+    remindButtondisabledTooltip: m(
+      'You have to assign a contact person before sending reminders'
+    ),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },

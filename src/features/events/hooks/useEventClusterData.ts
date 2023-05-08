@@ -16,6 +16,11 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
     0
   );
 
+  const numParticipantsAvailable = cluster.events.reduce(
+    (sum, event) => sum + event.num_participants_available,
+    0
+  );
+
   let statsLoading = false;
   const store = useStore<RootState>();
   const state = store.getState();
@@ -93,6 +98,7 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
     eventId,
     location,
     numBooked,
+    numParticipantsAvailable,
     numParticipantsRequired,
     numPending,
     numReminded,
