@@ -219,14 +219,14 @@ export default class EventDataModel extends ModelBase {
       return EventState.UNKNOWN;
     }
 
-    if (data.start_time) {
+    if (data.cancelled) {
+      return EventState.CANCELLED;
+    } else if (data.start_time) {
       const startTime = new Date(data.start_time);
       const now = new Date();
 
       if (startTime > now) {
         return EventState.SCHEDULED;
-      } else if (data.cancelled) {
-        return EventState.CANCELLED;
       } else {
         if (data.end_time) {
           const endTime = new Date(data.end_time);
