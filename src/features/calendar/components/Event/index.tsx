@@ -1,5 +1,5 @@
 import makeStyles from '@mui/styles/makeStyles';
-import { Box, Theme, Typography } from '@mui/material';
+import { Box, Divider, Theme, Typography } from '@mui/material';
 
 import Field from './Field';
 import FieldGroup from './FieldGroup';
@@ -15,15 +15,11 @@ interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
     alignItems: ({ collapsed }) => (collapsed ? 'center' : ''),
+    border: `1px solid ${theme.palette.divider}`,
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
-    borderLeft: ({ cancelled }) =>
-      `4px solid ${
-        cancelled ? theme.palette.secondary.main : theme.palette.primary.main
-      }`,
     borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
     borderTopRightRadius: 4,
-    boxShadow: `0 0 3px ${theme.palette.grey[300]}`,
     display: 'inline-flex',
     flexDirection: ({ collapsed }) => (collapsed ? 'row' : 'column'),
     fontSize: 12,
@@ -149,12 +145,16 @@ const Event = ({
       {!collapsed && (
         <Box className={classes.fieldGroups}>
           {fieldGroups.map((fields, index) => (
-            <FieldGroup
-              key={`fieldGroup-${index}`}
-              fields={fields}
-              height={availableHeightPerFieldGroup[index]}
-              index={index}
-            />
+            <>
+              {index > 0 && <Divider />}
+              <Box paddingTop={index > 0 ? 1 : ''}>
+                <FieldGroup
+                  key={`fieldGroup-${index}`}
+                  fields={fields}
+                  height={availableHeightPerFieldGroup[index]}
+                />
+              </Box>
+            </>
           ))}
         </Box>
       )}

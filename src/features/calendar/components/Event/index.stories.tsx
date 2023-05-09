@@ -111,6 +111,7 @@ export const multiShiftEvent = MultiShiftEvent.bind({});
 multiShiftEvent.args = {
   events: [
     mockEvent({
+      end_time: '2022-06-16T09:00:00+00:00',
       location: {
         id: 1,
         lat: 51.192702,
@@ -119,17 +120,33 @@ multiShiftEvent.args = {
       },
       num_participants_available: 16,
       num_participants_required: 20,
+      start_time: '2022-06-16T11:00:00+00:00',
       title: 'Zetkin Code Camp 2023',
     }),
     mockEvent({
+      end_time: '2022-06-16T13:00:00+00:00',
       location: {
         id: 1,
         lat: 51.192702,
         lng: 12.284873,
-        title: 'Malmö',
+        title: 'Hööööör',
       },
       num_participants_available: 16,
       num_participants_required: 20,
+      start_time: '2022-06-16T11:00:00+00:00',
+      title: 'Zetkin Code Camp 2023',
+    }),
+    mockEvent({
+      end_time: '2022-06-16T15:00:00+00:00',
+      location: {
+        id: 1,
+        lat: 51.192702,
+        lng: 12.284873,
+        title: 'Hööööör',
+      },
+      num_participants_available: 16,
+      num_participants_required: 20,
+      start_time: '2022-06-16T13:00:00+00:00',
       title: 'Zetkin Code Camp 2023',
     }),
   ],

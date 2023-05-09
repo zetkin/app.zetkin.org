@@ -79,7 +79,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
     height
   );
   const firstEventTitle = events[0].title;
-  const anyEventIsCancelled = events.some((event) => event?.cancelled);
+  const anyEventIsCancelled = events.some((event) => event.cancelled);
 
   return (
     <Event
