@@ -80,7 +80,7 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
 
       if (cluster.kind == CLUSTER_TYPE.SINGLE) {
         if (
-          event.activity.id != lastClusterEvent.activity.id ||
+          event.activity?.id != lastClusterEvent.activity?.id ||
           event.title != lastClusterEvent.title
         ) {
           continue;
@@ -101,7 +101,7 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
         // starts right after the last event in the group ends,
         // the event is part of this cluster.
         if (
-          lastClusterEvent.activity.id == event.activity.id &&
+          lastClusterEvent.activity?.id == event.activity?.id &&
           lastClusterEvent.title == event.title &&
           lastClusterEvent.location?.id == event.location?.id &&
           lastClusterEvent.end_time == event.start_time

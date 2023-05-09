@@ -11,6 +11,7 @@ export default makeMessages('feat.events', {
   },
   common: {
     noLocation: m('No physical location'),
+    noTitle: m('Untitle event'),
   },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),

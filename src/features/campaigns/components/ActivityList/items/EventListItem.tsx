@@ -7,6 +7,8 @@ import {
 } from '@mui/icons-material';
 
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import messageIds from 'features/events/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
@@ -21,6 +23,7 @@ interface EventListeItemProps {
 }
 
 const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
+  const messages = useMessages(messageIds);
   const model = useModel((env) => new EventDataModel(env, orgId, eventId));
   const state = model.state;
   const data = model.getData().data;
@@ -78,7 +81,7 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
           size="sm"
         />
       }
-      title={data.title || data.activity.title}
+      title={data.title || data.activity?.title || messages.common.noTitle()}
     />
   );
 };
