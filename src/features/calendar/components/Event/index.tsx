@@ -1,33 +1,35 @@
 import makeStyles from '@mui/styles/makeStyles';
+import { Box, Theme, Typography } from '@mui/material';
 
 import Field from './Field';
+import FieldGroup from './FieldGroup';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
 
-const useStyles = makeStyles((theme) => ({
+interface StyleProps {
+  cancelled: boolean;
+  collapsed: boolean;
+  hasTopBadge: boolean;
+  height: number;
+}
+
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
-    '&.cancelled': {
-      '& .title': {
-        textDecoration: 'line-through',
-      },
-      borderLeftColor: theme.palette.secondary.main,
-    },
-    '&.collapsed': {
-      alignItems: 'center',
-      flexFlow: 'row',
-      justifyContent: 'space-between',
-    },
-    '&.single': {
-      borderTopLeftRadius: 4,
-    },
+    alignItems: ({ collapsed }) => (collapsed ? 'center' : ''),
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
-    borderLeft: `4px solid ${theme.palette.primary.main}`,
+    borderLeft: ({ cancelled }) =>
+      `4px solid ${
+        cancelled ? theme.palette.secondary.main : theme.palette.primary.main
+      }`,
+    borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
     borderTopRightRadius: 4,
-    boxShadow: '0 0 3px #ccc9c9',
+    boxShadow: `0 0 3px ${theme.palette.grey[300]}`,
     display: 'inline-flex',
-    flexFlow: 'column',
+    flexDirection: ({ collapsed }) => (collapsed ? 'row' : 'column'),
     fontSize: 12,
     gap: '4px 0',
+    height: ({ height }) => height,
+    justifyContent: 'space-between',
     minWidth: '275px',
     padding: '0 4px',
     position: 'relative',
@@ -36,31 +38,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexFlow: 'column',
   },
-  fields: {
-    display: 'flex',
-    flexFlow: 'column',
-    gap: '4px 0',
-    position: 'relative',
-  },
-  fieldsWithIconOnly: {
-    '&.collapsed': {
-      position: 'static',
-    },
-    display: 'flex',
-    gap: '0 4px',
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  location: {
-    color: theme.palette.secondary.main,
-  },
   title: {
-    '&.collapsed': {
-      paddingTop: 0,
-    },
     fontSize: 14,
-    paddingTop: 4,
+    paddingTop: ({ collapsed }) => (collapsed ? '0' : '4px'),
+    textDecoration: ({ cancelled }) => (cancelled ? 'line-through' : ''),
   },
 }));
 
@@ -132,116 +113,52 @@ const Event = ({
   title,
   topBadge,
 }: EventProps) => {
-  const classes = useStyles();
-  const allFieldsAreCollapsed = !fieldGroups.some((group) => {
+  const collapsed = !fieldGroups.some((group) => {
     return group.some(
       (field) => field.presentation === FIELD_PRESENTATION.WITH_LABEL
     );
   });
+
   const availableHeightPerFieldGroup = availableHeightByEvent(
     height,
     fieldGroups.length
   );
 
-  if (allFieldsAreCollapsed) {
-    const collapsedFields: PresentableField[] =
-      allCollapsedPresentableFields(fieldGroups);
-
-    return (
-      <div
-        className={classes.container + ' collapsed'}
-        style={{
-          borderTopLeftRadius: topBadge ? '0px' : '4px',
-          height: height,
-          justifyContent: 'space-between',
-        }}
-      >
-        {topBadge}
-        <span
-          className={
-            classes.title + (allFieldsAreCollapsed ? ' collapsed' : '')
-          }
-        >
-          {title}
-        </span>
-        <div
-          style={{
-            display: 'flex',
-            gap: '0 4px',
-          }}
-        >
-          {collapsedFields.map((field, index) => {
-            return <Field key={`${field.kind}-${index}`} field={field} />;
-          })}
-        </div>
-      </div>
-    );
-  }
+  const classes = useStyles({
+    cancelled,
+    collapsed,
+    hasTopBadge: !!topBadge,
+    height,
+  });
 
   return (
-    <div
-      className={
-        classes.container +
-        (cancelled ? ' cancelled' : '') +
-        (fieldGroups.length == 1 ? ' single' : '')
-      }
-      style={{
-        borderTopLeftRadius: topBadge ? '0px' : '4px',
-        height: height,
-      }}
-    >
+    <Box className={classes.container}>
       {topBadge}
-      <span className={classes.title}>{title}</span>
-      <div className={classes.fieldGroups}>
-        {fieldGroups.map((fields, index) => (
-          <FieldGroup
-            key={`fieldGroup-${index}`}
-            fields={fields}
-            height={availableHeightPerFieldGroup[index]}
-            index={index}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const FieldGroup = ({
-  fields,
-  height,
-  index,
-}: {
-  fields: PresentableField[];
-  height: number;
-  index: number;
-}) => {
-  const classes = useStyles();
-  const fieldsWithLabel = fields.filter(
-    (f) => f.presentation === FIELD_PRESENTATION.WITH_LABEL
-  );
-  const fieldsWithIconOnly = fields.filter(
-    (f) => f.presentation === FIELD_PRESENTATION.ICON_ONLY
-  );
-  const isFirstFieldGroup = index === 0;
-
-  return (
-    <div
-      className={classes.fields}
-      style={{
-        borderTop: isFirstFieldGroup ? '' : 'solid 1px gray',
-        height,
-        paddingTop: isFirstFieldGroup ? '' : '4px',
-      }}
-    >
-      <div className={classes.fieldsWithIconOnly}>
-        {fieldsWithIconOnly.map((field, index) => (
-          <Field key={`${field.kind}-${index}`} field={field} />
-        ))}
-      </div>
-      {fieldsWithLabel.map((field, index) => (
-        <Field key={`${field.kind}-${index}`} field={field} />
-      ))}
-    </div>
+      <Typography className={classes.title}>{title}</Typography>
+      {collapsed && (
+        <Box display="flex">
+          {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
+            return (
+              <Box key={`${field.kind}-${index}`} paddingLeft={1}>
+                <Field field={field} />
+              </Box>
+            );
+          })}
+        </Box>
+      )}
+      {!collapsed && (
+        <Box className={classes.fieldGroups}>
+          {fieldGroups.map((fields, index) => (
+            <FieldGroup
+              key={`fieldGroup-${index}`}
+              fields={fields}
+              height={availableHeightPerFieldGroup[index]}
+              index={index}
+            />
+          ))}
+        </Box>
+      )}
+    </Box>
   );
 };
 
