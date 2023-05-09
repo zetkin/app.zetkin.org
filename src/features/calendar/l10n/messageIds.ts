@@ -1,6 +1,9 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.calendar', {
+  createMenu: {
+    singleEvent: m('Create single event'),
+  },
   eventFilter: {
     collapse: m('Collapse'),
     expand: m<{ numOfOptions: number }>(
@@ -34,6 +37,9 @@ export default makeMessages('feat.calendar', {
     },
     type: m('Type to filter content'),
   },
+  lastDayWithEvents: m<{ numEvents: number }>(
+    'There {numEvents, plural, one {was one event} other {were {numEvents} events}} on the last active day'
+  ),
   moreEvents: m<{ numEvents: number }>(
     '{numEvents, plural, one {# more event} other {# more events}}'
   ),
@@ -45,5 +51,6 @@ export default makeMessages('feat.calendar', {
     month: m('Month'),
     week: m('Week'),
   },
+  showMore: m('Show'),
   today: m('Today'),
 });
