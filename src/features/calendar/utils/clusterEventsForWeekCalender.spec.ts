@@ -1,12 +1,10 @@
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import clusterEventsForWeekCalender from './clusterEventsForWeekCalender';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
   EventActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
-import {
-  doArbitraryClustering,
-  isEventsOverlaping,
-} from './clusterEventsForWeekCalender';
 
 const mockEventData: ZetkinEvent = {
   activity: {
@@ -52,84 +50,78 @@ function mockEvent(id: number, data: Partial<ZetkinEvent>): EventActivity {
 }
 
 describe('doArbitraryClustering()', () => {
-  it('should not cluster if less then 4 events', () => {
-    const result = doArbitraryClustering([
+  it('should not events that do not overlap', () => {
+    const result = clusterEventsForWeekCalender([
       mockEvent(1, {
-        activity: {
-          id: 5,
-          title: 'JumpingJacks',
-        },
+        // 13:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        start_time: '1857-07-05T13:00:00.000Z',
       }),
       mockEvent(2, {
-        activity: {
-          id: 4,
-          title: 'Dancing',
-        },
+        // 15:00 - 17:00
+        end_time: '1857-07-05T17:00:00.000Z',
+        start_time: '1857-07-05T15:00:00.000Z',
       }),
-      mockEvent(3, {}),
     ]);
     expect(result.length).toBe(3);
+    expect(result[0].length).toBe(2);
+    expect(result[1].length).toBe(0);
+    expect(result[2].length).toBe(0);
   });
-  it('should cluster more than 3 events with overlaping times', () => {
-    const result = doArbitraryClustering([
+
+  it('should put overlapping clusters in separate lanes', () => {
+    const result = clusterEventsForWeekCalender([
       mockEvent(1, {
-        activity: {
-          id: 5,
-          title: 'JumpingJacks',
-        },
-        end_time: '1857-07-05T13:37:00.000Z',
-        start_time: '1857-07-05T12:00:00.000Z',
+        // 13:00 - 15:00
+        end_time: '1857-07-05T15:00:00.000Z',
+        start_time: '1857-07-05T13:00:00.000Z',
       }),
       mockEvent(2, {
-        activity: {
-          id: 4,
-          title: 'Dancing',
-        },
-        end_time: '1857-07-05T13:37:00.000Z',
-        start_time: '1857-07-05T12:15:00.000Z',
-      }),
-      mockEvent(3, {
-        end_time: '1857-07-05T13:37:00.000Z',
-        start_time: '1857-07-05T12:30:00.000Z',
-      }),
-      mockEvent(4, {
-        activity: {
-          id: 3,
-          title: 'Banana',
-        },
-        end_time: '1857-07-05T13:37:00.000Z',
-        start_time: '1857-07-05T12:45:00.000Z',
+        // 14:00 - 16:00
+        end_time: '1857-07-05T16:00:00.000Z',
+        start_time: '1857-07-05T14:00:00.000Z',
       }),
     ]);
-    expect(result.length).toBe(1);
+    expect(result.length).toBe(3);
+    expect(result[0].length).toBe(1);
+    expect(result[0][0].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect(result[0][0].events[0].id).toBe(1);
+    expect(result[1].length).toBe(1);
+    expect(result[1][0].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect(result[1][0].events[0].id).toBe(2);
   });
-});
 
-describe('isEventsOverlaping()', () => {
-  it('returns true if starttime of timespan2 is in timespan1', () => {
-    const result = isEventsOverlaping(
-      {
-        endTime: '1857-07-05T13:00:00.000Z',
-        startTime: '1857-07-05T12:00:00.000Z',
-      },
-      {
-        endTime: '1857-07-05T13:37:00.000Z',
-        startTime: '1857-07-05T12:37:00.000Z',
-      }
-    );
-    expect(result).toBe(true);
-  });
-  it('returns false if starttime of timespan2 is not in timespan1', () => {
-    const result = isEventsOverlaping(
-      {
-        endTime: '1857-07-05T13:00:00.000Z',
-        startTime: '1857-07-05T12:00:00.000Z',
-      },
-      {
-        endTime: '1857-07-05T13:37:00.000Z',
-        startTime: '1857-07-05T13:01:00.000Z',
-      }
-    );
-    expect(result).toBe(false);
+  it('should apply regular clustering first', () => {
+    const result = clusterEventsForWeekCalender([
+      mockEvent(1, {
+        // 13:00 - 15:00
+        end_time: '1857-07-05T15:00:00.000Z',
+        start_time: '1857-07-05T13:00:00.000Z',
+      }),
+      mockEvent(2, {
+        // 15:00 - 17:00
+        end_time: '1857-07-05T17:00:00.000Z',
+        start_time: '1857-07-05T15:00:00.000Z',
+      }),
+      mockEvent(3, {
+        // 14:00 - 16:00
+        end_time: '1857-07-05T16:00:00.000Z',
+        start_time: '1857-07-05T14:00:00.000Z',
+      }),
+      mockEvent(4, {
+        // 16:00 - 18:00
+        end_time: '1857-07-05T18:00:00.000Z',
+        start_time: '1857-07-05T16:00:00.000Z',
+      }),
+    ]);
+    expect(result.length).toBe(3);
+    expect(result[0].length).toBe(1);
+    expect(result[0][0].kind).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+    expect(result[0][0].events[0].id).toBe(1);
+    expect(result[0][0].events[1].id).toBe(2);
+    expect(result[1].length).toBe(1);
+    expect(result[1][0].kind).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+    expect(result[1][0].events[0].id).toBe(3);
+    expect(result[1][0].events[1].id).toBe(4);
   });
 });
