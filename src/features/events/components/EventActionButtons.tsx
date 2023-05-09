@@ -46,9 +46,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   };
 
   const handleCancel = () => {
-    event.cancelled
-      ? model.restoreEvent()
-      : model.cancelEvent(new Date().toISOString());
+    event.cancelled ? model.restoreEvent() : model.cancel();
   };
 
   return (

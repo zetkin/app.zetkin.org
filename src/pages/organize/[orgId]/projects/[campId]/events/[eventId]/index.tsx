@@ -62,6 +62,10 @@ const EventPage: PageWithLayout<EventPageProps> = ({
   const locationsModel = useModel(
     (env) => new LocationsModel(env, parseInt(orgId))
   );
+  const event = dataModel.getData().data;
+  if (!event) {
+    return null;
+  }
 
   return (
     <ZUIFuture future={dataModel.getData()}>
