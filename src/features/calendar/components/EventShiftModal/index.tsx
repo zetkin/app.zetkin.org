@@ -267,32 +267,36 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
       <Box display="flex">
         <Box flex={1} margin={1}>
           <Box></Box>
-          <ZUIFutures
-            futures={{
-              types: typesModel.getTypes(),
-            }}
-          >
-            {({ data: { types } }) => {
-              return (
-                <EventTypeAutocomplete
-                  onBlur={() => setEditingTypeOrTitle(false)}
-                  onChange={(newValue) => {
-                    if (newValue) {
-                      setTypeId(newValue.id);
-                      setTypeTitle(newValue.title);
-                    }
-                    setEditingTypeOrTitle(false);
-                  }}
-                  onChangeNewOption={(newValueId) => setTypeId(newValueId)}
-                  onFocus={() => setEditingTypeOrTitle(true)}
-                  showBorder={editingTypeOrTitle}
-                  types={types}
-                  typesModel={typesModel}
-                  value={{ id: typeId, title: typeTitle }}
-                />
-              );
-            }}
-          </ZUIFutures>
+          <Box margin={1}>
+            <ZUIFutures
+              futures={{
+                types: typesModel.getTypes(),
+              }}
+            >
+              {({ data: { types } }) => {
+                return (
+                  <EventTypeAutocomplete
+                    inEventCreationModal={true}
+                    label={messages.eventShiftModal.type()}
+                    onBlur={() => setEditingTypeOrTitle(false)}
+                    onChange={(newValue) => {
+                      if (newValue) {
+                        setTypeId(newValue.id);
+                        setTypeTitle(newValue.title);
+                      }
+                      setEditingTypeOrTitle(false);
+                    }}
+                    onChangeNewOption={(newValueId) => setTypeId(newValueId)}
+                    onFocus={() => setEditingTypeOrTitle(true)}
+                    showBorder={editingTypeOrTitle}
+                    types={types}
+                    typesModel={typesModel}
+                    value={{ id: typeId, title: typeTitle }}
+                  />
+                );
+              }}
+            </ZUIFutures>
+          </Box>
 
           <TextField
             fullWidth

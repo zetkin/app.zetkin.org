@@ -45,6 +45,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 }));
 
 type EventTypeAutocompleteProps = {
+  inEventCreationModal?: boolean;
+  label?: string;
   onBlur: () => void;
   onChange: (newValue: ZetkinEvent['activity'] | null) => void;
   onChangeNewOption: (newId: number) => void;
@@ -62,6 +64,8 @@ interface NewEventType {
 }
 
 const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
+  inEventCreationModal,
+  label,
   onBlur,
   onChange,
   onChangeNewOption,
@@ -101,7 +105,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
       <Autocomplete
         blurOnSelect
         classes={{
-          root: classes.inputRoot,
+          root: inEventCreationModal ? '' : classes.inputRoot,
         }}
         disableClearable
         filterOptions={(options, { inputValue }) => {
@@ -161,7 +165,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           <TextField
             {...params}
             InputLabelProps={{
-              shrink: false,
+              shrink: inEventCreationModal ? true : false,
               style: {
                 maxWidth: 180,
               },
@@ -169,7 +173,8 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             InputProps={{
               ...params.InputProps,
             }}
-            size="small"
+            label={inEventCreationModal ? label : ''}
+            size={inEventCreationModal ? 'medium' : 'small'}
           />
         )}
         renderOption={(props, option) => {
