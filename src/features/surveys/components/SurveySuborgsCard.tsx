@@ -29,7 +29,7 @@ const SurveySuborgsCard = ({
                 ? model.updateSurveyAccess('suborgs')
                 : model.updateSurveyAccess('sameorg')
             }
-          ></Switch>
+          />
         }
         subheader={messages.shareSuborgsCard.caption()}
       >

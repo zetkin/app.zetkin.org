@@ -4,7 +4,7 @@ import { Box, IconButton, Popover } from '@mui/material';
 import { EmojiPeople, People } from '@mui/icons-material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
-import messageIds from '../../l10n/messageIds';
+import messageIds from '../l10n/messageIds';
 import ZUIFutures from 'zui/ZUIFutures';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';

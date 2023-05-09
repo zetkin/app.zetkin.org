@@ -109,7 +109,7 @@ const EventWarningIconsSansModel: FC<{
   );
 };
 
-const WarningSlot: FC<{
+export const WarningSlot: FC<{
   icon?: JSX.Element;
   tooltip?: string;
 }> = ({ icon, tooltip }) => {
