@@ -108,6 +108,20 @@ export default class EventDataModel extends ModelBase {
     return participants?.filter((p) => p.cancelled != null).length ?? 0;
   }
 
+  getNumConfirmedParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants
+      ? participants.filter((p) => p.attended != null).length
+      : 0;
+  }
+
+  getNumNoshowParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants
+      ? participants.filter((p) => p.noshow != null).length
+      : 0;
+  }
+
   getNumRemindedParticipants(): number {
     const participants = this.getParticipants().data;
     return (

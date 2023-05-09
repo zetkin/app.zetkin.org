@@ -42,6 +42,7 @@ export default makeMessages('feat.events', {
   },
   eventParticipantsCard: {
     booked: m('Notifications'),
+    confirmed: m('Confirmed Attendance'),
     contact: m('Contact'),
     header: m('Participants'),
     noContact: m('None assigned'),
@@ -161,7 +162,11 @@ export default makeMessages('feat.events', {
     bookButton: m('Book all'),
     booked: m('Notifications'),
     cancelled: m('Cancelled'),
+    confirmed: m('Confirmed Attendance'),
     header: m('Participants'),
+    noshow: m<{ noshows: number }>(
+      '({noshows, plural, =1 {1 no-show} other {# no-shows}})'
+    ),
     pending: m('Pending sign-ups'),
     remindButton: m('Remind all'),
     remindButtondisabledTooltip: m(

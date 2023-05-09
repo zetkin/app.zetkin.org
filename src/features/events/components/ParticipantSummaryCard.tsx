@@ -33,6 +33,8 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
 
   const signedParticipants = model.getNumSignedParticipants();
   const contactPerson = eventData?.contact;
+  const confirmedParticipants = model.getNumConfirmedParticipants();
+  const noshowParticipants = model.getNumNoshowParticipants();
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -145,44 +147,64 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
               )}
             </Box>
           </Box>
-          <Box display="flex" flexDirection="column">
-            <Typography color={'secondary'}>
-              {messages.participantSummaryCard.booked()}
-            </Typography>
-            <Box display="flex">
-              <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
-              {remindedParticipants < availParticipants && (
-                <Tooltip
-                  arrow
-                  placement="top-start"
-                  title={
-                    contactPerson == null
-                      ? messages.participantSummaryCard.remindButtondisabledTooltip()
-                      : ''
-                  }
-                >
-                  <span>
-                    <Button
-                      disabled={contactPerson == null}
-                      onClick={() => {
-                        model.sendReminders();
-                      }}
-                      size="small"
-                      startIcon={<Check />}
-                      sx={{
-                        marginLeft: 2,
-                      }}
-                      variant="outlined"
-                    >
-                      <Msg
-                        id={messageIds.participantSummaryCard.remindButton}
-                      />
-                    </Button>
-                  </span>
-                </Tooltip>
-              )}
+          {new Date(eventData.start_time) > new Date() ? (
+            <Box display="flex" flexDirection="column">
+              <Typography color={'secondary'}>
+                {messages.participantSummaryCard.booked()}
+              </Typography>
+              <Box display="flex">
+                <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
+                {remindedParticipants < availParticipants && (
+                  <Tooltip
+                    arrow
+                    placement="top-start"
+                    title={
+                      contactPerson == null
+                        ? messages.participantSummaryCard.remindButtondisabledTooltip()
+                        : ''
+                    }
+                  >
+                    <span>
+                      <Button
+                        disabled={contactPerson == null}
+                        onClick={() => {
+                          model.sendReminders();
+                        }}
+                        size="small"
+                        startIcon={<Check />}
+                        sx={{
+                          marginLeft: 2,
+                        }}
+                        variant="outlined"
+                      >
+                        <Msg
+                          id={messageIds.participantSummaryCard.remindButton}
+                        />
+                      </Button>
+                    </span>
+                  </Tooltip>
+                )}
+              </Box>
             </Box>
-          </Box>
+          ) : (
+            <Box display="flex" flexDirection="column">
+              <Typography color={'secondary'}>
+                {messages.participantSummaryCard.confirmed()}
+              </Typography>
+              <Box alignItems="flex-end" display="flex">
+                <Typography variant="h4">{`${confirmedParticipants}/${availParticipants}`}</Typography>
+                <Typography
+                  color={'GrayText'}
+                  sx={{ fontSize: '1.7em', marginLeft: '0.3em' }}
+                  variant="h4"
+                >
+                  {messages.participantSummaryCard.noshow({
+                    noshows: noshowParticipants,
+                  })}
+                </Typography>
+              </Box>
+            </Box>
+          )}
           <Box display="flex" flexDirection="column">
             <Typography color={'secondary'}>
               {messages.participantSummaryCard.cancelled()}
