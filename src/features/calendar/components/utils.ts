@@ -108,8 +108,7 @@ export const getActivitiesByDay = (
             applyToHashmap(dateHashmap, isoDateString, event);
           } else {
             // If multi day event
-            const eventDays =
-              Math.abs(startTime.diff(endTime, 'hours')) / 24 + 1; // Number of days the event spans
+            const eventDays = Math.abs(startTime.diff(endTime, 'days')) + 1; // Number of days the event spans
 
             // Multi day events are added to each date they span.
             // The first day goes from the start time to 24:00
