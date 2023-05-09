@@ -93,6 +93,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       )
     );
     store.dispatch(filterTextUpdated({ filterText: '' }));
+    setUserInput('');
   };
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {
