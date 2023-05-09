@@ -250,6 +250,13 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
                   title: messages.eventParticipantsList.buttonCancel(),
                   variant: 'text',
                 },
+                {
+                  callback: () => {
+                    model.reBookParticipant(params.row.id);
+                  },
+                  title: messages.eventParticipantsList.buttonBook(),
+                  variant: 'outlined',
+                },
               ]}
             />
           );
