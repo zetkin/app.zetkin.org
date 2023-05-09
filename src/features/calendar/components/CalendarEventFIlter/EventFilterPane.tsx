@@ -19,17 +19,17 @@ import PaneHeader from 'utils/panes/PaneHeader';
 import { RootState } from 'core/store';
 import useDebounce from 'utils/hooks/useDebounce';
 import useModel from 'core/useModel';
-import { useState } from 'react';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
   ACTION_FILTER_OPTIONS,
   EventFilterOptions,
   FilterCategoryType,
-  filterTextAdded,
+  filterTextUpdated,
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
 import { Msg, useMessages } from 'core/i18n';
+import { useEffect, useState } from 'react';
 
 interface EventFilterPaneProps {
   orgId: number;
@@ -41,6 +41,25 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
   const [expand, setExpand] = useState(false);
   const [userInput, setUserInput] = useState<string>('');
+  const [disableReset, setDisableReset] = useState<boolean>(
+    state.selectedActions.length > 0 ||
+      state.selectedStates.length > 0 ||
+      state.selectedTypes.length > 0 ||
+      state.text !== ''
+  );
+
+  useEffect(() => {
+    if (
+      state.selectedActions.length > 0 ||
+      state.selectedStates.length > 0 ||
+      state.selectedTypes.length > 0 ||
+      state.text !== ''
+    ) {
+      setDisableReset(false);
+    } else {
+      setDisableReset(true);
+    }
+  }, [state]);
 
   const handleCheckBox = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -73,10 +92,11 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
         })
       )
     );
+    store.dispatch(filterTextUpdated({ filterText: '' }));
   };
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {
-    store.dispatch(filterTextAdded({ filterText: value }));
+    store.dispatch(filterTextUpdated({ filterText: value }));
   }, 400);
 
   return (
@@ -84,6 +104,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       <PaneHeader title={messages.eventFilter.filter()} />
       <Button
         color="warning"
+        disabled={disableReset}
         onClick={resetFilters}
         size="small"
         variant="outlined"
@@ -139,33 +160,21 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
               />
             </Box>
             <>
-              {Object.entries(ACTION_FILTER_OPTIONS).map((options) => {
-                const enumKey = options[0];
-                const enumValue = options[1];
-
-                const entries = Object.entries(
-                  messages.eventFilter.filterOptions.actionFilters
-                );
-                const lowerCaseKey = enumKey.toLowerCase();
-                const message = entries.find(
-                  (entry) => entry[0] === lowerCaseKey
-                );
-
-                if (!message) {
-                  return null;
-                }
-
+              {Object.values(ACTION_FILTER_OPTIONS).map((value) => {
                 return (
                   <FormControlLabel
-                    key={enumValue}
+                    key={value}
                     control={
                       <Checkbox
-                        checked={state.selectedActions.includes(enumValue)}
-                        name={enumValue}
+                        checked={state.selectedActions.includes(value)}
+                        name={value}
                         onChange={(e) => handleCheckBox(e, 'selectedActions')}
                       />
                     }
-                    label={message[1]()}
+                    label={
+                      messageIds.eventFilter.filterOptions.actionFilters[value]
+                        ._defaultMessage
+                    }
                     sx={{ pl: 1 }}
                   />
                 );
@@ -189,33 +198,21 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
               />
             </Box>
             <>
-              {Object.entries(STATE_FILTER_OPTIONS).map((options) => {
-                const enumKey = options[0];
-                const enumValue = options[1];
-
-                const entries = Object.entries(
-                  messages.eventFilter.filterOptions.stateFilters
-                );
-                const lowerCaseKey = enumKey.toLowerCase();
-                const message = entries.find(
-                  (entry) => entry[0] === lowerCaseKey
-                );
-
-                if (!message) {
-                  return null;
-                }
-
+              {Object.values(STATE_FILTER_OPTIONS).map((value) => {
                 return (
                   <FormControlLabel
-                    key={enumValue}
+                    key={value}
                     control={
                       <Checkbox
-                        checked={state.selectedStates.includes(enumValue)}
-                        name={enumValue}
+                        checked={state.selectedStates.includes(value)}
+                        name={value}
                         onChange={(e) => handleCheckBox(e, 'selectedStates')}
                       />
                     }
-                    label={message[1]()}
+                    label={
+                      messageIds.eventFilter.filterOptions.stateFilters[value]
+                        ._defaultMessage
+                    }
                     sx={{ pl: 1 }}
                   />
                 );
@@ -225,8 +222,15 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
           <FormGroup sx={{ mb: 2 }}>
             <ZUIFuture future={typesModel.getTypes()}>
               {(data) => {
+                //sorting everytime when user clicks
+                const sortedTypes = data.sort((a, b) =>
+                  a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+                );
+
                 const types =
-                  expand || data.length <= 5 ? data : data.slice(0, 5);
+                  expand || data.length <= 5
+                    ? sortedTypes
+                    : sortedTypes.slice(0, 5);
 
                 return (
                   <>
@@ -269,7 +273,11 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                     })}
                     <Button
                       onClick={() => setExpand(!expand)}
-                      sx={{ display: 'flex', justifyContent: 'flex-start' }}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        width: 'fit-content',
+                      }}
                       variant="text"
                     >
                       {expand && <Msg id={messageIds.eventFilter.collapse} />}

@@ -6,20 +6,21 @@ import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
 import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
+import { useRouter } from 'next/router';
 
 export enum TimeScale {
   DAY = 'day',
   WEEK = 'week',
   MONTH = 'month',
 }
-interface CalendarProps {
-  orgId: number;
-}
-const Calendar = ({ orgId }: CalendarProps) => {
+
+const Calendar = () => {
   const [focusDate, setFocusDate] = useState<Date>(new Date());
   const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
     TimeScale.MONTH
   );
+
+  const { orgId } = useRouter().query;
 
   return (
     <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
@@ -39,7 +40,7 @@ const Calendar = ({ orgId }: CalendarProps) => {
         onStepForward={() => {
           setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
         }}
-        orgId={orgId}
+        orgId={parseInt(orgId as string)}
         timeScale={selectedTimeScale}
       />
 

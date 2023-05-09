@@ -15,17 +15,17 @@ import {
 } from 'utils/types/zetkin';
 
 export enum ACTION_FILTER_OPTIONS {
-  MISSING = 'Contact person missing',
-  UNSENT = 'Unsent notifications',
-  PENDING = 'Signups pending',
-  UNDERBOOKED = 'Underbooked',
-  OVERBOOKED = 'Overbooked',
+  MISSING = 'missing',
+  UNSENT = 'unsent',
+  PENDING = 'pending',
+  UNDERBOOKED = 'underbooked',
+  OVERBOOKED = 'overbooked',
 }
 export enum STATE_FILTER_OPTIONS {
-  CANCELLED = 'Cancelled',
-  DRAFT = 'Draft',
-  PUBLISHED = 'Published',
-  SCHEDULED = 'Scheduled',
+  CANCELLED = 'cancelled',
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+  SCHEDULED = 'scheduled',
 }
 
 export type EventStats = {
@@ -128,7 +128,7 @@ const eventsSlice = createSlice({
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
-    filterTextAdded: (
+    filterTextUpdated: (
       state,
       action: PayloadAction<{
         filterText: string;
@@ -322,7 +322,7 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
-  filterTextAdded,
+  filterTextUpdated,
   filterUpdated,
   locationUpdate,
   locationUpdated,

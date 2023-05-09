@@ -6,10 +6,10 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { usePanes } from 'utils/panes';
 
-interface CalendarEventFIlterProps {
+interface CalendarEventFilterProps {
   orgId: number;
 }
-const CalendarEventFilter = ({ orgId }: CalendarEventFIlterProps) => {
+const CalendarEventFilter = ({ orgId }: CalendarEventFilterProps) => {
   const { openPane } = usePanes();
 
   return (
