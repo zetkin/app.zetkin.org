@@ -124,4 +124,104 @@ describe('doArbitraryClustering()', () => {
     expect(result[1][0].events[0].id).toBe(3);
     expect(result[1][0].events[1].id).toBe(4);
   });
+
+  it('should arbitrarily cluster single events when lanes are full', () => {
+    const result = clusterEventsForWeekCalender([
+      mockEvent(1, {
+        // 13:00 - 17:00
+        end_time: '1857-07-05T17:00:00.000Z',
+        start_time: '1857-07-05T13:00:00.000Z',
+      }),
+      mockEvent(2, {
+        // 14:00 - 17:00
+        end_time: '1857-07-05T17:00:00.000Z',
+        start_time: '1857-07-05T14:00:00.000Z',
+      }),
+      mockEvent(3, {
+        // 15:00 - 17:00
+        end_time: '1857-07-05T17:00:00.000Z',
+        start_time: '1857-07-05T15:00:00.000Z',
+      }),
+      mockEvent(4, {
+        // 16:00 - 17:00
+        end_time: '1857-07-05T17:00:00.000Z',
+        start_time: '1857-07-05T16:00:00.000Z',
+      }),
+    ]);
+
+    expect(result.length).toBe(3);
+    expect(result[0].length).toBe(1);
+    expect(result[0][0].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect(result[1].length).toBe(1);
+    expect(result[1][0].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect(result[2].length).toBe(1);
+    expect(result[2][0].kind).toBe(CLUSTER_TYPE.ARBITRARY);
+    expect(result[2][0].events[0].id).toBe(3);
+    expect(result[2][0].events[1].id).toBe(4);
+  });
+
+  it('should merge clusters in last lane when lanes are full', () => {
+    const result = clusterEventsForWeekCalender([
+      mockEvent(1, {
+        // 10:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 1, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T10:00:00.000Z',
+      }),
+      mockEvent(2, {
+        // 10:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 2, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T10:00:00.000Z',
+      }),
+      mockEvent(3, {
+        // 11:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 3, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T11:00:00.000Z',
+      }),
+      mockEvent(4, {
+        // 11:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 4, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T11:00:00.000Z',
+      }),
+      mockEvent(5, {
+        // 12:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 5, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T12:00:00.000Z',
+      }),
+      mockEvent(6, {
+        // 12:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 6, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T12:00:00.000Z',
+      }),
+      mockEvent(7, {
+        // 13:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 7, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T13:00:00.000Z',
+      }),
+      mockEvent(8, {
+        // 13:00 - 14:00
+        end_time: '1857-07-05T14:00:00.000Z',
+        location: { id: 8, lat: 0, lng: 0, title: '' },
+        start_time: '1857-07-05T13:00:00.000Z',
+      }),
+    ]);
+
+    expect(result.length).toBe(3);
+    expect(result[0].length).toBe(1);
+    expect(result[0][0].kind).toBe(CLUSTER_TYPE.MULTI_LOCATION);
+    expect(result[1].length).toBe(1);
+    expect(result[1][0].kind).toBe(CLUSTER_TYPE.MULTI_LOCATION);
+    expect(result[2].length).toBe(1);
+    expect(result[2][0].kind).toBe(CLUSTER_TYPE.ARBITRARY);
+    expect(result[2][0].events[0].id).toBe(5);
+    expect(result[2][0].events[1].id).toBe(6);
+    expect(result[2][0].events[2].id).toBe(7);
+    expect(result[2][0].events[3].id).toBe(8);
+  });
 });
