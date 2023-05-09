@@ -18,7 +18,6 @@ import { FC, useEffect, useState } from 'react';
 import { eventCreated } from 'features/events/store';
 import EventTypeAutocomplete from 'features/events/components/EventTypeAutocomplete';
 import EventTypesModel from 'features/events/models/EventTypesModel';
-import { isValidDate } from 'utils/dateUtils';
 import LocationModal from 'features/events/components/LocationModal';
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -58,7 +57,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const [typeId, setTypeId] = useState<number>(1);
   const [typeTitle, setTypeTitle] = useState<string>('');
   const [eventTitle, setEventTitle] = useState<string>('');
-  const [eventDate, setEventDate] = useState<Date>(dates[0]);
+  const [eventDate, setEventDate] = useState<Dayjs>(dayjs(dates[0]));
   const [invalidDate, setInvalidDate] = useState(false);
   const [locationId, setLocationId] = useState<number | null>(null);
   const [eventLink, setEventLink] = useState<string>('');
@@ -66,15 +65,16 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const [eventParticipants, setEventParticipants] = useState<number | null>(
     null
   );
-  const [eventStartTime, setEventStartTime] = useState<Date>(dates[0]);
+  const [eventStartTime, setEventStartTime] = useState<Dayjs>(dayjs(dates[0]));
   const [invalidStartTime, setInvalidStartTime] = useState(false);
-  const [eventEndTime, setEventEndTime] = useState<Date>(dates[1]);
+  const [eventEndTime, setEventEndTime] = useState<Dayjs>(dayjs(dates[1]));
   const [invalidEndTime, setInvalidEndTime] = useState(false);
-  const [eventShifts, setEventShifts] = useState<Date[]>([
-    dates[0],
-    dayjs(dates[0])
-      .add(dayjs(dates[1]).diff(dayjs(dates[0]), 'minute') / 2, 'minute')
-      .toDate(),
+  const [eventShifts, setEventShifts] = useState<Dayjs[]>([
+    dayjs(dates[0]),
+    dayjs(dates[0]).add(
+      dayjs(dates[1]).diff(dayjs(dates[0]), 'minute') / 2,
+      'minute'
+    ),
   ]);
   const [updatedShift, setUpdatedShift] = useState<[number, Dayjs]>([
     0,
@@ -86,17 +86,15 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   ]);
 
   const updateShifts = (noShifts: number) => {
-    const newShifts: Date[] = [];
+    const newShifts: Dayjs[] = [];
     for (let i = 0; i < noShifts; i++) {
       newShifts.push(
-        dayjs(eventStartTime)
-          .add(
-            (dayjs(eventEndTime).diff(dayjs(eventStartTime), 'minute') /
-              noShifts) *
-              i,
-            'minute'
-          )
-          .toDate()
+        dayjs(eventStartTime).add(
+          (dayjs(eventEndTime).diff(dayjs(eventStartTime), 'minute') /
+            noShifts) *
+            i,
+          'minute'
+        )
       );
     }
     setEventShifts(newShifts);
@@ -114,7 +112,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     setInvalidShiftTime(newInvalidShiftTime);
   };
 
-  const durationHoursMins = (start: Date, end: Date) => {
+  const durationHoursMins = (start: Dayjs, end: Dayjs) => {
     const diffMinute = dayjs(end).diff(dayjs(start), 'minute');
     const diffHour = dayjs(end).diff(dayjs(start), 'hour');
     const totTime = dayjs(eventEndTime).diff(dayjs(eventStartTime), 'minute');
@@ -475,8 +473,8 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                 inputFormat="HH:mm"
                 label={messages.eventShiftModal.start()}
                 onChange={(newValue) => {
-                  if (newValue && isValidDate(newValue.toDate())) {
-                    setEventStartTime(newValue.toDate());
+                  if (newValue && newValue.isValid()) {
+                    setEventStartTime(newValue);
                   }
                 }}
                 open={false}
@@ -507,8 +505,8 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                 inputFormat="HH:mm"
                 label={messages.eventShiftModal.end()}
                 onChange={(newValue) => {
-                  if (newValue && isValidDate(newValue.toDate())) {
-                    setEventEndTime(newValue.toDate());
+                  if (newValue && newValue.isValid()) {
+                    setEventEndTime(newValue);
                   }
                 }}
                 open={false}
@@ -592,10 +590,10 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                       no: index + 1,
                     })}
                     onChange={(newValue) => {
-                      if (newValue && isValidDate(newValue.toDate())) {
+                      if (newValue && newValue.isValid()) {
                         setEventShifts([
                           ...eventShifts.slice(0, index),
-                          dayjs(newValue).toDate(),
+                          dayjs(newValue),
                           ...eventShifts.slice(index + 1),
                         ]);
                         setUpdatedShift([index, dayjs(newValue)]);
