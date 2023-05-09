@@ -1,29 +1,34 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
 import MapIcon from '@mui/icons-material/Map';
 import { TimePicker } from '@mui/x-date-pickers-pro';
+import { useStore } from 'react-redux';
 import { Add, Close } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
   Button,
   Dialog,
+  IconButton,
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
+import { FC, useEffect, useState } from 'react';
 
+import { eventCreated } from 'features/events/store';
 import EventTypeAutocomplete from 'features/events/components/EventTypeAutocomplete';
 import EventTypesModel from 'features/events/models/EventTypesModel';
+import { isValidDate } from 'utils/dateUtils';
 import LocationModal from 'features/events/components/LocationModal';
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
+import { useEnv } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
-import { ZetkinLocation } from 'utils/types/zetkin';
+import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
 import ZUIFutures from 'zui/ZUIFutures';
-import { dateIsBefore, isValidDate } from 'utils/dateUtils';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface EventShiftModalProps {
   dates: [Date, Date];
@@ -33,10 +38,10 @@ interface EventShiftModalProps {
 
 const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const messages = useMessages(messageIds);
-  const { orgId } = useNumericRouteParams();
+  const { campId, orgId } = useNumericRouteParams();
+  const env = useEnv();
+  const store = useStore();
 
-  const [invalidFormat, setInvalidFormat] = useState(false);
-  const [endDate, setEndDate] = useState<Date>(dates[1]);
   const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
   const locationsModel = useModel((env) => new LocationsModel(env, orgId));
@@ -50,10 +55,11 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     ? [...locations, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
-  const [typeId, setTypeId] = useState<number>(0);
+  const [typeId, setTypeId] = useState<number>(1);
   const [typeTitle, setTypeTitle] = useState<string>('');
   const [eventTitle, setEventTitle] = useState<string>('');
   const [eventDate, setEventDate] = useState<Date>(dates[0]);
+  const [invalidDate, setInvalidDate] = useState(false);
   const [locationId, setLocationId] = useState<number | null>(null);
   const [eventLink, setEventLink] = useState<string>('');
   const [eventDescription, setEventDescription] = useState<string>('');
@@ -61,15 +67,25 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     null
   );
   const [eventStartTime, setEventStartTime] = useState<Date>(dates[0]);
+  const [invalidStartTime, setInvalidStartTime] = useState(false);
   const [eventEndTime, setEventEndTime] = useState<Date>(dates[1]);
+  const [invalidEndTime, setInvalidEndTime] = useState(false);
   const [eventShifts, setEventShifts] = useState<Date[]>([
     dates[0],
     dayjs(dates[0])
       .add(dayjs(dates[1]).diff(dayjs(dates[0]), 'minute') / 2, 'minute')
       .toDate(),
   ]);
+  const [updatedShift, setUpdatedShift] = useState<[number, Dayjs]>([
+    0,
+    dayjs(dates[0]),
+  ]);
+  const [invalidShiftTime, setInvalidShiftTime] = useState<boolean[]>([
+    false,
+    false,
+  ]);
 
-  function updateShifts(noShifts: number) {
+  const updateShifts = (noShifts: number) => {
     const newShifts: Date[] = [];
     for (let i = 0; i < noShifts; i++) {
       newShifts.push(
@@ -84,13 +100,27 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
       );
     }
     setEventShifts(newShifts);
-  }
+    for (let i = 0; i < noShifts; i++) {
+      invalidShiftTime[i] = false;
+    }
+  };
 
-  function durationHoursMins(start: Date, end: Date) {
+  const removeShift = (index: number) => {
+    const newShifts = [...eventShifts];
+    newShifts.splice(index, 1);
+    setEventShifts(newShifts);
+    const newInvalidShiftTime = [...invalidShiftTime];
+    newInvalidShiftTime.splice(index, 1);
+    setInvalidShiftTime(newInvalidShiftTime);
+  };
+
+  const durationHoursMins = (start: Date, end: Date) => {
     const diffMinute = dayjs(end).diff(dayjs(start), 'minute');
     const diffHour = dayjs(end).diff(dayjs(start), 'hour');
-
-    if (diffMinute < 60) {
+    const totTime = dayjs(eventEndTime).diff(dayjs(eventStartTime), 'minute');
+    if (diffMinute > totTime || diffMinute < 0) {
+      return <Typography color="secondary">{'\u2014'}</Typography>;
+    } else if (diffMinute < 60) {
       return (
         <Typography>
           {messages.eventShiftModal.minutes({
@@ -116,6 +146,108 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         );
       }
     }
+  };
+
+  const handleShiftTimeChange = (index: number) => {
+    const newShift = dayjs(eventShifts[index]);
+    if (
+      newShift.isAfter(dayjs(eventShifts[index - 1])) &&
+      (eventShifts.length - index > 1
+        ? newShift.isBefore(dayjs(eventShifts[index + 1]))
+        : newShift.isBefore(dayjs(eventEndTime)))
+    ) {
+      setInvalidShiftTime([
+        ...invalidShiftTime.slice(0, index),
+        false,
+        ...invalidShiftTime.slice(index + 1),
+      ]);
+    } else {
+      setInvalidShiftTime([
+        ...invalidShiftTime.slice(0, index),
+        true,
+        ...invalidShiftTime.slice(index + 1),
+      ]);
+    }
+  };
+
+  const handleStartEndTimeChange = () => {
+    if (dayjs(eventStartTime).isBefore(eventEndTime)) {
+      setInvalidStartTime(false);
+      updateShifts(eventShifts.length);
+    } else {
+      setInvalidStartTime(true);
+    }
+
+    if (dayjs(eventEndTime).isAfter(eventStartTime)) {
+      setInvalidEndTime(false);
+      updateShifts(eventShifts.length);
+    } else {
+      setInvalidEndTime(true);
+    }
+  };
+
+  const isNotPublishable = () => {
+    return (
+      invalidDate ||
+      invalidStartTime ||
+      invalidEndTime ||
+      invalidShiftTime.includes(true)
+    );
+  };
+
+  useEffect(() => {
+    handleShiftTimeChange(updatedShift[0]);
+  }, [updatedShift]);
+
+  useEffect(() => {
+    handleStartEndTimeChange();
+  }, [eventStartTime, eventEndTime]);
+
+  async function publishShifts(publish: boolean) {
+    eventShifts.forEach(async (shift, index) => {
+      await createShift(
+        dayjs(shift),
+        index < eventShifts.length - 1
+          ? dayjs(eventShifts[index + 1])
+          : dayjs(eventEndTime),
+        publish
+      );
+    });
+    close();
+  }
+
+  async function createShift(
+    startTime: Dayjs,
+    endTime: Dayjs,
+    publish: boolean
+  ) {
+    let startDate: Dayjs = dayjs(eventDate);
+    startDate = startDate
+      .set('hour', startTime.hour())
+      .set('minute', startTime.minute());
+    let endDate: Dayjs = dayjs(eventDate);
+    endDate = endDate
+      .set('hour', endTime.hour())
+      .set('minute', endTime.minute());
+
+    const event = await env.apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
+      campId
+        ? `/api/orgs/${orgId}/campaigns/${campId}/actions`
+        : `/api/orgs/${orgId}/actions`,
+      {
+        activity_id: typeId,
+        end_time: endDate.toISOString(),
+        info_text: eventDescription,
+        location_id: locationId,
+        num_participants_required: eventParticipants ? eventParticipants : 0,
+        published: publish ? dayjs().toISOString() : null,
+        start_time: startDate.toISOString(),
+        title: eventTitle,
+        url: eventLink,
+      }
+    );
+
+    store.dispatch(eventCreated(event));
   }
 
   return (
@@ -177,21 +309,23 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               inputFormat="DD-MM-YYYY"
               label={messages.eventShiftModal.date()}
               onChange={(newValue) => {
-                if (newValue && isValidDate(newValue)) {
-                  setInvalidFormat(false);
+                if (newValue && dayjs(newValue).isValid()) {
+                  setInvalidDate(false);
                   setEventDate(newValue);
-                  if (dateIsBefore(newValue, endDate)) {
-                    setEndDate(newValue);
-                  }
                 } else {
-                  setInvalidFormat(true);
+                  setInvalidDate(true);
                 }
               }}
               renderInput={(params) => {
                 return (
                   <TextField
                     {...params}
-                    error={invalidFormat}
+                    error={invalidDate}
+                    helperText={
+                      invalidDate
+                        ? messages.eventShiftModal.invalidDate()
+                        : undefined
+                    }
                     inputProps={{
                       ...params.inputProps,
                     }}
@@ -331,7 +465,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
           />
         </Box>
         <Box flex={1} margin={1}>
-          <Typography margin={1} variant="subtitle2">
+          <Typography color="secondary" margin={1} variant="subtitle2">
             {messages.eventShiftModal.event().toUpperCase()}
           </Typography>
           <Box display="flex" flex="space-between">
@@ -342,10 +476,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                 label={messages.eventShiftModal.start()}
                 onChange={(newValue) => {
                   if (newValue && isValidDate(newValue.toDate())) {
-                    setInvalidFormat(false);
-                    setEventStartTime(dayjs(newValue).toDate());
-                  } else {
-                    setInvalidFormat(true);
+                    setEventStartTime(newValue.toDate());
                   }
                 }}
                 open={false}
@@ -353,9 +484,16 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                   return (
                     <TextField
                       {...params}
+                      error={invalidStartTime}
+                      helperText={
+                        invalidStartTime
+                          ? messages.eventShiftModal.invalidTime()
+                          : undefined
+                      }
                       inputProps={{
                         ...params.inputProps,
                       }}
+                      variant="outlined"
                     />
                   );
                 }}
@@ -369,15 +507,8 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                 inputFormat="HH:mm"
                 label={messages.eventShiftModal.end()}
                 onChange={(newValue) => {
-                  if (
-                    newValue &&
-                    isValidDate(newValue.toDate()) &&
-                    newValue.isAfter(eventStartTime)
-                  ) {
-                    setInvalidFormat(false);
-                    setEventEndTime(dayjs(newValue).toDate());
-                  } else {
-                    setInvalidFormat(true);
+                  if (newValue && isValidDate(newValue.toDate())) {
+                    setEventEndTime(newValue.toDate());
                   }
                 }}
                 open={false}
@@ -385,6 +516,12 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                   return (
                     <TextField
                       {...params}
+                      error={invalidEndTime}
+                      helperText={
+                        invalidEndTime
+                          ? messages.eventShiftModal.invalidTime()
+                          : undefined
+                      }
                       inputProps={{
                         ...params.inputProps,
                       }}
@@ -396,13 +533,18 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             </Box>
 
             <Box flex={1} margin={1}>
-              <Typography variant="subtitle2">
+              <Typography color="secondary" variant="subtitle2">
                 {messages.eventShiftModal.eventDuration().toUpperCase()}
               </Typography>
               <Box>{durationHoursMins(eventStartTime, eventEndTime)}</Box>
             </Box>
           </Box>
-          <Typography marginLeft={1} marginTop={1} variant="subtitle2">
+          <Typography
+            color="secondary"
+            marginLeft={1}
+            marginTop={1}
+            variant="subtitle2"
+          >
             {messages.eventShiftModal.shiftsHeader().toUpperCase()}
           </Typography>
           <Box
@@ -441,44 +583,46 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
           {eventShifts.map((shift, index) => {
             return (
               <Box key={index} alignItems="center" display="flex" margin={1}>
-                <TimePicker
-                  ampm={false}
-                  inputFormat="HH:mm"
-                  label={messages.eventShiftModal.shiftStart({ no: index + 1 })}
-                  onChange={(newValue) => {
-                    if (
-                      newValue &&
-                      isValidDate(newValue.toDate()) &&
-                      newValue.isAfter(eventShifts[index - 1]) &&
-                      (eventShifts.length - index > 1
-                        ? newValue.isBefore(eventShifts[index + 1])
-                        : newValue.isBefore(eventEndTime))
-                    ) {
-                      setInvalidFormat(false);
-                      setEventShifts([
-                        ...eventShifts.slice(0, index),
-                        dayjs(newValue).toDate(),
-                        ...eventShifts.slice(index + 1),
-                      ]);
-                    } else {
-                      setInvalidFormat(true);
-                    }
-                  }}
-                  open={false}
-                  renderInput={(params) => {
-                    return (
-                      <TextField
-                        {...params}
-                        inputProps={{
-                          ...params.inputProps,
-                        }}
-                      />
-                    );
-                  }}
-                  value={dayjs(shift)}
-                />
-                <Box margin={1}>
-                  <Typography variant="subtitle2">
+                <Box flex={2}>
+                  <TimePicker
+                    ampm={false}
+                    disabled={index === 0}
+                    inputFormat="HH:mm"
+                    label={messages.eventShiftModal.shiftStart({
+                      no: index + 1,
+                    })}
+                    onChange={(newValue) => {
+                      if (newValue && isValidDate(newValue.toDate())) {
+                        setEventShifts([
+                          ...eventShifts.slice(0, index),
+                          dayjs(newValue).toDate(),
+                          ...eventShifts.slice(index + 1),
+                        ]);
+                        setUpdatedShift([index, dayjs(newValue)]);
+                      }
+                    }}
+                    open={false}
+                    renderInput={(params) => {
+                      return (
+                        <TextField
+                          {...params}
+                          error={invalidShiftTime[index]}
+                          helperText={
+                            invalidShiftTime[index]
+                              ? messages.eventShiftModal.invalidTime()
+                              : undefined
+                          }
+                          inputProps={{
+                            ...params.inputProps,
+                          }}
+                        />
+                      );
+                    }}
+                    value={dayjs(shift)}
+                  />
+                </Box>
+                <Box flex={2} margin={1} marginLeft={2}>
+                  <Typography color="secondary" variant="subtitle2">
                     {messages.eventShiftModal.shiftDuration().toUpperCase()}
                   </Typography>
                   {durationHoursMins(
@@ -486,6 +630,13 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                     eventShifts.length - index > 1
                       ? eventShifts[index + 1]
                       : eventEndTime
+                  )}
+                </Box>
+                <Box display="flex" flex={1} justifyContent="flex-end">
+                  {eventShifts.length > 2 && index > 0 && (
+                    <IconButton onClick={() => removeShift(index)}>
+                      <Close />
+                    </IconButton>
                   )}
                 </Box>
               </Box>
@@ -503,12 +654,26 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
           {messages.eventShiftModal.noEvents({ no: eventShifts.length })}
         </Typography>
         <Box margin={1}>
-          <Button size="large" variant="text">
+          <Button
+            disabled={isNotPublishable()}
+            onClick={async () => {
+              await publishShifts(false);
+            }}
+            size="large"
+            variant="text"
+          >
             {messages.eventShiftModal.draft().toUpperCase()}
           </Button>
         </Box>
         <Box margin={1}>
-          <Button size="large" variant="contained">
+          <Button
+            disabled={isNotPublishable()}
+            onClick={async () => {
+              publishShifts(true);
+            }}
+            size="large"
+            variant="contained"
+          >
             {messages.eventShiftModal.publish().toUpperCase()}
           </Button>
         </Box>

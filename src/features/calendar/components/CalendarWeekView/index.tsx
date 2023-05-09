@@ -220,6 +220,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
                         setShiftModalOpen(false);
                         setPendingEvent(null);
                         setCreating(false);
+                        //TODO: Navigate to the date of the events
                       }}
                       dates={pendingEvent}
                       open={shiftModalOpen}

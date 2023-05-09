@@ -48,6 +48,8 @@ export default makeMessages('feat.events', {
     header: m('Create multi-shift event'),
     hours: m<{ no: number }>('{no, plural, one {1 hour} other {# hours}}'),
     hoursShort: m('h'),
+    invalidDate: m('Invalid date'),
+    invalidTime: m('Invalid time'),
     link: m('Link'),
     location: m('Location'),
     minutes: m<{ no: number }>(
