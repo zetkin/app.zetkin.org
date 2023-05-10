@@ -21,6 +21,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import { EventsModel } from 'features/events/models/EventsModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import LocationsModel from 'features/events/models/LocationsModel';
@@ -41,12 +42,14 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 type EventOverviewCardProps = {
   data: ZetkinEvent;
   dataModel: EventDataModel;
+  eventsModel: EventsModel;
   locationsModel: LocationsModel;
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({
   data,
   dataModel,
+  eventsModel,
   locationsModel,
 }) => {
   const locations = locationsModel.getLocations().data;
@@ -101,6 +104,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   )[] = locations
     ? [...locations, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
+
+  const events = eventsModel.getParallelEvents(
+    data.start_time,
+    data.end_time
+  ).data;
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -322,7 +330,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 .endDate()
                                 .toUpperCase()}
                             </Typography>
-                            <Box mb={3}></Box>
+                            <Box mb={3} />
                           </Box>
                         );
                       }
@@ -459,6 +467,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             sx={{ cursor: 'pointer', marginLeft: 1 }}
                           />
                           <LocationModal
+                            currentEventId={data.id}
+                            events={events || []}
                             locationId={locationId}
                             locations={locations || []}
                             model={locationsModel}
