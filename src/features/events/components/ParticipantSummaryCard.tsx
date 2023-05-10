@@ -193,15 +193,17 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
               </Typography>
               <Box alignItems="flex-end" display="flex">
                 <Typography variant="h4">{`${confirmedParticipants}/${availParticipants}`}</Typography>
-                <Typography
-                  color={'GrayText'}
-                  sx={{ fontSize: '1.7em', marginLeft: '0.3em' }}
-                  variant="h4"
-                >
-                  {messages.participantSummaryCard.noshow({
-                    noshows: noshowParticipants,
-                  })}
-                </Typography>
+                {noshowParticipants > 0 && (
+                  <Typography
+                    color={'GrayText'}
+                    sx={{ fontSize: '1.7em', marginLeft: '0.3em' }}
+                    variant="h4"
+                  >
+                    {messages.participantSummaryCard.noshow({
+                      noshows: noshowParticipants,
+                    })}
+                  </Typography>
+                )}
               </Box>
             </Box>
           )}
