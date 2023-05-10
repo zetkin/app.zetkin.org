@@ -1,9 +1,6 @@
 import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { getBrowserLanguage } from 'utils/locale';
-import getServerMessages from 'core/i18n/server';
-import messageIds from 'features/events/l10n/messageIds';
 import { ZetkinViewFolder } from 'features/views/components/types';
 
 interface LabeledBreadcrumbElement {
@@ -48,7 +45,6 @@ const breadcrumbs = async (
           fieldName,
           fieldValue,
           orgId,
-          req,
           apiFetch
         );
         elements.forEach((elem) => breadcrumbs.push(elem));
@@ -78,12 +74,8 @@ async function fetchElements(
   fieldName: string,
   fieldValue: string,
   orgId: string,
-  req: NextApiRequest,
   apiFetch: ApiFetch
 ): Promise<BreadcrumbElement[]> {
-  const lang = getBrowserLanguage(req);
-  const messages = await getServerMessages(lang, messageIds);
-
   if (fieldName === 'orgId') {
     const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
     return [
@@ -187,15 +179,21 @@ async function fetchElements(
     const event = await apiFetch(`/orgs/${orgId}/actions/${fieldValue}`).then(
       (res) => res.json()
     );
-    return [
-      {
-        href: basePath + '/' + fieldValue,
-        label:
-          event.data.title ||
-          event.data.activity?.title ||
-          messages.type.untitled(),
-      },
-    ];
+    if (event.title || event.activity?.title) {
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          label: event.title || event.activity?.title,
+        },
+      ];
+    } else {
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          labelMsg: 'untitledEvent',
+        },
+      ];
+    }
   } else if (fieldName == 'folderId') {
     const folderId = parseInt(fieldValue);
     const folderElements = await fetchFolders(

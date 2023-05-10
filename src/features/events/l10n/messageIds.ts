@@ -12,7 +12,7 @@ export default makeMessages('feat.events', {
   common: {
     noActivity: m('Uncategorized'),
     noLocation: m('No physical location'),
-    noTitle: m('Untitle event'),
+    noTitle: m('Untitled event'),
   },
   eventActionButtons: {
     cancel: m('Cancel'),
@@ -196,6 +196,5 @@ export default makeMessages('feat.events', {
     createType: m<{ type: string }>('Create "{type}"'),
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
-    untitled: m('Untitled Event'),
   },
 });
