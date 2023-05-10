@@ -8,7 +8,9 @@ import {
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
@@ -26,6 +28,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
+  const messages = useMessages(messageIds);
 
   return (
     <OverviewListItem
@@ -68,7 +71,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
           ]}
         />
       }
-      title={event.title || event.activity.title}
+      title={event.title || event.activity?.title || messages.common.noTitle()}
     />
   );
 };

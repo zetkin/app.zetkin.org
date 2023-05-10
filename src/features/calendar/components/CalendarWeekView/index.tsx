@@ -226,10 +226,9 @@ function useCreateEvent() {
         ? `/api/orgs/${orgId}/campaigns/${campId}/actions`
         : `/api/orgs/${orgId}/actions`,
       {
-        // TODO: Use null when possible for activity, campaign and location
-        activity_id: 1,
+        activity_id: null,
         end_time: endDate.toISOString(),
-        location_id: 1,
+        location_id: null,
         start_time: startDate.toISOString(),
       }
     );

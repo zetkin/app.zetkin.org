@@ -25,6 +25,7 @@ import {
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
+import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
 import { PageWithLayout } from '../utils/types';
 import theme from '../theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
@@ -107,12 +108,17 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
                   <QueryClientProvider client={queryClient}>
                     <ZUISnackbarProvider>
                       <ZUIConfirmDialogProvider>
-                        <DndProvider backend={HTML5Backend}>
-                          <Hydrate state={dehydratedState}>
-                            <CssBaseline />
-                            {getLayout(<Component {...restProps} />, restProps)}
-                          </Hydrate>
-                        </DndProvider>
+                        <EventPopperProvider>
+                          <DndProvider backend={HTML5Backend}>
+                            <Hydrate state={dehydratedState}>
+                              <CssBaseline />
+                              {getLayout(
+                                <Component {...restProps} />,
+                                restProps
+                              )}
+                            </Hydrate>
+                          </DndProvider>
+                        </EventPopperProvider>
                       </ZUIConfirmDialogProvider>
                     </ZUISnackbarProvider>
                     <ReactQueryDevtools initialIsOpen={false} />

@@ -6,6 +6,7 @@ import { Store } from 'core/store';
 import {
   eventCreate,
   eventCreated,
+  eventDeleted,
   eventLoad,
   eventLoaded,
   eventsLoad,
@@ -21,6 +22,7 @@ import {
   participantsLoad,
   participantsLoaded,
   participantsReminded,
+  participantUpdated,
   respondentsLoad,
   respondentsLoaded,
   typeAdd,
@@ -44,10 +46,13 @@ export type ZetkinEventPatchBody = Partial<
     'id' | 'activity' | 'campaign' | 'location' | 'organization'
   >
 > & {
-  activity_id?: number;
+  activity_id?: number | null;
   campaign_id?: number;
+  cancelled?: string | null;
+  contact_id?: number | null;
   location_id?: number | null;
   organization_id?: number;
+  published?: string | null;
 };
 
 export type ZetkinEventPostBody = ZetkinEventPatchBody;
@@ -74,10 +79,7 @@ export default class EventsRepo {
   async addParticipant(orgId: number, eventId: number, personId: number) {
     const participant = await this._apiClient.put<ZetkinEventParticipant>(
       `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`,
-      {
-        id: personId,
-        reminder_sent: null,
-      }
+      {}
     );
     this._store.dispatch(participantAdded([eventId, participant]));
   }
@@ -107,6 +109,11 @@ export default class EventsRepo {
     );
     this._store.dispatch(eventCreated(event));
     return event;
+  }
+
+  async deleteEvent(orgId: number, eventId: number) {
+    await this._apiClient.delete(`/api/orgs/${orgId}/actions/${eventId}`);
+    this._store.dispatch(eventDeleted(eventId));
   }
 
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {
@@ -223,6 +230,24 @@ export default class EventsRepo {
       .patch<ZetkinLocation>(`/api/orgs/${orgId}/locations/${locationId}`, data)
       .then((location) => {
         this._store.dispatch(locationUpdated(location));
+      });
+  }
+
+  updateParticipant(
+    orgId: number,
+    eventId: number,
+    personId: number,
+    data: Partial<ZetkinEventParticipant>
+  ) {
+    return this._apiClient
+      .put<ZetkinEventParticipant>(
+        `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`,
+        data
+      )
+      .then((participant) => {
+        this._store.dispatch(participantUpdated([eventId, participant]));
+
+        return participant;
       });
   }
 }

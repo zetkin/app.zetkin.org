@@ -1,9 +1,13 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
+import { useState } from 'react';
 
-import AddPersonButton from 'features/events/components/EventParticipantsTab/AddPersonButton';
+import AddPersonButton from 'features/events/components/AddPersonButton';
+import EventContactCard from 'features/events/components/EventContactCard';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
+import EventParticipantsFilter from 'features/events/components/EventParticipantsFilter';
+import EventParticipantsList from 'features/events/components/EventParticipantsList';
 import { PageWithLayout } from 'utils/types';
 import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
 import { scaffold } from 'utils/next';
@@ -39,21 +43,47 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
   eventId,
   orgId,
 }) => {
+  const [filterString, setFilterString] = useState<string>('');
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
+
   return (
     <ZUIFuture future={dataModel.getData()}>
-      {() => {
+      {(data) => {
         return (
-          <Grid container spacing={2}>
-            <Grid item md={8} xs={12}>
-              <ParticipantSummaryCard model={dataModel} />
+          <>
+            <Grid container spacing={2}>
+              <Grid item md={8} xs={12}>
+                <ParticipantSummaryCard model={dataModel} />
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <EventContactCard
+                  data={data}
+                  model={dataModel}
+                  orgId={parseInt(orgId)}
+                />
+              </Grid>
             </Grid>
-            <Grid container item justifyContent="flex-end" md={12}>
+            <Grid
+              container
+              item
+              justifyContent="flex-end"
+              md={12}
+              style={{ marginBottom: '40px', marginTop: '30px' }}
+            >
+              <EventParticipantsFilter
+                onFilterChange={(value) => setFilterString(value)}
+              />
               <AddPersonButton model={dataModel} />
             </Grid>
-          </Grid>
+            <EventParticipantsList
+              data={data}
+              filterString={filterString}
+              model={dataModel}
+              orgId={parseInt(orgId)}
+            />
+          </>
         );
       }}
     </ZUIFuture>

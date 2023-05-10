@@ -4,6 +4,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import { useState } from 'react';
 
+import EventActionButtons from '../components/EventActionButtons';
 import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
 import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
@@ -45,6 +46,13 @@ const EventLayout: React.FC<EventLayoutProps> = ({
 
   return (
     <TabbedLayout
+      actionButtons={
+        <ZUIFuture future={model.getData()}>
+          {(data) => {
+            return <EventActionButtons event={data} />;
+          }}
+        </ZUIFuture>
+      }
       baseHref={`/organize/${orgId}/projects/${campaignId}/events/${eventId}`}
       defaultTab="/"
       subtitle={
@@ -135,7 +143,9 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 }}
                 onFocus={() => setEditingTypeOrTitle(true)}
                 placeholder={
-                  data.title || data.activity.title || messages.type.untitled()
+                  data.title ||
+                  data.activity?.title ||
+                  messages.common.noTitle()
                 }
                 showBorder={editingTypeOrTitle}
                 tooltipContent={messages.tooltipContent()}
