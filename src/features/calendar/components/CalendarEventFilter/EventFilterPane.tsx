@@ -7,7 +7,6 @@ import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/calendar/l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
 import { RootState } from 'core/store';
-import useDebounce from 'utils/hooks/useDebounce';
 import useModel from 'core/useModel';
 import { ZetkinActivity } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -75,10 +74,6 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
     store.dispatch(filterTextUpdated({ filterText: '' }));
   };
 
-  const debouncedFinishedTyping = useDebounce(async (value: string) => {
-    store.dispatch(filterTextUpdated({ filterText: value }));
-  }, 400);
-
   return (
     <>
       <PaneHeader title={messages.eventFilter.filter()} />
@@ -93,7 +88,9 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       </Button>
       <Box sx={{ mt: 2 }}>
         <EventInputFilter
-          onDebounce={(value: string) => debouncedFinishedTyping(value)}
+          onDebounce={(value: string) =>
+            store.dispatch(filterTextUpdated({ filterText: value }))
+          }
           placeholder={messages.eventFilter.type()}
           reset={disableReset}
           userText={state.text}

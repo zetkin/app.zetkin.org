@@ -1,3 +1,4 @@
+import useDebounce from 'utils/hooks/useDebounce';
 import { Clear, FilterList } from '@mui/icons-material';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -21,6 +22,10 @@ const EventInputFilter = ({
       setUserInput('');
     }
   }, [userText]);
+
+  const debouncedFinishedTyping = useDebounce(async (value: string) => {
+    onDebounce(value);
+  }, 400);
 
   return (
     <TextField
@@ -48,7 +53,7 @@ const EventInputFilter = ({
       }}
       onChange={(e) => {
         setUserInput(e.target.value);
-        onDebounce(e.target.value);
+        debouncedFinishedTyping(e.target.value);
       }}
       placeholder={placeholder}
       value={userInput}
