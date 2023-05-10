@@ -31,6 +31,9 @@ const Day = ({ clusters, date, isInFocusMonth, onClick }: DayProps) => {
       display="flex"
       flexDirection="column"
       height="100%"
+      sx={{
+        overflowY: 'hidden',
+      }}
       width="100%"
     >
       <Box marginLeft="5px">
