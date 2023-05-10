@@ -170,6 +170,12 @@ export default class EventDataModel extends ModelBase {
     });
   }
 
+  restoreEvent() {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: null,
+    });
+  }
+
   sendReminders() {
     this._repo.sendReminders(this._orgId, this._eventId);
   }
@@ -223,7 +229,6 @@ export default class EventDataModel extends ModelBase {
       return EventState.CANCELLED;
     }
     const now = new Date();
-
     if (data.published) {
       const published = new Date(data.published);
       if (published > now) {
