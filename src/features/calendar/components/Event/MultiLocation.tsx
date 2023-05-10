@@ -2,20 +2,26 @@ import { FC } from 'react';
 import { ScheduleOutlined } from '@mui/icons-material';
 
 import { fieldsToPresent } from './utils';
+import messageIds from 'features/calendar/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from '.';
 
-function createMultiLocationFields(props: MultiLocationProps): Field[] {
-  const totalRequiredParticipants: number = props.events.reduce(
+function createMultiLocationFields({
+  events,
+  unbookedSignups,
+  remindersNotSent,
+}: MultiLocationProps): Field[] {
+  const totalRequiredParticipants: number = events.reduce(
     (acc, curr) => acc + curr.num_participants_required,
     0
   );
-  const totalAvailableParticipants: number = props.events.reduce(
+  const totalAvailableParticipants: number = events.reduce(
     (acc, curr) => acc + curr.num_participants_available,
     0
   );
-  const noContactSelected = props.events.some((event) => !event?.contact);
+  const noContactSelected = events.some((event) => !event?.contact);
 
   const fields: (Field | null)[] = [
     {
@@ -25,27 +31,42 @@ function createMultiLocationFields(props: MultiLocationProps): Field[] {
     },
     {
       kind: 'Location',
-      message: `${props.events.length} different locations`,
+      message: (
+        <Msg
+          id={messageIds.event.differentLocations}
+          values={{ numLocations: events.length }}
+        />
+      ),
       requiresAction: false,
     },
-    props.remindersNotSent
+    remindersNotSent
       ? {
           kind: 'RemindersNotSent',
-          message: `${props.remindersNotSent} reminders not sent`,
+          message: (
+            <Msg
+              id={messageIds.event.remindersNotSent}
+              values={{ numNotSent: remindersNotSent }}
+            />
+          ),
           requiresAction: true,
         }
       : null,
-    props.unbookedSignups
+    unbookedSignups
       ? {
           kind: 'UnbookedSignups',
-          message: `${props.unbookedSignups} unbooked signups`,
+          message: (
+            <Msg
+              id={messageIds.event.unbookedSignups}
+              values={{ numUnbooked: unbookedSignups }}
+            />
+          ),
           requiresAction: true,
         }
       : null,
     noContactSelected
       ? {
           kind: 'NoContactSelected',
-          message: 'No contact selected',
+          message: <Msg id={messageIds.event.noContactSelected} />,
           requiresAction: true,
         }
       : null,
@@ -61,6 +82,7 @@ export interface MultiLocationProps {
   height: number;
   remindersNotSent: null | number;
   unbookedSignups: null | number;
+  width: number;
 }
 
 const MultiLocation: FC<MultiLocationProps> = ({
@@ -68,6 +90,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
   height,
   remindersNotSent,
   unbookedSignups,
+  width,
 }) => {
   const fields = fieldsToPresent(
     createMultiLocationFields({
@@ -75,10 +98,11 @@ const MultiLocation: FC<MultiLocationProps> = ({
       height,
       remindersNotSent,
       unbookedSignups,
+      width,
     }),
     height
   );
-  const firstEventTitle = events[0].title;
+  const firstEventTitle = events[0].title || events[0].activity.title;
   const anyEventIsCancelled = events.some((event) => event.cancelled);
 
   return (
@@ -93,6 +117,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
           text={events.length.toString()}
         />
       }
+      width={width}
     />
   );
 };

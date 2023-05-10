@@ -39,6 +39,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontSize: '14px',
     minHeight: '20px',
     overflow: 'hidden',
+    paddingTop: '4px',
     textDecoration: ({ cancelled }) => (cancelled ? 'line-through' : ''),
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -140,7 +141,7 @@ const Event = ({
       {collapsed && (
         <Box alignItems="center" display="flex" paddingX={1} width="100%">
           <Typography className={classes.title}>{title}</Typography>
-          <Box alignItems="center" display="flex">
+          <Box display="flex">
             {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
               return (
                 <Box

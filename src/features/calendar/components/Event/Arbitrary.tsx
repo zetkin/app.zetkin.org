@@ -13,6 +13,7 @@ export interface ArbitraryProps {
   height: number;
   remindersNotSent: null | number;
   eventsWithUnbookedSignups: null | number;
+  width: number;
 }
 
 function createArbitraryFields({
@@ -90,6 +91,7 @@ const Arbitrary: FC<ArbitraryProps> = ({
   height,
   eventsWithUnbookedSignups,
   remindersNotSent,
+  width,
 }) => {
   const messages = useMessages(messageIds);
   const fields = fieldsToPresent(
@@ -98,6 +100,7 @@ const Arbitrary: FC<ArbitraryProps> = ({
       eventsWithUnbookedSignups,
       height,
       remindersNotSent,
+      width,
     }),
     height
   );
@@ -115,6 +118,7 @@ const Arbitrary: FC<ArbitraryProps> = ({
           text={events.length.toString()}
         />
       }
+      width={width}
     />
   );
 };

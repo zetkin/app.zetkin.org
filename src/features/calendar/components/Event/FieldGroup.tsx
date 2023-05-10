@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
     gap: '0 4px',
     position: 'absolute',
     right: 0,
-    top: 0,
+    top: 2,
   },
 }));
 
@@ -37,11 +37,11 @@ const FieldGroup: FC<FieldGroupProps> = ({ fields, height }) => {
   return (
     <>
       <Box className={classes.fields} height={height}>
-        <div className={classes.fieldsWithIconOnly}>
+        <Box className={classes.fieldsWithIconOnly}>
           {fieldsWithIconOnly.map((field, index) => (
             <Field key={`${field.kind}-${index}`} field={field} />
           ))}
-        </div>
+        </Box>
         {fieldsWithLabel.map((field, index) => (
           <Field key={`${field.kind}-${index}`} field={field} />
         ))}

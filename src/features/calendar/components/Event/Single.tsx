@@ -1,42 +1,57 @@
 import { FC } from 'react';
 
 import { fieldsToPresent } from './utils';
+import messageIds from 'features/calendar/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from '.';
 
-function createSingleFields(props: SingleProps): Field[] {
+function createSingleFields({
+  event,
+  remindersNotSent,
+  unbookedSignups,
+}: SingleProps): Field[] {
   const fields: (Field | null)[] = [
     {
       kind: 'Participants',
-      message: `${props.event.num_participants_available} / ${props.event.num_participants_required}`,
+      message: `${event.num_participants_available} / ${event.num_participants_required}`,
       requiresAction:
-        props.event.num_participants_required >
-        props.event.num_participants_available,
+        event.num_participants_required > event.num_participants_available,
     },
     {
       kind: 'Location',
-      message: props.event.location.title,
+      message: event.location.title,
       requiresAction: false,
     },
-    props.remindersNotSent
+    remindersNotSent
       ? {
           kind: 'RemindersNotSent',
-          message: `${props.remindersNotSent} reminders not sent`,
+          message: (
+            <Msg
+              id={messageIds.event.remindersNotSent}
+              values={{ numNotSent: remindersNotSent }}
+            />
+          ),
           requiresAction: true,
         }
       : null,
-    props.unbookedSignups
+    unbookedSignups
       ? {
           kind: 'UnbookedSignups',
-          message: `${props.unbookedSignups} unbooked signups`,
+          message: (
+            <Msg
+              id={messageIds.event.unbookedSignups}
+              values={{ numUnbooked: unbookedSignups }}
+            />
+          ),
           requiresAction: true,
         }
       : null,
-    props.event?.contact
+    event.contact
       ? null
       : {
           kind: 'NoContactSelected',
-          message: 'No contact selected',
+          message: <Msg id={messageIds.event.noContactSelected} />,
           requiresAction: true,
         },
   ];
@@ -51,6 +66,7 @@ export interface SingleProps {
   remindersNotSent: null | number;
   unbookedSignups: null | number;
   height: number;
+  width: number;
 }
 
 const Single: FC<SingleProps> = ({
@@ -58,9 +74,16 @@ const Single: FC<SingleProps> = ({
   height,
   remindersNotSent,
   unbookedSignups,
+  width,
 }) => {
   const fields = fieldsToPresent(
-    createSingleFields({ event, height, remindersNotSent, unbookedSignups }),
+    createSingleFields({
+      event,
+      height,
+      remindersNotSent,
+      unbookedSignups,
+      width,
+    }),
     height
   );
 
@@ -70,6 +93,7 @@ const Single: FC<SingleProps> = ({
       fieldGroups={[fields]}
       height={height}
       title={event.title || ''}
+      width={width}
     />
   );
 };

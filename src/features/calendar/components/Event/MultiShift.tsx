@@ -1,13 +1,20 @@
 import { FC } from 'react';
+import { FormattedTime } from 'react-intl';
 import { ScheduleOutlined } from '@mui/icons-material';
 
+import messageIds from 'features/calendar/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
 import Event, { Field, FIELD_PRESENTATION } from '.';
 
-function createMultiShiftFieldGroups(props: MultiShiftProps): Field[][] {
-  const fieldGroups: Field[][] = props.events.map((event, index) => {
+function createMultiShiftFieldGroups({
+  events,
+  remindersNotSent,
+  unbookedSignups,
+}: MultiShiftProps): Field[][] {
+  const fieldGroups: Field[][] = events.map((event, index) => {
     const isFirstEvent = index === 0;
     let fields: (null | Field)[] = [];
 
@@ -24,31 +31,50 @@ function createMultiShiftFieldGroups(props: MultiShiftProps): Field[][] {
           message: event.location.title,
           requiresAction: false,
         },
-        props.remindersNotSent
+        {
+          kind: 'ScheduledTime',
+          message: (
+            <>
+              <FormattedTime value={event.start_time} />
+              {'-'}
+              <FormattedTime value={event.end_time} />
+            </>
+          ),
+          requiresAction: false,
+        },
+        remindersNotSent
           ? {
               kind: 'RemindersNotSent',
-              message: `${props.remindersNotSent} reminders not sent`,
+              message: (
+                <Msg
+                  id={messageIds.event.remindersNotSent}
+                  values={{ numNotSent: remindersNotSent }}
+                />
+              ),
               requiresAction: true,
             }
           : null,
-        props.unbookedSignups
+        unbookedSignups
           ? {
               kind: 'UnbookedSignups',
-              message: `${props.unbookedSignups} unbooked signups`,
+              message: (
+                <Msg
+                  id={messageIds.event.unbookedSignups}
+                  values={{ numUnbooked: unbookedSignups }}
+                />
+              ),
               requiresAction: true,
             }
           : null,
-        event?.contact
+        event.contact
           ? null
           : {
               kind: 'NoContactSelected',
-              message: 'No contact selected',
+              message: <Msg id={messageIds.event.noContactSelected} />,
               requiresAction: true,
             },
       ];
     } else {
-      const scheduledTime = `${event.start_time} / ${event.end_time}`;
-
       fields = [
         {
           kind: 'Participants',
@@ -58,28 +84,44 @@ function createMultiShiftFieldGroups(props: MultiShiftProps): Field[][] {
         },
         {
           kind: 'ScheduledTime',
-          message: scheduledTime,
+          message: (
+            <>
+              <FormattedTime value={event.start_time} />
+              {'-'}
+              <FormattedTime value={event.end_time} />
+            </>
+          ),
           requiresAction: false,
         },
-        props.remindersNotSent
+        remindersNotSent
           ? {
               kind: 'RemindersNotSent',
-              message: `${props.remindersNotSent} reminders not sent`,
+              message: (
+                <Msg
+                  id={messageIds.event.remindersNotSent}
+                  values={{ numNotSent: remindersNotSent }}
+                />
+              ),
               requiresAction: true,
             }
           : null,
-        props.unbookedSignups
+        unbookedSignups
           ? {
               kind: 'UnbookedSignups',
-              message: `${props.unbookedSignups} unbooked signups`,
+              message: (
+                <Msg
+                  id={messageIds.event.unbookedSignups}
+                  values={{ numUnbooked: unbookedSignups }}
+                />
+              ),
               requiresAction: true,
             }
           : null,
-        event?.contact
+        event.contact
           ? null
           : {
               kind: 'NoContactSelected',
-              message: 'No contact selected',
+              message: <Msg id={messageIds.event.noContactSelected} />,
               requiresAction: true,
             },
       ];
@@ -98,6 +140,7 @@ export interface MultiShiftProps {
   remindersNotSent: null | number;
   unbookedSignups: null | number;
   height: number;
+  width: number;
 }
 
 const MultiShift: FC<MultiShiftProps> = ({
@@ -105,6 +148,7 @@ const MultiShift: FC<MultiShiftProps> = ({
   height,
   remindersNotSent,
   unbookedSignups,
+  width,
 }) => {
   const firstEventTitle = events[0].title;
   const anyEventIsCancelled = events.some((event) => event?.cancelled);
@@ -118,6 +162,7 @@ const MultiShift: FC<MultiShiftProps> = ({
     height,
     remindersNotSent,
     unbookedSignups,
+    width,
   }).map((group, groupIndex) => {
     return fieldsToPresent(group, availableHeightPerFieldGroup[groupIndex]).map(
       (field) => {
@@ -136,13 +181,14 @@ const MultiShift: FC<MultiShiftProps> = ({
       cancelled={anyEventIsCancelled}
       fieldGroups={fieldGroups}
       height={height}
-      title={firstEventTitle || ''}
+      title={firstEventTitle || events[0].activity.title || ''}
       topBadge={
         <TopBadge
           icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
           text={events.length.toString()}
         />
       }
+      width={width}
     />
   );
 };

@@ -1,5 +1,6 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import Arbitrary from './Arbitrary';
 import Calendar from '..';
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import MultiLocation from './MultiLocation';
@@ -19,6 +20,7 @@ const SingleEvent: ComponentStory<typeof Single> = (args) => (
     height={args.height}
     remindersNotSent={args.remindersNotSent}
     unbookedSignups={args.unbookedSignups}
+    width={args.width}
   />
 );
 
@@ -28,6 +30,7 @@ const MultiLocationEvent: ComponentStory<typeof MultiLocation> = (args) => (
     height={args.height}
     remindersNotSent={args.remindersNotSent}
     unbookedSignups={args.unbookedSignups}
+    width={args.width}
   />
 );
 
@@ -37,6 +40,17 @@ const MultiShiftEvent: ComponentStory<typeof MultiShift> = (args) => (
     height={args.height}
     remindersNotSent={args.remindersNotSent}
     unbookedSignups={args.unbookedSignups}
+    width={args.width}
+  />
+);
+
+const ArbitraryCluster: ComponentStory<typeof Arbitrary> = (args) => (
+  <Arbitrary
+    events={args.events}
+    eventsWithUnbookedSignups={args.eventsWithUnbookedSignups}
+    height={args.height}
+    remindersNotSent={args.remindersNotSent}
+    width={args.width}
   />
 );
 
@@ -74,6 +88,7 @@ singleEvent.args = {
   height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
+  width: 150,
 };
 
 export const multiLocationEvent = MultiLocationEvent.bind({});
@@ -105,13 +120,14 @@ multiLocationEvent.args = {
   height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
+  width: 200,
 };
 
 export const multiShiftEvent = MultiShiftEvent.bind({});
 multiShiftEvent.args = {
   events: [
     mockEvent({
-      end_time: '2022-06-16T09:00:00+00:00',
+      end_time: '2022-06-16T11:00:00+00:00',
       location: {
         id: 1,
         lat: 51.192702,
@@ -120,7 +136,7 @@ multiShiftEvent.args = {
       },
       num_participants_available: 16,
       num_participants_required: 20,
-      start_time: '2022-06-16T11:00:00+00:00',
+      start_time: '2022-06-16T09:00:00+00:00',
       title: 'Zetkin Code Camp 2023',
     }),
     mockEvent({
@@ -153,4 +169,54 @@ multiShiftEvent.args = {
   height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
+  width: 200,
+};
+
+export const arbitraryCluster = ArbitraryCluster.bind({});
+arbitraryCluster.args = {
+  events: [
+    mockEvent({
+      end_time: '2022-06-16T11:00:00+00:00',
+      location: {
+        id: 1,
+        lat: 51.192702,
+        lng: 12.284873,
+        title: 'Hööööör',
+      },
+      num_participants_available: 16,
+      num_participants_required: 20,
+      start_time: '2022-06-16T09:00:00+00:00',
+      title: 'Zetkin Code Camp 2023',
+    }),
+    mockEvent({
+      end_time: '2022-06-16T13:00:00+00:00',
+      location: {
+        id: 1,
+        lat: 51.192702,
+        lng: 12.284873,
+        title: 'Hööööör',
+      },
+      num_participants_available: 16,
+      num_participants_required: 20,
+      start_time: '2022-06-16T11:00:00+00:00',
+      title: 'Zetkin Code Camp 2023',
+    }),
+    mockEvent({
+      end_time: '2022-06-16T15:00:00+00:00',
+      location: {
+        id: 1,
+        lat: 51.192702,
+        lng: 12.284873,
+        title: 'Hööööör',
+      },
+      num_participants_available: 16,
+      num_participants_required: 20,
+      start_time: '2022-06-16T13:00:00+00:00',
+      title: 'Zetkin Code Camp 2023',
+    }),
+  ],
+  eventsWithUnbookedSignups: 5,
+  height: 200,
+  remindersNotSent: 4,
+  width: 200,
 };
