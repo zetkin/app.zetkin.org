@@ -113,13 +113,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       <Box alignItems="center" display="flex">
         <Checkbox size="medium" />
         <Typography variant="h5">
-          {event.title || event.activity.title}
+          {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>
       </Box>
       <Box alignItems="center" display="flex" sx={{ ml: 1 }}>
         <StatusDot state={state} />
         <Typography color="secondary" sx={{ ml: 1 }}>
-          {event.activity.title}
+          {event.activity?.title || messages.common.noActivity()}
         </Typography>
       </Box>
       <Box

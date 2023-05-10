@@ -79,10 +79,16 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
                     : messages.eventActionButtons.cancel(),
                   warningText: event.cancelled
                     ? messages.eventActionButtons.warningRestore({
-                        eventTitle: event.title || event.activity.title,
+                        eventTitle:
+                          event.title ||
+                          event.activity?.title ||
+                          messages.common.noTitle(),
                       })
                     : messages.eventActionButtons.warningCancel({
-                        eventTitle: event.title || event.activity.title,
+                        eventTitle:
+                          event.title ||
+                          event.activity?.title ||
+                          messages.common.noTitle(),
                       }),
                 });
               },
@@ -100,7 +106,10 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
                   onSubmit: handleDelete,
                   title: messages.eventActionButtons.delete(),
                   warningText: messages.eventActionButtons.warning({
-                    eventTitle: event.title || event.activity.title,
+                    eventTitle:
+                      event.title ||
+                      event.activity?.title ||
+                      messages.common.noTitle(),
                   }),
                 });
               },

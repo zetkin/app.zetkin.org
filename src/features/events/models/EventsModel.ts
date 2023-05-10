@@ -74,7 +74,7 @@ export class EventsModel extends ModelBase {
           currentEvent.end_time == event.start_time
         ) {
           if (
-            event.activity.id == currentEvent.activity.id &&
+            event.activity?.id == currentEvent.activity?.id &&
             event.location?.id == currentEvent.location?.id
           ) {
             relatedEvents.push(event);
@@ -85,7 +85,7 @@ export class EventsModel extends ModelBase {
         if (
           currentEvent.start_time == event.start_time &&
           currentEvent.end_time == event.end_time &&
-          event.activity.id == currentEvent.activity.id
+          event.activity?.id == currentEvent.activity?.id
         ) {
           relatedEvents.push(event);
         }

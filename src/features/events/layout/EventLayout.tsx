@@ -143,7 +143,9 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 }}
                 onFocus={() => setEditingTypeOrTitle(true)}
                 placeholder={
-                  data.title || data.activity.title || messages.type.untitled()
+                  data.title ||
+                  data.activity?.title ||
+                  messages.common.noTitle()
                 }
                 showBorder={editingTypeOrTitle}
                 tooltipContent={messages.tooltipContent()}

@@ -83,7 +83,7 @@ export function clusterEvents(
 
       if (cluster.kind == CLUSTER_TYPE.SINGLE) {
         if (
-          event.activity.id != lastClusterEvent.activity.id ||
+          event.activity?.id != lastClusterEvent.activity?.id ||
           event.title != lastClusterEvent.title
         ) {
           continue;
@@ -112,7 +112,7 @@ export function clusterEvents(
         // starts right after the last event in the group ends,
         // the event is part of this cluster.
         if (
-          lastClusterEvent.activity.id == event.activity.id &&
+          lastClusterEvent.activity?.id == event.activity?.id &&
           lastClusterEvent.title == event.title &&
           lastClusterEvent.location?.id == event.location?.id &&
           lastClusterEvent.end_time == event.start_time
@@ -182,7 +182,7 @@ function doesMultipleLocationEventsMatch(
     !!event1.location &&
     !!event2.location &&
     event1.location.id !== event2.location.id &&
-    event1.activity.id === event2?.activity.id &&
+    event1.activity?.id === event2?.activity?.id &&
     event1.campaign?.id === event2?.campaign?.id &&
     event1.start_time === event2?.start_time &&
     event1.end_time === event2?.end_time &&

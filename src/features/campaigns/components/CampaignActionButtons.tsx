@@ -94,16 +94,13 @@ const CampaignActionButtons: React.FunctionComponent<
 
     const defaultEnd = new Date(defaultStart.getTime() + 60 * 60 * 1000);
 
-    eventModel.createEvent(
-      //TODO:give null to activity, location ids when API supports it.
-      {
-        activity_id: 1,
-        campaign_id: campaign.id,
-        end_time: defaultEnd.toISOString(),
-        location_id: 1,
-        start_time: defaultStart.toISOString(),
-      }
-    );
+    eventModel.createEvent({
+      activity_id: null,
+      campaign_id: campaign.id,
+      end_time: defaultEnd.toISOString(),
+      location_id: null,
+      start_time: defaultStart.toISOString(),
+    });
   };
   const handleCreateCallAssignment = () => {
     const assignment = {

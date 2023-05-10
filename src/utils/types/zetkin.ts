@@ -64,7 +64,7 @@ export interface ZetkinEvent {
   activity: {
     id: number;
     title: string;
-  };
+  } | null;
   campaign: {
     id: number;
     title: string;

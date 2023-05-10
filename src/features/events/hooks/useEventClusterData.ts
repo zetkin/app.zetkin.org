@@ -3,9 +3,11 @@ import { EnvContext } from 'core/env/EnvContext';
 import { EventState } from 'features/events/models/EventDataModel';
 import getEventStats from 'features/events/rpc/getEventStats';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
+import messageIds from '../l10n/messageIds';
 import { RootState } from 'core/store';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivityList/items/ActivityListItem';
 import { useContext } from 'react';
+import { useMessages } from 'core/i18n';
 import { useStore } from 'react-redux';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { statsLoad, statsLoaded } from 'features/events/store';
@@ -22,6 +24,7 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
   );
 
   let statsLoading = false;
+  const messages = useMessages(messageIds);
   const store = useStore<RootState>();
   const state = store.getState();
   const env = useContext(EnvContext);
@@ -88,7 +91,8 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
   const eventId = firstEvent.id;
   const startTime = firstEvent.start_time;
   const endTime = cluster.events[cluster.events.length - 1].end_time;
-  const title = firstEvent.title || firstEvent.activity.title;
+  const title =
+    firstEvent.title || firstEvent.activity?.title || messages.common.noTitle();
 
   return {
     allHaveContacts,

@@ -3,6 +3,8 @@ import NextLink from 'next/link';
 import { Box, Link, Typography } from '@mui/material';
 
 import { getParticipantsStatusColor } from 'features/events/utils/eventUtils';
+import messageIds from '../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
@@ -12,6 +14,7 @@ interface RelatedEventProps {
 }
 
 const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
+  const messages = useMessages(messageIds);
   return (
     <Box display="flex" flexDirection="column">
       <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -22,7 +25,11 @@ const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
           passHref
         >
           <Link>
-            <Typography>{event.title || event.activity.title}</Typography>
+            <Typography>
+              {event.title ||
+                event.activity?.title ||
+                messages.common.noTitle()}
+            </Typography>
           </Link>
         </NextLink>
         <ZUINumberChip

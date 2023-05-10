@@ -4,11 +4,14 @@ import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
+  const messages = useMessages(messageIds);
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
@@ -36,7 +39,9 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           }}
         />
         {/* Title */}
-        <Typography>{event.title || event.activity.title}</Typography>
+        <Typography>
+          {event.title || event.activity?.title || messages.common.noTitle()}
+        </Typography>
         {/* Time */}
         <Typography color={theme.palette.secondary.main} component={'div'}>
           <Box alignItems="center" display="flex" gap={0.5}>

@@ -7,7 +7,9 @@ import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationName from '../../LocationName';
+import messageIds from 'features/events/l10n/messageIds';
 import StatusDot from '../StatusDot';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
@@ -24,6 +26,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   onEventClick,
 }) => {
   const intl = useIntl();
+  const messages = useMessages(messageIds);
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
@@ -57,8 +60,9 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
                 <LocationName location={event.location} />
               )}
               {clusterType == CLUSTER_TYPE.MULTI_SHIFT && timeSpan}
-              {clusterType == CLUSTER_TYPE.ARBITRARY &&
-                (event.title || event.activity.title)}
+              {(clusterType == CLUSTER_TYPE.ARBITRARY &&
+                (event.title || event.activity?.title)) ||
+                messages.common.noTitle()}
             </Typography>
           </Box>
           <Box alignItems="center" display="flex">

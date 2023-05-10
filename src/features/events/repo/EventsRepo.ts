@@ -46,7 +46,7 @@ export type ZetkinEventPatchBody = Partial<
     'id' | 'activity' | 'campaign' | 'location' | 'organization'
   >
 > & {
-  activity_id?: number;
+  activity_id?: number | null;
   campaign_id?: number;
   cancelled?: string | null;
   contact_id?: number | null;

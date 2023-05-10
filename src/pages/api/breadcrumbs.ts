@@ -179,12 +179,21 @@ async function fetchElements(
     const event = await apiFetch(`/orgs/${orgId}/actions/${fieldValue}`).then(
       (res) => res.json()
     );
-    return [
-      {
-        href: basePath + '/' + fieldValue,
-        label: event.data.title || event.data.activity.title,
-      },
-    ];
+    if (event.title || event.activity?.title) {
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          label: event.title || event.activity?.title,
+        },
+      ];
+    } else {
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          labelMsg: 'untitledEvent',
+        },
+      ];
+    }
   } else if (fieldName == 'folderId') {
     const folderId = parseInt(fieldValue);
     const folderElements = await fetchFolders(
