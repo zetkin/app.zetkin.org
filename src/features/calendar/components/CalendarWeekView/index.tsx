@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { useState } from 'react';
+import { useStore } from 'react-redux';
 import {
   ListItemIcon,
   ListItemText,
@@ -21,7 +22,7 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import theme from 'theme';
-import { useStore } from 'react-redux';
+import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
 import { useEnv, useNumericRouteParams } from 'core/hooks';
@@ -49,6 +50,13 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
 
   const dayDates = range(7).map((weekday) => {
     return focusWeekStartDay.day(weekday + 1).toDate();
+  });
+
+  const { orgId, campId } = useNumericRouteParams();
+  const eventsByDate = useWeekCalendarEvents({
+    campaignId: campId,
+    dates: dayDates,
+    orgId,
   });
 
   return (
@@ -118,6 +126,9 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
                 (24 * 60) -
               pendingTop
             : 0;
+
+          const lanes = eventsByDate[index].lanes;
+
           return (
             <Box
               key={date.toISOString()}
@@ -154,6 +165,45 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
                 }}
                 onDragStart={() => setPendingEvent(null)}
               >
+                {lanes.flatMap((lane, laneIdx) => {
+                  return lane.map((cluster) => {
+                    const startTime = new Date(cluster.events[0].start_time);
+                    const endTime = new Date(
+                      cluster.events[cluster.events.length - 1].end_time
+                    );
+                    const startOffs =
+                      (startTime.getHours() + startTime.getMinutes() / 60) / 24;
+                    const endOffs =
+                      (endTime.getHours() + endTime.getMinutes() / 60) / 24;
+
+                    const height = Math.max(endOffs - startOffs, 1 / 3 / 24);
+
+                    const laneOffset = 0.15 * laneIdx;
+                    const width =
+                      1 - laneOffset - (lanes.length - laneIdx) * 0.05;
+
+                    return (
+                      <Box
+                        key={laneIdx}
+                        sx={{
+                          '&:hover': {
+                            zIndex: 100,
+                          },
+                          // TODO: This will be replaced with real event components (WIP)
+                          backgroundColor: 'rgba(255,255,255, 0.9)',
+                          border: '1px solid black',
+                          height: `${height * 100}%`,
+                          left: `${laneOffset * 100}%`,
+                          position: 'absolute',
+                          top: `${startOffs * 100}%`,
+                          width: `${width * 100}%`,
+                        }}
+                      >
+                        {cluster.kind}
+                      </Box>
+                    );
+                  });
+                })}
                 {pendingEvent && isSameDate(date, pendingEvent[0]) && (
                   <>
                     <EventGhost

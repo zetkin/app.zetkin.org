@@ -13,7 +13,7 @@ type ArbitraryEventCluster = {
   kind: CLUSTER_TYPE.ARBITRARY;
 };
 
-type AnyClusteredEvent = ClusteredEvent | ArbitraryEventCluster;
+export type AnyClusteredEvent = ClusteredEvent | ArbitraryEventCluster;
 
 export default function clusterEventsForWeekCalender(
   events: EventActivity[]
