@@ -1,24 +1,22 @@
+import { useState } from 'react';
 import {
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
   IconButton,
   InputAdornment,
   TextField,
-  Typography,
 } from '@mui/material';
 import { Clear, FilterList } from '@mui/icons-material';
 import { useSelector, useStore } from 'react-redux';
 
-import AllAndNoneToggle from './AllAndNoneToggle';
+import CheckboxFilterList from './CheckboxFilterList';
 import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/calendar/l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
 import { RootState } from 'core/store';
 import useDebounce from 'utils/hooks/useDebounce';
 import useModel from 'core/useModel';
+import { ZetkinActivity } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
   ACTION_FILTER_OPTIONS,
@@ -29,7 +27,6 @@ import {
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
 import { Msg, useMessages } from 'core/i18n';
-import { useEffect, useState } from 'react';
 
 interface EventFilterPaneProps {
   orgId: number;
@@ -39,27 +36,13 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const store = useStore<RootState>();
   const state = useSelector((state: RootState) => state.events.filters);
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
-  const [expand, setExpand] = useState(false);
   const [userInput, setUserInput] = useState<string>('');
-  const [disableReset, setDisableReset] = useState<boolean>(
-    state.selectedActions.length > 0 ||
-      state.selectedStates.length > 0 ||
-      state.selectedTypes.length > 0 ||
-      state.text !== ''
-  );
 
-  useEffect(() => {
-    if (
-      state.selectedActions.length > 0 ||
-      state.selectedStates.length > 0 ||
-      state.selectedTypes.length > 0 ||
-      state.text !== ''
-    ) {
-      setDisableReset(false);
-    } else {
-      setDisableReset(true);
-    }
-  }, [state]);
+  const disableReset =
+    state.selectedActions.length === 0 &&
+    state.selectedStates.length === 0 &&
+    state.selectedTypes.length === 0 &&
+    state.text === '';
 
   const handleCheckBox = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -69,15 +52,19 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
     store.dispatch(
       filterUpdated({
         filterCategory,
-        selectedFilterValue: [
-          filterCategory === 'selectedTypes'
-            ? parseInt(name)
-            : (name as EventFilterOptions),
-        ],
+        selectedFilterValue: [name as EventFilterOptions],
       })
     );
   };
 
+  const handleSelectNone = (filterCategory: FilterCategoryType) => {
+    store.dispatch(
+      filterUpdated({
+        filterCategory,
+        selectedFilterValue: [],
+      })
+    );
+  };
   const resetFilters = () => {
     const filterCategories: FilterCategoryType[] = [
       'selectedActions',
@@ -144,161 +131,77 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
           value={userInput}
         />
         <Box display="flex" flexDirection="column" sx={{ mt: 2 }}>
-          <FormGroup sx={{ mb: 2 }}>
-            <Box
-              alignItems="center"
-              display="flex"
-              justifyContent="space-between"
-            >
-              <Typography color="secondary" variant="body1">
-                <Msg
-                  id={messageIds.eventFilter.filterOptions.actionFilters.title}
+          <CheckboxFilterList
+            filterCategory={'selectedActions'}
+            onClickAll={(filterCategory) => {
+              store.dispatch(
+                filterUpdated({
+                  filterCategory,
+                  selectedFilterValue: Object.values(ACTION_FILTER_OPTIONS),
+                })
+              );
+            }}
+            onClickCheckbox={(e, value) => handleCheckBox(e, value)}
+            onClickNone={(filterCategory) => handleSelectNone(filterCategory)}
+            options={Object.values(ACTION_FILTER_OPTIONS).map((value) => ({
+              label: messages.eventFilter.filterOptions.actionFilters[value](),
+              value,
+            }))}
+            state={state.selectedActions}
+            title={messages.eventFilter.filterOptions.actionFilters.title()}
+          />
+          <CheckboxFilterList
+            filterCategory={'selectedStates'}
+            onClickAll={(filterCategory) => {
+              store.dispatch(
+                filterUpdated({
+                  filterCategory,
+                  selectedFilterValue: Object.values(STATE_FILTER_OPTIONS),
+                })
+              );
+            }}
+            onClickCheckbox={(e, value) => handleCheckBox(e, value)}
+            onClickNone={(filterCategory) => handleSelectNone(filterCategory)}
+            options={Object.values(STATE_FILTER_OPTIONS).map((value) => ({
+              label: messages.eventFilter.filterOptions.stateFilters[value](),
+              value,
+            }))}
+            state={state.selectedStates}
+            title={messages.eventFilter.filterOptions.stateFilters.title()}
+          />
+          <ZUIFuture future={typesModel.getTypes()}>
+            {(data) => {
+              return (
+                <CheckboxFilterList
+                  filterCategory={'selectedTypes'}
+                  onClickAll={(filterCategory) => {
+                    store.dispatch(
+                      filterUpdated({
+                        filterCategory,
+                        selectedFilterValue: data.map(
+                          (value: ZetkinActivity) => `${value.id}`
+                        ),
+                      })
+                    );
+                  }}
+                  onClickCheckbox={(e, value) => handleCheckBox(e, value)}
+                  onClickNone={(filterCategory) =>
+                    handleSelectNone(filterCategory)
+                  }
+                  options={data
+                    .map((value: ZetkinActivity) => ({
+                      label: value.title,
+                      value: `${value.id}`,
+                    }))
+                    .sort((a, b) =>
+                      a.label.toLowerCase().localeCompare(b.label.toLowerCase())
+                    )}
+                  state={state.selectedTypes}
+                  title={messages.eventFilter.filterOptions.eventTypes.title()}
                 />
-              </Typography>
-              <AllAndNoneToggle
-                filterCategory="selectedActions"
-                selectedFilterLength={state.selectedActions.length}
-              />
-            </Box>
-            <>
-              {Object.values(ACTION_FILTER_OPTIONS).map((value) => {
-                return (
-                  <FormControlLabel
-                    key={value}
-                    control={
-                      <Checkbox
-                        checked={state.selectedActions.includes(value)}
-                        name={value}
-                        onChange={(e) => handleCheckBox(e, 'selectedActions')}
-                      />
-                    }
-                    label={
-                      messageIds.eventFilter.filterOptions.actionFilters[value]
-                        ._defaultMessage
-                    }
-                    sx={{ pl: 1 }}
-                  />
-                );
-              })}
-            </>
-          </FormGroup>
-          <FormGroup sx={{ mb: 2 }}>
-            <Box
-              alignItems="center"
-              display="flex"
-              justifyContent="space-between"
-            >
-              <Typography color="secondary" variant="body1">
-                <Msg
-                  id={messageIds.eventFilter.filterOptions.stateFilters.title}
-                />
-              </Typography>
-              <AllAndNoneToggle
-                filterCategory="selectedStates"
-                selectedFilterLength={state.selectedStates.length}
-              />
-            </Box>
-            <>
-              {Object.values(STATE_FILTER_OPTIONS).map((value) => {
-                return (
-                  <FormControlLabel
-                    key={value}
-                    control={
-                      <Checkbox
-                        checked={state.selectedStates.includes(value)}
-                        name={value}
-                        onChange={(e) => handleCheckBox(e, 'selectedStates')}
-                      />
-                    }
-                    label={
-                      messageIds.eventFilter.filterOptions.stateFilters[value]
-                        ._defaultMessage
-                    }
-                    sx={{ pl: 1 }}
-                  />
-                );
-              })}
-            </>
-          </FormGroup>
-          <FormGroup sx={{ mb: 2 }}>
-            <ZUIFuture future={typesModel.getTypes()}>
-              {(data) => {
-                //sorting everytime when user clicks
-                const sortedTypes = data.sort((a, b) =>
-                  a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-                );
-
-                const types =
-                  expand || data.length <= 5
-                    ? sortedTypes
-                    : sortedTypes.slice(0, 5);
-
-                return (
-                  <>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      justifyContent="space-between"
-                    >
-                      <Typography color="secondary" variant="body1">
-                        <Msg
-                          id={
-                            messageIds.eventFilter.filterOptions.eventTypes
-                              .title
-                          }
-                        />
-                      </Typography>
-                      <AllAndNoneToggle
-                        filterCategory="selectedTypes"
-                        selectedFilterLength={state.selectedTypes.length}
-                        types={data.map((item) => item.id)}
-                      />
-                    </Box>
-                    {types.map((type) => {
-                      return (
-                        <FormControlLabel
-                          key={type.id}
-                          control={
-                            <Checkbox
-                              checked={state.selectedTypes.includes(type.id)}
-                              name={`${type.id}`}
-                              onChange={(e) =>
-                                handleCheckBox(e, 'selectedTypes')
-                              }
-                            />
-                          }
-                          label={type.title}
-                          sx={{ pl: 1 }}
-                        />
-                      );
-                    })}
-                    <Button
-                      onClick={() => setExpand(!expand)}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        width: 'fit-content',
-                      }}
-                      variant="text"
-                    >
-                      {expand && <Msg id={messageIds.eventFilter.collapse} />}
-                      {!expand && data.length - 5 > 0 && (
-                        <Typography
-                          sx={{ textDecoration: 'underline' }}
-                          variant="body2"
-                        >
-                          <Msg
-                            id={messageIds.eventFilter.expand}
-                            values={{ numOfOptions: data.length - 5 }}
-                          />
-                        </Typography>
-                      )}
-                    </Button>
-                  </>
-                );
-              }}
-            </ZUIFuture>
-          </FormGroup>
+              );
+            }}
+          </ZUIFuture>
         </Box>
       </Box>
     </>

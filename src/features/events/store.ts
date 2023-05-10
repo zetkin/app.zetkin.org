@@ -15,12 +15,13 @@ import {
 } from 'utils/types/zetkin';
 
 export enum ACTION_FILTER_OPTIONS {
-  MISSING = 'missing',
-  UNSENT = 'unsent',
-  PENDING = 'pending',
+  CONTACT_MISSING = 'missing',
+  UNSENT_NOTIFICATIONS = 'unsent',
+  SIGNUPS_PENDING = 'pending',
   UNDERBOOKED = 'underbooked',
   OVERBOOKED = 'overbooked',
 }
+
 export enum STATE_FILTER_OPTIONS {
   CANCELLED = 'cancelled',
   DRAFT = 'draft',
@@ -35,10 +36,11 @@ export type EventStats = {
   numReminded: number;
   numSignups: number;
 };
+
 export type EventFilterOptions =
   | ACTION_FILTER_OPTIONS
   | STATE_FILTER_OPTIONS
-  | number;
+  | string;
 
 export type FilterCategoryType =
   | 'selectedActions'
@@ -48,9 +50,9 @@ export type FilterCategoryType =
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   filters: {
-    selectedActions: ACTION_FILTER_OPTIONS[];
-    selectedStates: STATE_FILTER_OPTIONS[];
-    selectedTypes: number[];
+    selectedActions: string[];
+    selectedStates: string[];
+    selectedTypes: string[];
     text: string;
   };
   locationList: RemoteList<ZetkinLocation>;
@@ -146,49 +148,23 @@ const eventsSlice = createSlice({
     ) => {
       const { filterCategory, selectedFilterValue } = action.payload;
 
-      if (filterCategory === 'selectedActions') {
-        state.filters.selectedActions = filterOptions(
-          selectedFilterValue,
-          state.filters.selectedActions
-        ) as ACTION_FILTER_OPTIONS[];
+      const selectedFilterValueLength = selectedFilterValue.length;
+
+      if (selectedFilterValueLength === 0) {
+        state.filters[filterCategory] = [];
       }
 
-      if (filterCategory === 'selectedStates') {
-        state.filters.selectedStates = filterOptions(
-          selectedFilterValue,
-          state.filters.selectedStates
-        ) as STATE_FILTER_OPTIONS[];
-      }
+      const foundSelectedFilter = state.filters[filterCategory].find((item) =>
+        selectedFilterValue.includes(item)
+      );
 
-      if (filterCategory === 'selectedTypes') {
-        state.filters.selectedTypes = filterOptions(
-          selectedFilterValue,
-          state.filters.selectedTypes
-        ) as number[];
-      }
-
-      function filterOptions(
-        selectedFilterValue: EventFilterOptions[],
-        selectedFilterItems: EventFilterOptions[]
-      ) {
-        const selectedFilterValueLength = selectedFilterValue.length;
-
-        if (selectedFilterValueLength === 0) {
-          return [];
-        }
-
-        const foundSelectedFilter = selectedFilterItems.find((item) =>
-          selectedFilterValue.includes(item)
+      state.filters[filterCategory] = state.filters[filterCategory]
+        .filter((item) => !selectedFilterValue.includes(item))
+        .concat(
+          foundSelectedFilter && selectedFilterValueLength === 1
+            ? []
+            : selectedFilterValue
         );
-
-        return selectedFilterItems
-          .filter((item) => !selectedFilterValue.includes(item))
-          .concat(
-            foundSelectedFilter && selectedFilterValueLength === 1
-              ? []
-              : selectedFilterValue
-          );
-      }
     },
     locationAdded: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
