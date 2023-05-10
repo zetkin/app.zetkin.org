@@ -4,6 +4,8 @@ import React from 'react';
 import Day from './Day';
 import dayjs from 'dayjs';
 import range from 'utils/range';
+import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
+import { useNumericRouteParams } from 'core/hooks';
 import WeekNumber from './WeekNumber';
 import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
 
@@ -34,6 +36,17 @@ const CalendarMonthView = ({
   function onClickWeekHandler(rowIndex: number) {
     onClickWeek(dayjs(firstDayOfCalendar).add(rowIndex, 'week').toDate());
   }
+  const lastDayOfCalendar = new Date(firstDayOfCalendar);
+  lastDayOfCalendar.setDate(lastDayOfCalendar.getDate() + 6 * 7);
+
+  const { orgId, campId } = useNumericRouteParams();
+  const clustersByDate = useMonthCalendarEvents({
+    campaignId: campId,
+    endDate: lastDayOfCalendar,
+    maxPerDay: 5, // TODO: Don't hard-code this
+    orgId,
+    startDate: firstDayOfCalendar,
+  });
 
   return (
     <Box
@@ -67,11 +80,14 @@ const CalendarMonthView = ({
               .add(dayIndex, 'day')
               .toDate();
 
+            const clusters = clustersByDate[dayIndex].clusters;
+
             const isInFocusMonth = date.getMonth() === focusDate.getMonth();
 
             return (
               <Day
                 key={gridItemKey}
+                clusters={clusters}
                 date={date}
                 isInFocusMonth={isInFocusMonth}
                 onClick={onClickDay}
