@@ -1,15 +1,8 @@
-import { useState } from 'react';
-import {
-  Box,
-  Button,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
-import { Clear, FilterList } from '@mui/icons-material';
+import { Box, Button } from '@mui/material';
 import { useSelector, useStore } from 'react-redux';
 
 import CheckboxFilterList from './CheckboxFilterList';
+import EventInputFilter from './EventInputFilter';
 import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/calendar/l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
@@ -36,7 +29,6 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const store = useStore<RootState>();
   const state = useSelector((state: RootState) => state.events.filters);
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
-  const [userInput, setUserInput] = useState<string>('');
 
   const disableReset =
     state.selectedActions.length === 0 &&
@@ -65,6 +57,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       })
     );
   };
+
   const resetFilters = () => {
     const filterCategories: FilterCategoryType[] = [
       'selectedActions',
@@ -80,7 +73,6 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       )
     );
     store.dispatch(filterTextUpdated({ filterText: '' }));
-    setUserInput('');
   };
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {
@@ -100,35 +92,11 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
         <Msg id={messageIds.eventFilter.reset} />
       </Button>
       <Box sx={{ mt: 2 }}>
-        <TextField
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <>
-                {userInput && (
-                  <IconButton
-                    onClick={() => {
-                      setUserInput('');
-                      debouncedFinishedTyping('');
-                    }}
-                  >
-                    <Clear />
-                  </IconButton>
-                )}
-              </>
-            ),
-            startAdornment: (
-              <InputAdornment position="start">
-                <FilterList />
-              </InputAdornment>
-            ),
-          }}
-          onChange={(e) => {
-            setUserInput(e.target.value);
-            debouncedFinishedTyping(e.target.value);
-          }}
+        <EventInputFilter
+          onDebounce={(value: string) => debouncedFinishedTyping(value)}
           placeholder={messages.eventFilter.type()}
-          value={userInput}
+          reset={disableReset}
+          userText={state.text}
         />
         <Box display="flex" flexDirection="column" sx={{ mt: 2 }}>
           <CheckboxFilterList
