@@ -168,6 +168,7 @@ export default makeMessages('feat.events', {
       '({noshows, plural, =1 {1 no-show} other {# no-shows}})'
     ),
     pending: m('Pending sign-ups'),
+    recordButton: m('Record attendance'),
     remindButton: m('Remind all'),
     remindButtondisabledTooltip: m(
       'You have to assign a contact person before sending reminders'

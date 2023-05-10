@@ -19,9 +19,13 @@ import { Msg, useMessages } from 'core/i18n';
 
 type ParticipantSummaryCardProps = {
   model: EventDataModel;
+  onClickRecord: () => void;
 };
 
-const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
+const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
+  model,
+  onClickRecord,
+}) => {
   const eventData = model.getData().data;
   const respondents = model.getRespondents().data;
   const messages = useMessages(messageIds);
@@ -35,6 +39,9 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
   const contactPerson = eventData?.contact;
   const confirmedParticipants = model.getNumConfirmedParticipants();
   const noshowParticipants = model.getNumNoshowParticipants();
+
+  const hasRecordedAttendance =
+    cancelledParticipants + confirmedParticipants + noshowParticipants > 0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -196,13 +203,27 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
                 {noshowParticipants > 0 && (
                   <Typography
                     color={'GrayText'}
-                    sx={{ fontSize: '1.7em', marginLeft: '0.3em' }}
+                    ml={1}
+                    sx={{ fontSize: '1.7em' }}
                     variant="h4"
                   >
                     {messages.participantSummaryCard.noshow({
                       noshows: noshowParticipants,
                     })}
                   </Typography>
+                )}
+                {!hasRecordedAttendance && (
+                  <Box ml={2}>
+                    <Button
+                      onClick={() => onClickRecord()}
+                      size="small"
+                      variant="outlined"
+                    >
+                      <Msg
+                        id={messageIds.participantSummaryCard.recordButton}
+                      />
+                    </Button>
+                  </Box>
                 )}
               </Box>
             </Box>

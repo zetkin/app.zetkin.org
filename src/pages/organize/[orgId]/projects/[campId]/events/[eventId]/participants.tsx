@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import AddPersonButton from 'features/events/components/AddPersonButton';
 import EventContactCard from 'features/events/components/EventContactCard';
@@ -44,6 +44,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
   orgId,
 }) => {
   const [filterString, setFilterString] = useState<string>('');
+  const listRef = useRef<HTMLDivElement>();
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
@@ -55,7 +56,14 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
           <>
             <Grid container spacing={2}>
               <Grid item md={8} xs={12}>
-                <ParticipantSummaryCard model={dataModel} />
+                <ParticipantSummaryCard
+                  model={dataModel}
+                  onClickRecord={() => {
+                    if (listRef.current) {
+                      listRef.current.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                />
               </Grid>
               <Grid item md={4} xs={12}>
                 <EventContactCard
@@ -78,6 +86,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               <AddPersonButton model={dataModel} />
             </Grid>
             <EventParticipantsList
+              ref={listRef}
               data={data}
               filterString={filterString}
               model={dataModel}
