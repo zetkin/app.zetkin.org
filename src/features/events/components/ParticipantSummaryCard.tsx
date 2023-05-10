@@ -191,7 +191,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
               <Typography color={'secondary'}>
                 {messages.participantSummaryCard.confirmed()}
               </Typography>
-              <Box alignItems="flex-end" display="flex">
+              <Box alignItems="center" display="flex">
                 <Typography variant="h4">{`${confirmedParticipants}/${availParticipants}`}</Typography>
                 {noshowParticipants > 0 && (
                   <Typography
