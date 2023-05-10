@@ -10,6 +10,7 @@ interface StyleProps {
   collapsed: boolean;
   hasTopBadge: boolean;
   height: number;
+  width: number;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
@@ -26,55 +27,58 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     gap: '4px 0',
     height: ({ height }) => height,
     justifyContent: 'space-between',
-    minWidth: '275px',
-    padding: '0 4px',
+    minHeihgt: '20px',
     position: 'relative',
+    width: ({ width }) => width,
   },
   fieldGroups: {
     display: 'flex',
     flexFlow: 'column',
   },
   title: {
-    fontSize: 14,
-    paddingTop: ({ collapsed }) => (collapsed ? '0' : '4px'),
+    fontSize: '14px',
+    minHeight: '20px',
+    overflow: 'hidden',
     textDecoration: ({ cancelled }) => (cancelled ? 'line-through' : ''),
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 }));
 
 interface Participants {
   kind: 'Participants';
   requiresAction: boolean;
-  message: string;
+  message: string | JSX.Element;
 }
 
 interface Location {
   kind: 'Location';
   requiresAction: false;
-  message: string;
+  message: string | JSX.Element;
 }
 
 interface ScheduledTime {
   kind: 'ScheduledTime';
   requiresAction: false;
-  message: string;
+  message: JSX.Element;
 }
 
 interface RemindersNotSent {
   kind: 'RemindersNotSent';
   requiresAction: true;
-  message: string;
+  message: JSX.Element;
 }
 
 interface UnbookedSignups {
   kind: 'UnbookedSignups';
   requiresAction: true;
-  message: string;
+  message: JSX.Element;
 }
 
 interface NoContactSelected {
   kind: 'NoContactSelected';
   requiresAction: true;
-  message: string;
+  message: JSX.Element;
 }
 
 export enum FIELD_PRESENTATION {
@@ -100,6 +104,7 @@ interface EventProps {
   height: number;
   title: string;
   topBadge?: JSX.Element;
+  width: number;
 }
 
 const Event = ({
@@ -108,6 +113,7 @@ const Event = ({
   height,
   title,
   topBadge,
+  width,
 }: EventProps) => {
   const collapsed = !fieldGroups.some((group) => {
     return group.some(
@@ -125,38 +131,49 @@ const Event = ({
     collapsed,
     hasTopBadge: !!topBadge,
     height,
+    width,
   });
 
   return (
     <Box className={classes.container}>
       {topBadge}
-      <Typography className={classes.title}>{title}</Typography>
       {collapsed && (
-        <Box display="flex">
-          {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
-            return (
-              <Box key={`${field.kind}-${index}`} paddingLeft={1}>
-                <Field field={field} />
-              </Box>
-            );
-          })}
+        <Box alignItems="center" display="flex" paddingX={1} width="100%">
+          <Typography className={classes.title}>{title}</Typography>
+          <Box alignItems="center" display="flex">
+            {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
+              return (
+                <Box
+                  key={`${field.kind}-${index}`}
+                  paddingLeft={index > 0 ? '2px' : ''}
+                >
+                  <Field field={field} />
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
       )}
       {!collapsed && (
-        <Box className={classes.fieldGroups}>
-          {fieldGroups.map((fields, index) => (
-            <>
-              {index > 0 && <Divider />}
-              <Box paddingTop={index > 0 ? 1 : ''}>
-                <FieldGroup
-                  key={`fieldGroup-${index}`}
-                  fields={fields}
-                  height={availableHeightPerFieldGroup[index]}
-                />
-              </Box>
-            </>
-          ))}
-        </Box>
+        <>
+          <Typography className={classes.title} paddingX={1}>
+            {title}
+          </Typography>
+          <Box className={classes.fieldGroups}>
+            {fieldGroups.map((fields, index) => (
+              <>
+                {index > 0 && <Divider />}
+                <Box paddingTop={index > 0 ? 1 : ''} paddingX={1}>
+                  <FieldGroup
+                    key={`fieldGroup-${index}`}
+                    fields={fields}
+                    height={availableHeightPerFieldGroup[index]}
+                  />
+                </Box>
+              </>
+            ))}
+          </Box>
+        </>
       )}
     </Box>
   );
