@@ -33,9 +33,10 @@ const HOUR_COLUMN_WIDTH = '50px';
 
 export interface CalendarWeekViewProps {
   focusDate: Date;
+  onClickDay: (date: Date) => void;
 }
 
-const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
+const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [creating, setCreating] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
@@ -68,6 +69,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
               key={weekday}
               date={weekdayDate}
               focused={new Date().toDateString() == weekdayDate.toDateString()}
+              onClick={() => onClickDay(weekdayDate)}
             />
           );
         })}

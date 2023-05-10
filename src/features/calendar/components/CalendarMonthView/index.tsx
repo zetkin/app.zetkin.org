@@ -13,9 +13,15 @@ export const numberOfGridColumns = 8;
 
 type CalendarMonthViewProps = {
   focusDate: Date;
+  onClickDay: (date: Date) => void;
+  onClickWeek: (date: Date) => void;
 };
 
-const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
+const CalendarMonthView = ({
+  focusDate,
+  onClickDay,
+  onClickWeek,
+}: CalendarMonthViewProps) => {
   const firstDayOfMonth: Date = new Date(
     focusDate.getFullYear(),
     focusDate.getMonth(),
@@ -24,6 +30,10 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
   const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
     .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')
     .toDate();
+
+  function onClickWeekHandler(rowIndex: number) {
+    onClickWeek(dayjs(firstDayOfCalendar).add(rowIndex, 'week').toDate());
+  }
 
   return (
     <Box
@@ -45,6 +55,7 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
               return (
                 <WeekNumber
                   key={gridItemKey}
+                  onClick={() => onClickWeekHandler(columnIndex)}
                   weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
                 />
               );
@@ -63,6 +74,7 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
                 key={gridItemKey}
                 date={date}
                 isInFocusMonth={isInFocusMonth}
+                onClick={onClickDay}
               />
             );
           })

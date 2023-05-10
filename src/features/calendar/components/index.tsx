@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
@@ -8,7 +9,6 @@ import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import useModel from 'core/useModel';
-import { useRouter } from 'next/router';
 import ZUIFuture from 'zui/ZUIFuture';
 import { getActivitiesByDay, getFutureDays, getPreviousDay } from './utils';
 
@@ -18,13 +18,60 @@ export enum TimeScale {
   MONTH = 'month',
 }
 
+function getTimeScale(timeScaleStr: string) {
+  let timeScale = TimeScale.MONTH;
+  if (
+    timeScaleStr !== undefined &&
+    Object.values(TimeScale).includes(timeScaleStr as TimeScale)
+  ) {
+    timeScale = timeScaleStr as TimeScale;
+  }
+  return timeScale;
+}
+
+function getDateFromString(focusDateStr: string) {
+  let date = new Date();
+  if (focusDateStr) {
+    const d = dayjs(focusDateStr);
+    if (d.isValid()) {
+      date = d.toDate();
+    }
+  }
+  return date;
+}
+
 const Calendar = () => {
-  const [focusDate, setFocusDate] = useState<Date>(new Date());
+  const router = useRouter();
+
+  const orgId = router.query.orgId;
+
+  const focusDateStr = router.query.focusDate as string;
+  const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
+
+  const timeScaleStr = router.query.timeScale as string;
   const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
-    TimeScale.MONTH
+    getTimeScale(timeScaleStr)
   );
 
-  const { orgId } = useRouter().query;
+  useEffect(() => {
+    setFocusDate(getDateFromString(focusDateStr));
+  }, [focusDateStr]);
+
+  useEffect(() => {
+    setSelectedTimeScale(getTimeScale(timeScaleStr));
+  }, [timeScaleStr]);
+
+  useEffect(() => {
+    router.query.focusDate = dayjs(focusDate).format('YYYY-MM-DD');
+    router.query.timeScale = selectedTimeScale;
+    router.push(router, undefined, { shallow: true });
+  }, [focusDate, selectedTimeScale]);
+
+  function navigateTo(timeScale: TimeScale, date: Date) {
+    setSelectedTimeScale(timeScale);
+    setFocusDate(date);
+  }
+
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId as string))
   );
@@ -90,10 +137,17 @@ const Calendar = () => {
                 />
               )}
               {selectedTimeScale === TimeScale.WEEK && (
-                <CalendarWeekView focusDate={focusDate} />
+                <CalendarWeekView
+                  focusDate={focusDate}
+                  onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+                />
               )}
               {selectedTimeScale === TimeScale.MONTH && (
-                <CalendarMonthView focusDate={focusDate} />
+                <CalendarMonthView
+                  focusDate={focusDate}
+                  onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+                  onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
+                />
               )}
             </Box>
           </Box>
