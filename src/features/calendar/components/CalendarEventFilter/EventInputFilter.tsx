@@ -4,13 +4,13 @@ import { IconButton, InputAdornment, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 interface EventInputFilterProps {
-  onDebounce: (value: string) => void;
+  onChangeFilterText: (value: string) => void;
   placeholder: string;
   userText: string;
   reset: boolean;
 }
 const EventInputFilter = ({
-  onDebounce,
+  onChangeFilterText,
   placeholder,
   userText,
   reset,
@@ -24,7 +24,7 @@ const EventInputFilter = ({
   }, [userText]);
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {
-    onDebounce(value);
+    onChangeFilterText(value);
   }, 400);
 
   return (
@@ -37,7 +37,7 @@ const EventInputFilter = ({
               <IconButton
                 onClick={() => {
                   setUserInput('');
-                  onDebounce('');
+                  onChangeFilterText('');
                 }}
               >
                 <Clear />

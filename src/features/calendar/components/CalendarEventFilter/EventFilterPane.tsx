@@ -88,7 +88,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       </Button>
       <Box sx={{ mt: 2 }}>
         <EventInputFilter
-          onDebounce={(value: string) =>
+          onChangeFilterText={(value: string) =>
             store.dispatch(filterTextUpdated({ filterText: value }))
           }
           placeholder={messages.eventFilter.type()}
