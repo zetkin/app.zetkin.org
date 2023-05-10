@@ -93,6 +93,9 @@ export interface ZetkinEvent {
 }
 
 export type ZetkinEventParticipant = ZetkinPerson & {
+  attended: null | string;
+  cancelled: null | string;
+  noshow: null | string;
   reminder_sent: null | string;
 };
 

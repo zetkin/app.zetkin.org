@@ -1,6 +1,6 @@
-import { Delete } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
+import { CancelOutlined, Delete, RestoreOutlined } from '@mui/icons-material';
 import React, { useContext } from 'react';
 
 import EventDataModel from '../models/EventDataModel';
@@ -45,6 +45,10 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
     router.push(`/organize/${orgId}/projects/${event.campaign?.id || ''} `);
   };
 
+  const handleCancel = () => {
+    event.cancelled ? model.restoreEvent() : model.cancel();
+  };
+
   return (
     <Box alignItems="flex-end" display="flex" flexDirection="column" gap={1}>
       <Box>
@@ -60,15 +64,37 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
         <ZUIEllipsisMenu
           items={[
             {
-              id: '1',
               label: (
                 <>
-                  <Box mr={1}>
-                    <Delete />
-                  </Box>
-                  {messages.eventActionButtons.delete()}
+                  {event.cancelled
+                    ? messages.eventActionButtons.restore()
+                    : messages.eventActionButtons.cancel()}
                 </>
               ),
+              onSelect: () => {
+                showConfirmDialog({
+                  onSubmit: handleCancel,
+                  title: event.cancelled
+                    ? messages.eventActionButtons.restore()
+                    : messages.eventActionButtons.cancel(),
+                  warningText: event.cancelled
+                    ? messages.eventActionButtons.warningRestore({
+                        eventTitle: event.title || event.activity.title,
+                      })
+                    : messages.eventActionButtons.warningCancel({
+                        eventTitle: event.title || event.activity.title,
+                      }),
+                });
+              },
+
+              startIcon: event.cancelled ? (
+                <RestoreOutlined />
+              ) : (
+                <CancelOutlined />
+              ),
+            },
+            {
+              label: <>{messages.eventActionButtons.delete()}</>,
               onSelect: () => {
                 showConfirmDialog({
                   onSubmit: handleDelete,
@@ -78,6 +104,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
                   }),
                 });
               },
+              startIcon: <Delete />,
             },
           ]}
         />

@@ -13,10 +13,18 @@ export default makeMessages('feat.events', {
     noLocation: m('No physical location'),
   },
   eventActionButtons: {
+    cancel: m('Cancel'),
     delete: m('Delete'),
     publish: m('Publish'),
+    restore: m('Restore'),
     unpublish: m('Unpublish'),
     warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
+    warningCancel: m<{ eventTitle: string }>(
+      '"{eventTitle}" will be canceled.'
+    ),
+    warningRestore: m<{ eventTitle: string }>(
+      '"{eventTitle}" will be restored.'
+    ),
   },
   eventContactCard: {
     header: m('Contact'),
@@ -54,6 +62,7 @@ export default makeMessages('feat.events', {
     bookedParticipants: m('Booked Participants'),
     buttonBook: m('Book'),
     buttonCancel: m('Cancel'),
+    cancelledParticipants: m('Cancelled Participants'),
     columnEmail: m('Email'),
     columnName: m('Name'),
     columnNotified: m('Notified'),
@@ -62,11 +71,53 @@ export default makeMessages('feat.events', {
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
     ),
+    descriptionCancelled: m(
+      "These people have cancelled their participation for some reason. We keep them here so you don't try to book them again."
+    ),
     descriptionSignups: m(
       'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
     ),
     participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
+  },
+  eventPopper: {
+    backToEvents: m('Back to event list'),
+    backToLocations: m('Back to locations'),
+    backToShifts: m('Back to shift list'),
+    booked: m('Booked'),
+    cancel: m('Cancel'),
+    cancelWarning: m(
+      'If you do, remember to notify all participants and sign-ups that the event has been cancelled!'
+    ),
+    confirmCancel: m('Are you sure you want to cancel this event?'),
+    confirmDelete: m('Are you sure you want to delete this event?'),
+    contactPerson: m('Contact person'),
+    dateAndTime: m('Date & Time'),
+    delete: m('Delete'),
+    deleteWarning: m(
+      'Once the event has been deleted you will not be able to access it again.'
+    ),
+    description: m('Description'),
+    eventPageLink: m('Go to event page'),
+    events: m('Events'),
+    location: m('Location'),
+    locations: m('Locations'),
+    multiEvent: m('Multiple events'),
+    multiLocation: m('Multi-location event'),
+    multiShift: m('Multi-shift event'),
+    noContact: m('No contact person has been assigned'),
+    notified: m('Notified'),
+    pendingSignups: m('There are pending signups'),
+    publish: m('Publish'),
+    reminded: m('Reminded'),
+    shifts: m('Shifts'),
+    signups: m('Signups'),
+    unsentReminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
+  },
+  eventRelatedCard: {
+    header: m('Related events'),
   },
   form: {
     activity: m('Activity'),
@@ -111,9 +162,13 @@ export default makeMessages('feat.events', {
   participantSummaryCard: {
     bookButton: m('Book all'),
     booked: m('Notifications'),
+    cancelled: m('Cancelled'),
     header: m('Participants'),
     pending: m('Pending sign-ups'),
     remindButton: m('Remind all'),
+    remindButtondisabledTooltip: m(
+      'You have to assign a contact person before sending reminders'
+    ),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },

@@ -12,7 +12,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
-import RelatedEventCard from './RelatedEventCard';
+import RelatedEventCard from '../RelatedEvent';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput, {

@@ -142,6 +142,34 @@ const eventsSlice = createSlice({
         remoteItem(participant.id, { data: participant })
       );
     },
+    participantUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinEventParticipant]>
+    ) => {
+      const [eventId, participant] = action.payload;
+      const item = state.participantsByEventId[eventId].items.find(
+        (item) => item.id === participant.id
+      );
+
+      if (item) {
+        item.data = { ...item.data, ...participant };
+        item.mutating = [];
+      } else {
+        state.participantsByEventId[eventId].items.push(
+          remoteItem(participant.id, { data: participant })
+        );
+      }
+
+      if (participant.cancelled) {
+        // If cancelled participant was contact for event, also remove contact
+        const event = state.eventList.items.find(
+          (e) => e?.data?.id === eventId
+        );
+        if (event?.data && event?.data?.contact?.id == participant.id) {
+          event.data.contact = null;
+        }
+      }
+    },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       if (!state.participantsByEventId[eventId]) {
@@ -161,7 +189,7 @@ const eventsSlice = createSlice({
     participantsReminded: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.participantsByEventId[eventId].items.map((item) => {
-        if (item.data && item.data?.reminder_sent !== null) {
+        if (item.data && item.data?.reminder_sent == null) {
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
         }
       });
@@ -236,6 +264,7 @@ export const {
   locationsLoad,
   locationsLoaded,
   participantAdded,
+  participantUpdated,
   participantsLoad,
   participantsLoaded,
   participantsReminded,

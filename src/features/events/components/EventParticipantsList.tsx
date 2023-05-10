@@ -35,6 +35,7 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
           orgId={orgId}
           rows={model.getPendingSignUps() ?? []}
           title={messages.eventParticipantsList.signUps()}
+          type="signups"
         />
       )}
       <ParticipantListSection
@@ -46,9 +47,23 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
         filterString={filterString}
         model={model}
         orgId={orgId}
-        rows={model.getParticipants().data ?? []}
+        rows={model.getBookedParticipants()}
         title={messages.eventParticipantsList.bookedParticipants()}
+        type="booked"
       />
+      {model.getNumCancelledParticipants() > 0 && (
+        <ParticipantListSection
+          chipColor={theme.palette.grey[500]}
+          chipNumber={model.getNumCancelledParticipants().toString()}
+          description={messages.eventParticipantsList.descriptionCancelled()}
+          filterString={filterString}
+          model={model}
+          orgId={orgId}
+          rows={model.getCancelledParticipants()}
+          title={messages.eventParticipantsList.cancelledParticipants()}
+          type="cancelled"
+        />
+      )}
     </Box>
   );
 };
