@@ -5,6 +5,7 @@ import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import messageIds from 'features/events/l10n/messageIds';
+import { removeOffset } from 'utils/dateUtils';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
@@ -50,14 +51,14 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
               hour="numeric"
               hour12={false}
               minute="numeric"
-              value={event.start_time}
+              value={removeOffset(event.start_time)}
             />
             &nbsp;-&nbsp;
             <FormattedTime
               hour="numeric"
               hour12={false}
               minute="numeric"
-              value={event.end_time}
+              value={removeOffset(event.end_time)}
             />
           </Box>
         </Typography>
