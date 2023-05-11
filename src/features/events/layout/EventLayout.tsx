@@ -71,10 +71,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 <EventTypeAutocomplete
                   onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
-                    if (newValue) {
-                      // TODO: Pass null values as well, when API supports it
-                      model.setType(newValue.id);
-                    }
+                    model.setType(newValue ? newValue.id : newValue);
                     setEditingTypeOrTitle(false);
                   }}
                   onChangeNewOption={(newValueId) => model.setType(newValueId)}

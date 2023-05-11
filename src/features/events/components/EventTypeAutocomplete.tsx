@@ -50,13 +50,13 @@ type EventTypeAutocompleteProps = {
   onChangeNewOption: (newId: number) => void;
   onFocus: () => void;
   showBorder?: boolean;
-  types: ZetkinActivity[];
+  types: (ZetkinActivity | { id: null; info_text: string; title: string })[];
   typesModel: EventTypesModel;
   value: ZetkinEvent['activity'];
 };
 
 interface NewEventType {
-  id?: number;
+  id: number | null;
   title: string | null;
   createType?: boolean;
 }
@@ -82,16 +82,14 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
       const newId = types.find((item) => item.title === createdType)!.id;
-      onChangeNewOption(newId);
+      onChangeNewOption(newId!);
     }
   }, [types.length]);
 
-  if (value?.title === null) {
-    types = [
-      { id: 0, info_text: '', title: messages.type.uncategorized() },
-      ...types,
-    ];
-  }
+  types = [
+    { id: null, info_text: '', title: messages.type.uncategorized() },
+    ...types,
+  ];
 
   const eventTypes: NewEventType[] = types;
   const fuse = new Fuse(eventTypes, { keys: ['title'], threshold: 0.4 });
@@ -135,6 +133,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
 
           filtered.push({
             createType: true,
+            id: null,
             title: inputStartWithCapital,
           });
 
@@ -149,11 +148,14 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             typesModel.addType(value.title!);
             setCreatedType(value.title!);
           }
-
-          onChange({
-            id: value.id!,
-            title: value.title!,
-          });
+          onChange(
+            value.id
+              ? {
+                  id: value.id,
+                  title: value.title!,
+                }
+              : null
+          );
         }}
         onFocus={() => onFocus()}
         options={eventTypes}
@@ -189,7 +191,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             </li>
           );
         }}
-        value={value?.title ? value : { title: messages.type.uncategorized() }}
+        value={
+          value ? value : { id: null, title: messages.type.uncategorized() }
+        }
       />
     </Tooltip>
   );
