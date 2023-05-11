@@ -52,6 +52,7 @@ export default makeMessages('feat.events', {
   },
   eventParticipantsCard: {
     booked: m('Notifications'),
+    confirmed: m('Confirmed Attendance'),
     contact: m('Contact'),
     header: m('Participants'),
     noContact: m('None assigned'),
@@ -61,9 +62,13 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   eventParticipantsList: {
+    attendance: m('Attendance'),
     bookedParticipants: m('Booked Participants'),
+    buttonAttended: m('Attended'),
     buttonBook: m('Book'),
     buttonCancel: m('Cancel'),
+    buttonCancelled: m('Cancelled'),
+    buttonNoshow: m('No-show'),
     cancelledParticipants: m('Cancelled Participants'),
     columnEmail: m('Email'),
     columnName: m('Name'),
@@ -79,6 +84,8 @@ export default makeMessages('feat.events', {
     descriptionSignups: m(
       'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
     ),
+    dropDownAttended: m('Confirmed attendance'),
+    dropDownNoshow: m('Did not show up'),
     participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
   },
@@ -165,8 +172,13 @@ export default makeMessages('feat.events', {
     bookButton: m('Book all'),
     booked: m('Notifications'),
     cancelled: m('Cancelled'),
+    confirmed: m('Confirmed Attendance'),
     header: m('Participants'),
+    noshow: m<{ noshows: number }>(
+      '({noshows, plural, =1 {1 no-show} other {# no-shows}})'
+    ),
     pending: m('Pending sign-ups'),
+    recordButton: m('Record attendance'),
     remindButton: m('Remind all'),
     remindButtondisabledTooltip: m(
       'You have to assign a contact person before sending reminders'

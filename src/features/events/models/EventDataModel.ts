@@ -32,6 +32,12 @@ export default class EventDataModel extends ModelBase {
     this._repo.addParticipant(this._orgId, this._eventId, personId);
   }
 
+  attendedParticipant(personId: number) {
+    this._repo.updateParticipant(this._orgId, this._eventId, personId, {
+      status: 'attended',
+    });
+  }
+
   cancel() {
     this._repo.updateEvent(this._orgId, this._eventId, {
       cancelled: new Date().toISOString(),
@@ -102,6 +108,20 @@ export default class EventDataModel extends ModelBase {
     return participants?.filter((p) => p.cancelled != null).length ?? 0;
   }
 
+  getNumConfirmedParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants
+      ? participants.filter((p) => p.attended != null).length
+      : 0;
+  }
+
+  getNumNoshowParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants
+      ? participants.filter((p) => p.noshow != null).length
+      : 0;
+  }
+
   getNumRemindedParticipants(): number {
     const participants = this.getParticipants().data;
     return (
@@ -150,6 +170,12 @@ export default class EventDataModel extends ModelBase {
 
   getRespondents(): IFuture<ZetkinEventResponse[]> {
     return this._repo.getEventRespondents(this._orgId, this._eventId);
+  }
+
+  noShowParticipant(personId: number) {
+    this._repo.updateParticipant(this._orgId, this._eventId, personId, {
+      status: 'noshow',
+    });
   }
 
   publish() {

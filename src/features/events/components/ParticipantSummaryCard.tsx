@@ -19,9 +19,13 @@ import { Msg, useMessages } from 'core/i18n';
 
 type ParticipantSummaryCardProps = {
   model: EventDataModel;
+  onClickRecord: () => void;
 };
 
-const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
+const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
+  model,
+  onClickRecord,
+}) => {
   const eventData = model.getData().data;
   const respondents = model.getRespondents().data;
   const messages = useMessages(messageIds);
@@ -33,6 +37,11 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
 
   const signedParticipants = model.getNumSignedParticipants();
   const contactPerson = eventData?.contact;
+  const confirmedParticipants = model.getNumConfirmedParticipants();
+  const noshowParticipants = model.getNumNoshowParticipants();
+
+  const hasRecordedAttendance =
+    cancelledParticipants + confirmedParticipants + noshowParticipants > 0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -145,44 +154,80 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
               )}
             </Box>
           </Box>
-          <Box display="flex" flexDirection="column">
-            <Typography color={'secondary'}>
-              {messages.participantSummaryCard.booked()}
-            </Typography>
-            <Box display="flex">
-              <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
-              {remindedParticipants < availParticipants && (
-                <Tooltip
-                  arrow
-                  placement="top-start"
-                  title={
-                    contactPerson == null
-                      ? messages.participantSummaryCard.remindButtondisabledTooltip()
-                      : ''
-                  }
-                >
-                  <span>
+          {new Date(eventData.start_time) > new Date() ? (
+            <Box display="flex" flexDirection="column">
+              <Typography color={'secondary'}>
+                {messages.participantSummaryCard.booked()}
+              </Typography>
+              <Box display="flex">
+                <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
+                {remindedParticipants < availParticipants && (
+                  <Tooltip
+                    arrow
+                    placement="top-start"
+                    title={
+                      contactPerson == null
+                        ? messages.participantSummaryCard.remindButtondisabledTooltip()
+                        : ''
+                    }
+                  >
+                    <span>
+                      <Button
+                        disabled={contactPerson == null}
+                        onClick={() => {
+                          model.sendReminders();
+                        }}
+                        size="small"
+                        startIcon={<Check />}
+                        sx={{
+                          marginLeft: 2,
+                        }}
+                        variant="outlined"
+                      >
+                        <Msg
+                          id={messageIds.participantSummaryCard.remindButton}
+                        />
+                      </Button>
+                    </span>
+                  </Tooltip>
+                )}
+              </Box>
+            </Box>
+          ) : (
+            <Box display="flex" flexDirection="column">
+              <Typography color={'secondary'}>
+                {messages.participantSummaryCard.confirmed()}
+              </Typography>
+              <Box alignItems="center" display="flex">
+                <Typography variant="h4">{`${confirmedParticipants}/${availParticipants}`}</Typography>
+                {noshowParticipants > 0 && (
+                  <Typography
+                    color={'GrayText'}
+                    ml={1}
+                    sx={{ fontSize: '1.7em' }}
+                    variant="h4"
+                  >
+                    {messages.participantSummaryCard.noshow({
+                      noshows: noshowParticipants,
+                    })}
+                  </Typography>
+                )}
+                {!hasRecordedAttendance && (
+                  <Box ml={2}>
                     <Button
-                      disabled={contactPerson == null}
-                      onClick={() => {
-                        model.sendReminders();
-                      }}
+                      onClick={() => onClickRecord()}
                       size="small"
-                      startIcon={<Check />}
-                      sx={{
-                        marginLeft: 2,
-                      }}
                       variant="outlined"
                     >
                       <Msg
-                        id={messageIds.participantSummaryCard.remindButton}
+                        id={messageIds.participantSummaryCard.recordButton}
                       />
                     </Button>
-                  </span>
-                </Tooltip>
-              )}
+                  </Box>
+                )}
+              </Box>
             </Box>
-          </Box>
+          )}
           <Box display="flex" flexDirection="column">
             <Typography color={'secondary'}>
               {messages.participantSummaryCard.cancelled()}
