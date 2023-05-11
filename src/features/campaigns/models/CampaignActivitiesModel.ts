@@ -146,10 +146,10 @@ export default class CampaignActivitiesModel extends ModelBase {
     const tasksFuture = this._tasksRepo.getTasks(this._orgId);
 
     if (
-      callAssignmentsFuture.isLoading ||
-      eventsFuture.isLoading ||
-      surveysFuture.isLoading ||
-      tasksFuture.isLoading
+      (callAssignmentsFuture.isLoading && !callAssignmentsFuture.data) ||
+      (eventsFuture.isLoading && !eventsFuture.data) ||
+      (surveysFuture.isLoading && !surveysFuture.data) ||
+      (tasksFuture.isLoading && !tasksFuture.data)
     ) {
       return new LoadingFuture();
     }
