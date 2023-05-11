@@ -4,6 +4,26 @@ export default makeMessages('feat.calendar', {
   createMenu: {
     singleEvent: m('Create single event'),
   },
+  event: {
+    differentLocations: m<{ numLocations: number }>(
+      '{numLocations} different locations'
+    ),
+    events: m('Events'),
+    noContactSelected: m('No contact selected'),
+    remindersNotSent: m<{ numNotSent: number }>(
+      '{numNotSent} Reminders not sent'
+    ),
+    unbookedSignups: m<{ numUnbooked: number }>(
+      '{numUnbooked} Unbooked signups'
+    ),
+    underbooked: m<{ numUnderbooked: number }>(
+      '{numUnderbooked} Underbooked events'
+    ),
+    withSignups: m<{ numWithSignups: number }>('{numWithSignups} With signups'),
+    withoutContact: m<{ numWithoutContact: number }>(
+      '{numWithoutContact} Without contact'
+    ),
+  },
   eventFilter: {
     collapse: m('Collapse'),
     expand: m<{ numOfOptions: number }>(
