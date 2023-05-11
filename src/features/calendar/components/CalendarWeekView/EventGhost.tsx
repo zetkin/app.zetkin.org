@@ -17,9 +17,9 @@ const EventGhost = forwardRef<HTMLDivElement, EventGhostProps>(
         sx={{
           backgroundColor: 'white',
           borderColor: theme.palette.grey['500'],
-          borderRadius: '0.5em',
+          borderRadius: '4px',
           borderStyle: 'solid',
-          borderWidth: 2,
+          borderWidth: 1,
           boxShadow: elevated ? '4px 4px 10px rgba(0,0,0,0.2)' : undefined,
           height: height,
           left: 0,
