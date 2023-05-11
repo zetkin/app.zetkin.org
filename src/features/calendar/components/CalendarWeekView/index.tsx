@@ -14,6 +14,7 @@ import {
 
 import DayHeader from './DayHeader';
 import { Event } from '@mui/icons-material';
+import EventCluster from '../EventCluster';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
@@ -29,7 +30,7 @@ import { useEnv, useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(isoWeek);
 
-const HOUR_HEIGHT = 5;
+const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '50px';
 
 export interface CalendarWeekViewProps {
@@ -100,7 +101,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
               <Box
                 key={hour}
                 display="flex"
-                height={`${HOUR_HEIGHT}em`}
+                height={`${HOUR_HEIGHT}px`}
                 justifyContent="flex-end"
               >
                 <Typography color={theme.palette.grey[500]} variant="caption">
@@ -135,9 +136,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
             <Box
               key={date.toISOString()}
               flexGrow={1}
-              height={`${HOUR_HEIGHT * 24}em`}
+              height={`${HOUR_HEIGHT * 24}px`}
               sx={{
-                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
+                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}px)`,
                 marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
               }}
             >
@@ -184,6 +185,8 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                     const width =
                       1 - laneOffset - (lanes.length - laneIdx) * 0.05;
 
+                    const pixelHeight = height * HOUR_HEIGHT * 24;
+
                     return (
                       <Box
                         key={laneIdx}
@@ -192,16 +195,13 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                             zIndex: 100,
                           },
                           // TODO: This will be replaced with real event components (WIP)
-                          backgroundColor: 'rgba(255,255,255, 0.9)',
-                          border: '1px solid black',
-                          height: `${height * 100}%`,
                           left: `${laneOffset * 100}%`,
                           position: 'absolute',
                           top: `${startOffs * 100}%`,
                           width: `${width * 100}%`,
                         }}
                       >
-                        {cluster.kind}
+                        <EventCluster cluster={cluster} height={pixelHeight} />
                       </Box>
                     );
                   });
