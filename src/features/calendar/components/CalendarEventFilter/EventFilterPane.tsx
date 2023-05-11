@@ -87,7 +87,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
               label: messages.eventFilter.filterOptions.actionFilters[value](),
               value,
             }))}
-            state={state.selectedActions}
+            selectedValues={state.selectedActions}
             title={messages.eventFilter.filterOptions.actionFilters.title()}
           />
           <CheckboxFilterList
@@ -104,7 +104,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
               label: messages.eventFilter.filterOptions.stateFilters[value](),
               value,
             }))}
-            state={state.selectedStates}
+            selectedValues={state.selectedStates}
             title={messages.eventFilter.filterOptions.stateFilters.title()}
           />
           <ZUIFuture future={typesModel.getTypes()}>
@@ -128,7 +128,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
                     .sort((a, b) =>
                       a.label.toLowerCase().localeCompare(b.label.toLowerCase())
                     )}
-                  state={state.selectedTypes}
+                  selectedValues={state.selectedTypes}
                   title={messages.eventFilter.filterOptions.eventTypes.title()}
                 />
               );

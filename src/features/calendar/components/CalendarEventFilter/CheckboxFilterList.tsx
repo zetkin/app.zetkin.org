@@ -17,14 +17,14 @@ interface CheckboxFilterListProps {
   onFilterChange: (value: string[]) => void;
   maxCollapsed: number;
   options: { label: string; value: string }[];
-  state: EventFilterOptions[];
+  selectedValues: EventFilterOptions[];
   title: string;
 }
 const CheckboxFilterList = ({
   maxCollapsed,
   onFilterChange,
   options,
-  state,
+  selectedValues,
   title,
 }: CheckboxFilterListProps) => {
   const [expand, setExpand] = useState(false);
@@ -43,7 +43,7 @@ const CheckboxFilterList = ({
               onFilterChange(options.map((item) => item.value))
             }
             onSelectNone={() => onFilterChange([])}
-            selectedFilterLength={state.length}
+            selectedFilterLength={selectedValues.length}
           />
         </Box>
         {visibleOptions.map((item) => {
@@ -52,16 +52,16 @@ const CheckboxFilterList = ({
               key={item.value}
               control={
                 <Checkbox
-                  checked={state.includes(item.value)}
+                  checked={selectedValues.includes(item.value)}
                   name={item.value}
                   onChange={() => {
-                    const alreadyExists = state.includes(item.value);
+                    const alreadyExists = selectedValues.includes(item.value);
                     onFilterChange(
                       alreadyExists
-                        ? state.filter(
+                        ? selectedValues.filter(
                             (filterOption) => filterOption !== item.value
                           )
-                        : [...state, item.value]
+                        : [...selectedValues, item.value]
                     );
                   }}
                 />
