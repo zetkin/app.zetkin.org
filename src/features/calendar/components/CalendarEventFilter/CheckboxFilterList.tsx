@@ -9,38 +9,27 @@ import {
 } from '@mui/material';
 
 import AllAndNoneToggle from './AllAndNoneToggle';
+import { EventFilterOptions } from 'features/events/store';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { EventFilterOptions, FilterCategoryType } from 'features/events/store';
 
 interface CheckboxFilterListProps {
-  filterCategory: FilterCategoryType;
-  onClickAll: (value: FilterCategoryType) => void;
-  onClickCheckbox: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    value: FilterCategoryType
-  ) => void;
-  onClickNone: (value: FilterCategoryType) => void;
+  onFilterChange: (value: string[]) => void;
+  maxCollapsed: number;
   options: { label: string; value: string }[];
   state: EventFilterOptions[];
   title: string;
 }
 const CheckboxFilterList = ({
-  onClickCheckbox,
+  maxCollapsed,
+  onFilterChange,
   options,
   state,
-  filterCategory,
-  onClickAll,
-  onClickNone,
   title,
 }: CheckboxFilterListProps) => {
   const [expand, setExpand] = useState(false);
 
-  const sortedTypes = options.slice(
-    0,
-    expand || options.length <= 5 ? options.length : 5
-  );
-
+  const visibleOptions = expand ? options : options.slice(0, maxCollapsed);
   return (
     <>
       <FormGroup sx={{ mb: 2 }}>
@@ -50,47 +39,39 @@ const CheckboxFilterList = ({
           </Typography>
           <AllAndNoneToggle
             maxLength={options.length}
-            onSelectAll={() => onClickAll(filterCategory)}
-            onSelectNone={() => onClickNone(filterCategory)}
+            onSelectAll={() =>
+              onFilterChange(options.map((item) => item.value))
+            }
+            onSelectNone={() => onFilterChange([])}
             selectedFilterLength={state.length}
           />
         </Box>
-        {filterCategory != 'selectedTypes' &&
-          options.map((item) => {
-            return (
-              <FormControlLabel
-                key={item.value}
-                control={
-                  <Checkbox
-                    checked={state.includes(item.value)}
-                    name={item.value}
-                    onChange={(e) => onClickCheckbox(e, filterCategory)}
-                  />
-                }
-                label={item.label}
-                sx={{ pl: 1 }}
-              />
-            );
-          })}
-        {filterCategory == 'selectedTypes' &&
-          sortedTypes.map((item) => {
-            return (
-              <FormControlLabel
-                key={item.value}
-                control={
-                  <Checkbox
-                    checked={state.includes(item.value)}
-                    name={item.value}
-                    onChange={(e) => onClickCheckbox(e, filterCategory)}
-                  />
-                }
-                label={item.label}
-                sx={{ pl: 1 }}
-              />
-            );
-          })}
-
-        {options.length - 5 > 0 && (
+        {visibleOptions.map((item) => {
+          return (
+            <FormControlLabel
+              key={item.value}
+              control={
+                <Checkbox
+                  checked={state.includes(item.value)}
+                  name={item.value}
+                  onChange={() => {
+                    const alreadyExists = state.includes(item.value);
+                    onFilterChange(
+                      alreadyExists
+                        ? state.filter(
+                            (filterOption) => filterOption !== item.value
+                          )
+                        : [...state, item.value]
+                    );
+                  }}
+                />
+              }
+              label={item.label}
+              sx={{ pl: 1 }}
+            />
+          );
+        })}
+        {options.length > maxCollapsed && (
           <Button
             onClick={() => setExpand(!expand)}
             sx={{
@@ -105,7 +86,7 @@ const CheckboxFilterList = ({
               <Typography sx={{ textDecoration: 'underline' }} variant="body2">
                 <Msg
                   id={messageIds.eventFilter.expand}
-                  values={{ numOfOptions: options.length - 5 }}
+                  values={{ numOfOptions: options.length - maxCollapsed }}
                 />
               </Typography>
             )}

@@ -12,7 +12,6 @@ import { ZetkinActivity } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
   ACTION_FILTER_OPTIONS,
-  EventFilterOptions,
   FilterCategoryType,
   filterTextUpdated,
   filterUpdated,
@@ -35,35 +34,13 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
     state.selectedTypes.length === 0 &&
     state.text === '';
 
-  const handleCheckBox = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    filterCategory: FilterCategoryType
-  ) => {
-    const { name } = e.target;
-    store.dispatch(
-      filterUpdated({
-        filterCategory,
-        selectedFilterValue: [name as EventFilterOptions],
-      })
-    );
-  };
-
-  const handleSelectNone = (filterCategory: FilterCategoryType) => {
-    store.dispatch(
-      filterUpdated({
-        filterCategory,
-        selectedFilterValue: [],
-      })
-    );
-  };
-
   const resetFilters = () => {
     const filterCategories: FilterCategoryType[] = [
       'selectedActions',
       'selectedStates',
       'selectedTypes',
     ];
-    filterCategories.map((filterCategory) =>
+    filterCategories.forEach((filterCategory) =>
       store.dispatch(
         filterUpdated({
           filterCategory: filterCategory,
@@ -97,17 +74,15 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
         />
         <Box display="flex" flexDirection="column" sx={{ mt: 2 }}>
           <CheckboxFilterList
-            filterCategory={'selectedActions'}
-            onClickAll={(filterCategory) => {
+            maxCollapsed={5}
+            onFilterChange={(value) =>
               store.dispatch(
                 filterUpdated({
-                  filterCategory,
-                  selectedFilterValue: Object.values(ACTION_FILTER_OPTIONS),
+                  filterCategory: 'selectedActions',
+                  selectedFilterValue: value,
                 })
-              );
-            }}
-            onClickCheckbox={(e, value) => handleCheckBox(e, value)}
-            onClickNone={(filterCategory) => handleSelectNone(filterCategory)}
+              )
+            }
             options={Object.values(ACTION_FILTER_OPTIONS).map((value) => ({
               label: messages.eventFilter.filterOptions.actionFilters[value](),
               value,
@@ -116,17 +91,15 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
             title={messages.eventFilter.filterOptions.actionFilters.title()}
           />
           <CheckboxFilterList
-            filterCategory={'selectedStates'}
-            onClickAll={(filterCategory) => {
+            maxCollapsed={4}
+            onFilterChange={(value) =>
               store.dispatch(
                 filterUpdated({
-                  filterCategory,
-                  selectedFilterValue: Object.values(STATE_FILTER_OPTIONS),
+                  filterCategory: 'selectedStates',
+                  selectedFilterValue: value,
                 })
-              );
-            }}
-            onClickCheckbox={(e, value) => handleCheckBox(e, value)}
-            onClickNone={(filterCategory) => handleSelectNone(filterCategory)}
+              )
+            }
             options={Object.values(STATE_FILTER_OPTIONS).map((value) => ({
               label: messages.eventFilter.filterOptions.stateFilters[value](),
               value,
@@ -138,20 +111,14 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
             {(data) => {
               return (
                 <CheckboxFilterList
-                  filterCategory={'selectedTypes'}
-                  onClickAll={(filterCategory) => {
+                  maxCollapsed={5}
+                  onFilterChange={(value) =>
                     store.dispatch(
                       filterUpdated({
-                        filterCategory,
-                        selectedFilterValue: data.map(
-                          (value: ZetkinActivity) => `${value.id}`
-                        ),
+                        filterCategory: 'selectedTypes',
+                        selectedFilterValue: value,
                       })
-                    );
-                  }}
-                  onClickCheckbox={(e, value) => handleCheckBox(e, value)}
-                  onClickNone={(filterCategory) =>
-                    handleSelectNone(filterCategory)
+                    )
                   }
                   options={data
                     .map((value: ZetkinActivity) => ({

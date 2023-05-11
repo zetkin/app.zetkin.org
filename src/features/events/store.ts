@@ -147,24 +147,7 @@ const eventsSlice = createSlice({
       }>
     ) => {
       const { filterCategory, selectedFilterValue } = action.payload;
-
-      const selectedFilterValueLength = selectedFilterValue.length;
-
-      if (selectedFilterValueLength === 0) {
-        state.filters[filterCategory] = [];
-      }
-
-      const foundSelectedFilter = state.filters[filterCategory].find((item) =>
-        selectedFilterValue.includes(item)
-      );
-
-      state.filters[filterCategory] = state.filters[filterCategory]
-        .filter((item) => !selectedFilterValue.includes(item))
-        .concat(
-          foundSelectedFilter && selectedFilterValueLength === 1
-            ? []
-            : selectedFilterValue
-        );
+      state.filters[filterCategory] = selectedFilterValue;
     },
     locationAdded: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
