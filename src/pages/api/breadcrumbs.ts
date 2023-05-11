@@ -179,11 +179,11 @@ async function fetchElements(
     const event = await apiFetch(`/orgs/${orgId}/actions/${fieldValue}`).then(
       (res) => res.json()
     );
-    if (event.title || event.activity?.title) {
+    if (event.data.title || event.data.activity?.title) {
       return [
         {
           href: basePath + '/' + fieldValue,
-          label: event.title || event.activity?.title,
+          label: event.data.title || event.data.activity?.title,
         },
       ];
     } else {
