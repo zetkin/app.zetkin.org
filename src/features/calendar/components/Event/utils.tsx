@@ -1,6 +1,6 @@
 import { Field, FIELD_PRESENTATION, PresentableField } from '.';
 
-const titleHeight = 16;
+const titleHeight = 14;
 const fieldHeight = 18;
 const containerBottomPadding = 4;
 const spaceBetweenFields = 4;
@@ -11,16 +11,17 @@ export function availableHeightByEvent(
   numberOfEvents: number
 ): Record<number, number> {
   const availableHeights: Record<number, number> = {};
+  const actualPixels = totalAvailableHeight - (numberOfEvents - 1);
 
   for (let i = 0; i < numberOfEvents; i++) {
     const isFirstEvent = i === 0;
 
     availableHeights[i] = isFirstEvent
-      ? totalAvailableHeight / numberOfEvents -
+      ? actualPixels / numberOfEvents -
         titleHeight -
         containerBottomPadding -
         spaceBetweenFields
-      : totalAvailableHeight / numberOfEvents;
+      : actualPixels / numberOfEvents;
   }
 
   return availableHeights;

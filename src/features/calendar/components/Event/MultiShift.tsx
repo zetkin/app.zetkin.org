@@ -140,7 +140,7 @@ export interface MultiShiftProps {
   remindersNotSent: null | number;
   unbookedSignups: null | number;
   height: number;
-  width: number;
+  width: string;
 }
 
 const MultiShift: FC<MultiShiftProps> = ({
@@ -184,6 +184,7 @@ const MultiShift: FC<MultiShiftProps> = ({
       title={firstEventTitle || events[0].activity.title || ''}
       topBadge={
         <TopBadge
+          cancelled={anyEventIsCancelled}
           icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
           text={events.length.toString()}
         />

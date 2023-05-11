@@ -1,5 +1,5 @@
 import makeStyles from '@mui/styles/makeStyles';
-import { Box, Divider, Theme, Typography } from '@mui/material';
+import { Box, Theme, Typography } from '@mui/material';
 
 import Field from './Field';
 import FieldGroup from './FieldGroup';
@@ -10,13 +10,29 @@ interface StyleProps {
   collapsed: boolean;
   hasTopBadge: boolean;
   height: number;
-  width: number;
+  width: string;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+  collapsedContainer: {
+    alignItems: 'center',
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
+    borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
+    borderTopRightRadius: 4,
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'space-between',
+    padding: '0 4px 0 8px',
+    width: '100%',
+  },
   container: {
     alignItems: ({ collapsed }) => (collapsed ? 'center' : ''),
-    border: `1px solid ${theme.palette.divider}`,
+    background: ({ cancelled }) =>
+      `linear-gradient(to right, ${
+        cancelled ? theme.palette.secondary.main : theme.palette.primary.main
+      } 4px, white 4px)`,
+    border: `1px solid ${theme.palette.grey[300]}`,
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
     borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
@@ -31,6 +47,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     position: 'relative',
     width: ({ width }) => width,
   },
+  fieldGroupContainer: {
+    borderTop: `1px solid ${theme.palette.grey[300]}`,
+  },
   fieldGroups: {
     display: 'flex',
     flexFlow: 'column',
@@ -39,10 +58,13 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontSize: '14px',
     minHeight: '20px',
     overflow: 'hidden',
-    paddingTop: '4px',
     textDecoration: ({ cancelled }) => (cancelled ? 'line-through' : ''),
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  titleContainer: {
+    borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
+    borderTopRightRadius: 4,
   },
 }));
 
@@ -105,7 +127,7 @@ interface EventProps {
   height: number;
   title: string;
   topBadge?: JSX.Element;
-  width: number;
+  width: string;
 }
 
 const Event = ({
@@ -139,7 +161,7 @@ const Event = ({
     <Box className={classes.container}>
       {topBadge}
       {collapsed && (
-        <Box alignItems="center" display="flex" paddingX={1} width="100%">
+        <Box className={classes.collapsedContainer}>
           <Typography className={classes.title}>{title}</Typography>
           <Box display="flex">
             {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
@@ -156,25 +178,26 @@ const Event = ({
         </Box>
       )}
       {!collapsed && (
-        <>
-          <Typography className={classes.title} paddingX={1}>
-            {title}
-          </Typography>
+        <Box height="100%">
+          <Box className={classes.titleContainer}>
+            <Typography className={classes.title} paddingX={1}>
+              {title}
+            </Typography>
+          </Box>
           <Box className={classes.fieldGroups}>
             {fieldGroups.map((fields, index) => (
-              <>
-                {index > 0 && <Divider />}
-                <Box paddingTop={index > 0 ? 1 : ''} paddingX={1}>
-                  <FieldGroup
-                    key={`fieldGroup-${index}`}
-                    fields={fields}
-                    height={availableHeightPerFieldGroup[index]}
-                  />
-                </Box>
-              </>
+              <Box
+                key={`fieldGroup-${index}`}
+                className={index > 0 ? classes.fieldGroupContainer : ''}
+              >
+                <FieldGroup
+                  fields={fields}
+                  height={availableHeightPerFieldGroup[index]}
+                />
+              </Box>
             ))}
           </Box>
-        </>
+        </Box>
       )}
     </Box>
   );

@@ -10,11 +10,13 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexFlow: 'column',
     gap: '4px 0',
+    paddingLeft: '8px',
     position: 'relative',
   },
   fieldsWithIconOnly: {
     display: 'flex',
     gap: '0 4px',
+    paddingRight: '4px',
     position: 'absolute',
     right: 0,
     top: 2,

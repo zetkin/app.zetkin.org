@@ -88,7 +88,7 @@ singleEvent.args = {
   height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
-  width: 150,
+  width: '150px',
 };
 
 export const multiLocationEvent = MultiLocationEvent.bind({});
@@ -120,7 +120,7 @@ multiLocationEvent.args = {
   height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
-  width: 200,
+  width: '150px',
 };
 
 export const multiShiftEvent = MultiShiftEvent.bind({});
@@ -169,7 +169,7 @@ multiShiftEvent.args = {
   height: 200,
   remindersNotSent: 4,
   unbookedSignups: 5,
-  width: 200,
+  width: '150px',
 };
 
 export const arbitraryCluster = ArbitraryCluster.bind({});
@@ -218,5 +218,5 @@ arbitraryCluster.args = {
   eventsWithUnbookedSignups: 5,
   height: 200,
   remindersNotSent: 4,
-  width: 200,
+  width: '150px',
 };

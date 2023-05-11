@@ -66,7 +66,7 @@ export interface SingleProps {
   remindersNotSent: null | number;
   unbookedSignups: null | number;
   height: number;
-  width: number;
+  width: string;
 }
 
 const Single: FC<SingleProps> = ({

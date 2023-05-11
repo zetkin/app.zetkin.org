@@ -13,7 +13,7 @@ export interface ArbitraryProps {
   height: number;
   remindersNotSent: null | number;
   eventsWithUnbookedSignups: null | number;
-  width: number;
+  width: string;
 }
 
 function createArbitraryFields({
@@ -114,6 +114,7 @@ const Arbitrary: FC<ArbitraryProps> = ({
       title={messages.event.events()}
       topBadge={
         <TopBadge
+          cancelled={anyEventIsCancelled}
           icon={<EventOutlined color="inherit" fontSize="inherit" />}
           text={events.length.toString()}
         />

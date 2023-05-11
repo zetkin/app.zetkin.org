@@ -82,7 +82,7 @@ export interface MultiLocationProps {
   height: number;
   remindersNotSent: null | number;
   unbookedSignups: null | number;
-  width: number;
+  width: string;
 }
 
 const MultiLocation: FC<MultiLocationProps> = ({
@@ -113,6 +113,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
       title={firstEventTitle || ''}
       topBadge={
         <TopBadge
+          cancelled={anyEventIsCancelled}
           icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
           text={events.length.toString()}
         />
