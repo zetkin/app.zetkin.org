@@ -10,6 +10,7 @@ export default makeMessages('feat.events', {
     },
   },
   common: {
+    allDay: m('All day'),
     noActivity: m('Uncategorized'),
     noLocation: m('No physical location'),
     noTitle: m('Untitled event'),
