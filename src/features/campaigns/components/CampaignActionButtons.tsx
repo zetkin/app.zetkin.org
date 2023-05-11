@@ -1,6 +1,6 @@
-import { Alert, Link } from '@mui/material';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
+import { Alert, Link } from '@mui/material';
 import {
   AssignmentOutlined,
   CheckBoxOutlined,
@@ -204,7 +204,9 @@ const CampaignActionButtons: React.FunctionComponent<
                   </Link>
                 </>
               ),
-              onSelect: () => {},
+              onSelect: () => {
+                // Do nothing, but without this, the menu will not close
+              },
             },
           ]}
         />
