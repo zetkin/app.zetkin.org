@@ -74,14 +74,14 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
                   hour="numeric"
                   hour12={false}
                   minute="numeric"
-                  value={event.start_time}
+                  value={removeOffset(event.start_time)}
                 />
                 &nbsp;-&nbsp;
                 <FormattedTime
                   hour="numeric"
                   hour12={false}
                   minute="numeric"
-                  value={event.end_time}
+                  value={removeOffset(event.end_time)}
                 />
               </>
             )}
