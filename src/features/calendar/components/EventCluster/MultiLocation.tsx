@@ -82,6 +82,7 @@ export interface MultiLocationProps {
   events: ZetkinEvent[];
   height: number;
   remindersNotSent: null | number;
+  showTopBadge: boolean;
   unbookedSignups: null | number;
   width: string;
 }
@@ -90,6 +91,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
   events,
   height,
   remindersNotSent,
+  showTopBadge,
   unbookedSignups,
   width,
 }) => {
@@ -98,6 +100,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
       events,
       height,
       remindersNotSent,
+      showTopBadge,
       unbookedSignups,
       width,
     }),

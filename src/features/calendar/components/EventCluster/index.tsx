@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import Arbitrary from './Arbitrary';
@@ -12,10 +12,12 @@ import { useEventPopper } from 'features/events/components/EventPopper/EventPopp
 
 type EventClusterProps = {
   cluster: AnyClusteredEvent;
+  compact?: boolean;
   height: number;
 };
 
-const EventCluster: FC<EventClusterProps> = ({ cluster, height }) => {
+const EventCluster: FC<EventClusterProps> = ({ cluster, compact, height }) => {
+  const [mouseOver, setMouseOver] = useState(false);
   const { openEventPopper } = useEventPopper();
   const { numReminded, numPending, numBooked } = useEventClusterData(cluster);
   const remindersNotSent = numBooked - numReminded;
@@ -24,6 +26,12 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, height }) => {
     <Box
       onClick={(ev) => {
         openEventPopper(cluster, { left: ev.clientX, top: ev.clientY });
+      }}
+      onMouseOut={() => {
+        setMouseOver(false);
+      }}
+      onMouseOver={() => {
+        setMouseOver(true);
       }}
       sx={{ cursor: 'pointer' }}
     >
@@ -41,6 +49,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, height }) => {
           events={cluster.events}
           height={height}
           remindersNotSent={remindersNotSent}
+          showTopBadge={!compact || mouseOver}
           unbookedSignups={numPending}
           width="100%"
         />
@@ -50,6 +59,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, height }) => {
           events={cluster.events}
           height={height}
           remindersNotSent={remindersNotSent}
+          showTopBadge={!compact || mouseOver}
           unbookedSignups={numPending}
           width="100%"
         />
@@ -59,6 +69,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, height }) => {
           events={cluster.events}
           height={height}
           remindersNotSent={remindersNotSent}
+          showTopBadge={!compact || mouseOver}
           unbookedSignups={numPending}
           width="100%"
         />

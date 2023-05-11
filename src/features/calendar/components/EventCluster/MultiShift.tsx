@@ -140,6 +140,7 @@ function createMultiShiftFieldGroups({
 export interface MultiShiftProps {
   events: ZetkinEvent[];
   remindersNotSent: null | number;
+  showTopBadge: boolean;
   unbookedSignups: null | number;
   height: number;
   width: string;
@@ -149,6 +150,7 @@ const MultiShift: FC<MultiShiftProps> = ({
   events,
   height,
   remindersNotSent,
+  showTopBadge,
   unbookedSignups,
   width,
 }) => {
@@ -168,6 +170,7 @@ const MultiShift: FC<MultiShiftProps> = ({
     events,
     height,
     remindersNotSent,
+    showTopBadge,
     unbookedSignups,
     width,
   }).map((group, groupIndex) => {
@@ -190,11 +193,13 @@ const MultiShift: FC<MultiShiftProps> = ({
       height={height}
       title={firstEventTitle}
       topBadge={
-        <TopBadge
-          cancelled={anyEventIsCancelled}
-          icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
-          text={events.length.toString()}
-        />
+        showTopBadge && (
+          <TopBadge
+            cancelled={anyEventIsCancelled}
+            icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
+            text={events.length.toString()}
+          />
+        )
       }
       width={width}
     />

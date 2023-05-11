@@ -9,6 +9,7 @@ import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
 export interface ArbitraryProps {
+  showTopBadge: boolean;
   events: ZetkinEvent[];
   height: number;
   remindersNotSent: null | number;
@@ -87,6 +88,7 @@ function createArbitraryFields({
 }
 
 const Arbitrary: FC<ArbitraryProps> = ({
+  showTopBadge,
   events,
   height,
   remindersNotSent,
@@ -99,6 +101,7 @@ const Arbitrary: FC<ArbitraryProps> = ({
       events,
       height,
       remindersNotSent,
+      showTopBadge,
       unbookedSignups,
       width,
     }),
@@ -113,11 +116,13 @@ const Arbitrary: FC<ArbitraryProps> = ({
       height={height}
       title={messages.event.events()}
       topBadge={
-        <TopBadge
-          cancelled={anyEventIsCancelled}
-          icon={<EventOutlined color="inherit" fontSize="inherit" />}
-          text={events.length.toString()}
-        />
+        showTopBadge && (
+          <TopBadge
+            cancelled={anyEventIsCancelled}
+            icon={<EventOutlined color="inherit" fontSize="inherit" />}
+            text={events.length.toString()}
+          />
+        )
       }
       width={width}
     />

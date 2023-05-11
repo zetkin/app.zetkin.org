@@ -26,6 +26,7 @@ const MultiLocationEvent: ComponentStory<typeof MultiLocation> = (args) => (
     events={args.events}
     height={args.height}
     remindersNotSent={args.remindersNotSent}
+    showTopBadge={true}
     unbookedSignups={args.unbookedSignups}
     width={args.width}
   />
@@ -36,6 +37,7 @@ const MultiShiftEvent: ComponentStory<typeof MultiShift> = (args) => (
     events={args.events}
     height={args.height}
     remindersNotSent={args.remindersNotSent}
+    showTopBadge={true}
     unbookedSignups={args.unbookedSignups}
     width={args.width}
   />
@@ -46,6 +48,7 @@ const ArbitraryCluster: ComponentStory<typeof Arbitrary> = (args) => (
     events={args.events}
     height={args.height}
     remindersNotSent={args.remindersNotSent}
+    showTopBadge={true}
     unbookedSignups={args.unbookedSignups}
     width={args.width}
   />

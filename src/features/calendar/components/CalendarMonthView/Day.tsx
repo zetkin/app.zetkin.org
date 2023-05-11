@@ -64,7 +64,11 @@ const Day = ({
               margin: '1px',
             }}
           >
-            <EventCluster cluster={cluster} height={itemHeight} />
+            <EventCluster
+              cluster={cluster}
+              compact={true}
+              height={itemHeight}
+            />
           </Box>
         );
       })}

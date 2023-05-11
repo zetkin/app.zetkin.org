@@ -127,7 +127,7 @@ interface EventProps {
   fieldGroups: PresentableField[][];
   height: number;
   title: string;
-  topBadge?: JSX.Element;
+  topBadge?: JSX.Element | null | false;
   width: string;
 }
 
