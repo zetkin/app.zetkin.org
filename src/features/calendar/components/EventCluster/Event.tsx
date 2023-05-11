@@ -53,6 +53,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   fieldGroups: {
     display: 'flex',
     flexFlow: 'column',
+    overflowY: 'hidden',
   },
   title: {
     fontSize: '14px',

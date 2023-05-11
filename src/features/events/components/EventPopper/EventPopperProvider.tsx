@@ -1,15 +1,13 @@
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
 
+import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import MultiEventPopper from './MultiEventPopper';
 import SingleEventPopper from './SingleEventPopper';
-import {
-  CLUSTER_TYPE,
-  ClusteredEvent,
-} from 'features/campaigns/hooks/useClusteredActivities';
 
 type EventPopperContextData = {
   openEventPopper: (
-    cluster: ClusteredEvent,
+    cluster: AnyClusteredEvent,
     cursorPosition: { left: number; top: number }
   ) => void;
 };
@@ -33,7 +31,7 @@ export const EventPopperProvider: FC<EventPopperPropviderProps> = ({
     left: number;
     top: number;
   }>();
-  const [cluster, setCluster] = useState<ClusteredEvent | null>(null);
+  const [cluster, setCluster] = useState<AnyClusteredEvent | null>(null);
 
   return (
     <EventPopperContext.Provider
@@ -45,7 +43,8 @@ export const EventPopperProvider: FC<EventPopperPropviderProps> = ({
             setMultiAnchorPosition(undefined);
           } else if (
             cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ||
-            cluster.kind == CLUSTER_TYPE.MULTI_SHIFT
+            cluster.kind == CLUSTER_TYPE.MULTI_SHIFT ||
+            cluster.kind == CLUSTER_TYPE.ARBITRARY
           ) {
             setMultiAnchorPosition(cursorPosition);
             setSingleAnchorPosition(undefined);

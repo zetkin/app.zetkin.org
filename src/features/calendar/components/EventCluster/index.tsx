@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { FC } from 'react';
 
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
@@ -7,6 +8,7 @@ import MultiLocation from './MultiLocation';
 import MultiShift from './MultiShift';
 import Single from './Single';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 
 type EventClusterProps = {
   cluster: AnyClusteredEvent;
@@ -14,11 +16,17 @@ type EventClusterProps = {
 };
 
 const EventCluster: FC<EventClusterProps> = ({ cluster, height }) => {
+  const { openEventPopper } = useEventPopper();
   const { numReminded, numPending, numBooked } = useEventClusterData(cluster);
   const remindersNotSent = numBooked - numReminded;
 
   return (
-    <>
+    <Box
+      onClick={(ev) => {
+        openEventPopper(cluster, { left: ev.clientX, top: ev.clientY });
+      }}
+      sx={{ cursor: 'pointer' }}
+    >
       {cluster.kind == CLUSTER_TYPE.SINGLE && (
         <Single
           event={cluster.events[0]}
@@ -55,7 +63,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, height }) => {
           width="100%"
         />
       )}
-    </>
+    </Box>
   );
 };
 export default EventCluster;
