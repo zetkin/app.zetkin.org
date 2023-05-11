@@ -12,6 +12,9 @@ import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
 import { getActivitiesByDay, getFutureDays, getPreviousDay } from './utils';
 
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
+
 export enum TimeScale {
   DAY = 'day',
   WEEK = 'week',
@@ -32,7 +35,7 @@ function getTimeScale(timeScaleStr: string) {
 function getDateFromString(focusDateStr: string) {
   let date = new Date();
   if (focusDateStr) {
-    const d = dayjs(focusDateStr);
+    const d = dayjs.utc(focusDateStr);
     if (d.isValid()) {
       date = d.toDate();
     }
