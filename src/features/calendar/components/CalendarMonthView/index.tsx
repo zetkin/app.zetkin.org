@@ -25,7 +25,8 @@ const CalendarMonthView = ({
   onClickDay,
   onClickWeek,
 }: CalendarMonthViewProps) => {
-  const { gridRef, maxPerDay } = useFlexibleMaxPerDay();
+  const itemHeight = 25;
+  const { gridRef, maxPerDay } = useFlexibleMaxPerDay(itemHeight);
 
   const firstDayOfMonth: Date = new Date(
     focusDate.getFullYear(),
@@ -95,6 +96,7 @@ const CalendarMonthView = ({
                 clusters={clusters}
                 date={date}
                 isInFocusMonth={isInFocusMonth}
+                itemHeight={itemHeight}
                 onClick={onClickDay}
               />
             );
@@ -111,7 +113,7 @@ export default CalendarMonthView;
  * Calculate the maximum number of event clusters that can be displayed
  * in a day without overflowing the grid.
  */
-function useFlexibleMaxPerDay() {
+function useFlexibleMaxPerDay(itemHeight: number) {
   const gridRef = useRef<HTMLDivElement>();
   const [maxPerDay, setMaxPerDay] = useState(3);
 
@@ -121,7 +123,7 @@ function useFlexibleMaxPerDay() {
         const rect = gridRef.current.getBoundingClientRect();
         const heightWithoutGaps = rect.height - gridGap * 5;
         const dayHeight = heightWithoutGaps / 6;
-        const newMaxPerDay = Math.floor(dayHeight / 22) - 1;
+        const newMaxPerDay = Math.floor(dayHeight / itemHeight) - 1;
         setMaxPerDay(newMaxPerDay);
       }
     }

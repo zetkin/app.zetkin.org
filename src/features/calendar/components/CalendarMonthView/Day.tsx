@@ -4,15 +4,23 @@ import theme from 'theme';
 import { Box, Typography } from '@mui/material';
 
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
+import EventCluster from '../EventCluster';
 
 type DayProps = {
   clusters: AnyClusteredEvent[];
   date: Date;
   isInFocusMonth: boolean;
+  itemHeight: number;
   onClick: (date: Date) => void;
 };
 
-const Day = ({ clusters, date, isInFocusMonth, onClick }: DayProps) => {
+const Day = ({
+  clusters,
+  date,
+  isInFocusMonth,
+  itemHeight,
+  onClick,
+}: DayProps) => {
   const isToday = dayjs(date).isSame(new Date(), 'day');
 
   let textColor = theme.palette.text.secondary;
@@ -53,13 +61,10 @@ const Day = ({ clusters, date, isInFocusMonth, onClick }: DayProps) => {
           <Box
             key={index}
             sx={{
-              // TODO: Replace this with real component
-              backgroundColor: 'white',
-              height: '20px',
               margin: '1px',
             }}
           >
-            {cluster.kind} ({cluster.events.length})
+            <EventCluster cluster={cluster} height={itemHeight} />
           </Box>
         );
       })}
