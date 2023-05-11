@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 
 import Field from './Field';
-import { FIELD_PRESENTATION, PresentableField } from '.';
+import { FIELD_PRESENTATION, PresentableField } from './Event';
 
 const useStyles = makeStyles(() => ({
   fields: {

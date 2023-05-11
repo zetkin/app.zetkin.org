@@ -44,9 +44,9 @@ const MultiShiftEvent: ComponentStory<typeof MultiShift> = (args) => (
 const ArbitraryCluster: ComponentStory<typeof Arbitrary> = (args) => (
   <Arbitrary
     events={args.events}
-    eventsWithUnbookedSignups={args.eventsWithUnbookedSignups}
     height={args.height}
     remindersNotSent={args.remindersNotSent}
+    unbookedSignups={args.unbookedSignups}
     width={args.width}
   />
 );
@@ -195,8 +195,8 @@ arbitraryCluster.args = {
       title: 'Zetkin Code Camp 2023',
     }),
   ],
-  eventsWithUnbookedSignups: 5,
   height: 200,
   remindersNotSent: 4,
+  unbookedSignups: 5,
   width: '150px',
 };

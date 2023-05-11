@@ -4,7 +4,7 @@ import { Box, Theme } from '@mui/material';
 
 import { FieldIcon } from './FieldIcon';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
-import { FIELD_PRESENTATION, PresentableField } from '.';
+import { FIELD_PRESENTATION, PresentableField } from './Event';
 
 interface StyleProps {
   requiresAction: boolean;

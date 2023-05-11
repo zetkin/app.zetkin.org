@@ -8,7 +8,7 @@ import LocationName from 'features/events/components/LocationName';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
-import Event, { Field, FIELD_PRESENTATION } from '.';
+import Event, { Field, FIELD_PRESENTATION } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
 function createMultiShiftFieldGroups({
