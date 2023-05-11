@@ -2,12 +2,14 @@ import { FC } from 'react';
 import { FormattedTime } from 'react-intl';
 import { ScheduleOutlined } from '@mui/icons-material';
 
-import messageIds from 'features/calendar/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import calendarMessageIds from 'features/calendar/l10n/messageIds';
+import eventMessageIds from 'features/events/l10n/messageIds';
+import LocationName from 'features/events/components/LocationName';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
 import Event, { Field, FIELD_PRESENTATION } from '.';
+import { Msg, useMessages } from 'core/i18n';
 
 function createMultiShiftFieldGroups({
   events,
@@ -28,7 +30,7 @@ function createMultiShiftFieldGroups({
         },
         {
           kind: 'Location',
-          message: event.location.title,
+          message: <LocationName location={event.location} />,
           requiresAction: false,
         },
         {
@@ -47,7 +49,7 @@ function createMultiShiftFieldGroups({
               kind: 'RemindersNotSent',
               message: (
                 <Msg
-                  id={messageIds.event.remindersNotSent}
+                  id={calendarMessageIds.event.remindersNotSent}
                   values={{ numNotSent: remindersNotSent }}
                 />
               ),
@@ -59,7 +61,7 @@ function createMultiShiftFieldGroups({
               kind: 'UnbookedSignups',
               message: (
                 <Msg
-                  id={messageIds.event.unbookedSignups}
+                  id={calendarMessageIds.event.unbookedSignups}
                   values={{ numUnbooked: unbookedSignups }}
                 />
               ),
@@ -70,7 +72,7 @@ function createMultiShiftFieldGroups({
           ? null
           : {
               kind: 'NoContactSelected',
-              message: <Msg id={messageIds.event.noContactSelected} />,
+              message: <Msg id={calendarMessageIds.event.noContactSelected} />,
               requiresAction: true,
             },
       ];
@@ -98,7 +100,7 @@ function createMultiShiftFieldGroups({
               kind: 'RemindersNotSent',
               message: (
                 <Msg
-                  id={messageIds.event.remindersNotSent}
+                  id={calendarMessageIds.event.remindersNotSent}
                   values={{ numNotSent: remindersNotSent }}
                 />
               ),
@@ -110,7 +112,7 @@ function createMultiShiftFieldGroups({
               kind: 'UnbookedSignups',
               message: (
                 <Msg
-                  id={messageIds.event.unbookedSignups}
+                  id={calendarMessageIds.event.unbookedSignups}
                   values={{ numUnbooked: unbookedSignups }}
                 />
               ),
@@ -121,7 +123,7 @@ function createMultiShiftFieldGroups({
           ? null
           : {
               kind: 'NoContactSelected',
-              message: <Msg id={messageIds.event.noContactSelected} />,
+              message: <Msg id={calendarMessageIds.event.noContactSelected} />,
               requiresAction: true,
             },
       ];
@@ -150,7 +152,12 @@ const MultiShift: FC<MultiShiftProps> = ({
   unbookedSignups,
   width,
 }) => {
-  const firstEventTitle = events[0].title;
+  const messages = useMessages(eventMessageIds);
+  const firstEventTitle =
+    events[0].title ||
+    events[0].activity?.title ||
+    messages.common.noActivity();
+
   const anyEventIsCancelled = events.some((event) => event?.cancelled);
   const availableHeightPerFieldGroup = availableHeightByEvent(
     height,
@@ -181,7 +188,7 @@ const MultiShift: FC<MultiShiftProps> = ({
       cancelled={anyEventIsCancelled}
       fieldGroups={fieldGroups}
       height={height}
-      title={firstEventTitle || events[0].activity.title || ''}
+      title={firstEventTitle}
       topBadge={
         <TopBadge
           cancelled={anyEventIsCancelled}

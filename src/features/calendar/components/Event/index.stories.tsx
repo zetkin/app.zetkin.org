@@ -1,18 +1,15 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import Arbitrary from './Arbitrary';
-import Calendar from '..';
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import MultiLocation from './MultiLocation';
 import MultiShift from './MultiShift';
-import ReferendumSignatureCollection from '../../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import Single from './Single';
-import VisitReferendumWebsite from '../../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/VisitReferendumWebsite';
 
 export default {
-  component: Calendar,
+  component: Single,
   title: 'Calendar',
-} as ComponentMeta<typeof Calendar>;
+} as ComponentMeta<typeof Single>;
 
 const SingleEvent: ComponentStory<typeof Single> = (args) => (
   <Single
@@ -53,23 +50,6 @@ const ArbitraryCluster: ComponentStory<typeof Arbitrary> = (args) => (
     width={args.width}
   />
 );
-
-const Template: ComponentStory<typeof Calendar> = (args) => (
-  <Calendar
-    baseHref={args.baseHref}
-    campaigns={args.campaigns}
-    events={args.events}
-    tasks={args.tasks}
-  />
-);
-
-export const basic = Template.bind({});
-basic.args = {
-  baseHref: '/organize/1/projects/1/calendar',
-  campaigns: [ReferendumSignatureCollection],
-  events: [mockEvent()],
-  tasks: [VisitReferendumWebsite],
-};
 
 export const singleEvent = SingleEvent.bind({});
 singleEvent.args = {

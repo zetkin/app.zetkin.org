@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import { ScheduleOutlined } from '@mui/icons-material';
 
+import calendarMessageIds from 'features/calendar/l10n/messageIds';
+import eventMessageIds from 'features/events/l10n/messageIds';
 import { fieldsToPresent } from './utils';
-import messageIds from 'features/calendar/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from '.';
+import { Msg, useMessages } from 'core/i18n';
 
 function createMultiLocationFields({
   events,
@@ -33,7 +34,7 @@ function createMultiLocationFields({
       kind: 'Location',
       message: (
         <Msg
-          id={messageIds.event.differentLocations}
+          id={calendarMessageIds.event.differentLocations}
           values={{ numLocations: events.length }}
         />
       ),
@@ -44,7 +45,7 @@ function createMultiLocationFields({
           kind: 'RemindersNotSent',
           message: (
             <Msg
-              id={messageIds.event.remindersNotSent}
+              id={calendarMessageIds.event.remindersNotSent}
               values={{ numNotSent: remindersNotSent }}
             />
           ),
@@ -56,7 +57,7 @@ function createMultiLocationFields({
           kind: 'UnbookedSignups',
           message: (
             <Msg
-              id={messageIds.event.unbookedSignups}
+              id={calendarMessageIds.event.unbookedSignups}
               values={{ numUnbooked: unbookedSignups }}
             />
           ),
@@ -66,7 +67,7 @@ function createMultiLocationFields({
     noContactSelected
       ? {
           kind: 'NoContactSelected',
-          message: <Msg id={messageIds.event.noContactSelected} />,
+          message: <Msg id={calendarMessageIds.event.noContactSelected} />,
           requiresAction: true,
         }
       : null,
@@ -102,7 +103,11 @@ const MultiLocation: FC<MultiLocationProps> = ({
     }),
     height
   );
-  const firstEventTitle = events[0].title || events[0].activity.title;
+  const messages = useMessages(eventMessageIds);
+  const firstEventTitle =
+    events[0].title ||
+    events[0].activity?.title ||
+    messages.common.noActivity();
   const anyEventIsCancelled = events.some((event) => event.cancelled);
 
   return (

@@ -5,6 +5,7 @@ import {
   Paper,
   Popper,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { Check, Settings } from '@mui/icons-material';
@@ -12,28 +13,35 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
-import theme from 'theme';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
 
 type ParticipantSummaryCardProps = {
   model: EventDataModel;
+  onClickRecord: () => void;
 };
 
-const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
+const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
+  model,
+  onClickRecord,
+}) => {
   const eventData = model.getData().data;
-  const participants = model.getParticipants().data;
   const respondents = model.getRespondents().data;
   const messages = useMessages(messageIds);
+
   const reqParticipants = eventData?.num_participants_required ?? 0;
-  const availParticipants = participants?.length ?? 0;
-  const remindedParticipants =
-    participants?.filter((p) => p.reminder_sent != null).length ?? 0;
-  const signedParticipants =
-    respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
-      .length ?? 0;
+  const availParticipants = model.getNumAvailParticipants();
+  const remindedParticipants = model.getNumRemindedParticipants();
+  const cancelledParticipants = model.getNumCancelledParticipants();
+
+  const signedParticipants = model.getNumSignedParticipants();
   const contactPerson = eventData?.contact;
+  const confirmedParticipants = model.getNumConfirmedParticipants();
+  const noshowParticipants = model.getNumNoshowParticipants();
+
+  const hasRecordedAttendance =
+    cancelledParticipants + confirmedParticipants + noshowParticipants > 0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -46,26 +54,14 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
     return null;
   }
 
-  const getParticipantStatus = () => {
-    const diff = reqParticipants - availParticipants;
-
-    if (diff <= 0) {
-      return theme.palette.statusColors.green;
-    } else if (diff === 1) {
-      return theme.palette.statusColors.orange;
-    } else {
-      return theme.palette.statusColors.red;
-    }
-  };
-
   return (
     <Box>
       <ZUICard
         header={messages.participantSummaryCard.header()}
         status={
-          <Box display="flex">
+          <Box display="flex" mb={4}>
             <ZUINumberChip
-              color={getParticipantStatus()}
+              color={model.getParticipantStatus()}
               outlined={true}
               size="sm"
               value={`${availParticipants}/${reqParticipants}`}
@@ -146,6 +142,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
                       model.addParticipant(r.person.id);
                     });
                   }}
+                  size="small"
                   startIcon={<Check />}
                   sx={{
                     marginLeft: 2,
@@ -157,27 +154,86 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
               )}
             </Box>
           </Box>
+          {new Date(eventData.start_time) > new Date() ? (
+            <Box display="flex" flexDirection="column">
+              <Typography color={'secondary'}>
+                {messages.participantSummaryCard.booked()}
+              </Typography>
+              <Box display="flex">
+                <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
+                {remindedParticipants < availParticipants && (
+                  <Tooltip
+                    arrow
+                    placement="top-start"
+                    title={
+                      contactPerson == null
+                        ? messages.participantSummaryCard.remindButtondisabledTooltip()
+                        : ''
+                    }
+                  >
+                    <span>
+                      <Button
+                        disabled={contactPerson == null}
+                        onClick={() => {
+                          model.sendReminders();
+                        }}
+                        size="small"
+                        startIcon={<Check />}
+                        sx={{
+                          marginLeft: 2,
+                        }}
+                        variant="outlined"
+                      >
+                        <Msg
+                          id={messageIds.participantSummaryCard.remindButton}
+                        />
+                      </Button>
+                    </span>
+                  </Tooltip>
+                )}
+              </Box>
+            </Box>
+          ) : (
+            <Box display="flex" flexDirection="column">
+              <Typography color={'secondary'}>
+                {messages.participantSummaryCard.confirmed()}
+              </Typography>
+              <Box alignItems="center" display="flex">
+                <Typography variant="h4">{`${confirmedParticipants}/${availParticipants}`}</Typography>
+                {noshowParticipants > 0 && (
+                  <Typography
+                    color={'GrayText'}
+                    ml={1}
+                    sx={{ fontSize: '1.7em' }}
+                    variant="h4"
+                  >
+                    {messages.participantSummaryCard.noshow({
+                      noshows: noshowParticipants,
+                    })}
+                  </Typography>
+                )}
+                {!hasRecordedAttendance && (
+                  <Box ml={2}>
+                    <Button
+                      onClick={() => onClickRecord()}
+                      size="small"
+                      variant="outlined"
+                    >
+                      <Msg
+                        id={messageIds.participantSummaryCard.recordButton}
+                      />
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          )}
           <Box display="flex" flexDirection="column">
             <Typography color={'secondary'}>
-              {messages.participantSummaryCard.booked()}
+              {messages.participantSummaryCard.cancelled()}
             </Typography>
             <Box display="flex">
-              <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
-              {remindedParticipants < availParticipants && (
-                <Button
-                  disabled={contactPerson == null}
-                  onClick={() => {
-                    model.sendReminders();
-                  }}
-                  startIcon={<Check />}
-                  sx={{
-                    marginLeft: 2,
-                  }}
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.participantSummaryCard.remindButton} />
-                </Button>
-              )}
+              <Typography variant="h4">{`${cancelledParticipants}`}</Typography>
             </Box>
           </Box>
           <Box
@@ -185,7 +241,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
             display="flex"
             justifyContent="space-between"
             marginBottom={1}
-          ></Box>
+          />
         </Box>
       </ZUICard>
     </Box>

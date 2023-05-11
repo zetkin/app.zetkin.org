@@ -4,7 +4,9 @@ import { useMemo } from 'react';
 import { Box, Card, Divider, Typography } from '@mui/material';
 
 import CallAssignmentListItem from './items/CallAssignmentListItem';
+import EventClusterListItem from './items/EventClusterListItem';
 import EventListItem from './items/EventListItem';
+import isEventCluster from 'features/campaigns/utils/isEventCluster';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyListItem from './items/SurveyListItem';
 import TaskListItem from './items/TaskListItem';
@@ -13,6 +15,9 @@ import {
   ACTIVITIES,
   CampaignActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
+import useClusteredActivities, {
+  CLUSTER_TYPE,
+} from 'features/campaigns/hooks/useClusteredActivities';
 
 interface ActivitiesProps {
   activities: CampaignActivity[];
@@ -20,9 +25,11 @@ interface ActivitiesProps {
 }
 
 const Activities = ({ activities, orgId }: ActivitiesProps) => {
+  const clustered = useClusteredActivities(activities);
+
   return (
     <Card>
-      {activities.map((activity, index) => {
+      {clustered.map((activity, index) => {
         if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
           return (
             <Box key={`ca-${activity.data.id}`}>
@@ -30,11 +37,15 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
               <CallAssignmentListItem caId={activity.data.id} orgId={orgId} />
             </Box>
           );
-        } else if (activity.kind === ACTIVITIES.EVENT) {
+        } else if (isEventCluster(activity)) {
           return (
-            <Box key={`event-${activity.data.id}`}>
+            <Box key={`event-${activity.events[0].id}`}>
               {index > 0 && <Divider />}
-              <EventListItem eventId={activity.data.id} orgId={orgId} />
+              {activity.kind == CLUSTER_TYPE.SINGLE ? (
+                <EventListItem cluster={activity} />
+              ) : (
+                <EventClusterListItem cluster={activity} />
+              )}
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {

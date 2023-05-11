@@ -86,7 +86,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     }
   }, [types.length]);
 
-  if (value.title === null) {
+  if (value?.title === null) {
     types = [
       { id: 0, info_text: '', title: messages.type.uncategorized() },
       ...types,
@@ -189,7 +189,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             </li>
           );
         }}
-        value={value.title ? value : { title: messages.type.uncategorized() }}
+        value={value?.title ? value : { title: messages.type.uncategorized() }}
       />
     </Tooltip>
   );

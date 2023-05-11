@@ -26,6 +26,7 @@ export default makeMessages('feat.campaigns', {
   activityList: {
     eventItem: {
       contact: m('No contact person has been assigned'),
+      locations: m<{ count: number }>('{count} locations'),
       reminders: m<{ numMissing: number }>(
         '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
       ),
@@ -123,6 +124,7 @@ export default makeMessages('feat.campaigns', {
   linkGroup: {
     createActivity: m('Create activity'),
     createCallAssignment: m('Create call assignment'),
+    createEvent: m('Create event'),
     createSurvey: m('Create survey'),
     createTask: m('Create task'),
     public: m('Public Page'),

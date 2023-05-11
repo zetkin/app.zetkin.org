@@ -61,12 +61,15 @@ export interface ZetkinEventResponse {
 }
 
 export interface ZetkinEvent {
-  activity: { id: number; title: string };
+  activity: {
+    id: number;
+    title: string;
+  } | null;
   campaign: {
     id: number;
     title: string;
   } | null;
-  cancelled?: string; // TODO - should be `null | string`
+  cancelled: string | null;
   contact?: null | { id: number; name: string };
   end_time: string;
   id: number;
@@ -76,21 +79,23 @@ export interface ZetkinEvent {
     lat: number;
     lng: number;
     title: string;
-  };
+  } | null;
   num_participants_required: number;
   num_participants_available: number;
+  published: string | null;
   start_time: string;
   title?: string;
   organization: {
     id: number;
     title: string;
   };
-  userBooked?: boolean;
-  userResponse?: boolean;
   url?: string;
 }
 
 export type ZetkinEventParticipant = ZetkinPerson & {
+  attended: null | string;
+  cancelled: null | string;
+  noshow: null | string;
   reminder_sent: null | string;
 };
 

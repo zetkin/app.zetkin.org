@@ -6,31 +6,33 @@ import {
   ScheduleOutlined,
 } from '@mui/icons-material';
 
-import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 
 interface EventOverviewListItemProps {
-  activity: EventActivity;
+  event: ZetkinEvent;
   focusDate: Date | null;
 }
 
 const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
-  activity,
+  event,
   focusDate,
 }) => {
-  const event = activity.data;
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
+  const messages = useMessages(messageIds);
 
   return (
     <OverviewListItem
-      activity={activity}
+      endDate={null}
       endNumber={`${event.num_participants_available} / ${event.num_participants_required}`}
       endNumberColor={
         event.num_participants_available < event.num_participants_required
@@ -44,6 +46,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       meta={<EventWarningIcons compact model={model} />}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
+      startDate={null}
       statusBar={null}
       subtitle={
         <ZUIIconLabelRow
@@ -57,14 +60,18 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
                 />
               ),
             },
-            {
-              icon: <PlaceOutlined fontSize="inherit" />,
-              label: event.location.title,
-            },
+            ...(event.location
+              ? [
+                  {
+                    icon: <PlaceOutlined fontSize="inherit" />,
+                    label: event.location.title,
+                  },
+                ]
+              : []),
           ]}
         />
       }
-      title={event.title || event.activity.title}
+      title={event.title || event.activity?.title || messages.common.noTitle()}
     />
   );
 };

@@ -115,7 +115,7 @@ const ZUIPersonGridEditCell: FC<{
           onChange={() => setSearching(true)}
           placeholder={messages.personSelect.search()}
           sx={{ paddingLeft: '10px' }}
-        ></InputBase>
+        />
       </Box>
 
       {suggestedPeople.length || autoComplete.inputValue != '' ? (

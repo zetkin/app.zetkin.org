@@ -1,10 +1,12 @@
 import { FC } from 'react';
 
+import calendarMessageIds from 'features/calendar/l10n/messageIds';
+import eventMessageIds from 'features/events/l10n/messageIds';
 import { fieldsToPresent } from './utils';
-import messageIds from 'features/calendar/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import LocationName from 'features/events/components/LocationName';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from '.';
+import { Msg, useMessages } from 'core/i18n';
 
 function createSingleFields({
   event,
@@ -20,7 +22,7 @@ function createSingleFields({
     },
     {
       kind: 'Location',
-      message: event.location.title,
+      message: <LocationName location={event.location} />,
       requiresAction: false,
     },
     remindersNotSent
@@ -28,7 +30,7 @@ function createSingleFields({
           kind: 'RemindersNotSent',
           message: (
             <Msg
-              id={messageIds.event.remindersNotSent}
+              id={calendarMessageIds.event.remindersNotSent}
               values={{ numNotSent: remindersNotSent }}
             />
           ),
@@ -40,7 +42,7 @@ function createSingleFields({
           kind: 'UnbookedSignups',
           message: (
             <Msg
-              id={messageIds.event.unbookedSignups}
+              id={calendarMessageIds.event.unbookedSignups}
               values={{ numUnbooked: unbookedSignups }}
             />
           ),
@@ -51,7 +53,7 @@ function createSingleFields({
       ? null
       : {
           kind: 'NoContactSelected',
-          message: <Msg id={messageIds.event.noContactSelected} />,
+          message: <Msg id={calendarMessageIds.event.noContactSelected} />,
           requiresAction: true,
         },
   ];
@@ -87,12 +89,16 @@ const Single: FC<SingleProps> = ({
     height
   );
 
+  const messages = useMessages(eventMessageIds);
+  const eventTitle =
+    event.title || event.activity?.title || messages.common.noActivity();
+
   return (
     <Event
       cancelled={Boolean(event?.cancelled)}
       fieldGroups={[fields]}
       height={height}
-      title={event.title || ''}
+      title={eventTitle}
       width={width}
     />
   );
