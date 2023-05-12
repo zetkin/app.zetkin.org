@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { ScheduleOutlined } from '@mui/icons-material';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
 import { fieldsToPresent } from './utils';
+import MultiLocationIcon from 'zui/icons/MultiLocation';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
@@ -120,11 +120,13 @@ const MultiLocation: FC<MultiLocationProps> = ({
       height={height}
       title={firstEventTitle || ''}
       topBadge={
-        <TopBadge
-          cancelled={anyEventIsCancelled}
-          icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
-          text={events.length.toString()}
-        />
+        showTopBadge && (
+          <TopBadge
+            cancelled={anyEventIsCancelled}
+            icon={<MultiLocationIcon color="inherit" fontSize="inherit" />}
+            text={events.length.toString()}
+          />
+        )
       }
       width={width}
     />
