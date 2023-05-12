@@ -14,7 +14,7 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
-import LocationName from '../LocationName';
+import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
@@ -203,7 +203,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           />
         </Box>
         <Typography color="secondary" variant="body2">
-          <LocationName location={event.location} />
+          <LocationLabel location={event.location} />
         </Typography>
       </Box>
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>

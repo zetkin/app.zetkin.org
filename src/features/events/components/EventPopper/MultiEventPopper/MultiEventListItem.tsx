@@ -6,7 +6,7 @@ import { ChevronRightOutlined, People } from '@mui/icons-material';
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from '../../EventWarningIcons';
-import LocationName from '../../LocationName';
+import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import StatusDot from '../StatusDot';
 import { useMessages } from 'core/i18n';
@@ -57,7 +57,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
               }}
             >
               {clusterType == CLUSTER_TYPE.MULTI_LOCATION && (
-                <LocationName location={event.location} />
+                <LocationLabel location={event.location} />
               )}
               {clusterType == CLUSTER_TYPE.MULTI_SHIFT && timeSpan}
               {clusterType == CLUSTER_TYPE.ARBITRARY &&
@@ -102,7 +102,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
           </Box>
           <Typography color="secondary" variant="body2">
             {`${timeSpan}, `}
-            <LocationName location={event.location} />
+            <LocationLabel location={event.location} />
           </Typography>
         </Box>
       )}

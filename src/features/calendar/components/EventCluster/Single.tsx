@@ -3,7 +3,7 @@ import { FC } from 'react';
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
 import { fieldsToPresent } from './utils';
-import LocationName from 'features/events/components/LocationName';
+import LocationLabel from 'features/events/components/LocationLabel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
@@ -22,7 +22,7 @@ function createSingleFields({
     },
     {
       kind: 'Location',
-      message: <LocationName location={event.location} />,
+      message: <LocationLabel location={event.location} />,
       requiresAction: false,
     },
     remindersNotSent
