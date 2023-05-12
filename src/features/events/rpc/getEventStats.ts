@@ -3,10 +3,6 @@ import { z } from 'zod';
 import { EventStats } from '../store';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
-import {
-  ZetkinEventParticipant,
-  ZetkinEventResponse,
-} from 'utils/types/zetkin';
 
 const paramsSchema = z.object({
   eventId: z.number(),
@@ -26,19 +22,19 @@ export default makeRPCDef<Params, Result>(getEventStatsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { eventId, orgId } = params;
-  const participants = await apiClient.get<ZetkinEventParticipant[]>(
-    `/api/orgs/${orgId}/actions/${eventId}/participants`
-  );
-  const signups = await apiClient.get<ZetkinEventResponse[]>(
-    `/api/orgs/${orgId}/actions/${eventId}/responses`
-  );
+
+  const stats = await apiClient.get<{
+    num_booked: number;
+    num_pending: number;
+    num_reminded: number;
+    num_signups: number;
+  }>(`/api/orgs/${orgId}/actions/${eventId}/stats`);
 
   return {
     id: eventId,
-    numBooked: participants.length,
-    numPending: signups.filter((s) => !participants.some((p) => p.id == s.id))
-      .length,
-    numReminded: participants.filter((p) => !!p.reminder_sent).length,
-    numSignups: signups.length,
+    numBooked: stats.num_booked,
+    numPending: stats.num_pending,
+    numReminded: stats.num_reminded,
+    numSignups: stats.num_signups,
   };
 }
