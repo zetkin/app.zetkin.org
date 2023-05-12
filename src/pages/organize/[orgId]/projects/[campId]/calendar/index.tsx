@@ -14,6 +14,7 @@ import { campaignTasksResource } from 'features/tasks/api/tasks';
 import { useMessages } from 'core/i18n';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
+import useServerSide from 'core/useServerSide';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -96,6 +97,11 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
+
+  const isOnServer = useServerSide();
+  if (isOnServer) {
+    return null;
+  }
 
   return (
     <>

@@ -7,7 +7,7 @@ import {
   ScheduleOutlined,
 } from '@mui/icons-material';
 
-import { Field } from '.';
+import { Field } from './Event';
 
 export const FieldIcon = ({ field }: { field: Field }) => {
   if (field.kind === 'Participants') {

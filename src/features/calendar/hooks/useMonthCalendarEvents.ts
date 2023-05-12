@@ -57,7 +57,8 @@ export default function useMonthCalendarEvents({
     // If the number of clusters N is bigger than the maximum number M
     // allowed per day, take the last N-M clusters and squash them into a
     // single big arbitrary cluster at the end.
-    while (clusters.length > maxPerDay) {
+    const maxPerDayButAtLeastOne = Math.max(1, maxPerDay);
+    while (clusters.length > maxPerDayButAtLeastOne) {
       const clusterToRemove = clusters.pop();
       const clusterToReplace = clusters.pop();
 
@@ -73,7 +74,7 @@ export default function useMonthCalendarEvents({
 
     dates.push({
       clusters,
-      date: curDate,
+      date: new Date(curDate),
     });
 
     curDate.setDate(curDate.getDate() + 1);

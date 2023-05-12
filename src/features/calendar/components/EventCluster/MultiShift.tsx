@@ -8,7 +8,7 @@ import LocationName from 'features/events/components/LocationName';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
-import Event, { Field, FIELD_PRESENTATION } from '.';
+import Event, { Field, FIELD_PRESENTATION } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
 function createMultiShiftFieldGroups({
@@ -140,6 +140,7 @@ function createMultiShiftFieldGroups({
 export interface MultiShiftProps {
   events: ZetkinEvent[];
   remindersNotSent: null | number;
+  showTopBadge: boolean;
   unbookedSignups: null | number;
   height: number;
   width: string;
@@ -149,14 +150,13 @@ const MultiShift: FC<MultiShiftProps> = ({
   events,
   height,
   remindersNotSent,
+  showTopBadge,
   unbookedSignups,
   width,
 }) => {
   const messages = useMessages(eventMessageIds);
   const firstEventTitle =
-    events[0].title ||
-    events[0].activity?.title ||
-    messages.common.noActivity();
+    events[0].title || events[0].activity?.title || messages.common.noTitle();
 
   const anyEventIsCancelled = events.some((event) => event?.cancelled);
   const availableHeightPerFieldGroup = availableHeightByEvent(
@@ -168,6 +168,7 @@ const MultiShift: FC<MultiShiftProps> = ({
     events,
     height,
     remindersNotSent,
+    showTopBadge,
     unbookedSignups,
     width,
   }).map((group, groupIndex) => {
@@ -190,11 +191,13 @@ const MultiShift: FC<MultiShiftProps> = ({
       height={height}
       title={firstEventTitle}
       topBadge={
-        <TopBadge
-          cancelled={anyEventIsCancelled}
-          icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
-          text={events.length.toString()}
-        />
+        showTopBadge && (
+          <TopBadge
+            cancelled={anyEventIsCancelled}
+            icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
+            text={events.length.toString()}
+          />
+        )
       }
       width={width}
     />

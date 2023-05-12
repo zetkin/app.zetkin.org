@@ -1,4 +1,4 @@
-import { ClusteredEvent } from 'features/campaigns/hooks/useClusteredActivities';
+import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import { EnvContext } from 'core/env/EnvContext';
 import { EventState } from 'features/events/models/EventDataModel';
 import getEventStats from 'features/events/rpc/getEventStats';
@@ -12,7 +12,7 @@ import { useStore } from 'react-redux';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { statsLoad, statsLoaded } from 'features/events/store';
 
-export default function useEventClusterData(cluster: ClusteredEvent) {
+export default function useEventClusterData(cluster: AnyClusteredEvent) {
   const numParticipantsRequired = cluster.events.reduce(
     (sum, event) => sum + event.num_participants_required,
     0

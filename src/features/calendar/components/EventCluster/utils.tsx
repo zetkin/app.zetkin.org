@@ -1,4 +1,4 @@
-import { Field, FIELD_PRESENTATION, PresentableField } from '.';
+import { Field, FIELD_PRESENTATION, PresentableField } from './Event';
 
 const titleHeight = 14;
 const fieldHeight = 18;

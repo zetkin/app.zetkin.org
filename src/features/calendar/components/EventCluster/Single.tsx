@@ -5,7 +5,7 @@ import eventMessageIds from 'features/events/l10n/messageIds';
 import { fieldsToPresent } from './utils';
 import LocationName from 'features/events/components/LocationName';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import Event, { Field } from '.';
+import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
 function createSingleFields({
@@ -91,7 +91,7 @@ const Single: FC<SingleProps> = ({
 
   const messages = useMessages(eventMessageIds);
   const eventTitle =
-    event.title || event.activity?.title || messages.common.noActivity();
+    event.title || event.activity?.title || messages.common.noTitle();
 
   return (
     <Event

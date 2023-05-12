@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { ScheduleOutlined } from '@mui/icons-material';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
 import { fieldsToPresent } from './utils';
+import MultiLocationIcon from 'zui/icons/MultiLocation';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import Event, { Field } from '.';
+import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
 function createMultiLocationFields({
@@ -82,6 +82,7 @@ export interface MultiLocationProps {
   events: ZetkinEvent[];
   height: number;
   remindersNotSent: null | number;
+  showTopBadge: boolean;
   unbookedSignups: null | number;
   width: string;
 }
@@ -90,6 +91,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
   events,
   height,
   remindersNotSent,
+  showTopBadge,
   unbookedSignups,
   width,
 }) => {
@@ -98,6 +100,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
       events,
       height,
       remindersNotSent,
+      showTopBadge,
       unbookedSignups,
       width,
     }),
@@ -105,9 +108,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
   );
   const messages = useMessages(eventMessageIds);
   const firstEventTitle =
-    events[0].title ||
-    events[0].activity?.title ||
-    messages.common.noActivity();
+    events[0].title || events[0].activity?.title || messages.common.noTitle();
   const anyEventIsCancelled = events.some((event) => event.cancelled);
 
   return (
@@ -117,11 +118,13 @@ const MultiLocation: FC<MultiLocationProps> = ({
       height={height}
       title={firstEventTitle || ''}
       topBadge={
-        <TopBadge
-          cancelled={anyEventIsCancelled}
-          icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
-          text={events.length.toString()}
-        />
+        showTopBadge && (
+          <TopBadge
+            cancelled={anyEventIsCancelled}
+            icon={<MultiLocationIcon color="inherit" fontSize="inherit" />}
+            text={events.length.toString()}
+          />
+        )
       }
       width={width}
     />

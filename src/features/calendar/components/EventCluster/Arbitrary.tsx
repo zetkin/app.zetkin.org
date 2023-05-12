@@ -5,20 +5,21 @@ import { fieldsToPresent } from './utils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import Event, { Field } from '.';
+import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
 export interface ArbitraryProps {
+  showTopBadge: boolean;
   events: ZetkinEvent[];
   height: number;
   remindersNotSent: null | number;
-  eventsWithUnbookedSignups: null | number;
+  unbookedSignups: null | number;
   width: string;
 }
 
 function createArbitraryFields({
   events,
-  eventsWithUnbookedSignups,
+  unbookedSignups,
   remindersNotSent,
 }: ArbitraryProps): Field[] {
   const totalEventsWithoutContact = events.filter(
@@ -55,13 +56,13 @@ function createArbitraryFields({
           requiresAction: true,
         }
       : null,
-    eventsWithUnbookedSignups
+    unbookedSignups
       ? {
           kind: 'UnbookedSignups',
           message: (
             <Msg
               id={messageIds.event.withSignups}
-              values={{ numWithSignups: eventsWithUnbookedSignups }}
+              values={{ numWithSignups: unbookedSignups }}
             />
           ),
           requiresAction: true,
@@ -87,19 +88,21 @@ function createArbitraryFields({
 }
 
 const Arbitrary: FC<ArbitraryProps> = ({
+  showTopBadge,
   events,
   height,
-  eventsWithUnbookedSignups,
   remindersNotSent,
+  unbookedSignups,
   width,
 }) => {
   const messages = useMessages(messageIds);
   const fields = fieldsToPresent(
     createArbitraryFields({
       events,
-      eventsWithUnbookedSignups,
       height,
       remindersNotSent,
+      showTopBadge,
+      unbookedSignups,
       width,
     }),
     height
@@ -113,11 +116,13 @@ const Arbitrary: FC<ArbitraryProps> = ({
       height={height}
       title={messages.event.events()}
       topBadge={
-        <TopBadge
-          cancelled={anyEventIsCancelled}
-          icon={<EventOutlined color="inherit" fontSize="inherit" />}
-          text={events.length.toString()}
-        />
+        showTopBadge && (
+          <TopBadge
+            cancelled={anyEventIsCancelled}
+            icon={<EventOutlined color="inherit" fontSize="inherit" />}
+            text={events.length.toString()}
+          />
+        )
       }
       width={width}
     />
