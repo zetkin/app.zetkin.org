@@ -1,4 +1,5 @@
 import Environment from 'core/env/Environment';
+import getEventState from '../utils/getEventState';
 import { ModelBase } from 'core/models';
 import theme from 'theme';
 import EventsRepo, {
@@ -251,31 +252,7 @@ export default class EventDataModel extends ModelBase {
       return EventState.UNKNOWN;
     }
 
-    if (!data.published && data.cancelled) {
-      return EventState.CANCELLED;
-    }
-    const now = new Date();
-    if (data.published) {
-      const published = new Date(data.published);
-      if (published > now) {
-        return EventState.SCHEDULED;
-      }
-      if (data.cancelled) {
-        const cancelled = new Date(data.cancelled);
-        if (cancelled > published) {
-          return EventState.CANCELLED;
-        }
-      }
-      if (data.end_time) {
-        const endTime = new Date(data.end_time);
-        if (endTime < now) {
-          return EventState.ENDED;
-        }
-      }
-      return EventState.OPEN;
-    } else {
-      return EventState.DRAFT;
-    }
+    return getEventState(data);
   }
 
   updateEventData(eventData: ZetkinEventPatchBody) {
