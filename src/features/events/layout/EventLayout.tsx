@@ -81,7 +81,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                     ...types,
                     {
                       title: messages.type.uncategorized(),
-                      uncategorizeId: 'UNCATEGORIZED_ID',
+                      uncategorizedId: 'UNCATEGORIZED_ID',
                     },
                   ]}
                   typesModel={typesModel}

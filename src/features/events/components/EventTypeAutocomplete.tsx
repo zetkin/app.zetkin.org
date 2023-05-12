@@ -40,7 +40,7 @@ type EventTypeAutocompleteProps = {
   showBorder?: boolean;
   types: (
     | ZetkinActivity
-    | { id?: number; title: string; uncategorizeId: 'UNCATEGORIZED_ID' }
+    | { id?: number; title: string; uncategorizedId: 'UNCATEGORIZED_ID' }
   )[];
   typesModel: EventTypesModel;
   value: ZetkinEvent['activity'];
@@ -49,8 +49,8 @@ type EventTypeAutocompleteProps = {
 interface NewEventType {
   id?: number;
   title: string | null;
-  createdTypeId?: 'CREATED_EVENT_ID';
-  uncategorizeId?: 'UNCATEGORIZED_ID';
+  createdTypeId?: 'CREATED_TYPE_ID';
+  uncategorizedId?: 'UNCATEGORIZED_ID';
 }
 
 const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
@@ -73,7 +73,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     //In here, when the length of the type changes,
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
-      const newId = types.find((item) => item.title === createdType)!.id!;
+      const newId = types.find((item) => item.title === createdType)!.id;
       onChangeNewOption(newId!);
     }
   }, [types.length]);
@@ -107,7 +107,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             }),
             {
               title: messages.type.uncategorized(),
-              uncategorizeId: 'UNCATEGORIZED_ID',
+              uncategorizedId: 'UNCATEGORIZED_ID',
             },
           ];
 
@@ -122,7 +122,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           }
 
           filteredResult.push({
-            createdTypeId: 'CREATED_EVENT_ID',
+            createdTypeId: 'CREATED_TYPE_ID',
             title: inputStartWithCapital,
           });
           return inputValue ? filteredResult : options;
@@ -168,11 +168,11 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
               key={
                 option.id
                   ? option.id
-                  : option.uncategorizeId ?? option.createdTypeId
+                  : option.uncategorizedId ?? option.createdTypeId
               }
             >
               {option.id && <li {...props}>{option.title}</li>}
-              {option.uncategorizeId && (
+              {option.uncategorizedId && (
                 <li {...props}>
                   <Clear />
                   {messages.type.uncategorized()}
