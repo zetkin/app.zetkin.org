@@ -74,7 +74,7 @@ export default function useMonthCalendarEvents({
 
     dates.push({
       clusters,
-      date: curDate,
+      date: new Date(curDate),
     });
 
     curDate.setDate(curDate.getDate() + 1);

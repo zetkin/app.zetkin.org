@@ -29,9 +29,7 @@ const CalendarMonthView = ({
   const { gridRef, maxPerDay } = useFlexibleMaxPerDay(itemHeight);
 
   const firstDayOfMonth: Date = new Date(
-    focusDate.getFullYear(),
-    focusDate.getMonth(),
-    1
+    Date.UTC(focusDate.getFullYear(), focusDate.getMonth(), 1)
   );
   const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
     .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')
