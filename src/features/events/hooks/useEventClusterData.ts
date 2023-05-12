@@ -82,6 +82,8 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
     color = STATUS_COLORS.RED;
   } else if (status === EventState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
+  } else if (status === EventState.CANCELLED) {
+    color = STATUS_COLORS.ORANGE;
   }
 
   const firstEvent = cluster.events[0];
@@ -118,23 +120,28 @@ const getEventState = (data: ZetkinEvent) => {
     return EventState.UNKNOWN;
   }
 
-  if (data.start_time) {
-    const startTime = new Date(data.start_time);
-    const now = new Date();
-
-    if (startTime > now) {
+  if (!data.published && data.cancelled) {
+    return EventState.CANCELLED;
+  }
+  const now = new Date();
+  if (data.published) {
+    const published = new Date(data.published);
+    if (published > now) {
       return EventState.SCHEDULED;
-    } else {
-      if (data.end_time) {
-        const endTime = new Date(data.end_time);
-
-        if (endTime < now) {
-          return EventState.ENDED;
-        }
-      }
-
-      return EventState.OPEN;
     }
+    if (data.cancelled) {
+      const cancelled = new Date(data.cancelled);
+      if (cancelled > published) {
+        return EventState.CANCELLED;
+      }
+    }
+    if (data.end_time) {
+      const endTime = new Date(data.end_time);
+      if (endTime < now) {
+        return EventState.ENDED;
+      }
+    }
+    return EventState.OPEN;
   } else {
     return EventState.DRAFT;
   }
