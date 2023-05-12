@@ -183,9 +183,9 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
         display="flex"
         flexDirection="column"
         height="100%"
-        overflow="scroll"
         paddingBottom={2}
         paddingX={2}
+        sx={{ overflowY: 'auto' }}
       >
         {relatedEvents.length > 0 &&
           relatedEvents.map((event, index) => (

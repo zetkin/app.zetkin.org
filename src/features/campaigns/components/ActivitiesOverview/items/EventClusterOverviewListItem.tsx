@@ -14,6 +14,7 @@ import MultiLocationIcon from 'zui/icons/MultiLocation';
 import OverviewListItem from './OverviewListItem';
 import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import {
@@ -30,6 +31,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
   cluster,
   focusDate,
 }) => {
+  const { openEventPopper } = useEventPopper();
   const {
     allHaveContacts,
     campaignId,
@@ -63,6 +65,9 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
           participantsLoading={statsLoading}
         />
       }
+      onClick={(x: number, y: number) => {
+        openEventPopper(cluster, { left: x, top: y });
+      }}
       PrimaryIcon={
         cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
           ? MultiLocationIcon

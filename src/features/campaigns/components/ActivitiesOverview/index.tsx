@@ -54,7 +54,6 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
           </NextLink>
         </Box>
       </Box>
-
       <ZUIFuture future={activitiesModel.getActivityOverview(campaignId)}>
         {(data) => {
           const totalLength =

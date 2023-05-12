@@ -1,9 +1,10 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
+import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
 
 import { CampaignActivity } from 'features/campaigns/models/CampaignActivitiesModel';
+import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -68,13 +69,12 @@ interface OverviewListItemProps {
   SecondaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
-
   endDate: CampaignActivity['endDate'];
   startDate: CampaignActivity['startDate'];
-
   focusDate: Date | null;
   href: string;
   meta?: JSX.Element;
+  onClick?: (x: number, y: number) => void;
   title: string;
   endNumber: number | string;
   endNumberColor?: ZUIIconLabelProps['color'];
@@ -90,6 +90,7 @@ const OverviewListItem = ({
   focusDate,
   href,
   meta,
+  onClick,
   title,
   endNumber,
   endNumberColor = 'secondary',
@@ -152,8 +153,16 @@ const OverviewListItem = ({
 
   return (
     <NextLink href={href} passHref>
-      <Link my={2} underline="none">
-        <Box my={2}>
+      <a style={{ padding: '8px 0', textDecoration: 'none' }}>
+        <Box
+          my={2}
+          onClick={(evt) => {
+            if (onClick) {
+              evt.preventDefault();
+              onClick(evt.clientX, evt.clientY);
+            }
+          }}
+        >
           <Box
             alignItems="center"
             display="flex"
@@ -202,7 +211,9 @@ const OverviewListItem = ({
             justifyContent="space-between"
           >
             <Box width={30}>
-              <Box className={classes.dot} />
+              <Tooltip title={getStatusDotLabel({ color })}>
+                <Box className={classes.dot} />
+              </Tooltip>
             </Box>
             <Box width="calc(100% - 30px - 80px - 20px)">
               <Typography color={theme.palette.grey[500]} variant="body2">
@@ -212,7 +223,7 @@ const OverviewListItem = ({
             <Box width={80}>{statusBar}</Box>
           </Box>
         </Box>
-      </Link>
+      </a>
     </NextLink>
   );
 };
