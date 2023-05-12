@@ -118,6 +118,7 @@ const Calendar = () => {
                   );
                 }
               }}
+              orgId={parseInt(orgId as string)}
               timeScale={selectedTimeScale}
             />
 

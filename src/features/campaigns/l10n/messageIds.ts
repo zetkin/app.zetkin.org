@@ -142,6 +142,7 @@ export default makeMessages('feat.campaigns', {
     filterActivities: m('Type to filter'),
     noActivities: m('There are no activities in this project yet.'),
     noSearchResults: m('Your filtering yielded no results.'),
+    showPublicPage: m('Show public sign-up page'),
     viewArchive: m('View archive'),
   },
   taskLayout: {

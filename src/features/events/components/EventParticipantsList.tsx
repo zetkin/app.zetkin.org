@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { forwardRef } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -15,16 +15,14 @@ interface EventParticipantsListProps {
   orgId: number;
 }
 
-const EventParticipantsList: FC<EventParticipantsListProps> = ({
-  data,
-  filterString,
-  model,
-  orgId,
-}) => {
+const EventParticipantsList = forwardRef(function EventParticipantsList(
+  { data, filterString, model, orgId }: EventParticipantsListProps,
+  ref
+) {
   const messages = useMessages(messageIds);
 
   return (
-    <Box>
+    <Box ref={ref}>
       {model.getNumSignedParticipants() > 0 && (
         <ParticipantListSection
           chipColor={theme.palette.grey[500]}
@@ -66,6 +64,6 @@ const EventParticipantsList: FC<EventParticipantsListProps> = ({
       )}
     </Box>
   );
-};
+});
 
 export default EventParticipantsList;
