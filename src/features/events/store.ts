@@ -1,3 +1,4 @@
+import { isSameDate } from 'utils/dateUtils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
@@ -49,6 +50,7 @@ export type FilterCategoryType =
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
+  eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
   filters: {
     selectedActions: string[];
     selectedStates: string[];
@@ -64,6 +66,7 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
+  eventsByDate: {},
   filters: {
     selectedActions: [],
     selectedStates: [],
@@ -113,6 +116,36 @@ const eventsSlice = createSlice({
       item.data = event;
       item.isLoading = false;
       item.loaded = new Date().toISOString();
+    },
+    eventRangeLoad: (state, action: PayloadAction<Date[]>) => {
+      const range = action.payload;
+      range.forEach((date) => {
+        const dateStr = date.toISOString().slice(0, 10);
+        if (!state.eventsByDate[dateStr]) {
+          state.eventsByDate[dateStr] = remoteList();
+        }
+        state.eventsByDate[dateStr].isLoading = true;
+      });
+    },
+    eventRangeLoaded: (
+      state,
+      action: PayloadAction<[Date[], ZetkinEvent[]]>
+    ) => {
+      const [range, events] = action.payload;
+
+      // Add IDs to map
+      range.forEach((date) => {
+        const dateStr = date.toISOString().slice(0, 10);
+        state.eventsByDate[dateStr] = remoteList(
+          events.filter((event) => isSameDate(new Date(event.start_time), date))
+        );
+        state.eventsByDate[dateStr].loaded = new Date().toISOString();
+      });
+
+      // Add events to big list
+      state.eventList.items = state.eventList.items
+        .filter((item) => !events.some((c) => c.id == item.id))
+        .concat(events.map((event) => remoteItem(event.id, { data: event })));
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
@@ -310,6 +343,8 @@ export const {
   eventDeleted,
   eventLoad,
   eventLoaded,
+  eventRangeLoad,
+  eventRangeLoaded,
   eventsLoad,
   eventsLoaded,
   eventUpdate,
