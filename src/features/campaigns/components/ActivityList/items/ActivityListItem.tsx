@@ -1,8 +1,9 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, SvgIconTypeMap, Theme, Typography } from '@mui/material';
+import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
 
+import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import theme from 'theme';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 
@@ -107,7 +108,9 @@ const ActivityListItem = ({
           }}
         >
           <Box className={classes.left}>
-            <Box className={classes.dot} />
+            <Tooltip title={getStatusDotLabel({ color })}>
+              <Box className={classes.dot} />
+            </Tooltip>
             <PrimaryIcon className={classes.primaryIcon} />
             <Box>
               <Typography color={theme.palette.text.primary}>

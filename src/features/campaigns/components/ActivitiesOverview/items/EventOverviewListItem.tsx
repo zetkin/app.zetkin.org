@@ -6,11 +6,13 @@ import {
   ScheduleOutlined,
 } from '@mui/icons-material';
 
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
 import { removeOffset } from 'utils/dateUtils';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -26,6 +28,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
   event,
   focusDate,
 }) => {
+  const { openEventPopper } = useEventPopper();
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
@@ -45,6 +48,12 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
         event.campaign?.id ?? 'standalone'
       }/events/${event.id}`}
       meta={<EventWarningIcons compact model={model} />}
+      onClick={(x: number, y: number) => {
+        openEventPopper(
+          { events: [event], kind: CLUSTER_TYPE.SINGLE },
+          { left: x, top: y }
+        );
+      }}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
       startDate={null}

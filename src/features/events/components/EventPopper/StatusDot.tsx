@@ -1,8 +1,9 @@
-import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/system';
+import { Box, Tooltip } from '@mui/material';
 
 import { EventState } from 'features/events/models/EventDataModel';
+import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivitiesOverview/items/OverviewListItem';
 
 interface StyleProps {
@@ -36,7 +37,12 @@ const StatusDot = ({ state }: DotProps) => {
     color = STATUS_COLORS.ORANGE;
   }
   const classes = useStyles({ color });
-  return <Box className={classes.dot} />;
+
+  return (
+    <Tooltip title={getStatusDotLabel({ state })}>
+      <Box className={classes.dot} />
+    </Tooltip>
+  );
 };
 
 export default StatusDot;

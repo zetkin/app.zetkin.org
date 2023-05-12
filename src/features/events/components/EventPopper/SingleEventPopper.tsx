@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { ClickAwayListener, Paper, Popover } from '@mui/material';
 
-import SingleEvent from './MultiEventPopper/SingleEvent';
+import SingleEvent from './SingleEvent';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 export interface SingleEventPopperProps {

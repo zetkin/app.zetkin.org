@@ -68,7 +68,7 @@ const EventListItem: FC<EventListeItemProps> = ({ cluster }) => {
           color="secondary"
           iconLabels={[
             {
-              icon: <ScheduleOutlined fontSize="inherit" />,
+              icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
                   end={new Date(removeOffset(endTime))}
@@ -79,7 +79,9 @@ const EventListItem: FC<EventListeItemProps> = ({ cluster }) => {
             ...(location
               ? [
                   {
-                    icon: <PlaceOutlined fontSize="inherit" />,
+                    icon: (
+                      <PlaceOutlined color="secondary" fontSize="inherit" />
+                    ),
                     label: location.title,
                   },
                 ]
