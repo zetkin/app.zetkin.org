@@ -91,7 +91,7 @@ const Single: FC<SingleProps> = ({
 
   const messages = useMessages(eventMessageIds);
   const eventTitle =
-    event.title || event.activity?.title || messages.common.noActivity();
+    event.title || event.activity?.title || messages.common.noTitle();
 
   return (
     <Event

@@ -108,9 +108,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
   );
   const messages = useMessages(eventMessageIds);
   const firstEventTitle =
-    events[0].title ||
-    events[0].activity?.title ||
-    messages.common.noActivity();
+    events[0].title || events[0].activity?.title || messages.common.noTitle();
   const anyEventIsCancelled = events.some((event) => event.cancelled);
 
   return (
