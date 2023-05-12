@@ -1,7 +1,7 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
+import { Box, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 
 import { CampaignActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import { isSameDate } from 'utils/dateUtils';
@@ -152,7 +152,7 @@ const OverviewListItem = ({
 
   return (
     <NextLink href={href} passHref>
-      <Link my={2} underline="none">
+      <a style={{ padding: '8px 0', textDecoration: 'none' }}>
         <Box
           my={2}
           onClick={(evt) => {
@@ -220,7 +220,7 @@ const OverviewListItem = ({
             <Box width={80}>{statusBar}</Box>
           </Box>
         </Box>
-      </Link>
+      </a>
     </NextLink>
   );
 };
