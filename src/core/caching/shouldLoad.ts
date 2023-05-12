@@ -1,5 +1,7 @@
 import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
+const DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes
+
 export default function shouldLoad(
   item: RemoteItem<unknown> | RemoteList<unknown> | undefined
 ): boolean {
@@ -20,7 +22,7 @@ export default function shouldLoad(
   } else {
     const loadDate = new Date(item.loaded);
     const age = new Date().getTime() - loadDate.getTime();
-    if (age > 60000) {
+    if (age > DEFAULT_TTL) {
       return true;
     }
   }

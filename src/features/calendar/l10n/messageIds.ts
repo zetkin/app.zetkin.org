@@ -27,7 +27,7 @@ export default makeMessages('feat.calendar', {
   eventFilter: {
     collapse: m('Collapse'),
     expand: m<{ numOfOptions: number }>(
-      '{numOfOptions, plural, one {+ 1 more project activity types} other {+ # more project activity types}}'
+      '{numOfOptions, plural, one {+ 1 more event type} other {+ # more event types}}'
     ),
     filter: m('Filter'),
     filterOptions: {

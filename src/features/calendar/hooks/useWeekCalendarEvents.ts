@@ -2,6 +2,7 @@ import { ACTIVITIES } from 'features/campaigns/models/CampaignActivitiesModel';
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import { isSameDate } from 'utils/dateUtils';
+import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import useModel from 'core/useModel';
 import clusterEventsForWeekCalender, {
   AnyClusteredEvent,
@@ -31,8 +32,10 @@ export default function useWeekCalendarEvents({
     (activity) => activity.kind == ACTIVITIES.EVENT
   ) ?? []) as EventActivity[];
 
+  const filteredActivities = useFilteredEventActivities(eventActivities);
+
   return dates.map((date) => {
-    const relevantActivities = eventActivities.filter((activity) =>
+    const relevantActivities = filteredActivities.filter((activity) =>
       isSameDate(new Date(activity.data.start_time), date)
     );
 
