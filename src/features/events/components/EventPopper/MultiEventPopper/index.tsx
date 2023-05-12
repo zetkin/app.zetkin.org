@@ -14,7 +14,7 @@ import messageIds from 'features/events/l10n/messageIds';
 import MultiLocationCluster from './MultiLocationCluster';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import MultiShiftCluster from './MultiShiftCluster';
-import SingleEvent from './SingleEvent';
+import SingleEvent from '../SingleEvent';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from '../../../../../utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';

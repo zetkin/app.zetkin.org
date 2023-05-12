@@ -11,14 +11,14 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Checkbox, Link, Typography } from '@mui/material';
+import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
-import LocationName from '../../LocationName';
+import LocationName from '../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
-import Quota from '../Quota';
+import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
-import StatusDot from '../StatusDot';
+import StatusDot from './StatusDot';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -112,7 +112,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   return (
     <>
       <Box alignItems="center" display="flex">
-        <Checkbox size="medium" />
+        {/*TODO: <Checkbox size="medium" /> */}
         <Typography variant="h5">
           {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>
