@@ -117,7 +117,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>
       </Box>
-      <Box alignItems="center" display="flex" sx={{ ml: 1 }}>
+      <Box alignItems="center" display="flex">
         <StatusDot state={state} />
         <Typography color="secondary" sx={{ ml: 1 }}>
           {event.activity?.title || messages.common.noActivity()}
