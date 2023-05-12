@@ -239,7 +239,7 @@ export default class EventDataModel extends ModelBase {
     this._repo.updateEvent(this._orgId, this._eventId, { title });
   }
 
-  setType(id: number) {
+  setType(id: number | null) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       activity_id: id,
     });
