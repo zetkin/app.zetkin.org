@@ -1,5 +1,6 @@
 import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
 import { isSameDate } from 'utils/dateUtils';
+import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import useModel from 'core/useModel';
 import CampaignActivitiesModel, {
   ACTIVITIES,
@@ -39,11 +40,14 @@ export default function useMonthCalendarEvents({
     (activity) => activity.kind == ACTIVITIES.EVENT
   ) ?? []) as EventActivity[];
 
+  // Filter events based on user filters
+  const filteredActivities = useFilteredEventActivities(eventActivities);
+
   const dates: UseMonthCalendarEventsReturn = [];
 
   const curDate = new Date(startDate);
   while (curDate.getTime() <= endDate.getTime()) {
-    const relevantActivities = eventActivities.filter((activity) => {
+    const relevantActivities = filteredActivities.filter((activity) => {
       const startTime = new Date(activity.data.start_time);
       const endTime = new Date(activity.data.end_time);
 
