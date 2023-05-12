@@ -10,6 +10,7 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
+import { removeOffset } from 'utils/dateUtils';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -55,8 +56,8 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
               icon: <ScheduleOutlined fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
-                  end={new Date(event.end_time)}
-                  start={new Date(event.start_time)}
+                  end={new Date(removeOffset(event.end_time))}
+                  start={new Date(removeOffset(event.start_time))}
                 />
               ),
             },

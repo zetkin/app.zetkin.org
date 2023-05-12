@@ -4,6 +4,8 @@ import { Box, Link, Typography } from '@mui/material';
 
 import { getParticipantsStatusColor } from 'features/events/utils/eventUtils';
 import messageIds from '../l10n/messageIds';
+import { removeOffset } from 'utils/dateUtils';
+
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUINumberChip from 'zui/ZUINumberChip';
@@ -44,8 +46,8 @@ const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
       </Box>
       <Typography color="secondary">
         <ZUITimeSpan
-          end={new Date(event.end_time)}
-          start={new Date(event.start_time)}
+          end={new Date(removeOffset(event.end_time))}
+          start={new Date(removeOffset(event.start_time))}
         />
       </Typography>
     </Box>

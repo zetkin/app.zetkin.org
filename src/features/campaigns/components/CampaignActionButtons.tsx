@@ -1,12 +1,13 @@
-import { Alert } from '@mui/material';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
+import { Alert, Link } from '@mui/material';
 import {
   AssignmentOutlined,
   CheckBoxOutlined,
   Delete,
   Event,
   HeadsetMic,
+  OpenInNew,
   Settings,
 } from '@mui/icons-material';
 import React, { useContext, useState } from 'react';
@@ -32,6 +33,7 @@ import messageIds from '../l10n/messageIds';
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
   DELETE_CAMPAIGN = 'deleteCampaign',
+  SHOW_PUBLIC_PAGE = 'showPublicPage',
 }
 
 interface CampaignActionButtonsProps {
@@ -181,6 +183,29 @@ const CampaignActionButtons: React.FunctionComponent<
                   title: messages.form.deleteCampaign.title(),
                   warningText: messages.form.deleteCampaign.warning(),
                 });
+              },
+            },
+            {
+              id: CAMPAIGN_MENU_ITEMS.SHOW_PUBLIC_PAGE,
+              label: (
+                <>
+                  <Box mr={1}>
+                    <OpenInNew />
+                  </Box>
+                  <Link
+                    color="inherit"
+                    display="flex"
+                    href={`https://www.zetk.in/o/${orgId}/campaigns/${campaign.id}`}
+                    sx={{ alignItems: 'center', gap: 1 }}
+                    target="_blank"
+                    underline="none"
+                  >
+                    {<Msg id={messageIds.singleProject.showPublicPage} />}
+                  </Link>
+                </>
+              ),
+              onSelect: () => {
+                // Do nothing, but without this, the menu will not close
               },
             },
           ]}

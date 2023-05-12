@@ -5,6 +5,7 @@ import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import messageIds from 'features/events/l10n/messageIds';
+import { removeOffset } from 'utils/dateUtils';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
@@ -18,6 +19,23 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
   const needsParticipants =
     event.num_participants_required > event.num_participants_available;
+
+  function isAllDay(event: ZetkinEvent): boolean {
+    const startDate = new Date(removeOffset(event.start_time));
+    const endDate = new Date(removeOffset(event.end_time));
+
+    // Check if the start and end dates are not on the same day
+    if (startDate.toDateString() !== endDate.toDateString()) {
+      // If start time and end time are 00:00:00 return true
+      if (
+        startDate.toString().split(' ')[4] == '00:00:00' &&
+        endDate.toString().split(' ')[4] == '00:00:00'
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   return (
     <Box
@@ -39,6 +57,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           }}
         />
         {/* Title */}
+
         <Typography>
           {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>
@@ -46,19 +65,26 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
         <Typography color={theme.palette.secondary.main} component={'div'}>
           <Box alignItems="center" display="flex" gap={0.5}>
             <Schedule />
-            <FormattedTime
-              hour="numeric"
-              hour12={false}
-              minute="numeric"
-              value={event.start_time}
-            />
-            &nbsp;-&nbsp;
-            <FormattedTime
-              hour="numeric"
-              hour12={false}
-              minute="numeric"
-              value={event.end_time}
-            />
+            {isAllDay(event) && (
+              <Typography key={event.id}>{messages.common.allDay()}</Typography>
+            )}
+            {!isAllDay(event) && (
+              <>
+                <FormattedTime
+                  hour="numeric"
+                  hour12={false}
+                  minute="numeric"
+                  value={removeOffset(event.start_time)}
+                />
+                &nbsp;-&nbsp;
+                <FormattedTime
+                  hour="numeric"
+                  hour12={false}
+                  minute="numeric"
+                  value={removeOffset(event.end_time)}
+                />
+              </>
+            )}
           </Box>
         </Typography>
         {/* Location */}

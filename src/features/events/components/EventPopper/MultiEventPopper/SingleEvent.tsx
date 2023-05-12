@@ -17,6 +17,7 @@ import { FC, useContext } from 'react';
 import LocationName from '../../LocationName';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from '../Quota';
+import { removeOffset } from 'utils/dateUtils';
 import StatusDot from '../StatusDot';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -185,8 +186,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         </Box>
         <Typography color="secondary" variant="body2">
           <ZUITimeSpan
-            end={new Date(event.end_time)}
-            start={new Date(event.start_time)}
+            end={new Date(removeOffset(event.end_time))}
+            start={new Date(removeOffset(event.start_time))}
           />
         </Typography>
       </Box>
