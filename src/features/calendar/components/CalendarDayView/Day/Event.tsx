@@ -1,5 +1,6 @@
 import { FormattedTime } from 'react-intl';
-import { Box, Typography } from '@mui/material';
+import NextLink from 'next/link';
+import { Box, Link, Typography } from '@mui/material';
 import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
@@ -38,75 +39,96 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
   }
 
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      justifyContent="space-between"
-      padding={2}
-      sx={{ backgroundColor: 'white', borderRadius: '3px' }}
-      width="100%"
+    <NextLink
+      href={`/organize/${event.organization.id}/projects/${
+        event.campaign ? `${event.campaign.id}` : 'standalone'
+      }/events/${event.id}`}
+      passHref
     >
-      <Box alignItems="center" display="flex" gap={2.2}>
-        {/* Status */}
+      <Link color="inherit" underline="none">
         <Box
-          sx={{
-            backgroundColor: 'green',
-            borderRadius: '50%',
-            height: '10px',
-            width: '10px',
-          }}
-        />
-        {/* Title */}
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          padding={2}
+          sx={{ backgroundColor: 'white', borderRadius: '3px' }}
+          width="100%"
+        >
+          <Box alignItems="center" display="flex" gap={2.2}>
+            {/* Status */}
+            <Box
+              sx={{
+                backgroundColor: 'green',
+                borderRadius: '50%',
+                height: '10px',
+                width: '10px',
+              }}
+            />
+            {/* Title */}
 
-        <Typography>
-          {event.title || event.activity?.title || messages.common.noTitle()}
-        </Typography>
-        {/* Time */}
-        <Typography color={theme.palette.secondary.main} component={'div'}>
-          <Box alignItems="center" display="flex" gap={0.5}>
-            <Schedule />
-            {isAllDay(event) && (
-              <Typography key={event.id}>{messages.common.allDay()}</Typography>
-            )}
-            {!isAllDay(event) && (
-              <>
-                <FormattedTime
-                  hour="numeric"
-                  hour12={false}
-                  minute="numeric"
-                  value={removeOffset(event.start_time)}
-                />
-                &nbsp;-&nbsp;
-                <FormattedTime
-                  hour="numeric"
-                  hour12={false}
-                  minute="numeric"
-                  value={removeOffset(event.end_time)}
-                />
-              </>
+            <Typography
+              sx={{
+                color: theme.palette.secondary.main,
+              }}
+            >
+              {event.title ||
+                event.activity?.title ||
+                messages.common.noTitle()}
+            </Typography>
+            {/* Time */}
+            <Typography color={theme.palette.secondary.main} component={'div'}>
+              <Box alignItems="center" display="flex" gap={0.5}>
+                <Schedule />
+                {isAllDay(event) && (
+                  <Typography key={event.id}>
+                    {messages.common.allDay()}
+                  </Typography>
+                )}
+                {!isAllDay(event) && (
+                  <>
+                    <FormattedTime
+                      hour="numeric"
+                      hour12={false}
+                      minute="numeric"
+                      value={removeOffset(event.start_time)}
+                    />
+                    &nbsp;-&nbsp;
+                    <FormattedTime
+                      hour="numeric"
+                      hour12={false}
+                      minute="numeric"
+                      value={removeOffset(event.end_time)}
+                    />
+                  </>
+                )}
+              </Box>
+            </Typography>
+            {/* Location */}
+            {event.location && (
+              <Typography
+                color={theme.palette.secondary.main}
+                component={'div'}
+              >
+                <Box alignItems="center" display="flex" gap={0.5}>
+                  <PlaceOutlined />
+                  {event.location?.title}
+                </Box>
+              </Typography>
             )}
           </Box>
-        </Typography>
-        {/* Location */}
-        {event.location && (
-          <Typography color={theme.palette.secondary.main} component={'div'}>
-            <Box alignItems="center" display="flex" gap={0.5}>
-              <PlaceOutlined />
-              {event.location?.title}
-            </Box>
-          </Typography>
-        )}
-      </Box>
-      {/* Icons */}
+          {/* Icons */}
 
-      <Box alignItems="center" display="flex" gap={1}>
-        <EventWarningIcons compact model={model} />
-        <People color={needsParticipants ? 'error' : 'inherit'} />
-        <Typography color={needsParticipants ? 'error' : 'inherit'}>
-          {event.num_participants_available}/{event.num_participants_required}
-        </Typography>
-      </Box>
-    </Box>
+          <Box alignItems="center" display="flex" gap={1}>
+            <EventWarningIcons compact model={model} />
+            <People color={needsParticipants ? 'error' : 'secondary'} />
+            <Typography color={needsParticipants ? 'error' : 'secondary'}>
+              {event.num_participants_available}/
+              {event.num_participants_required}
+            </Typography>
+          </Box>
+        </Box>
+      </Link>
+    </NextLink>
   );
 };
 
