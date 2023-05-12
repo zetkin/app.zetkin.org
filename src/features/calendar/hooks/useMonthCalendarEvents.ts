@@ -1,11 +1,7 @@
 import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
 import { isSameDate } from 'utils/dateUtils';
+import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
-import useModel from 'core/useModel';
-import CampaignActivitiesModel, {
-  ACTIVITIES,
-  EventActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
 import {
   CLUSTER_TYPE,
   clusterEvents,
@@ -25,20 +21,11 @@ type UseMonthCalendarEventsReturn = {
 }[];
 
 export default function useMonthCalendarEvents({
-  campaignId,
   endDate,
   maxPerDay,
-  orgId,
-
   startDate,
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
-  const model = useModel((env) => new CampaignActivitiesModel(env, orgId));
-
-  // TODO: Load only the ones necessary here
-  const activities = model.getAllActivities(campaignId);
-  const eventActivities = (activities.data?.filter(
-    (activity) => activity.kind == ACTIVITIES.EVENT
-  ) ?? []) as EventActivity[];
+  const eventActivities = useEventsFromDateRange(startDate, endDate);
 
   // Filter events based on user filters
   const filteredActivities = useFilteredEventActivities(eventActivities);

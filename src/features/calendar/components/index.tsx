@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
@@ -132,27 +132,29 @@ const Calendar = () => {
               marginTop={2}
               overflow="auto"
             >
-              {selectedTimeScale === TimeScale.DAY && (
-                <CalendarDayView
-                  activities={futureDays}
-                  focusDate={focusDate}
-                  onClickPreviousDay={(date) => setFocusDate(date)}
-                  previousActivityDay={lastDayWithEvent}
-                />
-              )}
-              {selectedTimeScale === TimeScale.WEEK && (
-                <CalendarWeekView
-                  focusDate={focusDate}
-                  onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
-                />
-              )}
-              {selectedTimeScale === TimeScale.MONTH && (
-                <CalendarMonthView
-                  focusDate={focusDate}
-                  onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
-                  onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
-                />
-              )}
+              <Suspense>
+                {selectedTimeScale === TimeScale.DAY && (
+                  <CalendarDayView
+                    activities={futureDays}
+                    focusDate={focusDate}
+                    onClickPreviousDay={(date) => setFocusDate(date)}
+                    previousActivityDay={lastDayWithEvent}
+                  />
+                )}
+                {selectedTimeScale === TimeScale.WEEK && (
+                  <CalendarWeekView
+                    focusDate={focusDate}
+                    onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+                  />
+                )}
+                {selectedTimeScale === TimeScale.MONTH && (
+                  <CalendarMonthView
+                    focusDate={focusDate}
+                    onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+                    onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
+                  />
+                )}
+              </Suspense>
             </Box>
           </Box>
         );
