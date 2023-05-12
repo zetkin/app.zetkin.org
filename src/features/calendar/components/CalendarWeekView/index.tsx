@@ -175,9 +175,12 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                       cluster.events[cluster.events.length - 1].end_time
                     );
                     const startOffs =
-                      (startTime.getHours() + startTime.getMinutes() / 60) / 24;
+                      (startTime.getUTCHours() +
+                        startTime.getUTCMinutes() / 60) /
+                      24;
                     const endOffs =
-                      (endTime.getHours() + endTime.getMinutes() / 60) / 24;
+                      (endTime.getUTCHours() + endTime.getUTCMinutes() / 60) /
+                      24;
 
                     const height = Math.max(endOffs - startOffs, 1 / 3 / 24);
 
