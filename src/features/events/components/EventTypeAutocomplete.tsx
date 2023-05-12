@@ -38,19 +38,14 @@ type EventTypeAutocompleteProps = {
   onChangeNewOption: (newId: number) => void;
   onFocus: () => void;
   showBorder?: boolean;
-  types: (
-    | ZetkinActivity
-    | { id?: number; title: string; uncategorizedId: 'UNCATEGORIZED_ID' }
-  )[];
+  types: ZetkinActivity[];
   typesModel: EventTypesModel;
   value: ZetkinEvent['activity'];
 };
 
-interface NewEventType {
-  id?: number;
-  title: string | null;
-  createdTypeId?: 'CREATED_TYPE_ID';
-  uncategorizedId?: 'UNCATEGORIZED_ID';
+interface EventTypeOption {
+  id: number | 'CREATE' | 'UNCATEGORIZED';
+  title: string;
 }
 
 const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
@@ -78,8 +73,15 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     }
   }, [types.length]);
 
-  const eventTypes: NewEventType[] = types;
-  const fuse = new Fuse(eventTypes.slice(0, -1), {
+  const allTypes: EventTypeOption[] = [
+    ...types,
+    {
+      id: 'UNCATEGORIZED',
+      title: messages.type.uncategorized(),
+    },
+  ];
+
+  const fuse = new Fuse(types, {
     keys: ['title'],
     threshold: 0.4,
   });
@@ -101,16 +103,15 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
               )}`
             : '';
 
-          const filteredResult: NewEventType[] = [
+          const filteredResult: EventTypeOption[] = [
             ...searchedResults.map((result) => {
               return { id: result.item.id, title: result.item.title };
             }),
             {
+              id: 'UNCATEGORIZED',
               title: messages.type.uncategorized(),
-              uncategorizedId: 'UNCATEGORIZED_ID',
             },
           ];
-
           if (
             filteredResult.find(
               (item) =>
@@ -122,7 +123,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           }
 
           filteredResult.push({
-            createdTypeId: 'CREATED_TYPE_ID',
+            id: 'CREATE',
             title: inputStartWithCapital,
           });
           return inputValue ? filteredResult : options;
@@ -132,21 +133,22 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         isOptionEqualToValue={(option, value) => option.title === value.title}
         onBlur={() => onBlur()}
         onChange={(_, value) => {
-          if (value.createdTypeId) {
+          if (value.id == 'CREATE') {
             typesModel.addType(value.title!);
             setCreatedType(value.title!);
+            return;
           }
           onChange(
-            value.id
-              ? {
+            value.id == 'UNCATEGORIZED'
+              ? null
+              : {
                   id: value.id,
                   title: value.title!,
                 }
-              : null
           );
         }}
         onFocus={() => onFocus()}
-        options={eventTypes}
+        options={allTypes}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -164,21 +166,17 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         )}
         renderOption={(props, option) => {
           return (
-            <Box
-              key={
-                option.id
-                  ? option.id
-                  : option.uncategorizedId ?? option.createdTypeId
-              }
-            >
-              {option.id && <li {...props}>{option.title}</li>}
-              {option.uncategorizedId && (
+            <Box key={option.id}>
+              {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
+                <li {...props}>{option.title}</li>
+              )}
+              {option.id == 'UNCATEGORIZED' && (
                 <li {...props}>
                   <Clear />
                   {messages.type.uncategorized()}
                 </li>
               )}
-              {option.createdTypeId && (
+              {option.id == 'CREATE' && (
                 <li {...props}>
                   <Add />
                   {messages.type.createType({ type: option.title! })}
@@ -191,6 +189,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           value
             ? value
             : {
+                id: 'UNCATEGORIZED',
                 title: messages.type.uncategorized(),
               }
         }
