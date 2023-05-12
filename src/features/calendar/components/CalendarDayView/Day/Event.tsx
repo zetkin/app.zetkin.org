@@ -40,8 +40,8 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
   return (
     <NextLink
-      href={`/organize/${event.organization.id}/${
-        event.campaign ? `projects/${event.campaign.id}` : 'standalone'
+      href={`/organize/${event.organization.id}/projects/${
+        event.campaign ? `${event.campaign.id}` : 'standalone'
       }/events/${event.id}`}
       passHref
     >

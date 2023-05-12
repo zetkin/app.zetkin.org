@@ -21,8 +21,8 @@ const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
     <Box display="flex" flexDirection="column">
       <Box alignItems="center" display="flex" justifyContent="space-between">
         <NextLink
-          href={`/organize/${event.organization.id}/${
-            event.campaign ? `projects/${event.campaign.id}` : 'standalone'
+          href={`/organize/${event.organization.id}/projects/${
+            event.campaign ? `${event.campaign.id}` : 'standalone'
           }/events/${event.id}`}
           passHref
         >
