@@ -4,7 +4,7 @@ import { ScheduleOutlined } from '@mui/icons-material';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
-import LocationName from 'features/events/components/LocationName';
+import LocationLabel from 'features/events/components/LocationLabel';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
@@ -30,7 +30,7 @@ function createMultiShiftFieldGroups({
         },
         {
           kind: 'Location',
-          message: <LocationName location={event.location} />,
+          message: <LocationLabel location={event.location} />,
           requiresAction: false,
         },
         {
