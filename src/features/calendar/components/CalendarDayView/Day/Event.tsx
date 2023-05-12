@@ -3,7 +3,6 @@ import NextLink from 'next/link';
 import { Box, Link, Typography } from '@mui/material';
 import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
-import dayjs from 'dayjs';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import messageIds from 'features/events/l10n/messageIds';
@@ -39,8 +38,6 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
     return false;
   }
 
-  const isThePast = dayjs(event.start_time).isBefore(dayjs(), 'day');
-
   return (
     <NextLink
       href={`/organize/${event.organization.id}/${
@@ -71,7 +68,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
             <Typography
               sx={{
-                color: isThePast ? theme.palette.secondary.main : 'inherit',
+                color: theme.palette.secondary.main,
               }}
             >
               {event.title ||
