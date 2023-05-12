@@ -60,9 +60,10 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
                 <LocationName location={event.location} />
               )}
               {clusterType == CLUSTER_TYPE.MULTI_SHIFT && timeSpan}
-              {(clusterType == CLUSTER_TYPE.ARBITRARY &&
-                (event.title || event.activity?.title)) ||
-                messages.common.noTitle()}
+              {clusterType == CLUSTER_TYPE.ARBITRARY &&
+                (event.title ||
+                  event.activity?.title ||
+                  messages.common.noTitle())}
             </Typography>
           </Box>
           <Box alignItems="center" display="flex">
