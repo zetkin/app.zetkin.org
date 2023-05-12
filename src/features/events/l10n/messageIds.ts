@@ -129,6 +129,14 @@ export default makeMessages('feat.events', {
   eventRelatedCard: {
     header: m('Related events'),
   },
+  eventStatus: {
+    cancelled: m('Cancelled'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    open: m('Open'),
+    scheduled: m('Scheduled'),
+    unknown: m('Unknown'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),
