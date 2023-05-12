@@ -77,7 +77,13 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                   onChangeNewOption={(newValueId) => model.setType(newValueId)}
                   onFocus={() => setEditingTypeOrTitle(true)}
                   showBorder={editingTypeOrTitle}
-                  types={types}
+                  types={[
+                    ...types,
+                    {
+                      title: messages.type.uncategorized(),
+                      uncategorizeId: 'UNCATEGORIZED_ID',
+                    },
+                  ]}
                   typesModel={typesModel}
                   value={currentEvent.activity}
                 />
