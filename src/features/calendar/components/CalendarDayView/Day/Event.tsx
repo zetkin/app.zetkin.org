@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import { Box, Link, Typography } from '@mui/material';
 import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
+import dayjs from 'dayjs';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import messageIds from 'features/events/l10n/messageIds';
@@ -11,7 +12,6 @@ import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import dayjs from 'dayjs';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
@@ -48,7 +48,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
       }/events/${event.id}`}
       passHref
     >
-      <Link underline="none" color="inherit">
+      <Link color="inherit" underline="none">
         <Box
           display="flex"
           flexDirection="row"
@@ -71,11 +71,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
             <Typography
               sx={{
-                color: isThePast
-                  ? // Grey if it's the past
-                    theme.palette.secondary.main
-                  : // Default colour if it's the future
-                    'inherit',
+                color: isThePast ? theme.palette.secondary.main : 'inherit',
               }}
             >
               {event.title ||
