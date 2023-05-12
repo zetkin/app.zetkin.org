@@ -13,6 +13,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUICard from 'zui/ZUICard';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
 interface EventContactCardProps {
@@ -38,7 +39,9 @@ const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
   return (
     <>
       <Box m={1} sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
-        <ZUIAvatar orgId={orgId} personId={contact.id} />
+        <ZUIPersonHoverCard personId={contact.id}>
+          <ZUIAvatar orgId={orgId} personId={contact.id} />
+        </ZUIPersonHoverCard>
       </Box>
       <Typography sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
         {contact.name}

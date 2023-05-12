@@ -18,6 +18,7 @@ import noPropagate from 'utils/noPropagate';
 import { useMessages } from 'core/i18n';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   ZetkinEventParticipant,
@@ -126,7 +127,9 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       headerName: '',
       hideSortIcons: true,
       renderCell: (params) => (
-        <ZUIAvatar orgId={orgId} personId={params.row.id} />
+        <ZUIPersonHoverCard personId={params.row.id}>
+          <ZUIAvatar orgId={orgId} personId={params.row.id} />
+        </ZUIPersonHoverCard>
       ),
       resizable: false,
       sortable: false,
