@@ -11,6 +11,7 @@ import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import dayjs from 'dayjs';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
@@ -38,6 +39,8 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
     return false;
   }
 
+  const isThePast = dayjs(event.start_time).isBefore(dayjs(), 'day');
+
   return (
     <NextLink
       href={`/organize/${event.organization.id}/${
@@ -45,7 +48,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
       }/events/${event.id}`}
       passHref
     >
-      <Link underline="none">
+      <Link underline="none" color="inherit">
         <Box
           display="flex"
           flexDirection="row"
@@ -66,7 +69,15 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             />
             {/* Title */}
 
-            <Typography>
+            <Typography
+              sx={{
+                color: isThePast
+                  ? // Grey if it's the past
+                    theme.palette.secondary.main
+                  : // Default colour if it's the future
+                    'inherit',
+              }}
+            >
               {event.title ||
                 event.activity?.title ||
                 messages.common.noTitle()}
@@ -116,8 +127,8 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
           <Box alignItems="center" display="flex" gap={1}>
             <EventWarningIcons compact model={model} />
-            <People color={needsParticipants ? 'error' : 'inherit'} />
-            <Typography color={needsParticipants ? 'error' : 'inherit'}>
+            <People color={needsParticipants ? 'error' : 'secondary'} />
+            <Typography color={needsParticipants ? 'error' : 'secondary'}>
               {event.num_participants_available}/
               {event.num_participants_required}
             </Typography>
