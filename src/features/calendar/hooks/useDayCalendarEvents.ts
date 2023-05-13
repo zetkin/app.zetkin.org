@@ -8,16 +8,13 @@ import { DaySummary, getActivitiesByDay } from '../components/utils';
 type UseDayCalendarEventsReturn = {
   activities: [Date, DaySummary][];
   isLoadingFuture: boolean;
-  isLoadingPast: boolean;
   loadMoreFuture: () => void;
-  loadMorePast: () => void;
   previousActivityDay: [Date, DaySummary] | null;
 };
 
 export default function useDayCalendarEvents(
   focusDate: Date
 ): UseDayCalendarEventsReturn {
-  const [firstDate, setFirstDate] = useState(focusDate);
   const [lastDate, setLastDate] = useState(
     new Date(
       focusDate.getUTCFullYear(),
@@ -28,7 +25,7 @@ export default function useDayCalendarEvents(
 
   const eventsState = useSelector((state: RootState) => state.events);
 
-  const activities = useEventsFromDateRange(firstDate, lastDate);
+  const activities = useEventsFromDateRange(focusDate, lastDate);
   const activitiesByDay = getActivitiesByDay(activities);
 
   const lastDateInStore =
@@ -40,15 +37,10 @@ export default function useDayCalendarEvents(
       daySummary,
     ]),
     isLoadingFuture: !lastDateInStore || lastDateInStore.isLoading,
-    isLoadingPast: false, // TODO: Implement
     loadMoreFuture: () => {
       const newLastDate = new Date(lastDate);
       newLastDate.setDate(newLastDate.getDate() + 30);
       setLastDate(newLastDate);
-    },
-    loadMorePast: () => {
-      // TODO: Implement
-      setFirstDate;
     },
     previousActivityDay: null, // TODO: Implement
   };
