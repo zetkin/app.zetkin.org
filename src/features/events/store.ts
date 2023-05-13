@@ -133,7 +133,7 @@ const eventsSlice = createSlice({
     ) => {
       const [range, events] = action.payload;
 
-      // Add IDs to map
+      // Add events to per-date map
       range.forEach((date) => {
         const dateStr = date.toISOString().slice(0, 10);
         state.eventsByDate[dateStr] = remoteList(
@@ -143,9 +143,25 @@ const eventsSlice = createSlice({
       });
 
       // Add events to big list
+      const loadedIds: (number | string)[] = events.map((event) => event.id);
       state.eventList.items = state.eventList.items
-        .filter((item) => !events.some((c) => c.id == item.id))
-        .concat(events.map((event) => remoteItem(event.id, { data: event })));
+        .filter((oldItem) => {
+          if (loadedIds.includes(oldItem.id)) {
+            // This event exists in the freshly loaded list and should be removed
+            // before appending the list so that it does not create duplicates.
+            return false;
+          }
+
+          return true;
+        })
+        .concat(
+          events.map((event) =>
+            remoteItem(event.id, {
+              data: event,
+              loaded: new Date().toISOString(),
+            })
+          )
+        );
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
