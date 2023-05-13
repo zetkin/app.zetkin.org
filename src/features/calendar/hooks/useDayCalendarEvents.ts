@@ -38,7 +38,13 @@ export default function useDayCalendarEvents(
 
   const eventsState = useSelector((state: RootState) => state.events);
 
-  const activities = useEventsFromDateRange(focusDate, lastDate);
+  // When user navigates very far in the future (e.g. by changing the year)
+  // the focusDate may end up being _after_ the lastDate, which will cause
+  // errors if allowed. Instead, use the focusDate as endDate before loading,
+  // and the useEffect() above will soon update the lastDate.
+  const lastDateToLoad = lastDate > focusDate ? lastDate : focusDate;
+
+  const activities = useEventsFromDateRange(focusDate, lastDateToLoad);
   const filtered = useFilteredEventActivities(activities);
   const activitiesByDay = getActivitiesByDay(filtered);
 
