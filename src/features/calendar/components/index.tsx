@@ -7,7 +7,7 @@ import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
 import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
-import usePrevActivityDay from '../hooks/usePrevActivityDay';
+import useDayCalendarNav from '../hooks/useDayCalendarNav';
 
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -47,7 +47,7 @@ const Calendar = () => {
 
   const focusDateStr = router.query.focusDate as string;
   const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
-  const previousActivityDay = usePrevActivityDay(focusDate);
+  const { nextActivityDay, prevActivityDay } = useDayCalendarNav(focusDate);
 
   const timeScaleStr = router.query.timeScale as string;
   const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
@@ -85,8 +85,8 @@ const Calendar = () => {
         }}
         onStepBackward={() => {
           // Steps back to the last day with an event on day view
-          if (selectedTimeScale === TimeScale.DAY && previousActivityDay) {
-            setFocusDate(previousActivityDay[0]);
+          if (selectedTimeScale === TimeScale.DAY && prevActivityDay) {
+            setFocusDate(prevActivityDay[0]);
           } else {
             setFocusDate(
               dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
@@ -95,13 +95,11 @@ const Calendar = () => {
         }}
         onStepForward={() => {
           // Steps forward to the next day with an event on day view
-          /*
-                if (selectedTimeScale === TimeScale.DAY && lastDayWithEvent) {
-                  setFocusDate(new Date(futureDays[1][0]));
-                } else {
-                  */
-          setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
-          //}
+          if (selectedTimeScale === TimeScale.DAY && nextActivityDay) {
+            setFocusDate(nextActivityDay[0]);
+          } else {
+            setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
+          }
         }}
         orgId={parseInt(orgId as string)}
         timeScale={selectedTimeScale}
@@ -119,7 +117,7 @@ const Calendar = () => {
             <CalendarDayView
               focusDate={focusDate}
               onClickPreviousDay={(date) => setFocusDate(date)}
-              previousActivityDay={previousActivityDay}
+              previousActivityDay={prevActivityDay}
             />
           )}
           {selectedTimeScale === TimeScale.WEEK && (
