@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { RootState } from 'core/store';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
+import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import { DaySummary, getActivitiesByDay } from '../components/utils';
 
 type UseDayCalendarEventsReturn = {
@@ -38,7 +39,8 @@ export default function useDayCalendarEvents(
   const eventsState = useSelector((state: RootState) => state.events);
 
   const activities = useEventsFromDateRange(focusDate, lastDate);
-  const activitiesByDay = getActivitiesByDay(activities);
+  const filtered = useFilteredEventActivities(activities);
+  const activitiesByDay = getActivitiesByDay(filtered);
 
   const lastDateInStore =
     eventsState.eventsByDate[lastDate.toISOString().slice(0, 10)];
