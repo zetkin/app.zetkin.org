@@ -117,10 +117,10 @@ const eventsSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
-    eventRangeLoad: (state, action: PayloadAction<Date[]>) => {
-      const range = action.payload;
-      range.forEach((date) => {
-        const dateStr = date.toISOString().slice(0, 10);
+    eventRangeLoad: (state, action: PayloadAction<string[]>) => {
+      const isoDateRange = action.payload;
+      isoDateRange.forEach((isoDate) => {
+        const dateStr = isoDate.slice(0, 10);
         if (!state.eventsByDate[dateStr]) {
           state.eventsByDate[dateStr] = remoteList();
         }
@@ -129,15 +129,17 @@ const eventsSlice = createSlice({
     },
     eventRangeLoaded: (
       state,
-      action: PayloadAction<[Date[], ZetkinEvent[]]>
+      action: PayloadAction<[string[], ZetkinEvent[]]>
     ) => {
-      const [range, events] = action.payload;
+      const [isoDateRange, events] = action.payload;
 
       // Add events to per-date map
-      range.forEach((date) => {
-        const dateStr = date.toISOString().slice(0, 10);
+      isoDateRange.forEach((isoDate) => {
+        const dateStr = isoDate.slice(0, 10);
         state.eventsByDate[dateStr] = remoteList(
-          events.filter((event) => isSameDate(new Date(event.start_time), date))
+          events.filter((event) =>
+            isSameDate(new Date(event.start_time), new Date(isoDate))
+          )
         );
         state.eventsByDate[dateStr].loaded = new Date().toISOString();
       });
