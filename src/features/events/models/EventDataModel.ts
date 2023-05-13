@@ -83,6 +83,11 @@ export default class EventDataModel extends ModelBase {
     this._repo.deleteEvent(this._orgId, this._eventId);
   }
 
+  duplicateEvent() {
+    const promise = this._repo.createEvent(this.getDuplicatePostBody(), this._orgId)
+    return new PromiseFuture(promise);
+  }
+
   getBookedParticipants() {
     const participants = this.getParticipants().data;
     return participants?.filter((p) => p.cancelled == null) ?? [];
@@ -95,6 +100,25 @@ export default class EventDataModel extends ModelBase {
 
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
+  }
+
+  getDuplicatePostBody(): ZetkinEventPostBody {
+    const currentEvent = this.getData();
+    const duplicateEventPostBody: ZetkinEventPostBody = {
+      activity_id: currentEvent.data?.activity?.id,
+      end_time: currentEvent.data?.end_time,
+      info_text: currentEvent.data?.info_text,
+      location_id: currentEvent.data?.location?.id,
+      num_participants_required: currentEvent.data?.num_participants_required,
+      organization_id: currentEvent.data?.organization.id,
+      start_time: currentEvent.data?.start_time,
+      title: currentEvent.data?.title
+    }
+    if (currentEvent.data?.campaign){
+      duplicateEventPostBody.campaign_id = currentEvent.data?.campaign.id;
+    }
+    // TODO: should this include URL?
+    return duplicateEventPostBody
   }
 
   getNumAvailParticipants(): number {

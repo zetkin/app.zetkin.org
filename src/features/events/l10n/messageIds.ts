@@ -108,6 +108,7 @@ export default makeMessages('feat.events', {
       'Once the event has been deleted you will not be able to access it again.'
     ),
     description: m('Description'),
+    duplicate: m('Duplicate'),
     eventPageLink: m('Go to event page'),
     events: m('Events'),
     location: m('Location'),
