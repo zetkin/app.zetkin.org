@@ -1,5 +1,6 @@
+import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { RootState } from 'core/store';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
@@ -22,6 +23,17 @@ export default function useDayCalendarEvents(
       focusDate.getUTCDate() + 30
     )
   );
+
+  // When focus date changes make sure lastDate is at least
+  // 30 days in the future, or more will need to load.
+  useEffect(() => {
+    if (dayjs(lastDate).diff(focusDate, 'day') < 30) {
+      const newLastDate = new Date(focusDate);
+      newLastDate.setDate(newLastDate.getDate() + 30);
+
+      setLastDate(newLastDate);
+    }
+  }, [focusDate.toISOString()]);
 
   const eventsState = useSelector((state: RootState) => state.events);
 
