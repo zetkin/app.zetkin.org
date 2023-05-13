@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { ACTIVITIES } from 'features/campaigns/models/CampaignActivitiesModel';
 import { DaySummary } from '../components/utils';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import getPrevEventDay from 'features/events/rpc/getPrevEventDay';
 import { useApiClient, useNumericRouteParams } from 'core/hooks';
 
 export default function usePrevActivityDay(
@@ -19,43 +19,32 @@ export default function usePrevActivityDay(
   useEffect(() => {
     setPrevActivityDay(null);
 
-    // TODO: Optimize this
-    apiClient
-      .get<ZetkinEvent[]>(
-        `/api/orgs/${orgId}/actions?filter=end_time<${focusDateStr}`
-      )
-      .then((events) => {
-        const filtered = events.filter(
-          (event) => !campId || event.campaign?.id == campId
-        );
-        const sorted = filtered.sort(
-          (e0, e1) =>
-            new Date(e1.start_time).getTime() -
-            new Date(e0.start_time).getTime()
-        );
-        const mostRecentEvent = sorted[0];
-
-        if (mostRecentEvent) {
-          const mostRecentDateStr = mostRecentEvent.start_time.slice(0, 10);
-          const relevantEvents = filtered.filter(
-            (event) => event.start_time.slice(0, 10) == mostRecentDateStr
-          );
-
-          setPrevActivityDay([
-            new Date(mostRecentEvent.start_time),
-            {
-              endingActivities: [],
-              events: relevantEvents.map((event) => ({
-                data: event,
-                endDate: null,
-                kind: ACTIVITIES.EVENT,
-                startDate: event.published ? new Date(event.published) : null,
-              })),
-              startingActivities: [],
-            },
-          ]);
-        }
+    async function loadPrev() {
+      // Ask the server about the most recent day that includes events
+      const prevEventDay = await apiClient.rpc(getPrevEventDay, {
+        beforeDate: focusDate.toISOString(),
+        campaignId: campId,
+        orgId,
       });
+
+      if (prevEventDay) {
+        setPrevActivityDay([
+          new Date(prevEventDay.date),
+          {
+            endingActivities: [],
+            events: prevEventDay.events.map((event) => ({
+              data: event,
+              endDate: null,
+              kind: ACTIVITIES.EVENT,
+              startDate: event.published ? new Date(event.published) : null,
+            })),
+            startingActivities: [],
+          },
+        ]);
+      }
+    }
+
+    loadPrev();
   }, [focusDateStr]);
 
   return prevActivityDay;
