@@ -14,6 +14,7 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
+import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
@@ -30,6 +31,7 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import EventDataModel, {
   EventState,
 } from 'features/events/models/EventDataModel';
+
 
 const useStyles = makeStyles(() => ({
   description: {
@@ -250,9 +252,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         marginBottom={2}
       >
         <NextLink
-          href={`/organize/${event.organization.id}/${
-            event.campaign ? `projects/${event.campaign.id}` : 'standalone'
-          }/events/${event.id}`}
+          href={getEventUrl(event)}
           passHref
         >
           <Link underline="none">

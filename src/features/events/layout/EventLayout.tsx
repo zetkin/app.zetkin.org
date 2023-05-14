@@ -9,6 +9,7 @@ import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
 import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
 import EventTypesModel from '../models/EventTypesModel';
+import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useModel from 'core/useModel';
@@ -24,14 +25,12 @@ interface EventLayoutProps {
   children: React.ReactNode;
   eventId: string;
   orgId: string;
-  campaignId: string;
 }
 
 const EventLayout: React.FC<EventLayoutProps> = ({
   children,
   eventId,
   orgId,
-  campaignId,
 }) => {
   const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
 
@@ -54,7 +53,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
           }}
         </ZUIFuture>
       }
-      baseHref={`/organize/${orgId}/projects/${campaignId}/events/${eventId}`}
+      baseHref={getEventUrl(model.getData().data)}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">

@@ -32,7 +32,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     }
     return {
       props: {
-        campId,
         eventId,
         orgId,
       },
@@ -45,7 +44,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 interface EventPageProps {
-  campId: string;
   eventId: string;
   orgId: string;
 }
@@ -53,7 +51,6 @@ interface EventPageProps {
 const EventPage: PageWithLayout<EventPageProps> = ({
   orgId,
   eventId,
-  campId,
 }) => {
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
@@ -81,7 +78,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({
               />
             </Grid>
             <Grid item md={4} xs={6}>
-              <EventParticipantsCard campId={campId} model={dataModel} />
+              <EventParticipantsCard model={dataModel} />
               <EventRelatedCard data={data} model={eventsModel} />
             </Grid>
           </Grid>
@@ -95,7 +92,6 @@ EventPage.getLayout = function getLayout(page, props) {
   return (
     <EventLayout
       key={props.eventId}
-      campaignId={props.campId}
       eventId={props.eventId}
       orgId={props.orgId}
     >
