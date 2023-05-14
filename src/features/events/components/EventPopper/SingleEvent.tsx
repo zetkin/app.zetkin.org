@@ -97,8 +97,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       label: messages.eventPopper.duplicate(),
       onSelect: () => {
         model.duplicateEvent()
-        // router.push( NEW EVENT PAGE )
-        // return null
+        onClickAway()
       }
     }
   ];
@@ -258,9 +257,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         marginBottom={2}
       >
         <NextLink
-          href={`/organize/${event.organization.id}/${
-            event.campaign ? `projects/${event.campaign.id}` : 'standalone'
-          }/events/${event.id}`}
+          href={model.getEventBrowserUrl(event)}
           passHref
         >
           <Link underline="none">

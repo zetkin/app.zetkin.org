@@ -18,6 +18,7 @@ export default makeMessages('feat.events', {
   eventActionButtons: {
     cancel: m('Cancel'),
     delete: m('Delete'),
+    duplicate: m('Duplicate'),
     publish: m('Publish'),
     restore: m('Restore'),
     unpublish: m('Unpublish'),
