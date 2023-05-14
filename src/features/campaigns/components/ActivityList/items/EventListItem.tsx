@@ -9,11 +9,13 @@ import {
 import ActivityListItem from './ActivityListItem';
 import { ClusteredEvent } from 'features/campaigns/hooks/useClusteredActivities';
 import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
+import getEventUrl from 'features/events/utils/getEventUrl';
 import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
 import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
+
 
 interface EventListeItemProps {
   cluster: ClusteredEvent;
@@ -45,9 +47,7 @@ const EventListItem: FC<EventListeItemProps> = ({ cluster }) => {
       endNumberColor={
         numParticipantsAvailable < numParticipantsRequired ? 'error' : undefined
       }
-      href={`/organize/${event.organization.id}/projects/${
-        event.campaign?.id ?? 'standalone'
-      }/events/${event.id}`}
+      href={getEventUrl(event)}
       meta={
         <EventWarningIconsSansModel
           compact={false}

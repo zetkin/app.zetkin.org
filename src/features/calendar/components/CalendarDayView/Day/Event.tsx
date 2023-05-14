@@ -5,6 +5,7 @@ import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import getEventUrl from 'features/events/utils/getEventUrl';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import theme from 'theme';
@@ -40,9 +41,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
   return (
     <NextLink
-      href={`/organize/${event.organization.id}/projects/${
-        event.campaign ? `${event.campaign.id}` : 'standalone'
-      }/events/${event.id}`}
+      href={getEventUrl(event)}
       passHref
     >
       <Link color="inherit" underline="none">
