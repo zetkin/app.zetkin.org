@@ -1,5 +1,6 @@
 import Environment from 'core/env/Environment';
 import getEventState from '../utils/getEventState';
+import getEventUrl from '../utils/getEventUrl';
 import { ModelBase } from 'core/models';
 import theme from 'theme';
 import EventsRepo, {
@@ -69,7 +70,7 @@ export default class EventDataModel extends ModelBase {
     const promise = this._repo
       .createEvent(eventBody, this._orgId)
       .then((event: ZetkinEvent) => {
-        this._env.router.push(this.getEventBrowserUrl(event));
+        this._env.router.push(getEventUrl(event));
         return event;
       });
     return new PromiseFuture(promise);
@@ -87,13 +88,6 @@ export default class EventDataModel extends ModelBase {
   getBookedParticipants() {
     const participants = this.getParticipants().data;
     return participants?.filter((p) => p.cancelled == null) ?? [];
-  }
-
-  getBrowserUrl() {
-    const event = this.getData().data
-    if (event){
-      return this.getEventBrowserUrl(event)
-    }
   }
 
   getCancelledParticipants() {
@@ -122,14 +116,6 @@ export default class EventDataModel extends ModelBase {
     }
     // TODO: should this include URL?
     return duplicateEventPostBody
-  }
-
-  getEventBrowserUrl(event: ZetkinEvent) {
-    return `/organize/${event.organization.id}/projects/${
-      event.campaign ? `${event.campaign?.id}` : 'standalone'
-    }/events/${
-      event.id
-    }`
   }
 
   getNumAvailParticipants(): number {
