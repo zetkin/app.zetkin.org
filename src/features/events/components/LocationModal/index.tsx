@@ -15,6 +15,33 @@ import MoveLocationCard from './MoveLocationCard';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
+export interface NominatimLocation {
+  place_id: string,
+  licence: string,
+  osm_type: string,
+  osm_id: string,
+  boundingbox: string[],
+  lat: string,
+  lon: string,
+  display_name: string,
+  class: string,
+  type: string,
+  importance: number,
+  icon: string | null,
+  address: {
+      "ISO3166-2-lvl4": string | null,
+      city: string | null,
+      country: string,
+      country_code: string
+      postcode: string,
+      state: string | null,
+      state_district: string | null, 
+  } | null,
+  extratags: {
+      [key: string]: string
+  } | null
+}
+
 interface StyleProps {
   cardIsFullHeight: boolean;
 }
@@ -37,7 +64,22 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 export type PendingLocation = {
   lat: number;
   lng: number;
+  name: string | null;
 };
+
+enum LocationOptionType {
+  EXISTING = "Existing",
+  NEW = "New",
+}
+
+export type LocationOption = {
+  id: number | null;
+  info_text: string | null;
+  lat: number | null;
+  lng: number | null;
+  title: string;
+  type: LocationOptionType 
+}
 
 interface LocationModalProps {
   currentEventId: number;
@@ -63,6 +105,7 @@ const LocationModal: FC<LocationModalProps> = ({
   open,
   locationId = null,
 }) => {
+  const [geocodeLocations, setGeocodeLocations] = useState<NominatimLocation[]>([]);
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
@@ -73,6 +116,26 @@ const LocationModal: FC<LocationModalProps> = ({
   const [inMoveState, setInMoveState] = useState(false);
   const [newLatLng, setNewLatLng] =
     useState<Pick<ZetkinLocation, 'lat' | 'lng'>>();
+
+  const locationOptions: LocationOption[] = [...locations.map((location) => {
+    return {
+      id: location.id,
+      info_text: location.info_text,
+      lat: location.lat,
+      lng: location.lng,
+      title: location.title,
+      type: LocationOptionType.EXISTING
+    }
+  }), ...geocodeLocations.map((location) => {
+    return {
+      id: null,
+      info_text: location.display_name,
+      lat: Number(location.lat),
+      lng: Number(location.lon),
+      title: location.display_name,
+      type: LocationOptionType.NEW
+    }
+  })]
 
   const selectedLocation = locations.find(
     (location) => location.id === selectedLocationId
@@ -120,6 +183,7 @@ const LocationModal: FC<LocationModalProps> = ({
           {!selectedLocation && !pendingLocation && (
             <LocationSearch
               onChange={(value: ZetkinLocation) => {
+                // TODO: Split into "Create location at.." and existing locations
                 const location = locations.find(
                   (location) => location.id === value.id
                 );
@@ -142,9 +206,25 @@ const LocationModal: FC<LocationModalProps> = ({
                   );
                 }
               }}
-              onInputChange={(value) => setSearchString(value || '')}
+              onInputChange={(value) => {
+                setSearchString(value || '')
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${value}`).then((res) => {
+                  res.json().then((body) => {
+                    // setGeocodeLocations(body.map((nominatimPlace: NominatimLocation) => {
+                    //     return {
+                    //       lat: nominatimPlace.lat,
+                    //       lng: nominatimPlace.lon,
+                    //       name: nominatimPlace.display_name,
+                    //     }
+                    // }));
+                    setGeocodeLocations(body);
+                  })
+                }).catch(() => {
+                  setGeocodeLocations([])
+                })
+              }}
               onTextFieldChange={(value) => setSearchString(value)}
-              options={locations}
+              options={locationOptions}
             />
           )}
           {selectedLocation && !inMoveState && (

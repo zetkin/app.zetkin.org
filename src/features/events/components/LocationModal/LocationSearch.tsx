@@ -1,17 +1,20 @@
 import { FC } from 'react';
 import { Autocomplete, IconButton, TextField } from '@mui/material';
 
+import { LocationOption } from '.';
 import messageIds from 'features/events/l10n/messageIds';
 import { MyLocation } from '@mui/icons-material';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
+
+
 
 interface LocationSearchProps {
   onChange: (value: ZetkinLocation) => void;
   onInputChange: (value: string) => void;
   onTextFieldChange: (value: string) => void;
   onClickGeolocate: () => void;
-  options: ZetkinLocation[];
+  options: LocationOption[];
 }
 
 const LocationSearch: FC<LocationSearchProps> = ({
@@ -22,6 +25,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
   options,
 }) => {
   const messages = useMessages(messageIds);
+  console.log(options);
   return (
     <Autocomplete
       disableClearable

@@ -5,6 +5,7 @@ import { FC, useRef, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
 import BasicMarker from './BasicMarker';
+import getGeocodeLocations from 'features/events/fetching/getGeocodeLocations';
 import SelectedMarker from './SelectedMarker';
 import { useTheme } from '@mui/material';
 import {
@@ -26,6 +27,33 @@ interface MapProps {
   relatedEvents: ZetkinEvent[];
   searchString: string;
   selectedLocation?: ZetkinLocation;
+}
+
+interface NominatimLocation {
+  place_id: string,
+  licence: string,
+  osm_type: string,
+  osm_id: string,
+  boundingbox: string[],
+  lat: string,
+  lon: string,
+  display_name: string,
+  class: string,
+  type: string,
+  importance: number,
+  icon: string | null,
+  address: {
+      "ISO3166-2-lvl4": string | null,
+      city: string | null,
+      country: string,
+      country_code: string
+      postcode: string,
+      state: string | null,
+      state_district: string | null, 
+  } | null,
+  extratags: {
+      [key: string]: string
+  } | null
 }
 
 const MapWrapper = ({
