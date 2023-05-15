@@ -9,7 +9,6 @@ import {
 import EventDataModel from '../models/EventDataModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import { ZetkinEvent } from 'utils/types/zetkin';
 
 type EventWarningIconsProps = {
   compact?: boolean;
