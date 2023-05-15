@@ -150,8 +150,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               ) {
                                 setEndDate(newValue);
                               }
-                            } else {
-                              setInvalidFormat(true);
                             }
                           }}
                           renderInput={(params) => {
@@ -259,8 +257,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 setInvalidFormat(false);
                                 setEndDate(newValue);
                               }
-                            } else {
-                              setInvalidFormat(true);
                             }
                           }}
                           renderInput={(params) => {
