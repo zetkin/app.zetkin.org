@@ -31,7 +31,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
       numRemindersSent={
         participants.data?.filter((p) => !!p.reminder_sent).length ?? 0
       }
-      numSignups={model.getPendingSignUps().length ?? 0}
+      numSignups={model.getPendingSignUps().length}
       participantsLoading={!participants.data}
     />
   );
