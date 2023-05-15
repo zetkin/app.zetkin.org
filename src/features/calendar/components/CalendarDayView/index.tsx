@@ -19,7 +19,7 @@ const CalendarDayView = ({
   onClickPreviousDay,
   previousActivityDay,
 }: CalendarDayViewProps) => {
-  const { activities, isLoadingFuture, loadMoreFuture } =
+  const { activities, hasMore, isLoadingFuture, loadMoreFuture } =
     useDayCalendarEvents(focusDate);
 
   return (
@@ -41,7 +41,7 @@ const CalendarDayView = ({
       })}
       <Box display="flex" justifyContent={'center'} pb={10}>
         {isLoadingFuture && <CircularProgress />}
-        {!isLoadingFuture && (
+        {!isLoadingFuture && hasMore && (
           <Button onClick={() => loadMoreFuture()}>
             <Msg id={messageIds.loadMore} />
           </Button>

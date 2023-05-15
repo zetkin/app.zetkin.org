@@ -2,13 +2,16 @@ import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
+import getNextEventDay from 'features/events/rpc/getNextEventDay';
 import { RootState } from 'core/store';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import { DaySummary, getActivitiesByDay } from '../components/utils';
+import { useApiClient, useNumericRouteParams } from 'core/hooks';
 
 type UseDayCalendarEventsReturn = {
   activities: [Date, DaySummary][];
+  hasMore: boolean;
   isLoadingFuture: boolean;
   loadMoreFuture: () => void;
   previousActivityDay: [Date, DaySummary] | null;
@@ -17,6 +20,7 @@ type UseDayCalendarEventsReturn = {
 export default function useDayCalendarEvents(
   focusDate: Date
 ): UseDayCalendarEventsReturn {
+  const [nextLastDate, setNextLastDate] = useState<Date | null>(null);
   const [lastDate, setLastDate] = useState(
     new Date(
       focusDate.getUTCFullYear(),
@@ -35,6 +39,24 @@ export default function useDayCalendarEvents(
       setLastDate(newLastDate);
     }
   }, [focusDate.toISOString()]);
+
+  // When a new lastDate is set, load the next last date
+  const { orgId, campId } = useNumericRouteParams();
+  const apiClient = useApiClient();
+  useEffect(() => {
+    async function loadNextLastDate() {
+      const afterDate = new Date(lastDate);
+      afterDate.setDate(afterDate.getDate() + 1);
+      const nextLastDateStr = await apiClient.rpc(getNextEventDay, {
+        afterDate: afterDate.toISOString(),
+        campaignId: campId,
+        orgId,
+      });
+
+      setNextLastDate(nextLastDateStr ? new Date(nextLastDateStr) : null);
+    }
+    loadNextLastDate();
+  }, [lastDate.toISOString()]);
 
   const eventsState = useSelector((state: RootState) => state.events);
 
@@ -56,11 +78,12 @@ export default function useDayCalendarEvents(
       new Date(dateStr),
       daySummary,
     ]),
+    hasMore: !!nextLastDate,
     isLoadingFuture: !lastDateInStore || lastDateInStore.isLoading,
     loadMoreFuture: () => {
-      const newLastDate = new Date(lastDate);
-      newLastDate.setDate(newLastDate.getDate() + 30);
-      setLastDate(newLastDate);
+      if (nextLastDate) {
+        setLastDate(nextLastDate);
+      }
     },
     previousActivityDay: null, // TODO: Implement
   };
