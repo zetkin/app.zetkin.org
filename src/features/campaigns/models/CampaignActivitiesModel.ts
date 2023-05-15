@@ -102,17 +102,30 @@ export default class CampaignActivitiesModel extends ModelBase {
     if (activitiesFuture.data) {
       const currentActivities = activitiesFuture.data;
 
-      overview.today = currentActivities.filter(
-        (activity) =>
-          (activity.startDate && isSameDate(activity.startDate, todayDate)) ||
-          (activity.endDate && isSameDate(activity.endDate, todayDate))
-      );
-      overview.tomorrow = currentActivities.filter(
-        (activity) =>
-          (activity.startDate &&
-            isSameDate(activity.startDate, tomorrowDate)) ||
-          (activity.endDate && isSameDate(activity.endDate, tomorrowDate))
-      );
+      overview.today = currentActivities.filter((activity) => {
+        if (activity.kind == ACTIVITIES.EVENT) {
+          const startDate = new Date(activity.data.start_time);
+          return isSameDate(startDate, todayDate);
+        } else {
+          return (
+            (activity.startDate && isSameDate(activity.startDate, todayDate)) ||
+            (activity.endDate && isSameDate(activity.endDate, todayDate))
+          );
+        }
+      });
+
+      overview.tomorrow = currentActivities.filter((activity) => {
+        if (activity.kind == ACTIVITIES.EVENT) {
+          const startDate = new Date(activity.data.start_time);
+          return isSameDate(startDate, tomorrowDate);
+        } else {
+          return (
+            (activity.startDate &&
+              isSameDate(activity.startDate, tomorrowDate)) ||
+            (activity.endDate && isSameDate(activity.endDate, tomorrowDate))
+          );
+        }
+      });
 
       const startOfToday = new Date(new Date().toISOString().slice(0, 10));
       const weekFromNow = new Date(startOfToday);
@@ -176,9 +189,9 @@ export default class CampaignActivitiesModel extends ModelBase {
       .filter((event) => !campaignId || event.campaign?.id == campaignId)
       .map((event) => ({
         data: event,
-        endDate: getUTCDateWithoutTime(event.end_time), // End date (cancelled) not implemented in backend yet
+        endDate: null,
         kind: ACTIVITIES.EVENT,
-        startDate: new Date(0), // Start date (published) not implemented in backend yet
+        startDate: getUTCDateWithoutTime(event.published),
       }));
 
     const surveys: CampaignActivity[] = surveysFuture.data
