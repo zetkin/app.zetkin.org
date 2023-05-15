@@ -9,6 +9,7 @@ import {
 import EventDataModel from '../models/EventDataModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 type EventWarningIconsProps = {
   compact?: boolean;
@@ -23,7 +24,6 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
   }
 
   const participants = model.getParticipants();
-
   return (
     <EventWarningIconsSansModel
       compact={compact}
@@ -32,7 +32,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
       numRemindersSent={
         participants.data?.filter((p) => !!p.reminder_sent).length ?? 0
       }
-      numSignups={data.num_participants_available}
+      numSignups={model.getPendingSignUps().length ?? 0}
       participantsLoading={!participants.data}
     />
   );
