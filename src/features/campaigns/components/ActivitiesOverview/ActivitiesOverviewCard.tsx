@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { FlagOutlined } from '@mui/icons-material';
-import { Box, Divider, Typography } from '@mui/material';
+import NextLink from 'next/link';
+import { Box, Divider, Link } from '@mui/material';
 
 import CallAssignmentOverviewListItem from './items/CallAssignmentOverviewListItem';
 import EventClusterOverviewListItem from './items/EventClusterOverviewListItem';
@@ -22,19 +23,27 @@ import useClusteredActivities, {
 
 type OverviewListProps = {
   activities: CampaignActivity[];
+  campId: number | undefined;
   focusDate: Date | null;
   header: string;
+  orgId: number;
+  timeScale: 'day' | 'week';
 };
 
 const ActivitiesOverviewCard: FC<OverviewListProps> = ({
   activities,
+  campId,
   focusDate,
   header,
+  orgId,
+  timeScale,
 }) => {
   const messages = useMessages(messageIds);
   const clustered = useClusteredActivities(activities);
   const truncActivities = clustered.slice(0, 6);
   const numExtra = clustered.length - truncActivities.length;
+
+  const focusedDate = focusDate?.toISOString().split('T')[0];
 
   return (
     <ZUICard header={header}>
@@ -92,14 +101,21 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
         }
       })}
       {numExtra > 0 && (
-        <Box textAlign="center">
-          <Typography>
-            <Msg
-              id={messageIds.activitiesOverview.extraActivities}
-              values={{ numExtra }}
-            />
-          </Typography>
-        </Box>
+        <NextLink
+          href={`/organize/${orgId}/projects${
+            campId ? `/${campId}` : ''
+          }/calendar?focusDate=${focusedDate}&timeScale=${timeScale}`}
+          passHref
+        >
+          <Link underline="none" variant="button">
+            <Box textAlign="center">
+              <Msg
+                id={messageIds.activitiesOverview.extraActivities}
+                values={{ numExtra }}
+              />
+            </Box>
+          </Link>
+        </NextLink>
       )}
     </ZUICard>
   );
