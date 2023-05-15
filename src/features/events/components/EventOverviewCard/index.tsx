@@ -203,8 +203,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 setInvalidFormat(false);
                                 setStartDate(dayjs(newValue));
                               }
-                            } else {
-                              setInvalidFormat(true);
                             }
                           }}
                           open={false}
@@ -354,8 +352,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 setInvalidFormat(false);
                                 setEndDate(newValue);
                               }
-                            } else {
-                              setInvalidFormat(false);
                             }
                           }}
                           open={false}
