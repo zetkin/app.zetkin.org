@@ -199,8 +199,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.startTime()}
                           onChange={(newValue) => {
                             if (newValue && isValidDate(newValue.toDate())) {
-                              setInvalidFormat(false);
-                              setStartDate(dayjs(newValue));
+                              if (dayjs(newValue) < dayjs(endDate)) {
+                                setInvalidFormat(false);
+                                setStartDate(dayjs(newValue));
+                              }
                             } else {
                               setInvalidFormat(true);
                             }
@@ -214,6 +216,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   ...params.inputProps,
                                   ...props,
                                 }}
+                                sx={{ button: { cursor: 'text' } }}
                               />
                             );
                           }}
@@ -347,8 +350,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.endTime()}
                           onChange={(newValue) => {
                             if (newValue && isValidDate(newValue.toDate())) {
-                              setInvalidFormat(false);
-                              setEndDate(newValue);
+                              if (dayjs(newValue) > dayjs(startDate)) {
+                                setInvalidFormat(false);
+                                setEndDate(newValue);
+                              }
                             } else {
                               setInvalidFormat(false);
                             }
@@ -363,6 +368,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   ...params.inputProps,
                                   ...props,
                                 }}
+                                sx={{ button: { cursor: 'text' } }}
                               />
                             );
                           }}
