@@ -32,7 +32,6 @@ import EventDataModel, {
   EventState,
 } from 'features/events/models/EventDataModel';
 
-
 const useStyles = makeStyles(() => ({
   description: {
     '-webkit-box-orient': 'vertical',
@@ -251,10 +250,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         justifyContent="flex-end"
         marginBottom={2}
       >
-        <NextLink
-          href={getEventUrl(event)}
-          passHref
-        >
+        <NextLink href={getEventUrl(event)} passHref>
           <Link underline="none">
             <Button
               endIcon={<ArrowForward />}

@@ -48,10 +48,7 @@ interface EventPageProps {
   orgId: string;
 }
 
-const EventPage: PageWithLayout<EventPageProps> = ({
-  orgId,
-  eventId,
-}) => {
+const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
