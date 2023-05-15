@@ -41,10 +41,9 @@ const Buttons: FC<{ options: ButtonOption[] }> = ({ options }) => {
   return (
     <FormControl
       sx={{
-        columnGap: '0.5em',
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        gap: 0.5,
       }}
     >
       {options.map((option) => (
@@ -67,11 +66,7 @@ const Dropdown: FC<{
   value: attendance;
 }> = ({ options, value, label }) => {
   return (
-    <FormControl
-      size="small"
-      sx={{ m: 1, minWidth: '15em' }}
-      variant="outlined"
-    >
+    <FormControl size="small" variant="outlined">
       <InputLabel id={'attendance-select-label'}>{label}</InputLabel>
       <Select
         label={label}
@@ -141,6 +136,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       flex: 1,
       headerName: messages.eventParticipantsList.columnName(),
       hideSortIcons: true,
+      minWidth: 250,
       renderCell: (params) => {
         if (params.row.person) {
           return <Typography>{params.row.person.name}</Typography>;
@@ -192,15 +188,15 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       flex: 1,
       headerName: messages.eventParticipantsList.columnPhone(),
       hideSortIcons: true,
-      renderCell: (params) => {
-        if (params.row.person) {
-          return <Typography>{params.row.person.phone}</Typography>;
-        } else {
-          return <Typography>{params.row.phone}</Typography>;
-        }
-      },
       resizable: false,
       sortable: false,
+      valueGetter: (params) => {
+        if (params.row.person) {
+          return params.row.person.phone;
+        } else {
+          return params.row.phone;
+        }
+      },
     },
     {
       disableColumnMenu: true,
@@ -241,6 +237,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       flex: 1,
       headerName: '',
       hideSortIcons: true,
+      minWidth: 300,
       renderCell: (params) => {
         if (type == 'signups') {
           return (
