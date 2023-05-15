@@ -89,7 +89,7 @@ const ActivityList = ({
     );
 
     const fuse = new Fuse(filteredActivities, {
-      keys: ['title'],
+      keys: ['data.title'],
       threshold: 0.4,
     });
 
