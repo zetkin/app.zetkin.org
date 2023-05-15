@@ -27,7 +27,7 @@ type OverviewListProps = {
   focusDate: Date | null;
   header: string;
   orgId: number;
-  todayOrTmr?: true;
+  timeScale: 'day' | 'week';
 };
 
 const ActivitiesOverviewCard: FC<OverviewListProps> = ({
@@ -36,14 +36,14 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
   focusDate,
   header,
   orgId,
-  todayOrTmr,
+  timeScale,
 }) => {
   const messages = useMessages(messageIds);
   const clustered = useClusteredActivities(activities);
   const truncActivities = clustered.slice(0, 6);
   const numExtra = clustered.length - truncActivities.length;
 
-  const today = new Date().toISOString().split('T')[0];
+  const focusedDate = focusDate?.toISOString().split('T')[0];
 
   return (
     <ZUICard header={header}>
@@ -104,9 +104,7 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
         <NextLink
           href={`/organize/${orgId}/projects${
             campId ? `/${campId}` : ''
-          }/calendar?focusDate=${today}&timeScale=${
-            todayOrTmr ? 'day' : 'week'
-          }`}
+          }/calendar?focusDate=${focusedDate}&timeScale=${timeScale}`}
           passHref
         >
           <Link underline="none" variant="button">

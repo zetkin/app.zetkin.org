@@ -82,7 +82,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
                   focusDate={todayDate}
                   header={messages.activitiesOverview.todayCard()}
                   orgId={orgId}
-                  todayOrTmr={true}
+                  timeScale={'day'}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
@@ -92,7 +92,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
                   focusDate={tomorrowDate}
                   header={messages.activitiesOverview.tomorrowCard()}
                   orgId={orgId}
-                  todayOrTmr={true}
+                  timeScale={'day'}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
@@ -102,6 +102,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
                   focusDate={null}
                   header={messages.activitiesOverview.thisWeekCard()}
                   orgId={orgId}
+                  timeScale={'week'}
                 />
               </Grid>
             </Grid>
