@@ -14,6 +14,7 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
+import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
@@ -249,12 +250,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         justifyContent="flex-end"
         marginBottom={2}
       >
-        <NextLink
-          href={`/organize/${event.organization.id}/${
-            event.campaign ? `projects/${event.campaign.id}` : 'standalone'
-          }/events/${event.id}`}
-          passHref
-        >
+        <NextLink href={getEventUrl(event)} passHref>
           <Link underline="none">
             <Button
               endIcon={<ArrowForward />}

@@ -6,6 +6,7 @@ import { getParticipantsStatusColor } from 'features/events/utils/eventUtils';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 
+import getEventUrl from '../utils/getEventUrl';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUINumberChip from 'zui/ZUINumberChip';
@@ -20,12 +21,7 @@ const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
   return (
     <Box display="flex" flexDirection="column">
       <Box alignItems="center" display="flex" justifyContent="space-between">
-        <NextLink
-          href={`/organize/${event.organization.id}/projects/${
-            event.campaign ? `${event.campaign.id}` : 'standalone'
-          }/events/${event.id}`}
-          passHref
-        >
+        <NextLink href={getEventUrl(event)} passHref>
           <Link>
             <Typography>
               {event.title ||

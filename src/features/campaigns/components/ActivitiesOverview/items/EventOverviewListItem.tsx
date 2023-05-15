@@ -9,6 +9,7 @@ import {
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import getEventUrl from 'features/events/utils/getEventUrl';
 import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
 import { removeOffset } from 'utils/dateUtils';
@@ -44,9 +45,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
           : undefined
       }
       focusDate={focusDate}
-      href={`/organize/${event.organization.id}/projects/${
-        event.campaign?.id ?? 'standalone'
-      }/events/${event.id}`}
+      href={getEventUrl(event)}
       meta={<EventWarningIcons compact model={model} />}
       onClick={(x: number, y: number) => {
         openEventPopper(

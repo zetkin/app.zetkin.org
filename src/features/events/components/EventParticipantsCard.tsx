@@ -14,6 +14,7 @@ import {
 import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import getEventUrl from '../utils/getEventUrl';
 import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
@@ -23,14 +24,10 @@ import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 type EventParticipantsCardProps = {
-  campId: string;
   model: EventDataModel;
 };
 
-const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
-  model,
-  campId,
-}) => {
+const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
   const eventData = model.getData().data;
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
@@ -183,10 +180,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
         </Box>
         <Divider />
         <Box display="flex" justifyContent="center" marginTop={2}>
-          <NextLink
-            href={`/organize/${eventData.organization.id}/projects/${campId}/events/${eventData.id}/participants`}
-            passHref
-          >
+          <NextLink href={`${getEventUrl(eventData)}/participants`} passHref>
             <Link underline="none">
               <Typography
                 color={theme.palette.info.main}

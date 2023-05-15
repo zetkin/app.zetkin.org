@@ -101,11 +101,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
 
 ParticipantsPage.getLayout = function getLayout(page, props) {
   return (
-    <EventLayout
-      campaignId={props.campId}
-      eventId={props.eventId}
-      orgId={props.orgId}
-    >
+    <EventLayout eventId={props.eventId} orgId={props.orgId}>
       {page}
     </EventLayout>
   );
