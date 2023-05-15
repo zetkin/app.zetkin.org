@@ -136,9 +136,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.pending()}
             </Typography>
-            <Typography>
-              {Math.max(reqParticipants - availParticipants, 0)}
-            </Typography>
+            <Typography>{model.getPendingSignUps().length}</Typography>
           </Box>
           <Box
             alignItems="center"
