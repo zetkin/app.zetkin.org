@@ -12,13 +12,54 @@ core:
       denne funksjonen.
 feat:
   calendar:
+    createMenu:
+      singleEvent: Nytt arrangement
+    event:
+      differentLocations: '{numLocations} ulike steder'
+      events: Arrangementer
+      noContactSelected: Ingen kontakt valgt
+      remindersNotSent: '{numNotSent} Påminnelser ikke sendt'
+      unbookedSignups: '{numUnbooked} Uregistrerte påmeldinger'
+      underbooked: '{numUnderbooked} Arrangementer med få påmeldinger'
+      withSignups: '{numWithSignups} Med påmeldinger'
+      withoutContact: '{numWithoutContact} Uten kontakt'
+    eventFilter:
+      collapse: Skjul
+      expand: '{numOfOptions, plural, one {+ 1 type til} other {+ # typer til}}'
+      filter: Filtrer
+      filterOptions:
+        actionFilters:
+          missing: Mangler kontaktperson
+          overbooked: For mange registrerte
+          pending: Ventende påmeldinger
+          title: Handling påkrevd
+          underbooked: For få registrerte
+          unsent: Usendte varsler
+        eventTypes:
+          title: Type arrangement
+        stateFilters:
+          cancelled: Avlyst
+          draft: Utkast
+          published: Publisert
+          scheduled: Planlagt
+          title: Publiseringsstatus
+      reset: Fjern filtre
+      toggle:
+        all: Alle
+        none: Ingen
+      type: Skriv for å filtrere innhold
+    lastDayWithEvents: Det {numEvents, plural, one {var ett arrangement} other {var
+      {numEvents} arrangementer}} på siste aktive dag
     moreEvents: '{numEvents, plural, one {# til arrangement} other {# til arrangementer}}'
     next: NESTE
     prev: FORRIGE
     rangeLabel: Velg et alternativ
     ranges:
+      day: Dag
       month: Måned
       week: Uke
+    showMore: Vis
+    today: I dag
   callAssignments:
     actions:
       end: Avslutt oppdrag
@@ -34,6 +75,7 @@ feat:
       organizerActionNeeded: Må følges opp av koordinator
       subtitle: Mål som ikke er klare til å ringes
       title: Blokkert
+      viewSheetButton: Vis alle
     callers:
       actions:
         customize: Tilpass køen
@@ -81,6 +123,13 @@ feat:
       defineButton: Rediger kriterier for fullføring
       subtitle: Personer som oppfyller fullføringskriteriene
       title: Ferdig
+    organizerActionPane:
+      markAsSolved: Merk som løst
+      markAsUnsolved: Merk som uløst
+      messagePlaceholder: Ringeren la ikke igjen melding
+      noteByCaller: Notat fra {person} {time}
+      subtitle: Notat om {person}
+      title: Må følges opp av koordinator
     ready:
       allocated: Personer som er tildelt en ringer
       queue: Personer som er i kø
@@ -122,10 +171,17 @@ feat:
         endsToday: Avsluttes i dag
         startsLater: Begynner {relative}
         startsToday: Begynner i dag
-      thisWeekCard: Også denne uka
+      thisWeekCard: Denne uka
       title: Aktiviteter
       todayCard: I dag
       tomorrowCard: I morgen
+    activityList:
+      eventItem:
+        contact: Ingen kontaktperson tildelt
+        locations: '{count} steder'
+        reminders: '{numMissing, plural, =1 {En deltaker} other {# deltakere}} har
+          ikke fått påminnelse'
+        signups: Uregistrerte påmeldinger finnes
     all:
       cardCTA: Gå til prosjekt
       create: Nytt prosjekt
@@ -143,6 +199,7 @@ feat:
       linkToSummary: Gå til mine aktive prosjekter
       noActivities: Hvis organisasjonen din har aktiviteter som ikke tilhører et prosjekt
         vises de her.
+      viewArchive: Vis arkiv
     assigneeActions: Klikk i appen
     calendarView: Se alle i kalender
     events: Arrangementer
@@ -197,6 +254,7 @@ feat:
     linkGroup:
       createActivity: Ny aktivitet
       createCallAssignment: Nytt ringeoppdrag
+      createEvent: Nytt arrangement
       createSurvey: Ny spørreundersøkelse
       createTask: Nytt app-innhold
       public: Offentlig side
@@ -211,6 +269,8 @@ feat:
       filterActivities: Skriv her for å filtrere
       noActivities: Det er ingen aktiviteter i dette prosjektet ennå.
       noSearchResults: Filtreringen gav ingen resultater.
+      showPublicPage: Vis påmeldingssiden
+      viewArchive: Vis arkiv
     taskLayout:
       tabs:
         assignees: Mottakere
@@ -218,6 +278,119 @@ feat:
         summary: Oppsummering
     tasks: Innhold
   events:
+    addPerson:
+      addButton: Legg til person
+      addPlaceholder: Begynn å skrive for å legge til deltaker
+      status:
+        booked: Allerede registrert
+        signedUp: Påmeldt
+    common:
+      allDay: Hele dagen
+      noActivity: Ukategorisert
+      noLocation: Ingen fysisk plassering
+      noTitle: Arrangement uten tittel
+    eventActionButtons:
+      cancel: Avbryt
+      delete: Slett
+      publish: Publiser
+      restore: Gjenopprett
+      unpublish: Avpubliser
+      warning: '"{eventTitle}" vil bli slettet.'
+      warningCancel: '"{eventTitle}" vil bli avlyst.'
+      warningRestore: '"{eventTitle}" vil bli gjenopprettet.'
+    eventContactCard:
+      header: Kontakt
+      noContact: Ingen kontaktperson tildelt!
+      removeButton: Fjern
+      selectPlaceholder: Velg en kontaktperson
+      warningText: '{name} vil ikke lenger være kontaktpersonen, men er fortsatt registrert
+        som deltaker.'
+    eventOverviewCard:
+      buttonEndDate: + Sluttdato
+      createLocation: Nytt sted
+      description: Beskrivelse
+      editButton: Rediger arrangementsinformasjon
+      endDate: Slutt
+      endTime: Sluttidspunkt
+      location: Sted
+      noLocation: Ingen fysisk plassering
+      startDate: Start
+      startTime: Starttidspunkt
+      url: Lenke
+    eventParticipantsCard:
+      booked: Varsler
+      confirmed: Bekreftet deltakelse
+      contact: Kontakt
+      header: Deltakere
+      noContact: Ingen tildelt
+      participantList: Se deltakere
+      pending: Ventende påmeldinger
+      reqParticipantsHelperText: Minimum antall deltakere
+      reqParticipantsLabel: Påkrevde deltakere
+    eventParticipantsList:
+      attendance: Deltakelse
+      bookedParticipants: Registrerte deltakere
+      buttonAttended: Deltok
+      buttonBook: Registrer
+      buttonCancel: Avmeld
+      buttonCancelled: Avmeldt
+      buttonNoshow: Ikke møtt
+      cancelledParticipants: Avmeldte deltakere
+      columnEmail: E-post
+      columnName: Navn
+      columnNotified: Varslet
+      columnPhone: Telefon
+      contactTooltip: Kontaktperson
+      descriptionBooked: Dette er de som er registrert og som du stoler på at møter
+        opp. For å avmelde seg må de kontakte deg så du kan melde dem av manuelt.
+      descriptionCancelled: Disse har avmeldt seg selv, vi viser dem her så du ikke
+        forsøker å registrere dem på nytt.
+      descriptionSignups: Disse har meldt seg på i aktivistportalen, de kan fortsatt
+        avmelde seg når som helst.
+      dropDownAttended: Bekreftet deltakelse
+      dropDownNoshow: Møtte ikke opp
+      participantTooltip: Gjør til kontaktperson
+      signUps: Påmeldinger
+    eventPopper:
+      backToEvents: Tilbake til arrangementliste
+      backToLocations: Tilbake til steder
+      backToShifts: Tilbake til skiftliste
+      booked: Registrert
+      cancel: Avlys
+      cancelWarning: Husk å varsle alle som er registrert eller påmeldt om at arrangementet
+        avlyses.
+      confirmCancel: Er du sikker på at du vil avlyse dette arrangementet?
+      confirmDelete: Er du sikker på at du vil slette dette arrangementet?
+      contactPerson: Kontaktperson
+      dateAndTime: Dato og tid
+      delete: Slett
+      deleteWarning: Når arrangementet er slettet har du ikke lenger tilgang til det.
+      description: Beskrivelse
+      eventPageLink: Gå til arrangementsiden
+      events: Arrangementer
+      location: Sted
+      locations: Steder
+      multiEvent: Flere arrangementer
+      multiLocation: Arrangement med flere steder
+      multiShift: Arrangement med flere skift
+      noContact: Ingen kontaktperson valgt
+      notified: Varslet
+      pendingSignups: Det er uregistrerte påmeldinger
+      publish: Publiser
+      reminded: Fått påminnelse
+      shifts: Skift
+      signups: Påmeldinger
+      unsentReminders: '{numMissing, plural, =1 {En deltaker} other {# deltakere}}
+        har ikke fått påminnelse'
+    eventRelatedCard:
+      header: Relaterte arrangementer
+    eventStatus:
+      cancelled: Avlyst
+      draft: Utkast
+      ended: Avsluttet
+      open: Åpen
+      scheduled: Planlagt
+      unknown: Ukjent
     form:
       activity: Aktivitet
       campaign: Kampanje
@@ -236,7 +409,71 @@ feat:
     list:
       events: Arrangementer
       noEvents: Ingen arrangementer...
+    locationModal:
+      cancel: Avlys
+      createLocation: Nytt sted
+      description: Beskrivelse
+      infoText: Klikk på kartet for å lage et nytt sted. Klikk og dra for å flytte
+        kartet, zoom med scroll eller berøringsskjerm.
+      move: Flytt
+      moveInstructions: Flytt tegnestiften for å velge sted.
+      noDescription: Ingen beskrivelse
+      noRelatedEvents: Det er ingen arrangementer i nærheten på dette tidspunktet.
+      relatedEvents: Andre arrangementer i nærheten rundt dette tidspunktet
+      save: Lagre
+      saveLocation: Lagre sted
+      searchBox: Finn sted
+      title: Navn
+      useLocation: Bruk sted
+    participantSummaryCard:
+      bookButton: Registrer alle
+      booked: Varsler
+      cancelled: Avmeldte
+      confirmed: Bekreftet deltakelse
+      header: Deltakere
+      noshow: ({noshows, plural, =1 {1 ikke møtt} other {# ikke møtt}})
+      pending: Ventende påmeldinger
+      recordButton: Registrer deltakelse
+      remindButton: Send påminnelse til alle
+      remindButtondisabledTooltip: Du må velge en kontaktperson før du sender påminnelser
+      reqParticipantsHelperText: Minimum antall deltakere som trengs
+      reqParticipantsLabel: Deltakere
+    search: Søk
+    state:
+      cancelled: Avlyst
+      draft: Utkast
+      ended: Avsluttet
+      open: Åpen
+      scheduled: Planlagt
+    stats:
+      participants: '{participants, plural, one {1 deltaker} other {# deltakere}}'
+    tabs:
+      overview: Oversikt
+      participants: Deltakere
+    tooltipContent: Arrangement uten tittel viser type som tittel
+    type:
+      createType: Ny "{type}"
+      tooltip: Klikk for å endre type
+      uncategorized: Ukategorisert
+  organizations:
+    page:
+      title: Velg organisasjon
   profile:
+    delete:
+      button: Fjern person
+      confirm: Er du sikker på at du vil slette {name}? Dette er permanent.
+      title: Slett konto
+      warning: Dette kan ikke angres!
+    details:
+      title: Detaljer
+    editButton: Rediger {title}
+    editButtonClose: Avbryt redigering av {title}
+    editButtonLabel: Rediger detaljer
+    genders:
+      f: Kvinne
+      m: Mann
+      o: Annet
+      unknown: Ukjent
     organizations:
       add: Legg til underorganisasjon
       addError: Organisasjonen kunne ikke legges til
@@ -252,9 +489,11 @@ feat:
     noResults: Ingen resultater
     placeholder: Skriv for å søke
     results:
+      callassignment: Ringeoppdrag
       campaign: Kampanje
       people: Folk
       person: Person
+      survey: Spørreundersøkelse
       task: Innhold
       view: Liste
   smartSearch:
@@ -273,6 +512,7 @@ feat:
       surveys: Spørreundersøkelser
     filterTitles:
       all: Alle
+      call_blocked: Blokkert fra å ringes
       call_history: Basert på ringehistorikk
       campaign_participation: Basert på aktivitet
       most_active: De mest aktive
@@ -293,6 +533,11 @@ feat:
         startWithSelect:
           'false': en tom liste
           'true': alle i organisasjonen
+      callBlocked:
+        addRemoveSelect:
+          add: Legg til
+          sub: Fjern
+        inputString: '{addRemoveSelect} folk som er blokkert fra å ringes'
       callHistory:
         addRemoveSelect:
           add: Legg til
@@ -320,7 +565,7 @@ feat:
           add: Legg til
           sub: Fjern
         bookedSelect:
-          booked: blitt påmeldt
+          booked: registrert
           signed_up: meldt seg på
         campaignSelect:
           any: et prosjekt
@@ -328,8 +573,8 @@ feat:
         examples:
           one: Legg til folk som har meldt seg på arrangementer i et prosjekt med
             en aktivitet på plassen 'Torget' når som helst.
-          two: Fjern folk som ikke har blitt påmeldt arrangementer i et prosjekt med
-            aktiviteten "Stå på stand" hvor som helst før i dag.
+          two: Fjern folk som ikke har blitt registrert på arrangementer i et prosjekt
+            med aktiviteten "Stå på stand" hvor som helst før i dag.
         haveSelect:
           in: har
           notin: ikke har
@@ -698,6 +943,9 @@ feat:
       collapse: Skjul
       more: '{numOfOptions, plural, one {Vis ett alternativ til} other {Vis # flere
         alternativer}}'
+    organizerActionPane:
+      subtitle: Notater fra telefonsamtaler med {person}
+      title: Må følges opp av koordinator
     overview:
       noQuestions:
         button: Lag spørsmål
@@ -965,6 +1213,10 @@ feat:
         otherPeople: Andre folk
         restrictedMode: Kan ikke redigeres i delte lister
         searchLabel: Velg en person
+      organizerAction:
+        actionNeeded: Må følges opp av koordinator
+        showDetails: Vis detaljer
+        solvedIssues: '{count, plural, =1 {1 løst problem} other {# løste problemer}}'
     columnDialog:
       categories:
         basic:
@@ -1038,14 +1290,14 @@ feat:
           keywords: telefonnummer
           title: Telefonnummer
         queryBooked:
-          columnTitle: Meldt på
-          description: Er de meldt på noen kommende arrangementer av oss?
-          keywords: påmeldt
-          title: Er påmeldt kommende arrangementer
+          columnTitle: Registrert
+          description: Er de registrert på noen kommende arrangementer av oss?
+          keywords: registrert
+          title: Er registrert på kommende arrangementer
         queryParticipated:
           columnTitle: Deltatt
-          description: Har personen vært påmeldt et arrangement?
-          keywords: påmeldt
+          description: Har personen vært registrert på et arrangement?
+          keywords: registrert
           title: Deltatt
         queryReached:
           columnTitle: Nådd
@@ -1125,7 +1377,10 @@ feat:
     defaultColumnTitles:
       local_bool: Sjekkliste
       local_person: Personreferanse
+      organizer_action: Flaggede telefonsamtaler
       person_notes: Notater
+    defaultViewTitles:
+      organizer_action: Må følges opp av koordinator
     deleteDialog:
       error: Kunne ikke slette lista
       title: Slette liste?
@@ -1167,6 +1422,7 @@ feat:
           csv: Last ned CSV
           xlsx: Last ned Excel
         shareLink: dele informasjonen sikkert
+        tabLabel: Last ned
         warning1: Eksporter bare informasjon fra Zetkin hvis det er helt nødvendig.
           Eksporterte filer skal aldri deles med andre, skal kun lastes ned til en
           kryptert datamaskin, og skal slettes etter bruk.
@@ -1181,6 +1437,7 @@ feat:
         statusLabel: Delt med {collaborators, plural, =1 {en person} other {# personer}},
           {officials, plural, =1 {1 admin/koordinator} other {# admin/koordinatorer}}
           har tilgang til alle lister.
+        tabLabel: Del
         viewLink: sikker lenke
       title: Del "{title}"
     suggested:
@@ -1251,6 +1508,7 @@ zui:
     removeAccess: Fjern tilgang
   breadcrumbs:
     activities: Aktiviteter
+    archive: Arkiv
     areas: Områder
     assignees: Kontaktpersoner
     calendar: Kalender
@@ -1265,12 +1523,14 @@ zui:
     manage: Behandle
     new: Ny
     organize: Organiser
+    participants: Deltakere
     people: Folk
     projects: Prosjekter
     questions: Spørsmål
     submissions: Svar
     surveys: Spørreundersøkelser
     tasks: App-innhold
+    untitledEvent: Arrangement uten tittel
     views: Lister
   collapse:
     collapse: Skjul
@@ -1298,8 +1558,11 @@ zui:
     title: Sortér
   dateRange:
     draft: Ingen startdato
+    end: Slutt
     finite: Fra {start, date, medium} til {end, date, medium}
     indefinite: Fra {start, date, medium} og fremover
+    invisible: Ikke synlig eller planlagt
+    start: Start
   editTextInPlace:
     tooltip:
       edit: Klikk for å redigere
@@ -1315,6 +1578,8 @@ zui:
   lists:
     showMore: Vis mer...
   personGridEditCell:
+    keepTyping: Fortsett å skrive..
+    noResult: Ingen personer funnet
     otherPeople: Andre folk
     restrictedMode: Kan ikke redigeres i delte lister
     searchResults: Søkeresultater
@@ -1337,6 +1602,10 @@ zui:
     submit: Send inn
   suffixedNumber:
     thousands: '{num}K'
+  timeSpan:
+    multiDayEndsToday: '{startDate}, {start} - I dag, {end}'
+    multiDayToday: I dag, {start} - {endDate}, {end}
+    singleDayToday: I dag, {start} - {end}
   timeline:
     addNotePlaceholder: Skriv her for å legge inn et notat
     email:
@@ -1344,6 +1613,7 @@ zui:
         cc: Cc
         from: Fra
         to: Til
+    expand: vis hele tidslinja
     filter:
       byType:
         all: Alle
@@ -1352,6 +1622,7 @@ zui:
         people: Folk
         tags: Tægger
       filterSelectLabel: 'Vis: {filter}'
+      warning: Tidslinja er filtrert, klikk her for å fjerne filter.
     updates:
       any:
         addtags: '{actor} la til {count, plural, =1 {en tægg} other {# tægger}}'
