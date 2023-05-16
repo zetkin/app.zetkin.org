@@ -76,114 +76,172 @@ async function fetchElements(
   orgId: string,
   apiFetch: ApiFetch
 ): Promise<BreadcrumbElement[]> {
-  if (fieldName == 'folderId') {
-    const folders = await apiFetch(`/orgs/${orgId}/people/view_folders`)
-      .then((res) => res.json())
-      .then((envelope) => envelope.data as ZetkinViewFolder[]);
-
-    const ancestors: ZetkinViewFolder[] = [];
-    let nextAncestor = folders.find(
-      (folder) => folder.id == parseInt(fieldValue)
-    );
-    while (nextAncestor) {
-      ancestors.push(nextAncestor);
-      const parent = nextAncestor.parent;
-      nextAncestor = parent
-        ? folders.find((folder) => folder.id == parent.id)
-        : undefined;
-    }
-
-    return ancestors.reverse().map((folder) => ({
-      href: basePath + '/' + folder.id,
-      label: folder.title,
-    }));
-  } else {
-    const label = await fetchLabel(fieldName, fieldValue, orgId, apiFetch);
-    if (label) {
-      return [
-        {
-          href: basePath + '/' + fieldValue,
-          label: label,
-        },
-      ];
-    } else {
-      return [];
-    }
-  }
-}
-
-async function fetchLabel(
-  fieldName: string,
-  fieldValue: string,
-  orgId: string,
-  apiFetch: ApiFetch
-): Promise<string | null> {
   if (fieldName === 'orgId') {
     const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
-    return org.data.title;
-  }
-  if (fieldName === 'personId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: org.data.title,
+      },
+    ];
+  } else if (fieldName === 'personId') {
     const person = await apiFetch(`/orgs/${orgId}/people/${fieldValue}`).then(
       (res) => res.json()
     );
-    return `${person.data.first_name} ${person.data.last_name}`;
-  }
-  if (fieldName === 'campId') {
-    if (fieldValue == 'standalone') {
-      return null;
-    } else {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: `${person.data.first_name} ${person.data.last_name}`,
+      },
+    ];
+  } else if (fieldName === 'campId') {
+    if (fieldValue !== 'standalone') {
       const campaign = await apiFetch(
         `/orgs/${orgId}/campaigns/${fieldValue}`
       ).then((res) => res.json());
-      return campaign.data.title;
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          label: campaign.data.title,
+        },
+      ];
     }
-  }
-  if (fieldName === 'taskId') {
+  } else if (fieldName === 'taskId') {
     const task = await apiFetch(`/orgs/${orgId}/tasks/${fieldValue}`).then(
       (res) => res.json()
     );
-    return task.data.title;
-  }
-  if (fieldName == 'viewId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: task.data.title,
+      },
+    ];
+  } else if (fieldName == 'viewId') {
     const view = await apiFetch(
       `/orgs/${orgId}/people/views/${fieldValue}`
     ).then((res) => res.json());
-    return view.data.title;
-  }
-  if (fieldName == 'instanceId') {
+
+    const folderId = view.data?.folder?.id;
+    const folderElements = folderId
+      ? await fetchFolders(folderId, basePath, orgId, apiFetch)
+      : [];
+
+    return [
+      ...folderElements,
+      {
+        href: basePath + '/' + fieldValue,
+        label: view.data.title,
+      },
+    ];
+  } else if (fieldName == 'instanceId') {
     const journeyInstance = await apiFetch(
       `/orgs/${orgId}/journey_instances/${fieldValue}`
     ).then((res) => res.json());
-    return `${
-      journeyInstance.data.title || journeyInstance.data.journey.title
-    } #${journeyInstance.data.id}`;
-  }
-  if (fieldName == 'journeyId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: `${
+          journeyInstance.data.title || journeyInstance.data.journey.title
+        } #${journeyInstance.data.id}`,
+      },
+    ];
+  } else if (fieldName == 'journeyId') {
     const journey = await apiFetch(
       `/orgs/${orgId}/journeys/${fieldValue}`
     ).then((res) => res.json());
-    return journey.data.plural_label;
-  }
-  if (fieldName == 'callAssId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: journey.data.plural_label,
+      },
+    ];
+  } else if (fieldName == 'callAssId') {
     const assignment = await apiFetch(
       `/orgs/${orgId}/call_assignments/${fieldValue}`
     ).then((res) => res.json());
-    return assignment.data.title;
-  }
-  if (fieldName == 'surveyId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: assignment.data.title,
+      },
+    ];
+  } else if (fieldName == 'surveyId') {
     const survey = await apiFetch(`/orgs/${orgId}/surveys/${fieldValue}`).then(
       (res) => res.json()
     );
-    return survey.data.title;
-  }
-  if (fieldName == 'eventId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: survey.data.title,
+      },
+    ];
+  } else if (fieldName == 'eventId') {
     const event = await apiFetch(`/orgs/${orgId}/actions/${fieldValue}`).then(
       (res) => res.json()
     );
-    return event.data.title;
+    if (event.data.title || event.data.activity?.title) {
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          label: event.data.title || event.data.activity?.title,
+        },
+      ];
+    } else {
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          labelMsg: 'untitledEvent',
+        },
+      ];
+    }
+  } else if (fieldName == 'folderId') {
+    const folderId = parseInt(fieldValue);
+    const folderElements = await fetchFolders(
+      folderId,
+      basePath,
+      orgId,
+      apiFetch
+    );
+    return folderElements;
   }
-  return fieldValue;
+
+  return [];
 }
+
+async function fetchFolders(
+  folderId: number,
+  basePath: string,
+  orgId: string,
+  apiFetch: ApiFetch
+): Promise<BreadcrumbElement[]> {
+  const folders = await apiFetch(`/orgs/${orgId}/people/view_folders`)
+    .then((res) => res.json())
+    .then((envelope) => envelope.data as ZetkinViewFolder[]);
+
+  let nextAncestor = folders.find((folder) => folder.id == folderId);
+
+  const ancestors: ZetkinViewFolder[] = [];
+
+  while (nextAncestor) {
+    ancestors.push(nextAncestor);
+    const parent = nextAncestor.parent;
+    nextAncestor = parent
+      ? folders.find((folder) => folder.id == parent.id)
+      : undefined;
+  }
+
+  return ancestors
+    .reverse()
+    .map((folder) => getFolderAsElement(folder, basePath));
+}
+
+const getFolderAsElement = (folder: ZetkinViewFolder, basePath: string) => {
+  return {
+    folderId: folder?.parent?.id,
+    href: basePath + '/folders/' + folder.id,
+    label: folder.title,
+  };
+};
 
 const validateQuery = (
   query: NextApiRequest['query']

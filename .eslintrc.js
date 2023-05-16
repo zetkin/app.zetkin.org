@@ -75,6 +75,13 @@ module.exports = {
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
         'react-hooks/exhaustive-deps': 'off',
+        'react/self-closing-comp': [
+          'error',
+          {
+            component: true,
+            html: true,
+          },
+        ],
         'sort-imports': [
           'error',
           {

@@ -21,6 +21,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import { EventsModel } from 'features/events/models/EventsModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import LocationsModel from 'features/events/models/LocationsModel';
@@ -41,12 +42,14 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 type EventOverviewCardProps = {
   data: ZetkinEvent;
   dataModel: EventDataModel;
+  eventsModel: EventsModel;
   locationsModel: LocationsModel;
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({
   data,
   dataModel,
+  eventsModel,
   locationsModel,
 }) => {
   const locations = locationsModel.getLocations().data;
@@ -102,6 +105,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     ? [...locations, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
+  const events = eventsModel.getParallelEvents(
+    data.start_time,
+    data.end_time
+  ).data;
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -142,8 +150,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               ) {
                                 setEndDate(newValue);
                               }
-                            } else {
-                              setInvalidFormat(true);
                             }
                           }}
                           renderInput={(params) => {
@@ -191,10 +197,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.startTime()}
                           onChange={(newValue) => {
                             if (newValue && isValidDate(newValue.toDate())) {
-                              setInvalidFormat(false);
-                              setStartDate(dayjs(newValue));
-                            } else {
-                              setInvalidFormat(true);
+                              if (dayjs(newValue) < dayjs(endDate)) {
+                                setInvalidFormat(false);
+                                setStartDate(dayjs(newValue));
+                              }
                             }
                           }}
                           open={false}
@@ -206,6 +212,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   ...params.inputProps,
                                   ...props,
                                 }}
+                                sx={{ button: { cursor: 'text' } }}
                               />
                             );
                           }}
@@ -250,8 +257,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 setInvalidFormat(false);
                                 setEndDate(newValue);
                               }
-                            } else {
-                              setInvalidFormat(true);
                             }
                           }}
                           renderInput={(params) => {
@@ -322,7 +327,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 .endDate()
                                 .toUpperCase()}
                             </Typography>
-                            <Box mb={3}></Box>
+                            <Box mb={3} />
                           </Box>
                         );
                       }
@@ -339,10 +344,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.endTime()}
                           onChange={(newValue) => {
                             if (newValue && isValidDate(newValue.toDate())) {
-                              setInvalidFormat(false);
-                              setEndDate(newValue);
-                            } else {
-                              setInvalidFormat(false);
+                              if (dayjs(newValue) > dayjs(startDate)) {
+                                setInvalidFormat(false);
+                                setEndDate(newValue);
+                              }
                             }
                           }}
                           open={false}
@@ -355,6 +360,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   ...params.inputProps,
                                   ...props,
                                 }}
+                                sx={{ button: { cursor: 'text' } }}
                               />
                             );
                           }}
@@ -459,6 +465,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             sx={{ cursor: 'pointer', marginLeft: 1 }}
                           />
                           <LocationModal
+                            currentEventId={data.id}
+                            events={events || []}
                             locationId={locationId}
                             locations={locations || []}
                             model={locationsModel}

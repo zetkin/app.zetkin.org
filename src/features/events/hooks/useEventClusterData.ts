@@ -1,22 +1,30 @@
-import { ClusteredEvent } from 'features/campaigns/hooks/useClusteredActivities';
+import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import { EnvContext } from 'core/env/EnvContext';
 import { EventState } from 'features/events/models/EventDataModel';
 import getEventStats from 'features/events/rpc/getEventStats';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
+import messageIds from '../l10n/messageIds';
 import { RootState } from 'core/store';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivityList/items/ActivityListItem';
 import { useContext } from 'react';
+import { useMessages } from 'core/i18n';
 import { useStore } from 'react-redux';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { statsLoad, statsLoaded } from 'features/events/store';
 
-export default function useEventClusterData(cluster: ClusteredEvent) {
+export default function useEventClusterData(cluster: AnyClusteredEvent) {
   const numParticipantsRequired = cluster.events.reduce(
     (sum, event) => sum + event.num_participants_required,
     0
   );
 
+  const numParticipantsAvailable = cluster.events.reduce(
+    (sum, event) => sum + event.num_participants_available,
+    0
+  );
+
   let statsLoading = false;
+  const messages = useMessages(messageIds);
   const store = useStore<RootState>();
   const state = store.getState();
   const env = useContext(EnvContext);
@@ -74,6 +82,8 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
     color = STATUS_COLORS.RED;
   } else if (status === EventState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
+  } else if (status === EventState.CANCELLED) {
+    color = STATUS_COLORS.ORANGE;
   }
 
   const firstEvent = cluster.events[0];
@@ -83,7 +93,8 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
   const eventId = firstEvent.id;
   const startTime = firstEvent.start_time;
   const endTime = cluster.events[cluster.events.length - 1].end_time;
-  const title = firstEvent.title || firstEvent.activity.title;
+  const title =
+    firstEvent.title || firstEvent.activity?.title || messages.common.noTitle();
 
   return {
     allHaveContacts,
@@ -93,6 +104,7 @@ export default function useEventClusterData(cluster: ClusteredEvent) {
     eventId,
     location,
     numBooked,
+    numParticipantsAvailable,
     numParticipantsRequired,
     numPending,
     numReminded,
@@ -108,23 +120,28 @@ const getEventState = (data: ZetkinEvent) => {
     return EventState.UNKNOWN;
   }
 
-  if (data.start_time) {
-    const startTime = new Date(data.start_time);
-    const now = new Date();
-
-    if (startTime > now) {
+  if (!data.published && data.cancelled) {
+    return EventState.CANCELLED;
+  }
+  const now = new Date();
+  if (data.published) {
+    const published = new Date(data.published);
+    if (published > now) {
       return EventState.SCHEDULED;
-    } else {
-      if (data.end_time) {
-        const endTime = new Date(data.end_time);
-
-        if (endTime < now) {
-          return EventState.ENDED;
-        }
-      }
-
-      return EventState.OPEN;
     }
+    if (data.cancelled) {
+      const cancelled = new Date(data.cancelled);
+      if (cancelled > published) {
+        return EventState.CANCELLED;
+      }
+    }
+    if (data.end_time) {
+      const endTime = new Date(data.end_time);
+      if (endTime < now) {
+        return EventState.ENDED;
+      }
+    }
+    return EventState.OPEN;
   } else {
     return EventState.DRAFT;
   }

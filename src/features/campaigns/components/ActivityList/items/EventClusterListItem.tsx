@@ -9,9 +9,12 @@ import {
 import ActivityListItem from './ActivityListItem';
 import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
 import LocationLabel from 'features/events/components/LocationLabel';
+import messageIds from 'features/campaigns/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import {
@@ -24,6 +27,7 @@ interface EventListeItemProps {
 }
 
 const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
+  const { openEventPopper } = useEventPopper();
   const {
     allHaveContacts,
     campaignId,
@@ -35,8 +39,8 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
     numParticipantsRequired,
     numPending,
     numReminded,
-    statsLoading,
     orgId,
+    statsLoading,
     startTime,
     title,
   } = useEventClusterData(cluster);
@@ -57,6 +61,9 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
           participantsLoading={statsLoading}
         />
       }
+      onEventItemClick={(x: number, y: number) => {
+        openEventPopper(cluster, { left: x, top: y });
+      }}
       PrimaryIcon={
         cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
           ? MultiLocationIcon
@@ -68,7 +75,7 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
           color="secondary"
           iconLabels={[
             {
-              icon: <ScheduleOutlined fontSize="inherit" />,
+              icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
                   end={new Date(removeOffset(endTime))}
@@ -77,8 +84,16 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
               ),
             },
             {
-              icon: <PlaceOutlined fontSize="inherit" />,
-              label: <LocationLabel location={location} />,
+              icon: <PlaceOutlined color="secondary" fontSize="inherit" />,
+              label:
+                cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ? (
+                  <Msg
+                    id={messageIds.activityList.eventItem.locations}
+                    values={{ count: cluster.events.length }}
+                  />
+                ) : (
+                  <LocationLabel location={location} />
+                ),
             },
           ]}
           size="sm"

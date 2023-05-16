@@ -3,7 +3,7 @@ import { FC, ReactNode } from 'react';
 
 type ZUICardProps = {
   children: ReactNode;
-  header: string;
+  header: string | JSX.Element;
   status?: ReactNode;
   subheader?: string;
 };

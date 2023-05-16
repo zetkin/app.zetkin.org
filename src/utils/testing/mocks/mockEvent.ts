@@ -11,6 +11,7 @@ const event: ZetkinEvent = {
     id: 1,
     title: 'Testcampaign Title',
   },
+  cancelled: null,
   contact: null,
   end_time: '2022-06-16T09:00:00+00:00',
   id: 1,
@@ -24,8 +25,9 @@ const event: ZetkinEvent = {
   num_participants_available: 3,
   num_participants_required: 2,
   organization: mockOrganization(),
+  published: '2022-06-10T07:00:00+00:00',
   start_time: '2022-06-16T07:00:00+00:00',
-  title: undefined,
+  title: 'Dance party in the park',
   url: undefined,
 };
 

@@ -6,9 +6,15 @@ import {
   ScheduleOutlined,
 } from '@mui/icons-material';
 
+import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import getEventUrl from 'features/events/utils/getEventUrl';
+import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
+import { removeOffset } from 'utils/dateUtils';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
@@ -23,13 +29,15 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
   event,
   focusDate,
 }) => {
+  const { openEventPopper } = useEventPopper();
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
+  const messages = useMessages(messageIds);
 
   return (
     <OverviewListItem
-      endDate={null}
+      endDate={event.cancelled ? new Date(event.cancelled) : null}
       endNumber={`${event.num_participants_available} / ${event.num_participants_required}`}
       endNumberColor={
         event.num_participants_available < event.num_participants_required
@@ -37,13 +45,17 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
           : undefined
       }
       focusDate={focusDate}
-      href={`/organize/${event.organization.id}/projects/${
-        event.campaign?.id ?? 'standalone'
-      }/events/${event.id}`}
+      href={getEventUrl(event)}
       meta={<EventWarningIcons compact model={model} />}
+      onClick={(x: number, y: number) => {
+        openEventPopper(
+          { events: [event], kind: CLUSTER_TYPE.SINGLE },
+          { left: x, top: y }
+        );
+      }}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
-      startDate={null}
+      startDate={event.published ? new Date(event.published) : null}
       statusBar={null}
       subtitle={
         <ZUIIconLabelRow
@@ -52,8 +64,8 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
               icon: <ScheduleOutlined fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
-                  end={new Date(event.end_time)}
-                  start={new Date(event.start_time)}
+                  end={new Date(removeOffset(event.end_time))}
+                  start={new Date(removeOffset(event.start_time))}
                 />
               ),
             },
@@ -68,7 +80,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
           ]}
         />
       }
-      title={event.title || event.activity.title}
+      title={event.title || event.activity?.title || messages.common.noTitle()}
     />
   );
 };

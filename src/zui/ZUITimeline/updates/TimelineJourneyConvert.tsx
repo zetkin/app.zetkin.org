@@ -25,7 +25,7 @@ const TimelineJourneyConvert: React.FC<TimelineJourneyConvertProps> = ({
         />
       }
       update={update}
-    ></UpdateContainer>
+    />
   );
 };
 

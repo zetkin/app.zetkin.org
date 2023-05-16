@@ -26,6 +26,7 @@ export default makeMessages('feat.campaigns', {
   activityList: {
     eventItem: {
       contact: m('No contact person has been assigned'),
+      locations: m<{ count: number }>('{count} locations'),
       reminders: m<{ numMissing: number }>(
         '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
       ),
@@ -141,6 +142,7 @@ export default makeMessages('feat.campaigns', {
     filterActivities: m('Type to filter'),
     noActivities: m('There are no activities in this project yet.'),
     noSearchResults: m('Your filtering yielded no results.'),
+    showPublicPage: m('Show public sign-up page'),
     viewArchive: m('View archive'),
   },
   taskLayout: {

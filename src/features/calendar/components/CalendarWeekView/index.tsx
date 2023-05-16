@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { useState } from 'react';
+import { useStore } from 'react-redux';
 import {
   ListItemIcon,
   ListItemText,
@@ -12,6 +13,8 @@ import {
 } from '@mui/material';
 
 import DayHeader from './DayHeader';
+import { Event } from '@mui/icons-material';
+import EventCluster from '../EventCluster';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
@@ -21,7 +24,7 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import theme from 'theme';
-import { useStore } from 'react-redux';
+import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
 import { Event, SplitscreenOutlined } from '@mui/icons-material';
@@ -29,14 +32,15 @@ import { useEnv, useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(isoWeek);
 
-const HOUR_HEIGHT = 5;
+const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '50px';
 
 export interface CalendarWeekViewProps {
   focusDate: Date;
+  onClickDay: (date: Date) => void;
 }
 
-const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
+const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
@@ -51,6 +55,13 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
 
   const dayDates = range(7).map((weekday) => {
     return focusWeekStartDay.day(weekday + 1).toDate();
+  });
+
+  const { orgId, campId } = useNumericRouteParams();
+  const eventsByDate = useWeekCalendarEvents({
+    campaignId: campId,
+    dates: dayDates,
+    orgId,
   });
 
   return (
@@ -70,6 +81,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
               key={weekday}
               date={weekdayDate}
               focused={new Date().toDateString() == weekdayDate.toDateString()}
+              onClick={() => onClickDay(weekdayDate)}
             />
           );
         })}
@@ -92,7 +104,7 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
               <Box
                 key={hour}
                 display="flex"
-                height={`${HOUR_HEIGHT}em`}
+                height={`${HOUR_HEIGHT}px`}
                 justifyContent="flex-end"
               >
                 <Typography color={theme.palette.grey[500]} variant="caption">
@@ -120,13 +132,16 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
                 (24 * 60) -
               pendingTop
             : 0;
+
+          const lanes = eventsByDate[index].lanes;
+
           return (
             <Box
               key={date.toISOString()}
               flexGrow={1}
-              height={`${HOUR_HEIGHT * 24}em`}
+              height={`${HOUR_HEIGHT * 24}px`}
               sx={{
-                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}em)`,
+                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}px)`,
                 marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
               }}
             >
@@ -156,6 +171,47 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
                 }}
                 onDragStart={() => setPendingEvent(null)}
               >
+                {lanes.flatMap((lane, laneIdx) => {
+                  return lane.map((cluster) => {
+                    const startTime = new Date(cluster.events[0].start_time);
+                    const endTime = new Date(
+                      cluster.events[cluster.events.length - 1].end_time
+                    );
+                    const startOffs =
+                      (startTime.getUTCHours() +
+                        startTime.getUTCMinutes() / 60) /
+                      24;
+                    const endOffs =
+                      (endTime.getUTCHours() + endTime.getUTCMinutes() / 60) /
+                      24;
+
+                    const height = Math.max(endOffs - startOffs, 1 / 3 / 24);
+
+                    const laneOffset = 0.15 * laneIdx;
+                    const width =
+                      1 - laneOffset - (lanes.length - laneIdx) * 0.05;
+
+                    const pixelHeight = height * HOUR_HEIGHT * 24;
+
+                    return (
+                      <Box
+                        key={laneIdx}
+                        sx={{
+                          '&:hover': {
+                            zIndex: 100,
+                          },
+                          // TODO: This will be replaced with real event components (WIP)
+                          left: `${laneOffset * 100}%`,
+                          position: 'absolute',
+                          top: `${startOffs * 100}%`,
+                          width: `${width * 100}%`,
+                        }}
+                      >
+                        <EventCluster cluster={cluster} height={pixelHeight} />
+                      </Box>
+                    );
+                  });
+                })}
                 {pendingEvent && isSameDate(date, pendingEvent[0]) && (
                   <>
                     <EventGhost
@@ -250,10 +306,9 @@ function useCreateEvent() {
         ? `/api/orgs/${orgId}/campaigns/${campId}/actions`
         : `/api/orgs/${orgId}/actions`,
       {
-        // TODO: Use null when possible for activity, campaign and location
-        activity_id: 1,
+        activity_id: null,
         end_time: endDate.toISOString(),
-        location_id: 1,
+        location_id: null,
         start_time: startDate.toISOString(),
       }
     );

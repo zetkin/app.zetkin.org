@@ -54,7 +54,6 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
           </NextLink>
         </Box>
       </Box>
-
       <ZUIFuture future={activitiesModel.getActivityOverview(campaignId)}>
         {(data) => {
           const totalLength =
@@ -79,22 +78,31 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
               <Grid item md={4} xs={12}>
                 <ActivitiesOverviewCard
                   activities={data.today}
+                  campId={campaignId}
                   focusDate={todayDate}
                   header={messages.activitiesOverview.todayCard()}
+                  orgId={orgId}
+                  timeScale={'day'}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
                 <ActivitiesOverviewCard
                   activities={data.tomorrow}
+                  campId={campaignId}
                   focusDate={tomorrowDate}
                   header={messages.activitiesOverview.tomorrowCard()}
+                  orgId={orgId}
+                  timeScale={'day'}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
                 <ActivitiesOverviewCard
                   activities={data.alsoThisWeek}
+                  campId={campaignId}
                   focusDate={null}
                   header={messages.activitiesOverview.thisWeekCard()}
+                  orgId={orgId}
+                  timeScale={'week'}
                 />
               </Grid>
             </Grid>

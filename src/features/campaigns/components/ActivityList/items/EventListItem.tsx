@@ -6,51 +6,60 @@ import {
   ScheduleOutlined,
 } from '@mui/icons-material';
 
-import EventWarningIcons from 'features/events/components/EventWarningIcons';
-import useModel from 'core/useModel';
+import ActivityListItem from './ActivityListItem';
+import { ClusteredEvent } from 'features/campaigns/hooks/useClusteredActivities';
+import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
+import getEventUrl from 'features/events/utils/getEventUrl';
+import { removeOffset } from 'utils/dateUtils';
+import useEventClusterData from 'features/events/hooks/useEventClusterData';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
-import EventDataModel, {
-  EventState,
-} from 'features/events/models/EventDataModel';
 
 interface EventListeItemProps {
-  orgId: number;
-  eventId: number;
+  cluster: ClusteredEvent;
 }
 
-const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
-  const model = useModel((env) => new EventDataModel(env, orgId, eventId));
-  const state = model.state;
-  const data = model.getData().data;
+const EventListItem: FC<EventListeItemProps> = ({ cluster }) => {
+  const {
+    allHaveContacts,
+    color,
+    endTime,
+    location,
+    numBooked,
+    numParticipantsAvailable,
+    numParticipantsRequired,
+    numPending,
+    numReminded,
+    statsLoading,
+    startTime,
+    title,
+  } = useEventClusterData(cluster);
+  const { openEventPopper } = useEventPopper();
 
-  if (!data) {
-    return null;
-  }
-
-  let color = STATUS_COLORS.GRAY;
-  if (state === EventState.OPEN) {
-    color = STATUS_COLORS.GREEN;
-  } else if (state === EventState.ENDED) {
-    color = STATUS_COLORS.RED;
-  } else if (state === EventState.SCHEDULED) {
-    color = STATUS_COLORS.BLUE;
-  }
+  const event = cluster.events[0];
 
   return (
     <ActivityListItem
       color={color}
-      endNumber={`${data.num_participants_available} / ${data.num_participants_required}`}
+      endNumber={`${numParticipantsAvailable} / ${numParticipantsRequired}`}
       endNumberColor={
-        data.num_participants_available < data.num_participants_required
-          ? 'error'
-          : undefined
+        numParticipantsAvailable < numParticipantsRequired ? 'error' : undefined
       }
-      href={`/organize/${orgId}/projects/${
-        data.campaign?.id ?? 'standalone'
-      }/events/${eventId}`}
-      meta={<EventWarningIcons model={model} />}
+      href={getEventUrl(event)}
+      meta={
+        <EventWarningIconsSansModel
+          compact={false}
+          hasContact={allHaveContacts}
+          numParticipants={numBooked}
+          numRemindersSent={numReminded}
+          numSignups={numPending}
+          participantsLoading={statsLoading}
+        />
+      }
+      onEventItemClick={(x: number, y: number) => {
+        openEventPopper(cluster, { left: x, top: y });
+      }}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={Group}
       subtitle={
@@ -58,19 +67,21 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
           color="secondary"
           iconLabels={[
             {
-              icon: <ScheduleOutlined fontSize="inherit" />,
+              icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
-                  end={new Date(data.end_time)}
-                  start={new Date(data.start_time)}
+                  end={new Date(removeOffset(endTime))}
+                  start={new Date(removeOffset(startTime))}
                 />
               ),
             },
-            ...(data.location
+            ...(location
               ? [
                   {
-                    icon: <PlaceOutlined fontSize="inherit" />,
-                    label: data.location.title,
+                    icon: (
+                      <PlaceOutlined color="secondary" fontSize="inherit" />
+                    ),
+                    label: location.title,
                   },
                 ]
               : []),
@@ -78,7 +89,7 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
           size="sm"
         />
       }
-      title={data.title || data.activity.title}
+      title={title}
     />
   );
 };

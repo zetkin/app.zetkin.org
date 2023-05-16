@@ -42,7 +42,7 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
             <Box key={`event-${activity.events[0].id}`}>
               {index > 0 && <Divider />}
               {activity.kind == CLUSTER_TYPE.SINGLE ? (
-                <EventListItem eventId={activity.events[0].id} orgId={orgId} />
+                <EventListItem cluster={activity} />
               ) : (
                 <EventClusterListItem cluster={activity} />
               )}
@@ -89,7 +89,7 @@ const ActivityList = ({
     );
 
     const fuse = new Fuse(filteredActivities, {
-      keys: ['title'],
+      keys: ['data.title'],
       threshold: 0.4,
     });
 

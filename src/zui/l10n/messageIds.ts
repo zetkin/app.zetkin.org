@@ -35,6 +35,7 @@ export default makeMessages('zui', {
     submissions: m('Submissions'),
     surveys: m('Surveys'),
     tasks: m('Tasks'),
+    untitledEvent: m('Untitled event'),
     views: m('Views'),
   },
   collapse: {

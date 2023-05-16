@@ -1,20 +1,30 @@
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   Button,
   ClickAwayListener,
+  Divider,
   TextField,
   Typography,
 } from '@mui/material';
-import { Close, OpenWith } from '@mui/icons-material';
+import { Close, EventOutlined, OpenWith } from '@mui/icons-material';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
+import RelatedEventCard from '../RelatedEvent';
 import { useMessages } from 'core/i18n';
-import { ZetkinLocation } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    color: theme.palette.grey[400],
+    fontSize: '8rem',
+  },
+}));
 
 interface LocationDetailsCardProps {
   model: LocationsModel;
@@ -22,15 +32,18 @@ interface LocationDetailsCardProps {
   onMove: () => void;
   onUseLocation: () => void;
   location: ZetkinLocation;
+  relatedEvents: ZetkinEvent[];
 }
 
 const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
+  location,
   model,
   onClose,
   onMove,
   onUseLocation,
-  location,
+  relatedEvents,
 }) => {
+  const classes = useStyles();
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(location.title);
   const [description, setDescription] = useState(location.info_text);
@@ -58,13 +71,12 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
 
   return (
     <Box
-      padding={2}
       sx={{
         backgroundColor: 'white',
         cursor: 'default',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        height: '100%',
         width: '100%',
       }}
     >
@@ -80,7 +92,7 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
           }
         }}
       >
-        <Box>
+        <Box padding={2}>
           <Box display="flex" justifyContent="space-between">
             <ZUIPreviewableInput
               mode={
@@ -163,7 +175,42 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
           />
         </Box>
       </ClickAwayListener>
-      <Box display="flex" justifyContent="space-between" paddingTop={2}>
+      <Divider />
+      <Typography fontWeight="bold" padding={2} variant="h5">
+        {messages.locationModal.relatedEvents()}
+      </Typography>
+      <Box
+        display="flex"
+        flexDirection="column"
+        height="100%"
+        paddingBottom={2}
+        paddingX={2}
+        sx={{ overflowY: 'auto' }}
+      >
+        {relatedEvents.length > 0 &&
+          relatedEvents.map((event, index) => (
+            <Box key={event.id} paddingTop={index === 0 ? '' : 2}>
+              <RelatedEventCard event={event} />
+              <Divider sx={{ paddingTop: 2 }} />
+            </Box>
+          ))}
+        {!relatedEvents.length && (
+          <Box
+            alignItems="center"
+            display="flex"
+            flex={1}
+            flexDirection="column"
+            height="100"
+            justifyContent="center"
+          >
+            <EventOutlined className={classes.icon} />
+            <Typography color="secondary">
+              {messages.locationModal.noRelatedEvents()}
+            </Typography>
+          </Box>
+        )}
+      </Box>
+      <Box display="flex" justifyContent="space-between" padding={2}>
         <Button onClick={onMove} startIcon={<OpenWith />}>
           {messages.locationModal.move()}
         </Button>

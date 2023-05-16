@@ -1,10 +1,10 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import EventsRepo from 'features/events/repo/EventsRepo';
-import { isSameDate } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
+import { dateIsAfter, dateIsBefore, isSameDate } from 'utils/dateUtils';
 import {
   ErrorFuture,
   IFuture,
@@ -102,17 +102,30 @@ export default class CampaignActivitiesModel extends ModelBase {
     if (activitiesFuture.data) {
       const currentActivities = activitiesFuture.data;
 
-      overview.today = currentActivities.filter(
-        (activity) =>
-          (activity.startDate && isSameDate(activity.startDate, todayDate)) ||
-          (activity.endDate && isSameDate(activity.endDate, todayDate))
-      );
-      overview.tomorrow = currentActivities.filter(
-        (activity) =>
-          (activity.startDate &&
-            isSameDate(activity.startDate, tomorrowDate)) ||
-          (activity.endDate && isSameDate(activity.endDate, tomorrowDate))
-      );
+      overview.today = currentActivities.filter((activity) => {
+        if (activity.kind == ACTIVITIES.EVENT) {
+          const startDate = new Date(activity.data.start_time);
+          return isSameDate(startDate, todayDate);
+        } else {
+          return (
+            (activity.startDate && isSameDate(activity.startDate, todayDate)) ||
+            (activity.endDate && isSameDate(activity.endDate, todayDate))
+          );
+        }
+      });
+
+      overview.tomorrow = currentActivities.filter((activity) => {
+        if (activity.kind == ACTIVITIES.EVENT) {
+          const startDate = new Date(activity.data.start_time);
+          return isSameDate(startDate, tomorrowDate);
+        } else {
+          return (
+            (activity.startDate &&
+              isSameDate(activity.startDate, tomorrowDate)) ||
+            (activity.endDate && isSameDate(activity.endDate, tomorrowDate))
+          );
+        }
+      });
 
       const startOfToday = new Date(new Date().toISOString().slice(0, 10));
       const weekFromNow = new Date(startOfToday);
@@ -126,11 +139,27 @@ export default class CampaignActivitiesModel extends ModelBase {
           return false;
         }
 
-        return (
-          activity.startDate &&
-          activity.startDate < weekFromNow &&
-          (!activity.endDate || activity.endDate >= startOfToday)
-        );
+        if (activity.kind == ACTIVITIES.EVENT) {
+          const startDate = new Date(activity.data.start_time);
+          const endDate = new Date(activity.data.end_time);
+          const startsDuringWeek =
+            dateIsAfter(startDate, startOfToday) &&
+            dateIsBefore(startDate, weekFromNow);
+          const isOnGoing =
+            dateIsBefore(startDate, startOfToday) &&
+            dateIsAfter(endDate, weekFromNow);
+          const endsDuringWeek =
+            dateIsBefore(startDate, startOfToday) &&
+            dateIsBefore(endDate, weekFromNow);
+
+          return startsDuringWeek || isOnGoing || endsDuringWeek;
+        } else {
+          return (
+            activity.startDate &&
+            activity.startDate < weekFromNow &&
+            (!activity.endDate || activity.endDate >= startOfToday)
+          );
+        }
       });
     }
 
@@ -146,10 +175,10 @@ export default class CampaignActivitiesModel extends ModelBase {
     const tasksFuture = this._tasksRepo.getTasks(this._orgId);
 
     if (
-      callAssignmentsFuture.isLoading ||
-      eventsFuture.isLoading ||
-      surveysFuture.isLoading ||
-      tasksFuture.isLoading
+      (callAssignmentsFuture.isLoading && !callAssignmentsFuture.data) ||
+      (eventsFuture.isLoading && !eventsFuture.data) ||
+      (surveysFuture.isLoading && !surveysFuture.data) ||
+      (tasksFuture.isLoading && !tasksFuture.data)
     ) {
       return new LoadingFuture();
     }
@@ -176,9 +205,9 @@ export default class CampaignActivitiesModel extends ModelBase {
       .filter((event) => !campaignId || event.campaign?.id == campaignId)
       .map((event) => ({
         data: event,
-        endDate: getUTCDateWithoutTime(event.end_time), // End date (cancelled) not implemented in backend yet
+        endDate: null,
         kind: ACTIVITIES.EVENT,
-        startDate: new Date(0), // Start date (published) not implemented in backend yet
+        startDate: getUTCDateWithoutTime(event.published),
       }));
 
     const surveys: CampaignActivity[] = surveysFuture.data
@@ -223,10 +252,17 @@ export default class CampaignActivitiesModel extends ModelBase {
     }
 
     const now = new Date();
-    const filtered = activities.data?.filter(
-      (activity) =>
-        activity.startDate && activity.endDate && activity.endDate < now
-    );
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const filtered = activities.data?.filter((activity) => {
+      if (activity.kind == ACTIVITIES.EVENT) {
+        const endDate = new Date(activity.data.end_time);
+        return endDate < nowDate;
+      } else {
+        return (
+          activity.startDate && activity.endDate && activity.endDate < nowDate
+        );
+      }
+    });
 
     return new ResolvedFuture(filtered || []);
   }

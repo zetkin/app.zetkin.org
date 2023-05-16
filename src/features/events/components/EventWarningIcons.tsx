@@ -23,7 +23,6 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
   }
 
   const participants = model.getParticipants();
-
   return (
     <EventWarningIconsSansModel
       compact={compact}
@@ -32,7 +31,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
       numRemindersSent={
         participants.data?.filter((p) => !!p.reminder_sent).length ?? 0
       }
-      numSignups={data.num_participants_available}
+      numSignups={model.getPendingSignUps().length}
       participantsLoading={!participants.data}
     />
   );
@@ -109,7 +108,7 @@ const EventWarningIconsSansModel: FC<{
   );
 };
 
-const WarningSlot: FC<{
+export const WarningSlot: FC<{
   icon?: JSX.Element;
   tooltip?: string;
 }> = ({ icon, tooltip }) => {

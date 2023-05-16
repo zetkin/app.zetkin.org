@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
@@ -18,4 +19,5 @@ const LocationLabel: FC<LocationLabelProps> = ({ location }) => {
   }
   return <>{location.title}</>;
 };
+
 export default LocationLabel;

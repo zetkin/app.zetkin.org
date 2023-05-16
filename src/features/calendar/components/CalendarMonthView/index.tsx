@@ -1,37 +1,64 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Day from './Day';
 import dayjs from 'dayjs';
 import range from 'utils/range';
+import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
+import { useNumericRouteParams } from 'core/hooks';
 import WeekNumber from './WeekNumber';
 import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
 
-export const numberOfRows = 6;
-export const numberOfDayColumns = 7;
-export const numberOfGridColumns = 8;
+const gridGap = 8;
+const numberOfRows = 6;
+const numberOfDayColumns = 7;
+const numberOfGridColumns = 8;
 
 type CalendarMonthViewProps = {
   focusDate: Date;
+  onClickDay: (date: Date) => void;
+  onClickWeek: (date: Date) => void;
 };
 
-const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
+const CalendarMonthView = ({
+  focusDate,
+  onClickDay,
+  onClickWeek,
+}: CalendarMonthViewProps) => {
+  const itemHeight = 25;
+  const { gridRef, maxPerDay } = useFlexibleMaxPerDay(itemHeight);
+
   const firstDayOfMonth: Date = new Date(
-    focusDate.getFullYear(),
-    focusDate.getMonth(),
-    1
+    Date.UTC(focusDate.getFullYear(), focusDate.getMonth(), 1)
   );
   const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
     .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')
     .toDate();
 
+  function onClickWeekHandler(rowIndex: number) {
+    onClickWeek(dayjs(firstDayOfCalendar).add(rowIndex, 'week').toDate());
+  }
+  const lastDayOfCalendar = new Date(firstDayOfCalendar);
+  lastDayOfCalendar.setDate(lastDayOfCalendar.getDate() + 6 * 7);
+
+  const { orgId, campId } = useNumericRouteParams();
+  const clustersByDate = useMonthCalendarEvents({
+    campaignId: campId,
+    endDate: lastDayOfCalendar,
+    maxPerDay,
+    orgId,
+    startDate: firstDayOfCalendar,
+  });
+
   return (
     <Box
+      ref={gridRef}
       display="grid"
-      flexGrow="1"
-      gap="8px"
+      flexGrow="0"
+      gap={`${gridGap}px`}
       gridTemplateColumns={`auto repeat(${numberOfDayColumns}, 1fr)`}
       gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
+      height="100%"
     >
       {
         // Creates 6 rows
@@ -45,6 +72,7 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
               return (
                 <WeekNumber
                   key={gridItemKey}
+                  onClick={() => onClickWeekHandler(columnIndex)}
                   weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
                 />
               );
@@ -56,13 +84,18 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
               .add(dayIndex, 'day')
               .toDate();
 
+            const clusters = clustersByDate[dayIndex].clusters;
+
             const isInFocusMonth = date.getMonth() === focusDate.getMonth();
 
             return (
               <Day
                 key={gridItemKey}
+                clusters={clusters}
                 date={date}
                 isInFocusMonth={isInFocusMonth}
+                itemHeight={itemHeight}
+                onClick={onClickDay}
               />
             );
           })
@@ -73,3 +106,35 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
 };
 
 export default CalendarMonthView;
+
+/**
+ * Calculate the maximum number of event clusters that can be displayed
+ * in a day without overflowing the grid.
+ */
+function useFlexibleMaxPerDay(itemHeight: number) {
+  const gridRef = useRef<HTMLDivElement>();
+  const [maxPerDay, setMaxPerDay] = useState(3);
+
+  useEffect(() => {
+    function update() {
+      if (gridRef.current) {
+        const rect = gridRef.current.getBoundingClientRect();
+        const heightWithoutGaps = rect.height - gridGap * 5;
+        const dayHeight = heightWithoutGaps / 6;
+        const newMaxPerDay = Math.floor(dayHeight / itemHeight) - 1;
+        setMaxPerDay(newMaxPerDay);
+      }
+    }
+
+    update();
+
+    const observer = new ResizeObserver(update);
+    if (gridRef.current) {
+      observer.observe(gridRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [gridRef.current]);
+
+  return { gridRef, maxPerDay };
+}

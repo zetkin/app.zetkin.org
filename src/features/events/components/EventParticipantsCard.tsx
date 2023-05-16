@@ -14,6 +14,8 @@ import {
 import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import getEventUrl from '../utils/getEventUrl';
+import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
@@ -22,14 +24,10 @@ import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 type EventParticipantsCardProps = {
-  campId: string;
   model: EventDataModel;
 };
 
-const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
-  model,
-  campId,
-}) => {
+const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
   const eventData = model.getData().data;
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
@@ -46,18 +44,6 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
     return null;
   }
 
-  const getParticipantStatus = () => {
-    const diff = reqParticipants - availParticipants;
-
-    if (diff <= 0) {
-      return theme.palette.statusColors.green;
-    } else if (diff === 1) {
-      return theme.palette.statusColors.orange;
-    } else {
-      return theme.palette.statusColors.red;
-    }
-  };
-
   return (
     <Box>
       <ZUICard
@@ -65,7 +51,10 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
         status={
           <Box display="flex">
             <ZUINumberChip
-              color={getParticipantStatus()}
+              color={getParticipantsStatusColor(
+                reqParticipants,
+                availParticipants
+              )}
               outlined={true}
               size="sm"
               value={`${availParticipants}/${reqParticipants}`}
@@ -147,9 +136,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.pending()}
             </Typography>
-            <Typography>
-              {Math.max(reqParticipants - availParticipants, 0)}
-            </Typography>
+            <Typography>{model.getPendingSignUps().length}</Typography>
           </Box>
           <Box
             alignItems="center"
@@ -191,10 +178,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
         </Box>
         <Divider />
         <Box display="flex" justifyContent="center" marginTop={2}>
-          <NextLink
-            href={`/organize/${eventData.organization.id}/projects/${campId}/events/${eventData.id}/participants`}
-            passHref
-          >
+          <NextLink href={`${getEventUrl(eventData)}/participants`} passHref>
             <Link underline="none">
               <Typography
                 color={theme.palette.info.main}

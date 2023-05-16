@@ -97,7 +97,7 @@ const SurveyResponsesConfig = ({
                     }}
                     label={messages.columnDialog.choices.surveyResponses.questionField()}
                     variant="standard"
-                  ></TextField>
+                  />
                 )}
                 value={selectedQuestions}
               />

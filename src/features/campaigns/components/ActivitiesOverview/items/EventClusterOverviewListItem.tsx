@@ -8,10 +8,13 @@ import {
 
 import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
 import LocationLabel from 'features/events/components/LocationLabel';
+import messageIds from 'features/campaigns/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import OverviewListItem from './OverviewListItem';
 import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
+import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import {
@@ -28,6 +31,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
   cluster,
   focusDate,
 }) => {
+  const { openEventPopper } = useEventPopper();
   const {
     allHaveContacts,
     campaignId,
@@ -46,7 +50,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
-      endDate={null} // TODO: Replace with cancelled date
+      endDate={null}
       endNumber={`${numBooked} / ${numParticipantsRequired}`}
       endNumberColor={numBooked < numParticipantsRequired ? 'error' : undefined}
       focusDate={focusDate}
@@ -61,13 +65,20 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
           participantsLoading={statsLoading}
         />
       }
+      onClick={(x: number, y: number) => {
+        openEventPopper(cluster, { left: x, top: y });
+      }}
       PrimaryIcon={
         cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
           ? MultiLocationIcon
           : SplitscreenOutlined
       }
       SecondaryIcon={Group}
-      startDate={null} // TODO: Replace with published date
+      startDate={
+        cluster.events[0].published
+          ? new Date(cluster.events[0].published)
+          : null
+      }
       subtitle={
         <ZUIIconLabelRow
           color="secondary"
@@ -83,7 +94,15 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
             },
             {
               icon: <PlaceOutlined fontSize="inherit" />,
-              label: <LocationLabel location={location} />,
+              label:
+                cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ? (
+                  <Msg
+                    id={messageIds.activityList.eventItem.locations}
+                    values={{ count: cluster.events.length }}
+                  />
+                ) : (
+                  <LocationLabel location={location} />
+                ),
             },
           ]}
           size="sm"

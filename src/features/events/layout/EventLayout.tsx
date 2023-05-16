@@ -4,11 +4,14 @@ import PeopleIcon from '@mui/icons-material/People';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import { useState } from 'react';
 
+import EventActionButtons from '../components/EventActionButtons';
 import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
 import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
 import EventTypesModel from '../models/EventTypesModel';
+import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
+import { removeOffset } from 'utils/dateUtils';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -22,14 +25,12 @@ interface EventLayoutProps {
   children: React.ReactNode;
   eventId: string;
   orgId: string;
-  campaignId: string;
 }
 
 const EventLayout: React.FC<EventLayoutProps> = ({
   children,
   eventId,
   orgId,
-  campaignId,
 }) => {
   const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
 
@@ -45,7 +46,14 @@ const EventLayout: React.FC<EventLayoutProps> = ({
 
   return (
     <TabbedLayout
-      baseHref={`/organize/${orgId}/projects/${campaignId}/events/${eventId}`}
+      actionButtons={
+        <ZUIFuture future={model.getData()}>
+          {(data) => {
+            return <EventActionButtons event={data} />;
+          }}
+        </ZUIFuture>
+      }
+      baseHref={getEventUrl(model.getData().data)}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
@@ -63,10 +71,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 <EventTypeAutocomplete
                   onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
-                    if (newValue) {
-                      // TODO: Pass null values as well, when API supports it
-                      model.setType(newValue.id);
-                    }
+                    model.setType(newValue ? newValue.id : newValue);
                     setEditingTypeOrTitle(false);
                   }}
                   onChangeNewOption={(newValueId) => model.setType(newValueId)}
@@ -82,9 +87,8 @@ const EventLayout: React.FC<EventLayoutProps> = ({
           <Box marginX={1}>
             <ZUIFuture future={model.getData()}>
               {(data) => {
-                const startDate = new Date(data.start_time);
-
-                const endDate = new Date(data.end_time);
+                const startDate = new Date(removeOffset(data.start_time));
+                const endDate = new Date(removeOffset(data.end_time));
 
                 const labels: ZUIIconLabelProps[] = [];
 
@@ -135,7 +139,9 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 }}
                 onFocus={() => setEditingTypeOrTitle(true)}
                 placeholder={
-                  data.title || data.activity.title || messages.type.untitled()
+                  data.title ||
+                  data.activity?.title ||
+                  messages.common.noTitle()
                 }
                 showBorder={editingTypeOrTitle}
                 tooltipContent={messages.tooltipContent()}
