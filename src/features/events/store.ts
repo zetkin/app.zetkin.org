@@ -1,3 +1,4 @@
+import { isSameDate } from 'utils/dateUtils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
@@ -49,6 +50,7 @@ export type FilterCategoryType =
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
+  eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
   filters: {
     selectedActions: string[];
     selectedStates: string[];
@@ -64,6 +66,7 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
+  eventsByDate: {},
   filters: {
     selectedActions: [],
     selectedStates: [],
@@ -113,6 +116,54 @@ const eventsSlice = createSlice({
       item.data = event;
       item.isLoading = false;
       item.loaded = new Date().toISOString();
+    },
+    eventRangeLoad: (state, action: PayloadAction<string[]>) => {
+      const isoDateRange = action.payload;
+      isoDateRange.forEach((isoDate) => {
+        const dateStr = isoDate.slice(0, 10);
+        if (!state.eventsByDate[dateStr]) {
+          state.eventsByDate[dateStr] = remoteList();
+        }
+        state.eventsByDate[dateStr].isLoading = true;
+      });
+    },
+    eventRangeLoaded: (
+      state,
+      action: PayloadAction<[string[], ZetkinEvent[]]>
+    ) => {
+      const [isoDateRange, events] = action.payload;
+
+      // Add events to per-date map
+      isoDateRange.forEach((isoDate) => {
+        const dateStr = isoDate.slice(0, 10);
+        state.eventsByDate[dateStr] = remoteList(
+          events.filter((event) =>
+            isSameDate(new Date(event.start_time), new Date(isoDate))
+          )
+        );
+        state.eventsByDate[dateStr].loaded = new Date().toISOString();
+      });
+
+      // Add events to big list
+      const loadedIds: (number | string)[] = events.map((event) => event.id);
+      state.eventList.items = state.eventList.items
+        .filter((oldItem) => {
+          if (loadedIds.includes(oldItem.id)) {
+            // This event exists in the freshly loaded list and should be removed
+            // before appending the list so that it does not create duplicates.
+            return false;
+          }
+
+          return true;
+        })
+        .concat(
+          events.map((event) =>
+            remoteItem(event.id, {
+              data: event,
+              loaded: new Date().toISOString(),
+            })
+          )
+        );
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
@@ -310,6 +361,8 @@ export const {
   eventDeleted,
   eventLoad,
   eventLoaded,
+  eventRangeLoad,
+  eventRangeLoaded,
   eventsLoad,
   eventsLoaded,
   eventUpdate,

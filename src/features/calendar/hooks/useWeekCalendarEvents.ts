@@ -1,9 +1,6 @@
-import { ACTIVITIES } from 'features/campaigns/models/CampaignActivitiesModel';
-import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
-import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import { isSameDate } from 'utils/dateUtils';
+import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
-import useModel from 'core/useModel';
 import clusterEventsForWeekCalender, {
   AnyClusteredEvent,
 } from '../utils/clusterEventsForWeekCalender';
@@ -20,18 +17,12 @@ type UseWeekCalendarEventsReturn = {
 }[];
 
 export default function useWeekCalendarEvents({
-  campaignId,
   dates,
-  orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
-  const model = useModel((env) => new CampaignActivitiesModel(env, orgId));
-
-  // TODO: Load only the ones necessary here
-  const activities = model.getAllActivities(campaignId);
-  const eventActivities = (activities.data?.filter(
-    (activity) => activity.kind == ACTIVITIES.EVENT
-  ) ?? []) as EventActivity[];
-
+  const eventActivities = useEventsFromDateRange(
+    dates[0],
+    dates[dates.length - 1]
+  );
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
   return dates.map((date) => {

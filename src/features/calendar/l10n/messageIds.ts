@@ -60,6 +60,7 @@ export default makeMessages('feat.calendar', {
   lastDayWithEvents: m<{ numEvents: number }>(
     'There {numEvents, plural, one {was one event} other {were {numEvents} events}} on the last active day'
   ),
+  loadMore: m('Load more'),
   moreEvents: m<{ numEvents: number }>(
     '{numEvents, plural, one {# more event} other {# more events}}'
   ),
