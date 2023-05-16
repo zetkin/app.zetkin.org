@@ -1,10 +1,10 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import EventsRepo from 'features/events/repo/EventsRepo';
-import { isSameDate } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
+import { dateIsAfter, dateIsBefore, isSameDate } from 'utils/dateUtils';
 import {
   ErrorFuture,
   IFuture,
@@ -139,11 +139,27 @@ export default class CampaignActivitiesModel extends ModelBase {
           return false;
         }
 
-        return (
-          activity.startDate &&
-          activity.startDate < weekFromNow &&
-          (!activity.endDate || activity.endDate >= startOfToday)
-        );
+        if (activity.kind == ACTIVITIES.EVENT) {
+          const startDate = new Date(activity.data.start_time);
+          const endDate = new Date(activity.data.end_time);
+          const startsDuringWeek =
+            dateIsAfter(startDate, startOfToday) &&
+            dateIsBefore(startDate, weekFromNow);
+          const isOnGoing =
+            dateIsBefore(startDate, startOfToday) &&
+            dateIsAfter(endDate, weekFromNow);
+          const endsDuringWeek =
+            dateIsBefore(startDate, startOfToday) &&
+            dateIsBefore(endDate, weekFromNow);
+
+          return startsDuringWeek || isOnGoing || endsDuringWeek;
+        } else {
+          return (
+            activity.startDate &&
+            activity.startDate < weekFromNow &&
+            (!activity.endDate || activity.endDate >= startOfToday)
+          );
+        }
       });
     }
 
@@ -236,10 +252,17 @@ export default class CampaignActivitiesModel extends ModelBase {
     }
 
     const now = new Date();
-    const filtered = activities.data?.filter(
-      (activity) =>
-        activity.startDate && activity.endDate && activity.endDate < now
-    );
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const filtered = activities.data?.filter((activity) => {
+      if (activity.kind == ACTIVITIES.EVENT) {
+        const endDate = new Date(activity.data.end_time);
+        return endDate < nowDate;
+      } else {
+        return (
+          activity.startDate && activity.endDate && activity.endDate < nowDate
+        );
+      }
+    });
 
     return new ResolvedFuture(filtered || []);
   }
