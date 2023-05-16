@@ -252,10 +252,17 @@ export default class CampaignActivitiesModel extends ModelBase {
     }
 
     const now = new Date();
-    const filtered = activities.data?.filter(
-      (activity) =>
-        activity.startDate && activity.endDate && activity.endDate < now
-    );
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const filtered = activities.data?.filter((activity) => {
+      if (activity.kind == ACTIVITIES.EVENT) {
+        const endDate = new Date(activity.data.end_time);
+        return endDate < nowDate;
+      } else {
+        return (
+          activity.startDate && activity.endDate && activity.endDate < nowDate
+        );
+      }
+    });
 
     return new ResolvedFuture(filtered || []);
   }
