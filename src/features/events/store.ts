@@ -91,6 +91,9 @@ const eventsSlice = createSlice({
       const event = action.payload;
       state.eventList.isLoading = false;
       state.eventList.items.push(remoteItem(event.id, { data: event }));
+      state.eventsByDate[event.start_time.slice(0, 10)].items.push(
+        remoteItem(event.id, { data: event })
+      );
     },
     eventDeleted: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
