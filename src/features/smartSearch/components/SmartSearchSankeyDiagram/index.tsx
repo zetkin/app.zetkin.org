@@ -37,9 +37,23 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
               <SVGPath
                 d={[
                   ['M', diagCenter - inputWidth / 2, 0],
-                  ['l', inputWidth, 0],
-                  ['L', diagCenter + outputWidth / 2, segHeight],
+                  ['L', diagCenter + inputWidth / 2, 0],
+                  [
+                    'C',
+                    [diagCenter + inputWidth / 2, 0.4 * segHeight],
+                    [diagCenter + outputWidth / 2, 0.6 * segHeight],
+                    [diagCenter + outputWidth / 2, segHeight],
+                  ],
                   ['L', diagCenter - outputWidth / 2 + changeWidth, segHeight],
+                  [
+                    'C',
+                    [
+                      diagCenter - outputWidth / 2 + changeWidth,
+                      0.6 * segHeight,
+                    ],
+                    [diagCenter - inputWidth / 2, 0.4 * segHeight],
+                    [diagCenter - inputWidth / 2, 0],
+                  ],
                 ]}
                 fill="black"
               />
@@ -49,9 +63,23 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
               <SVGPath
                 d={[
                   ['M', diagCenter - inputWidth / 2, 0],
-                  ['l', inputWidth - changeWidth, 0],
-                  ['L', diagCenter + outputWidth / 2, segHeight],
+                  ['L', diagCenter + inputWidth / 2 - changeWidth, 0],
+                  [
+                    'C',
+                    [
+                      diagCenter + inputWidth / 2 - changeWidth,
+                      0.4 * segHeight,
+                    ],
+                    [diagCenter + outputWidth / 2, 0.6 * segHeight],
+                    [diagCenter + outputWidth / 2, segHeight],
+                  ],
                   ['L', diagCenter - outputWidth / 2, segHeight],
+                  [
+                    'C',
+                    [diagCenter - outputWidth / 2, 0.6 * segHeight],
+                    [diagCenter - inputWidth / 2, 0.4 * segHeight],
+                    [diagCenter - inputWidth / 2, 0],
+                  ],
                 ]}
                 fill="black"
               />
