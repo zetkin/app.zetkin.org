@@ -11,14 +11,14 @@ import {
 
 import { ACTIVITIES } from 'features/campaigns/models/CampaignActivitiesModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
+import useDebounce from 'utils/hooks/useDebounce';
 import { useMessages } from 'core/i18n';
 
 interface FilterActivitiesProps {
   filters: ACTIVITIES[];
   filterTypes: ACTIVITIES[];
   onFiltersChange: (evt: ChangeEvent<HTMLInputElement>) => void;
-  onSearchStringChange: (evt: ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  onSearchStringChange: (value: string) => void;
 }
 
 const FilterActivities = ({
@@ -26,9 +26,15 @@ const FilterActivities = ({
   filterTypes,
   onFiltersChange,
   onSearchStringChange,
-  value,
 }: FilterActivitiesProps) => {
   const messages = useMessages(messageIds);
+
+  const debouncedFinishedTyping = useDebounce(
+    async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      onSearchStringChange(evt.target.value);
+    },
+    400
+  );
 
   return (
     <Card>
@@ -43,9 +49,8 @@ const FilterActivities = ({
               />
             ),
           }}
-          onChange={onSearchStringChange}
+          onChange={(e) => debouncedFinishedTyping(e)}
           placeholder={messages.singleProject.filterActivities()}
-          value={value}
         />
         <FormGroup>
           <FormControlLabel

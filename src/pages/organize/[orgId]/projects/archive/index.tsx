@@ -62,8 +62,7 @@ const ActivitiesArchivePage: PageWithLayout<ActivitiesArchivePageProps> = ({
     }
   };
 
-  const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) =>
-    setSearchString(evt.target.value);
+  const onSearchStringChange = (value: string) => setSearchString(value);
 
   if (onServer) {
     return null;
@@ -105,7 +104,6 @@ const ActivitiesArchivePage: PageWithLayout<ActivitiesArchivePageProps> = ({
                   filterTypes={filterTypes}
                   onFiltersChange={onFiltersChange}
                   onSearchStringChange={onSearchStringChange}
-                  value={searchString}
                 />
               </Grid>
             </Grid>

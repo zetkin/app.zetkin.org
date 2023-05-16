@@ -65,8 +65,7 @@ const CampaignArchivePage: PageWithLayout<CampaignArchivePageProps> = ({
     }
   };
 
-  const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) =>
-    setSearchString(evt.target.value);
+  const onSearchStringChange = (value: string) => setSearchString(value);
 
   if (onServer) {
     return null;
@@ -104,7 +103,6 @@ const CampaignArchivePage: PageWithLayout<CampaignArchivePageProps> = ({
                   filterTypes={filterTypes}
                   onFiltersChange={onFiltersChange}
                   onSearchStringChange={onSearchStringChange}
-                  value={searchString}
                 />
               </Grid>
             </Grid>
