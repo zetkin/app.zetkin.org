@@ -10,15 +10,16 @@ type SmartSearchSankeyDiagramProps = {
 const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
   filterStats,
 }) => {
-  const margin = 50;
-  const diagWidth = 300;
+  const margin = 30;
+  const diagWidth = 200;
   const diagCenter = diagWidth / 2;
 
   const maxStreamWidth = diagWidth - margin * 2;
   const maxSegOutput = Math.max(...filterStats.map((stats) => stats.output));
   const segHeight = 100;
 
-  const changeThickness = 20;
+  const arrowDepth = 10;
+  const arrowWidth = 20;
 
   return (
     <svg height={500} width={300}>
@@ -89,13 +90,14 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
               // Change when adding
               <SVGPath
                 d={[
-                  ['M', 0, segHeight / 2 + changeThickness / 2],
-                  ['L', 0, segHeight / 2 - changeThickness / 2],
+                  ['M', 0, segHeight / 2 + arrowWidth / 2],
+                  ['L', arrowDepth, segHeight / 2],
+                  ['L', 0, segHeight / 2 - arrowWidth / 2],
                   [
                     'C',
                     [
                       diagCenter - outputWidth / 2 + changeWidth / 2,
-                      segHeight / 2,
+                      segHeight / 2 - arrowWidth / 2,
                     ],
                     [
                       diagCenter - outputWidth / 2 + changeWidth,
@@ -109,9 +111,9 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
                     [diagCenter - outputWidth / 2, segHeight / 1.5],
                     [
                       diagCenter - outputWidth / 2,
-                      segHeight / 2 + changeThickness / 2,
+                      segHeight / 2 + arrowWidth / 2,
                     ],
-                    [0, segHeight / 2 + changeThickness / 2],
+                    [0, segHeight / 2 + arrowWidth / 2],
                   ],
                 ]}
                 fill="black"
@@ -126,13 +128,14 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
                   [
                     'C',
                     [diagCenter + inputWidth / 2, segHeight / 3],
-                    [diagWidth - margin, segHeight / 2 - changeThickness / 2],
-                    [diagWidth, segHeight / 2 - changeThickness / 2],
+                    [diagWidth - margin, segHeight / 2 - arrowWidth / 2],
+                    [diagWidth - arrowDepth, segHeight / 2 - arrowWidth / 2],
                   ],
-                  ['L', diagWidth, segHeight / 2 + changeThickness / 2],
+                  ['L', diagWidth, segHeight / 2],
+                  ['L', diagWidth - arrowDepth, segHeight / 2 + arrowWidth / 2],
                   [
                     'C',
-                    [diagWidth - margin, segHeight / 2 + changeThickness / 2],
+                    [diagWidth - margin, segHeight / 2 + arrowWidth / 2],
                     [diagCenter + inputWidth / 2 - changeWidth, segHeight / 2],
                     [diagCenter + inputWidth / 2 - changeWidth, 0],
                   ],
