@@ -50,7 +50,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
-      endDate={null} // TODO: Replace with cancelled date
+      endDate={null}
       endNumber={`${numBooked} / ${numParticipantsRequired}`}
       endNumberColor={numBooked < numParticipantsRequired ? 'error' : undefined}
       focusDate={focusDate}
@@ -74,7 +74,11 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
           : SplitscreenOutlined
       }
       SecondaryIcon={Group}
-      startDate={null} // TODO: Replace with published date
+      startDate={
+        cluster.events[0].published
+          ? new Date(cluster.events[0].published)
+          : null
+      }
       subtitle={
         <ZUIIconLabelRow
           color="secondary"

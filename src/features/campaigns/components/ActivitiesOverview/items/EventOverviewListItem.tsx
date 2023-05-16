@@ -37,7 +37,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
-      endDate={null}
+      endDate={event.cancelled ? new Date(event.cancelled) : null}
       endNumber={`${event.num_participants_available} / ${event.num_participants_required}`}
       endNumberColor={
         event.num_participants_available < event.num_participants_required
@@ -55,7 +55,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       }}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
-      startDate={null}
+      startDate={event.published ? new Date(event.published) : null}
       statusBar={null}
       subtitle={
         <ZUIIconLabelRow
