@@ -14,4 +14,8 @@ export default class OrganizationsDataModel extends ModelBase {
   getData() {
     return this._repo.getUserOrganizations();
   }
+
+  getOrganization(orgId: number) {
+    return this._repo.getOrganization(orgId);
+  }
 }
