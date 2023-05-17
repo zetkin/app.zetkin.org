@@ -59,7 +59,6 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       const change = stats.output - inputCount;
       const changeWidth = (Math.abs(change) / maxSegOutput) * maxStreamWidth;
 
-      context.resetTransform();
       context.fillStyle =
         index == mouseState.current.hoveredSegment
           ? hoverGradient
@@ -169,6 +168,16 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
 
       context.fill();
     });
+
+    const lastStats = filterStats[filterStats.length - 1];
+    const outputWidth = (lastStats.output / maxSegOutput) * maxStreamWidth;
+    context.fillStyle = baseGradient;
+    context.beginPath();
+    context.moveTo(diagCenter - outputWidth / 2, diagHeight);
+    context.lineTo(diagCenter + outputWidth / 2, diagHeight);
+    context.lineTo(diagCenter, diagHeight + arrowDepth * 2);
+    context.lineTo(diagCenter - outputWidth / 2, diagHeight);
+    context.fill();
   };
 
   useEffect(() => {
@@ -208,7 +217,13 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     };
   }, [canvasRef.current, filterStats]);
 
-  return <canvas ref={canvasRef} height={diagHeight} width={diagWidth} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      height={diagHeight + arrowDepth * 2}
+      width={diagWidth}
+    />
+  );
 };
 
 type PathElem =
