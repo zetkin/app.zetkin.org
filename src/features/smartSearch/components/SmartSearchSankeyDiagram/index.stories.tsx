@@ -16,14 +16,17 @@ basic.args = {
   filterStats: [
     {
       matched: 400,
+      op: 'add',
       output: 400,
     },
     {
       matched: 300,
+      op: 'add',
       output: 600,
     },
     {
       matched: 230,
+      op: 'sub',
       output: 465,
     },
   ],

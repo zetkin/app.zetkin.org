@@ -4,6 +4,7 @@ import { FC, useEffect, useRef } from 'react';
 type SmartSearchSankeyDiagramProps = {
   filterStats: {
     matched: number;
+    op: 'add' | 'sub';
     output: number;
   }[];
 };
@@ -59,13 +60,14 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       const change = stats.output - inputCount;
       const changeWidth = (Math.abs(change) / maxSegOutput) * maxStreamWidth;
 
-      context.fillStyle =
+      const gradient =
         index == mouseState.current.hoveredSegment
           ? hoverGradient
           : baseGradient;
+      context.fillStyle = gradient;
       context.beginPath();
 
-      if (inputCount > 0 && change > 0) {
+      if (inputCount > 0 && change >= 0) {
         // Main stream when adding
         drawPath(
           context,
@@ -165,8 +167,76 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
           index * segHeight
         );
       }
-
       context.fill();
+
+      if (change == 0) {
+        const lineWidth = 2;
+        context.beginPath();
+        context.strokeStyle = gradient;
+        context.lineWidth = lineWidth;
+        context.setLineDash([3, 3]);
+
+        // Change is zero, so we should render a placeholder
+        if (stats.op == 'add') {
+          drawPath(
+            context,
+            [
+              ['M', 0, segHeight / 2 + arrowWidth / 2],
+              ['L', arrowDepth, segHeight / 2],
+              ['L', 0, segHeight / 2 - arrowWidth / 2],
+              [
+                'C',
+                [
+                  diagCenter - outputWidth / 2 + arrowWidth / 2,
+                  segHeight / 2 - arrowWidth / 2,
+                ],
+                [diagCenter - outputWidth / 2 + arrowWidth, segHeight / 1.5],
+                [
+                  diagCenter - outputWidth / 2 + arrowWidth,
+                  segHeight - lineWidth / 2,
+                ],
+              ],
+              [
+                'L',
+                diagCenter - outputWidth / 2 + lineWidth / 2,
+                segHeight - lineWidth / 2,
+              ],
+              [
+                'C',
+                [diagCenter - outputWidth / 2, segHeight / 1.5],
+                [diagCenter - outputWidth / 2, segHeight / 2 + arrowWidth / 2],
+                [0, segHeight / 2 + arrowWidth / 2],
+              ],
+            ],
+            index * segHeight
+          );
+        } else if (stats.op == 'sub') {
+          drawPath(
+            context,
+            [
+              ['M', diagCenter + inputWidth / 2 - arrowWidth, lineWidth / 2],
+              ['L', diagCenter + inputWidth / 2 - lineWidth / 2, lineWidth / 2],
+              [
+                'C',
+                [diagCenter + inputWidth / 2, segHeight / 3],
+                [diagWidth - margin, segHeight / 2 - arrowWidth / 2],
+                [diagWidth - arrowDepth, segHeight / 2 - arrowWidth / 2],
+              ],
+              ['L', diagWidth, segHeight / 2],
+              ['L', diagWidth - arrowDepth, segHeight / 2 + arrowWidth / 2],
+              [
+                'C',
+                [diagWidth - margin, segHeight / 2 + arrowWidth / 2],
+                [diagCenter + inputWidth / 2 - arrowWidth, segHeight / 2],
+                [diagCenter + inputWidth / 2 - arrowWidth, 0],
+              ],
+            ],
+            index * segHeight
+          );
+        }
+
+        context.stroke();
+      }
     });
 
     const lastStats = filterStats[filterStats.length - 1];
