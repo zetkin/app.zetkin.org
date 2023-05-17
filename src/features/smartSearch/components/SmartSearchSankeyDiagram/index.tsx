@@ -11,6 +11,9 @@ type SmartSearchSankeyDiagramProps = {
 const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
   filterStats,
 }) => {
+  const mouseState = useRef({
+    hoveredSegment: -1,
+  });
   const animFrameRef = useRef(0);
   const startTimeRef = useRef(new Date());
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -37,10 +40,16 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     const time =
       (now.getTime() - startTimeRef.current.getTime()) % animDuration;
     const gradOffset = (time / animDuration) * 0.96;
-    const gradient = context.createLinearGradient(0, 0, 0, 4 * diagHeight);
-    gradient.addColorStop(0 + gradOffset, color);
-    gradient.addColorStop(0.02 + gradOffset, lighten(color, 0.2));
-    gradient.addColorStop(0.04 + gradOffset, color);
+    const baseGradient = context.createLinearGradient(0, 0, 0, 4 * diagHeight);
+    baseGradient.addColorStop(0 + gradOffset, color);
+    baseGradient.addColorStop(0.02 + gradOffset, lighten(color, 0.2));
+    baseGradient.addColorStop(0.04 + gradOffset, color);
+
+    const hoverColor = '#f00';
+    const hoverGradient = context.createLinearGradient(0, 0, 0, 4 * diagHeight);
+    hoverGradient.addColorStop(0 + gradOffset, hoverColor);
+    hoverGradient.addColorStop(0.02 + gradOffset, lighten(hoverColor, 0.2));
+    hoverGradient.addColorStop(0.04 + gradOffset, hoverColor);
 
     filterStats.forEach((stats, index) => {
       const inputCount = index > 0 ? filterStats[index - 1].output : 0;
@@ -51,7 +60,10 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       const changeWidth = (Math.abs(change) / maxSegOutput) * maxStreamWidth;
 
       context.resetTransform();
-      context.fillStyle = gradient;
+      context.fillStyle =
+        index == mouseState.current.hoveredSegment
+          ? hoverGradient
+          : baseGradient;
       context.beginPath();
 
       if (inputCount > 0 && change > 0) {
@@ -172,9 +184,28 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       }
     }
 
-    animFrameRef.current = requestAnimationFrame(nextFrame);
+    function handleMouseOut() {
+      mouseState.current.hoveredSegment = -1;
+    }
 
-    return () => cancelAnimationFrame(animFrameRef.current);
+    function handleMouseMove(ev: MouseEvent) {
+      const count = filterStats.length;
+      const index = Math.floor((ev.offsetY / diagHeight) * count);
+      mouseState.current.hoveredSegment = Math.max(
+        0,
+        Math.min(index, count - 1)
+      );
+    }
+
+    animFrameRef.current = requestAnimationFrame(nextFrame);
+    canvasRef.current?.addEventListener('mousemove', handleMouseMove);
+    canvasRef.current?.addEventListener('mouseout', handleMouseOut);
+
+    return () => {
+      cancelAnimationFrame(animFrameRef.current);
+      canvasRef.current?.removeEventListener('mousemove', handleMouseMove);
+      canvasRef.current?.removeEventListener('mouseout', handleMouseOut);
+    };
   }, [canvasRef.current, filterStats]);
 
   return <canvas ref={canvasRef} height={diagHeight} width={diagWidth} />;
