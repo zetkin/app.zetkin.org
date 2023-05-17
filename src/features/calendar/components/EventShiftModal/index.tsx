@@ -1,6 +1,6 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MapIcon from '@mui/icons-material/Map';
-import { TimePicker } from '@mui/x-date-pickers-pro';
+import { TimePicker } from '@mui/x-date-pickers';
 import { useStore } from 'react-redux';
 import { Add, Close } from '@mui/icons-material';
 import {
@@ -16,6 +16,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useState } from 'react';
 
 import { eventCreated } from 'features/events/store';
+import { EventsModel } from 'features/events/models/EventsModel';
 import EventTypeAutocomplete from 'features/events/components/EventTypeAutocomplete';
 import EventTypesModel from 'features/events/models/EventTypesModel';
 import LocationModal from 'features/events/components/LocationModal';
@@ -42,6 +43,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const store = useStore();
 
   const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
+  const eventsModel = useModel((env) => new EventsModel(env, orgId));
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
   const locationsModel = useModel((env) => new LocationsModel(env, orgId));
   const locations = locationsModel.getLocations().data;
@@ -248,6 +250,11 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     store.dispatch(eventCreated(event));
   }
 
+  const events = eventsModel.getParallelEvents(
+    eventStartTime.toDate().toISOString(),
+    eventEndTime.toDate().toISOString()
+  ).data;
+
   return (
     <Dialog fullWidth maxWidth="md" onClose={close} open={open}>
       <Box display="flex" justifyContent="space-between" padding={2}>
@@ -266,7 +273,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
       </Box>
       <Box display="flex">
         <Box flex={1} margin={1}>
-          <Box></Box>
+          <Box />
           <Box margin={1}>
             <ZUIFutures
               futures={{
@@ -407,6 +414,8 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               sx={{ cursor: 'pointer', marginLeft: 1 }}
             />
             <LocationModal
+              currentEventId={0}
+              events={events || []}
               locationId={locationId}
               locations={locations || []}
               model={locationsModel}
@@ -671,7 +680,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
           <Button
             disabled={isNotPublishable()}
             onClick={async () => {
-              publishShifts(true);
+              await publishShifts(true);
             }}
             size="large"
             variant="contained"

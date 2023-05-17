@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 
 import DayHeader from './DayHeader';
-import { Event } from '@mui/icons-material';
 import EventCluster from '../EventCluster';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
