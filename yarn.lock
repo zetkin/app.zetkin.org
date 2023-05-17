@@ -13380,7 +13380,7 @@ ramda@^0.21.0:
 random-seed@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/random-seed/-/random-seed-0.3.0.tgz#d945f2e1f38f49e8d58913431b8bf6bb937556cd"
-  integrity sha1-2UXy4fOPSejViRNDG4v2u5N1Vs0=
+  integrity sha512-y13xtn3kcTlLub3HKWXxJNeC2qK4mB59evwZ5EkeRlolx+Bp2ztF7LbcZmyCnOqlHQrLnfuNbi1sVmm9lPDlDA==
   dependencies:
     json-stringify-safe "^5.0.1"
 
