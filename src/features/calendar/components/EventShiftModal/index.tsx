@@ -37,6 +37,10 @@ interface EventShiftModalProps {
 }
 
 const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
+  const [startDate, endDate] = dates.map((date) =>
+    dayjs(date.toISOString().split('Z')[0])
+  );
+
   const messages = useMessages(messageIds);
   const { campId, orgId } = useNumericRouteParams();
   const env = useEnv();
@@ -59,7 +63,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const [typeId, setTypeId] = useState<number>(1);
   const [typeTitle, setTypeTitle] = useState<string>('');
   const [eventTitle, setEventTitle] = useState<string>('');
-  const [eventDate, setEventDate] = useState<Dayjs>(dayjs(dates[0]));
+  const [eventDate, setEventDate] = useState<Dayjs>(startDate);
   const [invalidDate, setInvalidDate] = useState(false);
   const [locationId, setLocationId] = useState<number | null>(null);
   const [eventLink, setEventLink] = useState<string>('');
@@ -67,20 +71,17 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const [eventParticipants, setEventParticipants] = useState<number | null>(
     null
   );
-  const [eventStartTime, setEventStartTime] = useState<Dayjs>(dayjs(dates[0]));
+  const [eventStartTime, setEventStartTime] = useState<Dayjs>(startDate);
   const [invalidStartTime, setInvalidStartTime] = useState(false);
-  const [eventEndTime, setEventEndTime] = useState<Dayjs>(dayjs(dates[1]));
+  const [eventEndTime, setEventEndTime] = useState<Dayjs>(endDate);
   const [invalidEndTime, setInvalidEndTime] = useState(false);
   const [eventShifts, setEventShifts] = useState<Dayjs[]>([
-    dayjs(dates[0]),
-    dayjs(dates[0]).add(
-      dayjs(dates[1]).diff(dayjs(dates[0]), 'minute') / 2,
-      'minute'
-    ),
+    startDate,
+    startDate.add(endDate.diff(startDate, 'minute') / 2, 'minute'),
   ]);
   const [updatedShift, setUpdatedShift] = useState<[number, Dayjs]>([
     0,
-    dayjs(dates[0]),
+    startDate,
   ]);
   const [invalidShiftTime, setInvalidShiftTime] = useState<boolean[]>([
     false,
@@ -223,11 +224,11 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   ) {
     let startDate: Dayjs = dayjs(eventDate);
     startDate = startDate
-      .set('hour', startTime.hour())
+      .set('hour', startTime.hour() + 2)
       .set('minute', startTime.minute());
     let endDate: Dayjs = dayjs(eventDate);
     endDate = endDate
-      .set('hour', endTime.hour())
+      .set('hour', endTime.hour() + 2)
       .set('minute', endTime.minute());
 
     const event = await env.apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
