@@ -1,9 +1,11 @@
 import NextLink from 'next/link';
+import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
   AppBar,
+  Avatar,
   Box,
   Drawer,
   IconButton,
@@ -14,8 +16,6 @@ import {
 import { Event, Explore, Home, Map, Menu, People } from '@mui/icons-material/';
 
 import makeStyles from '@mui/styles/makeStyles';
-
-import ZUILogo from './ZUILogo';
 
 const drawerWidth = '5rem';
 
@@ -71,7 +71,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   };
 
   const router = useRouter();
-  const { orgId } = router.query as { orgId: string };
+  const { orgId } = useNumericRouteParams();
 
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
 
@@ -96,7 +96,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 size="large"
                 style={{ marginBottom: '2rem' }}
               >
-                <ZUILogo beta={true} htmlColor="#ED1C55" size={40} />
+                <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               </IconButton>
             </NextLink>
           </ListItem>
