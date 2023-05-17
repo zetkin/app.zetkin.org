@@ -33,7 +33,7 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 interface EventShiftModalProps {
   dates: [Date, Date];
   open: boolean;
-  close: () => void;
+  close: (eventShiftDate?: Date) => void;
 }
 
 const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
@@ -214,7 +214,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         publish
       );
     });
-    close();
+    close(eventDate.toDate());
   }
 
   async function createShift(
@@ -257,7 +257,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   ).data;
 
   return (
-    <Dialog fullWidth maxWidth="md" onClose={close} open={open}>
+    <Dialog fullWidth maxWidth="md" open={open}>
       <Box display="flex" justifyContent="space-between" padding={2}>
         <Typography variant="h4">
           {messages.eventShiftModal.header()}
