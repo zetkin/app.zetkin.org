@@ -8,15 +8,25 @@ import {
 } from './drawing';
 
 type SmartSearchSankeyDiagramProps = {
+  arrowDepth?: number;
+  arrowWidth?: number;
+  color?: string;
+  diagWidth?: number;
   filterStats: {
     matched: number;
     op: 'add' | 'sub';
     output: number;
   }[];
+  margin?: number;
 };
 
 const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
+  arrowDepth = 10,
+  arrowWidth = 20,
+  color = '#cccccc',
+  diagWidth = 200,
   filterStats,
+  margin = 30,
 }) => {
   const mouseState = useRef({
     hoveredSegment: -1,
@@ -24,18 +34,11 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
   const animFrameRef = useRef(0);
   const startTimeRef = useRef(new Date());
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const margin = 30;
-  const diagWidth = 200;
   const diagCenter = diagWidth / 2;
 
   const maxStreamWidth = diagWidth - margin * 2;
   const maxSegOutput = Math.max(...filterStats.map((stats) => stats.output));
   const segHeight = 100;
-
-  const arrowDepth = 10;
-  const arrowWidth = 20;
-
-  const color = '#cccccc';
 
   const diagHeight = filterStats.length * segHeight;
   const animDuration = 1000;
@@ -143,7 +146,15 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       canvasRef.current?.removeEventListener('mousemove', handleMouseMove);
       canvasRef.current?.removeEventListener('mouseout', handleMouseOut);
     };
-  }, [canvasRef.current, filterStats]);
+  }, [
+    canvasRef.current,
+    arrowDepth,
+    arrowWidth,
+    color,
+    diagWidth,
+    filterStats,
+    margin,
+  ]);
 
   return (
     <canvas

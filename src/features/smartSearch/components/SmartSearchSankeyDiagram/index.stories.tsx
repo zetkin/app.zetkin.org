@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof SmartSearchSankeyDiagram>;
 
 const Template: ComponentStory<typeof SmartSearchSankeyDiagram> = (args) => {
-  return <SmartSearchSankeyDiagram filterStats={args.filterStats} />;
+  return <SmartSearchSankeyDiagram {...args} />;
 };
 
 export const basic = Template.bind({});
