@@ -63,9 +63,19 @@ const Calendar = () => {
   }, [timeScaleStr]);
 
   useEffect(() => {
-    router.query.focusDate = dayjs(focusDate).format('YYYY-MM-DD');
-    router.query.timeScale = selectedTimeScale;
-    router.push(router, undefined, { shallow: true });
+    const focusedDate = dayjs(focusDate).format('YYYY-MM-DD');
+    router.push(
+      {
+        pathname: '/organize/[orgId]/projects/calendar',
+        query: {
+          orgId: orgId,
+          focusDate: focusedDate,
+          timeScale: selectedTimeScale,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
   }, [focusDate, selectedTimeScale]);
 
   function navigateTo(timeScale: TimeScale, date: Date) {
