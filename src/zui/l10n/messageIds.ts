@@ -101,6 +101,13 @@ export default makeMessages('zui', {
   lists: {
     showMore: m('Show more...'),
   },
+  organizeSidebar: {
+    areas: m('Areas'),
+    home: m('Home'),
+    journeys: m('Journeys'),
+    people: m('People'),
+    projects: m('Projects'),
+  },
   personGridEditCell: {
     keepTyping: m('Keep typing..'),
     noResult: m('No matching person found'),
