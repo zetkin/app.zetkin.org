@@ -21,7 +21,7 @@ const CalendarDayView = ({
 }: CalendarDayViewProps) => {
   const { activities, hasMore, isLoadingFuture, loadMoreFuture } =
     useDayCalendarEvents(focusDate);
-  console.log('calendar Day view');
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       {previousActivityDay && (
@@ -35,12 +35,9 @@ const CalendarDayView = ({
       )}
       {/* List of days with events */}
       {activities.map(([dateString, daySummary], index) => {
-        // console.log(dateString, ' dateString');
-        // console.log(daySummary, ' daySummary');
-
         return (
           <Day
-            key={`date-${index}`}
+            key={`dayIdx-${index}`}
             date={new Date(dateString)}
             dayInfo={daySummary}
           />

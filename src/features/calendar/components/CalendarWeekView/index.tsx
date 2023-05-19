@@ -99,7 +99,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
             const time = dayjs().set('hour', hour).set('minute', 0);
             return (
               <Box
-                key={hour}
+                key={`hour-${hour}`}
                 display="flex"
                 height={`${HOUR_HEIGHT}px`}
                 justifyContent="flex-end"

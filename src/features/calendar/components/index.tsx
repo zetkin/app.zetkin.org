@@ -68,8 +68,8 @@ const Calendar = () => {
       {
         pathname: '/organize/[orgId]/projects/calendar',
         query: {
-          orgId: orgId,
           focusDate: focusedDate,
+          orgId: orgId,
           timeScale: selectedTimeScale,
         },
       },
