@@ -11,7 +11,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
 import getEventUrl from 'features/events/utils/getEventUrl';
@@ -113,8 +113,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   return (
     <>
       <Box alignItems="center" display="flex">
-        {/*TODO: <Checkbox size="medium" /> */}
-        <Typography variant="h5">
+        <Checkbox size="medium" sx={{ padding: 0 }} />
+        <Typography variant="h5" sx={{ pl: 1 }}>
           {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>
       </Box>

@@ -1,5 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
-import { Box, Theme, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Box, Checkbox, Theme, Typography } from '@mui/material';
 
 import Field from './Field';
 import FieldGroup from './FieldGroup';
@@ -139,6 +140,7 @@ const Event = ({
   topBadge,
   width,
 }: EventProps) => {
+  const [isHovered, setIsHovered] = useState(false);
   const collapsed = !fieldGroups.some((group) => {
     return group.some(
       (field) => field.presentation === FIELD_PRESENTATION.WITH_LABEL
@@ -162,8 +164,15 @@ const Event = ({
     <Box className={classes.container}>
       {topBadge}
       {collapsed && (
-        <Box className={classes.collapsedContainer}>
-          <Typography className={classes.title}>{title}</Typography>
+        <Box
+          className={classes.collapsedContainer}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <Box display="flex" alignItems="center" sx={{ pl: 1 }}>
+            {isHovered && <Checkbox sx={{ py: 0, px: 0.2 }} size="small" />}
+            <Typography className={classes.title}>{title}</Typography>
+          </Box>
           <Box display="flex">
             {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
               return (
@@ -179,11 +188,16 @@ const Event = ({
         </Box>
       )}
       {!collapsed && (
-        <Box height="100%">
+        <Box
+          height="100%"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <Box className={classes.titleContainer}>
-            <Typography className={classes.title} paddingX={1}>
-              {title}
-            </Typography>
+            <Box display="flex" alignItems="center" sx={{ pl: 1, pt: 0.8 }}>
+              {isHovered && <Checkbox sx={{ py: 0, px: 0.2 }} size="small" />}
+              <Typography className={classes.title}>{title}</Typography>
+            </Box>
           </Box>
           <Box className={classes.fieldGroups}>
             {fieldGroups.map((fields, index) => (

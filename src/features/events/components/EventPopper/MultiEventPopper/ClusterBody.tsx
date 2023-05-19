@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Checkbox, Typography } from '@mui/material';
 import { People, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
@@ -60,7 +60,7 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
         paddingTop={2}
       >
         <Box alignItems="center" display="flex">
-          {/*TODO: <Checkbox sx={{ padding: '0px' }} /> */}
+          <Checkbox sx={{ padding: '0px' }} />
           <Typography
             color="secondary"
             paddingLeft={1}

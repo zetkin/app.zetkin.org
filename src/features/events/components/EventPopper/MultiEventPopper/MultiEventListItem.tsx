@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
-import { Box, Typography } from '@mui/material';
+import { Box, Checkbox, Typography } from '@mui/material';
 import { ChevronRightOutlined, People } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
@@ -38,7 +38,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   return (
     <Box display="flex" flexDirection="column" paddingBottom={1} width="100%">
       <Box display="flex">
-        {/*TODO: <Checkbox sx={{ padding: '0px' }} /> */}
+        <Checkbox sx={{ padding: '0px' }} />
         <Box
           display="flex"
           flexGrow={1}
