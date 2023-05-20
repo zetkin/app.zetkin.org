@@ -1,9 +1,9 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import MuiDrawer from '@mui/material/Drawer';
 import NextLink from 'next/link';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
 import {
   Architecture,
   Explore,
@@ -15,13 +15,13 @@ import {
   Avatar,
   Box,
   Divider,
+  Drawer,
   IconButton,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from '@mui/material';
-import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles';
 
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from './l10n/messageIds';
@@ -32,83 +32,51 @@ import ZUIFuture from './ZUIFuture';
 
 const drawerWidth = 300;
 
-const closedMixin = (theme: Theme): CSSObject => ({
-  overflowX: 'hidden',
-  transition: theme.transitions.create('width', {
-    duration: theme.transitions.duration.leavingScreen,
-    easing: theme.transitions.easing.sharp,
-  }),
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-const openedMixin = (theme: Theme): CSSObject => ({
-  overflowX: 'hidden',
-  transition: theme.transitions.create('width', {
-    duration: theme.transitions.duration.enteringScreen,
-    easing: theme.transitions.easing.sharp,
-  }),
-  width: drawerWidth,
-});
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  boxSizing: 'border-box',
-  flexShrink: 0,
-  ...(open && {
-    ...openedMixin(theme),
-    '& .MuiDrawer-paper': openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    '& .MuiDrawer-paper': closedMixin(theme),
-  }),
-  whiteSpace: 'nowrap',
-  width: drawerWidth,
-}));
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'flex-start',
-  padding: theme.spacing(0, 1),
-
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
-
 const useStyles = makeStyles((theme) => ({
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
-      flexShrink: 0,
-      width: drawerWidth,
-    },
+    boxSizing: 'border-box',
+    flexShrink: 0,
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    padding: theme.spacing(0, 1),
+
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
   },
   drawerPaper: {
     display: 'none',
-    width: drawerWidth,
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    width: drawerWidth,
   },
   roundButton: {
     height: '3rem',
     width: '3rem',
   },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
+  toggleDrawerPaper: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(${theme.spacing(8)} + 1px)`,
+    },
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    width: `calc(${theme.spacing(7)} + 1px)`,
+  },
 }));
 
 const ZUIOrganizeSidebar = (): JSX.Element => {
@@ -145,6 +113,14 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   return (
     <Box data-testid="organize-sidebar" sx={{ display: 'flex' }}>
       <Drawer
+        classes={{
+          paper:
+            classes.drawerPaper +
+            (!open ? ` ${classes.toggleDrawerPaper}` : ''),
+        }}
+        className={
+          classes.drawer + (!open ? ` ${classes.toggleDrawerPaper}` : '')
+        }
         onMouseLeave={() => {
           setHover(false);
         }}
@@ -157,7 +133,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         }}
         variant="permanent"
       >
-        <DrawerHeader>
+        <Box className={classes.drawerHeader}>
           {!open && hover && (
             <IconButton onClick={toggleDrawer}>
               <KeyboardDoubleArrowRight
@@ -203,7 +179,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               }}
             </ZUIFuture>
           )}
-        </DrawerHeader>
+        </Box>
         <Divider />
         <List>
           {menuItemsMap.map((item) => (
