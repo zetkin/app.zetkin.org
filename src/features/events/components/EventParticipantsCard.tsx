@@ -27,9 +27,7 @@ type EventParticipantsCardProps = {
   model: EventDataModel;
 };
 
-const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
-  model,
-}) => {
+const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
   const eventData = model.getData().data;
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
@@ -182,10 +180,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
         </Box>
         <Divider />
         <Box display="flex" justifyContent="center" marginTop={2}>
-          <NextLink
-            href={`${getEventUrl(eventData)}/participants`}
-            passHref
-          >
+          <NextLink href={`${getEventUrl(eventData)}/participants`} passHref>
             <Link underline="none">
               <Typography
                 color={theme.palette.info.main}

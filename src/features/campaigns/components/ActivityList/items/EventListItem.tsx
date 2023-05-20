@@ -16,7 +16,6 @@ import { useEventPopper } from 'features/events/components/EventPopper/EventPopp
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 
-
 interface EventListeItemProps {
   cluster: ClusteredEvent;
 }

@@ -1,6 +1,11 @@
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
-import { CancelOutlined, ContentCopy, Delete, RestoreOutlined } from '@mui/icons-material';
+import {
+  CancelOutlined,
+  ContentCopy,
+  Delete,
+  RestoreOutlined,
+} from '@mui/icons-material';
 import React, { useContext } from 'react';
 
 import EventDataModel from '../models/EventDataModel';
@@ -47,7 +52,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
 
   const handleDuplicate = () => {
     model.duplicateEvent();
-  }
+  };
 
   const handleCancel = () => {
     event.cancelled ? model.restoreEvent() : model.cancel();
@@ -106,7 +111,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
             {
               label: <>{messages.eventActionButtons.duplicate()}</>,
               onSelect: handleDuplicate,
-              startIcon: <ContentCopy />
+              startIcon: <ContentCopy />,
             },
             {
               label: <>{messages.eventActionButtons.delete()}</>,

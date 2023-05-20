@@ -81,7 +81,7 @@ export default class EventDataModel extends ModelBase {
   }
 
   duplicateEvent() {
-    const promise = this.createEvent(this.getDuplicatePostBody())
+    const promise = this.createEvent(this.getDuplicatePostBody());
     return promise;
   }
 
@@ -109,13 +109,13 @@ export default class EventDataModel extends ModelBase {
       num_participants_required: currentEvent.data?.num_participants_required,
       organization_id: currentEvent.data?.organization.id,
       start_time: currentEvent.data?.start_time,
-      title: currentEvent.data?.title
-    }
-    if (currentEvent.data?.campaign){
+      title: currentEvent.data?.title,
+    };
+    if (currentEvent.data?.campaign) {
       duplicateEventPostBody.campaign_id = currentEvent.data?.campaign.id;
     }
     // TODO: should this include URL?
-    return duplicateEventPostBody
+    return duplicateEventPostBody;
   }
 
   getNumAvailParticipants(): number {

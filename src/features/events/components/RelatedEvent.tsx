@@ -21,10 +21,7 @@ const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
   return (
     <Box display="flex" flexDirection="column">
       <Box alignItems="center" display="flex" justifyContent="space-between">
-        <NextLink
-          href={getEventUrl(event)}
-          passHref
-        >
+        <NextLink href={getEventUrl(event)} passHref>
           <Link>
             <Typography>
               {event.title ||
