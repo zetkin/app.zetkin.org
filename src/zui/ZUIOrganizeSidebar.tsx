@@ -1,11 +1,16 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import CssBaseline from '@mui/material/CssBaseline';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import MuiDrawer from '@mui/material/Drawer';
 import NextLink from 'next/link';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import {
+  Architecture,
+  Explore,
+  KeyboardDoubleArrowRight,
+  Map,
+  People,
+} from '@mui/icons-material/';
 import {
   Avatar,
   Box,
@@ -13,20 +18,19 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   Typography,
 } from '@mui/material';
-import { CSSObject, styled, Theme } from '@mui/material/styles';
-import { Event, Explore, Home, Map, People } from '@mui/icons-material/';
+import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles';
 
+import makeStyles from '@mui/styles/makeStyles';
 import messageIds from './l10n/messageIds';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIFuture from './ZUIFuture';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const closedMixin = (theme: Theme): CSSObject => ({
   overflowX: 'hidden',
@@ -75,11 +79,44 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
+const useStyles = makeStyles((theme) => ({
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      flexShrink: 0,
+      width: drawerWidth,
+    },
+  },
+  drawerPaper: {
+    display: 'none',
+    width: drawerWidth,
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
+  roundButton: {
+    height: '3rem',
+    width: '3rem',
+  },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+}));
+
 const ZUIOrganizeSidebar = (): JSX.Element => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hover, setHover] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const messages = useMessages(messageIds);
+  const classes = useStyles();
+  const theme = useTheme();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -92,24 +129,22 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
-    setExpanded(!expanded);
   };
 
-  const model = useModel((env) => new OrganizationsDataModel(env));
+  const model: OrganizationsDataModel = useModel(
+    (env) => new OrganizationsDataModel(env)
+  );
 
   const menuItemsMap = [
-    { icon: <Map />, name: 'areas' },
-    { icon: <Home />, name: 'home' },
-    { icon: <Explore />, name: 'journeys' },
     { icon: <People />, name: 'people' },
-    { icon: <Event />, name: 'projects' },
+    { icon: <Architecture />, name: 'projects' },
+    { icon: <Explore />, name: 'journeys' },
+    { icon: <Map />, name: 'areas' },
   ] as const;
 
-  const OrganizeSideBar = (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+  return (
+    <Box data-testid="organize-sidebar" sx={{ display: 'flex' }}>
       <Drawer
-        onFocus={() => void 0}
         onMouseLeave={() => {
           setHover(false);
         }}
@@ -123,50 +158,51 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         variant="permanent"
       >
         <DrawerHeader>
-          <IconButton onClick={toggleDrawer}>
-            {!open && hover && !expanded && (
-              <KeyboardDoubleArrowRightIcon
-                onClick={toggleDrawer}
-                sx={{ margin: 1 }}
+          {!open && hover && (
+            <IconButton onClick={toggleDrawer}>
+              <KeyboardDoubleArrowRight
+                sx={{ alignSelf: 'center', marginLeft: 0.5 }}
               />
-            )}
-            {!open && !hover && !expanded && (
-              <NextLink href="/organize" passHref>
-                <Avatar
-                  alt="icon"
-                  src={`/api/orgs/${orgId}/avatar`}
-                  sx={{ alignSelf: 'center' }}
-                />
-              </NextLink>
-            )}
-            {expanded && (
-              <ZUIFuture future={model.getOrganization(orgId)}>
-                {(data) => {
-                  return (
-                    <Box alignSelf="center">
-                      <Box display="flex" justifyContent="start">
-                        {hover ? (
+            </IconButton>
+          )}
+          {!open && !hover && (
+            <NextLink href="/organize" passHref>
+              <Avatar
+                alt="icon"
+                src={`/api/orgs/${orgId}/avatar`}
+                sx={{ alignSelf: 'center', marginLeft: 0.5 }}
+              />
+            </NextLink>
+          )}
+          {open && (
+            <ZUIFuture future={model.getOrganization(orgId)}>
+              {(data) => {
+                return (
+                  <Box alignSelf="center">
+                    <Box display="flex" justifyContent="start">
+                      {hover ? (
+                        <IconButton onClick={toggleDrawer}>
                           <ChevronLeftIcon
                             onClick={handleDrawerToggle}
-                            sx={{ alignSelf: 'center', margin: 2 }}
-                          />
-                        ) : (
-                          <Avatar
-                            alt="icon"
-                            src={`/api/orgs/${orgId}/avatar`}
                             sx={{ alignSelf: 'center', marginLeft: 2 }}
                           />
-                        )}
-                        <Typography gutterBottom m={2} variant="h6">
-                          {data.title}
-                        </Typography>
-                      </Box>
+                        </IconButton>
+                      ) : (
+                        <Avatar
+                          alt="icon"
+                          src={`/api/orgs/${orgId}/avatar`}
+                          sx={{ alignSelf: 'center', marginLeft: 2 }}
+                        />
+                      )}
+                      <Typography gutterBottom m={1} variant="h6">
+                        {data.title}
+                      </Typography>
                     </Box>
-                  );
-                }}
-              </ZUIFuture>
-            )}
-          </IconButton>
+                  </Box>
+                );
+              }}
+            </ZUIFuture>
+          )}
         </DrawerHeader>
         <Divider />
         <List>
@@ -175,37 +211,37 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               key={item.name}
               disableGutters
               disablePadding
-              sx={{ display: 'block' }}
+              sx={{
+                display: 'block',
+              }}
             >
-              <NextLink
-                href={
-                  item.name === 'home'
-                    ? '/organize/'
-                    : `/organize/${orgId}/${item.name}`
-                }
-                passHref
-              >
+              <NextLink href={`/organize/${orgId}/${item.name}`} passHref>
                 <IconButton
-                  color={
-                    key.startsWith('/' + item.name) ? 'primary' : 'secondary'
-                  }
+                  className={classes.roundButton}
+                  size="large"
                   sx={{
                     justifyContent: open ? 'initial' : 'center',
                     minHeight: 48,
+                    ml: open ? 1 : 2,
+                    mr: open ? 2 : 1,
                     px: 2.5,
                   }}
                 >
-                  <ListItemIcon
+                  <Avatar
                     sx={{
-                      justifyContent: 'center',
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
+                      backgroundColor: key.startsWith('/' + item.name)
+                        ? theme.palette.grey[300]
+                        : 'transparent',
+                      borderRadius: '20%',
+                      color: theme.palette.grey[500],
                     }}
-                  />
-                  {item.icon}
+                    variant="square"
+                  >
+                    {item.icon}
+                  </Avatar>
                   <ListItemText
                     primary={messages.organizeSidebar[item.name]()}
-                    sx={{ marginLeft: 3, opacity: open ? 1 : 0 }}
+                    sx={{ marginLeft: 2, opacity: open ? 1 : 0 }}
                   />
                 </IconButton>
               </NextLink>
@@ -215,8 +251,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
       </Drawer>
     </Box>
   );
-
-  return OrganizeSideBar;
 };
 
 export default ZUIOrganizeSidebar;
