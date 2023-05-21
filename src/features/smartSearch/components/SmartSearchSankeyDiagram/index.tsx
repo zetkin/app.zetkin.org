@@ -1,11 +1,8 @@
 import { lighten } from '@mui/system';
 import { FC, useEffect, useRef } from 'react';
 
-import {
-  drawFilterInputOutput,
-  drawFilterMainStream,
-  Measurements,
-} from './drawing';
+import makeSankeySegments from './makeSankeySegments';
+import { SankeyRenderer } from './drawing';
 
 type SmartSearchSankeyDiagramProps = {
   arrowDepth?: number;
@@ -34,10 +31,7 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
   const animFrameRef = useRef(0);
   const startTimeRef = useRef(new Date());
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const diagCenter = diagWidth / 2;
 
-  const maxStreamWidth = diagWidth - margin * 2;
-  const maxSegOutput = Math.max(...filterStats.map((stats) => stats.output));
   const segHeight = 100;
 
   const diagHeight = filterStats.length * segHeight;
@@ -61,54 +55,18 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     hoverGradient.addColorStop(0.02 + gradOffset, lighten(hoverColor, 0.2));
     hoverGradient.addColorStop(0.04 + gradOffset, hoverColor);
 
-    filterStats.forEach((stats, index) => {
-      const inputCount = index > 0 ? filterStats[index - 1].output : 0;
-      const inputWidth = (inputCount / maxSegOutput) * maxStreamWidth;
-      const outputWidth = (stats.output / maxSegOutput) * maxStreamWidth;
-
-      const change = stats.output - inputCount;
-      const changeWidth = (Math.abs(change) / maxSegOutput) * maxStreamWidth;
-
-      const measurements: Measurements = {
-        arrowDepth,
-        arrowWidth,
-        change,
-        changeWidth,
-        diagCenter,
-        diagWidth,
-        inputWidth,
-        lineWidth: 2,
-        margin,
-        offsetY: index * segHeight,
-        outputWidth,
-        segHeight,
-      };
-
-      const gradient =
-        index == mouseState.current.hoveredSegment
-          ? hoverGradient
-          : baseGradient;
-
-      if (inputCount > 0) {
-        context.fillStyle = gradient;
-        context.beginPath();
-        drawFilterMainStream(context, measurements);
-        context.fill();
-      }
-
-      drawFilterInputOutput(context, gradient, stats.op, measurements);
+    const segments = makeSankeySegments(filterStats);
+    const renderer = new SankeyRenderer(context, {
+      arrowDepth,
+      arrowWidth,
+      diagWidth,
+      lineWidth: 2,
+      margin,
+      segHeight,
     });
-
-    // Draw the final arrow
-    const lastStats = filterStats[filterStats.length - 1];
-    const outputWidth = (lastStats.output / maxSegOutput) * maxStreamWidth;
-    context.fillStyle = baseGradient;
-    context.beginPath();
-    context.moveTo(diagCenter - outputWidth / 2, diagHeight);
-    context.lineTo(diagCenter + outputWidth / 2, diagHeight);
-    context.lineTo(diagCenter, diagHeight + arrowDepth * 2);
-    context.lineTo(diagCenter - outputWidth / 2, diagHeight);
-    context.fill();
+    segments.forEach((seg, index) => {
+      renderer.drawSegment(seg, index * segHeight);
+    });
   };
 
   useEffect(() => {

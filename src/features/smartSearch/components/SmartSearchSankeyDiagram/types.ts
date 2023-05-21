@@ -27,16 +27,16 @@ type SelectionMainElement = {
   style: SegmentStyle;
 };
 
-type SelectionAddSegment = {
+export type SelectionAddSegment = {
   kind: 'add';
   main: SelectionMainElement | null;
-  side: SelectionSideElement | null;
+  side: SelectionSideElement;
 };
 
-type SelectionSubSegment = {
+export type SelectionSubSegment = {
   kind: 'sub';
   main: SelectionMainElement | null;
-  side: SelectionSideElement | null;
+  side: SelectionSideElement;
 };
 
 export type SankeySegment =
