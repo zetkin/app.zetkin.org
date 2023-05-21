@@ -107,6 +107,7 @@ export default makeMessages('zui', {
     journeys: m('Journeys'),
     people: m('People'),
     projects: m('Projects'),
+    search: m('Search'),
   },
   personGridEditCell: {
     keepTyping: m('Keep typing..'),

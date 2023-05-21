@@ -10,6 +10,7 @@ import {
   KeyboardDoubleArrowRight,
   Map,
   People,
+  Search,
 } from '@mui/icons-material/';
 import {
   Avatar,
@@ -26,6 +27,7 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from './l10n/messageIds';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
+import SearchDialog from 'features/search/components/SearchDialog';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIFuture from './ZUIFuture';
@@ -95,6 +97,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
 
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -104,6 +107,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   );
 
   const menuItemsMap = [
+    { icon: <Search />, name: 'search', onClick: 'search' },
     { icon: <People />, name: 'people' },
     { icon: <Architecture />, name: 'projects' },
     { icon: <Explore />, name: 'journeys' },
@@ -191,40 +195,78 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 display: 'block',
               }}
             >
-              <NextLink href={`/organize/${orgId}/${item.name}`} passHref>
-                <IconButton
-                  className={classes.roundButton}
-                  size="large"
-                  sx={{
-                    justifyContent: open ? 'initial' : 'center',
-                    minHeight: 48,
-                    ml: open ? 1 : 2,
-                    mr: open ? 2 : 1,
-                    px: 2.5,
-                  }}
-                >
-                  <Avatar
+              {'onClick' in item ? (
+                <NextLink href={'#'} passHref={false}>
+                  <IconButton
+                    className={classes.roundButton}
+                    size="large"
                     sx={{
-                      backgroundColor: key.startsWith('/' + item.name)
-                        ? theme.palette.grey[300]
-                        : 'transparent',
-                      borderRadius: '20%',
-                      color: theme.palette.grey[500],
+                      justifyContent: open ? 'initial' : 'center',
+                      minHeight: 48,
+                      ml: open ? 1 : 2,
+                      mr: open ? 2 : 1,
+                      px: 2.5,
                     }}
-                    variant="square"
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      setSearchOpen(true);
+                    }}
                   >
-                    {item.icon}
-                  </Avatar>
-                  <ListItemText
-                    primary={messages.organizeSidebar[item.name]()}
-                    sx={{ marginLeft: 2, opacity: open ? 1 : 0 }}
-                  />
-                </IconButton>
-              </NextLink>
+                    <Avatar
+                      sx={{
+                        backgroundColor: searchOpen
+                          ? theme.palette.grey[300]
+                          : 'transparent',
+                        borderRadius: '20%',
+                        color: theme.palette.grey[500],
+                      }}
+                      variant="square"
+                    >
+                      {item.icon}
+                    </Avatar>
+                    <ListItemText
+                      primary={messages.organizeSidebar[item.name]()}
+                      sx={{ marginLeft: 2, opacity: open ? 1 : 0 }}
+                    />
+                  </IconButton>
+                </NextLink>
+              ) : (
+                <NextLink href={`/organize/${orgId}/${item.name}`} passHref>
+                  <IconButton
+                    className={classes.roundButton}
+                    size="large"
+                    sx={{
+                      justifyContent: open ? 'initial' : 'center',
+                      minHeight: 48,
+                      ml: open ? 1 : 2,
+                      mr: open ? 2 : 1,
+                      px: 2.5,
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        backgroundColor: key.startsWith('/' + item.name)
+                          ? theme.palette.grey[300]
+                          : 'transparent',
+                        borderRadius: '20%',
+                        color: theme.palette.grey[500],
+                      }}
+                      variant="square"
+                    >
+                      {item.icon}
+                    </Avatar>
+                    <ListItemText
+                      primary={messages.organizeSidebar[item.name]()}
+                      sx={{ marginLeft: 2, opacity: open ? 1 : 0 }}
+                    />
+                  </IconButton>
+                </NextLink>
+              )}
             </ListItem>
           ))}
         </List>
       </Drawer>
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </Box>
   );
 };

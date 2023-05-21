@@ -105,7 +105,6 @@ const Header: React.FC<HeaderProps> = ({
                 </Button>
               </Box>
             )}
-            <SearchDialog />
           </Box>
         </Box>
         {/* Title, subtitle, and action buttons */}

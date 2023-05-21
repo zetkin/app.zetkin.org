@@ -1,13 +1,11 @@
 import { makeStyles } from '@mui/styles';
-import { Search } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Button, Dialog } from '@mui/material';
+import { Box, Dialog } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import defaultFetch from 'utils/fetching/defaultFetch';
 import handleResponseData from 'utils/api/handleResponseData';
-import isUserTyping from 'features/search/utils/isUserTyping';
 import ResultsList from 'features/search/components/SearchDialog/ResultsList';
 import SearchField from './SearchField';
 import { SearchResult } from '../types';
@@ -37,8 +35,15 @@ const getSearchResults = (orgId: string, searchQuery: string) => {
   };
 };
 
-const SearchDialog: React.FunctionComponent = () => {
-  const [open, setOpen] = useState(false);
+interface SearchDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const SearchDialog: React.FunctionComponent<SearchDialogProps> = ({
+  open,
+  onClose,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
@@ -52,24 +57,8 @@ const SearchDialog: React.FunctionComponent = () => {
 
   const handleRouteChange = () => {
     // Close dialog when clicking an item
-    setOpen(false);
+    onClose();
   };
-
-  const handleKeydown = (e: KeyboardEvent) => {
-    if (!isUserTyping(e)) {
-      if (e.key === '/') {
-        e.preventDefault();
-        setOpen(true);
-      }
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeydown);
-    return () => {
-      document.removeEventListener('keydown', handleKeydown);
-    };
-  });
 
   useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChange);
@@ -94,13 +83,6 @@ const SearchDialog: React.FunctionComponent = () => {
   return (
     <>
       {/* Activator */}
-      <Button
-        color="inherit"
-        data-testid="SearchDialog-activator"
-        onClick={() => setOpen(true)}
-      >
-        <Search />
-      </Button>
       <Dialog
         classes={{
           paperScrollBody: classes.topPaperScrollBody,
@@ -108,7 +90,7 @@ const SearchDialog: React.FunctionComponent = () => {
         }}
         fullWidth
         onClose={() => {
-          setOpen(false);
+          onClose();
           setSearchQuery('');
         }}
         open={open}
