@@ -199,6 +199,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 <NextLink href={'#'} passHref={false}>
                   <IconButton
                     className={classes.roundButton}
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      setSearchOpen(true);
+                    }}
                     size="large"
                     sx={{
                       justifyContent: open ? 'initial' : 'center',
@@ -206,10 +210,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       ml: open ? 1 : 2,
                       mr: open ? 2 : 1,
                       px: 2.5,
-                    }}
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      setSearchOpen(true);
                     }}
                   >
                     <Avatar
@@ -266,7 +266,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
           ))}
         </List>
       </Drawer>
-      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchDialog onClose={() => setSearchOpen(false)} open={searchOpen} />
     </Box>
   );
 };
