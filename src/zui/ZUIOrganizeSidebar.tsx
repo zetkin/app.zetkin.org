@@ -78,7 +78,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
 
   const [open, setOpen] = useState(false);
-  const toggleDrawer = () => {
+  const handleClick = () => {
     setOpen(!open);
   };
 
@@ -115,7 +115,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           {!open && hover && (
-            <IconButton onClick={toggleDrawer}>
+            <IconButton onClick={handleClick}>
               <KeyboardDoubleArrowRightOutlined />
             </IconButton>
           )}
@@ -139,7 +139,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     }}
                   >
                     {hover ? (
-                      <IconButton onClick={toggleDrawer}>
+                      <IconButton onClick={handleClick}>
                         <KeyboardDoubleArrowLeftOutlined />
                       </IconButton>
                     ) : (
