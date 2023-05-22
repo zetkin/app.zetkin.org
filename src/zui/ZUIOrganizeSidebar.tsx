@@ -183,29 +183,32 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             }}
           >
             {menuItemsMap.map((item) => (
-              <ListItem
+              <NextLink
                 key={item.name}
-                button
-                disablePadding
-                sx={{
-                  '&:hover': {
-                    background: theme.palette.grey[100],
-                    pointer: 'cursor',
-                  },
-                  backgroundColor: getBackgroundColor(item.name, open, key),
-                  borderRadius: '3px',
-                  justifyContent: open ? 'flex-start' : 'center',
-                  my: 0.5,
-                }}
+                href={`/organize/${orgId}/${item.name}`}
+                passHref
               >
-                <Box
+                <ListItem
+                  button
+                  disablePadding
                   sx={{
-                    display: 'flex',
+                    '&:hover': {
+                      background: theme.palette.grey[100],
+                      pointer: 'cursor',
+                    },
+                    backgroundColor: getBackgroundColor(item.name, open, key),
+                    borderRadius: '3px',
                     justifyContent: open ? 'flex-start' : 'center',
-                    width: open ? '100%' : '50%',
+                    my: 0.5,
                   }}
                 >
-                  <NextLink href={`/organize/${orgId}/${item.name}`} passHref>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: open ? 'flex-start' : 'center',
+                      width: open ? '100%' : '50%',
+                    }}
+                  >
                     <>
                       <ListItemIcon
                         sx={{
@@ -230,9 +233,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                         {messages.organizeSidebar[item.name]()}
                       </Typography>
                     </>
-                  </NextLink>
-                </Box>
-              </ListItem>
+                  </Box>
+                </ListItem>
+              </NextLink>
             ))}
           </List>
         </Box>
