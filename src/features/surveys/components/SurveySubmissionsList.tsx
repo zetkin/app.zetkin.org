@@ -141,7 +141,7 @@ const SurveySubmissionsList = ({
         >
           <ZUIPersonGridCell
             onClick={startEditing}
-            personId={row.respondent.id}
+            person={row.respondent}
             sx={{
               cursor: 'pointer',
             }}
