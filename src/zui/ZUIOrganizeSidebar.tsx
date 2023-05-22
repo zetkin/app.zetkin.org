@@ -92,6 +92,17 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Map />, name: 'areas' },
   ] as const;
 
+  function getBackgroundColor(item: string, open: boolean, key: string) {
+    let backgroundColor = 'transparent';
+
+    if (key.startsWith('/' + item) && open) {
+      return (backgroundColor = theme.palette.grey[100]);
+    } else if (key.startsWith('/' + item) && !open) {
+      return (backgroundColor = theme.palette.grey[200]);
+    }
+    return backgroundColor;
+  }
+
   return (
     <Box data-testid="organize-sidebar">
       <Drawer
@@ -167,6 +178,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         <Box>
           <List
             sx={{
+              gap: 8,
               mx: 0.5,
             }}
           >
@@ -180,18 +192,16 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     background: theme.palette.grey[100],
                     pointer: 'cursor',
                   },
-                  backgroundColor: key.startsWith('/' + item.name)
-                    ? theme.palette.grey[200]
-                    : 'transparent',
+                  backgroundColor: getBackgroundColor(item.name, open, key),
                   borderRadius: '3px',
                   justifyContent: open ? 'flex-start' : 'center',
+                  my: 0.5,
                 }}
               >
                 <Box
                   sx={{
                     display: 'flex',
                     justifyContent: open ? 'flex-start' : 'center',
-                    mr: 0.5,
                     width: open ? '100%' : '50%',
                   }}
                 >
@@ -199,6 +209,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     <>
                       <ListItemIcon
                         sx={{
+                          alignItems: 'center',
+                          height: '50px',
                           justifyContent: 'center',
                           width: '80px',
                         }}
@@ -207,6 +219,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       </ListItemIcon>
                       <Typography
                         sx={{
+                          alignItems: 'center',
                           color: 'black',
                           display: open ? 'flex' : 'none',
                           fontWeight: key.startsWith('/' + item.name)
