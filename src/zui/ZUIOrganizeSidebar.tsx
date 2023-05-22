@@ -20,7 +20,6 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
   Typography,
 } from '@mui/material';
 
@@ -94,7 +93,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   ] as const;
 
   return (
-    <Box data-testid="organize-sidebar" sx={{ display: 'flex' }}>
+    <Box data-testid="organize-sidebar">
       <Drawer
         classes={{
           paper:
@@ -113,7 +112,14 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         open={open}
         variant="permanent"
       >
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: open ? 'flex-start' : 'center',
+            mx: 0.5,
+            my: 0.5,
+          }}
+        >
           {!open && hover && (
             <IconButton onClick={handleClick}>
               <KeyboardDoubleArrowRightOutlined />
@@ -124,8 +130,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
             </NextLink>
           )}
-        </Box>
-        <Box>
+
           {open && (
             <ZUIFuture future={model.getOrganization(orgId)}>
               {(data) => {
@@ -134,20 +139,24 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     sx={{
                       alignItems: 'center',
                       display: 'flex',
-                      justifyContent: 'stretch',
-                      marginLeft: 1,
                     }}
                   >
-                    {hover ? (
-                      <IconButton onClick={handleClick}>
-                        <KeyboardDoubleArrowLeftOutlined />
-                      </IconButton>
-                    ) : (
-                      <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-                    )}
-                    <Typography ml={1} variant="h6">
-                      {data.title}
-                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '80px',
+                      }}
+                    >
+                      {hover ? (
+                        <IconButton onClick={handleClick}>
+                          <KeyboardDoubleArrowLeftOutlined />
+                        </IconButton>
+                      ) : (
+                        <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+                      )}
+                    </Box>
+                    <Typography variant="h6">{data.title}</Typography>
                   </Box>
                 );
               }}
@@ -158,50 +167,58 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         <Box>
           <List
             sx={{
-              display: 'flex',
-              flexFlow: 'column',
-              justifyContent: 'center',
-              marginLeft: '5px',
-              marginRight: '5px',
+              mx: 0.5,
             }}
           >
             {menuItemsMap.map((item) => (
               <ListItem
                 key={item.name}
                 button
+                disablePadding
                 sx={{
                   '&:hover': {
                     background: theme.palette.grey[100],
                     pointer: 'cursor',
                   },
                   backgroundColor: key.startsWith('/' + item.name)
-                    ? theme.palette.grey[300]
+                    ? theme.palette.grey[200]
                     : 'transparent',
                   borderRadius: '3px',
+                  justifyContent: open ? 'flex-start' : 'center',
                 }}
               >
-                <NextLink href={`/organize/${orgId}/${item.name}`} passHref>
-                  <>
-                    <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText
-                      primary={
-                        <Typography
-                          sx={{
-                            color: 'black',
-                            fontWeight: key.startsWith('/' + item.name)
-                              ? 700
-                              : 'normal',
-                          }}
-                        >
-                          {messages.organizeSidebar[item.name]()}
-                        </Typography>
-                      }
-                      sx={{
-                        display: open ? 'flex' : 'none',
-                      }}
-                    />
-                  </>
-                </NextLink>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: open ? 'flex-start' : 'center',
+                    mr: 0.5,
+                    width: open ? '100%' : '50%',
+                  }}
+                >
+                  <NextLink href={`/organize/${orgId}/${item.name}`} passHref>
+                    <>
+                      <ListItemIcon
+                        sx={{
+                          justifyContent: 'center',
+                          width: '80px',
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <Typography
+                        sx={{
+                          color: 'black',
+                          display: open ? 'flex' : 'none',
+                          fontWeight: key.startsWith('/' + item.name)
+                            ? 700
+                            : 'normal',
+                        }}
+                      >
+                        {messages.organizeSidebar[item.name]()}
+                      </Typography>
+                    </>
+                  </NextLink>
+                </Box>
               </ListItem>
             ))}
           </List>
