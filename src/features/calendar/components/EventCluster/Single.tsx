@@ -1,9 +1,12 @@
 import { FC } from 'react';
+import { useSelector, useStore } from 'react-redux';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
+import { eventsSelected } from 'features/events/store';
 import { fieldsToPresent } from './utils';
 import LocationLabel from 'features/events/components/LocationLabel';
+import { RootState } from 'core/store';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
@@ -93,11 +96,32 @@ const Single: FC<SingleProps> = ({
   const eventTitle =
     event.title || event.activity?.title || messages.common.noTitle();
 
+  const store = useStore<RootState>();
+  const selectedEvents = useSelector(
+    (state: RootState) => state.events.selectedEvents
+  );
+  const alreadyExists = selectedEvents.some(
+    (selectedEvent) => selectedEvent.id == event.id
+  );
+  const handleChange = () => {
+    if (alreadyExists) {
+      store.dispatch(
+        eventsSelected(
+          selectedEvents.filter((selectedEvent) => selectedEvent.id != event.id)
+        )
+      );
+    } else {
+      store.dispatch(eventsSelected([...selectedEvents, event]));
+    }
+  };
+
   return (
     <Event
       cancelled={Boolean(event?.cancelled)}
+      checked={alreadyExists ?? false}
       fieldGroups={[fields]}
       height={height}
+      onSelect={handleChange}
       title={eventTitle}
       width={width}
     />

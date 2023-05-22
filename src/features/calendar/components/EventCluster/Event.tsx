@@ -125,20 +125,24 @@ export type PresentableField = Field & {
 
 interface EventProps {
   cancelled: boolean;
+  checked: boolean;
   fieldGroups: PresentableField[][];
   height: number;
   title: string;
   topBadge?: JSX.Element | null | false;
   width: string;
+  onSelect: () => void;
 }
 
 const Event = ({
   cancelled,
+  checked,
   fieldGroups,
   height,
   title,
   topBadge,
   width,
+  onSelect: onClickEvent,
 }: EventProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const collapsed = !fieldGroups.some((group) => {
@@ -169,8 +173,21 @@ const Event = ({
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <Box display="flex" alignItems="center" sx={{ pl: 1 }}>
-            {isHovered && <Checkbox sx={{ py: 0, px: 0.2 }} size="small" />}
+          <Box alignItems="center" display="flex">
+            {isHovered && (
+              <Checkbox
+                checked={checked}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  onClickEvent();
+                }}
+                size="small"
+                sx={{
+                  px: 0,
+                  py: 0,
+                }}
+              />
+            )}
             <Typography className={classes.title}>{title}</Typography>
           </Box>
           <Box display="flex">
@@ -194,8 +211,18 @@ const Event = ({
           onMouseLeave={() => setIsHovered(false)}
         >
           <Box className={classes.titleContainer}>
-            <Box display="flex" alignItems="center" sx={{ pl: 1, pt: 0.8 }}>
-              {isHovered && <Checkbox sx={{ py: 0, px: 0.2 }} size="small" />}
+            <Box alignItems="center" display="flex" sx={{ pl: 1, pt: 0.8 }}>
+              {isHovered && (
+                <Checkbox
+                  checked={checked}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClickEvent();
+                  }}
+                  size="small"
+                  sx={{ px: 0.2, py: 0 }}
+                />
+              )}
               <Typography className={classes.title}>{title}</Typography>
             </Box>
           </Box>

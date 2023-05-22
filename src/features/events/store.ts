@@ -60,6 +60,7 @@ export interface EventsStoreSlice {
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
+  selectedEvents: ZetkinEvent[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
 }
@@ -76,6 +77,7 @@ const initialState: EventsStoreSlice = {
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
+  selectedEvents: [],
   statsByEventId: {},
   typeList: remoteList(),
 };
@@ -186,6 +188,10 @@ const eventsSlice = createSlice({
     eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
+    },
+    eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const selectedEvents = action.payload;
+      state.selectedEvents = selectedEvents;
     },
     filterTextUpdated: (
       state,
@@ -367,6 +373,7 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
+  eventsSelected,
   filterTextUpdated,
   filterUpdated,
   locationUpdate,
