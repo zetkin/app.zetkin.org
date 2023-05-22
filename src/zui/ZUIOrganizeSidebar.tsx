@@ -135,7 +135,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       alignItems: 'center',
                       display: 'flex',
                       justifyContent: 'stretch',
-
                       marginLeft: 1,
                     }}
                   >
@@ -162,6 +161,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               display: 'flex',
               flexFlow: 'column',
               justifyContent: 'center',
+              marginLeft: '5px',
+              marginRight: '5px',
             }}
           >
             {menuItemsMap.map((item) => (
@@ -176,24 +177,29 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                   backgroundColor: key.startsWith('/' + item.name)
                     ? theme.palette.grey[300]
                     : 'transparent',
+                  borderRadius: '3px',
                 }}
               >
                 <NextLink href={`/organize/${orgId}/${item.name}`} passHref>
                   <>
                     <ListItemIcon>{item.icon}</ListItemIcon>
-                    {open && (
-                      <ListItemText
-                        primary={messages.organizeSidebar[item.name]()}
-                        sx={{
-                          color: key.startsWith('/' + item.name)
-                            ? 'black'
-                            : theme.palette.grey[500],
-                          fontWeight: key.startsWith('/' + item.name)
-                            ? 900
-                            : 'normal',
-                        }}
-                      />
-                    )}
+                    <ListItemText
+                      primary={
+                        <Typography
+                          sx={{
+                            color: 'black',
+                            fontWeight: key.startsWith('/' + item.name)
+                              ? 700
+                              : 'normal',
+                          }}
+                        >
+                          {messages.organizeSidebar[item.name]()}
+                        </Typography>
+                      }
+                      sx={{
+                        display: open ? 'flex' : 'none',
+                      }}
+                    />
                   </>
                 </NextLink>
               </ListItem>
