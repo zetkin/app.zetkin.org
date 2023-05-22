@@ -7,8 +7,8 @@ import {
   Architecture,
   Explore,
   Groups,
-  KeyboardDoubleArrowLeft,
-  KeyboardDoubleArrowRight,
+  KeyboardDoubleArrowLeftOutlined,
+  KeyboardDoubleArrowRightOutlined,
   Map,
 } from '@mui/icons-material/';
 import {
@@ -116,7 +116,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           {!open && hover && (
             <IconButton onClick={toggleDrawer}>
-              <KeyboardDoubleArrowRight />
+              <KeyboardDoubleArrowRightOutlined />
             </IconButton>
           )}
           {!open && !hover && (
@@ -141,7 +141,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                   >
                     {hover ? (
                       <IconButton onClick={toggleDrawer}>
-                        <KeyboardDoubleArrowLeft />
+                        <KeyboardDoubleArrowLeftOutlined />
                       </IconButton>
                     ) : (
                       <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
