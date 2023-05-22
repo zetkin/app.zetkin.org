@@ -17,10 +17,9 @@ const EventSelectionCheckBox = ({
   const selectedEvents = useSelector(
     (state: RootState) => state.events.selectedEvents
   );
-  const eventId = eventList[0].id;
 
   const alreadyExists = selectedEvents.some(
-    (selectedEvent) => selectedEvent.id == eventId
+    (selectedEvent) => selectedEvent.id == eventList[0].id
   );
 
   const handleChange = (checked: boolean) => {
