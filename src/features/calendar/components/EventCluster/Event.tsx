@@ -1,10 +1,12 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { useState } from 'react';
-import { Box, Checkbox, Theme, Typography } from '@mui/material';
+import { Box, Theme, Typography } from '@mui/material';
 
+import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 import Field from './Field';
 import FieldGroup from './FieldGroup';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 interface StyleProps {
   cancelled: boolean;
@@ -125,24 +127,22 @@ export type PresentableField = Field & {
 
 interface EventProps {
   cancelled: boolean;
-  checked: boolean;
+  eventList: ZetkinEvent[];
   fieldGroups: PresentableField[][];
   height: number;
   title: string;
   topBadge?: JSX.Element | null | false;
   width: string;
-  onSelect: () => void;
 }
 
 const Event = ({
   cancelled,
-  checked,
+  eventList,
   fieldGroups,
   height,
   title,
   topBadge,
   width,
-  onSelect: onClickEvent,
 }: EventProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const collapsed = !fieldGroups.some((group) => {
@@ -174,20 +174,7 @@ const Event = ({
           onMouseLeave={() => setIsHovered(false)}
         >
           <Box alignItems="center" display="flex">
-            {isHovered && (
-              <Checkbox
-                checked={checked}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  onClickEvent();
-                }}
-                size="small"
-                sx={{
-                  px: 0,
-                  py: 0,
-                }}
-              />
-            )}
+            {isHovered && <EventSelectionCheckBox eventList={eventList} />}
             <Typography className={classes.title}>{title}</Typography>
           </Box>
           <Box display="flex">
@@ -212,17 +199,7 @@ const Event = ({
         >
           <Box className={classes.titleContainer}>
             <Box alignItems="center" display="flex" sx={{ pl: 1, pt: 0.8 }}>
-              {isHovered && (
-                <Checkbox
-                  checked={checked}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClickEvent();
-                  }}
-                  size="small"
-                  sx={{ px: 0.2, py: 0 }}
-                />
-              )}
+              {isHovered && <EventSelectionCheckBox eventList={eventList} />}
               <Typography className={classes.title}>{title}</Typography>
             </Box>
           </Box>

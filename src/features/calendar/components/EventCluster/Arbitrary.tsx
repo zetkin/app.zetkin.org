@@ -1,15 +1,12 @@
 import { EventOutlined } from '@mui/icons-material';
 import { FC } from 'react';
 
-import { eventsSelected } from 'features/events/store';
 import { fieldsToPresent } from './utils';
 import messageIds from 'features/calendar/l10n/messageIds';
-import { RootState } from 'core/store';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
-import { useSelector, useStore } from 'react-redux';
 
 export interface ArbitraryProps {
   showTopBadge: boolean;
@@ -112,35 +109,12 @@ const Arbitrary: FC<ArbitraryProps> = ({
   );
   const anyEventIsCancelled = events.some((event) => event.cancelled);
 
-  const store = useStore<RootState>();
-  const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
-  );
-  const alreadyExists = selectedEvents.some(
-    (selectedEvent) => selectedEvent.id == events[0].id
-  );
-  const handleChange = () => {
-    if (alreadyExists) {
-      store.dispatch(
-        eventsSelected(
-          selectedEvents.filter(
-            (selectedEvent) =>
-              !events.some((event) => event.id == selectedEvent.id)
-          )
-        )
-      );
-    } else {
-      store.dispatch(eventsSelected([...selectedEvents, ...events]));
-    }
-  };
-
   return (
     <Event
       cancelled={anyEventIsCancelled}
-      checked={alreadyExists ?? false}
+      eventList={events}
       fieldGroups={[fields]}
       height={height}
-      onSelect={handleChange}
       title={messages.event.events()}
       topBadge={
         showTopBadge && (

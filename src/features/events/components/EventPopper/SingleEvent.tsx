@@ -11,18 +11,15 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Checkbox, Link, Typography } from '@mui/material';
+import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
-import { useSelector, useStore } from 'react-redux';
 
-// import EventSelectCheckBox from '../EventSelectCheckBox';
-import { eventsSelected } from 'features/events/store';
+import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
-import { RootState } from 'core/store';
 import StatusDot from './StatusDot';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -114,35 +111,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     });
   }
 
-  const store = useStore<RootState>();
-  const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
-  );
-  const alreadyExists = selectedEvents.some(
-    (selectedEvent) => selectedEvent.id == event.id
-  );
-
-  const handleChange = () => {
-    if (alreadyExists) {
-      store.dispatch(
-        eventsSelected(
-          selectedEvents.filter((selectedEvent) => selectedEvent.id != event.id)
-        )
-      );
-    } else {
-      store.dispatch(eventsSelected([...selectedEvents, event]));
-    }
-  };
-
   return (
     <>
       <Box alignItems="center" display="flex">
-        {/* <EventSelectCheckBox event={event} /> */}
-        <Checkbox
-          checked={alreadyExists ?? false}
-          onChange={handleChange}
-          sx={{ padding: '0px' }}
-        />
+        <EventSelectionCheckBox eventList={[event]} />
         <Typography sx={{ pl: 1 }} variant="h5">
           {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>

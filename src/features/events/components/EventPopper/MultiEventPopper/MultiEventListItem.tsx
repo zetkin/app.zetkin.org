@@ -1,17 +1,14 @@
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
-import { Box, Checkbox, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ChevronRightOutlined, People } from '@mui/icons-material';
-import { useSelector, useStore } from 'react-redux';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
-// import EventSelectCheckBox from '../../EventSelectCheckBox';
-import { eventsSelected } from 'features/events/store';
+import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
-import { RootState } from 'core/store';
 import StatusDot from '../StatusDot';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
@@ -39,35 +36,10 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
     event.end_time
   )}`;
 
-  const store = useStore<RootState>();
-  const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
-  );
-  const alreadyExists = selectedEvents.some(
-    (selectedEvent) => selectedEvent.id == event.id
-  );
-
-  const handleChange = () => {
-    if (alreadyExists) {
-      store.dispatch(
-        eventsSelected(
-          selectedEvents.filter((selectedEvent) => selectedEvent.id != event.id)
-        )
-      );
-    } else {
-      store.dispatch(eventsSelected([...selectedEvents, event]));
-    }
-  };
-
   return (
     <Box display="flex" flexDirection="column" paddingBottom={1} width="100%">
       <Box display="flex">
-        {/* <EventSelectCheckBox event={event} /> */}
-        <Checkbox
-          checked={alreadyExists ?? false}
-          onChange={handleChange}
-          sx={{ padding: '0px' }}
-        />
+        <EventSelectionCheckBox eventList={[event]} />
         <Box
           display="flex"
           flexGrow={1}

@@ -1,13 +1,10 @@
 import { FC } from 'react';
 import { FormattedTime } from 'react-intl';
 import { ScheduleOutlined } from '@mui/icons-material';
-import { useSelector, useStore } from 'react-redux';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
-import { eventsSelected } from 'features/events/store';
 import LocationLabel from 'features/events/components/LocationLabel';
-import { RootState } from 'core/store';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
@@ -187,36 +184,12 @@ const MultiShift: FC<MultiShiftProps> = ({
     );
   });
 
-  const store = useStore<RootState>();
-  const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
-  );
-
-  const alreadyExists = selectedEvents.some(
-    (selectedEvent) => selectedEvent.id == events[0].id
-  );
-  const handleChange = () => {
-    if (alreadyExists) {
-      store.dispatch(
-        eventsSelected(
-          selectedEvents.filter(
-            (selectedEvent) =>
-              !events.some((event) => event.id == selectedEvent.id)
-          )
-        )
-      );
-    } else {
-      store.dispatch(eventsSelected([...selectedEvents, ...events]));
-    }
-  };
-
   return (
     <Event
       cancelled={anyEventIsCancelled}
-      checked={alreadyExists ?? false}
+      eventList={events}
       fieldGroups={fieldGroups}
       height={height}
-      onSelect={handleChange}
       title={firstEventTitle}
       topBadge={
         showTopBadge && (

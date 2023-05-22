@@ -1,12 +1,9 @@
 import { FC } from 'react';
-import { useSelector, useStore } from 'react-redux';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
-import { eventsSelected } from 'features/events/store';
 import { fieldsToPresent } from './utils';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
-import { RootState } from 'core/store';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
@@ -114,36 +111,12 @@ const MultiLocation: FC<MultiLocationProps> = ({
     events[0].title || events[0].activity?.title || messages.common.noTitle();
   const anyEventIsCancelled = events.some((event) => event.cancelled);
 
-  const store = useStore<RootState>();
-  const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
-  );
-
-  const alreadyExists = selectedEvents.some(
-    (selectedEvent) => selectedEvent.id == events[0].id
-  );
-  const handleChange = () => {
-    if (alreadyExists) {
-      store.dispatch(
-        eventsSelected(
-          selectedEvents.filter(
-            (selectedEvent) =>
-              !events.some((event) => event.id == selectedEvent.id)
-          )
-        )
-      );
-    } else {
-      store.dispatch(eventsSelected([...selectedEvents, ...events]));
-    }
-  };
-
   return (
     <Event
       cancelled={anyEventIsCancelled}
-      checked={alreadyExists ?? false}
+      eventList={events}
       fieldGroups={[fields]}
       height={height}
-      onSelect={handleChange}
       title={firstEventTitle || ''}
       topBadge={
         showTopBadge && (
