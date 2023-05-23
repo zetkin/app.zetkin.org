@@ -93,17 +93,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Map />, name: 'areas' },
   ] as const;
 
-  function getBackgroundColor(item: string, open: boolean, key: string) {
-    let backgroundColor = 'transparent';
-
-    if (key.startsWith('/' + item) && open) {
-      return (backgroundColor = theme.palette.grey[100]);
-    } else if (key.startsWith('/' + item) && !open) {
-      return (backgroundColor = theme.palette.grey[200]);
-    }
-    return backgroundColor;
-  }
-
   return (
     <Box data-testid="organize-sidebar">
       <Drawer
@@ -181,6 +170,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             }}
           >
             {menuItemsMap.map((item) => {
+              const selected = key.startsWith('/' + item.name);
               const icon = cloneElement<IconProps>(item.icon, {
                 // Differentiate size of icon for open/closed states
                 fontSize: open ? 'small' : 'medium',
@@ -200,14 +190,14 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                           background: theme.palette.grey[100],
                           pointer: 'cursor',
                         },
-                        backgroundColor: getBackgroundColor(
-                          item.name,
-                          open,
-                          key
-                        ),
+                        backgroundColor: selected
+                          ? theme.palette.grey[200]
+                          : 'transparent',
                         borderRadius: '3px',
                         my: 0.5,
-                        py: 1.5,
+                        py: open ? 1.25 : 1.5,
+                        transition:
+                          'padding-top 0.3s, padding-bottom 0.3s, background-color 0.2s',
                       }}
                     >
                       <ListItemIcon
