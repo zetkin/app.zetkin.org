@@ -55,14 +55,6 @@ const Calendar = () => {
   );
 
   useEffect(() => {
-    setFocusDate(getDateFromString(focusDateStr));
-  }, [focusDateStr]);
-
-  useEffect(() => {
-    setSelectedTimeScale(getTimeScale(timeScaleStr));
-  }, [timeScaleStr]);
-
-  useEffect(() => {
     const focusedDate = dayjs(focusDate).format('YYYY-MM-DD');
     router.push(
       {
