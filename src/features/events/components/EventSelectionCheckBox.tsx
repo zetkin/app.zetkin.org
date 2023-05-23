@@ -18,8 +18,11 @@ const EventSelectionCheckBox = ({
     (state: RootState) => state.events.selectedEvents
   );
 
-  const alreadyExists = selectedEvents.some(
-    (selectedEvent) => selectedEvent.id == eventList[0].id
+  const alreadyExists = eventList.some((event) =>
+    selectedEvents.some((selectedEvent) => event.id === selectedEvent.id)
+  );
+  const isAllChecked = eventList.every((event) =>
+    selectedEvents.some((selectedEvent) => event.id === selectedEvent.id)
   );
 
   const handleChange = (checked: boolean) => {
@@ -68,9 +71,8 @@ const EventSelectionCheckBox = ({
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Checkbox
-        checked={eventList.every((event) =>
-          selectedEvents.some((selectedEvent) => event.id === selectedEvent.id)
-        )}
+        checked={isAllChecked}
+        indeterminate={!isAllChecked && alreadyExists}
         onChange={(e) => {
           handleChange(e.target.checked);
         }}
