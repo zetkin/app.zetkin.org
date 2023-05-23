@@ -44,6 +44,7 @@ const Calendar = () => {
   const router = useRouter();
 
   const orgId = router.query.orgId;
+  const campId = router.query.campId;
 
   const focusDateStr = router.query.focusDate as string;
   const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
@@ -55,11 +56,20 @@ const Calendar = () => {
   );
 
   useEffect(() => {
+    setFocusDate(getDateFromString(focusDateStr));
+  }, [focusDateStr]);
+
+  useEffect(() => {
+    setSelectedTimeScale(getTimeScale(timeScaleStr));
+  }, [timeScaleStr]);
+
+  useEffect(() => {
     const focusedDate = dayjs(focusDate).format('YYYY-MM-DD');
     router.push(
       {
         pathname: undefined,
         query: {
+          campId: campId,
           focusDate: focusedDate,
           orgId: orgId,
           timeScale: selectedTimeScale,
