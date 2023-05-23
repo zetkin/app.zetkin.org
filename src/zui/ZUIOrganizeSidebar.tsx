@@ -196,8 +196,13 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                         borderRadius: '3px',
                         my: 0.5,
                         py: open ? 1.25 : 1.5,
-                        transition:
-                          'padding-top 0.3s, padding-bottom 0.3s, background-color 0.2s',
+                        transition: theme.transitions.create(
+                          ['padding-top', 'padding-bottom', 'background-color'],
+                          {
+                            duration: theme.transitions.duration.leavingScreen,
+                            easing: theme.transitions.easing.sharp,
+                          }
+                        ),
                       }}
                     >
                       <ListItemIcon
