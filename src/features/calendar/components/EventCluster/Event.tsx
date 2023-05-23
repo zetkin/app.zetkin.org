@@ -5,8 +5,8 @@ import { Box, Theme, Typography } from '@mui/material';
 import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 import Field from './Field';
 import FieldGroup from './FieldGroup';
-import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
 
 interface StyleProps {
   cancelled: boolean;

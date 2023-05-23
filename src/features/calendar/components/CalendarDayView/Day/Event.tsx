@@ -12,6 +12,7 @@ import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
@@ -61,7 +62,9 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
               }}
             />
             {/* Title */}
-
+            <Box>
+              <EventSelectionCheckBox eventList={[event]} />
+            </Box>
             <Typography
               sx={{
                 color: theme.palette.secondary.main,

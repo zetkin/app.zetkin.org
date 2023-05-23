@@ -61,7 +61,7 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
         paddingTop={2}
       >
         <Box alignItems="center" display="flex">
-          <EventSelectionCheckBox multiSelect={true} eventList={events} />
+          <EventSelectionCheckBox eventList={events} multiSelect={true} />
           <Typography
             color="secondary"
             paddingLeft={1}
