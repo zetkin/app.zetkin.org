@@ -75,7 +75,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         {dayDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <DayHeader
-              key={weekday}
+              key={`weekday-${weekday}`}
               date={weekdayDate}
               focused={new Date().toDateString() == weekdayDate.toDateString()}
               onClick={() => onClickDay(weekdayDate)}
@@ -99,7 +99,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
             const time = dayjs().set('hour', hour).set('minute', 0);
             return (
               <Box
-                key={hour}
+                key={`hour-${hour}`}
                 display="flex"
                 height={`${HOUR_HEIGHT}px`}
                 justifyContent="flex-end"
@@ -192,7 +192,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
 
                     return (
                       <Box
-                        key={laneIdx}
+                        key={`lane-${cluster.events[0].id}`}
                         sx={{
                           '&:hover': {
                             zIndex: 100,

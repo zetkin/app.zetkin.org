@@ -36,7 +36,11 @@ const CalendarDayView = ({
       {/* List of days with events */}
       {activities.map(([dateString, daySummary], index) => {
         return (
-          <Day key={index} date={new Date(dateString)} dayInfo={daySummary} />
+          <Day
+            key={`dayIdx-${index}`}
+            date={new Date(dateString)}
+            dayInfo={daySummary}
+          />
         );
       })}
       <Box display="flex" justifyContent={'center'} pb={10}>

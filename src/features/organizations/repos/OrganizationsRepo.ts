@@ -1,9 +1,17 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { IFuture } from 'core/caching/futures';
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { Store } from 'core/store';
-import { organizationsLoad, organizationsLoaded } from '../store';
+import {
+  loadItemIfNecessary,
+  loadListIfNecessary,
+} from 'core/caching/cacheUtils';
+import {
+  organizationLoad,
+  organizationLoaded,
+  organizationsLoad,
+  organizationsLoaded,
+} from '../store';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 export default class OrganizationsRepo {
@@ -13,6 +21,16 @@ export default class OrganizationsRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  getOrganization(orgId: number): IFuture<ZetkinOrganization> {
+    const state = this._store.getState();
+    return loadItemIfNecessary(state.organizations.orgData, this._store, {
+      actionOnLoad: () => organizationLoad(),
+      actionOnSuccess: (data) => organizationLoaded(data),
+      loader: () =>
+        this._apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`),
+    });
   }
 
   getUserOrganizations(): IFuture<ZetkinOrganization[]> {
