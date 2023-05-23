@@ -66,7 +66,7 @@ const Calendar = () => {
     const focusedDate = dayjs(focusDate).format('YYYY-MM-DD');
     router.push(
       {
-        pathname: '/organize/[orgId]/projects/calendar',
+        pathname: undefined,
         query: {
           focusDate: focusedDate,
           orgId: orgId,

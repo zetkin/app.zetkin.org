@@ -192,7 +192,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
 
                     return (
                       <Box
-                        key={`laneIdx-${laneIdx}`}
+                        key={`lane-${cluster.events[0].id}`}
                         sx={{
                           '&:hover': {
                             zIndex: 100,
