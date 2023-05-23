@@ -12,8 +12,13 @@ import {
 } from '@mui/material/styles';
 
 import { AnyMessage } from 'core/i18n/messages';
+import BrowserApiClient from 'core/api/client/BrowserApiClient';
+import createStore from 'core/store';
+import Environment from 'core/env/Environment';
+import { EnvProvider } from 'core/env/EnvContext';
 import theme from 'theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
+import { useRouter } from 'next/router';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -32,6 +37,9 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
       },
     },
   });
+  const router = useRouter();
+  const store = createStore();
+  const env = new Environment(store, new BrowserApiClient(), router);
 
   return (
     <UserContext.Provider value={null}>
@@ -50,8 +58,11 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
               }}
             >
               <QueryClientProvider client={queryClient}>
-                <CssBaseline />
-                {children}
+                <EnvProvider env={env}>
+                  <CssBaseline />
+
+                  {children}
+                </EnvProvider>
               </QueryClientProvider>
             </IntlProvider>
           </LocalizationProvider>

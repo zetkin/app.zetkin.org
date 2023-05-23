@@ -1,218 +1,240 @@
 import NextLink from 'next/link';
+import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
-  AppBar,
+  Architecture,
+  Explore,
+  Groups,
+  KeyboardDoubleArrowLeftOutlined,
+  KeyboardDoubleArrowRightOutlined,
+  Map,
+} from '@mui/icons-material/';
+import {
+  Avatar,
   Box,
+  Divider,
   Drawer,
   IconButton,
+  IconProps,
   List,
-  ListItem,
-  Toolbar,
+  ListItemButton,
+  ListItemIcon,
+  Typography,
 } from '@mui/material';
-import { Event, Explore, Home, Map, Menu, People } from '@mui/icons-material/';
+import { cloneElement, useState } from 'react';
 
 import makeStyles from '@mui/styles/makeStyles';
+import messageIds from './l10n/messageIds';
+import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
+import { useMessages } from 'core/i18n';
+import useModel from 'core/useModel';
+import ZUIFuture from './ZUIFuture';
 
-import ZUILogo from './ZUILogo';
-
-const drawerWidth = '5rem';
+const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
-  appBar: {
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
-      flexShrink: 0,
-      width: drawerWidth,
-    },
+    flexShrink: 0,
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
   },
   drawerPaper: {
     display: 'none',
-    width: drawerWidth,
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    width: drawerWidth,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  toggleDrawerPaper: {
     [theme.breakpoints.up('sm')]: {
-      display: 'none',
+      width: `calc(${theme.spacing(8)} + 1px)`,
     },
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    width: `calc(${theme.spacing(7)} + 1px)`,
   },
-  root: {
-    display: 'flex',
-  },
-  roundButton: {
-    background: 'white',
-    borderRadius: '50%',
-    height: '3rem',
-    width: '3rem',
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
 }));
 
 const ZUIOrganizeSidebar = (): JSX.Element => {
+  const [hover, setHover] = useState(false);
+  const messages = useMessages(messageIds);
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const router = useRouter();
-  const { orgId } = router.query as { orgId: string };
-
+  const { orgId } = useNumericRouteParams();
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
 
-  const drawer = (
-    <Box
-      alignItems="center"
-      data-testid="organize-sidebar"
-      display="flex"
-      flexDirection="column"
-      height="100%"
-      justifyContent="space-between"
-    >
-      <List disablePadding>
-        <Box display="flex" flexDirection="column">
-          <ListItem disableGutters>
-            <NextLink href="/organize" passHref>
-              <IconButton
-                aria-label="Home"
-                className={classes.roundButton}
-                color={key === 'organize' ? 'primary' : 'secondary'}
-                data-test="logo-button"
-                size="large"
-                style={{ marginBottom: '2rem' }}
-              >
-                <ZUILogo beta={true} htmlColor="#ED1C55" size={40} />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href="/organize/" passHref>
-              <IconButton
-                aria-label="Home"
-                className={classes.roundButton}
-                color={key === '' ? 'primary' : 'secondary'}
-                data-test="home-button"
-                size="large"
-              >
-                <Home />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/people`} passHref>
-              <IconButton
-                aria-label="People"
-                className={classes.roundButton}
-                color={key.startsWith('/people') ? 'primary' : 'secondary'}
-                data-test="people-button"
-                size="large"
-              >
-                <People />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/journeys`} passHref>
-              <IconButton
-                aria-label="Journeys"
-                className={classes.roundButton}
-                color={key.startsWith('/journeys') ? 'primary' : 'secondary'}
-                data-test="people-button"
-                size="large"
-              >
-                <Explore />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/areas`} passHref>
-              <IconButton
-                aria-label="Areas"
-                className={classes.roundButton}
-                color={key.startsWith('/areas') ? 'primary' : 'secondary'}
-                data-test="area-button"
-                size="large"
-              >
-                <Map />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/projects`} passHref>
-              <IconButton
-                aria-label="Projects"
-                className={classes.roundButton}
-                color={key.startsWith('/projects') ? 'primary' : 'secondary'}
-                data-test="calendar-button"
-                size="large"
-              >
-                <Event />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-        </Box>
-      </List>
-    </Box>
+  const [open, setOpen] = useState(false);
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
+  const model: OrganizationsDataModel = useModel(
+    (env) => new OrganizationsDataModel(env)
   );
 
-  return (
-    <div className={classes.root}>
-      <AppBar className={classes.appBar} position="fixed">
-        <Toolbar>
-          <IconButton
-            aria-label="open drawer"
-            className={classes.menuButton}
-            color="inherit"
-            edge="start"
-            onClick={handleDrawerToggle}
-            size="large"
-          >
-            <Menu data-test="menu-button" />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <nav aria-label="mailbox folders" className={classes.drawer}>
-        <Drawer
-          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          onClose={handleDrawerToggle}
-          open={mobileOpen}
-          variant="temporary"
-        >
-          {drawer}
-        </Drawer>
+  const menuItemsMap = [
+    { icon: <Groups />, name: 'people' },
+    { icon: <Architecture />, name: 'projects' },
+    { icon: <Explore />, name: 'journeys' },
+    { icon: <Map />, name: 'areas' },
+  ] as const;
 
-        <Drawer
-          classes={{
-            paper: classes.drawerPaper,
+  return (
+    <Box data-testid="organize-sidebar">
+      <Drawer
+        classes={{
+          paper:
+            classes.drawerPaper +
+            (!open ? ` ${classes.toggleDrawerPaper}` : ''),
+        }}
+        className={
+          classes.drawer + (!open ? ` ${classes.toggleDrawerPaper}` : '')
+        }
+        onMouseLeave={() => {
+          setHover(false);
+        }}
+        onMouseOver={() => {
+          setHover(true);
+        }}
+        open={open}
+        variant="permanent"
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: open ? 'flex-start' : 'center',
+            mx: 1,
+            my: 1.5,
           }}
-          open
-          variant="permanent"
         >
-          {drawer}
-        </Drawer>
-      </nav>
-    </div>
+          {!open && hover && (
+            <IconButton onClick={handleClick}>
+              <KeyboardDoubleArrowRightOutlined />
+            </IconButton>
+          )}
+          {!open && !hover && (
+            <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+          )}
+
+          {open && (
+            <ZUIFuture future={model.getOrganization(orgId)}>
+              {(data) => {
+                return (
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '48px',
+                      }}
+                    >
+                      {hover ? (
+                        <IconButton onClick={handleClick}>
+                          <KeyboardDoubleArrowLeftOutlined />
+                        </IconButton>
+                      ) : (
+                        <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+                      )}
+                    </Box>
+                    <Typography variant="h6">{data.title}</Typography>
+                  </Box>
+                );
+              }}
+            </ZUIFuture>
+          )}
+        </Box>
+        <Divider />
+        <Box>
+          <List
+            sx={{
+              mx: 1,
+            }}
+          >
+            {menuItemsMap.map((item) => {
+              const selected = key.startsWith('/' + item.name);
+              const icon = cloneElement<IconProps>(item.icon, {
+                // Differentiate size of icon for open/closed states
+                fontSize: open ? 'small' : 'medium',
+              });
+
+              return (
+                <>
+                  <NextLink
+                    key={item.name}
+                    href={`/organize/${orgId}/${item.name}`}
+                    passHref
+                  >
+                    <ListItemButton
+                      disableGutters
+                      sx={{
+                        '&:hover': {
+                          background: theme.palette.grey[100],
+                          pointer: 'cursor',
+                        },
+                        backgroundColor: selected
+                          ? theme.palette.grey[200]
+                          : 'transparent',
+                        borderRadius: '3px',
+                        my: 0.5,
+                        py: open ? 1.25 : 1.5,
+                        transition: theme.transitions.create(
+                          ['padding-top', 'padding-bottom', 'background-color'],
+                          {
+                            duration: theme.transitions.duration.leavingScreen,
+                            easing: theme.transitions.easing.sharp,
+                          }
+                        ),
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minWidth: '48px',
+                          width: '48px',
+                        }}
+                      >
+                        {icon}
+                      </ListItemIcon>
+                      <Typography
+                        sx={{
+                          alignItems: 'center',
+                          display: open ? 'block' : 'none',
+                          fontWeight: key.startsWith('/' + item.name)
+                            ? 700
+                            : 'normal',
+                        }}
+                      >
+                        {messages.organizeSidebar[item.name]()}
+                      </Typography>
+                    </ListItemButton>
+                  </NextLink>
+                </>
+              );
+            })}
+          </List>
+        </Box>
+      </Drawer>
+    </Box>
   );
 };
 
