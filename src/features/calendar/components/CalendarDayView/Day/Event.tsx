@@ -13,6 +13,8 @@ import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
+import StatusDot from 'features/events/components/EventPopper/StatusDot';
+import getEventState from 'features/events/utils/getEventState';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
@@ -51,20 +53,13 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           sx={{ backgroundColor: 'white', borderRadius: '3px' }}
           width="100%"
         >
+          <Box onClick={(e) => e.stopPropagation()}></Box>
           <Box alignItems="center" display="flex" gap={2.2}>
             {/* Status */}
-            <Box
-              sx={{
-                backgroundColor: 'green',
-                borderRadius: '50%',
-                height: '10px',
-                width: '10px',
-              }}
-            />
+            <StatusDot state={getEventState(event)} />
+            <EventSelectionCheckBox eventList={[event]} />
+
             {/* Title */}
-            <Box>
-              <EventSelectionCheckBox eventList={[event]} />
-            </Box>
             <Typography
               sx={{
                 color: theme.palette.secondary.main,
