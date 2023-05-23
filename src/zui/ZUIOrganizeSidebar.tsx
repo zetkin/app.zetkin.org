@@ -1,7 +1,6 @@
 import NextLink from 'next/link';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
   Architecture,
@@ -17,11 +16,13 @@ import {
   Divider,
   Drawer,
   IconButton,
+  IconProps,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   Typography,
 } from '@mui/material';
+import { cloneElement, useState } from 'react';
 
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from './l10n/messageIds';
@@ -127,8 +128,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
           sx={{
             display: 'flex',
             justifyContent: open ? 'flex-start' : 'center',
-            mx: 0.5,
-            my: 0.5,
+            mx: 1,
+            my: 1.5,
           }}
         >
           {!open && hover && (
@@ -137,9 +138,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             </IconButton>
           )}
           {!open && !hover && (
-            <NextLink href="/organize" passHref>
-              <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-            </NextLink>
+            <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
           )}
 
           {open && (
@@ -156,7 +155,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       sx={{
                         display: 'flex',
                         justifyContent: 'center',
-                        width: '80px',
+                        width: '48px',
                       }}
                     >
                       {hover ? (
@@ -178,53 +177,53 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         <Box>
           <List
             sx={{
-              gap: 8,
-              mx: 0.5,
+              mx: 1,
             }}
           >
-            {menuItemsMap.map((item) => (
-              <NextLink
-                key={item.name}
-                href={`/organize/${orgId}/${item.name}`}
-                passHref
-              >
-                <ListItem
-                  button
-                  disablePadding
-                  sx={{
-                    '&:hover': {
-                      background: theme.palette.grey[100],
-                      pointer: 'cursor',
-                    },
-                    backgroundColor: getBackgroundColor(item.name, open, key),
-                    borderRadius: '3px',
-                    justifyContent: open ? 'flex-start' : 'center',
-                    my: 0.5,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: open ? 'flex-start' : 'center',
-                      width: open ? '100%' : '50%',
-                    }}
+            {menuItemsMap.map((item) => {
+              const icon = cloneElement<IconProps>(item.icon, {
+                // Differentiate size of icon for open/closed states
+                fontSize: open ? 'small' : 'medium',
+              });
+
+              return (
+                <>
+                  <NextLink
+                    key={item.name}
+                    href={`/organize/${orgId}/${item.name}`}
+                    passHref
                   >
-                    <>
+                    <ListItemButton
+                      disableGutters
+                      sx={{
+                        '&:hover': {
+                          background: theme.palette.grey[100],
+                          pointer: 'cursor',
+                        },
+                        backgroundColor: getBackgroundColor(
+                          item.name,
+                          open,
+                          key
+                        ),
+                        borderRadius: '3px',
+                        my: 0.5,
+                        py: 1.5,
+                      }}
+                    >
                       <ListItemIcon
                         sx={{
                           alignItems: 'center',
-                          height: '50px',
                           justifyContent: 'center',
-                          width: '80px',
+                          minWidth: '48px',
+                          width: '48px',
                         }}
                       >
-                        {item.icon}
+                        {icon}
                       </ListItemIcon>
                       <Typography
                         sx={{
                           alignItems: 'center',
-                          color: 'black',
-                          display: open ? 'flex' : 'none',
+                          display: open ? 'block' : 'none',
                           fontWeight: key.startsWith('/' + item.name)
                             ? 700
                             : 'normal',
@@ -232,11 +231,11 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       >
                         {messages.organizeSidebar[item.name]()}
                       </Typography>
-                    </>
-                  </Box>
-                </ListItem>
-              </NextLink>
-            ))}
+                    </ListItemButton>
+                  </NextLink>
+                </>
+              );
+            })}
           </List>
         </Box>
       </Drawer>
