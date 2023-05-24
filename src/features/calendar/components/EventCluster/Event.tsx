@@ -7,6 +7,8 @@ import Field from './Field';
 import FieldGroup from './FieldGroup';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
+import { RootState } from 'core/store';
+import { useSelector } from 'react-redux';
 
 interface StyleProps {
   cancelled: boolean;
@@ -164,17 +166,23 @@ const Event = ({
     width,
   });
 
+  const selectedEvents = useSelector(
+    (state: RootState) => state.events.selectedEvents
+  );
+
   return (
-    <Box className={classes.container}>
+    <Box
+      className={classes.container}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {topBadge}
       {collapsed && (
-        <Box
-          className={classes.collapsedContainer}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <Box className={classes.collapsedContainer}>
           <Box alignItems="center" display="flex">
-            {isHovered && <EventSelectionCheckBox events={events} />}
+            {(isHovered || selectedEvents.length > 0) && (
+              <EventSelectionCheckBox events={events} />
+            )}
             <Typography className={classes.title}>{title}</Typography>
           </Box>
           <Box display="flex">
@@ -192,14 +200,12 @@ const Event = ({
         </Box>
       )}
       {!collapsed && (
-        <Box
-          height="100%"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <Box height="100%">
           <Box className={classes.titleContainer}>
             <Box alignItems="center" display="flex" sx={{ pl: 1, pt: 0.8 }}>
-              {isHovered && <EventSelectionCheckBox events={events} />}
+              {(isHovered || selectedEvents.length > 0) && (
+                <EventSelectionCheckBox events={events} />
+              )}
               <Typography className={classes.title}>{title}</Typography>
             </Box>
           </Box>
