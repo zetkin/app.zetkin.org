@@ -30,14 +30,11 @@ export class SankeyRenderer {
     const diagCenter = diagWidth / 2;
     const maxStreamWidth = diagWidth - margin;
 
-    const mainInWidth = (seg.main?.input ?? 0) * maxStreamWidth;
-    const mainOutWidth = (seg.main?.output ?? 0) * maxStreamWidth;
+    const mainWidth = (seg.main?.width ?? 0) * maxStreamWidth;
     const changeWidth = seg.side.width * maxStreamWidth;
 
-    const inputWidth =
-      seg.kind == 'add' ? mainInWidth : mainInWidth + changeWidth;
-    const outputWidth =
-      seg.kind == 'add' ? mainOutWidth + changeWidth : mainOutWidth;
+    const inputWidth = seg.kind == 'add' ? mainWidth : mainWidth + changeWidth;
+    const outputWidth = seg.kind == 'add' ? mainWidth + changeWidth : mainWidth;
 
     if (seg.main) {
       this.initPath(seg.main.style);
@@ -96,24 +93,24 @@ export class SankeyRenderer {
     const pseudoSide = seg.side.style == 'stroke';
 
     if (seg.kind == 'add') {
-      const totalOutWidth = mainOutWidth + changeWidth;
+      const totalOutWidth = mainWidth + changeWidth;
 
       // Remove some pixels to make sure the stroke does not extend
       // outside of the body of the diagram.
       const lowerRightX = pseudoSide
         ? diagCenter - totalOutWidth / 2 + lineWidth / 2
-        : diagCenter + totalOutWidth / 2 - mainOutWidth - changeWidth;
+        : diagCenter + totalOutWidth / 2 - mainWidth - changeWidth;
 
       // If there is no change, use the arrowWidth as the change width.
       const lowerLeftX = pseudoSide
         ? diagCenter - totalOutWidth / 2 + arrowWidth
-        : diagCenter + totalOutWidth / 2 - mainOutWidth;
+        : diagCenter + totalOutWidth / 2 - mainWidth;
 
       this.ctx.moveTo(0, segHeight / 2 + arrowWidth / 2 + offsetY);
       this.ctx.lineTo(arrowDepth, segHeight / 2 + offsetY);
       this.ctx.lineTo(0, segHeight / 2 - arrowWidth / 2 + offsetY);
       this.ctx.quadraticCurveTo(
-        diagCenter + totalOutWidth / 2 - mainOutWidth,
+        diagCenter + totalOutWidth / 2 - mainWidth,
         segHeight / 2 - arrowWidth / 2 + offsetY,
 
         lowerLeftX,
@@ -121,13 +118,13 @@ export class SankeyRenderer {
       );
       this.ctx.lineTo(lowerRightX, segHeight + offsetY);
       this.ctx.quadraticCurveTo(
-        diagCenter + totalOutWidth / 2 - mainOutWidth - changeWidth,
+        diagCenter + totalOutWidth / 2 - mainWidth - changeWidth,
         segHeight / 2 + arrowWidth / 2 + offsetY,
         0,
         segHeight / 2 + arrowWidth / 2 + offsetY
       );
     } else if (seg.kind == 'sub') {
-      const totalInWidth = mainInWidth + changeWidth;
+      const totalInWidth = mainWidth + changeWidth;
 
       // If there is no change, use the arrowWidth as the change width.
       const upperLeftX = pseudoSide

@@ -11,11 +11,7 @@ export default function makeSankeySegments(
   const segments: SankeySegment[] = stats.map((item, index) => {
     const inputReal = index > 0 ? stats[index - 1].output : 0;
     const inputNormalized = (inputReal || firstOutput) / maxOutput;
-
-    const isFirst = index == 0 || stats[index - 1].op == 'empty';
     const changeReal = Math.abs(item.output - inputReal);
-
-    const followsPseudo = inputReal == 0;
 
     if (item.op == 'entry') {
       return {
@@ -25,30 +21,27 @@ export default function makeSankeySegments(
       };
     }
 
+    // TODO: Implement this logic once output format has been verified to work
     if (item.op == 'add') {
       return {
         kind: 'add',
-        main: isFirst
-          ? null
-          : {
-              input: inputNormalized,
-              output: inputNormalized,
-              style: followsPseudo ? 'stroke' : 'fill',
-            },
+        main: null,
         side: {
-          style: changeReal > 0 ? 'fill' : 'stroke',
-          width: followsPseudo ? inputNormalized : changeReal / maxOutput,
+          offset: 0,
+          style: 'fill',
+          width: inputNormalized,
         },
       };
     } else if (item.op == 'sub') {
       return {
         kind: 'sub',
         main: {
-          input: item.output / maxOutput,
-          output: item.output / maxOutput,
+          offset: 0,
           style: 'fill',
+          width: item.output / maxOutput,
         },
         side: {
+          offset: 0,
           style: changeReal > 0 ? 'fill' : 'stroke',
           width: changeReal / maxOutput,
         },

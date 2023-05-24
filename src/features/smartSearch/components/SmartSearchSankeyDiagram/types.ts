@@ -17,14 +17,15 @@ export type SankeyExitSegment = {
 };
 
 type SelectionSideElement = {
+  offset: number;
   style: SegmentStyle;
   width: number;
 };
 
 type SelectionMainElement = {
-  input: number;
-  output: number;
+  offset: number;
   style: SegmentStyle;
+  width: number;
 };
 
 export type SankeyAddSegment = {
@@ -35,7 +36,7 @@ export type SankeyAddSegment = {
 
 export type SankeySubSegment = {
   kind: 'sub';
-  main: SelectionMainElement | null;
+  main: SelectionMainElement;
   side: SelectionSideElement;
 };
 

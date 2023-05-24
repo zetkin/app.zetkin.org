@@ -21,6 +21,7 @@ describe('makeSankeySegments()', () => {
         kind: 'add',
         main: null,
         side: {
+          offset: 0,
           style: 'fill',
           width: 1,
         },
@@ -28,11 +29,12 @@ describe('makeSankeySegments()', () => {
       {
         kind: 'sub',
         main: {
-          input: 0.6,
-          output: 0.6,
+          offset: -0.2,
           style: 'fill',
+          width: 0.6,
         },
         side: {
+          offset: 0.3,
           style: 'fill',
           width: 0.4,
         },
@@ -79,11 +81,12 @@ describe('makeSankeySegments()', () => {
       {
         kind: 'add',
         main: {
-          input: 1,
-          output: 1,
+          offset: 0,
           style: 'stroke',
+          width: 1,
         },
         side: {
+          offset: 0,
           style: 'fill',
           width: 1,
         },
@@ -112,25 +115,27 @@ describe('makeSankeySegments()', () => {
       {
         kind: 'add',
         main: {
-          input: 1,
-          output: 1,
+          offset: 0,
           style: 'fill',
+          width: 1,
         },
         side: {
+          offset: 0,
           style: 'stroke',
-          width: 0,
+          width: 1,
         },
       },
       {
         kind: 'sub',
         main: {
-          input: 1,
-          output: 1,
+          offset: 0,
           style: 'fill',
+          width: 1,
         },
         side: {
+          offset: 0,
           style: 'stroke',
-          width: 0,
+          width: 1,
         },
       },
       {

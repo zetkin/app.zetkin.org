@@ -13,21 +13,29 @@ const Template: ComponentStory<typeof SmartSearchSankeyDiagram> = (args) => {
 
 export const basic = Template.bind({});
 basic.args = {
-  filterStats: [
+  segments: [
     {
-      matched: 400,
-      op: 'entry',
-      output: 400,
+      kind: 'entry',
+      style: 'fill',
+      width: 0.8,
     },
     {
-      matched: 300,
-      op: 'add',
-      output: 600,
+      kind: 'add',
+      main: {
+        offset: 0.1,
+        style: 'fill',
+        width: 0.8,
+      },
+      side: {
+        offset: -0.1,
+        style: 'fill',
+        width: 0.2,
+      },
     },
     {
-      matched: 230,
-      op: 'sub',
-      output: 465,
+      kind: 'exit',
+      style: 'fill',
+      width: 1.0,
     },
   ],
 };

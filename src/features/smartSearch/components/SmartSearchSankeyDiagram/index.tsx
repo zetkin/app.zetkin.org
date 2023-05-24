@@ -1,17 +1,16 @@
 import { lighten } from '@mui/system';
 import { FC, useEffect, useRef } from 'react';
 
-import { FilterStats } from './types';
-import makeSankeySegments from './makeSankeySegments';
 import { SankeyRenderer } from './drawing';
+import { SankeySegment } from './types';
 
 type SmartSearchSankeyDiagramProps = {
   arrowDepth?: number;
   arrowWidth?: number;
   color?: string;
   diagWidth?: number;
-  filterStats: FilterStats[];
   margin?: number;
+  segments: SankeySegment[];
 };
 
 const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
@@ -19,8 +18,8 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
   arrowWidth = 20,
   color = '#cccccc',
   diagWidth = 200,
-  filterStats,
   margin = 30,
+  segments,
 }) => {
   const mouseState = useRef({
     hoveredSegment: -1,
@@ -31,7 +30,7 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
 
   const segHeight = 100;
 
-  const diagHeight = filterStats.length * segHeight;
+  const diagHeight = segments.length * segHeight;
   const animDuration = 1000;
 
   const render = (context: CanvasRenderingContext2D) => {
@@ -52,7 +51,6 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     hoverGradient.addColorStop(0.02 + gradOffset, lighten(hoverColor, 0.2));
     hoverGradient.addColorStop(0.04 + gradOffset, hoverColor);
 
-    const segments = makeSankeySegments(filterStats);
     const renderer = new SankeyRenderer(context, {
       arrowDepth,
       arrowWidth,
@@ -84,7 +82,7 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     }
 
     function handleMouseMove(ev: MouseEvent) {
-      const count = filterStats.length;
+      const count = segments.length;
       const index = Math.floor((ev.offsetY / diagHeight) * count);
       mouseState.current.hoveredSegment = Math.max(
         0,
@@ -107,8 +105,8 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     arrowWidth,
     color,
     diagWidth,
-    filterStats,
     margin,
+    segments,
   ]);
 
   return (
