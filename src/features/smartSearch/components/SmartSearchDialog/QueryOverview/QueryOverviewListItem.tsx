@@ -2,21 +2,21 @@ import { FC } from 'react';
 import { Box, IconButton, ListItem, Typography } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 
-import DisplayCallBlocked from '../filters/CallBlocked/DisplayCallBlocked';
-import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
-import DisplayCampaignParticipation from '../filters/CampaignParticipation/DisplayCampaignParticipation';
-import DisplayMostActive from '../filters/MostActive/DisplayMostActive';
-import DisplayPersonData from '../filters/PersonData/DisplayPersonData';
-import DisplayPersonField from '../filters/PersonField/DisplayPersonField';
-import DisplayPersonTags from '../filter/PersonTags/DisplayPersonTags';
-import DisplayPersonView from '../filters/PersonView/DisplayPersonView';
-import DisplayRandom from '../filters/Random/DisplayRandom';
-import DisplaySubQuery from '../filters/SubQuery/DisplaySubQuery';
-import DisplaySurveyOption from '../filters/SurveyOption/DisplaySurveyOption';
-import DisplaySurveyResponse from '../filters/SurveyResponse/DisplaySurveyResponse';
-import DisplaySurveySubmission from '../filters/SurveySubmission/DisplaySurveySubmission';
-import DisplayTask from '../filters/Task/DisplayTask';
-import DisplayUser from '../filters/User/DisplayUser';
+import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
+import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
+import DisplayCampaignParticipation from '../../filters/CampaignParticipation/DisplayCampaignParticipation';
+import DisplayMostActive from '../../filters/MostActive/DisplayMostActive';
+import DisplayPersonData from '../../filters/PersonData/DisplayPersonData';
+import DisplayPersonField from '../../filters/PersonField/DisplayPersonField';
+import DisplayPersonTags from '../../filter/PersonTags/DisplayPersonTags';
+import DisplayPersonView from '../../filters/PersonView/DisplayPersonView';
+import DisplayRandom from '../../filters/Random/DisplayRandom';
+import DisplaySubQuery from '../../filters/SubQuery/DisplaySubQuery';
+import DisplaySurveyOption from '../../filters/SurveyOption/DisplaySurveyOption';
+import DisplaySurveyResponse from '../../filters/SurveyResponse/DisplaySurveyResponse';
+import DisplaySurveySubmission from '../../filters/SurveySubmission/DisplaySurveySubmission';
+import DisplayTask from '../../filters/Task/DisplayTask';
+import DisplayUser from '../../filters/User/DisplayUser';
 import {
   AnyFilterConfig,
   CallBlockedFilterConfig,

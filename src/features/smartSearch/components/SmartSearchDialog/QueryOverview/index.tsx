@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Edit, PlaylistAddOutlined } from '@mui/icons-material';
 
-import DisplayStartsWith from '../StartsWith/DisplayStartsWith';
+import DisplayStartsWith from '../../StartsWith/DisplayStartsWith';
 import { Msg } from 'core/i18n';
 import {
   AnyFilterConfig,
