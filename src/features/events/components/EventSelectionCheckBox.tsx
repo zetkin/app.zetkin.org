@@ -1,69 +1,41 @@
 import { Box, Checkbox } from '@mui/material';
 import { useSelector, useStore } from 'react-redux';
 
-import { eventsSelected } from '../store';
+import { eventsDeselected, eventsSelected } from '../store';
 import { RootState } from 'core/store';
-import { ZetkinEvent } from 'utils/types/zetkin';
 
 interface EventSelectionCheckBoxProps {
-  eventList: ZetkinEvent[];
-  multiSelect?: boolean;
+  events: number[];
 }
-const EventSelectionCheckBox = ({
-  eventList,
-  multiSelect,
-}: EventSelectionCheckBoxProps) => {
+const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
   const store = useStore<RootState>();
   const selectedEvents = useSelector(
     (state: RootState) => state.events.selectedEvents
   );
 
-  const alreadyExists = eventList.some((event) =>
-    selectedEvents.some((selectedEvent) => event.id === selectedEvent.id)
+  const alreadyExists = events.some((event) =>
+    selectedEvents.some((selectedEvent) => event === selectedEvent)
   );
-  const allEventsChecked = eventList.every((event) =>
-    selectedEvents.some((selectedEvent) => event.id === selectedEvent.id)
+  const allEventsChecked = events.every((event) =>
+    selectedEvents.some((selectedEvent) => event === selectedEvent)
   );
 
   const handleChange = (checked: boolean) => {
-    if (multiSelect) {
+    if (events.length > 1) {
       if (checked) {
-        store.dispatch(
-          eventsSelected([
-            ...selectedEvents,
-            ...eventList.filter(
-              (event) =>
-                !selectedEvents.some(
-                  (selectedEvent) => event.id == selectedEvent.id
-                )
-            ),
-          ])
-        );
+        store.dispatch(eventsSelected(events));
       }
       if (!checked) {
-        store.dispatch(
-          eventsSelected(
-            selectedEvents.filter(
-              (selectedEvent) =>
-                !eventList.some((event) => event.id == selectedEvent.id)
-            )
-          )
-        );
+        store.dispatch(eventsDeselected(events));
       }
     }
-    if (!multiSelect) {
-      if (alreadyExists) {
-        store.dispatch(
-          eventsSelected(
-            selectedEvents.filter(
-              (selectedEvent) =>
-                !eventList.some((event) => event.id == selectedEvent.id)
-            )
-          )
-        );
+
+    if (events.length === 1) {
+      if (checked) {
+        store.dispatch(eventsSelected(events));
       }
-      if (!alreadyExists) {
-        store.dispatch(eventsSelected([...selectedEvents, ...eventList]));
+      if (!checked) {
+        store.dispatch(eventsDeselected(events));
       }
     }
   };

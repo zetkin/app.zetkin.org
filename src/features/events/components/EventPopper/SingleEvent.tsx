@@ -114,7 +114,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   return (
     <>
       <Box alignItems="center" display="flex">
-        <EventSelectionCheckBox eventList={[event]} />
+        <EventSelectionCheckBox events={[event.id]} />
         <Typography sx={{ pl: 1 }} variant="h5">
           {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>

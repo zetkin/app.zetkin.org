@@ -46,7 +46,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
     <Box sx={{ backgroundColor: 'white', borderRadius: '3px' }}>
       <Box alignItems="center" display="flex">
         <Box sx={{ pl: 2, pb: 0.1, pr: 1 }}>
-          <EventSelectionCheckBox eventList={[event]} />
+          <EventSelectionCheckBox events={[event.id]} />
         </Box>
         <NextLink href={getEventUrl(event)} passHref>
           <Link

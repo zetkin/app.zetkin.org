@@ -127,7 +127,7 @@ export type PresentableField = Field & {
 
 interface EventProps {
   cancelled: boolean;
-  eventList: ZetkinEvent[];
+  events: number[];
   fieldGroups: PresentableField[][];
   height: number;
   title: string;
@@ -137,7 +137,7 @@ interface EventProps {
 
 const Event = ({
   cancelled,
-  eventList,
+  events,
   fieldGroups,
   height,
   title,
@@ -174,7 +174,7 @@ const Event = ({
           onMouseLeave={() => setIsHovered(false)}
         >
           <Box alignItems="center" display="flex">
-            {isHovered && <EventSelectionCheckBox eventList={eventList} />}
+            {isHovered && <EventSelectionCheckBox events={events} />}
             <Typography className={classes.title}>{title}</Typography>
           </Box>
           <Box display="flex">
@@ -199,7 +199,7 @@ const Event = ({
         >
           <Box className={classes.titleContainer}>
             <Box alignItems="center" display="flex" sx={{ pl: 1, pt: 0.8 }}>
-              {isHovered && <EventSelectionCheckBox eventList={eventList} />}
+              {isHovered && <EventSelectionCheckBox events={events} />}
               <Typography className={classes.title}>{title}</Typography>
             </Box>
           </Box>

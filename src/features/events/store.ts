@@ -60,7 +60,7 @@ export interface EventsStoreSlice {
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
-  selectedEvents: ZetkinEvent[];
+  selectedEvents: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
 }
@@ -189,9 +189,30 @@ const eventsSlice = createSlice({
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
-    eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      const selectedEvents = action.payload;
-      state.selectedEvents = selectedEvents;
+    eventsSelected: (state, action: PayloadAction<number[]>) => {
+      const checkedEvents = action.payload;
+
+      if (checkedEvents.length > 1) {
+        state.selectedEvents = [
+          ...state.selectedEvents,
+          ...checkedEvents.filter(
+            (event) =>
+              !state.selectedEvents.some(
+                (selectedEvent) => event == selectedEvent
+              )
+          ),
+        ];
+      } else {
+        state.selectedEvents = [...state.selectedEvents, ...checkedEvents];
+      }
+    },
+    eventsDeselected: (state, action: PayloadAction<number[]>) => {
+      const checkedEvents = action.payload;
+
+      state.selectedEvents = state.selectedEvents.filter(
+        (selectedEvent) =>
+          !checkedEvents.some((event) => event == selectedEvent)
+      );
     },
     filterTextUpdated: (
       state,
@@ -373,6 +394,7 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
+  eventsDeselected,
   eventsSelected,
   filterTextUpdated,
   filterUpdated,
