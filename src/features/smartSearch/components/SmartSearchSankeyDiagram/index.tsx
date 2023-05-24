@@ -1,6 +1,7 @@
 import { lighten } from '@mui/system';
 import { FC, useEffect, useRef } from 'react';
 
+import { FilterStats } from './types';
 import makeSankeySegments from './makeSankeySegments';
 import { SankeyRenderer } from './drawing';
 
@@ -9,11 +10,7 @@ type SmartSearchSankeyDiagramProps = {
   arrowWidth?: number;
   color?: string;
   diagWidth?: number;
-  filterStats: {
-    matched: number;
-    op: 'add' | 'sub';
-    output: number;
-  }[];
+  filterStats: FilterStats[];
   margin?: number;
 };
 

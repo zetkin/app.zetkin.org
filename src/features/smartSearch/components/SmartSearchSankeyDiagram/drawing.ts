@@ -1,7 +1,9 @@
 import {
+  SankeyAddSegment,
+  SankeyEntrySegment,
+  SankeyExitSegment,
   SankeySegment,
-  SelectionAddSegment,
-  SelectionSubSegment,
+  SankeySubSegment,
 } from './types';
 
 export type Measurements = {
@@ -22,10 +24,7 @@ export class SankeyRenderer {
     this.measurements = measurements;
   }
 
-  drawAddSubSegment(
-    seg: SelectionAddSegment | SelectionSubSegment,
-    offsetY: number
-  ) {
+  drawAddSubSegment(seg: SankeyAddSegment | SankeySubSegment, offsetY: number) {
     const { arrowDepth, arrowWidth, diagWidth, lineWidth, margin, segHeight } =
       this.measurements;
     const diagCenter = diagWidth / 2;
@@ -166,9 +165,51 @@ export class SankeyRenderer {
     this.ctx.fill();
   }
 
+  drawEntrySegment(seg: SankeyEntrySegment, offsetY: number) {
+    const { arrowDepth, diagWidth, margin, segHeight } = this.measurements;
+
+    this.initPath(seg.style);
+
+    const segWidth = seg.width * (diagWidth - margin);
+    const diagCenter = diagWidth / 2;
+    const top = 0.3 * segHeight + offsetY;
+    const bottom = segHeight + offsetY;
+
+    this.ctx.moveTo(diagCenter - segWidth / 2, top);
+    this.ctx.lineTo(diagCenter, top + arrowDepth * 2);
+    this.ctx.lineTo(diagCenter + segWidth / 2, top);
+    this.ctx.lineTo(diagCenter + segWidth / 2, bottom);
+    this.ctx.lineTo(diagCenter - segWidth / 2, bottom);
+    this.ctx.lineTo(diagCenter - segWidth / 2, top);
+
+    this.ctx.stroke();
+    this.ctx.fill();
+  }
+
+  drawExitSegment(seg: SankeyExitSegment, offsetY: number) {
+    const { arrowDepth, diagWidth, margin } = this.measurements;
+
+    this.initPath(seg.style);
+
+    const segWidth = seg.width * (diagWidth - margin);
+    const diagCenter = diagWidth / 2;
+
+    this.ctx.moveTo(diagCenter - segWidth / 2, offsetY);
+    this.ctx.lineTo(diagCenter + segWidth / 2, offsetY);
+    this.ctx.lineTo(diagCenter, offsetY + arrowDepth * 2);
+    this.ctx.lineTo(diagCenter - segWidth / 2, offsetY);
+
+    this.ctx.stroke();
+    this.ctx.fill();
+  }
+
   drawSegment(seg: SankeySegment, offsetY: number) {
     if (seg.kind == 'add' || seg.kind == 'sub') {
       this.drawAddSubSegment(seg, offsetY);
+    } else if (seg.kind == 'entry') {
+      this.drawEntrySegment(seg, offsetY);
+    } else if (seg.kind == 'exit') {
+      this.drawExitSegment(seg, offsetY);
     }
   }
 

@@ -4,13 +4,13 @@ type EmptySegment = {
   kind: 'empty';
 };
 
-type EntrySegment = {
+export type SankeyEntrySegment = {
   kind: 'entry';
   style: SegmentStyle;
   width: number;
 };
 
-type ExitSegment = {
+export type SankeyExitSegment = {
   kind: 'exit';
   style: SegmentStyle;
   width: number;
@@ -27,13 +27,13 @@ type SelectionMainElement = {
   style: SegmentStyle;
 };
 
-export type SelectionAddSegment = {
+export type SankeyAddSegment = {
   kind: 'add';
   main: SelectionMainElement | null;
   side: SelectionSideElement;
 };
 
-export type SelectionSubSegment = {
+export type SankeySubSegment = {
   kind: 'sub';
   main: SelectionMainElement | null;
   side: SelectionSideElement;
@@ -41,10 +41,10 @@ export type SelectionSubSegment = {
 
 export type SankeySegment =
   | EmptySegment
-  | EntrySegment
-  | ExitSegment
-  | SelectionAddSegment
-  | SelectionSubSegment;
+  | SankeyEntrySegment
+  | SankeyExitSegment
+  | SankeyAddSegment
+  | SankeySubSegment;
 
 export type FilterStats = {
   matched: number;

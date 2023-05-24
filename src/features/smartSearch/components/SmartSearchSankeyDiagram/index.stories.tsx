@@ -16,7 +16,7 @@ basic.args = {
   filterStats: [
     {
       matched: 400,
-      op: 'add',
+      op: 'entry',
       output: 400,
     },
     {
