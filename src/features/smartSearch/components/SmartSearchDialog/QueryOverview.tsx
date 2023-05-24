@@ -91,11 +91,10 @@ const QueryOverview = ({
           <Msg id={messageIds.readOnly} />
         </Alert>
       )}
-      <Box margin="auto" maxWidth="500px" minWidth={0.5}>
+      <Box maxWidth="500px" minWidth={0.5} paddingLeft={4} paddingTop={4}>
         <List>
           <ListItem key={FIRST_FILTER} style={{ padding: 0 }}>
             <Box
-              alignItems="center"
               display="flex"
               flexDirection="column"
               justifyContent="center"
@@ -103,7 +102,7 @@ const QueryOverview = ({
               onMouseLeave={() => (readOnly ? null : setHovered(null))}
               width={1}
             >
-              <Typography align="center" variant="body2">
+              <Typography variant="body2">
                 <DisplayStartsWith startsWithAll={startsWithAll} />
               </Typography>
               <Box
@@ -121,7 +120,6 @@ const QueryOverview = ({
             .map((filter) => (
               <ListItem key={filter.id} style={{ padding: 0 }}>
                 <Box
-                  alignItems="center"
                   display="flex"
                   flexDirection="column"
                   justifyContent="center"
@@ -129,7 +127,7 @@ const QueryOverview = ({
                   onMouseLeave={() => (readOnly ? null : setHovered(null))}
                   width={1}
                 >
-                  <Typography align="center" variant="body2">
+                  <Typography variant="body2">
                     {filter.type === FILTER_TYPE.CALL_BLOCKED && (
                       <DisplayCallBlocked
                         filter={
@@ -257,7 +255,7 @@ const QueryOverview = ({
               </ListItem>
             ))}
         </List>
-        <Box display="flex" justifyContent="center">
+        <Box display="flex">
           <Button
             color="primary"
             disabled={readOnly}
