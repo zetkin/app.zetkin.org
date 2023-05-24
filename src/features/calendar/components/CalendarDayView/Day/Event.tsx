@@ -43,85 +43,96 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
   }
 
   return (
-    <NextLink href={getEventUrl(event)} passHref>
-      <Link color="inherit" underline="none">
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          padding={2}
-          sx={{ backgroundColor: 'white', borderRadius: '3px' }}
-          width="100%"
-        >
-          <Box alignItems="center" display="flex" gap={2.2}>
-            {/* Status */}
-            <EventSelectionCheckBox eventList={[event]} />
-            <StatusDot state={getEventState(event)} />
-
-            {/* Title */}
-            <Typography
-              sx={{
-                color: theme.palette.secondary.main,
-              }}
+    <Box sx={{ backgroundColor: 'white', borderRadius: '3px' }}>
+      <Box alignItems="center" display="flex">
+        <Box sx={{ pl: 2, pb: 0.1, pr: 1 }}>
+          <EventSelectionCheckBox eventList={[event]} />
+        </Box>
+        <NextLink href={getEventUrl(event)} passHref>
+          <Link
+            color="inherit"
+            underline="none"
+            sx={{ width: '100%', pt: 2, pr: 2, pb: 2 }}
+          >
+            <Box
+              display="flex"
+              alignItems="center"
+              flexDirection="row"
+              justifyContent="space-between"
+              gap={1}
+              width="100%"
             >
-              {event.title ||
-                event.activity?.title ||
-                messages.common.noTitle()}
-            </Typography>
-            {/* Time */}
-            <Typography color={theme.palette.secondary.main} component={'div'}>
-              <Box alignItems="center" display="flex" gap={0.5}>
-                <Schedule />
-                {isAllDay(event) && (
-                  <Typography key={event.id}>
-                    {messages.common.allDay()}
+              {/* Status */}
+              <Box display="flex" alignItems="center" gap={2.2}>
+                <StatusDot state={getEventState(event)} />
+                {/* Title */}
+                <Typography
+                  sx={{
+                    color: theme.palette.secondary.main,
+                  }}
+                >
+                  {event.title ||
+                    event.activity?.title ||
+                    messages.common.noTitle()}
+                </Typography>
+                {/* Time */}
+                <Typography
+                  color={theme.palette.secondary.main}
+                  component={'div'}
+                >
+                  <Box alignItems="center" display="flex" gap={0.5}>
+                    <Schedule />
+                    {isAllDay(event) && (
+                      <Typography key={event.id}>
+                        {messages.common.allDay()}
+                      </Typography>
+                    )}
+                    {!isAllDay(event) && (
+                      <>
+                        <FormattedTime
+                          hour="numeric"
+                          hour12={false}
+                          minute="numeric"
+                          value={removeOffset(event.start_time)}
+                        />
+                        &nbsp;-&nbsp;
+                        <FormattedTime
+                          hour="numeric"
+                          hour12={false}
+                          minute="numeric"
+                          value={removeOffset(event.end_time)}
+                        />
+                      </>
+                    )}
+                  </Box>
+                </Typography>
+                {/* Location */}
+                {event.location && (
+                  <Typography
+                    color={theme.palette.secondary.main}
+                    component={'div'}
+                  >
+                    <Box alignItems="center" display="flex" gap={0.5}>
+                      <PlaceOutlined />
+                      {event.location?.title}
+                    </Box>
                   </Typography>
                 )}
-                {!isAllDay(event) && (
-                  <>
-                    <FormattedTime
-                      hour="numeric"
-                      hour12={false}
-                      minute="numeric"
-                      value={removeOffset(event.start_time)}
-                    />
-                    &nbsp;-&nbsp;
-                    <FormattedTime
-                      hour="numeric"
-                      hour12={false}
-                      minute="numeric"
-                      value={removeOffset(event.end_time)}
-                    />
-                  </>
-                )}
               </Box>
-            </Typography>
-            {/* Location */}
-            {event.location && (
-              <Typography
-                color={theme.palette.secondary.main}
-                component={'div'}
-              >
-                <Box alignItems="center" display="flex" gap={0.5}>
-                  <PlaceOutlined />
-                  {event.location?.title}
-                </Box>
-              </Typography>
-            )}
-          </Box>
-          {/* Icons */}
-
-          <Box alignItems="center" display="flex" gap={1}>
-            <EventWarningIcons compact model={model} />
-            <People color={needsParticipants ? 'error' : 'secondary'} />
-            <Typography color={needsParticipants ? 'error' : 'secondary'}>
-              {event.num_participants_available}/
-              {event.num_participants_required}
-            </Typography>
-          </Box>
-        </Box>
-      </Link>
-    </NextLink>
+              {/* Icons */}
+              <Box alignItems="center" display="flex" gap={1}>
+                <EventWarningIcons compact model={model} />
+                <People color={needsParticipants ? 'error' : 'secondary'} />
+                <Typography color={needsParticipants ? 'error' : 'secondary'}>
+                  {event.num_participants_available}/
+                  {event.num_participants_required}
+                </Typography>
+              </Box>
+            </Box>
+          </Link>
+        </NextLink>
+      </Box>
+    </Box>
   );
 };
 
