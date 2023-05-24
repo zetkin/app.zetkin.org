@@ -53,11 +53,10 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           sx={{ backgroundColor: 'white', borderRadius: '3px' }}
           width="100%"
         >
-          <Box onClick={(e) => e.stopPropagation()}></Box>
           <Box alignItems="center" display="flex" gap={2.2}>
             {/* Status */}
-            <StatusDot state={getEventState(event)} />
             <EventSelectionCheckBox eventList={[event]} />
+            <StatusDot state={getEventState(event)} />
 
             {/* Title */}
             <Typography
