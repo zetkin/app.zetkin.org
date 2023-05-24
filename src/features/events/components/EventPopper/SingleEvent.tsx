@@ -94,6 +94,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           warningText: messages.eventPopper.deleteWarning(),
         }),
     },
+    {
+      label: messages.eventPopper.duplicate(),
+      onSelect: () => {
+        model.duplicateEvent();
+        onClickAway();
+      },
+    },
   ];
   if (state !== EventState.CANCELLED) {
     ellipsisMenuItems.push({

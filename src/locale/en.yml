@@ -26,8 +26,8 @@ feat:
       withoutContact: "{numWithoutContact} Without contact"
     eventFilter:
       collapse: Collapse
-      expand: "{numOfOptions, plural, one {+ 1 more project activity types} other {+ #
-        more project activity types}}"
+      expand: "{numOfOptions, plural, one {+ 1 more event type} other {+ # more event
+        types}}"
       filter: Filter
       filterOptions:
         actionFilters:
@@ -291,6 +291,7 @@ feat:
     eventActionButtons:
       cancel: Cancel
       delete: Delete
+      duplicate: Duplicate
       publish: Publish
       restore: Restore
       unpublish: Unpublish
@@ -366,6 +367,7 @@ feat:
       delete: Delete
       deleteWarning: Once the event has been deleted you will not be able to access it again.
       description: Description
+      duplicate: Duplicate
       eventPageLink: Go to event page
       events: Events
       location: Location
