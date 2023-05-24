@@ -4,6 +4,8 @@ import {
   SankeyExitSegment,
   SankeySegment,
   SankeySubSegment,
+  SEGMENT_KIND,
+  SEGMENT_STYLE,
 } from './types';
 
 export type Measurements = {
@@ -25,7 +27,7 @@ export class SankeyRenderer {
   }
 
   drawAddSubSegment(seg: SankeyAddSegment | SankeySubSegment, offsetY: number) {
-    const { arrowDepth, arrowWidth, diagWidth, lineWidth, margin, segHeight } =
+    const { arrowDepth, arrowWidth, diagWidth, margin, segHeight } =
       this.measurements;
     const diagCenter = diagWidth / 2;
     const maxStreamWidth = diagWidth - margin;
@@ -90,21 +92,13 @@ export class SankeyRenderer {
     }
 
     this.initPath(seg.side.style);
-    const pseudoSide = seg.side.style == 'stroke';
 
     if (seg.kind == 'add') {
       const totalOutWidth = mainWidth + changeWidth;
 
-      // Remove some pixels to make sure the stroke does not extend
-      // outside of the body of the diagram.
-      const lowerRightX = pseudoSide
-        ? diagCenter - totalOutWidth / 2 + lineWidth / 2
-        : diagCenter + totalOutWidth / 2 - mainWidth - changeWidth;
-
-      // If there is no change, use the arrowWidth as the change width.
-      const lowerLeftX = pseudoSide
-        ? diagCenter - totalOutWidth / 2 + arrowWidth
-        : diagCenter + totalOutWidth / 2 - mainWidth;
+      const lowerRightX =
+        diagCenter + totalOutWidth / 2 - mainWidth - changeWidth;
+      const lowerLeftX = diagCenter + totalOutWidth / 2 - mainWidth;
 
       this.ctx.moveTo(0, segHeight / 2 + arrowWidth / 2 + offsetY);
       this.ctx.lineTo(arrowDepth, segHeight / 2 + offsetY);
@@ -126,16 +120,8 @@ export class SankeyRenderer {
     } else if (seg.kind == 'sub') {
       const totalInWidth = mainWidth + changeWidth;
 
-      // If there is no change, use the arrowWidth as the change width.
-      const upperLeftX = pseudoSide
-        ? diagCenter + totalInWidth / 2 - arrowWidth
-        : diagCenter + totalInWidth / 2 - changeWidth;
-
-      // Remove some pixels to make sure the stroke does not extend
-      // outside of the body of the diagram.
-      const upperRightX = pseudoSide
-        ? diagCenter + totalInWidth / 2 - lineWidth / 2
-        : diagCenter + totalInWidth / 2;
+      const upperLeftX = diagCenter + totalInWidth / 2 - changeWidth;
+      const upperRightX = diagCenter + totalInWidth / 2;
 
       this.ctx.moveTo(upperLeftX, 0 + offsetY);
       this.ctx.lineTo(upperRightX, 0 + offsetY);
@@ -201,17 +187,17 @@ export class SankeyRenderer {
   }
 
   drawSegment(seg: SankeySegment, offsetY: number) {
-    if (seg.kind == 'add' || seg.kind == 'sub') {
+    if (seg.kind == SEGMENT_KIND.ADD || seg.kind == SEGMENT_KIND.SUB) {
       this.drawAddSubSegment(seg, offsetY);
-    } else if (seg.kind == 'entry') {
+    } else if (seg.kind == SEGMENT_KIND.ENTRY) {
       this.drawEntrySegment(seg, offsetY);
-    } else if (seg.kind == 'exit') {
+    } else if (seg.kind == SEGMENT_KIND.EXIT) {
       this.drawExitSegment(seg, offsetY);
     }
   }
 
-  initPath(style: 'fill' | 'stroke') {
-    const isStroke = style == 'stroke';
+  initPath(style: SEGMENT_STYLE) {
+    const isStroke = style == SEGMENT_STYLE.STROKE;
     this.ctx.beginPath();
     this.ctx.strokeStyle = isStroke ? 'red' : 'transparent';
     this.ctx.lineWidth = isStroke ? this.measurements.lineWidth : 0;
