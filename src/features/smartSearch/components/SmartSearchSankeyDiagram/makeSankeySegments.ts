@@ -36,7 +36,7 @@ export default function makeSankeySegments(
               style: followsPseudo ? 'stroke' : 'fill',
             },
         side: {
-          style: 'fill',
+          style: changeReal > 0 ? 'fill' : 'stroke',
           width: followsPseudo ? inputNormalized : changeReal / maxOutput,
         },
       };
@@ -49,7 +49,7 @@ export default function makeSankeySegments(
           style: 'fill',
         },
         side: {
-          style: 'fill',
+          style: changeReal > 0 ? 'fill' : 'stroke',
           width: changeReal / maxOutput,
         },
       };

@@ -95,4 +95,49 @@ describe('makeSankeySegments()', () => {
       },
     ]);
   });
+
+  it('handles temporarily empty input/output', () => {
+    const result = makeSankeySegments([
+      { matched: 0, op: 'entry', output: 400 },
+      { matched: 100, op: 'add', output: 400 },
+      { matched: 100, op: 'sub', output: 400 },
+    ]);
+
+    expect(result).toEqual([
+      {
+        kind: 'entry',
+        style: 'fill',
+        width: 1,
+      },
+      {
+        kind: 'add',
+        main: {
+          input: 1,
+          output: 1,
+          style: 'fill',
+        },
+        side: {
+          style: 'stroke',
+          width: 0,
+        },
+      },
+      {
+        kind: 'sub',
+        main: {
+          input: 1,
+          output: 1,
+          style: 'fill',
+        },
+        side: {
+          style: 'stroke',
+          width: 0,
+        },
+      },
+      {
+        kind: 'exit',
+        style: 'fill',
+        width: 1,
+      },
+    ]);
+  });
 });
