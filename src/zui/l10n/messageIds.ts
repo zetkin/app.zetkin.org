@@ -107,6 +107,8 @@ export default makeMessages('zui', {
     journeys: m('Journeys'),
     people: m('People'),
     projects: m('Projects'),
+    signOut: m('Sign out'),
+    userSettings: m('User settings'),
   },
   personGridEditCell: {
     keepTyping: m('Keep typing..'),
