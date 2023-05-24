@@ -57,14 +57,10 @@ const SmartSearch = ({
   // TODO: Remove this after refactoring Smart Search / View connection
   const viewsMessages = useMessages(viewsMessageIds);
 
-  const isEmptyQuery = !filterArray.length && !readOnly;
-
   const [selectedFilter, setSelectedFilter] =
     useState<SelectedSmartSearchFilter>(null);
 
-  const [searchState, setSearchState] = useState(
-    isEmptyQuery ? STATE.START_WITH : STATE.PREVIEW
-  );
+  const [searchState, setSearchState] = useState(STATE.PREVIEW);
 
   return (
     <>
