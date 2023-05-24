@@ -82,8 +82,8 @@ const QueryOverview = ({
   return (
     <Box
       display="flex"
+      flex={1}
       flexDirection="column"
-      height={1}
       justifyContent="space-between"
     >
       {readOnly && (

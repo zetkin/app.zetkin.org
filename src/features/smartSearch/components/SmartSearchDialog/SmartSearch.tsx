@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { Box, Typography } from '@mui/material';
 
 import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';
 import QueryOverview from './QueryOverview';
+import smartSearchMessageIds from 'features/smartSearch/l10n/messageIds';
 import StartsWith from '../StartsWith';
 import { useMessages } from 'core/i18n';
 import useSmartSearch from 'features/smartSearch/hooks/useSmartSearch';
+import viewsMessageIds from 'features/views/l10n/messageIds';
 import {
   AnyFilterConfig,
   FILTER_TYPE,
@@ -18,8 +21,6 @@ import {
   COLUMN_TYPE,
   SelectedViewColumn,
 } from 'features/views/components/types';
-
-import viewsMessageIds from 'features/views/l10n/messageIds';
 
 export interface SmartSearchDialogProps {
   query?: ZetkinQuery | null;
@@ -56,6 +57,7 @@ const SmartSearch = ({
   } = useSmartSearch(query?.filter_spec);
   // TODO: Remove this after refactoring Smart Search / View connection
   const viewsMessages = useMessages(viewsMessageIds);
+  const smartSearchMessages = useMessages(smartSearchMessageIds);
 
   const [selectedFilter, setSelectedFilter] =
     useState<SelectedSmartSearchFilter>(null);
@@ -63,7 +65,8 @@ const SmartSearch = ({
   const [searchState, setSearchState] = useState(STATE.PREVIEW);
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Typography variant="h5">{smartSearchMessages.smartSearch()}</Typography>
       {searchState === STATE.PREVIEW && (
         <QueryOverview
           filters={filterArray}
@@ -164,7 +167,7 @@ const SmartSearch = ({
           startsWithAll={startsWithAll}
         />
       )}
-    </>
+    </Box>
   );
 };
 

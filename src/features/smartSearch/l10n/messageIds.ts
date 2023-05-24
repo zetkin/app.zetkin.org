@@ -622,6 +622,7 @@ export default makeMessages('feat.smartSearch', {
   readOnly: m(
     'This Smart Search query is in read-only mode and cannot be edited.'
   ),
+  smartSearch: m('Smart Search'),
   timeFrame: {
     edit: {
       afterDate: m<{
