@@ -9,7 +9,11 @@ import {
   ListItem,
   Typography,
 } from '@mui/material';
-import { DeleteOutline, Settings } from '@mui/icons-material';
+import {
+  DeleteOutline,
+  PlaylistAddOutlined,
+  Settings,
+} from '@mui/icons-material';
 
 import DisplayCallBlocked from '../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
@@ -260,7 +264,8 @@ const QueryOverview = ({
             color="primary"
             disabled={readOnly}
             onClick={onOpenFilterGallery}
-            variant="contained"
+            startIcon={<PlaylistAddOutlined />}
+            variant="outlined"
           >
             <Msg id={messageIds.buttonLabels.addNewFilter} />
           </Button>
@@ -285,11 +290,7 @@ const QueryOverview = ({
             )}
             {!readOnly && (
               <>
-                <Button
-                  color="primary"
-                  onClick={onCloseDialog}
-                  variant="outlined"
-                >
+                <Button color="primary" onClick={onCloseDialog} variant="text">
                   <Msg id={messageIds.buttonLabels.cancel} />
                 </Button>
                 <Button
