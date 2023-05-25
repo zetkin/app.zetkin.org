@@ -2,6 +2,8 @@ import {
   SankeyAddSegment,
   SankeyEntrySegment,
   SankeyExitSegment,
+  SankeyPseudoAddSegment,
+  SankeyPseudoSubSegment,
   SankeySegment,
   SankeySubSegment,
   SEGMENT_KIND,
@@ -29,7 +31,7 @@ export class SankeyRenderer {
   drawAddSubSegment(seg: SankeyAddSegment | SankeySubSegment, offsetY: number) {
     const { diagWidth, margin } = this.measurements;
     const diagCenter = diagWidth / 2;
-    const maxStreamWidth = diagWidth - margin;
+    const maxStreamWidth = diagWidth - margin * 2;
 
     const mainWidth = (seg.main?.width ?? 0) * maxStreamWidth;
     const changeWidth = seg.side.width * maxStreamWidth;
@@ -85,7 +87,7 @@ export class SankeyRenderer {
 
     this.initPath(seg.style);
 
-    const segWidth = seg.width * (diagWidth - margin);
+    const segWidth = seg.width * (diagWidth - margin * 2);
     const diagCenter = diagWidth / 2;
     const top = 0.3 * segHeight + offsetY;
     const bottom = segHeight + offsetY;
@@ -106,12 +108,14 @@ export class SankeyRenderer {
 
     this.initPath(seg.style);
 
-    const segWidth = seg.width * (diagWidth - margin);
+    const segWidth = seg.width * (diagWidth - margin * 2);
     const diagCenter = diagWidth / 2;
 
     this.ctx.moveTo(diagCenter - segWidth / 2, offsetY);
     this.ctx.lineTo(diagCenter + segWidth / 2, offsetY);
-    this.ctx.lineTo(diagCenter, offsetY + arrowDepth * 2);
+    this.ctx.lineTo(diagCenter + segWidth / 2, offsetY + arrowDepth);
+    this.ctx.lineTo(diagCenter, offsetY + arrowDepth * 3);
+    this.ctx.lineTo(diagCenter - segWidth / 2, offsetY + arrowDepth);
     this.ctx.lineTo(diagCenter - segWidth / 2, offsetY);
 
     this.ctx.stroke();
@@ -220,9 +224,68 @@ export class SankeyRenderer {
     this.ctx.fill();
   }
 
+  drawPseudoAddSubSegment(
+    seg: SankeyPseudoAddSegment | SankeyPseudoSubSegment,
+    offsetY: number
+  ) {
+    const { diagWidth, margin, segHeight } = this.measurements;
+    const diagCenter = diagWidth / 2;
+    const doubleMargin = margin * 2;
+
+    if (seg.kind == SEGMENT_KIND.PSEUDO_SUB) {
+      const outputWidth = seg.side.width * (diagWidth - doubleMargin);
+      this.drawOutput(
+        diagCenter - outputWidth / 2,
+        diagCenter + outputWidth / 2,
+        offsetY,
+        seg.side.style
+      );
+    } else {
+      const inputWidth = seg.side.width * (diagWidth - doubleMargin);
+      this.drawInput(
+        diagCenter - inputWidth / 2,
+        diagCenter + inputWidth / 2,
+        offsetY,
+        seg.side.style
+      );
+    }
+
+    if (seg.main) {
+      const segWidth = seg.main.width * (diagWidth - doubleMargin);
+
+      if (
+        seg.main.style == SEGMENT_STYLE.STROKE &&
+        seg.side.style == SEGMENT_STYLE.STROKE
+      ) {
+        // Clear "behind" main so that the side
+        // does not shine through.
+        this.ctx.clearRect(
+          diagCenter - segWidth / 2,
+          offsetY,
+          segWidth,
+          segHeight
+        );
+      }
+
+      this.drawMain(
+        diagCenter - segWidth / 2,
+        diagCenter + segWidth / 2,
+        diagCenter + segWidth / 2,
+        diagCenter - segWidth / 2,
+        offsetY,
+        seg.main.style
+      );
+    }
+  }
+
   drawSegment(seg: SankeySegment, offsetY: number) {
     if (seg.kind == SEGMENT_KIND.ADD || seg.kind == SEGMENT_KIND.SUB) {
       this.drawAddSubSegment(seg, offsetY);
+    } else if (
+      seg.kind == SEGMENT_KIND.PSEUDO_ADD ||
+      seg.kind == SEGMENT_KIND.PSEUDO_SUB
+    ) {
+      this.drawPseudoAddSubSegment(seg, offsetY);
     } else if (seg.kind == SEGMENT_KIND.ENTRY) {
       this.drawEntrySegment(seg, offsetY);
     } else if (seg.kind == SEGMENT_KIND.EXIT) {

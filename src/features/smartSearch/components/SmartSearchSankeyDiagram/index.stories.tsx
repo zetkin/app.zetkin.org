@@ -49,3 +49,85 @@ basic.args = {
     },
   ],
 };
+
+export const pseudo = Template.bind({});
+pseudo.args = {
+  segments: [
+    {
+      kind: SEGMENT_KIND.ENTRY,
+      style: SEGMENT_STYLE.STROKE,
+      width: 1,
+    },
+    {
+      kind: SEGMENT_KIND.PSEUDO_ADD,
+      main: {
+        style: SEGMENT_STYLE.STROKE,
+        width: 1,
+      },
+      side: {
+        style: SEGMENT_STYLE.STROKE,
+        width: 1,
+      },
+    },
+    {
+      kind: SEGMENT_KIND.PSEUDO_SUB,
+      main: {
+        style: SEGMENT_STYLE.STROKE,
+        width: 1,
+      },
+      side: {
+        style: SEGMENT_STYLE.STROKE,
+        width: 1,
+      },
+    },
+    {
+      kind: SEGMENT_KIND.EXIT,
+      style: SEGMENT_STYLE.STROKE,
+      width: 1,
+    },
+  ],
+};
+
+export const mixed = Template.bind({});
+mixed.args = {
+  segments: [
+    {
+      kind: SEGMENT_KIND.EMPTY,
+    },
+    {
+      kind: SEGMENT_KIND.PSEUDO_ADD,
+      main: null,
+      side: {
+        style: SEGMENT_STYLE.STROKE,
+        width: 1,
+      },
+    },
+    {
+      kind: SEGMENT_KIND.PSEUDO_ADD,
+      main: {
+        style: SEGMENT_STYLE.STROKE,
+        width: 1,
+      },
+      side: {
+        style: SEGMENT_STYLE.FILL,
+        width: 1,
+      },
+    },
+    {
+      kind: SEGMENT_KIND.SUB,
+      main: {
+        style: SEGMENT_STYLE.FILL,
+        width: 0.7,
+      },
+      side: {
+        style: SEGMENT_STYLE.FILL,
+        width: 0.3,
+      },
+    },
+    {
+      kind: SEGMENT_KIND.EXIT,
+      style: SEGMENT_STYLE.FILL,
+      width: 0.7,
+    },
+  ],
+};
