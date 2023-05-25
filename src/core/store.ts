@@ -10,6 +10,7 @@ import organizationsSlice, {
 import surveysSlice, { SurveysStoreSlice } from 'features/surveys/store';
 import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
+import usersSlice, { UsersStoreSlice } from 'features/users/store/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 
 export interface RootState {
@@ -20,6 +21,7 @@ export interface RootState {
   tasks: TasksStoreSlice;
   views: ViewsStoreSlice;
   organizations: OrganizationsStoreSlice;
+  users: UsersStoreSlice;
 }
 
 const reducer = {
@@ -29,6 +31,7 @@ const reducer = {
   surveys: surveysSlice.reducer,
   tags: tagsSlice.reducer,
   tasks: tasksSlice.reducer,
+  users: usersSlice.reducer,
   views: viewsSlice.reducer,
 };
 
