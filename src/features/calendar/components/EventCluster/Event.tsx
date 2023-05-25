@@ -41,7 +41,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderBottomRightRadius: 4,
     borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
     borderTopRightRadius: 4,
-    display: 'inline-flex',
+    display: 'flex',
     flexDirection: ({ collapsed }) => (collapsed ? 'row' : 'column'),
     fontSize: 12,
     gap: '4px 0',
@@ -178,12 +178,10 @@ const Event = ({
       {topBadge}
       {collapsed && (
         <Box className={classes.collapsedContainer}>
-          <Box alignItems="center" display="flex">
-            {(isHovered || selectedEvents.length > 0) && (
-              <EventSelectionCheckBox events={events} />
-            )}
-            <Typography className={classes.title}>{title}</Typography>
-          </Box>
+          {(isHovered || selectedEvents.length > 0) && (
+            <EventSelectionCheckBox events={events} />
+          )}
+          <Typography className={classes.title}>{title}</Typography>
           <Box display="flex">
             {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
               return (

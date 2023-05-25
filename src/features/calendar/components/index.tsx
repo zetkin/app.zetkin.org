@@ -7,8 +7,10 @@ import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
 import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
+import { RootState } from 'core/store';
 import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
+import { useSelector } from 'react-redux';
 
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -85,6 +87,9 @@ const Calendar = () => {
     setSelectedTimeScale(timeScale);
     setFocusDate(date);
   }
+  const selectedEvents = useSelector(
+    (state: RootState) => state.events.selectedEvents
+  );
 
   return (
     <>
@@ -147,6 +152,7 @@ const Calendar = () => {
                 onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
               />
             )}
+            {selectedEvents.length > 0 && <Box sx={{ height: '68.5px' }} />}
           </Suspense>
         </Box>
       </Box>

@@ -21,7 +21,7 @@ const SelectionBar = () => {
   };
 
   return (
-    <>
+    <Box sx={{ position: 'relative', zIndex: 200 }}>
       {selectedEvents.length > 0 && (
         <Paper
           elevation={3}
@@ -69,7 +69,7 @@ const SelectionBar = () => {
           </Box>
         </Paper>
       )}
-    </>
+    </Box>
   );
 };
 
