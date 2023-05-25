@@ -17,7 +17,7 @@ export type SankeyConfig = {
   arrowWidth: number;
   color: string;
   diagWidth: number;
-  hoverColor: string;
+  highlightColor: string;
   lineWidth: number;
   margin: number;
   segHeight: number;
@@ -25,6 +25,8 @@ export type SankeyConfig = {
 };
 
 export class SankeyRenderer {
+  private _highlightCurrent = false;
+
   constructor(
     private ctx: CanvasRenderingContext2D,
     private config: SankeyConfig
@@ -294,8 +296,17 @@ export class SankeyRenderer {
     }
   }
 
+  drawSegments(segments: SankeySegment[], highlightIndex: number) {
+    const { segHeight } = this.config;
+    segments.forEach((seg, index) => {
+      this._highlightCurrent = index == highlightIndex;
+      this.drawSegment(seg, index * segHeight);
+    });
+  }
+
   initPathWithInset(style: SEGMENT_STYLE) {
-    const { animDuration, color, hoverColor, lineWidth, time } = this.config;
+    const { animDuration, color, highlightColor, lineWidth, time } =
+      this.config;
 
     // TODO: Calculate
     const diagHeight = 1000;
@@ -306,16 +317,24 @@ export class SankeyRenderer {
     baseGradient.addColorStop(0.02 + gradOffset, lighten(color, 0.2));
     baseGradient.addColorStop(0.04 + gradOffset, color);
 
-    const hovGradient = this.ctx.createLinearGradient(0, 0, 0, 4 * diagHeight);
-    hovGradient.addColorStop(0 + gradOffset, hoverColor);
-    hovGradient.addColorStop(0.02 + gradOffset, lighten(hoverColor, 0.2));
-    hovGradient.addColorStop(0.04 + gradOffset, hoverColor);
+    const hiliGradient = this.ctx.createLinearGradient(0, 0, 0, 4 * diagHeight);
+    hiliGradient.addColorStop(0 + gradOffset, highlightColor);
+    hiliGradient.addColorStop(0.02 + gradOffset, lighten(highlightColor, 0.2));
+    hiliGradient.addColorStop(0.04 + gradOffset, highlightColor);
 
     const isStroke = style == SEGMENT_STYLE.STROKE;
     this.ctx.beginPath();
-    this.ctx.strokeStyle = isStroke ? baseGradient : 'transparent';
+    this.ctx.strokeStyle = isStroke
+      ? this._highlightCurrent
+        ? hiliGradient
+        : baseGradient
+      : 'transparent';
     this.ctx.lineWidth = isStroke ? lineWidth : 0;
-    this.ctx.fillStyle = isStroke ? 'transparent' : baseGradient;
+    this.ctx.fillStyle = isStroke
+      ? 'transparent'
+      : this._highlightCurrent
+      ? hiliGradient
+      : baseGradient;
     this.ctx.setLineDash([3, 3]);
 
     return isStroke ? lineWidth / 2 : 0;

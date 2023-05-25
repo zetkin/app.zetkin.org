@@ -8,6 +8,7 @@ type SmartSearchSankeyDiagramProps = {
   arrowWidth?: number;
   color?: string;
   diagWidth?: number;
+  hoverColor?: string;
   margin?: number;
   segments: SankeySegment[];
 };
@@ -17,6 +18,7 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
   arrowWidth = 20,
   color = '#cccccc',
   diagWidth = 200,
+  hoverColor = '#bbbbbb',
   margin = 30,
   segments,
 }) => {
@@ -45,15 +47,13 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       arrowWidth,
       color,
       diagWidth,
-      hoverColor: '#f00',
+      highlightColor: hoverColor,
       lineWidth: 2,
       margin,
       segHeight,
       time,
     });
-    segments.forEach((seg, index) => {
-      renderer.drawSegment(seg, index * segHeight);
-    });
+    renderer.drawSegments(segments, mouseState.current.hoveredSegment);
   };
 
   useEffect(() => {
@@ -97,6 +97,7 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     arrowWidth,
     color,
     diagWidth,
+    hoverColor,
     margin,
     segments,
   ]);
