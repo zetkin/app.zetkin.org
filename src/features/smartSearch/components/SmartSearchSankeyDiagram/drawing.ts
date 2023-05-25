@@ -27,8 +27,7 @@ export class SankeyRenderer {
   }
 
   drawAddSubSegment(seg: SankeyAddSegment | SankeySubSegment, offsetY: number) {
-    const { arrowDepth, arrowWidth, diagWidth, margin, segHeight } =
-      this.measurements;
+    const { diagWidth, margin } = this.measurements;
     const diagCenter = diagWidth / 2;
     const maxStreamWidth = diagWidth - margin;
 
@@ -39,113 +38,46 @@ export class SankeyRenderer {
     const outputWidth = seg.kind == 'add' ? mainWidth + changeWidth : mainWidth;
 
     if (seg.main) {
-      this.initPath(seg.main.style);
-
       if (seg.kind == 'add') {
-        this.ctx.moveTo(diagCenter - inputWidth / 2, offsetY);
-        this.ctx.lineTo(diagCenter + inputWidth / 2, offsetY);
-        this.ctx.bezierCurveTo(
+        this.drawMain(
+          diagCenter - inputWidth / 2,
           diagCenter + inputWidth / 2,
-          0.4 * segHeight + offsetY,
           diagCenter + outputWidth / 2,
-          0.6 * segHeight + offsetY,
-          diagCenter + outputWidth / 2,
-          segHeight + offsetY
-        );
-        this.ctx.lineTo(diagCenter + outputWidth / 2, segHeight + offsetY);
-        this.ctx.lineTo(
           diagCenter - outputWidth / 2 + changeWidth,
-          segHeight + offsetY
-        );
-        this.ctx.bezierCurveTo(
-          diagCenter - outputWidth / 2 + changeWidth,
-          0.6 * segHeight + offsetY,
-          diagCenter - inputWidth / 2,
-          0.4 * segHeight + offsetY,
-          diagCenter - inputWidth / 2,
-          0 + offsetY
+          offsetY,
+          seg.main.style
         );
       } else if (seg.kind == 'sub') {
-        this.ctx.moveTo(diagCenter - inputWidth / 2, offsetY);
-        this.ctx.lineTo(diagCenter + inputWidth / 2 - changeWidth, offsetY);
-        this.ctx.bezierCurveTo(
+        this.drawMain(
+          diagCenter - inputWidth / 2,
           diagCenter + inputWidth / 2 - changeWidth,
-          0.4 * segHeight + offsetY,
           diagCenter + outputWidth / 2,
-          0.6 * segHeight + offsetY,
-          diagCenter + outputWidth / 2,
-          segHeight + offsetY
-        );
-        this.ctx.lineTo(diagCenter - outputWidth / 2, segHeight + offsetY);
-        this.ctx.bezierCurveTo(
           diagCenter - outputWidth / 2,
-          0.6 * segHeight + offsetY,
-          diagCenter - inputWidth / 2,
-          0.4 * segHeight + offsetY,
-          diagCenter - inputWidth / 2,
-          offsetY
+          offsetY,
+          seg.main.style
         );
       }
-
-      this.ctx.stroke();
-      this.ctx.fill();
     }
-
-    this.initPath(seg.side.style);
 
     if (seg.kind == 'add') {
       const totalOutWidth = mainWidth + changeWidth;
 
-      const lowerRightX =
-        diagCenter + totalOutWidth / 2 - mainWidth - changeWidth;
-      const lowerLeftX = diagCenter + totalOutWidth / 2 - mainWidth;
-
-      this.ctx.moveTo(0, segHeight / 2 + arrowWidth / 2 + offsetY);
-      this.ctx.lineTo(arrowDepth, segHeight / 2 + offsetY);
-      this.ctx.lineTo(0, segHeight / 2 - arrowWidth / 2 + offsetY);
-      this.ctx.quadraticCurveTo(
-        diagCenter + totalOutWidth / 2 - mainWidth,
-        segHeight / 2 - arrowWidth / 2 + offsetY,
-
-        lowerLeftX,
-        segHeight + offsetY
-      );
-      this.ctx.lineTo(lowerRightX, segHeight + offsetY);
-      this.ctx.quadraticCurveTo(
+      this.drawInput(
         diagCenter + totalOutWidth / 2 - mainWidth - changeWidth,
-        segHeight / 2 + arrowWidth / 2 + offsetY,
-        0,
-        segHeight / 2 + arrowWidth / 2 + offsetY
+        diagCenter + totalOutWidth / 2 - mainWidth,
+        offsetY,
+        seg.side.style
       );
     } else if (seg.kind == 'sub') {
       const totalInWidth = mainWidth + changeWidth;
 
-      const upperLeftX = diagCenter + totalInWidth / 2 - changeWidth;
-      const upperRightX = diagCenter + totalInWidth / 2;
-
-      this.ctx.moveTo(upperLeftX, 0 + offsetY);
-      this.ctx.lineTo(upperRightX, 0 + offsetY);
-      this.ctx.quadraticCurveTo(
-        diagCenter + totalInWidth / 2,
-        segHeight / 2 - arrowWidth / 2 + offsetY,
-        diagWidth - arrowDepth,
-        segHeight / 2 - arrowWidth / 2 + offsetY
-      );
-      this.ctx.lineTo(diagWidth, segHeight / 2 + offsetY);
-      this.ctx.lineTo(
-        diagWidth - arrowDepth,
-        segHeight / 2 + arrowWidth / 2 + offsetY
-      );
-      this.ctx.quadraticCurveTo(
+      this.drawOutput(
         diagCenter + totalInWidth / 2 - changeWidth,
-        segHeight / 2 + arrowWidth / 2 + offsetY,
-        upperLeftX,
-        0 + offsetY
+        diagCenter + totalInWidth / 2,
+        offsetY,
+        seg.side.style
       );
     }
-
-    this.ctx.stroke();
-    this.ctx.fill();
   }
 
   drawEntrySegment(seg: SankeyEntrySegment, offsetY: number) {
@@ -181,6 +113,108 @@ export class SankeyRenderer {
     this.ctx.lineTo(diagCenter + segWidth / 2, offsetY);
     this.ctx.lineTo(diagCenter, offsetY + arrowDepth * 2);
     this.ctx.lineTo(diagCenter - segWidth / 2, offsetY);
+
+    this.ctx.stroke();
+    this.ctx.fill();
+  }
+
+  drawInput(
+    bottomLeftX: number,
+    bottomRightX: number,
+    offsetY: number,
+    style: SEGMENT_STYLE
+  ) {
+    const { arrowDepth, arrowWidth, segHeight } = this.measurements;
+
+    this.initPath(style);
+
+    this.ctx.moveTo(0, segHeight / 2 + arrowWidth / 2 + offsetY);
+    this.ctx.lineTo(arrowDepth, segHeight / 2 + offsetY);
+    this.ctx.lineTo(0, segHeight / 2 - arrowWidth / 2 + offsetY);
+    this.ctx.quadraticCurveTo(
+      bottomRightX,
+      segHeight / 2 - arrowWidth / 2 + offsetY,
+
+      bottomRightX,
+      segHeight + offsetY
+    );
+    this.ctx.lineTo(bottomLeftX, segHeight + offsetY);
+    this.ctx.quadraticCurveTo(
+      bottomLeftX,
+      segHeight / 2 + arrowWidth / 2 + offsetY,
+      0,
+      segHeight / 2 + arrowWidth / 2 + offsetY
+    );
+
+    this.ctx.stroke();
+    this.ctx.fill();
+  }
+
+  drawMain(
+    upperLeftX: number,
+    upperRightX: number,
+    lowerRightX: number,
+    lowerLeftX: number,
+    offsetY: number,
+    style: SEGMENT_STYLE
+  ) {
+    const { segHeight } = this.measurements;
+
+    this.initPath(style);
+
+    this.ctx.moveTo(upperLeftX, offsetY);
+    this.ctx.lineTo(upperRightX, offsetY);
+    this.ctx.bezierCurveTo(
+      upperRightX,
+      offsetY + 0.4 * segHeight,
+      lowerRightX,
+      offsetY + 0.6 * segHeight,
+      lowerRightX,
+      offsetY + segHeight
+    );
+    this.ctx.lineTo(lowerLeftX, offsetY + segHeight);
+    this.ctx.bezierCurveTo(
+      lowerLeftX,
+      offsetY + 0.6 * segHeight,
+      upperLeftX,
+      offsetY + 0.4 * segHeight,
+      upperLeftX,
+      offsetY
+    );
+
+    this.ctx.stroke();
+    this.ctx.fill();
+  }
+
+  drawOutput(
+    upperLeftX: number,
+    upperRightX: number,
+    offsetY: number,
+    style: SEGMENT_STYLE
+  ) {
+    const { arrowDepth, arrowWidth, diagWidth, segHeight } = this.measurements;
+
+    this.initPath(style);
+
+    this.ctx.moveTo(upperLeftX, 0 + offsetY);
+    this.ctx.lineTo(upperRightX, 0 + offsetY);
+    this.ctx.quadraticCurveTo(
+      upperRightX,
+      segHeight / 2 - arrowWidth / 2 + offsetY,
+      diagWidth - arrowDepth,
+      segHeight / 2 - arrowWidth / 2 + offsetY
+    );
+    this.ctx.lineTo(diagWidth, segHeight / 2 + offsetY);
+    this.ctx.lineTo(
+      diagWidth - arrowDepth,
+      segHeight / 2 + arrowWidth / 2 + offsetY
+    );
+    this.ctx.quadraticCurveTo(
+      upperLeftX,
+      segHeight / 2 + arrowWidth / 2 + offsetY,
+      upperLeftX,
+      0 + offsetY
+    );
 
     this.ctx.stroke();
     this.ctx.fill();
