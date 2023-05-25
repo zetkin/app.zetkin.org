@@ -12,7 +12,7 @@ export default makeMessages('feat.smartSearch', {
     save: m('Save'),
   },
   filterCategories: {
-    campaignActivity: m('Campaign activity'),
+    campaignActivity: m('Project activity'),
     misc: m('Misc'),
     peopleDatabase: m('People'),
     phoneBanking: m('Phone banking'),
@@ -22,7 +22,7 @@ export default makeMessages('feat.smartSearch', {
     all: m('Everyone'),
     call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
-    campaign_participation: m('Based on their campaign participation'),
+    campaign_participation: m('Based on their event participation'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
@@ -81,7 +81,7 @@ export default makeMessages('feat.smartSearch', {
           'Add people who have been successfully reached at least 2 times in any assignment at any point in time.'
         ),
         two: m(
-          "Remove people who have been called at least 1 time in assignment 'Campaign 2020' during the last 30 days."
+          "Remove people who have been called at least 1 time in assignment 'Project Save The Bees' during the last 30 days."
         ),
       },
       inputString: m<{
@@ -102,10 +102,8 @@ export default makeMessages('feat.smartSearch', {
     },
     campaignParticipation: {
       activitySelect: {
-        activity: m<{ activity: ReactElement | string }>(
-          'activity "{activity}"'
-        ),
-        any: m('any activity'),
+        activity: m<{ activity: ReactElement | string }>('type "{activity}"'),
+        any: m('any type'),
       },
       addRemoveSelect: {
         add: m('Add'),
@@ -117,17 +115,17 @@ export default makeMessages('feat.smartSearch', {
         signed_up: m('signed up'),
       },
       campaignSelect: {
-        any: m('any campaign'),
+        any: m('any project'),
         campaign: m<{ campaign: ReactElement | string }>(
-          'campaign "{campaign}"'
+          'project "{campaign}"'
         ),
       },
       examples: {
         one: m(
-          "Add people who have signed up for events in any campaign with any activity at location 'Dorfplatz' at any point in time"
+          "Add people who have signed up for events in any project of any type at location 'Dorfplatz' at any point in time"
         ),
         two: m(
-          "Remove people who have not been booked for events in any campaign with activity 'Put up posters' at any location before today."
+          "Remove people who have not been booked for events in any project of type 'Put up posters' at any location before today."
         ),
       },
       haveSelect: {
@@ -143,7 +141,7 @@ export default makeMessages('feat.smartSearch', {
         locationSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} with {activitySelect} at {locationSelect} {timeFrame}'
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
       ),
       locationSelect: {
         any: m('any location'),
@@ -185,7 +183,7 @@ export default makeMessages('feat.smartSearch', {
       addRemoveSelect: {
         add: m('Add'),
         limit: m('Limit to'),
-        sub: m('remove'),
+        sub: m('Remove'),
       },
       ellipsis: m('...'),
       examples: {
@@ -231,10 +229,10 @@ export default makeMessages('feat.smartSearch', {
         ),
         none: m("This organization doesn't have any custom fields yet."),
         text: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
-          '{fieldSelect} matches {freeTextInput}'
+          '{fieldSelect} matches "{freeTextInput}"'
         ),
         url: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
-          '{fieldSelect} matches {freeTextInput}'
+          '{fieldSelect} matches "{freeTextInput}"'
         ),
       },
       fieldSelect: {
@@ -250,11 +248,11 @@ export default makeMessages('feat.smartSearch', {
         text: m<{
           fieldName: ReactElement | string;
           searchTerm: ReactElement | string;
-        }>('{fieldName} matches {searchTerm}'),
+        }>('{fieldName} matches "{searchTerm}"'),
         url: m<{
           fieldName: ReactElement | string;
           searchTerm: ReactElement | string;
-        }>('{fieldName} matches {searchTerm}'),
+        }>('{fieldName} matches "{searchTerm}"'),
       },
       styleMe: m<{ styleMe: string }>('{styleMe}'),
     },
@@ -308,8 +306,10 @@ export default makeMessages('feat.smartSearch', {
         sub: m('Remove'),
       },
       examples: {
-        one: m('Add people who are in the view "Campaign 2020.'),
-        two: m('Remove people who are not in the view "Campaign 2020".'),
+        one: m('Add people who are in the view "Project Save The Bees".'),
+        two: m(
+          'Remove people who are not in the view "Project Save The Bees".'
+        ),
       },
       inSelect: {
         in: m('in'),
@@ -328,7 +328,7 @@ export default makeMessages('feat.smartSearch', {
     random: {
       addRemoveSelect: {
         add: m('add'),
-        limit: m('Limit to'),
+        limit: m('limit to'),
         sub: m('remove'),
       },
       examples: {
@@ -351,7 +351,7 @@ export default makeMessages('feat.smartSearch', {
           "Remove people who match Smart Search Query 'People who live in Stockholm'."
         ),
         two: m(
-          "Add people who match the target group of call Assignment 'Assignment one'."
+          "Add people who match the target group of call assignment 'Assignment one'."
         ),
       },
       inputString: m<{
@@ -510,7 +510,7 @@ export default makeMessages('feat.smartSearch', {
           "People who have submitted responses to survey 'Member survey 2020' before today."
         ),
         two: m(
-          "People who have submitted responses to survey 'Member survey' during the last 30 days."
+          "People who have submitted responses to survey 'Member survey 2020' during the last 30 days."
         ),
       },
       inputString: m<{
@@ -536,9 +536,9 @@ export default makeMessages('feat.smartSearch', {
         sub: m('Remove'),
       },
       campaignSelect: {
-        any: m('any campaign'),
+        any: m('any project'),
         campaign: m<{ campaign: ReactElement | string }>(
-          'campaign "{campaign}"'
+          'project "{campaign}"'
         ),
         in: m(' in '),
       },
@@ -547,7 +547,7 @@ export default makeMessages('feat.smartSearch', {
           'Add people who have completed task "Tell your friends" at least once at any point in time'
         ),
         two: m(
-          'Add people who have ignored any task in any campaign between 2 and 5 times before today'
+          'Add people who have ignored any task in any project between 2 and 5 times before today'
         ),
       },
       inputString: m<{
