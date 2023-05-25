@@ -182,6 +182,18 @@ const eventsSlice = createSlice({
         item.mutating = [];
       }
     },
+    eventsDeselected: (state, action: PayloadAction<number[]>) => {
+      const checkedEvents = action.payload;
+
+      if (checkedEvents.length === 0) {
+        state.selectedEvents = [];
+      } else {
+        state.selectedEvents = state.selectedEvents.filter(
+          (selectedEvent) =>
+            !checkedEvents.some((event) => event == selectedEvent)
+        );
+      }
+    },
     eventsLoad: (state) => {
       state.eventList.isLoading = true;
     },
@@ -205,14 +217,6 @@ const eventsSlice = createSlice({
       } else {
         state.selectedEvents = [...state.selectedEvents, ...checkedEvents];
       }
-    },
-    eventsDeselected: (state, action: PayloadAction<number[]>) => {
-      const checkedEvents = action.payload;
-
-      state.selectedEvents = state.selectedEvents.filter(
-        (selectedEvent) =>
-          !checkedEvents.some((event) => event == selectedEvent)
-      );
     },
     filterTextUpdated: (
       state,

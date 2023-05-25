@@ -1,8 +1,8 @@
 import { Box, Checkbox } from '@mui/material';
 import { useSelector, useStore } from 'react-redux';
 
-import { eventsDeselected, eventsSelected } from '../store';
 import { RootState } from 'core/store';
+import { eventsDeselected, eventsSelected } from '../store';
 
 interface EventSelectionCheckBoxProps {
   events: number[];

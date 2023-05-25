@@ -4,8 +4,6 @@ export default makeMessages('feat.calendar', {
   createMenu: {
     singleEvent: m('Create single event'),
   },
-  editEvents: m('Edit events'),
-  deselect: m('Deselect'),
   event: {
     differentLocations: m<{ numLocations: number }>(
       '{numLocations} different locations'
@@ -73,6 +71,12 @@ export default makeMessages('feat.calendar', {
     day: m('Day'),
     month: m('Month'),
     week: m('Week'),
+  },
+  selectionBar: {
+    copy: m('Copy'),
+    deselect: m('Deselect'),
+    editEvents: m('Edit events'),
+    move: m('Move'),
   },
   showMore: m('Show'),
   today: m('Today'),

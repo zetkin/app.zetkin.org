@@ -4,17 +4,17 @@ import { Box, Link, Typography } from '@mui/material';
 import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import getEventState from 'features/events/utils/getEventState';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
+import StatusDot from 'features/events/components/EventPopper/StatusDot';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
-import StatusDot from 'features/events/components/EventPopper/StatusDot';
-import getEventState from 'features/events/utils/getEventState';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
@@ -45,25 +45,25 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
   return (
     <Box sx={{ backgroundColor: 'white', borderRadius: '3px' }}>
       <Box alignItems="center" display="flex">
-        <Box sx={{ pl: 2, pb: 0.1, pr: 1 }}>
+        <Box sx={{ pb: 0.1, pl: 2, pr: 1 }}>
           <EventSelectionCheckBox events={[event.id]} />
         </Box>
         <NextLink href={getEventUrl(event)} passHref>
           <Link
             color="inherit"
+            sx={{ pb: 2, pr: 2, pt: 2, width: '100%' }}
             underline="none"
-            sx={{ width: '100%', pt: 2, pr: 2, pb: 2 }}
           >
             <Box
-              display="flex"
               alignItems="center"
+              display="flex"
               flexDirection="row"
-              justifyContent="space-between"
               gap={1}
+              justifyContent="space-between"
               width="100%"
             >
               {/* Status */}
-              <Box display="flex" alignItems="center" gap={2.2}>
+              <Box alignItems="center" display="flex" gap={2.2}>
                 <StatusDot state={getEventState(event)} />
                 {/* Title */}
                 <Typography
