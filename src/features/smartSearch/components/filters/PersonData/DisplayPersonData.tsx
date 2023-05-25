@@ -7,6 +7,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.personData;
 
 interface DisplayPersonDataProps {
@@ -29,14 +30,19 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
         <Msg
           id={localMessageIds.fieldMatches}
           values={{
-            field: <Msg id={localMessageIds.fieldSelect[c]} />,
-            value: fields[c] || '',
+            field: <StyledMsg id={localMessageIds.fieldSelect[c]} />,
+            value: (
+              <StyledMsg
+                id={localMessageIds.styleMe}
+                values={{ styleMe: fields[c] || '' }}
+              />
+            ),
           }}
         />
       );
       if (criteriaString) {
         criteriaString = (
-          <Msg
+          <StyledMsg
             id={localMessageIds.fieldTuple}
             values={{
               first: criteriaString,
@@ -55,7 +61,7 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         criteria: getCriteriaString(),
       }}
     />

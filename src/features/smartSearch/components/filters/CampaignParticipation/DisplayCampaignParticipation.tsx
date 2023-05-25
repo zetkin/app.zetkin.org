@@ -14,6 +14,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 interface DisplayCampaignParticipationProps {
@@ -63,37 +64,52 @@ const DisplayCampaignParticipation = ({
       id={messageIds.filters.campaignParticipation.inputString}
       values={{
         activitySelect: activityTitle ? (
-          <Msg
+          <StyledMsg
             id={localMessageIds.activitySelect.activity}
             values={{
-              activity: activityTitle,
+              activity: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: activityTitle }}
+                />
+              ),
             }}
           />
         ) : (
-          <Msg id={localMessageIds.activitySelect.any} />
+          <StyledMsg id={localMessageIds.activitySelect.any} />
         ),
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
-        bookedSelect: <Msg id={localMessageIds.bookedSelect[state]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        bookedSelect: <StyledMsg id={localMessageIds.bookedSelect[state]} />,
         campaignSelect: campaignTitle ? (
-          <Msg
+          <StyledMsg
             id={localMessageIds.campaignSelect.campaign}
             values={{
-              campaign: campaignTitle,
+              campaign: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: campaignTitle }}
+                />
+              ),
             }}
           />
         ) : (
-          <Msg id={localMessageIds.campaignSelect.any} />
+          <StyledMsg id={localMessageIds.campaignSelect.any} />
         ),
         haveSelect: <Msg id={localMessageIds.haveSelect[operator]} />,
         locationSelect: locationTitle ? (
-          <Msg
+          <StyledMsg
             id={localMessageIds.locationSelect.location}
             values={{
-              location: locationTitle,
+              location: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: locationTitle }}
+                />
+              ),
             }}
           />
         ) : (
-          <Msg id={localMessageIds.locationSelect.any} />
+          <StyledMsg id={localMessageIds.locationSelect.any} />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}

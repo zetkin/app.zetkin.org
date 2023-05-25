@@ -8,6 +8,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.random;
 
 interface DisplayRandomProps {
@@ -22,9 +23,9 @@ const DisplayRandom = ({ filter }: DisplayRandomProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         quantity: (
-          <Msg
+          <StyledMsg
             id={messageIds.quantity.preview[quantity]}
             values={{
               people: size,

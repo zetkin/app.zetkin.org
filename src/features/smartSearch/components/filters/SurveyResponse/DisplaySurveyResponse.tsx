@@ -11,6 +11,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.surveyResponse;
 
 interface DisplaySurveyResponseProps {
@@ -60,21 +61,37 @@ const DisplaySurveyResponse = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
-        freeTextInput: value,
-        matchSelect: <Msg id={localMessageIds.matchSelect[operator]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        freeTextInput: (
+          <StyledMsg id={localMessageIds.styleMe} values={{ styleMe: value }} />
+        ),
+        matchSelect: <StyledMsg id={localMessageIds.matchSelect[operator]} />,
         questionSelect: question ? (
           <Msg
             id={localMessageIds.questionSelect.question}
-            values={{ question }}
+            values={{
+              question: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: question }}
+                />
+              ),
+            }}
           />
         ) : (
-          <Msg id={localMessageIds.questionSelect.any} />
+          <StyledMsg id={localMessageIds.questionSelect.any} />
         ),
         surveySelect: (
           <Msg
             id={localMessageIds.surveySelect.survey}
-            values={{ surveyTitle: surveyTitle || '' }}
+            values={{
+              surveyTitle: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: surveyTitle || '' }}
+                />
+              ),
+            }}
           />
         ),
       }}

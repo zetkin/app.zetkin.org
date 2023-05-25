@@ -12,6 +12,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.callHistory;
 
 interface DisplayCallHistoryProps {
@@ -42,20 +43,35 @@ const DisplayCallHistory = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         assignmentSelect: assignmentTitle ? (
           <Msg
             id={localMessageIds.assignmentSelect.assignment}
             values={{
-              assignmentTitle,
+              assignmentTitle: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: assignmentTitle }}
+                />
+              ),
             }}
           />
         ) : (
-          <Msg id={localMessageIds.assignmentSelect.any} />
+          <StyledMsg id={localMessageIds.assignmentSelect.any} />
         ),
-        callSelect: <Msg id={localMessageIds.callSelect[operator]} />,
-        minTimes: minTimes || 1,
-        minTimesInput: minTimes || 1,
+        callSelect: <StyledMsg id={localMessageIds.callSelect[operator]} />,
+        minTimes: (
+          <StyledMsg
+            id={localMessageIds.minTimes}
+            values={{ minTimes: minTimes || 1, minTimesInput: minTimes || 1 }}
+          />
+        ),
+        minTimesInput: (
+          <StyledMsg
+            id={localMessageIds.minTimesInput}
+            values={{ minTimesInput: minTimes || 1 }}
+          />
+        ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />

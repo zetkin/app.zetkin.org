@@ -12,6 +12,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -48,13 +49,18 @@ const DisplayPersonField = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         field:
           fieldType == 'date' ? (
             <Msg
               id={localMessageIds.preview.date}
               values={{
-                fieldName: field?.title ?? '',
+                fieldName: (
+                  <StyledMsg
+                    id={localMessageIds.styleMe}
+                    values={{ styleMe: field?.title ?? '' }}
+                  />
+                ),
                 timeFrame: <DisplayTimeFrame config={timeFrame} />,
               }}
             />
@@ -62,8 +68,18 @@ const DisplayPersonField = ({
             <Msg
               id={localMessageIds.preview[fieldType]}
               values={{
-                fieldName: field?.title ?? '',
-                searchTerm: search || '',
+                fieldName: (
+                  <StyledMsg
+                    id={localMessageIds.styleMe}
+                    values={{ styleMe: field?.title ?? '' }}
+                  />
+                ),
+                searchTerm: (
+                  <StyledMsg
+                    id={localMessageIds.styleMe}
+                    values={{ styleMe: search || '' }}
+                  />
+                ),
               }}
             />
           ),

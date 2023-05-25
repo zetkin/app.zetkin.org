@@ -12,6 +12,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.subQuery;
 
 interface DisplaySubQueryProps {
@@ -56,10 +57,10 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: (
-          <Msg id={messageIds.filters.subQuery.addRemoveSelect[op]} />
+          <StyledMsg id={messageIds.filters.subQuery.addRemoveSelect[op]} />
         ),
         matchSelect: (
-          <Msg
+          <StyledMsg
             id={
               messageIds.filters.subQuery.matchSelect[
                 filter.config.operator || 'in'
@@ -71,7 +72,12 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
           <Msg
             id={localMessageIds.query.preview[query?.type || 'none']}
             values={{
-              queryTitle: query?.title ?? '',
+              queryTitle: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: query?.title ?? '' }}
+                />
+              ),
             }}
           />
         ),

@@ -8,6 +8,7 @@ import { taskResource } from 'features/tasks/api/tasks';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
+import StyledMsg from '../../StyledMsg';
 import {
   getMatchingWithConfig,
   getTaskStatus,
@@ -59,12 +60,19 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
       <>
         <Msg id={localMessageIds.campaignSelect.in} />
         {campaignTitle ? (
-          <Msg
+          <StyledMsg
             id={localMessageIds.campaignSelect.campaign}
-            values={{ campaign: campaignTitle }}
+            values={{
+              campaign: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: campaignTitle }}
+                />
+              ),
+            }}
           />
         ) : (
-          <Msg id={localMessageIds.campaignSelect.any} />
+          <StyledMsg id={localMessageIds.campaignSelect.any} />
         )}
       </>
     );
@@ -74,11 +82,11 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         campaignSelect: campaignSelect,
         matchingSelect: (
           // TODO: Move this to reusable component
-          <Msg
+          <StyledMsg
             id={messageIds.matching.preview[matching.option]}
             values={{
               max: matching.config?.max ?? 0,
@@ -87,17 +95,24 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
           />
         ),
         taskSelect: taskTitle ? (
-          <Msg
+          <StyledMsg
             id={localMessageIds.taskSelect.task}
             values={{
-              task: taskTitle,
+              task: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: taskTitle }}
+                />
+              ),
             }}
           />
         ) : (
-          <Msg id={localMessageIds.taskSelect.any} />
+          <StyledMsg id={localMessageIds.taskSelect.any} />
         ),
         taskStatusSelect: (
-          <Msg id={localMessageIds.taskStatusSelect[getTaskStatus(config)]} />
+          <StyledMsg
+            id={localMessageIds.taskStatusSelect[getTaskStatus(config)]}
+          />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}

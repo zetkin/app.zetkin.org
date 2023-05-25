@@ -12,6 +12,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.personTags;
 
 interface DisplayPersonTagProps {
@@ -39,16 +40,16 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         condition: min_matching ? (
-          <Msg
+          <StyledMsg
             id={localMessageIds.condition.preview.minMatching}
             values={{
               minMatching: min_matching,
             }}
           />
         ) : (
-          <Msg id={localMessageIds.condition.preview[condition]} />
+          <StyledMsg id={localMessageIds.condition.preview[condition]} />
         ),
         tags: (
           <Box alignItems="start" display="inline-flex">

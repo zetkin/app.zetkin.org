@@ -18,6 +18,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.surveyOption;
 
 interface DisplaySurveyOptionProps {
@@ -60,10 +61,12 @@ const DisplaySurveyOption = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
-        conditionSelect: <Msg id={localMessageIds.conditionSelect[operator]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        conditionSelect: (
+          <StyledMsg id={localMessageIds.conditionSelect[operator]} />
+        ),
         options: (
-          <Box alignItems="start" display="inline-flex">
+          <Box display="inline">
             {options.map((o) => {
               const shortenedLabel = getEllipsedString(o.text, 15);
               return shortenedLabel.length === o.text.length ? (
@@ -91,7 +94,14 @@ const DisplaySurveyOption = ({
         questionSelect: question ? (
           <Msg
             id={localMessageIds.questionSelect.question}
-            values={{ question: question.question }}
+            values={{
+              question: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: question.question }}
+                />
+              ),
+            }}
           />
         ) : (
           <Msg id={localMessageIds.questionSelect.any} />
@@ -99,7 +109,14 @@ const DisplaySurveyOption = ({
         surveySelect: (
           <Msg
             id={localMessageIds.surveySelect.survey}
-            values={{ surveyTitle: survey?.title ?? '' }}
+            values={{
+              surveyTitle: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: survey?.title ?? '' }}
+                />
+              ),
+            }}
           />
         ),
       }}

@@ -12,6 +12,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledMsg from '../../StyledMsg';
 const localMessageIds = messageIds.filters.surveySubmission;
 
 interface DisplaySurveySubmissionProps {
@@ -40,11 +41,18 @@ const DisplaySurveySubmission = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         surveySelect: (
           <Msg
             id={localMessageIds.surveySelect.survey}
-            values={{ surveyTitle }}
+            values={{
+              surveyTitle: (
+                <StyledMsg
+                  id={localMessageIds.styleMe}
+                  values={{ styleMe: surveyTitle }}
+                />
+              ),
+            }}
           />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
