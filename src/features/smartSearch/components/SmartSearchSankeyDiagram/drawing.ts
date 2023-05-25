@@ -92,12 +92,11 @@ export class SankeyRenderer {
     const top = 0.3 * segHeight + offsetY;
     const bottom = segHeight + offsetY;
 
-    this.ctx.moveTo(diagCenter - segWidth / 2, top);
+    this.ctx.moveTo(diagCenter - segWidth / 2, bottom);
+    this.ctx.lineTo(diagCenter - segWidth / 2, top);
     this.ctx.lineTo(diagCenter, top + arrowDepth * 2);
     this.ctx.lineTo(diagCenter + segWidth / 2, top);
     this.ctx.lineTo(diagCenter + segWidth / 2, bottom);
-    this.ctx.lineTo(diagCenter - segWidth / 2, bottom);
-    this.ctx.lineTo(diagCenter - segWidth / 2, top);
 
     this.ctx.stroke();
     this.ctx.fill();
@@ -111,8 +110,7 @@ export class SankeyRenderer {
     const segWidth = seg.width * (diagWidth - margin * 2);
     const diagCenter = diagWidth / 2;
 
-    this.ctx.moveTo(diagCenter - segWidth / 2, offsetY);
-    this.ctx.lineTo(diagCenter + segWidth / 2, offsetY);
+    this.ctx.moveTo(diagCenter + segWidth / 2, offsetY);
     this.ctx.lineTo(diagCenter + segWidth / 2, offsetY + arrowDepth);
     this.ctx.lineTo(diagCenter, offsetY + arrowDepth * 3);
     this.ctx.lineTo(diagCenter - segWidth / 2, offsetY + arrowDepth);
@@ -142,7 +140,7 @@ export class SankeyRenderer {
       bottomRightX,
       segHeight + offsetY
     );
-    this.ctx.lineTo(bottomLeftX, segHeight + offsetY);
+    this.styledLineTo(bottomLeftX, segHeight + offsetY, style);
     this.ctx.quadraticCurveTo(
       bottomLeftX,
       segHeight / 2 + arrowWidth / 2 + offsetY,
@@ -166,8 +164,7 @@ export class SankeyRenderer {
 
     this.initPath(style);
 
-    this.ctx.moveTo(upperLeftX, offsetY);
-    this.ctx.lineTo(upperRightX, offsetY);
+    this.styledLineTo(upperRightX, offsetY, style);
     this.ctx.bezierCurveTo(
       upperRightX,
       offsetY + 0.4 * segHeight,
@@ -176,7 +173,7 @@ export class SankeyRenderer {
       lowerRightX,
       offsetY + segHeight
     );
-    this.ctx.lineTo(lowerLeftX, offsetY + segHeight);
+    this.styledLineTo(lowerLeftX, offsetY + segHeight, style);
     this.ctx.bezierCurveTo(
       lowerLeftX,
       offsetY + 0.6 * segHeight,
@@ -200,8 +197,7 @@ export class SankeyRenderer {
 
     this.initPath(style);
 
-    this.ctx.moveTo(upperLeftX, 0 + offsetY);
-    this.ctx.lineTo(upperRightX, 0 + offsetY);
+    this.ctx.moveTo(upperRightX, 0 + offsetY);
     this.ctx.quadraticCurveTo(
       upperRightX,
       segHeight / 2 - arrowWidth / 2 + offsetY,
@@ -299,5 +295,16 @@ export class SankeyRenderer {
     this.ctx.strokeStyle = isStroke ? 'red' : 'transparent';
     this.ctx.lineWidth = isStroke ? this.measurements.lineWidth : 0;
     this.ctx.fillStyle = isStroke ? 'transparent' : 'red';
+  }
+
+  /* Either draw, or just move to a new position, depending on whether
+   * we are drawing a stroked or filled path.
+   */
+  styledLineTo(toX: number, toY: number, style: SEGMENT_STYLE) {
+    if (style == SEGMENT_STYLE.FILL) {
+      this.ctx.lineTo(toX, toY);
+    } else {
+      this.ctx.moveTo(toX, toY);
+    }
   }
 }
