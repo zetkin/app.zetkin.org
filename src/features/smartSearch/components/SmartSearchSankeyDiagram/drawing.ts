@@ -1,3 +1,4 @@
+import { lighten } from '@mui/system';
 import {
   SankeyAddSegment,
   SankeyEntrySegment,
@@ -10,26 +11,30 @@ import {
   SEGMENT_STYLE,
 } from './types';
 
-export type Measurements = {
+export type SankeyConfig = {
+  animDuration: number;
   arrowDepth: number;
   arrowWidth: number;
+  color: string;
   diagWidth: number;
+  hoverColor: string;
   lineWidth: number;
   margin: number;
   segHeight: number;
+  time: number;
 };
 
 export class SankeyRenderer {
   constructor(
     private ctx: CanvasRenderingContext2D,
-    private measurements: Measurements
+    private config: SankeyConfig
   ) {
     this.ctx = ctx;
-    this.measurements = measurements;
+    this.config = config;
   }
 
   drawAddSubSegment(seg: SankeyAddSegment | SankeySubSegment, offsetY: number) {
-    const { diagWidth, margin } = this.measurements;
+    const { diagWidth, margin } = this.config;
     const diagCenter = diagWidth / 2;
     const maxStreamWidth = diagWidth - margin * 2;
 
@@ -83,7 +88,7 @@ export class SankeyRenderer {
   }
 
   drawEntrySegment(seg: SankeyEntrySegment, offsetY: number) {
-    const { arrowDepth, diagWidth, margin, segHeight } = this.measurements;
+    const { arrowDepth, diagWidth, margin, segHeight } = this.config;
 
     const inset = this.initPathWithInset(seg.style);
 
@@ -103,7 +108,7 @@ export class SankeyRenderer {
   }
 
   drawExitSegment(seg: SankeyExitSegment, offsetY: number) {
-    const { arrowDepth, diagWidth, margin } = this.measurements;
+    const { arrowDepth, diagWidth, margin } = this.config;
 
     const inset = this.initPathWithInset(seg.style);
 
@@ -126,7 +131,7 @@ export class SankeyRenderer {
     offsetY: number,
     style: SEGMENT_STYLE
   ) {
-    const { arrowDepth, arrowWidth, segHeight } = this.measurements;
+    const { arrowDepth, arrowWidth, segHeight } = this.config;
 
     const inset = this.initPathWithInset(style);
 
@@ -159,7 +164,7 @@ export class SankeyRenderer {
     offsetY: number,
     style: SEGMENT_STYLE
   ) {
-    const { segHeight } = this.measurements;
+    const { segHeight } = this.config;
 
     const inset = this.initPathWithInset(style);
 
@@ -193,7 +198,7 @@ export class SankeyRenderer {
     offsetY: number,
     style: SEGMENT_STYLE
   ) {
-    const { arrowDepth, arrowWidth, diagWidth, segHeight } = this.measurements;
+    const { arrowDepth, arrowWidth, diagWidth, segHeight } = this.config;
 
     const inset = this.initPathWithInset(style);
 
@@ -224,7 +229,7 @@ export class SankeyRenderer {
     seg: SankeyPseudoAddSegment | SankeyPseudoSubSegment,
     offsetY: number
   ) {
-    const { diagWidth, margin, segHeight } = this.measurements;
+    const { diagWidth, margin, segHeight } = this.config;
     const diagCenter = diagWidth / 2;
     const doubleMargin = margin * 2;
 
@@ -290,12 +295,28 @@ export class SankeyRenderer {
   }
 
   initPathWithInset(style: SEGMENT_STYLE) {
-    const { lineWidth } = this.measurements;
+    const { animDuration, color, hoverColor, lineWidth, time } = this.config;
+
+    // TODO: Calculate
+    const diagHeight = 1000;
+
+    const gradOffset = (time / animDuration) * 0.96;
+    const baseGradient = this.ctx.createLinearGradient(0, 0, 0, 4 * diagHeight);
+    baseGradient.addColorStop(0 + gradOffset, color);
+    baseGradient.addColorStop(0.02 + gradOffset, lighten(color, 0.2));
+    baseGradient.addColorStop(0.04 + gradOffset, color);
+
+    const hovGradient = this.ctx.createLinearGradient(0, 0, 0, 4 * diagHeight);
+    hovGradient.addColorStop(0 + gradOffset, hoverColor);
+    hovGradient.addColorStop(0.02 + gradOffset, lighten(hoverColor, 0.2));
+    hovGradient.addColorStop(0.04 + gradOffset, hoverColor);
+
     const isStroke = style == SEGMENT_STYLE.STROKE;
     this.ctx.beginPath();
-    this.ctx.strokeStyle = isStroke ? 'red' : 'transparent';
+    this.ctx.strokeStyle = isStroke ? baseGradient : 'transparent';
     this.ctx.lineWidth = isStroke ? lineWidth : 0;
-    this.ctx.fillStyle = isStroke ? 'transparent' : 'red';
+    this.ctx.fillStyle = isStroke ? 'transparent' : baseGradient;
+    this.ctx.setLineDash([3, 3]);
 
     return isStroke ? lineWidth / 2 : 0;
   }

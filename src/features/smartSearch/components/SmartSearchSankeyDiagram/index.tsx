@@ -1,4 +1,3 @@
-import { lighten } from '@mui/system';
 import { FC, useEffect, useRef } from 'react';
 
 import { SankeyRenderer } from './drawing';
@@ -39,25 +38,18 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     const now = new Date();
     const time =
       (now.getTime() - startTimeRef.current.getTime()) % animDuration;
-    const gradOffset = (time / animDuration) * 0.96;
-    const baseGradient = context.createLinearGradient(0, 0, 0, 4 * diagHeight);
-    baseGradient.addColorStop(0 + gradOffset, color);
-    baseGradient.addColorStop(0.02 + gradOffset, lighten(color, 0.2));
-    baseGradient.addColorStop(0.04 + gradOffset, color);
-
-    const hoverColor = '#f00';
-    const hoverGradient = context.createLinearGradient(0, 0, 0, 4 * diagHeight);
-    hoverGradient.addColorStop(0 + gradOffset, hoverColor);
-    hoverGradient.addColorStop(0.02 + gradOffset, lighten(hoverColor, 0.2));
-    hoverGradient.addColorStop(0.04 + gradOffset, hoverColor);
 
     const renderer = new SankeyRenderer(context, {
+      animDuration,
       arrowDepth,
       arrowWidth,
+      color,
       diagWidth,
+      hoverColor: '#f00',
       lineWidth: 2,
       margin,
       segHeight,
+      time,
     });
     segments.forEach((seg, index) => {
       renderer.drawSegment(seg, index * segHeight);
