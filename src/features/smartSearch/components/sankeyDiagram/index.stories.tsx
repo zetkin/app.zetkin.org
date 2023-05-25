@@ -1,15 +1,21 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Box } from '@mui/material';
+import { Meta, Story } from '@storybook/react';
 
-import SmartSearchSankeyDiagram from '.';
-import { SEGMENT_KIND, SEGMENT_STYLE } from './types';
+import SmartSearchSankeySegment from './SmartSearchSankeySegment';
+import { SankeySegment, SEGMENT_KIND, SEGMENT_STYLE } from './types';
 
 export default {
-  component: SmartSearchSankeyDiagram,
-  title: 'SmartSearchSankeyDiagram',
-} as ComponentMeta<typeof SmartSearchSankeyDiagram>;
+  title: 'Smart Search Sankey Diagram',
+} as Meta;
 
-const Template: ComponentStory<typeof SmartSearchSankeyDiagram> = (args) => {
-  return <SmartSearchSankeyDiagram {...args} />;
+const Template: Story<{ segments: SankeySegment[] }> = (args) => {
+  return (
+    <Box>
+      {args.segments.map((seg, index) => (
+        <SmartSearchSankeySegment key={index} segment={seg} />
+      ))}
+    </Box>
+  );
 };
 
 export const basic = Template.bind({});

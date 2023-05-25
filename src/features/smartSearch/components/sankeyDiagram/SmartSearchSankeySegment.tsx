@@ -1,37 +1,35 @@
-import { FC, useEffect, useRef } from 'react';
+import { Box } from '@mui/material';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { SankeyRenderer } from './drawing';
 import { SankeySegment } from './types';
 
-type SmartSearchSankeyDiagramProps = {
+type SmartSearchSankeySegmentProps = {
   arrowDepth?: number;
   arrowWidth?: number;
   color?: string;
   diagWidth?: number;
   hoverColor?: string;
   margin?: number;
-  segments: SankeySegment[];
+  segment: SankeySegment;
 };
 
-const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
+const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
+  segment,
   arrowDepth = 10,
   arrowWidth = 20,
   color = '#cccccc',
   diagWidth = 200,
   hoverColor = '#bbbbbb',
   margin = 30,
-  segments,
 }) => {
-  const mouseState = useRef({
-    hoveredSegment: -1,
-  });
   const animFrameRef = useRef(0);
   const startTimeRef = useRef(new Date());
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [hovered, setHovered] = useState(false);
 
   const segHeight = 100;
 
-  const diagHeight = segments.length * segHeight;
   const animDuration = 1000;
 
   const render = (context: CanvasRenderingContext2D) => {
@@ -53,7 +51,7 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       segHeight,
       time,
     });
-    renderer.drawSegments(segments, mouseState.current.hoveredSegment);
+    renderer.drawSegments([segment], hovered ? 0 : -1);
   };
 
   useEffect(() => {
@@ -69,27 +67,10 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
       }
     }
 
-    function handleMouseOut() {
-      mouseState.current.hoveredSegment = -1;
-    }
-
-    function handleMouseMove(ev: MouseEvent) {
-      const count = segments.length;
-      const index = Math.floor((ev.offsetY / diagHeight) * count);
-      mouseState.current.hoveredSegment = Math.max(
-        0,
-        Math.min(index, count - 1)
-      );
-    }
-
     animFrameRef.current = requestAnimationFrame(nextFrame);
-    canvasRef.current?.addEventListener('mousemove', handleMouseMove);
-    canvasRef.current?.addEventListener('mouseout', handleMouseOut);
 
     return () => {
       cancelAnimationFrame(animFrameRef.current);
-      canvasRef.current?.removeEventListener('mousemove', handleMouseMove);
-      canvasRef.current?.removeEventListener('mouseout', handleMouseOut);
     };
   }, [
     canvasRef.current,
@@ -98,17 +79,26 @@ const SmartSearchSankeyDiagram: FC<SmartSearchSankeyDiagramProps> = ({
     color,
     diagWidth,
     hoverColor,
+    hovered,
     margin,
-    segments,
+    segment,
   ]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      height={diagHeight + arrowDepth * 2}
-      width={diagWidth}
-    />
+    <Box
+      onMouseOut={() => setHovered(false)}
+      onMouseOver={() => setHovered(true)}
+    >
+      <canvas
+        ref={canvasRef}
+        height={segHeight}
+        style={{
+          display: 'block',
+        }}
+        width={diagWidth}
+      />
+    </Box>
   );
 };
 
-export default SmartSearchSankeyDiagram;
+export default SmartSearchSankeySegment;

@@ -1,4 +1,8 @@
-import { FilterStats, SankeySegment, SEGMENT_KIND } from './types';
+import {
+  FilterStats,
+  SankeySegment,
+  SEGMENT_KIND,
+} from '../sankeyDiagram/types';
 
 export default function makeSankeySegments(
   stats: FilterStats[]
