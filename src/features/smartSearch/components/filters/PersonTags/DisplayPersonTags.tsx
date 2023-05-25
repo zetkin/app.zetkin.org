@@ -58,7 +58,7 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
                 key={t.id}
                 label={t.title}
                 size="small"
-                sx={{ borderColor: t.color, color: t.color, margin: '2px' }}
+                sx={{ borderColor: t.color, margin: '2px' }}
                 variant="outlined"
               />
             ))}
