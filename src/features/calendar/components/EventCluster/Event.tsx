@@ -178,10 +178,12 @@ const Event = ({
       {topBadge}
       {collapsed && (
         <Box className={classes.collapsedContainer}>
-          {(isHovered || selectedEvents.length > 0) && (
-            <EventSelectionCheckBox events={events} />
-          )}
-          <Typography className={classes.title}>{title}</Typography>
+          <Box className={classes.title} display="flex">
+            {(isHovered || selectedEvents.length > 0) && (
+              <EventSelectionCheckBox events={events} />
+            )}
+            <Typography className={classes.title}>{title}</Typography>
+          </Box>
           <Box display="flex">
             {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
               return (
