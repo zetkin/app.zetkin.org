@@ -1,4 +1,11 @@
-import { Alert, Divider } from '@mui/material';
+import { Alert, Divider, Grid } from '@mui/material';
+import {
+  ArrowForwardOutlined,
+  CircleOutlined,
+  Edit,
+  PlaylistAddOutlined,
+  RadioButtonCheckedOutlined,
+} from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -8,7 +15,6 @@ import {
   ListItem,
   Typography,
 } from '@mui/material';
-import { Edit, PlaylistAddOutlined } from '@mui/icons-material';
 
 import DisplayStartsWith from '../../StartsWith/DisplayStartsWith';
 import { Msg } from 'core/i18n';
@@ -19,6 +25,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import QueryOverviewChip from './QueryOverviewChip';
 import QueryOverviewListItem from './QueryOverviewListItem';
 
 const FIRST_FILTER = 'first_filter';
@@ -61,44 +68,69 @@ const QueryOverview = ({
         </Alert>
       )}
       <Box minWidth={0.5} padding={4}>
-        <List>
-          <ListItem key={FIRST_FILTER} style={{ padding: 0 }}>
-            <Box
-              alignItems="center"
-              display="flex"
-              justifyContent="space-between"
-              width={1}
-            >
-              <Typography>
-                <DisplayStartsWith startsWithAll={startsWithAll} />
-              </Typography>
-              {!readOnly && (
-                <Box alignItems="center" display="flex">
-                  <IconButton
-                    onClick={onOpenStartsWithEditor}
-                    size="small"
-                    sx={{ paddingRight: '35px' }}
-                  >
-                    <Edit fontSize="small" />
-                  </IconButton>
+        <Box sx={{ overflowY: 'auto' }}>
+          <List>
+            <ListItem key={FIRST_FILTER} style={{ padding: 0 }}>
+              <Grid
+                alignItems="center"
+                container
+                display="flex"
+                justifyContent="space-between"
+                width={1}
+              >
+                <Grid display="flex" item xs={1}>
+                  <QueryOverviewChip
+                    filterOperatorIcon={
+                      <ArrowForwardOutlined
+                        color="secondary"
+                        fontSize="small"
+                      />
+                    }
+                    filterTypeIcon={
+                      startsWithAll ? (
+                        <RadioButtonCheckedOutlined
+                          color="secondary"
+                          fontSize="small"
+                        />
+                      ) : (
+                        <CircleOutlined color="secondary" fontSize="small" />
+                      )
+                    }
+                  />
+                </Grid>
+                <Grid item xs={10}>
+                  <Typography>
+                    <DisplayStartsWith startsWithAll={startsWithAll} />
+                  </Typography>
+                </Grid>
+                {!readOnly && (
+                  <Grid alignItems="center" display="flex" item xs={1}>
+                    <IconButton
+                      onClick={onOpenStartsWithEditor}
+                      size="small"
+                      sx={{ paddingRight: '35px' }}
+                    >
+                      <Edit fontSize="small" />
+                    </IconButton>
+                  </Grid>
+                )}
+              </Grid>
+            </ListItem>
+            {filters
+              .filter((f) => f.type !== FILTER_TYPE.ALL)
+              .map((filter) => (
+                <Box key={filter.id}>
+                  <Divider />
+                  <QueryOverviewListItem
+                    filter={filter}
+                    onDeleteFilter={onDeleteFilter}
+                    onEditFilter={onEditFilter}
+                    readOnly={readOnly}
+                  />
                 </Box>
-              )}
-            </Box>
-          </ListItem>
-          {filters
-            .filter((f) => f.type !== FILTER_TYPE.ALL)
-            .map((filter) => (
-              <>
-                <Divider />
-                <QueryOverviewListItem
-                  filter={filter}
-                  onDeleteFilter={onDeleteFilter}
-                  onEditFilter={onEditFilter}
-                  readOnly={readOnly}
-                />
-              </>
-            ))}
-        </List>
+              ))}
+          </List>
+        </Box>
         <Button
           color="primary"
           disabled={readOnly}

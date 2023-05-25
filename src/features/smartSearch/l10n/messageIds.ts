@@ -51,6 +51,7 @@ export default makeMessages('feat.smartSearch', {
     callBlocked: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       inputString: m<{ addRemoveSelect: ReactElement }>(
@@ -60,6 +61,7 @@ export default makeMessages('feat.smartSearch', {
     callHistory: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       assignmentSelect: {
@@ -100,6 +102,7 @@ export default makeMessages('feat.smartSearch', {
       },
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       bookedSelect: {
@@ -141,6 +144,7 @@ export default makeMessages('feat.smartSearch', {
     mostActive: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       examples: {
@@ -163,6 +167,7 @@ export default makeMessages('feat.smartSearch', {
     personData: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('remove'),
       },
       ellipsis: m('...'),
@@ -199,6 +204,7 @@ export default makeMessages('feat.smartSearch', {
     personField: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       edit: {
@@ -234,6 +240,7 @@ export default makeMessages('feat.smartSearch', {
     personTags: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       condition: {
@@ -276,6 +283,7 @@ export default makeMessages('feat.smartSearch', {
     personView: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       examples: {
@@ -298,6 +306,7 @@ export default makeMessages('feat.smartSearch', {
     random: {
       addRemoveSelect: {
         add: m('add'),
+        limit: m('Limit to'),
         sub: m('remove'),
       },
       examples: {
@@ -312,6 +321,7 @@ export default makeMessages('feat.smartSearch', {
     subQuery: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Sub'),
       },
       examples: {
@@ -380,6 +390,7 @@ export default makeMessages('feat.smartSearch', {
     surveyOption: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       conditionSelect: {
@@ -418,6 +429,7 @@ export default makeMessages('feat.smartSearch', {
     surveyResponse: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       examples: {
@@ -457,6 +469,7 @@ export default makeMessages('feat.smartSearch', {
     surveySubmission: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       examples: {
@@ -483,6 +496,7 @@ export default makeMessages('feat.smartSearch', {
     task: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       campaignSelect: {
@@ -521,6 +535,7 @@ export default makeMessages('feat.smartSearch', {
     user: {
       addRemoveSelect: {
         add: m('Add'),
+        limit: m('Limit to'),
         sub: m('Remove'),
       },
       connectedSelect: {
