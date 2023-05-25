@@ -10,7 +10,6 @@ import {
   KeyboardDoubleArrowRightOutlined,
   Logout,
   Map,
-  Settings,
 } from '@mui/icons-material/';
 import {
   Avatar,
@@ -29,7 +28,7 @@ import { cloneElement, useState } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from './l10n/messageIds';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
-import useCurrentUser from './hooks/useCurrentUser';
+import useCurrentUser from 'features/users/hooks/useCurrentUser';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIAvatar from './ZUIAvatar';
@@ -77,8 +76,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const messages = useMessages(messageIds);
   const classes = useStyles();
   const theme = useTheme();
-  const [user] = useCurrentUser();
-
+  const user = useCurrentUser();
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
@@ -291,14 +289,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 >
                   <ZUIEllipsisMenu
                     items={[
-                      {
-                        label: (
-                          <Typography>
-                            {messages.organizeSidebar.userSettings()}
-                          </Typography>
-                        ),
-                        startIcon: <Settings />,
-                      },
                       {
                         label: (
                           <Typography>
