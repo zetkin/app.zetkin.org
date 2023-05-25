@@ -16,30 +16,30 @@ import { useMessages } from 'core/i18n';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 export interface NominatimLocation {
-  place_id: string,
-  licence: string,
-  osm_type: string,
-  osm_id: string,
-  boundingbox: string[],
-  lat: string,
-  lon: string,
-  display_name: string,
-  class: string,
-  type: string,
-  importance: number,
-  icon: string | null,
+  place_id: string;
+  licence: string;
+  osm_type: string;
+  osm_id: string;
+  boundingbox: string[];
+  lat: string;
+  lon: string;
+  display_name: string;
+  class: string;
+  type: string;
+  importance: number;
+  icon: string | null;
   address: {
-      "ISO3166-2-lvl4": string | null,
-      city: string | null,
-      country: string,
-      country_code: string
-      postcode: string,
-      state: string | null,
-      state_district: string | null, 
-  } | null,
+    'ISO3166-2-lvl4': string | null;
+    city: string | null;
+    country: string;
+    country_code: string;
+    postcode: string;
+    state: string | null;
+    state_district: string | null;
+  } | null;
   extratags: {
-      [key: string]: string
-  } | null
+    [key: string]: string;
+  } | null;
 }
 
 interface StyleProps {
@@ -68,8 +68,8 @@ export type PendingLocation = {
 };
 
 enum LocationOptionType {
-  EXISTING = "Existing",
-  NEW = "New",
+  EXISTING = 'Existing',
+  NEW = 'New',
 }
 
 export type LocationOption = {
@@ -78,8 +78,8 @@ export type LocationOption = {
   lat: number | null;
   lng: number | null;
   title: string;
-  type: LocationOptionType 
-}
+  type: LocationOptionType;
+};
 
 interface LocationModalProps {
   currentEventId: number;
@@ -105,7 +105,9 @@ const LocationModal: FC<LocationModalProps> = ({
   open,
   locationId = null,
 }) => {
-  const [geocodeLocations, setGeocodeLocations] = useState<NominatimLocation[]>([]);
+  const [geocodeLocations, setGeocodeLocations] = useState<NominatimLocation[]>(
+    []
+  );
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
@@ -117,25 +119,28 @@ const LocationModal: FC<LocationModalProps> = ({
   const [newLatLng, setNewLatLng] =
     useState<Pick<ZetkinLocation, 'lat' | 'lng'>>();
 
-  const locationOptions: LocationOption[] = [...locations.map((location) => {
-    return {
-      id: location.id,
-      info_text: location.info_text,
-      lat: location.lat,
-      lng: location.lng,
-      title: location.title,
-      type: LocationOptionType.EXISTING
-    }
-  }), ...geocodeLocations.map((location) => {
-    return {
-      id: null,
-      info_text: location.display_name,
-      lat: Number(location.lat),
-      lng: Number(location.lon),
-      title: location.display_name,
-      type: LocationOptionType.NEW
-    }
-  })]
+  const locationOptions: LocationOption[] = [
+    ...locations.map((location) => {
+      return {
+        id: location.id,
+        info_text: location.info_text,
+        lat: location.lat,
+        lng: location.lng,
+        title: location.title,
+        type: LocationOptionType.EXISTING,
+      };
+    }),
+    ...geocodeLocations.map((location) => {
+      return {
+        id: null,
+        info_text: location.display_name,
+        lat: Number(location.lat),
+        lng: Number(location.lon),
+        title: location.display_name,
+        type: LocationOptionType.NEW,
+      };
+    }),
+  ];
 
   const selectedLocation = locations.find(
     (location) => location.id === selectedLocationId
@@ -207,21 +212,25 @@ const LocationModal: FC<LocationModalProps> = ({
                 }
               }}
               onInputChange={(value) => {
-                setSearchString(value || '')
-                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${value}`).then((res) => {
-                  res.json().then((body) => {
-                    // setGeocodeLocations(body.map((nominatimPlace: NominatimLocation) => {
-                    //     return {
-                    //       lat: nominatimPlace.lat,
-                    //       lng: nominatimPlace.lon,
-                    //       name: nominatimPlace.display_name,
-                    //     }
-                    // }));
-                    setGeocodeLocations(body);
+                setSearchString(value || '');
+                fetch(
+                  `https://nominatim.openstreetmap.org/search?format=json&q=${value}`
+                )
+                  .then((res) => {
+                    res.json().then((body) => {
+                      // setGeocodeLocations(body.map((nominatimPlace: NominatimLocation) => {
+                      //     return {
+                      //       lat: nominatimPlace.lat,
+                      //       lng: nominatimPlace.lon,
+                      //       name: nominatimPlace.display_name,
+                      //     }
+                      // }));
+                      setGeocodeLocations(body);
+                    });
                   })
-                }).catch(() => {
-                  setGeocodeLocations([])
-                })
+                  .catch(() => {
+                    setGeocodeLocations([]);
+                  });
               }}
               onTextFieldChange={(value) => setSearchString(value)}
               options={locationOptions}
