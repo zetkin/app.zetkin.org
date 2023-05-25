@@ -4,6 +4,8 @@ export default makeMessages('feat.calendar', {
   createMenu: {
     singleEvent: m('Create single event'),
   },
+  editEvents: m('Edit events'),
+  deselect: m('Deselect'),
   event: {
     differentLocations: m<{ numLocations: number }>(
       '{numLocations} different locations'

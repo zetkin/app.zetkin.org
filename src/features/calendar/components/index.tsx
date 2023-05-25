@@ -10,9 +10,12 @@ import CalendarWeekView from './CalendarWeekView';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
 
 import utc from 'dayjs/plugin/utc';
-import { Paper } from '@mui/material';
+import { Button, ButtonGroup, Paper, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from 'core/store';
+import { CheckBoxOutlined } from '@mui/icons-material';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 dayjs.extend(utc);
 
 export enum TimeScale {
@@ -156,12 +159,37 @@ const Calendar = () => {
           </Suspense>
         </Box>
       </Box>
-      {/* {selectedEvents.length > 0 && (
+      {selectedEvents.length > 0 && (
         <Paper
           elevation={3}
-          sx={{ padding: 2, backgroundColor: 'white', width: '100%' }}
-        />
-      )} */}
+          sx={{
+            padding: 2,
+            backgroundColor: 'white',
+            width: '100%',
+            position: 'sticky',
+            bottom: 15,
+          }}
+        >
+          <Box display="flex" alignItems="center">
+            <CheckBoxOutlined color="primary" />
+            <Typography color="primary" sx={{ px: 0.4 }}>
+              {selectedEvents.length}
+            </Typography>
+            <ButtonGroup variant="text" color="secondary">
+              <Button color="primary" sx={{ mr: 1 }}>
+                <Msg id={messageIds.deselect} />
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                sx={{ ml: 1, borderRadius: '5px' }}
+              >
+                <Msg id={messageIds.editEvents} />
+              </Button>
+            </ButtonGroup>
+          </Box>
+        </Paper>
+      )}
     </>
   );
 };
