@@ -46,7 +46,7 @@ const SelectionBar = () => {
               <Divider orientation="vertical" variant="fullWidth" />
               <Button
                 color="primary"
-                sx={{ borderRadius: '8px', ml: 1.5 }}
+                sx={{ borderRadius: '5px', ml: 1.5 }}
                 variant="outlined"
               >
                 <Msg id={messageIds.selectionBar.editEvents} />
