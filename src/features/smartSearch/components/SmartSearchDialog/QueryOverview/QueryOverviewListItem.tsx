@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Delete, Edit } from '@mui/icons-material';
-import { Grid, IconButton, ListItem, Typography } from '@mui/material';
+import { Divider, Grid, IconButton, ListItem, Typography } from '@mui/material';
 
 import getFilterComponents from './getFilterComponents';
 import QueryOverviewChip from './QueryOverviewChip';
@@ -25,35 +25,38 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
   const { displayFilter, filterOperatorIcon, filterTypeIcon } =
     getFilterComponents(filter);
   return (
-    <ListItem style={{ padding: 0 }}>
-      <Grid
-        alignItems="center"
-        container
-        display="flex"
-        justifyContent="space-between"
-        width={1}
-      >
-        <Grid display="flex" item xs={1}>
-          <QueryOverviewChip
-            filterOperatorIcon={filterOperatorIcon}
-            filterTypeIcon={filterTypeIcon}
-          />
-        </Grid>
-        <Grid item xs={10}>
-          <Typography>{displayFilter}</Typography>
-        </Grid>
-        {!readOnly && (
-          <Grid alignItems="center" display="flex" item xs={1}>
-            <IconButton onClick={() => onEditFilter(filter)} size="small">
-              <Edit fontSize="small" />
-            </IconButton>
-            <IconButton onClick={() => onDeleteFilter(filter)} size="small">
-              <Delete fontSize="small" />
-            </IconButton>
+    <>
+      <Divider />
+      <ListItem style={{ padding: 0 }}>
+        <Grid
+          alignItems="center"
+          container
+          display="flex"
+          justifyContent="space-between"
+          width={1}
+        >
+          <Grid display="flex" item xs={1}>
+            <QueryOverviewChip
+              filterOperatorIcon={filterOperatorIcon}
+              filterTypeIcon={filterTypeIcon}
+            />
           </Grid>
-        )}
-      </Grid>
-    </ListItem>
+          <Grid item xs={10}>
+            <Typography>{displayFilter}</Typography>
+          </Grid>
+          {!readOnly && (
+            <Grid alignItems="center" display="flex" item xs={1}>
+              <IconButton onClick={() => onEditFilter(filter)} size="small">
+                <Edit fontSize="small" />
+              </IconButton>
+              <IconButton onClick={() => onDeleteFilter(filter)} size="small">
+                <Delete fontSize="small" />
+              </IconButton>
+            </Grid>
+          )}
+        </Grid>
+      </ListItem>
+    </>
   );
 };
 

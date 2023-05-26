@@ -1,4 +1,4 @@
-import { Alert, Divider, Grid } from '@mui/material';
+import { Alert, Grid } from '@mui/material';
 import {
   ArrowForwardOutlined,
   CircleOutlined,
@@ -126,15 +126,13 @@ const QueryOverview = ({
           {filters
             .filter((f) => f.type !== FILTER_TYPE.ALL)
             .map((filter) => (
-              <Box key={filter.id}>
-                <Divider />
-                <QueryOverviewListItem
-                  filter={filter}
-                  onDeleteFilter={onDeleteFilter}
-                  onEditFilter={onEditFilter}
-                  readOnly={readOnly}
-                />
-              </Box>
+              <QueryOverviewListItem
+                key={filter.id}
+                filter={filter}
+                onDeleteFilter={onDeleteFilter}
+                onEditFilter={onEditFilter}
+                readOnly={readOnly}
+              />
             ))}
         </List>
         {!readOnly && (
