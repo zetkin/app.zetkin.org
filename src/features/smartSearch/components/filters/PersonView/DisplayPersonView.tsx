@@ -27,7 +27,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   );
   const personViews = personViewsQuery?.data || [];
 
-  const view = personViews.find((v) => v.id == config.view) || personViews[0];
+  const view = personViews.find((v) => v.id == config.view);
   const operator = config.operator;
 
   const op = filter.op || OPERATION.ADD;
