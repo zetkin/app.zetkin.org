@@ -8,6 +8,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.personData;
 
 interface DisplayPersonDataProps {
@@ -31,12 +32,7 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
           id={localMessageIds.fieldMatches}
           values={{
             field: <StyledMsg id={localMessageIds.fieldSelect[c]} />,
-            value: (
-              <StyledMsg
-                id={localMessageIds.styleMe}
-                values={{ styleMe: fields[c] || '' }}
-              />
-            ),
+            value: <UnderlinedText text={fields[c] || ''} />,
           }}
         />
       );

@@ -13,6 +13,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.callHistory;
 
 interface DisplayCallHistoryProps {
@@ -48,12 +49,7 @@ const DisplayCallHistory = ({
           <Msg
             id={localMessageIds.assignmentSelect.assignment}
             values={{
-              assignmentTitle: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: assignmentTitle }}
-                />
-              ),
+              assignmentTitle: <UnderlinedText text={assignmentTitle} />,
             }}
           />
         ) : (

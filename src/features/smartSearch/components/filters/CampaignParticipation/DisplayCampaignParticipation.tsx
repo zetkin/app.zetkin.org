@@ -15,6 +15,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 interface DisplayCampaignParticipationProps {
@@ -67,12 +68,7 @@ const DisplayCampaignParticipation = ({
           <StyledMsg
             id={localMessageIds.activitySelect.activity}
             values={{
-              activity: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: activityTitle }}
-                />
-              ),
+              activity: <UnderlinedText text={activityTitle} />,
             }}
           />
         ) : (
@@ -84,12 +80,7 @@ const DisplayCampaignParticipation = ({
           <StyledMsg
             id={localMessageIds.campaignSelect.campaign}
             values={{
-              campaign: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: campaignTitle }}
-                />
-              ),
+              campaign: <UnderlinedText text={campaignTitle} />,
             }}
           />
         ) : (
@@ -100,12 +91,7 @@ const DisplayCampaignParticipation = ({
           <StyledMsg
             id={localMessageIds.locationSelect.location}
             values={{
-              location: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: locationTitle }}
-                />
-              ),
+              location: <UnderlinedText text={locationTitle} />,
             }}
           />
         ) : (

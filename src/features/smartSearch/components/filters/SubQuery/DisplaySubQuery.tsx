@@ -13,6 +13,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.subQuery;
 
 interface DisplaySubQueryProps {
@@ -72,12 +73,7 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
           <Msg
             id={localMessageIds.query.preview[query?.type || 'none']}
             values={{
-              queryTitle: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: query?.title ?? '' }}
-                />
-              ),
+              queryTitle: <UnderlinedText text={query?.title ?? ''} />,
             }}
           />
         ),

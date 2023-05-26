@@ -9,6 +9,7 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 import {
   getMatchingWithConfig,
   getTaskStatus,
@@ -63,12 +64,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
           <StyledMsg
             id={localMessageIds.campaignSelect.campaign}
             values={{
-              campaign: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: campaignTitle }}
-                />
-              ),
+              campaign: <UnderlinedText text={campaignTitle} />,
             }}
           />
         ) : (
@@ -98,12 +94,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
           <StyledMsg
             id={localMessageIds.taskSelect.task}
             values={{
-              task: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: taskTitle }}
-                />
-              ),
+              task: <UnderlinedText text={taskTitle} />,
             }}
           />
         ) : (

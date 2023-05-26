@@ -12,6 +12,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.surveyResponse;
 
 interface DisplaySurveyResponseProps {
@@ -62,20 +63,13 @@ const DisplaySurveyResponse = ({
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
-        freeTextInput: (
-          <StyledMsg id={localMessageIds.styleMe} values={{ styleMe: value }} />
-        ),
+        freeTextInput: <UnderlinedText text={value} />,
         matchSelect: <StyledMsg id={localMessageIds.matchSelect[operator]} />,
         questionSelect: question ? (
           <Msg
             id={localMessageIds.questionSelect.question}
             values={{
-              question: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: question }}
-                />
-              ),
+              question: <UnderlinedText text={question} />,
             }}
           />
         ) : (
@@ -85,12 +79,7 @@ const DisplaySurveyResponse = ({
           <Msg
             id={localMessageIds.surveySelect.survey}
             values={{
-              surveyTitle: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: surveyTitle || '' }}
-                />
-              ),
+              surveyTitle: <UnderlinedText text={surveyTitle || ''} />,
             }}
           />
         ),

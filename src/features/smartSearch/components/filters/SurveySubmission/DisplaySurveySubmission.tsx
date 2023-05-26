@@ -13,6 +13,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.surveySubmission;
 
 interface DisplaySurveySubmissionProps {
@@ -46,12 +47,7 @@ const DisplaySurveySubmission = ({
           <Msg
             id={localMessageIds.surveySelect.survey}
             values={{
-              surveyTitle: (
-                <StyledMsg
-                  id={localMessageIds.styleMe}
-                  values={{ styleMe: surveyTitle }}
-                />
-              ),
+              surveyTitle: <UnderlinedText text={surveyTitle} />,
             }}
           />
         ),

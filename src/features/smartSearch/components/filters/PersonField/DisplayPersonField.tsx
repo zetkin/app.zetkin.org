@@ -13,6 +13,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -55,12 +56,7 @@ const DisplayPersonField = ({
             <Msg
               id={localMessageIds.preview.date}
               values={{
-                fieldName: (
-                  <StyledMsg
-                    id={localMessageIds.styleMe}
-                    values={{ styleMe: field?.title ?? '' }}
-                  />
-                ),
+                fieldName: <UnderlinedText text={field?.title ?? ''} />,
                 timeFrame: <DisplayTimeFrame config={timeFrame} />,
               }}
             />
@@ -68,18 +64,8 @@ const DisplayPersonField = ({
             <Msg
               id={localMessageIds.preview[fieldType]}
               values={{
-                fieldName: (
-                  <StyledMsg
-                    id={localMessageIds.styleMe}
-                    values={{ styleMe: field?.title ?? '' }}
-                  />
-                ),
-                searchTerm: (
-                  <StyledMsg
-                    id={localMessageIds.styleMe}
-                    values={{ styleMe: search || '' }}
-                  />
-                ),
+                fieldName: <UnderlinedText text={field?.title ?? ''} />,
+                searchTerm: <UnderlinedText text={search || ''} />,
               }}
             />
           ),

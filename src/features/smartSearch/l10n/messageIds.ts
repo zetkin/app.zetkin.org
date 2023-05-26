@@ -98,7 +98,6 @@ export default makeMessages('feat.smartSearch', {
         '{minTimesInput} {minTimes, plural, one {time} other {times}}'
       ),
       minTimesInput: m<{ minTimesInput: number }>('{minTimesInput}'),
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
     },
     campaignParticipation: {
       activitySelect: {
@@ -149,7 +148,6 @@ export default makeMessages('feat.smartSearch', {
           'location "{location}"'
         ),
       },
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
     },
     mostActive: {
       addRemoveSelect: {
@@ -215,7 +213,6 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         criteria: ReactElement | string | null;
       }>('{addRemoveSelect} any person whose {criteria}.'),
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
     },
     personField: {
       addRemoveSelect: {
@@ -254,7 +251,6 @@ export default makeMessages('feat.smartSearch', {
           searchTerm: ReactElement | string;
         }>('{fieldName} matches "{searchTerm}"'),
       },
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
     },
     personTags: {
       addRemoveSelect: {
@@ -320,7 +316,6 @@ export default makeMessages('feat.smartSearch', {
         inSelect: ReactElement;
         viewSelect: ReactElement | string;
       }>('{addRemoveSelect} people who are {inSelect} the view {viewSelect}.'),
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
       viewSelect: {
         none: m("This organization doesn't have any views yet"),
       },
@@ -408,7 +403,6 @@ export default makeMessages('feat.smartSearch', {
           standalone: m('a standalone Smart Search query'),
         },
       },
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
     },
     surveyOption: {
       addRemoveSelect: {
@@ -445,7 +439,6 @@ export default makeMessages('feat.smartSearch', {
           'question "{question}"'
         ),
       },
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
@@ -490,7 +483,6 @@ export default makeMessages('feat.smartSearch', {
           'question "{question}"'
         ),
       },
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
@@ -520,7 +512,6 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people who have submitted responses to {surveySelect} {timeFrame}.'
       ),
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
@@ -560,7 +551,6 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people who have {taskStatusSelect} {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
       ),
-      styleMe: m<{ styleMe: string }>('{styleMe}'),
       taskSelect: {
         any: m('any task'),
         task: m<{ task: ReactElement | string }>('task "{task}"'),

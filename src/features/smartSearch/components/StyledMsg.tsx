@@ -1,22 +1,11 @@
-import { makeStyles } from '@mui/styles';
-import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 
+import UnderlinedText from './UnderlinedText';
 import {
   InterpolatedMessage,
   PlainMessage,
   ValueRecord,
 } from 'core/i18n/messages';
-
-const useStyles = makeStyles((theme) => ({
-  text: {
-    display: 'inline',
-    textDecoration: 'underline',
-    textDecorationColor: theme.palette.grey[500],
-    textDecorationThickness: '2px',
-    textUnderlineOffset: '5px',
-  },
-}));
 
 type StyledPlainMsgProps = {
   id: PlainMessage;
@@ -42,7 +31,6 @@ function StyledMsg<Values extends ValueRecord>({
   id,
   values,
 }: StyledMsgProps<Values>): JSX.Element {
-  const classes = useStyles();
   const intl = useIntl();
 
   const descriptor = {
@@ -54,7 +42,7 @@ function StyledMsg<Values extends ValueRecord>({
     ? intl.formatMessage(descriptor, values)
     : intl.formatMessage(descriptor);
 
-  return <Typography className={classes.text}>{str}</Typography>;
+  return <UnderlinedText text={str} />;
 }
 
 export default StyledMsg;

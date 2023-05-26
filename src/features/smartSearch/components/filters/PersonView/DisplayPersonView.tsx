@@ -11,6 +11,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledMsg from '../../StyledMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.personView;
 
 interface DisplayPersonViewProps {
@@ -38,12 +39,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
       values={{
         addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
         inSelect: <StyledMsg id={localMessageIds.inSelect[operator]} />,
-        viewSelect: (
-          <StyledMsg
-            id={localMessageIds.styleMe}
-            values={{ styleMe: view?.title || '' }}
-          />
-        ),
+        viewSelect: <UnderlinedText text={view?.title || ''} />,
       }}
     />
   );
