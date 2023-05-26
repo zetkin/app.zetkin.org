@@ -14,6 +14,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 interface DisplayCampaignParticipationProps {
@@ -63,37 +65,39 @@ const DisplayCampaignParticipation = ({
       id={messageIds.filters.campaignParticipation.inputString}
       values={{
         activitySelect: activityTitle ? (
-          <Msg
+          <UnderlinedMsg
             id={localMessageIds.activitySelect.activity}
             values={{
-              activity: activityTitle,
+              activity: <UnderlinedText text={activityTitle} />,
             }}
           />
         ) : (
-          <Msg id={localMessageIds.activitySelect.any} />
+          <UnderlinedMsg id={localMessageIds.activitySelect.any} />
         ),
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
-        bookedSelect: <Msg id={localMessageIds.bookedSelect[state]} />,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
+        bookedSelect: (
+          <UnderlinedMsg id={localMessageIds.bookedSelect[state]} />
+        ),
         campaignSelect: campaignTitle ? (
-          <Msg
+          <UnderlinedMsg
             id={localMessageIds.campaignSelect.campaign}
             values={{
-              campaign: campaignTitle,
+              campaign: <UnderlinedText text={campaignTitle} />,
             }}
           />
         ) : (
-          <Msg id={localMessageIds.campaignSelect.any} />
+          <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
         ),
         haveSelect: <Msg id={localMessageIds.haveSelect[operator]} />,
         locationSelect: locationTitle ? (
-          <Msg
+          <UnderlinedMsg
             id={localMessageIds.locationSelect.location}
             values={{
-              location: locationTitle,
+              location: <UnderlinedText text={locationTitle} />,
             }}
           />
         ) : (
-          <Msg id={localMessageIds.locationSelect.any} />
+          <UnderlinedMsg id={localMessageIds.locationSelect.any} />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}

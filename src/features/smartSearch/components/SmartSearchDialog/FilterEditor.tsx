@@ -4,7 +4,7 @@ import CampaignParticipation from '../filters/CampaignParticipation';
 import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
 import PersonField from '../filters/PersonField';
-import PersonTags from '../filter/PersonTags';
+import PersonTags from '../filters/PersonTags';
 import PersonView from '../filters/PersonView';
 import Random from '../filters/Random';
 import SubQuery from '../filters/SubQuery';

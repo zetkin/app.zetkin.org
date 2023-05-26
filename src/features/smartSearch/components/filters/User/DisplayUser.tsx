@@ -6,6 +6,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
 const localMessageIds = messageIds.filters.user;
 
 interface DisplayUserProps {
@@ -20,8 +21,10 @@ const DisplayUser = ({ filter }: DisplayUserProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
-        connectedSelect: <Msg id={localMessageIds.connectedSelect[msgId]} />,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
+        connectedSelect: (
+          <UnderlinedMsg id={localMessageIds.connectedSelect[msgId]} />
+        ),
       }}
     />
   );
