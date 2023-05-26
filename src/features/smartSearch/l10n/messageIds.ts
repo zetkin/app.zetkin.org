@@ -81,7 +81,7 @@ export default makeMessages('feat.smartSearch', {
           'Add people who have been successfully reached at least 2 times in any assignment at any point in time.'
         ),
         two: m(
-          "Remove people who have been called at least 1 time in assignment 'Project Save The Bees' during the last 30 days."
+          "Remove people who have been called at least 1 time in assignment 'Activate old members' during the last 30 days."
         ),
       },
       inputString: m<{
@@ -302,10 +302,8 @@ export default makeMessages('feat.smartSearch', {
         sub: m('Remove'),
       },
       examples: {
-        one: m('Add people who are in the view "Project Save The Bees".'),
-        two: m(
-          'Remove people who are not in the view "Project Save The Bees".'
-        ),
+        one: m('Add people who are in the view "Active Members 2022".'),
+        two: m('Remove people who are not in the view "Active Members 2022".'),
       },
       inSelect: {
         in: m('in'),
