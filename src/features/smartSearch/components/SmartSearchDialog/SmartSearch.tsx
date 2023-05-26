@@ -1,5 +1,5 @@
+import { Typography } from '@mui/material';
 import { useState } from 'react';
-import { Box, Typography } from '@mui/material';
 
 import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';
@@ -65,7 +65,7 @@ const SmartSearch = ({
   const [searchState, setSearchState] = useState(STATE.PREVIEW);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <>
       <Typography variant="h5">{smartSearchMessages.smartSearch()}</Typography>
       {searchState === STATE.PREVIEW && (
         <QueryOverview
@@ -167,7 +167,7 @@ const SmartSearch = ({
           startsWithAll={startsWithAll}
         />
       )}
-    </Box>
+    </>
   );
 };
 

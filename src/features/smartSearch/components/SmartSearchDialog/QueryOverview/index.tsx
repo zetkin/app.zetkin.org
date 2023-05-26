@@ -57,90 +57,98 @@ const QueryOverview = ({
 }: QueryOverviewProps): JSX.Element => {
   return (
     <Box
-      display="flex"
-      flex={1}
-      flexDirection="column"
-      justifyContent="space-between"
+      sx={{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        height: '90%',
+      }}
     >
       {readOnly && (
         <Alert severity="info">
           <Msg id={messageIds.readOnly} />
         </Alert>
       )}
-      <Box minWidth={0.5} padding={4}>
-        <Box sx={{ overflowY: 'auto' }}>
-          <List>
-            <ListItem key={FIRST_FILTER} style={{ padding: 0 }}>
-              <Grid
-                alignItems="center"
-                container
-                display="flex"
-                justifyContent="space-between"
-                width={1}
-              >
-                <Grid display="flex" item xs={1}>
-                  <QueryOverviewChip
-                    filterOperatorIcon={
-                      <ArrowForwardOutlined
+      <Box
+        sx={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          overflowY: 'auto',
+          padding: '0 24px',
+        }}
+      >
+        <List sx={{ overflowY: 'auto' }}>
+          <ListItem key={FIRST_FILTER} sx={{ padding: 0 }}>
+            <Grid
+              alignItems="center"
+              container
+              display="flex"
+              justifyContent="space-between"
+              width={1}
+            >
+              <Grid display="flex" item xs={1}>
+                <QueryOverviewChip
+                  filterOperatorIcon={
+                    <ArrowForwardOutlined color="secondary" fontSize="small" />
+                  }
+                  filterTypeIcon={
+                    startsWithAll ? (
+                      <RadioButtonCheckedOutlined
                         color="secondary"
                         fontSize="small"
                       />
-                    }
-                    filterTypeIcon={
-                      startsWithAll ? (
-                        <RadioButtonCheckedOutlined
-                          color="secondary"
-                          fontSize="small"
-                        />
-                      ) : (
-                        <CircleOutlined color="secondary" fontSize="small" />
-                      )
-                    }
-                  />
-                </Grid>
-                <Grid item xs={10}>
-                  <Typography>
-                    <DisplayStartsWith startsWithAll={startsWithAll} />
-                  </Typography>
-                </Grid>
-                {!readOnly && (
-                  <Grid alignItems="center" display="flex" item xs={1}>
-                    <IconButton
-                      onClick={onOpenStartsWithEditor}
-                      size="small"
-                      sx={{ paddingRight: '35px' }}
-                    >
-                      <Edit fontSize="small" />
-                    </IconButton>
-                  </Grid>
-                )}
+                    ) : (
+                      <CircleOutlined color="secondary" fontSize="small" />
+                    )
+                  }
+                />
               </Grid>
-            </ListItem>
-            {filters
-              .filter((f) => f.type !== FILTER_TYPE.ALL)
-              .map((filter) => (
-                <Box key={filter.id}>
-                  <Divider />
-                  <QueryOverviewListItem
-                    filter={filter}
-                    onDeleteFilter={onDeleteFilter}
-                    onEditFilter={onEditFilter}
-                    readOnly={readOnly}
-                  />
-                </Box>
-              ))}
-          </List>
-        </Box>
-        <Button
-          color="primary"
-          disabled={readOnly}
-          onClick={onOpenFilterGallery}
-          startIcon={<PlaylistAddOutlined />}
-          sx={{ marginTop: 2 }}
-          variant="outlined"
-        >
-          <Msg id={messageIds.buttonLabels.addNewFilter} />
-        </Button>
+              <Grid item xs={10}>
+                <Typography>
+                  <DisplayStartsWith startsWithAll={startsWithAll} />
+                </Typography>
+              </Grid>
+              {!readOnly && (
+                <Grid alignItems="center" display="flex" item xs={1}>
+                  <IconButton
+                    onClick={onOpenStartsWithEditor}
+                    size="small"
+                    sx={{ paddingRight: '35px' }}
+                  >
+                    <Edit fontSize="small" />
+                  </IconButton>
+                </Grid>
+              )}
+            </Grid>
+          </ListItem>
+          {filters
+            .filter((f) => f.type !== FILTER_TYPE.ALL)
+            .map((filter) => (
+              <Box key={filter.id}>
+                <Divider />
+                <QueryOverviewListItem
+                  filter={filter}
+                  onDeleteFilter={onDeleteFilter}
+                  onEditFilter={onEditFilter}
+                  readOnly={readOnly}
+                />
+              </Box>
+            ))}
+        </List>
+        {!readOnly && (
+          <Button
+            color="primary"
+            disabled={readOnly}
+            onClick={onOpenFilterGallery}
+            startIcon={<PlaylistAddOutlined />}
+            sx={{ alignSelf: 'flex-start', marginTop: 2 }}
+            variant="outlined"
+          >
+            <Msg id={messageIds.buttonLabels.addNewFilter} />
+          </Button>
+        )}
       </Box>
       {hasSaveCancelButtons && (
         <DialogActions>
