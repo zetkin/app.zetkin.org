@@ -31,7 +31,7 @@ test.describe('Task detail page', async () => {
     moxy.teardown();
   });
 
-  test.only('lets user update target using SmartSearch Dialog', async ({
+  test('lets user update target using SmartSearch Dialog', async ({
     page,
     moxy,
     appUri,
