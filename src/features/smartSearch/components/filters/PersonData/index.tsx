@@ -115,10 +115,10 @@ const PersonData = ({
       value={filter.op}
     >
       <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-        <Msg id={messageIds.addLimitRemoveSelect.add} />
+        <Msg id={messageIds.operators.add} />
       </MenuItem>
       <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-        <Msg id={messageIds.addLimitRemoveSelect.sub} />
+        <Msg id={messageIds.operators.sub} />
       </MenuItem>
     </StyledSelect>
   );

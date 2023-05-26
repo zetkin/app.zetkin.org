@@ -40,9 +40,7 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         condition: min_matching ? (
           <UnderlinedMsg
             id={localMessageIds.condition.preview.minMatching}

@@ -74,9 +74,7 @@ const DisplayCampaignParticipation = ({
         ) : (
           <UnderlinedMsg id={localMessageIds.activitySelect.any} />
         ),
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         bookedSelect: (
           <UnderlinedMsg id={localMessageIds.bookedSelect[state]} />
         ),

@@ -57,9 +57,7 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         matchSelect: (
           <UnderlinedMsg
             id={

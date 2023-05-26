@@ -37,9 +37,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         inSelect: <UnderlinedMsg id={localMessageIds.inSelect[operator]} />,
         viewSelect: <UnderlinedText text={view?.title || ''} />,
       }}

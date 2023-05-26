@@ -50,9 +50,7 @@ const DisplayPersonField = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         field:
           fieldType == 'date' ? (
             <Msg

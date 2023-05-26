@@ -62,9 +62,7 @@ const DisplaySurveyOption = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         conditionSelect: (
           <UnderlinedMsg id={localMessageIds.conditionSelect[operator]} />
         ),

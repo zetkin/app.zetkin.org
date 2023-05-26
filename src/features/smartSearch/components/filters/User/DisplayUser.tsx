@@ -21,9 +21,7 @@ const DisplayUser = ({ filter }: DisplayUserProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         connectedSelect: (
           <UnderlinedMsg id={localMessageIds.connectedSelect[msgId]} />
         ),

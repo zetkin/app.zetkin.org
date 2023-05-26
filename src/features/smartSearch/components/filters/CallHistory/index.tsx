@@ -105,7 +105,7 @@ const CallHistory = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg id={messageIds.addLimitRemoveSelect[o]} />
+                    <Msg id={messageIds.operators[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>

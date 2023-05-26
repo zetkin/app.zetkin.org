@@ -28,9 +28,7 @@ const DisplayMostActive = ({ filter }: DisplayMostActiveProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         numPeople: (
           <UnderlinedMsg
             id={localMessageIds.numPeople}

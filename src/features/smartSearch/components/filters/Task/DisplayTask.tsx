@@ -78,9 +78,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         campaignSelect: campaignSelect,
         matchingSelect: (
           // TODO: Move this to reusable component

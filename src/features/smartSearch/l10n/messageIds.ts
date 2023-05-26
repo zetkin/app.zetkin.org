@@ -3,11 +3,6 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.smartSearch', {
-  addLimitRemoveSelect: {
-    add: m('Add'),
-    limit: m('Limit to'),
-    sub: m('Remove'),
-  },
   buttonLabels: {
     add: m('Save selection'),
     addNewFilter: m('Add / remove people'),
@@ -569,6 +564,11 @@ export default makeMessages('feat.smartSearch', {
   },
   misc: {
     noOptions: m('No matching tags'),
+  },
+  operators: {
+    add: m('Add'),
+    limit: m('Limit to'),
+    sub: m('Remove'),
   },
   quantity: {
     edit: {

@@ -44,9 +44,7 @@ const DisplayCallHistory = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         assignmentSelect: assignmentTitle ? (
           <Msg
             id={localMessageIds.assignmentSelect.assignment}
