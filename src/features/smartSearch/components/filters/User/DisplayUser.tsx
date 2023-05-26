@@ -21,7 +21,7 @@ const DisplayUser = ({ filter }: DisplayUserProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         connectedSelect: (
           <StyledMsg id={localMessageIds.connectedSelect[msgId]} />
         ),

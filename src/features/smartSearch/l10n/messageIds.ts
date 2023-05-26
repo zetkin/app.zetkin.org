@@ -3,6 +3,11 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.smartSearch', {
+  addLimitRemoveSelect: {
+    add: m('Add'),
+    limit: m('Limit to'),
+    sub: m('Remove'),
+  },
   buttonLabels: {
     add: m('Save selection'),
     addNewFilter: m('Add / remove people'),
@@ -49,21 +54,11 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     callBlocked: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       inputString: m<{ addRemoveSelect: ReactElement }>(
         '{addRemoveSelect} people who are blocked from calling for any reason'
       ),
     },
     callHistory: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       assignmentSelect: {
         any: m('any assignment'),
         assignment: m<{ assignmentTitle: ReactElement | string }>(
@@ -103,11 +98,6 @@ export default makeMessages('feat.smartSearch', {
       activitySelect: {
         activity: m<{ activity: ReactElement | string }>('type "{activity}"'),
         any: m('any type'),
-      },
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
       },
       bookedSelect: {
         booked: m('been booked'),
@@ -150,11 +140,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     mostActive: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       examples: {
         one: m(
           'Add the 100 most active members of the organization before today.'
@@ -178,11 +163,6 @@ export default makeMessages('feat.smartSearch', {
         m<{ numPeopleSelect: ReactElement | number }>('{numPeopleSelect}'),
     },
     personData: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       ellipsis: m('...'),
       examples: {
         one: m(
@@ -215,11 +195,6 @@ export default makeMessages('feat.smartSearch', {
       }>('{addRemoveSelect} any person whose {criteria}.'),
     },
     personField: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       edit: {
         date: m<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
           '{fieldSelect} is {timeFrame}'
@@ -253,11 +228,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     personTags: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       condition: {
         conditionSelect: {
           all: m('all'),
@@ -296,11 +266,6 @@ export default makeMessages('feat.smartSearch', {
       ),
     },
     personView: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       examples: {
         one: m('Add people who are in the view "Active Members 2022".'),
         two: m('Remove people who are not in the view "Active Members 2022".'),
@@ -319,7 +284,7 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     random: {
-      addRemoveSelect: {
+      addLimitRemoveSelect: {
         add: m('add'),
         limit: m('limit to'),
         sub: m('remove'),
@@ -334,11 +299,6 @@ export default makeMessages('feat.smartSearch', {
       }>('Randomly {addRemoveSelect} {quantity} in the organization.'),
     },
     subQuery: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Sub'),
-      },
       examples: {
         one: m(
           "Remove people who match Smart Search Query 'People who live in Stockholm'."
@@ -403,11 +363,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     surveyOption: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       conditionSelect: {
         all: m('all'),
         any: m('any'),
@@ -446,11 +401,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     surveyResponse: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       examples: {
         one: m(
           "People whose responses to survey 'Member survey' (any question) include 'organize'."
@@ -490,11 +440,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     surveySubmission: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       examples: {
         one: m(
           "People who have submitted responses to survey 'Member survey 2020' before today."
@@ -519,11 +464,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     task: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       campaignSelect: {
         any: m('any project'),
         campaign: m<{ campaign: ReactElement | string }>(
@@ -560,11 +500,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     user: {
-      addRemoveSelect: {
-        add: m('Add'),
-        limit: m('Limit to'),
-        sub: m('Remove'),
-      },
       connectedSelect: {
         false: m('not connected'),
         true: m('connected'),

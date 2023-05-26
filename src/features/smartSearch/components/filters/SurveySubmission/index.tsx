@@ -110,10 +110,10 @@ const SurveySubmission = ({
                 value={filter.op}
               >
                 <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                  <Msg id={localMessageIds.addRemoveSelect.add} />
+                  <Msg id={messageIds.addLimitRemoveSelect.add} />
                 </MenuItem>
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                  <Msg id={localMessageIds.addRemoveSelect.sub} />
+                  <Msg id={messageIds.addLimitRemoveSelect.sub} />
                 </MenuItem>
               </StyledSelect>
             ),

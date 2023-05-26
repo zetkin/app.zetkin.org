@@ -42,7 +42,7 @@ const DisplaySurveySubmission = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         surveySelect: (
           <Msg
             id={localMessageIds.surveySelect.survey}

@@ -78,7 +78,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         campaignSelect: campaignSelect,
         matchingSelect: (
           // TODO: Move this to reusable component

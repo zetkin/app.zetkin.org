@@ -57,9 +57,7 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <StyledMsg id={messageIds.filters.subQuery.addRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         matchSelect: (
           <StyledMsg
             id={

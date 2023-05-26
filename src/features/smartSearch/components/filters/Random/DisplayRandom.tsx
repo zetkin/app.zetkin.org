@@ -23,7 +23,9 @@ const DisplayRandom = ({ filter }: DisplayRandomProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: (
+          <StyledMsg id={localMessageIds.addLimitRemoveSelect[op]} />
+        ),
         quantity: (
           <StyledMsg
             id={messageIds.quantity.preview[quantity]}

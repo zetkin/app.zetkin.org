@@ -44,7 +44,7 @@ const DisplayCallHistory = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         assignmentSelect: assignmentTitle ? (
           <Msg
             id={localMessageIds.assignmentSelect.assignment}

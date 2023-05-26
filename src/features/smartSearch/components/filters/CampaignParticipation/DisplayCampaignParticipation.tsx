@@ -74,7 +74,7 @@ const DisplayCampaignParticipation = ({
         ) : (
           <StyledMsg id={localMessageIds.activitySelect.any} />
         ),
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         bookedSelect: <StyledMsg id={localMessageIds.bookedSelect[state]} />,
         campaignSelect: campaignTitle ? (
           <StyledMsg

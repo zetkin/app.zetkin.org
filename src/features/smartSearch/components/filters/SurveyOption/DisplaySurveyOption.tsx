@@ -62,7 +62,7 @@ const DisplaySurveyOption = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         conditionSelect: (
           <StyledMsg id={localMessageIds.conditionSelect[operator]} />
         ),

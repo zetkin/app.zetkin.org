@@ -28,7 +28,7 @@ const DisplayMostActive = ({ filter }: DisplayMostActiveProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
         numPeople: (
           <StyledMsg
             id={localMessageIds.numPeople}
