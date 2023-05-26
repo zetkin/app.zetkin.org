@@ -12,7 +12,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import StyledMsg from '../../UnderlinedMsg';
+import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.callHistory;
 
@@ -44,7 +44,9 @@ const DisplayCallHistory = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
+        addRemoveSelect: (
+          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
+        ),
         assignmentSelect: assignmentTitle ? (
           <Msg
             id={localMessageIds.assignmentSelect.assignment}
@@ -53,17 +55,17 @@ const DisplayCallHistory = ({
             }}
           />
         ) : (
-          <StyledMsg id={localMessageIds.assignmentSelect.any} />
+          <UnderlinedMsg id={localMessageIds.assignmentSelect.any} />
         ),
-        callSelect: <StyledMsg id={localMessageIds.callSelect[operator]} />,
+        callSelect: <UnderlinedMsg id={localMessageIds.callSelect[operator]} />,
         minTimes: (
-          <StyledMsg
+          <UnderlinedMsg
             id={localMessageIds.minTimes}
             values={{ minTimes: minTimes || 1, minTimesInput: minTimes || 1 }}
           />
         ),
         minTimesInput: (
-          <StyledMsg
+          <UnderlinedMsg
             id={localMessageIds.minTimesInput}
             values={{ minTimesInput: minTimes || 1 }}
           />

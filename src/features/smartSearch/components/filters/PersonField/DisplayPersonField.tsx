@@ -12,7 +12,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import StyledMsg from '../../UnderlinedMsg';
+import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.personField;
 
@@ -50,7 +50,9 @@ const DisplayPersonField = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
+        addRemoveSelect: (
+          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
+        ),
         field:
           fieldType == 'date' ? (
             <Msg

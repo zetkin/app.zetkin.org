@@ -4,7 +4,7 @@ import { TIME_FRAME } from '../types';
 import { TimeFrameConfig } from '../utils';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import StyledMsg from '../UnderlinedMsg';
+import UnderlinedMsg from '../UnderlinedMsg';
 
 type DisplayTimeFrameProps = {
   config: TimeFrameConfig;
@@ -24,7 +24,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
 
   if (timeFrame == TIME_FRAME.AFTER_DATE) {
     return (
-      <StyledMsg
+      <UnderlinedMsg
         id={messageIds.timeFrame.preview.afterDate}
         values={{
           ...withAfter,
@@ -33,7 +33,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
     );
   } else if (timeFrame == TIME_FRAME.BEFORE_DATE) {
     return (
-      <StyledMsg
+      <UnderlinedMsg
         id={messageIds.timeFrame.preview.beforeDate}
         values={{
           ...withBefore,
@@ -42,7 +42,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
     );
   } else if (timeFrame == TIME_FRAME.BETWEEN) {
     return (
-      <StyledMsg
+      <UnderlinedMsg
         id={messageIds.timeFrame.preview.between}
         values={{
           ...withAfter,
@@ -52,7 +52,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
     );
   } else if (timeFrame == TIME_FRAME.LAST_FEW_DAYS) {
     return (
-      <StyledMsg
+      <UnderlinedMsg
         id={messageIds.timeFrame.preview.lastFew}
         values={{
           days: numDays || 0,
@@ -60,7 +60,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
       />
     );
   } else {
-    return <StyledMsg id={messageIds.timeFrame.preview[timeFrame]} />;
+    return <UnderlinedMsg id={messageIds.timeFrame.preview[timeFrame]} />;
   }
 };
 

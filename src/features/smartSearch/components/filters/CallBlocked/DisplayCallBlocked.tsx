@@ -6,7 +6,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import StyledMsg from '../../UnderlinedMsg';
+import UnderlinedMsg from '../../UnderlinedMsg';
 
 const localMessageIds = messageIds.filters.callBlocked;
 
@@ -23,7 +23,9 @@ const DisplayCallBlocked = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <StyledMsg id={messageIds.addLimitRemoveSelect[op]} />,
+        addRemoveSelect: (
+          <UnderlinedMsg id={messageIds.addLimitRemoveSelect[op]} />
+        ),
       }}
     />
   );
