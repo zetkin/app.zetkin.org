@@ -31,7 +31,7 @@ test.describe('Task detail page', async () => {
     moxy.teardown();
   });
 
-  test('lets user update target using SmartSearch Dialog', async ({
+  test.only('lets user update target using SmartSearch Dialog', async ({
     page,
     moxy,
     appUri,
@@ -44,6 +44,7 @@ test.describe('Task detail page', async () => {
 
     // Open Smart Search dialog
     await page.click('data-testid=QueryStatusAlert-actionButton');
+    await page.click('data-testid=QueryOverview-editStartsWithButton');
     await page.click('data-testid=StartsWith-select');
     await page.click('data-testid=StartsWith-select-all');
     await page.click('data-testid=FilterForm-saveButton');

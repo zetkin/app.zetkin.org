@@ -113,6 +113,7 @@ const QueryOverview = ({
               {!readOnly && (
                 <Grid alignItems="center" display="flex" item xs={1}>
                   <IconButton
+                    data-testid="QueryOverview-editStartsWithButton"
                     onClick={onOpenStartsWithEditor}
                     size="small"
                     sx={{ paddingRight: '35px' }}
