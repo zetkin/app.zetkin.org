@@ -7,30 +7,30 @@ import {
   ValueRecord,
 } from 'core/i18n/messages';
 
-type StyledPlainMsgProps = {
+type UnderlinedPlainMsgProps = {
   id: PlainMessage;
   values?: void;
 };
 
-type StyledInterpolatedMsgProps<Values extends ValueRecord> = {
+type UnderlinedInterpolatedMsgProps<Values extends ValueRecord> = {
   id: InterpolatedMessage<Values>;
   values: Values;
 };
 
-type StyledMsgProps<Values extends ValueRecord> = {
+type UnderlinedMsgProps<Values extends ValueRecord> = {
   id: PlainMessage | InterpolatedMessage<Values>;
   values?: Values;
 };
 
-function StyledMsg({ id, values }: StyledPlainMsgProps): JSX.Element;
-function StyledMsg<Values extends ValueRecord>({
+function UnderlinedMsg({ id, values }: UnderlinedPlainMsgProps): JSX.Element;
+function UnderlinedMsg<Values extends ValueRecord>({
   id,
   values,
-}: StyledInterpolatedMsgProps<Values>): JSX.Element;
-function StyledMsg<Values extends ValueRecord>({
+}: UnderlinedInterpolatedMsgProps<Values>): JSX.Element;
+function UnderlinedMsg<Values extends ValueRecord>({
   id,
   values,
-}: StyledMsgProps<Values>): JSX.Element {
+}: UnderlinedMsgProps<Values>): JSX.Element {
   const intl = useIntl();
 
   const descriptor = {
@@ -45,4 +45,4 @@ function StyledMsg<Values extends ValueRecord>({
   return <UnderlinedText text={str} />;
 }
 
-export default StyledMsg;
+export default UnderlinedMsg;

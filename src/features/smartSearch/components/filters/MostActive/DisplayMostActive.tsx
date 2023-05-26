@@ -9,7 +9,7 @@ import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import StyledMsg from '../../StyledMsg';
+import StyledMsg from '../../UnderlinedMsg';
 const localMessageIds = messageIds.filters.mostActive;
 
 interface DisplayMostActiveProps {

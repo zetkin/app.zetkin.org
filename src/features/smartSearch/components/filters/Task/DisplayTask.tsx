@@ -8,7 +8,7 @@ import { taskResource } from 'features/tasks/api/tasks';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
-import StyledMsg from '../../StyledMsg';
+import StyledMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import {
   getMatchingWithConfig,

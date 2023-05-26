@@ -4,7 +4,7 @@ import { TIME_FRAME } from '../types';
 import { TimeFrameConfig } from '../utils';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import StyledMsg from '../StyledMsg';
+import StyledMsg from '../UnderlinedMsg';
 
 type DisplayTimeFrameProps = {
   config: TimeFrameConfig;

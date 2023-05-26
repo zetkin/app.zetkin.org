@@ -6,7 +6,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import StyledMsg from '../../StyledMsg';
+import StyledMsg from '../../UnderlinedMsg';
 const localMessageIds = messageIds.filters.callBlocked;
 
 interface DisplayCallBlockedProps {

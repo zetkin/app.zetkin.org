@@ -12,7 +12,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import StyledMsg from '../../StyledMsg';
+import StyledMsg from '../../UnderlinedMsg';
 const localMessageIds = messageIds.filters.personTags;
 
 interface DisplayPersonTagProps {
