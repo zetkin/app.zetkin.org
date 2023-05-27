@@ -1,147 +1,129 @@
 import { describe, expect, it } from '@jest/globals';
 
 import makeSankeySegments from './makeSankeySegments';
+import { FILTER_TYPE, OPERATION } from '../types';
+import { SankeySegment, SEGMENT_KIND, SEGMENT_STYLE } from './types';
 
-describe.skip('makeSankeySegments()', () => {
-  it('returns empty list for empty list', () => {
+describe('makeSankeySegments()', () => {
+  it('returns entry and exit for empty list', () => {
     const result = makeSankeySegments([]);
-    expect(result.length).toBe(0);
+    expect(result).toEqual(<SankeySegment[]>[
+      {
+        kind: SEGMENT_KIND.EMPTY,
+      },
+      {
+        kind: SEGMENT_KIND.EMPTY,
+      },
+    ]);
   });
 
-  it('handles empty, add, sub', () => {
+  it('treats non-all as empty start', () => {
     const result = makeSankeySegments([
-      { matched: 0, op: 'empty', output: 0 },
-      { matched: 100, op: 'add', output: 100 },
-      { matched: 100, op: 'sub', output: 60 },
+      {
+        change: 200,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.CALL_BLOCKED,
+        },
+        matches: 200,
+        result: 200,
+      },
     ]);
 
-    expect(result).toEqual([
-      { kind: 'empty' },
+    expect(result).toEqual(<SankeySegment[]>[
       {
-        kind: 'add',
+        kind: SEGMENT_KIND.EMPTY,
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_ADD,
         main: null,
         side: {
-          offset: 0,
-          style: 'fill',
-          width: 1,
+          style: SEGMENT_STYLE.FILL,
+          width: 1.0,
         },
       },
       {
-        kind: 'sub',
-        main: {
-          offset: -0.2,
-          style: 'fill',
-          width: 0.6,
-        },
-        side: {
-          offset: 0.3,
-          style: 'fill',
-          width: 0.4,
-        },
-      },
-      {
-        kind: 'exit',
-        style: 'fill',
-        width: 0.6,
+        kind: SEGMENT_KIND.EXIT,
+        style: SEGMENT_STYLE.FILL,
+        width: 1.0,
       },
     ]);
   });
 
-  it('handles non-empty entry', () => {
+  it('treats all as non-empty entry', () => {
     const result = makeSankeySegments([
-      { matched: 100, op: 'entry', output: 100 },
+      {
+        change: 200,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.ALL,
+        },
+        matches: 200,
+        result: 200,
+      },
     ]);
 
-    expect(result).toEqual([
+    expect(result).toEqual(<SankeySegment[]>[
       {
-        kind: 'entry',
-        style: 'fill',
+        kind: SEGMENT_KIND.ENTRY,
+        style: SEGMENT_STYLE.FILL,
         width: 1,
       },
       {
-        kind: 'exit',
-        style: 'fill',
+        kind: SEGMENT_KIND.EXIT,
+        style: SEGMENT_STYLE.FILL,
         width: 1,
       },
     ]);
   });
 
-  it('handles temporarily empty entry', () => {
+  it('handles a sub after an entry', () => {
     const result = makeSankeySegments([
-      { matched: 0, op: 'entry', output: 0 },
-      { matched: 100, op: 'add', output: 60 },
-    ]);
-
-    expect(result).toEqual([
       {
-        kind: 'entry',
-        style: 'stroke',
-        width: 1,
+        change: 200,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.ALL,
+        },
+        matches: 200,
+        result: 200,
       },
       {
-        kind: 'add',
-        main: {
-          offset: 0,
-          style: 'stroke',
-          width: 1,
+        change: -50,
+        filter: {
+          config: {},
+          op: OPERATION.SUB,
+          type: FILTER_TYPE.PERSON_DATA,
         },
-        side: {
-          offset: 0,
-          style: 'fill',
-          width: 1,
-        },
-      },
-      {
-        kind: 'exit',
-        style: 'fill',
-        width: 1,
+        matches: 100,
+        result: 150,
       },
     ]);
-  });
 
-  it('handles temporarily empty input/output', () => {
-    const result = makeSankeySegments([
-      { matched: 0, op: 'entry', output: 400 },
-      { matched: 100, op: 'add', output: 400 },
-      { matched: 100, op: 'sub', output: 400 },
-    ]);
-
-    expect(result).toEqual([
+    expect(result).toEqual(<SankeySegment[]>[
       {
-        kind: 'entry',
-        style: 'fill',
+        kind: SEGMENT_KIND.ENTRY,
+        style: SEGMENT_STYLE.FILL,
         width: 1,
       },
       {
-        kind: 'add',
+        kind: SEGMENT_KIND.SUB,
         main: {
-          offset: 0,
-          style: 'fill',
-          width: 1,
+          style: SEGMENT_STYLE.FILL,
+          width: 0.75,
         },
         side: {
-          offset: 0,
-          style: 'stroke',
-          width: 1,
+          style: SEGMENT_STYLE.FILL,
+          width: 0.25,
         },
       },
       {
-        kind: 'sub',
-        main: {
-          offset: 0,
-          style: 'fill',
-          width: 1,
-        },
-        side: {
-          offset: 0,
-          style: 'stroke',
-          width: 1,
-        },
-      },
-      {
-        kind: 'exit',
-        style: 'fill',
-        width: 1,
+        kind: SEGMENT_KIND.EXIT,
+        style: SEGMENT_STYLE.FILL,
+        width: 0.75,
       },
     ]);
   });

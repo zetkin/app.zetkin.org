@@ -71,9 +71,3 @@ export type SankeySegment =
   | SankeyPseudoAddSegment
   | SankeySubSegment
   | SankeyPseudoSubSegment;
-
-export type FilterStats = {
-  matched: number;
-  op: 'add' | 'empty' | 'entry' | 'sub';
-  output: number;
-};
