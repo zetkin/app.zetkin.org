@@ -145,6 +145,7 @@ const SurveySubmissionsList = ({
             sx={{
               cursor: 'pointer',
             }}
+            tooltip={false}
           />
         </ZUIPersonHoverCard>
       );
