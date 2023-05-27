@@ -10,7 +10,7 @@ const ZUIPersonGridCell: FC<{
   onClick?: () => void;
   person: Pick<ZetkinPerson, 'first_name' | 'last_name' | 'id'> | null;
   sx?: SxProps;
-  tooltip: boolean;
+  tooltip?: boolean;
 }> = ({ person, onClick, sx, tooltip = true }) => {
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
