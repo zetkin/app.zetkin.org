@@ -6,13 +6,9 @@ import { Avatar, Box, SxProps, Tooltip } from '@mui/material';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 
-type PersonGridCellPerson = Pick<ZetkinPerson, 'first_name' | 'last_name'> & {
-  id: number | null;
-};
-
 const ZUIPersonGridCell: FC<{
   onClick?: () => void;
-  person: PersonGridCellPerson | null;
+  person: Pick<ZetkinPerson, 'first_name' | 'last_name' | 'id'> | null;
   sx?: SxProps;
   tooltip: boolean;
 }> = ({ person, onClick, sx, tooltip = true }) => {
@@ -20,7 +16,7 @@ const ZUIPersonGridCell: FC<{
   const orgId = parseInt(query.orgId as string);
 
   // If no person provided
-  if (!person || !person.id) {
+  if (!person) {
     return (
       <Box onClick={onClick} sx={sx}>
         <Avatar>
