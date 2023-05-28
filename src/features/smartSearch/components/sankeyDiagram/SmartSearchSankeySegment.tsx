@@ -24,23 +24,15 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
   margin = 30,
 }) => {
   const animFrameRef = useRef(0);
-  const startTimeRef = useRef(new Date());
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [hovered, setHovered] = useState(false);
 
   const segHeight = 100;
 
-  const animDuration = 1000;
-
   const render = (context: CanvasRenderingContext2D) => {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-    const now = new Date();
-    const time =
-      (now.getTime() - startTimeRef.current.getTime()) % animDuration;
-
     const renderer = new SankeyRenderer(context, {
-      animDuration,
       arrowDepth,
       arrowWidth,
       color,
@@ -49,7 +41,6 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
       lineWidth: 2,
       margin,
       segHeight,
-      time,
     });
     renderer.drawSegments([segment], hovered ? 0 : -1);
   };

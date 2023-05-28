@@ -1,4 +1,3 @@
-import { lighten } from '@mui/system';
 import {
   SankeyAddSegment,
   SankeyEntrySegment,
@@ -12,7 +11,6 @@ import {
 } from './types';
 
 export type SankeyConfig = {
-  animDuration: number;
   arrowDepth: number;
   arrowWidth: number;
   color: string;
@@ -21,7 +19,6 @@ export type SankeyConfig = {
   lineWidth: number;
   margin: number;
   segHeight: number;
-  time: number;
 };
 
 export class SankeyRenderer {
@@ -305,36 +302,21 @@ export class SankeyRenderer {
   }
 
   initPathWithInset(style: SEGMENT_STYLE) {
-    const { animDuration, color, highlightColor, lineWidth, time } =
-      this.config;
-
-    // TODO: Calculate
-    const diagHeight = 1000;
-
-    const gradOffset = (time / animDuration) * 0.96;
-    const baseGradient = this.ctx.createLinearGradient(0, 0, 0, 4 * diagHeight);
-    baseGradient.addColorStop(0 + gradOffset, color);
-    baseGradient.addColorStop(0.02 + gradOffset, lighten(color, 0.2));
-    baseGradient.addColorStop(0.04 + gradOffset, color);
-
-    const hiliGradient = this.ctx.createLinearGradient(0, 0, 0, 4 * diagHeight);
-    hiliGradient.addColorStop(0 + gradOffset, highlightColor);
-    hiliGradient.addColorStop(0.02 + gradOffset, lighten(highlightColor, 0.2));
-    hiliGradient.addColorStop(0.04 + gradOffset, highlightColor);
+    const { color, highlightColor, lineWidth } = this.config;
 
     const isStroke = style == SEGMENT_STYLE.STROKE;
     this.ctx.beginPath();
     this.ctx.strokeStyle = isStroke
       ? this._highlightCurrent
-        ? hiliGradient
-        : baseGradient
+        ? highlightColor
+        : color
       : 'transparent';
     this.ctx.lineWidth = isStroke ? lineWidth : 0;
     this.ctx.fillStyle = isStroke
       ? 'transparent'
       : this._highlightCurrent
-      ? hiliGradient
-      : baseGradient;
+      ? highlightColor
+      : color;
     this.ctx.setLineDash([3, 3]);
 
     return isStroke ? lineWidth / 2 : 0;
