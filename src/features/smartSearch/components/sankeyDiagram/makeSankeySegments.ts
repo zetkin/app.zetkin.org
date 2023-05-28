@@ -1,5 +1,5 @@
-import { FILTER_TYPE } from '../types';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
+import { FILTER_TYPE, OPERATION } from '../types';
 import {
   SankeySegment,
   SEGMENT_KIND,
@@ -41,7 +41,7 @@ export default function makeSankeySegments(
     }
   }
 
-  statsCopy.forEach(({ change, result }, index) => {
+  statsCopy.forEach(({ change, filter, result }, index) => {
     // The previous segment is the one with the same index as the
     // filter/stats we're currently handling, because the segments
     // array starts with an entry, so already has one element when
@@ -83,6 +83,32 @@ export default function makeSankeySegments(
           width: Math.abs(change) / maxPeople,
         },
       });
+    } else {
+      if (filter.op == OPERATION.ADD) {
+        segments.push({
+          kind: SEGMENT_KIND.PSEUDO_ADD,
+          main: {
+            style: SEGMENT_STYLE.FILL,
+            width: result / maxPeople,
+          },
+          side: {
+            style: SEGMENT_STYLE.STROKE,
+            width: result / maxPeople,
+          },
+        });
+      } else {
+        segments.push({
+          kind: SEGMENT_KIND.PSEUDO_SUB,
+          main: {
+            style: SEGMENT_STYLE.FILL,
+            width: result / maxPeople,
+          },
+          side: {
+            style: SEGMENT_STYLE.STROKE,
+            width: result / maxPeople,
+          },
+        });
+      }
     }
 
     prevResult = result;

@@ -127,4 +127,165 @@ describe('makeSankeySegments()', () => {
       },
     ]);
   });
+
+  it('handles adding to already full stream', () => {
+    const result = makeSankeySegments([
+      {
+        change: 100,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.ALL,
+        },
+        matches: 100,
+        result: 100,
+      },
+      {
+        change: -20,
+        filter: {
+          config: {},
+          op: OPERATION.SUB,
+          type: FILTER_TYPE.PERSON_TAGS,
+        },
+        matches: 20,
+        result: 80,
+      },
+      {
+        change: 0,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+        },
+        matches: 5,
+        result: 80,
+      },
+      {
+        change: 0,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.CALL_HISTORY,
+        },
+        matches: 10,
+        result: 80,
+      },
+    ]);
+
+    expect(result).toEqual(<SankeySegment[]>[
+      {
+        kind: SEGMENT_KIND.ENTRY,
+        style: SEGMENT_STYLE.FILL,
+        width: 1,
+      },
+      {
+        kind: SEGMENT_KIND.SUB,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.8,
+        },
+        side: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.2,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_ADD,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.8,
+        },
+        side: {
+          style: SEGMENT_STYLE.STROKE,
+          width: 0.8,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_ADD,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.8,
+        },
+        side: {
+          style: SEGMENT_STYLE.STROKE,
+          width: 0.8,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.EXIT,
+        style: SEGMENT_STYLE.FILL,
+        width: 0.8,
+      },
+    ]);
+  });
+
+  it('handles pseudo-removing', () => {
+    const result = makeSankeySegments([
+      {
+        change: 100,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.ALL,
+        },
+        matches: 100,
+        result: 100,
+      },
+      {
+        change: -20,
+        filter: {
+          config: {},
+          op: OPERATION.SUB,
+          type: FILTER_TYPE.PERSON_TAGS,
+        },
+        matches: 20,
+        result: 80,
+      },
+      {
+        change: 0,
+        filter: {
+          config: {},
+          op: OPERATION.SUB,
+          type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+        },
+        matches: 5,
+        result: 80,
+      },
+    ]);
+
+    expect(result).toEqual(<SankeySegment[]>[
+      {
+        kind: SEGMENT_KIND.ENTRY,
+        style: SEGMENT_STYLE.FILL,
+        width: 1,
+      },
+      {
+        kind: SEGMENT_KIND.SUB,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.8,
+        },
+        side: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.2,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_SUB,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.8,
+        },
+        side: {
+          style: SEGMENT_STYLE.STROKE,
+          width: 0.8,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.EXIT,
+        style: SEGMENT_STYLE.FILL,
+        width: 0.8,
+      },
+    ]);
+  });
 });
