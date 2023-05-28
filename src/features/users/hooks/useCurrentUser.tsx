@@ -8,7 +8,7 @@ import { userLoad, userLoaded } from '../store/store';
 const useCurrentUser = () => {
   const apiClient = useApiClient();
   const dispatch = useDispatch();
-  const userState = useSelector((state: RootState) => state.users);
+  const userState = useSelector((state: RootState) => state.user);
 
   if (shouldLoad(userState.userItem)) {
     dispatch(userLoad());

@@ -264,8 +264,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    justifyContent: open ? 'flex-start' : 'center',
                     mx: 1,
+                    width: '48px',
                   }}
                 >
                   <ZUIAvatar
