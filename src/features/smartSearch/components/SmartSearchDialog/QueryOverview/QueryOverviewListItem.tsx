@@ -4,6 +4,7 @@ import { Divider, Grid, IconButton, ListItem, Typography } from '@mui/material';
 
 import getFilterComponents from './getFilterComponents';
 import QueryOverviewChip from './QueryOverviewChip';
+import { SmartSearchSankeyFilterSegment } from '../../sankeyDiagram';
 import {
   AnyFilterConfig,
   SmartSearchFilterWithId,
@@ -11,6 +12,7 @@ import {
 
 interface QueryOverviewListItemProps {
   filter: SmartSearchFilterWithId<AnyFilterConfig>;
+  filterIndex: number;
   onDeleteFilter: (filter: SmartSearchFilterWithId<AnyFilterConfig>) => void;
   onEditFilter: (filter: SmartSearchFilterWithId<AnyFilterConfig>) => void;
   readOnly: boolean;
@@ -18,6 +20,7 @@ interface QueryOverviewListItemProps {
 
 const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
   filter,
+  filterIndex,
   onDeleteFilter,
   onEditFilter,
   readOnly,
@@ -41,8 +44,11 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
               filterTypeIcon={filterTypeIcon}
             />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={7}>
             <Typography>{displayFilter}</Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <SmartSearchSankeyFilterSegment filterIndex={filterIndex} />
           </Grid>
           {!readOnly && (
             <Grid alignItems="center" display="flex" item xs={1}>
