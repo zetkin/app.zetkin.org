@@ -600,6 +600,16 @@ export default makeMessages('feat.smartSearch', {
     'This Smart Search query is in read-only mode and cannot be edited.'
   ),
   smartSearch: m('Smart Search'),
+  statsPopper: {
+    change: m('change'),
+    headline: m('Selection impact'),
+    info: m(
+      'This is a dynamic selection and the numbers may change over time.'
+    ),
+    input: m('input'),
+    matches: m('found'),
+    output: m('output'),
+  },
   timeFrame: {
     edit: {
       afterDate: m<{

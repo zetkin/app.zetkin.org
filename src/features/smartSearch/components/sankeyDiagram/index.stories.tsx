@@ -21,7 +21,7 @@ const Template: Story<StoryArgs> = (args) => {
   const { segments, ...config } = args;
 
   return (
-    <Box>
+    <Box maxWidth={200}>
       {segments.map((seg, index) => (
         <SmartSearchSankeySegment key={index} config={config} segment={seg} />
       ))}
