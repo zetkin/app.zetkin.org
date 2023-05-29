@@ -25,7 +25,7 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
-      endDate={activity.endDate}
+      endDate={activity.visibleUntil}
       endNumber={stats?.individuals || 0}
       focusDate={focusDate}
       href={`/organize/${task.organization.id}/projects/${
@@ -33,7 +33,7 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
       }/calendar/tasks/${task.id}`}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
-      startDate={activity.startDate}
+      startDate={activity.visibleFrom}
       statusBar={
         stats?.assigned ? (
           <ZUIStackedStatusBar

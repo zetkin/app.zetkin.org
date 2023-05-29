@@ -65,8 +65,8 @@ export default function useEventsFromDateRange(
     .filter((event) => !campId || event.campaign?.id == campId)
     .map((event) => ({
       data: event,
-      endDate: null,
       kind: ACTIVITIES.EVENT,
-      startDate: event.published ? new Date(event.published) : null,
+      visibleFrom: event.published ? new Date(event.published) : null,
+      visibleUntil: new Date(event.end_time),
     }));
 }
