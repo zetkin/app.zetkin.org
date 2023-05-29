@@ -33,7 +33,12 @@ const QueryOverviewFilterListItem: FC<QueryOverviewFilterListItemProps> = ({
       <QueryOverviewListItem
         canDelete={!readOnly}
         canEdit={!readOnly}
-        diagram={<SmartSearchSankeyFilterSegment filterIndex={filterIndex} />}
+        diagram={(hovered) => (
+          <SmartSearchSankeyFilterSegment
+            filterIndex={filterIndex}
+            hovered={hovered}
+          />
+        )}
         filterText={displayFilter}
         icon={
           <QueryOverviewChip

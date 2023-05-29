@@ -2,11 +2,23 @@ import { FC } from 'react';
 import SmartSearchSankeySegment from './SmartSearchSankeySegment';
 import { useSankey } from './SmartSearchSankeyProvider';
 
-const SmartSearchSankeyEntrySegment: FC = () => {
+type SmartSearchSankeyEntrySegmentProps = {
+  hovered: boolean;
+};
+
+const SmartSearchSankeyEntrySegment: FC<SmartSearchSankeyEntrySegmentProps> = ({
+  hovered,
+}) => {
   const { config, entrySegment } = useSankey();
 
   return entrySegment ? (
-    <SmartSearchSankeySegment config={config} segment={entrySegment} />
+    <SmartSearchSankeySegment
+      config={{
+        ...config,
+        color: hovered ? '#bbbbbb' : config.color,
+      }}
+      segment={entrySegment}
+    />
   ) : null;
 };
 

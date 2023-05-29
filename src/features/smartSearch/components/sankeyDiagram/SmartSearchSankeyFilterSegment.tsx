@@ -4,16 +4,23 @@ import { useSankey } from './SmartSearchSankeyProvider';
 
 type SmartSearchSankeyFilterSegmentProps = {
   filterIndex: number;
+  hovered: boolean;
 };
 
 const SmartSearchSankeyFilterSegment: FC<
   SmartSearchSankeyFilterSegmentProps
-> = ({ filterIndex }) => {
+> = ({ filterIndex, hovered }) => {
   const { config, filterSegments } = useSankey();
   const segment = filterSegments[filterIndex];
 
   return segment ? (
-    <SmartSearchSankeySegment config={config} segment={segment} />
+    <SmartSearchSankeySegment
+      config={{
+        ...config,
+        color: hovered ? '#bbbbbb' : config.color,
+      }}
+      segment={segment}
+    />
   ) : null;
 };
 

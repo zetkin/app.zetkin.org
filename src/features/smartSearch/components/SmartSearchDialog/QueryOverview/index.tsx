@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material';
+import { Alert, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,
   CircleOutlined,
@@ -50,6 +50,7 @@ const QueryOverview = ({
   onOpenStartsWithEditor,
   startsWithAll,
 }: QueryOverviewProps): JSX.Element => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -74,11 +75,16 @@ const QueryOverview = ({
           padding: '0 24px',
         }}
       >
-        <SmartSearchSankeyProvider filters={filters}>
+        <SmartSearchSankeyProvider
+          filters={filters}
+          hoverColor={theme.palette.primary.main}
+        >
           <List sx={{ overflowY: 'auto' }}>
             <QueryOverviewListItem
               canEdit={!readOnly}
-              diagram={<SmartSearchSankeyEntrySegment />}
+              diagram={(hovered) => (
+                <SmartSearchSankeyEntrySegment hovered={hovered} />
+              )}
               filterText={<DisplayStartsWith startsWithAll={startsWithAll} />}
               icon={
                 <QueryOverviewChip
