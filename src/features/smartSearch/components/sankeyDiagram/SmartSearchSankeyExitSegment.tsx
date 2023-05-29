@@ -3,10 +3,10 @@ import SmartSearchSankeySegment from './SmartSearchSankeySegment';
 import { useSankey } from './SmartSearchSankeyProvider';
 
 const SmartSearchSankeyExitSegment: FC = () => {
-  const { exitSegment } = useSankey();
+  const { config, exitSegment } = useSankey();
 
   return exitSegment ? (
-    <SmartSearchSankeySegment segment={exitSegment} />
+    <SmartSearchSankeySegment config={config} segment={exitSegment} />
   ) : null;
 };
 

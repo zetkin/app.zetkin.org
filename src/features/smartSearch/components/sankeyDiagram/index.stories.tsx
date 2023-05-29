@@ -2,24 +2,47 @@ import { Box } from '@mui/material';
 import { Meta, Story } from '@storybook/react';
 
 import SmartSearchSankeySegment from './SmartSearchSankeySegment';
-import { SankeySegment, SEGMENT_KIND, SEGMENT_STYLE } from './types';
+import {
+  SankeyConfig,
+  SankeySegment,
+  SEGMENT_KIND,
+  SEGMENT_STYLE,
+} from './types';
 
 export default {
   title: 'Smart Search Sankey Diagram',
 } as Meta;
 
-const Template: Story<{ segments: SankeySegment[] }> = (args) => {
+type StoryArgs = SankeyConfig & {
+  segments: SankeySegment[];
+};
+
+const Template: Story<StoryArgs> = (args) => {
+  const { segments, ...config } = args;
+
   return (
     <Box>
-      {args.segments.map((seg, index) => (
-        <SmartSearchSankeySegment key={index} segment={seg} />
+      {segments.map((seg, index) => (
+        <SmartSearchSankeySegment key={index} config={config} segment={seg} />
       ))}
     </Box>
   );
 };
 
+const defaultConfig = {
+  arrowDepth: 10,
+  arrowWidth: 20,
+  color: '#cccccc',
+  diagWidth: 200,
+  highlightColor: '#ffcc00',
+  lineWidth: 2,
+  margin: 30,
+  segHeight: 100,
+};
+
 export const basic = Template.bind({});
 basic.args = {
+  ...defaultConfig,
   segments: [
     {
       kind: SEGMENT_KIND.ENTRY,
@@ -58,6 +81,7 @@ basic.args = {
 
 export const pseudo = Template.bind({});
 pseudo.args = {
+  ...defaultConfig,
   segments: [
     {
       kind: SEGMENT_KIND.ENTRY,
@@ -96,6 +120,7 @@ pseudo.args = {
 
 export const mixed = Template.bind({});
 mixed.args = {
+  ...defaultConfig,
   segments: [
     {
       kind: SEGMENT_KIND.EMPTY,

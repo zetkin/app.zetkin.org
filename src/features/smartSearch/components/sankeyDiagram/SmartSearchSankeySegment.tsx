@@ -2,46 +2,25 @@ import { Box } from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { SankeyRenderer } from './drawing';
-import { SankeySegment } from './types';
+import { SankeyConfig, SankeySegment } from './types';
 
 type SmartSearchSankeySegmentProps = {
-  arrowDepth?: number;
-  arrowWidth?: number;
-  color?: string;
-  diagWidth?: number;
-  hoverColor?: string;
-  margin?: number;
+  config: SankeyConfig;
   segment: SankeySegment;
 };
 
 const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
+  config,
   segment,
-  arrowDepth = 10,
-  arrowWidth = 20,
-  color = '#cccccc',
-  diagWidth = 200,
-  hoverColor = '#bbbbbb',
-  margin = 30,
 }) => {
   const animFrameRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [hovered, setHovered] = useState(false);
 
-  const segHeight = 100;
-
   const render = (context: CanvasRenderingContext2D) => {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-    const renderer = new SankeyRenderer(context, {
-      arrowDepth,
-      arrowWidth,
-      color,
-      diagWidth,
-      highlightColor: hoverColor,
-      lineWidth: 2,
-      margin,
-      segHeight,
-    });
+    const renderer = new SankeyRenderer(context, config);
     renderer.drawSegments([segment], hovered ? 0 : -1);
   };
 
@@ -65,13 +44,13 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
     };
   }, [
     canvasRef.current,
-    arrowDepth,
-    arrowWidth,
-    color,
-    diagWidth,
-    hoverColor,
+    config.arrowDepth,
+    config.arrowWidth,
+    config.color,
+    config.diagWidth,
+    config.highlightColor,
     hovered,
-    margin,
+    config.margin,
     segment,
   ]);
 
@@ -82,11 +61,11 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
     >
       <canvas
         ref={canvasRef}
-        height={segHeight}
+        height={config.segHeight}
         style={{
           display: 'block',
         }}
-        width={diagWidth}
+        width={config.diagWidth}
       />
     </Box>
   );

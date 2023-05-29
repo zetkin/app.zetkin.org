@@ -1,5 +1,6 @@
 import {
   SankeyAddSegment,
+  SankeyConfig,
   SankeyEntrySegment,
   SankeyExitSegment,
   SankeyPseudoAddSegment,
@@ -9,17 +10,6 @@ import {
   SEGMENT_KIND,
   SEGMENT_STYLE,
 } from './types';
-
-export type SankeyConfig = {
-  arrowDepth: number;
-  arrowWidth: number;
-  color: string;
-  diagWidth: number;
-  highlightColor: string;
-  lineWidth: number;
-  margin: number;
-  segHeight: number;
-};
 
 export class SankeyRenderer {
   private _highlightCurrent = false;

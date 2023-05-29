@@ -9,10 +9,12 @@ type SmartSearchSankeyFilterSegmentProps = {
 const SmartSearchSankeyFilterSegment: FC<
   SmartSearchSankeyFilterSegmentProps
 > = ({ filterIndex }) => {
-  const { filterSegments } = useSankey();
+  const { config, filterSegments } = useSankey();
   const segment = filterSegments[filterIndex];
 
-  return segment ? <SmartSearchSankeySegment segment={segment} /> : null;
+  return segment ? (
+    <SmartSearchSankeySegment config={config} segment={segment} />
+  ) : null;
 };
 
 export default SmartSearchSankeyFilterSegment;

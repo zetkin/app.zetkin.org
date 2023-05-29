@@ -71,3 +71,14 @@ export type SankeySegment =
   | SankeyPseudoAddSegment
   | SankeySubSegment
   | SankeyPseudoSubSegment;
+
+export type SankeyConfig = {
+  arrowDepth: number;
+  arrowWidth: number;
+  color: string;
+  diagWidth: number;
+  highlightColor: string;
+  lineWidth: number;
+  margin: number;
+  segHeight: number;
+};
