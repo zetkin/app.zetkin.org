@@ -7,7 +7,7 @@ export interface UserStoreSlice {
 }
 
 const initialState: UserStoreSlice = {
-  userItem: remoteItem(0),
+  userItem: remoteItem('me'),
 };
 
 const userSlice = createSlice({
@@ -15,11 +15,11 @@ const userSlice = createSlice({
   name: 'user',
   reducers: {
     userLoad: (state) => {
+      state.userItem = remoteItem('me');
       state.userItem.isLoading = true;
     },
     userLoaded: (state, action: PayloadAction<ZetkinUser>) => {
       const user = action.payload;
-      state.userItem.id = user.id;
       state.userItem.data = user;
       state.userItem.loaded = new Date().toISOString();
       state.userItem.isLoading = false;
