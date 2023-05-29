@@ -77,6 +77,12 @@ export default makeMessages('feat.calendar', {
     deselect: m('Deselect'),
     editEvents: m('Edit events'),
     move: m('Move'),
+    ellipsisMenu: {
+      cancel: m('Cancel'),
+      delete: m('Delete'),
+      print: m('Print schedule'),
+      unpublish: m('Unpublish'),
+    },
   },
   showMore: m('Show'),
   today: m('Today'),

@@ -5,13 +5,15 @@ import { Button, Divider, Paper, Typography } from '@mui/material';
 import { useSelector, useStore } from 'react-redux';
 
 import messageIds from '../../calendar/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 
 const SelectionBar = () => {
   const store = useStore<RootState>();
+  const messages = useMessages(messageIds);
+
   const selectedEvents = useSelector(
     (state: RootState) => state.events.selectedEvents
   );
@@ -20,6 +22,19 @@ const SelectionBar = () => {
     store.dispatch(resetSelection());
   };
 
+  const ellipsisMenuItems = [
+    { label: messages.selectionBar.ellipsisMenu.delete(), onSelect: () => {} },
+    {
+      divider: true,
+      label: messages.selectionBar.ellipsisMenu.cancel(),
+      onSelect: () => {},
+    },
+    {
+      label: messages.selectionBar.ellipsisMenu.unpublish(),
+      onSelect: () => {},
+    },
+    { label: messages.selectionBar.ellipsisMenu.print(), onSelect: () => {} },
+  ];
   return (
     <Box
       sx={{
@@ -70,7 +85,7 @@ const SelectionBar = () => {
                 <Button endIcon={<ArrowDropDown />} variant="outlined">
                   <Msg id={messageIds.selectionBar.copy} />
                 </Button>
-                <ZUIEllipsisMenu items={[]} />
+                <ZUIEllipsisMenu items={ellipsisMenuItems} />
               </Box>
             </Box>
           </Paper>

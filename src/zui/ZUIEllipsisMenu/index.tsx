@@ -5,6 +5,7 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 
 interface MenuItem {
   disabled?: boolean;
+  divider?: boolean;
   id?: string;
   label: string | React.ReactNode;
   onSelect?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
@@ -47,6 +48,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
         {items.map((item, idx) => (
           <MenuItem
             key={item.id || idx}
+            divider={item.divider}
             data-testid={`ZUIEllipsisMenu-item-${item.id || idx}`}
             disabled={item.disabled}
             onClick={(e) => {

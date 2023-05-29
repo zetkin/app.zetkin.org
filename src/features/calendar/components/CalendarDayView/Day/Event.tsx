@@ -53,67 +53,62 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           sx={{ backgroundColor: 'white', borderRadius: '3px' }}
           width="100%"
         >
-          <Box alignItems="center" display="flex">
-            <Box sx={{ ml: 2, mr: 1, pb: 0.1 }}>
+          <Box alignItems="center" display="flex" gap={2.2}>
+            <Box sx={{ ml: 2, pb: 0.1 }}>
               <EventSelectionCheckBox events={[event]} />
             </Box>
-            <Box alignItems="center" display="flex" gap={2.2}>
-              {/* Status */}
-              <StatusDot state={getEventState(event)} />
-              {/* Title */}
-              <Typography
-                sx={{
-                  color: theme.palette.secondary.main,
-                }}
-              >
-                {event.title ||
-                  event.activity?.title ||
-                  messages.common.noTitle()}
-              </Typography>
-              {/* Time */}
+            {/* Status */}
+            <StatusDot state={getEventState(event)} />
+            {/* Title */}
+            <Typography
+              sx={{
+                color: theme.palette.secondary.main,
+              }}
+            >
+              {event.title ||
+                event.activity?.title ||
+                messages.common.noTitle()}
+            </Typography>
+            {/* Time */}
+            <Typography color={theme.palette.secondary.main} component={'div'}>
+              <Box alignItems="center" display="flex" gap={0.5}>
+                <Schedule />
+                {isAllDay(event) && (
+                  <Typography key={event.id}>
+                    {messages.common.allDay()}
+                  </Typography>
+                )}
+                {!isAllDay(event) && (
+                  <>
+                    <FormattedTime
+                      hour="numeric"
+                      hour12={false}
+                      minute="numeric"
+                      value={removeOffset(event.start_time)}
+                    />
+                    &nbsp;-&nbsp;
+                    <FormattedTime
+                      hour="numeric"
+                      hour12={false}
+                      minute="numeric"
+                      value={removeOffset(event.end_time)}
+                    />
+                  </>
+                )}
+              </Box>
+            </Typography>
+            {/* Location */}
+            {event.location && (
               <Typography
                 color={theme.palette.secondary.main}
                 component={'div'}
               >
                 <Box alignItems="center" display="flex" gap={0.5}>
-                  <Schedule />
-                  {isAllDay(event) && (
-                    <Typography key={event.id}>
-                      {messages.common.allDay()}
-                    </Typography>
-                  )}
-                  {!isAllDay(event) && (
-                    <>
-                      <FormattedTime
-                        hour="numeric"
-                        hour12={false}
-                        minute="numeric"
-                        value={removeOffset(event.start_time)}
-                      />
-                      &nbsp;-&nbsp;
-                      <FormattedTime
-                        hour="numeric"
-                        hour12={false}
-                        minute="numeric"
-                        value={removeOffset(event.end_time)}
-                      />
-                    </>
-                  )}
+                  <PlaceOutlined />
+                  {event.location?.title}
                 </Box>
               </Typography>
-              {/* Location */}
-              {event.location && (
-                <Typography
-                  color={theme.palette.secondary.main}
-                  component={'div'}
-                >
-                  <Box alignItems="center" display="flex" gap={0.5}>
-                    <PlaceOutlined />
-                    {event.location?.title}
-                  </Box>
-                </Typography>
-              )}
-            </Box>
+            )}
           </Box>
           {/* Icons */}
           <Box alignItems="center" display="flex" gap={1}>
