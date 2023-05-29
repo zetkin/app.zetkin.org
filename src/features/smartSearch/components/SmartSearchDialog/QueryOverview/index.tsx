@@ -1,20 +1,11 @@
-import { Alert, Grid } from '@mui/material';
+import { Alert } from '@mui/material';
 import {
   ArrowForwardOutlined,
   CircleOutlined,
-  Edit,
   PlaylistAddOutlined,
   RadioButtonCheckedOutlined,
 } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  DialogActions,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { Box, Button, DialogActions, List } from '@mui/material';
 
 import DisplayStartsWith from '../../StartsWith/DisplayStartsWith';
 import { Msg } from 'core/i18n';
@@ -26,6 +17,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import QueryOverviewChip from './QueryOverviewChip';
+import QueryOverviewFilterListItem from './QueryOverviewFilterListItem';
 import QueryOverviewListItem from './QueryOverviewListItem';
 import {
   SmartSearchSankeyEntrySegment,
@@ -84,60 +76,33 @@ const QueryOverview = ({
       >
         <SmartSearchSankeyProvider filters={filters}>
           <List sx={{ overflowY: 'auto' }}>
-            <ListItem key="entry" sx={{ padding: 0 }}>
-              <Grid
-                alignItems="center"
-                container
-                display="flex"
-                justifyContent="space-between"
-                width={1}
-              >
-                <Grid display="flex" item xs={1}>
-                  <QueryOverviewChip
-                    filterOperatorIcon={
-                      <ArrowForwardOutlined
+            <QueryOverviewListItem
+              canEdit={!readOnly}
+              diagram={<SmartSearchSankeyEntrySegment />}
+              filterText={<DisplayStartsWith startsWithAll={startsWithAll} />}
+              icon={
+                <QueryOverviewChip
+                  filterOperatorIcon={
+                    <ArrowForwardOutlined color="secondary" fontSize="small" />
+                  }
+                  filterTypeIcon={
+                    startsWithAll ? (
+                      <RadioButtonCheckedOutlined
                         color="secondary"
                         fontSize="small"
                       />
-                    }
-                    filterTypeIcon={
-                      startsWithAll ? (
-                        <RadioButtonCheckedOutlined
-                          color="secondary"
-                          fontSize="small"
-                        />
-                      ) : (
-                        <CircleOutlined color="secondary" fontSize="small" />
-                      )
-                    }
-                  />
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography>
-                    <DisplayStartsWith startsWithAll={startsWithAll} />
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <SmartSearchSankeyEntrySegment />
-                </Grid>
-                {!readOnly && (
-                  <Grid alignItems="center" display="flex" item xs={1}>
-                    <IconButton
-                      data-testid="QueryOverview-editStartsWithButton"
-                      onClick={onOpenStartsWithEditor}
-                      size="small"
-                      sx={{ paddingRight: '35px' }}
-                    >
-                      <Edit fontSize="small" />
-                    </IconButton>
-                  </Grid>
-                )}
-              </Grid>
-            </ListItem>
+                    ) : (
+                      <CircleOutlined color="secondary" fontSize="small" />
+                    )
+                  }
+                />
+              }
+              onClickEdit={onOpenStartsWithEditor}
+            />
             {filters
               .filter((f) => f.type !== FILTER_TYPE.ALL)
               .map((filter, index) => (
-                <QueryOverviewListItem
+                <QueryOverviewFilterListItem
                   key={filter.id}
                   filter={filter}
                   filterIndex={index}
@@ -146,32 +111,7 @@ const QueryOverview = ({
                   readOnly={readOnly}
                 />
               ))}
-            <ListItem key="exit" sx={{ padding: 0 }}>
-              <Grid
-                alignItems="center"
-                container
-                display="flex"
-                justifyContent="space-between"
-                width={1}
-              >
-                <Grid item xs={8} />
-                <Grid item xs={3}>
-                  <SmartSearchSankeyExitSegment />
-                </Grid>
-                {!readOnly && (
-                  <Grid alignItems="center" display="flex" item xs={1}>
-                    <IconButton
-                      data-testid="QueryOverview-editStartsWithButton"
-                      onClick={onOpenStartsWithEditor}
-                      size="small"
-                      sx={{ paddingRight: '35px' }}
-                    >
-                      <Edit fontSize="small" />
-                    </IconButton>
-                  </Grid>
-                )}
-              </Grid>
-            </ListItem>
+            <QueryOverviewListItem diagram={<SmartSearchSankeyExitSegment />} />
           </List>
         </SmartSearchSankeyProvider>
         {!readOnly && (
