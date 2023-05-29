@@ -91,7 +91,11 @@ const eventsSlice = createSlice({
       const event = action.payload;
       state.eventList.isLoading = false;
       state.eventList.items.push(remoteItem(event.id, { data: event }));
-      state.eventsByDate[event.start_time.slice(0, 10)].items.push(
+      const dateStr = event.start_time.slice(0, 10);
+      if (!state.eventsByDate[dateStr]) {
+        state.eventsByDate[dateStr] = remoteList();
+      }
+      state.eventsByDate[dateStr].items.push(
         remoteItem(event.id, { data: event })
       );
     },
