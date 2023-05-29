@@ -44,7 +44,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
   return (
     <NextLink href={getEventUrl(event)} passHref>
-      <Link color="inherit" sx={{ width: '100%' }} underline="none">
+      <Link color="inherit" underline="none">
         <Box
           display="flex"
           flexDirection="row"
