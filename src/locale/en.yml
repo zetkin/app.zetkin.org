@@ -52,6 +52,7 @@ feat:
       type: Type to filter content
     lastDayWithEvents: There {numEvents, plural, one {was one event} other {were
       {numEvents} events}} on the last active day
+    loadMore: Load more
     moreEvents: "{numEvents, plural, one {# more event} other {# more events}}"
     next: NEXT
     prev: PREV
@@ -625,7 +626,7 @@ feat:
       goBack: Go back to query
       save: Save
     filterCategories:
-      campaignActivity: Campaign activity
+      campaignActivity: Project activity
       misc: Misc
       peopleDatabase: People
       phoneBanking: Phone banking
@@ -634,7 +635,7 @@ feat:
       all: Everyone
       call_blocked: Blocked from calling
       call_history: Based on their call history
-      campaign_participation: Based on their campaign participation
+      campaign_participation: Based on their event participation
       most_active: The most active people
       person_data: Based on their name, address or other data
       person_field: Based on custom fields
@@ -654,14 +655,8 @@ feat:
           "false": an empty list
           "true": a list of all the people in the organization
       callBlocked:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         inputString: "{addRemoveSelect} people who are blocked from calling for any reason"
       callHistory:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         assignmentSelect:
           any: any assignment
           assignment: assignment "{assignmentTitle}"
@@ -673,51 +668,45 @@ feat:
         examples:
           one: Add people who have been successfully reached at least 2 times in any
             assignment at any point in time.
-          two: Remove people who have been called at least 1 time in assignment 'Campaign
-            2020' during the last 30 days.
+          two: Remove people who have been called at least 1 time in assignment 'Activate
+            old members' during the last 30 days.
         inputString: "{addRemoveSelect} people who {callSelect} at least {minTimesInput}
-          {minTimes, plural, one {time} other {times}} in {assignmentSelect}
-          {timeFrame}."
+          {minTimes} in {assignmentSelect} {timeFrame}."
+        minTimes: "{minTimesInput} {minTimes, plural, one {time} other {times}}"
+        minTimesInput: "{minTimesInput}"
       campaignParticipation:
         activitySelect:
-          activity: activity "{activity}"
-          any: any activity
-        addRemoveSelect:
-          add: Add
-          sub: Remove
+          activity: type "{activity}"
+          any: any type
         bookedSelect:
           booked: been booked
           signed_up: signed up
         campaignSelect:
-          any: any campaign
-          campaign: campaign "{campaign}"
+          any: any project
+          campaign: project "{campaign}"
         examples:
-          one: Add people who have signed up for events in any campaign with any activity
-            at location 'Dorfplatz' at any point in time
-          two: Remove people who have not been booked for events in any campaign with
-            activity 'Put up posters' at any location before today.
+          one: Add people who have signed up for events in any project of any type at
+            location 'Dorfplatz' at any point in time
+          two: Remove people who have not been booked for events in any project of type
+            'Put up posters' at any location before today.
         haveSelect:
           in: have
           notin: have not
         inputString: "{addRemoveSelect} people who {haveSelect} {bookedSelect} for
-          events in {campaignSelect} with {activitySelect} at {locationSelect}
+          events in {campaignSelect} of {activitySelect} at {locationSelect}
           {timeFrame}"
         locationSelect:
           any: any location
           location: location "{location}"
       mostActive:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         examples:
           one: Add the 100 most active members of the organization before today.
           two: Remove the 5 most active members of the organization at any point in time.
-        inputString: "{addRemoveSelect} the {numPeopleSelect} most active {numPeople,
-          plural, one {person} other {people}} in the organization {timeFrame}."
+        inputString: "{addRemoveSelect} the {numPeopleSelect} most active {numPeople} in
+          the organization {timeFrame}."
+        numPeople: "{numPeople, plural, one {person} other {people}}"
+        numPeopleSelect: "{numPeopleSelect}"
       personData:
-        addRemoveSelect:
-          add: Add
-          sub: remove
         ellipsis: ...
         examples:
           one: Add any person whose first name is 'Clara' and whose last name is 'Zetkin'.
@@ -738,25 +727,19 @@ feat:
         fieldTuple: "{first} and {second}"
         inputString: "{addRemoveSelect} any person whose {criteria}."
       personField:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         edit:
           date: "{fieldSelect} is {timeFrame}"
           none: This organization doesn't have any custom fields yet.
-          text: "{fieldSelect} matches {freeTextInput}"
-          url: "{fieldSelect} matches {freeTextInput}"
+          text: '{fieldSelect} matches "{freeTextInput}"'
+          url: '{fieldSelect} matches "{freeTextInput}"'
         fieldSelect:
           any: custom field
         inputString: "{addRemoveSelect} any person whose {field}."
         preview:
           date: "{fieldName} is {timeFrame}"
-          text: "{fieldName} matches {searchTerm}"
-          url: "{fieldName} matches {searchTerm}"
+          text: '{fieldName} matches "{searchTerm}"'
+          url: '{fieldName} matches "{searchTerm}"'
       personTags:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         condition:
           conditionSelect:
             all: all
@@ -779,12 +762,9 @@ feat:
         inputString: "{addRemoveSelect} people with {condition} of the following tags:
           {tags}"
       personView:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         examples:
-          one: Add people who are in the view "Campaign 2020.
-          two: Remove people who are not in the view "Campaign 2020".
+          one: Add people who are in the view "Active Members 2022".
+          two: Remove people who are not in the view "Active Members 2022".
         inSelect:
           in: in
           notin: not in
@@ -792,20 +772,18 @@ feat:
         viewSelect:
           none: This organization doesn't have any views yet
       random:
-        addRemoveSelect:
+        addLimitRemoveSelect:
           add: add
+          limit: limit to
           sub: remove
         examples:
           one: Randomly add 20 people in the organization.
           two: Randomly remove 15% of the people in the organization.
         inputString: Randomly {addRemoveSelect} {quantity} in the organization.
       subQuery:
-        addRemoveSelect:
-          add: Add
-          sub: Sub
         examples:
           one: Remove people who match Smart Search Query 'People who live in Stockholm'.
-          two: Add people who match the target group of call Assignment 'Assignment one'.
+          two: Add people who match the target group of call assignment 'Assignment one'.
         inputString: "{addRemoveSelect} people who {matchSelect} {query}."
         matchSelect:
           in: match
@@ -833,9 +811,6 @@ feat:
               queries yet.
             standalone: a standalone Smart Search query
       surveyOption:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         conditionSelect:
           all: all
           any: any
@@ -857,9 +832,6 @@ feat:
           none: This organization has no surveys yet
           survey: survey "{surveyTitle}"
       surveyResponse:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         examples:
           one: People whose responses to survey 'Member survey' (any question) include
             'organize'.
@@ -881,14 +853,11 @@ feat:
           none: This organization has no surveys yet
           survey: survey "{surveyTitle}"
       surveySubmission:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         examples:
           one: People who have submitted responses to survey 'Member survey 2020' before
             today.
-          two: People who have submitted responses to survey 'Member survey' during the
-            last 30 days.
+          two: People who have submitted responses to survey 'Member survey 2020' during
+            the last 30 days.
         inputString: "{addRemoveSelect} people who have submitted responses to
           {surveySelect} {timeFrame}."
         surveySelect:
@@ -896,17 +865,14 @@ feat:
           none: This organization has no surveys yet
           survey: survey "{surveyTitle}"
       task:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         campaignSelect:
-          any: any campaign
-          campaign: campaign "{campaign}"
+          any: any project
+          campaign: project "{campaign}"
           in: " in "
         examples:
           one: Add people who have completed task "Tell your friends" at least once at any
             point in time
-          two: Add people who have ignored any task in any campaign between 2 and 5 times
+          two: Add people who have ignored any task in any project between 2 and 5 times
             before today
         inputString: "{addRemoveSelect} people who have {taskStatusSelect}
           {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}"
@@ -918,9 +884,6 @@ feat:
           completed: completed
           ignored: ignored
       user:
-        addRemoveSelect:
-          add: Add
-          sub: Remove
         connectedSelect:
           "false": not connected
           "true": connected
@@ -955,6 +918,10 @@ feat:
         once: at least once
     misc:
       noOptions: No matching tags
+    operators:
+      add: Add
+      limit: Limit to
+      sub: Remove
     quantity:
       edit:
         integer: "{numInput} {quantitySelect}"
@@ -969,6 +936,7 @@ feat:
         integer: a number of people
         percent: a percentage of people
     readOnly: This Smart Search query is in read-only mode and cannot be edited.
+    smartSearch: Smart Search
     timeFrame:
       edit:
         afterDate: "{timeFrameSelect} {afterDateSelect}"
@@ -1737,6 +1705,12 @@ zui:
     instructions: Drag and drop an image file, or click to select
   lists:
     showMore: Show more...
+  organizeSidebar:
+    areas: Areas
+    home: Home
+    journeys: Journeys
+    people: People
+    projects: Projects
   personGridEditCell:
     keepTyping: Keep typing..
     noResult: No matching person found
