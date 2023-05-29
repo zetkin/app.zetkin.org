@@ -58,6 +58,7 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
         <Grid alignItems="center" display="flex" item xs={1}>
           {canEdit && (
             <IconButton
+              data-testid="QueryOverview-editFilterButton"
               onClick={() => onClickEdit && onClickEdit()}
               size="small"
             >
