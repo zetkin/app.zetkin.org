@@ -21,8 +21,6 @@ const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
   const allEventsChecked = events.every((event) =>
     selectedEvents.some((selectedEvent) => event.id === selectedEvent)
   );
-  console.log(events, 'events');
-  // console.log(selectedEvents, 'selected events');
 
   const handleChange = (checked: boolean) => {
     if (events.length > 1) {

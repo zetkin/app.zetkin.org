@@ -185,14 +185,10 @@ const eventsSlice = createSlice({
     eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const toggledEvents = action.payload;
 
-      if (toggledEvents.length === 0) {
-        state.selectedEvents = [];
-      } else {
-        state.selectedEvents = state.selectedEvents.filter(
-          (selectedEvent) =>
-            !toggledEvents.some((event) => event.id == selectedEvent)
-        );
-      }
+      state.selectedEvents = state.selectedEvents.filter(
+        (selectedEvent) =>
+          !toggledEvents.some((event) => event.id == selectedEvent)
+      );
     },
     eventsLoad: (state) => {
       state.eventList.isLoading = true;
@@ -202,26 +198,13 @@ const eventsSlice = createSlice({
       state.eventList.loaded = new Date().toISOString();
     },
     eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      const checkedEvents = action.payload;
+      const toggledEvents = action.payload;
 
-      state.selectedEvents = [
+      const uniqueEvents = new Set([
         ...state.selectedEvents,
-        ...checkedEvents
-          .filter(
-            (event) =>
-              !state.selectedEvents.some(
-                (selectedEvent) => event.id == selectedEvent
-              )
-          )
-          .map((filtered) => filtered.id),
-      ];
-      // if (checkedEvents.length > 1) {
-      // } else {
-      //   state.selectedEvents = [
-      //     ...state.selectedEvents,
-      //     ...checkedEvents.map((filtered) => filtered.id),
-      //   ];
-      // }
+        ...toggledEvents.map((filtered) => filtered.id),
+      ]);
+      state.selectedEvents = Array.from(uniqueEvents);
     },
     filterTextUpdated: (
       state,
@@ -337,6 +320,9 @@ const eventsSlice = createSlice({
         }
       });
     },
+    resetSelection: (state) => {
+      state.selectedEvents = [];
+    },
     respondentsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       if (!state.respondentsByEventId[eventId]) {
@@ -417,6 +403,7 @@ export const {
   participantsLoad,
   participantsLoaded,
   participantsReminded,
+  resetSelection,
   respondentsLoad,
   respondentsLoaded,
   statsLoad,

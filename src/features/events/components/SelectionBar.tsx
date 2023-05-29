@@ -4,9 +4,9 @@ import { CheckBoxOutlined } from '@mui/icons-material';
 import { Button, Divider, Paper, Typography } from '@mui/material';
 import { useSelector, useStore } from 'react-redux';
 
-import { eventsDeselected } from 'features/events/store';
 import messageIds from '../../calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 
@@ -17,7 +17,7 @@ const SelectionBar = () => {
   );
 
   const handleDeselect = () => {
-    store.dispatch(eventsDeselected([]));
+    store.dispatch(resetSelection());
   };
 
   return (

@@ -54,7 +54,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           width="100%"
         >
           <Box alignItems="center" display="flex">
-            <Box sx={{ pb: 0.1, ml: 2, mr: 1 }}>
+            <Box sx={{ ml: 2, mr: 1, pb: 0.1 }}>
               <EventSelectionCheckBox events={[event]} />
             </Box>
             <Box alignItems="center" display="flex" gap={2.2}>
