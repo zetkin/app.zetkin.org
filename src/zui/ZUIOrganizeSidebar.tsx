@@ -28,7 +28,7 @@ import { cloneElement, useState } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from './l10n/messageIds';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
-import useCurrentUser from 'features/users/hooks/useCurrentUser';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIAvatar from './ZUIAvatar';

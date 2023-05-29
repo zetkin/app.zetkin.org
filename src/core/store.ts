@@ -10,7 +10,7 @@ import organizationsSlice, {
 import surveysSlice, { SurveysStoreSlice } from 'features/surveys/store';
 import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
-import userSlice, { UserStoreSlice } from 'features/users/store/store';
+import userSlice, { UserStoreSlice } from 'features/user/store/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 
 export interface RootState {
