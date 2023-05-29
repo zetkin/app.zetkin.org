@@ -599,6 +599,14 @@ export default makeMessages('feat.smartSearch', {
   readOnly: m(
     'This Smart Search query is in read-only mode and cannot be edited.'
   ),
+  resultHint: {
+    countLabel: m<{ count: number }>(
+      '{count, plural, =1 {one person} other {# people}}'
+    ),
+    hint: m<{ count: ReactElement }>(
+      'This Smart Search will currently return {count} for you.'
+    ),
+  },
   smartSearch: m('Smart Search'),
   statsPopper: {
     change: m('change'),
