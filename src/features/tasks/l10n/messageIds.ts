@@ -183,7 +183,7 @@ export default makeMessages('feat.tasks', {
   },
   taskListItem: {
     relativeTimes: {
-      active: m<{ time: ReactElement }>('Closes {time}'),
+      active: m<{ time: ReactElement }>('Deadline {time}'),
       closed: m<{ time: ReactElement }>('Closed {time}'),
       expired: m<{ time: ReactElement }>('Expired {time}'),
       expires: m<{ time: ReactElement }>('Expires {time}'),

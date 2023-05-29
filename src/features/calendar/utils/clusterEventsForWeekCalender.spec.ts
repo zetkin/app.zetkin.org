@@ -43,9 +43,9 @@ function mockEvent(id: number, data: Partial<ZetkinEvent>): EventActivity {
       ...data,
       id,
     },
-    endDate: null,
     kind: ACTIVITIES.EVENT,
-    startDate: null,
+    visibleFrom: null,
+    visibleUntil: null,
   };
 }
 

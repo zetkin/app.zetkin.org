@@ -157,10 +157,10 @@ export default function useClusteredActivities(
   return clusteredEvents.concat(otherActivities).sort((a, b) => {
     const aStart = isEventCluster(a)
       ? new Date(a.events[0].start_time)
-      : a.startDate;
+      : a.visibleFrom;
     const bStart = isEventCluster(b)
       ? new Date(b.events[0].start_time)
-      : b.startDate;
+      : b.visibleFrom;
 
     if (!aStart && !bStart) {
       return 0;

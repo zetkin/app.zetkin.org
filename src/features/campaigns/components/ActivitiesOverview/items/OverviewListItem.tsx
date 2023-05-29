@@ -69,8 +69,8 @@ interface OverviewListItemProps {
   SecondaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
-  endDate: CampaignActivity['endDate'];
-  startDate: CampaignActivity['startDate'];
+  endDate: CampaignActivity['visibleUntil'];
+  startDate: CampaignActivity['visibleFrom'];
   focusDate: Date | null;
   href: string;
   meta?: JSX.Element;

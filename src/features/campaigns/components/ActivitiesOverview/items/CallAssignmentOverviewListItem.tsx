@@ -26,7 +26,7 @@ const CallAssignmentOverviewListItem: FC<
 
   return (
     <OverviewListItem
-      endDate={activity.endDate}
+      endDate={activity.visibleUntil}
       endNumber={callsMade}
       focusDate={focusDate}
       href={`/organize/${assignment.organization.id}/projects/${
@@ -34,7 +34,7 @@ const CallAssignmentOverviewListItem: FC<
       }/callassignments/${assignment.id}`}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
-      startDate={activity.startDate}
+      startDate={activity.visibleFrom}
       statusBar={
         stats?.allTargets ? (
           <ZUIStackedStatusBar
