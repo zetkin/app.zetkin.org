@@ -33,10 +33,10 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
         <Grid display="flex" item xs={1}>
           {icon}
         </Grid>
-        <Grid item xs={7}>
+        <Grid item lg={8} py={2} xs={7}>
           <Typography>{filterText}</Typography>
         </Grid>
-        <Grid alignSelf="stretch" item xs={3}>
+        <Grid alignSelf="stretch" item lg={2} px={3} xs={3}>
           {diagram}
         </Grid>
         <Grid alignItems="center" display="flex" item xs={1}>

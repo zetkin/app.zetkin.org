@@ -17,12 +17,20 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
   const animFrameRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [canvasHeight, setCanvasHeight] = useState(60);
+  const [canvasWidth, setCanvasWidth] = useState(200);
   const [hovered, setHovered] = useState(false);
 
   const render = (context: CanvasRenderingContext2D) => {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-    const renderer = new SankeyRenderer(context, config, canvasHeight);
+    const renderer = new SankeyRenderer(
+      context,
+      {
+        ...config,
+        diagWidth: canvasWidth,
+      },
+      canvasHeight
+    );
     renderer.drawSegments([segment], hovered ? 0 : -1);
   };
 
@@ -47,10 +55,10 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
   }, [
     canvasRef.current,
     canvasHeight,
+    canvasWidth,
     config.arrowDepth,
     config.arrowWidth,
     config.color,
-    config.diagWidth,
     config.highlightColor,
     hovered,
     config.margin,
@@ -60,6 +68,7 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
   const rectRef = useResizeObserver((elem) => {
     const rect = elem.getBoundingClientRect();
     setCanvasHeight(rect.height);
+    setCanvasWidth(rect.width);
   });
 
   return (
@@ -84,7 +93,7 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
           // big this canvas should be.
           position: 'absolute',
         }}
-        width={config.diagWidth}
+        width={canvasWidth}
       />
     </Box>
   );
