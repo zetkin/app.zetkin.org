@@ -2,7 +2,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { CssBaseline } from '@mui/material';
 import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactElement } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
@@ -43,35 +42,33 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   const env = new Environment(store, new BrowserApiClient(), router);
 
   return (
-    <ReduxProvider store={store}>
-      <UserContext.Provider value={null}>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <IntlProvider
-                defaultLocale="en"
-                locale="en"
-                messages={{}}
-                onError={(err) => {
-                  if (err.code === 'MISSING_TRANSLATION') {
-                    return;
-                  }
-                  throw err;
-                }}
-              >
-                <QueryClientProvider client={queryClient}>
-                  <EnvProvider env={env}>
-                    <CssBaseline />
+    <UserContext.Provider value={null}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <IntlProvider
+              defaultLocale="en"
+              locale="en"
+              messages={{}}
+              onError={(err) => {
+                if (err.code === 'MISSING_TRANSLATION') {
+                  return;
+                }
+                throw err;
+              }}
+            >
+              <QueryClientProvider client={queryClient}>
+                <EnvProvider env={env}>
+                  <CssBaseline />
 
-                    {children}
-                  </EnvProvider>
-                </QueryClientProvider>
-              </IntlProvider>
-            </LocalizationProvider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </UserContext.Provider>
-    </ReduxProvider>
+                  {children}
+                </EnvProvider>
+              </QueryClientProvider>
+            </IntlProvider>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </UserContext.Provider>
   );
 };
 
