@@ -16,10 +16,12 @@ export class SankeyRenderer {
 
   constructor(
     private ctx: CanvasRenderingContext2D,
-    private config: SankeyConfig
+    private config: SankeyConfig,
+    private segHeight: number
   ) {
     this.ctx = ctx;
     this.config = config;
+    this.segHeight = segHeight;
   }
 
   drawAddSubSegment(seg: SankeyAddSegment | SankeySubSegment, offsetY: number) {
@@ -77,14 +79,14 @@ export class SankeyRenderer {
   }
 
   drawEntrySegment(seg: SankeyEntrySegment, offsetY: number) {
-    const { arrowDepth, diagWidth, margin, segHeight } = this.config;
+    const { arrowDepth, diagWidth, margin } = this.config;
 
     const inset = this.initPathWithInset(seg.style);
 
     const segWidth = seg.width * (diagWidth - margin * 2);
     const diagCenter = diagWidth / 2;
-    const top = 0.3 * segHeight + offsetY;
-    const bottom = segHeight + offsetY;
+    const top = 0.3 * this.segHeight + offsetY;
+    const bottom = this.segHeight + offsetY;
 
     this.ctx.moveTo(diagCenter - segWidth / 2 + inset, bottom);
     this.ctx.lineTo(diagCenter - segWidth / 2 + inset, top);
@@ -120,7 +122,8 @@ export class SankeyRenderer {
     offsetY: number,
     style: SEGMENT_STYLE
   ) {
-    const { arrowDepth, arrowWidth, segHeight } = this.config;
+    const { arrowDepth, arrowWidth } = this.config;
+    const segHeight = this.segHeight;
 
     const inset = this.initPathWithInset(style);
 
@@ -153,8 +156,7 @@ export class SankeyRenderer {
     offsetY: number,
     style: SEGMENT_STYLE
   ) {
-    const { segHeight } = this.config;
-
+    const segHeight = this.segHeight;
     const inset = this.initPathWithInset(style);
 
     this.ctx.moveTo(upperLeftX + inset, offsetY);
@@ -187,7 +189,8 @@ export class SankeyRenderer {
     offsetY: number,
     style: SEGMENT_STYLE
   ) {
-    const { arrowDepth, arrowWidth, diagWidth, segHeight } = this.config;
+    const { arrowDepth, arrowWidth, diagWidth } = this.config;
+    const segHeight = this.segHeight;
 
     const inset = this.initPathWithInset(style);
 
@@ -218,7 +221,7 @@ export class SankeyRenderer {
     seg: SankeyPseudoAddSegment | SankeyPseudoSubSegment,
     offsetY: number
   ) {
-    const { diagWidth, margin, segHeight } = this.config;
+    const { diagWidth, margin } = this.config;
     const diagCenter = diagWidth / 2;
     const doubleMargin = margin * 2;
 
@@ -253,7 +256,7 @@ export class SankeyRenderer {
           diagCenter - segWidth / 2,
           offsetY,
           segWidth,
-          segHeight
+          this.segHeight
         );
       }
 
@@ -284,10 +287,9 @@ export class SankeyRenderer {
   }
 
   drawSegments(segments: SankeySegment[], highlightIndex: number) {
-    const { segHeight } = this.config;
     segments.forEach((seg, index) => {
       this._highlightCurrent = index == highlightIndex;
-      this.drawSegment(seg, index * segHeight);
+      this.drawSegment(seg, index * this.segHeight);
     });
   }
 

@@ -43,7 +43,6 @@ const SmartSearchSankeyProvider: FC<SmartSearchSankeyProviderProps> = ({
     highlightColor: hoverColor,
     lineWidth: 2,
     margin,
-    segHeight: 100, // TODO: Calculate this per segment instead
   };
 
   return (

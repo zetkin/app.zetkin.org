@@ -80,5 +80,4 @@ export type SankeyConfig = {
   highlightColor: string;
   lineWidth: number;
   margin: number;
-  segHeight: number;
 };
