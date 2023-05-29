@@ -7,7 +7,7 @@ import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMember
 import KPD from '../../../../mockData/orgs/KPD';
 
 const deleteView = async (page: Page) => {
-  await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+  await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
   await page.click(`data-testid=ZUIEllipsisMenu-item-delete-view`);
   await page.click('button:text("Confirm")');
 };
