@@ -1,8 +1,13 @@
 import makeStyles from '@mui/styles/makeStyles';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
 import { Box, Theme, Typography } from '@mui/material';
 
+import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 import Field from './Field';
 import FieldGroup from './FieldGroup';
+import { RootState } from 'core/store';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
 
 interface StyleProps {
@@ -37,7 +42,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderBottomRightRadius: 4,
     borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
     borderTopRightRadius: 4,
-    display: 'inline-flex',
+    display: 'flex',
     flexDirection: ({ collapsed }) => (collapsed ? 'row' : 'column'),
     fontSize: 12,
     gap: '4px 0',
@@ -124,6 +129,7 @@ export type PresentableField = Field & {
 
 interface EventProps {
   cancelled: boolean;
+  events: ZetkinEvent[];
   fieldGroups: PresentableField[][];
   height: number;
   title: string;
@@ -133,12 +139,14 @@ interface EventProps {
 
 const Event = ({
   cancelled,
+  events,
   fieldGroups,
   height,
   title,
   topBadge,
   width,
 }: EventProps) => {
+  const [isHovered, setIsHovered] = useState(false);
   const collapsed = !fieldGroups.some((group) => {
     return group.some(
       (field) => field.presentation === FIELD_PRESENTATION.WITH_LABEL
@@ -158,12 +166,25 @@ const Event = ({
     width,
   });
 
+  const selectedEvents = useSelector(
+    (state: RootState) => state.events.selectedEvents
+  );
+
   return (
-    <Box className={classes.container}>
+    <Box
+      className={classes.container}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {topBadge}
       {collapsed && (
         <Box className={classes.collapsedContainer}>
-          <Typography className={classes.title}>{title}</Typography>
+          <Box className={classes.title} display="flex">
+            {(isHovered || selectedEvents.length > 0) && (
+              <EventSelectionCheckBox events={events} />
+            )}
+            <Typography className={classes.title}>{title}</Typography>
+          </Box>
           <Box display="flex">
             {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
               return (
@@ -181,9 +202,12 @@ const Event = ({
       {!collapsed && (
         <Box height="100%">
           <Box className={classes.titleContainer}>
-            <Typography className={classes.title} paddingX={1}>
-              {title}
-            </Typography>
+            <Box alignItems="center" display="flex" sx={{ pl: 1, pt: 0.8 }}>
+              {(isHovered || selectedEvents.length > 0) && (
+                <EventSelectionCheckBox events={events} />
+              )}
+              <Typography className={classes.title}>{title}</Typography>
+            </Box>
           </Box>
           <Box className={classes.fieldGroups}>
             {fieldGroups.map((fields, index) => (

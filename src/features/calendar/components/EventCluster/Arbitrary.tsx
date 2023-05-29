@@ -112,6 +112,7 @@ const Arbitrary: FC<ArbitraryProps> = ({
   return (
     <Event
       cancelled={anyEventIsCancelled}
+      events={events}
       fieldGroups={[fields]}
       height={height}
       title={messages.event.events()}

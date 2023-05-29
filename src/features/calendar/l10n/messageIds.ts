@@ -72,6 +72,12 @@ export default makeMessages('feat.calendar', {
     month: m('Month'),
     week: m('Week'),
   },
+  selectionBar: {
+    copy: m('Copy'),
+    deselect: m('Deselect'),
+    editEvents: m('Edit events'),
+    move: m('Move'),
+  },
   showMore: m('Show'),
   today: m('Today'),
 });

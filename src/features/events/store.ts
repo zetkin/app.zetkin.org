@@ -60,6 +60,7 @@ export interface EventsStoreSlice {
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
+  selectedEvents: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
 }
@@ -76,6 +77,7 @@ const initialState: EventsStoreSlice = {
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
+  selectedEvents: [],
   statsByEventId: {},
   typeList: remoteList(),
 };
@@ -183,12 +185,29 @@ const eventsSlice = createSlice({
         item.mutating = [];
       }
     },
+    eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const toggledEvents = action.payload;
+
+      state.selectedEvents = state.selectedEvents.filter(
+        (selectedEvent) =>
+          !toggledEvents.some((event) => event.id == selectedEvent)
+      );
+    },
     eventsLoad: (state) => {
       state.eventList.isLoading = true;
     },
     eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
+    },
+    eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const toggledEvents = action.payload;
+
+      const uniqueEvents = new Set([
+        ...state.selectedEvents,
+        ...toggledEvents.map((filtered) => filtered.id),
+      ]);
+      state.selectedEvents = Array.from(uniqueEvents);
     },
     filterTextUpdated: (
       state,
@@ -304,6 +323,9 @@ const eventsSlice = createSlice({
         }
       });
     },
+    resetSelection: (state) => {
+      state.selectedEvents = [];
+    },
     respondentsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       if (!state.respondentsByEventId[eventId]) {
@@ -370,6 +392,8 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
+  eventsDeselected,
+  eventsSelected,
   filterTextUpdated,
   filterUpdated,
   locationUpdate,
@@ -382,6 +406,7 @@ export const {
   participantsLoad,
   participantsLoaded,
   participantsReminded,
+  resetSelection,
   respondentsLoad,
   respondentsLoaded,
   statsLoad,

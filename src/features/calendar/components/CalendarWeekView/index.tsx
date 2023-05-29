@@ -91,7 +91,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         gridTemplateRows={'1fr'}
         height="100%"
         marginTop={2}
-        overflow="scroll"
+        overflow="auto"
       >
         {/* Hours column */}
         <Box>
