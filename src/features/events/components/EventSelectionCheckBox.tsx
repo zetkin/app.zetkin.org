@@ -2,11 +2,13 @@ import { Box, Checkbox } from '@mui/material';
 import { useSelector, useStore } from 'react-redux';
 
 import { RootState } from 'core/store';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventsDeselected, eventsSelected } from '../store';
 
 interface EventSelectionCheckBoxProps {
-  events: number[];
+  events: ZetkinEvent[];
 }
+
 const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
   const store = useStore<RootState>();
   const selectedEvents = useSelector(
@@ -14,11 +16,13 @@ const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
   );
 
   const alreadyExists = events.some((event) =>
-    selectedEvents.some((selectedEvent) => event === selectedEvent)
+    selectedEvents.some((selectedEvent) => event.id === selectedEvent)
   );
   const allEventsChecked = events.every((event) =>
-    selectedEvents.some((selectedEvent) => event === selectedEvent)
+    selectedEvents.some((selectedEvent) => event.id === selectedEvent)
   );
+  console.log(events, 'events');
+  // console.log(selectedEvents, 'selected events');
 
   const handleChange = (checked: boolean) => {
     if (events.length > 1) {
@@ -45,8 +49,12 @@ const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
       <Checkbox
         checked={allEventsChecked}
         indeterminate={!allEventsChecked && alreadyExists}
-        onChange={(e) => {
-          handleChange(e.target.checked);
+        onClick={(ev) => {
+          handleChange(!allEventsChecked);
+          ev.stopPropagation();
+        }}
+        onClickCapture={(ev) => {
+          ev.preventDefault();
         }}
         size="small"
         sx={{ px: 0.2, py: 0 }}

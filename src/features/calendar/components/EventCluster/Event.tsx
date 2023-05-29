@@ -1,4 +1,5 @@
 import makeStyles from '@mui/styles/makeStyles';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Box, Theme, Typography } from '@mui/material';
 
@@ -6,7 +7,7 @@ import EventSelectionCheckBox from 'features/events/components/EventSelectionChe
 import Field from './Field';
 import FieldGroup from './FieldGroup';
 import { RootState } from 'core/store';
-import { useSelector } from 'react-redux';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
 
 interface StyleProps {
@@ -128,7 +129,7 @@ export type PresentableField = Field & {
 
 interface EventProps {
   cancelled: boolean;
-  events: number[];
+  events: ZetkinEvent[];
   fieldGroups: PresentableField[][];
   height: number;
   title: string;

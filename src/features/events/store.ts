@@ -182,15 +182,15 @@ const eventsSlice = createSlice({
         item.mutating = [];
       }
     },
-    eventsDeselected: (state, action: PayloadAction<number[]>) => {
-      const checkedEvents = action.payload;
+    eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const toggledEvents = action.payload;
 
-      if (checkedEvents.length === 0) {
+      if (toggledEvents.length === 0) {
         state.selectedEvents = [];
       } else {
         state.selectedEvents = state.selectedEvents.filter(
           (selectedEvent) =>
-            !checkedEvents.some((event) => event == selectedEvent)
+            !toggledEvents.some((event) => event.id == selectedEvent)
         );
       }
     },
@@ -201,22 +201,27 @@ const eventsSlice = createSlice({
       state.eventList = remoteList(action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
-    eventsSelected: (state, action: PayloadAction<number[]>) => {
+    eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const checkedEvents = action.payload;
 
-      if (checkedEvents.length > 1) {
-        state.selectedEvents = [
-          ...state.selectedEvents,
-          ...checkedEvents.filter(
+      state.selectedEvents = [
+        ...state.selectedEvents,
+        ...checkedEvents
+          .filter(
             (event) =>
               !state.selectedEvents.some(
-                (selectedEvent) => event == selectedEvent
+                (selectedEvent) => event.id == selectedEvent
               )
-          ),
-        ];
-      } else {
-        state.selectedEvents = [...state.selectedEvents, ...checkedEvents];
-      }
+          )
+          .map((filtered) => filtered.id),
+      ];
+      // if (checkedEvents.length > 1) {
+      // } else {
+      //   state.selectedEvents = [
+      //     ...state.selectedEvents,
+      //     ...checkedEvents.map((filtered) => filtered.id),
+      //   ];
+      // }
     },
     filterTextUpdated: (
       state,

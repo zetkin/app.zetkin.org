@@ -39,7 +39,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   return (
     <Box display="flex" flexDirection="column" paddingBottom={1} width="100%">
       <Box display="flex">
-        <EventSelectionCheckBox events={[event.id]} />
+        <EventSelectionCheckBox events={[event]} />
         <Box
           display="flex"
           flexGrow={1}

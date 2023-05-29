@@ -187,7 +187,7 @@ const MultiShift: FC<MultiShiftProps> = ({
   return (
     <Event
       cancelled={anyEventIsCancelled}
-      events={events.map((event) => event.id)}
+      events={events}
       fieldGroups={fieldGroups}
       height={height}
       title={firstEventTitle}

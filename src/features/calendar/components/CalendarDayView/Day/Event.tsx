@@ -43,96 +43,90 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
   }
 
   return (
-    <Box sx={{ backgroundColor: 'white', borderRadius: '3px' }}>
-      <Box alignItems="center" display="flex">
-        <Box sx={{ pb: 0.1, pl: 2, pr: 1 }}>
-          <EventSelectionCheckBox events={[event.id]} />
-        </Box>
-        <NextLink href={getEventUrl(event)} passHref>
-          <Link
-            color="inherit"
-            sx={{ pb: 2, pr: 2, pt: 2, width: '100%' }}
-            underline="none"
-          >
-            <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="row"
-              gap={1}
-              justifyContent="space-between"
-              width="100%"
-            >
+    <NextLink href={getEventUrl(event)} passHref>
+      <Link color="inherit" sx={{ width: '100%' }} underline="none">
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          padding={2}
+          sx={{ backgroundColor: 'white', borderRadius: '3px' }}
+          width="100%"
+        >
+          <Box alignItems="center" display="flex">
+            <Box sx={{ pb: 0.1, ml: 2, mr: 1 }}>
+              <EventSelectionCheckBox events={[event]} />
+            </Box>
+            <Box alignItems="center" display="flex" gap={2.2}>
               {/* Status */}
-              <Box alignItems="center" display="flex" gap={2.2}>
-                <StatusDot state={getEventState(event)} />
-                {/* Title */}
-                <Typography
-                  sx={{
-                    color: theme.palette.secondary.main,
-                  }}
-                >
-                  {event.title ||
-                    event.activity?.title ||
-                    messages.common.noTitle()}
-                </Typography>
-                {/* Time */}
+              <StatusDot state={getEventState(event)} />
+              {/* Title */}
+              <Typography
+                sx={{
+                  color: theme.palette.secondary.main,
+                }}
+              >
+                {event.title ||
+                  event.activity?.title ||
+                  messages.common.noTitle()}
+              </Typography>
+              {/* Time */}
+              <Typography
+                color={theme.palette.secondary.main}
+                component={'div'}
+              >
+                <Box alignItems="center" display="flex" gap={0.5}>
+                  <Schedule />
+                  {isAllDay(event) && (
+                    <Typography key={event.id}>
+                      {messages.common.allDay()}
+                    </Typography>
+                  )}
+                  {!isAllDay(event) && (
+                    <>
+                      <FormattedTime
+                        hour="numeric"
+                        hour12={false}
+                        minute="numeric"
+                        value={removeOffset(event.start_time)}
+                      />
+                      &nbsp;-&nbsp;
+                      <FormattedTime
+                        hour="numeric"
+                        hour12={false}
+                        minute="numeric"
+                        value={removeOffset(event.end_time)}
+                      />
+                    </>
+                  )}
+                </Box>
+              </Typography>
+              {/* Location */}
+              {event.location && (
                 <Typography
                   color={theme.palette.secondary.main}
                   component={'div'}
                 >
                   <Box alignItems="center" display="flex" gap={0.5}>
-                    <Schedule />
-                    {isAllDay(event) && (
-                      <Typography key={event.id}>
-                        {messages.common.allDay()}
-                      </Typography>
-                    )}
-                    {!isAllDay(event) && (
-                      <>
-                        <FormattedTime
-                          hour="numeric"
-                          hour12={false}
-                          minute="numeric"
-                          value={removeOffset(event.start_time)}
-                        />
-                        &nbsp;-&nbsp;
-                        <FormattedTime
-                          hour="numeric"
-                          hour12={false}
-                          minute="numeric"
-                          value={removeOffset(event.end_time)}
-                        />
-                      </>
-                    )}
+                    <PlaceOutlined />
+                    {event.location?.title}
                   </Box>
                 </Typography>
-                {/* Location */}
-                {event.location && (
-                  <Typography
-                    color={theme.palette.secondary.main}
-                    component={'div'}
-                  >
-                    <Box alignItems="center" display="flex" gap={0.5}>
-                      <PlaceOutlined />
-                      {event.location?.title}
-                    </Box>
-                  </Typography>
-                )}
-              </Box>
-              {/* Icons */}
-              <Box alignItems="center" display="flex" gap={1}>
-                <EventWarningIcons compact model={model} />
-                <People color={needsParticipants ? 'error' : 'secondary'} />
-                <Typography color={needsParticipants ? 'error' : 'secondary'}>
-                  {event.num_participants_available}/
-                  {event.num_participants_required}
-                </Typography>
-              </Box>
+              )}
             </Box>
-          </Link>
-        </NextLink>
-      </Box>
-    </Box>
+          </Box>
+          {/* Icons */}
+          <Box alignItems="center" display="flex" gap={1}>
+            <EventWarningIcons compact model={model} />
+            <People color={needsParticipants ? 'error' : 'secondary'} />
+            <Typography color={needsParticipants ? 'error' : 'secondary'}>
+              {event.num_participants_available}/
+              {event.num_participants_required}
+            </Typography>
+          </Box>
+        </Box>
+      </Link>
+    </NextLink>
   );
 };
 
