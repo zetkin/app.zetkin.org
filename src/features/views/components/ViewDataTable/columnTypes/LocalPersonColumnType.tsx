@@ -31,7 +31,7 @@ export default class LocalPersonColumnType
       headerAlign: 'center',
 
       renderCell: (params) => {
-        return <ZUIPersonGridCell personId={params.value?.id} />;
+        return <ZUIPersonGridCell person={params.value} />;
       },
       renderEditCell: (params) => {
         return <EditCell cell={params.value} column={col} row={params.row} />;
