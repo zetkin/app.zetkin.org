@@ -11,7 +11,6 @@ import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import NProgress from 'nprogress';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider as ReduxProvider } from 'react-redux';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -121,7 +120,6 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
                         </EventPopperProvider>
                       </ZUIConfirmDialogProvider>
                     </ZUISnackbarProvider>
-                    <ReactQueryDevtools initialIsOpen={false} />
                   </QueryClientProvider>
                 </IntlProvider>
               </LocalizationProvider>
