@@ -4,7 +4,7 @@ import { useApiClient } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLoad, userLoaded } from '../store/store';
+import { userLoad, userLoaded } from '../store';
 
 const useCurrentUser = () => {
   const apiClient = useApiClient();
