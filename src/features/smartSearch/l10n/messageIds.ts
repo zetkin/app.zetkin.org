@@ -610,6 +610,10 @@ export default makeMessages('feat.smartSearch', {
   smartSearch: m('Smart Search'),
   statsPopper: {
     change: m('change'),
+    details: m(
+      'Smart Search is dynamic. That means that over time, the number of matches can vary. Other users can see different results if they have access to more or less people.'
+    ),
+    exit: m('Result'),
     headline: m('Selection impact'),
     info: m(
       'This is a dynamic selection and the numbers may change over time.'
