@@ -1,3 +1,4 @@
+import deleteEvents from '../rpc/deleteEvents';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
@@ -39,7 +40,6 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
-import deleteEvents from '../rpc/deleteEvents';
 
 export type ZetkinEventPatchBody = Partial<
   Omit<

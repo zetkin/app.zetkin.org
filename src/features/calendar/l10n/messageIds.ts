@@ -76,9 +76,9 @@ export default makeMessages('feat.calendar', {
     copy: m('Copy'),
     deselect: m('Deselect'),
     editEvents: m('Edit events'),
-    move: m('Move'),
     ellipsisMenu: {
       cancel: m('Cancel'),
+      confirmDelete: m('Are you sure you want to delete selected events?'),
       delete: m('Delete'),
       deleteWarning: m(
         'Once the events have been deleted, you will not be able to access them again.'
@@ -86,8 +86,8 @@ export default makeMessages('feat.calendar', {
       print: m('Print schedule'),
       publish: m('Publish now'),
       unpublish: m('Unpublish'),
-      confirmDelete: m('Are you sure you want to delete selected events?'),
     },
+    move: m('Move'),
   },
   showMore: m('Show'),
   today: m('Today'),

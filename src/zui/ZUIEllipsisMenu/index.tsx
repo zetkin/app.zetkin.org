@@ -55,9 +55,9 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
         {items.map((item, idx) => (
           <MenuItem
             key={item.id || idx}
-            divider={item.divider}
             data-testid={`ZUIEllipsisMenu-item-${item.id || idx}`}
             disabled={item.disabled}
+            divider={item.divider}
             onClick={(e) => {
               if (item.onSelect) {
                 item.onSelect(e);

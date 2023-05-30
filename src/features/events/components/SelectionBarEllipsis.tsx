@@ -1,13 +1,14 @@
-import { useMessages } from 'core/i18n';
 import { RootState } from 'core/store';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+
+import { EventsModel } from '../models/EventsModel';
+import messageIds from '../../calendar/l10n/messageIds';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import messageIds from '../../calendar/l10n/messageIds';
-import { EventsModel } from '../models/EventsModel';
 
 const SelectionBarEllipsis = () => {
   const messages = useMessages(messageIds);
@@ -56,8 +57,8 @@ const SelectionBarEllipsis = () => {
     },
     {
       divider: true,
+      // onSelect: () => {},
       label: messages.selectionBar.ellipsisMenu.cancel(),
-      onSelect: () => {},
       textColor: '#ed1c55',
     },
     {
@@ -65,7 +66,7 @@ const SelectionBarEllipsis = () => {
         publishedEvents.length > 0
           ? messages.selectionBar.ellipsisMenu.unpublish()
           : '',
-      onSelect: () => {},
+      // onSelect: () => {},
       textColor: '#f66000',
     },
     {
@@ -73,9 +74,12 @@ const SelectionBarEllipsis = () => {
         unpublishedEvents.length > 0
           ? messages.selectionBar.ellipsisMenu.publish()
           : '',
-      onSelect: () => {},
+      // onSelect: () => {},
     },
-    { label: messages.selectionBar.ellipsisMenu.print(), onSelect: () => {} },
+    {
+      label: messages.selectionBar.ellipsisMenu.print(),
+      //  onSelect: () => {}
+    },
   ];
   return <ZUIEllipsisMenu items={ellipsisMenuItems} />;
 };

@@ -21,7 +21,6 @@ export class EventsModel extends ModelBase {
   }
 
   deleteEvents(events: number[]) {
-    console.log('in events model');
     this._repo.deleteEvents(this._orgId, events);
   }
 
