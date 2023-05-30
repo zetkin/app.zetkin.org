@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import SmartSearchSankeySegment from './SmartSearchSankeySegment';
 import { useSankey } from './SmartSearchSankeyProvider';
+import { useTheme } from '@mui/material';
 
 type SmartSearchSankeyFilterSegmentProps = {
   filterIndex: number;
@@ -10,6 +11,7 @@ type SmartSearchSankeyFilterSegmentProps = {
 const SmartSearchSankeyFilterSegment: FC<
   SmartSearchSankeyFilterSegmentProps
 > = ({ filterIndex, hovered }) => {
+  const theme = useTheme();
   const { config, filterSegments } = useSankey();
   const segment = filterSegments[filterIndex];
 
@@ -17,7 +19,7 @@ const SmartSearchSankeyFilterSegment: FC<
     <SmartSearchSankeySegment
       config={{
         ...config,
-        color: hovered ? '#bbbbbb' : config.color,
+        color: hovered ? theme.palette.grey[400] : config.color,
       }}
       segment={segment}
     />
