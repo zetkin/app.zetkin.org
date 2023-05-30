@@ -614,9 +614,9 @@ export default makeMessages('feat.smartSearch', {
     info: m(
       'This is a dynamic selection and the numbers may change over time.'
     ),
-    input: m('input'),
+    input: m('before'),
     matches: m('found'),
-    output: m('output'),
+    output: m('after'),
   },
   timeFrame: {
     edit: {

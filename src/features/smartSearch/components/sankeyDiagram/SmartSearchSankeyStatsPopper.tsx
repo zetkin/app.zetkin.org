@@ -37,20 +37,6 @@ const SmartSearchSankeyStatsPopper: FC<SmartSearchSankeyStatsPopperProps> = ({
             <Grid item sm={6}>
               <Metric
                 color={light}
-                label={messages.statsPopper.matches()}
-                value={stats.matches}
-              />
-            </Grid>
-            <Grid item sm={6}>
-              <Metric
-                color={dark}
-                label="CHANGE"
-                value={stats.change > 0 ? `+${stats.change}` : stats.change}
-              />
-            </Grid>
-            <Grid item sm={6}>
-              <Metric
-                color={light}
                 label={messages.statsPopper.input()}
                 value={stats.input}
               />
@@ -58,8 +44,22 @@ const SmartSearchSankeyStatsPopper: FC<SmartSearchSankeyStatsPopperProps> = ({
             <Grid item sm={6}>
               <Metric
                 color={light}
+                label={messages.statsPopper.matches()}
+                value={stats.matches}
+              />
+            </Grid>
+            <Grid item sm={6}>
+              <Metric
+                color={light}
                 label={messages.statsPopper.output()}
                 value={stats.output}
+              />
+            </Grid>
+            <Grid item sm={6}>
+              <Metric
+                color={dark}
+                label={messages.statsPopper.change()}
+                value={stats.change > 0 ? `+${stats.change}` : stats.change}
               />
             </Grid>
           </Grid>
