@@ -20,6 +20,11 @@ export class EventsModel extends ModelBase {
     this._repo = new EventsRepo(env);
   }
 
+  deleteEvents(events: number[]) {
+    console.log('in events model');
+    this._repo.deleteEvents(this._orgId, events);
+  }
+
   getAllEvents(): IFuture<ZetkinEvent[]> {
     return this._repo.getAllEvents(this._orgId);
   }

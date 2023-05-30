@@ -39,6 +39,7 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
+import deleteEvents from '../rpc/deleteEvents';
 
 export type ZetkinEventPatchBody = Partial<
   Omit<
@@ -114,6 +115,17 @@ export default class EventsRepo {
   async deleteEvent(orgId: number, eventId: number) {
     await this._apiClient.delete(`/api/orgs/${orgId}/actions/${eventId}`);
     this._store.dispatch(eventDeleted(eventId));
+  }
+
+  async deleteEvents(orgId: number, events: number[]) {
+    const result = await this._apiClient.rpc(deleteEvents, {
+      events,
+      orgId,
+    });
+
+    result.removedEvents.forEach((event) => {
+      this._store.dispatch(eventDeleted(event));
+    });
   }
 
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {

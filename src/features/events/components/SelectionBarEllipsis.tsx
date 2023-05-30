@@ -1,10 +1,13 @@
 import { useMessages } from 'core/i18n';
 import { RootState } from 'core/store';
+import useModel from 'core/useModel';
+import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import messageIds from '../../calendar/l10n/messageIds';
+import { EventsModel } from '../models/EventsModel';
 
 const SelectionBarEllipsis = () => {
   const messages = useMessages(messageIds);
@@ -30,6 +33,12 @@ const SelectionBarEllipsis = () => {
       (selectedEvent) => selectedEvent == event.id && event.data?.published
     )
   );
+  const router = useRouter();
+
+  const orgId = router.query.orgId;
+  const model = useModel(
+    (env) => new EventsModel(env, parseInt(orgId as string))
+  );
 
   const ellipsisMenuItems = [
     {
@@ -37,7 +46,7 @@ const SelectionBarEllipsis = () => {
       onSelect: () => {
         showConfirmDialog({
           onSubmit: () => {
-            console.log('delete');
+            model.deleteEvents(selectedEvents);
           },
           title: messages.selectionBar.ellipsisMenu.confirmDelete(),
           warningText: messages.selectionBar.ellipsisMenu.deleteWarning(),
