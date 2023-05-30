@@ -1,20 +1,11 @@
-import { Alert, Grid } from '@mui/material';
+import { Alert, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,
   CircleOutlined,
-  Edit,
   PlaylistAddOutlined,
   RadioButtonCheckedOutlined,
 } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  DialogActions,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { Box, Button, DialogActions, List } from '@mui/material';
 
 import DisplayStartsWith from '../../StartsWith/DisplayStartsWith';
 import { Msg } from 'core/i18n';
@@ -26,9 +17,13 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import QueryOverviewChip from './QueryOverviewChip';
+import QueryOverviewFilterListItem from './QueryOverviewFilterListItem';
 import QueryOverviewListItem from './QueryOverviewListItem';
-
-const FIRST_FILTER = 'first_filter';
+import {
+  SmartSearchSankeyEntrySegment,
+  SmartSearchSankeyExitSegment,
+  SmartSearchSankeyProvider,
+} from '../../sankeyDiagram';
 
 interface QueryOverviewProps {
   filters: SmartSearchFilterWithId<AnyFilterConfig>[];
@@ -55,6 +50,7 @@ const QueryOverview = ({
   onOpenStartsWithEditor,
   startsWithAll,
 }: QueryOverviewProps): JSX.Element => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -79,16 +75,18 @@ const QueryOverview = ({
           padding: '0 24px',
         }}
       >
-        <List sx={{ overflowY: 'auto' }}>
-          <ListItem key={FIRST_FILTER} sx={{ padding: 0 }}>
-            <Grid
-              alignItems="center"
-              container
-              display="flex"
-              justifyContent="space-between"
-              width={1}
-            >
-              <Grid display="flex" item xs={1}>
+        <SmartSearchSankeyProvider
+          filters={filters}
+          hoverColor={theme.palette.primary.main}
+        >
+          <List sx={{ overflowY: 'auto' }}>
+            <QueryOverviewListItem
+              canEdit={!readOnly}
+              diagram={(hovered) => (
+                <SmartSearchSankeyEntrySegment hovered={hovered} />
+              )}
+              filterText={<DisplayStartsWith startsWithAll={startsWithAll} />}
+              icon={
                 <QueryOverviewChip
                   filterOperatorIcon={
                     <ArrowForwardOutlined color="secondary" fontSize="small" />
@@ -104,38 +102,24 @@ const QueryOverview = ({
                     )
                   }
                 />
-              </Grid>
-              <Grid item xs={10}>
-                <Typography>
-                  <DisplayStartsWith startsWithAll={startsWithAll} />
-                </Typography>
-              </Grid>
-              {!readOnly && (
-                <Grid alignItems="center" display="flex" item xs={1}>
-                  <IconButton
-                    data-testid="QueryOverview-editStartsWithButton"
-                    onClick={onOpenStartsWithEditor}
-                    size="small"
-                    sx={{ paddingRight: '35px' }}
-                  >
-                    <Edit fontSize="small" />
-                  </IconButton>
-                </Grid>
-              )}
-            </Grid>
-          </ListItem>
-          {filters
-            .filter((f) => f.type !== FILTER_TYPE.ALL)
-            .map((filter) => (
-              <QueryOverviewListItem
-                key={filter.id}
-                filter={filter}
-                onDeleteFilter={onDeleteFilter}
-                onEditFilter={onEditFilter}
-                readOnly={readOnly}
-              />
-            ))}
-        </List>
+              }
+              onClickEdit={onOpenStartsWithEditor}
+            />
+            {filters
+              .filter((f) => f.type !== FILTER_TYPE.ALL)
+              .map((filter, index) => (
+                <QueryOverviewFilterListItem
+                  key={filter.id}
+                  filter={filter}
+                  filterIndex={index}
+                  onDeleteFilter={onDeleteFilter}
+                  onEditFilter={onEditFilter}
+                  readOnly={readOnly}
+                />
+              ))}
+            <QueryOverviewListItem diagram={<SmartSearchSankeyExitSegment />} />
+          </List>
+        </SmartSearchSankeyProvider>
         {!readOnly && (
           <Button
             color="primary"

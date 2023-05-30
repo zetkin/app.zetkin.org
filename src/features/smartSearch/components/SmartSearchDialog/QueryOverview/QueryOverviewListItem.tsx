@@ -1,62 +1,81 @@
-import { FC } from 'react';
 import { Delete, Edit } from '@mui/icons-material';
-import { Divider, Grid, IconButton, ListItem, Typography } from '@mui/material';
+import { FC, ReactNode, useState } from 'react';
+import { Grid, IconButton, ListItem, Typography } from '@mui/material';
 
-import getFilterComponents from './getFilterComponents';
-import QueryOverviewChip from './QueryOverviewChip';
-import {
-  AnyFilterConfig,
-  SmartSearchFilterWithId,
-} from 'features/smartSearch/components/types';
+type RenderFunction = (hovered: boolean) => ReactNode;
+type Renderable = ReactNode | RenderFunction;
 
-interface QueryOverviewListItemProps {
-  filter: SmartSearchFilterWithId<AnyFilterConfig>;
-  onDeleteFilter: (filter: SmartSearchFilterWithId<AnyFilterConfig>) => void;
-  onEditFilter: (filter: SmartSearchFilterWithId<AnyFilterConfig>) => void;
-  readOnly: boolean;
-}
+type QueryOverviewListItemProps = {
+  canDelete?: boolean;
+  canEdit?: boolean;
+  diagram?: Renderable;
+  filterText?: Renderable;
+  icon?: Renderable;
+  onClickDelete?: () => void;
+  onClickEdit?: () => void;
+};
 
 const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
-  filter,
-  onDeleteFilter,
-  onEditFilter,
-  readOnly,
+  canEdit,
+  canDelete,
+  diagram,
+  filterText,
+  icon,
+  onClickDelete,
+  onClickEdit,
 }) => {
-  const { displayFilter, filterOperatorIcon, filterTypeIcon } =
-    getFilterComponents(filter);
+  const [hovered, setHovered] = useState(false);
+
+  const render = (renderable: Renderable): ReactNode => {
+    if (typeof renderable == 'function') {
+      return renderable(hovered);
+    }
+    return renderable;
+  };
+
   return (
-    <>
-      <Divider />
-      <ListItem style={{ padding: 0 }}>
-        <Grid
-          alignItems="center"
-          container
-          display="flex"
-          justifyContent="space-between"
-          width={1}
-        >
-          <Grid display="flex" item xs={1}>
-            <QueryOverviewChip
-              filterOperatorIcon={filterOperatorIcon}
-              filterTypeIcon={filterTypeIcon}
-            />
-          </Grid>
-          <Grid item xs={10}>
-            <Typography>{displayFilter}</Typography>
-          </Grid>
-          {!readOnly && (
-            <Grid alignItems="center" display="flex" item xs={1}>
-              <IconButton onClick={() => onEditFilter(filter)} size="small">
-                <Edit fontSize="small" />
-              </IconButton>
-              <IconButton onClick={() => onDeleteFilter(filter)} size="small">
-                <Delete fontSize="small" />
-              </IconButton>
-            </Grid>
+    <ListItem
+      onMouseOut={() => setHovered(false)}
+      onMouseOver={() => setHovered(true)}
+      style={{ padding: 0 }}
+    >
+      <Grid
+        alignItems="center"
+        container
+        display="flex"
+        justifyContent="space-between"
+        width={1}
+      >
+        <Grid display="flex" item xs={1}>
+          {render(icon)}
+        </Grid>
+        <Grid item lg={8} py={2} xs={7}>
+          <Typography>{render(filterText)}</Typography>
+        </Grid>
+        <Grid alignSelf="stretch" item lg={2} px={3} xs={3}>
+          {render(diagram)}
+        </Grid>
+        <Grid alignItems="center" display="flex" item xs={1}>
+          {canEdit && (
+            <IconButton
+              data-testid="QueryOverview-editFilterButton"
+              onClick={() => onClickEdit && onClickEdit()}
+              size="small"
+            >
+              <Edit fontSize="small" />
+            </IconButton>
+          )}
+          {canDelete && (
+            <IconButton
+              onClick={() => onClickDelete && onClickDelete()}
+              size="small"
+            >
+              <Delete fontSize="small" />
+            </IconButton>
           )}
         </Grid>
-      </ListItem>
-    </>
+      </Grid>
+    </ListItem>
   );
 };
 
