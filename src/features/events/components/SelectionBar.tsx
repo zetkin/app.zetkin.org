@@ -9,13 +9,33 @@ import { Msg, useMessages } from 'core/i18n';
 import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import { useContext } from 'react';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const SelectionBar = () => {
   const store = useStore<RootState>();
   const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const selectedEvents = useSelector(
     (state: RootState) => state.events.selectedEvents
+  );
+
+  const events = useSelector(
+    (state: RootState) => state.events.eventList.items
+  );
+
+  const unpublishedEvents = events.filter((event) =>
+    selectedEvents.some(
+      (selectedEvent) =>
+        selectedEvent == event.id && event.data?.published === null
+    )
+  );
+
+  const publishedEvents = events.filter((event) =>
+    selectedEvents.some(
+      (selectedEvent) => selectedEvent == event.id && event.data?.published
+    )
   );
 
   const handleDeselect = () => {
@@ -23,18 +43,43 @@ const SelectionBar = () => {
   };
 
   const ellipsisMenuItems = [
-    { label: messages.selectionBar.ellipsisMenu.delete(), onSelect: () => {} },
+    {
+      label: messages.selectionBar.ellipsisMenu.delete(),
+      onSelect: () => {
+        showConfirmDialog({
+          onSubmit: () => {
+            console.log('delete');
+          },
+          title: messages.selectionBar.ellipsisMenu.confirmDelete(),
+          warningText: messages.selectionBar.ellipsisMenu.deleteWarning(),
+        });
+      },
+      textColor: '#ed1c55',
+    },
     {
       divider: true,
       label: messages.selectionBar.ellipsisMenu.cancel(),
       onSelect: () => {},
+      textColor: '#ed1c55',
     },
     {
-      label: messages.selectionBar.ellipsisMenu.unpublish(),
+      label:
+        publishedEvents.length > 0
+          ? messages.selectionBar.ellipsisMenu.unpublish()
+          : '',
+      onSelect: () => {},
+      textColor: '#f66000',
+    },
+    {
+      label:
+        unpublishedEvents.length > 0
+          ? messages.selectionBar.ellipsisMenu.publish()
+          : '',
       onSelect: () => {},
     },
     { label: messages.selectionBar.ellipsisMenu.print(), onSelect: () => {} },
   ];
+
   return (
     <Box
       sx={{

@@ -80,8 +80,13 @@ export default makeMessages('feat.calendar', {
     ellipsisMenu: {
       cancel: m('Cancel'),
       delete: m('Delete'),
+      deleteWarning: m(
+        'Once the events have been deleted, you will not be able to access them again.'
+      ),
       print: m('Print schedule'),
+      publish: m('Publish now'),
       unpublish: m('Unpublish'),
+      confirmDelete: m('Are you sure you want to delete selected events?'),
     },
   },
   showMore: m('Show'),
