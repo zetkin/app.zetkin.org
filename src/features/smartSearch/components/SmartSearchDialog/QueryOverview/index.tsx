@@ -1,4 +1,4 @@
-import { Alert, Typography, useTheme } from '@mui/material';
+import { Alert, Divider, Typography, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,
   CircleOutlined,
@@ -120,6 +120,7 @@ const QueryOverview = ({
                   readOnly={readOnly}
                 />
               ))}
+            <Divider />
             <QueryOverviewListItem diagram={<SmartSearchSankeyExitSegment />} />
           </List>
         </SmartSearchSankeyProvider>
