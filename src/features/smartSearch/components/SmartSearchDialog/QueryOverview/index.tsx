@@ -1,4 +1,4 @@
-import { Alert, useTheme } from '@mui/material';
+import { Alert, Divider, Typography, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,
   CircleOutlined,
@@ -9,6 +9,7 @@ import { Box, Button, DialogActions, List } from '@mui/material';
 
 import DisplayStartsWith from '../../StartsWith/DisplayStartsWith';
 import { Msg } from 'core/i18n';
+import useSmartSearchStats from 'features/smartSearch/hooks/useSmartSearchStats';
 import {
   AnyFilterConfig,
   FILTER_TYPE,
@@ -51,6 +52,8 @@ const QueryOverview = ({
   startsWithAll,
 }: QueryOverviewProps): JSX.Element => {
   const theme = useTheme();
+  const stats = useSmartSearchStats(filters);
+  const resultCount = stats?.length ? stats[stats.length - 1].result : 0;
   return (
     <Box
       sx={{
@@ -117,6 +120,7 @@ const QueryOverview = ({
                   readOnly={readOnly}
                 />
               ))}
+            <Divider />
             <QueryOverviewListItem diagram={<SmartSearchSankeyExitSegment />} />
           </List>
         </SmartSearchSankeyProvider>
@@ -136,11 +140,30 @@ const QueryOverview = ({
       {hasSaveCancelButtons && (
         <DialogActions>
           <Box
+            alignItems="center"
             display="flex"
             justifyContent="flex-end"
             m={1}
             style={{ gap: '1rem' }}
           >
+            <Typography color={theme.palette.text.secondary}>
+              <Msg
+                id={messageIds.resultHint.hint}
+                values={{
+                  count: (
+                    <Typography
+                      color={theme.palette.text.primary}
+                      component="span"
+                    >
+                      <Msg
+                        id={messageIds.resultHint.countLabel}
+                        values={{ count: resultCount }}
+                      />
+                    </Typography>
+                  ),
+                }}
+              />
+            </Typography>
             {readOnly && (
               <Button
                 color="primary"

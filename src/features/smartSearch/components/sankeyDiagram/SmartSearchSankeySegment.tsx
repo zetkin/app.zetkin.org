@@ -2,8 +2,10 @@ import { Box } from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { SankeyRenderer } from './drawing';
+import SmartSearchSankeyExitPopper from './SmartSearchSankeyExitPopper';
+import SmartSearchSankeyStatsPopper from './SmartSearchSankeyStatsPopper';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
-import { SankeyConfig, SankeySegment } from './types';
+import { SankeyConfig, SankeySegment, SEGMENT_KIND } from './types';
 
 type SmartSearchSankeySegmentProps = {
   config: SankeyConfig;
@@ -95,6 +97,20 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
         }}
         width={canvasWidth}
       />
+      {'stats' in segment && (
+        <SmartSearchSankeyStatsPopper
+          anchorEl={canvasRef.current}
+          open={hovered}
+          stats={segment.stats}
+        />
+      )}
+      {segment.kind == SEGMENT_KIND.EXIT && (
+        <SmartSearchSankeyExitPopper
+          anchorEl={canvasRef.current}
+          open={hovered}
+          output={segment.output}
+        />
+      )}
     </Box>
   );
 };
