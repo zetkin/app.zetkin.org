@@ -359,4 +359,58 @@ describe('makeSankeySegments()', () => {
       },
     ]);
   });
+
+  it('handles when first filter is a sub', () => {
+    const result = makeSankeySegments([
+      {
+        change: -100,
+        filter: {
+          config: {},
+          op: OPERATION.SUB,
+          type: FILTER_TYPE.RANDOM,
+        },
+        matches: 100,
+        result: 0,
+      },
+      {
+        change: 100,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.RANDOM,
+        },
+        matches: 100,
+        result: 100,
+      },
+    ]);
+
+    expect(result).toEqual(<SankeySegment[]>[
+      {
+        kind: SEGMENT_KIND.EMPTY,
+      },
+      {
+        kind: SEGMENT_KIND.EMPTY,
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_ADD,
+        main: null,
+        side: {
+          style: SEGMENT_STYLE.FILL,
+          width: 1,
+        },
+        stats: {
+          change: 100,
+          input: 0,
+          matches: 100,
+          output: 100,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.EXIT,
+        output: 100,
+        style: SEGMENT_STYLE.FILL,
+        width: 1,
+      },
+    ]);
+  });
 });
