@@ -60,7 +60,7 @@ export interface EventsStoreSlice {
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
-  selectedEvents: number[];
+  selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
 }
@@ -77,7 +77,7 @@ const initialState: EventsStoreSlice = {
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
-  selectedEvents: [],
+  selectedEventIds: [],
   statsByEventId: {},
   typeList: remoteList(),
 };
@@ -192,9 +192,9 @@ const eventsSlice = createSlice({
     eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const toggledEvents = action.payload;
 
-      state.selectedEvents = state.selectedEvents.filter(
-        (selectedEvent) =>
-          !toggledEvents.some((event) => event.id == selectedEvent)
+      state.selectedEventIds = state.selectedEventIds.filter(
+        (selectedEventId) =>
+          !toggledEvents.some((event) => event.id == selectedEventId)
       );
     },
     eventsLoad: (state) => {
@@ -207,11 +207,11 @@ const eventsSlice = createSlice({
     eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const toggledEvents = action.payload;
 
-      const uniqueEvents = new Set([
-        ...state.selectedEvents,
+      const uniqueEventIds = new Set([
+        ...state.selectedEventIds,
         ...toggledEvents.map((filtered) => filtered.id),
       ]);
-      state.selectedEvents = Array.from(uniqueEvents);
+      state.selectedEventIds = Array.from(uniqueEventIds);
     },
     filterTextUpdated: (
       state,
@@ -328,7 +328,7 @@ const eventsSlice = createSlice({
       });
     },
     resetSelection: (state) => {
-      state.selectedEvents = [];
+      state.selectedEventIds = [];
     },
     respondentsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;

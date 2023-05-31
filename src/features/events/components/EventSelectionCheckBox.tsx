@@ -12,7 +12,7 @@ interface EventSelectionCheckBoxProps {
 const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
   const store = useStore<RootState>();
   const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
+    (state: RootState) => state.events.selectedEventIds
   );
 
   const alreadyExists = events.some((event) =>
