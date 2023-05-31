@@ -30,7 +30,7 @@ test.describe('Campaign detail page', async () => {
 
     await page.goto(appUri + '/organize/1/projects/1');
 
-    await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+    await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
     await page.click('data-testid=ZUIEllipsisMenu-item-deleteCampaign');
 
     await Promise.all([
@@ -51,7 +51,7 @@ test.describe('Campaign detail page', async () => {
 
     await page.goto(appUri + '/organize/1/projects/1');
 
-    await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+    await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
     await page.click('data-testid=ZUIEllipsisMenu-item-deleteCampaign');
     await page.click('button:text("Confirm")');
 

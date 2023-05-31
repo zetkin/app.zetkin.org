@@ -8,6 +8,7 @@ import {
   Groups,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
+  Logout,
   Map,
 } from '@mui/icons-material/';
 import {
@@ -27,8 +28,11 @@ import { cloneElement, useState } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from './l10n/messageIds';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
+import ZUIAvatar from './ZUIAvatar';
+import ZUIEllipsisMenu from './ZUIEllipsisMenu';
 import ZUIFuture from './ZUIFuture';
 
 const drawerWidth = 300;
@@ -72,7 +76,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const messages = useMessages(messageIds);
   const classes = useStyles();
   const theme = useTheme();
-
+  const user = useCurrentUser();
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
@@ -92,6 +96,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Explore />, name: 'journeys' },
     { icon: <Map />, name: 'areas' },
   ] as const;
+
+  function logOut() {
+    router.push(`/logout`);
+  }
 
   return (
     <Box data-testid="organize-sidebar">
@@ -232,6 +240,72 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               );
             })}
           </List>
+        </Box>
+        <Box
+          sx={{
+            bottom: 0,
+            position: 'absolute',
+            width: '100%',
+          }}
+        >
+          <Divider />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              mx: open ? 1 : 0.5,
+              my: 0.5,
+              py: open ? 1.25 : 1,
+            }}
+          >
+            {user && (
+              <>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    mx: 1,
+                    width: '48px',
+                  }}
+                >
+                  <ZUIAvatar
+                    orgId={orgId}
+                    personId={user.id}
+                    size={open ? 'sm' : 'md'}
+                  />
+                  <Typography
+                    sx={{
+                      display: open ? 'flex' : 'none',
+                      marginLeft: 1,
+                    }}
+                  >
+                    {user.first_name}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <ZUIEllipsisMenu
+                    items={[
+                      {
+                        label: (
+                          <Typography>
+                            {messages.organizeSidebar.signOut()}
+                          </Typography>
+                        ),
+                        onSelect: () => {
+                          logOut();
+                        },
+                        startIcon: <Logout />,
+                      },
+                    ]}
+                  />
+                </Box>
+              </>
+            )}
+          </Box>
         </Box>
       </Drawer>
     </Box>

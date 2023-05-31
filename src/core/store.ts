@@ -13,6 +13,7 @@ import smartSearchSlice, {
 import surveysSlice, { SurveysStoreSlice } from 'features/surveys/store';
 import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
+import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 
 export interface RootState {
@@ -24,6 +25,7 @@ export interface RootState {
   tasks: TasksStoreSlice;
   views: ViewsStoreSlice;
   organizations: OrganizationsStoreSlice;
+  user: UserStoreSlice;
 }
 
 const reducer = {
@@ -34,6 +36,7 @@ const reducer = {
   surveys: surveysSlice.reducer,
   tags: tagsSlice.reducer,
   tasks: tasksSlice.reducer,
+  user: userSlice.reducer,
   views: viewsSlice.reducer,
 };
 
