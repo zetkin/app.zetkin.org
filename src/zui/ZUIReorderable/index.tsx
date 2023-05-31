@@ -1,5 +1,5 @@
 import { DragIndicatorOutlined } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { Box, BoxProps, IconButton } from '@mui/material';
 import {
   FC,
   MouseEvent as ReactMouseEvent,
@@ -29,6 +29,7 @@ type ZUIReorderableProps = {
   items: ReorderableItem[];
   onReorder: (ids: IDType[]) => void;
   onReordering?: () => void;
+  widgetsProps?: BoxProps;
 };
 
 const ZUIReorderable: FC<ZUIReorderableProps> = ({
@@ -38,6 +39,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   items,
   onReorder,
   onReordering,
+  widgetsProps,
 }) => {
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
   const [activeId, setActiveId] = useState<IDType | null>(null);
@@ -187,6 +189,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
               showDownButton={!disableClick && index < items.length - 1}
               showDragHandle={!disableDrag}
               showUpButton={!disableClick && index > 0}
+              widgetsProps={widgetsProps}
             />
           )
       )}
@@ -209,6 +212,7 @@ const ZUIReorderableItem: FC<{
   showDownButton: boolean;
   showDragHandle: boolean;
   showUpButton: boolean;
+  widgetsProps?: BoxProps;
 }> = ({
   centerWidgets,
   dragging,
@@ -220,6 +224,7 @@ const ZUIReorderableItem: FC<{
   showDownButton,
   showDragHandle,
   showUpButton,
+  widgetsProps,
 }) => {
   const itemRef = useRef<HTMLDivElement>();
   const contentRef = useRef<HTMLDivElement>();
@@ -240,7 +245,7 @@ const ZUIReorderableItem: FC<{
           position: dragging ? 'absolute' : 'static',
         }}
       >
-        <Box>
+        <Box {...widgetsProps}>
           {showDragHandle && (
             <IconButton
               onMouseDown={(ev) => {
