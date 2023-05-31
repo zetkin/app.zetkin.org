@@ -38,6 +38,7 @@ type ZUIReorderableProps = {
   onReorder: (ids: IDType[]) => void;
   onReordering?: () => void;
   widgets?: ZUIReorderableWidget[];
+  widgetsOnlyOnHover?: boolean;
   widgetsProps?: BoxProps;
 };
 
@@ -53,6 +54,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     ZUIReorderableWidget.MOVE_UP,
     ZUIReorderableWidget.MOVE_DOWN,
   ],
+  widgetsOnlyOnHover = false,
   widgetsProps,
 }) => {
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
@@ -225,6 +227,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
                 return false;
               })}
+              widgetsOnlyOnHover={widgetsOnlyOnHover}
               widgetsProps={widgetsProps}
             />
           )
@@ -246,6 +249,7 @@ const ZUIReorderableItem: FC<{
   onClickUp: () => void;
   onNodeExists: (node: HTMLDivElement) => void;
   widgets: ZUIReorderableWidget[];
+  widgetsOnlyOnHover?: boolean;
   widgetsProps?: BoxProps;
 }> = ({
   centerWidgets,
@@ -256,8 +260,10 @@ const ZUIReorderableItem: FC<{
   onClickUp,
   onNodeExists,
   widgets,
+  widgetsOnlyOnHover = false,
   widgetsProps,
 }) => {
+  const [hovered, setHovered] = useState(false);
   const itemRef = useRef<HTMLDivElement>();
   const contentRef = useRef<HTMLDivElement>();
 
@@ -268,6 +274,8 @@ const ZUIReorderableItem: FC<{
         itemRef.current = div;
         onNodeExists(div);
       }}
+      onMouseOut={() => setHovered(false)}
+      onMouseOver={() => setHovered(true)}
     >
       <Box
         ref={contentRef}
@@ -279,6 +287,11 @@ const ZUIReorderableItem: FC<{
       >
         <Box display="flex" flexDirection="column" {...widgetsProps}>
           {widgets.map((widget) => {
+            if (widgetsOnlyOnHover && !hovered) {
+              // Hide all widgets when not hovering
+              return false;
+            }
+
             if (widget == ZUIReorderableWidget.DRAG) {
               return (
                 <IconButton
