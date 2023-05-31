@@ -26,7 +26,7 @@ import {
   SmartSearchSankeyExitSegment,
   SmartSearchSankeyProvider,
 } from '../../sankeyDiagram';
-import ZUIReorderable, { ZUIReorderableRenderProps } from 'zui/ZUIReorderable';
+import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 
 interface QueryOverviewProps {
   filters: SmartSearchFilterWithId<AnyFilterConfig>[];
@@ -67,7 +67,7 @@ const QueryOverview = ({
     .filter((f) => f.type !== FILTER_TYPE.ALL)
     .map((filter, index) => ({
       id: filter.id,
-      renderContent: ({ dragging }: ZUIReorderableRenderProps) => {
+      renderContent: () => {
         return (
           <QueryOverviewFilterListItem
             key={filter.id}
@@ -136,18 +136,25 @@ const QueryOverview = ({
               onClickEdit={onOpenStartsWithEditor}
             />
             <ZUIReorderable
+              centerWidgets
               items={reorderableItems}
               onReorder={(ids) => {
                 setDragging(false);
-                setPendingFilters(
-                  pendingFilters.sort(
-                    (f0, f1) => ids.indexOf(f0.id) - ids.indexOf(f1.id)
-                  )
+                setPendingFilters((current) =>
+                  current
+                    .concat()
+                    .sort((f0, f1) => ids.indexOf(f0.id) - ids.indexOf(f1.id))
                 );
               }}
               onReordering={() => {
                 setDragging(true);
               }}
+              widgets={[
+                ZUIReorderableWidget.MOVE_UP,
+                ZUIReorderableWidget.DRAG,
+                ZUIReorderableWidget.MOVE_DOWN,
+              ]}
+              widgetsOnlyOnHover
               widgetsProps={{
                 sx: {
                   left: -40,
