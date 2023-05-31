@@ -12,7 +12,7 @@ import UpDownArrows from './UpDownArrows';
 
 type IDType = number | string;
 
-type ZUIReorderableRenderProps = {
+export type ZUIReorderableRenderProps = {
   dragging: boolean;
 };
 
