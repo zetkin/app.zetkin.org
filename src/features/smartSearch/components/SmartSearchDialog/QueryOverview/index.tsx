@@ -138,6 +138,12 @@ const QueryOverview = ({
             <ZUIReorderable
               centerWidgets
               items={reorderableItems}
+              onDragEnd={() => {
+                setDragging(false);
+              }}
+              onDragStart={() => {
+                setDragging(true);
+              }}
               onReorder={(ids) => {
                 setDragging(false);
                 setPendingFilters((current) =>
@@ -145,9 +151,6 @@ const QueryOverview = ({
                     .concat()
                     .sort((f0, f1) => ids.indexOf(f0.id) - ids.indexOf(f1.id))
                 );
-              }}
-              onReordering={() => {
-                setDragging(true);
               }}
               widgets={[
                 ZUIReorderableWidget.MOVE_UP,

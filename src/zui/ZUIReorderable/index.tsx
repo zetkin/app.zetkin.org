@@ -35,8 +35,9 @@ type ZUIReorderableProps = {
   disableClick?: boolean;
   disableDrag?: boolean;
   items: ReorderableItem[];
+  onDragEnd?: () => void;
+  onDragStart?: () => void;
   onReorder: (ids: IDType[]) => void;
-  onReordering?: () => void;
   widgets?: ZUIReorderableWidget[];
   widgetsOnlyOnHover?: boolean;
   widgetsProps?: BoxProps;
@@ -47,8 +48,9 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   disableClick,
   disableDrag,
   items,
+  onDragEnd,
+  onDragStart,
   onReorder,
-  onReordering,
   widgets = [
     ZUIReorderableWidget.DRAG,
     ZUIReorderableWidget.MOVE_UP,
@@ -139,6 +141,10 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+
+    if (onDragEnd) {
+      onDragEnd();
+    }
   };
 
   const sortedItems = items.concat().sort((item0, item1) => {
@@ -177,8 +183,8 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
 
-                if (onReordering) {
-                  onReordering();
+                if (onDragStart) {
+                  onDragStart();
                 }
               }}
               onClickDown={() => {
