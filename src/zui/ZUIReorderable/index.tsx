@@ -28,6 +28,7 @@ type ZUIReorderableProps = {
   disableDrag?: boolean;
   items: ReorderableItem[];
   onReorder: (ids: IDType[]) => void;
+  onReordering?: () => void;
 };
 
 const ZUIReorderable: FC<ZUIReorderableProps> = ({
@@ -36,6 +37,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   disableDrag,
   items,
   onReorder,
+  onReordering,
 }) => {
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
   const [activeId, setActiveId] = useState<IDType | null>(null);
@@ -156,6 +158,10 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
+
+                if (onReordering) {
+                  onReordering();
+                }
               }}
               onClickDown={() => {
                 if (index + 1 < items.length) {
