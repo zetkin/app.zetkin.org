@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Alert, Divider, Typography, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,
@@ -6,7 +7,6 @@ import {
   RadioButtonCheckedOutlined,
 } from '@mui/icons-material';
 import { Box, Button, DialogActions, List } from '@mui/material';
-import { useEffect, useState } from 'react';
 
 import DisplayStartsWith from '../../StartsWith/DisplayStartsWith';
 import { Msg } from 'core/i18n';
@@ -33,6 +33,7 @@ interface QueryOverviewProps {
   onCloseDialog?: () => void;
   onSaveQuery?: () => void;
   onOpenFilterGallery: () => void;
+  onReorderFilters: (filters: SmartSearchFilterWithId[]) => void;
   onEditFilter: (filter: SmartSearchFilterWithId) => void;
   onDeleteFilter: (filter: SmartSearchFilterWithId) => void;
   onOpenStartsWithEditor: () => void;
@@ -51,19 +52,15 @@ const QueryOverview = ({
   onEditFilter,
   onDeleteFilter,
   onOpenStartsWithEditor,
+  onReorderFilters,
   startsWithAll,
 }: QueryOverviewProps): JSX.Element => {
-  const [pendingFilters, setPendingFilters] = useState(filters);
   const [dragging, setDragging] = useState(false);
   const theme = useTheme();
-  const stats = useSmartSearchStats(pendingFilters);
+  const stats = useSmartSearchStats(filters);
   const resultCount = stats?.length ? stats[stats.length - 1].result : 0;
 
-  useEffect(() => {
-    setPendingFilters(filters);
-  }, [filters]);
-
-  const reorderableItems = pendingFilters
+  const reorderableItems = filters
     .filter((f) => f.type !== FILTER_TYPE.ALL)
     .map((filter, index) => ({
       id: filter.id,
@@ -106,7 +103,7 @@ const QueryOverview = ({
         }}
       >
         <SmartSearchSankeyProvider
-          filters={pendingFilters}
+          filters={filters}
           hoverColor={theme.palette.primary.main}
         >
           <List sx={{ overflowY: 'auto', paddingX: 4 }}>
@@ -146,8 +143,8 @@ const QueryOverview = ({
               }}
               onReorder={(ids) => {
                 setDragging(false);
-                setPendingFilters((current) =>
-                  current
+                onReorderFilters(
+                  filters
                     .concat()
                     .sort((f0, f1) => ids.indexOf(f0.id) - ids.indexOf(f1.id))
                 );
