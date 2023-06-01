@@ -5,6 +5,7 @@ import { FC, useState } from 'react';
 import getOffsetStartEnd from './getOffsetStartEnd';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useMoveEvents from 'features/events/hooks/useMoveEvents';
 import useSelectedEvents from 'features/events/hooks/useSelectedEvents';
 import ZUIDateSpan from 'zui/ZUIDateSpan';
 
@@ -19,6 +20,8 @@ const MoveCopyButtons: FC = () => {
   const selectedEvents = useSelectedEvents();
   const [dayStart, dayEnd] = getOffsetStartEnd(selectedEvents, 1);
   const [weekStart, weekEnd] = getOffsetStartEnd(selectedEvents, 7);
+
+  const { moveEvents } = useMoveEvents();
 
   return (
     <>
@@ -56,7 +59,7 @@ const MoveCopyButtons: FC = () => {
             />
           </Typography>
         </Box>
-        <MenuItem>
+        <MenuItem onClick={() => moveEvents(selectedEvents, 7)}>
           <Msg
             id={messageIds.selectionBar.moveCopyButtons.nextWeek}
             values={{
@@ -64,7 +67,7 @@ const MoveCopyButtons: FC = () => {
             }}
           />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => moveEvents(selectedEvents, 1)}>
           <Msg
             id={messageIds.selectionBar.moveCopyButtons.nextDay}
             values={{

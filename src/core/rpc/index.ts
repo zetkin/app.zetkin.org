@@ -9,6 +9,7 @@ import { getOrganizerActionViewRouteDef } from 'features/views/rpc/getOrganizerA
 import { getPrevEventDayDef } from 'features/events/rpc/getPrevEventDay';
 import { getSurveyStatsDef } from 'features/surveys/rpc/getSurveyStats';
 import { getTaskStatsRouteDef } from 'features/tasks/rpc/getTaskStats';
+import { updateEventsDef } from 'features/events/rpc/updateEvents';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -22,6 +23,7 @@ export function createRPCRouter() {
   rpcRouter.register(getEventStatsDef);
   rpcRouter.register(getPrevEventDayDef);
   rpcRouter.register(getNextEventDayDef);
+  rpcRouter.register(updateEventsDef);
 
   return rpcRouter;
 }

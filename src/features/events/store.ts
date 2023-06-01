@@ -213,6 +213,53 @@ const eventsSlice = createSlice({
       ]);
       state.selectedEventIds = Array.from(uniqueEventIds);
     },
+    eventsUpdate: (state, action: PayloadAction<[number[], string[]]>) => {
+      const [eventIds, mutating] = action.payload;
+      const items = state.eventList.items.filter((item) =>
+        eventIds.find((eventId) => item.id == eventId)
+      );
+
+      items.map((item) => {
+        item.mutating = mutating;
+        if (item.data) {
+          const event = item.data;
+          const dateStr = item.data.start_time.slice(0, 10);
+          state.eventsByDate[dateStr].items.map((i) => {
+            if (i.id === event.id) {
+              i.mutating = mutating;
+            }
+          });
+        }
+      });
+    },
+    eventsUpdated: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const updatedEvents = action.payload;
+      const items = state.eventList.items.filter((item) =>
+        updatedEvents.find((event) => item.id == event.id)
+      );
+
+      items.map((item) => {
+        item.mutating = [];
+        const oldEvent = item.data;
+        const updatedEvent = updatedEvents.find(
+          (event) => event.id === item.id
+        );
+        if (oldEvent && updatedEvent) {
+          item.data = { ...item.data, ...updatedEvent };
+
+          const oldDate = oldEvent.start_time.slice(0, 10);
+          const newDate = updatedEvent.start_time.slice(0, 10);
+
+          state.eventsByDate[newDate].items.push(
+            remoteItem(updatedEvent.id, { data: updatedEvent })
+          );
+
+          state.eventsByDate[oldDate].items = state.eventsByDate[
+            oldDate
+          ].items.filter((event) => event.id !== updatedEvent.id);
+        }
+      });
+    },
     filterTextUpdated: (
       state,
       action: PayloadAction<{
@@ -398,6 +445,8 @@ export const {
   eventUpdated,
   eventsDeselected,
   eventsSelected,
+  eventsUpdate,
+  eventsUpdated,
   filterTextUpdated,
   filterUpdated,
   locationUpdate,
