@@ -12,7 +12,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   icon: {
     color: ({ rgbAverage }) =>
       rgbAverage < 180 ? 'white' : theme.palette.grey[800],
-    fontSize: '35px',
+    fontSize: '20px',
   },
 }));
 
