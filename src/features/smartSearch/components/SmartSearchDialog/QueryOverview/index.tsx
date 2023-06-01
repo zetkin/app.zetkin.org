@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Alert, Divider, Typography, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,
@@ -25,12 +26,14 @@ import {
   SmartSearchSankeyExitSegment,
   SmartSearchSankeyProvider,
 } from '../../sankeyDiagram';
+import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 
 interface QueryOverviewProps {
   filters: SmartSearchFilterWithId<AnyFilterConfig>[];
   onCloseDialog?: () => void;
   onSaveQuery?: () => void;
   onOpenFilterGallery: () => void;
+  onReorderFilters: (filters: SmartSearchFilterWithId[]) => void;
   onEditFilter: (filter: SmartSearchFilterWithId) => void;
   onDeleteFilter: (filter: SmartSearchFilterWithId) => void;
   onOpenStartsWithEditor: () => void;
@@ -49,11 +52,33 @@ const QueryOverview = ({
   onEditFilter,
   onDeleteFilter,
   onOpenStartsWithEditor,
+  onReorderFilters,
   startsWithAll,
 }: QueryOverviewProps): JSX.Element => {
+  const [dragging, setDragging] = useState(false);
   const theme = useTheme();
   const stats = useSmartSearchStats(filters);
   const resultCount = stats?.length ? stats[stats.length - 1].result : 0;
+
+  const reorderableItems = filters
+    .filter((f) => f.type !== FILTER_TYPE.ALL)
+    .map((filter, index) => ({
+      id: filter.id,
+      renderContent: () => {
+        return (
+          <QueryOverviewFilterListItem
+            key={filter.id}
+            filter={filter}
+            filterIndex={index}
+            onDeleteFilter={onDeleteFilter}
+            onEditFilter={onEditFilter}
+            readOnly={readOnly}
+            showDiagram={!dragging}
+          />
+        );
+      },
+    }));
+
   return (
     <Box
       sx={{
@@ -75,19 +100,18 @@ const QueryOverview = ({
           flexDirection: 'column',
           justifyContent: 'center',
           overflowY: 'auto',
-          padding: '0 24px',
         }}
       >
         <SmartSearchSankeyProvider
           filters={filters}
           hoverColor={theme.palette.primary.main}
         >
-          <List sx={{ overflowY: 'auto' }}>
+          <List sx={{ overflowY: 'auto', paddingX: 4 }}>
             <QueryOverviewListItem
               canEdit={!readOnly}
-              diagram={(hovered) => (
-                <SmartSearchSankeyEntrySegment hovered={hovered} />
-              )}
+              diagram={(hovered) =>
+                !dragging && <SmartSearchSankeyEntrySegment hovered={hovered} />
+              }
               filterText={<DisplayStartsWith startsWithAll={startsWithAll} />}
               icon={
                 <QueryOverviewChip
@@ -108,20 +132,40 @@ const QueryOverview = ({
               }
               onClickEdit={onOpenStartsWithEditor}
             />
-            {filters
-              .filter((f) => f.type !== FILTER_TYPE.ALL)
-              .map((filter, index) => (
-                <QueryOverviewFilterListItem
-                  key={filter.id}
-                  filter={filter}
-                  filterIndex={index}
-                  onDeleteFilter={onDeleteFilter}
-                  onEditFilter={onEditFilter}
-                  readOnly={readOnly}
-                />
-              ))}
+            <ZUIReorderable
+              centerWidgets
+              items={reorderableItems}
+              onDragEnd={() => {
+                setDragging(false);
+              }}
+              onDragStart={() => {
+                setDragging(true);
+              }}
+              onReorder={(ids) => {
+                setDragging(false);
+                onReorderFilters(
+                  filters
+                    .concat()
+                    .sort((f0, f1) => ids.indexOf(f0.id) - ids.indexOf(f1.id))
+                );
+              }}
+              widgets={[
+                ZUIReorderableWidget.MOVE_UP,
+                ZUIReorderableWidget.DRAG,
+                ZUIReorderableWidget.MOVE_DOWN,
+              ]}
+              widgetsOnlyOnHover
+              widgetsProps={{
+                sx: {
+                  left: -40,
+                  position: 'absolute',
+                },
+              }}
+            />
             <Divider />
-            <QueryOverviewListItem diagram={<SmartSearchSankeyExitSegment />} />
+            <QueryOverviewListItem
+              diagram={!dragging && <SmartSearchSankeyExitSegment />}
+            />
           </List>
         </SmartSearchSankeyProvider>
         {!readOnly && (

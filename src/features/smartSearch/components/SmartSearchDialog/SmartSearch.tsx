@@ -54,6 +54,7 @@ const SmartSearch = ({
     startsWithAll,
     setStartsWithAll,
     deleteFilter,
+    update,
   } = useSmartSearch(query?.filter_spec);
   // TODO: Remove this after refactoring Smart Search / View connection
   const viewsMessages = useMessages(viewsMessageIds);
@@ -82,6 +83,7 @@ const SmartSearch = ({
           }}
           onOpenFilterGallery={() => setSearchState(STATE.GALLERY)}
           onOpenStartsWithEditor={() => setSearchState(STATE.START_WITH)}
+          onReorderFilters={(filters) => update(filters)}
           onSaveQuery={() => {
             if (onSave) {
               onSave({
