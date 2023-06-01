@@ -23,7 +23,7 @@ const MoveCopyButtons: FC = () => {
   const [weekStart, weekEnd] = getOffsetStartEnd(selectedEvents, 7);
 
   const { moveEvents } = useMoveEvents();
-  const { duplicate } = useCopyEvents();
+  const { createShift, duplicate } = useCopyEvents();
 
   return (
     <>
@@ -131,7 +131,7 @@ const MoveCopyButtons: FC = () => {
             }}
           />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => createShift(selectedEvents)}>
           <Msg id={messageIds.selectionBar.moveCopyButtons.createShift} />
         </MenuItem>
       </Menu>
