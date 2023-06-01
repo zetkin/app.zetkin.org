@@ -137,6 +137,16 @@ export interface ZetkinUser {
 }
 
 export interface ZetkinOrganization {
+  avatar_file: ZetkinFile | null;
+  country: string | null;
+  email: string | null;
+  is_active: boolean;
+  is_open: boolean;
+  is_public: boolean;
+  lang: string | null;
+  parent: { id: number; title: string } | null;
+  phone: string | null;
+  slug: string;
   id: number;
   title: string;
 }
