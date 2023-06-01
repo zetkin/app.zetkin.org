@@ -1,4 +1,5 @@
 import Environment from 'core/env/Environment';
+import getUserOrganizationsTree from 'features/organizations/rpc/getOrganizations';
 import IApiClient from 'core/api/client/IApiClient';
 import { IFuture } from 'core/caching/futures';
 import { Store } from 'core/store';
@@ -11,6 +12,12 @@ import {
   organizationLoaded,
   organizationsLoad,
   organizationsLoaded,
+  treeDataLoad,
+  treeDataLoaded,
+  userMembershipsLoad,
+  userMembershipsLoaded,
+  userOrganizationsLoad,
+  userOrganizationsLoaded,
 } from '../store';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -33,11 +40,43 @@ export default class OrganizationsRepo {
     });
   }
 
+  getOrganizations(): IFuture<ZetkinOrganization[]> {
+    const state = this._store.getState();
+    return loadListIfNecessary(state.organizations.orgList, this._store, {
+      actionOnLoad: () => organizationsLoad(),
+      actionOnSuccess: (data) => organizationsLoaded(data),
+      loader: () => this._apiClient.get(`/api/orgs`),
+    });
+  }
+
+  async getOrganizationsTree() {
+    const state = this._store.getState();
+    //use shouldLoad
+    return loadListIfNecessary(state.organizations.treeDataList, this._store, {
+      actionOnLoad: () => treeDataLoad(),
+      actionOnSuccess: (data) => treeDataLoaded(data),
+      loader: () => this._apiClient.rpc(getUserOrganizationsTree, {}),
+    });
+  }
+
+  getUserMemberships(): IFuture<ZetkinMembership[]> {
+    const state = this._store.getState();
+    return loadListIfNecessary(
+      state.organizations.membershipList,
+      this._store,
+      {
+        actionOnLoad: () => userMembershipsLoad(),
+        actionOnSuccess: (data) => userMembershipsLoaded(data),
+        loader: () => this._apiClient.get(`/api/users/me/memberships`),
+      }
+    );
+  }
+
   getUserOrganizations(): IFuture<ZetkinOrganization[]> {
     const state = this._store.getState();
     return loadListIfNecessary(state.organizations.userOrgList, this._store, {
-      actionOnLoad: () => organizationsLoad(),
-      actionOnSuccess: (data) => organizationsLoaded(data),
+      actionOnLoad: () => userOrganizationsLoad(),
+      actionOnSuccess: (data) => userOrganizationsLoaded(data),
       loader: () =>
         this._apiClient
           .get<ZetkinMembership[]>(`/api/users/me/memberships`)
