@@ -5,6 +5,7 @@ import { FC, useState } from 'react';
 import getOffsetStartEnd from './getOffsetStartEnd';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useCopyEvents from 'features/events/hooks/useCopyEvents';
 import useMoveEvents from 'features/events/hooks/useMoveEvents';
 import useSelectedEvents from 'features/events/hooks/useSelectedEvents';
 import ZUIDateSpan from 'zui/ZUIDateSpan';
@@ -22,6 +23,7 @@ const MoveCopyButtons: FC = () => {
   const [weekStart, weekEnd] = getOffsetStartEnd(selectedEvents, 7);
 
   const { moveEvents } = useMoveEvents();
+  const { duplicate } = useCopyEvents();
 
   return (
     <>
@@ -110,7 +112,7 @@ const MoveCopyButtons: FC = () => {
             />
           </Typography>
         </Box>
-        <MenuItem>
+        <MenuItem onClick={() => duplicate(selectedEvents)}>
           <Msg id={messageIds.selectionBar.moveCopyButtons.duplicate} />
         </MenuItem>
         <MenuItem>

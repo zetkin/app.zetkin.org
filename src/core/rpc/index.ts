@@ -1,6 +1,7 @@
 import { RPCRouter } from './router';
 
 import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
+import { copyEventsDef } from 'features/events/rpc/copyEvents';
 import { createNewViewRouteDef } from 'features/views/rpc/createNew/server';
 import { deleteFolderRouteDef } from 'features/views/rpc/deleteFolder';
 import { getEventStatsDef } from 'features/events/rpc/getEventStats';
@@ -24,6 +25,7 @@ export function createRPCRouter() {
   rpcRouter.register(getPrevEventDayDef);
   rpcRouter.register(getNextEventDayDef);
   rpcRouter.register(updateEventsDef);
+  rpcRouter.register(copyEventsDef);
 
   return rpcRouter;
 }

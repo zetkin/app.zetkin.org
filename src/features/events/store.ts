@@ -189,6 +189,23 @@ const eventsSlice = createSlice({
         item.mutating = [];
       }
     },
+    eventsCreate: (state) => {
+      state.eventList.isLoading = true;
+    },
+    eventsCreated: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const events = action.payload;
+      events.map((event) => {
+        state.eventList.items.push(remoteItem(event.id, { data: event }));
+        const dateStr = event.start_time.slice(0, 10);
+        if (!state.eventsByDate[dateStr]) {
+          state.eventsByDate[dateStr] = remoteList();
+        }
+        state.eventsByDate[dateStr].items.push(
+          remoteItem(event.id, { data: event })
+        );
+      });
+      state.eventList.isLoading = false;
+    },
     eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const toggledEvents = action.payload;
 
@@ -439,6 +456,8 @@ export const {
   eventLoaded,
   eventRangeLoad,
   eventRangeLoaded,
+  eventsCreate,
+  eventsCreated,
   eventsLoad,
   eventsLoaded,
   eventUpdate,
