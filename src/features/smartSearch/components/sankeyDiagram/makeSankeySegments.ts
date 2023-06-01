@@ -65,15 +65,21 @@ export default function makeSankeySegments(
     };
 
     if (prevIsEmpty) {
-      segments.push({
-        kind: SEGMENT_KIND.PSEUDO_ADD,
-        main: null,
-        side: {
-          style: SEGMENT_STYLE.FILL,
-          width: change / maxPeople,
-        },
-        stats,
-      });
+      if (filter.op == OPERATION.SUB) {
+        segments.push({
+          kind: SEGMENT_KIND.EMPTY,
+        });
+      } else {
+        segments.push({
+          kind: SEGMENT_KIND.PSEUDO_ADD,
+          main: null,
+          side: {
+            style: SEGMENT_STYLE.FILL,
+            width: change / maxPeople,
+          },
+          stats,
+        });
+      }
     } else if (change > 0) {
       segments.push({
         kind: SEGMENT_KIND.ADD,
