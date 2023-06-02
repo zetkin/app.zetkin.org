@@ -13,7 +13,12 @@ const mockTabbedLayoutProps = {
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 jest.mock('features/user/hooks/useCurrentUser');
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+  // The useSelector() hook is used inside of the ZUIOrganizeSidebar
+  // to retrieve a RemoteList. This mocks an empty RemoteList.
+  // TODO: Consider what to do with these tests that are testing huge components right now
+  useSelector: () => ({
+    items: [],
+  }),
 }));
 
 describe('TabbedLayout.tsx', () => {
