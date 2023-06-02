@@ -5,6 +5,7 @@ import { ChevronRightOutlined, People } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventDataModel from 'features/events/models/EventDataModel';
+import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -38,7 +39,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   return (
     <Box display="flex" flexDirection="column" paddingBottom={1} width="100%">
       <Box display="flex">
-        {/*TODO: <Checkbox sx={{ padding: '0px' }} /> */}
+        <EventSelectionCheckBox events={[event]} />
         <Box
           display="flex"
           flexGrow={1}

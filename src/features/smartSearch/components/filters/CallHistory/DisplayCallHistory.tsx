@@ -12,6 +12,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.callHistory;
 
 interface DisplayCallHistoryProps {
@@ -42,20 +44,30 @@ const DisplayCallHistory = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         assignmentSelect: assignmentTitle ? (
           <Msg
             id={localMessageIds.assignmentSelect.assignment}
             values={{
-              assignmentTitle,
+              assignmentTitle: <UnderlinedText text={assignmentTitle} />,
             }}
           />
         ) : (
-          <Msg id={localMessageIds.assignmentSelect.any} />
+          <UnderlinedMsg id={localMessageIds.assignmentSelect.any} />
         ),
-        callSelect: <Msg id={localMessageIds.callSelect[operator]} />,
-        minTimes: minTimes || 1,
-        minTimesInput: minTimes || 1,
+        callSelect: <UnderlinedMsg id={localMessageIds.callSelect[operator]} />,
+        minTimes: (
+          <UnderlinedMsg
+            id={localMessageIds.minTimes}
+            values={{ minTimes: minTimes || 1, minTimesInput: minTimes || 1 }}
+          />
+        ),
+        minTimesInput: (
+          <UnderlinedMsg
+            id={localMessageIds.minTimesInput}
+            values={{ minTimesInput: minTimes || 1 }}
+          />
+        ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />

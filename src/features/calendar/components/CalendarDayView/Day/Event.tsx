@@ -4,10 +4,13 @@ import { Box, Link, Typography } from '@mui/material';
 import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
+import getEventState from 'features/events/utils/getEventState';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
+import StatusDot from 'features/events/components/EventPopper/StatusDot';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
@@ -51,17 +54,12 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           width="100%"
         >
           <Box alignItems="center" display="flex" gap={2.2}>
+            <Box sx={{ ml: 2, pb: 0.1 }}>
+              <EventSelectionCheckBox events={[event]} />
+            </Box>
             {/* Status */}
-            <Box
-              sx={{
-                backgroundColor: 'green',
-                borderRadius: '50%',
-                height: '10px',
-                width: '10px',
-              }}
-            />
+            <StatusDot state={getEventState(event)} />
             {/* Title */}
-
             <Typography
               sx={{
                 color: theme.palette.secondary.main,
@@ -113,7 +111,6 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             )}
           </Box>
           {/* Icons */}
-
           <Box alignItems="center" display="flex" gap={1}>
             <EventWarningIcons compact model={model} />
             <People color={needsParticipants ? 'error' : 'secondary'} />

@@ -1,5 +1,6 @@
 import Environment from 'core/env/Environment';
 import getEventState from '../utils/getEventState';
+import getEventUrl from '../utils/getEventUrl';
 import { ModelBase } from 'core/models';
 import theme from 'theme';
 import EventsRepo, {
@@ -69,11 +70,7 @@ export default class EventDataModel extends ModelBase {
     const promise = this._repo
       .createEvent(eventBody, this._orgId)
       .then((event: ZetkinEvent) => {
-        this._env.router.push(
-          `/organize/${this._orgId}/projects/${event.campaign!.id}/events/${
-            event.id
-          }`
-        );
+        this._env.router.push(getEventUrl(event));
         return event;
       });
     return new PromiseFuture(promise);
@@ -81,6 +78,11 @@ export default class EventDataModel extends ModelBase {
 
   deleteEvent() {
     this._repo.deleteEvent(this._orgId, this._eventId);
+  }
+
+  duplicateEvent() {
+    const promise = this.createEvent(this.getDuplicatePostBody());
+    return promise;
   }
 
   getBookedParticipants() {
@@ -95,6 +97,25 @@ export default class EventDataModel extends ModelBase {
 
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
+  }
+
+  getDuplicatePostBody(): ZetkinEventPostBody {
+    const currentEvent = this.getData();
+    const duplicateEventPostBody: ZetkinEventPostBody = {
+      activity_id: currentEvent.data?.activity?.id,
+      end_time: currentEvent.data?.end_time,
+      info_text: currentEvent.data?.info_text,
+      location_id: currentEvent.data?.location?.id,
+      num_participants_required: currentEvent.data?.num_participants_required,
+      organization_id: currentEvent.data?.organization.id,
+      start_time: currentEvent.data?.start_time,
+      title: currentEvent.data?.title,
+    };
+    if (currentEvent.data?.campaign) {
+      duplicateEventPostBody.campaign_id = currentEvent.data?.campaign.id;
+    }
+    // TODO: should this include URL?
+    return duplicateEventPostBody;
   }
 
   getNumAvailParticipants(): number {

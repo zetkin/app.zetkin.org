@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { People, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -60,7 +61,7 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
         paddingTop={2}
       >
         <Box alignItems="center" display="flex">
-          {/*TODO: <Checkbox sx={{ padding: '0px' }} /> */}
+          <EventSelectionCheckBox events={events} />
           <Typography
             color="secondary"
             paddingLeft={1}

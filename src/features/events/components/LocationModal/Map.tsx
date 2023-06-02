@@ -66,9 +66,14 @@ const Map: FC<MapProps> = ({
     ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
     : locations;
 
-  const bounds = latLngBounds(
-    locations.map((location) => [location.lat, location.lng])
-  );
+  //if org doesn't have locations, show whole world
+  const bounds =
+    locations.length > 0
+      ? latLngBounds(locations.map((location) => [location.lat, location.lng]))
+      : latLngBounds([
+          [75, -170],
+          [-60, 180],
+        ]);
 
   return (
     <MapContainer

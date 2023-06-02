@@ -8,6 +8,8 @@ import { taskResource } from 'features/tasks/api/tasks';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 import {
   getMatchingWithConfig,
   getTaskStatus,
@@ -59,12 +61,14 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
       <>
         <Msg id={localMessageIds.campaignSelect.in} />
         {campaignTitle ? (
-          <Msg
+          <UnderlinedMsg
             id={localMessageIds.campaignSelect.campaign}
-            values={{ campaign: campaignTitle }}
+            values={{
+              campaign: <UnderlinedText text={campaignTitle} />,
+            }}
           />
         ) : (
-          <Msg id={localMessageIds.campaignSelect.any} />
+          <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
         )}
       </>
     );
@@ -74,11 +78,11 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         campaignSelect: campaignSelect,
         matchingSelect: (
           // TODO: Move this to reusable component
-          <Msg
+          <UnderlinedMsg
             id={messageIds.matching.preview[matching.option]}
             values={{
               max: matching.config?.max ?? 0,
@@ -87,17 +91,19 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
           />
         ),
         taskSelect: taskTitle ? (
-          <Msg
+          <UnderlinedMsg
             id={localMessageIds.taskSelect.task}
             values={{
-              task: taskTitle,
+              task: <UnderlinedText text={taskTitle} />,
             }}
           />
         ) : (
-          <Msg id={localMessageIds.taskSelect.any} />
+          <UnderlinedMsg id={localMessageIds.taskSelect.any} />
         ),
         taskStatusSelect: (
-          <Msg id={localMessageIds.taskStatusSelect[getTaskStatus(config)]} />
+          <UnderlinedMsg
+            id={localMessageIds.taskStatusSelect[getTaskStatus(config)]}
+          />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}

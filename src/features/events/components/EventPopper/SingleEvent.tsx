@@ -14,6 +14,7 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
+import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -94,6 +95,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           warningText: messages.eventPopper.deleteWarning(),
         }),
     },
+    {
+      label: messages.eventPopper.duplicate(),
+      onSelect: () => {
+        model.duplicateEvent();
+        onClickAway();
+      },
+    },
   ];
   if (state !== EventState.CANCELLED) {
     ellipsisMenuItems.push({
@@ -113,8 +121,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   return (
     <>
       <Box alignItems="center" display="flex">
-        {/*TODO: <Checkbox size="medium" /> */}
-        <Typography variant="h5">
+        <EventSelectionCheckBox events={[event]} />
+        <Typography sx={{ ml: 1 }} variant="h5">
           {event.title || event.activity?.title || messages.common.noTitle()}
         </Typography>
       </Box>

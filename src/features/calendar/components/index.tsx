@@ -7,7 +7,10 @@ import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
 import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
+import { RootState } from 'core/store';
+import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
+import { useSelector } from 'react-redux';
 
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -44,6 +47,7 @@ const Calendar = () => {
   const router = useRouter();
 
   const orgId = router.query.orgId;
+  const campId = router.query.campId;
 
   const focusDateStr = router.query.focusDate as string;
   const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
@@ -63,79 +67,97 @@ const Calendar = () => {
   }, [timeScaleStr]);
 
   useEffect(() => {
-    router.query.focusDate = dayjs(focusDate).format('YYYY-MM-DD');
-    router.query.timeScale = selectedTimeScale;
-    router.push(router, undefined, { shallow: true });
+    const focusedDate = dayjs(focusDate).format('YYYY-MM-DD');
+    router.push(
+      {
+        pathname: undefined,
+        query: {
+          campId: campId,
+          focusDate: focusedDate,
+          orgId: orgId,
+          timeScale: selectedTimeScale,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
   }, [focusDate, selectedTimeScale]);
 
   function navigateTo(timeScale: TimeScale, date: Date) {
     setSelectedTimeScale(timeScale);
     setFocusDate(date);
   }
+  const selectedEvents = useSelector(
+    (state: RootState) => state.events.selectedEvents
+  );
 
   return (
-    <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
-      <CalendarNavBar
-        focusDate={focusDate}
-        onChangeFocusDate={(date) => {
-          setFocusDate(date);
-        }}
-        onChangeTimeScale={(timeScale) => {
-          setSelectedTimeScale(timeScale);
-        }}
-        onStepBackward={() => {
-          // Steps back to the last day with an event on day view
-          if (selectedTimeScale === TimeScale.DAY && prevActivityDay) {
-            setFocusDate(prevActivityDay[0]);
-          } else {
-            setFocusDate(
-              dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
-            );
-          }
-        }}
-        onStepForward={() => {
-          // Steps forward to the next day with an event on day view
-          if (selectedTimeScale === TimeScale.DAY && nextActivityDay) {
-            setFocusDate(nextActivityDay[0]);
-          } else {
-            setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
-          }
-        }}
-        orgId={parseInt(orgId as string)}
-        timeScale={selectedTimeScale}
-      />
+    <>
+      <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
+        <CalendarNavBar
+          focusDate={focusDate}
+          onChangeFocusDate={(date) => {
+            setFocusDate(date);
+          }}
+          onChangeTimeScale={(timeScale) => {
+            setSelectedTimeScale(timeScale);
+          }}
+          onStepBackward={() => {
+            // Steps back to the last day with an event on day view
+            if (selectedTimeScale === TimeScale.DAY && prevActivityDay) {
+              setFocusDate(prevActivityDay[0]);
+            } else {
+              setFocusDate(
+                dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
+              );
+            }
+          }}
+          onStepForward={() => {
+            // Steps forward to the next day with an event on day view
+            if (selectedTimeScale === TimeScale.DAY && nextActivityDay) {
+              setFocusDate(nextActivityDay[0]);
+            } else {
+              setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
+            }
+          }}
+          orgId={parseInt(orgId as string)}
+          timeScale={selectedTimeScale}
+        />
 
-      <Box
-        display="flex"
-        flexDirection="column"
-        flexGrow={1}
-        marginTop={2}
-        overflow="auto"
-      >
-        <Suspense>
-          {selectedTimeScale === TimeScale.DAY && (
-            <CalendarDayView
-              focusDate={focusDate}
-              onClickPreviousDay={(date) => setFocusDate(date)}
-              previousActivityDay={prevActivityDay}
-            />
-          )}
-          {selectedTimeScale === TimeScale.WEEK && (
-            <CalendarWeekView
-              focusDate={focusDate}
-              onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
-            />
-          )}
-          {selectedTimeScale === TimeScale.MONTH && (
-            <CalendarMonthView
-              focusDate={focusDate}
-              onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
-              onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
-            />
-          )}
-        </Suspense>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flexGrow={1}
+          marginTop={2}
+          overflow="auto"
+        >
+          <Suspense>
+            {selectedTimeScale === TimeScale.DAY && (
+              <CalendarDayView
+                focusDate={focusDate}
+                onClickPreviousDay={(date) => setFocusDate(date)}
+                previousActivityDay={prevActivityDay}
+              />
+            )}
+            {selectedTimeScale === TimeScale.WEEK && (
+              <CalendarWeekView
+                focusDate={focusDate}
+                onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+              />
+            )}
+            {selectedTimeScale === TimeScale.MONTH && (
+              <CalendarMonthView
+                focusDate={focusDate}
+                onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
+                onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
+              />
+            )}
+            {selectedEvents.length > 0 && <Box sx={{ height: '68.5px' }} />}
+          </Suspense>
+        </Box>
       </Box>
-    </Box>
+      <SelectionBar />
+    </>
   );
 };
 

@@ -15,6 +15,7 @@ const Template: ComponentStory<typeof ZUIReorderable> = (args) => {
   return (
     <div style={{ marginTop: 100, width: 400 }}>
       <ZUIReorderable
+        {...args}
         items={items}
         onReorder={(ids) => {
           setItems(ids.map((id) => args.items.find((item) => item.id == id)!));

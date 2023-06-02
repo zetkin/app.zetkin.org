@@ -1,11 +1,12 @@
 import { Box } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 import Day from './Day';
 import dayjs from 'dayjs';
 import range from 'utils/range';
 import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
 import { useNumericRouteParams } from 'core/hooks';
+import useResizeObserver from 'zui/hooks/useResizeObserver';
 import WeekNumber from './WeekNumber';
 import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
 
@@ -112,29 +113,15 @@ export default CalendarMonthView;
  * in a day without overflowing the grid.
  */
 function useFlexibleMaxPerDay(itemHeight: number) {
-  const gridRef = useRef<HTMLDivElement>();
   const [maxPerDay, setMaxPerDay] = useState(3);
 
-  useEffect(() => {
-    function update() {
-      if (gridRef.current) {
-        const rect = gridRef.current.getBoundingClientRect();
-        const heightWithoutGaps = rect.height - gridGap * 5;
-        const dayHeight = heightWithoutGaps / 6;
-        const newMaxPerDay = Math.floor(dayHeight / itemHeight) - 1;
-        setMaxPerDay(newMaxPerDay);
-      }
-    }
-
-    update();
-
-    const observer = new ResizeObserver(update);
-    if (gridRef.current) {
-      observer.observe(gridRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [gridRef.current]);
+  const gridRef = useResizeObserver((elem) => {
+    const rect = elem.getBoundingClientRect();
+    const heightWithoutGaps = rect.height - gridGap * 5;
+    const dayHeight = heightWithoutGaps / 6;
+    const newMaxPerDay = Math.floor(dayHeight / itemHeight) - 1;
+    setMaxPerDay(newMaxPerDay);
+  });
 
   return { gridRef, maxPerDay };
 }

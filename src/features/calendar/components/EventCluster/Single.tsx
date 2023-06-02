@@ -96,6 +96,7 @@ const Single: FC<SingleProps> = ({
   return (
     <Event
       cancelled={Boolean(event?.cancelled)}
+      events={[event]}
       fieldGroups={[fields]}
       height={height}
       title={eventTitle}

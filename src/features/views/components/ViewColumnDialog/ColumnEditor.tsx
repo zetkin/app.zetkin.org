@@ -102,8 +102,8 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
           display="flex"
           flexDirection="column"
           justifyContent="center"
-          maxWidth="md"
           padding={2}
+          width="80%"
         >
           {choice.renderConfigForm({
             existingColumns: existingColumns,

@@ -114,6 +114,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
   return (
     <Event
       cancelled={anyEventIsCancelled}
+      events={events}
       fieldGroups={[fields]}
       height={height}
       title={firstEventTitle || ''}

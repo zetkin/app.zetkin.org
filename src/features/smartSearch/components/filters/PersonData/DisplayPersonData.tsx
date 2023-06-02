@@ -7,6 +7,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.personData;
 
 interface DisplayPersonDataProps {
@@ -29,14 +31,14 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
         <Msg
           id={localMessageIds.fieldMatches}
           values={{
-            field: <Msg id={localMessageIds.fieldSelect[c]} />,
-            value: fields[c] || '',
+            field: <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />,
+            value: <UnderlinedText text={fields[c] || ''} />,
           }}
         />
       );
       if (criteriaString) {
         criteriaString = (
-          <Msg
+          <UnderlinedMsg
             id={localMessageIds.fieldTuple}
             values={{
               first: criteriaString,
@@ -55,7 +57,7 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         criteria: getCriteriaString(),
       }}
     />

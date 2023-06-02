@@ -1,6 +1,11 @@
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
-import { CancelOutlined, Delete, RestoreOutlined } from '@mui/icons-material';
+import {
+  CancelOutlined,
+  ContentCopy,
+  Delete,
+  RestoreOutlined,
+} from '@mui/icons-material';
 import React, { useContext } from 'react';
 
 import EventDataModel from '../models/EventDataModel';
@@ -43,6 +48,10 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const handleDelete = () => {
     model.deleteEvent();
     router.push(`/organize/${orgId}/projects/${event.campaign?.id || ''} `);
+  };
+
+  const handleDuplicate = () => {
+    model.duplicateEvent();
   };
 
   const handleCancel = () => {
@@ -98,6 +107,11 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
               ) : (
                 <CancelOutlined />
               ),
+            },
+            {
+              label: <>{messages.eventActionButtons.duplicate()}</>,
+              onSelect: handleDuplicate,
+              startIcon: <ContentCopy />,
             },
             {
               label: <>{messages.eventActionButtons.delete()}</>,

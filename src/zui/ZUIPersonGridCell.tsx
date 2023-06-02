@@ -1,26 +1,41 @@
 import { FC } from 'react';
 import { Person } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { Avatar, Box, SxProps } from '@mui/material';
+import { Avatar, Box, SxProps, Tooltip } from '@mui/material';
 
+import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 
 const ZUIPersonGridCell: FC<{
   onClick?: () => void;
-  personId: number | null;
+  person: Pick<ZetkinPerson, 'first_name' | 'last_name' | 'id'> | null;
   sx?: SxProps;
-}> = ({ personId, onClick, sx }) => {
+  tooltip?: boolean;
+}> = ({ person, onClick, sx, tooltip = true }) => {
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
 
-  return (
-    <Box onClick={onClick} sx={sx}>
-      {personId ? (
-        <ZUIAvatar orgId={orgId} personId={personId} />
-      ) : (
+  // If no person provided
+  if (!person) {
+    return (
+      <Box onClick={onClick} sx={sx}>
         <Avatar>
           <Person />
         </Avatar>
+      </Box>
+    );
+  }
+
+  return (
+    <Box onClick={onClick} sx={sx}>
+      {tooltip ? (
+        // Person with tooltip
+        <Tooltip title={`${person.first_name} ${person.last_name}`}>
+          <ZUIAvatar orgId={orgId} personId={person.id} />
+        </Tooltip>
+      ) : (
+        // Person without tooltip
+        <ZUIAvatar orgId={orgId} personId={person.id} />
       )}
     </Box>
   );

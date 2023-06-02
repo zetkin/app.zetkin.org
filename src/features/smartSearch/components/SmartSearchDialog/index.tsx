@@ -18,7 +18,13 @@ const SmartSearchDialog = ({
 }: SmartSearchDialogProps): JSX.Element => {
   return (
     <Dialog fullWidth maxWidth="xl" onClose={onDialogClose} open>
-      <DialogContent style={{ height: '85vh' }}>
+      <DialogContent
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '85vh',
+        }}
+      >
         <SmartSearch
           onDialogClose={onDialogClose}
           onSave={onSave}
