@@ -210,7 +210,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             {...(checked ? { timeout: 1000 } : {})}
           >
             <Box>
-              <Typography m={1}>
+              <Typography fontSize={12} m={1} variant="body2">
                 {messages.organizeSidebar
                   .allOrganizations()
                   .toLocaleUpperCase()}

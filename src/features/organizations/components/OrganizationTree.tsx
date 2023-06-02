@@ -4,7 +4,7 @@ import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
 import { TreeItemData } from '../types';
 import TreeView from '@mui/lab/TreeView';
-import { Avatar, Box, Typography } from '@mui/material';
+import { Avatar, Box, Typography, useTheme } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 interface OrganizationTreeProps {
@@ -49,11 +49,25 @@ function OrganizationTree({
   treeItemData,
   orgId,
 }: OrganizationTreeProps): JSX.Element {
+  const theme = useTheme();
+
   return (
     <div>
       <TreeView
         defaultCollapseIcon={<ExpandMore />}
         defaultExpandIcon={<ChevronRight />}
+        disableSelection
+        sx={{
+          '& .Mui-focused': {
+            backgroundColor: theme.palette.grey[100],
+          },
+          '&:hover .Mui-focused': {
+            backgroundColor: 'transparent',
+          },
+          '&:hover .Mui-focused:hover': {
+            backgroundColor: theme.palette.grey[100],
+          },
+        }}
       >
         {renderTree(treeItemData, orgId)}
       </TreeView>
