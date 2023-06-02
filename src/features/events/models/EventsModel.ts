@@ -98,9 +98,9 @@ export class EventsModel extends ModelBase {
     return new ResolvedFuture(relatedEvents || []);
   }
 
-  updateEvents(events: number[], published: boolean) {
+  updateEvents(events: number[], published: boolean, cancelled: boolean) {
     this._repo.updateEvents(this._orgId, events, {
-      cancelled: null,
+      cancelled: cancelled ? new Date().toISOString() : null,
       published: published ? new Date().toISOString() : null,
     });
   }

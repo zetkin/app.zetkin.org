@@ -57,7 +57,15 @@ const SelectionBarEllipsis = () => {
     },
     {
       divider: true,
-      onSelect: () => {},
+      onSelect: () => {
+        showConfirmDialog({
+          onSubmit: () => {
+            model.updateEvents(selectedEvents, false, true);
+          },
+          title: messages.selectionBar.ellipsisMenu.confirmCancel(),
+          warningText: messages.selectionBar.ellipsisMenu.cancelWarning(),
+        });
+      },
       label: messages.selectionBar.ellipsisMenu.cancel(),
       textColor: '#ed1c55',
     },
@@ -72,7 +80,7 @@ const SelectionBarEllipsis = () => {
     ellipsisMenuItems.splice(2, 0, {
       label: messages.selectionBar.ellipsisMenu.unpublish(),
       onSelect: () => {
-        model.updateEvents(selectedEvents, false);
+        model.updateEvents(selectedEvents, false, false);
       },
       textColor: '#f66000',
     });
@@ -82,7 +90,7 @@ const SelectionBarEllipsis = () => {
     ellipsisMenuItems.splice(publishedEvents.length > 0 ? 3 : 2, 0, {
       label: messages.selectionBar.ellipsisMenu.publish(),
       onSelect: () => {
-        model.updateEvents(selectedEvents, true);
+        model.updateEvents(selectedEvents, true, false);
       },
     });
   }

@@ -78,6 +78,10 @@ export default makeMessages('feat.calendar', {
     editEvents: m('Edit events'),
     ellipsisMenu: {
       cancel: m('Cancel'),
+      cancelWarning: m(
+        'If you do, remember to notify all participants and sign-ups that the events has been cancelled!'
+      ),
+      confirmCancel: m('Are you sure you want to cancel selected events?'),
       confirmDelete: m('Are you sure you want to delete selected events?'),
       delete: m('Delete'),
       deleteWarning: m(
