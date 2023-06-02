@@ -57,30 +57,32 @@ const SelectionBarEllipsis = () => {
     },
     {
       divider: true,
-      // onSelect: () => {},
+      onSelect: () => {},
       label: messages.selectionBar.ellipsisMenu.cancel(),
       textColor: '#ed1c55',
     },
-    {
-      label:
-        publishedEvents.length > 0
-          ? messages.selectionBar.ellipsisMenu.unpublish()
-          : '',
-      // onSelect: () => {},
-      textColor: '#f66000',
-    },
-    {
-      label:
-        unpublishedEvents.length > 0
-          ? messages.selectionBar.ellipsisMenu.publish()
-          : '',
-      // onSelect: () => {},
-    },
+
     {
       label: messages.selectionBar.ellipsisMenu.print(),
-      //  onSelect: () => {}
+      onSelect: () => {},
     },
   ];
+
+  if (publishedEvents.length > 0) {
+    ellipsisMenuItems.splice(2, 0, {
+      label: messages.selectionBar.ellipsisMenu.unpublish(),
+      onSelect: () => {},
+      textColor: '#f66000',
+    });
+  }
+
+  if (unpublishedEvents.length > 0) {
+    ellipsisMenuItems.splice(publishedEvents.length > 0 ? 3 : 2, 0, {
+      label: messages.selectionBar.ellipsisMenu.publish(),
+      onSelect: () => {},
+    });
+  }
+
   return <ZUIEllipsisMenu items={ellipsisMenuItems} />;
 };
 
