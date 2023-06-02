@@ -83,7 +83,7 @@ describe('generateTreeData()', () => {
     const expectedTreeData: TreeItemData[] = [
       {
         avatar_file: null,
-        children: null,
+        children: [],
         country: 'SE',
         email: null,
         id: 1,
@@ -98,7 +98,7 @@ describe('generateTreeData()', () => {
       },
       {
         avatar_file: null,
-        children: null,
+        children: [],
         country: 'SE',
         email: null,
         id: 2,
@@ -172,7 +172,7 @@ describe('generateTreeData()', () => {
     const expectedTreeData: TreeItemData[] = [
       {
         avatar_file: null,
-        children: null,
+        children: [],
         country: 'SE',
         email: null,
         id: 2,

@@ -21,7 +21,7 @@ export interface TreeItemData {
   phone: string | null;
   slug: string | null;
   title: string;
-  children: TreeItemData[] | null;
+  children: TreeItemData[] | [];
 }
 
 const paramsSchema = z.object({});
