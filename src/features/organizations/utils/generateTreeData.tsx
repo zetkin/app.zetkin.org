@@ -48,6 +48,14 @@ export function generateTreeData(
       .map((org) => buildTree(org.id))
       .filter((child) => child !== null) as TreeItemData[];
 
+    // Inject an null children array if the organization is not a parent organization
+    if (!organization.parent) {
+      return {
+        ...organization,
+        children: null,
+      };
+    }
+
     return {
       ...organization,
       children,
