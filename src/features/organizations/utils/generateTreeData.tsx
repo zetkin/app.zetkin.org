@@ -49,8 +49,9 @@ export default function generateTreeData(
       .filter((child) => child !== null) as TreeItemData[];
 
     return {
-      ...organization,
       children,
+      id: organization.id,
+      title: organization.title,
     };
   };
 

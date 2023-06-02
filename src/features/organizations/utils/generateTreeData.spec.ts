@@ -44,33 +44,13 @@ describe('generateTreeData()', () => {
 
     const expectedTreeData: TreeItemData[] = [
       {
-        avatar_file: null,
         children: [],
-        country: 'SE',
-        email: null,
         id: 1,
-        is_active: false,
-        is_open: false,
-        is_public: true,
-        lang: null,
-        parent: null,
-        phone: null,
-        slug: 'slug',
         title: 'Party A',
       },
       {
-        avatar_file: null,
         children: [],
-        country: 'SE',
-        email: null,
         id: 2,
-        is_active: false,
-        is_open: false,
-        is_public: true,
-        lang: null,
-        parent: null,
-        phone: null,
-        slug: 'slug',
         title: 'Party B',
       },
     ];
@@ -149,18 +129,8 @@ describe('generateTreeData()', () => {
 
     const expectedTreeData: TreeItemData[] = [
       {
-        avatar_file: null,
         children: [],
-        country: 'SE',
-        email: null,
         id: 2,
-        is_active: false,
-        is_open: false,
-        is_public: true,
-        lang: null,
-        parent: null,
-        phone: null,
-        slug: 'slug',
         title: 'Party B',
       },
     ];
