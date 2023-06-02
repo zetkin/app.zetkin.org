@@ -15,14 +15,16 @@ export default function generateTreeData(
 
   // Find relevant organizations and build a cache of parent-child relationships
   const relevantOrgs = organizations.filter((org) => {
-    // While we're looping, build a cache of parent-child relationships
-    if (org.parent) {
-      const existing = orgsByParentId[org.parent.id] || [];
-      orgsByParentId[org.parent.id] = [...existing, org];
-    }
-
     // Only the organizations in which the user has a role are relevant
-    return !!roleByOrgId[org.id];
+    if (!!roleByOrgId[org.id] && org.is_active) {
+      // While we're looping, build a cache of parent-child relationships
+      if (org.parent) {
+        const existing = orgsByParentId[org.parent.id] || [];
+        orgsByParentId[org.parent.id] = [...existing, org];
+      }
+      return true;
+    }
+    return false;
   });
 
   // Top level orgs are the ones that have no parent, or where that parent

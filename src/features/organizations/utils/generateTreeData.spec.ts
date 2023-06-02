@@ -44,6 +44,37 @@ describe('generateTreeData()', () => {
     expect(result).toEqual(expectedTreeData);
   });
 
+  it('ignores inactive organizations', () => {
+    const organizations: ZetkinOrganization[] = [
+      mockOrganization(1),
+      {
+        ...mockOrganization(2, 1),
+        is_active: false,
+      },
+      mockOrganization(3, 2),
+    ];
+
+    const memberships: ZetkinMembership[] = [
+      mockMembership(1, 'admin'),
+      mockMembership(3, 'admin'),
+    ];
+
+    const result = generateTreeData(organizations, memberships);
+
+    expect(result).toEqual(<TreeItemData[]>[
+      {
+        children: [],
+        id: 1,
+        title: 'Org 1',
+      },
+      {
+        children: [],
+        id: 3,
+        title: 'Org 3',
+      },
+    ]);
+  });
+
   it('ignores organizations without membership', () => {
     const organizations: ZetkinOrganization[] = [
       mockOrganization(1),
@@ -105,7 +136,7 @@ function mockOrganization(id: number, parentId?: number): ZetkinOrganization {
     country: 'SE',
     email: null,
     id: id,
-    is_active: false,
+    is_active: true,
     is_open: false,
     is_public: true,
     lang: null,
