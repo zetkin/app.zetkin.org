@@ -45,14 +45,9 @@ function mockMemberships(membership: mockMembership): ZetkinMembership {
 }
 
 describe('generateTreeData()', () => {
-  it('creates an empty tree when there are not organizations', () => {
+  it('creates an empty tree when there are not organizations or memberships', () => {
     const organizations: ZetkinOrganization[] = [];
-    const memberships: ZetkinMembership[] = [
-      mockMemberships({
-        organization: { id: 1, title: 'Party A' },
-        role: 'Admin',
-      }),
-    ];
+    const memberships: ZetkinMembership[] = [];
 
     const expectedTreeData: TreeItemData[] = [];
 
@@ -193,5 +188,20 @@ describe('generateTreeData()', () => {
     ];
 
     expect(result).toEqual(expectedTreeData);
+  });
+  it('handles a missing organization without crashing', () => {
+    const organizations: ZetkinOrganization[] = [];
+    const memberships: ZetkinMembership[] = [
+      mockMemberships({
+        organization: { id: 1, title: 'Party A' },
+        role: 'Admin',
+      }),
+    ];
+
+    const expectedTreeData: TreeItemData[] = [];
+
+    const treeData = generateTreeData(organizations, memberships);
+
+    expect(treeData).toEqual(expectedTreeData);
   });
 });
