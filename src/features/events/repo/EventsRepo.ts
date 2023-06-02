@@ -40,6 +40,7 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
+import updateEvents from '../rpc/updateEvents';
 
 export type ZetkinEventPatchBody = Partial<
   Omit<
@@ -232,6 +233,22 @@ export default class EventsRepo {
       .then((event) => {
         this._store.dispatch(eventUpdated(event));
       });
+  }
+
+  async updateEvents(
+    orgId: number,
+    events: number[],
+    data: ZetkinEventPatchBody
+  ) {
+    const result = await this._apiClient.rpc(updateEvents, {
+      events,
+      orgId,
+      data,
+    });
+
+    result.updatedEvents.forEach((event) => {
+      this._store.dispatch(eventUpdated(event));
+    });
   }
 
   updateLocation(

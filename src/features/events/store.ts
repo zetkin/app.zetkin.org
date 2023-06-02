@@ -106,11 +106,12 @@ const eventsSlice = createSlice({
       state.eventList.items = state.eventList.items.filter(
         (item) => item.id != eventId
       );
-      state.eventsByDate = Object.fromEntries(
-        Object.entries(state.eventsByDate).filter(([_, data]) =>
-          data.items.find((event) => event.id != eventId)
-        )
-      );
+
+      for (const date in state.eventsByDate) {
+        state.eventsByDate[date].items = state.eventsByDate[date].items.filter(
+          (item) => item.id != eventId
+        );
+      }
     },
     eventLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;

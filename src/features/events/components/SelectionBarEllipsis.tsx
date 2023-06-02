@@ -71,7 +71,9 @@ const SelectionBarEllipsis = () => {
   if (publishedEvents.length > 0) {
     ellipsisMenuItems.splice(2, 0, {
       label: messages.selectionBar.ellipsisMenu.unpublish(),
-      onSelect: () => {},
+      onSelect: () => {
+        model.updateEvents(selectedEvents, false);
+      },
       textColor: '#f66000',
     });
   }
@@ -79,7 +81,9 @@ const SelectionBarEllipsis = () => {
   if (unpublishedEvents.length > 0) {
     ellipsisMenuItems.splice(publishedEvents.length > 0 ? 3 : 2, 0, {
       label: messages.selectionBar.ellipsisMenu.publish(),
-      onSelect: () => {},
+      onSelect: () => {
+        model.updateEvents(selectedEvents, true);
+      },
     });
   }
 

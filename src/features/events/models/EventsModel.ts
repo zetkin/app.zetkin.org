@@ -97,4 +97,11 @@ export class EventsModel extends ModelBase {
     }
     return new ResolvedFuture(relatedEvents || []);
   }
+
+  updateEvents(events: number[], published: boolean) {
+    this._repo.updateEvents(this._orgId, events, {
+      cancelled: null,
+      published: published ? new Date().toISOString() : null,
+    });
+  }
 }
