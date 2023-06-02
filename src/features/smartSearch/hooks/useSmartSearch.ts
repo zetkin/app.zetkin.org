@@ -16,6 +16,7 @@ type UseSmartSearch = {
   filtersWithIds: SmartSearchFilterWithId[];
   setStartsWithAll: (startsWithAll: boolean) => void;
   startsWithAll: boolean;
+  update: (filters: SmartSearchFilterWithId[]) => void;
 };
 
 const useSmartSearch = (
@@ -98,6 +99,9 @@ const useSmartSearch = (
     filtersWithIds,
     setStartsWithAll,
     startsWithAll,
+    update: (filters) => {
+      setFiltersWithIds(filters);
+    },
   };
 };
 

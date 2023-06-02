@@ -1,23 +1,16 @@
-import { Alert, Grid } from '@mui/material';
+import { useState } from 'react';
+import { Alert, Divider, Typography, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,
   CircleOutlined,
-  Edit,
   PlaylistAddOutlined,
   RadioButtonCheckedOutlined,
 } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  DialogActions,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { Box, Button, DialogActions, List } from '@mui/material';
 
 import DisplayStartsWith from '../../StartsWith/DisplayStartsWith';
 import { Msg } from 'core/i18n';
+import useSmartSearchStats from 'features/smartSearch/hooks/useSmartSearchStats';
 import {
   AnyFilterConfig,
   FILTER_TYPE,
@@ -26,15 +19,21 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import QueryOverviewChip from './QueryOverviewChip';
+import QueryOverviewFilterListItem from './QueryOverviewFilterListItem';
 import QueryOverviewListItem from './QueryOverviewListItem';
-
-const FIRST_FILTER = 'first_filter';
+import {
+  SmartSearchSankeyEntrySegment,
+  SmartSearchSankeyExitSegment,
+  SmartSearchSankeyProvider,
+} from '../../sankeyDiagram';
+import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 
 interface QueryOverviewProps {
   filters: SmartSearchFilterWithId<AnyFilterConfig>[];
   onCloseDialog?: () => void;
   onSaveQuery?: () => void;
   onOpenFilterGallery: () => void;
+  onReorderFilters: (filters: SmartSearchFilterWithId[]) => void;
   onEditFilter: (filter: SmartSearchFilterWithId) => void;
   onDeleteFilter: (filter: SmartSearchFilterWithId) => void;
   onOpenStartsWithEditor: () => void;
@@ -53,8 +52,33 @@ const QueryOverview = ({
   onEditFilter,
   onDeleteFilter,
   onOpenStartsWithEditor,
+  onReorderFilters,
   startsWithAll,
 }: QueryOverviewProps): JSX.Element => {
+  const [dragging, setDragging] = useState(false);
+  const theme = useTheme();
+  const stats = useSmartSearchStats(filters);
+  const resultCount = stats?.length ? stats[stats.length - 1].result : 0;
+
+  const reorderableItems = filters
+    .filter((f) => f.type !== FILTER_TYPE.ALL)
+    .map((filter, index) => ({
+      id: filter.id,
+      renderContent: () => {
+        return (
+          <QueryOverviewFilterListItem
+            key={filter.id}
+            filter={filter}
+            filterIndex={index}
+            onDeleteFilter={onDeleteFilter}
+            onEditFilter={onEditFilter}
+            readOnly={readOnly}
+            showDiagram={!dragging}
+          />
+        );
+      },
+    }));
+
   return (
     <Box
       sx={{
@@ -76,19 +100,20 @@ const QueryOverview = ({
           flexDirection: 'column',
           justifyContent: 'center',
           overflowY: 'auto',
-          padding: '0 24px',
         }}
       >
-        <List sx={{ overflowY: 'auto' }}>
-          <ListItem key={FIRST_FILTER} sx={{ padding: 0 }}>
-            <Grid
-              alignItems="center"
-              container
-              display="flex"
-              justifyContent="space-between"
-              width={1}
-            >
-              <Grid display="flex" item xs={1}>
+        <SmartSearchSankeyProvider
+          filters={filters}
+          hoverColor={theme.palette.primary.main}
+        >
+          <List sx={{ overflowY: 'auto', paddingX: 4 }}>
+            <QueryOverviewListItem
+              canEdit={!readOnly}
+              diagram={(hovered) =>
+                !dragging && <SmartSearchSankeyEntrySegment hovered={hovered} />
+              }
+              filterText={<DisplayStartsWith startsWithAll={startsWithAll} />}
+              icon={
                 <QueryOverviewChip
                   filterOperatorIcon={
                     <ArrowForwardOutlined color="secondary" fontSize="small" />
@@ -104,38 +129,45 @@ const QueryOverview = ({
                     )
                   }
                 />
-              </Grid>
-              <Grid item xs={10}>
-                <Typography>
-                  <DisplayStartsWith startsWithAll={startsWithAll} />
-                </Typography>
-              </Grid>
-              {!readOnly && (
-                <Grid alignItems="center" display="flex" item xs={1}>
-                  <IconButton
-                    data-testid="QueryOverview-editStartsWithButton"
-                    onClick={onOpenStartsWithEditor}
-                    size="small"
-                    sx={{ paddingRight: '35px' }}
-                  >
-                    <Edit fontSize="small" />
-                  </IconButton>
-                </Grid>
-              )}
-            </Grid>
-          </ListItem>
-          {filters
-            .filter((f) => f.type !== FILTER_TYPE.ALL)
-            .map((filter) => (
-              <QueryOverviewListItem
-                key={filter.id}
-                filter={filter}
-                onDeleteFilter={onDeleteFilter}
-                onEditFilter={onEditFilter}
-                readOnly={readOnly}
-              />
-            ))}
-        </List>
+              }
+              onClickEdit={onOpenStartsWithEditor}
+            />
+            <ZUIReorderable
+              centerWidgets
+              items={reorderableItems}
+              onDragEnd={() => {
+                setDragging(false);
+              }}
+              onDragStart={() => {
+                setDragging(true);
+              }}
+              onReorder={(ids) => {
+                setDragging(false);
+                onReorderFilters(
+                  filters
+                    .concat()
+                    .sort((f0, f1) => ids.indexOf(f0.id) - ids.indexOf(f1.id))
+                );
+              }}
+              widgets={[
+                ZUIReorderableWidget.MOVE_UP,
+                ZUIReorderableWidget.DRAG,
+                ZUIReorderableWidget.MOVE_DOWN,
+              ]}
+              widgetsOnlyOnHover
+              widgetsProps={{
+                sx: {
+                  left: -40,
+                  position: 'absolute',
+                },
+              }}
+            />
+            <Divider />
+            <QueryOverviewListItem
+              diagram={!dragging && <SmartSearchSankeyExitSegment />}
+            />
+          </List>
+        </SmartSearchSankeyProvider>
         {!readOnly && (
           <Button
             color="primary"
@@ -152,11 +184,30 @@ const QueryOverview = ({
       {hasSaveCancelButtons && (
         <DialogActions>
           <Box
+            alignItems="center"
             display="flex"
             justifyContent="flex-end"
             m={1}
             style={{ gap: '1rem' }}
           >
+            <Typography color={theme.palette.text.secondary}>
+              <Msg
+                id={messageIds.resultHint.hint}
+                values={{
+                  count: (
+                    <Typography
+                      color={theme.palette.text.primary}
+                      component="span"
+                    >
+                      <Msg
+                        id={messageIds.resultHint.countLabel}
+                        values={{ count: resultCount }}
+                      />
+                    </Typography>
+                  ),
+                }}
+              />
+            </Typography>
             {readOnly && (
               <Button
                 color="primary"

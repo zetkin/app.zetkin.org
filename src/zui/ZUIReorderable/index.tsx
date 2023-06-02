@@ -1,5 +1,9 @@
-import { DragIndicatorOutlined } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { Box, BoxProps, IconButton } from '@mui/material';
+import {
+  DragIndicatorOutlined,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+} from '@mui/icons-material';
 import {
   FC,
   MouseEvent as ReactMouseEvent,
@@ -8,11 +12,9 @@ import {
   useState,
 } from 'react';
 
-import UpDownArrows from './UpDownArrows';
-
 type IDType = number | string;
 
-type ZUIReorderableRenderProps = {
+export type ZUIReorderableRenderProps = {
   dragging: boolean;
 };
 
@@ -22,12 +24,23 @@ type ReorderableItem = {
   renderContent: (props: ZUIReorderableRenderProps) => JSX.Element;
 };
 
+export enum ZUIReorderableWidget {
+  DRAG = 'drag',
+  MOVE_DOWN = 'down',
+  MOVE_UP = 'up',
+}
+
 type ZUIReorderableProps = {
   centerWidgets?: boolean;
   disableClick?: boolean;
   disableDrag?: boolean;
   items: ReorderableItem[];
+  onDragEnd?: () => void;
+  onDragStart?: () => void;
   onReorder: (ids: IDType[]) => void;
+  widgets?: ZUIReorderableWidget[];
+  widgetsOnlyOnHover?: boolean;
+  widgetsProps?: BoxProps;
 };
 
 const ZUIReorderable: FC<ZUIReorderableProps> = ({
@@ -35,7 +48,16 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   disableClick,
   disableDrag,
   items,
+  onDragEnd,
+  onDragStart,
   onReorder,
+  widgets = [
+    ZUIReorderableWidget.DRAG,
+    ZUIReorderableWidget.MOVE_UP,
+    ZUIReorderableWidget.MOVE_DOWN,
+  ],
+  widgetsOnlyOnHover = false,
+  widgetsProps,
 }) => {
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
   const [activeId, setActiveId] = useState<IDType | null>(null);
@@ -119,6 +141,10 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+
+    if (onDragEnd) {
+      onDragEnd();
+    }
   };
 
   const sortedItems = items.concat().sort((item0, item1) => {
@@ -156,6 +182,10 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
+
+                if (onDragStart) {
+                  onDragStart();
+                }
               }}
               onClickDown={() => {
                 if (index + 1 < items.length) {
@@ -178,9 +208,33 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
                 }
               }}
               onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
-              showDownButton={!disableClick && index < items.length - 1}
-              showDragHandle={!disableDrag}
-              showUpButton={!disableClick && index > 0}
+              widgets={widgets.filter((widget) => {
+                if (disableClick) {
+                  // Hide all widgets when click is disabled
+                  return false;
+                }
+
+                if (
+                  widget == ZUIReorderableWidget.MOVE_DOWN &&
+                  index < items.length - 1
+                ) {
+                  return true;
+                } else if (
+                  widget == ZUIReorderableWidget.MOVE_UP &&
+                  index > 0
+                ) {
+                  return true;
+                } else if (
+                  widget == ZUIReorderableWidget.DRAG &&
+                  !disableDrag
+                ) {
+                  return true;
+                }
+
+                return false;
+              })}
+              widgetsOnlyOnHover={widgetsOnlyOnHover}
+              widgetsProps={widgetsProps}
             />
           )
       )}
@@ -200,9 +254,9 @@ const ZUIReorderableItem: FC<{
   onClickDown: () => void;
   onClickUp: () => void;
   onNodeExists: (node: HTMLDivElement) => void;
-  showDownButton: boolean;
-  showDragHandle: boolean;
-  showUpButton: boolean;
+  widgets: ZUIReorderableWidget[];
+  widgetsOnlyOnHover?: boolean;
+  widgetsProps?: BoxProps;
 }> = ({
   centerWidgets,
   dragging,
@@ -211,10 +265,11 @@ const ZUIReorderableItem: FC<{
   onClickDown,
   onClickUp,
   onNodeExists,
-  showDownButton,
-  showDragHandle,
-  showUpButton,
+  widgets,
+  widgetsOnlyOnHover = false,
+  widgetsProps,
 }) => {
+  const [hovered, setHovered] = useState(false);
   const itemRef = useRef<HTMLDivElement>();
   const contentRef = useRef<HTMLDivElement>();
 
@@ -225,6 +280,8 @@ const ZUIReorderableItem: FC<{
         itemRef.current = div;
         onNodeExists(div);
       }}
+      onMouseOut={() => setHovered(false)}
+      onMouseOver={() => setHovered(true)}
     >
       <Box
         ref={contentRef}
@@ -234,24 +291,39 @@ const ZUIReorderableItem: FC<{
           position: dragging ? 'absolute' : 'static',
         }}
       >
-        <Box>
-          {showDragHandle && (
-            <IconButton
-              onMouseDown={(ev) => {
-                if (itemRef.current && contentRef.current) {
-                  onBeginDrag(itemRef.current, contentRef.current, ev);
-                }
-              }}
-            >
-              <DragIndicatorOutlined />
-            </IconButton>
-          )}
-          <UpDownArrows
-            onClickDown={onClickDown}
-            onClickUp={onClickUp}
-            showDown={showDownButton}
-            showUp={showUpButton}
-          />
+        <Box display="flex" flexDirection="column" {...widgetsProps}>
+          {widgets.map((widget) => {
+            if (widgetsOnlyOnHover && !hovered) {
+              // Hide all widgets when not hovering
+              return false;
+            }
+
+            if (widget == ZUIReorderableWidget.DRAG) {
+              return (
+                <IconButton
+                  onMouseDown={(ev) => {
+                    if (itemRef.current && contentRef.current) {
+                      onBeginDrag(itemRef.current, contentRef.current, ev);
+                    }
+                  }}
+                >
+                  <DragIndicatorOutlined />
+                </IconButton>
+              );
+            } else if (widget == ZUIReorderableWidget.MOVE_DOWN) {
+              return (
+                <IconButton onClick={() => onClickDown()}>
+                  <KeyboardArrowDown />
+                </IconButton>
+              );
+            } else if (widget == ZUIReorderableWidget.MOVE_UP) {
+              return (
+                <IconButton onClick={() => onClickUp()}>
+                  <KeyboardArrowUp />
+                </IconButton>
+              );
+            }
+          })}
         </Box>
         <Box flex="1 0" zIndex={dragging ? '100' : '0'}>
           {item.renderContent({

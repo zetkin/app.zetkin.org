@@ -44,7 +44,7 @@ test.describe('Task detail page', async () => {
 
     // Open Smart Search dialog
     await page.click('data-testid=QueryStatusAlert-actionButton');
-    await page.click('data-testid=QueryOverview-editStartsWithButton');
+    await page.click('data-testid=QueryOverview-editFilterButton');
     await page.click('data-testid=StartsWith-select');
     await page.click('data-testid=StartsWith-select-all');
     await page.click('data-testid=FilterForm-saveButton');

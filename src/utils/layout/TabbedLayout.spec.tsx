@@ -11,6 +11,7 @@ const mockTabbedLayoutProps = {
 };
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('features/user/hooks/useCurrentUser');
 
 describe('TabbedLayout.tsx', () => {
   describe('Tabbed layout with 2 tabs', () => {

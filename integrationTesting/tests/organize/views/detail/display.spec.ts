@@ -33,7 +33,7 @@ test.describe('View detail page', () => {
     expect(
       await page.locator('text=All KPD members >> visible=true').count()
     ).toEqual(1);
-    expect(await page.locator('text=Clara').count()).toEqual(1);
-    expect(await page.locator('text=Rosa').count()).toEqual(1);
+    expect(await page.locator('main >> text=Clara').count()).toEqual(1);
+    expect(await page.locator('main >> text=Rosa').count()).toEqual(1);
   });
 });
