@@ -1,5 +1,6 @@
+/* eslint-disable react/display-name */
 import { Avatar } from '@mui/material';
-import { FC } from 'react';
+import { forwardRef } from 'react';
 
 interface ZUIAvatarProps {
   orgId: number;
@@ -12,13 +13,17 @@ const SIZES = {
   sm: 30,
 };
 
-const ZUIAvatar: FC<ZUIAvatarProps> = ({ orgId, personId, size = 'md' }) => {
-  return (
-    <Avatar
-      src={`/api/orgs/${orgId}/people/${personId}/avatar`}
-      style={{ height: SIZES[size], width: SIZES[size] }}
-    />
-  );
-};
+const ZUIAvatar = forwardRef<HTMLDivElement, ZUIAvatarProps>(
+  ({ orgId, personId, size = 'md', ...restProps }, ref) => {
+    return (
+      <Avatar
+        ref={ref}
+        {...restProps}
+        src={`/api/orgs/${orgId}/people/${personId}/avatar`}
+        style={{ height: SIZES[size], width: SIZES[size] }}
+      />
+    );
+  }
+);
 
 export default ZUIAvatar;

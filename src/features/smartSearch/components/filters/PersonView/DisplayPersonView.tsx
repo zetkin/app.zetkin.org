@@ -10,6 +10,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.personView;
 
 interface DisplayPersonViewProps {
@@ -26,7 +28,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   );
   const personViews = personViewsQuery?.data || [];
 
-  const view = personViews.find((v) => v.id == config.view) || personViews[0];
+  const view = personViews.find((v) => v.id == config.view);
   const operator = config.operator;
 
   const op = filter.op || OPERATION.ADD;
@@ -35,9 +37,9 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
-        inSelect: <Msg id={localMessageIds.inSelect[operator]} />,
-        viewSelect: view.title,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
+        inSelect: <UnderlinedMsg id={localMessageIds.inSelect[operator]} />,
+        viewSelect: <UnderlinedText text={view?.title || ''} />,
       }}
     />
   );

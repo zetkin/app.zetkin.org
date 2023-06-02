@@ -12,6 +12,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.surveySubmission;
 
 interface DisplaySurveySubmissionProps {
@@ -40,11 +42,13 @@ const DisplaySurveySubmission = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         surveySelect: (
           <Msg
             id={localMessageIds.surveySelect.survey}
-            values={{ surveyTitle }}
+            values={{
+              surveyTitle: <UnderlinedText text={surveyTitle} />,
+            }}
           />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,

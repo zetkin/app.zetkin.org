@@ -9,6 +9,7 @@ import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
 const localMessageIds = messageIds.filters.mostActive;
 
 interface DisplayMostActiveProps {
@@ -27,9 +28,19 @@ const DisplayMostActive = ({ filter }: DisplayMostActiveProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
-        numPeople: config.size,
-        numPeopleSelect: config.size || 0,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
+        numPeople: (
+          <UnderlinedMsg
+            id={localMessageIds.numPeople}
+            values={{ numPeople: config.size }}
+          />
+        ),
+        numPeopleSelect: (
+          <UnderlinedMsg
+            id={localMessageIds.numPeopleSelect}
+            values={{ numPeopleSelect: config.size || 0 }}
+          />
+        ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />

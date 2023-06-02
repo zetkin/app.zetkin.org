@@ -54,9 +54,9 @@ function mockEvent(id: number, data: Partial<ZetkinEvent>): EventActivity {
       ...data,
       id,
     },
-    endDate: null,
     kind: ACTIVITIES.EVENT,
-    startDate: null,
+    visibleFrom: null,
+    visibleUntil: null,
   };
 }
 
@@ -183,18 +183,18 @@ describe('useClusteredActivities()', () => {
         {
           // Fake data, will never be used
           data: { id: 1 } as ZetkinSurvey,
-          endDate: new Date('1857-07-06T13:37:00.000Z'),
           kind: ACTIVITIES.SURVEY,
           // This should appear first
-          startDate: new Date('1857-07-05T11:37:00.000Z'),
+          visibleFrom: new Date('1857-07-05T11:37:00.000Z'),
+          visibleUntil: new Date('1857-07-06T13:37:00.000Z'),
         },
         {
           // Fake data, will never be used
           data: { id: 2 } as ZetkinCallAssignment,
-          endDate: new Date('1857-07-06T13:37:00.000Z'),
           kind: ACTIVITIES.CALL_ASSIGNMENT,
           // This should appear last
-          startDate: new Date('1857-07-05T13:37:00.000Z'),
+          visibleFrom: new Date('1857-07-05T13:37:00.000Z'),
+          visibleUntil: new Date('1857-07-06T13:37:00.000Z'),
         },
         mockEvent(2, {
           end_time: '1857-07-05T14:00:00.000Z',

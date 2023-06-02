@@ -10,7 +10,7 @@ export enum TASK_STATUS {
 }
 
 const getTaskStatus = (task: ZetkinTask): TASK_STATUS => {
-  const { published, deadline, expires } = task;
+  const { published, expires } = task;
   const now = dayjs();
 
   const expiresDate = dayjs(expires);
@@ -18,13 +18,6 @@ const getTaskStatus = (task: ZetkinTask): TASK_STATUS => {
 
   if (isExpiresPassed) {
     return TASK_STATUS.EXPIRED;
-  }
-
-  const deadlineDate = dayjs(deadline);
-  const isDeadlinePassed = deadlineDate.isBefore(now);
-
-  if (isDeadlinePassed) {
-    return TASK_STATUS.CLOSED;
   }
 
   const publishedDate = dayjs(published);

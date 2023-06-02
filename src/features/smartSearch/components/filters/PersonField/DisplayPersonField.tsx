@@ -12,6 +12,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -48,13 +50,13 @@ const DisplayPersonField = ({
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         field:
           fieldType == 'date' ? (
             <Msg
               id={localMessageIds.preview.date}
               values={{
-                fieldName: field?.title ?? '',
+                fieldName: <UnderlinedText text={field?.title ?? ''} />,
                 timeFrame: <DisplayTimeFrame config={timeFrame} />,
               }}
             />
@@ -62,8 +64,8 @@ const DisplayPersonField = ({
             <Msg
               id={localMessageIds.preview[fieldType]}
               values={{
-                fieldName: field?.title ?? '',
-                searchTerm: search || '',
+                fieldName: <UnderlinedText text={field?.title ?? ''} />,
+                searchTerm: <UnderlinedText text={search || ''} />,
               }}
             />
           ),

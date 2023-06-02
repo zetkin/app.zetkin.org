@@ -12,6 +12,8 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import UnderlinedMsg from '../../UnderlinedMsg';
+import UnderlinedText from '../../UnderlinedText';
 const localMessageIds = messageIds.filters.subQuery;
 
 interface DisplaySubQueryProps {
@@ -55,11 +57,9 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={messageIds.filters.subQuery.addRemoveSelect[op]} />
-        ),
+        addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         matchSelect: (
-          <Msg
+          <UnderlinedMsg
             id={
               messageIds.filters.subQuery.matchSelect[
                 filter.config.operator || 'in'
@@ -71,7 +71,7 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
           <Msg
             id={localMessageIds.query.preview[query?.type || 'none']}
             values={{
-              queryTitle: query?.title ?? '',
+              queryTitle: <UnderlinedText text={query?.title ?? ''} />,
             }}
           />
         ),

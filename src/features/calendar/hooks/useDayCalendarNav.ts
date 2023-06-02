@@ -49,9 +49,9 @@ export default function useDayCalendarNav(
             endingActivities: [],
             events: prevEventDay.events.map((event) => ({
               data: event,
-              endDate: null,
               kind: ACTIVITIES.EVENT,
-              startDate: event.published ? new Date(event.published) : null,
+              visibleFrom: event.published ? new Date(event.published) : null,
+              visibleUntil: new Date(event.end_time),
             })),
             startingActivities: [],
           },
@@ -76,11 +76,11 @@ export default function useDayCalendarNav(
             .filter((item) => !!item.data)
             .map((item) => ({
               data: item.data!,
-              endDate: null,
               kind: ACTIVITIES.EVENT,
-              startDate: item.data!.published
+              visibleFrom: item.data!.published
                 ? new Date(item.data!.published)
                 : null,
+              visibleUntil: null,
             })),
           startingActivities: [],
         },

@@ -141,10 +141,14 @@ const SurveySubmissionsList = ({
         >
           <ZUIPersonGridCell
             onClick={startEditing}
-            personId={row.respondent.id}
+            person={{
+              ...row.respondent,
+              id: row.respondent.id, // Telling typescript that there is an id
+            }}
             sx={{
               cursor: 'pointer',
             }}
+            tooltip={false}
           />
         </ZUIPersonHoverCard>
       );

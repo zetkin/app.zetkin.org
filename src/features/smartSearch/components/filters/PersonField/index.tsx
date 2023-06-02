@@ -222,7 +222,7 @@ const PersonField = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg id={localMessageIds.addRemoveSelect[o]} />
+                    <Msg id={messageIds.operators[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>

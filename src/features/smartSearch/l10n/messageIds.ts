@@ -12,7 +12,7 @@ export default makeMessages('feat.smartSearch', {
     save: m('Save'),
   },
   filterCategories: {
-    campaignActivity: m('Campaign activity'),
+    campaignActivity: m('Project activity'),
     misc: m('Misc'),
     peopleDatabase: m('People'),
     phoneBanking: m('Phone banking'),
@@ -22,7 +22,7 @@ export default makeMessages('feat.smartSearch', {
     all: m('Everyone'),
     call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
-    campaign_participation: m('Based on their campaign participation'),
+    campaign_participation: m('Based on their event participation'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
@@ -49,22 +49,14 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     callBlocked: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       inputString: m<{ addRemoveSelect: ReactElement }>(
         '{addRemoveSelect} people who are blocked from calling for any reason'
       ),
     },
     callHistory: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       assignmentSelect: {
         any: m('any assignment'),
-        assignment: m<{ assignmentTitle: string }>(
+        assignment: m<{ assignmentTitle: ReactElement | string }>(
           'assignment "{assignmentTitle}"'
         ),
         none: m("This organization doesn't have any call assignments yet"),
@@ -79,43 +71,45 @@ export default makeMessages('feat.smartSearch', {
           'Add people who have been successfully reached at least 2 times in any assignment at any point in time.'
         ),
         two: m(
-          "Remove people who have been called at least 1 time in assignment 'Campaign 2020' during the last 30 days."
+          "Remove people who have been called at least 1 time in assignment 'Activate old members' during the last 30 days."
         ),
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
         assignmentSelect: ReactElement;
         callSelect: ReactElement;
-        minTimes: number;
+        minTimes: ReactElement | number;
         minTimesInput: ReactElement | number;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {callSelect} at least {minTimesInput} {minTimes, plural, one {time} other {times}} in {assignmentSelect} {timeFrame}.'
+        '{addRemoveSelect} people who {callSelect} at least {minTimesInput} {minTimes} in {assignmentSelect} {timeFrame}.'
       ),
+      minTimes: m<{ minTimes: number; minTimesInput: ReactElement | number }>(
+        '{minTimesInput} {minTimes, plural, one {time} other {times}}'
+      ),
+      minTimesInput: m<{ minTimesInput: number }>('{minTimesInput}'),
     },
     campaignParticipation: {
       activitySelect: {
-        activity: m<{ activity: string }>('activity "{activity}"'),
-        any: m('any activity'),
-      },
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
+        activity: m<{ activity: ReactElement | string }>('type "{activity}"'),
+        any: m('any type'),
       },
       bookedSelect: {
         booked: m('been booked'),
         signed_up: m('signed up'),
       },
       campaignSelect: {
-        any: m('any campaign'),
-        campaign: m<{ campaign: string }>('campaign "{campaign}"'),
+        any: m('any project'),
+        campaign: m<{ campaign: ReactElement | string }>(
+          'project "{campaign}"'
+        ),
       },
       examples: {
         one: m(
-          "Add people who have signed up for events in any campaign with any activity at location 'Dorfplatz' at any point in time"
+          "Add people who have signed up for events in any project of any type at location 'Dorfplatz' at any point in time"
         ),
         two: m(
-          "Remove people who have not been booked for events in any campaign with activity 'Put up posters' at any location before today."
+          "Remove people who have not been booked for events in any project of type 'Put up posters' at any location before today."
         ),
       },
       haveSelect: {
@@ -131,18 +125,16 @@ export default makeMessages('feat.smartSearch', {
         locationSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} with {activitySelect} at {locationSelect} {timeFrame}'
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
       ),
       locationSelect: {
         any: m('any location'),
-        location: m<{ location: string }>('location "{location}"'),
+        location: m<{ location: ReactElement | string }>(
+          'location "{location}"'
+        ),
       },
     },
     mostActive: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       examples: {
         one: m(
           'Add the 100 most active members of the organization before today.'
@@ -153,18 +145,19 @@ export default makeMessages('feat.smartSearch', {
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
-        numPeople: number;
+        numPeople: ReactElement | number;
         numPeopleSelect: ReactElement | number;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} the {numPeopleSelect} most active {numPeople, plural, one {person} other {people}} in the organization {timeFrame}.'
+        '{addRemoveSelect} the {numPeopleSelect} most active {numPeople} in the organization {timeFrame}.'
       ),
+      numPeople: m<{
+        numPeople: number;
+      }>('{numPeople, plural, one {person} other {people}}'),
+      numPeopleSelect:
+        m<{ numPeopleSelect: ReactElement | number }>('{numPeopleSelect}'),
     },
     personData: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('remove'),
-      },
       ellipsis: m('...'),
       examples: {
         one: m(
@@ -197,20 +190,16 @@ export default makeMessages('feat.smartSearch', {
       }>('{addRemoveSelect} any person whose {criteria}.'),
     },
     personField: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       edit: {
         date: m<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
           '{fieldSelect} is {timeFrame}'
         ),
         none: m("This organization doesn't have any custom fields yet."),
         text: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
-          '{fieldSelect} matches {freeTextInput}'
+          '{fieldSelect} matches "{freeTextInput}"'
         ),
         url: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
-          '{fieldSelect} matches {freeTextInput}'
+          '{fieldSelect} matches "{freeTextInput}"'
         ),
       },
       fieldSelect: {
@@ -220,22 +209,20 @@ export default makeMessages('feat.smartSearch', {
         '{addRemoveSelect} any person whose {field}.'
       ),
       preview: {
-        date: m<{ fieldName: string; timeFrame: ReactElement }>(
+        date: m<{ fieldName: ReactElement | string; timeFrame: ReactElement }>(
           '{fieldName} is {timeFrame}'
         ),
-        text: m<{ fieldName: string; searchTerm: string }>(
-          '{fieldName} matches {searchTerm}'
-        ),
-        url: m<{ fieldName: string; searchTerm: string }>(
-          '{fieldName} matches {searchTerm}'
-        ),
+        text: m<{
+          fieldName: ReactElement | string;
+          searchTerm: ReactElement | string;
+        }>('{fieldName} matches "{searchTerm}"'),
+        url: m<{
+          fieldName: ReactElement | string;
+          searchTerm: ReactElement | string;
+        }>('{fieldName} matches "{searchTerm}"'),
       },
     },
     personTags: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       condition: {
         conditionSelect: {
           all: m('all'),
@@ -274,13 +261,9 @@ export default makeMessages('feat.smartSearch', {
       ),
     },
     personView: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       examples: {
-        one: m('Add people who are in the view "Campaign 2020.'),
-        two: m('Remove people who are not in the view "Campaign 2020".'),
+        one: m('Add people who are in the view "Active Members 2022".'),
+        two: m('Remove people who are not in the view "Active Members 2022".'),
       },
       inSelect: {
         in: m('in'),
@@ -296,8 +279,9 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     random: {
-      addRemoveSelect: {
+      addLimitRemoveSelect: {
         add: m('add'),
+        limit: m('limit to'),
         sub: m('remove'),
       },
       examples: {
@@ -310,16 +294,12 @@ export default makeMessages('feat.smartSearch', {
       }>('Randomly {addRemoveSelect} {quantity} in the organization.'),
     },
     subQuery: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Sub'),
-      },
       examples: {
         one: m(
           "Remove people who match Smart Search Query 'People who live in Stockholm'."
         ),
         two: m(
-          "Add people who match the target group of call Assignment 'Assignment one'."
+          "Add people who match the target group of call assignment 'Assignment one'."
         ),
       },
       inputString: m<{
@@ -350,14 +330,14 @@ export default makeMessages('feat.smartSearch', {
           }>('{querySelect} "{titleSelect}"'),
         },
         preview: {
-          callassignment_goal: m<{ queryTitle: string }>(
+          callassignment_goal: m<{ queryTitle: ReactElement | string }>(
             'the purpose group of call assignment "{queryTitle}"'
           ),
-          callassignment_target: m<{ queryTitle: string }>(
+          callassignment_target: m<{ queryTitle: ReactElement | string }>(
             'the target group of call assignment "{queryTitle}"'
           ),
-          none: m<{ queryTitle: string }>('{queryTitle}'),
-          standalone: m<{ queryTitle: string }>(
+          none: m<{ queryTitle: ReactElement | string }>('{queryTitle}'),
+          standalone: m<{ queryTitle: ReactElement | string }>(
             'Smart Search query "{queryTitle}"'
           ),
         },
@@ -378,10 +358,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     surveyOption: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       conditionSelect: {
         all: m('all'),
         any: m('any'),
@@ -407,19 +383,19 @@ export default makeMessages('feat.smartSearch', {
       questionSelect: {
         any: m('a question'),
         none: m('There are no option questions in this survey'),
-        question: m<{ question: string }>('question "{question}"'),
+        question: m<{ question: ReactElement | string }>(
+          'question "{question}"'
+        ),
       },
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
-        survey: m<{ surveyTitle: string }>('survey "{surveyTitle}"'),
+        survey: m<{ surveyTitle: ReactElement | string }>(
+          'survey "{surveyTitle}"'
+        ),
       },
     },
     surveyResponse: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       examples: {
         one: m(
           "People whose responses to survey 'Member survey' (any question) include 'organize'."
@@ -446,25 +422,25 @@ export default makeMessages('feat.smartSearch', {
       questionSelect: {
         any: m('any question'),
         none: m('There are no free text questions in this survey'),
-        question: m<{ question: string }>('question "{question}"'),
+        question: m<{ question: ReactElement | string }>(
+          'question "{question}"'
+        ),
       },
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
-        survey: m<{ surveyTitle: string }>('survey "{surveyTitle}"'),
+        survey: m<{ surveyTitle: ReactElement | string }>(
+          'survey "{surveyTitle}"'
+        ),
       },
     },
     surveySubmission: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       examples: {
         one: m(
           "People who have submitted responses to survey 'Member survey 2020' before today."
         ),
         two: m(
-          "People who have submitted responses to survey 'Member survey' during the last 30 days."
+          "People who have submitted responses to survey 'Member survey 2020' during the last 30 days."
         ),
       },
       inputString: m<{
@@ -477,17 +453,17 @@ export default makeMessages('feat.smartSearch', {
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
-        survey: m<{ surveyTitle: string }>('survey "{surveyTitle}"'),
+        survey: m<{ surveyTitle: ReactElement | string }>(
+          'survey "{surveyTitle}"'
+        ),
       },
     },
     task: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       campaignSelect: {
-        any: m('any campaign'),
-        campaign: m<{ campaign: string }>('campaign "{campaign}"'),
+        any: m('any project'),
+        campaign: m<{ campaign: ReactElement | string }>(
+          'project "{campaign}"'
+        ),
         in: m(' in '),
       },
       examples: {
@@ -495,7 +471,7 @@ export default makeMessages('feat.smartSearch', {
           'Add people who have completed task "Tell your friends" at least once at any point in time'
         ),
         two: m(
-          'Add people who have ignored any task in any campaign between 2 and 5 times before today'
+          'Add people who have ignored any task in any project between 2 and 5 times before today'
         ),
       },
       inputString: m<{
@@ -510,7 +486,7 @@ export default makeMessages('feat.smartSearch', {
       ),
       taskSelect: {
         any: m('any task'),
-        task: m<{ task: string }>('task "{task}"'),
+        task: m<{ task: ReactElement | string }>('task "{task}"'),
       },
       taskStatusSelect: {
         assigned: m('been assigned'),
@@ -519,10 +495,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     user: {
-      addRemoveSelect: {
-        add: m('Add'),
-        sub: m('Remove'),
-      },
       connectedSelect: {
         false: m('not connected'),
         true: m('connected'),
@@ -593,6 +565,11 @@ export default makeMessages('feat.smartSearch', {
   misc: {
     noOptions: m('No matching tags'),
   },
+  operators: {
+    add: m('Add'),
+    limit: m('Limit to'),
+    sub: m('Remove'),
+  },
   quantity: {
     edit: {
       integer: m<{ numInput: ReactElement; quantitySelect: ReactElement }>(
@@ -622,6 +599,7 @@ export default makeMessages('feat.smartSearch', {
   readOnly: m(
     'This Smart Search query is in read-only mode and cannot be edited.'
   ),
+  smartSearch: m('Smart Search'),
   timeFrame: {
     edit: {
       afterDate: m<{

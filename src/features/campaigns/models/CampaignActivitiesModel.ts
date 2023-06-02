@@ -26,8 +26,8 @@ export enum ACTIVITIES {
 }
 
 type CampaignActivityBase = {
-  endDate: Date | null;
-  startDate: Date | null;
+  visibleFrom: Date | null;
+  visibleUntil: Date | null;
 };
 
 export type CallAssignmentActivity = CampaignActivityBase & {
@@ -108,8 +108,10 @@ export default class CampaignActivitiesModel extends ModelBase {
           return isSameDate(startDate, todayDate);
         } else {
           return (
-            (activity.startDate && isSameDate(activity.startDate, todayDate)) ||
-            (activity.endDate && isSameDate(activity.endDate, todayDate))
+            (activity.visibleFrom &&
+              isSameDate(activity.visibleFrom, todayDate)) ||
+            (activity.visibleUntil &&
+              isSameDate(activity.visibleUntil, todayDate))
           );
         }
       });
@@ -120,9 +122,10 @@ export default class CampaignActivitiesModel extends ModelBase {
           return isSameDate(startDate, tomorrowDate);
         } else {
           return (
-            (activity.startDate &&
-              isSameDate(activity.startDate, tomorrowDate)) ||
-            (activity.endDate && isSameDate(activity.endDate, tomorrowDate))
+            (activity.visibleFrom &&
+              isSameDate(activity.visibleFrom, tomorrowDate)) ||
+            (activity.visibleUntil &&
+              isSameDate(activity.visibleUntil, tomorrowDate))
           );
         }
       });
@@ -155,9 +158,9 @@ export default class CampaignActivitiesModel extends ModelBase {
           return startsDuringWeek || isOnGoing || endsDuringWeek;
         } else {
           return (
-            activity.startDate &&
-            activity.startDate < weekFromNow &&
-            (!activity.endDate || activity.endDate >= startOfToday)
+            activity.visibleFrom &&
+            activity.visibleFrom < weekFromNow &&
+            (!activity.visibleUntil || activity.visibleUntil >= startOfToday)
           );
         }
       });
@@ -196,48 +199,48 @@ export default class CampaignActivitiesModel extends ModelBase {
       .filter((ca) => !campaignId || ca.campaign?.id == campaignId)
       .map((ca) => ({
         data: ca,
-        endDate: getUTCDateWithoutTime(ca.end_date),
         kind: ACTIVITIES.CALL_ASSIGNMENT,
-        startDate: getUTCDateWithoutTime(ca.start_date),
+        visibleFrom: getUTCDateWithoutTime(ca.start_date),
+        visibleUntil: getUTCDateWithoutTime(ca.end_date),
       }));
 
     const events: CampaignActivity[] = eventsFuture.data
       .filter((event) => !campaignId || event.campaign?.id == campaignId)
       .map((event) => ({
         data: event,
-        endDate: null,
         kind: ACTIVITIES.EVENT,
-        startDate: getUTCDateWithoutTime(event.published),
+        visibleFrom: getUTCDateWithoutTime(event.published),
+        visibleUntil: getUTCDateWithoutTime(event.end_time),
       }));
 
     const surveys: CampaignActivity[] = surveysFuture.data
       .filter((survey) => !campaignId || survey.campaign?.id == campaignId)
       .map((survey) => ({
         data: survey,
-        endDate: getUTCDateWithoutTime(survey.expires),
         kind: ACTIVITIES.SURVEY,
-        startDate: getUTCDateWithoutTime(survey.published),
+        visibleFrom: getUTCDateWithoutTime(survey.published),
+        visibleUntil: getUTCDateWithoutTime(survey.expires),
       }));
 
     const tasks: CampaignActivity[] = tasksFuture.data
       .filter((task) => !campaignId || task.campaign?.id == campaignId)
       .map((task) => ({
         data: task,
-        endDate: getUTCDateWithoutTime(task.expires || null),
         kind: ACTIVITIES.TASK,
-        startDate: getUTCDateWithoutTime(task.published || null),
+        visibleFrom: getUTCDateWithoutTime(task.published || null),
+        visibleUntil: getUTCDateWithoutTime(task.expires || null),
       }));
 
     const unsorted = callAssignments.concat(...events, ...surveys, ...tasks);
 
     const sorted = unsorted.sort((first, second) => {
-      if (first.startDate === null) {
+      if (first.visibleFrom === null) {
         return -1;
-      } else if (second.startDate === null) {
+      } else if (second.visibleFrom === null) {
         return 1;
       }
 
-      return second.startDate.getTime() - first.startDate.getTime();
+      return second.visibleFrom.getTime() - first.visibleFrom.getTime();
     });
 
     return new ResolvedFuture(sorted);
@@ -253,16 +256,12 @@ export default class CampaignActivitiesModel extends ModelBase {
 
     const now = new Date();
     const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const filtered = activities.data?.filter((activity) => {
-      if (activity.kind == ACTIVITIES.EVENT) {
-        const endDate = new Date(activity.data.end_time);
-        return endDate < nowDate;
-      } else {
-        return (
-          activity.startDate && activity.endDate && activity.endDate < nowDate
-        );
-      }
-    });
+    const filtered = activities.data?.filter(
+      (activity) =>
+        activity.visibleFrom &&
+        activity.visibleUntil &&
+        activity.visibleUntil < nowDate
+    );
 
     return new ResolvedFuture(filtered || []);
   }
@@ -297,8 +296,10 @@ export default class CampaignActivitiesModel extends ModelBase {
     }
 
     const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
     const filtered = activities.data?.filter(
-      (activity) => !activity.endDate || activity.endDate > now
+      (activity) => !activity.visibleUntil || activity.visibleUntil >= nowDate
     );
 
     return new ResolvedFuture(filtered || []);
