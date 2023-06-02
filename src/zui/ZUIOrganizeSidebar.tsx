@@ -31,7 +31,6 @@ import {
   CircularProgress,
   Divider,
   Drawer,
-  Grow,
   IconButton,
   IconProps,
   List,
@@ -127,6 +126,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     router.push(`/logout`);
   }
 
+  const showOrgSwitcher = checked && open;
+
   return (
     <Box data-testid="organize-sidebar">
       <Drawer
@@ -147,217 +148,240 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         open={open}
         variant="permanent"
       >
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: open ? 'space-between' : 'center',
-            mx: 1,
-            my: 1.5,
-          }}
-        >
-          {!open && hover && (
-            <IconButton onClick={handleClick}>
-              <KeyboardDoubleArrowRightOutlined />
-            </IconButton>
-          )}
-          {!open && !hover && (
-            <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-          )}
+        <Box display="flex" flexDirection="column" height="100%">
+          <Box>
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: open ? 'space-between' : 'center',
+                mx: 1,
+                my: 1.5,
+              }}
+            >
+              {!open && hover && (
+                <IconButton onClick={handleClick}>
+                  <KeyboardDoubleArrowRightOutlined />
+                </IconButton>
+              )}
+              {!open && !hover && (
+                <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+              )}
 
-          {open && (
-            <ZUIFuture future={model.getOrganization(orgId)}>
-              {(data) => (
+              {open && (
+                <ZUIFuture future={model.getOrganization(orgId)}>
+                  {(data) => (
+                    <>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '48px',
+                          }}
+                        >
+                          {hover ? (
+                            <IconButton onClick={handleClick}>
+                              <KeyboardDoubleArrowLeftOutlined />
+                            </IconButton>
+                          ) : (
+                            <Avatar
+                              alt="icon"
+                              src={`/api/orgs/${orgId}/avatar`}
+                            />
+                          )}
+                        </Box>
+                        <Typography variant="h6">{data.title}</Typography>
+                      </Box>
+                      <Box sx={{ display: open ? 'flex' : 'none' }}>
+                        <IconButton onClick={handleExpansion}>
+                          {checked ? <ExpandLess /> : <ExpandMore />}
+                        </IconButton>
+                      </Box>
+                    </>
+                  )}
+                </ZUIFuture>
+              )}
+            </Box>
+            <Box
+              sx={{
+                backgroundColor: theme.palette.background.paper,
+                borderBottomColor: showOrgSwitcher
+                  ? 'transparent'
+                  : theme.palette.grey[300],
+                borderBottomStyle: 'solid',
+                borderBottomWidth: 1,
+                height: showOrgSwitcher ? 'calc(100% - 130px)' : 0,
+                overflowY: 'auto',
+                position: 'absolute',
+                transition: theme.transitions.create(
+                  ['borderBottomColor', 'height'],
+                  {
+                    duration: theme.transitions.duration.short,
+                    easing: theme.transitions.easing.sharp,
+                  }
+                ),
+                width: '100%',
+                zIndex: 1000,
+              }}
+            >
+              {orgData && (
+                <Box>
+                  <Typography fontSize={12} m={1} variant="body2">
+                    {messages.organizeSidebar
+                      .allOrganizations()
+                      .toLocaleUpperCase()}
+                  </Typography>
+                  <OrganizationTree orgId={orgId} treeItemData={orgData} />
+                </Box>
+              )}
+              {!orgData && (
+                <Box
+                  sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}
+                >
+                  <CircularProgress />
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              flexGrow: 1,
+              flexShrink: 1,
+              overflowY: 'auto',
+            }}
+          >
+            <List
+              sx={{
+                mx: 1,
+              }}
+            >
+              {menuItemsMap.map((item) => {
+                const selected = key.startsWith('/' + item.name);
+                const icon = cloneElement<IconProps>(item.icon, {
+                  // Differentiate size of icon for open/closed states
+                  fontSize: open ? 'small' : 'medium',
+                });
+
+                return (
+                  <NextLink
+                    key={item.name}
+                    href={`/organize/${orgId}/${item.name}`}
+                    passHref
+                  >
+                    <ListItemButton
+                      disableGutters
+                      sx={{
+                        '&:hover': {
+                          background: theme.palette.grey[100],
+                          pointer: 'cursor',
+                        },
+                        backgroundColor: selected
+                          ? theme.palette.grey[200]
+                          : 'transparent',
+                        borderRadius: '3px',
+                        my: 0.5,
+                        py: open ? 1.25 : 1.5,
+                        transition: theme.transitions.create(
+                          ['padding-top', 'padding-bottom', 'background-color'],
+                          {
+                            duration: theme.transitions.duration.leavingScreen,
+                            easing: theme.transitions.easing.sharp,
+                          }
+                        ),
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minWidth: '48px',
+                          width: '48px',
+                        }}
+                      >
+                        {icon}
+                      </ListItemIcon>
+                      <Typography
+                        sx={{
+                          alignItems: 'center',
+                          display: open ? 'block' : 'none',
+                          fontWeight: key.startsWith('/' + item.name)
+                            ? 700
+                            : 'normal',
+                        }}
+                      >
+                        {messages.organizeSidebar[item.name]()}
+                      </Typography>
+                    </ListItemButton>
+                  </NextLink>
+                );
+              })}
+            </List>
+          </Box>
+          <Box flexGrow={0}>
+            <Divider />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                mx: open ? 1 : 0.5,
+                my: 0.5,
+                py: open ? 1.25 : 1,
+              }}
+            >
+              {user && (
                 <>
                   <Box
                     sx={{
                       alignItems: 'center',
                       display: 'flex',
+                      mx: 1,
+                      width: '48px',
                     }}
                   >
-                    <Box
+                    <ZUIAvatar
+                      orgId={orgId}
+                      personId={user.id}
+                      size={open ? 'sm' : 'md'}
+                    />
+                    <Typography
                       sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '48px',
+                        display: open ? 'flex' : 'none',
+                        marginLeft: 1,
                       }}
                     >
-                      {hover ? (
-                        <IconButton onClick={handleClick}>
-                          <KeyboardDoubleArrowLeftOutlined />
-                        </IconButton>
-                      ) : (
-                        <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-                      )}
-                    </Box>
-                    <Typography variant="h6">{data.title}</Typography>
+                      {user.first_name}
+                    </Typography>
                   </Box>
-                  <Box sx={{ display: open ? 'flex' : 'none' }}>
-                    <IconButton onClick={handleExpansion}>
-                      {checked ? <ExpandLess /> : <ExpandMore />}
-                    </IconButton>
+                  <Box
+                    sx={{
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <ZUIEllipsisMenu
+                      items={[
+                        {
+                          label: (
+                            <Typography>
+                              {messages.organizeSidebar.signOut()}
+                            </Typography>
+                          ),
+                          onSelect: () => {
+                            logOut();
+                          },
+                          startIcon: <Logout />,
+                        },
+                      ]}
+                    />
                   </Box>
                 </>
               )}
-            </ZUIFuture>
-          )}
-        </Box>
-        <Divider />
-        {checked && open && orgData && (
-          <Grow
-            in={checked}
-            style={{ transformOrigin: '0 0 0' }}
-            {...(checked ? { timeout: 1000 } : {})}
-          >
-            <Box>
-              <Typography fontSize={12} m={1} variant="body2">
-                {messages.organizeSidebar
-                  .allOrganizations()
-                  .toLocaleUpperCase()}
-              </Typography>
-              <OrganizationTree orgId={orgId} treeItemData={orgData} />
             </Box>
-          </Grow>
-        )}
-        {checked && open && !orgData && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}>
-            <CircularProgress />
-          </Box>
-        )}
-        {/*{!checked && (*/}
-        <Box>
-          <List
-            sx={{
-              mx: 1,
-            }}
-          >
-            {menuItemsMap.map((item) => {
-              const selected = key.startsWith('/' + item.name);
-              const icon = cloneElement<IconProps>(item.icon, {
-                // Differentiate size of icon for open/closed states
-                fontSize: open ? 'small' : 'medium',
-              });
-
-              return (
-                <NextLink
-                  key={item.name}
-                  href={`/organize/${orgId}/${item.name}`}
-                  passHref
-                >
-                  <ListItemButton
-                    disableGutters
-                    sx={{
-                      '&:hover': {
-                        background: theme.palette.grey[100],
-                        pointer: 'cursor',
-                      },
-                      backgroundColor: selected
-                        ? theme.palette.grey[200]
-                        : 'transparent',
-                      borderRadius: '3px',
-                      my: 0.5,
-                      py: open ? 1.25 : 1.5,
-                      transition: theme.transitions.create(
-                        ['padding-top', 'padding-bottom', 'background-color'],
-                        {
-                          duration: theme.transitions.duration.leavingScreen,
-                          easing: theme.transitions.easing.sharp,
-                        }
-                      ),
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minWidth: '48px',
-                        width: '48px',
-                      }}
-                    >
-                      {icon}
-                    </ListItemIcon>
-                    <Typography
-                      sx={{
-                        alignItems: 'center',
-                        display: open ? 'block' : 'none',
-                        fontWeight: key.startsWith('/' + item.name)
-                          ? 700
-                          : 'normal',
-                      }}
-                    >
-                      {messages.organizeSidebar[item.name]()}
-                    </Typography>
-                  </ListItemButton>
-                </NextLink>
-              );
-            })}
-          </List>
-        </Box>
-        {/*} )}*/}
-        <Box
-          sx={{
-            bottom: 0,
-            position: 'absolute',
-            width: '100%',
-          }}
-        >
-          <Divider />
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              mx: open ? 1 : 0.5,
-              my: 0.5,
-              py: open ? 1.25 : 1,
-            }}
-          >
-            {user && (
-              <>
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    mx: 1,
-                    width: '48px',
-                  }}
-                >
-                  <ZUIAvatar
-                    orgId={orgId}
-                    personId={user.id}
-                    size={open ? 'sm' : 'md'}
-                  />
-                  <Typography
-                    sx={{
-                      display: open ? 'flex' : 'none',
-                      marginLeft: 1,
-                    }}
-                  >
-                    {user.first_name}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <ZUIEllipsisMenu
-                    items={[
-                      {
-                        label: (
-                          <Typography>
-                            {messages.organizeSidebar.signOut()}
-                          </Typography>
-                        ),
-                        onSelect: () => {
-                          logOut();
-                        },
-                        startIcon: <Logout />,
-                      },
-                    ]}
-                  />
-                </Box>
-              </>
-            )}
           </Box>
         </Box>
       </Drawer>
