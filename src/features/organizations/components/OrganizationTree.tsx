@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import ProceduralColorIcon from './ProceduralColorIcon';
 import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
-import { TreeItemData } from '../rpc/getOrganizations';
+import { TreeItemData } from '../types';
 import TreeView from '@mui/lab/TreeView';
 import { Avatar, Box, Typography } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';

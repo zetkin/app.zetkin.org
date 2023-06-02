@@ -19,17 +19,7 @@ export default class OrganizationsDataModel extends ModelBase {
     return this._repo.getOrganization(orgId);
   }
 
-  getOrganizations() {
-    return this._repo.getOrganizations();
-  }
-
   getOrganizationsTree() {
     this._repo.getOrganizationsTree();
-  }
-
-  getUserOrganizationsTree() {
-    const userOrgs = this._repo.getUserMemberships();
-
-    return userOrgs;
   }
 }

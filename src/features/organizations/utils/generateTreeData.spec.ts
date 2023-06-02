@@ -1,5 +1,5 @@
 import generateTreeData from './generateTreeData';
-import { TreeItemData } from '../rpc/getOrganizations';
+import { TreeItemData } from '../types';
 import { describe, expect, it } from '@jest/globals';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -17,61 +17,27 @@ describe('generateTreeData()', () => {
 
   it('creates flat list of unrelated organizations', () => {
     const organizations: ZetkinOrganization[] = [
-      mockOrganization({
-        id: 1,
-        parent: null,
-        title: 'Party A',
-      }),
-      mockOrganization({
-        id: 2,
-        parent: null,
-        title: 'Party B',
-      }),
+      mockOrganization(1),
+      mockOrganization(2),
     ];
 
     const memberships: ZetkinMembership[] = [
-      mockMembership({
-        organization: { id: 1, parent: null, title: 'Party A' },
-        role: 'admin',
-      }),
-      mockMembership({
-        organization: { id: 2, parent: null, title: 'Party B' },
-        role: 'admin',
-      }),
+      mockMembership(1, 'admin'),
+      mockMembership(2, 'admin'),
     ];
 
     const result = generateTreeData(organizations, memberships);
 
     const expectedTreeData: TreeItemData[] = [
       {
-        avatar_file: null,
         children: [],
-        country: 'SE',
-        email: null,
         id: 1,
-        is_active: false,
-        is_open: false,
-        is_public: true,
-        lang: null,
-        parent: null,
-        phone: null,
-        slug: 'slug',
-        title: 'Party A',
+        title: 'Org 1',
       },
       {
-        avatar_file: null,
         children: [],
-        country: 'SE',
-        email: null,
         id: 2,
-        is_active: false,
-        is_open: false,
-        is_public: true,
-        lang: null,
-        parent: null,
-        phone: null,
-        slug: 'slug',
-        title: 'Party B',
+        title: 'Org 2',
       },
     ];
 
@@ -80,31 +46,14 @@ describe('generateTreeData()', () => {
 
   it('ignores organizations without membership', () => {
     const organizations: ZetkinOrganization[] = [
-      mockOrganization({
-        id: 1,
-        parent: null,
-        title: 'Party A',
-      }),
-      mockOrganization({
-        id: 2,
-        parent: null,
-        title: 'Party B',
-      }),
+      mockOrganization(1),
+      mockOrganization(2),
     ];
 
     const memberships: ZetkinMembership[] = [
-      mockMembership({
-        organization: { id: 3, parent: null, title: 'Party C' },
-        role: 'organizer',
-      }),
-      mockMembership({
-        organization: { id: 4, parent: null, title: 'Party D' },
-        role: 'admin',
-      }),
-      mockMembership({
-        organization: { id: 5, parent: null, title: 'Party E' },
-        role: null,
-      }),
+      mockMembership(3, 'organizer'),
+      mockMembership(4, 'admin'),
+      mockMembership(5, null),
     ];
 
     const result = generateTreeData(organizations, memberships);
@@ -116,52 +65,22 @@ describe('generateTreeData()', () => {
 
   it('considers a child org a top org if the user doesnt have access to parent org', () => {
     const organizations: ZetkinOrganization[] = [
-      mockOrganization({
-        id: 1,
-        parent: null,
-        title: 'Party A',
-      }),
-      mockOrganization({
-        id: 2,
-        parent: {
-          id: 1,
-          title: 'Party A',
-        },
-        title: 'Party B',
-      }),
+      mockOrganization(1),
+      mockOrganization(2, 1),
     ];
 
     const memberships: ZetkinMembership[] = [
-      mockMembership({
-        organization: {
-          id: 2,
-          parent: {
-            id: 1,
-            title: 'Party A',
-          },
-          title: 'Party B',
-        },
-        role: 'organizer',
-      }),
+      mockMembership(1, null),
+      mockMembership(2, 'organizer'),
     ];
 
     const result = generateTreeData(organizations, memberships);
 
     const expectedTreeData: TreeItemData[] = [
       {
-        avatar_file: null,
         children: [],
-        country: 'SE',
-        email: null,
         id: 2,
-        is_active: false,
-        is_open: false,
-        is_public: true,
-        lang: null,
-        parent: null,
-        phone: null,
-        slug: 'slug',
-        title: 'Party B',
+        title: 'Org 2',
       },
     ];
 
@@ -170,12 +89,7 @@ describe('generateTreeData()', () => {
 
   it('handles a missing organization without crashing', () => {
     const organizations: ZetkinOrganization[] = [];
-    const memberships: ZetkinMembership[] = [
-      mockMembership({
-        organization: { id: 1, parent: null, title: 'Party A' },
-        role: 'admin',
-      }),
-    ];
+    const memberships: ZetkinMembership[] = [mockMembership(1, 'admin')];
 
     const expectedTreeData: TreeItemData[] = [];
 
@@ -185,35 +99,40 @@ describe('generateTreeData()', () => {
   });
 });
 
-function mockOrganization(
-  organization: Pick<ZetkinOrganization, 'id' | 'title' | 'parent'>
-): ZetkinOrganization {
-  const injectedProperties = {
+function mockOrganization(id: number, parentId?: number): ZetkinOrganization {
+  return {
     avatar_file: null,
     country: 'SE',
     email: null,
+    id: id,
     is_active: false,
     is_open: false,
     is_public: true,
     lang: null,
-    parent: null,
+    parent: parentId
+      ? {
+          id: parentId,
+          title: `Org ${parentId}`,
+        }
+      : null,
     phone: null,
     slug: 'slug',
+    title: `Org ${id}`,
   };
-
-  return { ...organization, ...injectedProperties };
 }
 
 function mockMembership(
-  membership: Pick<ZetkinMembership, 'role'> & {
-    organization: Pick<ZetkinOrganization, 'id' | 'title' | 'parent'>;
-  }
+  orgId: number,
+  role?: 'admin' | 'organizer' | null
 ): ZetkinMembership {
   return {
     follow: true,
     inherited: undefined,
-    organization: mockOrganization(membership.organization),
+    organization: {
+      id: orgId,
+      title: `Org ${orgId}`,
+    },
     profile: { id: 112, name: 'Test profile' },
-    role: membership.role,
+    role: role || null,
   };
 }

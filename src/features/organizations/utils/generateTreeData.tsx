@@ -1,71 +1,44 @@
-import { TreeItemData } from '../rpc/getOrganizations';
+import { TreeItemData } from '../types';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
-function userHasRoleInParentOrganization(
-  organization: ZetkinOrganization,
-  userRoleOrgIds: Set<number>
-) {
-  return organization.parent && userRoleOrgIds.has(organization.parent.id);
-}
-
-function nodeShouldBeHidden(
-  organization: ZetkinOrganization,
-  userRoleOrgIds: Set<number>,
-  hasUserRole: boolean
-) {
-  return (
-    !hasUserRole &&
-    !userHasRoleInParentOrganization(organization, userRoleOrgIds)
-  );
-}
-
-export function generateTreeData(
+export default function generateTreeData(
   organizations: ZetkinOrganization[],
   memberships: ZetkinMembership[]
 ): TreeItemData[] {
-  const userRoleOrgIds: Set<number> = new Set();
+  const roleByOrgId: Record<number, string | null> = {};
+  const orgsByParentId: Record<number, ZetkinOrganization[]> = {};
 
-  // Helper function to recursively build the tree structure
-  const buildTree = (orgId: number): TreeItemData | null => {
-    const organization = organizations.find((org) => org.id === orgId);
+  // Extract the user's role for each organization that they are connected to
+  memberships.forEach(
+    (membership) => (roleByOrgId[membership.organization.id] = membership.role)
+  );
 
-    if (!organization) {
-      return null;
+  // Find relevant organizations and build a cache of parent-child relationships
+  const relevantOrgs = organizations.filter((org) => {
+    // While we're looping, build a cache of parent-child relationships
+    if (org.parent) {
+      const existing = orgsByParentId[org.parent.id] || [];
+      orgsByParentId[org.parent.id] = [...existing, org];
     }
 
-    const hasUserRole = memberships.some(
-      (membership) =>
-        membership.organization.id === orgId && membership.role !== null
-    );
+    // Only the organizations in which the user has a role are relevant
+    return !!roleByOrgId[org.id];
+  });
 
-    // Skip organizations where the user doesn't have a role and there is no parent organization with user's role
-    if (nodeShouldBeHidden(organization, userRoleOrgIds, hasUserRole)) {
-      return null;
-    }
+  // Top level orgs are the ones that have no parent, or where that parent
+  // is not amongst the relevant organizations.
+  const topLevelOrgs = relevantOrgs.filter(
+    (org) => !org.parent || !roleByOrgId[org.parent.id]
+  );
 
-    const children: TreeItemData[] = organizations
-      .filter((org) => org.parent && org.parent.id === orgId)
-      .map((org) => buildTree(org.id))
-      .filter((child) => child !== null) as TreeItemData[];
-
+  const buildTree = (parent: ZetkinOrganization): TreeItemData => {
+    const childOrgs: ZetkinOrganization[] = orgsByParentId[parent.id] || [];
     return {
-      ...organization,
-      children,
+      children: childOrgs.map(buildTree),
+      id: parent.id,
+      title: parent.title,
     };
   };
 
-  // Get the organization IDs where the user has a role
-  for (const membership of memberships) {
-    if (membership.role !== null) {
-      userRoleOrgIds.add(membership.organization.id);
-    }
-  }
-
-  // Build the tree structure starting from top-level organizations
-  const treeData: TreeItemData[] = organizations
-    .filter((org) => !org.parent)
-    .map((org) => buildTree(org.id))
-    .filter((org) => org !== null) as TreeItemData[];
-
-  return treeData;
+  return topLevelOrgs.map(buildTree);
 }

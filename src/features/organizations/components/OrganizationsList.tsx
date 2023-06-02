@@ -2,7 +2,7 @@ import messageIds from 'features/organizations/l10n/messageIds';
 import NextLink from 'next/link';
 import OrganizationsDataModel from '../models/OrganizationsDataModel';
 import { useMessages } from 'core/i18n';
-import { ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinMembership } from 'utils/types/zetkin';
 
 import ZUIFuture from 'zui/ZUIFuture';
 import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
@@ -21,7 +21,7 @@ const OrganizationsList = ({ model }: UserOrganizationsProps) => {
           <Box style={{ margin: '30px' }}>
             <Typography variant="h3">{messages.page.title()}</Typography>
             <List>
-              {data.map((org: ZetkinOrganization) => {
+              {data.map((org: ZetkinMembership['organization']) => {
                 return (
                   <ListItem key={org.id}>
                     <Avatar

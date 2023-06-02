@@ -33,7 +33,7 @@ export interface ZetkinCampaignPostBody
 }
 
 export interface ZetkinMembership {
-  organization: ZetkinOrganization;
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   follow?: boolean;
   profile: {
     id: number;
@@ -380,7 +380,7 @@ export interface ZetkinTagGroup {
   id: number;
   title: string;
   description?: string;
-  organization: ZetkinOrganization;
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
 }
 
 export interface ZetkinTag {
@@ -388,7 +388,7 @@ export interface ZetkinTag {
   title: string;
   description: string;
   hidden: boolean;
-  organization: ZetkinOrganization;
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   color: string | null;
   group: ZetkinTagGroup | null;
   value?: string | number;
