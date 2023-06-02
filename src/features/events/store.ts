@@ -106,6 +106,12 @@ const eventsSlice = createSlice({
       state.eventList.items = state.eventList.items.filter(
         (item) => item.id != eventId
       );
+
+      for (const date in state.eventsByDate) {
+        state.eventsByDate[date].items = state.eventsByDate[date].items.filter(
+          (item) => item.id != eventId
+        );
+      }
     },
     eventLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -187,6 +193,15 @@ const eventsSlice = createSlice({
       if (item) {
         item.data = { ...item.data, ...event };
         item.mutating = [];
+      }
+      for (const date in state.eventsByDate) {
+        const item = state.eventsByDate[date].items.find(
+          (item) => item.id == event.id
+        );
+        if (item) {
+          item.data = { ...item.data, ...event };
+          item.mutating = [];
+        }
       }
     },
     eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {

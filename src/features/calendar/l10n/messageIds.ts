@@ -76,6 +76,21 @@ export default makeMessages('feat.calendar', {
     copy: m('Copy'),
     deselect: m('Deselect'),
     editEvents: m('Edit events'),
+    ellipsisMenu: {
+      cancel: m('Cancel'),
+      cancelWarning: m(
+        'If you do, remember to notify all participants and sign-ups that the events has been cancelled!'
+      ),
+      confirmCancel: m('Are you sure you want to cancel selected events?'),
+      confirmDelete: m('Are you sure you want to delete selected events?'),
+      delete: m('Delete'),
+      deleteWarning: m(
+        'Once the events have been deleted, you will not be able to access them again.'
+      ),
+      print: m('Print schedule'),
+      publish: m('Publish now'),
+      unpublish: m('Unpublish'),
+    },
     move: m('Move'),
   },
   showMore: m('Show'),

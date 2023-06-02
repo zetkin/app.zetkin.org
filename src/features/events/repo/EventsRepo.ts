@@ -1,8 +1,10 @@
+import deleteEvents from '../rpc/deleteEvents';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
+import updateEvents from '../rpc/updateEvents';
 import {
   eventCreate,
   eventCreated,
@@ -118,6 +120,17 @@ export default class EventsRepo {
     this._store.dispatch(eventDeleted(eventId));
   }
 
+  async deleteEvents(orgId: number, events: number[]) {
+    const result = await this._apiClient.rpc(deleteEvents, {
+      events,
+      orgId,
+    });
+
+    result.removedEvents.forEach((event) => {
+      this._store.dispatch(eventDeleted(event));
+    });
+  }
+
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {
     const state = this._store.getState();
 
@@ -220,6 +233,22 @@ export default class EventsRepo {
       .then((event) => {
         this._store.dispatch(eventUpdated(event));
       });
+  }
+
+  async updateEvents(
+    orgId: number,
+    events: number[],
+    data: ZetkinEventPatchBody
+  ) {
+    const result = await this._apiClient.rpc(updateEvents, {
+      data,
+      events,
+      orgId,
+    });
+
+    result.updatedEvents.forEach((event) => {
+      this._store.dispatch(eventUpdated(event));
+    });
   }
 
   updateLocation(

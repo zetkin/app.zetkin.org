@@ -8,10 +8,11 @@ import messageIds from '../../calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
-import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import SelectionBarEllipsis from './SelectionBarEllipsis';
 
 const SelectionBar = () => {
   const store = useStore<RootState>();
+
   const selectedEvents = useSelector(
     (state: RootState) => state.events.selectedEvents
   );
@@ -70,7 +71,7 @@ const SelectionBar = () => {
                 <Button endIcon={<ArrowDropDown />} variant="outlined">
                   <Msg id={messageIds.selectionBar.copy} />
                 </Button>
-                <ZUIEllipsisMenu items={[]} />
+                <SelectionBarEllipsis />
               </Box>
             </Box>
           </Paper>
