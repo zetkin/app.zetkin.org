@@ -6,6 +6,7 @@ import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 interface mockOrganization {
   id: number;
   title: string;
+  parent?: mockOrganization;
 }
 
 interface mockMembership {
@@ -145,6 +146,51 @@ describe('generateTreeData()', () => {
     const result = generateTreeData(organizations, memberships);
 
     const expectedTreeData: TreeItemData[] = [];
+
+    expect(result).toEqual(expectedTreeData);
+  });
+  it('considers a child org a top org if the user doesnt have access to parent org', () => {
+    const organizations: ZetkinOrganization[] = [
+      mockOrganizations({
+        id: 1,
+        title: 'Party A',
+      }),
+      mockOrganizations({
+        id: 2,
+        title: 'Party B',
+        parent: {
+          id: 1,
+          title: 'Party A',
+        },
+      }),
+    ];
+
+    const memberships: ZetkinMembership[] = [
+      mockMemberships({
+        organization: { id: 2, title: 'Party C' },
+        role: 'Admin',
+      }),
+    ];
+
+    const result = generateTreeData(organizations, memberships);
+
+    const expectedTreeData: TreeItemData[] = [
+      {
+        avatar_file: null,
+        children: null,
+        country: 'SE',
+        email: null,
+        id: 2,
+        is_active: false,
+        is_open: false,
+        is_public: true,
+        lang: null,
+        parent: null,
+        phone: null,
+        slug: 'slug',
+        title: 'Party B',
+      },
+    ];
 
     expect(result).toEqual(expectedTreeData);
   });
