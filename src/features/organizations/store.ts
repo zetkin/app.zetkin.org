@@ -1,4 +1,4 @@
-import { TreeItemData } from './rpc/getOrganizations';
+import { TreeItemData } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   remoteItem,

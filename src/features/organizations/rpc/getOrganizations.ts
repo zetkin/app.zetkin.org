@@ -1,28 +1,9 @@
 import generateTreeData from '../utils/generateTreeData';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
+import { TreeItemData } from '../types';
 import { z } from 'zod';
-import {
-  ZetkinFile,
-  ZetkinMembership,
-  ZetkinOrganization,
-} from 'utils/types/zetkin';
-
-export interface TreeItemData {
-  avatar_file: ZetkinFile | null;
-  country: string | null;
-  email: string | null;
-  id: number;
-  is_active: boolean;
-  is_open: boolean;
-  is_public: boolean;
-  lang: string | null;
-  parent: { id: number; title: string } | null;
-  phone: string | null;
-  slug: string | null;
-  title: string;
-  children: TreeItemData[] | [];
-}
+import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 const paramsSchema = z.object({});
 

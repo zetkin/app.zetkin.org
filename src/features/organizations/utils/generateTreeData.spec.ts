@@ -1,5 +1,5 @@
 import generateTreeData from './generateTreeData';
-import { TreeItemData } from '../rpc/getOrganizations';
+import { TreeItemData } from '../types';
 import { describe, expect, it } from '@jest/globals';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 

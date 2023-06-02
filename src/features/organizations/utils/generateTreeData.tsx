@@ -1,4 +1,4 @@
-import { TreeItemData } from '../rpc/getOrganizations';
+import { TreeItemData } from '../types';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 function userHasRoleInParentOrganization(
