@@ -23,7 +23,6 @@ export default class OrganizationsDataModel extends ModelBase {
     return this._repo.getOrganizations();
   }
 
-  //rpc
   getOrganizationsTree() {
     this._repo.getOrganizationsTree();
   }

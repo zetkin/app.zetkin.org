@@ -1,4 +1,4 @@
-import { generateTreeData } from './generateTreeData';
+import generateTreeData from './generateTreeData';
 import { TreeItemData } from '../rpc/getOrganizations';
 import { describe, expect, it } from '@jest/globals';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
@@ -32,11 +32,11 @@ describe('generateTreeData()', () => {
     const memberships: ZetkinMembership[] = [
       mockMembership({
         organization: { id: 1, parent: null, title: 'Party A' },
-        role: 'Admin',
+        role: 'admin',
       }),
       mockMembership({
         organization: { id: 2, parent: null, title: 'Party B' },
-        role: 'Admin',
+        role: 'admin',
       }),
     ];
 
@@ -95,11 +95,15 @@ describe('generateTreeData()', () => {
     const memberships: ZetkinMembership[] = [
       mockMembership({
         organization: { id: 3, parent: null, title: 'Party C' },
-        role: 'Admin',
+        role: 'organizer',
       }),
       mockMembership({
         organization: { id: 4, parent: null, title: 'Party D' },
-        role: 'Admin',
+        role: 'admin',
+      }),
+      mockMembership({
+        organization: { id: 5, parent: null, title: 'Party E' },
+        role: null,
       }),
     ];
 
@@ -137,7 +141,7 @@ describe('generateTreeData()', () => {
           },
           title: 'Party B',
         },
-        role: 'Admin',
+        role: 'organizer',
       }),
     ];
 
@@ -169,7 +173,7 @@ describe('generateTreeData()', () => {
     const memberships: ZetkinMembership[] = [
       mockMembership({
         organization: { id: 1, parent: null, title: 'Party A' },
-        role: 'Admin',
+        role: 'admin',
       }),
     ];
 

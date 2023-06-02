@@ -146,7 +146,7 @@ export interface ZetkinOrganization {
   lang: string | null;
   parent: { id: number; title: string } | null;
   phone: string | null;
-  slug: string;
+  slug: string | null;
   id: number;
   title: string;
 }
