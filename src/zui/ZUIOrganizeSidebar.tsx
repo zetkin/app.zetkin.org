@@ -109,11 +109,11 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     return value !== null && value !== undefined;
   }
 
-  const orgData = useSelector((state: RootState) =>
-    state.organizations.treeDataList.items
-      .map((item) => item.data)
-      .filter(notEmpty)
+  const treeDataList = useSelector(
+    (state: RootState) => state.organizations.treeDataList
   );
+
+  const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
 
   const menuItemsMap = [
     { icon: <Groups />, name: 'people' },
@@ -230,7 +230,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 zIndex: 1000,
               }}
             >
-              {orgData && (
+              {orgData.length > 0 && (
                 <Box>
                   <Typography fontSize={12} m={1} variant="body2">
                     {messages.organizeSidebar
@@ -240,7 +240,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                   <OrganizationTree orgId={orgId} treeItemData={orgData} />
                 </Box>
               )}
-              {!orgData && (
+              {treeDataList.isLoading && (
                 <Box
                   sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}
                 >
