@@ -1,4 +1,4 @@
-import { generateTreeData } from '../utils/generateTreeData';
+import generateTreeData from '../utils/generateTreeData';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import { z } from 'zod';

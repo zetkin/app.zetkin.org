@@ -8,30 +8,14 @@ import {
 } from 'utils/storeUtils';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
-interface Membership {
-  organization: ZetkinOrganization;
-  follow?: boolean;
-  profile: {
-    id: number;
-    name: string;
-  };
-  inherited?: false;
-  role: string | null;
-  id: number;
-}
-
 export interface OrganizationsStoreSlice {
-  membershipList: RemoteList<Membership>;
   orgData: RemoteItem<ZetkinOrganization>;
-  orgList: RemoteList<ZetkinOrganization>;
   treeDataList: RemoteList<TreeItemData>;
-  userOrgList: RemoteList<ZetkinOrganization>;
+  userOrgList: RemoteList<ZetkinMembership['organization']>;
 }
 
 const initialState: OrganizationsStoreSlice = {
-  membershipList: remoteList(),
   orgData: remoteItem(0),
-  orgList: remoteList(),
   treeDataList: remoteList(),
   userOrgList: remoteList(),
 };
@@ -50,19 +34,6 @@ const OrganizationsSlice = createSlice({
       state.orgData.loaded = new Date().toISOString();
       state.orgData.isLoading = false;
     },
-    organizationsLoad: (state) => {
-      state.orgList.isLoading = true;
-    },
-    organizationsLoaded: (
-      state,
-      action: PayloadAction<ZetkinOrganization[]>
-    ) => {
-      const organizations = action.payload;
-
-      state.orgList = remoteList(organizations);
-      state.orgList.loaded = new Date().toISOString();
-      state.orgList.isLoading = false;
-    },
     treeDataLoad: (state) => {
       state.treeDataList.isLoading = true;
     },
@@ -73,29 +44,12 @@ const OrganizationsSlice = createSlice({
       state.treeDataList.loaded = new Date().toISOString();
       state.treeDataList.isLoading = false;
     },
-    userMembershipsLoad: (state) => {
-      state.membershipList.isLoading = true;
-    },
-    userMembershipsLoaded: (
-      state,
-      action: PayloadAction<ZetkinMembership[]>
-    ) => {
-      const memberships = action.payload;
-      const membershipsWithIds = memberships.map((data) => ({
-        id: data.organization.id,
-        ...data,
-      }));
-
-      state.membershipList = remoteList(membershipsWithIds);
-      state.membershipList.loaded = new Date().toISOString();
-      state.membershipList.isLoading = false;
-    },
     userOrganizationsLoad: (state) => {
       state.userOrgList.isLoading = true;
     },
     userOrganizationsLoaded: (
       state,
-      action: PayloadAction<ZetkinOrganization[]>
+      action: PayloadAction<ZetkinMembership['organization'][]>
     ) => {
       const organizationsList = action.payload;
 
@@ -110,12 +64,8 @@ export default OrganizationsSlice;
 export const {
   organizationLoaded,
   organizationLoad,
-  organizationsLoaded,
-  organizationsLoad,
   treeDataLoad,
   treeDataLoaded,
   userOrganizationsLoad,
   userOrganizationsLoaded,
-  userMembershipsLoaded,
-  userMembershipsLoad,
 } = OrganizationsSlice.actions;

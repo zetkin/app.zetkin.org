@@ -10,12 +10,8 @@ import {
 import {
   organizationLoad,
   organizationLoaded,
-  organizationsLoad,
-  organizationsLoaded,
   treeDataLoad,
   treeDataLoaded,
-  userMembershipsLoad,
-  userMembershipsLoaded,
   userOrganizationsLoad,
   userOrganizationsLoaded,
 } from '../store';
@@ -40,18 +36,8 @@ export default class OrganizationsRepo {
     });
   }
 
-  getOrganizations(): IFuture<ZetkinOrganization[]> {
+  getOrganizationsTree() {
     const state = this._store.getState();
-    return loadListIfNecessary(state.organizations.orgList, this._store, {
-      actionOnLoad: () => organizationsLoad(),
-      actionOnSuccess: (data) => organizationsLoaded(data),
-      loader: () => this._apiClient.get(`/api/orgs`),
-    });
-  }
-
-  async getOrganizationsTree() {
-    const state = this._store.getState();
-    //use shouldLoad
     return loadListIfNecessary(state.organizations.treeDataList, this._store, {
       actionOnLoad: () => treeDataLoad(),
       actionOnSuccess: (data) => treeDataLoaded(data),
@@ -59,20 +45,7 @@ export default class OrganizationsRepo {
     });
   }
 
-  getUserMemberships(): IFuture<ZetkinMembership[]> {
-    const state = this._store.getState();
-    return loadListIfNecessary(
-      state.organizations.membershipList,
-      this._store,
-      {
-        actionOnLoad: () => userMembershipsLoad(),
-        actionOnSuccess: (data) => userMembershipsLoaded(data),
-        loader: () => this._apiClient.get(`/api/users/me/memberships`),
-      }
-    );
-  }
-
-  getUserOrganizations(): IFuture<ZetkinOrganization[]> {
+  getUserOrganizations(): IFuture<ZetkinMembership['organization'][]> {
     const state = this._store.getState();
     return loadListIfNecessary(state.organizations.userOrgList, this._store, {
       actionOnLoad: () => userOrganizationsLoad(),

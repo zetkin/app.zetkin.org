@@ -19,7 +19,7 @@ function nodeShouldBeHidden(
   );
 }
 
-export function generateTreeData(
+export default function generateTreeData(
   organizations: ZetkinOrganization[],
   memberships: ZetkinMembership[]
 ): TreeItemData[] {

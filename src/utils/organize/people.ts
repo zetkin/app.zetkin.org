@@ -1,9 +1,9 @@
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
-export type PersonOrganization = ZetkinOrganization & {
+export type PersonOrganization = Pick<ZetkinOrganization, 'id' | 'title'> & {
   connected?: boolean;
   is_active?: boolean;
-  parent?: ZetkinOrganization | null;
+  parent?: Pick<ZetkinOrganization, 'id' | 'title'> | null;
   sub_orgs: PersonOrganization[];
 };
 
