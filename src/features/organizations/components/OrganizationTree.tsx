@@ -21,7 +21,10 @@ function renderTree(nodes: TreeItemData[], orgId: number): React.ReactNode {
           <Box m={1} sx={{ alignItems: 'center', display: 'inlineFlex' }}>
             <Box mr={1}>
               {orgId == node.id ? (
-                <Avatar src={`/api/orgs/${node.id}/avatar`} />
+                <Avatar
+                  src={`/api/orgs/${node.id}/avatar`}
+                  sx={{ height: '28px', width: '28px' }}
+                />
               ) : (
                 <ProceduralColorIcon id={node.id} />
               )}
