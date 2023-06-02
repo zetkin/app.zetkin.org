@@ -239,58 +239,56 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               });
 
               return (
-                <>
-                  <NextLink
-                    key={item.name}
-                    href={`/organize/${orgId}/${item.name}`}
-                    passHref
+                <NextLink
+                  key={item.name}
+                  href={`/organize/${orgId}/${item.name}`}
+                  passHref
+                >
+                  <ListItemButton
+                    disableGutters
+                    sx={{
+                      '&:hover': {
+                        background: theme.palette.grey[100],
+                        pointer: 'cursor',
+                      },
+                      backgroundColor: selected
+                        ? theme.palette.grey[200]
+                        : 'transparent',
+                      borderRadius: '3px',
+                      my: 0.5,
+                      py: open ? 1.25 : 1.5,
+                      transition: theme.transitions.create(
+                        ['padding-top', 'padding-bottom', 'background-color'],
+                        {
+                          duration: theme.transitions.duration.leavingScreen,
+                          easing: theme.transitions.easing.sharp,
+                        }
+                      ),
+                    }}
                   >
-                    <ListItemButton
-                      disableGutters
+                    <ListItemIcon
                       sx={{
-                        '&:hover': {
-                          background: theme.palette.grey[100],
-                          pointer: 'cursor',
-                        },
-                        backgroundColor: selected
-                          ? theme.palette.grey[200]
-                          : 'transparent',
-                        borderRadius: '3px',
-                        my: 0.5,
-                        py: open ? 1.25 : 1.5,
-                        transition: theme.transitions.create(
-                          ['padding-top', 'padding-bottom', 'background-color'],
-                          {
-                            duration: theme.transitions.duration.leavingScreen,
-                            easing: theme.transitions.easing.sharp,
-                          }
-                        ),
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: '48px',
+                        width: '48px',
                       }}
                     >
-                      <ListItemIcon
-                        sx={{
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          minWidth: '48px',
-                          width: '48px',
-                        }}
-                      >
-                        {icon}
-                      </ListItemIcon>
-                      <Typography
-                        sx={{
-                          alignItems: 'center',
-                          display: open ? 'block' : 'none',
-                          fontWeight: key.startsWith('/' + item.name)
-                            ? 700
-                            : 'normal',
-                        }}
-                      >
-                        {messages.organizeSidebar[item.name]()}
-                      </Typography>
-                    </ListItemButton>
-                  </NextLink>
-                </>
+                      {icon}
+                    </ListItemIcon>
+                    <Typography
+                      sx={{
+                        alignItems: 'center',
+                        display: open ? 'block' : 'none',
+                        fontWeight: key.startsWith('/' + item.name)
+                          ? 700
+                          : 'normal',
+                      }}
+                    >
+                      {messages.organizeSidebar[item.name]()}
+                    </Typography>
+                  </ListItemButton>
+                </NextLink>
               );
             })}
           </List>
