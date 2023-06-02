@@ -1,18 +1,24 @@
-import { RootState } from 'core/store';
-import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
-import React, { useContext } from 'react';
+import { useSelector, useStore } from 'react-redux';
 
 import { EventsModel } from '../models/EventsModel';
 import messageIds from '../../calendar/l10n/messageIds';
+import { resetSelection } from '../store';
+import { RootState } from 'core/store';
+import { useMessages } from 'core/i18n';
+import useModel from 'core/useModel';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 
 const SelectionBarEllipsis = () => {
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const store = useStore<RootState>();
+
+  const handleDeselect = () => {
+    store.dispatch(resetSelection());
+  };
 
   const selectedEvents = useSelector(
     (state: RootState) => state.events.selectedEvents
@@ -48,6 +54,7 @@ const SelectionBarEllipsis = () => {
         showConfirmDialog({
           onSubmit: () => {
             model.deleteEvents(selectedEvents);
+            handleDeselect();
           },
           title: messages.selectionBar.ellipsisMenu.confirmDelete(),
           warningText: messages.selectionBar.ellipsisMenu.deleteWarning(),
@@ -57,6 +64,7 @@ const SelectionBarEllipsis = () => {
     },
     {
       divider: true,
+      label: messages.selectionBar.ellipsisMenu.cancel(),
       onSelect: () => {
         showConfirmDialog({
           onSubmit: () => {
@@ -66,12 +74,12 @@ const SelectionBarEllipsis = () => {
           warningText: messages.selectionBar.ellipsisMenu.cancelWarning(),
         });
       },
-      label: messages.selectionBar.ellipsisMenu.cancel(),
       textColor: '#ed1c55',
     },
 
     {
       label: messages.selectionBar.ellipsisMenu.print(),
+      /* eslint-disable-next-line */
       onSelect: () => {},
     },
   ];

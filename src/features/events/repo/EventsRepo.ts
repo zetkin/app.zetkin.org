@@ -4,6 +4,7 @@ import IApiClient from 'core/api/client/IApiClient';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
+import updateEvents from '../rpc/updateEvents';
 import {
   eventCreate,
   eventCreated,
@@ -40,7 +41,6 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
-import updateEvents from '../rpc/updateEvents';
 
 export type ZetkinEventPatchBody = Partial<
   Omit<
@@ -241,9 +241,9 @@ export default class EventsRepo {
     data: ZetkinEventPatchBody
   ) {
     const result = await this._apiClient.rpc(updateEvents, {
+      data,
       events,
       orgId,
-      data,
     });
 
     result.updatedEvents.forEach((event) => {

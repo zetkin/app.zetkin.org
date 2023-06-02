@@ -5,12 +5,12 @@ import { makeRPCDef } from 'core/rpc/types';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 const paramsSchema = z.object({
-  events: z.array(z.number()),
-  orgId: z.number(),
   data: z.object({
     cancelled: z.string().nullable().optional(),
     published: z.string().nullable().optional(),
   }),
+  events: z.array(z.number()),
+  orgId: z.number(),
 });
 
 type Params = z.input<typeof paramsSchema>;

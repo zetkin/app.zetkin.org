@@ -194,6 +194,15 @@ const eventsSlice = createSlice({
         item.data = { ...item.data, ...event };
         item.mutating = [];
       }
+      for (const date in state.eventsByDate) {
+        const item = state.eventsByDate[date].items.find(
+          (item) => item.id == event.id
+        );
+        if (item) {
+          item.data = { ...item.data, ...event };
+          item.mutating = [];
+        }
+      }
     },
     eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const toggledEvents = action.payload;
