@@ -55,6 +55,10 @@ function OrganizationTree({
     <div>
       <TreeView
         defaultCollapseIcon={<ExpandMore />}
+        defaultExpanded={
+          // If there is only one top-level org, expand it by default
+          treeItemData.length == 1 ? [treeItemData[0].id.toString()] : undefined
+        }
         defaultExpandIcon={<ChevronRight />}
         disableSelection
         sx={{
