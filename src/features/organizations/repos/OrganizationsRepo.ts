@@ -1,5 +1,5 @@
 import Environment from 'core/env/Environment';
-import getUserOrganizationsTree from 'features/organizations/rpc/getOrganizations';
+import getUserOrganizationsTree from 'features/organizations/rpc/getUserOrgTree';
 import IApiClient from 'core/api/client/IApiClient';
 import { IFuture } from 'core/caching/futures';
 import { Store } from 'core/store';

@@ -10,13 +10,13 @@ const paramsSchema = z.object({});
 type Params = z.input<typeof paramsSchema>;
 type Result = TreeItemData[];
 
-export const getOrganizationsDef = {
+export const getUserOrgTreeDef = {
   handler: handle,
-  name: 'getUserOrganizations',
+  name: 'getUserOrgTree',
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, Result>(getOrganizationsDef.name);
+export default makeRPCDef<Params, Result>(getUserOrgTreeDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const allOrganizations = await apiClient.get<ZetkinOrganization[]>(
