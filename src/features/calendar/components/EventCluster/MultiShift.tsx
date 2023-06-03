@@ -40,9 +40,9 @@ function createMultiShiftFieldGroups({
           kind: 'ScheduledTime',
           message: (
             <>
-              <FormattedTime value={event.start_time} />
+              <FormattedTime value={removeOffset(event.start_time)} />
               {'-'}
-              <FormattedTime value={event.end_time} />
+              <FormattedTime value={removeOffset(event.end_time)} />
             </>
           ),
           requiresAction: false,

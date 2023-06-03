@@ -6,6 +6,7 @@ import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
+import { removeOffset } from 'utils/dateUtils';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
@@ -40,8 +41,8 @@ const ClusterBody: FC<ClusterBodyProps> = ({ clusterType, events }) => {
           <ScheduleOutlined color="secondary" fontSize="small" />
           <Typography color="secondary" paddingLeft={1} variant="body2">
             <ZUITimeSpan
-              end={new Date(events[events.length - 1].end_time)}
-              start={new Date(events[0].start_time)}
+              end={new Date(removeOffset(events[events.length - 1].end_time))}
+              start={new Date(removeOffset(events[0].start_time))}
             />
           </Typography>
         </Box>
