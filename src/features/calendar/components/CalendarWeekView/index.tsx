@@ -212,11 +212,13 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                           '&:hover': {
                             zIndex: 100,
                           },
-                          // TODO: This will be replaced with real event components (WIP)
                           left: `${laneOffset * 100}%`,
                           overflow: 'hidden',
+                          // Padding (and offset `top`) make room for the TopBadge
+                          // if there is one, without it overflowing (and clipping)
+                          paddingTop: '20px',
                           position: 'absolute',
-                          top: `${startOffs * 100}%`,
+                          top: `calc(${startOffs * 100}% - 20px)`,
                           width: `${width * 100}%`,
                         }}
                       >
