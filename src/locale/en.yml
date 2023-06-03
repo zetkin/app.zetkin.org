@@ -1710,7 +1710,7 @@ zui:
     home: Home
     journeys: Journeys
     people: People
-    projects: Projects
+    projects: Projects & Activities
   personGridEditCell:
     keepTyping: Keep typing..
     noResult: No matching person found
