@@ -1,10 +1,11 @@
 import { GetServerSideProps } from 'next';
 import { scaffold } from 'utils/next';
 
-export const getServerSideProps: GetServerSideProps = scaffold(async () => {
+export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
+  const { orgId, campId } = ctx.params!;
   return {
     redirect: {
-      destination: '../calendar',
+      destination: `/organize/${orgId}/projects/${campId}/calendar`,
       permanent: false,
     },
   };
