@@ -281,7 +281,6 @@ export default makeMessages('feat.smartSearch', {
     random: {
       addLimitRemoveSelect: {
         add: m('add'),
-        limit: m('limit to'),
         sub: m('remove'),
       },
       examples: {
@@ -567,7 +566,6 @@ export default makeMessages('feat.smartSearch', {
   },
   operators: {
     add: m('Add'),
-    limit: m('Limit to'),
     sub: m('Remove'),
   },
   quantity: {
