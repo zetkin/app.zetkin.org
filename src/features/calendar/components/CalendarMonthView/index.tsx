@@ -73,7 +73,7 @@ const CalendarMonthView = ({
               return (
                 <WeekNumber
                   key={gridItemKey}
-                  onClick={() => onClickWeekHandler(columnIndex)}
+                  onClick={() => onClickWeekHandler(rowIndex)}
                   weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
                 />
               );
