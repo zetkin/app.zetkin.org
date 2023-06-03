@@ -159,7 +159,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               <Typography color={'secondary'}>
                 {messages.participantSummaryCard.booked()}
               </Typography>
-              <Box display="flex">
+              <Box alignItems="center" display="flex">
                 <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
                 {remindedParticipants < availParticipants && (
                   <Tooltip
