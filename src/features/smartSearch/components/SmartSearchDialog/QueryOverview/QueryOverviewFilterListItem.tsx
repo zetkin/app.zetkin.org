@@ -16,6 +16,7 @@ interface QueryOverviewFilterListItemProps {
   onDeleteFilter: (filter: SmartSearchFilterWithId<AnyFilterConfig>) => void;
   onEditFilter: (filter: SmartSearchFilterWithId<AnyFilterConfig>) => void;
   readOnly: boolean;
+  showDiagram: boolean;
 }
 
 const QueryOverviewFilterListItem: FC<QueryOverviewFilterListItemProps> = ({
@@ -24,6 +25,7 @@ const QueryOverviewFilterListItem: FC<QueryOverviewFilterListItemProps> = ({
   onDeleteFilter,
   onEditFilter,
   readOnly,
+  showDiagram,
 }) => {
   const { displayFilter, filterOperatorIcon, filterTypeIcon } =
     getFilterComponents(filter);
@@ -33,12 +35,14 @@ const QueryOverviewFilterListItem: FC<QueryOverviewFilterListItemProps> = ({
       <QueryOverviewListItem
         canDelete={!readOnly}
         canEdit={!readOnly}
-        diagram={(hovered) => (
-          <SmartSearchSankeyFilterSegment
-            filterIndex={filterIndex}
-            hovered={hovered}
-          />
-        )}
+        diagram={(hovered) =>
+          showDiagram && (
+            <SmartSearchSankeyFilterSegment
+              filterIndex={filterIndex}
+              hovered={hovered}
+            />
+          )
+        }
         filterText={displayFilter}
         icon={
           <QueryOverviewChip

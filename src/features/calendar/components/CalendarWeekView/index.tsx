@@ -2,7 +2,6 @@ import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { useState } from 'react';
 import { useStore } from 'react-redux';
 import {
   ListItemIcon,
@@ -11,6 +10,7 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 
 import DayHeader from './DayHeader';
 import { Event } from '@mui/icons-material';
@@ -22,6 +22,7 @@ import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
+import { scrollToEarliestEvent } from './utils';
 import theme from 'theme';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -37,7 +38,6 @@ export interface CalendarWeekViewProps {
   focusDate: Date;
   onClickDay: (date: Date) => void;
 }
-
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [creating, setCreating] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
@@ -60,6 +60,17 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     dates: dayDates,
     orgId,
   });
+
+  let laneHeight = 0;
+  const weekGridRef = useRef<HTMLDivElement>();
+  // This should only run when focusDate changes
+  useEffect(() => {
+    scrollToEarliestEvent(
+      weekGridRef.current,
+      laneHeight,
+      eventsByDate.map((a) => a.lanes)
+    );
+  }, [focusDate]);
 
   return (
     <>
@@ -85,6 +96,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
       </Box>
       {/* Week grid */}
       <Box
+        ref={weekGridRef}
         columnGap={1}
         display="grid"
         gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
@@ -135,6 +147,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
           return (
             <Box
               key={date.toISOString()}
+              ref={(elm: HTMLDivElement) =>
+                (laneHeight = elm?.clientHeight ?? 0)
+              }
               flexGrow={1}
               height={`${HOUR_HEIGHT * 24}px`}
               sx={{
@@ -199,6 +214,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                           },
                           // TODO: This will be replaced with real event components (WIP)
                           left: `${laneOffset * 100}%`,
+                          overflow: 'hidden',
                           position: 'absolute',
                           top: `${startOffs * 100}%`,
                           width: `${width * 100}%`,

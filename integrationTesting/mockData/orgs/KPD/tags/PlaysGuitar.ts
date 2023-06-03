@@ -7,7 +7,10 @@ const PlaysGuitarTag: ZetkinTag = {
   group: null,
   hidden: false,
   id: 4,
-  organization: { id: KPD.id, title: KPD.title },
+  organization: {
+    id: KPD.id,
+    title: KPD.title,
+  },
   title: 'Plays guitar',
   value_type: null,
 };

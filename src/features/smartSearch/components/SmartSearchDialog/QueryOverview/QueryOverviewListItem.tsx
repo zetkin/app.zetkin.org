@@ -37,7 +37,7 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
     <ListItem
       onMouseOut={() => setHovered(false)}
       onMouseOver={() => setHovered(true)}
-      style={{ padding: 0 }}
+      style={{ background: 'white', minHeight: 60, padding: 0 }}
     >
       <Grid
         alignItems="center"

@@ -118,11 +118,14 @@ export default makeMessages('zui', {
     showMore: m('Show more...'),
   },
   organizeSidebar: {
+    allOrganizations: m('All organizations'),
     areas: m('Areas'),
     home: m('Home'),
     journeys: m('Journeys'),
     people: m('People'),
-    projects: m('Projects'),
+    projects: m('Projects & Activities'),
+    signOut: m('Sign out'),
+    userSettings: m('User settings'),
   },
   personGridEditCell: {
     keepTyping: m('Keep typing..'),

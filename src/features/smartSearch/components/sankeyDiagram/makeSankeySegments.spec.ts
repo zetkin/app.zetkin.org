@@ -42,9 +42,16 @@ describe('makeSankeySegments()', () => {
           style: SEGMENT_STYLE.FILL,
           width: 1.0,
         },
+        stats: {
+          change: 200,
+          input: 0,
+          matches: 200,
+          output: 200,
+        },
       },
       {
         kind: SEGMENT_KIND.EXIT,
+        output: 200,
         style: SEGMENT_STYLE.FILL,
         width: 1.0,
       },
@@ -68,11 +75,18 @@ describe('makeSankeySegments()', () => {
     expect(result).toEqual(<SankeySegment[]>[
       {
         kind: SEGMENT_KIND.ENTRY,
+        stats: {
+          change: 200,
+          input: 0,
+          matches: 200,
+          output: 200,
+        },
         style: SEGMENT_STYLE.FILL,
         width: 1,
       },
       {
         kind: SEGMENT_KIND.EXIT,
+        output: 200,
         style: SEGMENT_STYLE.FILL,
         width: 1,
       },
@@ -106,6 +120,12 @@ describe('makeSankeySegments()', () => {
     expect(result).toEqual(<SankeySegment[]>[
       {
         kind: SEGMENT_KIND.ENTRY,
+        stats: {
+          change: 200,
+          input: 0,
+          matches: 200,
+          output: 200,
+        },
         style: SEGMENT_STYLE.FILL,
         width: 1,
       },
@@ -119,9 +139,16 @@ describe('makeSankeySegments()', () => {
           style: SEGMENT_STYLE.FILL,
           width: 0.25,
         },
+        stats: {
+          change: -50,
+          input: 200,
+          matches: 100,
+          output: 150,
+        },
       },
       {
         kind: SEGMENT_KIND.EXIT,
+        output: 150,
         style: SEGMENT_STYLE.FILL,
         width: 0.75,
       },
@@ -175,6 +202,12 @@ describe('makeSankeySegments()', () => {
     expect(result).toEqual(<SankeySegment[]>[
       {
         kind: SEGMENT_KIND.ENTRY,
+        stats: {
+          change: 100,
+          input: 0,
+          matches: 100,
+          output: 100,
+        },
         style: SEGMENT_STYLE.FILL,
         width: 1,
       },
@@ -188,16 +221,11 @@ describe('makeSankeySegments()', () => {
           style: SEGMENT_STYLE.FILL,
           width: 0.2,
         },
-      },
-      {
-        kind: SEGMENT_KIND.PSEUDO_ADD,
-        main: {
-          style: SEGMENT_STYLE.FILL,
-          width: 0.8,
-        },
-        side: {
-          style: SEGMENT_STYLE.STROKE,
-          width: 0.8,
+        stats: {
+          change: -20,
+          input: 100,
+          matches: 20,
+          output: 80,
         },
       },
       {
@@ -209,10 +237,34 @@ describe('makeSankeySegments()', () => {
         side: {
           style: SEGMENT_STYLE.STROKE,
           width: 0.8,
+        },
+        stats: {
+          change: 0,
+          input: 80,
+          matches: 5,
+          output: 80,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_ADD,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.8,
+        },
+        side: {
+          style: SEGMENT_STYLE.STROKE,
+          width: 0.8,
+        },
+        stats: {
+          change: 0,
+          input: 80,
+          matches: 10,
+          output: 80,
         },
       },
       {
         kind: SEGMENT_KIND.EXIT,
+        output: 80,
         style: SEGMENT_STYLE.FILL,
         width: 0.8,
       },
@@ -256,6 +308,12 @@ describe('makeSankeySegments()', () => {
     expect(result).toEqual(<SankeySegment[]>[
       {
         kind: SEGMENT_KIND.ENTRY,
+        stats: {
+          change: 100,
+          input: 0,
+          matches: 100,
+          output: 100,
+        },
         style: SEGMENT_STYLE.FILL,
         width: 1,
       },
@@ -269,6 +327,12 @@ describe('makeSankeySegments()', () => {
           style: SEGMENT_STYLE.FILL,
           width: 0.2,
         },
+        stats: {
+          change: -20,
+          input: 100,
+          matches: 20,
+          output: 80,
+        },
       },
       {
         kind: SEGMENT_KIND.PSEUDO_SUB,
@@ -280,11 +344,72 @@ describe('makeSankeySegments()', () => {
           style: SEGMENT_STYLE.STROKE,
           width: 0.8,
         },
+        stats: {
+          change: 0,
+          input: 80,
+          matches: 5,
+          output: 80,
+        },
       },
       {
         kind: SEGMENT_KIND.EXIT,
+        output: 80,
         style: SEGMENT_STYLE.FILL,
         width: 0.8,
+      },
+    ]);
+  });
+
+  it('handles when first filter is a sub', () => {
+    const result = makeSankeySegments([
+      {
+        change: -100,
+        filter: {
+          config: {},
+          op: OPERATION.SUB,
+          type: FILTER_TYPE.RANDOM,
+        },
+        matches: 100,
+        result: 0,
+      },
+      {
+        change: 100,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.RANDOM,
+        },
+        matches: 100,
+        result: 100,
+      },
+    ]);
+
+    expect(result).toEqual(<SankeySegment[]>[
+      {
+        kind: SEGMENT_KIND.EMPTY,
+      },
+      {
+        kind: SEGMENT_KIND.EMPTY,
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_ADD,
+        main: null,
+        side: {
+          style: SEGMENT_STYLE.FILL,
+          width: 1,
+        },
+        stats: {
+          change: 100,
+          input: 0,
+          matches: 100,
+          output: 100,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.EXIT,
+        output: 100,
+        style: SEGMENT_STYLE.FILL,
+        width: 1,
       },
     ]);
   });

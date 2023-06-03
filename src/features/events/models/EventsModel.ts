@@ -20,6 +20,10 @@ export class EventsModel extends ModelBase {
     this._repo = new EventsRepo(env);
   }
 
+  deleteEvents(events: number[]) {
+    this._repo.deleteEvents(this._orgId, events);
+  }
+
   getAllEvents(): IFuture<ZetkinEvent[]> {
     return this._repo.getAllEvents(this._orgId);
   }
@@ -92,5 +96,14 @@ export class EventsModel extends ModelBase {
       }
     }
     return new ResolvedFuture(relatedEvents || []);
+  }
+
+  updateEvents(eventIds: number[], published: boolean, cancelled: boolean) {
+    const events = eventIds.map((id) => ({
+      cancelled: cancelled ? new Date().toISOString() : null,
+      id: id,
+      published: published ? new Date().toISOString() : null,
+    }));
+    this._repo.updateEvents(this._orgId, events);
   }
 }

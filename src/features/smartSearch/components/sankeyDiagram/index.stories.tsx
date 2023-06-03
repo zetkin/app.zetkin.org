@@ -21,7 +21,7 @@ const Template: Story<StoryArgs> = (args) => {
   const { segments, ...config } = args;
 
   return (
-    <Box>
+    <Box maxWidth={200}>
       {segments.map((seg, index) => (
         <SmartSearchSankeySegment key={index} config={config} segment={seg} />
       ))}
@@ -40,12 +40,20 @@ const defaultConfig = {
   segHeight: 100,
 };
 
+const stats = {
+  change: 0,
+  input: 0,
+  matches: 0,
+  output: 0,
+};
+
 export const basic = Template.bind({});
 basic.args = {
   ...defaultConfig,
   segments: [
     {
       kind: SEGMENT_KIND.ENTRY,
+      stats,
       style: SEGMENT_STYLE.FILL,
       width: 0.8,
     },
@@ -59,6 +67,7 @@ basic.args = {
         style: SEGMENT_STYLE.FILL,
         width: 0.2,
       },
+      stats,
     },
     {
       kind: SEGMENT_KIND.SUB,
@@ -70,9 +79,11 @@ basic.args = {
         style: SEGMENT_STYLE.FILL,
         width: 0.3,
       },
+      stats,
     },
     {
       kind: SEGMENT_KIND.EXIT,
+      output: 0,
       style: SEGMENT_STYLE.FILL,
       width: 0.7,
     },
@@ -85,6 +96,7 @@ pseudo.args = {
   segments: [
     {
       kind: SEGMENT_KIND.ENTRY,
+      stats,
       style: SEGMENT_STYLE.STROKE,
       width: 1,
     },
@@ -98,6 +110,7 @@ pseudo.args = {
         style: SEGMENT_STYLE.STROKE,
         width: 1,
       },
+      stats,
     },
     {
       kind: SEGMENT_KIND.PSEUDO_SUB,
@@ -109,9 +122,11 @@ pseudo.args = {
         style: SEGMENT_STYLE.STROKE,
         width: 1,
       },
+      stats,
     },
     {
       kind: SEGMENT_KIND.EXIT,
+      output: 0,
       style: SEGMENT_STYLE.STROKE,
       width: 1,
     },
@@ -132,6 +147,7 @@ mixed.args = {
         style: SEGMENT_STYLE.STROKE,
         width: 1,
       },
+      stats,
     },
     {
       kind: SEGMENT_KIND.PSEUDO_ADD,
@@ -143,6 +159,7 @@ mixed.args = {
         style: SEGMENT_STYLE.FILL,
         width: 1,
       },
+      stats,
     },
     {
       kind: SEGMENT_KIND.SUB,
@@ -154,9 +171,11 @@ mixed.args = {
         style: SEGMENT_STYLE.FILL,
         width: 0.3,
       },
+      stats,
     },
     {
       kind: SEGMENT_KIND.EXIT,
+      output: 0,
       style: SEGMENT_STYLE.FILL,
       width: 0.7,
     },

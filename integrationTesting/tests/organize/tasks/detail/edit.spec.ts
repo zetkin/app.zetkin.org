@@ -30,7 +30,7 @@ test.describe('Task detail page', async () => {
     await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
     // Open modal
-    await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+    await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
     await page.click('data-testid=ZUIEllipsisMenu-item-editTask');
 
     moxy.removeMock('/orgs/1/tasks/1', 'get'); // Remove existing mock
@@ -59,7 +59,7 @@ test.describe('Task detail page', async () => {
     await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
     // Open modal
-    await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+    await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
     await page.click('data-testid=ZUIEllipsisMenu-item-editTask');
 
     // Edit task

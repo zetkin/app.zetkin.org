@@ -7,9 +7,11 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 const paramsSchema = z.object({
   events: z.array(
     z.object({
-      end_time: z.string(),
+      cancelled: z.string().nullable().optional(),
+      end_time: z.string().optional(),
       id: z.number(),
-      start_time: z.string(),
+      published: z.string().nullable().optional(),
+      start_time: z.string().optional(),
     })
   ),
   orgId: z.string(),

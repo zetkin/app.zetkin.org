@@ -61,7 +61,9 @@ test.describe('Journey instance detail page', () => {
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
     //Click ellipsis menu
-    await page.locator('data-testid=ZUIEllipsisMenu-menuActivator').click();
+    await page
+      .locator('header [data-testid=ZUIEllipsisMenu-menuActivator]')
+      .click();
 
     //Click "Convert to..."
     await page.locator('text=Convert to...').click();
@@ -142,7 +144,9 @@ test.describe('Journey instance detail page', () => {
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
     //Click ellipsis menu
-    await page.locator('data-testid=ZUIEllipsisMenu-menuActivator').click();
+    await page
+      .locator('header [data-testid=ZUIEllipsisMenu-menuActivator]')
+      .click();
 
     //Click "Convert to..."
     await page.locator('text=Convert to...').click();

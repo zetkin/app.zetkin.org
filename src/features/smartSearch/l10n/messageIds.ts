@@ -281,7 +281,6 @@ export default makeMessages('feat.smartSearch', {
     random: {
       addLimitRemoveSelect: {
         add: m('add'),
-        limit: m('limit to'),
         sub: m('remove'),
       },
       examples: {
@@ -567,7 +566,6 @@ export default makeMessages('feat.smartSearch', {
   },
   operators: {
     add: m('Add'),
-    limit: m('Limit to'),
     sub: m('Remove'),
   },
   quantity: {
@@ -599,7 +597,29 @@ export default makeMessages('feat.smartSearch', {
   readOnly: m(
     'This Smart Search query is in read-only mode and cannot be edited.'
   ),
+  resultHint: {
+    countLabel: m<{ count: number }>(
+      '{count, plural, =1 {one person} other {# people}}'
+    ),
+    hint: m<{ count: ReactElement }>(
+      'This Smart Search will currently return {count} for you.'
+    ),
+  },
   smartSearch: m('Smart Search'),
+  statsPopper: {
+    change: m('change'),
+    details: m(
+      'Smart Search is dynamic. That means that over time, the number of matches can vary. Other users can see different results if they have access to more or less people.'
+    ),
+    exit: m('Result'),
+    headline: m('Selection impact'),
+    info: m(
+      'This is a dynamic selection and the numbers may change over time.'
+    ),
+    input: m('before'),
+    matches: m('found'),
+    output: m('after'),
+  },
   timeFrame: {
     edit: {
       afterDate: m<{

@@ -1,8 +1,10 @@
+import deleteEvents from '../rpc/deleteEvents';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
+import updateEvents from '../rpc/updateEvents';
 import {
   eventCreate,
   eventCreated,
@@ -23,6 +25,7 @@ import {
   participantsLoaded,
   participantsReminded,
   participantUpdated,
+  resetSelection,
   respondentsLoad,
   respondentsLoaded,
   typeAdd,
@@ -58,6 +61,12 @@ export type ZetkinEventPatchBody = Partial<
 export type ZetkinEventPostBody = ZetkinEventPatchBody;
 
 export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
+
+type ZetkinEventUpdateCancelledPublished = {
+  cancelled: string | null;
+  id: number;
+  published: string | null;
+};
 
 export default class EventsRepo {
   private _apiClient: IApiClient;
@@ -116,6 +125,18 @@ export default class EventsRepo {
   async deleteEvent(orgId: number, eventId: number) {
     await this._apiClient.delete(`/api/orgs/${orgId}/actions/${eventId}`);
     this._store.dispatch(eventDeleted(eventId));
+  }
+
+  async deleteEvents(orgId: number, events: number[]) {
+    const result = await this._apiClient.rpc(deleteEvents, {
+      events,
+      orgId,
+    });
+
+    result.removedEvents.forEach((event) => {
+      this._store.dispatch(eventDeleted(event));
+    });
+    this._store.dispatch(resetSelection());
   }
 
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {
@@ -220,6 +241,21 @@ export default class EventsRepo {
       .then((event) => {
         this._store.dispatch(eventUpdated(event));
       });
+  }
+
+  async updateEvents(
+    orgId: number,
+    events: ZetkinEventUpdateCancelledPublished[]
+  ) {
+    const result = await this._apiClient.rpc(updateEvents, {
+      events,
+      orgId: orgId.toString(),
+    });
+
+    result.forEach((event) => {
+      this._store.dispatch(eventUpdated(event));
+    });
+    this._store.dispatch(resetSelection());
   }
 
   updateLocation(

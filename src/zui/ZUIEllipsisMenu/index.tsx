@@ -1,15 +1,23 @@
 import { MoreVert } from '@mui/icons-material';
 import noPropagate from 'utils/noPropagate';
-import { Button, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import {
+  Button,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 interface MenuItem {
   disabled?: boolean;
+  divider?: boolean;
   id?: string;
   label: string | React.ReactNode;
   onSelect?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   startIcon?: ReactElement;
   subMenuItems?: Omit<MenuItem, 'subMenuItems'>[];
+  textColor?: string;
 }
 
 export interface ZUIEllipsisMenuProps {
@@ -49,6 +57,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
             key={item.id || idx}
             data-testid={`ZUIEllipsisMenu-item-${item.id || idx}`}
             disabled={item.disabled}
+            divider={item.divider}
             onClick={(e) => {
               if (item.onSelect) {
                 item.onSelect(e);
@@ -60,7 +69,9 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
             }}
           >
             {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
-            {item.label}
+            <Typography sx={{ color: item.textColor ?? '' }}>
+              {item.label}
+            </Typography>
             {item.subMenuItems && (
               <Menu
                 anchorEl={subMenuActivator}

@@ -100,7 +100,9 @@ test.describe('Journey instance notes', () => {
     );
 
     // Click menu
-    await page.click('[data-testid=ZUIEllipsisMenu-menuActivator]');
+    await page.click(
+      'div[aria-label="timeline update"] >> [data-testid=ZUIEllipsisMenu-menuActivator]'
+    );
 
     // Click edit
     await page.click(

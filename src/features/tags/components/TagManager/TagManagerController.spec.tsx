@@ -11,6 +11,10 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import { EditTag, NewTag } from './types';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('features/user/hooks/useCurrentUser');
+jest.mock('react-redux', () => ({
+  useSelector: jest.fn(),
+}));
 
 const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const createTagCallback = jest.fn<Promise<ZetkinTag>, [NewTag]>((tag) =>

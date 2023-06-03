@@ -7,7 +7,7 @@ import MoveCopyButtons from './MoveCopyButtons';
 import { Msg } from 'core/i18n';
 import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
-import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import SelectionBarEllipsis from '../SelectionBarEllipsis';
 
 const SelectionBar = () => {
   const store = useStore<RootState>();
@@ -49,13 +49,14 @@ const SelectionBar = () => {
                   <Msg id={messageIds.selectionBar.deselect} />
                 </Button>
                 <Divider orientation="vertical" variant="fullWidth" />
+                {/* TODO: Implement edit events                
                 <Button
                   color="primary"
                   sx={{ borderRadius: '5px', ml: 1.5 }}
                   variant="outlined"
                 >
                   <Msg id={messageIds.selectionBar.editEvents} />
-                </Button>
+                </Button> */}
               </Box>
               <Box
                 alignItems="center"
@@ -64,7 +65,7 @@ const SelectionBar = () => {
                 justifyContent="center"
               >
                 <MoveCopyButtons />
-                <ZUIEllipsisMenu items={[]} />
+                <SelectionBarEllipsis />
               </Box>
             </Box>
           </Paper>
