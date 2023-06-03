@@ -1,4 +1,4 @@
-import { ZetkinOrganization } from 'utils/types/zetkin';
+import { TreeItemData } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   remoteItem,
@@ -6,14 +6,17 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
+import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
-  userOrgList: RemoteList<ZetkinOrganization>;
+  treeDataList: RemoteList<TreeItemData>;
+  userOrgList: RemoteList<ZetkinMembership['organization']>;
 }
 
 const initialState: OrganizationsStoreSlice = {
   orgData: remoteItem(0),
+  treeDataList: remoteList(),
   userOrgList: remoteList(),
 };
 
@@ -31,12 +34,22 @@ const OrganizationsSlice = createSlice({
       state.orgData.loaded = new Date().toISOString();
       state.orgData.isLoading = false;
     },
-    organizationsLoad: (state) => {
+    treeDataLoad: (state) => {
+      state.treeDataList.isLoading = true;
+    },
+    treeDataLoaded: (state, action: PayloadAction<TreeItemData[]>) => {
+      const treeData = action.payload;
+
+      state.treeDataList = remoteList(treeData);
+      state.treeDataList.loaded = new Date().toISOString();
+      state.treeDataList.isLoading = false;
+    },
+    userOrganizationsLoad: (state) => {
       state.userOrgList.isLoading = true;
     },
-    organizationsLoaded: (
+    userOrganizationsLoaded: (
       state,
-      action: PayloadAction<ZetkinOrganization[]>
+      action: PayloadAction<ZetkinMembership['organization'][]>
     ) => {
       const organizationsList = action.payload;
 
@@ -51,6 +64,8 @@ export default OrganizationsSlice;
 export const {
   organizationLoaded,
   organizationLoad,
-  organizationsLoaded,
-  organizationsLoad,
+  treeDataLoad,
+  treeDataLoaded,
+  userOrganizationsLoad,
+  userOrganizationsLoaded,
 } = OrganizationsSlice.actions;

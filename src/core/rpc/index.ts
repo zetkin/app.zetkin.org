@@ -10,6 +10,7 @@ import { getOrganizerActionViewRouteDef } from 'features/views/rpc/getOrganizerA
 import { getPrevEventDayDef } from 'features/events/rpc/getPrevEventDay';
 import { getSurveyStatsDef } from 'features/surveys/rpc/getSurveyStats';
 import { getTaskStatsRouteDef } from 'features/tasks/rpc/getTaskStats';
+import { getUserOrgTreeDef } from 'features/organizations/rpc/getUserOrgTree';
 import { updateEventsDef } from 'features/events/rpc/updateEvents';
 
 export function createRPCRouter() {
@@ -24,6 +25,7 @@ export function createRPCRouter() {
   rpcRouter.register(getEventStatsDef);
   rpcRouter.register(getPrevEventDayDef);
   rpcRouter.register(getNextEventDayDef);
+  rpcRouter.register(getUserOrgTreeDef);
   rpcRouter.register(deleteEventsDef);
   rpcRouter.register(updateEventsDef);
 

@@ -1,9 +1,23 @@
+import makeStyles from '@mui/styles/makeStyles';
+import messageIds from './l10n/messageIds';
 import NextLink from 'next/link';
+import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
+import OrganizationTree from 'features/organizations/components/OrganizationTree';
+import { RootState } from 'core/store';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import { useMessages } from 'core/i18n';
+import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
+import ZUIAvatar from './ZUIAvatar';
+import ZUIEllipsisMenu from './ZUIEllipsisMenu';
+import ZUIFuture from './ZUIFuture';
 import {
   Architecture,
+  ExpandLess,
+  ExpandMore,
   Explore,
   Groups,
   KeyboardDoubleArrowLeftOutlined,
@@ -14,6 +28,7 @@ import {
 import {
   Avatar,
   Box,
+  CircularProgress,
   Divider,
   Drawer,
   IconButton,
@@ -24,16 +39,6 @@ import {
   Typography,
 } from '@mui/material';
 import { cloneElement, useState } from 'react';
-
-import makeStyles from '@mui/styles/makeStyles';
-import messageIds from './l10n/messageIds';
-import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
-import ZUIAvatar from './ZUIAvatar';
-import ZUIEllipsisMenu from './ZUIEllipsisMenu';
-import ZUIFuture from './ZUIFuture';
 
 const drawerWidth = 300;
 
@@ -80,15 +85,35 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
+  const [checked, setChecked] = useState(false);
 
   const [open, setOpen] = useState(false);
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
   const model: OrganizationsDataModel = useModel(
     (env) => new OrganizationsDataModel(env)
   );
+
+  const handleClick = () => {
+    //remove checked state if menu is collapsed
+    if (!open) {
+      setChecked(false);
+    }
+    setOpen(!open);
+  };
+
+  const handleExpansion = () => {
+    model.getOrganizationsTree();
+    setChecked(!checked);
+  };
+
+  function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+    return value !== null && value !== undefined;
+  }
+
+  const treeDataList = useSelector(
+    (state: RootState) => state.organizations.treeDataList
+  );
+
+  const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
 
   const menuItemsMap = [
     { icon: <Groups />, name: 'people' },
@@ -100,6 +125,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   function logOut() {
     router.push(`/logout`);
   }
+
+  const showOrgSwitcher = checked && open;
 
   return (
     <Box data-testid="organize-sidebar">
@@ -121,71 +148,127 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         open={open}
         variant="permanent"
       >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: open ? 'flex-start' : 'center',
-            mx: 1,
-            my: 1.5,
-          }}
-        >
-          {!open && hover && (
-            <IconButton onClick={handleClick}>
-              <KeyboardDoubleArrowRightOutlined />
-            </IconButton>
-          )}
-          {!open && !hover && (
-            <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-          )}
-
-          {open && (
-            <ZUIFuture future={model.getOrganization(orgId)}>
-              {(data) => {
-                return (
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex',
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '48px',
-                      }}
-                    >
-                      {hover ? (
-                        <IconButton onClick={handleClick}>
-                          <KeyboardDoubleArrowLeftOutlined />
-                        </IconButton>
-                      ) : (
-                        <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-                      )}
-                    </Box>
-                    <Typography variant="h6">{data.title}</Typography>
-                  </Box>
-                );
+        <Box display="flex" flexDirection="column" height="100%">
+          <Box>
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: open ? 'space-between' : 'center',
+                mx: 1,
+                my: 1.5,
               }}
-            </ZUIFuture>
-          )}
-        </Box>
-        <Divider />
-        <Box>
-          <List
+            >
+              {!open && hover && (
+                <IconButton onClick={handleClick}>
+                  <KeyboardDoubleArrowRightOutlined />
+                </IconButton>
+              )}
+              {!open && !hover && (
+                <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+              )}
+
+              {open && (
+                <ZUIFuture future={model.getOrganization(orgId)}>
+                  {(data) => (
+                    <>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '48px',
+                          }}
+                        >
+                          {hover ? (
+                            <IconButton onClick={handleClick}>
+                              <KeyboardDoubleArrowLeftOutlined />
+                            </IconButton>
+                          ) : (
+                            <Avatar
+                              alt="icon"
+                              src={`/api/orgs/${orgId}/avatar`}
+                            />
+                          )}
+                        </Box>
+                        <Typography variant="h6">{data.title}</Typography>
+                      </Box>
+                      <Box sx={{ display: open ? 'flex' : 'none' }}>
+                        <IconButton onClick={handleExpansion}>
+                          {checked ? <ExpandLess /> : <ExpandMore />}
+                        </IconButton>
+                      </Box>
+                    </>
+                  )}
+                </ZUIFuture>
+              )}
+            </Box>
+            <Box
+              sx={{
+                backgroundColor: theme.palette.background.paper,
+                borderBottomColor: showOrgSwitcher
+                  ? 'transparent'
+                  : theme.palette.grey[300],
+                borderBottomStyle: 'solid',
+                borderBottomWidth: 1,
+                height: showOrgSwitcher ? 'calc(100% - 130px)' : 0,
+                overflowY: 'auto',
+                position: 'absolute',
+                transition: theme.transitions.create(
+                  ['borderBottomColor', 'height'],
+                  {
+                    duration: theme.transitions.duration.short,
+                    easing: theme.transitions.easing.sharp,
+                  }
+                ),
+                width: '100%',
+                zIndex: 1000,
+              }}
+            >
+              {orgData.length > 0 && (
+                <Box>
+                  <Typography fontSize={12} m={1} variant="body2">
+                    {messages.organizeSidebar
+                      .allOrganizations()
+                      .toLocaleUpperCase()}
+                  </Typography>
+                  <OrganizationTree orgId={orgId} treeItemData={orgData} />
+                </Box>
+              )}
+              {treeDataList.isLoading && (
+                <Box
+                  sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}
+                >
+                  <CircularProgress />
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box
             sx={{
-              mx: 1,
+              flexGrow: 1,
+              flexShrink: 1,
+              overflowY: 'auto',
             }}
           >
-            {menuItemsMap.map((item) => {
-              const selected = key.startsWith('/' + item.name);
-              const icon = cloneElement<IconProps>(item.icon, {
-                // Differentiate size of icon for open/closed states
-                fontSize: open ? 'small' : 'medium',
-              });
+            <List
+              sx={{
+                mx: 1,
+              }}
+            >
+              {menuItemsMap.map((item) => {
+                const selected = key.startsWith('/' + item.name);
+                const icon = cloneElement<IconProps>(item.icon, {
+                  // Differentiate size of icon for open/closed states
+                  fontSize: open ? 'small' : 'medium',
+                });
 
-              return (
-                <>
+                return (
                   <NextLink
                     key={item.name}
                     href={`/organize/${orgId}/${item.name}`}
@@ -236,75 +319,69 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       </Typography>
                     </ListItemButton>
                   </NextLink>
-                </>
-              );
-            })}
-          </List>
-        </Box>
-        <Box
-          sx={{
-            bottom: 0,
-            position: 'absolute',
-            width: '100%',
-          }}
-        >
-          <Divider />
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              mx: open ? 1 : 0.5,
-              my: 0.5,
-              py: open ? 1.25 : 1,
-            }}
-          >
-            {user && (
-              <>
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    mx: 1,
-                    width: '48px',
-                  }}
-                >
-                  <ZUIAvatar
-                    orgId={orgId}
-                    personId={user.id}
-                    size={open ? 'sm' : 'md'}
-                  />
-                  <Typography
+                );
+              })}
+            </List>
+          </Box>
+          <Box flexGrow={0}>
+            <Divider />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                mx: open ? 1 : 0.5,
+                my: 0.5,
+                py: open ? 1.25 : 1,
+              }}
+            >
+              {user && (
+                <>
+                  <Box
                     sx={{
-                      display: open ? 'flex' : 'none',
-                      marginLeft: 1,
+                      alignItems: 'center',
+                      display: 'flex',
+                      mx: 1,
+                      width: '48px',
                     }}
                   >
-                    {user.first_name}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <ZUIEllipsisMenu
-                    items={[
-                      {
-                        label: (
-                          <Typography>
-                            {messages.organizeSidebar.signOut()}
-                          </Typography>
-                        ),
-                        onSelect: () => {
-                          logOut();
+                    <ZUIAvatar
+                      orgId={orgId}
+                      personId={user.id}
+                      size={open ? 'sm' : 'md'}
+                    />
+                    <Typography
+                      sx={{
+                        display: open ? 'flex' : 'none',
+                        marginLeft: 1,
+                      }}
+                    >
+                      {user.first_name}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <ZUIEllipsisMenu
+                      items={[
+                        {
+                          label: (
+                            <Typography>
+                              {messages.organizeSidebar.signOut()}
+                            </Typography>
+                          ),
+                          onSelect: () => {
+                            logOut();
+                          },
+                          startIcon: <Logout />,
                         },
-                        startIcon: <Logout />,
-                      },
-                    ]}
-                  />
-                </Box>
-              </>
-            )}
+                      ]}
+                    />
+                  </Box>
+                </>
+              )}
+            </Box>
           </Box>
         </Box>
       </Drawer>

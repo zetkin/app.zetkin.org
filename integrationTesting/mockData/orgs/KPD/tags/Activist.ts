@@ -8,7 +8,10 @@ const ActivistTag: ZetkinTag = {
   group: Political,
   hidden: false,
   id: 1,
-  organization: { id: KPD.id, title: KPD.title },
+  organization: {
+    id: KPD.id,
+    title: KPD.title,
+  },
   title: 'Activist',
   value_type: null,
 };

@@ -1,4 +1,5 @@
 import Environment from 'core/env/Environment';
+import getUserOrganizationsTree from 'features/organizations/rpc/getUserOrgTree';
 import IApiClient from 'core/api/client/IApiClient';
 import { IFuture } from 'core/caching/futures';
 import { Store } from 'core/store';
@@ -9,8 +10,10 @@ import {
 import {
   organizationLoad,
   organizationLoaded,
-  organizationsLoad,
-  organizationsLoaded,
+  treeDataLoad,
+  treeDataLoaded,
+  userOrganizationsLoad,
+  userOrganizationsLoaded,
 } from '../store';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -33,11 +36,20 @@ export default class OrganizationsRepo {
     });
   }
 
-  getUserOrganizations(): IFuture<ZetkinOrganization[]> {
+  getOrganizationsTree() {
+    const state = this._store.getState();
+    return loadListIfNecessary(state.organizations.treeDataList, this._store, {
+      actionOnLoad: () => treeDataLoad(),
+      actionOnSuccess: (data) => treeDataLoaded(data),
+      loader: () => this._apiClient.rpc(getUserOrganizationsTree, {}),
+    });
+  }
+
+  getUserOrganizations(): IFuture<ZetkinMembership['organization'][]> {
     const state = this._store.getState();
     return loadListIfNecessary(state.organizations.userOrgList, this._store, {
-      actionOnLoad: () => organizationsLoad(),
-      actionOnSuccess: (data) => organizationsLoaded(data),
+      actionOnLoad: () => userOrganizationsLoad(),
+      actionOnSuccess: (data) => userOrganizationsLoaded(data),
       loader: () =>
         this._apiClient
           .get<ZetkinMembership[]>(`/api/users/me/memberships`)

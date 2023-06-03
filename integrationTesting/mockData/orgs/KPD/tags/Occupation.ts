@@ -8,7 +8,10 @@ const OccupationTag: ZetkinTag = {
   group: Skills,
   hidden: false,
   id: 1,
-  organization: { id: KPD.id, title: KPD.title },
+  organization: {
+    id: KPD.id,
+    title: KPD.title,
+  },
   title: 'Occupation',
   value_type: 'text',
 };

@@ -33,7 +33,7 @@ export interface ZetkinCampaignPostBody
 }
 
 export interface ZetkinMembership {
-  organization: ZetkinOrganization;
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   follow?: boolean;
   profile: {
     id: number;
@@ -137,6 +137,16 @@ export interface ZetkinUser {
 }
 
 export interface ZetkinOrganization {
+  avatar_file: ZetkinFile | null;
+  country: string | null;
+  email: string | null;
+  is_active: boolean;
+  is_open: boolean;
+  is_public: boolean;
+  lang: string | null;
+  parent: { id: number; title: string } | null;
+  phone: string | null;
+  slug: string | null;
   id: number;
   title: string;
 }
@@ -370,7 +380,7 @@ export interface ZetkinTagGroup {
   id: number;
   title: string;
   description?: string;
-  organization: ZetkinOrganization;
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
 }
 
 export interface ZetkinTag {
@@ -378,7 +388,7 @@ export interface ZetkinTag {
   title: string;
   description: string;
   hidden: boolean;
-  organization: ZetkinOrganization;
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   color: string | null;
   group: ZetkinTagGroup | null;
   value?: string | number;
