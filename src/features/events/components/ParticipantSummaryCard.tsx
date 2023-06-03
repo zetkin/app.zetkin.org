@@ -171,7 +171,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                         : ''
                     }
                   >
-                    <span>
+                    <Box sx={{margin: "auto"}}>
                       <Button
                         disabled={contactPerson == null}
                         onClick={() => {
@@ -188,7 +188,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                           id={messageIds.participantSummaryCard.remindButton}
                         />
                       </Button>
-                    </span>
+                    </Box>
                   </Tooltip>
                 )}
               </Box>
