@@ -23,7 +23,7 @@ const MoveCopyButtons: FC = () => {
   const [weekStart, weekEnd] = getOffsetStartEnd(selectedEvents, 7);
 
   const { moveEvents } = useMoveEvents();
-  const { createShift, duplicate } = useCopyEvents();
+  const { copyToLaterDate, createShift, duplicate } = useCopyEvents();
 
   return (
     <>
@@ -115,7 +115,7 @@ const MoveCopyButtons: FC = () => {
         <MenuItem onClick={() => duplicate(selectedEvents)}>
           <Msg id={messageIds.selectionBar.moveCopyButtons.duplicate} />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => copyToLaterDate(selectedEvents, 7)}>
           <Msg
             id={messageIds.selectionBar.moveCopyButtons.nextWeek}
             values={{
@@ -123,7 +123,7 @@ const MoveCopyButtons: FC = () => {
             }}
           />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => copyToLaterDate(selectedEvents, 1)}>
           <Msg
             id={messageIds.selectionBar.moveCopyButtons.nextDay}
             values={{

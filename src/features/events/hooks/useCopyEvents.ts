@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 
 import copyEvents from '../rpc/copyEvents';
+import getOffsetStartEnd from '../components/SelectionBar/getOffsetStartEnd';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventsCreate, eventsCreated, resetSelection } from '../store';
 import { useApiClient, useNumericRouteParams } from 'core/hooks';
@@ -41,7 +42,7 @@ export default function useCopyEvents() {
   };
 
   const createShift = async (events: ZetkinEvent[]) => {
-    const shifts = events.map((event) => {
+    const shiftsToCreate = events.map((event) => {
       const firstShiftStart = new Date(event.start_time);
       const firstShiftEnd = new Date(event.end_time);
 
@@ -56,15 +57,62 @@ export default function useCopyEvents() {
     });
 
     dispatch(eventsCreate);
-    const newShifts = await apiClient.rpc(copyEvents, {
-      events: shifts,
+    const createdShifts = await apiClient.rpc(copyEvents, {
+      events: shiftsToCreate,
       orgId: orgId.toString(),
     });
-    dispatch(eventsCreated(newShifts));
+    dispatch(eventsCreated(createdShifts));
+    dispatch(resetSelection());
+  };
+
+  const copyToLaterDate = async (events: ZetkinEvent[], offset: number) => {
+    const eventsToCreate = events.map((event) => {
+      const currentEventStart = new Date(event.start_time);
+      const currentEventEnd = new Date(event.end_time);
+
+      const eventLength =
+        currentEventEnd.getTime() - currentEventStart.getTime();
+
+      const [newEventStart] = getOffsetStartEnd([event], offset);
+      const newEventEnd = new Date(newEventStart.getTime() + eventLength);
+
+      const testStart = new Date(
+        Date.UTC(
+          newEventStart.getUTCFullYear(),
+          newEventStart.getUTCMonth(),
+          newEventStart.getUTCDate(),
+          newEventStart.getUTCHours(),
+          newEventStart.getUTCMinutes()
+        )
+      );
+      const testEnd = new Date(
+        Date.UTC(
+          newEventEnd.getUTCFullYear(),
+          newEventEnd.getUTCMonth(),
+          newEventEnd.getDate(),
+          newEventEnd.getUTCHours(),
+          newEventEnd.getUTCMinutes()
+        )
+      );
+
+      return makeZetkinEventPatchBody({
+        ...event,
+        end_time: testEnd.toISOString(),
+        start_time: testStart.toISOString(),
+      });
+    });
+
+    dispatch(eventsCreate);
+    const createdEvents = await apiClient.rpc(copyEvents, {
+      events: eventsToCreate,
+      orgId: orgId.toString(),
+    });
+    dispatch(eventsCreated(createdEvents));
     dispatch(resetSelection());
   };
 
   return {
+    copyToLaterDate,
     createShift,
     duplicate,
   };
