@@ -199,6 +199,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                           },
                           // TODO: This will be replaced with real event components (WIP)
                           left: `${laneOffset * 100}%`,
+                          overflow: 'hidden',
                           position: 'absolute',
                           top: `${startOffs * 100}%`,
                           width: `${width * 100}%`,
