@@ -51,13 +51,14 @@ const SelectionBar = () => {
                   <Msg id={messageIds.selectionBar.deselect} />
                 </Button>
                 <Divider orientation="vertical" variant="fullWidth" />
+                {/* TODO: Implement edit events                
                 <Button
                   color="primary"
                   sx={{ borderRadius: '5px', ml: 1.5 }}
                   variant="outlined"
                 >
                   <Msg id={messageIds.selectionBar.editEvents} />
-                </Button>
+                </Button> */}
               </Box>
               <Box
                 alignItems="center"
