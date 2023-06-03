@@ -393,7 +393,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 <Grid item sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
                     {...previewableProps}
-                    renderInput={() => {
+                    renderInput={(previewableInputProps) => {
                       return (
                         <Box alignItems="center" display="flex">
                           <Autocomplete
@@ -427,6 +427,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             renderInput={(params) => (
                               <TextField
                                 {...params}
+                                inputProps={{
+                                  ...params.inputProps,
+                                  ...previewableInputProps,
+                                }}
                                 label={messages.eventOverviewCard.location()}
                                 sx={{
                                   backgroundColor: 'white',
