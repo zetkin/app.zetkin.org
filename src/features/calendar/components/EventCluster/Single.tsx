@@ -2,7 +2,9 @@ import { FC } from 'react';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
+import { EventState } from 'features/events/models/EventDataModel';
 import { fieldsToPresent } from './utils';
+import getEventState from 'features/events/utils/getEventState';
 import LocationLabel from 'features/events/components/LocationLabel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
@@ -93,9 +95,12 @@ const Single: FC<SingleProps> = ({
   const eventTitle =
     event.title || event.activity?.title || messages.common.noTitle();
 
+  const state = getEventState(event);
+
   return (
     <Event
-      cancelled={Boolean(event?.cancelled)}
+      cancelled={state == EventState.CANCELLED}
+      draft={state == EventState.DRAFT}
       events={[event]}
       fieldGroups={[fields]}
       height={height}

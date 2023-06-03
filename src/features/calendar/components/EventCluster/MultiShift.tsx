@@ -4,7 +4,10 @@ import { ScheduleOutlined } from '@mui/icons-material';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
+import { EventState } from 'features/events/models/EventDataModel';
+import getEventState from 'features/events/utils/getEventState';
 import LocationLabel from 'features/events/components/LocationLabel';
+import { removeOffset } from 'utils/dateUtils';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
@@ -158,7 +161,10 @@ const MultiShift: FC<MultiShiftProps> = ({
   const firstEventTitle =
     events[0].title || events[0].activity?.title || messages.common.noTitle();
 
-  const anyEventIsCancelled = events.some((event) => event?.cancelled);
+  const statuses = events.map((event) => getEventState(event));
+  const anyEventIsCancelled = statuses.includes(EventState.CANCELLED);
+  const anyEventIsDraft = statuses.includes(EventState.DRAFT);
+
   const availableHeightPerFieldGroup = availableHeightByEvent(
     height,
     events.length
@@ -187,6 +193,7 @@ const MultiShift: FC<MultiShiftProps> = ({
   return (
     <Event
       cancelled={anyEventIsCancelled}
+      draft={anyEventIsDraft}
       events={events}
       fieldGroups={fieldGroups}
       height={height}
@@ -195,6 +202,7 @@ const MultiShift: FC<MultiShiftProps> = ({
         showTopBadge && (
           <TopBadge
             cancelled={anyEventIsCancelled}
+            draft={anyEventIsDraft}
             icon={<ScheduleOutlined color="inherit" fontSize="inherit" />}
             text={events.length.toString()}
           />

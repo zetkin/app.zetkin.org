@@ -1,7 +1,9 @@
 import { EventOutlined } from '@mui/icons-material';
 import { FC } from 'react';
 
+import { EventState } from 'features/events/models/EventDataModel';
 import { fieldsToPresent } from './utils';
+import getEventState from 'features/events/utils/getEventState';
 import messageIds from 'features/calendar/l10n/messageIds';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -107,11 +109,15 @@ const Arbitrary: FC<ArbitraryProps> = ({
     }),
     height
   );
-  const anyEventIsCancelled = events.some((event) => event.cancelled);
+
+  const statuses = events.map((event) => getEventState(event));
+  const anyEventIsCancelled = statuses.includes(EventState.CANCELLED);
+  const anyEventIsDraft = statuses.includes(EventState.DRAFT);
 
   return (
     <Event
       cancelled={anyEventIsCancelled}
+      draft={anyEventIsDraft}
       events={events}
       fieldGroups={[fields]}
       height={height}
@@ -120,6 +126,7 @@ const Arbitrary: FC<ArbitraryProps> = ({
         showTopBadge && (
           <TopBadge
             cancelled={anyEventIsCancelled}
+            draft={anyEventIsDraft}
             icon={<EventOutlined color="inherit" fontSize="inherit" />}
             text={events.length.toString()}
           />

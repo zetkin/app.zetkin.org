@@ -4,13 +4,16 @@ import { Theme } from '@mui/material';
 
 interface StyleProps {
   cancelled: boolean;
+  draft: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   topBadge: {
     alignItems: 'center',
-    backgroundColor: ({ cancelled }) =>
-      cancelled ? theme.palette.secondary.main : theme.palette.primary.main,
+    backgroundColor: ({ cancelled, draft }) =>
+      cancelled || draft
+        ? theme.palette.secondary.main
+        : theme.palette.primary.main,
     borderLeft: `1px solid ${theme.palette.grey[300]}`,
     borderRight: `1px solid ${theme.palette.grey[300]}`,
     borderTop: `1px solid ${theme.palette.grey[300]}`,
@@ -30,12 +33,13 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 interface TopBadgeProps {
   cancelled: boolean;
+  draft: boolean;
   icon: JSX.Element;
   text: string;
 }
 
-const TopBadge: FC<TopBadgeProps> = ({ cancelled, icon, text }) => {
-  const classes = useStyles({ cancelled });
+const TopBadge: FC<TopBadgeProps> = ({ cancelled, draft, icon, text }) => {
+  const classes = useStyles({ cancelled, draft });
 
   return (
     <div className={classes.topBadge}>

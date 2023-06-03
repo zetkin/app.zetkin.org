@@ -12,6 +12,7 @@ import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
 
 interface StyleProps {
   cancelled: boolean;
+  draft: boolean;
   collapsed: boolean;
   hasTopBadge: boolean;
   height: number;
@@ -33,9 +34,11 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
   container: {
     alignItems: ({ collapsed }) => (collapsed ? 'center' : ''),
-    background: ({ cancelled }) =>
+    background: ({ cancelled, draft }) =>
       `linear-gradient(to right, ${
-        cancelled ? theme.palette.secondary.main : theme.palette.primary.main
+        cancelled || draft
+          ? theme.palette.secondary.main
+          : theme.palette.primary.main
       } 4px, white 4px)`,
     border: `1px solid ${theme.palette.grey[300]}`,
     borderBottomLeftRadius: 4,
@@ -129,6 +132,7 @@ export type PresentableField = Field & {
 
 interface EventProps {
   cancelled: boolean;
+  draft: boolean;
   events: ZetkinEvent[];
   fieldGroups: PresentableField[][];
   height: number;
@@ -139,6 +143,7 @@ interface EventProps {
 
 const Event = ({
   cancelled,
+  draft,
   events,
   fieldGroups,
   height,
@@ -161,6 +166,7 @@ const Event = ({
   const classes = useStyles({
     cancelled,
     collapsed,
+    draft,
     hasTopBadge: !!topBadge,
     height,
     width,
