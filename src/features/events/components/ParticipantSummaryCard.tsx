@@ -13,6 +13,7 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
+import { removeOffset } from 'utils/dateUtils';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
@@ -154,7 +155,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               )}
             </Box>
           </Box>
-          {new Date(eventData.start_time) > new Date() ? (
+          {new Date(removeOffset(eventData.start_time)) > new Date() ? (
             <Box display="flex" flexDirection="column">
               <Typography color={'secondary'}>
                 {messages.participantSummaryCard.booked()}
