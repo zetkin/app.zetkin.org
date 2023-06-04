@@ -61,6 +61,23 @@ feat:
       day: Day
       month: Month
       week: Week
+    selectionBar:
+      copy: Copy
+      deselect: Deselect
+      editEvents: Edit events
+      ellipsisMenu:
+        cancel: Cancel
+        cancelWarning: If you do, remember to notify all participants and sign-ups that
+          the events has been cancelled!
+        confirmCancel: Are you sure you want to cancel selected events?
+        confirmDelete: Are you sure you want to delete selected events?
+        delete: Delete
+        deleteWarning: Once the events have been deleted, you will not be able to access
+          them again.
+        print: Print schedule
+        publish: Publish now
+        unpublish: Unpublish
+      move: Move
     showMore: Show
     today: Today
   callAssignments:
@@ -774,7 +791,6 @@ feat:
       random:
         addLimitRemoveSelect:
           add: add
-          limit: limit to
           sub: remove
         examples:
           one: Randomly add 20 people in the organization.
@@ -920,7 +936,6 @@ feat:
       noOptions: No matching tags
     operators:
       add: Add
-      limit: Limit to
       sub: Remove
     quantity:
       edit:
@@ -936,7 +951,21 @@ feat:
         integer: a number of people
         percent: a percentage of people
     readOnly: This Smart Search query is in read-only mode and cannot be edited.
+    resultHint:
+      countLabel: "{count, plural, =1 {one person} other {# people}}"
+      hint: This Smart Search will currently return {count} for you.
     smartSearch: Smart Search
+    statsPopper:
+      change: change
+      details: Smart Search is dynamic. That means that over time, the number of
+        matches can vary. Other users can see different results if they have
+        access to more or less people.
+      exit: Result
+      headline: Selection impact
+      info: This is a dynamic selection and the numbers may change over time.
+      input: before
+      matches: found
+      output: after
     timeFrame:
       edit:
         afterDate: "{timeFrameSelect} {afterDateSelect}"
@@ -1706,11 +1735,14 @@ zui:
   lists:
     showMore: Show more...
   organizeSidebar:
+    allOrganizations: All organizations
     areas: Areas
     home: Home
     journeys: Journeys
     people: People
     projects: Projects & Activities
+    signOut: Sign out
+    userSettings: User settings
   personGridEditCell:
     keepTyping: Keep typing..
     noResult: No matching person found
