@@ -202,6 +202,7 @@ export default class EventDataModel extends ModelBase {
 
   publish() {
     this._repo.updateEvent(this._orgId, this._eventId, {
+      cancelled: null,
       published: new Date().toISOString(),
     });
   }
