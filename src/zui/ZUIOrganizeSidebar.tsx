@@ -270,14 +270,14 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 });
 
                 return (
-                  <NextLink
-                    key={item.name}
-                    href={`/organize/${orgId}/${item.name}`}
-                    passHref
-                  >
-                    <>
-                      {/* Add tooltip if menu is collapsed */}
-                      {!open && (
+                  <>
+                    {/* Add tooltip if menu is collapsed */}
+                    {!open && (
+                      <NextLink
+                        key={item.name}
+                        href={`/organize/${orgId}/${item.name}`}
+                        passHref
+                      >
                         <Tooltip
                           placement="right"
                           title={messages.organizeSidebar[item.name]()}
@@ -332,9 +332,15 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             </Typography>
                           </ListItemButton>
                         </Tooltip>
-                      )}
-                      {/* Don't add tooltip if menu isn't collapsed */}
-                      {open && (
+                      </NextLink>
+                    )}
+                    {/* Don't add tooltip if menu isn't collapsed */}
+                    {open && (
+                      <NextLink
+                        key={item.name}
+                        href={`/organize/${orgId}/${item.name}`}
+                        passHref
+                      >
                         <ListItemButton
                           disableGutters
                           sx={{
@@ -384,9 +390,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             {messages.organizeSidebar[item.name]()}
                           </Typography>
                         </ListItemButton>
-                      )}
-                    </>
-                  </NextLink>
+                      </NextLink>
+                    )}
+                  </>
                 );
               })}
             </List>
