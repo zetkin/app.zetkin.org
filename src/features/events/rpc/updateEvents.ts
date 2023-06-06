@@ -5,18 +5,20 @@ import { makeRPCDef } from 'core/rpc/types';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 const paramsSchema = z.object({
-  data: z.object({
-    cancelled: z.string().nullable().optional(),
-    published: z.string().nullable().optional(),
-  }),
-  events: z.array(z.number()),
-  orgId: z.number(),
+  events: z.array(
+    z.object({
+      cancelled: z.string().nullable().optional(),
+      end_time: z.string().optional(),
+      id: z.number(),
+      published: z.string().nullable().optional(),
+      start_time: z.string().optional(),
+    })
+  ),
+  orgId: z.string(),
 });
 
 type Params = z.input<typeof paramsSchema>;
-type Result = {
-  updatedEvents: ZetkinEvent[];
-};
+type Result = ZetkinEvent[];
 
 export const updateEventsDef = {
   handler: handle,
@@ -27,18 +29,17 @@ export const updateEventsDef = {
 export default makeRPCDef<Params, Result>(updateEventsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
-  const { orgId, events, data } = params;
+  const { events, orgId } = params;
   const updatedEvents: ZetkinEvent[] = [];
 
-  for (const eventId of events) {
-    await apiClient
-      .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
-      .then((event) => {
-        updatedEvents.push(event);
-      });
+  for (const event of events) {
+    const { id, ...data } = event;
+    const updatedEvent = await apiClient.patch<ZetkinEvent>(
+      `/api/orgs/${orgId}/actions/${id}`,
+      data
+    );
+    updatedEvents.push(updatedEvent);
   }
 
-  return {
-    updatedEvents,
-  };
+  return updatedEvents;
 }

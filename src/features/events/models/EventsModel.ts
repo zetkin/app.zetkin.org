@@ -98,10 +98,12 @@ export class EventsModel extends ModelBase {
     return new ResolvedFuture(relatedEvents || []);
   }
 
-  updateEvents(events: number[], published: boolean, cancelled: boolean) {
-    this._repo.updateEvents(this._orgId, events, {
+  updateEvents(eventIds: number[], published: boolean, cancelled: boolean) {
+    const events = eventIds.map((id) => ({
       cancelled: cancelled ? new Date().toISOString() : null,
+      id: id,
       published: published ? new Date().toISOString() : null,
-    });
+    }));
+    this._repo.updateEvents(this._orgId, events);
   }
 }

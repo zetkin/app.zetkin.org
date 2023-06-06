@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.calendar', {
@@ -73,7 +74,6 @@ export default makeMessages('feat.calendar', {
     week: m('Week'),
   },
   selectionBar: {
-    copy: m('Copy'),
     deselect: m('Deselect'),
     editEvents: m('Edit events'),
     ellipsisMenu: {
@@ -91,7 +91,20 @@ export default makeMessages('feat.calendar', {
       publish: m('Publish now'),
       unpublish: m('Unpublish'),
     },
-    move: m('Move'),
+    moveCopyButtons: {
+      copy: m('Copy'),
+      copyMenuHeader: m<{ numberOfEvents: number }>(
+        'Copy {numberOfEvents} events to'
+      ),
+      createShift: m('After each event (create shift)'),
+      duplicate: m('Same time and date (duplicate)'),
+      move: m('Move'),
+      moveMenuHeader: m<{ numberOfEvents: number }>(
+        'Move {numberOfEvents} events to'
+      ),
+      nextDay: m<{ dates: ReactElement }>('Next day {dates}'),
+      nextWeek: m<{ dates: ReactElement }>('Next week {dates}'),
+    },
   },
   showMore: m('Show'),
   today: m('Today'),

@@ -60,7 +60,7 @@ export interface EventsStoreSlice {
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
-  selectedEvents: number[];
+  selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
 }
@@ -77,7 +77,7 @@ const initialState: EventsStoreSlice = {
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
-  selectedEvents: [],
+  selectedEventIds: [],
   statsByEventId: {},
   typeList: remoteList(),
 };
@@ -204,12 +204,29 @@ const eventsSlice = createSlice({
         }
       }
     },
+    eventsCreate: (state) => {
+      state.eventList.isLoading = true;
+    },
+    eventsCreated: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const events = action.payload;
+      events.map((event) => {
+        state.eventList.items.push(remoteItem(event.id, { data: event }));
+        const dateStr = event.start_time.slice(0, 10);
+        if (!state.eventsByDate[dateStr]) {
+          state.eventsByDate[dateStr] = remoteList();
+        }
+        state.eventsByDate[dateStr].items.push(
+          remoteItem(event.id, { data: event })
+        );
+      });
+      state.eventList.isLoading = false;
+    },
     eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const toggledEvents = action.payload;
 
-      state.selectedEvents = state.selectedEvents.filter(
-        (selectedEvent) =>
-          !toggledEvents.some((event) => event.id == selectedEvent)
+      state.selectedEventIds = state.selectedEventIds.filter(
+        (selectedEventId) =>
+          !toggledEvents.some((event) => event.id == selectedEventId)
       );
     },
     eventsLoad: (state) => {
@@ -222,11 +239,58 @@ const eventsSlice = createSlice({
     eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const toggledEvents = action.payload;
 
-      const uniqueEvents = new Set([
-        ...state.selectedEvents,
+      const uniqueEventIds = new Set([
+        ...state.selectedEventIds,
         ...toggledEvents.map((filtered) => filtered.id),
       ]);
-      state.selectedEvents = Array.from(uniqueEvents);
+      state.selectedEventIds = Array.from(uniqueEventIds);
+    },
+    eventsUpdate: (state, action: PayloadAction<[number[], string[]]>) => {
+      const [eventIds, mutating] = action.payload;
+      const items = state.eventList.items.filter((item) =>
+        eventIds.find((eventId) => item.id == eventId)
+      );
+
+      items.map((item) => {
+        item.mutating = mutating;
+        if (item.data) {
+          const event = item.data;
+          const dateStr = item.data.start_time.slice(0, 10);
+          state.eventsByDate[dateStr].items.map((i) => {
+            if (i.id === event.id) {
+              i.mutating = mutating;
+            }
+          });
+        }
+      });
+    },
+    eventsUpdated: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const updatedEvents = action.payload;
+      const items = state.eventList.items.filter((item) =>
+        updatedEvents.find((event) => item.id == event.id)
+      );
+
+      items.map((item) => {
+        item.mutating = [];
+        const oldEvent = item.data;
+        const updatedEvent = updatedEvents.find(
+          (event) => event.id === item.id
+        );
+        if (oldEvent && updatedEvent) {
+          item.data = { ...item.data, ...updatedEvent };
+
+          const oldDate = oldEvent.start_time.slice(0, 10);
+          const newDate = updatedEvent.start_time.slice(0, 10);
+
+          state.eventsByDate[newDate].items.push(
+            remoteItem(updatedEvent.id, { data: updatedEvent })
+          );
+
+          state.eventsByDate[oldDate].items = state.eventsByDate[
+            oldDate
+          ].items.filter((event) => event.id !== updatedEvent.id);
+        }
+      });
     },
     filterTextUpdated: (
       state,
@@ -343,7 +407,7 @@ const eventsSlice = createSlice({
       });
     },
     resetSelection: (state) => {
-      state.selectedEvents = [];
+      state.selectedEventIds = [];
     },
     respondentsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
@@ -407,12 +471,16 @@ export const {
   eventLoaded,
   eventRangeLoad,
   eventRangeLoaded,
+  eventsCreate,
+  eventsCreated,
   eventsLoad,
   eventsLoaded,
   eventUpdate,
   eventUpdated,
   eventsDeselected,
   eventsSelected,
+  eventsUpdate,
+  eventsUpdated,
   filterTextUpdated,
   filterUpdated,
   locationUpdate,

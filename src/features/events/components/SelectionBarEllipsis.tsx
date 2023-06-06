@@ -20,8 +20,8 @@ const SelectionBarEllipsis = () => {
     store.dispatch(resetSelection());
   };
 
-  const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
+  const selectedEventIds = useSelector(
+    (state: RootState) => state.events.selectedEventIds
   );
 
   const events = useSelector(
@@ -29,14 +29,14 @@ const SelectionBarEllipsis = () => {
   );
 
   const unpublishedEvents = events.filter((event) =>
-    selectedEvents.some(
+    selectedEventIds.some(
       (selectedEvent) =>
         selectedEvent == event.id && event.data?.published === null
     )
   );
 
   const publishedEvents = events.filter((event) =>
-    selectedEvents.some(
+    selectedEventIds.some(
       (selectedEvent) => selectedEvent == event.id && event.data?.published
     )
   );
@@ -53,7 +53,7 @@ const SelectionBarEllipsis = () => {
       onSelect: () => {
         showConfirmDialog({
           onSubmit: () => {
-            model.deleteEvents(selectedEvents);
+            model.deleteEvents(selectedEventIds);
             handleDeselect();
           },
           title: messages.selectionBar.ellipsisMenu.confirmDelete(),
@@ -68,7 +68,7 @@ const SelectionBarEllipsis = () => {
       onSelect: () => {
         showConfirmDialog({
           onSubmit: () => {
-            model.updateEvents(selectedEvents, false, true);
+            model.updateEvents(selectedEventIds, false, true);
           },
           title: messages.selectionBar.ellipsisMenu.confirmCancel(),
           warningText: messages.selectionBar.ellipsisMenu.cancelWarning(),
@@ -88,7 +88,7 @@ const SelectionBarEllipsis = () => {
     ellipsisMenuItems.splice(2, 0, {
       label: messages.selectionBar.ellipsisMenu.unpublish(),
       onSelect: () => {
-        model.updateEvents(selectedEvents, false, false);
+        model.updateEvents(selectedEventIds, false, false);
       },
       textColor: '#f66000',
     });
@@ -98,7 +98,7 @@ const SelectionBarEllipsis = () => {
     ellipsisMenuItems.splice(publishedEvents.length > 0 ? 3 : 2, 0, {
       label: messages.selectionBar.ellipsisMenu.publish(),
       onSelect: () => {
-        model.updateEvents(selectedEvents, true, false);
+        model.updateEvents(selectedEventIds, true, false);
       },
     });
   }

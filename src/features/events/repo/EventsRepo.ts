@@ -25,6 +25,7 @@ import {
   participantsLoaded,
   participantsReminded,
   participantUpdated,
+  resetSelection,
   respondentsLoad,
   respondentsLoaded,
   typeAdd,
@@ -60,6 +61,12 @@ export type ZetkinEventPatchBody = Partial<
 export type ZetkinEventPostBody = ZetkinEventPatchBody;
 
 export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
+
+type ZetkinEventUpdateCancelledPublished = {
+  cancelled: string | null;
+  id: number;
+  published: string | null;
+};
 
 export default class EventsRepo {
   private _apiClient: IApiClient;
@@ -129,6 +136,7 @@ export default class EventsRepo {
     result.removedEvents.forEach((event) => {
       this._store.dispatch(eventDeleted(event));
     });
+    this._store.dispatch(resetSelection());
   }
 
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {
@@ -237,18 +245,17 @@ export default class EventsRepo {
 
   async updateEvents(
     orgId: number,
-    events: number[],
-    data: ZetkinEventPatchBody
+    events: ZetkinEventUpdateCancelledPublished[]
   ) {
     const result = await this._apiClient.rpc(updateEvents, {
-      data,
       events,
-      orgId,
+      orgId: orgId.toString(),
     });
 
-    result.updatedEvents.forEach((event) => {
+    result.forEach((event) => {
       this._store.dispatch(eventUpdated(event));
     });
+    this._store.dispatch(resetSelection());
   }
 
   updateLocation(

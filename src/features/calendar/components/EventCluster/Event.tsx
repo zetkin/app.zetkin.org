@@ -173,7 +173,7 @@ const Event = ({
   });
 
   const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEvents
+    (state: RootState) => state.events.selectedEventIds
   );
 
   return (

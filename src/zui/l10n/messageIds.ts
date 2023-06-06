@@ -80,6 +80,22 @@ export default makeMessages('zui', {
     invisible: m('Not visible or scheduled'),
     start: m('Start'),
   },
+  dateSpan: {
+    multiDay: m<{
+      endDate: ReactElement;
+      startDate: ReactElement;
+    }>('{startDate} - {endDate}'),
+    multiDayEndsToday: m<{
+      startDate: ReactElement;
+    }>('{startDate} - Today'),
+    multiDayToday: m<{
+      endDate: ReactElement;
+    }>('Today - {endDate}'),
+    singleDay: m<{
+      date: ReactElement;
+    }>('{date}'),
+    singleDayToday: m('Today'),
+  },
   editTextInPlace: {
     tooltip: {
       edit: m('Click to edit'),
