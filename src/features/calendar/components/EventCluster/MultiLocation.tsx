@@ -2,7 +2,9 @@ import { FC } from 'react';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
+import { EventState } from 'features/events/models/EventDataModel';
 import { fieldsToPresent } from './utils';
+import getEventState from 'features/events/utils/getEventState';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -109,11 +111,14 @@ const MultiLocation: FC<MultiLocationProps> = ({
   const messages = useMessages(eventMessageIds);
   const firstEventTitle =
     events[0].title || events[0].activity?.title || messages.common.noTitle();
-  const anyEventIsCancelled = events.some((event) => event.cancelled);
+  const statuses = events.map((event) => getEventState(event));
+  const anyEventIsCancelled = statuses.includes(EventState.CANCELLED);
+  const anyEventIsDraft = statuses.includes(EventState.DRAFT);
 
   return (
     <Event
       cancelled={anyEventIsCancelled}
+      draft={anyEventIsDraft}
       events={events}
       fieldGroups={[fields]}
       height={height}
@@ -122,6 +127,7 @@ const MultiLocation: FC<MultiLocationProps> = ({
         showTopBadge && (
           <TopBadge
             cancelled={anyEventIsCancelled}
+            draft={anyEventIsDraft}
             icon={<MultiLocationIcon color="inherit" fontSize="inherit" />}
             text={events.length.toString()}
           />

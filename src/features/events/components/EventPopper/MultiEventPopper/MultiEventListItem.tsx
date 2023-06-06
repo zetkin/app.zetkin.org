@@ -9,6 +9,7 @@ import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
+import { removeOffset } from 'utils/dateUtils';
 import StatusDot from '../StatusDot';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
@@ -32,9 +33,9 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
   const state = model.state;
-  const timeSpan = `${intl.formatTime(event.start_time)}-${intl.formatTime(
-    event.end_time
-  )}`;
+  const timeSpan = `${intl.formatTime(
+    removeOffset(event.start_time)
+  )}-${intl.formatTime(removeOffset(event.end_time))}`;
 
   return (
     <Box display="flex" flexDirection="column" paddingBottom={1} width="100%">

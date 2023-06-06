@@ -15,6 +15,7 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import EventDataModel from '../models/EventDataModel';
 import filterParticipants from '../utils/filterParticipants';
 import noPropagate from 'utils/noPropagate';
+import { removeOffset } from 'utils/dateUtils';
 import { useMessages } from 'core/i18n';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
@@ -262,7 +263,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         } else if (type == 'booked') {
           const event = model.getData().data;
-          if (event && new Date(event.start_time) < new Date()) {
+          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
             const options: ButtonOption[] = [
               {
                 callback: () => {
