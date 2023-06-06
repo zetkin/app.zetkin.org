@@ -63,7 +63,7 @@ test.describe('Profile page journeys section', () => {
 
     await page.goto(appUri + `/organize/${KPD.id}/people/${ClaraZetkin.id}`);
 
-    await expect(page.locator('text=Journeys')).not.toBeVisible();
+    await expect(page.locator('main >> text=Journeys')).not.toBeVisible();
     await expect(
       page.locator('data-testid=PersonJourneysCard-addButton')
     ).not.toBeVisible();

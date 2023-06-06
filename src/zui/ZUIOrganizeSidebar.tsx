@@ -5,6 +5,7 @@ import OrganizationsDataModel from 'features/organizations/models/OrganizationsD
 import OrganizationTree from 'features/organizations/components/OrganizationTree';
 import { RootState } from 'core/store';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import useLocalStorage from './hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
@@ -39,7 +40,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { cloneElement, useState } from 'react';
+import { cloneElement, useEffect, useState } from 'react';
 
 const drawerWidth = 300;
 
@@ -88,10 +89,17 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
   const [checked, setChecked] = useState(false);
 
+  const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
   const [open, setOpen] = useState(false);
   const model: OrganizationsDataModel = useModel(
     (env) => new OrganizationsDataModel(env)
   );
+
+  useEffect(() => {
+    if (lastOpen != open) {
+      setOpen(lastOpen);
+    }
+  }, []);
 
   const handleClick = () => {
     //remove checked state if menu is collapsed
@@ -99,6 +107,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
       setChecked(false);
     }
     setOpen(!open);
+    setLastOpen(!open);
   };
 
   const handleExpansion = () => {
