@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 
-import getOffsetStartEnd from '../components/SelectionBar/getOffsetStartEnd';
+import getNewEventTimes from '../utils/getNewEventTimes';
 import updateEvents from '../rpc/updateEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventsUpdate, eventsUpdated, resetSelection } from '../store';
@@ -13,33 +13,7 @@ export default function useMoveEvents() {
 
   const moveEvents = async (events: ZetkinEvent[], offset: number) => {
     const eventsWithNewDates = events.map((event) => {
-      const currentEventStart = new Date(event.start_time);
-      const currentEventEnd = new Date(event.end_time);
-
-      const eventLength =
-        currentEventEnd.getTime() - currentEventStart.getTime();
-
-      const [newStart] = getOffsetStartEnd([event], offset);
-      const newEnd = new Date(newStart.getTime() + eventLength);
-
-      const newStartTime = new Date(
-        Date.UTC(
-          newStart.getUTCFullYear(),
-          newStart.getUTCMonth(),
-          newStart.getUTCDate(),
-          newStart.getUTCHours(),
-          newStart.getUTCMinutes()
-        )
-      );
-      const newEndTime = new Date(
-        Date.UTC(
-          newEnd.getUTCFullYear(),
-          newEnd.getUTCMonth(),
-          newEnd.getDate(),
-          newEnd.getUTCHours(),
-          newEnd.getUTCMinutes()
-        )
-      );
+      const { newStartTime, newEndTime } = getNewEventTimes(event, offset);
 
       return {
         end_time: newEndTime.toISOString(),

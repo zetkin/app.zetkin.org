@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 
 import copyEvents from '../rpc/copyEvents';
-import getOffsetStartEnd from '../components/SelectionBar/getOffsetStartEnd';
+import getNewEventTimes from '../utils/getNewEventTimes';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventsCreate, eventsCreated, resetSelection } from '../store';
 import { useApiClient, useNumericRouteParams } from 'core/hooks';
@@ -67,33 +67,8 @@ export default function useCopyEvents() {
 
   const copyToLaterDate = async (events: ZetkinEvent[], offset: number) => {
     const eventsToCreate = events.map((event) => {
-      const currentEventStart = new Date(event.start_time);
-      const currentEventEnd = new Date(event.end_time);
-
-      const eventLength =
-        currentEventEnd.getTime() - currentEventStart.getTime();
-
-      const [newEventStart] = getOffsetStartEnd([event], offset);
-      const newEventEnd = new Date(newEventStart.getTime() + eventLength);
-
-      const newEventStartTime = new Date(
-        Date.UTC(
-          newEventStart.getUTCFullYear(),
-          newEventStart.getUTCMonth(),
-          newEventStart.getUTCDate(),
-          newEventStart.getUTCHours(),
-          newEventStart.getUTCMinutes()
-        )
-      );
-      const newEventEndTime = new Date(
-        Date.UTC(
-          newEventEnd.getUTCFullYear(),
-          newEventEnd.getUTCMonth(),
-          newEventEnd.getDate(),
-          newEventEnd.getUTCHours(),
-          newEventEnd.getUTCMinutes()
-        )
-      );
+      const { newEndTime: newEventEndTime, newStartTime: newEventStartTime } =
+        getNewEventTimes(event, offset);
 
       return makeZetkinEventPatchBody({
         ...event,
