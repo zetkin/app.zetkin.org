@@ -13,7 +13,34 @@ export default function useMoveEvents() {
 
   const moveEvents = async (events: ZetkinEvent[], offset: number) => {
     const eventsWithNewDates = events.map((event) => {
-      const [newStartTime, newEndTime] = getOffsetStartEnd([event], offset);
+      const currentEventStart = new Date(event.start_time);
+      const currentEventEnd = new Date(event.end_time);
+
+      const eventLength =
+        currentEventEnd.getTime() - currentEventStart.getTime();
+
+      const [newStart] = getOffsetStartEnd([event], offset);
+      const newEnd = new Date(newStart.getTime() + eventLength);
+
+      const newStartTime = new Date(
+        Date.UTC(
+          newStart.getUTCFullYear(),
+          newStart.getUTCMonth(),
+          newStart.getUTCDate(),
+          newStart.getUTCHours(),
+          newStart.getUTCMinutes()
+        )
+      );
+      const newEndTime = new Date(
+        Date.UTC(
+          newEnd.getUTCFullYear(),
+          newEnd.getUTCMonth(),
+          newEnd.getDate(),
+          newEnd.getUTCHours(),
+          newEnd.getUTCMinutes()
+        )
+      );
+
       return {
         end_time: newEndTime.toISOString(),
         id: event.id,
