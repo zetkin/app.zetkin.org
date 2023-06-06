@@ -76,7 +76,7 @@ export default function useCopyEvents() {
       const [newEventStart] = getOffsetStartEnd([event], offset);
       const newEventEnd = new Date(newEventStart.getTime() + eventLength);
 
-      const testStart = new Date(
+      const newEventStartTime = new Date(
         Date.UTC(
           newEventStart.getUTCFullYear(),
           newEventStart.getUTCMonth(),
@@ -85,7 +85,7 @@ export default function useCopyEvents() {
           newEventStart.getUTCMinutes()
         )
       );
-      const testEnd = new Date(
+      const newEventEndTime = new Date(
         Date.UTC(
           newEventEnd.getUTCFullYear(),
           newEventEnd.getUTCMonth(),
@@ -97,8 +97,8 @@ export default function useCopyEvents() {
 
       return makeZetkinEventPatchBody({
         ...event,
-        end_time: testEnd.toISOString(),
-        start_time: testStart.toISOString(),
+        end_time: newEventEndTime.toISOString(),
+        start_time: newEventStartTime.toISOString(),
       });
     });
 
