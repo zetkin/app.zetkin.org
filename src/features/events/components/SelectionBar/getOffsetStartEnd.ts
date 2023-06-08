@@ -17,7 +17,7 @@ export default function getOffsetStartEnd(
     }
   });
 
-  if (sortedEvents.length == 0) {
+  if (sortedEvents.length === 0) {
     return [];
   }
 
