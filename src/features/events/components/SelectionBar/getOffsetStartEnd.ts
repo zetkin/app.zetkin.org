@@ -17,6 +17,10 @@ export default function getOffsetStartEnd(
     }
   });
 
+  if (sortedEvents.length == 0) {
+    return [];
+  }
+
   const firstEventDate = new Date(sortedEvents[0].start_time);
   const lastEventDate = new Date(
     sortedEvents[sortedEvents.length - 1].start_time
