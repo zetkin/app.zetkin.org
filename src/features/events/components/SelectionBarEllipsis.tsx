@@ -76,12 +76,11 @@ const SelectionBarEllipsis = () => {
       },
       textColor: '#ed1c55',
     },
-
-    {
-      label: messages.selectionBar.ellipsisMenu.print(),
-      /* eslint-disable-next-line */
-      onSelect: () => {},
-    },
+    // {
+    //   label: messages.selectionBar.ellipsisMenu.print(),
+    //   /* eslint-disable-next-line */
+    //   onSelect: () => {},
+    // },
   ];
 
   if (publishedEvents.length > 0) {
@@ -100,6 +99,7 @@ const SelectionBarEllipsis = () => {
       onSelect: () => {
         model.updateEvents(selectedEventIds, true, false);
       },
+      textColor: '',
     });
   }
 
