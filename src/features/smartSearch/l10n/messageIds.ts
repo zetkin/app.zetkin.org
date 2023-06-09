@@ -85,7 +85,7 @@ export default makeMessages('feat.smartSearch', {
         '{addRemoveSelect} people who {callSelect} at least {minTimesInput} {minTimes} in {assignmentSelect} {timeFrame}.'
       ),
       minTimes: m<{ minTimes: number; minTimesInput: ReactElement | number }>(
-        '{minTimesInput} {minTimes, plural, one {time} other {times}}'
+        '{minTimes, plural, one {once} other {times}}'
       ),
       minTimesInput: m<{ minTimesInput: number }>('{minTimesInput}'),
     },
