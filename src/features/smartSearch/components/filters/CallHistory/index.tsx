@@ -165,7 +165,19 @@ const CallHistory = ({
                 ))}
               </StyledSelect>
             ),
-            minTimes: filter.config.minTimes ?? 1,
+            minTimes:
+              filter.config.minTimes === 1 ||
+              filter.config.minTimes === undefined ? (
+                <></>
+              ) : (
+                <Msg
+                  id={localMessageIds.minTimes}
+                  values={{
+                    minTimes: filter.config.minTimes,
+                    minTimesInput: filter.config.minTimes,
+                  }}
+                />
+              ),
             minTimesInput: (
               <StyledNumberInput
                 defaultValue={filter.config.minTimes}
