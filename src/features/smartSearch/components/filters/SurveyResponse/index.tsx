@@ -25,6 +25,7 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { truncateIfNecessary } from '../../utils';
 const localMessageIds = messageIds.filters.surveyResponse;
 
 const DEFAULT_VALUE = 'none';
@@ -222,9 +223,11 @@ const SurveyResponse = ({
                       <Msg
                         id={localMessageIds.questionSelect.question}
                         values={{
-                          question:
+                          question: truncateIfNecessary(
                             validQuestions.find((q) => q.id === value)?.question
                               .question ?? '',
+                            30
+                          ),
                         }}
                       />
                     );
@@ -244,7 +247,7 @@ const SurveyResponse = ({
                 )}
                 {validQuestions.map((q) => (
                   <MenuItem key={q.id} value={q.id}>
-                    {q.question.question}
+                    {truncateIfNecessary(q.question.question, 25)}
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -260,8 +263,10 @@ const SurveyResponse = ({
                       <Msg
                         id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle:
+                          surveyTitle: truncateIfNecessary(
                             surveys.find((s) => s.id === value)?.title ?? '',
+                            25
+                          ),
                         }}
                       />
                     );
@@ -276,7 +281,7 @@ const SurveyResponse = ({
                 )}
                 {surveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {s.title}
+                    {truncateIfNecessary(s.title, 30)}
                   </MenuItem>
                 ))}
               </StyledSelect>
