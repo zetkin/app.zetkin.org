@@ -247,7 +247,7 @@ const SurveyResponse = ({
                 )}
                 {validQuestions.map((q) => (
                   <MenuItem key={q.id} value={q.id}>
-                    {truncateIfNecessary(q.question.question, 25)}
+                    {truncateIfNecessary(q.question.question, 50)}
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -265,7 +265,7 @@ const SurveyResponse = ({
                         values={{
                           surveyTitle: truncateIfNecessary(
                             surveys.find((s) => s.id === value)?.title ?? '',
-                            25
+                            30
                           ),
                         }}
                       />
@@ -281,7 +281,7 @@ const SurveyResponse = ({
                 )}
                 {surveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {truncateIfNecessary(s.title, 30)}
+                    {s.title}
                   </MenuItem>
                 ))}
               </StyledSelect>
