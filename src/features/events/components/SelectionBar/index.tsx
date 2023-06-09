@@ -35,8 +35,7 @@ const SelectionBar = () => {
               borderRadius: '5px',
               bottom: 15,
               padding: 2,
-              position: 'fixed',
-              width: 'calc(100% - 97px)',
+              width: '100%',
             }}
           >
             <Box display="flex" justifyContent="space-between">
