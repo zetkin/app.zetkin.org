@@ -1,5 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from '../l10n/messageIds';
+import NextLink from 'next/link';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
 import OrganizationTree from 'features/organizations/components/OrganizationTree';
 import { RootState } from 'core/store';
@@ -37,7 +38,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import SidebarLink from './SidebarLink';
+import SidebarListItem from './SidebarListItem';
 
 const drawerWidth = 300;
 
@@ -270,13 +271,19 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             >
               {menuItemsMap.map(({ name, icon }) => {
                 return (
-                  <SidebarLink
+                  <NextLink
                     key={name}
-                    icon={icon}
-                    name={name}
-                    open={open}
-                    selected={key.startsWith('/' + name)}
-                  />
+                    href={`/organize/${orgId}/${name}`}
+                    passHref
+                  >
+                    <SidebarListItem
+                      key={name}
+                      icon={icon}
+                      name={name}
+                      open={open}
+                      selected={key.startsWith('/' + name)}
+                    />
+                  </NextLink>
                 );
               })}
             </List>
