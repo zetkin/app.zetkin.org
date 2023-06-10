@@ -1,20 +1,19 @@
 import makeStyles from '@mui/styles/makeStyles';
-import messageIds from './l10n/messageIds';
-import NextLink from 'next/link';
+import messageIds from '../l10n/messageIds';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
 import OrganizationTree from 'features/organizations/components/OrganizationTree';
 import { RootState } from 'core/store';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import useLocalStorage from './hooks/useLocalStorage';
+import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
-import ZUIAvatar from './ZUIAvatar';
-import ZUIEllipsisMenu from './ZUIEllipsisMenu';
-import ZUIFuture from './ZUIFuture';
+import ZUIAvatar from '../ZUIAvatar';
+import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
+import ZUIFuture from '../ZUIFuture';
 import {
   Architecture,
   ExpandLess,
@@ -41,6 +40,8 @@ import {
   Typography,
 } from '@mui/material';
 import { cloneElement, useEffect, useState } from 'react';
+
+import NextLink from 'next/link';
 
 const drawerWidth = 300;
 
