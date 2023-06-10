@@ -1,5 +1,7 @@
+import { cloneElement } from 'react';
 import NextLink from 'next/link';
 import {
+  IconProps,
   ListItemButton,
   ListItemIcon,
   Tooltip,
@@ -25,6 +27,11 @@ const SidebarLink = ({
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
+
+  const sizedIcon = cloneElement<IconProps>(icon, {
+    // Differentiate size of icon for open/closed states
+    fontSize: open ? 'small' : 'medium',
+  });
 
   return (
     <>
@@ -63,7 +70,7 @@ const SidebarLink = ({
                 width: '48px',
               }}
             >
-              {icon}
+              {sizedIcon}
             </ListItemIcon>
             <Typography
               sx={{

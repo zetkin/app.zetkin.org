@@ -32,16 +32,12 @@ import {
   Divider,
   Drawer,
   IconButton,
-  IconProps,
   List,
-  ListItemButton,
-  ListItemIcon,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import { cloneElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import NextLink from 'next/link';
+import SidebarLink from './SidebarLink';
 
 const drawerWidth = 300;
 
@@ -272,76 +268,15 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 mx: 1,
               }}
             >
-              {menuItemsMap.map((item) => {
-                const selected = key.startsWith('/' + item.name);
-                const icon = cloneElement<IconProps>(item.icon, {
-                  // Differentiate size of icon for open/closed states
-                  fontSize: open ? 'small' : 'medium',
-                });
-
+              {menuItemsMap.map(({ name, icon }) => {
                 return (
-                  <NextLink
-                    key={item.name}
-                    href={`/organize/${orgId}/${item.name}`}
-                    passHref
-                  >
-                    <Tooltip
-                      placement="right"
-                      title={
-                        open ? undefined : messages.organizeSidebar[item.name]()
-                      }
-                    >
-                      <ListItemButton
-                        disableGutters
-                        sx={{
-                          '&:hover': {
-                            background: theme.palette.grey[100],
-                            pointer: 'cursor',
-                          },
-                          backgroundColor: selected
-                            ? theme.palette.grey[200]
-                            : 'transparent',
-                          borderRadius: '3px',
-                          my: 0.5,
-                          py: open ? 1.25 : 1.5,
-                          transition: theme.transitions.create(
-                            [
-                              'padding-top',
-                              'padding-bottom',
-                              'background-color',
-                            ],
-                            {
-                              duration:
-                                theme.transitions.duration.leavingScreen,
-                              easing: theme.transitions.easing.sharp,
-                            }
-                          ),
-                        }}
-                      >
-                        <ListItemIcon
-                          sx={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            minWidth: '48px',
-                            width: '48px',
-                          }}
-                        >
-                          {icon}
-                        </ListItemIcon>
-                        <Typography
-                          sx={{
-                            alignItems: 'center',
-                            display: open ? 'block' : 'none',
-                            fontWeight: key.startsWith('/' + item.name)
-                              ? 700
-                              : 'normal',
-                          }}
-                        >
-                          {messages.organizeSidebar[item.name]()}
-                        </Typography>
-                      </ListItemButton>
-                    </Tooltip>
-                  </NextLink>
+                  <SidebarLink
+                    key={name}
+                    icon={icon}
+                    name={name}
+                    open={open}
+                    selected={key.startsWith('/' + name)}
+                  />
                 );
               })}
             </List>
