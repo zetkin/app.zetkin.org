@@ -113,7 +113,7 @@ const SearchDialog: React.FunctionComponent<{
         }}
         open={open}
       >
-        <Box p={4}>
+        <Box p={1}>
           <SearchField
             error={isError}
             loading={isFetching}
