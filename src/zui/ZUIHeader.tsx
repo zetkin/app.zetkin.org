@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 
 import { Msg } from 'core/i18n';
-import SearchDialog from 'features/search/components/SearchDialog';
 import ZUIBreadcrumbTrail from 'zui/ZUIBreadcrumbTrail';
 import ZUIEllipsisMenu, { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 
@@ -105,7 +104,6 @@ const Header: React.FC<HeaderProps> = ({
                 </Button>
               </Box>
             )}
-            <SearchDialog />
           </Box>
         </Box>
         {/* Title, subtitle, and action buttons */}

@@ -18,7 +18,7 @@ const SidebarListItem = ({
   selected,
 }: {
   icon: JSX.Element;
-  name: 'people' | 'projects' | 'journeys' | 'areas';
+  name: 'people' | 'projects' | 'journeys' | 'areas' | 'search';
   open: boolean;
   selected: boolean;
 }) => {

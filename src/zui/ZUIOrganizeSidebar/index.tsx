@@ -25,6 +25,7 @@ import {
   KeyboardDoubleArrowRightOutlined,
   Logout,
   Map,
+  Search,
 } from '@mui/icons-material/';
 import {
   Avatar,
@@ -38,6 +39,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
 
 const drawerWidth = 300;
@@ -269,6 +271,16 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 mx: 1,
               }}
             >
+              <SearchDialog
+                activator={
+                  <SidebarListItem
+                    icon={<Search />}
+                    name="search"
+                    open={open}
+                    selected={false}
+                  />
+                }
+              />
               {menuItemsMap.map(({ name, icon }) => {
                 return (
                   <NextLink

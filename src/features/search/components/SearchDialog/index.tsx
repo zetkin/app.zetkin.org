@@ -37,7 +37,9 @@ const getSearchResults = (orgId: string, searchQuery: string) => {
   };
 };
 
-const SearchDialog: React.FunctionComponent = () => {
+const SearchDialog: React.FunctionComponent<{
+  activator: JSX.Element;
+}> = ({ activator }) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -94,13 +96,13 @@ const SearchDialog: React.FunctionComponent = () => {
   return (
     <>
       {/* Activator */}
-      <Button
+      <div
         color="inherit"
         data-testid="SearchDialog-activator"
         onClick={() => setOpen(true)}
       >
-        <Search />
-      </Button>
+        {activator}
+      </div>
       <Dialog
         classes={{
           paperScrollBody: classes.topPaperScrollBody,
