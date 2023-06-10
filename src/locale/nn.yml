@@ -31,7 +31,7 @@ feat:
         actionFilters:
           missing: Mangler kontaktperson
           overbooked: For mange registrerte
-          pending: Ventende påmeldinger
+          pending: Påmeldinger
           title: Handling påkrevd
           underbooked: For få registrerte
           unsent: Usendte varsler
@@ -50,6 +50,7 @@ feat:
       type: Skriv for å filtrere innhold
     lastDayWithEvents: Det {numEvents, plural, one {var ett arrangement} other {var
       {numEvents} arrangementer}} på siste aktive dag
+    loadMore: Vis fler
     moreEvents: '{numEvents, plural, one {# til arrangement} other {# til arrangementer}}'
     next: NESTE
     prev: FORRIGE
@@ -58,6 +59,22 @@ feat:
       day: Dag
       month: Måned
       week: Uke
+    selectionBar:
+      copy: Kopier
+      deselect: Ikke velg
+      editEvents: Rediger arrangementer
+      ellipsisMenu:
+        cancel: Avbryt
+        cancelWarning: Hvis ja, husk å varsle alle deltakere om at arrangementet er
+          avlyst!
+        confirmCancel: Er du sikker på at du vil avlyse de valgte arrangementene?
+        confirmDelete: Er du sikker på at du vil slette de valgte arrangementene?
+        delete: Slett
+        deleteWarning: Når arrangementene er slettet kan du ikke angre.
+        print: Skriv ut timeplan
+        publish: Publiser
+        unpublish: Avpubliser
+      move: Flytt
     showMore: Vis
     today: I dag
   callAssignments:
@@ -73,7 +90,7 @@ feat:
       hours: '{cooldown, plural, =0 {None} =1 {# time} other {# timer}}'
       missingPhoneNumber: Mangler telefonnumer
       organizerActionNeeded: Må følges opp av koordinator
-      subtitle: Mål som ikke er klare til å ringes
+      subtitle: Folk som ikke er klare til å ringes
       title: Blokkert
       viewSheetButton: Vis alle
     callers:
@@ -86,10 +103,10 @@ feat:
       customize:
         exclude:
           h: Utelukkede tags
-          intro: Aldri ring personer med disse tæggene.
+          intro: Aldri ring folk med disse tæggene.
         prioritize:
           h: Prioriterte tægger
-          intro: Ting til personer med disse tæggene først.
+          intro: Ring til folk med disse tæggene først.
         title: Tilpass køen til {name}
       customizeButton: Tilpass
       excludedTagsColumn: Utelukkede tags
@@ -114,14 +131,14 @@ feat:
             kan gå tapt.
           title: La ringere lagre notater
         targetData:
-          message: Navn og telefonnummer til personer som skal ringes er alltid synlig
+          message: Navn og telefonnummer til folk som skal ringes er alltid synlig
             for ringere. Hvis du skrur på utvidede opplysninger får ringerne se all
             informasjonen som finnes om den de skal ringe.
-          title: Vis utvidede opplysninger om personer som skal ringes
+          title: Vis utvidede opplysninger om folk som skal ringes
         title: Samtaleinnstillinger
     done:
       defineButton: Rediger kriterier for fullføring
-      subtitle: Personer som oppfyller fullføringskriteriene
+      subtitle: Folk som oppfyller fullføringskriteriene
       title: Ferdig
     organizerActionPane:
       markAsSolved: Merk som løst
@@ -131,9 +148,9 @@ feat:
       subtitle: Notat om {person}
       title: Må følges opp av koordinator
     ready:
-      allocated: Personer som er tildelt en ringer
-      queue: Personer som er i kø
-      subtitle: Personer som skal ringes
+      allocated: Folk som er tildelt en ringer
+      queue: Folk som er i kø
+      subtitle: Folk som skal ringes
       title: Klar
     state:
       active: Aktiv
@@ -144,7 +161,7 @@ feat:
     stats:
       callers: '{numCallers, plural, =0 {Ingen ringere} one {En ringer} other {# ringere}}'
       targets: '{numTargets, plural, =0 {Ingen i målgruppa} one {En person i målgruppa}
-        other {# personer i målgruppa}}'
+        other {# folk i målgruppa}}'
     statusSectionTitle: Status
     tabs:
       callers: Ringere
@@ -155,7 +172,7 @@ feat:
       defineButton: Velg målgruppe
       editButton: Rediger målgruppe
       subtitle: Bruk smartsøk til å definere målgruppa for dette oppdraget
-      title: Personer i målgruppa
+      title: Folk i målgruppa
   campaigns:
     activitiesOverview:
       button: Se alle aktiviteter
@@ -180,7 +197,7 @@ feat:
         contact: Ingen kontaktperson tildelt
         locations: '{count} steder'
         reminders: '{numMissing, plural, =1 {En deltaker} other {# deltakere}} har
-          ikke fått påminnelse'
+          ikke fått varsel'
         signups: Uregistrerte påmeldinger finnes
     all:
       cardCTA: Gå til prosjekt
@@ -292,6 +309,7 @@ feat:
     eventActionButtons:
       cancel: Avbryt
       delete: Slett
+      duplicate: Kopier
       publish: Publiser
       restore: Gjenopprett
       unpublish: Avpubliser
@@ -309,7 +327,7 @@ feat:
       buttonEndDate: + Sluttdato
       createLocation: Nytt sted
       description: Beskrivelse
-      editButton: Rediger arrangementsinformasjon
+      editButton: Rediger
       endDate: Slutt
       endTime: Sluttidspunkt
       location: Sted
@@ -324,7 +342,7 @@ feat:
       header: Deltakere
       noContact: Ingen tildelt
       participantList: Se deltakere
-      pending: Ventende påmeldinger
+      pending: Påmeldinger
       reqParticipantsHelperText: Minimum antall deltakere
       reqParticipantsLabel: Påkrevde deltakere
     eventParticipantsList:
@@ -356,7 +374,7 @@ feat:
       backToLocations: Tilbake til steder
       backToShifts: Tilbake til skiftliste
       booked: Registrert
-      cancel: Avlys
+      cancel: Avbryt
       cancelWarning: Husk å varsle alle som er registrert eller påmeldt om at arrangementet
         avlyses.
       confirmCancel: Er du sikker på at du vil avlyse dette arrangementet?
@@ -366,6 +384,7 @@ feat:
       delete: Slett
       deleteWarning: Når arrangementet er slettet har du ikke lenger tilgang til det.
       description: Beskrivelse
+      duplicate: Kopier
       eventPageLink: Gå til arrangementsiden
       events: Arrangementer
       location: Sted
@@ -377,11 +396,11 @@ feat:
       notified: Varslet
       pendingSignups: Det er uregistrerte påmeldinger
       publish: Publiser
-      reminded: Fått påminnelse
+      reminded: Fått varsel
       shifts: Skift
       signups: Påmeldinger
       unsentReminders: '{numMissing, plural, =1 {En deltaker} other {# deltakere}}
-        har ikke fått påminnelse'
+        har ikke fått varsel'
     eventRelatedCard:
       header: Relaterte arrangementer
     eventStatus:
@@ -432,10 +451,10 @@ feat:
       confirmed: Bekreftet deltakelse
       header: Deltakere
       noshow: ({noshows, plural, =1 {1 ikke møtt} other {# ikke møtt}})
-      pending: Ventende påmeldinger
+      pending: Påmeldinger
       recordButton: Registrer deltakelse
-      remindButton: Send påminnelse til alle
-      remindButtondisabledTooltip: Du må velge en kontaktperson før du sender påminnelser
+      remindButton: Send varsel til alle
+      remindButtondisabledTooltip: Du må velge en kontaktperson før du sender varsler
       reqParticipantsHelperText: Minimum antall deltakere som trengs
       reqParticipantsLabel: Deltakere
     search: Søk
@@ -498,7 +517,7 @@ feat:
       view: Liste
   smartSearch:
     buttonLabels:
-      add: Lagre utvalg
+      add: Lagre
       addNewFilter: Legg til / fjern folk
       cancel: Avbryt
       close: Lukk
@@ -521,7 +540,7 @@ feat:
       person_tags: Basert på tægger
       person_view: Folk fra en liste
       random: Et tilfeldig utvalg av folk
-      sub_query: Basert på et annet smartsøk
+      sub_query: Basert på et annet søk
       survey_option: Basert på svar de har valgt i en spørreundersøkelse
       survey_response: Basert på svar de har skrevet i en spørreundersøkelse
       survey_submission: Folk som har besvart en spørreundersøkelse
@@ -557,6 +576,7 @@ feat:
             2023" de siste 30 dagene.
         inputString: '{addRemoveSelect} folk som {callSelect} minst {minTimesInput}
           {minTimes, plural, one {gang} other {ganger}} i {assignmentSelect} {timeFrame}.'
+        minTimes: '{minTimesInput} {minTimes, plural, en {gang} other {ganger}}'
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
@@ -565,7 +585,7 @@ feat:
           add: Legg til
           sub: Fjern
         bookedSelect:
-          booked: registrert
+          booked: blitt registrert på
           signed_up: meldt seg på
         campaignSelect:
           any: et prosjekt
@@ -592,15 +612,16 @@ feat:
           two: Fjern de 5 mest aktive folka i organisasjonen når som helst.
         inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople,
           plural, one {person} other {folka}} i organisasjonen {timeFrame}.'
+        numPeople: '{numPeople, plural, en {person} other {folk}}'
       personData:
         addRemoveSelect:
           add: Legg til
-          sub: fjern
+          sub: Fjern
         ellipsis: '...'
         examples:
-          one: Legg til folk med fornavnet 'Clara' og etternavnet 'Zetkin'.
+          one: Legg til folk med fornavn 'Clara' og etternavn 'Zetkin'.
           two: Fjern folk med poststed Oslo.
-        fieldMatches: '{field} er {value}'
+        fieldMatches: '{field}{value}'
         fieldSelect:
           alt_phone: alternativt telefonnummer
           city: poststed
@@ -664,6 +685,9 @@ feat:
         viewSelect:
           none: Denne organisasjonen har ingen lister ennå
       random:
+        addLimitRemoveSelect:
+          add: Legg til
+          sub: Fjern
         addRemoveSelect:
           add: legg til
           sub: fjern
@@ -674,7 +698,7 @@ feat:
       subQuery:
         addRemoveSelect:
           add: Legg til
-          sub: Under
+          sub: Fjern
         examples:
           one: Fjern folk som er i smartsøket 'Folk som bor i Nordland'.
           two: Legg til folk som er i målgruppa for ringeoppdraget 'Gjenbetalingsringing'.
@@ -689,17 +713,17 @@ feat:
           preview:
             callassignment_goal: fullføringsgruppa for ringeoppdraget "{queryTitle}"
             callassignment_target: målgruppa for ringeoppdraget  "{queryTitle}"
-            standalone: Smartsøket
+            standalone: smartsøket
           selectLabel:
             callassignment_goal: fullførtgruppa
             callassignment_target: målgruppa
             none: et smartsøk
-            standalone: Smartsøk
+            standalone: smartsøket
           selectOptions:
             callassignment_goal: fullførtgruppa for et ringeoppdrag
             callassignment_target: målgruppa for et ringeoppdrag
             none: Denne organisasjonen har ingen ringeoppdrag eller smartsøk ennå.
-            standalone: et frittstående smartsøk
+            standalone: et annet smartsøk
       surveyOption:
         addRemoveSelect:
           add: Legg til
@@ -822,10 +846,13 @@ feat:
         once: minst en gang
     misc:
       noOptions: Ingen like tags
+    operators:
+      add: Legg til
+      sub: Fjern
     quantity:
       preview:
         integer: '{people} {people, plural, one {person} other {folk}}'
-        percent: '{people} % av folk'
+        percent: '{people} % av folkene'
       quantitySelectLabel:
         integer: '{people, plural, one {person} other {folk}}'
         percent: '% av folk'
@@ -833,6 +860,21 @@ feat:
         integer: et antall folk
         percent: en prosentandel av folk
     readOnly: Dette smartsøket er skrivebeskyttet og kan ikke redigeres.
+    resultHint:
+      countLabel: '{count, plural, =1 {en person} other {# folk}}'
+      hint: Dette smartsøket kommer til å finne {count} for deg.
+    smartSearch: Smartsøk
+    statsPopper:
+      change: endre
+      details: Smartsøk er dynamiske. Det betyr at over tid kan antallet treff i søket
+        variere, og andre brukere kan se andre resultater hvis de har tilgang til
+        fler eller færre folk.
+      exit: Resultat
+      headline: Påvirkning
+      info: Dette er et dynamisk kriterie og antallet kan forandres over tid.
+      input: før
+      matches: funnet
+      output: etter
     timeFrame:
       edit:
         between: '{timeFrameSelect} {afterDateSelect} og {beforeDateSelect}'
@@ -1327,7 +1369,7 @@ feat:
           noSurveys: Organisasjonen din har ingen spørreundersøkelser.
           title: Besvart dato
         tag:
-          description: Vis og skru av og på en tægg for personer i lista
+          description: Vis og skru av og på en tægg for folk i lista
           title: Tægg
         toggle:
           columnTitle: Sjekkliste
@@ -1434,7 +1476,7 @@ feat:
           kopier og send dem {viewLink} lister skal bare deles med tillitsvalgte og
           ansatte som har myndighet til å behandle personopplysninger.
         showOfficials: Vis admin og koordinatorer
-        statusLabel: Delt med {collaborators, plural, =1 {en person} other {# personer}},
+        statusLabel: Delt med {collaborators, plural, =1 {en person} other {# folk}},
           {officials, plural, =1 {1 admin/koordinator} other {# admin/koordinatorer}}
           har tilgang til alle lister.
         tabLabel: Del
@@ -1470,7 +1512,7 @@ feat:
       jumpMenu:
         placeholder: Skriv for å finne liste
       subtitle:
-        collaborators: '{count, plural, =1 {1 person} other {# personer}}'
+        collaborators: '{count, plural, =1 {1 person} other {# folk}}'
         columns: '{count, plural, =0 {Ingen kolonner} =1 {En kolonne} other {# kolonner}}'
         people: '{count, plural, =0 {Empty} =1 {1 person} other {# folk}}'
     viewsList:
@@ -1577,9 +1619,17 @@ zui:
     instructions: Trekk og slipp et bilde eller en fil, eller klikk for å velge
   lists:
     showMore: Vis mer...
+  organizeSidebar:
+    allOrganizations: Alle organisasjonsledd
+    areas: Steder
+    home: Hjem
+    people: Folk
+    projects: Prosjekter
+    signOut: Logg ut
+    userSettings: Innstillinger
   personGridEditCell:
     keepTyping: Fortsett å skrive..
-    noResult: Ingen personer funnet
+    noResult: Ingen funnet
     otherPeople: Andre folk
     restrictedMode: Kan ikke redigeres i delte lister
     searchResults: Søkeresultater
