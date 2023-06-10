@@ -1,8 +1,7 @@
 import { makeStyles } from '@mui/styles';
-import { Search } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Button, Dialog } from '@mui/material';
+import { Box, Dialog } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import defaultFetch from 'utils/fetching/defaultFetch';
@@ -95,14 +94,13 @@ const SearchDialog: React.FunctionComponent<{
 
   return (
     <>
-      {/* Activator */}
-      <div
-        color="inherit"
+      <button
         data-testid="SearchDialog-activator"
         onClick={() => setOpen(true)}
+        style={{ all: 'unset' }}
       >
         {activator}
-      </div>
+      </button>
       <Dialog
         classes={{
           paperScrollBody: classes.topPaperScrollBody,
