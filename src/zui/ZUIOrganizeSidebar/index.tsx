@@ -281,6 +281,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     }
                   >
                     <SidebarListItem
+                      data-testid="SearchDialog-activator"
                       icon={<Search />}
                       name="search"
                       onClick={openDialog}

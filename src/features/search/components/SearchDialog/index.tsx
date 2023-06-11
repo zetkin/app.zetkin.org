@@ -37,7 +37,7 @@ const getSearchResults = (orgId: string, searchQuery: string) => {
 };
 
 const SearchDialog: React.FunctionComponent<{
-  activator: (open: () => void) => JSX.Element;
+  activator: (openDialog: () => void) => JSX.Element;
 }> = ({ activator }) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
