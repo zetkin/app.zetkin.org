@@ -35,6 +35,7 @@ import {
   Drawer,
   IconButton,
   List,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -272,14 +273,21 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               }}
             >
               <SearchDialog
-                activator={
-                  <SidebarListItem
-                    icon={<Search />}
-                    name="search"
-                    open={open}
-                    selected={false}
-                  />
-                }
+                activator={(openDialog) => (
+                  <Tooltip
+                    placement="right"
+                    title={
+                      !open ? messages.organizeSidebar['search']() : undefined
+                    }
+                  >
+                    <SidebarListItem
+                      icon={<Search />}
+                      name="search"
+                      onClick={openDialog}
+                      open={open}
+                    />
+                  </Tooltip>
+                )}
               />
               {menuItemsMap.map(({ name, icon }) => {
                 return (
@@ -288,13 +296,20 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     href={`/organize/${orgId}/${name}`}
                     passHref
                   >
-                    <SidebarListItem
-                      key={name}
-                      icon={icon}
-                      name={name}
-                      open={open}
-                      selected={key.startsWith('/' + name)}
-                    />
+                    <Tooltip
+                      placement="right"
+                      title={
+                        !open ? messages.organizeSidebar[name]() : undefined
+                      }
+                    >
+                      <SidebarListItem
+                        key={name}
+                        icon={icon}
+                        name={name}
+                        open={open}
+                        selected={key.startsWith('/' + name)}
+                      />
+                    </Tooltip>
                   </NextLink>
                 );
               })}

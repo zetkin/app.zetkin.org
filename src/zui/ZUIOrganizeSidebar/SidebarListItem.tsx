@@ -1,9 +1,9 @@
-import { cloneElement } from 'react';
+/* eslint-disable react/display-name */
+import { cloneElement, forwardRef } from 'react';
 import {
   IconProps,
   ListItemButton,
   ListItemIcon,
-  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -11,32 +11,29 @@ import {
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
-const SidebarListItem = ({
-  icon,
-  name,
-  open,
-  selected,
-}: {
+export interface SidebarListItemProps {
   icon: JSX.Element;
   name: 'people' | 'projects' | 'journeys' | 'areas' | 'search';
   open: boolean;
-  selected: boolean;
-}) => {
-  const theme = useTheme();
-  const messages = useMessages(messageIds);
+  selected?: boolean;
+  onClick?: () => void;
+}
 
-  const sizedIcon = cloneElement<IconProps>(icon, {
-    // Differentiate size of icon for open/closed states
-    fontSize: open ? 'small' : 'medium',
-  });
+const SidebarListItem = forwardRef<HTMLDivElement, SidebarListItemProps>(
+  ({ icon, name, onClick, open, selected, ...restProps }, ref) => {
+    const theme = useTheme();
+    const messages = useMessages(messageIds);
 
-  return (
-    <Tooltip
-      placement="right"
-      title={!open ? messages.organizeSidebar[name]() : undefined}
-    >
+    const sizedIcon = cloneElement<IconProps>(icon, {
+      // Differentiate size of icon for open/closed states
+      fontSize: open ? 'small' : 'medium',
+    });
+
+    return (
       <ListItemButton
+        ref={ref}
         disableGutters
+        onClick={onClick}
         sx={{
           '&:hover': {
             background: theme.palette.grey[100],
@@ -54,6 +51,7 @@ const SidebarListItem = ({
             }
           ),
         }}
+        {...restProps}
       >
         <ListItemIcon
           sx={{
@@ -75,8 +73,8 @@ const SidebarListItem = ({
           {messages.organizeSidebar[name]()}
         </Typography>
       </ListItemButton>
-    </Tooltip>
-  );
-};
+    );
+  }
+);
 
 export default SidebarListItem;
