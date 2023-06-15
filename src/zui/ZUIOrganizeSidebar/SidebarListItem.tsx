@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { cloneElement, forwardRef } from 'react';
 import {
   IconProps,
@@ -76,5 +75,7 @@ const SidebarListItem = forwardRef<HTMLDivElement, SidebarListItemProps>(
     );
   }
 );
+
+SidebarListItem.displayName = 'SidebarListItem';
 
 export default SidebarListItem;
