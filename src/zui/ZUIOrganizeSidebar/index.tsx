@@ -1,20 +1,20 @@
 import makeStyles from '@mui/styles/makeStyles';
-import messageIds from './l10n/messageIds';
+import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
 import OrganizationTree from 'features/organizations/components/OrganizationTree';
 import { RootState } from 'core/store';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import useLocalStorage from './hooks/useLocalStorage';
+import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
-import ZUIAvatar from './ZUIAvatar';
-import ZUIEllipsisMenu from './ZUIEllipsisMenu';
-import ZUIFuture from './ZUIFuture';
+import ZUIAvatar from '../ZUIAvatar';
+import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
+import ZUIFuture from '../ZUIFuture';
 import {
   Architecture,
   ExpandLess,
@@ -25,6 +25,7 @@ import {
   KeyboardDoubleArrowRightOutlined,
   Logout,
   Map,
+  Search,
 } from '@mui/icons-material/';
 import {
   Avatar,
@@ -33,14 +34,14 @@ import {
   Divider,
   Drawer,
   IconButton,
-  IconProps,
   List,
-  ListItemButton,
-  ListItemIcon,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { cloneElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import SearchDialog from 'features/search/components/SearchDialog';
+import SidebarListItem from './SidebarListItem';
 
 const drawerWidth = 300;
 
@@ -271,137 +272,46 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 mx: 1,
               }}
             >
-              {menuItemsMap.map((item) => {
-                const selected = key.startsWith('/' + item.name);
-                const icon = cloneElement<IconProps>(item.icon, {
-                  // Differentiate size of icon for open/closed states
-                  fontSize: open ? 'small' : 'medium',
-                });
-
+              <SearchDialog
+                activator={(openDialog) => (
+                  <Tooltip
+                    placement="right"
+                    title={
+                      !open ? messages.organizeSidebar['search']() : undefined
+                    }
+                  >
+                    <SidebarListItem
+                      data-testid="SearchDialog-activator"
+                      icon={<Search />}
+                      name="search"
+                      onClick={openDialog}
+                      open={open}
+                    />
+                  </Tooltip>
+                )}
+              />
+              {menuItemsMap.map(({ name, icon }) => {
                 return (
-                  <>
-                    {/* Add tooltip if menu is collapsed */}
-                    {!open && (
-                      <NextLink
-                        key={item.name}
-                        href={`/organize/${orgId}/${item.name}`}
-                        passHref
-                      >
-                        <Tooltip
-                          placement="right"
-                          title={messages.organizeSidebar[item.name]()}
-                        >
-                          <ListItemButton
-                            disableGutters
-                            sx={{
-                              '&:hover': {
-                                background: theme.palette.grey[100],
-                                pointer: 'cursor',
-                              },
-                              backgroundColor: selected
-                                ? theme.palette.grey[200]
-                                : 'transparent',
-                              borderRadius: '3px',
-                              my: 0.5,
-                              py: open ? 1.25 : 1.5,
-                              transition: theme.transitions.create(
-                                [
-                                  'padding-top',
-                                  'padding-bottom',
-                                  'background-color',
-                                ],
-                                {
-                                  duration:
-                                    theme.transitions.duration.leavingScreen,
-                                  easing: theme.transitions.easing.sharp,
-                                }
-                              ),
-                            }}
-                          >
-                            <ListItemIcon
-                              sx={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                minWidth: '48px',
-                                width: '48px',
-                              }}
-                            >
-                              {icon}
-                            </ListItemIcon>
-                            <Typography
-                              sx={{
-                                alignItems: 'center',
-                                display: open ? 'block' : 'none',
-                                fontWeight: key.startsWith('/' + item.name)
-                                  ? 700
-                                  : 'normal',
-                              }}
-                            >
-                              {messages.organizeSidebar[item.name]()}
-                            </Typography>
-                          </ListItemButton>
-                        </Tooltip>
-                      </NextLink>
-                    )}
-                    {/* Don't add tooltip if menu isn't collapsed */}
-                    {open && (
-                      <NextLink
-                        key={item.name}
-                        href={`/organize/${orgId}/${item.name}`}
-                        passHref
-                      >
-                        <ListItemButton
-                          disableGutters
-                          sx={{
-                            '&:hover': {
-                              background: theme.palette.grey[100],
-                              pointer: 'cursor',
-                            },
-                            backgroundColor: selected
-                              ? theme.palette.grey[200]
-                              : 'transparent',
-                            borderRadius: '3px',
-                            my: 0.5,
-                            py: open ? 1.25 : 1.5,
-                            transition: theme.transitions.create(
-                              [
-                                'padding-top',
-                                'padding-bottom',
-                                'background-color',
-                              ],
-                              {
-                                duration:
-                                  theme.transitions.duration.leavingScreen,
-                                easing: theme.transitions.easing.sharp,
-                              }
-                            ),
-                          }}
-                        >
-                          <ListItemIcon
-                            sx={{
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              minWidth: '48px',
-                              width: '48px',
-                            }}
-                          >
-                            {icon}
-                          </ListItemIcon>
-                          <Typography
-                            sx={{
-                              alignItems: 'center',
-                              display: open ? 'block' : 'none',
-                              fontWeight: key.startsWith('/' + item.name)
-                                ? 700
-                                : 'normal',
-                            }}
-                          >
-                            {messages.organizeSidebar[item.name]()}
-                          </Typography>
-                        </ListItemButton>
-                      </NextLink>
-                    )}
-                  </>
+                  <NextLink
+                    key={name}
+                    href={`/organize/${orgId}/${name}`}
+                    passHref
+                  >
+                    <Tooltip
+                      placement="right"
+                      title={
+                        !open ? messages.organizeSidebar[name]() : undefined
+                      }
+                    >
+                      <SidebarListItem
+                        key={name}
+                        icon={icon}
+                        name={name}
+                        open={open}
+                        selected={key.startsWith('/' + name)}
+                      />
+                    </Tooltip>
+                  </NextLink>
                 );
               })}
             </List>

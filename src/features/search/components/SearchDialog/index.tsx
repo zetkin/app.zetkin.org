@@ -1,8 +1,7 @@
 import { makeStyles } from '@mui/styles';
-import { Search } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Button, Dialog } from '@mui/material';
+import { Box, Dialog } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import defaultFetch from 'utils/fetching/defaultFetch';
@@ -37,7 +36,9 @@ const getSearchResults = (orgId: string, searchQuery: string) => {
   };
 };
 
-const SearchDialog: React.FunctionComponent = () => {
+const SearchDialog: React.FunctionComponent<{
+  activator: (openDialog: () => void) => JSX.Element;
+}> = ({ activator }) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -93,14 +94,7 @@ const SearchDialog: React.FunctionComponent = () => {
 
   return (
     <>
-      {/* Activator */}
-      <Button
-        color="inherit"
-        data-testid="SearchDialog-activator"
-        onClick={() => setOpen(true)}
-      >
-        <Search />
-      </Button>
+      {activator(() => setOpen(true))}
       <Dialog
         classes={{
           paperScrollBody: classes.topPaperScrollBody,
@@ -113,7 +107,7 @@ const SearchDialog: React.FunctionComponent = () => {
         }}
         open={open}
       >
-        <Box p={4}>
+        <Box p={1}>
           <SearchField
             error={isError}
             loading={isFetching}
