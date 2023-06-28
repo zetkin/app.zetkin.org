@@ -12,7 +12,7 @@ The new Zetkin app is built on [NEXT.js](https://nextjs.org) with TypeScript.
 Do you want to contribute to this project and become part of a community of people
 that use their coding skills to help the international left? We try to make the
 process as easy and transparent as possible. Read all about it in the separate
-CONTRIBUTING.md file.
+[CONTRIBUTING.md](./CONTRIBUTING.md) file.
 
 ## Instructions
 

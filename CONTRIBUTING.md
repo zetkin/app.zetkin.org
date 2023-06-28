@@ -149,7 +149,7 @@ else will finish the PR for you.
 ## 6. Checklist
 Here's a list of all the steps to contribute, in summary:
 
-- [ ] Clone and run the project locally (see README for details)
+- [ ] Clone and run the project locally (see [README](./README.md) for details)
 - [ ] Configure your development environment (Prettier, pre-commit hooks etc)
 - [ ] Find a suitable issue from the [issues list](https://github.com/zetkin/app.zetkin.org/issues)
 - [ ] Write a comment on the issue saying something like "I'm giving this a try!" and include your questions if you have any
