@@ -79,15 +79,17 @@ export default makeMessages('feat.smartSearch', {
         assignmentSelect: ReactElement;
         callSelect: ReactElement;
         minTimes: ReactElement | number;
-        minTimesInput: ReactElement | number;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {callSelect} at least {minTimesInput} {minTimes} in {assignmentSelect} {timeFrame}.'
+        '{addRemoveSelect} people who {callSelect} at least {minTimes} in {assignmentSelect} {timeFrame}.'
       ),
-      minTimes: m<{ minTimes: number; minTimesInput: ReactElement | number }>(
-        '{minTimesInput} {minTimes, plural, one {time} other {times}}'
+      minTimes: m<{ minTimes: number }>(
+        '{minTimes, plural, one {once} other {# times}}'
       ),
-      minTimesInput: m<{ minTimesInput: number }>('{minTimesInput}'),
+      minTimesInput: m<{
+        input: ReactElement;
+        minTimes: number;
+      }>('{input} {minTimes, plural, one {time} other {times}}'),
     },
     campaignParticipation: {
       activitySelect: {

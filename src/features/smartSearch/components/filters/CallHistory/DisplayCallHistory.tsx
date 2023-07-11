@@ -59,13 +59,7 @@ const DisplayCallHistory = ({
         minTimes: (
           <UnderlinedMsg
             id={localMessageIds.minTimes}
-            values={{ minTimes: minTimes || 1, minTimesInput: minTimes || 1 }}
-          />
-        ),
-        minTimesInput: (
-          <UnderlinedMsg
-            id={localMessageIds.minTimesInput}
-            values={{ minTimesInput: minTimes || 1 }}
+            values={{ minTimes: minTimes || 1 }}
           />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
