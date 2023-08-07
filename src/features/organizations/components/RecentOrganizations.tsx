@@ -17,7 +17,7 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
   recentOrganizations,
 }) => {
   return (
-    <Box m={1}>
+    <Box m={1} sx={{ cursor: 'pointer' }}>
       {recentOrganizations.map((org) => (
         <NextLink key={org.id} href={`/organize/${org.id}`}>
           <Box m={1} sx={{ alignItems: 'center', display: 'inlineFlex' }}>
