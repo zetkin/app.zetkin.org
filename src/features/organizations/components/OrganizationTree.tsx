@@ -9,10 +9,15 @@ import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 interface OrganizationTreeProps {
   treeItemData: TreeItemData[];
+  onSwitchOrg: () => void;
   orgId: number;
 }
 
-function renderTree(nodes: TreeItemData[], orgId: number): React.ReactNode {
+function renderTree(
+  nodes: TreeItemData[],
+  onSwitchOrg: () => void,
+  orgId: number
+): React.ReactNode {
   return nodes.map((node) => (
     <TreeItem
       key={node.id}
@@ -39,14 +44,16 @@ function renderTree(nodes: TreeItemData[], orgId: number): React.ReactNode {
         </NextLink>
       }
       nodeId={node.id.toString()}
+      onClick={onSwitchOrg}
     >
-      {node.children ? renderTree(node.children, orgId) : ''}
+      {node.children ? renderTree(node.children, onSwitchOrg, orgId) : ''}
     </TreeItem>
   ));
 }
 
 function OrganizationTree({
   treeItemData,
+  onSwitchOrg,
   orgId,
 }: OrganizationTreeProps): JSX.Element {
   const theme = useTheme();
@@ -73,7 +80,7 @@ function OrganizationTree({
           },
         }}
       >
-        {renderTree(treeItemData, orgId)}
+        {renderTree(treeItemData, onSwitchOrg, orgId)}
       </TreeView>
     </div>
   );

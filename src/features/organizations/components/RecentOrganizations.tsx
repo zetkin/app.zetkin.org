@@ -3,10 +3,13 @@ import NextLink from 'next/link';
 import { Box, Typography } from '@mui/material';
 
 import ProceduralColorIcon from './ProceduralColorIcon';
+import { ZetkinOrganization } from 'utils/types/zetkin';
+
+export type RecentOrganization = Pick<ZetkinOrganization, 'id' | 'title'>;
 
 interface RecentOrganizationProps {
   orgId: number;
-  recentOrganizations: { id: number; title: string }[];
+  recentOrganizations: RecentOrganization[];
 }
 
 const RecentOrganizations: FC<RecentOrganizationProps> = ({

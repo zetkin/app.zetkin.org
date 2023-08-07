@@ -30,6 +30,7 @@ import {
 import {
   Avatar,
   Box,
+  Button,
   CircularProgress,
   Divider,
   Drawer,
@@ -40,9 +41,11 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import RecentOrganizations from 'features/organizations/components/RecentOrganizations';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
+import RecentOrganizations, {
+  RecentOrganization,
+} from 'features/organizations/components/RecentOrganizations';
 
 const drawerWidth = 300;
 
@@ -92,6 +95,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [checked, setChecked] = useState(false);
 
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
+  const [recentOrganizations, setRecentOrganizations] = useLocalStorage(
+    'recentOrganizations',
+    [] as RecentOrganization[]
+  );
   const [open, setOpen] = useState(false);
   const model: OrganizationsDataModel = useModel(
     (env) => new OrganizationsDataModel(env)
@@ -120,8 +127,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
     return value !== null && value !== undefined;
   }
-
-  const recentOrganizations = [{ id: 165, title: 'katten' }];
 
   const treeDataList = useSelector(
     (state: RootState) => state.organizations.treeDataList
@@ -247,26 +252,49 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               {recentOrganizations.filter((recentOrg) => recentOrg.id != orgId)
                 .length > 0 && (
                 <Box>
-                  <Typography fontSize={12} m={1} variant="body2">
-                    {messages.organizeSidebar
-                      .recentOrganizations()
-                      .toLocaleUpperCase()}
-                  </Typography>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography fontSize={12} m={1} variant="body2">
+                      {messages.organizeSidebar
+                        .recentOrganizations()
+                        .toLocaleUpperCase()}
+                    </Typography>
+                    <Button
+                      onClick={() => setRecentOrganizations([])}
+                      variant="text"
+                    >
+                      {messages.organizeSidebar.clearRecentOrganizations()}
+                    </Button>
+                  </Box>
                   <RecentOrganizations
                     orgId={orgId}
-                    recentOrganizations={recentOrganizations}
+                    recentOrganizations={recentOrganizations.filter(
+                      (recentOrg) => recentOrg.id != orgId
+                    )}
                   />
                 </Box>
               )}
               {orgData.length > 0 && (
-                <Box>
-                  <Typography fontSize={12} m={1} variant="body2">
-                    {messages.organizeSidebar
-                      .allOrganizations()
-                      .toLocaleUpperCase()}
-                  </Typography>
-                  <OrganizationTree orgId={orgId} treeItemData={orgData} />
-                </Box>
+                <ZUIFuture future={model.getOrganization(orgId)}>
+                  {(data) => (
+                    <Box>
+                      <Typography fontSize={12} m={1} variant="body2">
+                        {messages.organizeSidebar
+                          .allOrganizations()
+                          .toLocaleUpperCase()}
+                      </Typography>
+                      <OrganizationTree
+                        onSwitchOrg={() =>
+                          setRecentOrganizations([
+                            ...recentOrganizations,
+                            { id: orgId, title: data.title },
+                          ])
+                        }
+                        orgId={orgId}
+                        treeItemData={orgData}
+                      />
+                    </Box>
+                  )}
+                </ZUIFuture>
               )}
               {treeDataList.isLoading && (
                 <Box
