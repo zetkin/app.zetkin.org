@@ -252,7 +252,11 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               {recentOrganizations.filter((recentOrg) => recentOrg.id != orgId)
                 .length > 0 && (
                 <Box marginBottom={2}>
-                  <Box display="flex" justifyContent="space-between">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    marginRight={1}
+                  >
                     <Typography fontSize={12} m={1} variant="body2">
                       {messages.organizeSidebar
                         .recentOrganizations()
