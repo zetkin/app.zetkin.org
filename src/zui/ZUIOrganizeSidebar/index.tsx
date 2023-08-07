@@ -40,6 +40,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import RecentOrganizations from 'features/organizations/components/RecentOrganizations';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
 
@@ -119,6 +120,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
     return value !== null && value !== undefined;
   }
+
+  const recentOrganizations = [{ id: 165, title: 'katten' }];
 
   const treeDataList = useSelector(
     (state: RootState) => state.organizations.treeDataList
@@ -241,6 +244,20 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 zIndex: 1000,
               }}
             >
+              {recentOrganizations.filter((recentOrg) => recentOrg.id != orgId)
+                .length > 0 && (
+                <Box>
+                  <Typography fontSize={12} m={1} variant="body2">
+                    {messages.organizeSidebar
+                      .recentOrganizations()
+                      .toLocaleUpperCase()}
+                  </Typography>
+                  <RecentOrganizations
+                    orgId={orgId}
+                    recentOrganizations={recentOrganizations}
+                  />
+                </Box>
+              )}
               {orgData.length > 0 && (
                 <Box>
                   <Typography fontSize={12} m={1} variant="body2">

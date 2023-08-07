@@ -124,6 +124,7 @@ export default makeMessages('zui', {
     journeys: m('Journeys'),
     people: m('People'),
     projects: m('Projects & Activities'),
+    recentOrganizations: m('Recent organizations'),
     search: m('Search'),
     signOut: m('Sign out'),
     userSettings: m('User settings'),
