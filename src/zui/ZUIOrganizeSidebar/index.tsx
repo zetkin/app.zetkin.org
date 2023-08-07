@@ -251,32 +251,44 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             >
               {recentOrganizations.filter((recentOrg) => recentOrg.id != orgId)
                 .length > 0 && (
-                <Box marginBottom={2}>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    marginRight={1}
-                  >
-                    <Typography fontSize={12} m={1} variant="body2">
-                      {messages.organizeSidebar
-                        .recentOrganizations()
-                        .toLocaleUpperCase()}
-                    </Typography>
-                    <Button
-                      onClick={() => setRecentOrganizations([])}
-                      size="small"
-                      variant="text"
-                    >
-                      {messages.organizeSidebar.clearRecentOrganizations()}
-                    </Button>
-                  </Box>
-                  <RecentOrganizations
-                    orgId={orgId}
-                    recentOrganizations={recentOrganizations
-                      .filter((recentOrg) => recentOrg.id != orgId)
-                      .slice(0, 3)}
-                  />
-                </Box>
+                <ZUIFuture future={model.getOrganization(orgId)}>
+                  {(data) => (
+                    <Box marginBottom={2}>
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        marginRight={1}
+                      >
+                        <Typography fontSize={12} m={1} variant="body2">
+                          {messages.organizeSidebar
+                            .recentOrganizations()
+                            .toLocaleUpperCase()}
+                        </Typography>
+                        <Button
+                          onClick={() => setRecentOrganizations([])}
+                          size="small"
+                          variant="text"
+                        >
+                          {messages.organizeSidebar.clearRecentOrganizations()}
+                        </Button>
+                      </Box>
+                      <RecentOrganizations
+                        onSwitchOrg={() =>
+                          setRecentOrganizations([
+                            { id: orgId, title: data.title },
+                            ...recentOrganizations.filter(
+                              (org) => org.id != orgId
+                            ),
+                          ])
+                        }
+                        orgId={orgId}
+                        recentOrganizations={recentOrganizations
+                          .filter((recentOrg) => recentOrg.id != orgId)
+                          .slice(0, 3)}
+                      />
+                    </Box>
+                  )}
+                </ZUIFuture>
               )}
               {orgData.length > 0 && (
                 <ZUIFuture future={model.getOrganization(orgId)}>
