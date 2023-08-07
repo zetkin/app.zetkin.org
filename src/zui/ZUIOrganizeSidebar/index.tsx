@@ -251,7 +251,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             >
               {recentOrganizations.filter((recentOrg) => recentOrg.id != orgId)
                 .length > 0 && (
-                <Box>
+                <Box marginBottom={2}>
                   <Box display="flex" justifyContent="space-between">
                     <Typography fontSize={12} m={1} variant="body2">
                       {messages.organizeSidebar
@@ -260,6 +260,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     </Typography>
                     <Button
                       onClick={() => setRecentOrganizations([])}
+                      size="small"
                       variant="text"
                     >
                       {messages.organizeSidebar.clearRecentOrganizations()}
