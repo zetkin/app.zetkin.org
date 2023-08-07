@@ -267,9 +267,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                   </Box>
                   <RecentOrganizations
                     orgId={orgId}
-                    recentOrganizations={recentOrganizations.filter(
-                      (recentOrg) => recentOrg.id != orgId
-                    )}
+                    recentOrganizations={recentOrganizations
+                      .filter((recentOrg) => recentOrg.id != orgId)
+                      .slice(0, 3)}
                   />
                 </Box>
               )}
@@ -285,8 +285,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       <OrganizationTree
                         onSwitchOrg={() =>
                           setRecentOrganizations([
-                            ...recentOrganizations,
                             { id: orgId, title: data.title },
+                            ...recentOrganizations.filter(
+                              (org) => org.id != orgId
+                            ),
                           ])
                         }
                         orgId={orgId}
