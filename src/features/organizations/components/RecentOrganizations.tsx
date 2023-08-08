@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import NextLink from 'next/link';
-import { Box, Typography } from '@mui/material';
+import { Box, List, Typography, useTheme } from '@mui/material';
 
 import ProceduralColorIcon from './ProceduralColorIcon';
 import { ZetkinOrganization } from 'utils/types/zetkin';
@@ -18,12 +18,25 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
   orgId,
   recentOrganizations,
 }) => {
+  const theme = useTheme();
   return (
-    <Box m={1} onClick={onSwitchOrg} sx={{ cursor: 'pointer' }}>
+    <List>
       {recentOrganizations.map((org) => (
         <NextLink key={org.id} href={`/organize/${org.id}`}>
-          <Box m={1} sx={{ alignItems: 'center', display: 'inlineFlex' }}>
-            <Box mr={1}>
+          <Box
+            onClick={onSwitchOrg}
+            sx={{
+              '&:hover': {
+                backgroundColor: theme.palette.grey[100],
+              },
+              alignItems: 'center',
+              cursor: 'pointer',
+              display: 'inlineFlex',
+              marginLeft: 1,
+              padding: 1,
+            }}
+          >
+            <Box marginRight={1}>
               <ProceduralColorIcon id={org.id} />
             </Box>
             <Typography
@@ -35,7 +48,7 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
           </Box>
         </NextLink>
       ))}
-    </Box>
+    </List>
   );
 };
 
