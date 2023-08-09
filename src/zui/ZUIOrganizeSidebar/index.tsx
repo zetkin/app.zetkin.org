@@ -44,6 +44,7 @@ import RecentOrganizations from 'features/organizations/components/RecentOrganiz
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
 import { TreeItemData } from 'features/organizations/types';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const drawerWidth = 300;
 
@@ -129,9 +130,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const treeDataList = useSelector(
     (state: RootState) => state.organizations.treeDataList
   );
-  const currentOrg = useSelector(
-    (state: RootState) => state.organizations.orgData
-  ).data;
 
   const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
 
@@ -150,7 +148,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   }
 
   const flatOrgData = makeFlatOrgData(orgData);
-
   const recentOrganizations = recentOrganizationIds.map((id) =>
     flatOrgData.find((org) => org.id === id)
   );
@@ -208,36 +205,43 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               )}
               {open && (
-                <>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex',
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '48px',
-                      }}
-                    >
-                      {hover ? (
-                        <IconButton onClick={handleClick}>
-                          <KeyboardDoubleArrowLeftOutlined />
+                <ZUIFuture future={model.getOrganization(orgId)}>
+                  {(data) => (
+                    <>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '48px',
+                          }}
+                        >
+                          {hover ? (
+                            <IconButton onClick={handleClick}>
+                              <KeyboardDoubleArrowLeftOutlined />
+                            </IconButton>
+                          ) : (
+                            <Avatar
+                              alt="icon"
+                              src={`/api/orgs/${orgId}/avatar`}
+                            />
+                          )}
+                        </Box>
+                        <Typography variant="h6">{data.title}</Typography>
+                      </Box>
+                      <Box sx={{ display: open ? 'flex' : 'none' }}>
+                        <IconButton onClick={handleExpansion}>
+                          {checked ? <ExpandLess /> : <ExpandMore />}
                         </IconButton>
-                      ) : (
-                        <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-                      )}
-                    </Box>
-                    <Typography variant="h6">{currentOrg?.title}</Typography>
-                  </Box>
-                  <Box sx={{ display: open ? 'flex' : 'none' }}>
-                    <IconButton onClick={handleExpansion}>
-                      {checked ? <ExpandLess /> : <ExpandMore />}
-                    </IconButton>
-                  </Box>
-                </>
+                      </Box>
+                    </>
+                  )}
+                </ZUIFuture>
               )}
             </Box>
             <Box
