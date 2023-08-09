@@ -13,40 +13,39 @@ interface OrganizationTreeProps {
   orgId: number;
 }
 
-function renderTree(
-  nodes: TreeItemData[],
-  onSwitchOrg: () => void,
-  orgId: number
-): React.ReactNode {
-  return nodes.map((node) => (
+function renderTree(props: OrganizationTreeProps): React.ReactNode {
+  const { treeItemData, orgId, onSwitchOrg } = props;
+  return treeItemData.map((item) => (
     <TreeItem
-      key={node.id}
+      key={item.id}
       label={
-        <NextLink href={`/organize/${node.id}`}>
+        <NextLink href={`/organize/${item.id}`}>
           <Box m={1} sx={{ alignItems: 'center', display: 'inlineFlex' }}>
             <Box mr={1}>
-              {orgId == node.id ? (
+              {orgId == item.id ? (
                 <Avatar
-                  src={`/api/orgs/${node.id}/avatar`}
+                  src={`/api/orgs/${item.id}/avatar`}
                   sx={{ height: '28px', width: '28px' }}
                 />
               ) : (
-                <ProceduralColorIcon id={node.id} />
+                <ProceduralColorIcon id={item.id} />
               )}
             </Box>
             <Typography
-              sx={{ fontWeight: orgId == node.id ? 'bold' : 'normal' }}
+              sx={{ fontWeight: orgId == item.id ? 'bold' : 'normal' }}
               variant="body2"
             >
-              {node.title}
+              {item.title}
             </Typography>
           </Box>
         </NextLink>
       }
-      nodeId={node.id.toString()}
+      nodeId={item.id.toString()}
       onClick={onSwitchOrg}
     >
-      {node.children ? renderTree(node.children, onSwitchOrg, orgId) : ''}
+      {item.children
+        ? renderTree({ onSwitchOrg, orgId, treeItemData: item.children })
+        : ''}
     </TreeItem>
   ));
 }
@@ -80,7 +79,7 @@ function OrganizationTree({
           },
         }}
       >
-        {renderTree(treeItemData, onSwitchOrg, orgId)}
+        {renderTree({ onSwitchOrg, orgId, treeItemData })}
       </TreeView>
     </div>
   );
