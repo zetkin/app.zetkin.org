@@ -14,7 +14,6 @@ import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 import ZUIAvatar from '../ZUIAvatar';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
-import ZUIFuture from '../ZUIFuture';
 import {
   Architecture,
   ExpandLess,
@@ -41,11 +40,10 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import RecentOrganizations from 'features/organizations/components/RecentOrganizations';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
-import RecentOrganizations, {
-  RecentOrganization,
-} from 'features/organizations/components/RecentOrganizations';
+import { TreeItemData } from 'features/organizations/types';
 
 const drawerWidth = 300;
 
@@ -95,9 +93,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [checked, setChecked] = useState(false);
 
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
-  const [recentOrganizations, setRecentOrganizations] = useLocalStorage(
-    'recentOrganizations',
-    [] as RecentOrganization[]
+  const [recentOrganizationIds, setRecentOrganizationIds] = useLocalStorage(
+    'recentOrganizationIds',
+    [] as number[]
   );
   const [open, setOpen] = useState(false);
   const model: OrganizationsDataModel = useModel(
@@ -133,6 +131,27 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   );
 
   const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
+
+  function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
+    let children = [] as TreeItemData[];
+    const flatOrgData = orgData.map((org) => {
+      if (org.children && org.children.length) {
+        children = [...children, ...org.children];
+      }
+      return org;
+    });
+
+    return flatOrgData.concat(
+      children.length ? makeFlatOrgData(children) : children
+    );
+  }
+
+  const flatOrgData = makeFlatOrgData(orgData);
+  const currentOrg = flatOrgData.find((org) => org.id === orgId);
+
+  const recentOrganizations = recentOrganizationIds.map((id) =>
+    flatOrgData.find((org) => org.id === id)
+  );
 
   const menuItemsMap = [
     { icon: <Groups />, name: 'people' },
@@ -186,45 +205,37 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               {!open && !hover && (
                 <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               )}
-
               {open && (
-                <ZUIFuture future={model.getOrganization(orgId)}>
-                  {(data) => (
-                    <>
-                      <Box
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '48px',
-                          }}
-                        >
-                          {hover ? (
-                            <IconButton onClick={handleClick}>
-                              <KeyboardDoubleArrowLeftOutlined />
-                            </IconButton>
-                          ) : (
-                            <Avatar
-                              alt="icon"
-                              src={`/api/orgs/${orgId}/avatar`}
-                            />
-                          )}
-                        </Box>
-                        <Typography variant="h6">{data.title}</Typography>
-                      </Box>
-                      <Box sx={{ display: open ? 'flex' : 'none' }}>
-                        <IconButton onClick={handleExpansion}>
-                          {checked ? <ExpandLess /> : <ExpandMore />}
+                <>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '48px',
+                      }}
+                    >
+                      {hover ? (
+                        <IconButton onClick={handleClick}>
+                          <KeyboardDoubleArrowLeftOutlined />
                         </IconButton>
-                      </Box>
-                    </>
-                  )}
-                </ZUIFuture>
+                      ) : (
+                        <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+                      )}
+                    </Box>
+                    <Typography variant="h6">{currentOrg?.title}</Typography>
+                  </Box>
+                  <Box sx={{ display: open ? 'flex' : 'none' }}>
+                    <IconButton onClick={handleExpansion}>
+                      {checked ? <ExpandLess /> : <ExpandMore />}
+                    </IconButton>
+                  </Box>
+                </>
               )}
             </Box>
             <Box
@@ -249,71 +260,61 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 zIndex: 1000,
               }}
             >
-              {recentOrganizations.filter((recentOrg) => recentOrg.id != orgId)
-                .length > 0 && (
-                <ZUIFuture future={model.getOrganization(orgId)}>
-                  {(data) => (
-                    <Box marginBottom={2}>
-                      <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        marginRight={1}
-                      >
-                        <Typography fontSize={12} m={1} variant="body2">
-                          {messages.organizeSidebar
-                            .recentOrganizations()
-                            .toLocaleUpperCase()}
-                        </Typography>
-                        <Button
-                          onClick={() => setRecentOrganizations([])}
-                          size="small"
-                          variant="text"
-                        >
-                          {messages.organizeSidebar.clearRecentOrganizations()}
-                        </Button>
-                      </Box>
-                      <RecentOrganizations
-                        onSwitchOrg={() =>
-                          setRecentOrganizations([
-                            { id: orgId, title: data.title },
-                            ...recentOrganizations.filter(
-                              (org) => org.id != orgId
-                            ),
-                          ])
-                        }
-                        orgId={orgId}
-                        recentOrganizations={recentOrganizations
-                          .filter((recentOrg) => recentOrg.id != orgId)
-                          .slice(0, 3)}
-                      />
-                    </Box>
-                  )}
-                </ZUIFuture>
-              )}
-              {orgData.length > 0 && (
-                <ZUIFuture future={model.getOrganization(orgId)}>
-                  {(data) => (
-                    <Box>
-                      <Typography fontSize={12} m={1} variant="body2">
+              {recentOrganizations.filter((org) => org?.id != orgId).length >
+                0 &&
+                flatOrgData.length >= 5 && (
+                  <Box marginBottom={1}>
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
+                      <Typography fontSize={12} margin={1} variant="body2">
                         {messages.organizeSidebar
-                          .allOrganizations()
+                          .recentOrganizations()
                           .toLocaleUpperCase()}
                       </Typography>
-                      <OrganizationTree
-                        onSwitchOrg={() =>
-                          setRecentOrganizations([
-                            { id: orgId, title: data.title },
-                            ...recentOrganizations.filter(
-                              (org) => org.id != orgId
-                            ),
-                          ])
-                        }
-                        orgId={orgId}
-                        treeItemData={orgData}
-                      />
+                      <Button
+                        onClick={() => setRecentOrganizationIds([])}
+                        size="small"
+                        sx={{ marginRight: 2 }}
+                        variant="text"
+                      >
+                        {messages.organizeSidebar.clearRecentOrganizations()}
+                      </Button>
                     </Box>
-                  )}
-                </ZUIFuture>
+                    <RecentOrganizations
+                      onSwitchOrg={() =>
+                        setRecentOrganizationIds([
+                          orgId,
+                          ...recentOrganizationIds.filter((id) => id != orgId),
+                        ])
+                      }
+                      orgId={orgId}
+                      recentOrganizations={recentOrganizations
+                        .filter((org) => org?.id != orgId)
+                        .slice(0, 5)}
+                    />
+                  </Box>
+                )}
+              {orgData.length > 0 && (
+                <Box>
+                  <Typography fontSize={12} m={1} variant="body2">
+                    {messages.organizeSidebar
+                      .allOrganizations()
+                      .toLocaleUpperCase()}
+                  </Typography>
+                  <OrganizationTree
+                    onSwitchOrg={() =>
+                      setRecentOrganizationIds([
+                        orgId,
+                        ...recentOrganizationIds.filter((id) => id != orgId),
+                      ])
+                    }
+                    orgId={orgId}
+                    treeItemData={orgData}
+                  />
+                </Box>
               )}
               {treeDataList.isLoading && (
                 <Box
