@@ -25,9 +25,12 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
           return;
         }
         return (
-          <NextLink key={org.id} href={`/organize/${org.id}`}>
+          <NextLink
+            key={org.id}
+            href={`/organize/${org.id}`}
+            onClick={onSwitchOrg}
+          >
             <Box
-              onClick={onSwitchOrg}
               sx={{
                 '&:hover': {
                   backgroundColor: theme.palette.grey[100],
