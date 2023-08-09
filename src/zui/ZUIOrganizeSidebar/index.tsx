@@ -129,6 +129,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const treeDataList = useSelector(
     (state: RootState) => state.organizations.treeDataList
   );
+  const currentOrg = useSelector(
+    (state: RootState) => state.organizations.orgData
+  ).data;
 
   const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
 
@@ -147,7 +150,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   }
 
   const flatOrgData = makeFlatOrgData(orgData);
-  const currentOrg = flatOrgData.find((org) => org.id === orgId);
 
   const recentOrganizations = recentOrganizationIds.map((id) =>
     flatOrgData.find((org) => org.id === id)
