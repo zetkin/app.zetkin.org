@@ -272,8 +272,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       justifyContent="space-between"
                     >
                       <Typography fontSize={12} margin={1} variant="body2">
-                        {messages.organizeSidebar
-                          .recentOrganizations()
+                        {messages.organizeSidebar.recent
+                          .title()
                           .toLocaleUpperCase()}
                       </Typography>
                       <Button
@@ -282,7 +282,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                         sx={{ marginRight: 2 }}
                         variant="text"
                       >
-                        {messages.organizeSidebar.clearRecentOrganizations()}
+                        {messages.organizeSidebar.recent.clear()}
                       </Button>
                     </Box>
                     <RecentOrganizations

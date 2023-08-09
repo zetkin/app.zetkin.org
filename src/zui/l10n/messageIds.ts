@@ -120,12 +120,14 @@ export default makeMessages('zui', {
   organizeSidebar: {
     allOrganizations: m('All organizations'),
     areas: m('Areas'),
-    clearRecentOrganizations: m('Clear'),
     home: m('Home'),
     journeys: m('Journeys'),
     people: m('People'),
     projects: m('Projects & Activities'),
-    recentOrganizations: m('Recent organizations'),
+    recent: {
+      clear: m('Clear'),
+      title: m('Recent organizations'),
+    },
     search: m('Search'),
     signOut: m('Sign out'),
     userSettings: m('User settings'),
