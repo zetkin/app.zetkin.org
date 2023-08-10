@@ -152,6 +152,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     flatOrgData.find((org) => org.id === id)
   );
 
+  const hasRecentOrganizations =
+    recentOrganizations.filter((org) => org?.id != orgId).length > 0;
+
   const menuItemsMap = [
     { icon: <Groups />, name: 'people' },
     { icon: <Architecture />, name: 'projects' },
@@ -266,43 +269,41 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 zIndex: 1000,
               }}
             >
-              {recentOrganizations.filter((org) => org?.id != orgId).length >
-                0 &&
-                flatOrgData.length >= 5 && (
-                  <Box marginBottom={1}>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      justifyContent="space-between"
+              {hasRecentOrganizations && flatOrgData.length >= 5 && (
+                <Box marginBottom={1}>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <Typography fontSize={12} margin={1} variant="body2">
+                      {messages.organizeSidebar.recent
+                        .title()
+                        .toLocaleUpperCase()}
+                    </Typography>
+                    <Button
+                      onClick={() => setRecentOrganizationIds([])}
+                      size="small"
+                      sx={{ marginRight: 2 }}
+                      variant="text"
                     >
-                      <Typography fontSize={12} margin={1} variant="body2">
-                        {messages.organizeSidebar.recent
-                          .title()
-                          .toLocaleUpperCase()}
-                      </Typography>
-                      <Button
-                        onClick={() => setRecentOrganizationIds([])}
-                        size="small"
-                        sx={{ marginRight: 2 }}
-                        variant="text"
-                      >
-                        {messages.organizeSidebar.recent.clear()}
-                      </Button>
-                    </Box>
-                    <RecentOrganizations
-                      onSwitchOrg={() =>
-                        setRecentOrganizationIds([
-                          orgId,
-                          ...recentOrganizationIds.filter((id) => id != orgId),
-                        ])
-                      }
-                      orgId={orgId}
-                      recentOrganizations={recentOrganizations
-                        .filter((org) => org?.id != orgId)
-                        .slice(0, 5)}
-                    />
+                      {messages.organizeSidebar.recent.clear()}
+                    </Button>
                   </Box>
-                )}
+                  <RecentOrganizations
+                    onSwitchOrg={() =>
+                      setRecentOrganizationIds([
+                        orgId,
+                        ...recentOrganizationIds.filter((id) => id != orgId),
+                      ])
+                    }
+                    orgId={orgId}
+                    recentOrganizations={recentOrganizations
+                      .filter((org) => org?.id != orgId)
+                      .slice(0, 5)}
+                  />
+                </Box>
+              )}
               {orgData.length > 0 && (
                 <Box>
                   <Typography fontSize={12} m={1} variant="body2">
