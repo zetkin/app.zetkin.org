@@ -32,11 +32,13 @@ describe('generateTreeData()', () => {
       {
         children: [],
         id: 1,
+        parent: null,
         title: 'Org 1',
       },
       {
         children: [],
         id: 2,
+        parent: null,
         title: 'Org 2',
       },
     ];
@@ -111,6 +113,7 @@ describe('generateTreeData()', () => {
       {
         children: [],
         id: 2,
+        parent: null,
         title: 'Org 2',
       },
     ];
