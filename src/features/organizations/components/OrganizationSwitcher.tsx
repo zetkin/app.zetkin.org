@@ -10,33 +10,67 @@ import {
 import messageIds from '../l10n/messageIds';
 import OrganizationTree from './OrganizationTree';
 import RecentOrganizations from './RecentOrganizations';
-import { RemoteList } from 'utils/storeUtils';
+import { RootState } from 'core/store';
 import { TreeItemData } from '../types';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
+import { useSelector } from 'react-redux';
 
 interface OrganizationSwitcherProps {
-  onClearRecentOrgs: () => void;
-  onSwitchOrg: () => void;
-  orgData: TreeItemData[];
   orgId: number;
-  recentOrganizations: (TreeItemData | undefined)[];
   showOrgSwitcher: boolean;
-  showRecentOrgs: boolean;
-  treeDataList: RemoteList<TreeItemData>;
 }
 
 const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
-  onClearRecentOrgs,
-  onSwitchOrg,
-  orgData,
   orgId,
-  recentOrganizations,
   showOrgSwitcher,
-  showRecentOrgs,
-  treeDataList,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const [recentOrganizationIds, setRecentOrganizationIds] = useLocalStorage(
+    'recentOrganizationIds',
+    [] as number[]
+  );
+
+  function onSwitchOrg() {
+    setRecentOrganizationIds([
+      orgId,
+      ...recentOrganizationIds.filter((id) => id != orgId),
+    ]);
+  }
+
+  function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+    return value !== null && value !== undefined;
+  }
+
+  const treeDataList = useSelector(
+    (state: RootState) => state.organizations.treeDataList
+  );
+
+  const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
+
+  function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
+    let children = [] as TreeItemData[];
+    const flatOrgData = orgData.map((org) => {
+      if (org.children && org.children.length) {
+        children = [...children, ...org.children];
+      }
+      return org;
+    });
+
+    return flatOrgData.concat(
+      children.length ? makeFlatOrgData(children) : children
+    );
+  }
+
+  const flatOrgData = makeFlatOrgData(orgData);
+  const recentOrganizations = recentOrganizationIds.map((id) =>
+    flatOrgData.find((org) => org.id === id)
+  );
+
+  const showRecentOrgs =
+    recentOrganizations.filter((org) => org?.id != orgId).length > 0 &&
+    flatOrgData.length >= 5;
 
   return (
     <Box
@@ -69,7 +103,7 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
               {messages.sidebar.recent.title().toLocaleUpperCase()}
             </Typography>
             <Button
-              onClick={onClearRecentOrgs}
+              onClick={() => setRecentOrganizationIds([])}
               size="small"
               sx={{ marginRight: 2 }}
               variant="text"

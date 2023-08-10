@@ -2,14 +2,12 @@ import makeStyles from '@mui/styles/makeStyles';
 import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
-import { RootState } from 'core/store';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
 import ZUIAvatar from '../ZUIAvatar';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import {
@@ -39,7 +37,6 @@ import { useEffect, useState } from 'react';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
-import { TreeItemData } from 'features/organizations/types';
 import ZUIFuture from 'zui/ZUIFuture';
 
 const drawerWidth = 300;
@@ -89,10 +86,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [checked, setChecked] = useState(false);
 
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
-  const [recentOrganizationIds, setRecentOrganizationIds] = useLocalStorage(
-    'recentOrganizationIds',
-    [] as number[]
-  );
+
   const [open, setOpen] = useState(false);
   const model: OrganizationsDataModel = useModel(
     (env) => new OrganizationsDataModel(env)
@@ -117,39 +111,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     model.getOrganizationsTree();
     setChecked(!checked);
   };
-
-  function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
-    return value !== null && value !== undefined;
-  }
-
-  const treeDataList = useSelector(
-    (state: RootState) => state.organizations.treeDataList
-  );
-
-  const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
-
-  function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
-    let children = [] as TreeItemData[];
-    const flatOrgData = orgData.map((org) => {
-      if (org.children && org.children.length) {
-        children = [...children, ...org.children];
-      }
-      return org;
-    });
-
-    return flatOrgData.concat(
-      children.length ? makeFlatOrgData(children) : children
-    );
-  }
-
-  const flatOrgData = makeFlatOrgData(orgData);
-  const recentOrganizations = recentOrganizationIds.map((id) =>
-    flatOrgData.find((org) => org.id === id)
-  );
-
-  const showRecentOrgs =
-    recentOrganizations.filter((org) => org?.id != orgId).length > 0 &&
-    flatOrgData.length >= 5;
 
   const menuItemsMap = [
     { icon: <Groups />, name: 'people' },
@@ -244,21 +205,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               )}
             </Box>
             <OrganizationSwitcher
-              onClearRecentOrgs={() => setRecentOrganizationIds([])}
-              onSwitchOrg={() =>
-                setRecentOrganizationIds([
-                  orgId,
-                  ...recentOrganizationIds.filter((id) => id != orgId),
-                ])
-              }
-              orgData={orgData}
               orgId={orgId}
-              recentOrganizations={recentOrganizations
-                .filter((org) => org?.id != orgId)
-                .slice(0, 5)}
               showOrgSwitcher={showOrgSwitcher}
-              showRecentOrgs={showRecentOrgs}
-              treeDataList={treeDataList}
             />
           </Box>
           <Box
