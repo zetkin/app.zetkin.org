@@ -6,6 +6,9 @@ export default makeMessages('feat.organizations', {
   },
   sidebar: {
     allOrganizations: m('All organizations'),
+    filter: {
+      noResults: m('No organizations matching this filter'),
+    },
     recent: {
       clear: m('Clear'),
       title: m('Recent organizations'),

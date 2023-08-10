@@ -11,6 +11,7 @@ import messageIds from '../l10n/messageIds';
 import OrganizationTree from './OrganizationTree';
 import RecentOrganizations from './RecentOrganizations';
 import { RootState } from 'core/store';
+import SearchResults from './SearchResults';
 import { TreeItemData } from '../types';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
@@ -18,11 +19,13 @@ import { useSelector } from 'react-redux';
 
 interface OrganizationSwitcherProps {
   orgId: number;
+  searchString: string;
   showOrgSwitcher: boolean;
 }
 
 const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
   orgId,
+  searchString,
   showOrgSwitcher,
 }) => {
   const theme = useTheme();
@@ -123,11 +126,19 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           <Typography fontSize={12} m={1} variant="body2">
             {messages.sidebar.allOrganizations().toLocaleUpperCase()}
           </Typography>
-          <OrganizationTree
-            onSwitchOrg={onSwitchOrg}
-            orgId={orgId}
-            treeItemData={orgData}
-          />
+          {searchString.length == 0 && (
+            <OrganizationTree
+              onSwitchOrg={onSwitchOrg}
+              orgId={orgId}
+              treeItemData={orgData}
+            />
+          )}
+          {searchString.length > 0 && (
+            <SearchResults
+              flatOrgData={flatOrgData}
+              searchString={searchString}
+            />
+          )}
         </Box>
       )}
       {treeDataList.isLoading && (

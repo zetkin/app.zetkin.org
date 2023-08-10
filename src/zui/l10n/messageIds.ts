@@ -119,6 +119,7 @@ export default makeMessages('zui', {
   },
   organizeSidebar: {
     areas: m('Areas'),
+    filter: m('Type to filter'),
     home: m('Home'),
     journeys: m('Journeys'),
     people: m('People'),

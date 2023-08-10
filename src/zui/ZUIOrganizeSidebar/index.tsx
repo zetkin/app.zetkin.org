@@ -15,6 +15,7 @@ import {
   ExpandLess,
   ExpandMore,
   Explore,
+  FilterListOutlined,
   Groups,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
@@ -29,14 +30,16 @@ import {
   Drawer,
   IconButton,
   List,
+  TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
+import useDebounce from 'utils/hooks/useDebounce';
 import ZUIFuture from 'zui/ZUIFuture';
 
 const drawerWidth = 300;
@@ -83,11 +86,12 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
+
   const [checked, setChecked] = useState(false);
-
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
-
   const [open, setOpen] = useState(false);
+  const [searchString, setSearchString] = useState('');
+
   const model: OrganizationsDataModel = useModel(
     (env) => new OrganizationsDataModel(env)
   );
@@ -122,6 +126,13 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   function logOut() {
     router.push(`/logout`);
   }
+
+  const debouncedFinishedTyping = useDebounce(
+    async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      setSearchString(evt.target.value);
+    },
+    400
+  );
 
   const showOrgSwitcher = checked && open;
 
@@ -174,25 +185,44 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                           display: 'flex',
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '48px',
-                          }}
-                        >
-                          {hover ? (
-                            <IconButton onClick={handleClick}>
-                              <KeyboardDoubleArrowLeftOutlined />
-                            </IconButton>
-                          ) : (
-                            <Avatar
-                              alt="icon"
-                              src={`/api/orgs/${orgId}/avatar`}
-                            />
-                          )}
-                        </Box>
-                        <Typography variant="h6">{data.title}</Typography>
+                        {!showOrgSwitcher && (
+                          <>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                width: '48px',
+                              }}
+                            >
+                              {hover ? (
+                                <IconButton onClick={handleClick}>
+                                  <KeyboardDoubleArrowLeftOutlined />
+                                </IconButton>
+                              ) : (
+                                <Avatar
+                                  alt="icon"
+                                  src={`/api/orgs/${orgId}/avatar`}
+                                />
+                              )}
+                            </Box>
+                            <Typography variant="h6">{data.title}</Typography>
+                          </>
+                        )}
+                        {showOrgSwitcher && (
+                          <TextField
+                            fullWidth
+                            InputProps={{
+                              startAdornment: (
+                                <FilterListOutlined
+                                  color="secondary"
+                                  sx={{ marginRight: '0.5em' }}
+                                />
+                              ),
+                            }}
+                            onChange={(e) => debouncedFinishedTyping(e)}
+                            placeholder={messages.organizeSidebar.filter()}
+                          />
+                        )}
                       </Box>
                       <Box sx={{ display: open ? 'flex' : 'none' }}>
                         <IconButton onClick={handleExpansion}>
@@ -206,6 +236,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             </Box>
             <OrganizationSwitcher
               orgId={orgId}
+              searchString={searchString}
               showOrgSwitcher={showOrgSwitcher}
             />
           </Box>
