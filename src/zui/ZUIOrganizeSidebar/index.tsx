@@ -2,7 +2,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
-import OrganizationTree from 'features/organizations/components/OrganizationTree';
 import { RootState } from 'core/store';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -11,7 +10,6 @@ import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { useTheme } from '@mui/material/styles';
 import ZUIAvatar from '../ZUIAvatar';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import {
@@ -29,8 +27,6 @@ import {
 import {
   Avatar,
   Box,
-  Button,
-  CircularProgress,
   Divider,
   Drawer,
   IconButton,
@@ -40,7 +36,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import RecentOrganizations from 'features/organizations/components/RecentOrganizations';
+import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
 import { TreeItemData } from 'features/organizations/types';
@@ -86,7 +82,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [hover, setHover] = useState(false);
   const messages = useMessages(messageIds);
   const classes = useStyles();
-  const theme = useTheme();
   const user = useCurrentUser();
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
@@ -151,6 +146,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const recentOrganizations = recentOrganizationIds.map((id) =>
     flatOrgData.find((org) => org.id === id)
   );
+
+  const showRecentOrgs =
+    recentOrganizations.filter((org) => org?.id != orgId).length > 0 &&
+    flatOrgData.length >= 5;
 
   const menuItemsMap = [
     { icon: <Groups />, name: 'people' },
@@ -244,92 +243,23 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 </ZUIFuture>
               )}
             </Box>
-            <Box
-              sx={{
-                backgroundColor: theme.palette.background.paper,
-                borderBottomColor: showOrgSwitcher
-                  ? 'transparent'
-                  : theme.palette.grey[300],
-                borderBottomStyle: 'solid',
-                borderBottomWidth: 1,
-                height: showOrgSwitcher ? 'calc(100% - 130px)' : 0,
-                overflowY: 'auto',
-                position: 'absolute',
-                transition: theme.transitions.create(
-                  ['borderBottomColor', 'height'],
-                  {
-                    duration: theme.transitions.duration.short,
-                    easing: theme.transitions.easing.sharp,
-                  }
-                ),
-                width: '100%',
-                zIndex: 1000,
-              }}
-            >
-              {recentOrganizations.filter((org) => org?.id != orgId).length >
-                0 &&
-                flatOrgData.length >= 5 && (
-                  <Box marginBottom={1}>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      justifyContent="space-between"
-                    >
-                      <Typography fontSize={12} margin={1} variant="body2">
-                        {messages.organizeSidebar.recent
-                          .title()
-                          .toLocaleUpperCase()}
-                      </Typography>
-                      <Button
-                        onClick={() => setRecentOrganizationIds([])}
-                        size="small"
-                        sx={{ marginRight: 2 }}
-                        variant="text"
-                      >
-                        {messages.organizeSidebar.recent.clear()}
-                      </Button>
-                    </Box>
-                    <RecentOrganizations
-                      onSwitchOrg={() =>
-                        setRecentOrganizationIds([
-                          orgId,
-                          ...recentOrganizationIds.filter((id) => id != orgId),
-                        ])
-                      }
-                      orgId={orgId}
-                      recentOrganizations={recentOrganizations
-                        .filter((org) => org?.id != orgId)
-                        .slice(0, 5)}
-                    />
-                  </Box>
-                )}
-              {orgData.length > 0 && (
-                <Box>
-                  <Typography fontSize={12} m={1} variant="body2">
-                    {messages.organizeSidebar
-                      .allOrganizations()
-                      .toLocaleUpperCase()}
-                  </Typography>
-                  <OrganizationTree
-                    onSwitchOrg={() =>
-                      setRecentOrganizationIds([
-                        orgId,
-                        ...recentOrganizationIds.filter((id) => id != orgId),
-                      ])
-                    }
-                    orgId={orgId}
-                    treeItemData={orgData}
-                  />
-                </Box>
-              )}
-              {treeDataList.isLoading && (
-                <Box
-                  sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}
-                >
-                  <CircularProgress />
-                </Box>
-              )}
-            </Box>
+            <OrganizationSwitcher
+              onClearRecentOrgs={() => setRecentOrganizationIds([])}
+              onSwitchOrg={() =>
+                setRecentOrganizationIds([
+                  orgId,
+                  ...recentOrganizationIds.filter((id) => id != orgId),
+                ])
+              }
+              orgData={orgData}
+              orgId={orgId}
+              recentOrganizations={recentOrganizations
+                .filter((org) => org?.id != orgId)
+                .slice(0, 5)}
+              showOrgSwitcher={showOrgSwitcher}
+              showRecentOrgs={showRecentOrgs}
+              treeDataList={treeDataList}
+            />
           </Box>
           <Box
             sx={{
