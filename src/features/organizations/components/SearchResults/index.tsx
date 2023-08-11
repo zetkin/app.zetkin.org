@@ -1,11 +1,12 @@
+import { FilterListOutlined } from '@mui/icons-material';
 import Fuse from 'fuse.js';
 import { useMemo } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
-import { ChevronRight, FilterListOutlined } from '@mui/icons-material';
 
-import messageIds from '../l10n/messageIds';
-import ProceduralColorIcon from './ProceduralColorIcon';
-import { TreeItemData } from '../types';
+import Ancestors from './Ancestors';
+import messageIds from '../../l10n/messageIds';
+import ProceduralColorIcon from '../ProceduralColorIcon';
+import { TreeItemData } from '../../types';
 import { useMessages } from 'core/i18n';
 
 interface SearchResultsProps {
@@ -61,21 +62,7 @@ const SearchResults = ({ flatOrgData, searchString }: SearchResultsProps) => {
               cursor: 'pointer',
             }}
           >
-            <Box display="flex">
-              {findAncestors(result).map((ancestor, index) => (
-                <Box key={ancestor.id} display="flex">
-                  {index == 0 && (
-                    <Typography color="secondary" variant="body2">
-                      ...
-                    </Typography>
-                  )}
-                  <ChevronRight color="secondary" fontSize="small" />
-                  <Typography color="secondary" variant="body2">
-                    {ancestor.title}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
+            <Ancestors ancestors={findAncestors(result)} />
             <Box
               sx={{
                 alignItems: 'center',
