@@ -576,7 +576,7 @@ feat:
             2023" de siste 30 dagene.
         inputString: '{addRemoveSelect} folk som {callSelect} minst {minTimesInput}
           {minTimes, plural, one {gang} other {ganger}} i {assignmentSelect} {timeFrame}.'
-        minTimes: '{minTimesInput} {minTimes, plural, en {gang} other {ganger}}'
+        minTimes: '{minTimesInput} {minTimes, plural, one {gang} other {ganger}}'
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
@@ -612,7 +612,7 @@ feat:
           two: Fjern de 5 mest aktive folka i organisasjonen når som helst.
         inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople,
           plural, one {person} other {folka}} i organisasjonen {timeFrame}.'
-        numPeople: '{numPeople, plural, en {person} other {folk}}'
+        numPeople: '{numPeople, plural, one {person} other {folk}}'
       personData:
         addRemoveSelect:
           add: Legg til
