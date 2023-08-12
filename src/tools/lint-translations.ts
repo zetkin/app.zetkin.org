@@ -26,8 +26,10 @@ async function run() {
 
   function warn(str: string) {
     numWarnings++;
-    // eslint-disable-next-line no-console
-    console.log('WARN: ', str);
+    if (process.argv.includes('--print-warnings')) {
+      // eslint-disable-next-line no-console
+      console.log('WARN: ', str);
+    }
   }
 
   function error(str: string) {
@@ -54,7 +56,9 @@ async function run() {
   }
 
   // eslint-disable-next-line no-console
-  console.log(`Found ${numErrors} error(s), ${numWarnings} warning(s)`);
+  console.log(
+    `Found ${numErrors} error(s), ${numWarnings} warning(s). Use --print-warnings to display warnings.`
+  );
 
   process.exit(numErrors);
 }
