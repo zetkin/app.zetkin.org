@@ -4,7 +4,16 @@ import * as ts from 'typescript';
 
 const fileName = 'src/features/tags/l10n/messageIds.ts';
 
-const fullProgram = ts.createProgram([fileName], {});
+const host = ts.createIncrementalCompilerHost({}, {
+  ...ts.sys,
+  readFile: (path, encoding) => {
+    if (path.startsWith('/Users')) return '';
+    console.log('sys.readFile', path, encoding);
+    return ts.sys.readFile(path, encoding);
+  },
+});
+
+const fullProgram = ts.createProgram([fileName], {}, host);
 const file = fullProgram.getSourceFile(fileName);
 
 if (file) {
