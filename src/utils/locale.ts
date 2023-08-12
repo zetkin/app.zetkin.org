@@ -108,6 +108,6 @@ export const getBrowserLanguage = (
   req: NextApiRequest | IncomingMessage
 ): SupportedLanguage => {
   const negotiator = new Negotiator(req);
-  const languages = negotiator.languages(['en', 'nn']);
+  const languages = negotiator.languages(['en', 'nn', 'da']);
   return languages.length ? (languages[0] as SupportedLanguage) : 'en';
 };
