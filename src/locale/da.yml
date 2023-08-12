@@ -1554,7 +1554,7 @@ feat:
     toolbar:
       createColumn: ny kolonne
       createFromSelection: Skab liste fra udvalg
-      removeFromSelection: Fjern {numSelected, plural, one {1 person} anden {{numSelected}
+      removeFromSelection: Fjern {numSelected, plural, one {1 person} other {{numSelected}
         people} } fra liste
       removeTooltip: Det er ikke muligt at fjerne rækker i en Smart Søgning
     viewLayout:
