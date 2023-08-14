@@ -2,12 +2,13 @@ import { FC, ReactElement, useEffect, useRef, useState } from 'react';
 
 interface ZUIResponsiveContainerProps {
   children: (width: number) => ReactElement | null;
+  onWidthChange?: (width: number, container: HTMLDivElement) => void;
   ssrWidth: number;
 }
 
 const FrontendResponsiveContainer: FC<
-  Pick<ZUIResponsiveContainerProps, 'children'>
-> = ({ children }) => {
+  Pick<ZUIResponsiveContainerProps, 'children' | 'onWidthChange'>
+> = ({ children, onWidthChange }) => {
   const [width, setWidth] = useState(0);
 
   const widthRef = useRef<HTMLDivElement>(null);
@@ -19,6 +20,12 @@ const FrontendResponsiveContainer: FC<
       }
     })
   );
+
+  useEffect(() => {
+    if (onWidthChange && widthRef.current) {
+      onWidthChange(width, widthRef.current);
+    }
+  }, [width]);
 
   useEffect(() => {
     if (widthRef.current) {
@@ -38,6 +45,7 @@ const FrontendResponsiveContainer: FC<
 
 const ZUIResponsiveContainer: FC<ZUIResponsiveContainerProps> = ({
   children,
+  onWidthChange,
   ssrWidth,
 }) => {
   const [onServer, setOnServer] = useState(true);
@@ -50,7 +58,9 @@ const ZUIResponsiveContainer: FC<ZUIResponsiveContainerProps> = ({
     return children(ssrWidth);
   } else {
     return (
-      <FrontendResponsiveContainer>{children}</FrontendResponsiveContainer>
+      <FrontendResponsiveContainer onWidthChange={onWidthChange}>
+        {children}
+      </FrontendResponsiveContainer>
     );
   }
 };

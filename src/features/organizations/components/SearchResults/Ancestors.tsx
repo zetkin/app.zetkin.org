@@ -1,77 +1,86 @@
 import { ChevronRight } from '@mui/icons-material';
-import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
+import { FC, useRef, useState } from 'react';
 
 import { TreeItemData } from 'features/organizations/types';
-
-const Dots = () => {
-  return (
-    <>
-      <Typography color="secondary" variant="body2">
-        ...
-      </Typography>
-      <ChevronRight color="secondary" fontSize="small" />
-    </>
-  );
-};
-
-const Title = ({ title }: { title: string }) => {
-  return (
-    <>
-      <Typography color="secondary" variant="body2">
-        {title}
-      </Typography>
-      <ChevronRight color="secondary" fontSize="small" />
-    </>
-  );
-};
-
-const renderAncestors = (ancestors: TreeItemData[]) => {
-  if (ancestors.length === 0) {
-    return;
-  }
-
-  if (ancestors.length === 1) {
-    return <Title title={ancestors[0].title} />;
-  }
-
-  if (ancestors.length === 2) {
-    return (
-      <>
-        {ancestors.map((ancestor) => {
-          return ancestor.title.length > 10 ? (
-            <Dots />
-          ) : (
-            <Title title={ancestor.title} />
-          );
-        })}
-      </>
-    );
-  }
-
-  if (ancestors.length > 2) {
-    const closestTwo = ancestors.slice(-2);
-    return (
-      <>
-        <Dots />
-        {closestTwo.map((ancestor) => {
-          return ancestor.title.length > 10 ? (
-            <Dots />
-          ) : (
-            <Title title={ancestor.title} />
-          );
-        })}
-      </>
-    );
-  }
-};
+import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 
 interface AncestorsProps {
   ancestors: TreeItemData[];
 }
 
 const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
-  return <Box display="flex">{renderAncestors(ancestors)}</Box>;
+  const originalCrumbWidths = useRef<number[] | null>(null);
+  const [crumbStates, setCrumbStates] = useState<boolean[]>(
+    ancestors.map(() => true)
+  );
+
+  return (
+    <ZUIResponsiveContainer
+      onWidthChange={(width, container) => {
+        const childElements = Array.from(container.querySelectorAll('.crumb'));
+
+        if (width == 0) {
+          return;
+        }
+
+        originalCrumbWidths.current = childElements.map((crumb, index) => {
+          const oldWidth = originalCrumbWidths.current
+            ? originalCrumbWidths.current[index]
+            : 0;
+          return Math.max(oldWidth, crumb.getBoundingClientRect().width);
+        });
+
+        let spaceLeft = Math.round(width);
+        const nextCrumbStates: boolean[] = originalCrumbWidths.current.map(
+          () => false
+        );
+
+        for (let i = originalCrumbWidths.current.length - 1; i >= 0; i--) {
+          spaceLeft -= originalCrumbWidths.current[i];
+          if (spaceLeft > 40) {
+            nextCrumbStates[i] = true;
+          }
+        }
+
+        setCrumbStates(nextCrumbStates);
+      }}
+      ssrWidth={300}
+    >
+      {() => (
+        <Box display="flex" flexWrap="wrap" width="100%">
+          {ancestors.length === 0 && (
+            <Typography color="secondary" variant="body2">
+              Top level organization
+            </Typography>
+          )}
+          {ancestors.map((ancestor, index) => {
+            return (
+              <Box
+                key={`ancestor-${ancestor.id}`}
+                className="crumb"
+                display="flex"
+                flexShrink={0}
+              >
+                <Typography
+                  color="secondary"
+                  sx={{ whiteSpace: 'nowrap' }}
+                  variant="body2"
+                >
+                  {crumbStates[index] ? ancestor.title : '...'}
+                </Typography>
+                {index == ancestors.length - 1 ? (
+                  ''
+                ) : (
+                  <ChevronRight color="secondary" fontSize="small" />
+                )}
+              </Box>
+            );
+          })}
+        </Box>
+      )}
+    </ZUIResponsiveContainer>
+  );
 };
 
 export default Ancestors;
