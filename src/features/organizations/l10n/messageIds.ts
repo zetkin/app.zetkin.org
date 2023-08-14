@@ -8,6 +8,7 @@ export default makeMessages('feat.organizations', {
     allOrganizations: m('All organizations'),
     filter: {
       noResults: m('No organizations matching this filter'),
+      topLevel: m('Top level organization'),
     },
     recent: {
       clear: m('Clear'),

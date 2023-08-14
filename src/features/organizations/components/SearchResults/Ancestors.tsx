@@ -2,7 +2,9 @@ import { ChevronRight } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { FC, useRef, useState } from 'react';
 
+import messageIds from 'features/organizations/l10n/messageIds';
 import { TreeItemData } from 'features/organizations/types';
+import { useMessages } from 'core/i18n';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 
 interface AncestorsProps {
@@ -10,6 +12,7 @@ interface AncestorsProps {
 }
 
 const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
+  const messages = useMessages(messageIds);
   const originalCrumbWidths = useRef<number[] | null>(null);
   const [crumbStates, setCrumbStates] = useState<boolean[]>(
     ancestors.map(() => true)
@@ -51,7 +54,7 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
         <Box display="flex" flexWrap="wrap" width="100%">
           {ancestors.length === 0 && (
             <Typography color="secondary" variant="body2">
-              Top level organization
+              {messages.sidebar.filter.topLevel()}
             </Typography>
           )}
           {ancestors.map((ancestor, index) => {
