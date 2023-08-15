@@ -29,7 +29,11 @@ const SearchResults = ({ flatOrgData, searchString }: SearchResultsProps) => {
       : flatOrgData;
   }, [searchString]);
 
-  function findAncestors(node: TreeItemData): TreeItemData[] {
+  function findAncestors(node: TreeItemData | null): TreeItemData[] {
+    if (node === null) {
+      return [];
+    }
+
     const ancestors: TreeItemData[] = [];
 
     const getParent = (childOrg: TreeItemData) => {
@@ -45,48 +49,66 @@ const SearchResults = ({ flatOrgData, searchString }: SearchResultsProps) => {
     return ancestors;
   }
 
+  if (!searchResults.length) {
+    return (
+      <Box alignItems="center" display="flex" flexDirection="column">
+        <FilterListOutlined color="secondary" sx={{ fontSize: '12em' }} />
+        <Typography color="secondary">
+          {messages.sidebar.filter.noResults()}
+        </Typography>
+      </Box>
+    );
+  }
+
+  const searchResultsByParent: Record<number, TreeItemData[]> = {};
+
+  searchResults.forEach((result) => {
+    //Give 0 as parent id to top level orgs
+    const parentId = result.parent?.id ?? 0;
+
+    if (!searchResultsByParent[parentId]) {
+      searchResultsByParent[parentId] = [];
+    }
+    searchResultsByParent[parentId].push(result);
+  });
+
+  const keys = Object.keys(searchResultsByParent);
+
   return (
     <>
-      {searchResults.length > 0 &&
-        searchResults.map((result, index) => (
-          <Box
-            key={result.id}
-            display="flex"
-            flexDirection="column"
-            paddingTop={index == 0 ? '' : 1}
-            paddingX={1}
-            sx={{
-              '&:hover': {
-                backgroundColor: theme.palette.grey[100],
-              },
-              cursor: 'pointer',
-            }}
-          >
-            <Ancestors ancestors={findAncestors(result)} />
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'inlineFlex',
-                paddingLeft: 2,
-                paddingRight: 1,
-                paddingY: 1,
-              }}
-            >
-              <Box marginRight={1}>
-                <ProceduralColorIcon id={result.id} />
-              </Box>
-              <Typography variant="body2">{result.title}</Typography>
+      {keys.map((key) => {
+        const results = searchResultsByParent[parseInt(key)];
+        return (
+          <>
+            <Box paddingX={1}>
+              <Ancestors ancestors={findAncestors(results[0])} />
             </Box>
-          </Box>
-        ))}
-      {!searchResults.length && (
-        <Box alignItems="center" display="flex" flexDirection="column">
-          <FilterListOutlined color="secondary" sx={{ fontSize: '12em' }} />
-          <Typography color="secondary">
-            {messages.sidebar.filter.noResults()}
-          </Typography>
-        </Box>
-      )}
+            {results.map((result) => (
+              <Box key={result.id} display="flex" flexDirection="column">
+                <Box
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: theme.palette.grey[100],
+                    },
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    paddingLeft: 3,
+                    paddingRight: 1,
+                    paddingY: 1,
+                    width: '100%',
+                  }}
+                >
+                  <Box marginRight={1}>
+                    <ProceduralColorIcon id={result.id} />
+                  </Box>
+                  <Typography variant="body2">{result.title}</Typography>
+                </Box>
+              </Box>
+            ))}
+          </>
+        );
+      })}
     </>
   );
 };

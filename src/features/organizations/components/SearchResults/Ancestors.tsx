@@ -53,9 +53,11 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
       {() => (
         <Box display="flex" flexWrap="wrap" width="100%">
           {ancestors.length === 0 && (
-            <Typography color="secondary" variant="body2">
-              {messages.sidebar.filter.topLevel()}
-            </Typography>
+            <Box>
+              <Typography color="secondary" variant="body2">
+                {messages.sidebar.filter.topLevel()}
+              </Typography>
+            </Box>
           )}
           {ancestors.map((ancestor, index) => {
             return (
