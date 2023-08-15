@@ -104,6 +104,8 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           >
             <Typography fontSize={12} margin={1} variant="body2">
               {messages.sidebar.recent.title().toLocaleUpperCase()}
+              {searchString.length > 0 &&
+                ` (${messages.sidebar.filtered().toLocaleUpperCase()})`}
             </Typography>
             <Button
               onClick={() => setRecentOrganizationIds([])}
@@ -125,6 +127,9 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
         <Box>
           <Typography fontSize={12} m={1} variant="body2">
             {messages.sidebar.allOrganizations().toLocaleUpperCase()}
+
+            {searchString.length > 0 &&
+              ` (${messages.sidebar.filtered().toLocaleUpperCase()})`}
           </Typography>
           {searchString.length == 0 && (
             <OrganizationTree

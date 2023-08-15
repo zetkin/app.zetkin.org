@@ -10,6 +10,7 @@ export default makeMessages('feat.organizations', {
       noResults: m('No organizations matching this filter'),
       topLevel: m('Top level organization'),
     },
+    filtered: m('Filtered'),
     recent: {
       clear: m('Clear'),
       title: m('Recent organizations'),
