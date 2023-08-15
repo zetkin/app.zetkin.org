@@ -79,7 +79,7 @@ const SearchResults = ({ flatOrgData, searchString }: SearchResultsProps) => {
       {keys.map((key) => {
         const results = searchResultsByParent[parseInt(key)];
         return (
-          <>
+          <Box key={key}>
             <Box paddingX={1}>
               <Ancestors ancestors={findAncestors(results[0])} />
             </Box>
@@ -106,7 +106,7 @@ const SearchResults = ({ flatOrgData, searchString }: SearchResultsProps) => {
                 </Box>
               </Box>
             ))}
-          </>
+          </Box>
         );
       })}
     </>
