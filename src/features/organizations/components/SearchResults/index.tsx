@@ -1,14 +1,11 @@
-import { FilterListOutlined } from '@mui/icons-material';
 import Fuse from 'fuse.js';
 import NextLink from 'next/link';
 import { useMemo } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
 import Ancestors from './Ancestors';
-import messageIds from '../../l10n/messageIds';
 import ProceduralColorIcon from '../ProceduralColorIcon';
 import { TreeItemData } from '../../types';
-import { useMessages } from 'core/i18n';
 
 interface SearchResultsProps {
   flatOrgData: TreeItemData[];
@@ -21,7 +18,6 @@ const SearchResults = ({
   onSwitchOrg,
   searchString,
 }: SearchResultsProps) => {
-  const messages = useMessages(messageIds);
   const theme = useTheme();
 
   const searchResults = useMemo(() => {
@@ -53,17 +49,6 @@ const SearchResults = ({
     }
 
     return ancestors;
-  }
-
-  if (!searchResults.length) {
-    return (
-      <Box alignItems="center" display="flex" flexDirection="column">
-        <FilterListOutlined color="secondary" sx={{ fontSize: '12em' }} />
-        <Typography color="secondary">
-          {messages.sidebar.filter.noResults()}
-        </Typography>
-      </Box>
-    );
   }
 
   const searchResultsByParent: Record<number, TreeItemData[]> = {};

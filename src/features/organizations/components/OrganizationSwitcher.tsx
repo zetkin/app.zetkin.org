@@ -1,3 +1,4 @@
+import { FilterListOutlined } from '@mui/icons-material';
 import Fuse from 'fuse.js';
 import {
   Box,
@@ -84,15 +85,28 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
       : flatOrgData;
   }, [searchString]);
 
-  const showRecentOrgs =
-    searchString.length === 0 &&
-    recentOrgs.length > 0 &&
-    flatOrgData.length >= 5;
+  const filteredAllOrgs = useMemo(() => {
+    const fuse = new Fuse(flatOrgData, {
+      keys: ['title'],
+      threshold: 0.4,
+    });
 
-  const showFilteredRecentOrgs =
-    searchString.length > 0 &&
-    filteredRecentOrgs.length > 0 &&
-    flatOrgData.length >= 5;
+    return searchString
+      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
+      : flatOrgData;
+  }, [searchString]);
+
+  const showLoadingState = treeDataList.isLoading;
+  const showEmptyState = searchString.length > 0 && filteredAllOrgs.length == 0;
+  const showOrgTree = orgData.length > 0 && !showEmptyState;
+  const hasMatchesInRecentOrgs =
+    searchString.length > 0 && filteredRecentOrgs.length > 0;
+  const hasRecentOrgs =
+    searchString.length == 0 &&
+    recentOrgs.length > 0 &&
+    flatOrgData.length >= 5 &&
+    !showEmptyState;
+  const showRecentOrgs = hasRecentOrgs || hasMatchesInRecentOrgs;
 
   return (
     <Box
@@ -114,6 +128,19 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
         zIndex: 1000,
       }}
     >
+      {showLoadingState && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}>
+          <CircularProgress />
+        </Box>
+      )}
+      {showEmptyState && (
+        <Box alignItems="center" display="flex" flexDirection="column">
+          <FilterListOutlined color="secondary" sx={{ fontSize: '12em' }} />
+          <Typography color="secondary">
+            {messages.sidebar.filter.noResults()}
+          </Typography>
+        </Box>
+      )}
       {showRecentOrgs && (
         <Box>
           <Box
@@ -123,6 +150,8 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           >
             <Typography fontSize={12} margin={1} variant="body2">
               {messages.sidebar.recent.title().toLocaleUpperCase()}
+              {hasMatchesInRecentOrgs &&
+                ` (${messages.sidebar.filtered().toLocaleUpperCase()})`}
             </Typography>
             <Button
               onClick={() => setRecentOrganizationIds([])}
@@ -136,27 +165,13 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           <RecentOrganizations
             onSwitchOrg={onSwitchOrg}
             orgId={orgId}
-            recentOrganizations={recentOrgs}
+            recentOrganizations={
+              hasMatchesInRecentOrgs ? filteredRecentOrgs : recentOrgs
+            }
           />
         </Box>
       )}
-      {showFilteredRecentOrgs && (
-        <Box>
-          <Typography fontSize={12} margin={1} variant="body2">
-            {`${messages.sidebar.recent
-              .title()
-              .toLocaleUpperCase()} (${messages.sidebar
-              .filtered()
-              .toLocaleUpperCase()})`}
-          </Typography>
-          <RecentOrganizations
-            onSwitchOrg={onSwitchOrg}
-            orgId={orgId}
-            recentOrganizations={filteredRecentOrgs}
-          />
-        </Box>
-      )}
-      {orgData.length > 0 && (
+      {showOrgTree && (
         <Box>
           <Typography fontSize={12} m={1} variant="body2">
             {messages.sidebar.allOrganizations().toLocaleUpperCase()}
@@ -177,11 +192,6 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
               searchString={searchString}
             />
           )}
-        </Box>
-      )}
-      {treeDataList.isLoading && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}>
-          <CircularProgress />
         </Box>
       )}
     </Box>
