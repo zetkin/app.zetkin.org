@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import Fuse from 'fuse.js';
 import {
   Box,
   Button,
@@ -6,6 +6,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { FC, useMemo } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import OrganizationTree from './OrganizationTree';
@@ -67,12 +68,30 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
   }
 
   const flatOrgData = makeFlatOrgData(orgData);
-  const recentOrganizations = recentOrganizationIds.map((id) =>
-    flatOrgData.find((org) => org.id === id)
-  );
+
+  const recentOrgs = recentOrganizationIds
+    .map((id) => flatOrgData.find((org) => org.id === id))
+    .filter((org) => org?.id != orgId);
+
+  const filteredRecentOrgs = useMemo(() => {
+    const fuse = new Fuse(recentOrgs, {
+      keys: ['title'],
+      threshold: 0.4,
+    });
+
+    return searchString
+      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
+      : flatOrgData;
+  }, [searchString]);
 
   const showRecentOrgs =
-    recentOrganizations.filter((org) => org?.id != orgId).length > 0 &&
+    searchString.length === 0 &&
+    recentOrgs.length > 0 &&
+    flatOrgData.length >= 5;
+
+  const showFilteredRecentOrgs =
+    searchString.length > 0 &&
+    filteredRecentOrgs.length > 0 &&
     flatOrgData.length >= 5;
 
   return (
@@ -96,7 +115,7 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
       }}
     >
       {showRecentOrgs && (
-        <Box marginBottom={1}>
+        <Box>
           <Box
             alignItems="center"
             display="flex"
@@ -104,8 +123,6 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           >
             <Typography fontSize={12} margin={1} variant="body2">
               {messages.sidebar.recent.title().toLocaleUpperCase()}
-              {searchString.length > 0 &&
-                ` (${messages.sidebar.filtered().toLocaleUpperCase()})`}
             </Typography>
             <Button
               onClick={() => setRecentOrganizationIds([])}
@@ -119,7 +136,23 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           <RecentOrganizations
             onSwitchOrg={onSwitchOrg}
             orgId={orgId}
-            recentOrganizations={recentOrganizations}
+            recentOrganizations={recentOrgs}
+          />
+        </Box>
+      )}
+      {showFilteredRecentOrgs && (
+        <Box>
+          <Typography fontSize={12} margin={1} variant="body2">
+            {`${messages.sidebar.recent
+              .title()
+              .toLocaleUpperCase()} (${messages.sidebar
+              .filtered()
+              .toLocaleUpperCase()})`}
+          </Typography>
+          <RecentOrganizations
+            onSwitchOrg={onSwitchOrg}
+            orgId={orgId}
+            recentOrganizations={filteredRecentOrgs}
           />
         </Box>
       )}
@@ -127,7 +160,6 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
         <Box>
           <Typography fontSize={12} m={1} variant="body2">
             {messages.sidebar.allOrganizations().toLocaleUpperCase()}
-
             {searchString.length > 0 &&
               ` (${messages.sidebar.filtered().toLocaleUpperCase()})`}
           </Typography>
