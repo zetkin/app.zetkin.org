@@ -12,6 +12,7 @@ import ZUIAvatar from '../ZUIAvatar';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import {
   Architecture,
+  Close,
   ExpandLess,
   ExpandMore,
   Explore,
@@ -34,12 +35,11 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
-import useDebounce from 'utils/hooks/useDebounce';
 import ZUIFuture from 'zui/ZUIFuture';
 
 const drawerWidth = 300;
@@ -127,13 +127,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     router.push(`/logout`);
   }
 
-  const debouncedFinishedTyping = useDebounce(
-    async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      setSearchString(evt.target.value);
-    },
-    400
-  );
-
   const showOrgSwitcher = checked && open;
 
   return (
@@ -212,6 +205,16 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                           <TextField
                             fullWidth
                             InputProps={{
+                              endAdornment:
+                                searchString.length > 0 ? (
+                                  <Close
+                                    color="secondary"
+                                    onClick={() => setSearchString('')}
+                                    sx={{ cursor: 'pointer' }}
+                                  />
+                                ) : (
+                                  ''
+                                ),
                               startAdornment: (
                                 <FilterListOutlined
                                   color="secondary"
@@ -219,8 +222,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                                 />
                               ),
                             }}
-                            onChange={(e) => debouncedFinishedTyping(e)}
+                            onChange={(e) => setSearchString(e.target.value)}
                             placeholder={messages.organizeSidebar.filter()}
+                            value={searchString}
                           />
                         )}
                       </Box>
