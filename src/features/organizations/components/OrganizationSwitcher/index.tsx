@@ -1,5 +1,5 @@
+import { FC } from 'react';
 import { FilterListOutlined } from '@mui/icons-material';
-import Fuse from 'fuse.js';
 import {
   Box,
   Button,
@@ -7,17 +7,13 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { FC, useMemo } from 'react';
 
-import messageIds from '../l10n/messageIds';
-import OrganizationTree from './OrganizationTree';
-import RecentOrganizations from './RecentOrganizations';
-import { RootState } from 'core/store';
-import SearchResults from './SearchResults';
-import { TreeItemData } from '../types';
-import useLocalStorage from 'zui/hooks/useLocalStorage';
+import messageIds from '../../l10n/messageIds';
+import OrganizationTree from '../OrganizationTree';
+import RecentOrganizations from '../RecentOrganizations';
+import SearchResults from '../SearchResults';
 import { useMessages } from 'core/i18n';
-import { useSelector } from 'react-redux';
+import useOrgSwitcher from './useOrgSwitcher';
 
 interface OrganizationSwitcherProps {
   orgId: number;
@@ -32,81 +28,20 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const [recentOrganizationIds, setRecentOrganizationIds] = useLocalStorage(
-    'recentOrganizationIds',
-    [] as number[]
-  );
 
-  function onSwitchOrg() {
-    setRecentOrganizationIds([
-      orgId,
-      ...recentOrganizationIds.filter((id) => id != orgId),
-    ]);
-  }
-
-  function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
-    return value !== null && value !== undefined;
-  }
-
-  const treeDataList = useSelector(
-    (state: RootState) => state.organizations.treeDataList
-  );
-
-  const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
-
-  function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
-    let children = [] as TreeItemData[];
-    const flatOrgData = orgData.map((org) => {
-      if (org.children && org.children.length) {
-        children = [...children, ...org.children];
-      }
-      return org;
-    });
-
-    return flatOrgData.concat(
-      children.length ? makeFlatOrgData(children) : children
-    );
-  }
-
-  const flatOrgData = makeFlatOrgData(orgData);
-
-  const recentOrgs = recentOrganizationIds
-    .map((id) => flatOrgData.find((org) => org.id === id))
-    .filter((org) => org?.id != orgId);
-
-  const filteredRecentOrgs = useMemo(() => {
-    const fuse = new Fuse(recentOrgs, {
-      keys: ['title'],
-      threshold: 0.4,
-    });
-
-    return searchString
-      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
-      : flatOrgData;
-  }, [searchString]);
-
-  const filteredAllOrgs = useMemo(() => {
-    const fuse = new Fuse(flatOrgData, {
-      keys: ['title'],
-      threshold: 0.4,
-    });
-
-    return searchString
-      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
-      : flatOrgData;
-  }, [searchString]);
-
-  const showLoadingState = treeDataList.isLoading;
-  const showEmptyState = searchString.length > 0 && filteredAllOrgs.length == 0;
-  const showOrgTree = orgData.length > 0 && !showEmptyState;
-  const hasMatchesInRecentOrgs =
-    searchString.length > 0 && filteredRecentOrgs.length > 0;
-  const hasRecentOrgs =
-    searchString.length == 0 &&
-    recentOrgs.length > 0 &&
-    flatOrgData.length >= 5 &&
-    !showEmptyState;
-  const showRecentOrgs = hasRecentOrgs || hasMatchesInRecentOrgs;
+  const {
+    filteredRecentOrgs,
+    flatOrgData,
+    hasMatchesInRecentOrgs,
+    onSwitchOrg,
+    orgData,
+    recentOrgs,
+    setRecentOrganizationIds,
+    showEmptyState,
+    showLoadingState,
+    showOrgTree,
+    showRecentOrgs,
+  } = useOrgSwitcher(orgId, searchString);
 
   return (
     <Box
