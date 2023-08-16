@@ -64,7 +64,7 @@ feat:
       deselect: Ikke velg
       editEvents: Rediger arrangementer
       ellipsisMenu:
-        cancel: Avbryt
+        cancel: Avlys
         cancelWarning: Hvis ja, husk å varsle alle deltakere om at arrangementet er
           avlyst!
         confirmCancel: Er du sikker på at du vil avlyse de valgte arrangementene?
@@ -307,7 +307,7 @@ feat:
       noLocation: Ingen fysisk plassering
       noTitle: Arrangement uten tittel
     eventActionButtons:
-      cancel: Avbryt
+      cancel: Avlys
       delete: Slett
       duplicate: Kopier
       publish: Publiser
@@ -374,7 +374,7 @@ feat:
       backToLocations: Tilbake til steder
       backToShifts: Tilbake til skiftliste
       booked: Registrert
-      cancel: Avbryt
+      cancel: Avlys
       cancelWarning: Husk å varsle alle som er registrert eller påmeldt om at arrangementet
         avlyses.
       confirmCancel: Er du sikker på at du vil avlyse dette arrangementet?
@@ -413,7 +413,7 @@ feat:
     form:
       activity: Aktivitet
       campaign: Kampanje
-      cancel: Avbryt
+      cancel: Avlys
       create: Nytt arrangement
       edit: Rediger arrangement
       end: Slutttidspunkt
@@ -576,7 +576,7 @@ feat:
             2023" de siste 30 dagene.
         inputString: '{addRemoveSelect} folk som {callSelect} minst {minTimesInput}
           {minTimes, plural, one {gang} other {ganger}} i {assignmentSelect} {timeFrame}.'
-        minTimes: '{minTimesInput} {minTimes, plural, en {gang} other {ganger}}'
+        minTimes: '{minTimesInput} {minTimes, plural, one {gang} other {ganger}}'
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
@@ -612,7 +612,7 @@ feat:
           two: Fjern de 5 mest aktive folka i organisasjonen når som helst.
         inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople,
           plural, one {person} other {folka}} i organisasjonen {timeFrame}.'
-        numPeople: '{numPeople, plural, en {person} other {folk}}'
+        numPeople: '{numPeople, plural, one {person} other {folk}}'
       personData:
         addRemoveSelect:
           add: Legg til
@@ -692,9 +692,9 @@ feat:
           add: legg til
           sub: fjern
         examples:
-          one: Tilfeldig legg til 20 folk i organisasjonen.
-          two: Tilfeldig fjern 15% av folk i organisasjonen.
-        inputString: Tilfeldig {addRemoveSelect} {quantity} i organisasjonen.
+          one: Legg til 20 folk i organisasjonen, ved å velge tilfeldig.
+          two: Fjern 15% av folk i organisasjonen, ved å velge tilfeldig.
+        inputString: '{addRemoveSelect} {quantity} i organisasjonen, ved å velge tilfeldig.'
       subQuery:
         addRemoveSelect:
           add: Legg til
@@ -772,21 +772,19 @@ feat:
         surveySelect:
           any: en spørreundersøkelse
           none: Denne organisasjonen har ikke noen spørreundersøkelsen ennå
-          survey: spørreundersøkelsen "{surveyTitle}"
+          survey: '"{surveyTitle}"'
       surveySubmission:
         addRemoveSelect:
           add: Legg til
           sub: Fjern
         examples:
-          one: Folk som har besvart spørreundersøkelsen 'Medlemsundersøkelse' før
-            i dag.
-          two: Folk som har besvart spørreundersøkelsen 'Medlemsundersøkelse' de siste
-            30 dagene.
+          one: Folk som har besvart 'Medlemsundersøkelse' før i dag.
+          two: Folk som har besvart 'Medlemsundersøkelse' de siste 30 dagene.
         inputString: '{addRemoveSelect} folk som har besvart {surveySelect} {timeFrame}.'
         surveySelect:
           any: en spørreundersøkelse
           none: Denne organisasjonen har ikke noen spørreundersøkelsen ennå
-          survey: spørreundersøkelsen "{surveyTitle}"
+          survey: '"{surveyTitle}"'
       task:
         addRemoveSelect:
           add: Legg til
@@ -800,8 +798,8 @@ feat:
             minst en gang når som helst
           two: Legg til folk som har trykket ignorer på innhold i et prosjekt mellom
             2 og 5 ganger før i dag
-        inputString: '{addRemoveSelect} folk som har {taskStatusSelect} {taskSelect}{campaignSelect}
-          {matchingSelect} {timeFrame}'
+        inputString: '{addRemoveSelect} folk som har {taskStatusSelect} {taskSelect}
+          {campaignSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: innhold
           task: innholdet "{task}"
@@ -1681,5 +1679,6 @@ zui:
         addassignee: '{actor} tildelte kontaktperson {assignee}'
         addnote: '{actor} la til et notat'
         addsubject: '{actor} la til {subject}'
+        convert: '{actor} konverterte fra {oldLabel} til {newLabel}'
         update:
           readMore: Les mer
