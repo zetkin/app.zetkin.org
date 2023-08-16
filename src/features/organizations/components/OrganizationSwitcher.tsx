@@ -173,6 +173,7 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           {searchString.length > 0 && (
             <SearchResults
               flatOrgData={flatOrgData}
+              onSwitchOrg={onSwitchOrg}
               searchString={searchString}
             />
           )}

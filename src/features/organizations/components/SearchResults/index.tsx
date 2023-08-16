@@ -1,5 +1,6 @@
 import { FilterListOutlined } from '@mui/icons-material';
 import Fuse from 'fuse.js';
+import NextLink from 'next/link';
 import { useMemo } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
@@ -11,10 +12,15 @@ import { useMessages } from 'core/i18n';
 
 interface SearchResultsProps {
   flatOrgData: TreeItemData[];
+  onSwitchOrg: () => void;
   searchString: string;
 }
 
-const SearchResults = ({ flatOrgData, searchString }: SearchResultsProps) => {
+const SearchResults = ({
+  flatOrgData,
+  onSwitchOrg,
+  searchString,
+}: SearchResultsProps) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
 
@@ -84,27 +90,33 @@ const SearchResults = ({ flatOrgData, searchString }: SearchResultsProps) => {
               <Ancestors ancestors={findAncestors(results[0])} />
             </Box>
             {results.map((result) => (
-              <Box key={result.id} display="flex" flexDirection="column">
+              <NextLink key={result.id} href={`/organize/${result.id}`}>
                 <Box
-                  sx={{
-                    '&:hover': {
-                      backgroundColor: theme.palette.grey[100],
-                    },
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    paddingLeft: 3,
-                    paddingRight: 1,
-                    paddingY: 1,
-                    width: '100%',
-                  }}
+                  display="flex"
+                  flexDirection="column"
+                  onClick={onSwitchOrg}
                 >
-                  <Box marginRight={1}>
-                    <ProceduralColorIcon id={result.id} />
+                  <Box
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: theme.palette.grey[100],
+                      },
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      paddingLeft: 3,
+                      paddingRight: 1,
+                      paddingY: 1,
+                      width: '100%',
+                    }}
+                  >
+                    <Box marginRight={1}>
+                      <ProceduralColorIcon id={result.id} />
+                    </Box>
+                    <Typography variant="body2">{result.title}</Typography>
                   </Box>
-                  <Typography variant="body2">{result.title}</Typography>
                 </Box>
-              </Box>
+              </NextLink>
             ))}
           </Box>
         );
