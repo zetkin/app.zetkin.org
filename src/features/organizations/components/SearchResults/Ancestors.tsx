@@ -21,12 +21,15 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
   return (
     <ZUIResponsiveContainer
       onWidthChange={(width, container) => {
+        //Take all the elements that represent an ancestor in the "bread crumb trail"
         const childElements = Array.from(container.querySelectorAll('.crumb'));
 
         if (width == 0) {
           return;
         }
 
+        //Save the original widhts of the crumb elements = how wide they are when they
+        //show the full ancestor's title
         originalCrumbWidths.current = childElements.map((crumb, index) => {
           const oldWidth = originalCrumbWidths.current
             ? originalCrumbWidths.current[index]
@@ -35,10 +38,16 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
         });
 
         let spaceLeft = Math.round(width);
+
+        //Make an array of false values
         const nextCrumbStates: boolean[] = originalCrumbWidths.current.map(
           () => false
         );
 
+        //Loop backwarrds through the original widhts of the crumbs,
+        //to give priority to the ancestors closest to the child.
+        //Set the value to true if the space left if displaying the
+        //ancestor's title is more than 40 pixels.
         for (let i = originalCrumbWidths.current.length - 1; i >= 0; i--) {
           spaceLeft -= originalCrumbWidths.current[i];
           if (spaceLeft > 40) {
@@ -46,6 +55,7 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
           }
         }
 
+        //Save the array of true/false values in state.
         setCrumbStates(nextCrumbStates);
       }}
       ssrWidth={300}
