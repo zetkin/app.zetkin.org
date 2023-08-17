@@ -1,9 +1,11 @@
 import Fuse from 'fuse.js';
 import { RootState } from 'core/store';
-import { TreeItemData } from 'features/organizations/types';
-import useLocalStorage from 'zui/hooks/useLocalStorage';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
+import notEmpty from 'utils/notEmpty';
+import { TreeItemData } from 'features/organizations/types';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
   let children = [] as TreeItemData[];
@@ -20,10 +22,6 @@ function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
 }
 
 function useOrgSwitcher(orgId: number, searchString: string) {
-  function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
-    return value !== null && value !== undefined;
-  }
-
   const treeDataList = useSelector(
     (state: RootState) => state.organizations.treeDataList
   );
