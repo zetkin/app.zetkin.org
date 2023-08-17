@@ -48,7 +48,7 @@ const SearchResults = ({
       parent = getParent(parent);
     }
 
-    return ancestors;
+    return ancestors.reverse();
   }
 
   const searchResultsByParent: Record<number, TreeItemData[]> = {};
