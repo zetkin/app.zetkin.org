@@ -83,6 +83,7 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   const showRecentOrgs = hasRecentOrgs || hasMatchesInRecentOrgs;
 
   return {
+    filteredAllOrgs,
     filteredRecentOrgs,
     flatOrgData,
     hasMatchesInRecentOrgs,

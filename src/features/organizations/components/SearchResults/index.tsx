@@ -1,6 +1,4 @@
-import Fuse from 'fuse.js';
 import NextLink from 'next/link';
-import { useMemo } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
 import Ancestors from './Ancestors';
@@ -9,27 +7,16 @@ import { TreeItemData } from '../../types';
 
 interface SearchResultsProps {
   flatOrgData: TreeItemData[];
+  matchingOrgs: TreeItemData[];
   onSwitchOrg: () => void;
-  searchString: string;
 }
 
 const SearchResults = ({
   flatOrgData,
+  matchingOrgs,
   onSwitchOrg,
-  searchString,
 }: SearchResultsProps) => {
   const theme = useTheme();
-
-  const searchResults = useMemo(() => {
-    const fuse = new Fuse(flatOrgData, {
-      keys: ['title'],
-      threshold: 0.4,
-    });
-
-    return searchString
-      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
-      : flatOrgData;
-  }, [searchString]);
 
   function findAncestors(node: TreeItemData | null): TreeItemData[] {
     if (node === null) {
@@ -39,7 +26,9 @@ const SearchResults = ({
     const ancestors: TreeItemData[] = [];
 
     const getParent = (childOrg: TreeItemData) => {
-      return flatOrgData.find((org) => org.id == childOrg.parent?.id);
+      return flatOrgData.find((org) => {
+        return org.id == childOrg.parent?.id;
+      });
     };
 
     let parent = getParent(node);
@@ -53,7 +42,7 @@ const SearchResults = ({
 
   const searchResultsByParent: Record<number, TreeItemData[]> = {};
 
-  searchResults.forEach((result) => {
+  matchingOrgs.forEach((result) => {
     //Give 0 as parent id to top level orgs
     const parentId = result.parent?.id ?? 0;
 

@@ -30,6 +30,7 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
   const messages = useMessages(messageIds);
 
   const {
+    filteredAllOrgs,
     filteredRecentOrgs,
     flatOrgData,
     hasMatchesInRecentOrgs,
@@ -121,8 +122,8 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           {searchString.length > 0 && (
             <SearchResults
               flatOrgData={flatOrgData}
+              matchingOrgs={filteredAllOrgs}
               onSwitchOrg={onSwitchOrg}
-              searchString={searchString}
             />
           )}
         </Box>
