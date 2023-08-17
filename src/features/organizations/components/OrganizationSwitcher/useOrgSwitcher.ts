@@ -5,6 +5,20 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
+function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
+  let children = [] as TreeItemData[];
+  const flatOrgData = orgData.map((org) => {
+    if (org.children && org.children.length) {
+      children = [...children, ...org.children];
+    }
+    return org;
+  });
+
+  return flatOrgData.concat(
+    children.length ? makeFlatOrgData(children) : children
+  );
+}
+
 function useOrgSwitcher(orgId: number, searchString: string) {
   function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
     return value !== null && value !== undefined;
@@ -21,20 +35,6 @@ function useOrgSwitcher(orgId: number, searchString: string) {
     'recentOrganizationIds',
     [] as number[]
   );
-
-  function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
-    let children = [] as TreeItemData[];
-    const flatOrgData = orgData.map((org) => {
-      if (org.children && org.children.length) {
-        children = [...children, ...org.children];
-      }
-      return org;
-    });
-
-    return flatOrgData.concat(
-      children.length ? makeFlatOrgData(children) : children
-    );
-  }
 
   function onSwitchOrg() {
     setRecentOrganizationIds([
