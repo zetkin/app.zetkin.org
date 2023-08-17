@@ -45,25 +45,26 @@ function useOrgSwitcher(orgId: number, searchString: string) {
     .map((id) => flatOrgData.find((org) => org.id === id))
     .filter((org) => org?.id != orgId);
 
-  const filteredRecentOrgs = useMemo(() => {
-    const fuse = new Fuse(recentOrgs, {
+  const recentOrgsFuse = useMemo(() => {
+    return new Fuse(recentOrgs, {
       keys: ['title'],
       threshold: 0.4,
     });
+  }, [recentOrgs]);
 
+  const filteredRecentOrgs = useMemo(() => {
     return searchString
-      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
-      : flatOrgData;
+      ? recentOrgsFuse.search(searchString).map((fuseResult) => fuseResult.item)
+      : recentOrgs;
   }, [searchString]);
 
-  const filteredAllOrgs = useMemo(() => {
-    const fuse = new Fuse(flatOrgData, {
-      keys: ['title'],
-      threshold: 0.4,
-    });
+  const allOrgsFuse = useMemo(() => {
+    return new Fuse(flatOrgData, { keys: ['title'], threshold: 0.4 });
+  }, [flatOrgData]);
 
+  const filteredAllOrgs = useMemo(() => {
     return searchString
-      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
+      ? allOrgsFuse.search(searchString).map((fuseResult) => fuseResult.item)
       : flatOrgData;
   }, [searchString]);
 
