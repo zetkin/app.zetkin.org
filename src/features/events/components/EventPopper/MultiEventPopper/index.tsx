@@ -104,7 +104,13 @@ const MultiEventPopper: FC<MultiEventPopperProps> = ({
               />
             </Box>
             {singleEvent && (
-              <SingleEvent event={singleEvent} onClickAway={onClickAway} />
+              <SingleEvent
+                event={singleEvent}
+                onClickAway={() => {
+                  onClickAway();
+                  setSingleEvent(null);
+                }}
+              />
             )}
             <Box maxHeight="500px" sx={{ overFlowY: 'auto' }}>
               {!singleEvent && clusterType === CLUSTER_TYPE.MULTI_SHIFT && (
