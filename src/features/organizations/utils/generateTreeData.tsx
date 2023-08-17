@@ -38,6 +38,7 @@ export default function generateTreeData(
     return {
       children: childOrgs.map(buildTree),
       id: parent.id,
+      parent: parent.parent,
       title: parent.title,
     };
   };
