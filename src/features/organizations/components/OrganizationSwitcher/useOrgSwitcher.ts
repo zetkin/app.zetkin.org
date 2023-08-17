@@ -27,7 +27,9 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   );
   const orgData = treeDataList.items.map((item) => item.data).filter(notEmpty);
 
-  const flatOrgData = makeFlatOrgData(orgData);
+  const flatOrgData = useMemo(() => {
+    return makeFlatOrgData(orgData);
+  }, [orgData]);
 
   const [recentOrganizationIds, setRecentOrganizationIds] = useLocalStorage(
     'recentOrganizationIds',
