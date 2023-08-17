@@ -16,15 +16,15 @@ import { useMessages } from 'core/i18n';
 import useOrgSwitcher from './useOrgSwitcher';
 
 interface OrganizationSwitcherProps {
+  open: boolean;
   orgId: number;
   searchString: string;
-  showOrgSwitcher: boolean;
 }
 
 const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
+  open,
   orgId,
   searchString,
-  showOrgSwitcher,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -47,12 +47,10 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
     <Box
       sx={{
         backgroundColor: theme.palette.background.paper,
-        borderBottomColor: showOrgSwitcher
-          ? 'transparent'
-          : theme.palette.grey[300],
+        borderBottomColor: open ? 'transparent' : theme.palette.grey[300],
         borderBottomStyle: 'solid',
         borderBottomWidth: 1,
-        height: showOrgSwitcher ? 'calc(100% - 130px)' : 0,
+        height: open ? 'calc(100% - 130px)' : 0,
         overflowY: 'auto',
         position: 'absolute',
         transition: theme.transitions.create(['borderBottomColor', 'height'], {

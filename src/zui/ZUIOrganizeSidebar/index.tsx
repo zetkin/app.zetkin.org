@@ -239,9 +239,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               )}
             </Box>
             <OrganizationSwitcher
+              open={showOrgSwitcher}
               orgId={orgId}
               searchString={searchString}
-              showOrgSwitcher={showOrgSwitcher}
             />
           </Box>
           <Box
