@@ -715,7 +715,7 @@ feat:
         inSelect:
           in: i
           notin: ikke i
-        inputString: '{addRemoveSelect} personer der er {inSelect} på listen {inSelect}'
+        inputString: '{addRemoveSelect} personer der er {inSelect} på listen {viewSelect}'
         viewSelect:
           none: Denne organisation har ingen lister endnu
       random:

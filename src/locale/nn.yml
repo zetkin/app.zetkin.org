@@ -665,7 +665,7 @@ feat:
           preview:
             all: alle
             any: en av
-            minMatching: minst
+            minMatching: minst {minMatching}
             none: ingen
         examples:
           one: 'Legg til folk med minst 1 av følgende: ''Medlem'', ''Aktivist'''
@@ -713,7 +713,7 @@ feat:
           preview:
             callassignment_goal: fullføringsgruppa for ringeoppdraget "{queryTitle}"
             callassignment_target: målgruppa for ringeoppdraget  "{queryTitle}"
-            standalone: smartsøket
+            standalone: smartsøket "{queryTitle}"
           selectLabel:
             callassignment_goal: fullførtgruppa
             callassignment_target: målgruppa
@@ -840,7 +840,7 @@ feat:
       preview:
         between: mellom {min} og {max} ganger
         max: maksimalt {max} {max, plural, one {gang} other {ganger}}
-        min: minst {max} {max, plural, one {gang} other {ganger}}
+        min: minst {min} {max, plural, one {gang} other {ganger}}
         once: minst en gang
     misc:
       noOptions: Ingen like tags
