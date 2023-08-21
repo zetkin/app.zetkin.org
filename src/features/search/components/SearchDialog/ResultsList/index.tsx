@@ -8,6 +8,7 @@ import PersonListItem from './PersonListItem';
 import SurveyListItem from './SurveyListItem';
 import TaskListItem from './TaskListItem';
 import ViewListItem from './ViewListItem';
+import JourneyInstanceListItem from './JourneyInstanceListItem';
 
 import {
   SEARCH_DATA_TYPE,
@@ -55,6 +56,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
             }
             if (result.type === SEARCH_DATA_TYPE.VIEW) {
               return <ViewListItem view={result.match} />;
+            }
+            if (result.type === SEARCH_DATA_TYPE.JOURNEY_INSTANCE) {
+              return <JourneyInstanceListItem journeyInstance={result.match} />;
             }
           })}
         </>
