@@ -9,7 +9,7 @@ core:
     header: Du bliver omdirigeret
     info: Du bruger en prerelease version af Zetkin, der ikke understøtter den funktion
       du vil bruge. Du bliver omdirigeret til en ældre version af Zetkin, der understøtter
-      den funktion
+      den funktion.
 feat:
   calendar:
     createMenu:
@@ -561,7 +561,7 @@ feat:
       person_tags: Baseret på deres etiketter
       person_view: Mennesker fra en liste
       random: Tilfældigt udvalgte personer
-      sub_query: Baseret på en anden smart søgning.
+      sub_query: Baseret på en anden Smart Søgning.
       survey_option: Baseret på svar i et fritekstfelt i et spørgeskema
       survey_response: Baseret på svar i ud fra svarmuligheder i et spørgeskema
       survey_submission: Personer som har deltaget i et spørgeskema
@@ -593,7 +593,7 @@ feat:
           reached: er nået med succes
         examples:
           one: Tilføj personer som vi har nået mindst to gange nogensinde i hvilken
-            som helst opgave til
+            som helst opgave til.
           two: Fjern personer, der er blevet ringet op mindst 1 gang i opgaven 'Aktiver
             gamle medlemmer' i løbet af de sidste 30 dage.
         inputString: '{addRemoveSelect} personer som {callSelect} mindst {minTimes}
@@ -634,7 +634,7 @@ feat:
           sub: Fjern
         examples:
           one: Tilføj de 100 mest aktive medlemmer af organisationen før dags dato.
-          two: Fjern de fem mest aktive medlemmer af organisationen nogensinde
+          two: Fjern de fem mest aktive medlemmer af organisationen nogensinde.
         inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople}
           i organisationen {timeFrame}.'
         numPeople: '{numPeople, plural, one {person} other {personer}}'
@@ -646,7 +646,7 @@ feat:
         ellipsis: '...'
         examples:
           one: Tilføj alle personer, hvis fornavn er 'Clara' og hvis efternavn er
-            'Zetkin'
+            'Zetkin'.
           two: Fjern enhver person, hvis by er København.
         fieldMatches: '{field} matcher {value}'
         fieldSelect:
@@ -702,7 +702,7 @@ feat:
         examples:
           one: 'Tilføj personer med mindst en af de følgende etiketter: ''medlem'',
             ''aktivist'''
-          two: 'Fjern mennesker med de følgende etiketter: ''bestyrelsesmedlem'''
+          two: 'Fjern mennesker med de følgende etiketter: ''Bestyrelsesmedlem'''
         inputString: '{addRemoveSelect} personer med {condition} af de følgende etiketter:
           {tags}'
       personView:
@@ -710,12 +710,12 @@ feat:
           add: Tilføj
           sub: Fjern
         examples:
-          one: Tilføj personer, der er på listen "aktive medlemmer 2022"
-          two: Fjern personer, der ikke er på listen "aktive medlemmer 2022"
+          one: Tilføj personer, der er på listen "Aktive Medlemmer 2022".
+          two: Fjern personer, der ikke er på listen "Aktive Medlemmer 2022".
         inSelect:
           in: i
           notin: ikke i
-        inputString: '{addRemoveSelect} personer der er {inSelect} på listen {viewSelect}'
+        inputString: '{addRemoveSelect} personer der er {inSelect} på listen {viewSelect}.'
         viewSelect:
           none: Denne organisation har ingen lister endnu
       random:
@@ -726,17 +726,17 @@ feat:
           add: tilføj
           sub: fjern
         examples:
-          one: Tilføj 20 tilfældige personer fra organisationen
-          two: Fjern tilfældige 15% af personerne fra organisationen
-        inputString: '{addRemoveSelect} tilfældige {quantity} fra organisationen'
+          one: Tilføj 20 tilfældige personer fra organisationen.
+          two: Fjern tilfældige 15% af personerne fra organisationen.
+        inputString: '{addRemoveSelect} Tilfældige {quantity} fra organisationen.'
       subQuery:
         addRemoveSelect:
           add: Tilføj
           sub: Erstat
         examples:
-          one: Fjern personer, der matcher smart søgningen 'Personer, der bor i Stockholm'.
-          two: Tilføj personer der matcher målgruppen til ringeopgaven 'ringeopgave
-            et'
+          one: Fjern personer, der matcher Smart Søgningen 'Personer, der bor i Stockholm'.
+          two: Tilføj personer der matcher målgruppen til ringeopgaven 'Ringeopgave
+            et'.
         inputString: '{addRemoveSelect} personer der {matchSelect} {query}.'
         matchSelect:
           in: match
@@ -774,9 +774,9 @@ feat:
         examples:
           one: 'Fjern alle personer som har valgt en af følgende svarmuligheder i
             spørgeskemaet ''medlemsspørgeskema 2020'' (question ''Question one''):
-            ''nogle gange'', ''aldrig'''
+            ''Nogle gange'', ''Aldrig'''
           two: 'Tilføj alle personer som har valgt en af følgende svarmuligheder i
-            spørgeskemaet ''medlemsspørgeskema'' (question ''Question one''): ''svarmulighed
+            spørgeskemaet ''Medlemsspørgeskema'' (question ''Question one''): ''Svarmulighed
             to'''
         inputString: '{addRemoveSelect} personer som har valgt {conditionSelect} en
           af de følgende svarmuligheder {surveySelect} ({questionSelect}): {options}'
@@ -786,17 +786,17 @@ feat:
           question: spørgsmål "{question}"
         surveySelect:
           any: et spørgeskema
-          none: denne organisation har ingen spørgeskemaer endnu
+          none: Denne organisation har ingen spørgeskemaer endnu
           survey: spørgeskema "{surveyTitle}"
       surveyResponse:
         addRemoveSelect:
           add: Tilføj
           sub: Fjern
         examples:
-          one: personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
+          one: Personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
             'Question one') indeholder 'organizer'
-          two: personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
-            'Question one') matcher nøjagtigt 'organizer'
+          two: Personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
+            'Question one') matcher nøjagtigt 'organizer'.
         inputString: '{addRemoveSelect} personer hvis svar på {surveySelect} ({questionSelect})
           {matchSelect} "{freeTextInput}"'
         matchSelect:
@@ -1129,7 +1129,7 @@ feat:
       completedStates:
         completed: Afsluttet {time}
         ignored: Ignoreret {time}
-        notCompleted: Ikke Afsluttet Endnu
+        notCompleted: Ikke afsluttet endnu
       links:
         create: Opret Smart Søgning
         edit: Rediger Smart Søgning
