@@ -41,14 +41,59 @@ async function run() {
   const languages = Object.keys(messagesByLang);
   const englishEntries = messagesByLang.en;
   for (const id of Object.keys(englishEntries)) {
+    const enTokens = parse(englishEntries[id]);
+    const enArgs: Record<string, number> = {};
+    enTokens.forEach((token) => {
+      if (
+        token.type == 'argument' ||
+        token.type == 'plural' ||
+        token.type == 'function'
+      ) {
+        if (!enArgs[token.arg]) {
+          enArgs[token.arg] = 0;
+        }
+
+        enArgs[token.arg]++;
+      }
+    });
     for (const lang of languages) {
       const msg = messagesByLang[lang][id];
       if (!msg) {
         warn(`Message ${id} is missing in locale ${lang}`);
+        continue;
       }
 
       try {
-        parse(msg);
+        const localTokens = parse(msg);
+        const localArgs: Record<string, number> = {};
+        localTokens.forEach((token) => {
+          if (
+            token.type == 'argument' ||
+            token.type == 'plural' ||
+            token.type == 'function'
+          ) {
+            if (!localArgs[token.arg]) {
+              localArgs[token.arg] = 0;
+            }
+            localArgs[token.arg]++;
+          }
+        });
+
+        const allArgs = new Set([
+          ...Object.keys(enArgs),
+          ...Object.keys(localArgs),
+        ]);
+        allArgs.forEach((arg) => {
+          if (!localArgs[arg]) {
+            error(
+              `Message ${id} of locale ${lang} is not using argument ${arg}`
+            );
+          } else if (!enArgs[arg]) {
+            error(
+              `Message ${id} of locale ${lang} is using unknown argument ${arg}`
+            );
+          }
+        });
       } catch (err) {
         error(`Message ${id} of locale ${lang} is malformed`);
       }
