@@ -574,9 +574,9 @@ feat:
             ringeoppdrag når som helst.
           two: Fjern folk som har blitt ringt minst en gang i ringeoppdraget "Valgkamp
             2023" de siste 30 dagene.
-        inputString: '{addRemoveSelect} folk som {callSelect} minst {minTimesInput}
-          {minTimes, plural, one {gang} other {ganger}} i {assignmentSelect} {timeFrame}.'
-        minTimes: '{minTimesInput} {minTimes, plural, one {gang} other {ganger}}'
+        inputString: '{addRemoveSelect} folk som {callSelect} minst {minTimes} {minTimes,
+          plural, one {gang} other {ganger}} i {assignmentSelect} {timeFrame}.'
+        minTimes: '{minTimes} {minTimes, plural, one {gang} other {ganger}}'
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
