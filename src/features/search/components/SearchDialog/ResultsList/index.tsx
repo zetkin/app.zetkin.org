@@ -4,11 +4,11 @@ import { List, ListItem, ListItemText } from '@mui/material';
 
 import CallAssignmentListItem from './CallAssignmentListItem';
 import CampaignListItem from './CampaignListItem';
+import JourneyInstanceListItem from './JourneyInstanceListItem';
 import PersonListItem from './PersonListItem';
 import SurveyListItem from './SurveyListItem';
 import TaskListItem from './TaskListItem';
 import ViewListItem from './ViewListItem';
-import JourneyInstanceListItem from './JourneyInstanceListItem';
 
 import {
   SEARCH_DATA_TYPE,
