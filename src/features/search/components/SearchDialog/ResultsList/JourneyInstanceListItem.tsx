@@ -6,13 +6,9 @@ import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
-import messageIds from '../../../l10n/messageIds';
-import { useMessages } from 'core/i18n';
-
 const JourneyInstanceListItem: React.FunctionComponent<{ journeyInstance: ZetkinJourneyInstance }> = ({
   journeyInstance,
 }) => {
-  const messages = useMessages(messageIds);
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
@@ -25,8 +21,8 @@ const JourneyInstanceListItem: React.FunctionComponent<{ journeyInstance: Zetkin
           </Avatar>
         </ListItemAvatar>
         <ResultsListItemText
-          primary={journeyInstance.journey.title}
-          secondary={journeyInstance.title}
+          primary={journeyInstance.title}
+          secondary={journeyInstance.journey.title}
         />
       </ListItem>
     </Link>
