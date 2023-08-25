@@ -1,11 +1,11 @@
 import { expect } from '@playwright/test';
 import test from '../../fixtures/next';
 
+import ClarasOnboarding from '../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 import KPD from '../../mockData/orgs/KPD';
 import ReferendumSignatures from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
 import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
-import ClarasOnboarding from '../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 
 test.describe('Search', async () => {
   test.beforeEach(async ({ login, moxy }) => {
