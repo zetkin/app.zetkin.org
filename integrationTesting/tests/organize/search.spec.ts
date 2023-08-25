@@ -19,6 +19,7 @@ test.describe('Search', async () => {
     moxy.setZetkinApiMock('/orgs/1/search/view', 'post', []);
     moxy.setZetkinApiMock('/orgs/1/search/callassignment', 'post', []);
     moxy.setZetkinApiMock('/orgs/1/search/survey', 'post', []);
+    moxy.setZetkinApiMock('/orgs/1/search/journeyinstance', 'post', []);
     login();
   });
 
