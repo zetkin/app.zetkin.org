@@ -5,6 +5,7 @@ import KPD from '../../mockData/orgs/KPD';
 import ReferendumSignatures from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
 import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import ClarasOnboarding from '../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 
 test.describe('Search', async () => {
   test.beforeEach(async ({ login, moxy }) => {
@@ -91,6 +92,11 @@ test.describe('Search', async () => {
     const taskSearchReq = moxy.setZetkinApiMock('/orgs/1/search/task', 'post', [
       SpeakToFriendAboutReferendum,
     ]);
+    const journeyInstanceSearchReq = moxy.setZetkinApiMock(
+      '/orgs/1/search/journeyinstance',
+      'post',
+      [ClarasOnboarding]
+    );
 
     await page.goto(appUri + '/organize/1/projects/1');
 
@@ -107,10 +113,11 @@ test.describe('Search', async () => {
     expect(personSearchReq.log()[0].mocked).toEqual(true);
     expect(campaignSearchReq.log()[0].mocked).toEqual(true);
     expect(taskSearchReq.log()[0].mocked).toEqual(true);
+    expect(journeyInstanceSearchReq.log()[0].mocked).toEqual(true);
 
     // Check that results list contains all results
     expect(
       await page.locator('data-testid=SearchDialog-resultsListItem').count()
-    ).toEqual(3);
+    ).toEqual(4);
   });
 });
