@@ -50,4 +50,9 @@ describe('truncateOnMiddle()', () => {
       'Do you have fascinating facts about feminist political beliefs?'
     );
   });
+  it('Falls back to old behaviour if no whitespaces are found', () => {
+    expect(truncateOnMiddle('Supercalifragilisticexpialidocious', 20)).toEqual(
+      'Supercal...idocious'
+    );
+  });
 });
