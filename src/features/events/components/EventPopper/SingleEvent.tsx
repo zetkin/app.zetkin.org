@@ -68,13 +68,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     state == EventState.DRAFT ||
     state == EventState.SCHEDULED ||
     state == EventState.CANCELLED;
-
-  // const remindedParticipants =
-  // participants.filter((p) => p.reminder_sent != null).length ?? 0;
   const remindedParticipants = model.getNumRemindedParticipants();
   const availableParticipants = model.getNumAvailParticipants();
-  // const availableParticipants =
-  // participants.filter((p) => p.cancelled !== null).length ?? 0;
   const signedParticipants =
     respondents.filter((r) => !participants.some((p) => p.id === r.id))
       .length ?? 0;
