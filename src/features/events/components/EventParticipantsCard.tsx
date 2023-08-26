@@ -31,7 +31,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
   const eventData = model.getData().data;
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
-  const availParticipants = eventData?.num_participants_available ?? 0;
+  const availParticipants = model.getNumAvailParticipants();
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
