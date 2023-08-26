@@ -80,11 +80,13 @@ export function clusterEvents(
     for (let i = 0; i < pendingClusters.length; i++) {
       const cluster = pendingClusters[i];
       const lastClusterEvent = cluster.events[cluster.events.length - 1];
+      const lastClusterEventTitle = lastClusterEvent.title || '';
+      const eventTitle = event.title || '';
 
       if (cluster.kind == CLUSTER_TYPE.SINGLE) {
         if (
           event.activity?.id != lastClusterEvent.activity?.id ||
-          event.title != lastClusterEvent.title
+          eventTitle != lastClusterEventTitle
         ) {
           continue;
         }
@@ -113,7 +115,7 @@ export function clusterEvents(
         // the event is part of this cluster.
         if (
           lastClusterEvent.activity?.id == event.activity?.id &&
-          lastClusterEvent.title == event.title &&
+          lastClusterEventTitle == eventTitle &&
           lastClusterEvent.location?.id == event.location?.id &&
           lastClusterEvent.end_time == event.start_time
         ) {
