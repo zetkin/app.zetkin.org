@@ -1,4 +1,5 @@
 import { stringToBool } from './stringUtils';
+import { truncateOnMiddle } from './stringUtils';
 
 describe('stringToBool()', () => {
   // Returns false
@@ -27,5 +28,26 @@ describe('stringToBool()', () => {
     expect(stringToBool('true')).toEqual(true);
     expect(stringToBool('TRUE')).toEqual(true);
     expect(stringToBool('TrUe')).toEqual(true);
+  });
+});
+
+describe('truncateOnMiddle()', () => {
+  it('Truncates a string on whitespaces if possible', () => {
+    expect(
+      truncateOnMiddle(
+        'Do you have fascinating facts about feminist political beliefs?',
+        40
+      )
+    ).toEqual('Do you have...beliefs?');
+  });
+  it("Doesn't truncate if the string is below the length", () => {
+    expect(
+      truncateOnMiddle(
+        'Do you have fascinating facts about feminist political beliefs?',
+        500
+      )
+    ).toEqual(
+      'Do you have fascinating facts about feminist political beliefs?'
+    );
   });
 });
