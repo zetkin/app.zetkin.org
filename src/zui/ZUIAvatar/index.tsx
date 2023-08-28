@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 interface ZUIAvatarProps {
   orgId: number;
   personId: number;
+  isUserAvatar?: boolean;
   size?: 'sm' | 'md' | 'lg';
 }
 const SIZES = {
@@ -14,12 +15,19 @@ const SIZES = {
 };
 
 const ZUIAvatar = forwardRef<HTMLDivElement, ZUIAvatarProps>(
-  ({ orgId, personId, size = 'md', ...restProps }, ref) => {
+  (
+    { orgId, personId, isUserAvatar = false, size = 'md', ...restProps },
+    ref
+  ) => {
     return (
       <Avatar
         ref={ref}
         {...restProps}
-        src={`/api/orgs/${orgId}/people/${personId}/avatar`}
+        src={
+          isUserAvatar
+            ? `/api/users/${personId}/avatar`
+            : `/api/orgs/${orgId}/people/${personId}/avatar`
+        }
         style={{ height: SIZES[size], width: SIZES[size] }}
       />
     );
