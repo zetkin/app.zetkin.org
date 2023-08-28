@@ -322,6 +322,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     }}
                   >
                     <ZUIAvatar
+                      isUserAvatar={true}
                       orgId={orgId}
                       personId={user.id}
                       size={open ? 'sm' : 'md'}
