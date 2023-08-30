@@ -23,4 +23,24 @@ const getEllipsedString = (string: string, maxLength: number): string => {
   return string.slice(0, ellipseIndex) + '...';
 };
 
-export { getEllipsedString, stringToBool };
+const truncateOnMiddle = (str: string, maxLength: number) => {
+  if (str.length <= maxLength) {
+    return str;
+  }
+  const halfLength = Math.floor((maxLength - 3) / 2);
+  const firstPartBase = str.substring(0, halfLength);
+  const lastPartBase = str.substring(str.length - halfLength);
+  const lastWhitespaceOfFirst = firstPartBase.lastIndexOf(' ');
+  const firstWhitespaceOfLast = lastPartBase.indexOf(' ');
+  if (lastWhitespaceOfFirst == -1 || firstWhitespaceOfLast == -1) {
+    return `${firstPartBase}...${lastPartBase}`;
+  }
+  const firstPart = firstPartBase.substring(0, lastWhitespaceOfFirst);
+  const lastPart = lastPartBase.substring(
+    firstWhitespaceOfLast + 1,
+    lastPartBase.length
+  );
+  return `${firstPart}...${lastPart}`;
+};
+
+export { getEllipsedString, stringToBool, truncateOnMiddle };
