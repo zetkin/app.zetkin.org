@@ -137,13 +137,3 @@ export const getTaskTimeFrameWithConfig = (
     throw 'Unknown task status';
   }
 };
-
-export const truncateIfNecessary = (str: string, maxLength: number) => {
-  if (str.length <= maxLength) {
-    return str;
-  }
-  const halfLength = Math.floor((maxLength - 3) / 2);
-  const firstPart = str.substring(0, halfLength);
-  const lastPart = str.substring(str.length - halfLength);
-  return `${firstPart}...${lastPart}`;
-};
