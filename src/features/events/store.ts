@@ -113,6 +113,12 @@ const eventsSlice = createSlice({
         );
       }
     },
+    eventDeselected: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.selectedEventIds = state.selectedEventIds.filter(
+        (selectedEventId) => selectedEventId !== eventId
+      );
+    },
     eventLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.eventList.items.find((item) => item.id == id);
@@ -467,6 +473,7 @@ export const {
   eventCreate,
   eventCreated,
   eventDeleted,
+  eventDeselected,
   eventLoad,
   eventLoaded,
   eventRangeLoad,
