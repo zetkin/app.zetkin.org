@@ -65,63 +65,6 @@ const SurveyResponseConfig = ({
     ];
   };
 
-  const makeOptionColumns = (
-    selectedOption: string | SURVEY_QUESTION_OPTIONS,
-    surveyId: number
-  ) => {
-    if (
-      selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
-      selectedQuestion.question.response_type != RESPONSE_TYPE.OPTIONS
-    ) {
-      return [];
-    }
-
-    if (selectedQuestion !== undefined && selectedQuestion !== null) {
-      if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
-        return [
-          {
-            config: {
-              question_id: selectedQuestion.id,
-            },
-
-            title: selectedQuestion.question.question,
-            type: COLUMN_TYPE.SURVEY_OPTIONS,
-          },
-        ];
-      } else if (
-        selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS_SEPARATED
-      ) {
-        return selectedQuestion.question.options?.map((option) => {
-          return {
-            config: {
-              option_id: option.id,
-              survey_id: surveyId,
-            },
-            title: option.text,
-            type: COLUMN_TYPE.SURVEY_OPTION,
-          };
-        });
-      } else {
-        const optionSelected = selectedQuestion.question.options?.find(
-          (option) => option.id === parseInt(selectedOption)
-        );
-        if (optionSelected === undefined) {
-          return [];
-        }
-        return [
-          {
-            config: {
-              option_id: optionSelected.id,
-              survey_id: surveyId,
-            },
-            title: optionSelected.text,
-            type: COLUMN_TYPE.SURVEY_OPTION,
-          },
-        ];
-      }
-    }
-  };
-
   return (
     <ZUIQuery queries={{ surveysQuery }}>
       {({ queries: { surveysQuery: successSurveysQuery } }) => {
@@ -198,6 +141,7 @@ const SurveyResponseConfig = ({
                 onChange={(evt) => {
                   if (surveyId) {
                     const columns = makeOptionColumns(
+                      selectedQuestion,
                       evt.target.value,
                       surveyId
                     );
@@ -251,6 +195,64 @@ const SurveyResponseConfig = ({
       }}
     </ZUIQuery>
   );
+};
+
+const makeOptionColumns = (
+  selectedQuestion: ZetkinSurveyQuestionElement,
+  selectedOption: string | SURVEY_QUESTION_OPTIONS,
+  surveyId: number
+) => {
+  if (
+    selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
+    selectedQuestion.question.response_type != RESPONSE_TYPE.OPTIONS
+  ) {
+    return [];
+  }
+
+  if (selectedQuestion !== undefined && selectedQuestion !== null) {
+    if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
+      return [
+        {
+          config: {
+            question_id: selectedQuestion.id,
+          },
+
+          title: selectedQuestion.question.question,
+          type: COLUMN_TYPE.SURVEY_OPTIONS,
+        },
+      ];
+    } else if (
+      selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS_SEPARATED
+    ) {
+      return selectedQuestion.question.options?.map((option) => {
+        return {
+          config: {
+            option_id: option.id,
+            survey_id: surveyId,
+          },
+          title: option.text,
+          type: COLUMN_TYPE.SURVEY_OPTION,
+        };
+      });
+    } else {
+      const optionSelected = selectedQuestion.question.options?.find(
+        (option) => option.id === parseInt(selectedOption)
+      );
+      if (optionSelected === undefined) {
+        return [];
+      }
+      return [
+        {
+          config: {
+            option_id: optionSelected.id,
+            survey_id: surveyId,
+          },
+          title: optionSelected.text,
+          type: COLUMN_TYPE.SURVEY_OPTION,
+        },
+      ];
+    }
+  }
 };
 
 export default SurveyResponseConfig;
