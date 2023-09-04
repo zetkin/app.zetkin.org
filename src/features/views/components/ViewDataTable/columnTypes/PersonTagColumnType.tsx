@@ -41,6 +41,24 @@ export default class PersonTagColumnType implements IColumnType {
           />
         );
       },
+      sortComparator: (v1: ZetkinTag, v2: ZetkinTag) => {
+        if (v1 == null || v2 == null) {
+          return 0;
+        }
+
+        if (typeof v1.value === 'string' && typeof v2.value === 'string') {
+          if (Number.isNaN(parseInt(v1.value))) {
+            return v1.value.localeCompare(v2.value);
+          } else {
+            return parseInt(v1.value) - parseInt(v2.value);
+          }
+        }
+
+        if (typeof v1.value === 'number' && typeof v2.value === 'number') {
+          return v1.value - v2.value;
+        }
+        return 0;
+      },
     };
   }
 
