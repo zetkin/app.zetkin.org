@@ -28,7 +28,7 @@ const CampaignListItem: React.FunctionComponent<{
         </ListItemAvatar>
         <ResultsListItemText
           primary={campaign.title}
-          secondary={<Msg id={messageIds.results.campaign} />}
+          secondary={<Msg id={messageIds.results.project} />}
         />
       </ListItem>
     </Link>
