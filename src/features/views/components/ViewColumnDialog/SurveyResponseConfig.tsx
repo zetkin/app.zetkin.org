@@ -112,6 +112,20 @@ const SurveyResponseConfig = ({
                         value as ZetkinSurveyTextQuestionElement
                       );
                       onOutputConfigured(columns);
+                    } else if (
+                      value.question.response_type === RESPONSE_TYPE.OPTIONS
+                    ) {
+                      setSelectedColumnOption(
+                        SURVEY_QUESTION_OPTIONS.ALL_OPTIONS
+                      );
+                      const columns = makeOptionColumns(
+                        value,
+                        SURVEY_QUESTION_OPTIONS.ALL_OPTIONS,
+                        surveyId
+                      );
+                      if (columns !== undefined) {
+                        onOutputConfigured(columns);
+                      }
                     }
                   }
                 }}
