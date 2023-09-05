@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import {
   DataGridProProps,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridSortModel,
 } from '@mui/x-data-grid-pro';
 import { useEffect, useState } from 'react';
@@ -104,15 +104,16 @@ function parseFilterModelFromQuery(query: ParsedUrlQuery): GridFilterModel {
         const paramFields = param.split('_').slice(1);
 
         // The last will be the operator
-        const op = paramFields.pop();
+        const op = paramFields[paramFields.length - 1];
+        paramFields.pop();
 
         // The remaining ones are the name of the field, possibly containing underscores
         const field = paramFields.join('_');
 
         return {
-          columnField: field,
+          field: field,
           id: idx * 10000 + valIdx,
-          operatorValue: op,
+          operator: op,
           value: val || undefined,
         };
       });
@@ -123,8 +124,8 @@ function parseFilterModelFromQuery(query: ParsedUrlQuery): GridFilterModel {
     ...(!!items.length && {
       linkOperator:
         query.filterOperator == 'or'
-          ? GridLinkOperator.Or
-          : GridLinkOperator.And,
+          ? GridLogicOperator.Or
+          : GridLogicOperator.And,
     }),
   };
 }
@@ -152,14 +153,14 @@ function serializeFilterQueryString(filterModel: GridFilterModel): string {
   const qs = filterModel.items
     .map(
       (filter) =>
-        `filter_${filter.columnField}_${filter.operatorValue}` +
+        `filter_${filter.field}_${filter.operator}` +
         (filter.value ? `=${encodeURIComponent(filter.value)}` : '')
     )
     .join('&');
 
   // Include the operator if more than one filter
   if (filterModel.items.length > 1) {
-    return qs + `&filterOperator=${filterModel.linkOperator || 'and'}`;
+    return qs + `&filterOperator=${filterModel.logicOperator || 'and'}`;
   } else {
     return qs;
   }

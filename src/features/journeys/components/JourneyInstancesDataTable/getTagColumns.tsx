@@ -1,6 +1,5 @@
 import {
   GridCellParams,
-  GridCellValue,
   GridColDef,
   GridFilterItem,
   GridRenderCellParams,
@@ -32,7 +31,7 @@ const has = (
       return true;
     }
 
-    const tags = col.tagsGetter(params.row.tags);
+    const tags = col.tagsGetter(params.row);
 
     return !!tags.find((tag) => {
       return tag.id.toString() === item.value;
@@ -51,7 +50,7 @@ const doesNotHave = (
       return true;
     }
 
-    const tags = col.tagsGetter(params.row.tags);
+    const tags = col.tagsGetter(params.row);
 
     return !!tags.find((tag) => {
       return tag.id.toString() !== item.value;
@@ -63,19 +62,15 @@ const isEmpty = (col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn) => {
   return (
     params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
   ) => {
-    const tags = col.tagsGetter(params.row.tags);
+    const tags = col.tagsGetter(params.row);
 
     return tags.length === 0;
   };
 };
 
-const sortByTagName = (value0: GridCellValue, value1: GridCellValue) => {
-  const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
-    t0.title.localeCompare(t1.title)
-  );
-  const tags1 = (value1 as ZetkinTag[]).sort((t0, t1) =>
-    t0.title.localeCompare(t1.title)
-  );
+const sortByTagName = (value0: ZetkinTag[], value1: ZetkinTag[]) => {
+  const tags0 = value0.sort((t0, t1) => t0.title.localeCompare(t1.title));
+  const tags1 = value1.sort((t0, t1) => t0.title.localeCompare(t1.title));
 
   const tagName0 = tags0[0]?.title ?? '';
   const tagName1 = tags1[0]?.title ?? '';

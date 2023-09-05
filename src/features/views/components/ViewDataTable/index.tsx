@@ -5,10 +5,12 @@ import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 import {
   DataGridPro,
+  DataGridProProps,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GridCellEditStartReasons,
   GridCellParams,
   GridColDef,
+  GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
@@ -41,9 +43,40 @@ import ViewDataTableFooter, {
 import ViewDataTableToolbar, {
   ViewDataTableToolbarProps,
 } from './ViewDataTableToolbar';
-import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
+import {
+  ZetkinPerson,
+  ZetkinViewColumn,
+  ZetkinViewRow,
+} from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+
+declare module '@mui/x-data-grid-pro' {
+  interface ColumnMenuPropsOverrides {
+    onConfigure: (colId: string) => void;
+    onDelete: (colId: string) => void;
+    onRename: (colId: string) => void;
+    showConfigureButton: (field: GridColDef['field']) => boolean;
+  }
+
+  interface FooterPropsOverrides {
+    onRowAdd: (person: ZetkinPerson) => void;
+  }
+
+  interface ToolbarPropsOverrides {
+    disableConfigure?: boolean;
+    disabled: boolean;
+    gridColumns: GridColDef[];
+    isSmartSearch: boolean;
+    onColumnCreate: () => void;
+    onRowsRemove: () => void;
+    onViewCreate: () => void;
+    selection: number[];
+    setQuickSearch: (quickSearch: string) => void;
+    onSortModelChange: DataGridProProps['onSortModelChange'];
+    sortModel: GridSortModel;
+  }
+}
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -323,7 +356,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         // Scroll (jump) to row after short delay
         setTimeout(() => {
           const gridApi = gridApiRef.current;
-          const rowIndex = gridApi.getRowIndex(person.id);
+          const rowIndex = gridApi.getRowIndexRelativeToVisibleRows(person.id);
           gridApi.scrollToIndexes({ rowIndex });
         }, 200);
       },
@@ -358,14 +391,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         autoHeight={empty}
         checkboxSelection={!disableBulkActions}
         columns={gridColumns}
-        components={{
-          ColumnMenu: ViewDataTableColumnMenu,
-          Footer: ViewDataTableFooter,
-          Toolbar: ViewDataTableToolbar,
-        }}
-        componentsProps={componentsProps}
-        disableSelectionOnClick={true}
-        experimentalFeatures={{ newEditingApi: true }}
+        disableRowSelectionOnClick={true}
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
@@ -383,7 +409,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             event.defaultMuiPrevented = true;
           }
         }}
-        onCellKeyDown={(params: GridCellParams<unknown, ZetkinViewRow>, ev) => {
+        onCellKeyDown={(params: GridCellParams<ZetkinViewRow, unknown>, ev) => {
           if (!params.isEditable) {
             const col = colFromFieldName(params.field, columns);
             if (col) {
@@ -401,7 +427,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             }
           }
         }}
-        onSelectionModelChange={(model) => setSelection(model as number[])}
+        onRowSelectionModelChange={(model) => setSelection(model as number[])}
         pinnedColumns={{
           left: ['id', GRID_CHECKBOX_SELECTION_COL_DEF.field],
         }}
@@ -421,6 +447,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           return after;
         }}
         rows={gridRows}
+        slotProps={componentsProps}
+        slots={{
+          columnMenu: ViewDataTableColumnMenu,
+          footer: ViewDataTableFooter,
+          toolbar: ViewDataTableToolbar,
+        }}
         style={{
           border: 'none',
         }}

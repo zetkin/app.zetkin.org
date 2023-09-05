@@ -110,6 +110,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     data.end_time
   ).data;
 
+  const showEndDatePicker =
+    !isSameDate(startDate.toDate(), endDate.toDate()) || showEndDate;
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -133,10 +136,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 <Grid item sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
                     {...previewableProps}
-                    renderInput={(props) => {
+                    renderInput={() => {
                       return (
                         <DatePicker
-                          inputFormat="DD-MM-YYYY"
+                          format="DD-MM-YYYY"
                           label={messages.eventOverviewCard.startDate()}
                           onChange={(newValue) => {
                             if (newValue && isValidDate(newValue.toDate())) {
@@ -152,18 +155,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               }
                             }
                           }}
-                          renderInput={(params) => {
-                            return (
-                              <TextField
-                                {...params}
-                                error={invalidFormat}
-                                inputProps={{
-                                  ...params.inputProps,
-                                  ...props,
-                                }}
-                                sx={{ marginBottom: '15px' }}
-                              />
-                            );
+                          slotProps={{
+                            textField: {
+                              error: invalidFormat,
+                              sx: { marginBottom: '15px' },
+                            },
                           }}
                           value={dayjs(startDate)}
                         />
@@ -189,11 +185,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                   />
                   <ZUIPreviewableInput
                     {...previewableProps}
-                    renderInput={(props) => {
+                    renderInput={() => {
                       return (
                         <TimePicker
                           ampm={false}
-                          inputFormat="HH:mm"
+                          format="HH:mm"
                           label={messages.eventOverviewCard.startTime()}
                           onChange={(newValue) => {
                             if (newValue && isValidDate(newValue.toDate())) {
@@ -204,17 +200,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             }
                           }}
                           open={false}
-                          renderInput={(params) => {
-                            return (
-                              <TextField
-                                {...params}
-                                inputProps={{
-                                  ...params.inputProps,
-                                  ...props,
-                                }}
-                                sx={{ button: { cursor: 'text' } }}
-                              />
-                            );
+                          slotProps={{
+                            textField: { sx: { button: { cursor: 'text' } } },
                           }}
                           value={dayjs(startDate)}
                         />
@@ -236,71 +223,64 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 <Grid id={'wrap'} ml={1} sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
                     {...previewableProps}
-                    renderInput={(props) => {
+                    renderInput={() => {
                       return (
-                        <DatePicker
-                          inputFormat="DD-MM-YYYY"
-                          label={messages.eventOverviewCard.endDate()}
-                          onChange={(newValue) => {
-                            if (newValue && isValidDate(newValue.toDate())) {
-                              if (
-                                newValue &&
-                                dateIsBefore(
-                                  startDate.toDate(),
-                                  newValue.toDate()
-                                )
-                              ) {
-                                setInvalidFormat(false);
-                                setStartDate(newValue);
-                                setEndDate(newValue);
-                              } else {
-                                setInvalidFormat(false);
-                                setEndDate(newValue);
-                              }
-                            }
-                          }}
-                          renderInput={(params) => {
-                            if (
-                              !isSameDate(
-                                startDate.toDate(),
-                                endDate.toDate()
-                              ) ||
-                              showEndDate
-                            ) {
-                              return (
-                                <TextField
-                                  {...params}
-                                  error={invalidFormat}
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    ...props,
+                        <>
+                          {!showEndDatePicker && (
+                            <Grid container xs={6}>
+                              <Grid item mt={2}>
+                                <Button
+                                  onClick={() => {
+                                    setShowEndDate(true);
                                   }}
-                                  sx={{ marginBottom: '15px' }}
-                                />
-                              );
-                            } else {
-                              return (
-                                <Grid container xs={6}>
-                                  <Grid item mt={2}>
-                                    <Button
-                                      onClick={() => {
-                                        setShowEndDate(true);
-                                      }}
-                                      sx={{
-                                        marginBottom: '19px',
-                                        width: 'max-content',
-                                      }}
-                                      variant="text"
-                                    >
-                                      {messages.eventOverviewCard.buttonEndDate()}
-                                    </Button>
-                                  </Grid>
-                                </Grid>
-                              );
-                            }
-                          }}
-                          value={dayjs(endDate)}
-                        />
+                                  sx={{
+                                    marginBottom: '19px',
+                                    width: 'max-content',
+                                  }}
+                                  variant="text"
+                                >
+                                  {messages.eventOverviewCard.buttonEndDate()}
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          )}
+                          {showEndDatePicker && (
+                            <DatePicker
+                              format="DD-MM-YYYY"
+                              label={messages.eventOverviewCard.endDate()}
+                              onChange={(newValue) => {
+                                if (
+                                  newValue &&
+                                  isValidDate(newValue.toDate())
+                                ) {
+                                  if (
+                                    newValue &&
+                                    dateIsBefore(
+                                      startDate.toDate(),
+                                      newValue.toDate()
+                                    )
+                                  ) {
+                                    setInvalidFormat(false);
+                                    setStartDate(newValue);
+                                    setEndDate(newValue);
+                                  } else {
+                                    setInvalidFormat(false);
+                                    setEndDate(newValue);
+                                  }
+                                }
+                              }}
+                              slotProps={{
+                                textField: {
+                                  error: invalidFormat,
+                                  sx: {
+                                    marginBottom: '15px',
+                                  },
+                                },
+                              }}
+                              value={dayjs(endDate)}
+                            />
+                          )}
+                        </>
                       );
                     }}
                     renderPreview={() => {
@@ -336,11 +316,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                   />
                   <ZUIPreviewableInput
                     {...previewableProps}
-                    renderInput={(props) => {
+                    renderInput={() => {
                       return (
                         <TimePicker
                           ampm={false}
-                          inputFormat="HH:mm"
+                          format="HH:mm"
                           label={messages.eventOverviewCard.endTime()}
                           onChange={(newValue) => {
                             if (newValue && isValidDate(newValue.toDate())) {
@@ -351,18 +331,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             }
                           }}
                           open={false}
-                          renderInput={(params) => {
-                            return (
-                              <TextField
-                                {...params}
-                                error={invalidFormat}
-                                inputProps={{
-                                  ...params.inputProps,
-                                  ...props,
-                                }}
-                                sx={{ button: { cursor: 'text' } }}
-                              />
-                            );
+                          slotProps={{
+                            textField: {
+                              error: invalidFormat,
+                              sx: { button: { cursor: 'text' } },
+                            },
                           }}
                           value={dayjs(endDate)}
                         />

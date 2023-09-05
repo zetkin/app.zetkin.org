@@ -1,4 +1,4 @@
-import { MenuItem, TextField, Typography } from '@mui/material';
+import { MenuItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';
@@ -61,14 +61,12 @@ const TimeFrame = ({
   const afterDateSelect = (
     <StyledDatePicker
       onChange={(date) => setAfter(date as unknown as Date)}
-      renderInput={(params) => <TextField {...params} />}
       value={after}
     />
   );
   const beforeDateSelect = (
     <StyledDatePicker
       onChange={(date) => setBefore(date as unknown as Date)}
-      renderInput={(params) => <TextField {...params} />}
       value={before}
     />
   );
