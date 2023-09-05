@@ -17,7 +17,7 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
   const { orgId } = router.query as { orgId: string };
 
   const elements = [
-    messages.results.campaign(),
+    messages.results.project(),
     task.campaign.title,
     messages.results.task(),
   ];
