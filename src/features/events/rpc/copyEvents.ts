@@ -18,7 +18,7 @@ const paramsSchema = z.object({
       num_participants_required: z.number(),
       organization_id: z.optional(z.number()),
       start_time: z.string(),
-      title: z.optional(z.string()),
+      title: z.optional(z.string().or(z.null())),
       url: z.optional(z.string()),
     })
   ),

@@ -84,7 +84,7 @@ export interface ZetkinEvent {
   num_participants_available: number;
   published: string | null;
   start_time: string;
-  title?: string;
+  title?: string | null;
   organization: {
     id: number;
     title: string;
