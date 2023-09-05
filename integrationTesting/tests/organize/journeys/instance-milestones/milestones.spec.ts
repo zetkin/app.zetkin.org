@@ -64,7 +64,7 @@ test.describe('Journey instance page Milestones tab', () => {
     ).toBe('There are no milestones.');
   });
 
-  test.only('lets user update milestone deadline.', async ({
+  test('lets user update milestone deadline.', async ({
     appUri,
     moxy,
     page,
