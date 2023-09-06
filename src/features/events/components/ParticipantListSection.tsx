@@ -209,9 +209,9 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       sortable: false,
       valueGetter: (params) => {
         if (params.row.person) {
-          return `${params.row.person.email}`;
+          return params.row.person.email;
         } else {
-          return `${params.row.email}`;
+          return params.row.email;
         }
       },
     },
