@@ -16,6 +16,7 @@ import { FunctionComponent, useContext, useState } from 'react';
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
+import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
@@ -31,9 +32,6 @@ import {
   SelectedViewColumn,
   ZetkinView,
 } from 'features/views/components/types';
-import useConfigurableDataGridColumns, {
-  loadConfig,
-} from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewDataTableColumnMenu, {
   ViewDataTableColumnMenuProps,
@@ -260,9 +258,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     width: 50,
   };
 
-  const configStr = loadConfig(localStorage, 'dataGridConfig-viewInstances');
-
-  const gridColumns = [
+  const unConfiguredGridColumns = [
     avatarColumn,
     ...columns.map((col) => ({
       field: `col_${col.id}`,
@@ -270,14 +266,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       minWidth: 100,
       resizable: true,
       sortable: true,
-      width: configStr.fieldWidths[`col_${col.id}`] ?? 150,
+      width: 150,
       ...columnTypes[col.type].getColDef(col, accessLevel),
     })),
   ];
-  const { setColumnWidth } = useConfigurableDataGridColumns(
-    'viewInstances',
-    gridColumns
-  );
+  const { columns: gridColumns, setColumnWidth } =
+    useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
 
   const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
 
