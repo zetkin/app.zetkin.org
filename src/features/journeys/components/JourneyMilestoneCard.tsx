@@ -132,7 +132,10 @@ const JourneyMilestoneCard = ({
                 }
               }}
               slotProps={{
-                actionBar: { actions: ['clear'] },
+                actionBar: {
+                  actions: ['clear'],
+                  'data-testid': 'JourneyMilestoneCard-datePickerActionBar',
+                },
               }}
               value={milestone.deadline ? dayjs(milestone.deadline) : null}
             />
