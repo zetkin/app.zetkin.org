@@ -98,7 +98,7 @@ export default function useConfigurableDataGridColumns(
   };
 }
 
-export function loadConfig(storage: StorageBackend, key: string): ColumnConfig {
+function loadConfig(storage: StorageBackend, key: string): ColumnConfig {
   let fieldOrder: string[] = [];
   let fieldWidths: Record<string, number> = {};
   try {
