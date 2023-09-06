@@ -24,14 +24,12 @@ const has = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (
-    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
-  ) => {
+  return (params: GridCellParams<ZetkinJourneyInstance>) => {
     if (!item.value) {
       return true;
     }
 
-    const tags = col.tagsGetter(params.row);
+    const tags = col.tagsGetter(params.row.tags);
 
     return !!tags.find((tag) => {
       return tag.id.toString() === item.value;
@@ -43,26 +41,21 @@ const doesNotHave = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (
-    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
-  ) => {
+  return (params: GridCellParams<ZetkinJourneyInstance>) => {
     if (!item.value) {
       return true;
     }
+    const tags = col.tagsGetter(params.row.tags);
 
-    const tags = col.tagsGetter(params.row);
-
-    return !!tags.find((tag) => {
-      return tag.id.toString() !== item.value;
+    return !tags.some((tag) => {
+      return tag.id.toString() == item.value;
     });
   };
 };
 
 const isEmpty = (col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn) => {
-  return (
-    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
-  ) => {
-    const tags = col.tagsGetter(params.row);
+  return (params: GridCellParams<ZetkinJourneyInstance>) => {
+    const tags = col.tagsGetter(params.row.tags);
 
     return tags.length === 0;
   };
@@ -91,10 +84,9 @@ const getTagColumns = (
   journeyInstances: ZetkinJourneyInstance[],
   tagColumns: JourneyTagColumnData[]
 ): GridColDef[] => {
-  const colDefs: GridColDef[] = [];
+  const colDefs: GridColDef<ZetkinJourneyInstance>[] = [];
 
   tagColumns.forEach((colData) => {
-    fetch;
     const col = makeJourneyTagColumn(colData);
 
     if (col.type == JourneyTagColumnType.TAG_GROUP) {
