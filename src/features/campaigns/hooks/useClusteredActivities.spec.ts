@@ -478,4 +478,42 @@ describe('useClusteredActivities()', () => {
     );
     expect(result.current.length).toBe(4);
   });
+  it('Should cluster events in the same location where one title is an empty string and the other title is null', () => {
+    const { result } = renderHook(() =>
+      useClusteredActivities([
+        mockEvent(112, {
+          activity: {
+            id: 5,
+            title: 'Open',
+          },
+          end_time: '1857-07-05T13:00:00.000Z',
+          location: {
+            id: 112,
+            lat: 12321.1,
+            lng: 12321.2,
+            title: 'The square',
+          },
+          start_time: '1857-07-05T12:00:00.000Z',
+          title: null,
+        }),
+        mockEvent(321, {
+          activity: {
+            id: 5,
+            title: 'Open',
+          },
+          end_time: '1857-07-05T14:00:00.000Z',
+          location: {
+            id: 112,
+            lat: 12321.1,
+            lng: 12321.2,
+            title: 'The square',
+          },
+          start_time: '1857-07-05T13:00:00.000Z',
+          title: '',
+        }),
+      ])
+    );
+    expect(result.current.length).toBe(1);
+    expect(result.current[0].kind).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+  });
 });
