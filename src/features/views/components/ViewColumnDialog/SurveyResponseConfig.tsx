@@ -30,7 +30,6 @@ interface SurveyResponseConfigProps {
 export enum SURVEY_QUESTION_OPTIONS {
   ALL_OPTIONS = 'allSingle',
   ALL_OPTIONS_SEPARATED = 'allOptionsSeparated',
-  ONE_OPTION = 'oneOption',
 }
 
 const SurveyResponseConfig = ({
@@ -46,9 +45,9 @@ const SurveyResponseConfig = ({
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestion, setSelectedQuestion] =
     useState<ZetkinSurveyQuestionElement | null>(null);
-  const [selectedColumnOption, setSelectedColumnOption] = useState<
-    SURVEY_QUESTION_OPTIONS | string
-  >(SURVEY_QUESTION_OPTIONS.ALL_OPTIONS);
+  const [selectedColumnOption, setSelectedColumnOption] = useState<string>(
+    SURVEY_QUESTION_OPTIONS.ALL_OPTIONS
+  );
 
   const onSurveyChange: ChangeEventHandler<{ value: unknown }> = (ev) => {
     setSurveyId(ev.target.value as number);
@@ -218,7 +217,7 @@ const SurveyResponseConfig = ({
 
 const makeOptionColumns = (
   selectedQuestion: ZetkinSurveyQuestionElement,
-  selectedOption: string | SURVEY_QUESTION_OPTIONS,
+  selectedOption: string,
   surveyId: number
 ) => {
   if (
