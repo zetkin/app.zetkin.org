@@ -1,7 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { useMessages } from 'core/i18n';
-import { useRouter } from 'next/router';
 import {
   AccessTime,
   ArrowForward,
@@ -51,7 +50,6 @@ interface SingleEventProps {
 }
 
 const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
-  const router = useRouter();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
@@ -85,11 +83,6 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           onSubmit: () => {
             model.deleteEvent();
             onClickAway();
-            router.push(
-              `/organize/${event.organization.id}${
-                event.campaign ? `/projects/${event.campaign.id}` : ''
-              }`
-            );
           },
           title: messages.eventPopper.confirmDelete(),
           warningText: messages.eventPopper.deleteWarning(),

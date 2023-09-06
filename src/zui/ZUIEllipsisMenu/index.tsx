@@ -1,5 +1,6 @@
 import { MoreVert } from '@mui/icons-material';
 import noPropagate from 'utils/noPropagate';
+import theme from 'theme';
 import {
   Button,
   ListItemIcon,
@@ -51,6 +52,16 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
         keepMounted
         onClose={() => setMenuActivator(null)}
         open={Boolean(menuActivator)}
+        sx={{
+          '& .MuiPaper-root': {
+            '& .MuiMenuItem-root': {
+              '& .MuiSvgIcon-root': {
+                marginRight: 1,
+              },
+            },
+            marginTop: theme.spacing(1),
+          },
+        }}
       >
         {items.map((item, idx) => (
           <MenuItem
@@ -69,7 +80,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
             }}
           >
             {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
-            <Typography sx={{ color: item.textColor ?? '' }}>
+            <Typography sx={{ color: item.textColor ?? '', display: 'flex' }}>
               {item.label}
             </Typography>
             {item.subMenuItems && (

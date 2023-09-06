@@ -159,9 +159,7 @@ const CampaignActionButtons: React.FunctionComponent<
               id: CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN,
               label: (
                 <>
-                  <Box mr={1}>
-                    <Settings />
-                  </Box>
+                  <Settings />
                   <Msg id={messageIds.form.edit} />
                 </>
               ),
@@ -171,9 +169,7 @@ const CampaignActionButtons: React.FunctionComponent<
               id: CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN,
               label: (
                 <>
-                  <Box mr={1}>
-                    <Delete />
-                  </Box>
+                  <Delete />
                   <Msg id={messageIds.form.deleteCampaign.title} />
                 </>
               ),
@@ -189,9 +185,7 @@ const CampaignActionButtons: React.FunctionComponent<
               id: CAMPAIGN_MENU_ITEMS.SHOW_PUBLIC_PAGE,
               label: (
                 <>
-                  <Box mr={1}>
-                    <OpenInNew />
-                  </Box>
+                  <OpenInNew />
                   <Link
                     color="inherit"
                     display="flex"
