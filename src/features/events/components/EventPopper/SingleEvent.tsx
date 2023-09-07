@@ -14,7 +14,7 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
-import { eventDeselected } from 'features/events/store';
+import { eventsDeselected } from 'features/events/store';
 import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
@@ -85,7 +85,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         showConfirmDialog({
           onSubmit: () => {
             model.deleteEvent();
-            store.dispatch(eventDeselected(event.id));
+            store.dispatch(eventsDeselected([event]));
             onClickAway();
           },
           title: messages.eventPopper.confirmDelete(),
