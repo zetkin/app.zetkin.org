@@ -31,12 +31,7 @@ import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
-import {
-  dateIsBefore,
-  isSameDate,
-  isValidDate,
-  removeOffset,
-} from 'utils/dateUtils';
+import { isSameDate, removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 type EventOverviewCardProps = {
@@ -68,7 +63,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     dayjs(removeOffset(data.end_time))
   );
   const [showEndDate, setShowEndDate] = useState(false);
-  const [invalidFormat, setInvalidFormat] = useState(false);
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const { clickAwayProps, containerProps, previewableProps } =
@@ -81,17 +75,16 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       },
       save: () => {
         dataModel.updateEventData({
-          end_time: dayjs(endDate)
+          end_time: endDate
             .hour(endDate.hour())
             .minute(endDate.minute())
             .format(),
           info_text: infoText,
           location_id: locationId,
-          start_time: dayjs(startDate)
+          start_time: startDate
             .hour(startDate.hour())
             .minute(startDate.minute())
             .format(),
-
           url: link,
         });
       },
@@ -109,9 +102,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     data.start_time,
     data.end_time
   ).data;
-
-  const showEndDatePicker =
-    !isSameDate(startDate.toDate(), endDate.toDate()) || showEndDate;
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -141,27 +131,17 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         <DatePicker
                           format="DD-MM-YYYY"
                           label={messages.eventOverviewCard.startDate()}
-                          onChange={(newValue) => {
-                            if (newValue && isValidDate(newValue.toDate())) {
-                              setInvalidFormat(false);
-                              setStartDate(dayjs(newValue));
-                              if (
-                                dateIsBefore(
-                                  newValue.toDate(),
-                                  endDate.toDate()
-                                )
-                              ) {
-                                setEndDate(newValue);
+                          onChange={(newStartDate) => {
+                            if (newStartDate) {
+                              setStartDate(newStartDate);
+                              if (newStartDate > endDate) {
+                                setEndDate(newStartDate);
+                                setShowEndDate(false);
                               }
                             }
                           }}
-                          slotProps={{
-                            textField: {
-                              error: invalidFormat,
-                              sx: { marginBottom: '15px' },
-                            },
-                          }}
-                          value={dayjs(startDate)}
+                          sx={{ marginBottom: 2 }}
+                          value={startDate}
                         />
                       );
                     }}
@@ -181,7 +161,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         </Box>
                       );
                     }}
-                    value={dayjs(startDate).format()}
+                    value={startDate.format()}
                   />
                   <ZUIPreviewableInput
                     {...previewableProps}
@@ -191,11 +171,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           ampm={false}
                           format="HH:mm"
                           label={messages.eventOverviewCard.startTime()}
-                          onChange={(newValue) => {
-                            if (newValue && isValidDate(newValue.toDate())) {
-                              if (dayjs(newValue) < dayjs(endDate)) {
-                                setInvalidFormat(false);
-                                setStartDate(dayjs(newValue));
+                          onChange={(newStartTime) => {
+                            if (newStartTime) {
+                              if (newStartTime < endDate) {
+                                setStartDate(newStartTime);
                               }
                             }
                           }}
@@ -206,7 +185,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               },
                             },
                           }}
-                          value={dayjs(startDate)}
+                          value={startDate}
                         />
                       );
                     }}
@@ -229,7 +208,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     renderInput={() => {
                       return (
                         <>
-                          {!showEndDatePicker && (
+                          {!showEndDate && (
                             <Grid container xs={6}>
                               <Grid item mt={2}>
                                 <Button
@@ -247,40 +226,23 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               </Grid>
                             </Grid>
                           )}
-                          {showEndDatePicker && (
+                          {showEndDate && (
                             <DatePicker
                               format="DD-MM-YYYY"
                               label={messages.eventOverviewCard.endDate()}
-                              onChange={(newValue) => {
-                                if (
-                                  newValue &&
-                                  isValidDate(newValue.toDate())
-                                ) {
-                                  if (
-                                    newValue &&
-                                    dateIsBefore(
-                                      startDate.toDate(),
-                                      newValue.toDate()
-                                    )
-                                  ) {
-                                    setInvalidFormat(false);
-                                    setStartDate(newValue);
-                                    setEndDate(newValue);
+                              onChange={(newEndDate) => {
+                                if (newEndDate) {
+                                  if (newEndDate < startDate) {
+                                    setStartDate(newEndDate);
+                                    setEndDate(newEndDate);
+                                    setShowEndDate(false);
                                   } else {
-                                    setInvalidFormat(false);
-                                    setEndDate(newValue);
+                                    setEndDate(newEndDate);
                                   }
                                 }
                               }}
-                              slotProps={{
-                                textField: {
-                                  error: invalidFormat,
-                                  sx: {
-                                    marginBottom: '15px',
-                                  },
-                                },
-                              }}
-                              value={dayjs(endDate)}
+                              sx={{ marginBottom: 2 }}
+                              value={endDate}
                             />
                           )}
                         </>
@@ -297,7 +259,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             </Typography>
                             <ZUIDate
                               datetime={new Date(
-                                dayjs(endDate).format()
+                                endDate.format()
                               ).toISOString()}
                             />
                           </Box>
@@ -315,7 +277,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         );
                       }
                     }}
-                    value={dayjs(endDate).format()}
+                    value={endDate.format()}
                   />
                   <ZUIPreviewableInput
                     {...previewableProps}
@@ -325,11 +287,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           ampm={false}
                           format="HH:mm"
                           label={messages.eventOverviewCard.endTime()}
-                          onChange={(newValue) => {
-                            if (newValue && isValidDate(newValue.toDate())) {
-                              if (dayjs(newValue) > dayjs(startDate)) {
-                                setInvalidFormat(false);
-                                setEndDate(newValue);
+                          onChange={(newEndTime) => {
+                            if (newEndTime) {
+                              if (newEndTime > startDate) {
+                                setEndDate(newEndTime);
                               }
                             }
                           }}
@@ -338,10 +299,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               InputProps: {
                                 endAdornment: <AccessTime color="secondary" />,
                               },
-                              error: invalidFormat,
                             },
                           }}
-                          value={dayjs(endDate)}
+                          value={endDate}
                         />
                       );
                     }}
@@ -350,14 +310,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         <Box ml={10}>
                           <FormattedTime
                             hour12={false}
-                            value={new Date(
-                              dayjs(endDate).format()
-                            ).toISOString()}
+                            value={new Date(endDate.format()).toISOString()}
                           />
                         </Box>
                       );
                     }}
-                    value={dayjs(endDate).format()}
+                    value={endDate.format()}
                   />
                 </Grid>
               </Grid>
