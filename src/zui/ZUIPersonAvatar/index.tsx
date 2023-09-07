@@ -2,7 +2,7 @@
 import { Avatar } from '@mui/material';
 import { forwardRef } from 'react';
 
-interface ZUIAvatarProps {
+interface ZUIPersonAvatarProps {
   orgId: number;
   personId: number;
   isUserAvatar?: boolean;
@@ -14,7 +14,7 @@ const SIZES = {
   sm: 30,
 };
 
-const ZUIAvatar = forwardRef<HTMLDivElement, ZUIAvatarProps>(
+const ZUIPersonAvatar = forwardRef<HTMLDivElement, ZUIPersonAvatarProps>(
   (
     { orgId, personId, isUserAvatar = false, size = 'md', ...restProps },
     ref
@@ -34,4 +34,4 @@ const ZUIAvatar = forwardRef<HTMLDivElement, ZUIAvatarProps>(
   }
 );
 
-export default ZUIAvatar;
+export default ZUIPersonAvatar;
