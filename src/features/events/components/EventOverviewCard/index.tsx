@@ -1,10 +1,10 @@
-import { Add } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormattedTime } from 'react-intl';
 import MapIcon from '@mui/icons-material/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { TimeField } from '@mui/x-date-pickers-pro';
+import { AccessTime, Add } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -199,6 +199,13 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               }
                             }
                           }}
+                          slotProps={{
+                            textField: {
+                              InputProps: {
+                                endAdornment: <AccessTime color="secondary" />,
+                              },
+                            },
+                          }}
                           value={dayjs(startDate)}
                         />
                       );
@@ -328,6 +335,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           }}
                           slotProps={{
                             textField: {
+                              InputProps: {
+                                endAdornment: <AccessTime color="secondary" />,
+                              },
                               error: invalidFormat,
                             },
                           }}
