@@ -109,7 +109,13 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   }, [clear]);
 
   return (
-    <ClickAwayListener onClickAway={onClickAway}>
+    <ClickAwayListener
+      onClickAway={() => {
+        if (!isEqual(editor.children, emptySlate)) {
+          onClickAway();
+        }
+      }}
+    >
       <Box
         className={classes.container}
         onClick={() => ReactEditor.focus(editor)}
