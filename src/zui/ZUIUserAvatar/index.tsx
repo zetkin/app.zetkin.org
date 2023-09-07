@@ -10,7 +10,7 @@ const ZUIUserAvatar: React.FC<ZUIUserAvatarProps> = ({
   personId,
   size = 'md',
 }) => {
-  return <ZUIAvatar url={`/api/users/${personId}/avatar`} size={size} />;
+  return <ZUIAvatar size={size} url={`/api/users/${personId}/avatar`} />;
 };
 
 export default ZUIUserAvatar;

@@ -17,8 +17,8 @@ import filterParticipants from '../utils/filterParticipants';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
 import { useMessages } from 'core/i18n';
-import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {

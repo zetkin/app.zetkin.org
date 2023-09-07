@@ -10,9 +10,9 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUICard from 'zui/ZUICard';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 

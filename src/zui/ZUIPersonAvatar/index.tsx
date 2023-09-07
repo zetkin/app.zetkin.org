@@ -14,8 +14,8 @@ const ZUIPersonAvatar: React.FC<ZUIPersonAvatarProps> = ({
 }) => {
   return (
     <ZUIAvatar
-      url={`/api/orgs/${orgId}/people/${personId}/avatar`}
       size={size}
+      url={`/api/orgs/${orgId}/people/${personId}/avatar`}
     />
   );
 };

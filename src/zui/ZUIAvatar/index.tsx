@@ -13,7 +13,7 @@ const SIZES = {
 
 const ZUIAvatar: React.FC<ZUIAvatarProps> = ({ url, size }) => {
   return (
-    <Avatar src={url} style={{ width: SIZES[size], height: SIZES[size] }} />
+    <Avatar src={url} style={{ height: SIZES[size], width: SIZES[size] }} />
   );
 };
 
