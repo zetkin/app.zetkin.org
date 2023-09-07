@@ -30,7 +30,6 @@ interface SurveyResponseConfigProps {
 export enum SURVEY_QUESTION_OPTIONS {
   ALL_OPTIONS = 'allSingle',
   ALL_OPTIONS_SEPARATED = 'allOptionsSeparated',
-  ONE_OPTION = 'oneOption',
 }
 
 const SurveyResponseConfig = ({
@@ -46,6 +45,9 @@ const SurveyResponseConfig = ({
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestion, setSelectedQuestion] =
     useState<ZetkinSurveyQuestionElement | null>(null);
+  const [selectedColumnOption, setSelectedColumnOption] = useState<string>(
+    SURVEY_QUESTION_OPTIONS.ALL_OPTIONS
+  );
 
   const onSurveyChange: ChangeEventHandler<{ value: unknown }> = (ev) => {
     setSurveyId(ev.target.value as number);
@@ -63,63 +65,6 @@ const SurveyResponseConfig = ({
         type: COLUMN_TYPE.SURVEY_RESPONSE,
       },
     ];
-  };
-
-  const makeOptionColumns = (
-    selectedOption: string | SURVEY_QUESTION_OPTIONS,
-    surveyId: number
-  ) => {
-    if (
-      selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
-      selectedQuestion.question.response_type != RESPONSE_TYPE.OPTIONS
-    ) {
-      return [];
-    }
-
-    if (selectedQuestion !== undefined && selectedQuestion !== null) {
-      if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
-        return [
-          {
-            config: {
-              question_id: selectedQuestion.id,
-            },
-
-            title: selectedQuestion.question.question,
-            type: COLUMN_TYPE.SURVEY_OPTIONS,
-          },
-        ];
-      } else if (
-        selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS_SEPARATED
-      ) {
-        return selectedQuestion.question.options?.map((option) => {
-          return {
-            config: {
-              option_id: option.id,
-              survey_id: surveyId,
-            },
-            title: option.text,
-            type: COLUMN_TYPE.SURVEY_OPTION,
-          };
-        });
-      } else {
-        const optionSelected = selectedQuestion.question.options?.find(
-          (option) => option.id === parseInt(selectedOption)
-        );
-        if (optionSelected === undefined) {
-          return [];
-        }
-        return [
-          {
-            config: {
-              option_id: optionSelected.id,
-              survey_id: surveyId,
-            },
-            title: optionSelected.text,
-            type: COLUMN_TYPE.SURVEY_OPTION,
-          },
-        ];
-      }
-    }
   };
 
   return (
@@ -166,6 +111,20 @@ const SurveyResponseConfig = ({
                         value as ZetkinSurveyTextQuestionElement
                       );
                       onOutputConfigured(columns);
+                    } else if (
+                      value.question.response_type === RESPONSE_TYPE.OPTIONS
+                    ) {
+                      setSelectedColumnOption(
+                        SURVEY_QUESTION_OPTIONS.ALL_OPTIONS
+                      );
+                      const columns = makeOptionColumns(
+                        value,
+                        SURVEY_QUESTION_OPTIONS.ALL_OPTIONS,
+                        surveyId
+                      );
+                      if (columns !== undefined) {
+                        onOutputConfigured(columns);
+                      }
                     }
                   }
                 }}
@@ -197,7 +156,9 @@ const SurveyResponseConfig = ({
                 label={messages.columnDialog.choices.surveyResponse.optionsLabel()}
                 onChange={(evt) => {
                   if (surveyId) {
+                    setSelectedColumnOption(evt.target.value);
                     const columns = makeOptionColumns(
+                      selectedQuestion,
                       evt.target.value,
                       surveyId
                     );
@@ -207,6 +168,7 @@ const SurveyResponseConfig = ({
                   }
                 }}
                 select
+                value={selectedColumnOption}
                 variant="standard"
               >
                 <ListSubheader>
@@ -251,6 +213,64 @@ const SurveyResponseConfig = ({
       }}
     </ZUIQuery>
   );
+};
+
+const makeOptionColumns = (
+  selectedQuestion: ZetkinSurveyQuestionElement,
+  selectedOption: string,
+  surveyId: number
+) => {
+  if (
+    selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
+    selectedQuestion.question.response_type != RESPONSE_TYPE.OPTIONS
+  ) {
+    return [];
+  }
+
+  if (selectedQuestion !== undefined && selectedQuestion !== null) {
+    if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
+      return [
+        {
+          config: {
+            question_id: selectedQuestion.id,
+          },
+
+          title: selectedQuestion.question.question,
+          type: COLUMN_TYPE.SURVEY_OPTIONS,
+        },
+      ];
+    } else if (
+      selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS_SEPARATED
+    ) {
+      return selectedQuestion.question.options?.map((option) => {
+        return {
+          config: {
+            option_id: option.id,
+            survey_id: surveyId,
+          },
+          title: option.text,
+          type: COLUMN_TYPE.SURVEY_OPTION,
+        };
+      });
+    } else {
+      const optionSelected = selectedQuestion.question.options?.find(
+        (option) => option.id === parseInt(selectedOption)
+      );
+      if (optionSelected === undefined) {
+        return [];
+      }
+      return [
+        {
+          config: {
+            option_id: optionSelected.id,
+            survey_id: surveyId,
+          },
+          title: optionSelected.text,
+          type: COLUMN_TYPE.SURVEY_OPTION,
+        },
+      ];
+    }
+  }
 };
 
 export default SurveyResponseConfig;
