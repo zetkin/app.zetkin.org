@@ -10,7 +10,7 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUICard from 'zui/ZUICard';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -40,7 +40,7 @@ const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
     <>
       <Box m={1} sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
         <ZUIPersonHoverCard personId={contact.id}>
-          <ZUIAvatar orgId={orgId} personId={contact.id} />
+          <ZUIPersonAvatar orgId={orgId} personId={contact.id} />
         </ZUIPersonHoverCard>
       </Box>
       <Typography sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
