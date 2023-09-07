@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { FormattedTime } from 'react-intl';
 import MapIcon from '@mui/icons-material/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { TimeField } from '@mui/x-date-pickers-pro';
 import {
   Autocomplete,
   Box,
@@ -187,7 +187,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     {...previewableProps}
                     renderInput={() => {
                       return (
-                        <TimePicker
+                        <TimeField
                           ampm={false}
                           format="HH:mm"
                           label={messages.eventOverviewCard.startTime()}
@@ -198,10 +198,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 setStartDate(dayjs(newValue));
                               }
                             }
-                          }}
-                          open={false}
-                          slotProps={{
-                            textField: { sx: { button: { cursor: 'text' } } },
                           }}
                           value={dayjs(startDate)}
                         />
@@ -318,7 +314,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     {...previewableProps}
                     renderInput={() => {
                       return (
-                        <TimePicker
+                        <TimeField
                           ampm={false}
                           format="HH:mm"
                           label={messages.eventOverviewCard.endTime()}
@@ -330,11 +326,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               }
                             }
                           }}
-                          open={false}
                           slotProps={{
                             textField: {
                               error: invalidFormat,
-                              sx: { button: { cursor: 'text' } },
                             },
                           }}
                           value={dayjs(endDate)}
