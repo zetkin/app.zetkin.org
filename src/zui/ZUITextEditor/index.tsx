@@ -109,13 +109,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   }, [clear]);
 
   return (
-    <ClickAwayListener
-      onClickAway={() => {
-        if (!isEqual(editor.children, emptySlate)) {
-          onClickAway();
-        }
-      }}
-    >
+    <ClickAwayListener onClickAway={onClickAway}>
       <Box
         className={classes.container}
         onClick={() => ReactEditor.focus(editor)}
@@ -129,7 +123,11 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
         {initialValueSlate && (
           <Slate
             editor={editor}
-            onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
+            onChange={(slateArray) => {
+              if (!isEqual(editor.children, emptySlate)) {
+                onChange(slateToMarkdown(slateArray));
+              }
+            }}
             value={initialValueSlate}
           >
             <Editable
