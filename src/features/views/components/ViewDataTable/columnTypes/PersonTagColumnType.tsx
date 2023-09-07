@@ -65,7 +65,7 @@ export default class PersonTagColumnType implements IColumnType {
           if (isNaN(Number(v2.value))) {
             return -1;
           } else {
-            v1.value.localeCompare(v2.value);
+            return v1.value.localeCompare(v2.value);
           }
         }
 
