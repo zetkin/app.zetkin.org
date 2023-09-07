@@ -1,6 +1,7 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { useMessages } from 'core/i18n';
+import { useStore } from 'react-redux';
 import {
   AccessTime,
   ArrowForward,
@@ -13,12 +14,14 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
+import { eventsDeselected } from 'features/events/store';
 import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
+import { RootState } from 'core/store';
 import StatusDot from './StatusDot';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -57,7 +60,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
-
+  const store = useStore<RootState>();
   const participants = model.getParticipants().data || [];
   const respondents = model.getRespondents().data || [];
   const state = model.state;
@@ -82,6 +85,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         showConfirmDialog({
           onSubmit: () => {
             model.deleteEvent();
+            store.dispatch(eventsDeselected([event]));
             onClickAway();
           },
           title: messages.eventPopper.confirmDelete(),
