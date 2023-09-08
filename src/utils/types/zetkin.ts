@@ -132,7 +132,6 @@ export interface ZetkinUser {
   first_name: string;
   id: number;
   is_superuser?: boolean;
-  lang: string | null;
   last_name: string;
   username: string;
 }
