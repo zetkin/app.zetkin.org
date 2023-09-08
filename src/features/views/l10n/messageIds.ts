@@ -2,25 +2,25 @@ import { ReactElement } from 'react';
 
 import { m, makeMessages } from 'core/i18n';
 
-export default makeMessages('feat.views', {
+export default makeMessages('feat.lists', {
   actions: {
     createFolder: m('Create folder'),
-    createView: m('Create view'),
+    createView: m('Create list'),
   },
   browser: {
     backToFolder: m<{ folder: ReactElement }>('Back to {folder}'),
-    backToRoot: m('Back to all views'),
+    backToRoot: m('Back to all lists'),
     confirmDelete: {
       folder: {
         title: m('Delete folder and content'),
         warning: m(
-          'Deleting this folder and all views within is a permanent action that cannot be undone. Are you sure you want to continue?'
+          'Deleting this folder and all lists within is a permanent action that cannot be undone. Are you sure you want to continue?'
         ),
       },
       view: {
-        title: m('Delete view'),
+        title: m('Delete list'),
         warning: m(
-          "Deleting this view is a permanent action which can't be undone. Are you sure you want to continue?"
+          "Deleting this list is a permanent action which can't be undone. Are you sure you want to continue?"
         ),
       },
     },
@@ -28,20 +28,20 @@ export default makeMessages('feat.views', {
       rename: m('Rename'),
     },
     moveToFolder: m<{ folder: ReactElement }>('Move to {folder}'),
-    moveToRoot: m('Move to all views'),
+    moveToRoot: m('Move to all lists'),
   },
   browserLayout: {
     tabs: {
-      views: m('Views'),
+      views: m('Lists'),
     },
     title: m('People'),
   },
   cells: {
     localPerson: {
-      alreadyInView: m('Already in view'),
+      alreadyInView: m('Already in list'),
       clearLabel: m('Unassign'),
       otherPeople: m('Other people'),
-      restrictedMode: m("Can't be edited in shared views."),
+      restrictedMode: m("Can't be edited in shared lists."),
       searchLabel: m('Select a person'),
     },
     organizerAction: {
@@ -205,7 +205,7 @@ export default makeMessages('feat.views', {
         title: m('Survey submit date'),
       },
       tag: {
-        description: m('Toggle a tag for each person in the view'),
+        description: m('Toggle a tag for each person in the list'),
         keywords: m(''),
         title: m('Tag'),
       },
@@ -223,7 +223,7 @@ export default makeMessages('feat.views', {
       phone: m('Phone number'),
     },
     editor: {
-      alreadyInView: m('Already in view'),
+      alreadyInView: m('Already in list'),
       buttonLabels: {
         addColumns: m<{ columns: number }>(
           'Add {columns, plural, one {1 column} other {{columns} columns}}'
@@ -241,10 +241,10 @@ export default makeMessages('feat.views', {
     },
     gallery: {
       add: m('Add'),
-      alreadyInView: m('Already in view'),
+      alreadyInView: m('Already in list'),
       columns: m('Columns'),
       configure: m('Configure'),
-      header: m('Add column to view'),
+      header: m('Add column to list'),
       noSearchResults: m<{ searchString: string }>(
         'There are no column choices that match "{searchString}"'
       ),
@@ -283,10 +283,10 @@ export default makeMessages('feat.views', {
     organizer_action: m('Organizer action needed'),
   },
   deleteDialog: {
-    error: m('There was an error deleting the view'),
-    title: m('Delete view?'),
+    error: m('There was an error deleting the list'),
+    title: m('Delete list?'),
     warningText: m(
-      'Do you really want to delete this view? This will delete any data stored in the view such as notes and toggles (but will not delete the people from the database)?'
+      'Do you really want to delete this list? This will delete any data stored in the list such as notes and toggles (but will not delete the people from the database)?'
     ),
   },
   editViewTitleAlert: {
@@ -297,17 +297,17 @@ export default makeMessages('feat.views', {
     dynamic: {
       configureButton: m('Configure'),
       description: m(
-        'Create a dynamic view where people are added and removed automatically using Smart Search.'
+        'Create a dynamic list where people are added and removed automatically using Smart Search.'
       ),
-      headline: m('Configure Smart Search View'),
+      headline: m('Configure Smart Search List'),
     },
     notice: {
-      dynamic: m('This is a Smart Search View but no people match the query'),
+      dynamic: m('This is a Smart Search List but no people match the query'),
       static: m("You haven't added any rows yet"),
     },
     static: {
       description: m(
-        'Add the first person to create a static view where people are added and removed manually.'
+        'Add the first person to create a static list where people are added and removed manually.'
       ),
       headline: m('Add people manually'),
     },
@@ -324,16 +324,16 @@ export default makeMessages('feat.views', {
     },
   },
   footer: {
-    addPlaceholder: m('Start typing to add person to view'),
-    alreadyInView: m('Already in view'),
+    addPlaceholder: m('Start typing to add person to list'),
+    alreadyInView: m('Already in list'),
   },
   newFolderTitle: m('New Folder'),
   newViewFields: {
-    title: m('New View'),
+    title: m('New List'),
   },
   removeDialog: {
-    action: m('Are you sure you want to remove these rows from this view?'),
-    title: m('Remove people from view'),
+    action: m('Are you sure you want to remove these rows from this list?'),
+    title: m('Remove people from list'),
   },
   shareDialog: {
     download: {
@@ -357,7 +357,7 @@ export default makeMessages('feat.views', {
       ),
       showOfficials: m('Show officials'),
       statusLabel: m<{ collaborators: number; officials: number }>(
-        'Shared with {collaborators, plural, =1 {1 collaborator} other {# collaborators}}, {officials, plural, =1 {1 official} other {# officials}} can access all views.'
+        'Shared with {collaborators, plural, =1 {1 collaborator} other {# collaborators}}, {officials, plural, =1 {1 official} other {# officials}} can access all lists.'
       ),
       tabLabel: m('Share'),
       viewLink: m('restricted link'),
@@ -384,12 +384,12 @@ export default makeMessages('feat.views', {
   },
   toolbar: {
     createColumn: m('New column'),
-    createFromSelection: m('Create view from selection'),
+    createFromSelection: m('Create list from selection'),
     removeFromSelection: m<{ numSelected: number }>(
-      'Remove {numSelected, plural, one {1 person} other {{numSelected} people} } from view'
+      'Remove {numSelected, plural, one {1 person} other {{numSelected} people} } from list'
     ),
     removeTooltip: m(
-      'Smart search views do not currently support removing rows'
+      'Smart search lists do not currently support removing rows'
     ),
   },
   viewLayout: {
@@ -397,13 +397,13 @@ export default makeMessages('feat.views', {
       share: m('Share'),
     },
     ellipsisMenu: {
-      delete: m('Delete view'),
+      delete: m('Delete list'),
       editQuery: m('Edit Smart Search query'),
-      makeDynamic: m('Convert to Smart Search view'),
-      makeStatic: m('Convert to static view'),
+      makeDynamic: m('Convert to Smart Search List'),
+      makeStatic: m('Convert to static list'),
     },
     jumpMenu: {
-      placeholder: m('Start typing to find view'),
+      placeholder: m('Start typing to find list'),
     },
     subtitle: {
       collaborators: m<{ count: number }>(
@@ -423,6 +423,6 @@ export default makeMessages('feat.views', {
       owner: m('Owner'),
       title: m('Title'),
     },
-    empty: m("You haven't created any views yet."),
+    empty: m("You haven't created any lists yet."),
   },
 });
