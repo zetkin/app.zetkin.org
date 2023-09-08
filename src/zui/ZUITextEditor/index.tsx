@@ -123,11 +123,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
         {initialValueSlate && (
           <Slate
             editor={editor}
-            onChange={(slateArray) => {
-              if (!isEqual(editor.children, emptySlate)) {
-                onChange(slateToMarkdown(slateArray));
-              }
-            }}
+            onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
             value={initialValueSlate}
           >
             <Editable
