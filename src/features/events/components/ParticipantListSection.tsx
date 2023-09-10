@@ -17,8 +17,8 @@ import filterParticipants from '../utils/filterParticipants';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
 import { useMessages } from 'core/i18n';
-import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
@@ -124,7 +124,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       hideSortIcons: true,
       renderCell: (params) => (
         <ZUIPersonHoverCard personId={params.row.id}>
-          <ZUIAvatar orgId={orgId} personId={params.row.id} />
+          <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
         </ZUIPersonHoverCard>
       ),
       resizable: false,

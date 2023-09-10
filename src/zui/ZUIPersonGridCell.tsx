@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Avatar, Box, SxProps, Tooltip } from '@mui/material';
 
 import { ZetkinPerson } from 'utils/types/zetkin';
-import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 
 const ZUIPersonGridCell: FC<{
   onClick?: () => void;
@@ -31,11 +31,11 @@ const ZUIPersonGridCell: FC<{
       {tooltip ? (
         // Person with tooltip
         <Tooltip title={`${person.first_name} ${person.last_name}`}>
-          <ZUIAvatar orgId={orgId} personId={person.id} />
+          <ZUIPersonAvatar orgId={orgId} personId={person.id} />
         </Tooltip>
       ) : (
         // Person without tooltip
-        <ZUIAvatar orgId={orgId} personId={person.id} />
+        <ZUIPersonAvatar orgId={orgId} personId={person.id} />
       )}
     </Box>
   );

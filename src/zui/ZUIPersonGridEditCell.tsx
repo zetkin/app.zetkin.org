@@ -20,7 +20,7 @@ import { FC, HTMLAttributes, useState } from 'react';
 import { useMessages } from 'core/i18n';
 import { usePersonSelect } from './ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 
 import messageIds from './l10n/messageIds';
 
@@ -292,7 +292,7 @@ const PersonListItem: FC<{
           justifyContent: 'center',
         }}
       >
-        <ZUIAvatar orgId={orgId} personId={person.id} size="sm" />
+        <ZUIPersonAvatar orgId={orgId} personId={person.id} size="sm" />
         <Typography component="span">
           {`${person.first_name} ${person.last_name}`}
         </Typography>
@@ -307,7 +307,7 @@ const SelectedPerson: FC<{ orgId: number; person: ZetkinPerson }> = ({
 }) => {
   return (
     <>
-      <ZUIAvatar orgId={orgId} personId={person.id} size="lg" />
+      <ZUIPersonAvatar orgId={orgId} personId={person.id} size="lg" />
       <Typography>{`${person.first_name} ${person.last_name}`}</Typography>
     </>
   );

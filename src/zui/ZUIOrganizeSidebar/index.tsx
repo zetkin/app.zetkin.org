@@ -8,7 +8,6 @@ import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
-import ZUIAvatar from '../ZUIAvatar';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import {
   Architecture,
@@ -41,6 +40,7 @@ import OrganizationSwitcher from 'features/organizations/components/Organization
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 
 const drawerWidth = 300;
 
@@ -321,8 +321,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       width: '48px',
                     }}
                   >
-                    <ZUIAvatar
-                      orgId={orgId}
+                    <ZUIUserAvatar
                       personId={user.id}
                       size={open ? 'sm' : 'md'}
                     />
