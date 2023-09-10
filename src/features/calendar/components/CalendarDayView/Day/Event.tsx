@@ -12,10 +12,10 @@ import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from 'features/events/components/EventPopper/StatusDot';
 import theme from 'theme';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { truncateOnMiddle } from 'utils/stringUtils';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
@@ -62,10 +62,10 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             <StatusDot state={getEventState(event)} />
             {/* Title */}
             <Typography
+              noWrap
               sx={{
                 color: theme.palette.secondary.main,
               }}
-              noWrap
             >
               {truncateOnMiddle(
                 event.title ||
