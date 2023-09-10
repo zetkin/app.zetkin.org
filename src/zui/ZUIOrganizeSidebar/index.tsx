@@ -248,6 +248,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             sx={{
               flexGrow: 1,
               flexShrink: 1,
+              overflowX: 'hidden',
               overflowY: 'auto',
             }}
           >
