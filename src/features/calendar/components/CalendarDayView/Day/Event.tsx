@@ -15,6 +15,7 @@ import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { truncateOnMiddle } from 'utils/stringUtils';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
@@ -64,10 +65,14 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
               sx={{
                 color: theme.palette.secondary.main,
               }}
+              noWrap
             >
-              {event.title ||
-                event.activity?.title ||
-                messages.common.noTitle()}
+              {truncateOnMiddle(
+                event.title ||
+                  event.activity?.title ||
+                  messages.common.noTitle(),
+                50
+              )}
             </Typography>
             {/* Time */}
             <Typography color={theme.palette.secondary.main} component={'div'}>
@@ -105,7 +110,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
               >
                 <Box alignItems="center" display="flex" gap={0.5}>
                   <PlaceOutlined />
-                  {event.location?.title}
+                  {truncateOnMiddle(event.location?.title, 40)}
                 </Box>
               </Typography>
             )}
