@@ -47,7 +47,7 @@ test.describe('View detail page', () => {
       id: 1,
     });
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     await page.locator('[role=cell] >> input[type=checkbox]').nth(0).click();
     await page.locator('[role=cell] >> input[type=checkbox]').nth(1).click();
@@ -78,7 +78,7 @@ test.describe('View detail page', () => {
     expect(columnPostLogs).toHaveLength(2);
 
     // Expect that correctly localised strings sent when posting
-    expect(viewPostLogs[0].data?.title).toEqual('New View');
+    expect(viewPostLogs[0].data?.title).toEqual('New List');
     expect(columnPostLogs[0].data?.title).toEqual('First Name');
     expect(columnPostLogs[1].data?.title).toEqual('Last Name');
 
@@ -88,7 +88,7 @@ test.describe('View detail page', () => {
 
     // Expect that user is navigated to new view's page
     expect(page.url()).toEqual(
-      appUri + `/organize/1/people/views/${NewView.id}`
+      appUri + `/organize/1/people/lists/${NewView.id}`
     );
   });
 });
