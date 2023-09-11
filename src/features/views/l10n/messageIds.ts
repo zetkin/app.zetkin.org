@@ -319,7 +319,7 @@ export default makeMessages('feat.lists', {
         '{count, plural, =1 {1 folder} other {# folders}}'
       ),
       viewCount: m<{ count: number }>(
-        '{count, plural, =1 {1 view} other {# views}}'
+        '{count, plural, =1 {1 list} other {# lists}}'
       ),
     },
   },

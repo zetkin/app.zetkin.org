@@ -20,7 +20,7 @@ export default makeMessages('zui', {
     closed: m('Closed'),
     conversation: m('Conversation'),
     events: m('Events'),
-    folders: m('Views'),
+    folders: m('Lists'),
     insights: m('Insights'),
     instances: m('Instances'),
     journeys: m('Journeys'),
@@ -36,7 +36,7 @@ export default makeMessages('zui', {
     surveys: m('Surveys'),
     tasks: m('Tasks'),
     untitledEvent: m('Untitled event'),
-    views: m('Views'),
+    views: m('Lists'),
   },
   collapse: {
     collapse: m('Collapse'),
@@ -132,7 +132,7 @@ export default makeMessages('zui', {
     keepTyping: m('Keep typing..'),
     noResult: m('No matching person found'),
     otherPeople: m('Other people'),
-    restrictedMode: m("Can't be edited in shared views."),
+    restrictedMode: m("Can't be edited in shared lists."),
     searchResults: m('Search results'),
   },
   personSelect: {
