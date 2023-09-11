@@ -4,7 +4,7 @@ import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
 import { TreeItemData } from '../types';
 import TreeView from '@mui/lab/TreeView';
-import { Avatar, Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 interface OrganizationTreeProps {
