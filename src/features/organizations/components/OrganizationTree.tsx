@@ -22,14 +22,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
         <NextLink href={`/organize/${item.id}`}>
           <Box m={1} sx={{ alignItems: 'center', display: 'inlineFlex' }}>
             <Box mr={1}>
-              {orgId == item.id ? (
-                <Avatar
-                  src={`/api/orgs/${item.id}/avatar`}
-                  sx={{ height: '28px', width: '28px' }}
-                />
-              ) : (
-                <ProceduralColorIcon id={item.id} />
-              )}
+              <ProceduralColorIcon id={item.id} />
             </Box>
             <Typography
               sx={{ fontWeight: orgId == item.id ? 'bold' : 'normal' }}
