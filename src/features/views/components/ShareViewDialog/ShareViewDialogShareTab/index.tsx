@@ -27,7 +27,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
   const selectInputRef = useRef<HTMLInputElement>();
   const [showOfficials, setShowOfficials] = useState(true);
   const shareLinkUrl = useAbsoluteUrl(
-    `/organize/${model.orgId}/people/views/${model.viewId}/shared`
+    `/organize/${model.orgId}/people/lists/${model.viewId}/shared`
   );
 
   const accessFuture = model.getAccessList();
@@ -122,7 +122,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                       copyText={shareLinkUrl}
                     >
                       <NextLink
-                        href={`/organize/${model.orgId}/people/views/${model.viewId}/shared`}
+                        href={`/organize/${model.orgId}/people/lists/${model.viewId}/shared`}
                         passHref
                       >
                         <Link>

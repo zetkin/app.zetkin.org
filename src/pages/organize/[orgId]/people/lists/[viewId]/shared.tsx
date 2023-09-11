@@ -19,7 +19,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 const scaffoldOptions = {
   allowNonOfficials: true,
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people.views'],
+  localeScope: ['layout.organize', 'pages.people.lists'],
 };
 
 async function getAccessLevel(
