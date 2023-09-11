@@ -107,6 +107,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
               <Typography
                 color={theme.palette.secondary.main}
                 component={'div'}
+                noWrap
               >
                 <Box alignItems="center" display="flex" gap={0.5}>
                   <PlaceOutlined />
