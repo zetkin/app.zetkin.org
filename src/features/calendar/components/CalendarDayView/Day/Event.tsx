@@ -12,6 +12,7 @@ import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from 'features/events/components/EventPopper/StatusDot';
 import theme from 'theme';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -61,13 +62,17 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             <StatusDot state={getEventState(event)} />
             {/* Title */}
             <Typography
+              noWrap
               sx={{
                 color: theme.palette.secondary.main,
               }}
             >
-              {event.title ||
-                event.activity?.title ||
-                messages.common.noTitle()}
+              {truncateOnMiddle(
+                event.title ||
+                  event.activity?.title ||
+                  messages.common.noTitle(),
+                50
+              )}
             </Typography>
             {/* Time */}
             <Typography color={theme.palette.secondary.main} component={'div'}>
@@ -102,10 +107,11 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
               <Typography
                 color={theme.palette.secondary.main}
                 component={'div'}
+                noWrap
               >
                 <Box alignItems="center" display="flex" gap={0.5}>
                   <PlaceOutlined />
-                  {event.location?.title}
+                  {truncateOnMiddle(event.location?.title, 40)}
                 </Box>
               </Typography>
             )}
