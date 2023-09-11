@@ -17,7 +17,9 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
   recentOrganizations,
 }) => {
   const theme = useTheme();
-
+  if (recentOrganizations.length > 7) {
+    recentOrganizations = recentOrganizations.slice(0, 7);
+  }
   return (
     <Box>
       {recentOrganizations.map((org) => {
