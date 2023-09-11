@@ -32,7 +32,12 @@ import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
-import { isSameDate, removeOffset } from 'utils/dateUtils';
+import {
+  isSameDate,
+  makeNaiveDateString,
+  makeNaiveTimeString,
+  removeOffset,
+} from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 dayjs.extend(utc);
@@ -136,20 +141,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.startDate()}
                           onChange={(newStartDate) => {
                             if (newStartDate) {
-                              const month =
-                                newStartDate.utc().toDate().getMonth() + 1;
-                              const startDateString = `${newStartDate
-                                .utc()
-                                .toDate()
-                                .getFullYear()
-                                .toString()}-${month
-                                .toString()
-                                .padStart(2, '0')}-${newStartDate
-                                .utc()
-                                .toDate()
-                                .getDate()
-                                .toString()
-                                .padStart(2, '0')}`;
+                              const startDateString = makeNaiveDateString(
+                                newStartDate.utc().toDate()
+                              );
                               setStartDate(startDateString);
                               if (newStartDate > dayjs(endDate)) {
                                 setEndDate(startDateString);
@@ -185,17 +179,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.startTime()}
                           onChange={(newStartTime) => {
                             if (newStartTime) {
-                              const startTimeString = `${newStartTime
-                                .utc()
-                                .toDate()
-                                .getHours()
-                                .toString()
-                                .padStart(2, '0')}:${newStartTime
-                                .utc()
-                                .toDate()
-                                .getMinutes()
-                                .toString()
-                                .padStart(2, '0')}`;
+                              const startTimeString = makeNaiveTimeString(
+                                newStartTime.utc().toDate()
+                              );
                               setStartTime(startTimeString);
                             }
                           }}
@@ -251,20 +237,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               minDate={dayjs(startDate)}
                               onChange={(newEndDate) => {
                                 if (newEndDate) {
-                                  const month =
-                                    newEndDate.utc().toDate().getMonth() + 1;
-                                  const endDateString = `${newEndDate
-                                    .utc()
-                                    .toDate()
-                                    .getFullYear()
-                                    .toString()}-${month
-                                    .toString()
-                                    .padStart(2, '0')}-${newEndDate
-                                    .utc()
-                                    .toDate()
-                                    .getDate()
-                                    .toString()
-                                    .padStart(2, '0')}`;
+                                  const endDateString = makeNaiveDateString(
+                                    newEndDate.utc().toDate()
+                                  );
                                   setEndDate(endDateString);
                                   if (
                                     isSameDate(
@@ -321,17 +296,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           minTime={dayjs(naiveStart).add(1, 'min')}
                           onChange={(newEndTime) => {
                             if (newEndTime) {
-                              const endTimeString = `${newEndTime
-                                .utc()
-                                .toDate()
-                                .getHours()
-                                .toString()
-                                .padStart(2, '0')}:${newEndTime
-                                .utc()
-                                .toDate()
-                                .getMinutes()
-                                .toString()
-                                .padStart(2, '0')}`;
+                              const endTimeString = makeNaiveTimeString(
+                                newEndTime.utc().toDate()
+                              );
                               setEndTime(endTimeString);
                             }
                           }}

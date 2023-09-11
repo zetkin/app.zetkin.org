@@ -52,6 +52,28 @@ export const LocalTimeToJsonPlugin = (
 };
 
 /**
+ * @param date
+ * @returns string in YYYY-MM-DD format
+ */
+export function makeNaiveDateString(date: Date): string {
+  const month = date.getMonth() + 1;
+  return `${date.getFullYear().toString()}-${month
+    .toString()
+    .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+}
+
+/**
+ * @param date
+ * @returns string in HH:MM format
+ */
+export function makeNaiveTimeString(date: Date): string {
+  return `${date.getHours().toString().padStart(2, '0')}:${date
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
+}
+
+/**
  * Takes an ISO datestring and returns a boolean that says if the date is in the futre or not.
  * @param datestring
  * @returns boolean
