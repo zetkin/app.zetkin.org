@@ -13,7 +13,7 @@ core:
 feat:
   calendar:
     createMenu:
-      singleEvent: Skapa en enskild event
+      singleEvent: Skapa ett enskild event
     event:
       differentLocations: '{numLocations} olika platser'
       events: Events
@@ -25,7 +25,7 @@ feat:
       withoutContact: '{numWithoutContact} Utan kontaktperson'
     eventFilter:
       collapse: Minska
-      expand: '{numOfOptions, plural, one {+ 1 fler eventtyper} other {+ # fler eventtyper}}'
+      expand: '{numOfOptions, plural, one {+ 1 till eventtyp} other {+ # fler eventtyper}}'
       filter: Filter
       filterOptions:
         actionFilters:
@@ -51,7 +51,7 @@ feat:
     lastDayWithEvents: Det {numEvents, plural, one {var ett event} other {var {numEvents}
       events}} på den senaste aktiva dagen
     loadMore: Ladda mer
-    moreEvents: '{numEvents, plural, one {# mer event} other {# fler event}}'
+    moreEvents: '{numEvents, plural, one {# event till} other {# fler event}}'
     next: NÄSTA
     prev: FÖREGÅENDE
     rangeLabel: Välj ett alternativ
@@ -65,8 +65,8 @@ feat:
       editEvents: Redigera event
       ellipsisMenu:
         cancel: Ställ in
-        cancelWarning: Om du gör så, kom ihåg att berätta för deltagarna och anmälda
-          att eventet har blivit inställd!
+        cancelWarning: Om du gör detta, kom ihåg att berätta för deltagarna och anmälda
+          att eventet har blivit inställt!
         confirmCancel: Är du säker på att du vill ställa in valda event?
         confirmDelete: Är du säker på att du vill radera valda event?
         delete: Radera
@@ -153,7 +153,7 @@ feat:
       subtitle: Personer att ringa
       title: Redo
     state:
-      active: Aktivit
+      active: Aktivt
       closed: Stängd
       draft: Utkast
       open: Öppen
@@ -377,8 +377,8 @@ feat:
       backToShifts: Tillbaka till skiftlistan
       booked: Bokad
       cancel: Ställ in
-      cancelWarning: Om du gör så, kom ihåg att meddela alla bokade och anmälda deltagare
-        att eventet har blivit inställd!
+      cancelWarning: Om du gör detta, kom ihåg att meddela alla bokade och anmälda
+        deltagare att eventet har blivit inställt!
       confirmCancel: Är du säker på att du vill ställa in det här eventet?
       confirmDelete: Är du säker på att du vill radera det här eventet?
       contactPerson: Kontaktperson
@@ -453,7 +453,8 @@ feat:
       cancelled: Avbokad
       confirmed: Bekräftade deltagare
       header: Deltagare
-      noshow: ({noshows, plural, =1 {1 person dök ej upp} other {# personer dök ej upp}})
+      noshow: ({noshows, plural, =1 {1 person dök ej upp} other {# personer dök ej
+        upp}})
       pending: Anmälningar väntar
       recordButton: Rekordstor närvaro
       remindButton: Påminn alla
@@ -744,7 +745,7 @@ feat:
           sub: ta bort
         ellipsis: '...'
         examples:
-          one: Lägg till alla personer vars första namn är 'Clara' och vars efternamn
+          one: Lägg till alla personer vars förnamn är 'Clara' och vars efternamn
             är 'Zetkin'.
           two: Ta bort alla personer vars stad är Stockholm.
         fieldMatches: '{field} matchar {value}'
@@ -799,7 +800,7 @@ feat:
             minMatching: minst {minMatching}
             none: ingen
         examples:
-          one: 'Lägg till personer med minst någon av följande etiketter: ''Medlem'',
+          one: 'Lägg till personer med minst en av följande etiketter: ''Medlem'',
             ''Aktivist'''
           two: 'Ta bort personer med alla följande etiketter: ''Styrelseledamot'''
         inputString: '{addRemoveSelect} personer med {condition} av följande etiketter:
@@ -813,7 +814,7 @@ feat:
           two: Ta bort personer som inte finns i listan "Aktiva medlemmar 2022".
         inSelect:
           in: i
-          notin: inte i
+          notin: inte finns i
         inputString: '{addRemoveSelect} personer som är med i {inSelect} listan {viewSelect}.'
         viewSelect:
           none: Organisationen har inte några listor ännu
@@ -839,8 +840,8 @@ feat:
             ett'
         inputString: '{addRemoveSelect} personer som {matchSelect} {query}.'
         matchSelect:
-          in: matcha
-          notin: matcha inte
+          in: matchar
+          notin: inte matchar
         query:
           edit:
             callassignment_goal: '{querySelect} i ringuppdraget "{titleSelect}"'
@@ -1527,9 +1528,9 @@ feat:
           description: Lägg till en etikett på varje person i listan
           title: Etikett
         toggle:
-          columnTitle: Växla
-          description: Kryssruta-kolumn
-          title: Växla
+          columnTitle: Kryssruta
+          description: Kolumn för kryssruta
+          title: Kryssruta
       commonHeaders:
         email: E-postadress
         first_name: Förnamn
@@ -1573,7 +1574,7 @@ feat:
       remove_rows: Något gick fel när en eller flera rader togs bort
     defaultColumnTitles:
       journey_assignee: Ansvarig för journeys
-      local_bool: Växla
+      local_bool: Kryssruta
       local_person: Personuppgifter
       organizer_action: Flaggade samtal
       person_notes: Anteckningar
@@ -1627,13 +1628,13 @@ feat:
         warning2: Du kan {shareLink} göra det mesta du behöver i Zetkin. Export är
           en god idé när du vill kopiera data till ett annat system.
       share:
-        addPlaceholder: Lägg till medarbetare
-        collabInstructions: Efter att du lagt till medorganisatörer, kopiera och skicka
-          {viewLink}
+        addPlaceholder: Dela med person utan administratörsbehörighet
+        collabInstructions: Efter att du lagt till personer utan administratörsbehörighet,
+          kopiera och skicka {viewLink}
         showOfficials: Visa administratörer
-        statusLabel: Delad med {collaborators, plural, =1 {1 medorganisatör} other
-          {# medorganisatörer}}, {officials, plural, =1 {1 administratör} other {#
-          administratörer}} har tillgång till alla listor.
+        statusLabel: Delad med {collaborators, plural, =1 {1 person utan administratörsbehörighet}
+          other {# personer utan administratörsbehörighet}}, {officials, plural, =1
+          {1 administratör} other {# administratörer}} har tillgång till alla listor.
         tabLabel: Dela
         viewLink: begränsad länk
       title: Dela "{title}"
