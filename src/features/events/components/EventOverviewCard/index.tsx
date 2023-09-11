@@ -1,9 +1,11 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormattedTime } from 'react-intl';
 import MapIcon from '@mui/icons-material/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { TimeField } from '@mui/x-date-pickers-pro';
+import utc from 'dayjs/plugin/utc';
 import { AccessTime, Add } from '@mui/icons-material';
 import {
   Autocomplete,
@@ -17,7 +19,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
@@ -33,6 +34,8 @@ import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { isSameDate, removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+
+dayjs.extend(utc);
 
 type EventOverviewCardProps = {
   data: ZetkinEvent;
@@ -55,15 +58,21 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   const [locationId, setLocationId] = useState<number | null>(
     data.location?.id ?? null
   );
-
-  const [startDate, setStartDate] = useState<Dayjs>(
-    dayjs(removeOffset(data.start_time))
+  const [startDate, setStartDate] = useState(data.start_time.slice(0, 10));
+  const [endDate, setEndDate] = useState(data.end_time.slice(0, 10));
+  const [startTime, setStartTime] = useState(
+    removeOffset(data.start_time.slice(11, 16))
   );
-  const [endDate, setEndDate] = useState<Dayjs>(
-    dayjs(removeOffset(data.end_time))
+  const [endTime, setEndTime] = useState(
+    removeOffset(data.end_time.slice(11, 16))
   );
-  const [showEndDate, setShowEndDate] = useState(false);
+  const naiveEnd = `${endDate}T${endTime}`;
+  const naiveStart = `${startDate}T${startTime}`;
 
+  const [wantsToShowEndDate, setWantsToShowEndDate] = useState(false);
+  const mustShowEndDate = dayjs(endDate).isAfter(dayjs(startDate), 'day');
+
+  const showEndDate = mustShowEndDate || wantsToShowEndDate;
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const { clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
@@ -71,20 +80,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       onEditModeEnter: () => setEditable(true),
       onEditModeExit: () => {
         setEditable(false);
-        setShowEndDate(false);
+        setWantsToShowEndDate(false);
       },
       save: () => {
         dataModel.updateEventData({
-          end_time: endDate
-            .hour(endDate.hour())
-            .minute(endDate.minute())
-            .format(),
+          end_time: `${naiveEnd}:00`,
           info_text: infoText,
           location_id: locationId,
-          start_time: startDate
-            .hour(startDate.hour())
-            .minute(startDate.minute())
-            .format(),
+          start_time: `${naiveStart}:00`,
           url: link,
         });
       },
@@ -133,15 +136,28 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.startDate()}
                           onChange={(newStartDate) => {
                             if (newStartDate) {
-                              setStartDate(newStartDate);
-                              if (newStartDate > endDate) {
-                                setEndDate(newStartDate);
-                                setShowEndDate(false);
+                              const month =
+                                newStartDate.utc().toDate().getMonth() + 1;
+                              const startDateString = `${newStartDate
+                                .utc()
+                                .toDate()
+                                .getFullYear()
+                                .toString()}-${month
+                                .toString()
+                                .padStart(2, '0')}-${newStartDate
+                                .utc()
+                                .toDate()
+                                .getDate()
+                                .toString()
+                                .padStart(2, '0')}`;
+                              setStartDate(startDateString);
+                              if (newStartDate > dayjs(endDate)) {
+                                setEndDate(startDateString);
                               }
                             }
                           }}
                           sx={{ marginBottom: 2 }}
-                          value={startDate}
+                          value={dayjs(startDate)}
                         />
                       );
                     }}
@@ -153,15 +169,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               .startDate()
                               .toUpperCase()}
                           </Typography>
-                          <ZUIDate
-                            datetime={new Date(
-                              dayjs(startDate).format()
-                            ).toISOString()}
-                          />
+                          <ZUIDate datetime={startDate} />
                         </Box>
                       );
                     }}
-                    value={startDate.format()}
+                    value={startDate}
                   />
                   <ZUIPreviewableInput
                     {...previewableProps}
@@ -173,9 +185,18 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           label={messages.eventOverviewCard.startTime()}
                           onChange={(newStartTime) => {
                             if (newStartTime) {
-                              if (newStartTime < endDate) {
-                                setStartDate(newStartTime);
-                              }
+                              const startTimeString = `${newStartTime
+                                .utc()
+                                .toDate()
+                                .getHours()
+                                .toString()
+                                .padStart(2, '0')}:${newStartTime
+                                .utc()
+                                .toDate()
+                                .getMinutes()
+                                .toString()
+                                .padStart(2, '0')}`;
+                              setStartTime(startTimeString);
                             }
                           }}
                           slotProps={{
@@ -185,24 +206,21 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               },
                             },
                           }}
-                          value={startDate}
+                          value={dayjs(naiveStart)}
                         />
                       );
                     }}
                     renderPreview={() => {
                       return (
                         <Box>
-                          <FormattedTime
-                            hour12={false}
-                            value={startDate.format()}
-                          />
+                          <FormattedTime hour12={false} value={naiveStart} />
                         </Box>
                       );
                     }}
-                    value={dayjs(startDate).format()}
+                    value={naiveStart}
                   />
                 </Grid>
-                <Grid id={'wrap'} ml={1} sx={{ alignItems: 'center' }}>
+                <Grid ml={1} sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
                     {...previewableProps}
                     renderInput={() => {
@@ -213,7 +231,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               <Grid item mt={2}>
                                 <Button
                                   onClick={() => {
-                                    setShowEndDate(true);
+                                    setWantsToShowEndDate(true);
                                   }}
                                   sx={{
                                     marginBottom: '19px',
@@ -230,26 +248,43 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             <DatePicker
                               format="DD-MM-YYYY"
                               label={messages.eventOverviewCard.endDate()}
+                              minDate={dayjs(startDate)}
                               onChange={(newEndDate) => {
                                 if (newEndDate) {
-                                  if (newEndDate < startDate) {
-                                    setStartDate(newEndDate);
-                                    setEndDate(newEndDate);
-                                    setShowEndDate(false);
-                                  } else {
-                                    setEndDate(newEndDate);
+                                  const month =
+                                    newEndDate.utc().toDate().getMonth() + 1;
+                                  const endDateString = `${newEndDate
+                                    .utc()
+                                    .toDate()
+                                    .getFullYear()
+                                    .toString()}-${month
+                                    .toString()
+                                    .padStart(2, '0')}-${newEndDate
+                                    .utc()
+                                    .toDate()
+                                    .getDate()
+                                    .toString()
+                                    .padStart(2, '0')}`;
+                                  setEndDate(endDateString);
+                                  if (
+                                    isSameDate(
+                                      new Date(endDateString),
+                                      new Date(startDate)
+                                    )
+                                  ) {
+                                    setWantsToShowEndDate(false);
                                   }
                                 }
                               }}
                               sx={{ marginBottom: 2 }}
-                              value={endDate}
+                              value={dayjs(naiveEnd)}
                             />
                           )}
                         </>
                       );
                     }}
                     renderPreview={() => {
-                      if (!isSameDate(startDate.toDate(), endDate.toDate())) {
+                      if (showEndDate) {
                         return (
                           <Box ml={10}>
                             <Typography color="secondary" variant="subtitle1">
@@ -257,11 +292,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 .endDate()
                                 .toUpperCase()}
                             </Typography>
-                            <ZUIDate
-                              datetime={new Date(
-                                endDate.format()
-                              ).toISOString()}
-                            />
+                            <ZUIDate datetime={naiveEnd} />
                           </Box>
                         );
                       } else {
@@ -277,7 +308,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         );
                       }
                     }}
-                    value={endDate.format()}
+                    value={naiveEnd}
                   />
                   <ZUIPreviewableInput
                     {...previewableProps}
@@ -287,11 +318,21 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           ampm={false}
                           format="HH:mm"
                           label={messages.eventOverviewCard.endTime()}
+                          minTime={dayjs(naiveStart).add(1, 'min')}
                           onChange={(newEndTime) => {
                             if (newEndTime) {
-                              if (newEndTime > startDate) {
-                                setEndDate(newEndTime);
-                              }
+                              const endTimeString = `${newEndTime
+                                .utc()
+                                .toDate()
+                                .getHours()
+                                .toString()
+                                .padStart(2, '0')}:${newEndTime
+                                .utc()
+                                .toDate()
+                                .getMinutes()
+                                .toString()
+                                .padStart(2, '0')}`;
+                              setEndTime(endTimeString);
                             }
                           }}
                           slotProps={{
@@ -301,21 +342,18 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               },
                             },
                           }}
-                          value={endDate}
+                          value={dayjs(naiveEnd)}
                         />
                       );
                     }}
                     renderPreview={() => {
                       return (
                         <Box ml={10}>
-                          <FormattedTime
-                            hour12={false}
-                            value={new Date(endDate.format()).toISOString()}
-                          />
+                          <FormattedTime hour12={false} value={naiveEnd} />
                         </Box>
                       );
                     }}
-                    value={endDate.format()}
+                    value={naiveEnd}
                   />
                 </Grid>
               </Grid>
