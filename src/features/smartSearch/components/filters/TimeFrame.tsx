@@ -1,15 +1,16 @@
+import dayjs from 'dayjs';
 import { MenuItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';
 import { getTimeFrameWithConfig } from '../utils';
 import { Msg } from 'core/i18n';
-import StyledDatePicker from '../inputs/StyledDatePicker';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import { TIME_FRAME } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledDatePicker from '../inputs/StyledDatePicker';
 
 interface TimeFrameProps {
   onChange: (range: { after?: string; before?: string }) => void;
@@ -60,14 +61,22 @@ const TimeFrame = ({
 
   const afterDateSelect = (
     <StyledDatePicker
-      onChange={(date) => setAfter(date as unknown as Date)}
-      value={after}
+      onChange={(date) => {
+        if (date) {
+          setAfter(date.toDate());
+        }
+      }}
+      value={dayjs(after)}
     />
   );
   const beforeDateSelect = (
     <StyledDatePicker
-      onChange={(date) => setBefore(date as unknown as Date)}
-      value={before}
+      onChange={(date) => {
+        if (date) {
+          setBefore(date.toDate());
+        }
+      }}
+      value={dayjs(before)}
     />
   );
   const timeFrameSelect = (
