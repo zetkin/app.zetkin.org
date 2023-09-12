@@ -87,36 +87,44 @@ const CallerInstructions = ({
           </Box>
           <Box alignItems="center" display="flex" justifyContent="flex-end">
             <Box marginRight={2}>
-              {!model.isSaving && !model.hasUnsavedChanges && (
-                <Typography>
-                  <Msg id={messageIds.conversation.instructions.savedMessage} />
-                </Typography>
-              )}
-              {!model.isSaving && model.hasUnsavedChanges && (
-                <Typography component="span">
-                  <Msg
-                    id={messageIds.conversation.instructions.unsavedMessage}
-                  />{' '}
-                  <Link
-                    color="textPrimary"
-                    component="span"
-                    onClick={() => {
-                      showConfirmDialog({
-                        onSubmit: () => {
-                          model.revert();
-                          //Force Slate to re-mount
-                          setKey((current) => current + 1);
-                        },
-                        warningText:
-                          messages.conversation.instructions.confirm(),
-                      });
-                    }}
-                    style={{ cursor: 'pointer', fontFamily: 'inherit' }}
-                  >
-                    <Msg id={messageIds.conversation.instructions.revertLink} />
-                  </Link>
-                </Typography>
-              )}
+              {!model.isSaving &&
+                !model.hasUnsavedChanges &&
+                model.getInstructions() !== '' && (
+                  <Typography>
+                    <Msg
+                      id={messageIds.conversation.instructions.savedMessage}
+                    />
+                  </Typography>
+                )}
+              {!model.isSaving &&
+                model.hasUnsavedChanges &&
+                !model.emptyInstrunctions && (
+                  <Typography component="span">
+                    <Msg
+                      id={messageIds.conversation.instructions.unsavedMessage}
+                    />{' '}
+                    <Link
+                      color="textPrimary"
+                      component="span"
+                      onClick={() => {
+                        showConfirmDialog({
+                          onSubmit: () => {
+                            model.revert();
+                            //Force Slate to re-mount
+                            setKey((current) => current + 1);
+                          },
+                          warningText:
+                            messages.conversation.instructions.confirm(),
+                        });
+                      }}
+                      style={{ cursor: 'pointer', fontFamily: 'inherit' }}
+                    >
+                      <Msg
+                        id={messageIds.conversation.instructions.revertLink}
+                      />
+                    </Link>
+                  </Typography>
+                )}
             </Box>
             <Button
               color="primary"
