@@ -341,6 +341,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     }}
                   >
                     <ZUIEllipsisMenu
+                      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                       items={[
                         {
                           label: (
@@ -354,6 +355,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                           startIcon: <Logout />,
                         },
                       ]}
+                      transformOrigin={{
+                        horizontal: 'right',
+                        vertical: 'bottom',
+                      }}
                     />
                   </Box>
                 </>
