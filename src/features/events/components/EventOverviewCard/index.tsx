@@ -126,10 +126,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               <Box flex={1}>
                 <ZUIPreviewableInput
                   {...previewableProps}
-                  renderInput={() => {
+                  renderInput={(params) => {
+                    params.ref;
                     return (
                       <DatePicker
                         format="DD-MM-YYYY"
+                        inputRef={params.ref}
                         label={messages.eventOverviewCard.startDate()}
                         onChange={(newStartDate) => {
                           if (newStartDate) {
@@ -161,12 +163,13 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 />
                 <ZUIPreviewableInput
                   {...previewableProps}
-                  renderInput={() => {
+                  renderInput={(params) => {
                     return (
                       <TimeField
                         ampm={false}
                         format="HH:mm"
                         fullWidth
+                        inputRef={params.ref}
                         label={messages.eventOverviewCard.startTime()}
                         onChange={(newStartTime) => {
                           if (newStartTime) {
@@ -201,7 +204,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               >
                 <ZUIPreviewableInput
                   {...previewableProps}
-                  renderInput={() => {
+                  renderInput={(params) => {
                     return (
                       <>
                         {!showEndDate && (
@@ -219,6 +222,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         {showEndDate && (
                           <DatePicker
                             format="DD-MM-YYYY"
+                            inputRef={params.ref}
                             label={messages.eventOverviewCard.endDate()}
                             minDate={dayjs(startDate)}
                             onChange={(newEndDate) => {
@@ -256,13 +260,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 />
                 <ZUIPreviewableInput
                   {...previewableProps}
-                  renderInput={() => {
+                  renderInput={(params) => {
                     return (
                       <TimeField
                         ampm={false}
                         disableIgnoringDatePartForTimeValidation={true}
                         format="HH:mm"
                         fullWidth
+                        inputRef={params.ref}
                         label={messages.eventOverviewCard.endTime()}
                         minTime={dayjs(naiveStart).add(1, 'min')}
                         onChange={(newEndTime) => {

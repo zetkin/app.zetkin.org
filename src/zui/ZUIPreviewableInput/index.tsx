@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { HTMLProps, useEffect, useRef } from 'react';
+import { Ref, useEffect, useRef } from 'react';
 
 export enum ZUIPreviewableMode {
   EDITABLE = 'editable',
@@ -10,14 +10,14 @@ type ZUIPreviewableInputProps<ValueType, InputType> = {
   focusInitially?: boolean;
   mode: ZUIPreviewableMode;
   onSwitchMode?: (mode: ZUIPreviewableMode) => void;
-  renderInput: (props: HTMLProps<InputType>) => JSX.Element;
+  renderInput: (props: { ref: Ref<InputType> }) => JSX.Element;
   renderPreview?: () => JSX.Element;
   value: ValueType;
 };
 
 function ZUIPreviewableInput<
   ValueType extends string | number,
-  InputType extends HTMLElement
+  InputType extends HTMLInputElement
 >({
   focusInitially = false,
   mode,
