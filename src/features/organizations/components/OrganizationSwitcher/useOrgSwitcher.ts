@@ -50,6 +50,7 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   const recentOrgsFuse = useMemo(() => {
     return new Fuse(recentOrgs, {
       keys: ['title'],
+      shouldSort: false,
       threshold: 0.4,
     });
   }, [recentOrgs]);
@@ -61,7 +62,11 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   }, [searchString]);
 
   const allOrgsFuse = useMemo(() => {
-    return new Fuse(flatOrgData, { keys: ['title'], threshold: 0.4 });
+    return new Fuse(flatOrgData, {
+      keys: ['title'],
+      shouldSort: false,
+      threshold: 0.4,
+    });
   }, [flatOrgData]);
 
   const filteredAllOrgs = useMemo(() => {
