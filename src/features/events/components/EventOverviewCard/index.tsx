@@ -260,16 +260,19 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     return (
                       <TimeField
                         ampm={false}
+                        disableIgnoringDatePartForTimeValidation={true}
                         format="HH:mm"
                         fullWidth
                         label={messages.eventOverviewCard.endTime()}
                         minTime={dayjs(naiveStart).add(1, 'min')}
                         onChange={(newEndTime) => {
                           if (newEndTime) {
-                            const endTimeString = makeNaiveTimeString(
-                              newEndTime.utc().toDate()
-                            );
-                            setEndTime(endTimeString);
+                            if (newEndTime >= dayjs(naiveStart).add(1, 'min')) {
+                              const endTimeString = makeNaiveTimeString(
+                                newEndTime.utc().toDate()
+                              );
+                              setEndTime(endTimeString);
+                            }
                           }
                         }}
                         slotProps={{
