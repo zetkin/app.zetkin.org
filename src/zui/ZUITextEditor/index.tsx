@@ -124,7 +124,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
           <Slate
             editor={editor}
             onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
-            value={initialValueSlate}
+            initialValue={initialValueSlate}
           >
             <Editable
               autoFocus
