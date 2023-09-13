@@ -134,7 +134,10 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
               renderElement={renderElement}
               renderLeaf={renderLeaf}
               spellCheck
-              style={{ overflowY: 'scroll' }}
+              style={{
+                overflowY: 'scroll',
+                outline: 'none',
+              }}
             />
             <Collapse in={active} sx={{ flexShrink: 0 }}>
               <Toolbar onClickAttach={onClickAttach} />
