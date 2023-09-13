@@ -123,8 +123,8 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
         {initialValueSlate && (
           <Slate
             editor={editor}
-            onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
             initialValue={initialValueSlate}
+            onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
           >
             <Editable
               autoFocus
@@ -135,8 +135,8 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
               renderLeaf={renderLeaf}
               spellCheck
               style={{
-                overflowY: 'scroll',
                 outline: 'none',
+                overflowY: 'scroll',
               }}
             />
             <Collapse in={active} sx={{ flexShrink: 0 }}>
