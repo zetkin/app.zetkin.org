@@ -22,9 +22,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
         <NextLink href={`/organize/${item.id}`}>
           <Box
             m={1}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
+            onClick={(e) => e.stopPropagation()}
             sx={{ alignItems: 'center', display: 'inlineFlex' }}
           >
             <Box mr={1}>
