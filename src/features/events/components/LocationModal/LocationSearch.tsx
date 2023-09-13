@@ -34,6 +34,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
         <TextField
           {...params}
           InputProps={{
+            ...params.InputProps,
             endAdornment: (
               <IconButton onClick={onClickGeolocate}>
                 <MyLocation />

@@ -3,7 +3,7 @@ import { InfoOutlined } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/system';
 import { Box, Dialog, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import 'leaflet/dist/leaflet.css';
 import CreateLocationCard from './CreateLocationCard';
@@ -87,6 +87,13 @@ const LocationModal: FC<LocationModalProps> = ({
     setPendingLocation(null);
   }, [open]);
 
+  const sortedLocation = useMemo(() => {
+    const sorted = locations.sort((a, b) => {
+      return a.title.localeCompare(b.title);
+    });
+    return sorted;
+  }, [locations]);
+
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box border={1} padding={2}>
@@ -144,7 +151,7 @@ const LocationModal: FC<LocationModalProps> = ({
               }}
               onInputChange={(value) => setSearchString(value || '')}
               onTextFieldChange={(value) => setSearchString(value)}
-              options={locations}
+              options={sortedLocation}
             />
           )}
           {selectedLocation && !inMoveState && (
