@@ -13,11 +13,11 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 import DayHeader from './DayHeader';
-import { Event } from '@mui/icons-material';
 import EventCluster from '../EventCluster';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
+import EventShiftModal from '../EventShiftModal';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -27,6 +27,7 @@ import theme from 'theme';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
+import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import { useEnv, useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(isoWeek);
@@ -40,6 +41,7 @@ export interface CalendarWeekViewProps {
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [creating, setCreating] = useState(false);
+  const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
@@ -270,8 +272,34 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                             <Msg id={messageIds.createMenu.singleEvent} />
                           </ListItemText>
                         </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setCreating(true);
+                            setGhostAnchorEl(null);
+                            setShiftModalOpen(true);
+                          }}
+                        >
+                          <ListItemIcon>
+                            <SplitscreenOutlined />
+                          </ListItemIcon>
+                          <ListItemText>
+                            <Msg id={messageIds.createMenu.shiftEvent} />
+                          </ListItemText>
+                        </MenuItem>
                       </Menu>
                     )}
+                    <EventShiftModal
+                      close={(shiftEventDate?: Date) => {
+                        setShiftModalOpen(false);
+                        setPendingEvent(null);
+                        setCreating(false);
+                        if (shiftEventDate) {
+                          onClickDay(shiftEventDate);
+                        }
+                      }}
+                      dates={pendingEvent}
+                      open={shiftModalOpen}
+                    />
                   </>
                 )}
                 {/* TODO: Put events here */}
