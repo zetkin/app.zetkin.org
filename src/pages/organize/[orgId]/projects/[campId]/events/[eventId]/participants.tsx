@@ -81,7 +81,12 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               style={{ marginBottom: '40px', marginTop: '30px' }}
             >
               <EventParticipantsFilter
-                onFilterChange={(value) => setFilterString(value)}
+                onFilterChange={(value) => {
+                  setFilterString(value);
+                  if (listRef.current) {
+                    listRef.current.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               />
               <AddPersonButton model={dataModel} />
             </Grid>
