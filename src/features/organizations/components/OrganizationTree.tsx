@@ -20,7 +20,11 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
       key={item.id}
       label={
         <NextLink href={`/organize/${item.id}`}>
-          <Box m={1} sx={{ alignItems: 'center', display: 'inlineFlex' }}>
+          <Box
+            m={1}
+            onClick={(e) => e.stopPropagation()}
+            sx={{ alignItems: 'center', display: 'inlineFlex' }}
+          >
             <Box mr={1}>
               <ProceduralColorIcon id={item.id} />
             </Box>
