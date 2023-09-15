@@ -4,7 +4,14 @@ import { makeStyles } from '@mui/styles';
 import { markdownToSlate } from './utils/markdownToSlate';
 import { withHistory } from 'slate-history';
 import { Box, ClickAwayListener, Collapse } from '@mui/material';
-import { createEditor, Descendant, Editor, Transforms } from 'slate';
+import {
+  createEditor,
+  deleteBackward,
+  Descendant,
+  Editor,
+  Node,
+  Transforms,
+} from 'slate';
 import {
   Editable,
   ReactEditor,
@@ -21,7 +28,12 @@ import TextElement from './TextElement';
 import theme from 'theme';
 import Toolbar from './Toolbar';
 import { ZetkinFileUploadChip } from 'zui/ZUIFileChip';
-import { keyDownHandler, slateToMarkdown, withInlines } from './helpers';
+import {
+  keyDownHandler,
+  shouldBeRemoved,
+  slateToMarkdown,
+  withInlines,
+} from './helpers';
 
 const emptySlate = [
   {
@@ -86,6 +98,33 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
     () => withInlines(withHistory(withReact(createEditor()))),
     []
   );
+
+  //fixes deleting the missing bullet point in empty list in root
+  editor.deleteBackward = (...args) => {
+    deleteBackward(editor, ...args);
+
+    const bulletListNode = Editor.above(editor, {
+      match: (n: Node) =>
+        'type' in n &&
+        n.type === 'list-item' &&
+        Object.prototype.hasOwnProperty.call(n, 'children'),
+    });
+
+    if (bulletListNode) {
+      if (shouldBeRemoved(bulletListNode)) {
+        Transforms.setNodes(
+          editor,
+          { type: 'paragraph' },
+          {
+            at: bulletListNode[1],
+            match: (n) => 'type' in n && n.type === 'list-item',
+          }
+        );
+      }
+    }
+    return editor;
+  };
+
   const [initialValueSlate, setInitialValueSlate] = useState<
     Descendant[] | null
   >(null);
