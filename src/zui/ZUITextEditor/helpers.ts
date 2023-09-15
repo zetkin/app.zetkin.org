@@ -8,6 +8,8 @@ import {
   Element as SlateElement,
   Text,
   Transforms,
+  NodeEntry,
+  Ancestor,
 } from 'slate';
 import isHotkey, { isKeyHotkey } from 'is-hotkey';
 
@@ -225,6 +227,23 @@ const convertSlateToRemarked = (
   return convertedChildren;
 };
 
+const shouldBeRemoved = (node: NodeEntry<Ancestor>): boolean => {
+  if (node && node[0].hasOwnProperty('children')) {
+    if (
+      'children' in node[0].children[0] &&
+      node[0].children[0].hasOwnProperty('children')
+    ) {
+      if (
+        node[0].children[0].children[0] &&
+        node[0].children[0].children[0].text === ''
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 const slateToMarkdown = (slateArray: Descendant[]): string => {
   const nodeTypes = {
     block_quote: 'block-quote',
@@ -269,6 +288,7 @@ export {
   isMarkActive,
   keyDownHandler,
   LIST_TYPES,
+  shouldBeRemoved,
   slateToMarkdown,
   withInlines,
   unwrapLink,
