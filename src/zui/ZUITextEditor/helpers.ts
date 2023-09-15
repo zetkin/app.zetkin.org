@@ -228,10 +228,10 @@ const convertSlateToRemarked = (
 };
 
 const shouldBeRemoved = (node: NodeEntry<Ancestor>): boolean => {
-  if (node && node[0].hasOwnProperty('children')) {
+  if (node && Object.prototype.hasOwnProperty.call(node[0], 'children')) {
     if (
       'children' in node[0].children[0] &&
-      node[0].children[0].hasOwnProperty('children')
+      Object.prototype.hasOwnProperty.call(node[0].children[0], 'children')
     ) {
       if (
         node[0].children[0].children[0] &&
