@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import isUrl from 'is-url';
-import { BlockType, LeafType, NodeTypes, serialize } from 'remark-slate';
 import {
+  Ancestor,
   Descendant,
   Editor,
+  NodeEntry,
   Range,
   Element as SlateElement,
   Text,
   Transforms,
-  NodeEntry,
-  Ancestor,
 } from 'slate';
+import { BlockType, LeafType, NodeTypes, serialize } from 'remark-slate';
 import isHotkey, { isKeyHotkey } from 'is-hotkey';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
