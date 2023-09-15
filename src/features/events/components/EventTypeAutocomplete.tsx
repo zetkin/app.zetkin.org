@@ -3,7 +3,7 @@ import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import { Add, Clear } from '@mui/icons-material';
 import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import EventTypesModel from '../models/EventTypesModel';
 import messageIds from '../l10n/messageIds';
@@ -26,9 +26,26 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderColor: ({ showBorder }) =>
       showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
     borderRadius: 10,
-    maxWidth: '200px',
+    //border width
+    // maxWidth: '200px',
     paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
+    paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
     transition: 'all 0.2s ease',
+  },
+  span: {
+    // Same styles as input
+    '&:focus, &:hover': {
+      borderColor: lighten(theme.palette.primary.main, 0.65),
+      paddingLeft: 10,
+      paddingRight: 0,
+    },
+    border: '2px dotted transparent',
+    borderRadius: 10,
+    paddingRight: 10,
+    fontSize: '1rem',
+    // But invisible and positioned absolutely to not affect flow
+    position: 'absolute',
+    // visibility: 'hidden',
   },
 }));
 
@@ -59,9 +76,12 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   value,
 }) => {
   const [createdType, setCreatedType] = useState<string>('');
+  const [text, setText] = useState<string>('');
 
   const classes = useStyles({ showBorder });
   const messages = useMessages(messageIds);
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     //When a user creates a new type, it is missing an event ID.
@@ -72,6 +92,14 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
       onChangeNewOption(newId!);
     }
   }, [types.length]);
+
+  useEffect(() => {
+    if (spanRef.current && inputRef.current) {
+      // Add some margin to the right while in edit mode
+      const width = spanRef.current.offsetWidth + (showBorder ? 10 : -5);
+      inputRef.current.style.width = width + 'px';
+    }
+  }, [spanRef.current, inputRef.current, text, showBorder]);
 
   const allTypes: EventTypeOption[] = [
     ...types,
@@ -86,10 +114,13 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     threshold: 0.4,
   });
 
+  const uncategorizedMsg = messages.type.uncategorized();
+
   return (
     <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
       <Autocomplete
         blurOnSelect
+        // componentsProps={{ popper: { style: { minWidth: 170, width: width } } }}
         classes={{
           root: classes.inputRoot,
         }}
@@ -109,7 +140,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             }),
             {
               id: 'UNCATEGORIZED',
-              title: messages.type.uncategorized(),
+              title: uncategorizedMsg,
             },
           ];
           if (
@@ -128,10 +159,17 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           });
           return inputValue ? filteredResult : options;
         }}
-        fullWidth
         getOptionLabel={(option) => option.title!}
         isOptionEqualToValue={(option, value) => option.title === value.title}
-        onBlur={() => onBlur()}
+        onBlur={() => {
+          if (!value && text !== uncategorizedMsg) {
+            setText(uncategorizedMsg);
+          }
+          if (value && text !== value.title) {
+            setText(value.title);
+          }
+          onBlur();
+        }}
         onChange={(_, value) => {
           if (value.id == 'CREATE') {
             typesModel.addType(value.title!);
@@ -150,19 +188,25 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onFocus={() => onFocus()}
         options={allTypes}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            InputLabelProps={{
-              shrink: false,
-              style: {
-                maxWidth: 180,
-              },
-            }}
-            InputProps={{
-              ...params.InputProps,
-            }}
-            size="small"
-          />
+          <>
+            <span ref={spanRef} className={classes.span}>
+              {text || (value?.title ?? uncategorizedMsg)}
+            </span>
+            <TextField
+              {...params}
+              // fullWidth
+              inputRef={inputRef}
+              InputLabelProps={{
+                shrink: false,
+              }}
+              InputProps={{
+                ...params.InputProps,
+                style: { maxWidth: 1000 },
+              }}
+              size="small"
+              onChange={(e) => setText(e.target.value)}
+            />
+          </>
         )}
         renderOption={(props, option) => {
           return (
@@ -173,7 +217,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
               {option.id == 'UNCATEGORIZED' && (
                 <li {...props}>
                   <Clear />
-                  {messages.type.uncategorized()}
+                  {uncategorizedMsg}
                 </li>
               )}
               {option.id == 'CREATE' && (
@@ -190,7 +234,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             ? value
             : {
                 id: 'UNCATEGORIZED',
-                title: messages.type.uncategorized(),
+                title: text !== '' ? text : uncategorizedMsg,
               }
         }
       />
