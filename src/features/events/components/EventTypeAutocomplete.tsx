@@ -45,7 +45,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontSize: '1rem',
     // But invisible and positioned absolutely to not affect flow
     position: 'absolute',
-    // visibility: 'hidden',
+    visibility: 'hidden',
   },
 }));
 
@@ -75,11 +75,12 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   typesModel,
   value,
 }) => {
+  const messages = useMessages(messageIds);
+  const uncategorizedMsg = messages.type.uncategorized();
   const [createdType, setCreatedType] = useState<string>('');
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string>(value?.title ?? uncategorizedMsg);
 
   const classes = useStyles({ showBorder });
-  const messages = useMessages(messageIds);
   const spanRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -113,8 +114,6 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     keys: ['title'],
     threshold: 0.4,
   });
-
-  const uncategorizedMsg = messages.type.uncategorized();
 
   return (
     <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
@@ -184,13 +183,14 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                   title: value.title!,
                 }
           );
+          setText(value.title);
         }}
         onFocus={() => onFocus()}
         options={allTypes}
         renderInput={(params) => (
           <>
             <span ref={spanRef} className={classes.span}>
-              {text || (value?.title ?? uncategorizedMsg)}
+              {text}
             </span>
             <TextField
               {...params}
