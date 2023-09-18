@@ -270,8 +270,29 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ...columnTypes[col.type].getColDef(col, accessLevel),
     })),
   ];
-  const { columns: gridColumns, setColumnWidth } =
-    useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
+  const {
+    columns: gridColumns,
+    setColumnWidth,
+    setColumnOrder,
+  } = useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
+
+  const moveColumn = (field: string, targetIndex: number) => {
+    // The column index is offset by 2 compared to the API (avatar and checkbox)
+    targetIndex -= 2;
+    const columnOrder = columns.map((col) => col.id);
+    const columnId = colIdFromFieldName(field);
+    const origIndex = columnOrder.findIndex((colId) => columnId == colId);
+
+    // Remove column and place it in new location
+    columnOrder.splice(origIndex, 1);
+    const newColumnOrder = [
+      ...columnOrder.slice(0, targetIndex),
+      columnId,
+      ...columnOrder.slice(targetIndex),
+    ];
+    //setColumnOrder(field, targetIndex);
+    model.updateColumnOrder(newColumnOrder);
+  };
 
   const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
 
@@ -403,6 +424,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
               }
             }
           }
+        }}
+        onColumnOrderChange={(params) => {
+          moveColumn(params.field, params.targetIndex);
         }}
         onColumnResize={(params) => {
           setColumnWidth(params.colDef.field, params.width);

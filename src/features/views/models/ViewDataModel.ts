@@ -88,6 +88,10 @@ export default class ViewDataModel extends ModelBase {
     return this._repo.updateColumn(this._orgId, this._viewId, columnId, data);
   }
 
+  updateColumnOrder(columnOrder: number[]): Promise<void> {
+    return this._repo.updateColumnOrder(this._orgId, this._viewId, columnOrder);
+  }
+
   updateContentQuery(query: Pick<ZetkinQuery, 'filter_spec'>) {
     return this._repo.updateViewContentQuery(this._orgId, this._viewId, query);
   }

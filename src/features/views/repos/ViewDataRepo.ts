@@ -161,6 +161,17 @@ export default class ViewDataRepo {
       });
   }
 
+  async updateColumnOrder(
+    orgId: number,
+    viewId: number,
+    columnOrder: number[]
+  ) {
+    await this._apiClient.patch<{ order: number[] }>(
+      `/api/orgs/${orgId}/people/views/${viewId}/column_order`,
+      { order: columnOrder }
+    );
+  }
+
   async updateColumn(
     orgId: number,
     viewId: number,
