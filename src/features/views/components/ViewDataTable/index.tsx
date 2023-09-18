@@ -270,11 +270,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ...columnTypes[col.type].getColDef(col, accessLevel),
     })),
   ];
-  const {
-    columns: gridColumns,
-    setColumnWidth,
-    setColumnOrder,
-  } = useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
+  const { columns: gridColumns, setColumnWidth } =
+    useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
 
   const moveColumn = (field: string, targetIndex: number) => {
     // The column index is offset by 2 compared to the API (avatar and checkbox)
