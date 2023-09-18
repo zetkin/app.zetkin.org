@@ -50,9 +50,10 @@ export default class CallerInstructionsModel extends ModelBase {
       return false;
     }
 
-    const lsInstructions = localStorage.getItem(this._key) || '';
+    const lsInstructions = localStorage.getItem(this._key)?.trim() || '';
+    const dataInstructions = data.instructions.trim();
 
-    return data.instructions != lsInstructions;
+    return dataInstructions != lsInstructions;
   }
 
   get isSaving(): boolean {
