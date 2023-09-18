@@ -20,7 +20,13 @@ import {
   Slate,
   withReact,
 } from 'slate-react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import './types';
 import { FileUpload } from 'features/files/hooks/useFileUploads';
@@ -125,6 +131,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
     return editor;
   };
 
+  const markdownValue = useRef('');
   const [initialValueSlate, setInitialValueSlate] = useState<
     Descendant[] | null
   >(null);
@@ -132,8 +139,10 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   useEffect(() => {
     (async () => {
       if (initialValue) {
-        const slate = await markdownToSlate(initialValue as string);
-        setInitialValueSlate(slate as Descendant[]);
+        if (initialValue !== markdownValue.current) {
+          const slate = await markdownToSlate(initialValue);
+          setInitialValueSlate(slate as Descendant[]);
+        }
       } else {
         setInitialValueSlate(emptySlate);
       }
@@ -163,7 +172,10 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
           <Slate
             editor={editor}
             initialValue={initialValueSlate}
-            onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
+            onChange={(slateArray) => {
+              markdownValue.current = slateToMarkdown(slateArray);
+              onChange(markdownValue.current);
+            }}
           >
             <Editable
               autoFocus
