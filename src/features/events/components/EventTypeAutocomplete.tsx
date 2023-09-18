@@ -45,7 +45,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontSize: '1rem',
     // But invisible and positioned absolutely to not affect flow
     position: 'absolute',
-    visibility: 'hidden',
+    // visibility: 'hidden',
   },
 }));
 
@@ -79,6 +79,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const uncategorizedMsg = messages.type.uncategorized();
   const [createdType, setCreatedType] = useState<string>('');
   const [text, setText] = useState<string>(value?.title ?? uncategorizedMsg);
+  const [dropdownListWidth, setDropdownListWidth] = useState(0);
 
   const classes = useStyles({ showBorder });
   const spanRef = useRef<HTMLSpanElement>(null);
@@ -98,10 +99,11 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   useEffect(() => {
     if (spanRef.current && inputRef.current) {
       // Add some margin to the right while in edit mode
-      const width = spanRef.current.offsetWidth + (showBorder ? 10 : -5);
+      const width = spanRef.current.offsetWidth;
+      setDropdownListWidth(width);
       inputRef.current.style.width = width + 'px';
     }
-  }, [spanRef.current, inputRef.current, text, showBorder]);
+  }, [spanRef.current, inputRef.current, text]);
 
   const allTypes: EventTypeOption[] = [
     ...types,
@@ -120,7 +122,11 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
       <Autocomplete
         blurOnSelect
-        // componentsProps={{ popper: { style: { minWidth: 170, width: width } } }}
+        componentsProps={{
+          popper: {
+            style: { minWidth: 180, width: dropdownListWidth, maxWidth: 700 },
+          },
+        }}
         classes={{
           root: classes.inputRoot,
         }}
@@ -162,15 +168,14 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         getOptionLabel={(option) => option.title!}
         isOptionEqualToValue={(option, value) => option.title === value.title}
         onBlur={() => {
+          // show 'uncategorized' in textField when blur
           if (!value && text !== uncategorizedMsg) {
             setText(uncategorizedMsg);
-          }
-          if (value && text !== value.title) {
-            setText(value.title);
           }
           onBlur();
         }}
         onChange={(_, value) => {
+          setText(value.title);
           if (value.id == 'CREATE') {
             typesModel.addType(value.title!);
             setCreatedType(value.title!);
@@ -184,7 +189,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                   title: value.title!,
                 }
           );
-          setText(value.title);
+        }}
+        onInputChange={(e, inputValue) => {
+          setText(inputValue);
         }}
         onFocus={() => onFocus()}
         options={allTypes}
@@ -195,14 +202,13 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             </span>
             <TextField
               {...params}
-              // fullWidth
               inputRef={inputRef}
               InputLabelProps={{
                 shrink: false,
               }}
               InputProps={{
                 ...params.InputProps,
-                style: { maxWidth: 1000 },
+                style: { maxWidth: 700 },
               }}
               size="small"
               onChange={(e) => setText(e.target.value)}
