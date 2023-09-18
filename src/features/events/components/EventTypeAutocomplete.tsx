@@ -89,8 +89,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     //In here, when the length of the type changes,
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
-      const newId = types.find((item) => item.title === createdType)!.id;
-      onChangeNewOption(newId!);
+      const newEventType = types.find((item) => item.title === createdType);
+      setText(newEventType!.title);
+      onChangeNewOption(newEventType!.id);
     }
   }, [types.length]);
 
@@ -234,7 +235,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             ? value
             : {
                 id: 'UNCATEGORIZED',
-                title: text !== '' ? text : uncategorizedMsg,
+                title: text,
               }
         }
       />
