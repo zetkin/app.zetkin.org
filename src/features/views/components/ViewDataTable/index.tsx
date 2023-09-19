@@ -45,6 +45,7 @@ import ViewDataTableToolbar, {
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import useDebounce from 'utils/hooks/useDebounce';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -258,9 +259,28 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     width: 50,
   };
 
+  const [columnOrder, setColumnOrder] = useState<number[]>([]);
+
+  const debouncedUpdateColumnOrder = useDebounce((order: number[]) => {
+    setColumnOrder(order);
+    return model.updateColumnOrder(order);
+  }, 1000);
+
+  let orderedColumns;
+  if (columnOrder.length > 0) {
+    const newColumns: ZetkinViewColumn[] = [];
+    for (const ci of columnOrder) {
+      const col = columns.find((c) => c.id == ci);
+      newColumns.push(col!);
+    }
+    orderedColumns = newColumns;
+  } else {
+    orderedColumns = columns;
+  }
+
   const unConfiguredGridColumns = [
     avatarColumn,
-    ...columns.map((col) => ({
+    ...orderedColumns.map((col) => ({
       field: `col_${col.id}`,
       headerName: col.title,
       minWidth: 100,
@@ -287,8 +307,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       columnId,
       ...columnOrder.slice(targetIndex),
     ];
-    //setColumnOrder(field, targetIndex);
-    model.updateColumnOrder(newColumnOrder);
+    debouncedUpdateColumnOrder(newColumnOrder);
   };
 
   const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
