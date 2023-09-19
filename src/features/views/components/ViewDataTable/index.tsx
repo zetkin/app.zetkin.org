@@ -405,9 +405,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           params.id == addedId ? classes.addedRow : ''
         }
         hideFooter={empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC}
-        localeText={{
-          noRowsLabel: messages.empty.notice[contentSource](),
-        }}
         onCellEditStart={(params, event) => {
           if (params.reason == GridCellEditStartReasons.printableKeyDown) {
             // Don't enter edit mode when the user just presses a printable character.
