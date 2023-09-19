@@ -126,6 +126,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         }}
         componentsProps={{
           popper: {
+            placement: 'bottom-start',
             style: { maxWidth: 380, minWidth: 180, width: dropdownListWidth },
           },
         }}
