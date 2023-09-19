@@ -26,8 +26,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderColor: ({ showBorder }) =>
       showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
     borderRadius: 10,
-    //border width
-    // maxWidth: '200px',
     paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
     paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
     transition: 'all 0.2s ease',
@@ -41,11 +39,11 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     },
     border: '2px dotted transparent',
     borderRadius: 10,
-    paddingRight: 10,
     fontSize: '1rem',
+    paddingRight: 10,
     // But invisible and positioned absolutely to not affect flow
     position: 'absolute',
-    // visibility: 'hidden',
+    visibility: 'hidden',
   },
 }));
 
@@ -81,9 +79,8 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const [text, setText] = useState<string>(value?.title ?? uncategorizedMsg);
   const [dropdownListWidth, setDropdownListWidth] = useState(0);
 
-  const classes = useStyles({ showBorder });
   const spanRef = useRef<HTMLSpanElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const classes = useStyles({ showBorder });
 
   useEffect(() => {
     //When a user creates a new type, it is missing an event ID.
@@ -97,13 +94,15 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   }, [types.length]);
 
   useEffect(() => {
-    if (spanRef.current && inputRef.current) {
-      // Add some margin to the right while in edit mode
+    if (spanRef.current) {
       const width = spanRef.current.offsetWidth;
       setDropdownListWidth(width);
-      inputRef.current.style.width = width + 'px';
     }
-  }, [spanRef.current, inputRef.current, text]);
+  }, [spanRef.current, text]);
+
+  useEffect(() => {
+    setText(value ? value.title : uncategorizedMsg);
+  }, [value]);
 
   const allTypes: EventTypeOption[] = [
     ...types,
@@ -122,13 +121,13 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
       <Autocomplete
         blurOnSelect
-        componentsProps={{
-          popper: {
-            style: { minWidth: 180, width: dropdownListWidth, maxWidth: 700 },
-          },
-        }}
         classes={{
           root: classes.inputRoot,
+        }}
+        componentsProps={{
+          popper: {
+            style: { maxWidth: 380, minWidth: 180, width: dropdownListWidth },
+          },
         }}
         disableClearable
         filterOptions={(options, { inputValue }) => {
@@ -168,9 +167,13 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         getOptionLabel={(option) => option.title!}
         isOptionEqualToValue={(option, value) => option.title === value.title}
         onBlur={() => {
-          // show 'uncategorized' in textField when blur
+          // show 'uncategorized' in textField when blurring
           if (!value && text !== uncategorizedMsg) {
             setText(uncategorizedMsg);
+          }
+          //set text to previous input value when clicking away
+          if (value && text !== value.title) {
+            setText(value.title);
           }
           onBlur();
         }}
@@ -190,9 +193,6 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                 }
           );
         }}
-        onInputChange={(e, inputValue) => {
-          setText(inputValue);
-        }}
         onFocus={() => onFocus()}
         options={allTypes}
         renderInput={(params) => (
@@ -202,16 +202,19 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             </span>
             <TextField
               {...params}
-              inputRef={inputRef}
               InputLabelProps={{
                 shrink: false,
               }}
               InputProps={{
                 ...params.InputProps,
-                style: { maxWidth: 700 },
+                style: {
+                  maxWidth: 380,
+                  minWidth: 60,
+                  width: dropdownListWidth + 50,
+                },
               }}
-              size="small"
               onChange={(e) => setText(e.target.value)}
+              size="small"
             />
           </>
         )}
