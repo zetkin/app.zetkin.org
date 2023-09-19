@@ -189,7 +189,7 @@ export const scaffold =
     const result = (await wrapped(ctx)) || {};
 
     // Figure out browser's preferred language
-    const lang = getBrowserLanguage(contextFromNext.req);
+    const lang = ctx.user?.lang || getBrowserLanguage(contextFromNext.req);
 
     // TODO: Respect scope from options again
     //const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
