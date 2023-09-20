@@ -50,6 +50,7 @@ feat:
         all: All
         none: None
       type: Type to filter content
+    insightsHeader: Calls and conversations
     lastDayWithEvents: There {numEvents, plural, one {was one event} other {were
       {numEvents} events}} on the last active day
     loadMore: Load more
