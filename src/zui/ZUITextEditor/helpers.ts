@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import isUrl from 'is-url';
-import { BlockType, LeafType, NodeTypes, serialize } from 'remark-slate';
 import {
+  Ancestor,
   Descendant,
   Editor,
+  NodeEntry,
   Range,
   Element as SlateElement,
   Text,
   Transforms,
 } from 'slate';
+import { BlockType, LeafType, NodeTypes, serialize } from 'remark-slate';
 import isHotkey, { isKeyHotkey } from 'is-hotkey';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -225,6 +227,23 @@ const convertSlateToRemarked = (
   return convertedChildren;
 };
 
+const shouldBeRemoved = (node: NodeEntry<Ancestor>): boolean => {
+  if (node && Object.prototype.hasOwnProperty.call(node[0], 'children')) {
+    if (
+      'children' in node[0].children[0] &&
+      Object.prototype.hasOwnProperty.call(node[0].children[0], 'children')
+    ) {
+      if (
+        node[0].children[0].children[0] &&
+        node[0].children[0].children[0].text === ''
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 const slateToMarkdown = (slateArray: Descendant[]): string => {
   const nodeTypes = {
     block_quote: 'block-quote',
@@ -269,6 +288,7 @@ export {
   isMarkActive,
   keyDownHandler,
   LIST_TYPES,
+  shouldBeRemoved,
   slateToMarkdown,
   withInlines,
   unwrapLink,
