@@ -1,4 +1,3 @@
-import { Link } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
@@ -14,6 +13,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
+import { Link, useTheme } from '@mui/material';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
@@ -110,6 +110,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   rows,
   view,
 }) => {
+  const theme = useTheme();
   const messages = useMessages(messageIds);
   const classes = useStyles();
   const gridApiRef = useGridApiRef();
@@ -405,6 +406,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           params.id == addedId ? classes.addedRow : ''
         }
         hideFooter={empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC}
+        localeText={{
+          ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
+          noRowsLabel: messages.empty.notice[contentSource](),
+        }}
         onCellEditStart={(params, event) => {
           if (params.reason == GridCellEditStartReasons.printableKeyDown) {
             // Don't enter edit mode when the user just presses a printable character.
