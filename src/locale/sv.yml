@@ -701,7 +701,7 @@ feat:
         inputString: '{addRemoveSelect} personer som {callSelect} minst
           {minTimes} i {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
-        minTimesInput: '{minTimesInput}'
+        minTimesInput: '{input} {minTimes, plural, one {gång} other {gånger}}'
       campaignParticipation:
         activitySelect:
           activity: typ "{activity}"
