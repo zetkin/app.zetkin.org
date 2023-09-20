@@ -16,6 +16,8 @@ import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { callAssignmentQuery } from 'features/callAssignments/api/callAssignments';
+import messageIds from 'features/calendar/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
@@ -92,7 +94,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       <Head>
         <title>{model.getData().data?.title}</title>
       </Head>
-      <Typography variant="h3">Calls and conversations</Typography>
+      <Typography variant="h3">
+        <Msg id={messageIds.insightsHeader} />
+      </Typography>
       <ZUIQuery queries={{ statsQuery }}>
         {({ queries }) => {
           const data = queries.statsQuery.data.dates.map((d: DateStats) => {
