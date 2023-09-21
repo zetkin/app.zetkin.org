@@ -141,6 +141,7 @@ feat:
       defineButton: Edit done criteria
       subtitle: Targets that meet the done criteria
       title: Done
+    insightsHeader: Calls and conversations
     organizerActionPane:
       markAsSolved: Mark as solved
       markAsUnsolved: Mark as unsolved
@@ -1346,6 +1347,7 @@ feat:
           warning: Deleting this view is a permanent action which can't be undone. Are you
             sure you want to continue?
       menu:
+        delete: Delete
         rename: Rename
       moveToFolder: Move to {folder}
       moveToRoot: Move to all views
