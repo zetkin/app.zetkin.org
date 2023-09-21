@@ -20,7 +20,7 @@ export default makeMessages('feat.callAssignments', {
     organizerActionNeeded: m('Organizer action needed'),
     subtitle: m('Targets not ready to be called'),
     title: m('Blocked'),
-    viewSheetButton: m('View sheet'),
+    viewSheetButton: m('View list'),
   },
   callers: {
     actions: {
