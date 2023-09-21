@@ -299,10 +299,10 @@ export default makeMessages('feat.lists', {
       description: m(
         'Create a dynamic list where people are added and removed automatically using Smart Search.'
       ),
-      headline: m('Configure Smart Search List'),
+      headline: m('Configure Smart Search list'),
     },
     notice: {
-      dynamic: m('This is a Smart Search List but no people match the query'),
+      dynamic: m('This is a Smart Search list but no people match the query'),
       static: m("You haven't added any rows yet"),
     },
     static: {
@@ -329,7 +329,7 @@ export default makeMessages('feat.lists', {
   },
   newFolderTitle: m('New Folder'),
   newViewFields: {
-    title: m('New List'),
+    title: m('New list'),
   },
   removeDialog: {
     action: m('Are you sure you want to remove these rows from this list?'),
@@ -399,7 +399,7 @@ export default makeMessages('feat.lists', {
     ellipsisMenu: {
       delete: m('Delete list'),
       editQuery: m('Edit Smart Search query'),
-      makeDynamic: m('Convert to Smart Search List'),
+      makeDynamic: m('Convert to Smart Search list'),
       makeStatic: m('Convert to static list'),
     },
     jumpMenu: {

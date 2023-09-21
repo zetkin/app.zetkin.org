@@ -78,7 +78,7 @@ test.describe('View detail page', () => {
     expect(columnPostLogs).toHaveLength(2);
 
     // Expect that correctly localised strings sent when posting
-    expect(viewPostLogs[0].data?.title).toEqual('New List');
+    expect(viewPostLogs[0].data?.title).toEqual('New list');
     expect(columnPostLogs[0].data?.title).toEqual('First Name');
     expect(columnPostLogs[1].data?.title).toEqual('Last Name');
 
