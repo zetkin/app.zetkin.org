@@ -32,12 +32,12 @@ const ColumnChoiceCard = ({
   title,
 }: ColumnChoiceCardProps) => {
   return (
-    <Card sx={{ height: '300px' }}>
+    <Card sx={{ height: '100%' }}>
       <Box
         alignItems="center"
         bgcolor={color}
         display="flex"
-        height="50%"
+        height="150px"
         justifyContent="center"
       >
         {cardVisual}
