@@ -16,7 +16,7 @@ import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { callAssignmentQuery } from 'features/callAssignments/api/callAssignments';
-import messageIds from 'features/calendar/l10n/messageIds';
+import messageIds from 'features/callAssignments/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';

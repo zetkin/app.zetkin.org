@@ -58,7 +58,6 @@ export default makeMessages('feat.calendar', {
     },
     type: m('Type to filter content'),
   },
-  insightsHeader: m('Calls and conversations'),
   lastDayWithEvents: m<{ numEvents: number }>(
     'There {numEvents, plural, one {was one event} other {were {numEvents} events}} on the last active day'
   ),
