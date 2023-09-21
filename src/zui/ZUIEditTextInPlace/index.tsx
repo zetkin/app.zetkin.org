@@ -177,11 +177,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
       placement="top"
       title={tooltipText()}
     >
-      <FormControl
-        onClick={(e) => e.stopPropagation()}
-        style={{ overflow: 'hidden' }}
-        variant="standard"
-      >
+      <FormControl style={{ overflow: 'hidden' }} variant="standard">
         <span ref={spanRef} className={classes.span}>
           {text || placeholder}
         </span>
