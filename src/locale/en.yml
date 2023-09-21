@@ -62,13 +62,12 @@ feat:
       month: Month
       week: Week
     selectionBar:
-      copy: Copy
       deselect: Deselect
       editEvents: Edit events
       ellipsisMenu:
         cancel: Cancel
         cancelWarning: If you do, remember to notify all participants and sign-ups that
-          the events has been cancelled!
+          the events have been cancelled!
         confirmCancel: Are you sure you want to cancel selected events?
         confirmDelete: Are you sure you want to delete selected events?
         delete: Delete
@@ -77,7 +76,15 @@ feat:
         print: Print schedule
         publish: Publish now
         unpublish: Unpublish
-      move: Move
+      moveCopyButtons:
+        copy: Copy
+        copyMenuHeader: Copy {numberOfEvents} events to
+        createShift: After each event (create shift)
+        duplicate: Same time and date (duplicate)
+        move: Move
+        moveMenuHeader: Move {numberOfEvents} events to
+        nextDay: Next day {dates}
+        nextWeek: Next week {dates}
     showMore: Show
     today: Today
   callAssignments:
@@ -594,6 +601,15 @@ feat:
   organizations:
     page:
       title: "Select organization:"
+    sidebar:
+      allOrganizations: All organizations
+      filter:
+        noResults: No organizations matching this filter
+        topLevel: Top level organization
+      filtered: Filtered
+      recent:
+        clear: Clear
+        title: Recent organizations
   profile:
     delete:
       button: Remove person
@@ -629,9 +645,9 @@ feat:
     placeholder: Type to search
     results:
       callassignment: Call assignment
-      campaign: Campaign
       people: People
       person: Person
+      project: Project
       survey: Survey
       task: Task
       view: View
@@ -688,10 +704,10 @@ feat:
             assignment at any point in time.
           two: Remove people who have been called at least 1 time in assignment 'Activate
             old members' during the last 30 days.
-        inputString: "{addRemoveSelect} people who {callSelect} at least {minTimesInput}
-          {minTimes} in {assignmentSelect} {timeFrame}."
-        minTimes: "{minTimesInput} {minTimes, plural, one {time} other {times}}"
-        minTimesInput: "{minTimesInput}"
+        inputString: "{addRemoveSelect} people who {callSelect} at least {minTimes} in
+          {assignmentSelect} {timeFrame}."
+        minTimes: "{minTimes, plural, one {once} other {# times}}"
+        minTimesInput: "{input} {minTimes, plural, one {time} other {times}}"
       campaignParticipation:
         activitySelect:
           activity: type "{activity}"
@@ -1722,6 +1738,12 @@ zui:
     indefinite: Visible from {start} onwards
     invisible: Not visible or scheduled
     start: Start
+  dateSpan:
+    multiDay: "{startDate} - {endDate}"
+    multiDayEndsToday: "{startDate} - Today"
+    multiDayToday: Today - {endDate}
+    singleDay: "{date}"
+    singleDayToday: Today
   editTextInPlace:
     tooltip:
       edit: Click to edit
@@ -1737,12 +1759,13 @@ zui:
   lists:
     showMore: Show more...
   organizeSidebar:
-    allOrganizations: All organizations
     areas: Areas
+    filter: Type to filter
     home: Home
     journeys: Journeys
     people: People
     projects: Projects & Activities
+    search: Search
     signOut: Sign out
     userSettings: User settings
   personGridEditCell:
