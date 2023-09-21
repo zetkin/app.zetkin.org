@@ -156,7 +156,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
               },
               {
                 id: 'delete-item',
-                label: 'Delete',
+                label: messages.browser.menu.delete(),
                 onSelect: (e) => {
                   e.stopPropagation();
                   showConfirmDialog({

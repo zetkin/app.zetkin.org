@@ -25,6 +25,7 @@ export default makeMessages('feat.views', {
       },
     },
     menu: {
+      delete: m('Delete'),
       rename: m('Rename'),
     },
     moveToFolder: m<{ folder: ReactElement }>('Move to {folder}'),
