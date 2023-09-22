@@ -118,7 +118,7 @@ const ViewJumpMenu: FunctionComponent = () => {
             if (selectedView) {
               setJumpMenuAnchor(null);
               setActiveIndex(Infinity);
-              router.push(`/organize/${orgId}/people/views/${selectedView.id}`);
+              router.push(`/organize/${orgId}/people/lists/${selectedView.id}`);
               ev.preventDefault();
             }
           }
@@ -156,7 +156,7 @@ const ViewJumpMenu: FunctionComponent = () => {
                 <Link
                   key={view.id}
                   href={{
-                    pathname: `/organize/${orgId}/people/views/${view.id}`,
+                    pathname: `/organize/${orgId}/people/lists/${view.id}`,
                   }}
                   passHref
                 >

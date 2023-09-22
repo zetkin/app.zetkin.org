@@ -27,7 +27,7 @@ test.describe('View detail page', () => {
   });
 
   test('jumps between views using jump menu', async ({ page, appUri }) => {
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Click to open the jump menu
     await page.click('data-testid=view-jump-menu-button');
@@ -48,7 +48,7 @@ test.describe('View detail page', () => {
 
     // Assert that we navigate away to the new view
     expect(page.url()).toEqual(
-      appUri + `/organize/1/people/views/${NewView.id}`
+      appUri + `/organize/1/people/lists/${NewView.id}`
     );
   });
 });

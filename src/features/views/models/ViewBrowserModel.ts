@@ -68,7 +68,7 @@ export default class ViewBrowserModel extends ModelBase {
       .createView(this._orgId, folderId, rows)
       .then((view) => {
         this._env.router.push(
-          `/organize/${view.organization.id}/people/views/${view.id}`
+          `/organize/${view.organization.id}/people/lists/${view.id}`
         );
         return view;
       });
@@ -154,7 +154,7 @@ export default class ViewBrowserModel extends ModelBase {
         items.push({
           data: view,
           folderId: folderId,
-          id: 'views/' + view.id,
+          id: 'lists/' + view.id,
           owner: view.owner.name,
           title: view.title,
           type: 'view',
@@ -169,7 +169,7 @@ export default class ViewBrowserModel extends ModelBase {
       .getOrganizerActionView(this._orgId)
       .then((view) => {
         this._env.router.push(
-          `/organize/${view.organization.id}/people/views/${view.id}`
+          `/organize/${view.organization.id}/people/lists/${view.id}`
         );
         return view;
       });

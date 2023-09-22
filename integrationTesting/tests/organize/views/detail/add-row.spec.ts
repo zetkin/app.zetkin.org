@@ -57,7 +57,7 @@ test.describe('View detail page', () => {
       204
     );
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Add person statically
     await page.click('[name=person]');
@@ -113,7 +113,7 @@ test.describe('View detail page', () => {
       AllMembersRows.slice(0, 1)
     );
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Add person statically
     await page.click('[name=person]');

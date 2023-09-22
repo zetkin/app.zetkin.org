@@ -52,7 +52,7 @@ test.describe('View detail page', () => {
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'delete', undefined, 204);
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Wait for navigation after deleting
     await Promise.all([
@@ -90,7 +90,7 @@ test.describe('View detail page', () => {
     );
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'delete', undefined, 405);
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     await deleteView(page);
     await expectDeleteViewError(page);

@@ -31,7 +31,7 @@ test.describe('View detail page', () => {
     const inputSelector = 'data-testid=page-title >> input';
 
     // Click to edit, fill and submit change
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
     await page.click(inputSelector);
     await page.fill(inputSelector, 'Friends of Zetkin');
     await Promise.all([

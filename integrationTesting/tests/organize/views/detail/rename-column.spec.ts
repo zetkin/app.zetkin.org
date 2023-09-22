@@ -39,7 +39,7 @@ test.describe('View detail page', () => {
       201
     );
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
@@ -77,7 +77,7 @@ test.describe('View detail page', () => {
       400
     );
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
