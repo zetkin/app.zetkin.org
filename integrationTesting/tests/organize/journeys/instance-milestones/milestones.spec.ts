@@ -139,7 +139,18 @@ test.describe('Journey instance page Milestones tab', () => {
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
       //Click "clear"-button
-      page.locator('[aria-label="Clear"]').first().click(),
+      page
+        .locator(
+          '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
+        )
+        .first()
+        .click(),
+      page
+        .locator(
+          '[data-testid=JourneyMilestoneCard-datePickerActionBar] button'
+        )
+        .first()
+        .click(),
     ]);
 
     //Expect deadline to be set to null

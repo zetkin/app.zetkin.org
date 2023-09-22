@@ -42,7 +42,7 @@ export default class OrganizerActionColumnType implements IColumnType {
       align: 'center',
       headerAlign: 'center',
       renderCell: (
-        params: GridRenderCellParams<OrganizerActionViewCell, ZetkinViewRow>
+        params: GridRenderCellParams<ZetkinViewRow, OrganizerActionViewCell>
       ) => {
         // Get the index of the column
         const columnIdx = Object.keys(params.row).indexOf(params.field) - 1;

@@ -1,4 +1,3 @@
-import { TextField } from '@mui/material';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
 const styles = {
@@ -7,15 +6,10 @@ const styles = {
   width: '12rem',
 };
 
-const StyledDatePicker: React.FC<DatePickerProps<Date, Date>> = (
+const StyledDatePicker: React.FC<DatePickerProps<Date>> = (
   props
 ): React.ReactElement => {
-  return (
-    <DatePicker
-      {...props}
-      renderInput={(params) => <TextField {...params} sx={styles} />}
-    />
-  );
+  return <DatePicker {...props} slotProps={{ textField: { sx: styles } }} />;
 };
 
 export default StyledDatePicker;

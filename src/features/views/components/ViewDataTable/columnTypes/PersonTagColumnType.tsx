@@ -32,7 +32,7 @@ export default class PersonTagColumnType implements IColumnType {
     return {
       align: 'center',
       headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<ZetkinTag, ZetkinViewRow>) => {
+      renderCell: (params: GridRenderCellParams<ZetkinViewRow, ZetkinTag>) => {
         return (
           <Cell
             cell={params.value}

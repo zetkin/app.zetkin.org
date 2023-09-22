@@ -2,7 +2,6 @@ import { Link } from '@mui/material';
 import NextLink from 'next/link';
 import {
   GridCellParams,
-  GridCellValue,
   GridColDef,
   GridFilterItem,
   GridFilterOperator,
@@ -101,11 +100,11 @@ function makeEmptyFilterOperator(
   };
 }
 
-const sortByName = (value0: GridCellValue, value1: GridCellValue) => {
-  const names0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
+const sortByName = (value0: ZetkinPersonType[], value1: ZetkinPersonType[]) => {
+  const names0 = value0.sort((p0, p1) =>
     fullName(p0).localeCompare(fullName(p1))
   );
-  const names1 = (value1 as ZetkinPersonType[]).sort((p0, p1) =>
+  const names1 = value1.sort((p0, p1) =>
     fullName(p0).localeCompare(fullName(p1))
   );
 
@@ -217,6 +216,7 @@ export const getStaticColumns = (
         />
       ),
       type: 'date',
+      valueFormatter: (params) => new Date(params.value),
     },
     {
       field: 'updated',
@@ -228,6 +228,7 @@ export const getStaticColumns = (
         />
       ),
       type: 'date',
+      valueFormatter: (params) => new Date(params.value),
     },
     {
       field: 'nextMilestoneTitle',
@@ -263,6 +264,7 @@ export const getStaticColumns = (
           <ZUIRelativeTime datetime={params.value as string} />
         ) : null,
       type: 'date',
+      valueFormatter: (params) => new Date(params.value),
       valueGetter: (params) =>
         (params.row as ZetkinJourneyInstance).next_milestone?.deadline,
     },
