@@ -5,7 +5,6 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
-  Call,
   CallAssignmentCaller,
   CallAssignmentData,
   CallAssignmentStats,
@@ -27,8 +26,6 @@ import {
   callerRemoved,
   callersLoad,
   callersLoaded,
-  callUpdate,
-  callUpdated,
   statsLoad,
   statsLoaded,
 } from '../store';
@@ -197,20 +194,6 @@ export default class CallAssignmentsRepo {
       .then((data: CallAssignmentCaller) => {
         this._store.dispatch(callerConfigured([assignmentId, data]));
       });
-  }
-
-  updateCall(orgId: number, id: number, data: Partial<Call>): IFuture<Call> {
-    const mutatingAttributes = Object.keys(data);
-
-    this._store.dispatch(callUpdate([id, mutatingAttributes]));
-    const promise = this._apiClient
-      .patch<Call>(`/api/orgs/${orgId}/calls/${id}`, data)
-      .then((data) => {
-        this._store.dispatch(callUpdated([data, mutatingAttributes]));
-        return data;
-      });
-
-    return new PromiseFuture(promise);
   }
 
   updateCallAssignment(
