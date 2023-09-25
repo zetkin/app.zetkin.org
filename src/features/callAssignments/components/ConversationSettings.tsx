@@ -1,10 +1,8 @@
 import { Box, Paper, Switch, Typography } from '@mui/material';
 
-import CallAssignmentModel from '../models/CallAssignmentModel';
-import { Msg } from 'core/i18n';
-import useModel from 'core/useModel';
-
 import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
+import useCallAssignment from '../hooks/useCallAssignment';
 
 interface ConversationSettingsProps {
   assignmentId: number;
@@ -15,9 +13,8 @@ const ConversationSettings = ({
   assignmentId,
   orgId,
 }: ConversationSettingsProps) => {
-  const model = useModel(
-    (store) => new CallAssignmentModel(store, orgId, assignmentId)
-  );
+  const { data, setCallerNotesEnabled, setTargetDetailsExposed } =
+    useCallAssignment(orgId, assignmentId);
 
   return (
     <Paper>
@@ -36,8 +33,8 @@ const ConversationSettings = ({
           </Typography>
           <Switch
             //this looks backwards bc in interface we use the positive "allow"
-            checked={!model.getData().data?.disable_caller_notes}
-            onChange={(evt) => model.setCallerNotesEnabled(evt.target.checked)}
+            checked={!data?.disable_caller_notes}
+            onChange={(evt) => setCallerNotesEnabled(evt.target.checked)}
           />
         </Box>
         <Typography>
@@ -53,10 +50,8 @@ const ConversationSettings = ({
             <Msg id={messageIds.conversation.settings.targetData.title} />
           </Typography>
           <Switch
-            checked={model.getData().data?.expose_target_details}
-            onChange={(evt) =>
-              model.setTargetDetailsExposed(evt.target.checked)
-            }
+            checked={data?.expose_target_details}
+            onChange={(evt) => setTargetDetailsExposed(evt.target.checked)}
           />
         </Box>
         <Typography>
