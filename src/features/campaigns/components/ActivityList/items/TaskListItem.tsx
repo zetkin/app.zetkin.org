@@ -2,8 +2,8 @@ import { CheckBoxOutlined, People } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
 import { STATUS_COLORS } from './ActivityListItem';
-import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import useTask from 'features/tasks/hooks/useTask';
+import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 
 interface TaskListItemProps {
   orgId: number;

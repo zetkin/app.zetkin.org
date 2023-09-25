@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux';
 
-import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { IFuture } from 'core/caching/futures';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { RootState } from 'core/store';
-import { useApiClient, useEnv } from 'core/hooks';
 import { ZetkinTask } from '../components/types';
 import getStats, { TaskStats } from '../rpc/getTaskStats';
-import { taskLoad, taskLoaded, statsLoad, statsLoaded } from '../store';
+import { statsLoad, statsLoaded, taskLoad, taskLoaded } from '../store';
+import { useApiClient, useEnv } from 'core/hooks';
 
 interface UseTaskReturn {
   getTask: () => IFuture<ZetkinTask>;
@@ -15,9 +15,9 @@ interface UseTaskReturn {
 
 export default function useTask(orgId: number, taskId: number): UseTaskReturn {
   const apiClient = useApiClient();
+  const env = useEnv();
 
   const state = useSelector((state: RootState) => state);
-  const env = useEnv();
 
   const getTask = (): IFuture<ZetkinTask> => {
     const item = state.tasks.tasksList.items.find((item) => item.id === taskId);
