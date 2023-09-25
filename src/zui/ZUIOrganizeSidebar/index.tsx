@@ -1,11 +1,9 @@
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
-import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
@@ -39,6 +37,7 @@ import { useEffect, useState } from 'react';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
+import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 
@@ -92,9 +91,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
 
-  const model: OrganizationsDataModel = useModel(
-    (env) => new OrganizationsDataModel(env)
-  );
+  const { getOrganization, getOrganizationsTree } = useOrganizations();
 
   useEffect(() => {
     if (lastOpen != open) {
@@ -112,7 +109,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   };
 
   const handleExpansion = () => {
-    model.getOrganizationsTree();
+    getOrganizationsTree();
     setChecked(!checked);
   };
 
@@ -169,7 +166,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               )}
               {open && (
-                <ZUIFuture future={model.getOrganization(orgId)}>
+                <ZUIFuture future={getOrganization(orgId)}>
                   {(data) => (
                     <>
                       <Box

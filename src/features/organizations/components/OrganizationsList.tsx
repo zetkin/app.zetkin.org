@@ -1,21 +1,18 @@
 import messageIds from 'features/organizations/l10n/messageIds';
 import NextLink from 'next/link';
-import OrganizationsDataModel from '../models/OrganizationsDataModel';
 import { useMessages } from 'core/i18n';
+import useOrganizations from '../hooks/useOrganizations';
 import { ZetkinMembership } from 'utils/types/zetkin';
 
 import ZUIFuture from 'zui/ZUIFuture';
 import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
 
-interface UserOrganizationsProps {
-  model: OrganizationsDataModel;
-}
-
-const OrganizationsList = ({ model }: UserOrganizationsProps) => {
+const OrganizationsList = () => {
   const messages = useMessages(messageIds);
+  const { getUserOrganizations } = useOrganizations();
 
   return (
-    <ZUIFuture future={model.getData()}>
+    <ZUIFuture future={getUserOrganizations()}>
       {(data) => {
         return (
           <Box style={{ margin: '30px' }}>
