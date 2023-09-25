@@ -11,9 +11,11 @@ interface TaskListItemProps {
 }
 
 const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
-  const { getTask, getTaskStats } = useTask(orgId, taskId);
-  const task = getTask().data;
-  const stats = getTaskStats().data;
+  const {
+    taskData: task,
+    taskStats: stats,
+    taskStatsIsLoading: statsLoading,
+  } = useTask(orgId, taskId);
 
   if (!task) {
     return null;
@@ -29,8 +31,6 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
   } else if (taskStatus === TASK_STATUS.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
   }
-
-  const statsLoading = getTaskStats().isLoading;
 
   return (
     <ActivityListItemWithStats

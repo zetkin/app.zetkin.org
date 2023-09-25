@@ -16,9 +16,7 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
   focusDate,
 }) => {
   const task = activity.data;
-  const { getTaskStats } = useTask(task.organization.id, task.id);
-
-  const stats = getTaskStats().data;
+  const { taskStats: stats } = useTask(task.organization.id, task.id);
 
   return (
     <OverviewListItem
