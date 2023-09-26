@@ -1,6 +1,5 @@
 import { useSelector, useStore } from 'react-redux';
 
-import { IFuture } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { RootState } from 'core/store';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -9,8 +8,10 @@ import { useApiClient, useEnv } from 'core/hooks';
 
 interface UseTagReturn {
   assignToPerson: (personId: number, value?: string) => void;
-  getTag: () => IFuture<ZetkinTag>;
   removeFromPerson: (personId: number) => Promise<void>;
+  tagData: ZetkinTag | null;
+  tagError: unknown | null;
+  tagIsLoading: boolean;
 }
 export default function useTag(orgId: number, tagId: number): UseTagReturn {
   const apiClient = useApiClient();
@@ -42,5 +43,11 @@ export default function useTag(orgId: number, tagId: number): UseTagReturn {
     );
     store.dispatch(tagUnassigned([personId, tagId]));
   };
-  return { assignToPerson, getTag, removeFromPerson };
+  return {
+    assignToPerson,
+    removeFromPerson,
+    tagData: getTag().data,
+    tagError: getTag().error,
+    tagIsLoading: getTag().isLoading,
+  };
 }

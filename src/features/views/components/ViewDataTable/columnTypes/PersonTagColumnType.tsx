@@ -122,7 +122,8 @@ const Cell: FC<{
   // TODO: Find a way to share a model between cells in a column
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
-  const { assignToPerson, getTag, removeFromPerson } = useTag(orgId, tagId);
+  const { assignToPerson, removeFromPerson, tagData, tagError, tagIsLoading } =
+    useTag(orgId, tagId);
   const styles = useStyles();
 
   const [isRestricted] = useAccessLevel();
@@ -144,7 +145,9 @@ const Cell: FC<{
       // likely that a user in restricted mode will not have access to assign
       // (or even retrieve) the tag.
       return (
-        <ZUIFuture future={getTag()}>
+        <ZUIFuture
+          future={{ data: tagData, error: tagError, isLoading: tagIsLoading }}
+        >
           {(tag) => (
             <Box
               className={styles.ghostContainer}
