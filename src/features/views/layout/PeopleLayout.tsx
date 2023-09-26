@@ -32,7 +32,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
 
   return (
     <SimpleLayout
-      actionButtons={<ViewFolderActionButtons folderId={null} model={model} />}
+      actionButtons={<ViewFolderActionButtons folderId={null} />}
       noPad
       subtitle={
         <ZUIFuture future={model.getItemSummary()}>

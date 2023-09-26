@@ -27,9 +27,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
     <ZUIFuture future={model.getFolder(folderId)}>
       {(data) => (
         <SimpleLayout
-          actionButtons={
-            <ViewFolderActionButtons folderId={folderId} model={model} />
-          }
+          actionButtons={<ViewFolderActionButtons folderId={folderId} />}
           noPad
           subtitle={
             <ZUIFuture future={model.getItemSummary(folderId)}>

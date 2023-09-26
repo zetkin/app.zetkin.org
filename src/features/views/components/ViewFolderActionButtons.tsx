@@ -1,28 +1,32 @@
 import { FC } from 'react';
+import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 
-import ViewBrowserModel from '../models/ViewBrowserModel';
+import useViewBrowser from '../hooks/useViewBrowser';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
 
 interface ViewFolderActionButtonsProps {
   folderId: number | null;
-  model: ViewBrowserModel;
 }
 
 const ViewFolderActionButtons: FC<ViewFolderActionButtonsProps> = ({
   folderId,
-  model,
 }) => {
+  const { orgId } = useRouter().query;
   const messages = useMessages(messageIds);
+  const { createFolder, createView } = useViewBrowser(
+    parseInt(orgId as string)
+  );
+
   return (
     <Box display="flex" gap={1}>
       <Button
         endIcon={<FolderOutlined />}
         onClick={() => {
-          model.createFolder(messages.newFolderTitle(), folderId || undefined);
+          createFolder(messages.newFolderTitle(), folderId || undefined);
         }}
         variant="outlined"
       >
@@ -31,7 +35,7 @@ const ViewFolderActionButtons: FC<ViewFolderActionButtonsProps> = ({
       <Button
         endIcon={<InsertDriveFileOutlined />}
         onClick={() => {
-          model.createView(folderId || undefined);
+          createView(folderId || undefined);
         }}
         variant="contained"
       >
