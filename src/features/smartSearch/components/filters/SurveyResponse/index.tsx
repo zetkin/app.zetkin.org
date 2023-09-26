@@ -190,6 +190,9 @@ const SurveyResponse = ({
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
                   <Msg id={messageIds.operators.sub} />
                 </MenuItem>
+                <MenuItem key={OPERATION.LIMIT} value={OPERATION.LIMIT}>
+                  <Msg id={messageIds.operators.limit} />
+                </MenuItem>
               </StyledSelect>
             ),
             freeTextInput: (
