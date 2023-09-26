@@ -4,10 +4,11 @@ import { IFuture } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { RootState } from 'core/store';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { tagLoad, tagLoaded, tagUnassigned } from '../store';
+import { tagAssigned, tagLoad, tagLoaded, tagUnassigned } from '../store';
 import { useApiClient, useEnv } from 'core/hooks';
 
 interface UseTagReturn {
+  assignToPerson: (personId: number, value?: string) => void;
   getTag: () => IFuture<ZetkinTag>;
   removeFromPerson: (personId: number) => Promise<void>;
 }
@@ -17,6 +18,14 @@ export default function useTag(orgId: number, tagId: number): UseTagReturn {
   const env = useEnv();
   const store = useStore();
 
+  const assignToPerson = async (personId: number, value?: string) => {
+    const data = value ? { value } : undefined;
+    const tag = await apiClient.put<ZetkinTag>(
+      `/api/orgs/${orgId}/people/${personId}/tags/${tagId}`,
+      data
+    );
+    store.dispatch(tagAssigned([personId, tag]));
+  };
   const getTag = () => {
     const item = tags.tagList.items.find((item) => item.id == tagId);
     return loadItemIfNecessary(item, env.store, {
@@ -33,5 +42,5 @@ export default function useTag(orgId: number, tagId: number): UseTagReturn {
     );
     store.dispatch(tagUnassigned([personId, tagId]));
   };
-  return { getTag, removeFromPerson };
+  return { assignToPerson, getTag, removeFromPerson };
 }
