@@ -37,7 +37,8 @@ import { useEffect, useState } from 'react';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import useOrganization from 'features/organizations/hooks/useOrganization';
+import useOrganizationsTree from 'features/organizations/hooks/useOrganizationsTree';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 
@@ -91,7 +92,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
 
-  const { getOrganization, getOrganizationsTree } = useOrganizations();
+  const handleExpansion = () => {
+    setChecked(!checked);
+  };
 
   useEffect(() => {
     if (lastOpen != open) {
@@ -106,11 +109,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     }
     setOpen(!open);
     setLastOpen(!open);
-  };
-
-  const handleExpansion = () => {
-    getOrganizationsTree();
-    setChecked(!checked);
   };
 
   const menuItemsMap = [
@@ -165,75 +163,85 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               {!open && !hover && (
                 <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               )}
-              {open && (
-                <ZUIFuture future={getOrganization(orgId)}>
+              <ZUIFuture future={useOrganizationsTree()}>
+                <ZUIFuture future={useOrganization(orgId)}>
                   {(data) => (
                     <>
-                      <Box
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                        }}
-                      >
-                        {!showOrgSwitcher && (
-                          <>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                width: '48px',
-                              }}
-                            >
-                              {hover ? (
-                                <IconButton onClick={handleClick}>
-                                  <KeyboardDoubleArrowLeftOutlined />
-                                </IconButton>
-                              ) : (
-                                <Avatar
-                                  alt="icon"
-                                  src={`/api/orgs/${orgId}/avatar`}
-                                />
-                              )}
-                            </Box>
-                            <Typography variant="h6">{data.title}</Typography>
-                          </>
-                        )}
-                        {showOrgSwitcher && (
-                          <TextField
-                            fullWidth
-                            InputProps={{
-                              endAdornment:
-                                searchString.length > 0 ? (
-                                  <Close
-                                    color="secondary"
-                                    onClick={() => setSearchString('')}
-                                    sx={{ cursor: 'pointer' }}
-                                  />
-                                ) : (
-                                  ''
-                                ),
-                              startAdornment: (
-                                <FilterListOutlined
-                                  color="secondary"
-                                  sx={{ marginRight: '0.5em' }}
-                                />
-                              ),
+                      {open && (
+                        <>
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
                             }}
-                            onChange={(e) => setSearchString(e.target.value)}
-                            placeholder={messages.organizeSidebar.filter()}
-                            value={searchString}
-                          />
-                        )}
-                      </Box>
-                      <Box sx={{ display: open ? 'flex' : 'none' }}>
-                        <IconButton onClick={handleExpansion}>
-                          {checked ? <ExpandLess /> : <ExpandMore />}
-                        </IconButton>
-                      </Box>
+                          >
+                            {!showOrgSwitcher && (
+                              <>
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    width: '48px',
+                                  }}
+                                >
+                                  {hover ? (
+                                    <IconButton onClick={handleClick}>
+                                      <KeyboardDoubleArrowLeftOutlined />
+                                    </IconButton>
+                                  ) : (
+                                    <Avatar
+                                      alt="icon"
+                                      src={`/api/orgs/${orgId}/avatar`}
+                                    />
+                                  )}
+                                </Box>
+                                <Typography variant="h6">
+                                  {data.title}
+                                </Typography>
+                              </>
+                            )}
+
+                            {showOrgSwitcher && (
+                              <TextField
+                                fullWidth
+                                InputProps={{
+                                  endAdornment:
+                                    searchString.length > 0 ? (
+                                      <Close
+                                        color="secondary"
+                                        onClick={() => setSearchString('')}
+                                        sx={{ cursor: 'pointer' }}
+                                      />
+                                    ) : (
+                                      ''
+                                    ),
+                                  startAdornment: (
+                                    <FilterListOutlined
+                                      color="secondary"
+                                      sx={{ marginRight: '0.5em' }}
+                                    />
+                                  ),
+                                }}
+                                onChange={(e) =>
+                                  setSearchString(e.target.value)
+                                }
+                                placeholder={messages.organizeSidebar.filter()}
+                                value={searchString}
+                              />
+                            )}
+                          </Box>
+
+                          <Box sx={{ display: open ? 'flex' : 'none' }}>
+                            <IconButton onClick={handleExpansion}>
+                              {checked ? <ExpandLess /> : <ExpandMore />}
+                            </IconButton>
+                          </Box>
+                        </>
+                      )}
                     </>
                   )}
                 </ZUIFuture>
-              )}
+              </ZUIFuture>
             </Box>
             <OrganizationSwitcher
               open={showOrgSwitcher}

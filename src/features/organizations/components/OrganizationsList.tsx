@@ -9,10 +9,9 @@ import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
 
 const OrganizationsList = () => {
   const messages = useMessages(messageIds);
-  const { getUserOrganizations } = useOrganizations();
 
   return (
-    <ZUIFuture future={getUserOrganizations()}>
+    <ZUIFuture future={useOrganizations()}>
       {(data) => {
         return (
           <Box style={{ margin: '30px' }}>
