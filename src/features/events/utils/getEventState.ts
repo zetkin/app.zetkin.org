@@ -8,9 +8,6 @@ export default function getEventState(event: ZetkinEvent): EventState {
   const now = new Date();
   if (event.published) {
     const published = new Date(event.published);
-    if (published > now) {
-      return EventState.SCHEDULED;
-    }
     if (event.cancelled) {
       const cancelled = new Date(event.cancelled);
       if (cancelled > published) {
@@ -22,6 +19,9 @@ export default function getEventState(event: ZetkinEvent): EventState {
       if (endTime < now) {
         return EventState.ENDED;
       }
+    }
+    if (published > now) {
+      return EventState.SCHEDULED;
     }
     return EventState.OPEN;
   } else {

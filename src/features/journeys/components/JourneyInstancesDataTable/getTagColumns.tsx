@@ -48,7 +48,7 @@ const doesNotHave = (
     const tags = col.tagsGetter(params.row.tags);
 
     return !tags.some((tag) => {
-      return tag.id.toString() == item.value;
+      return tag.id.toString() === item.value;
     });
   };
 };

@@ -24,6 +24,11 @@ export default class CallerInstructionsModel extends ModelBase {
     this._store = env.store;
   }
 
+  get emptyInstrunctions(): boolean {
+    const { data } = this._repo.getCallAssignment(this._orgId, this._id);
+    return data?.instructions === '';
+  }
+
   getInstructions(): string {
     const lsInstructions = localStorage.getItem(this._key) || '';
 
@@ -45,9 +50,10 @@ export default class CallerInstructionsModel extends ModelBase {
       return false;
     }
 
-    const lsInstructions = localStorage.getItem(this._key) || '';
+    const lsInstructions = localStorage.getItem(this._key)?.trim() || '';
+    const dataInstructions = data.instructions.trim();
 
-    return data.instructions != lsInstructions;
+    return dataInstructions != lsInstructions;
   }
 
   get isSaving(): boolean {

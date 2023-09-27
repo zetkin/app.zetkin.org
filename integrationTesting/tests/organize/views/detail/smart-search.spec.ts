@@ -42,7 +42,7 @@ test.describe('View detail page', () => {
       id: 1,
     });
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Configure Smart Search query
     await page.click('data-testid=EmptyView-configureButton');

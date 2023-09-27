@@ -46,7 +46,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   model,
 }) => {
   const messages = useMessages(messageIds);
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [sortModel, setSortModel] = useState<GridSortModel>([
+    { field: 'title', sort: 'asc' },
+  ]);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -154,7 +156,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
               },
               {
                 id: 'delete-item',
-                label: 'Delete',
+                label: messages.browser.menu.delete(),
                 onSelect: (e) => {
                   e.stopPropagation();
                   showConfirmDialog({

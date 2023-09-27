@@ -103,7 +103,16 @@ const SelectionBarEllipsis = () => {
     });
   }
 
-  return <ZUIEllipsisMenu items={ellipsisMenuItems} />;
+  return (
+    <ZUIEllipsisMenu
+      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+      items={ellipsisMenuItems}
+      transformOrigin={{
+        horizontal: 'right',
+        vertical: 'bottom',
+      }}
+    />
+  );
 };
 
 export default SelectionBarEllipsis;

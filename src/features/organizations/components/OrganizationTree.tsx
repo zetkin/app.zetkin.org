@@ -4,7 +4,7 @@ import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
 import { TreeItemData } from '../types';
 import TreeView from '@mui/lab/TreeView';
-import { Avatar, Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 interface OrganizationTreeProps {
@@ -20,16 +20,13 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
       key={item.id}
       label={
         <NextLink href={`/organize/${item.id}`}>
-          <Box m={1} sx={{ alignItems: 'center', display: 'inlineFlex' }}>
+          <Box
+            m={1}
+            onClick={(e) => e.stopPropagation()}
+            sx={{ alignItems: 'center', display: 'inlineFlex' }}
+          >
             <Box mr={1}>
-              {orgId == item.id ? (
-                <Avatar
-                  src={`/api/orgs/${item.id}/avatar`}
-                  sx={{ height: '28px', width: '28px' }}
-                />
-              ) : (
-                <ProceduralColorIcon id={item.id} />
-              )}
+              <ProceduralColorIcon id={item.id} />
             </Box>
             <Typography
               sx={{ fontWeight: orgId == item.id ? 'bold' : 'normal' }}

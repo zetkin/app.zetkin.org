@@ -1,7 +1,7 @@
 import { Box, ListItem, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 
 interface AccessListItemProps {
   action?: ReactNode;
@@ -21,7 +21,7 @@ const AccessListItem: FC<AccessListItemProps> = ({
     <ListItem>
       <Box alignItems="center" display="flex" gap={2} width="100%">
         <Box>
-          <ZUIAvatar orgId={orgId} personId={personId} size="sm" />
+          <ZUIPersonAvatar orgId={orgId} personId={personId} size="sm" />
         </Box>
         <Box flexGrow={1}>
           <Typography component="div">{title}</Typography>

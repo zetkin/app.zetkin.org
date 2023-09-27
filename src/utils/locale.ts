@@ -10,7 +10,7 @@ type MessageDB = Record<string, MessageList>;
 
 let MESSAGES: MessageDB | null = null;
 
-export type SupportedLanguage = 'en' | 'sv';
+export type SupportedLanguage = 'en' | 'sv' | 'de' | 'dk' | 'nn';
 
 function flattenObject(
   obj: Record<string, unknown>,
@@ -108,6 +108,6 @@ export const getBrowserLanguage = (
   req: NextApiRequest | IncomingMessage
 ): SupportedLanguage => {
   const negotiator = new Negotiator(req);
-  const languages = negotiator.languages(['en', 'nn', 'da']);
+  const languages = negotiator.languages(['en', 'nn', 'da', 'de', 'sv']);
   return languages.length ? (languages[0] as SupportedLanguage) : 'en';
 };

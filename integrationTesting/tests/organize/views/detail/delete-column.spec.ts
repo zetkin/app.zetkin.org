@@ -33,7 +33,7 @@ test.describe('View detail page', () => {
       'delete'
     );
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Delete first column
     await Promise.all([
@@ -73,7 +73,7 @@ test.describe('View detail page', () => {
       400
     );
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Delete first column
     await Promise.all([
@@ -104,7 +104,7 @@ test.describe('View detail page', () => {
       'delete'
     );
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Delete local column
     await Promise.all([

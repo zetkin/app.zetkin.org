@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import { EventsModel } from 'features/events/models/EventsModel';
@@ -97,12 +97,19 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       },
     });
 
+  const sortedLocation = useMemo(() => {
+    const sorted = locations?.sort((a, b) => {
+      return a.title.localeCompare(b.title);
+    });
+    return sorted;
+  }, [locations?.length]);
+
   const options: (
     | ZetkinLocation
     | 'CREATE_NEW_LOCATION'
     | 'NO_PHYSICAL_LOCATION'
-  )[] = locations
-    ? [...locations, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
+  )[] = sortedLocation
+    ? [...sortedLocation, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
   const events = eventsModel.getParallelEvents(

@@ -10,6 +10,9 @@ import {
 } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
+type horizontalType = 'left' | 'center' | 'right';
+type verticalType = 'top' | 'center' | 'bottom';
+
 interface MenuItem {
   disabled?: boolean;
   divider?: boolean;
@@ -23,10 +26,14 @@ interface MenuItem {
 
 export interface ZUIEllipsisMenuProps {
   items: MenuItem[];
+  anchorOrigin?: { horizontal: horizontalType; vertical: verticalType };
+  transformOrigin?: { horizontal: horizontalType; vertical: verticalType };
 }
 
 const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
   items,
+  anchorOrigin,
+  transformOrigin,
 }) => {
   const [menuActivator, setMenuActivator] = useState<null | HTMLElement>(null);
   const [subMenuActivator, setSubMenuActivator] = useState<null | HTMLElement>(
@@ -49,6 +56,9 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
       </Button>
       <Menu
         anchorEl={menuActivator}
+        anchorOrigin={
+          anchorOrigin ?? { horizontal: 'left', vertical: 'bottom' }
+        }
         keepMounted
         onClose={() => setMenuActivator(null)}
         open={Boolean(menuActivator)}
@@ -62,6 +72,9 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
             marginTop: theme.spacing(1),
           },
         }}
+        transformOrigin={
+          transformOrigin ?? { horizontal: 'left', vertical: 'top' }
+        }
       >
         {items.map((item, idx) => (
           <MenuItem

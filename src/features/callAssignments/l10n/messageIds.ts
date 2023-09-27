@@ -20,7 +20,7 @@ export default makeMessages('feat.callAssignments', {
     organizerActionNeeded: m('Organizer action needed'),
     subtitle: m('Targets not ready to be called'),
     title: m('Blocked'),
-    viewSheetButton: m('View sheet'),
+    viewSheetButton: m('View list'),
   },
   callers: {
     actions: {
@@ -83,6 +83,7 @@ export default makeMessages('feat.callAssignments', {
     subtitle: m('Targets that meet the done criteria'),
     title: m('Done'),
   },
+  insightsHeader: m('Calls and conversations'),
   organizerActionPane: {
     markAsSolved: m('Mark as solved'),
     markAsUnsolved: m('Mark as unsolved'),
