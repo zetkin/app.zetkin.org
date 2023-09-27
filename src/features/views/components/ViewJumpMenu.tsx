@@ -16,15 +16,15 @@ import {
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { ZetkinView } from './types';
 import ZUIFuture from 'zui/ZUIFuture';
-import ViewBrowserModel, {
+import {
   ViewBrowserItem,
   ViewBrowserViewItem,
 } from '../models/ViewBrowserModel';
 
 import messageIds from '../l10n/messageIds';
+import useItems from '../hooks/useItems';
 
 const ViewJumpMenu: FunctionComponent = () => {
   const messages = useMessages(messageIds);
@@ -33,10 +33,9 @@ const ViewJumpMenu: FunctionComponent = () => {
   const { orgId, viewId } = router.query;
   const [jumpMenuAnchor, setJumpMenuAnchor] = useState<Element | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(Infinity);
-  const model = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
-  );
-  const itemsFuture = model.getItems();
+
+  const { itemsFuture } = useItems(parseInt(orgId as string), null);
+
   const views: ZetkinView[] =
     itemsFuture.data
       ?.filter((item) => item.type == 'view')

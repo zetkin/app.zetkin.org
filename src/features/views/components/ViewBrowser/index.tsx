@@ -16,7 +16,7 @@ import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
 import { useMessages } from 'core/i18n';
-import useViewBrowser from 'features/views/hooks/useViewBrowser';
+import useViewBrowserMutation from 'features/views/hooks/useViewBrowserMutation';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -27,6 +27,7 @@ import ViewBrowserModel, {
 } from '../../models/ViewBrowserModel';
 
 import messageIds from 'features/views/l10n/messageIds';
+import useItems from 'features/views/hooks/useItems';
 
 interface ViewBrowserProps {
   basePath: string;
@@ -58,9 +59,11 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   );
   const gridApiRef = useGridApiRef();
 
-  const { deleteFolder, deleteView } = useViewBrowser(
+  const { deleteFolder, deleteView } = useViewBrowserMutation(
     parseInt(orgId as string)
   );
+
+  const { itemsFuture } = useItems(parseInt(orgId as string), folderId);
 
   // If a folder was created, go into rename state
   useEffect(() => {
@@ -188,7 +191,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   }
 
   return (
-    <ZUIFuture future={model.getItems(folderId)}>
+    <ZUIFuture future={itemsFuture}>
       {(data) => {
         const rows = data.sort((item0, item1) => {
           const typeSort = typeComparator(item0, item1);
