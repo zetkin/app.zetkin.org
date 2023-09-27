@@ -1,4 +1,5 @@
 import { CallAssignmentData } from '../apiTypes';
+import dayjs from 'dayjs';
 import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient } from 'core/hooks';
@@ -26,6 +27,7 @@ interface UseCallAssignmentReturn {
   cooldown?: number;
   data: ZetkinCallAssignment | null;
   disableCallerNotes?: boolean;
+  end: () => void;
   endDate?: string | null;
   exposeTargetDetails?: boolean;
   goal?: ZetkinQuery;
@@ -34,9 +36,12 @@ interface UseCallAssignmentReturn {
   isTargeted: boolean;
   setCallerNotesEnabled: (enabled: boolean) => void;
   setCooldown: (cooldown: number) => void;
+  setDates: (startDate: string | null, endDate: string | null) => void;
   setGoal: (query: Partial<ZetkinQuery>) => void;
   setTargetDetailsExposed: (targetDetailsExposed: boolean) => void;
   setTargets: (query: Partial<ZetkinQuery>) => void;
+  setTitle: (newTitle: string) => void;
+  start: () => void;
   startDate?: string | null;
   state: CallAssignmentState;
   target?: ZetkinQuery;
@@ -216,12 +221,97 @@ export default function useCallAssignment(
     }
   };
 
+  const setTitle = (newTitle: string) => {
+    updateCallAssignment({ title: newTitle });
+  };
+
+  const start = () => {
+    const { data } = getData();
+    if (!data) {
+      return;
+    }
+
+    const now = dayjs();
+    const today = now.format('YYYY-MM-DD');
+
+    const { start_date: startStr, end_date: endStr } = data;
+
+    if (!startStr && !endStr) {
+      updateCallAssignment({
+        start_date: today,
+      });
+    } else if (!startStr) {
+      // End date is non-null
+      const endDate = dayjs(endStr);
+      if (endDate.isBefore(today)) {
+        updateCallAssignment({
+          end_date: null,
+          start_date: today,
+        });
+      } else if (endDate.isAfter(today)) {
+        updateCallAssignment({
+          start_date: today,
+        });
+      }
+    } else if (!endStr) {
+      // Start date is non-null
+      const startDate = dayjs(startStr);
+      if (startDate.isAfter(today)) {
+        // End date is null, start date is future
+        updateCallAssignment({
+          start_date: today,
+        });
+      }
+    } else {
+      // Start and end date are non-null
+      const startDate = dayjs(startStr);
+      const endDate = dayjs(endStr);
+
+      if (
+        (startDate.isBefore(today) || startDate.isSame(today)) &&
+        (endDate.isBefore(today) || endDate.isSame(today))
+      ) {
+        // Start is past, end is past
+        updateCallAssignment({
+          end_date: null,
+        });
+      } else if (startDate.isAfter(today) && endDate.isAfter(today)) {
+        // Start is future, end is future
+        updateCallAssignment({
+          start_date: today,
+        });
+      }
+    }
+  };
+
+  const end = () => {
+    const { data } = getData();
+    if (!data) {
+      return;
+    }
+
+    const now = dayjs();
+    const today = now.format('YYYY-MM-DD');
+
+    updateCallAssignment({
+      end_date: today,
+    });
+  };
+
+  const setDates = (startDate: string | null, endDate: string | null) => {
+    updateCallAssignment({
+      end_date: endDate,
+      start_date: startDate,
+    });
+  };
+
   const data = getData().data;
 
   return {
     cooldown: data?.cooldown,
     data,
     disableCallerNotes: data?.disable_caller_notes,
+    end,
     endDate: data?.end_date,
     exposeTargetDetails: data?.expose_target_details,
     goal: data?.goal,
@@ -230,9 +320,12 @@ export default function useCallAssignment(
     isTargeted: isTargeted(),
     setCallerNotesEnabled,
     setCooldown,
+    setDates,
     setGoal,
     setTargetDetailsExposed,
     setTargets,
+    setTitle,
+    start,
     startDate: data?.start_date,
     state: getState(),
     target: data?.target,

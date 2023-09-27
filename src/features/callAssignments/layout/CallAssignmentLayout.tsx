@@ -1,10 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import { Headset, People } from '@mui/icons-material';
 
-import CallAssignmentModel from '../models/CallAssignmentModel';
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -31,15 +29,17 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   assignmentId,
 }) => {
   const messages = useMessages(messageIds);
-  const model = useModel(
-    (env) =>
-      new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
-  );
-
-  const { data, endDate, startDate, state, title } = useCallAssignment(
-    parseInt(orgId),
-    parseInt(assignmentId)
-  );
+  const {
+    data,
+    end,
+    endDate,
+    setDates,
+    setTitle,
+    start,
+    startDate,
+    state,
+    title,
+  } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
 
   const {
     data: statsData,
@@ -62,11 +62,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       actionButtons={
         state == CallAssignmentState.OPEN ||
         state == CallAssignmentState.ACTIVE ? (
-          <Button onClick={() => model.end()} variant="outlined">
+          <Button onClick={() => end()} variant="outlined">
             <Msg id={messageIds.actions.end} />
           </Button>
         ) : (
-          <Button onClick={() => model.start()} variant="contained">
+          <Button onClick={() => start()} variant="contained">
             <Msg id={messageIds.actions.start} />
           </Button>
         )
@@ -76,7 +76,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         <ZUIDateRangePicker
           endDate={endDate || null}
           onChange={(startDate, endDate) => {
-            model.setDates(startDate, endDate);
+            setDates(startDate, endDate);
           }}
           startDate={startDate || null}
         />
@@ -155,7 +155,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       ]}
       title={
         <ZUIEditTextinPlace
-          onChange={(newTitle) => model.setTitle(newTitle)}
+          onChange={(newTitle) => setTitle(newTitle)}
           value={title}
         />
       }
