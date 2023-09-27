@@ -2,14 +2,13 @@ import { useRouter } from 'next/router';
 
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
-import ViewBrowserModel from '../models/ViewBrowserModel';
 import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
 
 import messageIds from '../l10n/messageIds';
+import useViewBrowser from '../hooks/useViewBrowser';
 
 interface PeopleLayoutProps {
   children: React.ReactNode;
@@ -20,10 +19,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
 }) => {
   const { orgId } = useRouter().query;
   const messages = useMessages(messageIds);
-
-  const model = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
-  );
+  const { itemSummaryData } = useViewBrowser(parseInt(orgId as string));
 
   const onServer = useServerSide();
   if (onServer) {
@@ -35,7 +31,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
       actionButtons={<ViewFolderActionButtons folderId={null} />}
       noPad
       subtitle={
-        <ZUIFuture future={model.getItemSummary()}>
+        <ZUIFuture future={itemSummaryData}>
           {(data) => (
             <ViewFolderSubtitle
               numFolders={data.folders}

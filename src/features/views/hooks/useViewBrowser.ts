@@ -39,6 +39,11 @@ interface UseViewBrowserReturn {
     error: unknown | null;
     isLoading: boolean;
   };
+  itemSummaryData: {
+    data: { folders: number; views: number } | null;
+    error: unknown | null;
+    isLoading: boolean;
+  };
 }
 export default function useViewBrowser(
   orgId: number,
@@ -104,6 +109,24 @@ export default function useViewBrowser(
     );
   };
 
+  const getItemSummary = (
+    folderId: number | null = null
+  ): IFuture<{ folders: number; views: number }> => {
+    const itemsFuture = getViewTree(orgId);
+    if (!itemsFuture.data) {
+      return new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
+    }
+
+    return new ResolvedFuture({
+      folders: itemsFuture.data.folders.filter(
+        (folder) => folder.parent?.id == folderId
+      ).length,
+      views: itemsFuture.data.views.filter(
+        (view) => view.folder?.id == folderId
+      ).length,
+    });
+  };
+
   const getViewTree = (orgId: number): IFuture<ViewTreeData> => {
     if (shouldLoad(views.folderList) || shouldLoad(views.viewList)) {
       store.dispatch(allItemsLoad());
@@ -121,6 +144,7 @@ export default function useViewBrowser(
       });
     }
   };
+
   return {
     createFolder,
     createView,
@@ -130,6 +154,11 @@ export default function useViewBrowser(
       data: getFolder().data,
       error: getFolder().error,
       isLoading: getFolder().isLoading,
+    },
+    itemSummaryData: {
+      data: getItemSummary().data,
+      error: getItemSummary().error,
+      isLoading: getItemSummary().isLoading,
     },
   };
 }

@@ -19,7 +19,10 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   folderId,
 }) => {
   const { orgId } = useRouter().query;
-  const { folderData } = useViewBrowser(parseInt(orgId as string), folderId);
+  const { folderData, itemSummaryData } = useViewBrowser(
+    parseInt(orgId as string),
+    folderId
+  );
   const model = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId as string))
   );
@@ -31,7 +34,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
           actionButtons={<ViewFolderActionButtons folderId={folderId} />}
           noPad
           subtitle={
-            <ZUIFuture future={model.getItemSummary(folderId)}>
+            <ZUIFuture future={itemSummaryData}>
               {(data) => (
                 <ViewFolderSubtitle
                   numFolders={data.folders}
