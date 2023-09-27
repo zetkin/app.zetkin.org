@@ -1,21 +1,15 @@
 import dayjs from 'dayjs';
-import Fuse from 'fuse.js';
 
 import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
 import { Store } from 'core/store';
-import {
-  CallAssignmentCaller,
-  CallAssignmentData,
-  CallAssignmentStats,
-} from '../apiTypes';
+import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
   IFuture,
   PlaceholderFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
-import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 export default class CallAssignmentModel extends ModelBase {
   private _env: Environment;
@@ -23,10 +17,6 @@ export default class CallAssignmentModel extends ModelBase {
   private _orgId: number;
   private _repo: CallAssignmentsRepo;
   private _store: Store;
-
-  addCaller(person: ZetkinPerson): void {
-    this._repo.addCaller(this._orgId, this._id, person.id);
-  }
 
   constructor(env: Environment, orgId: number, id: number) {
     super();
@@ -53,30 +43,6 @@ export default class CallAssignmentModel extends ModelBase {
 
   getData(): IFuture<CallAssignmentData> {
     return this._repo.getCallAssignment(this._orgId, this._id);
-  }
-
-  getFilteredCallers(searchString = ''): IFuture<CallAssignmentCaller[]> {
-    const callers = this._repo.getCallAssignmentCallers(this._orgId, this._id);
-
-    if (callers.isLoading) {
-      return callers;
-    }
-
-    if (callers.data && searchString) {
-      const fuse = new Fuse(callers.data, {
-        includeScore: true,
-        keys: ['first_name', 'last_name'],
-        threshold: 0.4,
-      });
-
-      const filteredCallers = fuse
-        .search(searchString)
-        .map((fuseResult) => fuseResult.item);
-
-      return new ResolvedFuture(filteredCallers);
-    }
-
-    return new ResolvedFuture(callers.data || []);
   }
 
   getStats(): IFuture<CallAssignmentStats | null> {
@@ -109,24 +75,6 @@ export default class CallAssignmentModel extends ModelBase {
   get isTargeted() {
     const { data } = this.getData();
     return data && data.target?.filter_spec?.length != 0;
-  }
-
-  removeCaller(callerId: number) {
-    this._repo.removeCaller(this._orgId, this._id, callerId);
-  }
-
-  setCallerTags(
-    callerId: number,
-    prioTags: ZetkinTag[],
-    excludedTags: ZetkinTag[]
-  ): void {
-    this._repo.setCallerTags(
-      this._orgId,
-      this._id,
-      callerId,
-      prioTags,
-      excludedTags
-    );
   }
 
   setDates(startDate: string | null, endDate: string | null): void {
