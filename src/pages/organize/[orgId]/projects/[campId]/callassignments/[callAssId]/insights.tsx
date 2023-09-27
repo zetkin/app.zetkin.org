@@ -14,13 +14,12 @@ import {
 
 import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
-import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { callAssignmentQuery } from 'features/callAssignments/api/callAssignments';
 import messageIds from 'features/callAssignments/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useModel from 'core/useModel';
+import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
 import ZUIQuery from 'zui/ZUIQuery';
 import { DateStats, ZetkinCaller } from 'pages/api/stats/calls/date';
 
@@ -63,10 +62,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   const [normalized, setNormalized] = useState(false);
   const [interval, setInterval] = useState<'date' | 'hour'>('date');
 
-  const model = useModel(
-    (env) =>
-      new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
-  );
+  const { title } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
 
   const statsQuery = useQuery(
     [
@@ -92,7 +88,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{title}</title>
       </Head>
       <Typography variant="h3">
         <Msg id={messageIds.insightsHeader} />
