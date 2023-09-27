@@ -4,6 +4,7 @@ import { List, ListItem, ListItemText } from '@mui/material';
 
 import CallAssignmentListItem from './CallAssignmentListItem';
 import CampaignListItem from './CampaignListItem';
+import JourneyInstanceListItem from './JourneyInstanceListItem';
 import PersonListItem from './PersonListItem';
 import SurveyListItem from './SurveyListItem';
 import TaskListItem from './TaskListItem';
@@ -55,6 +56,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
             }
             if (result.type === SEARCH_DATA_TYPE.VIEW) {
               return <ViewListItem view={result.match} />;
+            }
+            if (result.type === SEARCH_DATA_TYPE.JOURNEY_INSTANCE) {
+              return <JourneyInstanceListItem journeyInstance={result.match} />;
             }
           })}
         </>
