@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { Add, Edit } from '@mui/icons-material';
 import { Box, Button, Card, Divider, Typography } from '@mui/material';
 
-import CallAssignmentModel from '../models/CallAssignmentModel';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
+import useCallAssignment from '../hooks/useCallAssignment';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,14 +24,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
+const CallAssignmentTargets = () => {
   const classes = useStyles();
-
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const { data: stats } = model.getStats();
-  const { data } = model.getData();
-  const target = data?.target;
+  const { orgId, callAssId } = useNumericRouteParams();
+  const { allTargets, isTargeted, setTargets, target } = useCallAssignment(
+    orgId,
+    callAssId
+  );
 
   return (
     <>
@@ -39,15 +41,15 @@ const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          {model.isTargeted && (
-            <ZUIAnimatedNumber value={stats?.allTargets || 0}>
+          {isTargeted && (
+            <ZUIAnimatedNumber value={allTargets || 0}>
               {(animatedValue) => (
                 <Box className={classes.chip}>{animatedValue}</Box>
               )}
             </ZUIAnimatedNumber>
           )}
         </Box>
-        {model.isTargeted ? (
+        {isTargeted ? (
           <>
             <Divider />
             <Box p={2}>
@@ -83,7 +85,7 @@ const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
         <SmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}
           onSave={(query) => {
-            model.setTargets(query);
+            setTargets(query);
             setQueryDialogOpen(false);
           }}
           query={target}

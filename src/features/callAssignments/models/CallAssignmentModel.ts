@@ -10,13 +10,12 @@ import {
   CallAssignmentData,
   CallAssignmentStats,
 } from '../apiTypes';
-import { callAssignmentUpdate, callAssignmentUpdated } from '../store';
 import {
   IFuture,
   PlaceholderFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
-import { ZetkinPerson, ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 export enum CallAssignmentState {
   ACTIVE = 'active',
@@ -116,14 +115,6 @@ export default class CallAssignmentModel extends ModelBase {
     }
   }
 
-  get hasTargets() {
-    const { data } = this.getStats();
-    if (data === null) {
-      return false;
-    }
-    return data.blocked + data.ready + data.done > 0;
-  }
-
   get isTargeted() {
     const { data } = this.getData();
     return data && data.target?.filter_spec?.length != 0;
@@ -131,12 +122,6 @@ export default class CallAssignmentModel extends ModelBase {
 
   removeCaller(callerId: number) {
     this._repo.removeCaller(this._orgId, this._id, callerId);
-  }
-
-  setCallerNotesEnabled(enabled: boolean) {
-    this._repo.updateCallAssignment(this._orgId, this._id, {
-      disable_caller_notes: !enabled,
-    });
   }
 
   setCallerTags(
@@ -153,96 +138,11 @@ export default class CallAssignmentModel extends ModelBase {
     );
   }
 
-  setCooldown(cooldown: number): void {
-    const state = this._store.getState();
-    const caItem = state.callAssignments.assignmentList.items.find(
-      (item) => item.id == this._id
-    );
-    const callAssignment = caItem?.data;
-
-    //if cooldown has not changed, do nothing.
-    if (cooldown === callAssignment?.cooldown) {
-      return;
-    }
-
-    this._repo.updateCallAssignment(this._orgId, this._id, { cooldown });
-  }
-
   setDates(startDate: string | null, endDate: string | null): void {
     this._repo.updateCallAssignment(this._orgId, this._id, {
       end_date: endDate,
       start_date: startDate,
     });
-  }
-
-  setGoal(query: Partial<ZetkinQuery>) {
-    // TODO: Refactor once SmartSearch is supported in redux framework
-    const state = this._store.getState();
-    const caItem = state.callAssignments.assignmentList.items.find(
-      (item) => item.id == this._id
-    );
-    const callAssignment = caItem?.data;
-
-    if (callAssignment) {
-      this._store.dispatch(callAssignmentUpdate([this._id, ['goal']]));
-      fetch(
-        `/api/orgs/${this._orgId}/people/queries/${callAssignment.goal.id}`,
-        {
-          body: JSON.stringify(query),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'PATCH',
-        }
-      )
-        .then((res) => res.json())
-        .then((data: { data: ZetkinQuery }) =>
-          this._store.dispatch(
-            callAssignmentUpdated([
-              { ...callAssignment, goal: data.data },
-              ['goal'],
-            ])
-          )
-        );
-    }
-  }
-
-  setTargetDetailsExposed(exposeTargetDetails: boolean) {
-    this._repo.updateCallAssignment(this._orgId, this._id, {
-      expose_target_details: exposeTargetDetails,
-    });
-  }
-
-  setTargets(query: Partial<ZetkinQuery>): void {
-    // TODO: Refactor once SmartSearch is supported in redux framework
-    const state = this._store.getState();
-    const caItem = state.callAssignments.assignmentList.items.find(
-      (item) => item.id == this._id
-    );
-    const callAssignment = caItem?.data;
-
-    if (callAssignment) {
-      this._store.dispatch(callAssignmentUpdate([this._id, ['target']]));
-      fetch(
-        `/api/orgs/${this._orgId}/people/queries/${callAssignment.target.id}`,
-        {
-          body: JSON.stringify(query),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'PATCH',
-        }
-      )
-        .then((res) => res.json())
-        .then((data: { data: ZetkinQuery }) => {
-          this._store.dispatch(
-            callAssignmentUpdated([
-              { ...callAssignment, target: data.data },
-              ['target'],
-            ])
-          );
-        });
-    }
   }
 
   setTitle(title: string): void {
