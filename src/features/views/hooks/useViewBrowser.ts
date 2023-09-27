@@ -1,8 +1,10 @@
-import { useStore } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 
 import createNew from '../rpc/createNew/client';
 import deleteViewFolder from '../rpc/deleteFolder';
 import {
+  allItemsLoad,
+  allItemsLoaded,
   folderCreate,
   folderCreated,
   folderDeleted,
@@ -12,6 +14,15 @@ import {
 } from '../store';
 import { useApiClient, useEnv } from 'core/hooks';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
+import shouldLoad from 'core/caching/shouldLoad';
+import { RootState } from 'core/store';
+import {
+  FutureBase,
+  IFuture,
+  PromiseFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
+import { ViewTreeData } from 'pages/api/views/tree';
 
 type ZetkinViewFolderPostBody = {
   parent_id?: number;
@@ -28,6 +39,7 @@ export default function useViewBrowser(orgId: number): UseViewBrowserReturn {
   const apiClient = useApiClient();
   const env = useEnv();
   const store = useStore();
+  const views = useSelector((state: RootState) => state.views);
 
   const createFolder = async (
     title: string,
@@ -71,6 +83,35 @@ export default function useViewBrowser(orgId: number): UseViewBrowserReturn {
   const deleteView = async (viewId: number): Promise<void> => {
     await apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
     store.dispatch(viewDeleted(viewId));
+  };
+
+  const getFolder = (folderId: number): IFuture<ZetkinViewFolder> => {
+    const itemsFuture = getViewTree(orgId);
+    if (!itemsFuture.data) {
+      return new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
+    }
+
+    return new ResolvedFuture(
+      itemsFuture.data.folders.find((folder) => folder.id == folderId) || null
+    );
+  };
+
+  const getViewTree = (orgId: number): IFuture<ViewTreeData> => {
+    if (shouldLoad(views.folderList) || shouldLoad(views.viewList)) {
+      store.dispatch(allItemsLoad());
+      const promise = apiClient
+        .get<ViewTreeData>(`/api/views/tree?orgId=${orgId}`)
+        .then((items) => {
+          store.dispatch(allItemsLoaded(items));
+          return items;
+        });
+      return new PromiseFuture(promise);
+    } else {
+      return new ResolvedFuture({
+        folders: views.folderList.items.map((item) => item.data!),
+        views: views.viewList.items.map((item) => item.data!),
+      });
+    }
   };
   return { createFolder, createView, deleteFolder, deleteView };
 }
