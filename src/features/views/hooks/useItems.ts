@@ -1,7 +1,7 @@
-import { IFuture, FutureBase, ResolvedFuture } from 'core/caching/futures';
-import { ViewTreeData } from 'pages/api/views/tree';
-import { ViewBrowserItem } from '../models/ViewBrowserModel';
 import useViewTree from './useViewTree';
+import { ViewBrowserItem } from '../models/ViewBrowserModel';
+import { ViewTreeData } from 'pages/api/views/tree';
+import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
 
 interface UseItemsReturn {
   itemsFuture: IFuture<ViewBrowserItem[]>;

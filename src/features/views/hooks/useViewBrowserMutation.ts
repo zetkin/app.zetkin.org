@@ -1,8 +1,7 @@
-import { useSelector, useStore } from 'react-redux';
+import { useStore } from 'react-redux';
 
 import createNew from '../rpc/createNew/client';
 import deleteViewFolder from '../rpc/deleteFolder';
-import { RootState } from 'core/store';
 import {
   folderCreate,
   folderCreated,
@@ -32,7 +31,6 @@ export default function useViewBrowserMutation(
   const apiClient = useApiClient();
   const env = useEnv();
   const store = useStore();
-  const views = useSelector((state: RootState) => state.views);
 
   const createFolder = async (
     title: string,

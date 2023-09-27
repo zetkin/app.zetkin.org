@@ -1,6 +1,6 @@
-import { IFuture, FutureBase, ResolvedFuture } from 'core/caching/futures';
-import { ViewTreeData } from 'pages/api/views/tree';
 import useViewTree from './useViewTree';
+import { ViewTreeData } from 'pages/api/views/tree';
+import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
 
 interface UseItemSummaryReturn {
   itemSummaryFuture: IFuture<{ folders: number; views: number }>;

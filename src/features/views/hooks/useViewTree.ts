@@ -1,10 +1,11 @@
-import { IFuture, ResolvedFuture, PromiseFuture } from 'core/caching/futures';
+import { useSelector, useStore } from 'react-redux';
+
+import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient } from 'core/hooks';
-import { RootState } from 'core/store';
 import { ViewTreeData } from 'pages/api/views/tree';
-import { useStore, useSelector } from 'react-redux';
 import { allItemsLoad, allItemsLoaded } from '../store';
+import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
 
 export default function useViewTree(orgId: number): IFuture<ViewTreeData> {
   const apiClient = useApiClient();
