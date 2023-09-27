@@ -1,22 +1,17 @@
+import { CallAssignmentData } from '../apiTypes';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
   callAssignmentCreate,
   callAssignmentCreated,
-  callAssignmentLoad,
-  callAssignmentLoaded,
   callAssignmentsLoad,
   callAssignmentsLoaded,
   callAssignmentUpdate,
   callAssignmentUpdated,
-  statsLoad,
-  statsLoaded,
 } from '../store';
-import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
-import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
 import {
   ZetkinCallAssignment,
   ZetkinCallAssignmentPostBody,
@@ -47,51 +42,6 @@ export default class CallAssignmentsRepo {
 
     this._store.dispatch(callAssignmentCreated(assignment));
     return assignment;
-  }
-
-  getCallAssignment(orgId: number, id: number): IFuture<CallAssignmentData> {
-    const state = this._store.getState();
-    const caItem = state.callAssignments.assignmentList.items.find(
-      (item) => item.id == id
-    );
-
-    if (!caItem || shouldLoad(caItem)) {
-      this._store.dispatch(callAssignmentLoad(id));
-      const promise = this._apiClient
-        .get<CallAssignmentData>(`/api/orgs/${orgId}/call_assignments/${id}`)
-        .then((data: CallAssignmentData) => {
-          this._store.dispatch(callAssignmentLoaded(data));
-          return data;
-        });
-
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(caItem);
-    }
-  }
-
-  getCallAssignmentStats(
-    orgId: number,
-    id: number
-  ): IFuture<CallAssignmentStats> {
-    const state = this._store.getState();
-    const statsItem = state.callAssignments.statsById[id];
-
-    if (shouldLoad(statsItem)) {
-      this._store.dispatch(statsLoad(id));
-      const promise = this._apiClient
-        .get<CallAssignmentStats>(
-          `/api/callAssignments/targets?org=${orgId}&assignment=${id}`
-        )
-        .then((data: CallAssignmentStats) => {
-          this._store.dispatch(statsLoaded({ ...data, id: id }));
-          return data;
-        });
-
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(statsItem);
-    }
   }
 
   getCallAssignments(orgId: number): IFuture<CallAssignmentData[]> {

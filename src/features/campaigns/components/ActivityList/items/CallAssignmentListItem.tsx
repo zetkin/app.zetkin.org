@@ -2,9 +2,8 @@ import { FC } from 'react';
 import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
-import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { STATUS_COLORS } from './ActivityListItem';
-import useModel from 'core/useModel';
+import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
 import useCallAssignment, {
   CallAssignmentState,
 } from 'features/callAssignments/hooks/useCallAssignment';
@@ -18,10 +17,11 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   caId,
   orgId,
 }) => {
-  const { state } = useCallAssignment(orgId, caId);
-  const model = useModel((env) => new CallAssignmentModel(env, orgId, caId));
-  const data = model.getData().data;
-  const stats = model.getStats().data;
+  const { data, state, title } = useCallAssignment(orgId, caId);
+  const { data: stats, isLoading: statsLoading } = useCallAssignmentStats(
+    orgId,
+    caId
+  );
 
   if (!data) {
     return null;
@@ -43,7 +43,6 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   const ready = stats?.ready || 0;
   const done = stats?.done || 0;
   const callsMade = stats?.callsMade.toString() || '0';
-  const statsLoading = model.getStats().isLoading;
 
   return (
     <ActivityListItemWithStats
@@ -58,7 +57,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
       statsLoading={statsLoading}
-      title={data.title}
+      title={title}
     />
   );
 };
