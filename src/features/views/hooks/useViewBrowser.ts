@@ -2,6 +2,9 @@ import { useSelector, useStore } from 'react-redux';
 
 import createNew from '../rpc/createNew/client';
 import deleteViewFolder from '../rpc/deleteFolder';
+import { RootState } from 'core/store';
+import shouldLoad from 'core/caching/shouldLoad';
+import { ViewTreeData } from 'pages/api/views/tree';
 import {
   allItemsLoad,
   allItemsLoaded,
@@ -12,17 +15,14 @@ import {
   viewCreated,
   viewDeleted,
 } from '../store';
-import { useApiClient, useEnv } from 'core/hooks';
-import { ZetkinView, ZetkinViewFolder } from '../components/types';
-import shouldLoad from 'core/caching/shouldLoad';
-import { RootState } from 'core/store';
 import {
   FutureBase,
   IFuture,
   PromiseFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
-import { ViewTreeData } from 'pages/api/views/tree';
+import { useApiClient, useEnv } from 'core/hooks';
+import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 type ZetkinViewFolderPostBody = {
   parent_id?: number;
@@ -34,8 +34,16 @@ interface UseViewBrowserReturn {
   createView: (folderId?: number, rows?: number[]) => void;
   deleteFolder: (folderId: number) => void;
   deleteView: (viewId: number) => void;
+  folderData: {
+    data: ZetkinViewFolder | null;
+    error: unknown | null;
+    isLoading: boolean;
+  };
 }
-export default function useViewBrowser(orgId: number): UseViewBrowserReturn {
+export default function useViewBrowser(
+  orgId: number,
+  folderId?: number
+): UseViewBrowserReturn {
   const apiClient = useApiClient();
   const env = useEnv();
   const store = useStore();
@@ -85,7 +93,7 @@ export default function useViewBrowser(orgId: number): UseViewBrowserReturn {
     store.dispatch(viewDeleted(viewId));
   };
 
-  const getFolder = (folderId: number): IFuture<ZetkinViewFolder> => {
+  const getFolder = (): IFuture<ZetkinViewFolder> => {
     const itemsFuture = getViewTree(orgId);
     if (!itemsFuture.data) {
       return new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
@@ -113,5 +121,15 @@ export default function useViewBrowser(orgId: number): UseViewBrowserReturn {
       });
     }
   };
-  return { createFolder, createView, deleteFolder, deleteView };
+  return {
+    createFolder,
+    createView,
+    deleteFolder,
+    deleteView,
+    folderData: {
+      data: getFolder().data,
+      error: getFolder().error,
+      isLoading: getFolder().isLoading,
+    },
+  };
 }

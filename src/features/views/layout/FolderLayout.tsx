@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useModel from 'core/useModel';
+import useViewBrowser from '../hooks/useViewBrowser';
 import ViewBrowserModel from '../models/ViewBrowserModel';
 import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
@@ -18,13 +19,13 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   folderId,
 }) => {
   const { orgId } = useRouter().query;
-
+  const { folderData } = useViewBrowser(parseInt(orgId as string), folderId);
   const model = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId as string))
   );
 
   return (
-    <ZUIFuture future={model.getFolder(folderId)}>
+    <ZUIFuture future={folderData}>
       {(data) => (
         <SimpleLayout
           actionButtons={<ViewFolderActionButtons folderId={folderId} />}
