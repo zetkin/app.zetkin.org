@@ -91,6 +91,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
   const [open, setOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
+  const { orgData, orgError, orgIsLoading } = useOrganization(orgId);
+  const { treeData, treeError, treeIsLoading } = useOrganizationsTree();
 
   const handleExpansion = () => {
     setChecked(!checked);
@@ -163,91 +165,99 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               {!open && !hover && (
                 <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               )}
-              <ZUIFuture future={useOrganizationsTree()}>
-                <ZUIFuture future={useOrganization(orgId)}>
-                  {(data) => (
-                    <>
-                      {open && (
-                        <>
-                          <Box
-                            sx={{
-                              alignItems: 'center',
-                              display: 'flex',
-                            }}
-                          >
-                            {!showOrgSwitcher && (
-                              <>
-                                <Box
-                                  sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    width: '48px',
-                                  }}
-                                >
-                                  {hover ? (
-                                    <IconButton onClick={handleClick}>
-                                      <KeyboardDoubleArrowLeftOutlined />
-                                    </IconButton>
-                                  ) : (
-                                    <Avatar
-                                      alt="icon"
-                                      src={`/api/orgs/${orgId}/avatar`}
-                                    />
-                                  )}
-                                </Box>
-                                <Typography variant="h6">
-                                  {data.title}
-                                </Typography>
-                              </>
-                            )}
-
-                            {showOrgSwitcher && (
-                              <TextField
-                                fullWidth
-                                InputProps={{
-                                  endAdornment:
-                                    searchString.length > 0 ? (
-                                      <Close
-                                        color="secondary"
-                                        onClick={() => setSearchString('')}
-                                        sx={{ cursor: 'pointer' }}
-                                      />
-                                    ) : (
-                                      ''
-                                    ),
-                                  startAdornment: (
-                                    <FilterListOutlined
-                                      color="secondary"
-                                      sx={{ marginRight: '0.5em' }}
-                                    />
-                                  ),
+              <ZUIFuture
+                future={{
+                  data: orgData,
+                  error: orgError,
+                  isLoading: orgIsLoading,
+                }}
+              >
+                {(data) => (
+                  <>
+                    {open && (
+                      <>
+                        <Box
+                          sx={{
+                            alignItems: 'center',
+                            display: 'flex',
+                          }}
+                        >
+                          {!showOrgSwitcher && (
+                            <>
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  width: '48px',
                                 }}
-                                onChange={(e) =>
-                                  setSearchString(e.target.value)
-                                }
-                                placeholder={messages.organizeSidebar.filter()}
-                                value={searchString}
-                              />
-                            )}
-                          </Box>
+                              >
+                                {hover ? (
+                                  <IconButton onClick={handleClick}>
+                                    <KeyboardDoubleArrowLeftOutlined />
+                                  </IconButton>
+                                ) : (
+                                  <Avatar
+                                    alt="icon"
+                                    src={`/api/orgs/${orgId}/avatar`}
+                                  />
+                                )}
+                              </Box>
+                              <Typography variant="h6">{data.title}</Typography>
+                            </>
+                          )}
 
-                          <Box sx={{ display: open ? 'flex' : 'none' }}>
-                            <IconButton onClick={handleExpansion}>
-                              {checked ? <ExpandLess /> : <ExpandMore />}
-                            </IconButton>
-                          </Box>
-                        </>
-                      )}
-                    </>
-                  )}
-                </ZUIFuture>
+                          {showOrgSwitcher && (
+                            <TextField
+                              fullWidth
+                              InputProps={{
+                                endAdornment:
+                                  searchString.length > 0 ? (
+                                    <Close
+                                      color="secondary"
+                                      onClick={() => setSearchString('')}
+                                      sx={{ cursor: 'pointer' }}
+                                    />
+                                  ) : (
+                                    ''
+                                  ),
+                                startAdornment: (
+                                  <FilterListOutlined
+                                    color="secondary"
+                                    sx={{ marginRight: '0.5em' }}
+                                  />
+                                ),
+                              }}
+                              onChange={(e) => setSearchString(e.target.value)}
+                              placeholder={messages.organizeSidebar.filter()}
+                              value={searchString}
+                            />
+                          )}
+                        </Box>
+
+                        <Box sx={{ display: open ? 'flex' : 'none' }}>
+                          <IconButton onClick={handleExpansion}>
+                            {checked ? <ExpandLess /> : <ExpandMore />}
+                          </IconButton>
+                        </Box>
+                      </>
+                    )}
+                  </>
+                )}
               </ZUIFuture>
             </Box>
-            <OrganizationSwitcher
-              open={showOrgSwitcher}
-              orgId={orgId}
-              searchString={searchString}
-            />
+            <ZUIFuture
+              future={{
+                data: treeData,
+                error: treeError,
+                isLoading: treeIsLoading,
+              }}
+            >
+              <OrganizationSwitcher
+                open={showOrgSwitcher}
+                orgId={orgId}
+                searchString={searchString}
+              />
+            </ZUIFuture>
           </Box>
           <Box
             sx={{
