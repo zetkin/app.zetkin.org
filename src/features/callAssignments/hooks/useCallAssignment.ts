@@ -1,50 +1,34 @@
+import { CallAssignmentData } from '../apiTypes';
 import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient } from 'core/hooks';
-import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import useCallAssignmentStats from './useCallAssignmentStats';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdate,
   callAssignmentUpdated,
-  statsLoad,
-  statsLoaded,
 } from '../store';
-import {
-  IFuture,
-  PlaceholderFuture,
-  PromiseFuture,
-  RemoteItemFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
+import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import { useSelector, useStore } from 'react-redux';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
 interface UseCallAssignmentReturn {
-  allocated?: number;
-  allTargets?: number;
-  blocked?: number;
-  callBackLater?: number;
-  calledTooRecently?: number;
   cooldown?: number;
   data: ZetkinCallAssignment | null;
   disableCallerNotes?: boolean;
-  done?: number;
+  endDate?: string | null;
   exposeTargetDetails?: boolean;
   goal?: ZetkinQuery;
   hasTargets: boolean;
   instructions: string;
   isTargeted: boolean;
-  missingPhoneNumber?: number;
-  organizerActionNeeded?: number;
-  queue?: number;
-  ready?: number;
   setCallerNotesEnabled: (enabled: boolean) => void;
   setCooldown: (cooldown: number) => void;
   setGoal: (query: Partial<ZetkinQuery>) => void;
   setTargetDetailsExposed: (targetDetailsExposed: boolean) => void;
   setTargets: (query: Partial<ZetkinQuery>) => void;
-  statusBarStatsList: { color: string; value: number }[];
+  startDate?: string | null;
   target?: ZetkinQuery;
   title: string;
 }
@@ -59,7 +43,7 @@ export default function useCallAssignment(
     (state: RootState) => state.callAssignments
   );
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
-  const statsById = callAssignmentSlice.statsById;
+  const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
 
   const getData = (): IFuture<CallAssignmentData> => {
     const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
@@ -87,58 +71,10 @@ export default function useCallAssignment(
   };
 
   const hasTargets = () => {
-    const { data } = getStats();
-    if (data === null) {
+    if (statsData === null) {
       return false;
     }
-    return data.blocked + data.ready > 0;
-  };
-
-  const getCallAssignmentStats = () => {
-    const statsItem = statsById[assignmentId];
-
-    if (shouldLoad(statsItem)) {
-      store.dispatch(statsLoad(assignmentId));
-      const promise = apiClient
-        .get<CallAssignmentStats>(
-          `/api/callAssignments/targets?org=${orgId}&assignment=${assignmentId}`
-        )
-        .then((data: CallAssignmentStats) => {
-          store.dispatch(statsLoaded({ ...data, id: assignmentId }));
-          return data;
-        });
-
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(statsItem);
-    }
-  };
-
-  const getStats = (): IFuture<CallAssignmentStats | null> => {
-    if (!isTargeted()) {
-      return new ResolvedFuture(null);
-    }
-
-    const future = getCallAssignmentStats();
-    if (future.isLoading && !future.data) {
-      return new PlaceholderFuture({
-        allTargets: 0,
-        allocated: 0,
-        blocked: 0,
-        callBackLater: 0,
-        calledTooRecently: 0,
-        callsMade: 0,
-        done: 0,
-        id: assignmentId,
-        missingPhoneNumber: 0,
-        mostRecentCallTime: null,
-        organizerActionNeeded: 0,
-        queue: 0,
-        ready: 0,
-      });
-    } else {
-      return future;
-    }
+    return statsData.blocked + statsData.ready > 0;
   };
 
   const setTargets = (query: Partial<ZetkinQuery>): void => {
@@ -235,58 +171,25 @@ export default function useCallAssignment(
     });
   };
 
-  const getStatusBarStatsList = () => {
-    const { data: stats } = getStats();
-    const statusBarStatsList =
-      hasTargets() && stats
-        ? [
-            {
-              color: 'statusColors.orange',
-              value: stats.blocked,
-            },
-            {
-              color: 'statusColors.blue',
-              value: stats.ready,
-            },
-            {
-              color: 'statusColors.green',
-              value: stats.done,
-            },
-          ]
-        : [
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-          ];
-
-    return statusBarStatsList;
-  };
+  const data = getData().data;
 
   return {
-    data: getData().data,
-    disableCallerNotes: getData().data?.disable_caller_notes,
-    exposeTargetDetails: getData().data?.expose_target_details,
-    ...getStats().data,
-    goal: getData().data?.goal,
+    cooldown: data?.cooldown,
+    data,
+    disableCallerNotes: data?.disable_caller_notes,
+    endDate: data?.end_date,
+    exposeTargetDetails: data?.expose_target_details,
+    goal: data?.goal,
     hasTargets: hasTargets(),
-    instructions: getData().data?.instructions || '',
+    instructions: data?.instructions || '',
     isTargeted: isTargeted(),
     setCallerNotesEnabled,
     setCooldown,
     setGoal,
     setTargetDetailsExposed,
     setTargets,
-    statusBarStatsList: getStatusBarStatsList(),
-    target: getData().data?.target,
-    title: getData().data?.title || '',
+    startDate: data?.start_date,
+    target: data?.target,
+    title: data?.title || '',
   };
 }

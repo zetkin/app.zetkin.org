@@ -11,6 +11,7 @@ import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
+import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
@@ -57,7 +58,8 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
-  const { statusBarStatsList, title } = useCallAssignment(
+  const { title } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  const { statusBarStatsList } = useCallAssignmentStats(
     parseInt(orgId),
     parseInt(assignmentId)
   );

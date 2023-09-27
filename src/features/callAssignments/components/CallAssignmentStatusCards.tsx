@@ -18,6 +18,7 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
 import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
@@ -27,22 +28,9 @@ const CallAssignmentStatusCards = () => {
   const messages = useMessages(messageIds);
 
   const { orgId, callAssId } = useNumericRouteParams();
-  const {
-    allocated,
-    blocked,
-    cooldown,
-    done,
-    callBackLater,
-    calledTooRecently,
-    goal,
-    hasTargets,
-    missingPhoneNumber,
-    organizerActionNeeded,
-    ready,
-    queue,
-    setCooldown,
-    setGoal,
-  } = useCallAssignment(orgId, callAssId);
+  const { cooldown, goal, hasTargets, setCooldown, setGoal } =
+    useCallAssignment(orgId, callAssId);
+  const { data: statsData } = useCallAssignmentStats(orgId, callAssId);
 
   const cooldownNumber = cooldown ?? null;
   const viewsModel: ViewBrowserModel = useModel(
@@ -63,7 +51,7 @@ const CallAssignmentStatusCards = () => {
             chipColor={hasTargets ? 'orange' : 'gray'}
             subtitle={messages.blocked.subtitle()}
             title={messages.blocked.title()}
-            value={blocked}
+            value={statsData?.blocked}
           />
           <List>
             <StatusCardItem
@@ -132,15 +120,15 @@ const CallAssignmentStatusCards = () => {
                 </Box>
               }
               title={messages.blocked.calledTooRecently()}
-              value={calledTooRecently}
+              value={statsData?.calledTooRecently}
             />
             <StatusCardItem
               title={messages.blocked.callBackLater()}
-              value={callBackLater}
+              value={statsData?.callBackLater}
             />
             <StatusCardItem
               title={messages.blocked.missingPhoneNumber()}
-              value={missingPhoneNumber}
+              value={statsData?.missingPhoneNumber}
             />
             <StatusCardItem
               action={
@@ -153,7 +141,7 @@ const CallAssignmentStatusCards = () => {
                 </Button>
               }
               title={messages.blocked.organizerActionNeeded()}
-              value={organizerActionNeeded}
+              value={statsData?.organizerActionNeeded}
             />
           </List>
         </Card>
@@ -164,13 +152,16 @@ const CallAssignmentStatusCards = () => {
             chipColor={hasTargets ? 'blue' : 'gray'}
             subtitle={messages.ready.subtitle()}
             title={messages.ready.title()}
-            value={ready}
+            value={statsData?.ready}
           />
           <List>
-            <StatusCardItem title={messages.ready.queue()} value={queue} />
+            <StatusCardItem
+              title={messages.ready.queue()}
+              value={statsData?.queue}
+            />
             <StatusCardItem
               title={messages.ready.allocated()}
-              value={allocated}
+              value={statsData?.allocated}
             />
           </List>
         </Card>
@@ -181,7 +172,7 @@ const CallAssignmentStatusCards = () => {
             chipColor={hasTargets ? 'green' : 'gray'}
             subtitle={messages.done.subtitle()}
             title={messages.done.title()}
-            value={done}
+            value={statsData?.done}
           />
           <Box p={2}>
             <Button

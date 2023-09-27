@@ -7,6 +7,7 @@ import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
@@ -29,10 +30,11 @@ const CallAssignmentTargets = () => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   const { orgId, callAssId } = useNumericRouteParams();
-  const { allTargets, isTargeted, setTargets, target } = useCallAssignment(
+  const { isTargeted, setTargets, target } = useCallAssignment(
     orgId,
     callAssId
   );
+  const { data: statsData } = useCallAssignmentStats(orgId, callAssId);
 
   return (
     <>
@@ -42,7 +44,7 @@ const CallAssignmentTargets = () => {
             <Msg id={messageIds.targets.title} />
           </Typography>
           {isTargeted && (
-            <ZUIAnimatedNumber value={allTargets || 0}>
+            <ZUIAnimatedNumber value={statsData?.allTargets || 0}>
               {(animatedValue) => (
                 <Box className={classes.chip}>{animatedValue}</Box>
               )}
