@@ -7,6 +7,8 @@ import {
   SEGMENT_STYLE,
 } from '../sankeyDiagram/types';
 
+const MAIN_MIN_WIDTH = 0.05;
+
 export default function makeSankeySegments(
   stats: ZetkinSmartSearchFilterStats[]
 ): SankeySegment[] {
@@ -81,28 +83,36 @@ export default function makeSankeySegments(
         });
       }
     } else if (change > 0) {
+      const [mainWidth, sideWidth] = normalizeWidths(
+        prevResult / maxPeople,
+        change / maxPeople
+      );
       segments.push({
         kind: SEGMENT_KIND.ADD,
         main: {
           style: SEGMENT_STYLE.FILL,
-          width: prevResult / maxPeople,
+          width: mainWidth,
         },
         side: {
           style: SEGMENT_STYLE.FILL,
-          width: change / maxPeople,
+          width: sideWidth,
         },
         stats,
       });
     } else if (change < 0) {
+      const [mainWidth, sideWidth] = normalizeWidths(
+        result / maxPeople,
+        Math.abs(change) / maxPeople
+      );
       segments.push({
         kind: SEGMENT_KIND.SUB,
         main: {
           style: SEGMENT_STYLE.FILL,
-          width: result / maxPeople,
+          width: mainWidth,
         },
         side: {
           style: SEGMENT_STYLE.FILL,
-          width: Math.abs(change) / maxPeople,
+          width: sideWidth,
         },
         stats,
       });
@@ -150,9 +160,23 @@ export default function makeSankeySegments(
       kind: SEGMENT_KIND.EXIT,
       output: prevResult,
       style: SEGMENT_STYLE.FILL,
-      width: prevResult / maxPeople,
+      width: Math.max(prevResult / maxPeople, MAIN_MIN_WIDTH),
     });
   }
 
   return segments;
+}
+
+function normalizeWidths(
+  mainWidthIn: number,
+  sideWidthIn: number
+): [number, number] {
+  if (mainWidthIn < MAIN_MIN_WIDTH) {
+    const total = mainWidthIn + sideWidthIn;
+    const mainWidthOut = MAIN_MIN_WIDTH;
+    const sideWidthOut = total - MAIN_MIN_WIDTH;
+    return [mainWidthOut, sideWidthOut];
+  } else {
+    return [mainWidthIn, sideWidthIn];
+  }
 }

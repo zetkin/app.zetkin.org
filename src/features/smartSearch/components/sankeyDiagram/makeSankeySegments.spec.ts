@@ -475,4 +475,66 @@ describe('makeSankeySegments()', () => {
       },
     ]);
   });
+
+  it('imposes a minimum width of 5% to main when limited', () => {
+    const result = makeSankeySegments([
+      {
+        change: 100,
+        filter: {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.ALL,
+        },
+        matches: 100,
+        result: 100,
+      },
+      {
+        change: -99,
+        filter: {
+          config: {},
+          op: OPERATION.LIMIT,
+          type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+        },
+        matches: 99,
+        result: 1,
+      },
+    ]);
+
+    expect(result).toEqual(<SankeySegment[]>[
+      {
+        kind: SEGMENT_KIND.ENTRY,
+        stats: {
+          change: 100,
+          input: 0,
+          matches: 100,
+          output: 100,
+        },
+        style: SEGMENT_STYLE.FILL,
+        width: 1.0,
+      },
+      {
+        kind: SEGMENT_KIND.SUB,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.05,
+        },
+        side: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.95,
+        },
+        stats: {
+          change: -99,
+          input: 100,
+          matches: 99,
+          output: 1,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.EXIT,
+        output: 1,
+        style: SEGMENT_STYLE.FILL,
+        width: 0.05,
+      },
+    ]);
+  });
 });
