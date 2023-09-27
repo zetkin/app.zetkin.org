@@ -2,11 +2,12 @@ import { FC } from 'react';
 import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
+import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { STATUS_COLORS } from './ActivityListItem';
 import useModel from 'core/useModel';
-import CallAssignmentModel, {
+import useCallAssignment, {
   CallAssignmentState,
-} from 'features/callAssignments/models/CallAssignmentModel';
+} from 'features/callAssignments/hooks/useCallAssignment';
 
 interface CallAssignmentListItemProps {
   orgId: number;
@@ -17,8 +18,8 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   caId,
   orgId,
 }) => {
+  const { state } = useCallAssignment(orgId, caId);
   const model = useModel((env) => new CallAssignmentModel(env, orgId, caId));
-  const state = model.state;
   const data = model.getData().data;
   const stats = model.getStats().data;
 

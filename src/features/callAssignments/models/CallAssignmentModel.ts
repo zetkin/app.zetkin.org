@@ -17,15 +17,6 @@ import {
 } from 'core/caching/futures';
 import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
-export enum CallAssignmentState {
-  ACTIVE = 'active',
-  CLOSED = 'closed',
-  DRAFT = 'draft',
-  OPEN = 'open',
-  SCHEDULED = 'scheduled',
-  UNKNOWN = 'unknown',
-}
-
 export default class CallAssignmentModel extends ModelBase {
   private _env: Environment;
   private _id: number;
@@ -205,42 +196,6 @@ export default class CallAssignmentModel extends ModelBase {
           start_date: today,
         });
       }
-    }
-  }
-
-  get state(): CallAssignmentState {
-    const { data } = this.getData();
-    if (!data) {
-      return CallAssignmentState.UNKNOWN;
-    }
-
-    if (data.start_date) {
-      const startDate = new Date(data.start_date);
-      const now = new Date();
-      if (startDate > now) {
-        return CallAssignmentState.SCHEDULED;
-      } else {
-        if (data.end_date) {
-          const endDate = new Date(data.end_date);
-          if (endDate < now) {
-            return CallAssignmentState.CLOSED;
-          }
-        }
-
-        const { data: statsData } = this.getStats();
-        if (!statsData?.mostRecentCallTime) {
-          return CallAssignmentState.OPEN;
-        }
-
-        const mostRecentCallTime = new Date(statsData.mostRecentCallTime);
-        const diff = now.getTime() - mostRecentCallTime.getTime();
-
-        return diff < 10 * 60 * 1000
-          ? CallAssignmentState.ACTIVE
-          : CallAssignmentState.OPEN;
-      }
-    } else {
-      return CallAssignmentState.DRAFT;
     }
   }
 }

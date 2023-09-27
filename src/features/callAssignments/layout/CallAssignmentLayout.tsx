@@ -1,21 +1,21 @@
 import { Box, Button, Typography } from '@mui/material';
 import { Headset, People } from '@mui/icons-material';
 
+import CallAssignmentModel from '../models/CallAssignmentModel';
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
-import CallAssignmentModel, {
-  CallAssignmentState,
-} from '../models/CallAssignmentModel';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import useCallers from '../hooks/useCallers';
+import useCallAssignment, {
+  CallAssignmentState,
+} from '../hooks/useCallAssignment';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -36,7 +36,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
   );
 
-  const { data, endDate, startDate, title } = useCallAssignment(
+  const { data, endDate, startDate, state, title } = useCallAssignment(
     parseInt(orgId),
     parseInt(assignmentId)
   );
@@ -60,8 +60,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={
-        model.state == CallAssignmentState.OPEN ||
-        model.state == CallAssignmentState.ACTIVE ? (
+        state == CallAssignmentState.OPEN ||
+        state == CallAssignmentState.ACTIVE ? (
           <Button onClick={() => model.end()} variant="outlined">
             <Msg id={messageIds.actions.end} />
           </Button>
@@ -85,7 +85,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            <CallAssignmentStatusChip state={model.state} />
+            <CallAssignmentStatusChip state={state} />
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture

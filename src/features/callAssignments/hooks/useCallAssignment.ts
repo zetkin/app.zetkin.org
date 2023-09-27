@@ -13,6 +13,15 @@ import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import { useSelector, useStore } from 'react-redux';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
+export enum CallAssignmentState {
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+  DRAFT = 'draft',
+  OPEN = 'open',
+  SCHEDULED = 'scheduled',
+  UNKNOWN = 'unknown',
+}
+
 interface UseCallAssignmentReturn {
   cooldown?: number;
   data: ZetkinCallAssignment | null;
@@ -29,6 +38,7 @@ interface UseCallAssignmentReturn {
   setTargetDetailsExposed: (targetDetailsExposed: boolean) => void;
   setTargets: (query: Partial<ZetkinQuery>) => void;
   startDate?: string | null;
+  state: CallAssignmentState;
   target?: ZetkinQuery;
   title: string;
 }
@@ -171,6 +181,41 @@ export default function useCallAssignment(
     });
   };
 
+  const getState = () => {
+    const { data } = getData();
+    if (!data) {
+      return CallAssignmentState.UNKNOWN;
+    }
+
+    if (data.start_date) {
+      const startDate = new Date(data.start_date);
+      const now = new Date();
+      if (startDate > now) {
+        return CallAssignmentState.SCHEDULED;
+      } else {
+        if (data.end_date) {
+          const endDate = new Date(data.end_date);
+          if (endDate < now) {
+            return CallAssignmentState.CLOSED;
+          }
+        }
+
+        if (!statsData?.mostRecentCallTime) {
+          return CallAssignmentState.OPEN;
+        }
+
+        const mostRecentCallTime = new Date(statsData.mostRecentCallTime);
+        const diff = now.getTime() - mostRecentCallTime.getTime();
+
+        return diff < 10 * 60 * 1000
+          ? CallAssignmentState.ACTIVE
+          : CallAssignmentState.OPEN;
+      }
+    } else {
+      return CallAssignmentState.DRAFT;
+    }
+  };
+
   const data = getData().data;
 
   return {
@@ -189,6 +234,7 @@ export default function useCallAssignment(
     setTargetDetailsExposed,
     setTargets,
     startDate: data?.start_date,
+    state: getState(),
     target: data?.target,
     title: data?.title || '',
   };
