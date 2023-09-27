@@ -13,6 +13,9 @@ import CallAssignmentModel, {
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
+import useCallers from '../hooks/useCallers';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -33,11 +36,24 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
   );
 
-  const dataFuture = model.getData();
-  const statsFuture = model.getStats();
-  const callersFuture = model.getFilteredCallers();
+  const { data, endDate, startDate, title } = useCallAssignment(
+    parseInt(orgId),
+    parseInt(assignmentId)
+  );
 
-  if (!dataFuture.data) {
+  const {
+    data: statsData,
+    error: statsError,
+    isLoading: statsIsLoading,
+  } = useCallAssignmentStats(parseInt(orgId), parseInt(assignmentId));
+
+  const {
+    data: callersData,
+    error: callersError,
+    isLoading: callersIsLoading,
+  } = useCallers(parseInt(orgId), parseInt(assignmentId));
+
+  if (!data) {
     return null;
   }
 
@@ -58,11 +74,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
       belowActionButtons={
         <ZUIDateRangePicker
-          endDate={dataFuture.data.end_date || null}
+          endDate={endDate || null}
           onChange={(startDate, endDate) => {
             model.setDates(startDate, endDate);
           }}
-          startDate={dataFuture.data.start_date || null}
+          startDate={startDate || null}
         />
       }
       defaultTab="/"
@@ -73,7 +89,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
-              future={statsFuture}
+              future={{
+                data: statsData,
+                error: statsError,
+                isLoading: statsIsLoading,
+              }}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
@@ -92,7 +112,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
-              future={callersFuture}
+              future={{
+                data: callersData,
+                error: callersError,
+                isLoading: callersIsLoading,
+              }}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
@@ -132,7 +156,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => model.setTitle(newTitle)}
-          value={dataFuture.data.title}
+          value={title}
         />
       }
     >
