@@ -1,7 +1,6 @@
 import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient } from 'core/hooks';
-import { ZetkinQuery } from 'utils/types/zetkin';
 import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
   callAssignmentLoad,
@@ -19,6 +18,7 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { useSelector, useStore } from 'react-redux';
+import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
 interface UseCallAssignmentReturn {
   allocated?: number;
@@ -27,11 +27,13 @@ interface UseCallAssignmentReturn {
   callBackLater?: number;
   calledTooRecently?: number;
   cooldown?: number;
+  data: ZetkinCallAssignment | null;
   disableCallerNotes?: boolean;
   done?: number;
   exposeTargetDetails?: boolean;
   goal?: ZetkinQuery;
   hasTargets: boolean;
+  instructions: string;
   isTargeted: boolean;
   missingPhoneNumber?: number;
   organizerActionNeeded?: number;
@@ -270,11 +272,13 @@ export default function useCallAssignment(
   };
 
   return {
+    data: getData().data,
     disableCallerNotes: getData().data?.disable_caller_notes,
     exposeTargetDetails: getData().data?.expose_target_details,
     ...getStats().data,
     goal: getData().data?.goal,
     hasTargets: hasTargets(),
+    instructions: getData().data?.instructions || '',
     isTargeted: isTargeted(),
     setCallerNotesEnabled,
     setCooldown,
