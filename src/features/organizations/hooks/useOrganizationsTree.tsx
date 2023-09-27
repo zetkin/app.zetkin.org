@@ -12,11 +12,19 @@ const useOrganizationsTree = () => {
     (state: RootState) => state.organizations
   );
 
-  return loadListIfNecessary(organizationState.treeDataList, env.store, {
-    actionOnLoad: () => treeDataLoad(),
-    actionOnSuccess: (data) => treeDataLoaded(data),
-    loader: () => apiClient.rpc(getUserOrganizationsTree, {}),
-  });
+  const getOrgTree = () => {
+    return loadListIfNecessary(organizationState.treeDataList, env.store, {
+      actionOnLoad: () => treeDataLoad(),
+      actionOnSuccess: (data) => treeDataLoaded(data),
+      loader: () => apiClient.rpc(getUserOrganizationsTree, {}),
+    });
+  };
+
+  return {
+    treeData: getOrgTree().data,
+    treeError: getOrgTree().error,
+    treeIsLoading: getOrgTree().isLoading,
+  };
 };
 
 export default useOrganizationsTree;
