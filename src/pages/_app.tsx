@@ -26,7 +26,7 @@ import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
 import { PageWithLayout } from '../utils/types';
-import theme from '../theme';
+import { themeWithLocale } from '../theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
@@ -97,7 +97,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <EnvProvider env={env}>
         <UserContext.Provider value={pageProps.user}>
           <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={themeWithLocale(lang)}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <IntlProvider
                   defaultLocale="en"
