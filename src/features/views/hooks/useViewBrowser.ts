@@ -1,7 +1,15 @@
 import { useStore } from 'react-redux';
 
 import createNew from '../rpc/createNew/client';
-import { folderCreate, folderCreated, viewCreate, viewCreated } from '../store';
+import deleteViewFolder from '../rpc/deleteFolder';
+import {
+  folderCreate,
+  folderCreated,
+  folderDeleted,
+  viewCreate,
+  viewCreated,
+  viewDeleted,
+} from '../store';
 import { useApiClient, useEnv } from 'core/hooks';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
@@ -13,6 +21,8 @@ type ZetkinViewFolderPostBody = {
 interface UseViewBrowserReturn {
   createFolder: (title: string, folderId?: number) => Promise<ZetkinViewFolder>;
   createView: (folderId?: number, rows?: number[]) => void;
+  deleteFolder: (folderId: number) => void;
+  deleteView: (viewId: number) => void;
 }
 export default function useViewBrowser(orgId: number): UseViewBrowserReturn {
   const apiClient = useApiClient();
@@ -53,5 +63,14 @@ export default function useViewBrowser(orgId: number): UseViewBrowserReturn {
     return view;
   };
 
-  return { createFolder, createView };
+  const deleteFolder = async (folderId: number): Promise<void> => {
+    const report = await apiClient.rpc(deleteViewFolder, { folderId, orgId });
+    store.dispatch(folderDeleted(report));
+  };
+
+  const deleteView = async (viewId: number): Promise<void> => {
+    await apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
+    store.dispatch(viewDeleted(viewId));
+  };
+  return { createFolder, createView, deleteFolder, deleteView };
 }

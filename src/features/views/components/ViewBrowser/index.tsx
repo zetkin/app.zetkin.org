@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import {
   DataGridPro,
   GridColDef,
@@ -15,6 +16,7 @@ import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
 import { useMessages } from 'core/i18n';
+import useViewBrowser from 'features/views/hooks/useViewBrowser';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -45,6 +47,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   folderId = null,
   model,
 }) => {
+  const { orgId } = useRouter().query;
   const messages = useMessages(messageIds);
   const [sortModel, setSortModel] = useState<GridSortModel>([
     { field: 'title', sort: 'asc' },
@@ -53,8 +56,11 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
-
   const gridApiRef = useGridApiRef();
+
+  const { deleteFolder, deleteView } = useViewBrowser(
+    parseInt(orgId as string)
+  );
 
   // If a folder was created, go into rename state
   useEffect(() => {
@@ -162,9 +168,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                   showConfirmDialog({
                     onSubmit: () => {
                       if (item.type == 'folder') {
-                        model.deleteFolder(item.data.id);
+                        deleteFolder(item.data.id);
                       } else if (params.row.type == 'view') {
-                        model.deleteView(item.data.id);
+                        deleteView(item.data.id);
                       }
                     },
                     title: messages.browser.confirmDelete[item.type].title(),
