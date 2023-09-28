@@ -6,9 +6,9 @@ import { organizationLoad, organizationLoaded } from '../store';
 import { useApiClient, useEnv } from 'core/hooks';
 
 interface UseOrganizationReturn {
-  orgData: ZetkinOrganization | null;
-  orgError: unknown;
-  orgIsLoading: boolean;
+  data: ZetkinOrganization | null;
+  error: unknown;
+  isLoading: boolean;
 }
 
 const useOrganization = (orgId: number): UseOrganizationReturn => {
@@ -18,18 +18,20 @@ const useOrganization = (orgId: number): UseOrganizationReturn => {
     (state: RootState) => state.organizations
   );
 
-  const getOrganization = () => {
-    return loadItemIfNecessary(organizationState.orgData, env.store, {
+  const organization = loadItemIfNecessary(
+    organizationState.orgData,
+    env.store,
+    {
       actionOnLoad: () => organizationLoad(),
       actionOnSuccess: (data) => organizationLoaded(data),
       loader: () => apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`),
-    });
-  };
+    }
+  );
 
   return {
-    orgData: getOrganization().data,
-    orgError: getOrganization().error,
-    orgIsLoading: getOrganization().isLoading,
+    data: organization.data,
+    error: organization.error,
+    isLoading: organization.isLoading,
   };
 };
 
