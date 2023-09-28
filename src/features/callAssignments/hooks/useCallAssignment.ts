@@ -26,7 +26,6 @@ export enum CallAssignmentState {
 interface UseCallAssignmentReturn {
   data: ZetkinCallAssignment | null;
   end: () => void;
-  hasTargets: boolean;
   isTargeted: boolean;
   setCallerNotesEnabled: (enabled: boolean) => void;
   setCooldown: (cooldown: number) => void;
@@ -74,13 +73,6 @@ export default function useCallAssignment(
   const isTargeted = () => {
     const { data } = getData();
     return !!(data && data.target?.filter_spec?.length != 0);
-  };
-
-  const hasTargets = () => {
-    if (statsData === null) {
-      return false;
-    }
-    return statsData.blocked + statsData.ready > 0;
   };
 
   const setTargets = (query: Partial<ZetkinQuery>): void => {
@@ -299,7 +291,6 @@ export default function useCallAssignment(
   return {
     end,
     ...getData(),
-    hasTargets: hasTargets(),
     isTargeted: isTargeted(),
     setCallerNotesEnabled,
     setCooldown,

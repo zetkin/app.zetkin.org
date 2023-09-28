@@ -16,6 +16,7 @@ import { useSelector, useStore } from 'react-redux';
 interface UseCallAssignmentStatsReturn {
   data: CallAssignmentStats | null;
   error: unknown | null;
+  hasTargets: boolean;
   isLoading: boolean;
   statusBarStatsList: { color: string; value: number }[];
 }
@@ -79,6 +80,14 @@ export default function useCallAssignmentStats(
     }
   };
 
+  const hasTargets = () => {
+    const statsData = getStats().data;
+    if (statsData === null) {
+      return false;
+    }
+    return statsData.blocked + statsData.ready > 0;
+  };
+
   const getStatusBarStatsList = () => {
     const { data } = getStats();
     const hasTargets = data && data?.blocked + data?.ready > 0;
@@ -118,6 +127,7 @@ export default function useCallAssignmentStats(
 
   return {
     ...getStats(),
+    hasTargets: hasTargets(),
     statusBarStatsList: getStatusBarStatsList(),
   };
 }
