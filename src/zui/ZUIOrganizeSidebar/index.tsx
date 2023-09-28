@@ -38,7 +38,6 @@ import OrganizationSwitcher from 'features/organizations/components/Organization
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import useOrganizationsTree from 'features/organizations/hooks/useOrganizationsTree';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 
@@ -91,8 +90,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
   const [open, setOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
-  const { orgData, orgError, orgIsLoading } = useOrganization(orgId);
-  const { treeData, treeError, treeIsLoading } = useOrganizationsTree();
+  const { data, error, isLoading } = useOrganization(orgId);
 
   const handleExpansion = () => {
     setChecked(!checked);
@@ -167,9 +165,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               )}
               <ZUIFuture
                 future={{
-                  data: orgData,
-                  error: orgError,
-                  isLoading: orgIsLoading,
+                  data: data,
+                  error: error,
+                  isLoading: isLoading,
                 }}
               >
                 {(data) => (
@@ -245,19 +243,13 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 )}
               </ZUIFuture>
             </Box>
-            <ZUIFuture
-              future={{
-                data: treeData,
-                error: treeError,
-                isLoading: treeIsLoading,
-              }}
-            >
+            {checked && (
               <OrganizationSwitcher
                 open={showOrgSwitcher}
                 orgId={orgId}
                 searchString={searchString}
               />
-            </ZUIFuture>
+            )}
           </Box>
           <Box
             sx={{

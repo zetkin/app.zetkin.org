@@ -9,18 +9,16 @@ import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
 
 const OrganizationsList = () => {
   const messages = useMessages(messageIds);
-  const { orgsData, orgsError, orgsIsLoading } = useOrganizations();
+  const organizations = useOrganizations();
 
   return (
-    <ZUIFuture
-      future={{ data: orgsData, error: orgsError, isLoading: orgsIsLoading }}
-    >
+    <ZUIFuture future={organizations}>
       {(data) => {
         return (
           <Box style={{ margin: '30px' }}>
             <Typography variant="h3">{messages.page.title()}</Typography>
             <List>
-              {data.map((org: ZetkinMembership['organization']) => {
+              {data?.map((org: ZetkinMembership['organization']) => {
                 return (
                   <ListItem key={org.id}>
                     <Avatar
