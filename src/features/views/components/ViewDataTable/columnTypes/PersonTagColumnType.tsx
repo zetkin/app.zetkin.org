@@ -12,6 +12,7 @@ import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
+import useTagMutation from 'features/tags/hooks/useTagMutation';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -122,7 +123,9 @@ const Cell: FC<{
   // TODO: Find a way to share a model between cells in a column
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
-  const { assignToPerson, removeFromPerson, tagFuture } = useTag(orgId, tagId);
+  const { tagFuture } = useTag(orgId, tagId);
+  const { assignToPerson, removeFromPerson } = useTagMutation(orgId, tagId);
+
   const styles = useStyles();
 
   const [isRestricted] = useAccessLevel();
