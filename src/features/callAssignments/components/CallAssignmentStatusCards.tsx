@@ -23,6 +23,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useModel from 'core/useModel';
 import { useRouter } from 'next/router';
+import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
 
 interface CallAssignmentStatusCardProps {
   model: CallAssignmentModel;
@@ -43,6 +44,8 @@ const CallAssignmentStatusCards = ({
   const viewsModel: ViewBrowserModel = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId as string))
   );
+
+  // const { what } = useOrganizerActionView(parseInt(orgId as string));
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)

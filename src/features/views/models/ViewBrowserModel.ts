@@ -171,6 +171,7 @@ export default class ViewBrowserModel extends ModelBase {
         this._env.router.push(
           `/organize/${view.organization.id}/people/lists/${view.id}`
         );
+        console.log(view, ' 뭔데?');
         return view;
       });
 
