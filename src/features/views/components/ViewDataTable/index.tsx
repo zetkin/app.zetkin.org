@@ -443,7 +443,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           }
         }}
         onColumnOrderChange={(params) => {
-          moveColumn(params.field, params.targetIndex);
+          moveColumn(params.column.field, params.targetIndex);
         }}
         onColumnResize={(params) => {
           setColumnWidth(params.colDef.field, params.width);
