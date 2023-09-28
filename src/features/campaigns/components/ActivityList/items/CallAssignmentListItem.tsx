@@ -17,13 +17,13 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   caId,
   orgId,
 }) => {
-  const { data, state, title } = useCallAssignment(orgId, caId);
+  const { data: assignmentData, state } = useCallAssignment(orgId, caId);
   const { data: stats, isLoading: statsLoading } = useCallAssignmentStats(
     orgId,
     caId
   );
 
-  if (!data) {
+  if (!assignmentData) {
     return null;
   }
 
@@ -51,13 +51,13 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       endNumber={callsMade}
       greenChipValue={done}
       href={`/organize/${orgId}/projects/${
-        data.campaign?.id ?? 'standalone'
+        assignmentData.campaign?.id ?? 'standalone'
       }/callassignments/${caId}`}
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
       statsLoading={statsLoading}
-      title={title}
+      title={assignmentData.title}
     />
   );
 };

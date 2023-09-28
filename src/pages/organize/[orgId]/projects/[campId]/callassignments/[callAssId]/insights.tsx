@@ -25,15 +25,15 @@ import { DateStats, ZetkinCaller } from 'pages/api/stats/calls/date';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId, campId, callAssId } = ctx.params!;
+    const { orgId, campId, callAssId: assignmentId } = ctx.params!;
 
-    await callAssignmentQuery(orgId as string, callAssId as string).prefetch(
+    await callAssignmentQuery(orgId as string, assignmentId as string).prefetch(
       ctx
     );
 
     return {
       props: {
-        assignmentId: callAssId,
+        assignmentId,
         campId,
         orgId,
       },
@@ -62,7 +62,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   const [normalized, setNormalized] = useState(false);
   const [interval, setInterval] = useState<'date' | 'hour'>('date');
 
-  const { title } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  const { data } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
 
   const statsQuery = useQuery(
     [
@@ -88,7 +88,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{data?.title}</title>
       </Head>
       <Typography variant="h3">
         <Msg id={messageIds.insightsHeader} />

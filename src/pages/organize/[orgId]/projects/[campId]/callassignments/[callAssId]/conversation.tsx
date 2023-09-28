@@ -41,12 +41,12 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
   assignmentId,
   orgId,
 }) => {
-  const { title } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  const { data } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
 
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{data?.title}</title>
       </Head>
       <Grid container spacing={2}>
         <Grid item lg={8} md={6} sm={12}>

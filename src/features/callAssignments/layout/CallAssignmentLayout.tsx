@@ -30,15 +30,12 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const {
-    data,
+    data: assignmentData,
     end,
-    endDate,
     setDates,
     setTitle,
     start,
-    startDate,
     state,
-    title,
   } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
 
   const {
@@ -53,7 +50,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     isLoading: callersIsLoading,
   } = useCallers(parseInt(orgId), parseInt(assignmentId));
 
-  if (!data) {
+  if (!assignmentData) {
     return null;
   }
 
@@ -74,11 +71,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
       belowActionButtons={
         <ZUIDateRangePicker
-          endDate={endDate || null}
+          endDate={assignmentData.end_date || null}
           onChange={(startDate, endDate) => {
             setDates(startDate, endDate);
           }}
-          startDate={startDate || null}
+          startDate={assignmentData.start_date || null}
         />
       }
       defaultTab="/"
@@ -156,7 +153,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => setTitle(newTitle)}
-          value={title}
+          value={assignmentData.title}
         />
       }
     >

@@ -24,15 +24,9 @@ export enum CallAssignmentState {
 }
 
 interface UseCallAssignmentReturn {
-  cooldown?: number;
   data: ZetkinCallAssignment | null;
-  disableCallerNotes?: boolean;
   end: () => void;
-  endDate?: string | null;
-  exposeTargetDetails?: boolean;
-  goal?: ZetkinQuery;
   hasTargets: boolean;
-  instructions: string;
   isTargeted: boolean;
   setCallerNotesEnabled: (enabled: boolean) => void;
   setCooldown: (cooldown: number) => void;
@@ -42,10 +36,7 @@ interface UseCallAssignmentReturn {
   setTargets: (query: Partial<ZetkinQuery>) => void;
   setTitle: (newTitle: string) => void;
   start: () => void;
-  startDate?: string | null;
   state: CallAssignmentState;
-  target?: ZetkinQuery;
-  title: string;
 }
 
 export default function useCallAssignment(
@@ -305,18 +296,10 @@ export default function useCallAssignment(
     });
   };
 
-  const data = getData().data;
-
   return {
-    cooldown: data?.cooldown,
-    data,
-    disableCallerNotes: data?.disable_caller_notes,
     end,
-    endDate: data?.end_date,
-    exposeTargetDetails: data?.expose_target_details,
-    goal: data?.goal,
+    ...getData(),
     hasTargets: hasTargets(),
-    instructions: data?.instructions || '',
     isTargeted: isTargeted(),
     setCallerNotesEnabled,
     setCooldown,
@@ -326,9 +309,6 @@ export default function useCallAssignment(
     setTargets,
     setTitle,
     start,
-    startDate: data?.start_date,
     state: getState(),
-    target: data?.target,
-    title: data?.title || '',
   };
 }

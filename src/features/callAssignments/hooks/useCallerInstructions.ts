@@ -25,15 +25,15 @@ export default function useCallerInstructions(
   const key = `callerInstructions-${assignmentId}`;
   const callAssignmentItems =
     store.getState().callAssignments.assignmentList.items;
-  const { data, instructions } = useCallAssignment(orgId, assignmentId);
+  const { data } = useCallAssignment(orgId, assignmentId);
 
   const getInstructions = () => {
     const lsInstructions = localStorage.getItem(key);
 
     if (lsInstructions === null) {
       if (data) {
-        localStorage.setItem(key, instructions);
-        return instructions;
+        localStorage.setItem(key, data.instructions);
+        return data.instructions;
       }
     }
     return lsInstructions || '';

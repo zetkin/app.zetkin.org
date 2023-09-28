@@ -29,12 +29,13 @@ const CallAssignmentTargets = () => {
   const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const { orgId, callAssId } = useNumericRouteParams();
-  const { isTargeted, setTargets, target } = useCallAssignment(
-    orgId,
-    callAssId
-  );
-  const { data: statsData } = useCallAssignmentStats(orgId, callAssId);
+  const { orgId, callAssId: assignmentId } = useNumericRouteParams();
+  const {
+    data: assignmentData,
+    isTargeted,
+    setTargets,
+  } = useCallAssignment(orgId, assignmentId);
+  const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
 
   return (
     <>
@@ -90,7 +91,7 @@ const CallAssignmentTargets = () => {
             setTargets(query);
             setQueryDialogOpen(false);
           }}
-          query={target}
+          query={assignmentData?.target}
         />
       )}
     </>

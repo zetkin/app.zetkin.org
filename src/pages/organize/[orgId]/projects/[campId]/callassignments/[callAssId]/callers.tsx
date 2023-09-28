@@ -64,7 +64,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
   const selectInputRef = useRef<HTMLInputElement>();
   const [selectedCaller, setSelectedCaller] =
     useState<CallAssignmentCaller | null>(null);
-  const { title } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  const { data } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
   const {
     addCaller,
     data: callers,
@@ -86,7 +86,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{data?.title}</title>
       </Head>
       <Box>
         <Paper>

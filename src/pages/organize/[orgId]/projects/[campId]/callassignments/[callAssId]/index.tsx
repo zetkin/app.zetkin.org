@@ -58,7 +58,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
-  const { title } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  const { data } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
   const { statusBarStatsList } = useCallAssignmentStats(
     parseInt(orgId),
     parseInt(assignmentId)
@@ -73,7 +73,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{data?.title}</title>
       </Head>
       <Box>
         <Box mb={2}>

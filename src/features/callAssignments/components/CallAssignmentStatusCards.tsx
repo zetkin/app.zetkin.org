@@ -27,12 +27,14 @@ import { Msg, useMessages } from 'core/i18n';
 const CallAssignmentStatusCards = () => {
   const messages = useMessages(messageIds);
 
-  const { orgId, callAssId } = useNumericRouteParams();
-  const { cooldown, goal, hasTargets, setCooldown, setGoal } =
-    useCallAssignment(orgId, callAssId);
-  const { data: statsData } = useCallAssignmentStats(orgId, callAssId);
+  const { orgId, callAssId: assignmentId } = useNumericRouteParams();
+  const { data, hasTargets, setCooldown, setGoal } = useCallAssignment(
+    orgId,
+    assignmentId
+  );
+  const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
 
-  const cooldownNumber = cooldown ?? null;
+  const cooldownNumber = data?.cooldown ?? null;
   const viewsModel: ViewBrowserModel = useModel(
     (env) => new ViewBrowserModel(env, orgId)
   );
@@ -76,7 +78,10 @@ const CallAssignmentStatusCards = () => {
                     <ClickAwayListener
                       onClickAway={() => {
                         setAnchorEl(null);
-                        if (newCooldown != null && newCooldown != cooldown) {
+                        if (
+                          newCooldown != null &&
+                          newCooldown != data?.cooldown
+                        ) {
                           setCooldown(newCooldown);
                         }
                       }}
@@ -189,7 +194,7 @@ const CallAssignmentStatusCards = () => {
                   setGoal(query);
                   setQueryDialogOpen(false);
                 }}
-                query={goal}
+                query={data?.goal}
               />
             )}
           </Box>
