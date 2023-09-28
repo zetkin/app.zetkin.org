@@ -259,7 +259,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     width: 50,
   };
 
-  const [columnOrder, setColumnOrder] = useState<number[]>([]);
+  const [columnOrder, setColumnOrder] = useState<number[]>(
+    columns.map((col) => col.id)
+  );
 
   const debouncedUpdateColumnOrder = useDebounce((order: number[]) => {
     setColumnOrder(order);
@@ -296,7 +298,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const moveColumn = (field: string, targetIndex: number) => {
     // The column index is offset by 2 compared to the API (avatar and checkbox)
     targetIndex -= 2;
-    const columnOrder = columns.map((col) => col.id);
     const columnId = colIdFromFieldName(field);
     const origIndex = columnOrder.findIndex((colId) => columnId == colId);
 
