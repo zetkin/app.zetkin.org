@@ -32,10 +32,9 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   const {
     data: assignmentData,
     end,
-    setDates,
-    setTitle,
     start,
     state,
+    updateCallAssignment,
   } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
 
   const {
@@ -73,7 +72,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         <ZUIDateRangePicker
           endDate={assignmentData.end_date || null}
           onChange={(startDate, endDate) => {
-            setDates(startDate, endDate);
+            updateCallAssignment({ end_date: endDate, start_date: startDate });
           }}
           startDate={assignmentData.start_date || null}
         />
@@ -152,7 +151,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       ]}
       title={
         <ZUIEditTextinPlace
-          onChange={(newTitle) => setTitle(newTitle)}
+          onChange={(newTitle) => updateCallAssignment({ title: newTitle })}
           value={assignmentData.title}
         />
       }

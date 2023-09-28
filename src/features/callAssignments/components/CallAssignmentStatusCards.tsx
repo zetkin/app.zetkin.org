@@ -30,8 +30,8 @@ const CallAssignmentStatusCards = () => {
   const { orgId, callAssId: assignmentId } = useNumericRouteParams();
   const {
     data: assignmentData,
-    setCooldown,
-    setGoal,
+    updateGoal: setGoal,
+    updateCallAssignment,
   } = useCallAssignment(orgId, assignmentId);
   const { data: statsData, hasTargets } = useCallAssignmentStats(
     orgId,
@@ -86,7 +86,7 @@ const CallAssignmentStatusCards = () => {
                           newCooldown != null &&
                           newCooldown != assignmentData?.cooldown
                         ) {
-                          setCooldown(newCooldown);
+                          updateCallAssignment({ cooldown: newCooldown });
                         }
                       }}
                     >
@@ -111,8 +111,13 @@ const CallAssignmentStatusCards = () => {
                             onKeyDown={(ev) => {
                               if (ev.key === 'Enter') {
                                 setAnchorEl(null);
-                                if (newCooldown != null) {
-                                  setCooldown(newCooldown);
+                                if (
+                                  newCooldown != null &&
+                                  newCooldown != assignmentData?.cooldown
+                                ) {
+                                  updateCallAssignment({
+                                    cooldown: newCooldown,
+                                  });
                                 }
                               } else if (ev.key === 'Escape') {
                                 setAnchorEl(null);

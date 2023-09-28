@@ -33,7 +33,7 @@ const CallAssignmentTargets = () => {
   const {
     data: assignmentData,
     isTargeted,
-    setTargets,
+    updateTargets: setTargets,
   } = useCallAssignment(orgId, assignmentId);
   const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
 

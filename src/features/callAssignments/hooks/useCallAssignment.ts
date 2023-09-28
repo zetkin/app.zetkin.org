@@ -27,15 +27,11 @@ interface UseCallAssignmentReturn {
   data: ZetkinCallAssignment | null;
   end: () => void;
   isTargeted: boolean;
-  setCallerNotesEnabled: (enabled: boolean) => void;
-  setCooldown: (cooldown: number) => void;
-  setDates: (startDate: string | null, endDate: string | null) => void;
-  setGoal: (query: Partial<ZetkinQuery>) => void;
-  setTargetDetailsExposed: (targetDetailsExposed: boolean) => void;
-  setTargets: (query: Partial<ZetkinQuery>) => void;
-  setTitle: (newTitle: string) => void;
+  updateGoal: (query: Partial<ZetkinQuery>) => void;
+  updateTargets: (query: Partial<ZetkinQuery>) => void;
   start: () => void;
   state: CallAssignmentState;
+  updateCallAssignment: (data: Partial<ZetkinCallAssignment>) => void;
 }
 
 export default function useCallAssignment(
@@ -75,7 +71,7 @@ export default function useCallAssignment(
     return !!(data && data.target?.filter_spec?.length != 0);
   };
 
-  const setTargets = (query: Partial<ZetkinQuery>): void => {
+  const updateTargets = (query: Partial<ZetkinQuery>): void => {
     const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
     const callAssignment = caItem?.data;
 
@@ -100,7 +96,7 @@ export default function useCallAssignment(
     }
   };
 
-  const setGoal = (query: Partial<ZetkinQuery>): void => {
+  const updateGoal = (query: Partial<ZetkinQuery>): void => {
     // TODO: Refactor once SmartSearch is supported in redux framework
     const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
     const callAssignment = caItem?.data;
@@ -145,30 +141,6 @@ export default function useCallAssignment(
     return new PromiseFuture(promise);
   };
 
-  const setCooldown = (cooldown: number) => {
-    const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
-    const callAssignment = caItem?.data;
-
-    //if cooldown has not changed, do nothing.
-    if (cooldown === callAssignment?.cooldown) {
-      return;
-    }
-
-    updateCallAssignment({ cooldown });
-  };
-
-  const setCallerNotesEnabled = (enabled: boolean) => {
-    updateCallAssignment({
-      disable_caller_notes: !enabled,
-    });
-  };
-
-  const setTargetDetailsExposed = (exposeTargetDetails: boolean) => {
-    updateCallAssignment({
-      expose_target_details: exposeTargetDetails,
-    });
-  };
-
   const getState = () => {
     const { data } = getData();
     if (!data) {
@@ -202,10 +174,6 @@ export default function useCallAssignment(
     } else {
       return CallAssignmentState.DRAFT;
     }
-  };
-
-  const setTitle = (newTitle: string) => {
-    updateCallAssignment({ title: newTitle });
   };
 
   const start = () => {
@@ -281,25 +249,14 @@ export default function useCallAssignment(
     });
   };
 
-  const setDates = (startDate: string | null, endDate: string | null) => {
-    updateCallAssignment({
-      end_date: endDate,
-      start_date: startDate,
-    });
-  };
-
   return {
     end,
     ...getData(),
     isTargeted: isTargeted(),
-    setCallerNotesEnabled,
-    setCooldown,
-    setDates,
-    setGoal,
-    setTargetDetailsExposed,
-    setTargets,
-    setTitle,
     start,
     state: getState(),
+    updateCallAssignment,
+    updateGoal,
+    updateTargets,
   };
 }
