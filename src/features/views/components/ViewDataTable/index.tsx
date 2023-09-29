@@ -11,6 +11,10 @@ import {
   GridCellParams,
   GridColDef,
   GridSortModel,
+  getGridBooleanOperators,
+  getGridDateOperators,
+  getGridNumericOperators,
+  getGridStringOperators,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
@@ -31,6 +35,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { colIdFromFieldName, viewQuickSearch } from './utils';
 import {
+  COLUMN_TYPE,
   SelectedViewColumn,
   ZetkinView,
 } from 'features/views/components/types';
@@ -92,6 +97,14 @@ const useStyles = makeStyles((theme) => ({
     animation: '$addedRowAnimation 2s',
   },
 }));
+
+const getFilterOperators = (col: ZetkinViewColumn) => {
+  if (COLUMN_TYPE.LOCAL_BOOL === col.type) {
+    return getGridBooleanOperators();
+  } else {
+    return getGridStringOperators().filter((op) => op.value !== 'isAnyOf');
+  }
+};
 
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
@@ -295,6 +308,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     avatarColumn,
     ...columns.map((col) => ({
       field: `col_${col.id}`,
+      filterOperators: getFilterOperators(col),
       headerName: col.title,
       minWidth: 100,
       resizable: true,
