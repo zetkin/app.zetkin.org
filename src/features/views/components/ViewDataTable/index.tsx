@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import {
   DataGridPro,
   DataGridProProps,
-  getGridBooleanOperators,
+  getGridDefaultColumnTypes,
   getGridStringOperators,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GridCellEditStartReasons,
@@ -33,7 +33,6 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { colIdFromFieldName, viewQuickSearch } from './utils';
 import {
-  COLUMN_TYPE,
   SelectedViewColumn,
   ZetkinView,
 } from 'features/views/components/types';
@@ -96,11 +95,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getFilterOperators = (col: ZetkinViewColumn) => {
-  if (COLUMN_TYPE.LOCAL_BOOL === col.type) {
-    return getGridBooleanOperators();
+const getFilterOperators = (col: Omit<GridColDef<any, any, any>, 'field'>) => {
+  const stringOperators = getGridStringOperators().filter(
+    (op) => op.value !== 'isAnyOf'
+  );
+  if (col.filterOperators) {
+    return col.filterOperators;
   } else {
-    return getGridStringOperators().filter((op) => op.value !== 'isAnyOf');
+    const defaultTypes = getGridDefaultColumnTypes();
+    if (col.type && col.type in defaultTypes) {
+      return (
+        defaultTypes[col.type].filterOperators?.filter(
+          (op) => op.value !== 'isAnyOf'
+        ) ?? stringOperators
+      );
+    } else {
+      return stringOperators;
+    }
   }
 };
 
@@ -306,7 +317,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     avatarColumn,
     ...columns.map((col) => ({
       field: `col_${col.id}`,
-      filterOperators: getFilterOperators(col),
+      filterOperators: getFilterOperators(
+        columnTypes[col.type].getColDef(col, accessLevel)
+      ),
       headerName: col.title,
       minWidth: 100,
       resizable: true,
