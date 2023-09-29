@@ -70,8 +70,8 @@ module.exports = {
         permanent: false,
       },
       {
-        source: '/organize/:orgId/views/:path*',
-        destination: 'organize/:orgId/lists/:path*',
+        source: '/organize/:orgId/people/views/:path*',
+        destination: '/organize/:orgId/people/lists/:path*',
         permanent: false,
       }
     ];
