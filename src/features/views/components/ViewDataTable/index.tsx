@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import {
   DataGridPro,
   DataGridProProps,
+  getGridDefaultColumnTypes,
+  getGridStringOperators,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GridCellEditStartReasons,
   GridCellParams,
@@ -92,6 +94,26 @@ const useStyles = makeStyles((theme) => ({
     animation: '$addedRowAnimation 2s',
   },
 }));
+
+const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
+  const stringOperators = getGridStringOperators().filter(
+    (op) => op.value !== 'isAnyOf'
+  );
+  if (col.filterOperators) {
+    return col.filterOperators;
+  } else {
+    const defaultTypes = getGridDefaultColumnTypes();
+    if (col.type && col.type in defaultTypes) {
+      return (
+        defaultTypes[col.type].filterOperators?.filter(
+          (op) => op.value !== 'isAnyOf'
+        ) ?? stringOperators
+      );
+    } else {
+      return stringOperators;
+    }
+  }
+};
 
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
@@ -296,6 +318,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     avatarColumn,
     ...columns.map((col) => ({
       field: `col_${col.id}`,
+      filterOperators: getFilterOperators(
+        columnTypes[col.type].getColDef(col, accessLevel)
+      ),
       headerName: col.title,
       minWidth: 100,
       resizable: true,
