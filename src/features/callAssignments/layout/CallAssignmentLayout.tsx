@@ -9,11 +9,12 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import useCallers from '../hooks/useCallers';
-import useCallAssignment, {
+import useCallAssignmentState, {
   CallAssignmentState,
-} from '../hooks/useCallAssignment';
+} from '../hooks/useCallAssignmentState';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -33,7 +34,6 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     data: assignmentData,
     end,
     start,
-    state,
     updateCallAssignment,
   } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
 
@@ -48,6 +48,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     error: callersError,
     isLoading: callersIsLoading,
   } = useCallers(parseInt(orgId), parseInt(assignmentId));
+
+  const state = useCallAssignmentState(parseInt(orgId), parseInt(assignmentId));
 
   if (!assignmentData) {
     return null;

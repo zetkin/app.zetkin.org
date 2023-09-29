@@ -3,10 +3,11 @@ import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
 import { STATUS_COLORS } from './ActivityListItem';
+import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
 import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
-import useCallAssignment, {
+import useCallAssignmentState, {
   CallAssignmentState,
-} from 'features/callAssignments/hooks/useCallAssignment';
+} from 'features/callAssignments/hooks/useCallAssignmentState';
 
 interface CallAssignmentListItemProps {
   orgId: number;
@@ -17,11 +18,12 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   caId,
   orgId,
 }) => {
-  const { data: assignmentData, state } = useCallAssignment(orgId, caId);
+  const { data: assignmentData } = useCallAssignment(orgId, caId);
   const { data: stats, isLoading: statsLoading } = useCallAssignmentStats(
     orgId,
     caId
   );
+  const state = useCallAssignmentState(orgId, caId);
 
   if (!assignmentData) {
     return null;

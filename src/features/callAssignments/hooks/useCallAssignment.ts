@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient } from 'core/hooks';
-import useCallAssignmentStats from './useCallAssignmentStats';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
@@ -14,15 +13,6 @@ import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import { useSelector, useStore } from 'react-redux';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
-export enum CallAssignmentState {
-  ACTIVE = 'active',
-  CLOSED = 'closed',
-  DRAFT = 'draft',
-  OPEN = 'open',
-  SCHEDULED = 'scheduled',
-  UNKNOWN = 'unknown',
-}
-
 interface UseCallAssignmentReturn {
   data: ZetkinCallAssignment | null;
   end: () => void;
@@ -30,7 +20,6 @@ interface UseCallAssignmentReturn {
   updateGoal: (query: Partial<ZetkinQuery>) => void;
   updateTargets: (query: Partial<ZetkinQuery>) => void;
   start: () => void;
-  state: CallAssignmentState;
   updateCallAssignment: (data: Partial<ZetkinCallAssignment>) => void;
 }
 
@@ -44,7 +33,6 @@ export default function useCallAssignment(
     (state: RootState) => state.callAssignments
   );
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
-  const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
 
   const getData = (): IFuture<CallAssignmentData> => {
     const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
@@ -141,41 +129,6 @@ export default function useCallAssignment(
     return new PromiseFuture(promise);
   };
 
-  const getState = () => {
-    const { data } = getData();
-    if (!data) {
-      return CallAssignmentState.UNKNOWN;
-    }
-
-    if (data.start_date) {
-      const startDate = new Date(data.start_date);
-      const now = new Date();
-      if (startDate > now) {
-        return CallAssignmentState.SCHEDULED;
-      } else {
-        if (data.end_date) {
-          const endDate = new Date(data.end_date);
-          if (endDate < now) {
-            return CallAssignmentState.CLOSED;
-          }
-        }
-
-        if (!statsData?.mostRecentCallTime) {
-          return CallAssignmentState.OPEN;
-        }
-
-        const mostRecentCallTime = new Date(statsData.mostRecentCallTime);
-        const diff = now.getTime() - mostRecentCallTime.getTime();
-
-        return diff < 10 * 60 * 1000
-          ? CallAssignmentState.ACTIVE
-          : CallAssignmentState.OPEN;
-      }
-    } else {
-      return CallAssignmentState.DRAFT;
-    }
-  };
-
   const start = () => {
     const { data } = getData();
     if (!data) {
@@ -254,7 +207,6 @@ export default function useCallAssignment(
     ...getData(),
     isTargeted: isTargeted(),
     start,
-    state: getState(),
     updateCallAssignment,
     updateGoal,
     updateTargets,
