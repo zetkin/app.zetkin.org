@@ -15,8 +15,8 @@ describe('useModelsFromQueryString()', () => {
       expect(result.current.filterModel).toMatchObject({
         items: [
           {
-            columnField: 'first_name',
-            operatorValue: 'contains',
+            field: 'first_name',
+            operator: 'contains',
             value: 'Clara',
           },
         ],
@@ -33,13 +33,13 @@ describe('useModelsFromQueryString()', () => {
       expect(result.current.filterModel).toMatchObject({
         items: [
           {
-            columnField: 'name',
-            operatorValue: 'contains',
+            field: 'name',
+            operator: 'contains',
             value: 'Clara',
           },
           {
-            columnField: 'name',
-            operatorValue: 'contains',
+            field: 'name',
+            operator: 'contains',
             value: 'Zetkin',
           },
         ],

@@ -46,6 +46,7 @@ export enum CALL_OPERATOR {
 export enum OPERATION {
   ADD = 'add',
   SUB = 'sub',
+  LIMIT = 'limit',
 }
 
 export enum QUANTITY {

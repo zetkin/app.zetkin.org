@@ -54,7 +54,7 @@ const SurveySubmissionsList = ({
       flex: 1,
       headerName: messages.submissions[messageId](),
       renderCell: (
-        params: GridRenderCellParams<string, ZetkinSurveySubmission>
+        params: GridRenderCellParams<ZetkinSurveySubmission, string>
       ) => {
         if (params.row.respondent !== null) {
           return <Box>{params.row.respondent[field]}</Box>;
@@ -82,7 +82,7 @@ const SurveySubmissionsList = ({
       flex: 1,
       headerName: messages.submissions.dateColumn(),
       renderCell: (
-        params: GridRenderCellParams<string, ZetkinSurveySubmission>
+        params: GridRenderCellParams<ZetkinSurveySubmission, string>
       ) => {
         return <ZUIRelativeTime datetime={params.row.submitted} />;
       },
@@ -95,16 +95,16 @@ const SurveySubmissionsList = ({
       headerName: messages.submissions.personRecordColumn(),
       renderCell: (
         params: GridRenderCellParams<
-          ZetkinSurveySubmission['respondent'],
-          ZetkinSurveySubmission
+          ZetkinSurveySubmission,
+          ZetkinSurveySubmission['respondent']
         >
       ) => {
         return <ReadCell row={params.row} />;
       },
       renderEditCell: (
         params: GridRenderCellParams<
-          ZetkinSurveySubmission['respondent'],
-          ZetkinSurveySubmission
+          ZetkinSurveySubmission,
+          ZetkinSurveySubmission['respondent']
         >
       ) => {
         return <EditCell row={params.row} />;
@@ -221,8 +221,7 @@ const SurveySubmissionsList = ({
         columns={gridColumns}
         disableColumnFilter
         disableColumnMenu
-        experimentalFeatures={{ newEditingApi: true }}
-        getCellClassName={(params: GridCellParams<string>) => {
+        getCellClassName={(params: GridCellParams<ZetkinSurveySubmission>) => {
           return params.field === 'respondent' ? '' : 'pointer';
         }}
         onCellClick={(params) => {

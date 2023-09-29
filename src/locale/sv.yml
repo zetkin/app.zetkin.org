@@ -698,10 +698,10 @@ feat:
             närsomhelt.
           two: Ta bort personer som blivit ringda åtminstone 1 gång i uppdraget 'Aktivera
             gamla medlemmar' under de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som {callSelect} minst {minTimesInput}
+        inputString: '{addRemoveSelect} personer som {callSelect} minst
           {minTimes} i {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
-        minTimesInput: '{minTimesInput}'
+        minTimesInput: '{input} {minTimes, plural, one {gång} other {gånger}}'
       campaignParticipation:
         activitySelect:
           activity: typ "{activity}"

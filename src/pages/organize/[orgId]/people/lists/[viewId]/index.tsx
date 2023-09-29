@@ -17,7 +17,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 const scaffoldOptions = {
   allowNonOfficials: true,
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people.views'],
+  localeScope: ['layout.organize', 'pages.people.lists'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
           viewId,
         },
         redirect: {
-          destination: `/organize/${orgId}/people/views/${viewId}/shared`,
+          destination: `/organize/${orgId}/people/lists/${viewId}/shared`,
           permament: false,
         },
       };

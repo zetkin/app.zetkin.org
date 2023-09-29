@@ -6,6 +6,7 @@ import {
   Call,
   CheckBoxOutlined,
   Event,
+  FilterAlt,
   LocalOfferOutlined,
   PersonAddAlt,
   PersonOutlined,
@@ -64,6 +65,8 @@ export default function getFilterComponents(
     filterOperatorIcon = undefined;
   } else if (filter.op === OPERATION.SUB) {
     filterOperatorIcon = <Remove color="secondary" fontSize="small" />;
+  } else if (filter.op === OPERATION.LIMIT) {
+    filterOperatorIcon = <FilterAlt color="secondary" fontSize="small" />;
   }
 
   //Uses CALL_BLOCKED as default

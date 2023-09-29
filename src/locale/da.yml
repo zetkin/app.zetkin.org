@@ -596,7 +596,7 @@ feat:
             som helst opgave til.
           two: Fjern personer, der er blevet ringet op mindst 1 gang i opgaven 'Aktiver
             gamle medlemmer' i løbet af de sidste 30 dage.
-        inputString: '{addRemoveSelect} personer som {callSelect} mindst {minTimes}
+        inputString: '{addRemoveSelect} personer som {callSelect} mindst
           {minTimes} i {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {gange}}'
         minTimesInput: '{input} {minTimes, plural, one {gang} other {gange}}'

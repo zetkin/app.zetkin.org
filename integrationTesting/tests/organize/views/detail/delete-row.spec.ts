@@ -33,7 +33,7 @@ test.describe('View detail page', () => {
 
     const removeButton = 'data-testid=ViewDataTableToolbar-removeFromSelection';
     const confirmButtonInModal = 'button:has-text("confirm")';
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Show toolbar button on row selection
     await expect(page.locator(removeButton)).toBeHidden();

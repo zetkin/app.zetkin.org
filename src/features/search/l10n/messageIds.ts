@@ -12,6 +12,6 @@ export default makeMessages('feat.search', {
     project: m('Project'),
     survey: m('Survey'),
     task: m('Task'),
-    view: m('View'),
+    view: m('List'),
   },
 });

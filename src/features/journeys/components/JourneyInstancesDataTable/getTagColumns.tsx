@@ -1,6 +1,5 @@
 import {
   GridCellParams,
-  GridCellValue,
   GridColDef,
   GridFilterItem,
   GridRenderCellParams,
@@ -25,9 +24,7 @@ const has = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (
-    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
-  ) => {
+  return (params: GridCellParams<ZetkinJourneyInstance>) => {
     if (!item.value) {
       return true;
     }
@@ -44,38 +41,29 @@ const doesNotHave = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (
-    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
-  ) => {
+  return (params: GridCellParams<ZetkinJourneyInstance>) => {
     if (!item.value) {
       return true;
     }
-
     const tags = col.tagsGetter(params.row.tags);
 
-    return !!tags.find((tag) => {
-      return tag.id.toString() !== item.value;
+    return !tags.some((tag) => {
+      return tag.id.toString() === item.value;
     });
   };
 };
 
 const isEmpty = (col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn) => {
-  return (
-    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
-  ) => {
+  return (params: GridCellParams<ZetkinJourneyInstance>) => {
     const tags = col.tagsGetter(params.row.tags);
 
     return tags.length === 0;
   };
 };
 
-const sortByTagName = (value0: GridCellValue, value1: GridCellValue) => {
-  const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
-    t0.title.localeCompare(t1.title)
-  );
-  const tags1 = (value1 as ZetkinTag[]).sort((t0, t1) =>
-    t0.title.localeCompare(t1.title)
-  );
+const sortByTagName = (value0: ZetkinTag[], value1: ZetkinTag[]) => {
+  const tags0 = value0.sort((t0, t1) => t0.title.localeCompare(t1.title));
+  const tags1 = value1.sort((t0, t1) => t0.title.localeCompare(t1.title));
 
   const tagName0 = tags0[0]?.title ?? '';
   const tagName1 = tags1[0]?.title ?? '';
@@ -96,10 +84,9 @@ const getTagColumns = (
   journeyInstances: ZetkinJourneyInstance[],
   tagColumns: JourneyTagColumnData[]
 ): GridColDef[] => {
-  const colDefs: GridColDef[] = [];
+  const colDefs: GridColDef<ZetkinJourneyInstance>[] = [];
 
   tagColumns.forEach((colData) => {
-    fetch;
     const col = makeJourneyTagColumn(colData);
 
     if (col.type == JourneyTagColumnType.TAG_GROUP) {

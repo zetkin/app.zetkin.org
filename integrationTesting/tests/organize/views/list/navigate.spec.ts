@@ -30,7 +30,7 @@ test.describe('Views list page', () => {
     ]);
 
     await expect(page.url()).toEqual(
-      appUri + `/organize/1/people/views/${AllMembers.id}`
+      appUri + `/organize/1/people/lists/${AllMembers.id}`
     );
   });
 });

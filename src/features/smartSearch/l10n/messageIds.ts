@@ -27,7 +27,7 @@ export default makeMessages('feat.smartSearch', {
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
     person_tags: m('Based on their tags'),
-    person_view: m('People from a view'),
+    person_view: m('People from a list'),
     random: m('A random selection of people'),
     sub_query: m('Based on another Smart Search query'),
     survey_option: m(
@@ -264,8 +264,8 @@ export default makeMessages('feat.smartSearch', {
     },
     personView: {
       examples: {
-        one: m('Add people who are in the view "Active Members 2022".'),
-        two: m('Remove people who are not in the view "Active Members 2022".'),
+        one: m('Add people who are in the list "Active Members 2022".'),
+        two: m('Remove people who are not in the list "Active Members 2022".'),
       },
       inSelect: {
         in: m('in'),
@@ -275,14 +275,15 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         inSelect: ReactElement;
         viewSelect: ReactElement | string;
-      }>('{addRemoveSelect} people who are {inSelect} the view {viewSelect}.'),
+      }>('{addRemoveSelect} people who are {inSelect} the list {viewSelect}.'),
       viewSelect: {
-        none: m("This organization doesn't have any views yet"),
+        none: m("This organization doesn't have any lists yet"),
       },
     },
     random: {
       addLimitRemoveSelect: {
         add: m('add'),
+        limit: m('limit to'),
         sub: m('remove'),
       },
       examples: {
@@ -568,6 +569,7 @@ export default makeMessages('feat.smartSearch', {
   },
   operators: {
     add: m('Add'),
+    limit: m('Limit to'),
     sub: m('Remove'),
   },
   quantity: {

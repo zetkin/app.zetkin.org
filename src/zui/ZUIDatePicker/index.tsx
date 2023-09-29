@@ -141,10 +141,8 @@ const ZUIDatePicker: FC<ZUIDatePickerProps> = ({ onChange, date }) => {
               </Box>
               <StaticDatePicker
                 displayStaticWrapperAs="desktop"
-                label="date range"
                 minDate={dayjs('1800-01-01')}
                 onChange={(newValue: Dayjs | null) => setValue(newValue)}
-                renderInput={() => <></>}
                 value={value}
               />
             </Box>

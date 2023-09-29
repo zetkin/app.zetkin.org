@@ -22,7 +22,7 @@ const TextElement: React.FunctionComponent<RenderElementProps> = ({
   if (element.type === 'bulleted-list') {
     return (
       <ul style={style} {...attributes}>
-        {children}{' '}
+        {children}
       </ul>
     );
   }

@@ -29,7 +29,7 @@ test.describe('View detail page', () => {
     page,
     appUri,
   }) => {
-    await page.goto(appUri + '/organize/1/people/views/1');
+    await page.goto(appUri + '/organize/1/people/lists/1');
     expect(
       await page.locator('text=All KPD members >> visible=true').count()
     ).toEqual(1);

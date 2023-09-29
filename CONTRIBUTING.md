@@ -33,7 +33,7 @@ When you take on an issue, write a short comment on the issue to let others know
 you're working on it, so that it isn't taken on by someone else as well.
 
 ## 2. Code style and formatting
-In order to keep things consistent why try to automate as much as possible when it comes
+In order to keep things consistent we try to automate as much as possible when it comes
 to code style and formatting.
 
 ### Linting
