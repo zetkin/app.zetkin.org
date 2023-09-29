@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getFilterOperators = (col: Omit<GridColDef<any, any, any>, 'field'>) => {
+const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
   const stringOperators = getGridStringOperators().filter(
     (op) => op.value !== 'isAnyOf'
   );
