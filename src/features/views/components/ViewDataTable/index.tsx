@@ -6,15 +6,13 @@ import { useRouter } from 'next/router';
 import {
   DataGridPro,
   DataGridProProps,
+  getGridBooleanOperators,
+  getGridStringOperators,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GridCellEditStartReasons,
   GridCellParams,
   GridColDef,
   GridSortModel,
-  getGridBooleanOperators,
-  getGridDateOperators,
-  getGridNumericOperators,
-  getGridStringOperators,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
