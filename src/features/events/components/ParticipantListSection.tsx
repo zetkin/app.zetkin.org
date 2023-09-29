@@ -373,6 +373,8 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             '&:hover svg': { display: 'inline-block' },
             cursor: 'pointer',
           },
+          // '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+          // },
         }}
       />
     </>
