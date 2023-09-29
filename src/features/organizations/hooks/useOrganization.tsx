@@ -7,7 +7,7 @@ import { useApiClient, useEnv } from 'core/hooks';
 
 interface UseOrganizationReturn {
   data: ZetkinOrganization | null;
-  error: unknown;
+  error: unknown | null;
   isLoading: boolean;
 }
 
