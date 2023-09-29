@@ -1,11 +1,9 @@
 import makeStyles from '@mui/styles/makeStyles';
 import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
-import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
@@ -39,6 +37,7 @@ import { useEffect, useState } from 'react';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 
@@ -91,10 +90,11 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
   const [open, setOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
+  const { data, error, isLoading } = useOrganization(orgId);
 
-  const model: OrganizationsDataModel = useModel(
-    (env) => new OrganizationsDataModel(env)
-  );
+  const handleExpansion = () => {
+    setChecked(!checked);
+  };
 
   useEffect(() => {
     if (lastOpen != open) {
@@ -109,11 +109,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     }
     setOpen(!open);
     setLastOpen(!open);
-  };
-
-  const handleExpansion = () => {
-    model.getOrganizationsTree();
-    setChecked(!checked);
   };
 
   const menuItemsMap = [
@@ -168,81 +163,93 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               {!open && !hover && (
                 <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               )}
-              {open && (
-                <ZUIFuture future={model.getOrganization(orgId)}>
-                  {(data) => (
-                    <>
-                      <Box
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                        }}
-                      >
-                        {!showOrgSwitcher && (
-                          <>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                width: '48px',
-                              }}
-                            >
-                              {hover ? (
-                                <IconButton onClick={handleClick}>
-                                  <KeyboardDoubleArrowLeftOutlined />
-                                </IconButton>
-                              ) : (
-                                <Avatar
-                                  alt="icon"
-                                  src={`/api/orgs/${orgId}/avatar`}
-                                />
-                              )}
-                            </Box>
-                            <Typography variant="h6">{data.title}</Typography>
-                          </>
-                        )}
-                        {showOrgSwitcher && (
-                          <TextField
-                            fullWidth
-                            InputProps={{
-                              endAdornment:
-                                searchString.length > 0 ? (
-                                  <Close
-                                    color="secondary"
-                                    onClick={() => setSearchString('')}
-                                    sx={{ cursor: 'pointer' }}
-                                  />
+              <ZUIFuture
+                future={{
+                  data: data,
+                  error: error,
+                  isLoading: isLoading,
+                }}
+              >
+                {(data) => (
+                  <>
+                    {open && (
+                      <>
+                        <Box
+                          sx={{
+                            alignItems: 'center',
+                            display: 'flex',
+                          }}
+                        >
+                          {!showOrgSwitcher && (
+                            <>
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  width: '48px',
+                                }}
+                              >
+                                {hover ? (
+                                  <IconButton onClick={handleClick}>
+                                    <KeyboardDoubleArrowLeftOutlined />
+                                  </IconButton>
                                 ) : (
-                                  ''
+                                  <Avatar
+                                    alt="icon"
+                                    src={`/api/orgs/${orgId}/avatar`}
+                                  />
+                                )}
+                              </Box>
+                              <Typography variant="h6">{data.title}</Typography>
+                            </>
+                          )}
+
+                          {showOrgSwitcher && (
+                            <TextField
+                              fullWidth
+                              InputProps={{
+                                endAdornment:
+                                  searchString.length > 0 ? (
+                                    <Close
+                                      color="secondary"
+                                      onClick={() => setSearchString('')}
+                                      sx={{ cursor: 'pointer' }}
+                                    />
+                                  ) : (
+                                    ''
+                                  ),
+                                startAdornment: (
+                                  <FilterListOutlined
+                                    color="secondary"
+                                    sx={{ marginRight: '0.5em' }}
+                                  />
                                 ),
-                              startAdornment: (
-                                <FilterListOutlined
-                                  color="secondary"
-                                  sx={{ marginRight: '0.5em' }}
-                                />
-                              ),
-                            }}
-                            onChange={(e) => setSearchString(e.target.value)}
-                            placeholder={messages.organizeSidebar.filter()}
-                            value={searchString}
-                          />
-                        )}
-                      </Box>
-                      <Box sx={{ display: open ? 'flex' : 'none' }}>
-                        <IconButton onClick={handleExpansion}>
-                          {checked ? <ExpandLess /> : <ExpandMore />}
-                        </IconButton>
-                      </Box>
-                    </>
-                  )}
-                </ZUIFuture>
-              )}
+                              }}
+                              onChange={(e) => setSearchString(e.target.value)}
+                              placeholder={messages.organizeSidebar.filter()}
+                              value={searchString}
+                            />
+                          )}
+                        </Box>
+
+                        <Box sx={{ display: open ? 'flex' : 'none' }}>
+                          <IconButton onClick={handleExpansion}>
+                            {checked ? <ExpandLess /> : <ExpandMore />}
+                          </IconButton>
+                        </Box>
+                      </>
+                    )}
+                  </>
+                )}
+              </ZUIFuture>
             </Box>
-            <OrganizationSwitcher
-              open={showOrgSwitcher}
-              orgId={orgId}
-              searchString={searchString}
-            />
+            {checked && (
+              <OrganizationSwitcher
+                open={showOrgSwitcher}
+                orgId={orgId}
+                searchString={searchString}
+              />
+            )}
           </Box>
           <Box
             sx={{

@@ -10,6 +10,7 @@ import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import { Provider as ReduxProvider } from 'react-redux';
 import { useEffect } from 'react';
@@ -111,10 +112,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
                           <DndProvider backend={HTML5Backend}>
                             <Hydrate state={dehydratedState}>
                               <CssBaseline />
-                              {getLayout(
-                                <Component {...restProps} />,
-                                restProps
-                              )}
+                              <NoSsr>
+                                {getLayout(
+                                  <Component {...restProps} />,
+                                  restProps
+                                )}
+                              </NoSsr>
                             </Hydrate>
                           </DndProvider>
                         </EventPopperProvider>

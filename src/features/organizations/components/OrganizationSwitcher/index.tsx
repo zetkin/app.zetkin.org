@@ -13,6 +13,7 @@ import OrganizationTree from '../OrganizationTree';
 import RecentOrganizations from '../RecentOrganizations';
 import SearchResults from '../SearchResults';
 import { useMessages } from 'core/i18n';
+import useOrganizationsTree from 'features/organizations/hooks/useOrganizationsTree';
 import useOrgSwitcher from './useOrgSwitcher';
 
 interface OrganizationSwitcherProps {
@@ -28,6 +29,7 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const organizations = useOrganizationsTree();
 
   const {
     filteredAllOrgs,
@@ -105,7 +107,7 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
           />
         </Box>
       )}
-      {showOrgTree && (
+      {showOrgTree && organizations && (
         <Box>
           <Typography fontSize={12} m={1} variant="body2">
             {messages.sidebar.allOrganizations().toLocaleUpperCase()}
