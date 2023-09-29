@@ -138,7 +138,9 @@ export default function useCallers(
 
   return {
     addCaller,
-    ...getFilteredCallers(),
+    data: getFilteredCallers().data,
+    error: getFilteredCallers().error,
+    isLoading: getFilteredCallers().isLoading,
     removeCaller,
     setCallerTags,
   };

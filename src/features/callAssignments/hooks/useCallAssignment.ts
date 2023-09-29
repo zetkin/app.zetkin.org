@@ -203,8 +203,8 @@ export default function useCallAssignment(
   };
 
   return {
+    data: getData().data,
     end,
-    ...getData(),
     isTargeted: isTargeted(),
     start,
     updateCallAssignment,

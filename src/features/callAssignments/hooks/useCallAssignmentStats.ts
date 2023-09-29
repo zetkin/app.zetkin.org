@@ -126,8 +126,10 @@ export default function useCallAssignmentStats(
   };
 
   return {
-    ...getStats(),
+    data: getStats().data,
+    error: getStats().error,
     hasTargets: hasTargets(),
+    isLoading: getStats().isLoading,
     statusBarStatsList: getStatusBarStatsList(),
   };
 }
