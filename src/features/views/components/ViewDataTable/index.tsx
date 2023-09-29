@@ -12,7 +12,7 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FunctionComponent, useContext, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { Link, useTheme } from '@mui/material';
 
 import columnTypes from './columnTypes';
@@ -297,22 +297,35 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     columns.map((col) => col.id)
   );
 
+  useEffect(() => {
+    const colIds = columns.map((col) => col.id);
+    const addedColIds = colIds.filter((cid) => !columnOrder.includes(cid));
+    const removedColIds = columnOrder.filter((cid) => !colIds.includes(cid));
+
+    let newColumnOrder = colIds;
+    if (addedColIds.length > 0) {
+      newColumnOrder = colIds.concat(addedColIds);
+    }
+    if (removedColIds.length > 0) {
+      newColumnOrder = colIds.filter((cid) => !removedColIds.includes(cid));
+    }
+    setColumnOrder(newColumnOrder);
+  }, [columns]);
+
   const debouncedUpdateColumnOrder = useDebounce((order: number[]) => {
     setColumnOrder(order);
     return model.updateColumnOrder(order);
   }, 1000);
 
   let orderedColumns;
-  if (columnOrder.length > 0) {
-    const newColumns: ZetkinViewColumn[] = [];
-    for (const ci of columnOrder) {
-      const col = columns.find((c) => c.id == ci);
-      newColumns.push(col!);
+  const newColumns: ZetkinViewColumn[] = [];
+  for (const ci of columnOrder) {
+    const col = columns.find((c) => c.id == ci);
+    if (col) {
+      newColumns.push(col);
     }
-    orderedColumns = newColumns;
-  } else {
-    orderedColumns = columns;
   }
+  orderedColumns = newColumns;
 
   const unConfiguredGridColumns = [
     avatarColumn,
