@@ -152,7 +152,7 @@ const viewsSlice = createSlice({
       }
     },
     columnAdded: (state, action: PayloadAction<[number, ZetkinViewColumn]>) => {
-      const [viewId, column] = action.payload;
+      const [viewId] = action.payload;
       const colList = state.columnsByViewId[viewId];
       if (colList) {
         colList.isStale = true;
@@ -183,26 +183,35 @@ const viewsSlice = createSlice({
       // Re-arrange columns
       const colList = state.columnsByViewId[viewId];
       if (colList) {
-        const newColListItems = columnOrder.map((colId, idx) => {
-          return colList.items.find((col) => col.id == colId)!;
+        const newColListItems = columnOrder.map((colId) => {
+          const col = colList.items.find((col) => col.id == colId);
+          if (col) {
+            return col;
+          } else {
+            throw new Error('Could not find column!');
+          }
         });
 
         // Re-arrange columns of data-rows
         const rowList = state.rowsByViewId[viewId];
         if (rowList) {
           const newRowListItems = rowList.items.map((row) => {
-            return {
-              ...row,
-              data: {
-                id: row.data!.id,
-                content: columnOrder.map((colId) => {
-                  const idx = colList.items.findIndex(
-                    (col) => col.id == colId
-                  )!;
-                  return row.data?.content[idx];
-                }),
-              },
-            };
+            if (row.data) {
+              return {
+                ...row,
+                data: {
+                  content: columnOrder.map((colId) => {
+                    const idx = colList.items.findIndex(
+                      (col) => col.id == colId
+                    )!;
+                    return row.data?.content[idx];
+                  }),
+                  id: row.data.id,
+                },
+              };
+            } else {
+              return row;
+            }
           });
           state.columnsByViewId[viewId].items = newColListItems;
           state.rowsByViewId[viewId].items = newRowListItems;

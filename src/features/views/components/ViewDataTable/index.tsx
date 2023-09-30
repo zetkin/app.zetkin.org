@@ -12,7 +12,7 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FunctionComponent, useContext, useEffect, useState } from 'react';
+import { FunctionComponent, useContext, useState } from 'react';
 import { Link, useTheme } from '@mui/material';
 
 import columnTypes from './columnTypes';
