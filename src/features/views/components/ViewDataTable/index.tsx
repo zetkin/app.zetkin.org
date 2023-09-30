@@ -293,60 +293,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     width: 50,
   };
 
-  const [columnOrder, setColumnOrder] = useState<number[]>(
-    columns.map((col) => col.id)
-  );
-
-  useEffect(() => {
-    const colIds = columns.map((col) => col.id);
-    const addedColIds = colIds.filter((cid) => !columnOrder.includes(cid));
-    const removedColIds = columnOrder.filter((cid) => !colIds.includes(cid));
-
-    let newColumnOrder = colIds;
-    if (addedColIds.length > 0) {
-      newColumnOrder = colIds.concat(addedColIds);
-    }
-    if (removedColIds.length > 0) {
-      newColumnOrder = colIds.filter((cid) => !removedColIds.includes(cid));
-    }
-    setColumnOrder(newColumnOrder);
-  }, [columns]);
-
   const debouncedUpdateColumnOrder = useDebounce((order: number[]) => {
-    setColumnOrder(order);
     return model.updateColumnOrder(order);
   }, 1000);
-
-  let orderedColumns;
-  const newColumns: ZetkinViewColumn[] = [];
-  for (const ci of columnOrder) {
-    const col = columns.find((c) => c.id == ci);
-    if (col) {
-      newColumns.push(col);
-    }
-  }
-  orderedColumns = newColumns;
-
-  const unConfiguredGridColumns = [
-    avatarColumn,
-    ...orderedColumns.map((col) => ({
-      field: `col_${col.id}`,
-      headerName: col.title,
-      minWidth: 100,
-      resizable: true,
-      sortable: true,
-      width: 150,
-      ...columnTypes[col.type].getColDef(col, accessLevel),
-    })),
-  ];
-  const { columns: gridColumns, setColumnWidth } =
-    useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
 
   const moveColumn = (field: string, targetIndex: number) => {
     // The column index is offset by 2 compared to the API (avatar and checkbox)
     targetIndex -= 2;
     const columnId = colIdFromFieldName(field);
-    const origIndex = columnOrder.findIndex((colId) => columnId == colId);
+    const origIndex = columns.findIndex((col) => col.id == columnId);
+    const columnOrder = columns.map((col) => col.id);
 
     // Remove column and place it in new location
     columnOrder.splice(origIndex, 1);
@@ -357,6 +313,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     ];
     debouncedUpdateColumnOrder(newColumnOrder);
   };
+
+  const unConfiguredGridColumns = [
+    avatarColumn,
+    ...columns.map((col) => ({
+      field: `col_${col.id}`,
+      headerName: col.title,
+      minWidth: 100,
+      resizable: true,
+      sortable: true,
+      width: 150,
+      ...columnTypes[col.type].getColDef(col, accessLevel),
+    })),
+  ];
+
+  const { columns: gridColumns, setColumnWidth } =
+    useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
 
   const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
 

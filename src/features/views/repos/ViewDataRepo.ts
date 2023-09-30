@@ -9,6 +9,7 @@ import {
   columnDeleted,
   columnsLoad,
   columnsLoaded,
+  columnOrderUpdated,
   columnUpdated,
   rowAdded,
   rowRemoved,
@@ -183,6 +184,7 @@ export default class ViewDataRepo {
       `/api/orgs/${orgId}/people/views/${viewId}/column_order`,
       { order: columnOrder }
     );
+    this._store.dispatch(columnOrderUpdated([viewId, columnOrder]));
   }
 
   updateView(

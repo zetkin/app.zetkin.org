@@ -155,9 +155,7 @@ const viewsSlice = createSlice({
       const [viewId, column] = action.payload;
       const colList = state.columnsByViewId[viewId];
       if (colList) {
-        colList.items = colList.items.concat([
-          remoteItem(column.id, { data: column }),
-        ]);
+        colList.isStale = true;
         const rowList = state.rowsByViewId[viewId];
 
         if (rowList) {
@@ -177,6 +175,37 @@ const viewsSlice = createSlice({
           // Empty the view to force a reload
           rowList.items = [];
           rowList.isStale = true;
+        }
+      }
+    },
+    columnOrderUpdated: (state, action: PayloadAction<[number, number[]]>) => {
+      const [viewId, columnOrder] = action.payload;
+      // Re-arrange columns
+      const colList = state.columnsByViewId[viewId];
+      if (colList) {
+        const newColListItems = columnOrder.map((colId, idx) => {
+          return colList.items.find((col) => col.id == colId)!;
+        });
+
+        // Re-arrange columns of data-rows
+        const rowList = state.rowsByViewId[viewId];
+        if (rowList) {
+          const newRowListItems = rowList.items.map((row) => {
+            return {
+              ...row,
+              data: {
+                id: row.data!.id,
+                content: columnOrder.map((colId) => {
+                  const idx = colList.items.findIndex(
+                    (col) => col.id == colId
+                  )!;
+                  return row.data?.content[idx];
+                }),
+              },
+            };
+          });
+          state.columnsByViewId[viewId].items = newColListItems;
+          state.rowsByViewId[viewId].items = newRowListItems;
         }
       }
     },
@@ -484,6 +513,7 @@ export const {
   cellUpdated,
   columnAdded,
   columnDeleted,
+  columnOrderUpdated,
   columnUpdated,
   columnsLoad,
   columnsLoaded,
