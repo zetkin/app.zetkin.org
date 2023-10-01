@@ -53,6 +53,7 @@ import {
 } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import useDebounce from 'utils/hooks/useDebounce';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -314,6 +315,27 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     width: 50,
   };
 
+  const debouncedUpdateColumnOrder = useDebounce((order: number[]) => {
+    return model.updateColumnOrder(order);
+  }, 1000);
+
+  const moveColumn = (field: string, targetIndex: number) => {
+    // The column index is offset by 2 compared to the API (avatar and checkbox)
+    targetIndex -= 2;
+    const columnId = colIdFromFieldName(field);
+    const origIndex = columns.findIndex((col) => col.id == columnId);
+    const columnOrder = columns.map((col) => col.id);
+
+    // Remove column and place it in new location
+    columnOrder.splice(origIndex, 1);
+    const newColumnOrder = [
+      ...columnOrder.slice(0, targetIndex),
+      columnId,
+      ...columnOrder.slice(targetIndex),
+    ];
+    debouncedUpdateColumnOrder(newColumnOrder);
+  };
+
   const unConfiguredGridColumns = [
     avatarColumn,
     ...columns.map((col) => ({
@@ -329,6 +351,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ...columnTypes[col.type].getColDef(col, accessLevel),
     })),
   ];
+
   const { columns: gridColumns, setColumnWidth } =
     useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
 
@@ -456,6 +479,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
               }
             }
           }
+        }}
+        onColumnOrderChange={(params) => {
+          moveColumn(params.column.field, params.targetIndex);
         }}
         onColumnResize={(params) => {
           setColumnWidth(params.colDef.field, params.width);

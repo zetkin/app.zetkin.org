@@ -7,6 +7,7 @@ import {
   cellUpdated,
   columnAdded,
   columnDeleted,
+  columnOrderUpdated,
   columnsLoad,
   columnsLoaded,
   columnUpdated,
@@ -172,6 +173,18 @@ export default class ViewDataRepo {
       Partial<Omit<ZetkinViewColumn, 'id'>>
     >(`/api/orgs/${orgId}/people/views/${viewId}/columns/${columnId}`, data);
     this._store.dispatch(columnUpdated([viewId, column]));
+  }
+
+  async updateColumnOrder(
+    orgId: number,
+    viewId: number,
+    columnOrder: number[]
+  ) {
+    await this._apiClient.patch<{ order: number[] }>(
+      `/api/orgs/${orgId}/people/views/${viewId}/column_order`,
+      { order: columnOrder }
+    );
+    this._store.dispatch(columnOrderUpdated([viewId, columnOrder]));
   }
 
   updateView(
