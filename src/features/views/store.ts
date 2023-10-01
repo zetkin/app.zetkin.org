@@ -2,6 +2,7 @@ import { Call } from 'features/callAssignments/apiTypes';
 import { callUpdated } from 'features/callAssignments/store';
 import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
+import notEmpty from 'utils/notEmpty';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
@@ -183,14 +184,16 @@ const viewsSlice = createSlice({
       // Re-arrange columns
       const colList = state.columnsByViewId[viewId];
       if (colList) {
-        const newColListItems = columnOrder.map((colId) => {
-          const col = colList.items.find((col) => col.id == colId);
-          if (col) {
-            return col;
-          } else {
-            throw new Error('Could not find column!');
-          }
-        });
+        const newColListItems = columnOrder
+          .map((colId) => {
+            const col = colList.items.find((col) => col.id == colId);
+            if (col) {
+              return col;
+            } else {
+              colList.isStale = true;
+            }
+          })
+          .filter(notEmpty);
 
         // Re-arrange columns of data-rows
         const rowList = state.rowsByViewId[viewId];
