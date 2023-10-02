@@ -2,9 +2,10 @@ import { CallAssignmentData } from '../apiTypes';
 import { RootState } from 'core/store';
 import { useApiClient } from 'core/hooks';
 import useCallAssignment from './useCallAssignment';
-import { useStore } from 'react-redux';
+import { useState } from 'react';
 import { callAssignmentUpdate, callAssignmentUpdated } from '../store';
 import { IFuture, PromiseFuture } from 'core/caching/futures';
+import { useSelector, useStore } from 'react-redux';
 
 interface UseCallerInstructionsReturn {
   hasEmptyInstructions: boolean;
@@ -23,9 +24,14 @@ export default function useCallerInstructions(
   const store = useStore<RootState>();
   const apiClient = useApiClient();
   const key = `callerInstructions-${assignmentId}`;
-  const callAssignmentItems =
-    store.getState().callAssignments.assignmentList.items;
+  const callAssignmentSlice = useSelector(
+    (state: RootState) => state.callAssignments
+  );
+  const callAssignmentItems = callAssignmentSlice.assignmentList.items;
   const { data } = useCallAssignment(orgId, assignmentId);
+
+  //Used to force re-render
+  const [pointlessState, setPointlessState] = useState(0);
 
   const getInstructions = () => {
     const lsInstructions = localStorage.getItem(key);
@@ -45,10 +51,14 @@ export default function useCallerInstructions(
     }
 
     localStorage.setItem(key, data?.instructions);
+    //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
+    setPointlessState(pointlessState + 1);
   };
 
   const setInstructions = (instructions: string): void => {
     localStorage.setItem(key, instructions);
+    //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
+    setPointlessState(pointlessState + 1);
   };
 
   const save = (): IFuture<CallAssignmentData> => {

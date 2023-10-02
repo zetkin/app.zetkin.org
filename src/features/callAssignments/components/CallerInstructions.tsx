@@ -43,6 +43,9 @@ const CallerInstructions = ({
 
   const [key, setKey] = useState(1);
 
+  const isSaved = !isSaving && !hasUnsavedChanges && instructions !== '';
+  const isUnsaved = !isSaving && hasUnsavedChanges && !hasEmptyInstructions;
+
   return (
     <Paper
       //These styles are added to enable the editor to grow with the window.
@@ -89,12 +92,12 @@ const CallerInstructions = ({
           </Box>
           <Box alignItems="center" display="flex" justifyContent="flex-end">
             <Box marginRight={2}>
-              {!isSaving && !hasUnsavedChanges && instructions !== '' && (
+              {isSaved && (
                 <Typography>
                   <Msg id={messageIds.conversation.instructions.savedMessage} />
                 </Typography>
               )}
-              {!isSaving && hasUnsavedChanges && !hasEmptyInstructions && (
+              {isUnsaved && (
                 <Typography component="span">
                   <Msg
                     id={messageIds.conversation.instructions.unsavedMessage}
