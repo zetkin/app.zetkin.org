@@ -136,11 +136,13 @@ export default function useCallers(
       });
   };
 
+  const callersFuture = getFilteredCallers();
+
   return {
     addCaller,
-    data: getFilteredCallers().data,
-    error: getFilteredCallers().error,
-    isLoading: getFilteredCallers().isLoading,
+    data: callersFuture.data,
+    error: callersFuture.error,
+    isLoading: callersFuture.isLoading,
     removeCaller,
     setCallerTags,
   };

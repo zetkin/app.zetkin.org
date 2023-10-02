@@ -125,11 +125,13 @@ export default function useCallAssignmentStats(
     return statusBarStatsList;
   };
 
+  const statsFuture = getStats();
+
   return {
-    data: getStats().data,
-    error: getStats().error,
+    data: statsFuture.data,
+    error: statsFuture.error,
     hasTargets: hasTargets(),
-    isLoading: getStats().isLoading,
+    isLoading: statsFuture.isLoading,
     statusBarStatsList: getStatusBarStatsList(),
   };
 }
