@@ -12,28 +12,28 @@ core:
 feat:
   calendar:
     createMenu:
-      singleEvent: Erstelle einzelne Veranstaltung
+      singleEvent: Erstelle einzelne Aktion
     event:
-      events: Veranstaltungen
+      events: Aktionen
       noContactSelected: Kein Kontakt ausgewählt
     eventFilter:
       collapse: ausblenden
       filter: Filtern
       filterOptions:
         actionFilters:
-          missing: Fehlende Kontaktperson
+          missing: fehlende Kontaktperson
           overbooked: überbucht
           pending: ausstehende Anmeldungen
           title: Filtern nach Handlungsbedarf
           underbooked: freie Plätze
           unsent: ausstehende Benachrichtigungen
         eventTypes:
-          title: Filtern nach Veranstaltungsart
+          title: Filtern nach Aktionsart
         stateFilters:
           cancelled: abgesagt
           draft: Entwurf
-          published: Veröffentlicht
-          scheduled: Geplant
+          published: veröffentlicht
+          scheduled: geplant
           title: Filtern nach
       reset: Filter zurücksetzen
       toggle:
@@ -51,16 +51,15 @@ feat:
     selectionBar:
       copy: Kopieren
       deselect: Auswahl aufheben
-      editEvents: Veranstaltungen bearbeiten
+      editEvents: Aktionen bearbeiten
       ellipsisMenu:
         cancel: Absagen
         cancelWarning: Wenn du diese Aktivität löscht, informiere bitte alle Teilnehmenden
           und Angemeldeten darüber.
-        confirmCancel: Möchtest du die ausgewählten Veranstaltungen wirklich absagen?
-        confirmDelete: Möchtest du die ausgewählten Veranstaltungen wirklich löschen?
+        confirmCancel: Möchtest du die ausgewählten Aktionen wirklich absagen?
+        confirmDelete: Möchtest du die ausgewählten Aktionen wirklich löschen?
         delete: Löschen
-        deleteWarning: Nach dem Löschen kannst du auf diese Veranstaltungen nicht
-          mehr zugreifen.
+        deleteWarning: Nach dem Löschen kannst du auf diese Aktionen nicht mehr zugreifen.
         print: Zeitplan drucken
         publish: Veröffentlichen
         unpublish: Verbergen
@@ -164,8 +163,8 @@ feat:
       nothingTomorrow: Morgen ist frei!
       startsTomorrow: startet morgen
       subtitles:
-        endsToday: Endet heute
-        startsToday: Startet heute
+        endsToday: endet heute
+        startsToday: startet heute
       thisWeekCard: Diese Woche
       title: Anstehende Aktivitäten
       todayCard: Heute
@@ -181,18 +180,18 @@ feat:
         calls: Telefonaktionen
         canvasses: Haustüreinsätze
         filter: Filterergebnisse
-        standalones: Einzelne Veranstaltungen
+        standalones: Einzelne Aktionen
         surveys: Umfragen
       heading: Alle Projekte
       indefinite: Undefiniert
       unsorted: Unsortierte Projekte
     allProjects:
       linkToSummary: Gehe zu meinen aktuellen Projekten.
-      noActivities: Wenn deine Gruppe von Projekten unabhängige Veranstaltungen hat,
-        werden sie hier angezeigt.
+      noActivities: Wenn deine Gruppe von Projekten unabhängige Aktivitäten hat, werden
+        sie hier angezeigt.
       viewArchive: Archiv anzeigen
     calendarView: Alles einblenden
-    events: Veranstaltungen
+    events: Aktionen
     feedback:
       copy: Feedback einzuholen kann dein Engagement effektiver machen
       create: Umfrage erstellen
@@ -234,7 +233,7 @@ feat:
         heading: Sichtbarkeit
         private: Verborgen
         public: Öffentlich
-    indefinite: unbegrenzte Zeitleiste
+    indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
       allCampaigns: Alle Projekte & Aktivitäten
@@ -245,7 +244,7 @@ feat:
     linkGroup:
       createActivity: Erstelle Aktivität
       createCallAssignment: Erstelle Telefonaktion
-      createEvent: Erstelle Veranstaltung
+      createEvent: Erstelle Aktion
       createSurvey: Erstelle Umfrage
       createTask: Erstelle Aufgabe
       public: Öffentliche Seite
@@ -278,7 +277,7 @@ feat:
       allDay: Ganzer Tag
       noActivity: Nicht kategorisiert
       noLocation: Kein zugewiesener Ort
-      noTitle: Unbenannte Veranstaltung
+      noTitle: Unbenannte Aktion
     eventActionButtons:
       cancel: Abbrechen
       delete: Löschen
@@ -309,7 +308,7 @@ feat:
       contact: Kontakt
       header: Teilnehmende
       noContact: nicht zugeordnet
-      participantList: Zeige Teilnehmende an
+      participantList: Teilnehmende anzeigen
       pending: Ausstehende Anmeldungen
       reqParticipantsHelperText: Mindestteilnehmendenzahl
       reqParticipantsLabel: Mindestteilnehmendenzahl
@@ -339,29 +338,28 @@ feat:
       participantTooltip: Zur Kontaktperson machen
       signUps: Anmeldungen
     eventPopper:
-      backToEvents: Zurück zu Veranstaltungen
+      backToEvents: Zurück zu Aktionen
       backToLocations: Zurück zu Orten
       backToShifts: Zurück zu Schichtplan
       booked: Gebucht
       cancel: Absagen
-      cancelWarning: Wenn du diese Veranstaltung absagst, gib bitte allen Teilnehmenden
-        und Angemeldeten Bescheid.
-      confirmCancel: Bist du sicher, dass du diese Veranstaltung absagen möchtest?
-      confirmDelete: Bist du sicher, dass du diese Veranstaltung löschen möchtest?
+      cancelWarning: Wenn du diese Aktion absagst, gib bitte allen Teilnehmenden und
+        Angemeldeten Bescheid.
+      confirmCancel: Bist du sicher, dass du diese Aktion absagen möchtest?
+      confirmDelete: Bist du sicher, dass du diese Aktion löschen möchtest?
       contactPerson: Kontaktperson
       dateAndTime: Datum & Uhrzeit
       delete: Löschen
-      deleteWarning: Nach dem Löschen kannst du nicht mehr auf diese Veranstaltung
-        zugreifen.
+      deleteWarning: Nach dem Löschen kannst du nicht mehr auf diese Aktion zugreifen.
       description: Beschreibung
       duplicate: Kopieren
-      eventPageLink: Gehe zu Veranstaltungsseite
-      events: Veranstaltungen
+      eventPageLink: Gehe zu Aktionsseite
+      events: Aktionen
       location: Ort
       locations: Orte
-      multiEvent: Mehrere Veranstaltungen
-      multiLocation: Veranstaltung an mehreren Orten
-      multiShift: Veranstaltung mit mehreren Schichten
+      multiEvent: Mehrere Aktionen
+      multiLocation: Aktion an mehreren Orten
+      multiShift: Aktion mit mehreren Schichten
       noContact: Keine Kontaktperson zugeordnet
       notified: Benachrichtigt
       pendingSignups: Es gibt ausstehende Anmeldungen
@@ -370,7 +368,7 @@ feat:
       shifts: Schichten
       signups: Anmeldungen
     eventRelatedCard:
-      header: Verwandte Veranstaltungen
+      header: Verwandte Aktionen
     eventStatus:
       cancelled: Abgesagt
       draft: Entwurf
@@ -382,8 +380,8 @@ feat:
       activity: Aktivität
       campaign: Kampagne
       cancel: Abbrechen
-      create: Erstelle neue Veranstaltung
-      edit: Bearbeite Veranstaltung
+      create: Erstelle neue Aktion
+      edit: Bearbeite Aktion
       end: Ende
       info: Information zur Anmeldung
       link: Link
@@ -392,10 +390,10 @@ feat:
       required: Pflichtfeld
       start: Start
       submit: Erstellen
-      title: Titel
+      title: Überschrift
     list:
-      events: Veranstaltungen
-      noEvents: Keine Veranstaltungen
+      events: Aktionen
+      noEvents: Keine Aktionen
     locationModal:
       cancel: Abbrechen
       createLocation: Erstelle neuen Ort
@@ -406,9 +404,8 @@ feat:
       move: Verschieben
       moveInstructions: Verschiebe die Nadel, um einen Ort auszuwählen.
       noDescription: Keine Beschreibung
-      noRelatedEvents: Es finden hier keine weiteren Veranstaltungen um diese Zeit
-        statt.
-      relatedEvents: Weitere Veranstaltungen hier um diese Zeit
+      noRelatedEvents: Es finden hier keine weiteren Aktionen um diese Zeit statt.
+      relatedEvents: Weitere Aktionen hier um diese Zeit
       save: Speichern
       saveLocation: Ort speichern
       searchBox: Ort finden
@@ -436,7 +433,7 @@ feat:
     tabs:
       overview: Überblick
       participants: Teilnehmer*innen
-    tooltipContent: Nicht benannte Veranstaltungen zeigen den Typ als Titel an
+    tooltipContent: Unbenannte Aktionen zeigen den Typ als Überschrift an
     type:
       tooltip: Klicke, um Typ zu ändern
       uncategorized: Nicht kategorisiert
@@ -501,7 +498,7 @@ feat:
       all: Alle
       call_blocked: Für Anrufe gesperrt
       call_history: Auf Grundlage bisheriger Telefonate
-      campaign_participation: Auf Grundlage ihrer Teilnahme an Veranstaltungen
+      campaign_participation: Auf Grundlage ihrer Teilnahme an Aktionen
       most_active: Aktivste Personen
       person_data: Auf Grundlage ihres Namens, ihrer Adresse und anderer persönlicher
         Angaben
@@ -822,7 +819,7 @@ feat:
         description: Beschreibung
         emptyDescription: Beschreibung
         emptyOption: leeres Feld
-        emptyQuestion: Titel
+        emptyQuestion: Überschrift
         question: Frage
         widget: Element
         widgets:
@@ -839,16 +836,16 @@ feat:
           Diese Aktion kann nicht rückgängig gemacht werden.
       open:
         description: Beschreibung
-        empty: Offene Frage ohne Titel
+        empty: Offene Frage ohne Überschrift
         fieldTypePreview: Textfeld
-        label: Titel
+        label: Überschrift
         multiLine: mehrzeilig
         singleLine: einzeilig
         textFieldType: Textfeld-Art
       text:
         content: Beschreibung
-        empty: Abschnitt ohne Titel
-        header: Titel
+        empty: Abschnitt ohne Überschrift
+        header: Überschrift
     chart:
       header: Antworten
       placeholder: Sammle Umfrageteilnahmen und starte durch!
@@ -1026,7 +1023,7 @@ feat:
             dem Ablaufdatum geplant werden.
           expiresNotThird: Diese Aufgabe muss als Letztes geplant werden
           publishedNotFirst: Diese Aufgabe muss als Erstes geplant werden
-        title: Titel
+        title: Überschrift
         type: Art der Aufgabe
         types:
           demographic: Daten einholen
@@ -1062,7 +1059,7 @@ feat:
     taskDetails:
       deadlineTime: Frist
       editButton: Bearbeiten
-      expiresTime: Überschreitet Zeitraum
+      expiresTime: Ablaufdatum
       instructionsLabel: Anleitung
       publishedTime: Zeitpunkt der Veröffentlichung
       reassignInterval:
@@ -1072,7 +1069,7 @@ feat:
       statusLabel: Stand
       timeEstimateLabel: Geschätzte Dauer
       title: Details
-      titleLabel: Titel
+      titleLabel: Überschrift
       typeLabel: Art der Aufgabe
     taskLayout:
       tabs:
@@ -1277,7 +1274,7 @@ feat:
       rename: Spalte umbenennen
     columnRenameDialog:
       save: Speichern
-      title: Titel
+      title: Überschrift
     dataTableErrors:
       create_column: Es ist ein Fehler aufgetreten beim Erstellen der Spalte
       delete_column: Es ist ein Fehler aufgetreten beim Löschen der Spalte
@@ -1296,8 +1293,8 @@ feat:
       warningText: Möchtest du diese Liste wirklich löschen? Alle Daten in der Liste
         wie Notizen und Checklisten werden gelöscht.
     editViewTitleAlert:
-      error: Fehler. Titel wurde nicht geändert
-      success: Titel geändert!
+      error: Fehler. Überschrift wurde nicht geändert
+      success: Überschrift geändert!
     empty:
       dynamic:
         configureButton: Erstellen
@@ -1360,7 +1357,7 @@ feat:
         share: Teilen
       ellipsisMenu:
         delete: Liste löschen
-        editQuery: Bearbeite Intelligente Suchanfrage
+        editQuery: Bearbeite Intelligente Suche
         makeDynamic: Umwandeln in dynamische Liste (basierend auf Intelligenter Suche)
         makeStatic: Umwandeln in statische Liste
       jumpMenu:
@@ -1369,8 +1366,8 @@ feat:
       columns:
         created: Erstellt am
         owner: Erstellt von
-        title: Titel
-      empty: Du hast noch keine Listen erstellt
+        title: Überschrift
+      empty: Du hast noch keine Listen erstellt.
 glob:
   accessLevels:
     configure: Bearbeiten & Erstellen
@@ -1405,7 +1402,7 @@ zui:
     campaigns: Projekte
     closed: Beendet
     conversation: Gespräch
-    events: Veranstaltungen
+    events: Aktionen
     folders: Listen
     insights: Statistiken
     manage: Verwalten
@@ -1419,7 +1416,7 @@ zui:
     submissions: Teilnahmen
     surveys: Umfragen
     tasks: Aufgaben
-    untitledEvent: Veranstaltung ohne Titel
+    untitledEvent: Unbenannte Aktion
     views: Listen
   collapse:
     collapse: Ausblenden
@@ -1443,7 +1440,7 @@ zui:
   dateRange:
     draft: Kein Startdatum
     end: Ende
-    invisible: Nicht sichtbar oder geplant
+    invisible: unsichtbar oder geplant
     start: Startdatum
   editTextInPlace:
     tooltip:
@@ -1484,12 +1481,12 @@ zui:
     warning: Achtung!
   speedDial:
     createCampaign: Erstelle Kampagne
-    createEvent: Erstelle Veranstaltung
+    createEvent: Erstelle Aktion
     createTask: Erstelle Aufgabe
     requestError: Es ist ein Fehler aufgetreten.
   submitOrCancel:
     cancel: Abbrechen
-    submit: Einreichen
+    submit: Erstellen
   timeline:
     addNotePlaceholder: Tippe, um eine Notiz zu erstellen
     email:
