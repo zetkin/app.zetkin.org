@@ -808,6 +808,7 @@ feat:
       random:
         addLimitRemoveSelect:
           add: add
+          limit: limit to
           sub: remove
         examples:
           one: Randomly add 20 people in the organization.
@@ -953,6 +954,7 @@ feat:
       noOptions: No matching tags
     operators:
       add: Add
+      limit: Limit to
       sub: Remove
     quantity:
       edit:
