@@ -8,10 +8,11 @@ import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { useSelector, useStore } from 'react-redux';
 
 interface UseCallerInstructionsReturn {
-  hasEmptyInstructions: boolean;
-  hasUnsavedChanges: boolean;
+  hasNewText: boolean;
   instructions: string;
+  isSaved: boolean;
   isSaving: boolean;
+  isUnsaved: boolean;
   revert: () => void;
   setInstructions: (instructions: string) => void;
   save: () => IFuture<CallAssignmentData>;
@@ -114,11 +115,16 @@ export default function useCallerInstructions(
     return item.mutating.includes('instructions');
   };
 
+  const saving = isSaving();
+  const instructions = getInstructions();
+  const unsavedChanges = hasUnsavedChanges();
+
   return {
-    hasEmptyInstructions: hasEmptyInstrunctions(),
-    hasUnsavedChanges: hasUnsavedChanges(),
-    instructions: getInstructions(),
-    isSaving: isSaving(),
+    hasNewText: unsavedChanges,
+    instructions,
+    isSaved: !saving && !unsavedChanges && instructions !== '',
+    isSaving: saving,
+    isUnsaved: !saving && unsavedChanges && !hasEmptyInstrunctions(),
     revert,
     save,
     setInstructions,

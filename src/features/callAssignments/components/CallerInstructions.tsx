@@ -32,19 +32,17 @@ const CallerInstructions = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
-    hasEmptyInstructions,
-    hasUnsavedChanges,
+    hasNewText,
     instructions,
+    isSaved,
     isSaving,
+    isUnsaved,
     revert,
     save,
     setInstructions,
   } = useCallerInstructions(orgId, assignmentId);
 
   const [key, setKey] = useState(1);
-
-  const isSaved = !isSaving && !hasUnsavedChanges && instructions !== '';
-  const isUnsaved = !isSaving && hasUnsavedChanges && !hasEmptyInstructions;
 
   return (
     <Paper
@@ -125,7 +123,7 @@ const CallerInstructions = ({
             </Box>
             <Button
               color="primary"
-              disabled={!hasUnsavedChanges}
+              disabled={!hasNewText}
               type="submit"
               variant="contained"
             >
