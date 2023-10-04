@@ -1,21 +1,20 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { CircularProgress, Link, Theme } from '@mui/material';
 import { FC, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
+import useItems from 'features/views/hooks/useItems';
+import { ViewBrowserItem } from 'features/views/models/ViewBrowserModel';
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
-import ViewBrowserModel, {
-  ViewBrowserItem,
-} from 'features/views/models/ViewBrowserModel';
 
 import messageIds from 'features/views/l10n/messageIds';
 
 interface BrowserItemProps {
   basePath: string;
   item: ViewBrowserItem;
-  model: ViewBrowserModel;
 }
 
 const useStyles = makeStyles<Theme, BrowserRowDropProps>({
@@ -29,9 +28,11 @@ const useStyles = makeStyles<Theme, BrowserRowDropProps>({
   },
 });
 
-const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
+const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
   const dropProps = useContext(BrowserRowContext);
   const styles = useStyles(dropProps);
+  const { orgId } = useRouter().query;
+  const { itemIsRenaming } = useItems(parseInt(orgId as string), item.folderId);
 
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
@@ -66,7 +67,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
         <NextLink href={`${basePath}/${item.id}`} passHref>
           <Link className={styles.itemLink}>{item.title}</Link>
         </NextLink>
-        {model.itemIsRenaming(item.type, item.data.id) && (
+        {itemIsRenaming(item.type, item.data.id) && (
           <CircularProgress size={20} />
         )}
       </BrowserDraggableItem>

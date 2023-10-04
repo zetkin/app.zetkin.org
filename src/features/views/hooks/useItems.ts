@@ -1,3 +1,6 @@
+import { useSelector } from 'react-redux';
+
+import { RootState } from 'core/store';
 import useViewTree from './useViewTree';
 import { ViewBrowserItem } from '../models/ViewBrowserModel';
 import { ViewTreeData } from 'pages/api/views/tree';
@@ -5,6 +8,7 @@ import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
 
 interface UseItemsReturn {
   itemsFuture: IFuture<ViewBrowserItem[]>;
+  itemIsRenaming: (type: 'folder' | 'view', id: number) => boolean;
 }
 
 export default function useItems(
@@ -12,6 +16,7 @@ export default function useItems(
   folderId: number | null
 ): UseItemsReturn {
   const viewTreeFuture = useViewTree(orgId);
+  const views = useSelector((state: RootState) => state.views);
 
   const getItems = (itemsFuture: IFuture<ViewTreeData>) => {
     if (!itemsFuture.data) {
@@ -63,5 +68,18 @@ export default function useItems(
     return new ResolvedFuture(items);
   };
   const itemsFuture = getItems(viewTreeFuture);
-  return { itemsFuture };
+
+  const itemIsRenaming = (type: 'folder' | 'view', id: number): boolean => {
+    if (type == 'folder') {
+      const item = views.folderList.items.find((item) => item.id == id);
+      return item?.mutating.includes('title') ?? false;
+    } else if (type == 'view') {
+      const item = views.viewList.items.find((item) => item.id == id);
+      return item?.mutating.includes('title') ?? false;
+    } else {
+      return false;
+    }
+  };
+
+  return { itemIsRenaming, itemsFuture };
 }

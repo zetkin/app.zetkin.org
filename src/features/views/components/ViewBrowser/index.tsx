@@ -114,9 +114,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       flex: 2,
       headerName: messages.viewsList.columns.title(),
       renderCell: (params) => {
-        return (
-          <BrowserItem basePath={basePath} item={params.row} model={model} />
-        );
+        return <BrowserItem basePath={basePath} item={params.row} />;
       },
     },
   ];

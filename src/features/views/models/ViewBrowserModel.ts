@@ -48,19 +48,6 @@ export default class ViewBrowserModel extends ModelBase {
     this._dataRepo = new ViewDataRepo(env);
   }
 
-  itemIsRenaming(type: 'folder' | 'view', id: number): boolean {
-    const state = this._env.store.getState();
-    if (type == 'folder') {
-      const item = state.views.folderList.items.find((item) => item.id == id);
-      return item?.mutating.includes('title') ?? false;
-    } else if (type == 'view') {
-      const item = state.views.viewList.items.find((item) => item.id == id);
-      return item?.mutating.includes('title') ?? false;
-    } else {
-      return false;
-    }
-  }
-
   moveItem(type: 'folder' | 'view', id: number, newParentId: number | null) {
     if (type == 'folder') {
       this._repo.updateFolder(this._orgId, id, { parent_id: newParentId });
