@@ -20,7 +20,7 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
         <Msg
           id={messageIds.taskListItem.relativeTimes.scheduled}
           values={{
-            time: <ZUIRelativeTime datetime={published} />,
+            time: <ZUIRelativeTime datetime={published + '.000Z'} />,
           }}
         />
       )}
@@ -29,7 +29,7 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
         <Msg
           id={messageIds.taskListItem.relativeTimes.active}
           values={{
-            time: <ZUIRelativeTime datetime={deadline} />,
+            time: <ZUIRelativeTime datetime={deadline + '.000Z'} />,
           }}
         />
       )}
@@ -38,7 +38,7 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
         <Msg
           id={messageIds.taskListItem.relativeTimes.indefinite}
           values={{
-            time: <ZUIRelativeTime datetime={published} />,
+            time: <ZUIRelativeTime datetime={published + '.000Z'} />,
           }}
         />
       )}
@@ -46,7 +46,7 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
       {taskStatus === TASK_STATUS.CLOSED && expires && (
         <Msg
           id={messageIds.taskListItem.relativeTimes.expires}
-          values={{ time: <ZUIRelativeTime datetime={expires} /> }}
+          values={{ time: <ZUIRelativeTime datetime={expires + '.000Z'} /> }}
         />
       )}
       {/* Closed and no expiry date */}
@@ -54,7 +54,7 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
         <Msg
           id={messageIds.taskListItem.relativeTimes.closed}
           values={{
-            time: <ZUIRelativeTime datetime={deadline} />,
+            time: <ZUIRelativeTime datetime={deadline + '.000Z'} />,
           }}
         />
       )}
@@ -62,7 +62,7 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
       {taskStatus === TASK_STATUS.EXPIRED && expires && (
         <Msg
           id={messageIds.taskListItem.relativeTimes.expired}
-          values={{ time: <ZUIRelativeTime datetime={expires} /> }}
+          values={{ time: <ZUIRelativeTime datetime={expires + '.000Z'} /> }}
         />
       )}
     </>

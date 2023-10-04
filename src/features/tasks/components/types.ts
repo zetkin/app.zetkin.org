@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { ZetkinFile } from 'utils/types/zetkin';
 import {
   ZetkinQuery,
@@ -66,6 +67,15 @@ export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
     title: string;
   };
 }
+
+export type NewTaskValues = Omit<
+  ZetkinTaskRequestBody,
+  'deadline' | 'expires' | 'published'
+> & {
+  deadline?: Dayjs;
+  expires?: Dayjs;
+  published?: Dayjs;
+};
 
 // POST and PUT requests use this data shape
 export interface ZetkinTaskRequestBody<

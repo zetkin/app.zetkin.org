@@ -13,14 +13,14 @@ const getTaskStatus = (task: ZetkinTask): TASK_STATUS => {
   const { published, expires } = task;
   const now = dayjs();
 
-  const expiresDate = dayjs(expires);
+  const expiresDate = dayjs(expires + '.000Z');
   const isExpiresPassed = expiresDate.isBefore(now);
 
   if (isExpiresPassed) {
     return TASK_STATUS.EXPIRED;
   }
 
-  const publishedDate = dayjs(published);
+  const publishedDate = dayjs(published + '.000Z');
   const isPublishedPassed = publishedDate.isBefore(now);
 
   if (isPublishedPassed) {
