@@ -3,10 +3,11 @@ import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
 import { STATUS_COLORS } from './ActivityListItem';
-import useModel from 'core/useModel';
-import CallAssignmentModel, {
+import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
+import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
+import useCallAssignmentState, {
   CallAssignmentState,
-} from 'features/callAssignments/models/CallAssignmentModel';
+} from 'features/callAssignments/hooks/useCallAssignmentState';
 
 interface CallAssignmentListItemProps {
   orgId: number;
@@ -17,12 +18,14 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   caId,
   orgId,
 }) => {
-  const model = useModel((env) => new CallAssignmentModel(env, orgId, caId));
-  const state = model.state;
-  const data = model.getData().data;
-  const stats = model.getStats().data;
+  const { data: assignmentData } = useCallAssignment(orgId, caId);
+  const { data: stats, isLoading: statsLoading } = useCallAssignmentStats(
+    orgId,
+    caId
+  );
+  const state = useCallAssignmentState(orgId, caId);
 
-  if (!data) {
+  if (!assignmentData) {
     return null;
   }
 
@@ -42,7 +45,6 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   const ready = stats?.ready || 0;
   const done = stats?.done || 0;
   const callsMade = stats?.callsMade.toString() || '0';
-  const statsLoading = model.getStats().isLoading;
 
   return (
     <ActivityListItemWithStats
@@ -51,13 +53,13 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       endNumber={callsMade}
       greenChipValue={done}
       href={`/organize/${orgId}/projects/${
-        data.campaign?.id ?? 'standalone'
+        assignmentData.campaign?.id ?? 'standalone'
       }/callassignments/${caId}`}
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
       statsLoading={statsLoading}
-      title={data.title}
+      title={assignmentData.title}
     />
   );
 };

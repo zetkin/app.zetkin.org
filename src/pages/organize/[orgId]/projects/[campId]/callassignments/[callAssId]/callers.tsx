@@ -14,16 +14,16 @@ import { useEffect, useRef, useState } from 'react';
 import { CallAssignmentCaller } from 'features/callAssignments/apiTypes';
 import CallAssignmentCallersList from 'features/callAssignments/components/CallAssignmentCallersList';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
-import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import CallerConfigDialog from 'features/callAssignments/components/CallerConfigDialog';
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useModel from 'core/useModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/callAssignments/l10n/messageIds';
+import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
+import useCallers from 'features/callAssignments/hooks/useCallers';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -60,14 +60,17 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
   const [onServer, setOnServer] = useState(true);
   const [searchString, setSearchString] = useState('');
   const isSearching = searchString.length > 0;
-  const model = useModel(
-    (store) =>
-      new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
-  );
   const messages = useMessages(messageIds);
   const selectInputRef = useRef<HTMLInputElement>();
   const [selectedCaller, setSelectedCaller] =
     useState<CallAssignmentCaller | null>(null);
+  const { data } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  const {
+    addCaller,
+    data: callers,
+    removeCaller,
+    setCallerTags,
+  } = useCallers(parseInt(orgId), parseInt(assignmentId));
 
   useEffect(() => {
     setOnServer(false);
@@ -77,15 +80,13 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
     return null;
   }
 
-  const future = model.getFilteredCallers(searchString);
-
   const isCaller = (person: ZetkinPerson) =>
-    !!model.getFilteredCallers().data?.find((caller) => caller.id == person.id);
+    !!callers?.find((caller) => caller.id == person.id);
 
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{data?.title}</title>
       </Head>
       <Box>
         <Paper>
@@ -113,9 +114,9 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
               />
             </Box>
             <CallAssignmentCallersList
-              callers={future.data || []}
+              callers={callers || []}
               onCustomize={(caller) => setSelectedCaller(caller)}
-              onRemove={(caller) => model.removeCaller(caller.id)}
+              onRemove={(caller) => removeCaller(caller.id)}
             />
           </Box>
         </Paper>
@@ -127,7 +128,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
             }
             inputRef={selectInputRef}
             onChange={(person) => {
-              model.addCaller(person);
+              addCaller(person.id);
 
               // Blur and re-focus input to reset, so that user can type again to
               // add another person, without taking their hands off the keyboard.
@@ -143,7 +144,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
           onClose={() => setSelectedCaller(null)}
           onSubmit={(prioTags, excludedTags) => {
             if (selectedCaller) {
-              model.setCallerTags(selectedCaller.id, prioTags, excludedTags);
+              setCallerTags(selectedCaller.id, prioTags, excludedTags);
             }
             setSelectedCaller(null);
           }}

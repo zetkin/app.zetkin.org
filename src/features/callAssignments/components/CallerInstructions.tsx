@@ -9,13 +9,12 @@ import {
 } from '@mui/material';
 import { useContext, useState } from 'react';
 
-import CallerInstructionsModel from '../models/CallerInstructionsModel';
-import useModel from 'core/useModel';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUITextEditor from 'zui/ZUITextEditor';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useCallerInstructions from '../hooks/useCallerInstructions';
 
 interface CallerInstructionsProps {
   assignmentId: number;
@@ -32,15 +31,21 @@ const CallerInstructions = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const model = useModel(
-    (store) => new CallerInstructionsModel(store, orgId, assignmentId)
-  );
-
-  const onChange = (markdown: string) => {
-    model.setInstructions(markdown);
-  };
+  const {
+    hasEmptyInstructions,
+    hasUnsavedChanges,
+    instructions,
+    isSaving,
+    revert,
+    save,
+    setInstructions,
+  } = useCallerInstructions(orgId, assignmentId);
 
   const [key, setKey] = useState(1);
+
+  const isSaved = !isSaving && !hasUnsavedChanges && instructions !== '';
+  const isUnsaved = !isSaving && hasUnsavedChanges && !hasEmptyInstructions;
+
   return (
     <Paper
       //These styles are added to enable the editor to grow with the window.
@@ -65,7 +70,7 @@ const CallerInstructions = ({
         <form
           onSubmit={(evt) => {
             evt.preventDefault();
-            model.save();
+            save();
           }}
           style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}
         >
@@ -80,59 +85,51 @@ const CallerInstructions = ({
           >
             <ZUITextEditor
               key={key}
-              initialValue={model.getInstructions()}
-              onChange={onChange}
+              initialValue={instructions}
+              onChange={(markdown) => setInstructions(markdown)}
               placeholder={messages.conversation.instructions.editorPlaceholder()}
             />
           </Box>
           <Box alignItems="center" display="flex" justifyContent="flex-end">
             <Box marginRight={2}>
-              {!model.isSaving &&
-                !model.hasUnsavedChanges &&
-                model.getInstructions() !== '' && (
-                  <Typography>
-                    <Msg
-                      id={messageIds.conversation.instructions.savedMessage}
-                    />
-                  </Typography>
-                )}
-              {!model.isSaving &&
-                model.hasUnsavedChanges &&
-                !model.emptyInstrunctions && (
-                  <Typography component="span">
-                    <Msg
-                      id={messageIds.conversation.instructions.unsavedMessage}
-                    />{' '}
-                    <Link
-                      color="textPrimary"
-                      component="span"
-                      onClick={() => {
-                        showConfirmDialog({
-                          onSubmit: () => {
-                            model.revert();
-                            //Force Slate to re-mount
-                            setKey((current) => current + 1);
-                          },
-                          warningText:
-                            messages.conversation.instructions.confirm(),
-                        });
-                      }}
-                      style={{ cursor: 'pointer', fontFamily: 'inherit' }}
-                    >
-                      <Msg
-                        id={messageIds.conversation.instructions.revertLink}
-                      />
-                    </Link>
-                  </Typography>
-                )}
+              {isSaved && (
+                <Typography>
+                  <Msg id={messageIds.conversation.instructions.savedMessage} />
+                </Typography>
+              )}
+              {isUnsaved && (
+                <Typography component="span">
+                  <Msg
+                    id={messageIds.conversation.instructions.unsavedMessage}
+                  />{' '}
+                  <Link
+                    color="textPrimary"
+                    component="span"
+                    onClick={() => {
+                      showConfirmDialog({
+                        onSubmit: () => {
+                          revert();
+                          //Force Slate to re-mount
+                          setKey((current) => current + 1);
+                        },
+                        warningText:
+                          messages.conversation.instructions.confirm(),
+                      });
+                    }}
+                    style={{ cursor: 'pointer', fontFamily: 'inherit' }}
+                  >
+                    <Msg id={messageIds.conversation.instructions.revertLink} />
+                  </Link>
+                </Typography>
+              )}
             </Box>
             <Button
               color="primary"
-              disabled={!model.hasUnsavedChanges}
+              disabled={!hasUnsavedChanges}
               type="submit"
               variant="contained"
             >
-              {model.isSaving ? (
+              {isSaving ? (
                 <Msg id={messageIds.conversation.instructions.savingButton} />
               ) : (
                 <Msg id={messageIds.conversation.instructions.saveButton} />

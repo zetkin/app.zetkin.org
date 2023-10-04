@@ -2,9 +2,8 @@ import { FC } from 'react';
 import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import { CallAssignmentActivity } from 'features/campaigns/models/CampaignActivitiesModel';
-import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import OverviewListItem from './OverviewListItem';
-import useModel from 'core/useModel';
+import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 interface CallAssignmentOverviewListItemProps {
@@ -16,12 +15,10 @@ const CallAssignmentOverviewListItem: FC<
   CallAssignmentOverviewListItemProps
 > = ({ activity, focusDate }) => {
   const assignment = activity.data;
-  const dataModel = useModel(
-    (env) =>
-      new CallAssignmentModel(env, assignment.organization.id, assignment.id)
+  const { data: stats } = useCallAssignmentStats(
+    assignment.organization.id,
+    assignment.id
   );
-
-  const stats = dataModel.getStats().data;
   const callsMade = stats?.callsMade ?? 0;
 
   return (

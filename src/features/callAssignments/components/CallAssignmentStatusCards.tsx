@@ -13,40 +13,37 @@ import {
 } from '@mui/material';
 import { Edit, Settings, Visibility } from '@mui/icons-material';
 
-import CallAssignmentModel from '../models/CallAssignmentModel';
+import messageIds from '../l10n/messageIds';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
+import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
+import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
+import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 
-import messageIds from '../l10n/messageIds';
-import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
-import { useRouter } from 'next/router';
-
-interface CallAssignmentStatusCardProps {
-  model: CallAssignmentModel;
-}
-
-const CallAssignmentStatusCards = ({
-  model,
-}: CallAssignmentStatusCardProps) => {
+const CallAssignmentStatusCards = () => {
   const messages = useMessages(messageIds);
-  const { data: stats } = model.getStats();
-  const { data } = model.getData();
-  const cooldown = data?.cooldown ?? null;
-  const hasTargets = model.hasTargets;
-  const goalQuery = data?.goal;
 
-  const { orgId } = useRouter().query;
-
-  const { getOrganizerActionView } = useOrganizerActionView(
-    parseInt(orgId as string)
+  const { orgId, callAssId: assignmentId } = useNumericRouteParams();
+  const {
+    data: assignmentData,
+    updateGoal: setGoal,
+    updateCallAssignment,
+  } = useCallAssignment(orgId, assignmentId);
+  const { data: statsData, hasTargets } = useCallAssignmentStats(
+    orgId,
+    assignmentId
   );
+  const { getOrganizerActionView } = useOrganizerActionView(orgId);
+
+  const cooldownNumber = assignmentData?.cooldown ?? null;
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
   >(null);
-  const [newCooldown, setNewCooldown] = useState<number | null>(cooldown);
+  const [newCooldown, setNewCooldown] = useState<number | null>(cooldownNumber);
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   return (
@@ -57,7 +54,7 @@ const CallAssignmentStatusCards = ({
             chipColor={hasTargets ? 'orange' : 'gray'}
             subtitle={messages.blocked.subtitle()}
             title={messages.blocked.title()}
-            value={stats?.blocked}
+            value={statsData?.blocked}
           />
           <List>
             <StatusCardItem
@@ -66,7 +63,7 @@ const CallAssignmentStatusCards = ({
                   <Typography color="secondary" variant="h5">
                     <Msg
                       id={messageIds.blocked.hours}
-                      values={{ cooldown: cooldown || 0 }}
+                      values={{ cooldown: cooldownNumber || 0 }}
                     />
                   </Typography>
                   <Box ml={1}>
@@ -82,8 +79,11 @@ const CallAssignmentStatusCards = ({
                     <ClickAwayListener
                       onClickAway={() => {
                         setAnchorEl(null);
-                        if (newCooldown != null && newCooldown != cooldown) {
-                          model.setCooldown(newCooldown);
+                        if (
+                          newCooldown != null &&
+                          newCooldown != assignmentData?.cooldown
+                        ) {
+                          updateCallAssignment({ cooldown: newCooldown });
                         }
                       }}
                     >
@@ -108,12 +108,17 @@ const CallAssignmentStatusCards = ({
                             onKeyDown={(ev) => {
                               if (ev.key === 'Enter') {
                                 setAnchorEl(null);
-                                if (newCooldown != null) {
-                                  model.setCooldown(newCooldown);
+                                if (
+                                  newCooldown != null &&
+                                  newCooldown != assignmentData?.cooldown
+                                ) {
+                                  updateCallAssignment({
+                                    cooldown: newCooldown,
+                                  });
                                 }
                               } else if (ev.key === 'Escape') {
                                 setAnchorEl(null);
-                                setNewCooldown(cooldown);
+                                setNewCooldown(cooldownNumber);
                               }
                             }}
                             value={newCooldown === null ? '' : newCooldown}
@@ -126,15 +131,15 @@ const CallAssignmentStatusCards = ({
                 </Box>
               }
               title={messages.blocked.calledTooRecently()}
-              value={stats?.calledTooRecently}
+              value={statsData?.calledTooRecently}
             />
             <StatusCardItem
               title={messages.blocked.callBackLater()}
-              value={stats?.callBackLater}
+              value={statsData?.callBackLater}
             />
             <StatusCardItem
               title={messages.blocked.missingPhoneNumber()}
-              value={stats?.missingPhoneNumber}
+              value={statsData?.missingPhoneNumber}
             />
             <StatusCardItem
               action={
@@ -147,7 +152,7 @@ const CallAssignmentStatusCards = ({
                 </Button>
               }
               title={messages.blocked.organizerActionNeeded()}
-              value={stats?.organizerActionNeeded}
+              value={statsData?.organizerActionNeeded}
             />
           </List>
         </Card>
@@ -158,16 +163,16 @@ const CallAssignmentStatusCards = ({
             chipColor={hasTargets ? 'blue' : 'gray'}
             subtitle={messages.ready.subtitle()}
             title={messages.ready.title()}
-            value={stats?.ready}
+            value={statsData?.ready}
           />
           <List>
             <StatusCardItem
               title={messages.ready.queue()}
-              value={stats?.queue}
+              value={statsData?.queue}
             />
             <StatusCardItem
               title={messages.ready.allocated()}
-              value={stats?.allocated}
+              value={statsData?.allocated}
             />
           </List>
         </Card>
@@ -178,7 +183,7 @@ const CallAssignmentStatusCards = ({
             chipColor={hasTargets ? 'green' : 'gray'}
             subtitle={messages.done.subtitle()}
             title={messages.done.title()}
-            value={stats?.done}
+            value={statsData?.done}
           />
           <Box p={2}>
             <Button
@@ -192,10 +197,10 @@ const CallAssignmentStatusCards = ({
               <SmartSearchDialog
                 onDialogClose={() => setQueryDialogOpen(false)}
                 onSave={(query) => {
-                  model.setGoal(query);
+                  setGoal(query);
                   setQueryDialogOpen(false);
                 }}
-                query={goalQuery}
+                query={assignmentData?.goal}
               />
             )}
           </Box>

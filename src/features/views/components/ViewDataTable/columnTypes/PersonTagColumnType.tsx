@@ -10,9 +10,9 @@ import {
 
 import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
-import TagModel from 'features/tags/models/TagModel';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
-import useModel from 'core/useModel';
+import useTag from 'features/tags/hooks/useTag';
+import useTagMutation from 'features/tags/hooks/useTagMutation';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -123,7 +123,9 @@ const Cell: FC<{
   // TODO: Find a way to share a model between cells in a column
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
-  const model = useModel((env) => new TagModel(env, orgId, tagId));
+  const { tagFuture } = useTag(orgId, tagId);
+  const { assignToPerson, removeFromPerson } = useTagMutation(orgId, tagId);
+
   const styles = useStyles();
 
   const [isRestricted] = useAccessLevel();
@@ -134,7 +136,7 @@ const Cell: FC<{
     return (
       <TagChip
         onDelete={() => {
-          model.removeFromPerson(personId);
+          removeFromPerson(personId);
         }}
         tag={cell}
       />
@@ -145,12 +147,12 @@ const Cell: FC<{
       // likely that a user in restricted mode will not have access to assign
       // (or even retrieve) the tag.
       return (
-        <ZUIFuture future={model.getTag()}>
+        <ZUIFuture future={tagFuture}>
           {(tag) => (
             <Box
               className={styles.ghostContainer}
               onClick={() => {
-                model.assignToPerson(personId);
+                assignToPerson(personId);
               }}
             >
               <Box className={styles.ghost}>
