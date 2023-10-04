@@ -19,8 +19,8 @@ import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
-import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
 import { Msg, useMessages } from 'core/i18n';
 
 const CallAssignmentStatusCards = () => {
