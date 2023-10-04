@@ -2,13 +2,18 @@ import { useStore } from 'react-redux';
 
 import createNew from '../rpc/createNew/client';
 import deleteViewFolder from '../rpc/deleteFolder';
+import { PromiseFuture } from 'core/caching/futures';
 import {
   folderCreate,
   folderCreated,
   folderDeleted,
+  folderUpdate,
+  folderUpdated,
   viewCreate,
   viewCreated,
   viewDeleted,
+  viewUpdate,
+  viewUpdated,
 } from '../store';
 import { useApiClient, useEnv } from 'core/hooks';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
@@ -18,11 +23,26 @@ type ZetkinViewFolderPostBody = {
   title: string;
 };
 
+type ZetkinViewFolderUpdateBody = Partial<
+  Omit<ZetkinViewFolder, 'id' | 'parent'>
+> & {
+  parent_id?: number | null;
+};
+
+type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
+  folder_id?: number | null;
+};
+
 interface UseViewBrowserMutationReturn {
   createFolder: (title: string, folderId?: number) => Promise<ZetkinViewFolder>;
   createView: (folderId?: number, rows?: number[]) => void;
   deleteFolder: (folderId: number) => void;
   deleteView: (viewId: number) => void;
+  moveItem: (
+    type: 'folder' | 'view',
+    id: number,
+    newParentId: number | null
+  ) => void;
 }
 
 export default function useViewBrowserMutation(
@@ -76,10 +96,60 @@ export default function useViewBrowserMutation(
     store.dispatch(viewDeleted(viewId));
   };
 
+  const updateFolder = (
+    orgId: number,
+    folderId: number,
+    data: ZetkinViewFolderUpdateBody
+  ) => {
+    const mutating = Object.keys(data);
+    store.dispatch(folderUpdate([folderId, mutating]));
+    const promise = apiClient
+      .patch<ZetkinViewFolder>(
+        `/api/orgs/${orgId}/people/view_folders/${folderId}`,
+        data
+      )
+      .then((folder) => {
+        store.dispatch(folderUpdated([folder, mutating]));
+        return folder;
+      });
+
+    return new PromiseFuture(promise);
+  };
+
+  const updateView = (
+    orgId: number,
+    viewId: number,
+    data: ZetkinViewUpdateBody
+  ) => {
+    const mutating = Object.keys(data);
+    store.dispatch(viewUpdate([viewId, mutating]));
+    const promise = apiClient
+      .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
+      .then((view) => {
+        store.dispatch(viewUpdated([view, mutating]));
+        return view;
+      });
+
+    return new PromiseFuture(promise);
+  };
+
+  const moveItem = (
+    type: 'folder' | 'view',
+    id: number,
+    newParentId: number | null
+  ) => {
+    if (type == 'folder') {
+      updateFolder(orgId, id, { parent_id: newParentId });
+    } else if (type == 'view') {
+      updateView(orgId, id, { folder_id: newParentId });
+    }
+  };
+
   return {
     createFolder,
     createView,
     deleteFolder,
     deleteView,
+    moveItem,
   };
 }

@@ -1,8 +1,10 @@
 import { useDrop } from 'react-dnd';
+import { useRouter } from 'next/router';
 import { Box, useTheme } from '@mui/material';
 import { createContext, FC } from 'react';
 import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 
+import useViewBrowserMutation from 'features/views/hooks/useViewBrowserMutation';
 import ViewBrowserModel, {
   ViewBrowserItem,
 } from 'features/views/models/ViewBrowserModel';
@@ -26,8 +28,10 @@ export const BrowserRowContext = createContext<BrowserRowDropProps>({
  * Adds support for dropping views/folders onto the row, highlighting
  * the row when dragging over, etc.
  */
-const BrowserRow: FC<BrowserRowProps> = ({ item, model, rowProps }) => {
+const BrowserRow: FC<BrowserRowProps> = ({ item, rowProps }) => {
   const theme = useTheme();
+  const { orgId } = useRouter().query;
+  const { moveItem } = useViewBrowserMutation(parseInt(orgId as string));
   const [dropProps, dropRef] = useDrop<
     ViewBrowserItem,
     unknown,
@@ -44,7 +48,7 @@ const BrowserRow: FC<BrowserRowProps> = ({ item, model, rowProps }) => {
     drop: (draggedItem) => {
       if (draggedItem.type == 'folder' || draggedItem.type == 'view') {
         const parentId = item.type == 'back' ? item.folderId : item.data.id;
-        model.moveItem(draggedItem.type, draggedItem.data.id, parentId);
+        moveItem(draggedItem.type, draggedItem.data.id, parentId);
       }
     },
   });

@@ -48,14 +48,6 @@ export default class ViewBrowserModel extends ModelBase {
     this._dataRepo = new ViewDataRepo(env);
   }
 
-  moveItem(type: 'folder' | 'view', id: number, newParentId: number | null) {
-    if (type == 'folder') {
-      this._repo.updateFolder(this._orgId, id, { parent_id: newParentId });
-    } else if (type == 'view') {
-      this._dataRepo.updateView(this._orgId, id, { folder_id: newParentId });
-    }
-  }
-
   get recentlyCreatedFolder(): ZetkinViewFolder | null {
     const state = this._env.store.getState();
     return state.views.recentlyCreatedFolder;
