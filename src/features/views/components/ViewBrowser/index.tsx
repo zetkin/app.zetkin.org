@@ -27,6 +27,7 @@ import ViewBrowserModel, {
 } from '../../models/ViewBrowserModel';
 
 import messageIds from 'features/views/l10n/messageIds';
+import useFolder from 'features/views/hooks/useFolder';
 import useItems from 'features/views/hooks/useItems';
 
 interface ViewBrowserProps {
@@ -49,6 +50,8 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   model,
 }) => {
   const { orgId } = useRouter().query;
+  const parsedOrgId = parseInt(orgId as string);
+
   const messages = useMessages(messageIds);
   const [sortModel, setSortModel] = useState<GridSortModel>([
     { field: 'title', sort: 'asc' },
@@ -59,21 +62,20 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   );
   const gridApiRef = useGridApiRef();
 
-  const { deleteFolder, deleteView } = useViewBrowserMutation(
-    parseInt(orgId as string)
-  );
+  const { deleteFolder, deleteView } = useViewBrowserMutation(parsedOrgId);
 
-  const { itemsFuture } = useItems(parseInt(orgId as string), folderId);
+  const { itemsFuture } = useItems(parsedOrgId, folderId);
+  const { recentlyCreatedFolder } = useFolder(parsedOrgId);
 
   // If a folder was created, go into rename state
   useEffect(() => {
-    if (gridApiRef.current && model.recentlyCreatedFolder) {
+    if (gridApiRef.current && recentlyCreatedFolder) {
       gridApiRef.current.startCellEditMode({
         field: 'title',
-        id: 'folders/' + model.recentlyCreatedFolder.id,
+        id: 'folders/' + recentlyCreatedFolder.id,
       });
     }
-  }, [model.recentlyCreatedFolder]);
+  }, [recentlyCreatedFolder]);
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
@@ -230,9 +232,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
               components={{
                 Row: (props: GridRowProps) => {
                   const item = props.row as ViewBrowserItem;
-                  return (
-                    <BrowserRow item={item} model={model} rowProps={props} />
-                  );
+                  return <BrowserRow item={item} rowProps={props} />;
                 },
               }}
               disableSelectionOnClick
