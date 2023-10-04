@@ -17,11 +17,9 @@ import CallAssignmentModel from '../models/CallAssignmentModel';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
-import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import useModel from 'core/useModel';
 import { useRouter } from 'next/router';
 import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
 
@@ -41,11 +39,9 @@ const CallAssignmentStatusCards = ({
 
   const { orgId } = useRouter().query;
 
-  const viewsModel: ViewBrowserModel = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
+  const { getOrganizerActionView } = useOrganizerActionView(
+    parseInt(orgId as string)
   );
-
-  // const { what } = useOrganizerActionView(parseInt(orgId as string));
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
@@ -143,7 +139,7 @@ const CallAssignmentStatusCards = ({
             <StatusCardItem
               action={
                 <Button
-                  onClick={() => viewsModel.getOrganizerActionView()}
+                  onClick={() => getOrganizerActionView()}
                   startIcon={<Visibility />}
                   variant="outlined"
                 >

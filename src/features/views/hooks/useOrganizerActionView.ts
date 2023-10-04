@@ -1,17 +1,17 @@
-import { ZetkinView } from '../components/types';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
-import { useApiClient, useEnv } from 'core/hooks';
 import { useStore } from 'react-redux';
-import { viewCreate, viewCreated } from '../store';
+
 import getOrgActionView from '../rpc/getOrganizerActionView/client';
+import { ZetkinView } from '../components/types';
+import { useApiClient, useEnv } from 'core/hooks';
+import { viewCreate, viewCreated } from '../store';
 
 interface UseOrganizerActionViewReturn {
-  organizerActionViewFuture: IFuture<ZetkinView>;
+  getOrganizerActionView: () => Promise<ZetkinView>;
 }
 
 export default function useOrganizerActionView(
   orgId: number
-): PromiseFuture<ZetkinView> {
+): UseOrganizerActionViewReturn {
   const apiClient = useApiClient();
   const env = useEnv();
   const store = useStore();
@@ -22,17 +22,11 @@ export default function useOrganizerActionView(
       orgId,
     });
     store.dispatch(viewCreated(view));
-    return view;
-  };
-
-  const promise = getOrganizerActionView().then((view) => {
-    console.log(view, ' djdj');
     env.router.push(
       `/organize/${view.organization.id}/people/lists/${view.id}`
     );
     return view;
-  });
+  };
 
-  return new PromiseFuture(promise);
-  //   return { organizerActionViewFuture };
+  return { getOrganizerActionView };
 }

@@ -45,6 +45,7 @@ import ViewDataTableToolbar, {
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import useViewBrowserMutation from 'features/views/hooks/useViewBrowserMutation';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -102,6 +103,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const browserModel = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId as string))
   );
+  const { createView } = useViewBrowserMutation(parseInt(orgId as string));
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar('error', messages.dataTableErrors[error]());
@@ -221,6 +223,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   };
 
   const onViewCreate = () => {
+    console.log('yeah');
     browserModel.createView(view.folder?.id ?? 0, selection);
   };
 
