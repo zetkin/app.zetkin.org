@@ -43,6 +43,7 @@ interface UseViewBrowserMutationReturn {
     id: number,
     newParentId: number | null
   ) => void;
+  renameItem: (type: 'folder' | 'view', id: number, title: string) => void;
 }
 
 export default function useViewBrowserMutation(
@@ -145,11 +146,20 @@ export default function useViewBrowserMutation(
     }
   };
 
+  const renameItem = (type: 'folder' | 'view', id: number, title: string) => {
+    if (type == 'folder') {
+      updateFolder(orgId, id, { title });
+    } else if (type == 'view') {
+      updateView(orgId, id, { title });
+    }
+  };
+
   return {
     createFolder,
     createView,
     deleteFolder,
     deleteView,
     moveItem,
+    renameItem,
   };
 }

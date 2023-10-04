@@ -22,18 +22,14 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ViewBrowserModel, {
-  ViewBrowserItem,
-} from '../../models/ViewBrowserModel';
 
 import messageIds from 'features/views/l10n/messageIds';
 import useFolder from 'features/views/hooks/useFolder';
-import useItems from 'features/views/hooks/useItems';
+import useItems, { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 interface ViewBrowserProps {
   basePath: string;
   folderId?: number | null;
-  model: ViewBrowserModel;
 }
 
 const TYPE_SORT_ORDER = ['back', 'folder', 'view'];
@@ -44,11 +40,7 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
   return index0 - index1;
 }
 
-const ViewBrowser: FC<ViewBrowserProps> = ({
-  basePath,
-  folderId = null,
-  model,
-}) => {
+const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
   const { orgId } = useRouter().query;
   const parsedOrgId = parseInt(orgId as string);
 
@@ -62,7 +54,8 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   );
   const gridApiRef = useGridApiRef();
 
-  const { deleteFolder, deleteView } = useViewBrowserMutation(parsedOrgId);
+  const { deleteFolder, deleteView, renameItem } =
+    useViewBrowserMutation(parsedOrgId);
 
   const { itemsFuture } = useItems(parsedOrgId, folderId);
   const { recentlyCreatedFolder } = useFolder(parsedOrgId);
@@ -242,7 +235,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
               onSortModelChange={(model) => setSortModel(model)}
               processRowUpdate={(item) => {
                 if (item.type != 'back') {
-                  model.renameItem(item.type, item.data.id, item.title);
+                  renameItem(item.type, item.data.id, item.title);
                 }
                 return item;
               }}

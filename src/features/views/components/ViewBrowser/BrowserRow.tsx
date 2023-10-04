@@ -5,7 +5,7 @@ import { createContext, FC } from 'react';
 import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 
 import useViewBrowserMutation from 'features/views/hooks/useViewBrowserMutation';
-import { ViewBrowserItem } from 'features/views/models/ViewBrowserModel';
+import { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 interface BrowserRowProps {
   item: ViewBrowserItem;

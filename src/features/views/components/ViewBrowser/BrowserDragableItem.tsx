@@ -3,7 +3,7 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useDrag } from 'react-dnd';
 import { FC, ReactNode, useEffect } from 'react';
 
-import { ViewBrowserItem } from 'features/views/models/ViewBrowserModel';
+import { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 interface BrowserDragItemProps {
   children: ReactNode;

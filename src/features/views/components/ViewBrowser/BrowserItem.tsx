@@ -6,8 +6,8 @@ import { FC, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
-import useItems from 'features/views/hooks/useItems';
-import { ViewBrowserItem } from 'features/views/models/ViewBrowserModel';
+import useItems, { ViewBrowserItem } from 'features/views/hooks/useItems';
+
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
 
 import messageIds from 'features/views/l10n/messageIds';

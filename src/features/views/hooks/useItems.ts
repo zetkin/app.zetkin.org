@@ -2,9 +2,39 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from 'core/store';
 import useViewTree from './useViewTree';
-import { ViewBrowserItem } from '../models/ViewBrowserModel';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
+import { ZetkinView, ZetkinViewFolder } from '../components/types';
+
+export interface ViewBrowserFolderItem {
+  id: number | string;
+  type: 'folder';
+  title: string;
+  owner: string;
+  data: ZetkinViewFolder;
+  folderId: number | null;
+}
+
+export interface ViewBrowserViewItem {
+  id: number | string;
+  type: 'view';
+  title: string;
+  owner: string;
+  data: ZetkinView;
+  folderId: number | null;
+}
+
+type ViewBrowserBackItem = {
+  folderId: number | null;
+  id: string;
+  title: string | null;
+  type: 'back';
+};
+
+export type ViewBrowserItem =
+  | ViewBrowserFolderItem
+  | ViewBrowserViewItem
+  | ViewBrowserBackItem;
 
 interface UseItemsReturn {
   itemsFuture: IFuture<ViewBrowserItem[]>;

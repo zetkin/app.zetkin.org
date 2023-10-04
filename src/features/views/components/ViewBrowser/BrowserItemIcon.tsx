@@ -7,7 +7,7 @@ import {
 import { FC, useContext } from 'react';
 
 import { BrowserRowContext } from './BrowserRow';
-import { ViewBrowserItem } from 'features/views/models/ViewBrowserModel';
+import { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 interface BrowserItemIconProps {
   item: ViewBrowserItem;

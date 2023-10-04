@@ -18,13 +18,12 @@ import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useMessages } from 'core/i18n';
 import { ZetkinView } from './types';
 import ZUIFuture from 'zui/ZUIFuture';
-import {
+import useItems, {
   ViewBrowserItem,
   ViewBrowserViewItem,
-} from '../models/ViewBrowserModel';
+} from '../hooks/useItems';
 
 import messageIds from '../l10n/messageIds';
-import useItems from '../hooks/useItems';
 
 const ViewJumpMenu: FunctionComponent = () => {
   const messages = useMessages(messageIds);

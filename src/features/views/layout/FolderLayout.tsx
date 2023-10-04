@@ -3,8 +3,7 @@ import { useRouter } from 'next/router';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useFolder from '../hooks/useFolder';
 import useItemSummary from '../hooks/useItemSummary';
-import useModel from 'core/useModel';
-import ViewBrowserModel from '../models/ViewBrowserModel';
+import useViewBrowserMutation from '../hooks/useViewBrowserMutation';
 import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -24,10 +23,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
 
   const { folderFuture } = useFolder(parsedOrgId, folderId);
   const { itemSummaryFuture } = useItemSummary(parsedOrgId, folderId);
-
-  const model = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
-  );
+  const { renameItem } = useViewBrowserMutation(parsedOrgId);
 
   return (
     <ZUIFuture future={folderFuture}>
@@ -49,7 +45,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
             <ZUIEditTextinPlace
               key={data.id}
               onChange={(newTitle) => {
-                model.renameItem('folder', data.id, newTitle);
+                renameItem('folder', data.id, newTitle);
               }}
               value={data.title}
             />
