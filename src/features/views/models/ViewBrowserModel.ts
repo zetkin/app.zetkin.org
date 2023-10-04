@@ -2,7 +2,6 @@ import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
 import ViewDataRepo from '../repos/ViewDataRepo';
 import ViewsRepo from '../repos/ViewsRepo';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 export interface ViewBrowserFolderItem {
@@ -47,19 +46,6 @@ export default class ViewBrowserModel extends ModelBase {
     this._orgId = orgId;
     this._repo = new ViewsRepo(env);
     this._dataRepo = new ViewDataRepo(env);
-  }
-
-  createView(folderId?: number, rows?: number[]): IFuture<ZetkinView> {
-    const promise = this._repo
-      .createView(this._orgId, folderId, rows)
-      .then((view) => {
-        this._env.router.push(
-          `/organize/${view.organization.id}/people/lists/${view.id}`
-        );
-        return view;
-      });
-
-    return new PromiseFuture(promise);
   }
 
   itemIsRenaming(type: 'folder' | 'view', id: number): boolean {

@@ -20,8 +20,8 @@ import StatusCardItem from './StatusCardItem';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import { useRouter } from 'next/router';
 import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
+import { useRouter } from 'next/router';
 
 interface CallAssignmentStatusCardProps {
   model: CallAssignmentModel;

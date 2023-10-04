@@ -18,10 +18,8 @@ import EmptyView from 'features/views/components/EmptyView';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
-import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -100,9 +98,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const model = useViewDataModel();
-  const browserModel = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
-  );
   const { createView } = useViewBrowserMutation(parseInt(orgId as string));
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
@@ -223,8 +218,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   };
 
   const onViewCreate = () => {
-    console.log('yeah');
-    browserModel.createView(view.folder?.id ?? 0, selection);
+    createView(view.folder?.id ?? 0, selection);
   };
 
   const avatarColumn: GridColDef = {
