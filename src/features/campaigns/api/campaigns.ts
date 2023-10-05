@@ -10,12 +10,3 @@ export const campaignsResource = (orgId: string) => {
     useQuery: createUseQuery<ZetkinCampaign[]>(key, url),
   };
 };
-
-export const campaignResource = (orgId: string, campaignId: string) => {
-  const key = ['campaign', campaignId];
-  const url = `/orgs/${orgId}/campaigns/${campaignId}`;
-
-  return {
-    useQuery: createUseQuery<ZetkinCampaign>(key, url),
-  };
-};
