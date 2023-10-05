@@ -9,6 +9,7 @@ import callAssignmentsSlice, {
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
 import campaignsSlice, {
+  campaignCreated,
   campaignDeleted,
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
@@ -58,6 +59,16 @@ listenerMiddleware.startListening({
   effect: (action) => {
     const orgId = action.payload[0];
     Router.push(`/organize/${orgId}/projects`);
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: campaignCreated,
+  effect: (action) => {
+    const campaign = action.payload;
+    Router.push(
+      `/organize/${campaign.organization?.id}/projects/${campaign.id}`
+    );
   },
 });
 

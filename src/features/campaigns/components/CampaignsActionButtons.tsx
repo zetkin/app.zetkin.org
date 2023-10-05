@@ -1,35 +1,27 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
 
-import CampaignBrowserModel from '../models/CampaignBrowserModel';
-import useModel from 'core/useModel';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useCreateCampaign from '../hooks/useCreateCampaign';
+import { useNumericRouteParams } from 'core/hooks';
 
 const CampaignActionButtons: React.FunctionComponent = () => {
   const messages = useMessages(messageIds);
-  const router = useRouter();
-  const { orgId } = router.query;
-  const model = useModel(
-    (env) => new CampaignBrowserModel(env, parseInt(orgId as string))
-  );
-
-  // Event Handlers
-  const handleCreateCampaign = () => {
-    const campaign = {
-      title: messages.form.createCampaign.newCampaign(),
-    };
-    model.createCampaign(campaign);
-  };
+  const { orgId } = useNumericRouteParams();
+  const { createCampaign } = useCreateCampaign(orgId);
 
   return (
     <Box display="flex">
       <Box mr={1}>
         <Button
           color="primary"
-          onClick={handleCreateCampaign}
+          onClick={() =>
+            createCampaign({
+              title: messages.form.createCampaign.newCampaign(),
+            })
+          }
           variant="contained"
         >
           <Msg id={messageIds.all.create} />
