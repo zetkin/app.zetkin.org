@@ -3,12 +3,18 @@ import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient } from 'core/hooks';
 import { ZetkinCampaign } from 'utils/types/zetkin';
-import { campaignLoad, campaignLoaded } from '../store';
+import {
+  campaignLoad,
+  campaignLoaded,
+  campaignUpdate,
+  campaignUpdated,
+} from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface UseCampaignReturn {
   data: ZetkinCampaign | null;
+  updateCampaign: (data: Partial<ZetkinCampaign>) => IFuture<ZetkinCampaign>;
 }
 
 export default function useCampaign(
@@ -42,6 +48,22 @@ export default function useCampaign(
     }
   };
 
+  const updateCampaign = (
+    data: Partial<ZetkinCampaign>
+  ): IFuture<ZetkinCampaign> => {
+    const mutatingAttributes = Object.keys(data);
+
+    dispatch(campaignUpdate([campId, mutatingAttributes]));
+    const promise = apiClient
+      .patch<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campId}`, data)
+      .then((data: ZetkinCampaign) => {
+        dispatch(campaignUpdated(data));
+        return data;
+      });
+
+    return new PromiseFuture(promise);
+  };
+
   const { data } = getData();
-  return { data };
+  return { data, updateCampaign };
 }

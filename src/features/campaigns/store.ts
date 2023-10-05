@@ -51,9 +51,36 @@ const campaignsSlice = createSlice({
       item.isLoading = false;
       item.isStale = false;
     },
+    campaignUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [id, attributes] = action.payload;
+      const item = state.campaignList.items.find((item) => item.id == id);
+
+      if (item) {
+        item.mutating = item.mutating
+          .filter((attr) => !attributes.includes(attr))
+          .concat(attributes);
+      }
+    },
+    campaignUpdated: (state, action: PayloadAction<ZetkinCampaign>) => {
+      const campaign = action.payload;
+      const item = state.campaignList.items.find(
+        (item) => item.id == campaign.id
+      );
+
+      if (item) {
+        item.data = { ...item.data, ...campaign };
+        item.mutating = [];
+      }
+    },
   },
 });
 
 export default campaignsSlice;
-export const { campaignCreate, campaignCreated, campaignLoad, campaignLoaded } =
-  campaignsSlice.actions;
+export const {
+  campaignCreate,
+  campaignCreated,
+  campaignLoad,
+  campaignLoaded,
+  campaignUpdate,
+  campaignUpdated,
+} = campaignsSlice.actions;
