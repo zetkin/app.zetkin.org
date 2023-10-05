@@ -4,6 +4,7 @@ import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient } from 'core/hooks';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import {
+  campaignDeleted,
   campaignLoad,
   campaignLoaded,
   campaignUpdate,
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 interface UseCampaignReturn {
   data: ZetkinCampaign | null;
+  deleteCampaign: () => void;
   updateCampaign: (data: Partial<ZetkinCampaign>) => IFuture<ZetkinCampaign>;
 }
 
@@ -48,6 +50,11 @@ export default function useCampaign(
     }
   };
 
+  const deleteCampaign = () => {
+    apiClient.delete(`/api/orgs/${orgId}/campaigns/${campId}`);
+    dispatch(campaignDeleted([orgId, campId]));
+  };
+
   const updateCampaign = (
     data: Partial<ZetkinCampaign>
   ): IFuture<ZetkinCampaign> => {
@@ -65,5 +72,5 @@ export default function useCampaign(
   };
 
   const { data } = getData();
-  return { data, updateCampaign };
+  return { data, deleteCampaign, updateCampaign };
 }

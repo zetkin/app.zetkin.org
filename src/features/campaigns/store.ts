@@ -29,6 +29,15 @@ const campaignsSlice = createSlice({
       );
       state.recentlyCreatedCampaign = campaign;
     },
+    campaignDeleted: (
+      state,
+      action: PayloadAction<[orgId: number, campaignId: number]>
+    ) => {
+      const campaignId = action.payload[1];
+      state.campaignList.items = state.campaignList.items.filter(
+        (item) => item.id != campaignId
+      );
+    },
     campaignLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.campaignList.items.find((item) => item.id == id);
@@ -79,6 +88,7 @@ export default campaignsSlice;
 export const {
   campaignCreate,
   campaignCreated,
+  campaignDeleted,
   campaignLoad,
   campaignLoaded,
   campaignUpdate,

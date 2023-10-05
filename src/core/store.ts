@@ -1,9 +1,17 @@
-import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
+import Router from 'next/router';
+import {
+  configureStore,
+  ConfigureStoreOptions,
+  createListenerMiddleware,
+} from '@reduxjs/toolkit';
 
 import callAssignmentsSlice, {
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
-import campaignsSlice, { CampaignsStoreSlice } from 'features/campaigns/store';
+import campaignsSlice, {
+  campaignDeleted,
+  CampaignsStoreSlice,
+} from 'features/campaigns/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import organizationsSlice, {
   OrganizationsStoreSlice,
@@ -43,10 +51,22 @@ const reducer = {
   views: viewsSlice.reducer,
 };
 
+const listenerMiddleware = createListenerMiddleware();
+
+listenerMiddleware.startListening({
+  actionCreator: campaignDeleted,
+  effect: (action) => {
+    const orgId = action.payload[0];
+    Router.push(`/organize/${orgId}/projects`);
+  },
+});
+
 export default function createStore(
   preloadedState?: ConfigureStoreOptions<RootState>['preloadedState']
 ) {
   return configureStore({
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().prepend(listenerMiddleware.middleware),
     preloadedState: preloadedState,
     reducer: reducer,
   });

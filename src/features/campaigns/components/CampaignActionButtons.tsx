@@ -1,7 +1,5 @@
 import { Box } from '@mui/material';
 import { Link } from '@mui/material';
-import { useMutation } from 'react-query';
-import { useRouter } from 'next/router';
 import {
   AssignmentOutlined,
   CheckBoxOutlined,
@@ -16,14 +14,12 @@ import React, { useContext, useState } from 'react';
 import CampaignDataModel from '../models/CampaignDataModel';
 import CampaignDetailsForm from 'features/campaigns/components/CampaignDetailsForm';
 import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actions/createTask';
-import deleteCampaign from 'features/campaigns/fetching/deleteCampaign';
 import useModel from 'core/useModel';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 
 import EventDataModel from 'features/events/models/EventDataModel';
@@ -45,10 +41,8 @@ const CampaignActionButtons: React.FunctionComponent<
   CampaignActionButtonsProps
 > = ({ campaign }) => {
   const messages = useMessages(messageIds);
-  const router = useRouter();
   const { orgId } = useNumericRouteParams();
   // Dialogs
-  const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
@@ -60,23 +54,7 @@ const CampaignActionButtons: React.FunctionComponent<
     (env) => new EventDataModel(env, orgId, campaign.id)
   );
 
-  const { updateCampaign } = useCampaign(orgId, campaign.id);
-
-  // Mutations
-  const deleteCampaignMutation = useMutation(
-    deleteCampaign(orgId, campaign.id)
-  );
-
-  // Event Handlers
-  const handleDeleteCampaign = () => {
-    deleteCampaignMutation.mutate(undefined, {
-      onError: () =>
-        showSnackbar('error', messages.form.deleteCampaign.error()),
-      onSuccess: () => {
-        router.push(`/organize/${orgId}/projects`);
-      },
-    });
-  };
+  const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
 
   const handleCreateEvent = () => {
     const defaultStart = new Date();
@@ -166,7 +144,7 @@ const CampaignActionButtons: React.FunctionComponent<
               ),
               onSelect: () => {
                 showConfirmDialog({
-                  onSubmit: handleDeleteCampaign,
+                  onSubmit: deleteCampaign,
                   title: messages.form.deleteCampaign.title(),
                   warningText: messages.form.deleteCampaign.warning(),
                 });
