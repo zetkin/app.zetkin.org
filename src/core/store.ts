@@ -3,6 +3,7 @@ import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
 import callAssignmentsSlice, {
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
+import campaignsSlice, { CampaignsStoreSlice } from 'features/campaigns/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import organizationsSlice, {
   OrganizationsStoreSlice,
@@ -18,6 +19,7 @@ import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 
 export interface RootState {
   callAssignments: CallAssignmentSlice;
+  campaigns: CampaignsStoreSlice;
   events: EventsStoreSlice;
   smartSearch: smartSearchStoreSlice;
   surveys: SurveysStoreSlice;
@@ -30,6 +32,7 @@ export interface RootState {
 
 const reducer = {
   callAssignments: callAssignmentsSlice.reducer,
+  campaigns: campaignsSlice.reducer,
   events: eventsSlice.reducer,
   organizations: organizationsSlice.reducer,
   smartSearch: smartSearchSlice.reducer,

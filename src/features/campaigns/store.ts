@@ -29,8 +29,31 @@ const campaignsSlice = createSlice({
       );
       state.recentlyCreatedCampaign = campaign;
     },
+    campaignLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.campaignList.items.find((item) => item.id == id);
+      state.campaignList.items = state.campaignList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    campaignLoaded: (state, action: PayloadAction<ZetkinCampaign>) => {
+      const id = action.payload.id;
+      const item = state.campaignList.items.find((item) => item.id == id);
+
+      if (!item) {
+        throw new Error(
+          'Finished loading something that never started loading'
+        );
+      }
+
+      item.data = action.payload;
+      item.loaded = new Date().toISOString();
+      item.isLoading = false;
+      item.isStale = false;
+    },
   },
 });
 
 export default campaignsSlice;
-export const { campaignCreate, campaignCreated } = campaignsSlice.actions;
+export const { campaignCreate, campaignCreated, campaignLoad, campaignLoaded } =
+  campaignsSlice.actions;

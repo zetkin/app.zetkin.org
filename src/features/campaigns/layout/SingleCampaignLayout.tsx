@@ -1,17 +1,17 @@
 import { FormattedDate } from 'react-intl';
 import { FunctionComponent } from 'react';
 import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 
 import CampaignActionButtons from 'features/campaigns/components/CampaignActionButtons';
 import EditableCampaignTitle from '../components/EditableCampaignTitle';
-import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from '../fetching/getCampaignEvents';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useCampaign from '../hooks/useCampaign';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface SingleCampaignLayoutProps {
   children: React.ReactNode;
@@ -23,17 +23,13 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
   fixedHeight,
 }) => {
   const messages = useMessages(messageIds);
-  const { campId, orgId } = useRouter().query;
-  const campaignQuery = useQuery(
-    ['campaign', orgId, campId],
-    getCampaign(orgId as string, campId as string)
-  );
+  const { orgId, campId } = useNumericRouteParams();
   const campaignEventsQuery = useQuery(
     ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId as string, campId as string)
+    getCampaignEvents(orgId.toString(), campId.toString())
   );
 
-  const campaign = campaignQuery.data;
+  const { data: campaign } = useCampaign(orgId, campId);
   const campaignEvents = campaignEventsQuery.data || [];
 
   const [firstEvent, lastEvent] = getFirstAndLastEvent(campaignEvents);

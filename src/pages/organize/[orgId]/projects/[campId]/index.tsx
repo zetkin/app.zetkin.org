@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
@@ -11,6 +10,7 @@ import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import useCampaign from 'features/campaigns/hooks/useCampaign';
 import useServerSide from 'core/useServerSide';
 
 const scaffoldOptions = {
@@ -82,12 +82,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
   campId,
 }) => {
   const isOnServer = useServerSide();
-  const campaignQuery = useQuery(
-    ['campaign', orgId, campId],
-    getCampaign(orgId, campId)
-  );
-
-  const campaign = campaignQuery.data;
+  const { data: campaign } = useCampaign(parseInt(orgId), parseInt(campId));
 
   if (isOnServer) {
     return null;

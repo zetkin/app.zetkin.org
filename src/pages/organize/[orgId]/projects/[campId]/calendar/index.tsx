@@ -2,18 +2,16 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import Calendar from 'features/calendar/components';
+import { campaignTasksResource } from 'features/tasks/api/tasks';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
-import { useQuery } from 'react-query';
-
-import { campaignTasksResource } from 'features/tasks/api/tasks';
+import useCampaign from 'features/campaigns/hooks/useCampaign';
 import { useMessages } from 'core/i18n';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
 import useServerSide from 'core/useServerSide';
 
 const scaffoldOptions = {
@@ -93,10 +91,7 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
   campId,
 }) => {
   const messages = useMessages(messageIds);
-  const campaignQuery = useQuery(
-    ['campaign', orgId, campId],
-    getCampaign(orgId, campId)
-  );
+  const { data: campaign } = useCampaign(parseInt(orgId), parseInt(campId));
 
   const isOnServer = useServerSide();
   if (isOnServer) {
@@ -106,9 +101,7 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
   return (
     <>
       <Head>
-        <title>
-          {`${campaignQuery.data?.title} - ${messages.layout.calendar()}`}
-        </title>
+        <title>{`${campaign?.title} - ${messages.layout.calendar()}`}</title>
       </Head>
       <Calendar />
     </>
