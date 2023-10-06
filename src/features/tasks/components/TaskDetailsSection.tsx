@@ -48,15 +48,25 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({
 
           <TaskProperty
             title={messages.taskDetails.publishedTime()}
-            value={task.published && <ZUIDateTime datetime={task.published} />}
+            value={
+              task.published && (
+                <ZUIDateTime datetime={task.published + '.000Z'} />
+              )
+            }
           />
           <TaskProperty
             title={messages.taskDetails.deadlineTime()}
-            value={task.deadline && <ZUIDateTime datetime={task.deadline} />}
+            value={
+              task.deadline && (
+                <ZUIDateTime datetime={task.deadline + '.000Z'} />
+              )
+            }
           />
           <TaskProperty
             title={messages.taskDetails.expiresTime()}
-            value={task.expires && <ZUIDateTime datetime={task.expires} />}
+            value={
+              task.expires && <ZUIDateTime datetime={task.expires + '.000Z'} />
+            }
           />
           <TaskProperty
             title={messages.taskDetails.reassignInterval.label()}
