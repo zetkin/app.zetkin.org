@@ -81,6 +81,17 @@ const campaignsSlice = createSlice({
         item.mutating = [];
       }
     },
+    campaignsLoad: (state) => {
+      state.campaignList.isLoading = true;
+    },
+    campaignsLoaded: (state, action: PayloadAction<ZetkinCampaign[]>) => {
+      const campaigns = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.campaignList = remoteList(campaigns);
+      state.campaignList.loaded = timestamp;
+      state.campaignList.items.forEach((item) => (item.loaded = timestamp));
+    },
   },
 });
 
@@ -93,4 +104,6 @@ export const {
   campaignLoaded,
   campaignUpdate,
   campaignUpdated,
+  campaignsLoad,
+  campaignsLoaded,
 } = campaignsSlice.actions;

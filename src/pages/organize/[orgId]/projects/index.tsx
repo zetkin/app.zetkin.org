@@ -5,17 +5,18 @@ import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import CampaignCard from 'features/campaigns/components/CampaignCard';
-import getCampaigns from 'features/campaigns/fetching/getCampaigns';
 import getEvents from 'features/events/fetching/getEvents';
 import getOrg from 'utils/fetching/getOrg';
 import getUpcomingEvents from 'features/events/fetching/getUpcomingEvents';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useServerSide from 'core/useServerSide';
+import { ZetkinCampaign } from 'utils/types/zetkin';
+import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -38,12 +39,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
   await ctx.queryClient.prefetchQuery(
-    ['campaigns', orgId],
-    getCampaigns(orgId as string, ctx.apiFetch)
-  );
-  const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
-
-  await ctx.queryClient.prefetchQuery(
     ['upcomingEvents', orgId],
     getUpcomingEvents(orgId as string, ctx.apiFetch)
   );
@@ -58,9 +53,17 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
   const eventsState = ctx.queryClient.getQueryState(['events', orgId]);
 
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    await apiClient.get<ZetkinCampaign[]>(`/api/orgs/${orgId}/campaigns/`);
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
+
   if (
     orgState?.status === 'success' &&
-    campaignsState?.status === 'success' &&
     eventsState?.status === 'success' &&
     upcomingEventsState?.status === 'success'
   ) {
@@ -84,7 +87,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
+  const { data: campaigns } = useCampaigns(parseInt(orgId));
   const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
 
   const onServer = useServerSide();
@@ -92,7 +95,6 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     return null;
   }
 
-  const campaigns = campaignsQuery.data || [];
   const events = eventsQuery.data || [];
 
   return (
@@ -107,7 +109,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         </Typography>
 
         <Grid container spacing={2}>
-          {campaigns.map((campaign) => {
+          {campaigns?.map((campaign) => {
             return (
               <Grid key={campaign.id} item lg={3} md={4} xs={12}>
                 <CampaignCard campaign={campaign} events={events} />

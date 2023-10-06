@@ -1,11 +1,8 @@
 import { Form } from 'react-final-form';
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import validator from 'validator';
 import { DateTimePicker, TextField } from 'mui-rff';
 
-import getCampaigns from 'features/campaigns/fetching/getCampaigns';
 import { ZetkinTask } from 'utils/types/zetkin';
 import {
   AnyTaskTypeConfig,
@@ -36,6 +33,8 @@ import {
 } from './constants';
 
 import messageIds from 'features/tasks/l10n/messageIds';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface TaskDetailsFormProps {
   onSubmit: (task: ZetkinTaskRequestBody) => void;
@@ -49,12 +48,8 @@ const TaskDetailsForm = ({
   task,
 }: TaskDetailsFormProps): JSX.Element => {
   const messages = useMessages(messageIds);
-  const router = useRouter();
-  const { campId, orgId } = router.query as { campId: string; orgId: string };
-  const { data: campaigns } = useQuery(
-    ['campaigns', orgId],
-    getCampaigns(orgId)
-  );
+  const { campId, orgId } = useNumericRouteParams();
+  const { data: campaigns } = useCampaigns(orgId);
   const taskStatus = task ? getTaskStatus(task) : null;
 
   const validate = (values: ZetkinTaskRequestBody) => {
@@ -147,7 +142,7 @@ const TaskDetailsForm = ({
   return (
     <Form
       initialValues={{
-        campaign_id: parseInt(campId),
+        campaign_id: campId,
         config: {
           ...task?.config,
           // Set first value from fields array
