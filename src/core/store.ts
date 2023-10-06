@@ -6,6 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import callAssignmentsSlice, {
+  callAssignmentCreated,
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
 import campaignsSlice, {
@@ -20,7 +21,10 @@ import organizationsSlice, {
 import smartSearchSlice, {
   smartSearchStoreSlice,
 } from 'features/smartSearch/store';
-import surveysSlice, { SurveysStoreSlice } from 'features/surveys/store';
+import surveysSlice, {
+  surveyCreated,
+  SurveysStoreSlice,
+} from 'features/surveys/store';
 import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
@@ -68,6 +72,26 @@ listenerMiddleware.startListening({
     const campaign = action.payload;
     Router.push(
       `/organize/${campaign.organization?.id}/projects/${campaign.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: callAssignmentCreated,
+  effect: (action) => {
+    const [callAssignment, campId] = action.payload;
+    Router.push(
+      `/organize/${callAssignment.organization?.id}/projects/${campId}/callassignments/${callAssignment.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: surveyCreated,
+  effect: (action) => {
+    const [survey, campId] = action.payload;
+    Router.push(
+      `/organize/${survey.organization.id}/projects/${campId}/surveys/${survey.id}`
     );
   },
 });

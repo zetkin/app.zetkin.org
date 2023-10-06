@@ -11,7 +11,6 @@ import {
   ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
-  ZetkinSurveyPostBody,
   ZetkinSurveySubmission,
   ZetkinSurveySubmissionPatchBody,
   ZetkinSurveyTextElement,
@@ -32,8 +31,6 @@ import {
   statsLoaded,
   submissionLoad,
   submissionLoaded,
-  surveyCreate,
-  surveyCreated,
   surveyLoad,
   surveyLoaded,
   surveysLoad,
@@ -152,21 +149,6 @@ export default class SurveysRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
-  }
-
-  async createSurvey(
-    surveyBody: ZetkinSurveyPostBody,
-    orgId: number,
-    campaignId: number
-  ): Promise<ZetkinSurvey> {
-    this._store.dispatch(surveyCreate());
-    const survey = await this._apiClient.post<
-      ZetkinSurveyExtended,
-      ZetkinSurveyPostBody
-    >(`/api/orgs/${orgId}/campaigns/${campaignId}/surveys`, surveyBody);
-
-    this._store.dispatch(surveyCreated(survey));
-    return survey;
   }
 
   async deleteElementOption(

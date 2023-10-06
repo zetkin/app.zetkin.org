@@ -11,21 +11,20 @@ import {
 } from '@mui/icons-material';
 import React, { useContext, useState } from 'react';
 
-import CampaignDataModel from '../models/CampaignDataModel';
 import CampaignDetailsForm from 'features/campaigns/components/CampaignDetailsForm';
 import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actions/createTask';
+import EventDataModel from 'features/events/models/EventDataModel';
+import messageIds from '../l10n/messageIds';
+import useCampaign from '../hooks/useCampaign';
+import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
 import useModel from 'core/useModel';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
-
-import EventDataModel from 'features/events/models/EventDataModel';
-import messageIds from '../l10n/messageIds';
-import useCampaign from '../hooks/useCampaign';
-import { useNumericRouteParams } from 'core/hooks';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -41,19 +40,20 @@ const CampaignActionButtons: React.FunctionComponent<
   CampaignActionButtonsProps
 > = ({ campaign }) => {
   const messages = useMessages(messageIds);
-  const { orgId } = useNumericRouteParams();
-  // Dialogs
+  const { orgId, campId } = useNumericRouteParams();
+
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
-  const model = useModel(
-    (env) => new CampaignDataModel(env, orgId, campaign.id)
-  );
   const eventModel = useModel(
     (env) => new EventDataModel(env, orgId, campaign.id)
   );
 
+  const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
+    orgId,
+    campId
+  );
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
 
   const handleCreateEvent = () => {
@@ -73,24 +73,6 @@ const CampaignActionButtons: React.FunctionComponent<
       start_time: defaultStart.toISOString(),
     });
   };
-  const handleCreateCallAssignment = () => {
-    const assignment = {
-      goal_filters: [],
-      target_filters: [],
-      title: messages.form.createCallAssignment.newCallAssignment(),
-    };
-    model.createCallAssignment(assignment);
-  };
-  const handleCreateSurvey = () => {
-    model.createSurvey({
-      signature: 'require_signature',
-      title: messages.form.createSurvey.newSurvey(),
-    });
-  };
-  const handleCreateTask = () => {
-    // Open the creat task dialog
-    setCreateTaskDialogOpen(true);
-  };
 
   return (
     <Box display="flex" gap={1}>
@@ -105,17 +87,24 @@ const CampaignActionButtons: React.FunctionComponent<
             {
               icon: <HeadsetMic />,
               label: messages.linkGroup.createCallAssignment(),
-              onClick: handleCreateCallAssignment,
+              onClick: () =>
+                createCallAssignment({
+                  title: messages.form.createCallAssignment.newCallAssignment(),
+                }),
             },
             {
               icon: <AssignmentOutlined />,
               label: messages.linkGroup.createSurvey(),
-              onClick: handleCreateSurvey,
+              onClick: () =>
+                createSurvey({
+                  signature: 'require_signature',
+                  title: messages.form.createSurvey.newSurvey(),
+                }),
             },
             {
               icon: <CheckBoxOutlined />,
               label: messages.linkGroup.createTask(),
-              onClick: handleCreateTask,
+              onClick: () => setCreateTaskDialogOpen(true),
             },
           ]}
           label={messages.linkGroup.createActivity()}
@@ -181,7 +170,7 @@ const CampaignActionButtons: React.FunctionComponent<
       >
         <CampaignDetailsForm
           campaign={campaign}
-          onCancel={() => setCreateTaskDialogOpen(false)}
+          onCancel={() => setEditCampaignDialogOpen(false)}
           onSubmit={(data) => {
             updateCampaign({ ...data });
             setEditCampaignDialogOpen(false);

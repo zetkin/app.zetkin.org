@@ -36,9 +36,9 @@ const callAssignmentsSlice = createSlice({
     },
     callAssignmentCreated: (
       state,
-      action: PayloadAction<CallAssignmentData>
+      action: PayloadAction<[CallAssignmentData, number]>
     ) => {
-      const callAssignment = action.payload;
+      const [callAssignment] = action.payload;
       state.assignmentList.isLoading = false;
       state.assignmentList.items.push(
         remoteItem(callAssignment.id, { data: callAssignment })
