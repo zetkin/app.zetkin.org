@@ -1,7 +1,5 @@
 import { generateRandomColor } from 'utils/colorUtils';
-import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
-import { useApiClient } from 'core/hooks';
 import {
   campaignCreate,
   campaignCreated,
@@ -12,7 +10,7 @@ import {
   campaignUpdated,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-import { useDispatch, useSelector } from 'react-redux';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinCampaign, ZetkinCampaignPostBody } from 'utils/types/zetkin';
 
 interface UseCampaignReturn {
@@ -29,8 +27,8 @@ export default function useCampaign(
   campId: number
 ): UseCampaignReturn {
   const apiClient = useApiClient();
-  const dispatch = useDispatch();
-  const campaignsSlice = useSelector((state: RootState) => state.campaigns);
+  const dispatch = useAppDispatch();
+  const campaignsSlice = useAppSelector((state) => state.campaigns);
   const campaignItems = campaignsSlice.campaignList.items;
 
   const createCampaign = (

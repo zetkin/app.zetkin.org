@@ -1,7 +1,6 @@
-import { useApiClient } from 'core/hooks';
-import { useDispatch } from 'react-redux';
 import { campaignCreate, campaignCreated } from '../store';
 import { IFuture, PromiseFuture } from 'core/caching/futures';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinCampaign, ZetkinCampaignPostBody } from 'utils/types/zetkin';
 
 interface UseCreateCampaignReturn {
@@ -14,7 +13,7 @@ export default function useCreateCampaign(
   orgId: number
 ): UseCreateCampaignReturn {
   const apiClient = useApiClient();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const createCampaign = (
     campaignBody: ZetkinCampaignPostBody
