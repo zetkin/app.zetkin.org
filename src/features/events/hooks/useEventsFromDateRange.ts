@@ -6,7 +6,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
   EventActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+} from 'features/campaigns/hooks/useCampaignActivities';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
 import {
   useApiClient,

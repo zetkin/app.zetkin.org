@@ -14,7 +14,7 @@ import { useMessages } from 'core/i18n';
 import {
   ACTIVITIES,
   CampaignActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+} from 'features/campaigns/hooks/useCampaignActivities';
 import useClusteredActivities, {
   CLUSTER_TYPE,
 } from 'features/campaigns/hooks/useClusteredActivities';

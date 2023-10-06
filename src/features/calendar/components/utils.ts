@@ -7,7 +7,7 @@ import {
   ACTIVITIES,
   CampaignActivity,
   EventActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+} from 'features/campaigns/hooks/useCampaignActivities';
 
 const makeIsoDateString = (date: Date): string | null => {
   try {

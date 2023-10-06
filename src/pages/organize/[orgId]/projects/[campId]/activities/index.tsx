@@ -9,13 +9,12 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import CampaignActivitiesModel, {
+import useCampaignActivities, {
   ACTIVITIES,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+} from 'features/campaigns/hooks/useCampaignActivities';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -45,8 +44,9 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const model = useModel(
-    (env) => new CampaignActivitiesModel(env, parseInt(orgId))
+  const { campaignActivities } = useCampaignActivities(
+    parseInt(orgId),
+    parseInt(orgId)
   );
   const [searchString, setSearchString] = useState('');
 
@@ -72,7 +72,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   }
   return (
     <Box>
-      <ZUIFuture future={model.getCampaignActivities(parseInt(campId))}>
+      <ZUIFuture future={campaignActivities}>
         {(data) => {
           if (data.length === 0) {
             return (

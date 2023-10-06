@@ -1,10 +1,14 @@
-import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
-import Environment from 'core/env/Environment';
 import EventsRepo from 'features/events/repo/EventsRepo';
-import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
-import TasksRepo from 'features/tasks/repos/TasksRepo';
-import { dateIsAfter, dateIsBefore, isSameDate } from 'utils/dateUtils';
+import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
+import { useEnv } from 'core/hooks';
+import useTasks from 'features/tasks/hooks/useTasks';
+import {
+  dateIsAfter,
+  dateIsBefore,
+  getUTCDateWithoutTime,
+  isSameDate,
+} from 'utils/dateUtils';
 import {
   ErrorFuture,
   IFuture,
@@ -62,26 +66,27 @@ export type ActivityOverview = {
   tomorrow: CampaignActivity[];
 };
 
-export default class CampaignActivitiesModel extends ModelBase {
-  private _callAssignmentsRepo: CallAssignmentsRepo;
-  private _eventsRepo: EventsRepo;
-  private _orgId: number;
-  private _surveysRepo: SurveysRepo;
-  private _tasksRepo: TasksRepo;
+interface UseCampaignActivitiesReturn {
+  archivedActivities: IFuture<CampaignActivity[]>;
+  activityOverview: IFuture<ActivityOverview>;
+  campaignActivities: IFuture<CampaignActivity[]>;
+  currentActivities: IFuture<CampaignActivity[]>;
+}
 
-  constructor(env: Environment, orgId: number) {
-    super();
-    this._orgId = orgId;
-    this._callAssignmentsRepo = new CallAssignmentsRepo(env);
-    this._eventsRepo = new EventsRepo(env);
-    this._surveysRepo = new SurveysRepo(env);
-    this._tasksRepo = new TasksRepo(env);
-  }
+export default function useCampaignActivities(
+  orgId: number,
+  campaignId?: number
+): UseCampaignActivitiesReturn {
+  const env = useEnv();
+  const eventsRepo = new EventsRepo(env);
+  const surveysRepo = new SurveysRepo(env);
+  const callAssignmentsFuture = useCallAssignments(orgId);
+  const tasksFuture = useTasks(orgId);
 
-  getActivityOverview(campaignId?: number): IFuture<ActivityOverview> {
+  const getActivityOverview = (): IFuture<ActivityOverview> => {
     const activitiesFuture = campaignId
-      ? this.getCampaignActivities(campaignId)
-      : this.getCurrentActivities();
+      ? getCampaignActivities()
+      : getCurrentActivities();
 
     if (activitiesFuture.isLoading) {
       return new LoadingFuture();
@@ -167,15 +172,13 @@ export default class CampaignActivitiesModel extends ModelBase {
     }
 
     return new ResolvedFuture(overview);
-  }
+  };
 
-  getAllActivities(campaignId?: number): IFuture<CampaignActivity[]> {
-    const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
-      this._orgId
-    );
-    const eventsFuture = this._eventsRepo.getAllEvents(this._orgId);
-    const surveysFuture = this._surveysRepo.getSurveys(this._orgId);
-    const tasksFuture = this._tasksRepo.getTasks(this._orgId);
+  const getAllActivities = (
+    campaignId?: number
+  ): IFuture<CampaignActivity[]> => {
+    const eventsFuture = eventsRepo.getAllEvents(orgId);
+    const surveysFuture = surveysRepo.getSurveys(orgId);
 
     if (
       (callAssignmentsFuture.isLoading && !callAssignmentsFuture.data) ||
@@ -244,10 +247,12 @@ export default class CampaignActivitiesModel extends ModelBase {
     });
 
     return new ResolvedFuture(sorted);
-  }
+  };
 
-  getArchivedActivities(campaignId?: number): IFuture<CampaignActivity[]> {
-    const activities = this.getAllActivities(campaignId);
+  const getArchivedActivities = (
+    campaignId?: number
+  ): IFuture<CampaignActivity[]> => {
+    const activities = getAllActivities(campaignId);
     if (activities.isLoading) {
       return new LoadingFuture();
     } else if (activities.error) {
@@ -264,31 +269,10 @@ export default class CampaignActivitiesModel extends ModelBase {
     );
 
     return new ResolvedFuture(filtered || []);
-  }
+  };
 
-  getArchivedStandaloneActivities(): IFuture<CampaignActivity[]> {
-    const activities = this.getArchivedActivities().data;
-    const filtered = activities?.filter(
-      (activity) => activity.data.campaign === null
-    );
-    return new ResolvedFuture(filtered || []);
-  }
-
-  getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
-    const activities = this.getCurrentActivities();
-    if (activities.isLoading) {
-      return new LoadingFuture();
-    } else if (activities.error) {
-      return new ErrorFuture(activities.error);
-    }
-    const filtered = activities.data?.filter(
-      (activity) => activity.data.campaign?.id === campId
-    );
-    return new ResolvedFuture(filtered || []);
-  }
-
-  getCurrentActivities(): IFuture<CampaignActivity[]> {
-    const activities = this.getAllActivities();
+  const getCurrentActivities = (): IFuture<CampaignActivity[]> => {
+    const activities = getAllActivities();
     if (activities.isLoading) {
       return new LoadingFuture();
     } else if (activities.error) {
@@ -303,20 +287,25 @@ export default class CampaignActivitiesModel extends ModelBase {
     );
 
     return new ResolvedFuture(filtered || []);
-  }
-}
+  };
 
-function getUTCDateWithoutTime(naiveDateString: string | null): Date | null {
-  if (!naiveDateString) {
-    return null;
-  }
+  const getCampaignActivities = (): IFuture<CampaignActivity[]> => {
+    const activities = getCurrentActivities();
+    if (activities.isLoading) {
+      return new LoadingFuture();
+    } else if (activities.error) {
+      return new ErrorFuture(activities.error);
+    }
+    const filtered = activities.data?.filter(
+      (activity) => activity.data.campaign?.id === campaignId
+    );
+    return new ResolvedFuture(filtered || []);
+  };
 
-  const dateFromNaive = new Date(naiveDateString);
-  const utcTime = Date.UTC(
-    dateFromNaive.getFullYear(),
-    dateFromNaive.getMonth(),
-    dateFromNaive.getDate()
-  );
-
-  return new Date(utcTime);
+  return {
+    activityOverview: getActivityOverview(),
+    archivedActivities: getArchivedActivities(),
+    campaignActivities: getCampaignActivities(),
+    currentActivities: getCurrentActivities(),
+  };
 }

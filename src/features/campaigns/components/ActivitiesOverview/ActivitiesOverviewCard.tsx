@@ -15,7 +15,7 @@ import ZUIEmptyState from 'zui/ZUIEmptyState';
 import {
   ACTIVITIES,
   CampaignActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+} from 'features/campaigns/hooks/useCampaignActivities';
 import { Msg, useMessages } from 'core/i18n';
 import useClusteredActivities, {
   CLUSTER_TYPE,
