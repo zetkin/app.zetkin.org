@@ -75,6 +75,15 @@ feat:
         publish: Publiser
         unpublish: Avpubliser
       move: Flytt
+      moveCopyButtons:
+        copy: Kopier
+        copyMenuHeader: Kopier {numberOfEvents} arrangementer til
+        createShift: Etter hvert arrangement (legg til et skift)
+        duplicate: Samme tid og dato (dupliser)
+        move: Flytt
+        moveMenuHeader: Flytt {numberOfEvents} arrangementer til
+        nextDay: Neste dag {dates}
+        nextWeek: Neste uke {dates}
     showMore: Vis
     today: I dag
   callAssignments:
@@ -88,7 +97,7 @@ feat:
         nå et mål
       cooldownLabel: Ventetid i timer
       hours: '{cooldown, plural, =0 {None} =1 {# time} other {# timer}}'
-      missingPhoneNumber: Mangler telefonnumer
+      missingPhoneNumber: Mangler telefonnummer
       organizerActionNeeded: Må følges opp av koordinator
       subtitle: Folk som ikke er klare til å ringes
       title: Blokkert
@@ -103,10 +112,10 @@ feat:
       customize:
         exclude:
           h: Utelukkede tags
-          intro: Aldri ring folk med disse tæggene.
+          intro: Aldri ring folk med disse etikettene.
         prioritize:
-          h: Prioriterte tægger
-          intro: Ring til folk med disse tæggene først.
+          h: Prioriterte etiketter
+          intro: Ring til folk med disse etikettene først.
         title: Tilpass køen til {name}
       customizeButton: Tilpass
       excludedTagsColumn: Utelukkede tags
@@ -140,6 +149,7 @@ feat:
       defineButton: Rediger kriterier for fullføring
       subtitle: Folk som oppfyller fullføringskriteriene
       title: Ferdig
+    insightsHeader: Oppringinger og samtaler
     organizerActionPane:
       markAsSolved: Merk som løst
       markAsUnsolved: Merk som uløst
@@ -537,7 +547,7 @@ feat:
       most_active: De mest aktive
       person_data: Basert på navn, adresse, eller annen informasjon
       person_field: Basert på spesialfelter
-      person_tags: Basert på tægger
+      person_tags: Basert på etiketter
       person_view: Folk fra en liste
       random: Et tilfeldig utvalg av folk
       sub_query: Basert på et annet søk
@@ -1048,29 +1058,29 @@ feat:
     dialog:
       colorErrorText: Legg inn en gyldig HEX fargekode
       colorLabel: Farge
-      createTitle: Ny tægg
-      editTitle: Rediger tægg
+      createTitle: Ny etikett
+      editTitle: Rediger etikett
       groupCreatePrompt: Legg til "{groupName}"
       groupLabel: Gruppe
       groupSelectPlaceholder: Skriv for å søke eller opprette gruppe
       submitCreateTagButton: Lagre og bruk
-      titleErrorText: Du må gi tæggen et navn
+      titleErrorText: Du må gi etiketten et navn
       titleLabel: Navn
       typeLabel: Type
       types:
         none: Vanlig
         text: Med tekst
     manager:
-      addTag: Legg til tægg
+      addTag: Legg til etikett
       addValue: Legg til tekst for "{tag}"
-      createNamedTag: 'Opprett tægg: {name}'
-      createTag: Ny tægg
-      groupTags: Gruppér tægger
-      title: Tægger
+      createNamedTag: 'Opprett etikett: {name}'
+      createTag: Ny etikett
+      groupTags: Gruppér etiketter
+      title: Etiketter
       ungroupedHeader: Ingen gruppe
       valueTagForm:
         typeHint: '{type, select, text {Legg til tekst} other {Legg til tall}} som
-          vises på tæggen.'
+          vises på etiketten.'
   tasks:
     assignees:
       completedStates:
@@ -1368,8 +1378,8 @@ feat:
           noSurveys: Organisasjonen din har ingen spørreundersøkelser.
           title: Besvart dato
         tag:
-          description: Vis og skru av og på en tægg for folk i lista
-          title: Tægg
+          description: Vis og skru av og på en etikett for folk i lista
+          title: Etikett
         toggle:
           columnTitle: Sjekkliste
           description: Kolonne der du kan krysse av for hver rad
@@ -1391,7 +1401,7 @@ feat:
           question: Spørsmål
           smartSearch: Smartsøk
           survey: Spørreundersøkelse
-          tag: Tægg
+          tag: Etikett
       gallery:
         add: Legg til
         alreadyInView: Finnes i lista fra før
@@ -1669,13 +1679,13 @@ zui:
         files: Filer
         notes: Notater
         people: Folk
-        tags: Tægger
+        tags: Etiketter
       filterSelectLabel: 'Vis: {filter}'
       warning: Tidslinja er filtrert, klikk her for å fjerne filter.
     updates:
       any:
-        addtags: '{actor} la til {count, plural, =1 {en tægg} other {# tægger}}'
-        removetags: '{actor} fjernet {count, plural, =1 {en tægg} other {# tægger}}'
+        addtags: '{actor} la til {count, plural, =1 {en etikett} other {# etiketter}}'
+        removetags: '{actor} fjernet {count, plural, =1 {en etikett} other {# etiketter}}'
       journeyinstance:
         addassignee: '{actor} tildelte kontaktperson {assignee}'
         addnote: '{actor} la til et notat'
