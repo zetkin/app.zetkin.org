@@ -2,7 +2,6 @@ import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { useStore } from 'react-redux';
 import {
   ListItemIcon,
   ListItemText,
@@ -27,7 +26,7 @@ import theme from 'theme';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
-import { useEnv, useNumericRouteParams } from 'core/hooks';
+import { useAppDispatch, useEnv, useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(isoWeek);
 
@@ -288,7 +287,7 @@ export default CalendarWeekView;
 
 function useCreateEvent() {
   const env = useEnv();
-  const store = useStore();
+  const dispatch = useAppDispatch();
   const { campId, orgId } = useNumericRouteParams();
 
   async function createAndNavigate(startDate: Date, endDate: Date) {
@@ -304,7 +303,7 @@ function useCreateEvent() {
       }
     );
 
-    store.dispatch(eventCreated(event));
+    dispatch(eventCreated(event));
 
     const campaignId = event.campaign?.id ?? 'standalone';
     const url = `/organize/${orgId}/projects/${campaignId}/events/${event.id}`;

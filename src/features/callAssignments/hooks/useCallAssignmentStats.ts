@@ -1,7 +1,5 @@
 import { CallAssignmentStats } from '../apiTypes';
-import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
-import { useApiClient } from 'core/hooks';
 import useCallAssignment from './useCallAssignment';
 import {
   IFuture,
@@ -11,7 +9,7 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { statsLoad, statsLoaded } from '../store';
-import { useSelector, useStore } from 'react-redux';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseCallAssignmentStatsReturn {
   data: CallAssignmentStats | null;
@@ -25,11 +23,9 @@ export default function useCallAssignmentStats(
   orgId: number,
   assignmentId: number
 ): UseCallAssignmentStatsReturn {
-  const store = useStore<RootState>();
   const apiClient = useApiClient();
-  const callAssignmentSlice = useSelector(
-    (state: RootState) => state.callAssignments
-  );
+  const dispatch = useAppDispatch();
+  const callAssignmentSlice = useAppSelector((state) => state.callAssignments);
   const statsById = callAssignmentSlice.statsById;
   const { isTargeted } = useCallAssignment(orgId, assignmentId);
 
@@ -37,13 +33,13 @@ export default function useCallAssignmentStats(
     const statsItem = statsById[assignmentId];
 
     if (shouldLoad(statsItem)) {
-      store.dispatch(statsLoad(assignmentId));
+      dispatch(statsLoad(assignmentId));
       const promise = apiClient
         .get<CallAssignmentStats>(
           `/api/callAssignments/targets?org=${orgId}&assignment=${assignmentId}`
         )
         .then((data: CallAssignmentStats) => {
-          store.dispatch(statsLoaded({ ...data, id: assignmentId }));
+          dispatch(statsLoaded({ ...data, id: assignmentId }));
           return data;
         });
 

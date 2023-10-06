@@ -142,7 +142,7 @@ export default class EventsRepo {
   getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {
     const state = this._store.getState();
 
-    return loadListIfNecessary(state.events.eventList, this._store, {
+    return loadListIfNecessary(state.events.eventList, this._store.dispatch, {
       actionOnLoad: () => eventsLoad(),
       actionOnSuccess: (events) => eventsLoaded(events),
       loader: () =>
@@ -152,7 +152,7 @@ export default class EventsRepo {
 
   getAllTypes(orgId: number) {
     const state = this._store.getState();
-    return loadListIfNecessary(state.events.typeList, this._store, {
+    return loadListIfNecessary(state.events.typeList, this._store.dispatch, {
       actionOnLoad: () => typesLoad(orgId),
       actionOnSuccess: (data) => typesLoaded([orgId, data]),
       loader: () =>
@@ -185,7 +185,7 @@ export default class EventsRepo {
     const state = this._store.getState();
     const list = state.events.participantsByEventId[eventId];
 
-    return loadListIfNecessary(list, this._store, {
+    return loadListIfNecessary(list, this._store.dispatch, {
       actionOnLoad: () => participantsLoad(eventId),
       actionOnSuccess: (participants) =>
         participantsLoaded([eventId, participants]),
@@ -203,7 +203,7 @@ export default class EventsRepo {
     const state = this._store.getState();
     const list = state.events.respondentsByEventId[eventId];
 
-    return loadListIfNecessary(list, this._store, {
+    return loadListIfNecessary(list, this._store.dispatch, {
       actionOnLoad: () => respondentsLoad(eventId),
       actionOnSuccess: (respondents) =>
         respondentsLoaded([eventId, respondents]),
@@ -218,7 +218,7 @@ export default class EventsRepo {
     const state = this._store.getState();
     const locationsList = state.events.locationList;
 
-    return loadListIfNecessary(locationsList, this._store, {
+    return loadListIfNecessary(locationsList, this._store.dispatch, {
       actionOnLoad: () => locationsLoad(),
       actionOnSuccess: (data) => locationsLoaded(data),
       loader: () =>

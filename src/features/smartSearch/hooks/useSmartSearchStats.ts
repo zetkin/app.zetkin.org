@@ -1,11 +1,13 @@
-import { useDispatch, useSelector } from 'react-redux';
-
-import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinSmartSearchFilter } from '../components/types';
 import { ZetkinSmartSearchFilterStats } from '../types';
 import { statsLoad, statsLoaded } from '../store';
-import { useApiClient, useNumericRouteParams } from 'core/hooks';
+import {
+  useApiClient,
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 export default function useSmartSearchStats(
   filters: ZetkinSmartSearchFilter[]
@@ -13,10 +15,10 @@ export default function useSmartSearchStats(
   const { orgId } = useNumericRouteParams();
   const key = JSON.stringify(filters);
   const apiClient = useApiClient();
-  const statsItem = useSelector(
-    (state: RootState) => state.smartSearch.statsByFilterSpec[key]
+  const statsItem = useAppSelector(
+    (state) => state.smartSearch.statsByFilterSpec[key]
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   if (shouldLoad(statsItem)) {
     dispatch(statsLoad(key));

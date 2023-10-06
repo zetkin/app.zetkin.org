@@ -1,17 +1,17 @@
 import { CallAssignmentData } from '../apiTypes';
 import { RootState } from 'core/store';
-import { useApiClient } from 'core/hooks';
 import useCallAssignment from './useCallAssignment';
 import { useState } from 'react';
 import { callAssignmentUpdate, callAssignmentUpdated } from '../store';
 import { IFuture, PromiseFuture } from 'core/caching/futures';
-import { useSelector, useStore } from 'react-redux';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseCallerInstructionsReturn {
-  hasEmptyInstructions: boolean;
-  hasUnsavedChanges: boolean;
+  hasNewText: boolean;
   instructions: string;
+  isSaved: boolean;
   isSaving: boolean;
+  isUnsaved: boolean;
   revert: () => void;
   setInstructions: (instructions: string) => void;
   save: () => IFuture<CallAssignmentData>;
@@ -21,10 +21,10 @@ export default function useCallerInstructions(
   orgId: number,
   assignmentId: number
 ): UseCallerInstructionsReturn {
-  const store = useStore<RootState>();
   const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
   const key = `callerInstructions-${assignmentId}`;
-  const callAssignmentSlice = useSelector(
+  const callAssignmentSlice = useAppSelector(
     (state: RootState) => state.callAssignments
   );
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
@@ -75,14 +75,14 @@ export default function useCallerInstructions(
   ): IFuture<CallAssignmentData> => {
     const mutatingAttributes = Object.keys(data);
 
-    store.dispatch(callAssignmentUpdate([assignmentId, mutatingAttributes]));
+    dispatch(callAssignmentUpdate([assignmentId, mutatingAttributes]));
     const promise = apiClient
       .patch<CallAssignmentData>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}`,
         data
       )
       .then((data: CallAssignmentData) => {
-        store.dispatch(callAssignmentUpdated([data, mutatingAttributes]));
+        dispatch(callAssignmentUpdated([data, mutatingAttributes]));
         return data;
       });
 
@@ -114,11 +114,16 @@ export default function useCallerInstructions(
     return item.mutating.includes('instructions');
   };
 
+  const saving = isSaving();
+  const instructions = getInstructions();
+  const unsavedChanges = hasUnsavedChanges();
+
   return {
-    hasEmptyInstructions: hasEmptyInstrunctions(),
-    hasUnsavedChanges: hasUnsavedChanges(),
-    instructions: getInstructions(),
-    isSaving: isSaving(),
+    hasNewText: unsavedChanges,
+    instructions,
+    isSaved: !saving && !unsavedChanges && instructions !== '',
+    isSaving: saving,
+    isUnsaved: !saving && unsavedChanges && !hasEmptyInstrunctions(),
     revert,
     save,
     setInstructions,

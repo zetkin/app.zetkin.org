@@ -236,7 +236,7 @@ export default class SurveysRepo {
       ZetkinSurveyElement,
       number,
       [number, ZetkinSurveyElement[]]
-    >(state.surveys.elementsBySurveyId[surveyId], this._store, {
+    >(state.surveys.elementsBySurveyId[surveyId], this._store.dispatch, {
       actionOnLoad: () => elementsLoad(surveyId),
       actionOnSuccess: (elements) => elementsLoaded([surveyId, elements]),
       loader: async () => {
@@ -252,7 +252,7 @@ export default class SurveysRepo {
     const state = this._store.getState();
     return loadItemIfNecessary(
       state.surveys.statsBySurveyId[surveyId],
-      this._store,
+      this._store.dispatch,
       {
         actionOnLoad: () => statsLoad(surveyId),
         actionOnSuccess: (stats) => statsLoaded([surveyId, stats]),
@@ -266,21 +266,25 @@ export default class SurveysRepo {
     surveyId: number
   ): IFuture<ZetkinSurveySubmission[]> {
     const state = this._store.getState();
-    return loadListIfNecessary(state.surveys.submissionList, this._store, {
-      actionOnLoad: () => surveySubmissionsLoad(surveyId),
-      actionOnSuccess: (data) => surveySubmissionsLoaded([surveyId, data]),
-      loader: () =>
-        this._apiClient.get<ZetkinSurveySubmission[]>(
-          `/api/orgs/${orgId}/surveys/${surveyId}/submissions`
-        ),
-    });
+    return loadListIfNecessary(
+      state.surveys.submissionList,
+      this._store.dispatch,
+      {
+        actionOnLoad: () => surveySubmissionsLoad(surveyId),
+        actionOnSuccess: (data) => surveySubmissionsLoaded([surveyId, data]),
+        loader: () =>
+          this._apiClient.get<ZetkinSurveySubmission[]>(
+            `/api/orgs/${orgId}/surveys/${surveyId}/submissions`
+          ),
+      }
+    );
   }
 
   getSurveys(orgId: number): IFuture<ZetkinSurvey[]> {
     const state = this._store.getState();
     const surveyList = state.surveys.surveyList;
 
-    return loadListIfNecessary(surveyList, this._store, {
+    return loadListIfNecessary(surveyList, this._store.dispatch, {
       actionOnLoad: () => surveysLoad(),
       actionOnSuccess: (data) => surveysLoaded(data),
       loader: () =>

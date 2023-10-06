@@ -1,23 +1,19 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { RootState } from 'core/store';
-import { useSelector } from 'react-redux';
-import { useApiClient, useEnv } from 'core/hooks';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { userOrganizationsLoad, userOrganizationsLoaded } from '../store';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 const useOrganizations = (): IFuture<
   Pick<ZetkinOrganization, 'title' | 'id'>[] | null
 > => {
-  const env = useEnv();
   const apiClient = useApiClient();
-  const organizationState = useSelector(
-    (state: RootState) => state.organizations
-  );
+  const dispatch = useAppDispatch();
+  const organizationState = useAppSelector((state) => state.organizations);
 
   const organizations = loadListIfNecessary(
     organizationState.userOrgList,
-    env.store,
+    dispatch,
     {
       actionOnLoad: () => userOrganizationsLoad(),
       actionOnSuccess: (data) => userOrganizationsLoaded(data),

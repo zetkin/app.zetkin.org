@@ -97,7 +97,7 @@ export default class ViewDataRepo {
     const state = this._store.getState();
     const list = state.views.columnsByViewId[viewId];
 
-    return loadListIfNecessary(list, this._store, {
+    return loadListIfNecessary(list, this._store.dispatch, {
       actionOnLoad: () => columnsLoad(viewId),
       actionOnSuccess: (columns) => columnsLoaded([viewId, columns]),
       loader: () =>
@@ -111,7 +111,7 @@ export default class ViewDataRepo {
     const state = this._store.getState();
     const list = state.views.rowsByViewId[viewId];
 
-    return loadListIfNecessary(list, this._store, {
+    return loadListIfNecessary(list, this._store.dispatch, {
       actionOnLoad: () => rowsLoad(viewId),
       actionOnSuccess: (rows) => rowsLoaded([viewId, rows]),
       loader: () =>
@@ -122,7 +122,7 @@ export default class ViewDataRepo {
   getView(orgId: number, viewId: number): IFuture<ZetkinView> {
     const state = this._store.getState();
     const item = state.views.viewList.items.find((item) => item.id == viewId);
-    return loadItemIfNecessary(item, this._store, {
+    return loadItemIfNecessary(item, this._store.dispatch, {
       actionOnLoad: () => viewLoad(viewId),
       actionOnSuccess: (view) => viewLoaded(view),
       loader: () =>

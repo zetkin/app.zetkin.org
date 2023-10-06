@@ -1,8 +1,6 @@
 import { CallAssignmentData } from '../apiTypes';
 import dayjs from 'dayjs';
-import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
-import { useApiClient } from 'core/hooks';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
@@ -10,7 +8,7 @@ import {
   callAssignmentUpdated,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-import { useSelector, useStore } from 'react-redux';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
 interface UseCallAssignmentReturn {
@@ -27,24 +25,22 @@ export default function useCallAssignment(
   orgId: number,
   assignmentId: number
 ): UseCallAssignmentReturn {
-  const store = useStore<RootState>();
   const apiClient = useApiClient();
-  const callAssignmentSlice = useSelector(
-    (state: RootState) => state.callAssignments
-  );
+  const dispatch = useAppDispatch();
+  const callAssignmentSlice = useAppSelector((state) => state.callAssignments);
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
 
   const getData = (): IFuture<CallAssignmentData> => {
     const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
 
     if (!caItem || shouldLoad(caItem)) {
-      store.dispatch(callAssignmentLoad(assignmentId));
+      dispatch(callAssignmentLoad(assignmentId));
       const promise = apiClient
         .get<CallAssignmentData>(
           `/api/orgs/${orgId}/call_assignments/${assignmentId}`
         )
         .then((data: CallAssignmentData) => {
-          store.dispatch(callAssignmentLoaded(data));
+          dispatch(callAssignmentLoaded(data));
           return data;
         });
 
@@ -64,7 +60,7 @@ export default function useCallAssignment(
     const callAssignment = caItem?.data;
 
     if (callAssignment) {
-      store.dispatch(callAssignmentUpdate([assignmentId, ['target']]));
+      dispatch(callAssignmentUpdate([assignmentId, ['target']]));
       fetch(`/api/orgs/${orgId}/people/queries/${callAssignment.target.id}`, {
         body: JSON.stringify(query),
         headers: {
@@ -74,7 +70,7 @@ export default function useCallAssignment(
       })
         .then((res) => res.json())
         .then((data: { data: ZetkinQuery }) => {
-          store.dispatch(
+          dispatch(
             callAssignmentUpdated([
               { ...callAssignment, target: data.data },
               ['target'],
@@ -90,7 +86,7 @@ export default function useCallAssignment(
     const callAssignment = caItem?.data;
 
     if (callAssignment) {
-      store.dispatch(callAssignmentUpdate([assignmentId, ['goal']]));
+      dispatch(callAssignmentUpdate([assignmentId, ['goal']]));
       fetch(`/api/orgs/${orgId}/people/queries/${callAssignment.goal.id}`, {
         body: JSON.stringify(query),
         headers: {
@@ -100,7 +96,7 @@ export default function useCallAssignment(
       })
         .then((res) => res.json())
         .then((data: { data: ZetkinQuery }) =>
-          store.dispatch(
+          dispatch(
             callAssignmentUpdated([
               { ...callAssignment, goal: data.data },
               ['goal'],
@@ -115,14 +111,14 @@ export default function useCallAssignment(
   ): IFuture<CallAssignmentData> => {
     const mutatingAttributes = Object.keys(data);
 
-    store.dispatch(callAssignmentUpdate([assignmentId, mutatingAttributes]));
+    dispatch(callAssignmentUpdate([assignmentId, mutatingAttributes]));
     const promise = apiClient
       .patch<CallAssignmentData>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}`,
         data
       )
       .then((data: CallAssignmentData) => {
-        store.dispatch(callAssignmentUpdated([data, mutatingAttributes]));
+        dispatch(callAssignmentUpdated([data, mutatingAttributes]));
         return data;
       });
 

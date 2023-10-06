@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import getNextEventDay from 'features/events/rpc/getNextEventDay';
-import { RootState } from 'core/store';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import { DaySummary, getActivitiesByDay } from '../components/utils';
-import { useApiClient, useNumericRouteParams } from 'core/hooks';
+import {
+  useApiClient,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 type UseDayCalendarEventsReturn = {
   activities: [Date, DaySummary][];
@@ -58,7 +60,7 @@ export default function useDayCalendarEvents(
     loadNextLastDate();
   }, [lastDate.toISOString()]);
 
-  const eventsState = useSelector((state: RootState) => state.events);
+  const eventsState = useAppSelector((state) => state.events);
 
   // When user navigates very far in the future (e.g. by changing the year)
   // the focusDate may end up being _after_ the lastDate, which will cause
