@@ -1,9 +1,6 @@
 import { BodySchema } from 'pages/api/callAssignments/setCallerTags';
 import { CallAssignmentCaller } from '../apiTypes';
 import Fuse from 'fuse.js';
-import { RootState } from 'core/store';
-import { useApiClient } from 'core/hooks';
-import { useStore } from 'react-redux';
 import { ZetkinTag } from 'utils/types/zetkin';
 import {
   callerAdd,
@@ -21,6 +18,7 @@ import {
   RemoteListFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseCallersReturn {
   addCaller: (callerId: number) => PromiseFuture<CallAssignmentCaller>;
@@ -40,16 +38,17 @@ export default function useCallers(
   assignmentId: number
 ): UseCallersReturn {
   const apiClient = useApiClient();
-  const store = useStore<RootState>();
+  const dispatch = useAppDispatch();
+  const callAssignments = useAppSelector((state) => state.callAssignments);
 
   const addCaller = (callerId: number): PromiseFuture<CallAssignmentCaller> => {
-    store.dispatch(callerAdd([assignmentId, callerId]));
+    dispatch(callerAdd([assignmentId, callerId]));
     const promise = apiClient
       .put<CallAssignmentCaller>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/callers/${callerId}`
       )
       .then((data) => {
-        store.dispatch(callerAdded([assignmentId, data]));
+        dispatch(callerAdded([assignmentId, data]));
         return data;
       });
 
@@ -57,20 +56,19 @@ export default function useCallers(
   };
 
   const getCallers = (): IFuture<CallAssignmentCaller[]> => {
-    const state = store.getState();
-    const callersList = state.callAssignments.callersById[assignmentId];
+    const callersList = callAssignments.callersById[assignmentId];
 
     if (callersList) {
       return new RemoteListFuture(callersList);
     }
 
-    store.dispatch(callersLoad(assignmentId));
+    dispatch(callersLoad(assignmentId));
     const promise = fetch(
       `/api/orgs/${orgId}/call_assignments/${assignmentId}/callers`
     )
       .then((res) => res.json())
       .then((data: { data: CallAssignmentCaller[] }) => {
-        store.dispatch(callersLoaded({ callers: data.data, id: assignmentId }));
+        dispatch(callersLoaded({ callers: data.data, id: assignmentId }));
         return data.data;
       });
 
@@ -104,13 +102,13 @@ export default function useCallers(
   };
 
   const removeCaller = (callerId: number) => {
-    store.dispatch(callerRemove([assignmentId, callerId]));
+    dispatch(callerRemove([assignmentId, callerId]));
     apiClient
       .delete(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/callers/${callerId}`
       )
       .then(() => {
-        store.dispatch(callerRemoved([assignmentId, callerId]));
+        dispatch(callerRemoved([assignmentId, callerId]));
       });
   };
 
@@ -119,7 +117,7 @@ export default function useCallers(
     prioTags: ZetkinTag[],
     excludedTags: ZetkinTag[]
   ) => {
-    store.dispatch(callerConfigure([assignmentId, callerId]));
+    dispatch(callerConfigure([assignmentId, callerId]));
     apiClient
       .post<CallAssignmentCaller, BodySchema>(
         `/api/callAssignments/setCallerTags`,
@@ -132,7 +130,7 @@ export default function useCallers(
         }
       )
       .then((data: CallAssignmentCaller) => {
-        store.dispatch(callerConfigured([assignmentId, data]));
+        dispatch(callerConfigured([assignmentId, data]));
       });
   };
 

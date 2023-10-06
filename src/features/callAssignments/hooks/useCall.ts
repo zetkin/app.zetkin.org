@@ -1,8 +1,7 @@
 import { Call } from '../apiTypes';
 import { PromiseFuture } from 'core/caching/futures';
-import { useApiClient } from 'core/hooks';
-import { useStore } from 'react-redux';
 import { callUpdate, callUpdated } from '../store';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 
 interface UseCallReturn {
   setOrganizerActionNeeded: (callId: number) => void;
@@ -10,17 +9,17 @@ interface UseCallReturn {
 }
 
 export default function useCall(orgId: number): UseCallReturn {
-  const store = useStore();
   const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
 
   const updateCall = (callId: number, data: Partial<Call>) => {
     const mutatingAttributes = Object.keys(data);
 
-    store.dispatch(callUpdate([callId, mutatingAttributes]));
+    dispatch(callUpdate([callId, mutatingAttributes]));
     const promise = apiClient
       .patch<Call>(`/api/orgs/${orgId}/calls/${callId}`, data)
       .then((data) => {
-        store.dispatch(callUpdated([data, mutatingAttributes]));
+        dispatch(callUpdated([data, mutatingAttributes]));
         return data;
       });
     return new PromiseFuture(promise);

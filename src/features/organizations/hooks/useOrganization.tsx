@@ -1,9 +1,7 @@
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
-import { RootState } from 'core/store';
-import { useSelector } from 'react-redux';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { organizationLoad, organizationLoaded } from '../store';
-import { useApiClient, useEnv } from 'core/hooks';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseOrganizationReturn {
   data: ZetkinOrganization | null;
@@ -12,15 +10,13 @@ interface UseOrganizationReturn {
 }
 
 const useOrganization = (orgId: number): UseOrganizationReturn => {
-  const env = useEnv();
+  const dispatch = useAppDispatch();
   const apiClient = useApiClient();
-  const organizationState = useSelector(
-    (state: RootState) => state.organizations
-  );
+  const organizationState = useAppSelector((state) => state.organizations);
 
   const organization = loadItemIfNecessary(
     organizationState.orgData,
-    env.store,
+    dispatch,
     {
       actionOnLoad: () => organizationLoad(),
       actionOnSuccess: (data) => organizationLoaded(data),

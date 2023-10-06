@@ -1,15 +1,13 @@
-import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
-import { useApiClient } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { ZetkinUser } from 'utils/types/zetkin';
-import { useDispatch, useSelector } from 'react-redux';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { userLoad, userLoaded } from '../store';
 
 const useCurrentUser = () => {
   const apiClient = useApiClient();
-  const dispatch = useDispatch();
-  const userState = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  const userState = useAppSelector((state) => state.user);
   const isServer = useServerSide();
 
   if (isServer) {

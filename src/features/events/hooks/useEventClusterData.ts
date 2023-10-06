@@ -1,16 +1,13 @@
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
-import { EnvContext } from 'core/env/EnvContext';
 import { EventState } from 'features/events/models/EventDataModel';
 import getEventStats from 'features/events/rpc/getEventStats';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import messageIds from '../l10n/messageIds';
-import { RootState } from 'core/store';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivityList/items/ActivityListItem';
-import { useContext } from 'react';
 import { useMessages } from 'core/i18n';
-import { useStore } from 'react-redux';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { statsLoad, statsLoaded } from 'features/events/store';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useEventClusterData(cluster: AnyClusteredEvent) {
   const numParticipantsRequired = cluster.events.reduce(
@@ -25,18 +22,19 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
 
   let statsLoading = false;
   const messages = useMessages(messageIds);
-  const store = useStore<RootState>();
-  const state = store.getState();
-  const env = useContext(EnvContext);
+  const events = useAppSelector((state) => state.events);
+  const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
+
   const allStats = cluster.events.map((event) => {
     const future = loadItemIfNecessary(
-      state.events.statsByEventId[event.id],
-      store,
+      events.statsByEventId[event.id],
+      dispatch,
       {
         actionOnLoad: () => statsLoad(event.id),
         actionOnSuccess: (stats) => statsLoaded([event.id, stats]),
         loader: () => {
-          return env!.apiClient.rpc(getEventStats, {
+          return apiClient.rpc(getEventStats, {
             eventId: event.id,
             orgId: event.organization.id,
           });

@@ -1,8 +1,6 @@
-import { useStore } from 'react-redux';
-
-import { useApiClient } from 'core/hooks';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { tagAssigned, tagUnassigned } from '../store';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 
 interface UseTagMutationReturn {
   assignToPerson: (personId: number, value?: string) => void;
@@ -13,8 +11,7 @@ export default function useTagMutation(
   tagId: number
 ): UseTagMutationReturn {
   const apiClient = useApiClient();
-
-  const store = useStore();
+  const dispatch = useAppDispatch();
 
   const assignToPerson = async (personId: number, value?: string) => {
     const data = value ? { value } : undefined;
@@ -22,14 +19,14 @@ export default function useTagMutation(
       `/api/orgs/${orgId}/people/${personId}/tags/${tagId}`,
       data
     );
-    store.dispatch(tagAssigned([personId, tag]));
+    dispatch(tagAssigned([personId, tag]));
   };
 
   const removeFromPerson = async (personId: number) => {
     await apiClient.delete(
       `/api/orgs/${orgId}/people/${personId}/tags/${tagId}`
     );
-    store.dispatch(tagUnassigned([personId, tagId]));
+    dispatch(tagUnassigned([personId, tagId]));
   };
 
   return {
