@@ -19,7 +19,7 @@ export default class TasksRepo {
     const state = this._store.getState();
     const taskList = state.tasks.tasksList;
 
-    return loadListIfNecessary(taskList, this._store, {
+    return loadListIfNecessary(taskList, this._store.dispatch, {
       actionOnLoad: () => tasksLoad(),
       actionOnSuccess: (data) => tasksLoaded(data),
       loader: () =>

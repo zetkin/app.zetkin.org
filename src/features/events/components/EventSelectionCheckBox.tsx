@@ -1,18 +1,17 @@
 import { Box, Checkbox } from '@mui/material';
-import { useSelector, useStore } from 'react-redux';
 
-import { RootState } from 'core/store';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventsDeselected, eventsSelected } from '../store';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface EventSelectionCheckBoxProps {
   events: ZetkinEvent[];
 }
 
 const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
-  const store = useStore<RootState>();
-  const selectedEvents = useSelector(
-    (state: RootState) => state.events.selectedEventIds
+  const dispatch = useAppDispatch();
+  const selectedEvents = useAppSelector(
+    (state) => state.events.selectedEventIds
   );
 
   const alreadyExists = events.some((event) =>
@@ -25,19 +24,19 @@ const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
   const handleChange = (checked: boolean) => {
     if (events.length > 1) {
       if (checked) {
-        store.dispatch(eventsSelected(events));
+        dispatch(eventsSelected(events));
       }
       if (!checked) {
-        store.dispatch(eventsDeselected(events));
+        dispatch(eventsDeselected(events));
       }
     }
 
     if (events.length === 1) {
       if (checked) {
-        store.dispatch(eventsSelected(events));
+        dispatch(eventsSelected(events));
       }
       if (!checked) {
-        store.dispatch(eventsDeselected(events));
+        dispatch(eventsDeselected(events));
       }
     }
   };

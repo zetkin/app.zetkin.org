@@ -48,7 +48,7 @@ export default class CallAssignmentsRepo {
     const state = this._store.getState();
     const assignmentList = state.callAssignments.assignmentList;
 
-    return loadListIfNecessary(assignmentList, this._store, {
+    return loadListIfNecessary(assignmentList, this._store.dispatch, {
       actionOnLoad: () => callAssignmentsLoad(),
       actionOnSuccess: (data) => callAssignmentsLoaded(data),
       loader: () =>
