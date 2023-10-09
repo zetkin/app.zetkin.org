@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 
-import useViewBrowserMutation from '../hooks/useViewBrowserMutation';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useFolder from '../hooks/useFolder';
+import useView from '../hooks/useView';
 
 interface ViewFolderActionButtonsProps {
   folderId: number | null;
@@ -16,10 +17,10 @@ const ViewFolderActionButtons: FC<ViewFolderActionButtonsProps> = ({
   folderId,
 }) => {
   const { orgId } = useRouter().query;
+  const parsedOrgId = parseInt(orgId as string);
   const messages = useMessages(messageIds);
-  const { createFolder, createView } = useViewBrowserMutation(
-    parseInt(orgId as string)
-  );
+  const { createView } = useView(parsedOrgId);
+  const { createFolder } = useFolder(parsedOrgId);
 
   return (
     <Box display="flex" gap={1}>

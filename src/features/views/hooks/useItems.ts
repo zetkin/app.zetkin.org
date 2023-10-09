@@ -1,4 +1,6 @@
 import { useAppSelector } from 'core/hooks';
+import useFolder from './useFolder';
+import useView from './useView';
 import useViewTree from './useViewTree';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
@@ -37,6 +39,12 @@ export type ViewBrowserItem =
 interface UseItemsReturn {
   itemsFuture: IFuture<ViewBrowserItem[]>;
   itemIsRenaming: (type: 'folder' | 'view', id: number) => boolean;
+  moveItem: (
+    type: 'folder' | 'view',
+    id: number,
+    newParentId: number | null
+  ) => void;
+  renameItem: (type: 'folder' | 'view', id: number, title: string) => void;
 }
 
 export default function useItems(
@@ -45,6 +53,8 @@ export default function useItems(
 ): UseItemsReturn {
   const viewTreeFuture = useViewTree(orgId);
   const views = useAppSelector((state) => state.views);
+  const { updateFolder } = useFolder(orgId);
+  const { updateView } = useView(orgId);
 
   const getItems = (itemsFuture: IFuture<ViewTreeData>) => {
     if (!itemsFuture.data) {
@@ -108,6 +118,25 @@ export default function useItems(
       return false;
     }
   };
+  const moveItem = (
+    type: 'folder' | 'view',
+    id: number,
+    newParentId: number | null
+  ) => {
+    if (type == 'folder') {
+      updateFolder(orgId, id, { parent_id: newParentId });
+    } else if (type == 'view') {
+      updateView(orgId, id, { folder_id: newParentId });
+    }
+  };
 
-  return { itemIsRenaming, itemsFuture };
+  const renameItem = (type: 'folder' | 'view', id: number, title: string) => {
+    if (type == 'folder') {
+      updateFolder(orgId, id, { title });
+    } else if (type == 'view') {
+      updateView(orgId, id, { title });
+    }
+  };
+
+  return { itemIsRenaming, itemsFuture, moveItem, renameItem };
 }

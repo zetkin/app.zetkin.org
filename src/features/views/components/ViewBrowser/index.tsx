@@ -15,17 +15,17 @@ import BrowserDragLayer from './BrowserDragLayer';
 import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
+import useFolder from 'features/views/hooks/useFolder';
 import { useMessages } from 'core/i18n';
-import useViewBrowserMutation from 'features/views/hooks/useViewBrowserMutation';
+import useView from 'features/views/hooks/useView';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import useItems, { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 import messageIds from 'features/views/l10n/messageIds';
-import useFolder from 'features/views/hooks/useFolder';
-import useItems, { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 interface ViewBrowserProps {
   basePath: string;
@@ -54,11 +54,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
   );
   const gridApiRef = useGridApiRef();
 
-  const { deleteFolder, deleteView, renameItem } =
-    useViewBrowserMutation(parsedOrgId);
-
-  const { itemsFuture } = useItems(parsedOrgId, folderId);
-  const { recentlyCreatedFolder } = useFolder(parsedOrgId);
+  const { deleteView } = useView(parsedOrgId);
+  const { itemsFuture, renameItem } = useItems(parsedOrgId, folderId);
+  const { deleteFolder, recentlyCreatedFolder } = useFolder(parsedOrgId);
 
   // If a folder was created, go into rename state
   useEffect(() => {
