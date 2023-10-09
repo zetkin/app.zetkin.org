@@ -23,7 +23,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
 
   const { folderFuture } = useFolder(parsedOrgId, folderId);
   const { itemSummaryFuture } = useItemSummary(parsedOrgId, folderId);
-  const { renameItem } = useItems(parsedOrgId);
+  const { renameItem } = useItems(parsedOrgId, folderId);
 
   return (
     <ZUIFuture future={folderFuture}>

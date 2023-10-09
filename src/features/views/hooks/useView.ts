@@ -1,5 +1,6 @@
 import createNew from '../rpc/createNew/client';
 import { PromiseFuture } from 'core/caching/futures';
+import { ZetkinView } from '../components/types';
 import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 import {
   viewCreate,
@@ -8,7 +9,6 @@ import {
   viewUpdate,
   viewUpdated,
 } from '../store';
-import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
   folder_id?: number | null;
@@ -21,7 +21,7 @@ interface UseViewReturn {
     orgId: number,
     viewId: number,
     data: ZetkinViewUpdateBody
-  ) => PromiseFuture<ZetkinViewFolder>;
+  ) => PromiseFuture<ZetkinView>;
 }
 
 export default function useView(orgId: number): UseViewReturn {
