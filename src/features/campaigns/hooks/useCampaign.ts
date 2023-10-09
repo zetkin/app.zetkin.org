@@ -1,8 +1,7 @@
 import { generateRandomColor } from 'utils/colorUtils';
 import shouldLoad from 'core/caching/shouldLoad';
+import { ZetkinCampaign } from 'utils/types/zetkin';
 import {
-  campaignCreate,
-  campaignCreated,
   campaignDeleted,
   campaignLoad,
   campaignLoaded,
@@ -11,12 +10,8 @@ import {
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { ZetkinCampaign, ZetkinCampaignPostBody } from 'utils/types/zetkin';
 
 interface UseCampaignReturn {
-  createCampaign: (
-    campaignBody: ZetkinCampaignPostBody
-  ) => IFuture<ZetkinCampaign>;
   data: ZetkinCampaign | null;
   deleteCampaign: () => void;
   updateCampaign: (data: Partial<ZetkinCampaign>) => IFuture<ZetkinCampaign>;
@@ -30,24 +25,6 @@ export default function useCampaign(
   const dispatch = useAppDispatch();
   const campaignsSlice = useAppSelector((state) => state.campaigns);
   const campaignItems = campaignsSlice.campaignList.items;
-
-  const createCampaign = (
-    campaignBody: ZetkinCampaignPostBody
-  ): IFuture<ZetkinCampaign> => {
-    dispatch(campaignCreate());
-
-    const promise = apiClient
-      .post<ZetkinCampaign, ZetkinCampaignPostBody>(
-        `/api/orgs/${orgId}/campaigns`,
-        campaignBody
-      )
-      .then((campaign: ZetkinCampaign) => {
-        dispatch(campaignCreated(campaign));
-        return campaign;
-      });
-
-    return new PromiseFuture(promise);
-  };
 
   const getData = (): IFuture<ZetkinCampaign> => {
     const campaignItem = campaignItems.find((item) => item.id == campId);
@@ -93,5 +70,5 @@ export default function useCampaign(
   };
 
   const { data } = getData();
-  return { createCampaign, data, deleteCampaign, updateCampaign };
+  return { data, deleteCampaign, updateCampaign };
 }
