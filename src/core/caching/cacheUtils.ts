@@ -1,6 +1,6 @@
+import { AppDispatch } from 'core/store';
 import { PayloadAction } from '@reduxjs/toolkit';
 import shouldLoad from './shouldLoad';
-import { Store } from 'core/store';
 import {
   IFuture,
   PromiseFuture,
@@ -15,7 +15,7 @@ export function loadListIfNecessary<
   OnSuccessPayload = DataType[]
 >(
   remoteList: RemoteList<DataType> | undefined,
-  store: Store,
+  dispatch: AppDispatch,
   hooks: {
     actionOnLoad: () => PayloadAction<OnLoadPayload>;
     actionOnSuccess: (items: DataType[]) => PayloadAction<OnSuccessPayload>;
@@ -23,9 +23,9 @@ export function loadListIfNecessary<
   }
 ): IFuture<DataType[]> {
   if (!remoteList || shouldLoad(remoteList)) {
-    store.dispatch(hooks.actionOnLoad());
+    dispatch(hooks.actionOnLoad());
     const promise = hooks.loader().then((val) => {
-      store.dispatch(hooks.actionOnSuccess(val));
+      dispatch(hooks.actionOnSuccess(val));
       return val;
     });
 
@@ -41,7 +41,7 @@ export function loadItemIfNecessary<
   OnSuccessPayload = DataType
 >(
   remoteItem: RemoteItem<DataType> | undefined,
-  store: Store,
+  dispatch: AppDispatch,
   hooks: {
     actionOnLoad: () => PayloadAction<OnLoadPayload>;
     actionOnSuccess: (item: DataType) => PayloadAction<OnSuccessPayload>;
@@ -49,9 +49,9 @@ export function loadItemIfNecessary<
   }
 ): IFuture<DataType> {
   if (!remoteItem || shouldLoad(remoteItem)) {
-    store.dispatch(hooks.actionOnLoad());
+    dispatch(hooks.actionOnLoad());
     const promise = hooks.loader().then((val) => {
-      store.dispatch(hooks.actionOnSuccess(val));
+      dispatch(hooks.actionOnSuccess(val));
       return val;
     });
 

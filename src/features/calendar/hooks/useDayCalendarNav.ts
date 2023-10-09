@@ -1,11 +1,13 @@
-import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import { ACTIVITIES } from 'features/campaigns/models/CampaignActivitiesModel';
 import { DaySummary } from '../components/utils';
 import getPrevEventDay from 'features/events/rpc/getPrevEventDay';
-import { RootState } from 'core/store';
-import { useApiClient, useNumericRouteParams } from 'core/hooks';
+import {
+  useApiClient,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 type ActivityDay = [Date, DaySummary];
 
@@ -24,9 +26,7 @@ export default function useDayCalendarNav(
     null
   );
   const apiClient = useApiClient();
-  const eventsByDate = useSelector(
-    (state: RootState) => state.events.eventsByDate
-  );
+  const eventsByDate = useAppSelector((state) => state.events.eventsByDate);
   const { orgId, campId } = useNumericRouteParams();
 
   const focusDateStr = focusDate.toISOString().slice(0, 10);
