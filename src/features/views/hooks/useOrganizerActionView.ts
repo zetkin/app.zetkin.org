@@ -1,8 +1,6 @@
-import { useStore } from 'react-redux';
-
 import getOrgActionView from '../rpc/getOrganizerActionView/client';
 import { ZetkinView } from '../components/types';
-import { useApiClient, useEnv } from 'core/hooks';
+import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 import { viewCreate, viewCreated } from '../store';
 
 interface UseOrganizerActionViewReturn {
@@ -14,14 +12,14 @@ export default function useOrganizerActionView(
 ): UseOrganizerActionViewReturn {
   const apiClient = useApiClient();
   const env = useEnv();
-  const store = useStore();
+  const dispatch = useAppDispatch();
 
   const getOrganizerActionView = async () => {
-    store.dispatch(viewCreate());
+    dispatch(viewCreate());
     const view = await apiClient.rpc(getOrgActionView, {
       orgId,
     });
-    store.dispatch(viewCreated(view));
+    dispatch(viewCreated(view));
     env.router.push(
       `/organize/${view.organization.id}/people/lists/${view.id}`
     );

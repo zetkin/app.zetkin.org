@@ -1,5 +1,3 @@
-import { useStore } from 'react-redux';
-
 import createNew from '../rpc/createNew/client';
 import deleteViewFolder from '../rpc/deleteFolder';
 import { PromiseFuture } from 'core/caching/futures';
@@ -15,7 +13,7 @@ import {
   viewUpdate,
   viewUpdated,
 } from '../store';
-import { useApiClient, useEnv } from 'core/hooks';
+import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 type ZetkinViewFolderPostBody = {
@@ -51,13 +49,13 @@ export default function useViewBrowserMutation(
 ): UseViewBrowserMutationReturn {
   const apiClient = useApiClient();
   const env = useEnv();
-  const store = useStore();
+  const dispatch = useAppDispatch();
 
   const createFolder = async (
     title: string,
     folderId?: number
   ): Promise<ZetkinViewFolder> => {
-    store.dispatch(folderCreate());
+    dispatch(folderCreate());
     const folder = await apiClient.post<
       ZetkinViewFolder,
       ZetkinViewFolderPostBody
@@ -66,7 +64,7 @@ export default function useViewBrowserMutation(
       title,
     });
 
-    store.dispatch(folderCreated(folder));
+    dispatch(folderCreated(folder));
     return folder;
   };
 
@@ -74,13 +72,13 @@ export default function useViewBrowserMutation(
     folderId = 0,
     rows: number[] = []
   ): Promise<ZetkinView> => {
-    store.dispatch(viewCreate());
+    dispatch(viewCreate());
     const view = await apiClient.rpc(createNew, {
       folderId,
       orgId,
       rows,
     });
-    store.dispatch(viewCreated(view));
+    dispatch(viewCreated(view));
     env.router.push(
       `/organize/${view.organization.id}/people/lists/${view.id}`
     );
@@ -89,12 +87,12 @@ export default function useViewBrowserMutation(
 
   const deleteFolder = async (folderId: number): Promise<void> => {
     const report = await apiClient.rpc(deleteViewFolder, { folderId, orgId });
-    store.dispatch(folderDeleted(report));
+    dispatch(folderDeleted(report));
   };
 
   const deleteView = async (viewId: number): Promise<void> => {
     await apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
-    store.dispatch(viewDeleted(viewId));
+    dispatch(viewDeleted(viewId));
   };
 
   const updateFolder = (
@@ -103,14 +101,14 @@ export default function useViewBrowserMutation(
     data: ZetkinViewFolderUpdateBody
   ) => {
     const mutating = Object.keys(data);
-    store.dispatch(folderUpdate([folderId, mutating]));
+    dispatch(folderUpdate([folderId, mutating]));
     const promise = apiClient
       .patch<ZetkinViewFolder>(
         `/api/orgs/${orgId}/people/view_folders/${folderId}`,
         data
       )
       .then((folder) => {
-        store.dispatch(folderUpdated([folder, mutating]));
+        dispatch(folderUpdated([folder, mutating]));
         return folder;
       });
 
@@ -123,11 +121,11 @@ export default function useViewBrowserMutation(
     data: ZetkinViewUpdateBody
   ) => {
     const mutating = Object.keys(data);
-    store.dispatch(viewUpdate([viewId, mutating]));
+    dispatch(viewUpdate([viewId, mutating]));
     const promise = apiClient
       .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
       .then((view) => {
-        store.dispatch(viewUpdated([view, mutating]));
+        dispatch(viewUpdated([view, mutating]));
         return view;
       });
 

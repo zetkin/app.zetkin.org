@@ -1,23 +1,20 @@
-import { useSelector, useStore } from 'react-redux';
-
-import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
-import { useApiClient } from 'core/hooks';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { allItemsLoad, allItemsLoaded } from '../store';
 import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useViewTree(orgId: number): IFuture<ViewTreeData> {
   const apiClient = useApiClient();
-  const store = useStore();
-  const views = useSelector((state: RootState) => state.views);
+  const views = useAppSelector((state) => state.views);
+  const dispatch = useAppDispatch();
 
   if (shouldLoad(views.folderList) || shouldLoad(views.viewList)) {
-    store.dispatch(allItemsLoad());
+    dispatch(allItemsLoad());
     const promise = apiClient
       .get<ViewTreeData>(`/api/views/tree?orgId=${orgId}`)
       .then((items) => {
-        store.dispatch(allItemsLoaded(items));
+        dispatch(allItemsLoaded(items));
         return items;
       });
     return new PromiseFuture(promise);

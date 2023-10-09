@@ -1,6 +1,4 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from 'core/store';
+import { useAppSelector } from 'core/hooks';
 import useViewTree from './useViewTree';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
@@ -46,7 +44,7 @@ export default function useItems(
   folderId: number | null
 ): UseItemsReturn {
   const viewTreeFuture = useViewTree(orgId);
-  const views = useSelector((state: RootState) => state.views);
+  const views = useAppSelector((state) => state.views);
 
   const getItems = (itemsFuture: IFuture<ViewTreeData>) => {
     if (!itemsFuture.data) {

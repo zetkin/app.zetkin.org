@@ -1,6 +1,4 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from 'core/store';
+import { useAppSelector } from 'core/hooks';
 import useViewTree from './useViewTree';
 import { ZetkinViewFolder } from '../components/types';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
@@ -15,7 +13,7 @@ export default function useFolder(
   folderId?: number | null
 ): UseFolderReturn {
   const itemsFuture = useViewTree(orgId);
-  const views = useSelector((state: RootState) => state.views);
+  const views = useAppSelector((state) => state.views);
 
   const getFolder = (): IFuture<ZetkinViewFolder> => {
     if (!itemsFuture.data) {
