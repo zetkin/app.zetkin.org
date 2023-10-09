@@ -132,6 +132,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       setDeactivated(true);
       NProgress.start();
       try {
+        console.log('여여여여');
         await dataModel.delete();
       } catch (err) {
         setDeactivated(false);

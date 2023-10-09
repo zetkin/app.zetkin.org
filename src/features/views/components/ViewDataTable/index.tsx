@@ -44,6 +44,7 @@ import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
 import useView from 'features/views/hooks/useView';
+import UseViewDataTableMutation from 'features/views/hooks/useViewDataTableMutation';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -94,11 +95,15 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [quickSearch, setQuickSearch] = useState('');
   const router = useRouter();
   const { orgId } = router.query;
+  const parsedOrgId = parseInt(orgId as string);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-
+  const { addColumn, addPerson } = UseViewDataTableMutation(
+    parsedOrgId,
+    view.id
+  );
   const model = useViewDataModel();
-  const { createView } = useView(parseInt(orgId as string));
+  const { createView } = useView(parsedOrgId);
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar('error', messages.dataTableErrors[error]());
@@ -144,7 +149,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onCreateColumnSave = async (colSpec: SelectedViewColumn) => {
     setColumnToCreate(null);
     try {
-      await model.addColumn({
+      await addColumn({
         config: colSpec.config,
         title: colSpec.title,
         type: colSpec.type,
@@ -310,7 +315,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     },
     footer: {
       onRowAdd: async (person) => {
-        await model.addPerson(person);
+        await addPerson(person.id);
 
         // Store ID for highlighting the new row
         setAddedId(person.id);

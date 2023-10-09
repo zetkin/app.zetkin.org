@@ -16,6 +16,7 @@ import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinView } from 'features/views/components/types';
 
 import messageIds from '../l10n/messageIds';
+import UseViewDataTableMutation from '../hooks/useViewDataTableMutation';
 
 export interface EmptyViewProps {
   orgId: string | number;
@@ -26,6 +27,10 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   const model = useViewDataModel();
+  const { addPerson } = UseViewDataTableMutation(
+    parseInt(orgId as string),
+    view.id
+  );
 
   return (
     <Box m={2}>
@@ -44,7 +49,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                   name="person"
                   onChange={async (person) => {
                     await model.deleteContentQuery();
-                    await model.addPerson(person);
+                    await addPerson(person.id);
                   }}
                   selectedPerson={null}
                   variant="outlined"
