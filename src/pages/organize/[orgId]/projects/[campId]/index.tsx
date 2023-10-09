@@ -5,7 +5,6 @@ import { Box, Grid, Typography } from '@mui/material';
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { campaignTasksResource } from 'features/tasks/api/tasks';
-import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -34,16 +33,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
   const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-  await ctx.queryClient.prefetchQuery(
-    ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId as string, campId as string, ctx.apiFetch)
-  );
-  const campaignEventsState = ctx.queryClient.getQueryState([
-    'campaignEvents',
-    orgId,
-    campId,
-  ]);
-
   try {
     const apiClient = new BackendApiClient(ctx.req.headers);
     await apiClient.get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/`);
@@ -55,7 +44,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
   if (
     orgState?.status === 'success' &&
-    campaignEventsState?.status === 'success' &&
     campaignTasksState?.status === 'success'
   ) {
     return {

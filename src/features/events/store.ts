@@ -50,6 +50,7 @@ export type FilterCategoryType =
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
+  eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
   filters: {
     selectedActions: string[];
@@ -67,6 +68,7 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
+  eventsByCampaignId: {},
   eventsByDate: {},
   filters: {
     selectedActions: [],
@@ -86,6 +88,21 @@ const eventsSlice = createSlice({
   initialState,
   name: 'events',
   reducers: {
+    campaignEventsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.eventsByCampaignId[id] = remoteList<ZetkinEvent>();
+      state.eventsByCampaignId[id].isLoading = true;
+    },
+    campaignEventsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEvent[]]>
+    ) => {
+      const [id, events] = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.eventsByCampaignId[id] = remoteList<ZetkinEvent>(events);
+      state.eventsByCampaignId[id].loaded = timestamp;
+    },
     eventCreate: (state) => {
       state.eventList.isLoading = true;
     },
@@ -464,6 +481,8 @@ const eventsSlice = createSlice({
 
 export default eventsSlice;
 export const {
+  campaignEventsLoad,
+  campaignEventsLoaded,
   eventCreate,
   eventCreated,
   eventDeleted,

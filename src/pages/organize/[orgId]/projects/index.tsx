@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
@@ -88,14 +87,11 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const { data: campaigns } = useCampaigns(parseInt(orgId));
-  const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
-
   const onServer = useServerSide();
+
   if (onServer) {
     return null;
   }
-
-  const events = eventsQuery.data || [];
 
   return (
     <>
@@ -112,7 +108,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
           {campaigns?.map((campaign) => {
             return (
               <Grid key={campaign.id} item lg={3} md={4} xs={12}>
-                <CampaignCard campaign={campaign} events={events} />
+                <CampaignCard campaign={campaign} />
               </Grid>
             );
           })}

@@ -23,7 +23,7 @@ export default function useCampaigns(orgId: number): UseCampaignsReturn {
       return campaignsLoaded(dataWithColor);
     },
     loader: () =>
-      apiClient.get<ZetkinCampaign[]>(`/api/orgs/${orgId}/campaigns/`),
+      apiClient.get<ZetkinCampaign[]>(`/api/orgs/${orgId}/campaigns`),
   });
 
   return { data: campaignsFuture.data };
