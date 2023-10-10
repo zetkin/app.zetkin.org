@@ -27,7 +27,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   const model = useViewDataModel();
-  const { addPerson } = UseViewDataTableMutation(
+  const { addPerson, deleteContentQuery } = UseViewDataTableMutation(
     parseInt(orgId as string),
     view.id
   );
@@ -48,7 +48,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                 <PersonSelect
                   name="person"
                   onChange={async (person) => {
-                    await model.deleteContentQuery();
+                    await deleteContentQuery();
                     await addPerson(person.id);
                   }}
                   selectedPerson={null}

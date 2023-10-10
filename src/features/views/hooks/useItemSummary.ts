@@ -21,9 +21,11 @@ export default function useItemSummary(
       folders: itemsFuture.data.folders.filter(
         (folder) => folder.parent?.id == folderId
       ).length,
-      views: itemsFuture.data.views.filter(
-        (view) => view.folder?.id == folderId
-      ).length,
+      views: itemsFuture.data.views.filter((view) => {
+        if (view) {
+          return view.folder?.id == folderId;
+        }
+      }).length,
     });
   };
 

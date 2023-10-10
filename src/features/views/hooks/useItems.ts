@@ -91,7 +91,11 @@ export default function useItems(
       });
 
     itemsFuture.data.views
-      .filter((view) => view.folder?.id == folderId)
+      .filter((view) => {
+        if (view) {
+          return view.folder?.id == folderId;
+        }
+      })
       .forEach((view) => {
         items.push({
           data: view,

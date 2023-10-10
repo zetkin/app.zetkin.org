@@ -98,7 +98,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const parsedOrgId = parseInt(orgId as string);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { addColumn, addPerson } = UseViewDataTableMutation(
+  const { addColumn, addPerson, deleteColumn } = UseViewDataTableMutation(
     parsedOrgId,
     view.id
   );
@@ -177,7 +177,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
     async function doDelete() {
       try {
-        await model.deleteColumn(colId);
+        await deleteColumn(colId);
       } catch (err) {
         showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
         NProgress.done();

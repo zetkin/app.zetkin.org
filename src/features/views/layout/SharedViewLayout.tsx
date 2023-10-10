@@ -5,6 +5,7 @@ import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
+import useColumns from '../hooks/useColumns';
 import useModel from 'core/useModel';
 import ViewDataModel from '../models/ViewDataModel';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -54,6 +55,10 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
         parseInt(viewId as string)
       )
   );
+  const { columnsFuture } = useColumns(
+    parseInt(orgId as string),
+    parseInt(viewId as string)
+  );
 
   const title = (
     <ZUIFuture future={dataModel.getView()}>
@@ -64,7 +69,7 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
     // TODO: Replace with model eventually
     <ZUIFutures
       futures={{
-        cols: dataModel.getColumns(),
+        cols: columnsFuture,
         rows: dataModel.getRows(),
       }}
     >

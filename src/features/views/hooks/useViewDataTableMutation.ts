@@ -1,13 +1,17 @@
-import { columnAdded, rowAdded } from '../store';
+import {
+  columnAdded,
+  columnDeleted,
+  rowAdded,
+  viewQueryUpdated,
+} from '../store';
 import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
 interface UseViewDataTableMutationReturn {
-  addColumn: (
-    viewId: number,
-    data: Omit<ZetkinViewColumn, 'id'>
-  ) => Promise<void>;
+  addColumn: (data: Omit<ZetkinViewColumn, 'id'>) => Promise<void>;
   addPerson: (personId: number) => Promise<void>;
+  deleteColumn: (columnId: number) => Promise<void>;
+  deleteContentQuery: () => Promise<void>;
 }
 
 export default function useViewDataTableMutation(
@@ -19,7 +23,6 @@ export default function useViewDataTableMutation(
   const dispatch = useAppDispatch();
 
   const addColumn = async (
-    viewId: number,
     data: Omit<ZetkinViewColumn, 'id'>
   ): Promise<void> => {
     const column = await apiClient.post<
@@ -36,5 +39,19 @@ export default function useViewDataTableMutation(
     );
     dispatch(rowAdded([viewId, row]));
   };
-  return { addColumn, addPerson };
+
+  const deleteColumn = async (columnId: number) => {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/people/views/${viewId}/columns/${columnId}`
+    );
+    dispatch(columnDeleted([viewId, columnId]));
+  };
+
+  const deleteContentQuery = async () => {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/people/views/${viewId}/content_query`
+    );
+    dispatch(viewQueryUpdated([viewId, null]));
+  };
+  return { addColumn, addPerson, deleteColumn, deleteContentQuery };
 }

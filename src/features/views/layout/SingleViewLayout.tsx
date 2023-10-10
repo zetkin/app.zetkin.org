@@ -7,6 +7,8 @@ import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import useView from '../hooks/useView';
+import useViewDataTableMutation from '../hooks/useViewDataTableMutation';
 import ViewDataModel from '../models/ViewDataModel';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
 import ViewSharingModel from '../models/ViewSharingModel';
@@ -42,6 +44,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 }) => {
   const router = useRouter();
   const { orgId, viewId } = router.query;
+  const parsedOrgId = parseInt(orgId as string);
 
   const shareModel = useModel(
     (env) =>
@@ -68,6 +71,11 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteView: deleteList } = useView(parsedOrgId);
+  const { deleteContentQuery } = useViewDataTableMutation(
+    parsedOrgId,
+    parseInt(viewId as string)
+  );
 
   // TODO: Remove once SSR is supported for models
   const onServer = useServerSide();
@@ -117,7 +125,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     ellipsisMenu.push({
       label: messages.viewLayout.ellipsisMenu.makeStatic(),
       onSelect: () => {
-        dataModel.deleteContentQuery();
+        deleteContentQuery();
       },
     });
   } else {
@@ -132,7 +140,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       setDeactivated(true);
       NProgress.start();
       try {
-        await dataModel.delete();
+        await deleteList(view.id);
       } catch (err) {
         setDeactivated(false);
         showSnackbar('error', messages.deleteDialog.error());
