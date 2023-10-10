@@ -1,6 +1,6 @@
-import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
-import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 import { columnAdded, rowAdded } from '../store';
+import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
+import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
 interface UseViewDataTableMutationReturn {
   addColumn: (

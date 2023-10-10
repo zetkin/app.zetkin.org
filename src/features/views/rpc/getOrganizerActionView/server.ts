@@ -148,6 +148,7 @@ async function handle(
       `/api/orgs/${orgId}/people/views/${view.id}/columns`,
       {
         config: {
+          assignment_id: 1,
           state: 'any',
         },
         title: messages.defaultColumnTitles.organizer_action(),
