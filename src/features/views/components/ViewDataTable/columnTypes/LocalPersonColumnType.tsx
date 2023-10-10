@@ -7,7 +7,6 @@ import { IFuture } from 'core/caching/futures';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useGrid from 'features/views/hooks/useGrid';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
-import ViewDataModel from 'features/views/models/ViewDataModel';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import {
@@ -85,13 +84,13 @@ const EditCell: FC<{
   const model = useViewDataModel();
   const { orgId, viewId } = useRouter().query;
 
-  const { columnsFuture } = useGrid(
+  const { columnsFuture, rowsFuture } = useGrid(
     parseInt(orgId as string),
     parseInt(viewId as string)
   );
   const messages = useMessages(messageIds);
 
-  const suggestedPeople = getPeopleInView(model, columnsFuture);
+  const suggestedPeople = getPeopleInView(columnsFuture, rowsFuture);
   const [isRestrictedMode] = useAccessLevel();
 
   const updateCellValue = (person: ZetkinPerson | null) => {
@@ -115,10 +114,10 @@ const EditCell: FC<{
 };
 
 function getPeopleInView(
-  model: ViewDataModel,
-  columnsFuture: IFuture<ZetkinViewColumn[]>
+  columnsFuture: IFuture<ZetkinViewColumn[]>,
+  rowsFuture: IFuture<ZetkinViewRow[]>
 ): ZetkinPerson[] {
-  const rows = model.getRows().data;
+  const rows = rowsFuture.data;
   const cols = columnsFuture.data;
 
   if (!rows || !cols) {

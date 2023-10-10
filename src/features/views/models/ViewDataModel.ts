@@ -25,14 +25,6 @@ export default class ViewDataModel extends ModelBase {
     this._viewId = viewId;
   }
 
-  getColumns(): IFuture<ZetkinViewColumn[]> {
-    return this._repo.getColumns(this._orgId, this._viewId);
-  }
-
-  getRows(): IFuture<ZetkinViewRow[]> {
-    return this._repo.getRows(this._orgId, this._viewId);
-  }
-
   getView(): IFuture<ZetkinView> {
     return this._repo.getView(this._orgId, this._viewId);
   }

@@ -95,7 +95,10 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const model = useModel(
     (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
   );
-  const { columnsFuture } = useGrid(parseInt(orgId), parseInt(viewId));
+  const { columnsFuture, rowsFuture } = useGrid(
+    parseInt(orgId),
+    parseInt(viewId)
+  );
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -107,7 +110,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
     <ZUIFutures
       futures={{
         cols: columnsFuture,
-        rows: model.getRows(),
+        rows: rowsFuture,
         view: model.getView(),
       }}
     >

@@ -1,8 +1,9 @@
 import { Box } from '@mui/material';
+import { useRouter } from 'next/router';
 import { FunctionComponent, useRef } from 'react';
 
+import useGrid from 'features/views/hooks/useGrid';
 import { useMessages } from 'core/i18n';
-import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
@@ -17,9 +18,12 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const selectInputRef = useRef<HTMLInputElement>();
-
-  const model = useViewDataModel();
-  const rows = model.getRows().data || [];
+  const { orgId, viewId } = useRouter().query;
+  const { rowsFuture } = useGrid(
+    parseInt(orgId as string),
+    parseInt(viewId as string)
+  );
+  const rows = rowsFuture.data || [];
 
   return (
     <Box p={1}>

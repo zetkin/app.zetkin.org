@@ -1,11 +1,12 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { ZetkinViewColumn } from '../components/types';
-import { columnsLoad, columnsLoaded } from '../store';
+import { columnsLoad, columnsLoaded, rowsLoad, rowsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
 interface UseGridReturn {
   columnsFuture: IFuture<ZetkinViewColumn[]>;
+  rowsFuture: IFuture<ZetkinViewRow[]>;
 }
 export default function useGrid(orgId: number, viewId: number): UseGridReturn {
   const apiClient = useApiClient();
@@ -22,5 +23,12 @@ export default function useGrid(orgId: number, viewId: number): UseGridReturn {
         apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/columns`),
     }
   );
-  return { columnsFuture };
+
+  const rowsFuture = loadListIfNecessary(views.rowsByViewId[viewId], dispatch, {
+    actionOnLoad: () => rowsLoad(viewId),
+    actionOnSuccess: (rows) => rowsLoaded([viewId, rows]),
+    loader: () =>
+      apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/rows`),
+  });
+  return { columnsFuture, rowsFuture };
 }

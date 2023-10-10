@@ -78,7 +78,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     parsedOrgId,
     parsedViewId
   );
-  const { columnsFuture } = useGrid(parsedOrgId, parsedViewId);
+  const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
 
   // TODO: Remove once SSR is supported for models
   const onServer = useServerSide();
@@ -184,7 +184,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
           <ZUIFutures
             futures={{
               cols: columnsFuture,
-              rows: dataModel.getRows(),
+              rows: rowsFuture,
             }}
           >
             {({ data: { cols, rows } }) => {

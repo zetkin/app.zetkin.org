@@ -74,7 +74,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
     (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
   );
 
-  const { columnsFuture } = useGrid(
+  const { columnsFuture, rowsFuture } = useGrid(
     parseInt(orgId as string),
     parseInt(viewId as string)
   );
@@ -87,7 +87,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
     <ZUIFutures
       futures={{
         cols: columnsFuture,
-        rows: model.getRows(),
+        rows: rowsFuture,
         view: model.getView(),
       }}
     >

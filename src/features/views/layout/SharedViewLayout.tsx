@@ -55,7 +55,7 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
         parseInt(viewId as string)
       )
   );
-  const { columnsFuture } = useGrid(
+  const { columnsFuture, rowsFuture } = useGrid(
     parseInt(orgId as string),
     parseInt(viewId as string)
   );
@@ -70,7 +70,7 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
     <ZUIFutures
       futures={{
         cols: columnsFuture,
-        rows: dataModel.getRows(),
+        rows: rowsFuture,
       }}
     >
       {({ data: { cols, rows } }) => (
