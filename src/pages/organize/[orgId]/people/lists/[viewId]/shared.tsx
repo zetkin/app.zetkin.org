@@ -10,6 +10,7 @@ import SharedViewLayout from 'features/views/layout/SharedViewLayout';
 import useGrid from 'features/views/hooks/useGrid';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import useView from 'features/views/hooks/useView';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
@@ -95,10 +96,11 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const model = useModel(
     (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
   );
-  const { columnsFuture, rowsFuture } = useGrid(
-    parseInt(orgId),
-    parseInt(viewId)
-  );
+  const parsedOrgId = parseInt(orgId);
+  const parsedViewId = parseInt(viewId);
+
+  const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
+  const { viewFuture } = useView(parsedOrgId, parsedViewId);
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -111,7 +113,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
       futures={{
         cols: columnsFuture,
         rows: rowsFuture,
-        view: model.getView(),
+        view: viewFuture,
       }}
     >
       {({ data: { cols, rows, view } }) => (

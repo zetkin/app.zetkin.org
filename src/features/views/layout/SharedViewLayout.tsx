@@ -6,8 +6,7 @@ import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
 import useGrid from '../hooks/useGrid';
-import useModel from 'core/useModel';
-import ViewDataModel from '../models/ViewDataModel';
+import useView from '../hooks/useView';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
@@ -46,24 +45,14 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   const router = useRouter();
   const { orgId, viewId } = router.query;
   const classes = useStyles();
+  const parsedOrgId = parseInt(orgId as string);
+  const parsedViewId = parseInt(viewId as string);
 
-  const dataModel = useModel(
-    (env) =>
-      new ViewDataModel(
-        env,
-        parseInt(orgId as string),
-        parseInt(viewId as string)
-      )
-  );
-  const { columnsFuture, rowsFuture } = useGrid(
-    parseInt(orgId as string),
-    parseInt(viewId as string)
-  );
+  const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
+  const { viewFuture } = useView(parsedOrgId, parsedViewId);
 
   const title = (
-    <ZUIFuture future={dataModel.getView()}>
-      {(view) => <>{view.title}</>}
-    </ZUIFuture>
+    <ZUIFuture future={viewFuture}>{(view) => <>{view.title}</>}</ZUIFuture>
   );
   const subtitle = (
     // TODO: Replace with model eventually

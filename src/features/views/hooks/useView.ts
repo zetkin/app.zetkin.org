@@ -1,11 +1,19 @@
 import createNew from '../rpc/createNew/client';
-import { PromiseFuture } from 'core/caching/futures';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinView } from '../components/types';
-import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
+import {
+  useApiClient,
+  useAppDispatch,
+  useAppSelector,
+  useEnv,
+} from 'core/hooks';
 import {
   viewCreate,
   viewCreated,
   viewDeleted,
+  viewLoad,
+  viewLoaded,
   viewUpdate,
   viewUpdated,
 } from '../store';
@@ -22,12 +30,15 @@ interface UseViewReturn {
     viewId: number,
     data: ZetkinViewUpdateBody
   ) => PromiseFuture<ZetkinView>;
+  viewFuture: IFuture<ZetkinView>;
 }
 
-export default function useView(orgId: number): UseViewReturn {
+export default function useView(orgId: number, viewId?: number): UseViewReturn {
   const apiClient = useApiClient();
   const env = useEnv();
   const dispatch = useAppDispatch();
+  const views = useAppSelector((state) => state.views);
+  const item = views.viewList.items.find((item) => item.id == viewId);
 
   const createView = async (
     folderId = 0,
@@ -68,5 +79,10 @@ export default function useView(orgId: number): UseViewReturn {
     return new PromiseFuture(promise);
   };
 
-  return { createView, deleteView, updateView };
+  const viewFuture = loadItemIfNecessary(item, dispatch, {
+    actionOnLoad: () => viewLoad(viewId!),
+    actionOnSuccess: (view) => viewLoaded(view),
+    loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
+  });
+  return { createView, deleteView, updateView, viewFuture };
 }
