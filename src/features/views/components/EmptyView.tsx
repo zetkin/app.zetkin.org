@@ -11,7 +11,6 @@ import { FunctionComponent, useState } from 'react';
 
 import { Msg } from 'core/i18n';
 import { MUIOnlyPersonSelect as PersonSelect } from 'zui/ZUIPersonSelect';
-import useViewDataModel from '../hooks/useViewDataModel';
 import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinView } from 'features/views/components/types';
 
@@ -26,7 +25,6 @@ export interface EmptyViewProps {
 const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const model = useViewDataModel();
   const { addPerson, deleteContentQuery } = UseViewDataTableMutation(
     parseInt(orgId as string),
     view.id

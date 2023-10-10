@@ -7,6 +7,7 @@ import getUserMemberships from 'utils/getUserMemberships';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
+import useGrid from 'features/views/hooks/useGrid';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewDataModel from 'features/views/models/ViewDataModel';
@@ -73,11 +74,14 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
     (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
   );
 
+  const { columnsFuture } = useGrid(
+    parseInt(orgId as string),
+    parseInt(viewId as string)
+  );
+
   if (onServer) {
     return null;
   }
-
-  const columnsFuture = model.getColumns();
 
   return (
     <ZUIFutures

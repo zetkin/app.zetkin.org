@@ -7,6 +7,7 @@ import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
+import useGrid from 'features/views/hooks/useGrid';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewDataModel from 'features/views/models/ViewDataModel';
@@ -94,6 +95,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const model = useModel(
     (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
   );
+  const { columnsFuture } = useGrid(parseInt(orgId), parseInt(viewId));
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -104,7 +106,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   return (
     <ZUIFutures
       futures={{
-        cols: model.getColumns(),
+        cols: columnsFuture,
         rows: model.getRows(),
         view: model.getView(),
       }}
@@ -117,7 +119,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
           <ViewDataModelProvider model={model}>
             <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
               <>
-                {!model.getColumns().isLoading && (
+                {!columnsFuture.isLoading && (
                   <ViewDataTable
                     columns={cols}
                     disableBulkActions

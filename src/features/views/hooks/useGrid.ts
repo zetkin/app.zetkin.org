@@ -1,16 +1,13 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { IFuture } from 'core/caching/futures';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinViewColumn } from '../components/types';
 import { columnsLoad, columnsLoaded } from '../store';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-interface UseColumnsReturn {
+interface UseGridReturn {
   columnsFuture: IFuture<ZetkinViewColumn[]>;
 }
-export default function useColumns(
-  orgId: number,
-  viewId: number
-): UseColumnsReturn {
+export default function useGrid(orgId: number, viewId: number): UseGridReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);

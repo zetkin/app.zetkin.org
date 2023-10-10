@@ -4,7 +4,7 @@ import {
   rowAdded,
   viewQueryUpdated,
 } from '../store';
-import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
 interface UseViewDataTableMutationReturn {
@@ -19,7 +19,6 @@ export default function useViewDataTableMutation(
   viewId: number
 ): UseViewDataTableMutationReturn {
   const apiClient = useApiClient();
-  const env = useEnv();
   const dispatch = useAppDispatch();
 
   const addColumn = async (

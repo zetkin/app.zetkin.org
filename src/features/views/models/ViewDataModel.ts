@@ -3,7 +3,6 @@ import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import TagsRepo from 'features/tags/repos/TagsRepo';
 import ViewDataRepo from '../repos/ViewDataRepo';
-import ViewsRepo from '../repos/ViewsRepo';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   ZetkinView,
@@ -16,14 +15,12 @@ export default class ViewDataModel extends ModelBase {
   private _repo: ViewDataRepo;
   private _tagsRepo: TagsRepo;
   private _viewId: number;
-  private _viewsRepo: ViewsRepo;
 
   constructor(env: Environment, orgId: number, viewId: number) {
     super();
 
     this._repo = new ViewDataRepo(env);
     this._tagsRepo = new TagsRepo(env);
-    this._viewsRepo = new ViewsRepo(env);
     this._orgId = orgId;
     this._viewId = viewId;
   }

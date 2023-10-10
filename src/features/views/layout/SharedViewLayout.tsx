@@ -5,7 +5,7 @@ import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
-import useColumns from '../hooks/useColumns';
+import useGrid from '../hooks/useGrid';
 import useModel from 'core/useModel';
 import ViewDataModel from '../models/ViewDataModel';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -55,7 +55,7 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
         parseInt(viewId as string)
       )
   );
-  const { columnsFuture } = useColumns(
+  const { columnsFuture } = useGrid(
     parseInt(orgId as string),
     parseInt(viewId as string)
   );

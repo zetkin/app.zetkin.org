@@ -1,13 +1,20 @@
 import { FC } from 'react';
+import { useRouter } from 'next/router';
 import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
+import { IFuture } from 'core/caching/futures';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
+import useGrid from 'features/views/hooks/useGrid';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
-import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
+import {
+  COLUMN_TYPE,
+  LocalPersonViewColumn,
+  ZetkinViewColumn,
+} from '../../types';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
@@ -76,9 +83,15 @@ const EditCell: FC<{
 }> = ({ cell, column, row }) => {
   const api = useGridApiContext();
   const model = useViewDataModel();
+  const { orgId, viewId } = useRouter().query;
+
+  const { columnsFuture } = useGrid(
+    parseInt(orgId as string),
+    parseInt(viewId as string)
+  );
   const messages = useMessages(messageIds);
 
-  const suggestedPeople = getPeopleInView(model);
+  const suggestedPeople = getPeopleInView(model, columnsFuture);
   const [isRestrictedMode] = useAccessLevel();
 
   const updateCellValue = (person: ZetkinPerson | null) => {
@@ -101,9 +114,12 @@ const EditCell: FC<{
   );
 };
 
-function getPeopleInView(model: ViewDataModel): ZetkinPerson[] {
+function getPeopleInView(
+  model: ViewDataModel,
+  columnsFuture: IFuture<ZetkinViewColumn[]>
+): ZetkinPerson[] {
   const rows = model.getRows().data;
-  const cols = model.getColumns().data;
+  const cols = columnsFuture.data;
 
   if (!rows || !cols) {
     return [];

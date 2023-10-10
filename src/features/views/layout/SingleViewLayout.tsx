@@ -5,6 +5,7 @@ import { FunctionComponent, useContext, useState } from 'react';
 
 import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
+import useGrid from '../hooks/useGrid';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from '../hooks/useView';
@@ -45,6 +46,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const router = useRouter();
   const { orgId, viewId } = router.query;
   const parsedOrgId = parseInt(orgId as string);
+  const parsedViewId = parseInt(viewId as string);
 
   const shareModel = useModel(
     (env) =>
@@ -74,8 +76,9 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const { deleteView: deleteList } = useView(parsedOrgId);
   const { deleteContentQuery } = useViewDataTableMutation(
     parsedOrgId,
-    parseInt(viewId as string)
+    parsedViewId
   );
+  const { columnsFuture } = useGrid(parsedOrgId, parsedViewId);
 
   // TODO: Remove once SSR is supported for models
   const onServer = useServerSide();
@@ -180,7 +183,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
           // TODO: Replace with model eventually
           <ZUIFutures
             futures={{
-              cols: dataModel.getColumns(),
+              cols: columnsFuture,
               rows: dataModel.getRows(),
             }}
           >
