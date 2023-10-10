@@ -4,7 +4,7 @@ import { ModelBase } from 'core/models';
 import TagsRepo from 'features/tags/repos/TagsRepo';
 import ViewDataRepo from '../repos/ViewDataRepo';
 import ViewsRepo from '../repos/ViewsRepo';
-import { ZetkinPerson, ZetkinQuery } from 'utils/types/zetkin';
+import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   ZetkinView,
   ZetkinViewColumn,
