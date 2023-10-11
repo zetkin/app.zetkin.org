@@ -12,7 +12,6 @@ import {
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
   ZetkinSurveyPostBody,
-  ZetkinSurveySubmission,
   ZetkinSurveyTextElement,
   ZetkinTextQuestion,
 } from 'utils/types/zetkin';
@@ -29,8 +28,6 @@ import {
   elementUpdated,
   statsLoad,
   statsLoaded,
-  submissionLoad,
-  submissionLoaded,
   surveyCreate,
   surveyCreated,
   surveyLoad,
@@ -181,28 +178,6 @@ export default class SurveysRepo {
       `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`
     );
     this._store.dispatch(elementDeleted([surveyId, elemId]));
-  }
-
-  getSubmission(orgId: number, id: number): IFuture<ZetkinSurveySubmission> {
-    const state = this._store.getState();
-    const item = state.surveys.submissionList.items.find(
-      (item) => item.id == id
-    );
-
-    if (!item || shouldLoad(item)) {
-      this._store.dispatch(submissionLoad(id));
-      const promise = this._apiClient
-        .get<ZetkinSurveySubmission>(
-          `/api/orgs/${orgId}/survey_submissions/${id}`
-        )
-        .then((sub) => {
-          this._store.dispatch(submissionLoaded(sub));
-          return sub;
-        });
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(item);
-    }
   }
 
   getSurvey(orgId: number, id: number): IFuture<ZetkinSurvey> {
