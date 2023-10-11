@@ -1,6 +1,5 @@
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
-import TagsRepo from 'features/tags/repos/TagsRepo';
 import ViewDataRepo from '../repos/ViewDataRepo';
 import { ZetkinQuery } from 'utils/types/zetkin';
 
@@ -13,7 +12,6 @@ export default class ViewDataModel extends ModelBase {
     super();
 
     this._repo = new ViewDataRepo(env);
-    this._tagsRepo = new TagsRepo(env);
     this._orgId = orgId;
     this._viewId = viewId;
   }
