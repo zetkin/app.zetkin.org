@@ -30,15 +30,14 @@ interface UseViewReturn {
     viewId: number,
     data: ZetkinViewUpdateBody
   ) => PromiseFuture<ZetkinView>;
-  viewFuture: IFuture<ZetkinView>;
+  getView: (viewId: number) => IFuture<ZetkinView>;
 }
 
-export default function useView(orgId: number, viewId?: number): UseViewReturn {
+export default function useView(orgId: number): UseViewReturn {
   const apiClient = useApiClient();
   const env = useEnv();
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);
-  const item = views.viewList.items.find((item) => item.id == viewId);
 
   const createView = async (
     folderId = 0,
@@ -79,10 +78,13 @@ export default function useView(orgId: number, viewId?: number): UseViewReturn {
     return new PromiseFuture(promise);
   };
 
-  const viewFuture = loadItemIfNecessary(item, dispatch, {
-    actionOnLoad: () => viewLoad(viewId!),
-    actionOnSuccess: (view) => viewLoaded(view),
-    loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
-  });
-  return { createView, deleteView, updateView, viewFuture };
+  const getView = (viewId: number) => {
+    const item = views.viewList.items.find((item) => item.id == viewId);
+    return loadItemIfNecessary(item, dispatch, {
+      actionOnLoad: () => viewLoad(viewId),
+      actionOnSuccess: (view) => viewLoaded(view),
+      loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
+    });
+  };
+  return { createView, deleteView, updateView, getView };
 }

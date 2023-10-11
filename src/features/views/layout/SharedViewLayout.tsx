@@ -49,10 +49,12 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   const parsedViewId = parseInt(viewId as string);
 
   const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
-  const { viewFuture } = useView(parsedOrgId, parsedViewId);
+  const { getView } = useView(parsedOrgId);
 
   const title = (
-    <ZUIFuture future={viewFuture}>{(view) => <>{view.title}</>}</ZUIFuture>
+    <ZUIFuture future={getView(parsedViewId)}>
+      {(view) => <>{view.title}</>}
+    </ZUIFuture>
   );
   const subtitle = (
     // TODO: Replace with model eventually

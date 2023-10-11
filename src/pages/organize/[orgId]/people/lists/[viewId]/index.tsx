@@ -79,7 +79,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   const parsedViewId = parseInt(viewId);
 
   const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
-  const { viewFuture } = useView(parsedOrgId, parsedViewId);
+  const { getView } = useView(parsedOrgId);
 
   if (onServer) {
     return null;
@@ -90,7 +90,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
       futures={{
         cols: columnsFuture,
         rows: rowsFuture,
-        view: viewFuture,
+        view: getView(parsedViewId),
       }}
     >
       {({ data: { cols, rows, view } }) => (

@@ -100,7 +100,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const parsedViewId = parseInt(viewId);
 
   const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
-  const { viewFuture } = useView(parsedOrgId, parsedViewId);
+  const { getView } = useView(parsedOrgId);
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -113,7 +113,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
       futures={{
         cols: columnsFuture,
         rows: rowsFuture,
-        view: viewFuture,
+        view: getView(parsedViewId),
       }}
     >
       {({ data: { cols, rows, view } }) => (

@@ -8,7 +8,7 @@ interface UseItemSummaryReturn {
 
 export default function useItemSummary(
   orgId: number,
-  folderId?: number | null
+  folderId: number | null
 ): UseItemSummaryReturn {
   const itemsFuture = useViewTree(orgId);
 

@@ -73,10 +73,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { deleteView: deleteList, viewFuture } = useView(
-    parsedOrgId,
-    parsedViewId
-  );
+  const { deleteView: deleteList, getView } = useView(parsedOrgId);
 
   const { deleteContentQuery } = useViewDataTableMutation(
     parsedOrgId,
@@ -93,7 +90,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   const title = (
     <>
-      <ZUIFuture future={viewFuture}>
+      <ZUIFuture future={getView(parsedViewId)}>
         {(view) => {
           return (
             <Box>
@@ -122,7 +119,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
-  const view = viewFuture.data;
+  const view = getView(parsedViewId).data;
 
   if (view?.content_query) {
     ellipsisMenu.push({
