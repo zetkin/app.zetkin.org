@@ -1,5 +1,6 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
+import useTagMutation from 'features/tags/hooks/useTagMutation';
 import {
   cellUpdate,
   cellUpdated,
@@ -21,6 +22,7 @@ export interface UseViewGridReturn {
     colId: number,
     data: CellType
   ) => void;
+  toggleTag: (personId: number, tagId: number, assigned: boolean) => void;
 }
 export default function useViewGrid(
   orgId: number,
@@ -28,6 +30,7 @@ export default function useViewGrid(
 ): UseViewGridReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const { assignToPerson, removeFromPerson } = useTagMutation(orgId);
   const views = useAppSelector((state) => state.views);
 
   const columnsFuture = loadListIfNecessary(
@@ -97,5 +100,13 @@ export default function useViewGrid(
       clearCellData(personId, colId);
     }
   };
-  return { columnsFuture, removeRows, rowsFuture, setCellValue };
+
+  const toggleTag = (personId: number, tagId: number, assigned: boolean) => {
+    if (assigned) {
+      assignToPerson(personId, tagId);
+    } else {
+      removeFromPerson(personId, tagId);
+    }
+  };
+  return { columnsFuture, removeRows, rowsFuture, setCellValue, toggleTag };
 }
