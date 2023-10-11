@@ -13,7 +13,6 @@ import {
   ZetkinSurveyOption,
   ZetkinSurveyPostBody,
   ZetkinSurveySubmission,
-  ZetkinSurveySubmissionPatchBody,
   ZetkinSurveyTextElement,
   ZetkinTextQuestion,
 } from 'utils/types/zetkin';
@@ -38,8 +37,6 @@ import {
   surveyLoaded,
   surveysLoad,
   surveysLoaded,
-  surveySubmissionUpdate,
-  surveySubmissionUpdated,
   surveyUpdate,
   surveyUpdated,
 } from '../store';
@@ -346,24 +343,6 @@ export default class SurveysRepo {
       )
       .then((survey) => {
         this._store.dispatch(surveyUpdated(survey));
-      });
-  }
-
-  updateSurveySubmission(
-    orgId: number,
-    submissionId: number,
-    data: ZetkinSurveySubmissionPatchBody
-  ) {
-    this._store.dispatch(
-      surveySubmissionUpdate([submissionId, Object.keys(data)])
-    );
-    this._apiClient
-      .patch<ZetkinSurveySubmission, ZetkinSurveySubmissionPatchBody>(
-        `/api/orgs/${orgId}/survey_submissions/${submissionId}`,
-        data
-      )
-      .then((submission) => {
-        this._store.dispatch(surveySubmissionUpdated(submission));
       });
   }
 }
