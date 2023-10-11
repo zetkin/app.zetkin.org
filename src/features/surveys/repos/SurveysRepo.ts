@@ -38,8 +38,6 @@ import {
   surveyLoaded,
   surveysLoad,
   surveysLoaded,
-  surveySubmissionsLoad,
-  surveySubmissionsLoaded,
   surveySubmissionUpdate,
   surveySubmissionUpdated,
   surveyUpdate,
@@ -257,25 +255,6 @@ export default class SurveysRepo {
         actionOnLoad: () => statsLoad(surveyId),
         actionOnSuccess: (stats) => statsLoaded([surveyId, stats]),
         loader: () => this._apiClient.rpc(getSurveyStats, { orgId, surveyId }),
-      }
-    );
-  }
-
-  getSurveySubmissions(
-    orgId: number,
-    surveyId: number
-  ): IFuture<ZetkinSurveySubmission[]> {
-    const state = this._store.getState();
-    return loadListIfNecessary(
-      state.surveys.submissionList,
-      this._store.dispatch,
-      {
-        actionOnLoad: () => surveySubmissionsLoad(surveyId),
-        actionOnSuccess: (data) => surveySubmissionsLoaded([surveyId, data]),
-        loader: () =>
-          this._apiClient.get<ZetkinSurveySubmission[]>(
-            `/api/orgs/${orgId}/surveys/${surveyId}/submissions`
-          ),
       }
     );
   }

@@ -9,9 +9,9 @@ import SubmissionWarningAlert from 'features/surveys/components/SubmissionWarnin
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
-import SurveySubmissionsModel from 'features/surveys/models/SurveySubmissionsModel';
 import SurveySuborgsCard from 'features/surveys/components/SurveySuborgsCard';
 import useModel from 'core/useModel';
+import useSurveySubmissions from 'features/surveys/hooks/useSurveySubmissions';
 import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -50,9 +50,9 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
-  const subsModel = useModel(
-    (env) =>
-      new SurveySubmissionsModel(env, parseInt(orgId), parseInt(surveyId))
+  const submissionsFuture = useSurveySubmissions(
+    parseInt(orgId),
+    parseInt(surveyId)
   );
 
   const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
@@ -65,7 +65,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
       </Head>
       <Grid container spacing={2}>
         <Grid item md={8} sm={12} xs={12}>
-          <ZUIFuture future={subsModel.getSubmissions()}>
+          <ZUIFuture future={submissionsFuture}>
             {(data) => {
               let submissions = data;
               if (showUnlinkedOnly) {
