@@ -12,7 +12,7 @@ import SurveyOptionColumnType from './SurveyOptionColumnType';
 import SurveyOptionsColumnType from './SurveyOptionsColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
@@ -27,7 +27,7 @@ export interface IColumnType<
   ): Omit<GridColDef, 'field'>;
   getSearchableStrings(cell: CellType): string[];
   handleKeyDown?(
-    model: ViewDataModel,
+    useViewGrid: UseViewGridReturn,
     column: ColumnType,
     personId: number,
     data: CellType,
@@ -35,7 +35,7 @@ export interface IColumnType<
     accessLevel: ZetkinObjectAccess['level'] | null
   ): void;
   processRowUpdate?(
-    model: ViewDataModel,
+    useViewGrid: UseViewGridReturn,
     colId: number,
     personId: number,
     data: CellType

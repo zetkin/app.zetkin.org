@@ -20,24 +20,8 @@ export default class ViewDataModel extends ModelBase {
     this._viewId = viewId;
   }
 
-  setCellValue<CellType>(personId: number, colId: number, data: CellType) {
-    if (data !== null) {
-      this._repo.setCellData(this._orgId, this._viewId, personId, colId, data);
-    } else {
-      this._repo.clearCellData(this._orgId, this._viewId, personId, colId);
-    }
-  }
-
   setTitle(newTitle: string) {
     this._repo.updateView(this._orgId, this._viewId, { title: newTitle });
-  }
-
-  toggleTag(personId: number, tagId: number, assigned: boolean) {
-    if (assigned) {
-      this._tagsRepo.assignTagToPerson(this._orgId, personId, tagId);
-    } else {
-      this._tagsRepo.removeTagFromPerson(this._orgId, personId, tagId);
-    }
   }
 
   updateColumn(columnId: number, data: Partial<Omit<ZetkinViewColumn, 'id'>>) {

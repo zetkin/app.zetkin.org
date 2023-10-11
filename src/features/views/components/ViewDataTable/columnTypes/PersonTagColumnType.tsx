@@ -13,7 +13,7 @@ import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
 import useTagMutation from 'features/tags/hooks/useTagMutation';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -82,7 +82,7 @@ export default class PersonTagColumnType implements IColumnType {
   }
 
   handleKeyDown(
-    model: ViewDataModel,
+    useViewGrid: UseViewGridReturn,
     column: PersonTagViewColumn,
     personId: number,
     data: PersonTagViewCell,
@@ -95,7 +95,7 @@ export default class PersonTagColumnType implements IColumnType {
     }
 
     if (ev.key == 'Enter' || ev.key == ' ') {
-      model.toggleTag(personId, column.config.tag_id, !data);
+      useViewGrid.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
     }
   }

@@ -105,7 +105,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   );
   const model = useViewDataModel();
   const { createView } = useView(parsedOrgId);
-  const { removeRows } = useViewGrid(parsedOrgId, view.id);
+  const viewGridHook = useViewGrid(parsedOrgId, view.id);
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar('error', messages.dataTableErrors[error]());
@@ -216,7 +216,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onRowsRemove = async () => {
     setWaiting(true);
     try {
-      removeRows(selection);
+      viewGridHook.removeRows(selection);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
     } finally {
@@ -397,7 +397,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
               const handleKeyDown = columnTypes[col.type].handleKeyDown;
               if (handleKeyDown) {
                 handleKeyDown(
-                  model,
+                  viewGridHook,
                   col,
                   params.row.id,
                   params.value,
@@ -424,7 +424,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             if (col) {
               const processRowUpdate = columnTypes[col.type].processRowUpdate;
               if (processRowUpdate) {
-                processRowUpdate(model, col.id, after.id, after[changedField]);
+                processRowUpdate(
+                  viewGridHook,
+                  col.id,
+                  after.id,
+                  after[changedField]
+                );
               }
             }
           }
