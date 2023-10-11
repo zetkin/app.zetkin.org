@@ -7,10 +7,10 @@ import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
-import useGrid from 'features/views/hooks/useGrid';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
@@ -99,7 +99,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const parsedOrgId = parseInt(orgId);
   const parsedViewId = parseInt(viewId);
 
-  const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
+  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const { getView } = useView(parsedOrgId);
   const canConfigure = accessLevel == 'configure';
 

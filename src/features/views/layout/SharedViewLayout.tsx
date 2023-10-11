@@ -5,8 +5,8 @@ import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
-import useGrid from '../hooks/useGrid';
 import useView from '../hooks/useView';
+import useViewGrid from '../hooks/useViewGrid';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
@@ -48,7 +48,7 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   const parsedOrgId = parseInt(orgId as string);
   const parsedViewId = parseInt(viewId as string);
 
-  const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
+  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const { getView } = useView(parsedOrgId);
 
   const title = (

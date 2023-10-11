@@ -1,14 +1,24 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { columnsLoad, columnsLoaded, rowsLoad, rowsLoaded } from '../store';
+import {
+  columnsLoad,
+  columnsLoaded,
+  rowRemoved,
+  rowsLoad,
+  rowsLoaded,
+} from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
-interface UseGridReturn {
+interface UseViewGridReturn {
   columnsFuture: IFuture<ZetkinViewColumn[]>;
   rowsFuture: IFuture<ZetkinViewRow[]>;
+  removeRows: (rows: number[]) => Promise<void>;
 }
-export default function useGrid(orgId: number, viewId: number): UseGridReturn {
+export default function useViewGrid(
+  orgId: number,
+  viewId: number
+): UseViewGridReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);
@@ -30,5 +40,16 @@ export default function useGrid(orgId: number, viewId: number): UseGridReturn {
     loader: () =>
       apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/rows`),
   });
-  return { columnsFuture, rowsFuture };
+
+  const removeRows = async (rows: number[]): Promise<void> => {
+    await apiClient.post(
+      `/api/views/removeRows?orgId=${orgId}&viewId=${viewId}`,
+      {
+        rows,
+      }
+    );
+
+    rows.forEach((rowId) => dispatch(rowRemoved([viewId, rowId])));
+  };
+  return { columnsFuture, removeRows, rowsFuture };
 }

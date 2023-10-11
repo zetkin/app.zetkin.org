@@ -5,8 +5,8 @@ import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 import { IColumnType } from '.';
 import { IFuture } from 'core/caching/futures';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
-import useGrid from 'features/views/hooks/useGrid';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import {
@@ -84,7 +84,7 @@ const EditCell: FC<{
   const model = useViewDataModel();
   const { orgId, viewId } = useRouter().query;
 
-  const { columnsFuture, rowsFuture } = useGrid(
+  const { columnsFuture, rowsFuture } = useViewGrid(
     parseInt(orgId as string),
     parseInt(viewId as string)
   );

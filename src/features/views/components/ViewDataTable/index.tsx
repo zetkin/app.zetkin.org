@@ -19,7 +19,10 @@ import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
+import useView from 'features/views/hooks/useView';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
+import UseViewDataTableMutation from 'features/views/hooks/useViewDataTableMutation';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -43,8 +46,6 @@ import ViewDataTableToolbar, {
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
-import useView from 'features/views/hooks/useView';
-import UseViewDataTableMutation from 'features/views/hooks/useViewDataTableMutation';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -104,6 +105,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   );
   const model = useViewDataModel();
   const { createView } = useView(parsedOrgId);
+  const { removeRows } = useViewGrid(parsedOrgId, view.id);
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar('error', messages.dataTableErrors[error]());
@@ -214,7 +216,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onRowsRemove = async () => {
     setWaiting(true);
     try {
-      await model.removeRows(selection);
+      removeRows(selection);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
     } finally {

@@ -7,10 +7,10 @@ import getUserMemberships from 'utils/getUserMemberships';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
-import useGrid from 'features/views/hooks/useGrid';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
@@ -78,7 +78,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   const parsedOrgId = parseInt(orgId);
   const parsedViewId = parseInt(viewId);
 
-  const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
+  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const { getView } = useView(parsedOrgId);
 
   if (onServer) {

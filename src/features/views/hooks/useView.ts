@@ -86,5 +86,5 @@ export default function useView(orgId: number): UseViewReturn {
       loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
     });
   };
-  return { createView, deleteView, updateView, getView };
+  return { createView, deleteView, getView, updateView };
 }

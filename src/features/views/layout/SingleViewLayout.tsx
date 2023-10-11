@@ -5,11 +5,11 @@ import { FunctionComponent, useContext, useState } from 'react';
 
 import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
-import useGrid from '../hooks/useGrid';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from '../hooks/useView';
 import useViewDataTableMutation from '../hooks/useViewDataTableMutation';
+import useViewGrid from '../hooks/useViewGrid';
 import ViewDataModel from '../models/ViewDataModel';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
 import ViewSharingModel from '../models/ViewSharingModel';
@@ -79,7 +79,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     parsedOrgId,
     parsedViewId
   );
-  const { columnsFuture, rowsFuture } = useGrid(parsedOrgId, parsedViewId);
+  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
 
   // TODO: Remove once SSR is supported for models
   const onServer = useServerSide();
