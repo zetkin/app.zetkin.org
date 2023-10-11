@@ -5,7 +5,6 @@ import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 import { IColumnType } from '.';
 import { IFuture } from 'core/caching/futures';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
-import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
@@ -81,10 +80,9 @@ const EditCell: FC<{
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
   const api = useGridApiContext();
-  const model = useViewDataModel();
   const { orgId, viewId } = useRouter().query;
 
-  const { columnsFuture, rowsFuture } = useViewGrid(
+  const { columnsFuture, rowsFuture, setCellValue } = useViewGrid(
     parseInt(orgId as string),
     parseInt(viewId as string)
   );
@@ -98,7 +96,7 @@ const EditCell: FC<{
       field: 'col_' + column.id,
       id: row.id,
     });
-    model.setCellValue(row.id, column.id, person?.id ?? null);
+    setCellValue(row.id, column.id, person?.id ?? null);
   };
 
   return (
