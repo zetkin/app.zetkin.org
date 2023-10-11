@@ -10,7 +10,6 @@ import useServerSide from 'core/useServerSide';
 import useView from '../hooks/useView';
 import useViewDataTableMutation from '../hooks/useViewDataTableMutation';
 import useViewGrid from '../hooks/useViewGrid';
-import ViewDataModel from '../models/ViewDataModel';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
 import ViewSharingModel from '../models/ViewSharingModel';
 import ViewSmartSearchDialog from 'features/views/components/ViewSmartSearchDialog';
@@ -57,15 +56,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       )
   );
 
-  const dataModel = useModel(
-    (env) =>
-      new ViewDataModel(
-        env,
-        parseInt(orgId as string),
-        parseInt(viewId as string)
-      )
-  );
-
   const [deactivated, setDeactivated] = useState(false);
   const classes = useStyles({ deactivated });
   const messages = useMessages(messageIds);
@@ -73,7 +63,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { deleteView: deleteList, getView } = useView(parsedOrgId);
+  const { deleteView: deleteList, getView, setTitle } = useView(parsedOrgId);
 
   const { deleteContentQuery } = useViewDataTableMutation(
     parsedOrgId,
@@ -98,7 +88,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                 key={view.id}
                 onChange={(newTitle) => {
                   try {
-                    dataModel.setTitle(newTitle);
+                    setTitle(parsedViewId, newTitle);
                     showSnackbar(
                       'success',
                       messages.editViewTitleAlert.success()

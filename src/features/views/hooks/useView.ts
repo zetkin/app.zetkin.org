@@ -25,12 +25,12 @@ type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
 interface UseViewReturn {
   createView: (folderId?: number, rows?: number[]) => void;
   deleteView: (viewId: number) => void;
+  getView: (viewId: number) => IFuture<ZetkinView>;
+  setTitle: (viewId: number, title: string) => void;
   updateView: (
-    orgId: number,
     viewId: number,
     data: ZetkinViewUpdateBody
   ) => PromiseFuture<ZetkinView>;
-  getView: (viewId: number) => IFuture<ZetkinView>;
 }
 
 export default function useView(orgId: number): UseViewReturn {
@@ -61,11 +61,7 @@ export default function useView(orgId: number): UseViewReturn {
     dispatch(viewDeleted(viewId));
   };
 
-  const updateView = (
-    orgId: number,
-    viewId: number,
-    data: ZetkinViewUpdateBody
-  ) => {
+  const updateView = (viewId: number, data: ZetkinViewUpdateBody) => {
     const mutating = Object.keys(data);
     dispatch(viewUpdate([viewId, mutating]));
     const promise = apiClient
@@ -86,5 +82,9 @@ export default function useView(orgId: number): UseViewReturn {
       loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
     });
   };
-  return { createView, deleteView, getView, updateView };
+
+  const setTitle = (viewId: number, title: string) => {
+    updateView(viewId, { title });
+  };
+  return { createView, deleteView, getView, setTitle, updateView };
 }

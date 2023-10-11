@@ -130,7 +130,7 @@ export default function useItems(
     if (type == 'folder') {
       updateFolder(orgId, id, { parent_id: newParentId });
     } else if (type == 'view') {
-      updateView(orgId, id, { folder_id: newParentId });
+      updateView(id, { folder_id: newParentId });
     }
   };
 
@@ -138,7 +138,7 @@ export default function useItems(
     if (type == 'folder') {
       updateFolder(orgId, id, { title });
     } else if (type == 'view') {
-      updateView(orgId, id, { title });
+      updateView(id, { title });
     }
   };
 
