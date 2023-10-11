@@ -20,7 +20,6 @@ import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useC
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useView from 'features/views/hooks/useView';
-import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import UseViewDataTableMutation from 'features/views/hooks/useViewDataTableMutation';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewColumnDialog from '../ViewColumnDialog';
@@ -103,7 +102,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     parsedOrgId,
     view.id
   );
-  const model = useViewDataModel();
   const { createView } = useView(parsedOrgId);
   const viewGridHook = useViewGrid(parsedOrgId, view.id);
 
@@ -117,7 +115,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   ) => {
     NProgress.start();
     try {
-      await model.updateColumn(id, data);
+      viewGridHook.updateColumn(id, data);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
     } finally {

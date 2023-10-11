@@ -6,6 +6,7 @@ import {
   cellUpdated,
   columnsLoad,
   columnsLoaded,
+  columnUpdated,
   rowRemoved,
   rowsLoad,
   rowsLoaded,
@@ -23,6 +24,10 @@ export interface UseViewGridReturn {
     data: CellType
   ) => void;
   toggleTag: (personId: number, tagId: number, assigned: boolean) => void;
+  updateColumn: (
+    columnId: number,
+    data: Partial<Omit<ZetkinViewColumn, 'id'>>
+  ) => Promise<void>;
 }
 export default function useViewGrid(
   orgId: number,
@@ -108,5 +113,23 @@ export default function useViewGrid(
       removeFromPerson(personId, tagId);
     }
   };
-  return { columnsFuture, removeRows, rowsFuture, setCellValue, toggleTag };
+
+  const updateColumn = async (
+    columnId: number,
+    data: Partial<Omit<ZetkinViewColumn, 'id'>>
+  ) => {
+    const column = await apiClient.patch<
+      ZetkinViewColumn,
+      Partial<Omit<ZetkinViewColumn, 'id'>>
+    >(`/api/orgs/${orgId}/people/views/${viewId}/columns/${columnId}`, data);
+    dispatch(columnUpdated([viewId, column]));
+  };
+  return {
+    columnsFuture,
+    removeRows,
+    rowsFuture,
+    setCellValue,
+    toggleTag,
+    updateColumn,
+  };
 }
