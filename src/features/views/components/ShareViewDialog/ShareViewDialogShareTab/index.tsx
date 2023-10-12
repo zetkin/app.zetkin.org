@@ -1,12 +1,11 @@
 import NextLink from 'next/link';
 import { Box, FormControlLabel, Link, Switch } from '@mui/material';
-import { FC, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import useAbsoluteUrl from 'utils/hooks/useAbsoluteUrl';
 import { useNumericRouteParams } from 'core/hooks';
 import useViewSharing from 'features/views/hooks/useViewSharing';
-import ViewSharingModel from 'features/views/models/ViewSharingModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAccessList from 'zui/ZUIAccessList';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -17,25 +16,17 @@ import { Msg, useMessages } from 'core/i18n';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
 
-interface ShareViewDialogShareTabProps {
-  model: ViewSharingModel;
-}
-
-const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
-  model,
-}) => {
+const ShareViewDialogShareTab = () => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const selectInputRef = useRef<HTMLInputElement>();
+  const { orgId, viewId } = useNumericRouteParams();
   const [showOfficials, setShowOfficials] = useState(true);
   const shareLinkUrl = useAbsoluteUrl(
-    `/organize/${model.orgId}/people/lists/${model.viewId}/shared`
+    `/organize/${orgId}/people/lists/${viewId}/shared`
   );
-  const { orgId, viewId } = useNumericRouteParams();
-  const { accessListFuture, officialsFuture, grantAccess } = useViewSharing(
-    orgId,
-    viewId
-  );
+  const { accessListFuture, officialsFuture, grantAccess, revokeAccess } =
+    useViewSharing(orgId, viewId);
 
   return (
     <Box display="flex" flexDirection="column" gap={1} height="100%">
@@ -76,8 +67,8 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                 onChangeLevel={(personId, level) =>
                   grantAccess(personId, level)
                 }
-                onRevoke={(personId) => model.revokeAccess(personId)}
-                orgId={model.orgId}
+                onRevoke={(personId) => revokeAccess(personId)}
+                orgId={orgId}
               />
             </ZUIScrollingContainer>
             <Box marginTop={1}>
@@ -126,7 +117,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                       copyText={shareLinkUrl}
                     >
                       <NextLink
-                        href={`/organize/${model.orgId}/people/lists/${model.viewId}/shared`}
+                        href={`/organize/${orgId}/people/lists/${viewId}/shared`}
                         passHref
                       >
                         <Link>

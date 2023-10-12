@@ -5,7 +5,6 @@ import { FunctionComponent, useContext, useState } from 'react';
 
 import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
-import useModel from 'core/useModel';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useView from '../hooks/useView';
@@ -13,7 +12,6 @@ import useViewDataTableMutations from '../hooks/useViewDataTableMutations';
 import useViewGrid from '../hooks/useViewGrid';
 import useViewSharing from '../hooks/useViewSharing';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
-import ViewSharingModel from '../models/ViewSharingModel';
 import ViewSmartSearchDialog from 'features/views/components/ViewSmartSearchDialog';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -46,10 +44,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 }) => {
   const router = useRouter();
   const { orgId, viewId } = useNumericRouteParams();
-
-  const shareModel = useModel(
-    (env) => new ViewSharingModel(env, orgId, viewId)
-  );
 
   const [deactivated, setDeactivated] = useState(false);
   const classes = useStyles({ deactivated });
@@ -221,7 +215,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       )}
       {view && shareDialogOpen && (
         <ShareViewDialog
-          model={shareModel}
           onClose={() => setShareDialogOpen(false)}
           view={view}
         />

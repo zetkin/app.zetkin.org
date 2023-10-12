@@ -6,6 +6,7 @@ import {
   accessAdded,
   accessLoad,
   accessLoaded,
+  accessRevoked,
   officialsLoad,
   officialsLoaded,
 } from '../store';
@@ -15,6 +16,7 @@ interface UseViewSharingReturn {
   accessListFuture: IFuture<ZetkinObjectAccess[]>;
   grantAccess: (personId: number, level: ZetkinObjectAccess['level']) => void;
   officialsFuture: IFuture<ZetkinOfficial[]>;
+  revokeAccess: (personId: number) => void;
 }
 export default function useViewSharing(
   orgId: number,
@@ -57,5 +59,13 @@ export default function useViewSharing(
       });
   };
 
-  return { accessListFuture, grantAccess, officialsFuture };
+  const revokeAccess = (personId: number) => {
+    apiClient
+      .delete(`/api/orgs/${orgId}/people/views/${viewId}/access/${personId}`)
+      .then(() => {
+        dispatch(accessRevoked([viewId, personId]));
+      });
+  };
+
+  return { accessListFuture, grantAccess, officialsFuture, revokeAccess };
 }
