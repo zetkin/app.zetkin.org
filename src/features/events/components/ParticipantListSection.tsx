@@ -16,6 +16,7 @@ import EventDataModel from '../models/EventDataModel';
 import filterParticipants from '../utils/filterParticipants';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
+import useEventContact from '../hooks/useEventContact';
 import useEventData from '../hooks/useEventData';
 import { useMessages } from 'core/i18n';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
@@ -118,6 +119,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const eventFuture = useEventData(orgId, eventId);
+  const { setContact } = useEventContact(orgId, eventId);
 
   const columns: GridColDef[] = [
     {
@@ -167,9 +169,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
                     title={messages.eventParticipantsList.participantTooltip()}
                   >
                     <FaceOutlinedIcon
-                      onClick={noPropagate(() =>
-                        model.setContact(params.row.id)
-                      )}
+                      onClick={noPropagate(() => setContact(params.row.id))}
                       sx={{
                         display: 'none',
                         marginLeft: '8px',

@@ -6,8 +6,8 @@ import {
 } from '@mui/icons-material';
 import { FC, useContext } from 'react';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
+import useEventContact from '../hooks/useEventContact';
 import useEventData from '../hooks/useEventData';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -19,23 +19,30 @@ import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
 interface EventContactCardProps {
   data: ZetkinEvent;
-  model: EventDataModel;
   orgId: number;
 }
 
 interface ContactDetailsProps {
   contact: { id: number; name: string };
-  model: EventDataModel;
+
+  eventId: number;
   orgId: number;
 }
 
 interface ContactSelectProps {
-  model: EventDataModel;
+  orgId: number;
+
+  eventId: number;
 }
 
-const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
+const ContactDetails: FC<ContactDetailsProps> = ({
+  contact,
+  eventId,
+  orgId,
+}) => {
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { removeContact } = useEventContact(orgId, eventId);
 
   return (
     <>
@@ -52,7 +59,7 @@ const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
           onClick={() => {
             showConfirmDialog({
               onSubmit: () => {
-                model.removeContact();
+                removeContact();
               },
               warningText: messages.eventContactCard.warningText({
                 name: contact.name,
@@ -70,10 +77,11 @@ const ContactDetails: FC<ContactDetailsProps> = ({ contact, model, orgId }) => {
   );
 };
 
-const ContactSelect: FC<ContactSelectProps> = ({ model }) => {
+const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
   const messages = useMessages(messageIds);
+  const { setContact } = useEventContact(orgId, eventId);
   const handleSelectedPerson = (personId: number) => {
-    model.setContact(personId);
+    setContact(personId);
   };
 
   return (
@@ -116,9 +124,13 @@ const EventContactCard: FC<EventContactCardProps> = ({ data, orgId }) => {
         }
       >
         {data.contact ? (
-          <ContactDetails contact={data.contact} model={model} orgId={orgId} />
+          <ContactDetails
+            contact={data.contact}
+            eventId={data.id}
+            orgId={orgId}
+          />
         ) : (
-          <ContactSelect model={model} />
+          <ContactSelect eventId={data.id} orgId={orgId} />
         )}
       </ZUICard>
     </Box>
