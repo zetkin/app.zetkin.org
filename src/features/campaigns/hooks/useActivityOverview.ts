@@ -1,10 +1,11 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ResolvedFuture } from 'core/caching/futures';
 import {
-  ACTIVITIES,
-  ActivityOverview,
-  CampaignActivity,
-} from './useCampaignActivities';
+  callAssignmentsLoad,
+  callAssignmentsLoaded,
+  campaignCallAssignmentsLoad,
+  campaignCallAssignmentsLoaded,
+} from 'features/callAssignments/store';
 import {
   campaignSurveyIdsLoad,
   campaignSurveyIdsLoaded,
@@ -19,13 +20,63 @@ import {
 } from 'features/tasks/store';
 import { getUTCDateWithoutTime, isSameDate } from 'utils/dateUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { ZetkinSurvey, ZetkinTask } from 'utils/types/zetkin';
+import {
+  ZetkinCallAssignment,
+  ZetkinEvent,
+  ZetkinSurvey,
+  ZetkinTask,
+} from 'utils/types/zetkin';
+
+export enum ACTIVITIES {
+  CALL_ASSIGNMENT = 'callAssignment',
+  EVENT = 'event',
+  SURVEY = 'survey',
+  TASK = 'task',
+}
+
+type CampaignActivityBase = {
+  visibleFrom: Date | null;
+  visibleUntil: Date | null;
+};
+
+export type CallAssignmentActivity = CampaignActivityBase & {
+  data: ZetkinCallAssignment;
+  kind: ACTIVITIES.CALL_ASSIGNMENT;
+};
+
+export type SurveyActivity = CampaignActivityBase & {
+  data: ZetkinSurvey;
+  kind: ACTIVITIES.SURVEY;
+};
+
+export type TaskActivity = CampaignActivityBase & {
+  data: ZetkinTask;
+  kind: ACTIVITIES.TASK;
+};
+
+export type EventActivity = CampaignActivityBase & {
+  data: ZetkinEvent;
+  kind: ACTIVITIES.EVENT;
+};
+
+export type CampaignActivity =
+  | CallAssignmentActivity
+  | EventActivity
+  | SurveyActivity
+  | TaskActivity;
+
+export type ActivityOverview = {
+  alsoThisWeek: CampaignActivity[];
+  today: CampaignActivity[];
+  tomorrow: CampaignActivity[];
+};
 
 export default function useActivitiyOverview(orgId: number, campId?: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const tasksSlice = useAppSelector((state) => state.tasks);
   const surveysSlice = useAppSelector((state) => state.surveys);
+  const callAssignmentsSlice = useAppSelector((state) => state.callAssignments);
 
   const activities: CampaignActivity[] = [];
 
@@ -113,6 +164,56 @@ export default function useActivitiyOverview(orgId: number, campId?: number) {
         }
       });
     }
+
+    const callAssignmentIdsByCampaignId =
+      callAssignmentsSlice.callAssignmentIdsByCampaignId[campId];
+    const callAssignmentIdsFuture = loadListIfNecessary(
+      callAssignmentIdsByCampaignId,
+      dispatch,
+      {
+        actionOnLoad: () => campaignCallAssignmentsLoad(campId),
+        actionOnSuccess: (data) =>
+          campaignCallAssignmentsLoaded([campId, data]),
+        loader: async () => {
+          const callAssignments = await apiClient.get<ZetkinCallAssignment[]>(
+            `/api/orgs/${orgId}/campaigns/${campId}/call_assignments`
+          );
+          return callAssignments.map((ca) => ({ id: ca.id }));
+        },
+      }
+    );
+
+    const callAssignmentList = callAssignmentsSlice.assignmentList;
+    const callAssignmentsFuture = loadListIfNecessary(
+      callAssignmentList,
+      dispatch,
+      {
+        actionOnLoad: () => callAssignmentsLoad(),
+        actionOnSuccess: (data) => callAssignmentsLoaded(data),
+        loader: () =>
+          apiClient.get<ZetkinCallAssignment[]>(
+            `/api/orgs/${orgId}/campaigns/${campId}/call_assignments`
+          ),
+      }
+    );
+
+    if (callAssignmentIdsFuture.data && callAssignmentsFuture.data) {
+      const callAssignments = callAssignmentsFuture.data;
+      const callAssignmentIds = callAssignmentIdsFuture.data;
+
+      callAssignmentIds.forEach(({ id: caId }) => {
+        const ca = callAssignments.find((item) => item.id === caId);
+
+        if (ca) {
+          activities.push({
+            data: ca,
+            kind: ACTIVITIES.CALL_ASSIGNMENT,
+            visibleFrom: getUTCDateWithoutTime(ca.start_date),
+            visibleUntil: getUTCDateWithoutTime(ca.end_date),
+          });
+        }
+      });
+    }
   } else {
     const tasksList = tasksSlice.tasksList;
     const allTasksFuture = loadListIfNecessary(tasksList, dispatch, {
@@ -148,6 +249,32 @@ export default function useActivitiyOverview(orgId: number, campId?: number) {
           kind: ACTIVITIES.SURVEY,
           visibleFrom: getUTCDateWithoutTime(survey.published || null),
           visibleUntil: getUTCDateWithoutTime(survey.expires || null),
+        });
+      });
+    }
+
+    const callAssignmentList = callAssignmentsSlice.assignmentList;
+    const allCallAssignmentsFuture = loadListIfNecessary(
+      callAssignmentList,
+      dispatch,
+      {
+        actionOnLoad: () => callAssignmentsLoad(),
+        actionOnSuccess: (data) => callAssignmentsLoaded(data),
+        loader: () =>
+          apiClient.get<ZetkinCallAssignment[]>(
+            `/api/orgs/${orgId}/call_assignments`
+          ),
+      }
+    );
+
+    if (allCallAssignmentsFuture.data) {
+      const allCallAssignments = allCallAssignmentsFuture.data;
+      allCallAssignments.forEach((ca) => {
+        activities.push({
+          data: ca,
+          kind: ACTIVITIES.CALL_ASSIGNMENT,
+          visibleFrom: getUTCDateWithoutTime(ca.start_date),
+          visibleUntil: getUTCDateWithoutTime(ca.end_date),
         });
       });
     }
