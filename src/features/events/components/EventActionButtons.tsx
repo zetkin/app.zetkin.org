@@ -10,8 +10,8 @@ import React, { useContext } from 'react';
 
 import EventDataModel from '../models/EventDataModel';
 import messageIds from '../l10n/messageIds';
+import useDuplicateEvent from '../hooks/useDuplicateEvent';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDatePicker from 'zui/ZUIDatePicker';
@@ -30,6 +30,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const router = useRouter();
 
   const model = useModel((env) => new EventDataModel(env, orgId, event.id));
+  const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
 
   const published =
     !!event.published && new Date(event.published) <= new Date();
@@ -51,7 +52,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   };
 
   const handleDuplicate = () => {
-    model.duplicateEvent();
+    duplicateEvent();
   };
 
   const handleCancel = () => {

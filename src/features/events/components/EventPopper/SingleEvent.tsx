@@ -23,6 +23,7 @@ import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
 import { useAppDispatch } from 'core/hooks';
 import useModel from 'core/useModel';
+import useDuplicateEvent from 'features/events/hooks/useDuplicateEvent';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -52,6 +53,7 @@ interface SingleEventProps {
 }
 
 const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
+  const { orgId } = useNumericRouteParams();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
@@ -59,6 +61,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
   );
+  const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
   const dispatch = useAppDispatch();
   const participants = model.getParticipants().data || [];
   const respondents = model.getRespondents().data || [];
@@ -94,7 +97,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     {
       label: messages.eventPopper.duplicate(),
       onSelect: () => {
-        model.duplicateEvent();
+        duplicateEvent();
         onClickAway();
       },
     },
