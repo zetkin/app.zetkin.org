@@ -1,5 +1,6 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ResolvedFuture } from 'core/caching/futures';
+import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import {
   callAssignmentsLoad,
   callAssignmentsLoaded,
@@ -78,7 +79,14 @@ export default function useActivitiyOverview(orgId: number, campId?: number) {
   const surveysSlice = useAppSelector((state) => state.surveys);
   const callAssignmentsSlice = useAppSelector((state) => state.callAssignments);
 
+  const startOfToday = new Date(new Date().toISOString().slice(0, 10));
+  const weekFromNow = new Date(startOfToday);
+  weekFromNow.setDate(startOfToday.getDate() + 8);
+
+  const events = useEventsFromDateRange(startOfToday, weekFromNow);
+
   const activities: CampaignActivity[] = [];
+  activities.push(...events);
 
   if (campId) {
     const taskIdsByCampaignId = tasksSlice.taskIdsByCampaignId[campId];
@@ -299,10 +307,6 @@ export default function useActivitiyOverview(orgId: number, campId?: number) {
   const todayDate = new Date();
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-
-  const startOfToday = new Date(new Date().toISOString().slice(0, 10));
-  const weekFromNow = new Date(startOfToday);
-  weekFromNow.setDate(startOfToday.getDate() + 8);
 
   overview.today = sortedAcitvities.filter((activity) => {
     if (activity.kind == ACTIVITIES.EVENT) {
