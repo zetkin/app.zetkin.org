@@ -1,6 +1,3 @@
-import { useAppSelector } from 'core/hooks';
-import useFolder from './useFolder';
-import useView from './useView';
 import useViewTree from './useViewTree';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
@@ -36,25 +33,11 @@ export type ViewBrowserItem =
   | ViewBrowserViewItem
   | ViewBrowserBackItem;
 
-interface UseItemsReturn {
-  itemsFuture: IFuture<ViewBrowserItem[]>;
-  itemIsRenaming: (type: 'folder' | 'view', id: number) => boolean;
-  moveItem: (
-    type: 'folder' | 'view',
-    id: number,
-    newParentId: number | null
-  ) => void;
-  renameItem: (type: 'folder' | 'view', id: number, title: string) => void;
-}
-
 export default function useItems(
   orgId: number,
   folderId: number | null
-): UseItemsReturn {
+): IFuture<ViewBrowserItem[]> {
   const viewTreeFuture = useViewTree(orgId);
-  const views = useAppSelector((state) => state.views);
-  const { updateFolder } = useFolder(orgId);
-  const { updateView } = useView(orgId);
 
   const getItems = (itemsFuture: IFuture<ViewTreeData>) => {
     if (!itemsFuture.data) {
@@ -111,36 +94,5 @@ export default function useItems(
   };
   const itemsFuture = getItems(viewTreeFuture);
 
-  const itemIsRenaming = (type: 'folder' | 'view', id: number): boolean => {
-    if (type == 'folder') {
-      const item = views.folderList.items.find((item) => item.id == id);
-      return item?.mutating.includes('title') ?? false;
-    } else if (type == 'view') {
-      const item = views.viewList.items.find((item) => item.id == id);
-      return item?.mutating.includes('title') ?? false;
-    } else {
-      return false;
-    }
-  };
-  const moveItem = (
-    type: 'folder' | 'view',
-    id: number,
-    newParentId: number | null
-  ) => {
-    if (type == 'folder') {
-      updateFolder(orgId, id, { parent_id: newParentId });
-    } else if (type == 'view') {
-      updateView(id, { folder_id: newParentId });
-    }
-  };
-
-  const renameItem = (type: 'folder' | 'view', id: number, title: string) => {
-    if (type == 'folder') {
-      updateFolder(orgId, id, { title });
-    } else if (type == 'view') {
-      updateView(id, { title });
-    }
-  };
-
-  return { itemIsRenaming, itemsFuture, moveItem, renameItem };
+  return itemsFuture;
 }

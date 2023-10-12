@@ -1,10 +1,11 @@
 import { useDrop } from 'react-dnd';
-import { useRouter } from 'next/router';
 import { Box, useTheme } from '@mui/material';
 import { createContext, FC } from 'react';
 import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 
-import useItems, { ViewBrowserItem } from 'features/views/hooks/useItems';
+import useItemsMutations from 'features/views/hooks/useItemsMutations';
+import { useNumericRouteParams } from 'core/hooks';
+import { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 interface BrowserRowProps {
   item: ViewBrowserItem;
@@ -26,8 +27,8 @@ export const BrowserRowContext = createContext<BrowserRowDropProps>({
  */
 const BrowserRow: FC<BrowserRowProps> = ({ item, rowProps }) => {
   const theme = useTheme();
-  const { orgId } = useRouter().query;
-  const { moveItem } = useItems(parseInt(orgId as string), null);
+  const { orgId } = useNumericRouteParams();
+  const { moveItem } = useItemsMutations(orgId);
   const [dropProps, dropRef] = useDrop<
     ViewBrowserItem,
     unknown,

@@ -1,5 +1,4 @@
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import {
   DataGridPro,
   GridColDef,
@@ -16,7 +15,9 @@ import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
 import useFolder from 'features/views/hooks/useFolder';
+import useItemsMutations from 'features/views/hooks/useItemsMutations';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import useView from 'features/views/hooks/useView';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -41,8 +42,7 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
 }
 
 const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
-  const { orgId } = useRouter().query;
-  const parsedOrgId = parseInt(orgId as string);
+  const { orgId } = useNumericRouteParams();
 
   const messages = useMessages(messageIds);
   const [sortModel, setSortModel] = useState<GridSortModel>([
@@ -54,9 +54,10 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
   );
   const gridApiRef = useGridApiRef();
 
-  const { deleteView } = useView(parsedOrgId);
-  const { itemsFuture, renameItem } = useItems(parsedOrgId, folderId);
-  const { deleteFolder, recentlyCreatedFolder } = useFolder(parsedOrgId);
+  const { deleteView } = useView(orgId);
+  const { renameItem } = useItemsMutations(orgId);
+  const itemsFuture = useItems(orgId, folderId);
+  const { deleteFolder, recentlyCreatedFolder } = useFolder(orgId);
 
   // If a folder was created, go into rename state
   useEffect(() => {

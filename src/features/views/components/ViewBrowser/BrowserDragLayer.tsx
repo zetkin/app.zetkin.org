@@ -4,7 +4,7 @@ import { Box, Paper, Theme } from '@mui/material';
 import { useDragDropManager, useDragLayer, XYCoord } from 'react-dnd';
 
 import BrowserItemIcon from './BrowserItemIcon';
-import { ViewBrowserItem } from 'features/views/hooks/useItems';
+import { ViewBrowserItem } from 'features/views/hooks/useItemsMutations';
 
 const useStyles = makeStyles<Theme, CollectedProps>((theme) => ({
   '@keyframes dragPreview-in': {

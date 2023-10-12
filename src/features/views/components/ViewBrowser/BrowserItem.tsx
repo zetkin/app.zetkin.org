@@ -1,12 +1,14 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import { CircularProgress, Link, Theme } from '@mui/material';
 import { FC, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
-import useItems, { ViewBrowserItem } from 'features/views/hooks/useItems';
+import { useNumericRouteParams } from 'core/hooks';
+import useItemsMutations, {
+  ViewBrowserItem,
+} from 'features/views/hooks/useItemsMutations';
 
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
 
@@ -31,8 +33,8 @@ const useStyles = makeStyles<Theme, BrowserRowDropProps>({
 const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
   const dropProps = useContext(BrowserRowContext);
   const styles = useStyles(dropProps);
-  const { orgId } = useRouter().query;
-  const { itemIsRenaming } = useItems(parseInt(orgId as string), item.folderId);
+  const { orgId } = useNumericRouteParams();
+  const { itemIsRenaming } = useItemsMutations(orgId);
 
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';

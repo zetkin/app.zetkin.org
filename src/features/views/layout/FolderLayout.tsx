@@ -1,9 +1,8 @@
-import { useRouter } from 'next/router';
-
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useFolder from '../hooks/useFolder';
-import useItems from '../hooks/useItems';
+import useItemsMutations from '../hooks/useItemsMutations';
 import useItemSummary from '../hooks/useItemSummary';
+import { useNumericRouteParams } from 'core/hooks';
 import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -18,12 +17,11 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   children,
   folderId,
 }) => {
-  const { orgId } = useRouter().query;
-  const parsedOrgId = parseInt(orgId as string);
+  const { orgId } = useNumericRouteParams();
 
-  const { folderFuture } = useFolder(parsedOrgId, folderId);
-  const { itemSummaryFuture } = useItemSummary(parsedOrgId, folderId);
-  const { renameItem } = useItems(parsedOrgId, folderId);
+  const { folderFuture } = useFolder(orgId, folderId);
+  const { itemSummaryFuture } = useItemSummary(orgId, folderId);
+  const { renameItem } = useItemsMutations(orgId);
 
   return (
     <ZUIFuture future={folderFuture}>
