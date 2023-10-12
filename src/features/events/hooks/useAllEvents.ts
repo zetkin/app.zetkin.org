@@ -1,8 +1,8 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { eventsLoad, eventsLoaded } from '../store';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useAllEvents(orgId: number): IFuture<ZetkinEvent[]> {
   const apiClient = useApiClient();

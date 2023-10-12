@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useRouter } from 'next/router';
 
 import messageIds from '../../calendar/l10n/messageIds';
 import { resetSelection } from '../store';

@@ -144,7 +144,6 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.pending()}
             </Typography>
-            <Typography>{model.getPendingSignUps().length}</Typography>
             <Typography>{pendingSignUps.length}</Typography>
           </Box>
           <Box
