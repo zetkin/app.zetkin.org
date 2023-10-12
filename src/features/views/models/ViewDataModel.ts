@@ -15,11 +15,6 @@ export default class ViewDataModel extends ModelBase {
     this._orgId = orgId;
     this._viewId = viewId;
   }
-
-  updateColumnOrder(columnOrder: number[]): Promise<void> {
-    return this._repo.updateColumnOrder(this._orgId, this._viewId, columnOrder);
-  }
-
   updateContentQuery(query: Pick<ZetkinQuery, 'filter_spec'>) {
     return this._repo.updateViewContentQuery(this._orgId, this._viewId, query);
   }

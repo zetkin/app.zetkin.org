@@ -4,7 +4,6 @@ import useTagMutation from 'features/tags/hooks/useTagMutation';
 import {
   cellUpdate,
   cellUpdated,
-  columnOrderUpdated,
   columnsLoad,
   columnsLoaded,
   columnUpdated,
@@ -29,7 +28,6 @@ export interface UseViewGridReturn {
     columnId: number,
     data: Partial<Omit<ZetkinViewColumn, 'id'>>
   ) => Promise<void>;
-  updateColumnOrder: (columnOrder: number[]) => Promise<void>;
 }
 export default function useViewGrid(
   orgId: number,
@@ -127,13 +125,6 @@ export default function useViewGrid(
     dispatch(columnUpdated([viewId, column]));
   };
 
-  const updateColumnOrder = async (columnOrder: number[]) => {
-    await apiClient.patch<{ order: number[] }>(
-      `/api/orgs/${orgId}/people/views/${viewId}/column_order`,
-      { order: columnOrder }
-    );
-    dispatch(columnOrderUpdated([viewId, columnOrder]));
-  };
   return {
     columnsFuture,
     removeRows,
@@ -141,6 +132,5 @@ export default function useViewGrid(
     setCellValue,
     toggleTag,
     updateColumn,
-    updateColumnOrder,
   };
 }

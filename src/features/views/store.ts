@@ -2,7 +2,6 @@ import { Call } from 'features/callAssignments/apiTypes';
 import { callUpdated } from 'features/callAssignments/store';
 import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
-import notEmpty from 'utils/notEmpty';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
@@ -178,48 +177,6 @@ const viewsSlice = createSlice({
           // Empty the view to force a reload
           rowList.items = [];
           rowList.isStale = true;
-        }
-      }
-    },
-    columnOrderUpdated: (state, action: PayloadAction<[number, number[]]>) => {
-      const [viewId, columnOrder] = action.payload;
-      // Re-arrange columns
-      const colList = state.columnsByViewId[viewId];
-      if (colList) {
-        const newColListItems = columnOrder
-          .map((colId) => {
-            const col = colList.items.find((col) => col.id == colId);
-            if (col) {
-              return col;
-            } else {
-              colList.isStale = true;
-            }
-          })
-          .filter(notEmpty);
-
-        // Re-arrange columns of data-rows
-        const rowList = state.rowsByViewId[viewId];
-        if (rowList) {
-          const newRowListItems = rowList.items.map((row) => {
-            if (row.data) {
-              return {
-                ...row,
-                data: {
-                  content: columnOrder.map((colId) => {
-                    const idx = colList.items.findIndex(
-                      (col) => col.id == colId
-                    )!;
-                    return row.data?.content[idx];
-                  }),
-                  id: row.data.id,
-                },
-              };
-            } else {
-              return row;
-            }
-          });
-          state.columnsByViewId[viewId].items = newColListItems;
-          state.rowsByViewId[viewId].items = newRowListItems;
         }
       }
     },
@@ -527,7 +484,6 @@ export const {
   cellUpdated,
   columnAdded,
   columnDeleted,
-  columnOrderUpdated,
   columnUpdated,
   columnsLoad,
   columnsLoaded,
