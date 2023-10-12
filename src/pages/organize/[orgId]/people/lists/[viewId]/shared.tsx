@@ -8,7 +8,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
 import useServerSide from 'core/useServerSide';
-import useViewMutations from 'features/views/hooks/useViewMutations';
+import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
@@ -94,7 +94,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const parsedViewId = parseInt(viewId);
 
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
-  const { getView } = useViewMutations(parsedOrgId);
+  const viewFuture = useView(parsedOrgId, parsedViewId);
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -107,7 +107,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
       futures={{
         cols: columnsFuture,
         rows: rowsFuture,
-        view: getView(parsedViewId),
+        view: viewFuture,
       }}
     >
       {({ data: { cols, rows, view } }) => (

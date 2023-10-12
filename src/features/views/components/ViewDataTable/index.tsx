@@ -2,7 +2,6 @@ import { Link } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
-import { useRouter } from 'next/router';
 import {
   DataGridPro,
   GRID_CHECKBOX_SELECTION_COL_DEF,
@@ -19,9 +18,9 @@ import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
-import useViewMutations from 'features/views/hooks/useViewMutations';
 import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
 import useViewGrid from 'features/views/hooks/useViewGrid';
+import useViewMutations from 'features/views/hooks/useViewMutations';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';

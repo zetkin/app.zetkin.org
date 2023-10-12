@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 
@@ -7,6 +6,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
 import useFolder from '../hooks/useFolder';
+import { useNumericRouteParams } from 'core/hooks';
 import useViewMutations from '../hooks/useViewMutations';
 
 interface ViewFolderActionButtonsProps {
@@ -16,11 +16,11 @@ interface ViewFolderActionButtonsProps {
 const ViewFolderActionButtons: FC<ViewFolderActionButtonsProps> = ({
   folderId,
 }) => {
-  const { orgId } = useRouter().query;
-  const parsedOrgId = parseInt(orgId as string);
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const { createView } = useViewMutations(parsedOrgId);
-  const { createFolder } = useFolder(parsedOrgId);
+
+  const { createView } = useViewMutations(orgId);
+  const { createFolder } = useFolder(orgId);
 
   return (
     <Box display="flex" gap={1}>

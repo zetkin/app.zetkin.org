@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { Box, Checkbox, useTheme } from '@mui/material';
 import { FC, KeyboardEvent } from 'react';
 import {
@@ -8,6 +7,7 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
   LocalBoolViewColumn,
@@ -65,11 +65,8 @@ const Cell: FC<{
   personId: number;
 }> = ({ cell, column, personId }) => {
   const theme = useTheme();
-  const { orgId, viewId } = useRouter().query;
-  const { setCellValue } = useViewGrid(
-    parseInt(orgId as string),
-    parseInt(viewId as string)
-  );
+  const { orgId, viewId } = useNumericRouteParams();
+  const { setCellValue } = useViewGrid(orgId, viewId);
 
   const checked = !!cell;
 

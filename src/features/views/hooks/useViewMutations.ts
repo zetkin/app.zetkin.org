@@ -1,6 +1,6 @@
 import createNew from '../rpc/createNew/client';
-import { ZetkinView } from '../components/types';
 import { PromiseFuture } from 'core/caching/futures';
+import { ZetkinView } from '../components/types';
 import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 import {
   viewCreate,

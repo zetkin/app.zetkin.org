@@ -1,6 +1,6 @@
+import { IFuture } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinView } from '../components/types';
-import { IFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { viewLoad, viewLoaded } from '../store';
 
