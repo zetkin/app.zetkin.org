@@ -1,6 +1,7 @@
 import messageIds from '../l10n/messageIds';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useState } from 'react';
 import ZUIFutures from 'zui/ZUIFutures';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
@@ -15,12 +16,8 @@ interface AddPersonButtonProps {
 
 const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-
   const messages = useMessages(messageIds);
-
-  const handleSelectedPerson = (personId: number) => {
-    model.addParticipant(personId);
-  };
+  const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
   const { participantsFuture, respondentsFuture } = useEventParticipantsData(
     orgId,
     eventId
@@ -121,7 +118,7 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
                     }}
                     name="person"
                     onChange={(person) => {
-                      handleSelectedPerson(person.id);
+                      addParticipant(person.id);
                     }}
                     placeholder={messages.addPerson.addPlaceholder()}
                     selectedPerson={null}

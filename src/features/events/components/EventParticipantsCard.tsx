@@ -13,13 +13,13 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import getEventUrl from '../utils/getEventUrl';
 import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEventData from '../hooks/useEventData';
 import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
@@ -36,6 +36,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
 }) => {
   const eventData = useEventData(orgId, eventId).data;
   const { pendingSignUps } = useEventParticipantsData(orgId, eventId);
+  const { setReqParticipants } = useEventParticipantsMutations(orgId, eventId);
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
   const availParticipants = eventData?.num_participants_available ?? 0;
@@ -83,7 +84,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                     newReqParticipants != null &&
                     newReqParticipants != reqParticipants
                   ) {
-                    model.setReqParticipants(newReqParticipants);
+                    setReqParticipants(newReqParticipants);
                   }
                 }}
               >
@@ -109,7 +110,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
                           if (newReqParticipants != null) {
-                            model.setReqParticipants(newReqParticipants);
+                            setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {
                           setAnchorEl(null);

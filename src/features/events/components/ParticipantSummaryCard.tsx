@@ -11,30 +11,27 @@ import {
 import { Check, Settings } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useEventData from '../hooks/useEventData';
 import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
 
 type ParticipantSummaryCardProps = {
-  model: EventDataModel;
   eventId: number;
   onClickRecord: () => void;
   orgId: number;
 };
 
 const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
-  model,
   eventId,
   onClickRecord,
   orgId,
 }) => {
-  const respondents = model.getRespondents().data;
   const eventData = useEventData(orgId, eventId).data;
   const participantStatus = useParticipantStatus(orgId, eventId);
   const {
@@ -46,6 +43,8 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     numRemindedParticipants,
     numSignedParticipants,
   } = useEventParticipantsData(orgId, eventId);
+  const { addParticipant, setReqParticipants, sendReminders } =
+    useEventParticipantsMutations(orgId, eventId);
   const respondents = respondentsFuture.data;
   const messages = useMessages(messageIds);
 
@@ -98,7 +97,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                     newReqParticipants != null &&
                     newReqParticipants != reqParticipants
                   ) {
-                    model.setReqParticipants(newReqParticipants);
+                    setReqParticipants(newReqParticipants);
                   }
                 }}
               >
@@ -124,7 +123,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
                           if (newReqParticipants != null) {
-                            model.setReqParticipants(newReqParticipants);
+                            setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {
                           setAnchorEl(null);
@@ -154,7 +153,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                 <Button
                   onClick={() => {
                     respondents?.map((r) => {
-                      model.addParticipant(r.person.id);
+                      addParticipant(r.person.id);
                     });
                   }}
                   size="small"
@@ -190,7 +189,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                       <Button
                         disabled={contactPerson == null}
                         onClick={() => {
-                          model.sendReminders();
+                          sendReminders(eventId);
                         }}
                         size="small"
                         startIcon={<Check />}

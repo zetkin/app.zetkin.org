@@ -12,12 +12,13 @@ import {
 } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
-import EventDataModel from '../models/EventDataModel';
 import filterParticipants from '../utils/filterParticipants';
+import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
 import useEventContact from '../hooks/useEventContact';
 import useEventData from '../hooks/useEventData';
+import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useMessages } from 'core/i18n';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
@@ -27,8 +28,6 @@ import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
-
-import messageIds from 'features/events/l10n/messageIds';
 
 type attendance = 'noshow' | 'attended' | 'cancelled';
 
@@ -97,7 +96,6 @@ interface ParticipantListSectionListProps {
   chipNumber: string;
   description: string;
   filterString: string;
-  model: EventDataModel;
   eventId: number;
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
@@ -112,7 +110,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   filterString,
   eventId,
   orgId,
-  model,
   rows,
   title,
   type,
@@ -120,6 +117,12 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   const messages = useMessages(messageIds);
   const eventFuture = useEventData(orgId, eventId);
   const { setContact } = useEventContact(orgId, eventId);
+  const {
+    attendedParticipant,
+    cancelParticipant,
+    noShowParticipant,
+    reBookParticipant,
+  } = useEventParticipantsMutations(orgId, eventId);
 
   const columns: GridColDef[] = [
     {
@@ -250,14 +253,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               options={[
                 {
                   callback: () => {
-                    model.cancelParticipant(params.row.id);
+                    cancelParticipant(params.row.id);
                   },
                   title: messages.eventParticipantsList.buttonCancel(),
                   variant: 'text',
                 },
                 {
                   callback: () => {
-                    model.reBookParticipant(params.row.id);
+                    reBookParticipant(params.row.id);
                   },
                   title: messages.eventParticipantsList.buttonBook(),
                   variant: 'outlined',
@@ -273,7 +276,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             const options: ButtonOption[] = [
               {
                 callback: () => {
-                  model.cancelParticipant(params.row.id);
+                  cancelParticipant(params.row.id);
                 },
                 title: messages.eventParticipantsList.buttonCancelled(),
                 value: 'cancelled',
@@ -281,7 +284,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               },
               {
                 callback: () => {
-                  model.noShowParticipant(params.row.id);
+                  noShowParticipant(params.row.id);
                 },
                 longTitle: messages.eventParticipantsList.dropDownNoshow(),
                 title: messages.eventParticipantsList.buttonNoshow(),
@@ -290,7 +293,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               },
               {
                 callback: () => {
-                  model.attendedParticipant(params.row.id);
+                  attendedParticipant(params.row.id);
                 },
                 longTitle: messages.eventParticipantsList.dropDownAttended(),
                 title: messages.eventParticipantsList.buttonAttended(),
@@ -317,7 +320,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
                 options={[
                   {
                     callback: () => {
-                      model.cancelParticipant(params.row.id);
+                      cancelParticipant(params.row.id);
                     },
                     title: messages.eventParticipantsList.buttonCancel(),
                     variant: 'text',
@@ -332,7 +335,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               options={[
                 {
                   callback: () => {
-                    model.reBookParticipant(params.row.id);
+                    reBookParticipant(params.row.id);
                   },
                   title: messages.eventParticipantsList.buttonBook(),
                   variant: 'text',

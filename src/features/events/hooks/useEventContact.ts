@@ -1,5 +1,6 @@
 import useEventMutations from '../hooks/useEventMutations';
 import useEventParticipantsData from './useEventParticipantsData';
+import useEventParticipantsMutations from './useEventParticipantsMutations';
 
 type useEventContacReturn = {
   removeContact: () => void;
@@ -11,11 +12,8 @@ export default function useEventContact(
   eventId: number
 ): useEventContacReturn {
   const { updateEvent } = useEventMutations(orgId, eventId);
-  const { addParticipant, getEventParticipants } = useEventParticipants(
-    orgId,
-    eventId
-  );
   const { participantsFuture } = useEventParticipantsData(orgId, eventId);
+  const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
 
   const removeContact = () => {
     updateEvent({
@@ -26,7 +24,7 @@ export default function useEventContact(
   const setContact = async (contactId: number) => {
     const eventParticipantsList = participantsFuture.data;
     if (!eventParticipantsList?.find((item) => item.id == contactId)) {
-      await addParticipant(orgId, eventId, contactId);
+      await addParticipant(contactId);
     }
     updateEvent({
       contact_id: contactId,
