@@ -16,6 +16,7 @@ import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useEventData from '../hooks/useEventData';
 import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
@@ -35,6 +36,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
 }) => {
   const respondents = model.getRespondents().data;
   const eventData = useEventData(orgId, eventId).data;
+  const participantStatus = useParticipantStatus(orgId, eventId);
   const {
     respondentsFuture,
     numAvailParticipants,
@@ -74,7 +76,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
         status={
           <Box display="flex" mb={4}>
             <ZUINumberChip
-              color={model.getParticipantStatus()}
+              color={participantStatus}
               outlined={true}
               size="sm"
               value={`${numAvailParticipants}/${reqParticipants}`}
