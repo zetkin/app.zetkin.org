@@ -1,11 +1,8 @@
-import { Box, Button } from '@mui/material';
-
 import CheckboxFilterList from './CheckboxFilterList';
 import EventInputFilter from './EventInputFilter';
-import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/calendar/l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
-import useModel from 'core/useModel';
+import useEventTypes from 'features/events/hooks/useEventTypes';
 import { ZetkinActivity } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
@@ -15,6 +12,7 @@ import {
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
+import { Box, Button } from '@mui/material';
 import { Msg, useMessages } from 'core/i18n';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
@@ -25,7 +23,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const dispatch = useAppDispatch();
   const messages = useMessages(messageIds);
   const state = useAppSelector((state) => state.events.filters);
-  const typesModel = useModel((env) => new EventTypesModel(env, orgId));
+  const { eventTypes } = useEventTypes(orgId);
 
   const disableReset =
     state.selectedActions.length === 0 &&
@@ -106,7 +104,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
             selectedValues={state.selectedStates}
             title={messages.eventFilter.filterOptions.stateFilters.title()}
           />
-          <ZUIFuture future={typesModel.getTypes()}>
+          <ZUIFuture future={eventTypes}>
             {(data) => {
               return (
                 <CheckboxFilterList

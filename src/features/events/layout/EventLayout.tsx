@@ -5,17 +5,15 @@ import TabbedLayout from 'utils/layout/TabbedLayout';
 import { useState } from 'react';
 
 import EventActionButtons from '../components/EventActionButtons';
-import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
 import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
-import EventTypesModel from '../models/EventTypesModel';
 import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useEventData from '../hooks/useEventData';
 import useEventMutations from '../hooks/useEventMutations';
 import useEventState from '../hooks/useEventState';
-import useModel from 'core/useModel';
+import useEventTypes from '../hooks/useEventTypes';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -35,12 +33,8 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   eventId,
   orgId,
 }) => {
-  const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
-
   const messages = useMessages(messageIds);
-
-  const model = useModel(
-    (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
+  const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
   const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
   const eventState = useEventState(parseInt(orgId), parseInt(eventId));
   const { setTitle, setType } = useEventMutations(
@@ -48,9 +42,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
     parseInt(eventId)
   );
 
-  const typesModel = useModel(
-    (env) => new EventTypesModel(env, parseInt(orgId))
-  );
+  const { eventTypes } = useEventTypes(parseInt(orgId));
 
   return (
     <TabbedLayout
@@ -71,7 +63,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
           <ZUIFutures
             futures={{
               currentEvent: eventFuture,
-              types: typesModel.getTypes(),
+              types: eventTypes,
             }}
           >
             {({ data: { types, currentEvent } }) => {
@@ -86,7 +78,6 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                   onFocus={() => setEditingTypeOrTitle(true)}
                   showBorder={editingTypeOrTitle}
                   types={types}
-                  typesModel={typesModel}
                   value={currentEvent.activity}
                 />
               );
