@@ -1,19 +1,19 @@
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useState } from 'react';
-import { Box, IconButton, Popover } from '@mui/material';
-import { EmojiPeople, People } from '@mui/icons-material';
-
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from '../l10n/messageIds';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import { useState } from 'react';
 import ZUIFutures from 'zui/ZUIFutures';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
+import { Box, IconButton, Popover } from '@mui/material';
+import { EmojiPeople, People } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
 
 interface AddPersonButtonProps {
-  model: EventDataModel;
+  orgId: number;
+  eventId: number;
 }
 
-const AddPersonButton = ({ model }: AddPersonButtonProps) => {
+const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
   const messages = useMessages(messageIds);
@@ -21,6 +21,10 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
   const handleSelectedPerson = (personId: number) => {
     model.addParticipant(personId);
   };
+  const { participantsFuture, respondentsFuture } = useEventParticipantsData(
+    orgId,
+    eventId
+  );
 
   return (
     <>
@@ -60,8 +64,8 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
         <Box mt={1} p={2}>
           <ZUIFutures
             futures={{
-              participants: model.getParticipants(),
-              respondents: model.getRespondents(),
+              participants: participantsFuture,
+              respondents: respondentsFuture,
             }}
           >
             {({ data: { participants, respondents } }) => {

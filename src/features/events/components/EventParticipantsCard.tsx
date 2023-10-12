@@ -19,6 +19,7 @@ import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEventData from '../hooks/useEventData';
+import useEventParticipantsData from '../hooks/useEventParticipantsData';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
@@ -34,6 +35,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   orgId,
 }) => {
   const eventData = useEventData(orgId, eventId).data;
+  const { pendingSignUps } = useEventParticipantsData(orgId, eventId);
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
   const availParticipants = eventData?.num_participants_available ?? 0;
@@ -142,6 +144,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
               {messages.eventParticipantsCard.pending()}
             </Typography>
             <Typography>{model.getPendingSignUps().length}</Typography>
+            <Typography>{pendingSignUps.length}</Typography>
           </Box>
           <Box
             alignItems="center"

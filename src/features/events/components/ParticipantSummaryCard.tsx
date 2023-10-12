@@ -15,6 +15,7 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useEventData from '../hooks/useEventData';
+import useEventParticipantsData from '../hooks/useEventParticipantsData';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
@@ -34,20 +35,26 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
 }) => {
   const respondents = model.getRespondents().data;
   const eventData = useEventData(orgId, eventId).data;
+  const {
+    respondentsFuture,
+    numAvailParticipants,
+    numCancelledParticipants,
+    numConfirmedParticipants,
+    numNoshowParticipants,
+    numRemindedParticipants,
+    numSignedParticipants,
+  } = useEventParticipantsData(orgId, eventId);
+  const respondents = respondentsFuture.data;
   const messages = useMessages(messageIds);
 
-  const availParticipants = model.getNumAvailParticipants();
-  const remindedParticipants = model.getNumRemindedParticipants();
-  const cancelledParticipants = model.getNumCancelledParticipants();
   const reqParticipants = eventData?.num_participants_required ?? 0;
-
-  const signedParticipants = model.getNumSignedParticipants();
-  const confirmedParticipants = model.getNumConfirmedParticipants();
-  const noshowParticipants = model.getNumNoshowParticipants();
   const contactPerson = eventData?.contact;
 
   const hasRecordedAttendance =
-    cancelledParticipants + confirmedParticipants + noshowParticipants > 0;
+    numCancelledParticipants +
+      numConfirmedParticipants +
+      numNoshowParticipants >
+    0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -70,7 +77,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               color={model.getParticipantStatus()}
               outlined={true}
               size="sm"
-              value={`${availParticipants}/${reqParticipants}`}
+              value={`${numAvailParticipants}/${reqParticipants}`}
             />
             <Box ml={1}>
               <Settings
@@ -140,8 +147,8 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               {messages.participantSummaryCard.pending()}
             </Typography>
             <Box display="flex">
-              <Typography variant="h4">{signedParticipants}</Typography>
-              {signedParticipants > 0 && (
+              <Typography variant="h4">{numSignedParticipants}</Typography>
+              {numSignedParticipants > 0 && (
                 <Button
                   onClick={() => {
                     respondents?.map((r) => {
@@ -166,8 +173,8 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                 {messages.participantSummaryCard.booked()}
               </Typography>
               <Box alignItems="center" display="flex">
-                <Typography variant="h4">{`${remindedParticipants}/${availParticipants}`}</Typography>
-                {remindedParticipants < availParticipants && (
+                <Typography variant="h4">{`${numRemindedParticipants}/${numAvailParticipants}`}</Typography>
+                {numRemindedParticipants < numAvailParticipants && (
                   <Tooltip
                     arrow
                     placement="top-start"
@@ -205,8 +212,8 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                 {messages.participantSummaryCard.confirmed()}
               </Typography>
               <Box alignItems="center" display="flex">
-                <Typography variant="h4">{`${confirmedParticipants}/${availParticipants}`}</Typography>
-                {noshowParticipants > 0 && (
+                <Typography variant="h4">{`${numConfirmedParticipants}/${numAvailParticipants}`}</Typography>
+                {numNoshowParticipants > 0 && (
                   <Typography
                     color={'GrayText'}
                     ml={1}
@@ -214,7 +221,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                     variant="h4"
                   >
                     {messages.participantSummaryCard.noshow({
-                      noshows: noshowParticipants,
+                      noshows: numNoshowParticipants,
                     })}
                   </Typography>
                 )}
@@ -239,7 +246,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               {messages.participantSummaryCard.cancelled()}
             </Typography>
             <Box display="flex">
-              <Typography variant="h4">{`${cancelledParticipants}`}</Typography>
+              <Typography variant="h4">{`${numCancelledParticipants}`}</Typography>
             </Box>
           </Box>
           <Box
