@@ -1,10 +1,10 @@
 import { FunctionComponent } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import useView from '../hooks/useView';
 import useViewGrid from '../hooks/useViewGrid';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -42,19 +42,14 @@ interface SharedViewLayoutProps {
 const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   children,
 }) => {
-  const router = useRouter();
-  const { orgId, viewId } = router.query;
+  const { orgId, viewId } = useNumericRouteParams();
   const classes = useStyles();
-  const parsedOrgId = parseInt(orgId as string);
-  const parsedViewId = parseInt(viewId as string);
 
-  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
-  const { getView } = useView(parsedOrgId);
+  const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
+  const viewFuture = useView(orgId, viewId);
 
   const title = (
-    <ZUIFuture future={getView(parsedViewId)}>
-      {(view) => <>{view.title}</>}
-    </ZUIFuture>
+    <ZUIFuture future={viewFuture}>{(view) => <>{view.title}</>}</ZUIFuture>
   );
   const subtitle = (
     // TODO: Replace with model eventually

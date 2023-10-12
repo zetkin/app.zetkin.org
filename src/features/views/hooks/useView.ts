@@ -1,90 +1,23 @@
-import createNew from '../rpc/createNew/client';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinView } from '../components/types';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
-import {
-  useApiClient,
-  useAppDispatch,
-  useAppSelector,
-  useEnv,
-} from 'core/hooks';
-import {
-  viewCreate,
-  viewCreated,
-  viewDeleted,
-  viewLoad,
-  viewLoaded,
-  viewUpdate,
-  viewUpdated,
-} from '../store';
+import { IFuture } from 'core/caching/futures';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { viewLoad, viewLoaded } from '../store';
 
-type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
-  folder_id?: number | null;
-};
-
-interface UseViewReturn {
-  createView: (folderId?: number, rows?: number[]) => void;
-  deleteView: (viewId: number) => void;
-  getView: (viewId: number) => IFuture<ZetkinView>;
-  setTitle: (viewId: number, title: string) => void;
-  updateView: (
-    viewId: number,
-    data: ZetkinViewUpdateBody
-  ) => PromiseFuture<ZetkinView>;
-}
-
-export default function useView(orgId: number): UseViewReturn {
+export default function useView(
+  orgId: number,
+  viewId: number
+): IFuture<ZetkinView> {
   const apiClient = useApiClient();
-  const env = useEnv();
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);
+  const item = views.viewList.items.find((item) => item.id == viewId);
 
-  const createView = async (
-    folderId = 0,
-    rows: number[] = []
-  ): Promise<ZetkinView> => {
-    dispatch(viewCreate());
-    const view = await apiClient.rpc(createNew, {
-      folderId,
-      orgId,
-      rows,
-    });
-    dispatch(viewCreated(view));
-    env.router.push(
-      `/organize/${view.organization.id}/people/lists/${view.id}`
-    );
-    return view;
-  };
+  const viewFuture = loadItemIfNecessary(item, dispatch, {
+    actionOnLoad: () => viewLoad(viewId),
+    actionOnSuccess: (view) => viewLoaded(view),
+    loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
+  });
 
-  const deleteView = async (viewId: number): Promise<void> => {
-    await apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
-    dispatch(viewDeleted(viewId));
-  };
-
-  const updateView = (viewId: number, data: ZetkinViewUpdateBody) => {
-    const mutating = Object.keys(data);
-    dispatch(viewUpdate([viewId, mutating]));
-    const promise = apiClient
-      .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
-      .then((view) => {
-        dispatch(viewUpdated([view, mutating]));
-        return view;
-      });
-
-    return new PromiseFuture(promise);
-  };
-
-  const getView = (viewId: number) => {
-    const item = views.viewList.items.find((item) => item.id == viewId);
-    return loadItemIfNecessary(item, dispatch, {
-      actionOnLoad: () => viewLoad(viewId),
-      actionOnSuccess: (view) => viewLoaded(view),
-      loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
-    });
-  };
-
-  const setTitle = (viewId: number, title: string) => {
-    updateView(viewId, { title });
-  };
-  return { createView, deleteView, getView, setTitle, updateView };
+  return viewFuture;
 }

@@ -1,6 +1,6 @@
 import { useAppSelector } from 'core/hooks';
 import useFolder from './useFolder';
-import useView from './useView';
+import useViewMutations from './useViewMutations';
 
 interface UseItemsMutationsReturn {
   itemIsRenaming: (type: 'folder' | 'view', id: number) => boolean;
@@ -17,7 +17,7 @@ export default function useItemsMutations(
 ): UseItemsMutationsReturn {
   const views = useAppSelector((state) => state.views);
   const { updateFolder } = useFolder(orgId);
-  const { updateView } = useView(orgId);
+  const { updateView } = useViewMutations(orgId);
 
   const itemIsRenaming = (type: 'folder' | 'view', id: number): boolean => {
     if (type == 'folder') {

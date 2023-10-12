@@ -18,7 +18,7 @@ import messageIds from '../l10n/messageIds';
 import UseViewDataTableMutations from '../hooks/useViewDataTableMutations';
 
 export interface EmptyViewProps {
-  orgId: string | number;
+  orgId: number;
   view: ZetkinView;
 }
 
@@ -26,7 +26,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   const { addPerson, deleteContentQuery } = UseViewDataTableMutations(
-    parseInt(orgId as string),
+    orgId,
     view.id
   );
 

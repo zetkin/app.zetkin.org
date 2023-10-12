@@ -7,7 +7,7 @@ import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
-import useView from '../hooks/useView';
+import useViewMutations from '../hooks/useViewMutations';
 import useViewDataTableMutations from '../hooks/useViewDataTableMutations';
 import useViewGrid from '../hooks/useViewGrid';
 import useViewSharing from '../hooks/useViewSharing';
@@ -25,6 +25,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
 import SimpleLayout from 'utils/layout/SimpleLayout';
+import useView from '../hooks/useView';
 
 const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   deactivateWrapper: {
@@ -52,7 +53,8 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { deleteView: deleteList, getView, setTitle } = useView(orgId);
+  const { deleteView: deleteList, setTitle } = useViewMutations(orgId);
+  const viewFuture = useView(orgId, viewId);
   const { deleteContentQuery } = useViewDataTableMutations(orgId, viewId);
   const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
   const { accessListFuture } = useViewSharing(orgId, viewId);
@@ -66,7 +68,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   const title = (
     <>
-      <ZUIFuture future={getView(viewId)}>
+      <ZUIFuture future={viewFuture}>
         {(view) => {
           return (
             <Box>
@@ -95,7 +97,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
-  const view = getView(viewId).data;
+  const view = viewFuture.data;
 
   if (view?.content_query) {
     ellipsisMenu.push({

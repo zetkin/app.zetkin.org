@@ -19,7 +19,7 @@ import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
-import useView from 'features/views/hooks/useView';
+import useViewMutations from 'features/views/hooks/useViewMutations';
 import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewColumnDialog from '../ViewColumnDialog';
@@ -45,6 +45,7 @@ import ViewDataTableToolbar, {
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -93,17 +94,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [, accessLevel] = useAccessLevel();
 
   const [quickSearch, setQuickSearch] = useState('');
-  const router = useRouter();
-  const { orgId } = router.query;
-  const parsedOrgId = parseInt(orgId as string);
+  const { orgId } = useNumericRouteParams();
+
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { addColumn, addPerson, deleteColumn } = UseViewDataTableMutations(
-    parsedOrgId,
+    orgId,
     view.id
   );
-  const { createView } = useView(parsedOrgId);
-  const viewGridHook = useViewGrid(parsedOrgId, view.id);
+  const { createView } = useViewMutations(orgId);
+  const viewGridHook = useViewGrid(orgId, view.id);
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar('error', messages.dataTableErrors[error]());
@@ -439,7 +439,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }}
         {...modelGridProps}
       />
-      {empty && <EmptyView orgId={orgId as string} view={view} />}
+      {empty && <EmptyView orgId={orgId} view={view} />}
       {columnToRename && (
         <ViewRenameColumnDialog
           column={columnToRename}

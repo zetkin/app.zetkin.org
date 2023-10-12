@@ -8,10 +8,10 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
 import useServerSide from 'core/useServerSide';
-import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIFutures from 'zui/ZUIFutures';
+import useView from 'features/views/hooks/useView';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -71,9 +71,8 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
 
   const parsedOrgId = parseInt(orgId);
   const parsedViewId = parseInt(viewId);
-
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
-  const { getView } = useView(parsedOrgId);
+  const viewFuture = useView(parsedOrgId, parsedViewId);
 
   if (onServer) {
     return null;
@@ -84,7 +83,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
       futures={{
         cols: columnsFuture,
         rows: rowsFuture,
-        view: getView(parsedViewId),
+        view: viewFuture,
       }}
     >
       {({ data: { cols, rows, view } }) => (

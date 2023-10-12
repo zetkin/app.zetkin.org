@@ -7,7 +7,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
 import useFolder from '../hooks/useFolder';
-import useView from '../hooks/useView';
+import useViewMutations from '../hooks/useViewMutations';
 
 interface ViewFolderActionButtonsProps {
   folderId: number | null;
@@ -19,7 +19,7 @@ const ViewFolderActionButtons: FC<ViewFolderActionButtonsProps> = ({
   const { orgId } = useRouter().query;
   const parsedOrgId = parseInt(orgId as string);
   const messages = useMessages(messageIds);
-  const { createView } = useView(parsedOrgId);
+  const { createView } = useViewMutations(parsedOrgId);
   const { createFolder } = useFolder(parsedOrgId);
 
   return (
