@@ -21,10 +21,9 @@ import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
-import { useAppDispatch } from 'core/hooks';
-import useModel from 'core/useModel';
 import useDuplicateEvent from 'features/events/hooks/useDuplicateEvent';
 import useEventMutations from 'features/events/hooks/useEventMutations';
+import useEventParticipantsData from 'features/events/hooks/useEventParticipantsData';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -32,9 +31,7 @@ import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import EventDataModel, {
-  EventState,
-} from 'features/events/models/EventDataModel';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 
 const useStyles = makeStyles(() => ({
@@ -59,17 +56,19 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
-
-  const model = useModel(
-    (env) => new EventDataModel(env, event.organization.id, event.id)
+  const { participantsFuture, respondentsFuture } = useEventParticipantsData(
+    orgId,
+    event.id
+  );
   const { cancelEvent, deleteEvent, publishEvent } = useEventMutations(
     orgId,
     event.id
   );
   const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
+
   const dispatch = useAppDispatch();
-  const participants = model.getParticipants().data || [];
-  const respondents = model.getRespondents().data || [];
+  const participants = participantsFuture.data || [];
+  const respondents = respondentsFuture.data || [];
   const state = useEventState(orgId, event.id);
 
   const showPublishButton =

@@ -6,14 +6,13 @@ import {
   MailOutline,
 } from '@mui/icons-material';
 
-import EventDataModel from '../models/EventDataModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import useEventData from '../hooks/useEventData';
+import useEventParticipantsData from '../hooks/useEventParticipantsData';
 import { useMessages } from 'core/i18n';
 
 type EventWarningIconsProps = {
   compact?: boolean;
-  model: EventDataModel;
   eventId: number;
   orgId: number;
 };
@@ -24,22 +23,27 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
   orgId,
 }) => {
   const eventData = useEventData(orgId, eventId).data;
+  const { participantsFuture, pendingSignUps } = useEventParticipantsData(
+    orgId,
+    eventId
+  );
+
+  const numSignups = pendingSignUps.length;
 
   if (!eventData) {
     return null;
   }
 
-  const participants = model.getParticipants();
   return (
     <EventWarningIconsSansModel
       compact={compact}
       hasContact={!!eventData.contact}
-      numParticipants={participants.data?.length ?? 0}
+      numParticipants={participantsFuture.data?.length ?? 0}
       numRemindersSent={
-        participants.data?.filter((p) => !!p.reminder_sent).length ?? 0
+        participantsFuture.data?.filter((p) => !!p.reminder_sent).length ?? 0
       }
-      numSignups={model.getPendingSignUps().length}
-      participantsLoading={!participants.data}
+      numSignups={numSignups}
+      participantsLoading={!participantsFuture.data}
     />
   );
 };
