@@ -8,9 +8,9 @@ import {
 } from '@mui/icons-material';
 import React, { useContext } from 'react';
 
-import EventDataModel from '../models/EventDataModel';
 import messageIds from '../l10n/messageIds';
 import useDuplicateEvent from '../hooks/useDuplicateEvent';
+import useEventMutations from '../hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -28,26 +28,26 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const orgId = event.organization.id;
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const router = useRouter();
-
-  const model = useModel((env) => new EventDataModel(env, orgId, event.id));
+  const { cancelEvent, deleteEvent, restoreEvent, setPublished } =
+    useEventMutations(orgId, event.id);
   const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
 
   const published =
     !!event.published && new Date(event.published) <= new Date();
 
   const handlePublish = () => {
-    model.setPublished(new Date().toISOString());
+    setPublished(new Date().toISOString());
   };
 
   const handleUnpublish = () => {
-    model.setPublished(null);
+    setPublished(null);
   };
   const handleChangeDate = (date: string | null) => {
-    model.setPublished(date);
+    setPublished(date);
   };
 
   const handleDelete = () => {
-    model.deleteEvent();
+    deleteEvent();
     router.push(`/organize/${orgId}/projects/${event.campaign?.id || ''} `);
   };
 
@@ -56,7 +56,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   };
 
   const handleCancel = () => {
-    event.cancelled ? model.restoreEvent() : model.cancel();
+    event.cancelled ? restoreEvent() : cancelEvent();
   };
 
   return (

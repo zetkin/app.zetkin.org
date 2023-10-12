@@ -13,6 +13,7 @@ import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useEventData from '../hooks/useEventData';
+import useEventMutations from '../hooks/useEventMutations';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -40,6 +41,9 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   const model = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
+  const { setTitle, setType } = useEventMutations(
+    parseInt(orgId),
+    parseInt(eventId)
   );
 
   const typesModel = useModel(
@@ -73,10 +77,10 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 <EventTypeAutocomplete
                   onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
-                    model.setType(newValue ? newValue.id : newValue);
+                    setType(newValue ? newValue.id : newValue);
                     setEditingTypeOrTitle(false);
                   }}
-                  onChangeNewOption={(newValueId) => model.setType(newValueId)}
+                  onChangeNewOption={(newValueId) => setType(newValueId)}
                   onFocus={() => setEditingTypeOrTitle(true)}
                   showBorder={editingTypeOrTitle}
                   types={types}
@@ -137,7 +141,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 }}
                 onChange={(val) => {
                   setEditingTypeOrTitle(false);
-                  model.setTitle(val);
+                  setTitle(val);
                 }}
                 onFocus={() => setEditingTypeOrTitle(true)}
                 placeholder={

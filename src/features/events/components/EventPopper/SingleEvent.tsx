@@ -24,6 +24,7 @@ import StatusDot from './StatusDot';
 import { useAppDispatch } from 'core/hooks';
 import useModel from 'core/useModel';
 import useDuplicateEvent from 'features/events/hooks/useDuplicateEvent';
+import useEventMutations from 'features/events/hooks/useEventMutations';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -60,6 +61,9 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
 
   const model = useModel(
     (env) => new EventDataModel(env, event.organization.id, event.id)
+  const { cancelEvent, deleteEvent, publishEvent } = useEventMutations(
+    orgId,
+    event.id
   );
   const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
   const dispatch = useAppDispatch();
@@ -86,7 +90,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       onSelect: () =>
         showConfirmDialog({
           onSubmit: () => {
-            model.deleteEvent();
+            deleteEvent();
             dispatch(eventsDeselected([event]));
             onClickAway();
           },
@@ -108,7 +112,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       onSelect: () =>
         showConfirmDialog({
           onSubmit: () => {
-            model.cancel();
+            cancelEvent();
             onClickAway();
           },
           title: messages.eventPopper.confirmCancel(),
@@ -273,7 +277,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         {showPublishButton && (
           <Button
             onClick={() => {
-              model.publish();
+              publishEvent();
               onClickAway();
             }}
             variant="contained"

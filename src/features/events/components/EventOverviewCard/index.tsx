@@ -20,7 +20,6 @@ import {
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
@@ -28,6 +27,7 @@ import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useEventLocation from 'features/events/hooks/useEventLocation';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
+import useEventMutations from 'features/events/hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
 import useParallelEvents from 'features/events/hooks/useParallelEvents';
 import ZUIDate from 'zui/ZUIDate';
@@ -42,11 +42,9 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 type EventOverviewCardProps = {
   data: ZetkinEvent;
-  dataModel: EventDataModel;
   orgId: number;
 };
 
-  dataModel,
 const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   const { updateEvent } = useEventMutations(orgId, data.id);
   const locations = useEventLocation(orgId);
@@ -78,7 +76,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
         setShowEndDate(false);
       },
       save: () => {
-        dataModel.updateEventData({
+        updateEvent({
           end_time: dayjs(endDate)
             .hour(endDate.hour())
             .minute(endDate.minute())
