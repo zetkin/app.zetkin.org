@@ -7,7 +7,6 @@ import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';

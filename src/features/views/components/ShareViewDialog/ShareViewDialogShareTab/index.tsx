@@ -14,6 +14,8 @@ import { Msg, useMessages } from 'core/i18n';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
+import useAccessList from 'features/views/hooks/useAccessList';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface ShareViewDialogShareTabProps {
   model: ViewSharingModel;
@@ -29,14 +31,14 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
   const shareLinkUrl = useAbsoluteUrl(
     `/organize/${model.orgId}/people/lists/${model.viewId}/shared`
   );
-
-  const accessFuture = model.getAccessList();
+  const { orgId, viewId } = useNumericRouteParams();
+  const { accessListFuture } = useAccessList(orgId, viewId);
   const officialsFuture = model.getOfficials();
 
   return (
     <Box display="flex" flexDirection="column" gap={1} height="100%">
       <ZUIFutures
-        futures={{ accessList: accessFuture, officials: officialsFuture }}
+        futures={{ accessList: accessListFuture, officials: officialsFuture }}
       >
         {({ data: { accessList, officials } }) => (
           <>

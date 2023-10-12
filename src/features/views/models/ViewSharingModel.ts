@@ -18,10 +18,6 @@ export default class ViewSharingModel extends ModelBase {
     this._viewId = viewId;
   }
 
-  getAccessList(): IFuture<ZetkinObjectAccess[]> {
-    return this._repo.getViewAccessList(this._orgId, this._viewId);
-  }
-
   getOfficials(): IFuture<ZetkinOfficial[]> {
     return this._repo.getOfficials(this._orgId);
   }

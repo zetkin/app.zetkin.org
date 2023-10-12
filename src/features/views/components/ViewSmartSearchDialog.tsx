@@ -8,7 +8,7 @@ import SmartSearchDialog, {
 
 interface ViewSmartSearchDialogProps {
   onDialogClose: SmartSearchDialogProps['onDialogClose'];
-  orgId: string | number;
+  orgId: number;
   view: ZetkinView;
 }
 
@@ -17,10 +17,7 @@ const ViewSmartSearchDialog: FunctionComponent<ViewSmartSearchDialogProps> = ({
   view,
   ...dialogProps
 }) => {
-  const { updateContentQuery } = useViewDataTableMutations(
-    parseInt(orgId as string),
-    view.id
-  );
+  const { updateContentQuery } = useViewDataTableMutations(orgId, view.id);
 
   return (
     <SmartSearchDialog

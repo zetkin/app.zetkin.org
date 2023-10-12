@@ -5,7 +5,9 @@ import { FunctionComponent, useContext, useState } from 'react';
 
 import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
+import useAccessList from '../hooks/useAccessList';
 import useModel from 'core/useModel';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useView from '../hooks/useView';
 import useViewDataTableMutations from '../hooks/useViewDataTableMutations';
@@ -43,17 +45,10 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   children,
 }) => {
   const router = useRouter();
-  const { orgId, viewId } = router.query;
-  const parsedOrgId = parseInt(orgId as string);
-  const parsedViewId = parseInt(viewId as string);
+  const { orgId, viewId } = useNumericRouteParams();
 
   const shareModel = useModel(
-    (env) =>
-      new ViewSharingModel(
-        env,
-        parseInt(orgId as string),
-        parseInt(viewId as string)
-      )
+    (env) => new ViewSharingModel(env, orgId, viewId)
   );
 
   const [deactivated, setDeactivated] = useState(false);
@@ -63,13 +58,10 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { deleteView: deleteList, getView, setTitle } = useView(parsedOrgId);
-
-  const { deleteContentQuery } = useViewDataTableMutations(
-    parsedOrgId,
-    parsedViewId
-  );
-  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
+  const { deleteView: deleteList, getView, setTitle } = useView(orgId);
+  const { deleteContentQuery } = useViewDataTableMutations(orgId, viewId);
+  const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
+  const { accessListFuture } = useAccessList(orgId, viewId);
 
   // TODO: Remove once SSR is supported for models
   const onServer = useServerSide();
@@ -80,7 +72,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   const title = (
     <>
-      <ZUIFuture future={getView(parsedViewId)}>
+      <ZUIFuture future={getView(viewId)}>
         {(view) => {
           return (
             <Box>
@@ -88,7 +80,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                 key={view.id}
                 onChange={(newTitle) => {
                   try {
-                    setTitle(parsedViewId, newTitle);
+                    setTitle(viewId, newTitle);
                     showSnackbar(
                       'success',
                       messages.editViewTitleAlert.success()
@@ -109,7 +101,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
-  const view = getView(parsedViewId).data;
+  const view = getView(viewId).data;
 
   if (view?.content_query) {
     ellipsisMenu.push({
@@ -157,7 +149,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   });
 
   return (
-    <Box key={viewId as string} className={classes.deactivateWrapper}>
+    <Box key={`${viewId}`} className={classes.deactivateWrapper}>
       <SimpleLayout
         actionButtons={
           <Button
@@ -200,7 +192,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                 },
               ];
 
-              const accessListFuture = shareModel.getAccessList();
               if (accessListFuture.data?.length) {
                 labels.push({
                   icon: <Share />,
@@ -224,7 +215,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       {queryDialogOpen && view && (
         <ViewSmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}
-          orgId={orgId as string}
+          orgId={orgId}
           view={view}
         />
       )}

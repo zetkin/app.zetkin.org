@@ -7,7 +7,6 @@ import getUserMemberships from 'utils/getUserMemberships';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
