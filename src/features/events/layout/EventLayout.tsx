@@ -14,6 +14,7 @@ import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useEventData from '../hooks/useEventData';
 import useEventMutations from '../hooks/useEventMutations';
+import useEventState from '../hooks/useEventState';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -41,6 +42,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   const model = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
+  const eventState = useEventState(parseInt(orgId), parseInt(eventId));
   const { setTitle, setType } = useEventMutations(
     parseInt(orgId),
     parseInt(eventId)
@@ -64,7 +66,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            <EventStatusChip state={model.state} />
+            <EventStatusChip state={eventState} />
           </Box>
           <ZUIFutures
             futures={{

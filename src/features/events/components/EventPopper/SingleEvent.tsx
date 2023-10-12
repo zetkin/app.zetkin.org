@@ -35,6 +35,7 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import EventDataModel, {
   EventState,
 } from 'features/events/models/EventDataModel';
+import useEventState, { EventState } from 'features/events/hooks/useEventState';
 
 const useStyles = makeStyles(() => ({
   description: {
@@ -69,7 +70,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const dispatch = useAppDispatch();
   const participants = model.getParticipants().data || [];
   const respondents = model.getRespondents().data || [];
-  const state = model.state;
+  const state = useEventState(orgId, event.id);
 
   const showPublishButton =
     state == EventState.DRAFT ||
