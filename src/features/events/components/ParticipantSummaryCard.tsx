@@ -14,32 +14,37 @@ import { FC, useState } from 'react';
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
+import useEventData from '../hooks/useEventData';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
 
 type ParticipantSummaryCardProps = {
   model: EventDataModel;
+  eventId: number;
   onClickRecord: () => void;
+  orgId: number;
 };
 
 const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   model,
+  eventId,
   onClickRecord,
+  orgId,
 }) => {
-  const eventData = model.getData().data;
   const respondents = model.getRespondents().data;
+  const eventData = useEventData(orgId, eventId).data;
   const messages = useMessages(messageIds);
 
-  const reqParticipants = eventData?.num_participants_required ?? 0;
   const availParticipants = model.getNumAvailParticipants();
   const remindedParticipants = model.getNumRemindedParticipants();
   const cancelledParticipants = model.getNumCancelledParticipants();
+  const reqParticipants = eventData?.num_participants_required ?? 0;
 
   const signedParticipants = model.getNumSignedParticipants();
-  const contactPerson = eventData?.contact;
   const confirmedParticipants = model.getNumConfirmedParticipants();
   const noshowParticipants = model.getNumNoshowParticipants();
+  const contactPerson = eventData?.contact;
 
   const hasRecordedAttendance =
     cancelledParticipants + confirmedParticipants + noshowParticipants > 0;

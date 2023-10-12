@@ -16,6 +16,7 @@ import EventDataModel from '../models/EventDataModel';
 import filterParticipants from '../utils/filterParticipants';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
+import useEventData from '../hooks/useEventData';
 import { useMessages } from 'core/i18n';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
@@ -96,6 +97,7 @@ interface ParticipantListSectionListProps {
   description: string;
   filterString: string;
   model: EventDataModel;
+  eventId: number;
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
   title: string;
@@ -107,6 +109,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   chipNumber,
   description,
   filterString,
+  eventId,
   orgId,
   model,
   rows,
@@ -114,6 +117,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   type,
 }) => {
   const messages = useMessages(messageIds);
+  const eventFuture = useEventData(orgId, eventId);
 
   const columns: GridColDef[] = [
     {
@@ -144,7 +148,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         } else {
           return (
             <>
-              {model.getData().data?.contact?.id === params.row.id ? (
+              {eventFuture.data?.contact?.id === params.row.id ? (
                 <Typography>
                   {params.row.first_name + ' ' + params.row.last_name}
                   <Tooltip
@@ -262,8 +266,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             />
           );
         } else if (type == 'booked') {
-          const event = model.getData().data;
-          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
+          if (
+            eventFuture.data &&
+            new Date(removeOffset(eventFuture.data.start_time)) < new Date()
+          ) {
             const options: ButtonOption[] = [
               {
                 callback: () => {

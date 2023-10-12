@@ -8,6 +8,7 @@ import { FC, useContext } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
+import useEventData from '../hooks/useEventData';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUICard from 'zui/ZUICard';
@@ -89,19 +90,16 @@ const ContactSelect: FC<ContactSelectProps> = ({ model }) => {
   );
 };
 
-const EventContactCard: FC<EventContactCardProps> = ({
-  data,
-  model,
-  orgId,
-}) => {
+const EventContactCard: FC<EventContactCardProps> = ({ data, orgId }) => {
   const messages = useMessages(messageIds);
+  const eventFuture = useEventData(orgId, data.id);
 
   return (
     <Box mb={2}>
       <ZUICard
         header={
           <Box>
-            {model.getData().data?.contact?.id ? (
+            {eventFuture.data?.contact?.id ? (
               <Box>
                 <FaceOutlined sx={{ margin: 1, verticalAlign: 'middle' }} />
                 {messages.eventContactCard.header()}

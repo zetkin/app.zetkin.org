@@ -18,17 +18,22 @@ import getEventUrl from '../utils/getEventUrl';
 import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
+import useEventData from '../hooks/useEventData';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 type EventParticipantsCardProps = {
-  model: EventDataModel;
+  eventId: number;
+  orgId: number;
 };
 
-const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
-  const eventData = model.getData().data;
+const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
+  eventId,
+  orgId,
+}) => {
+  const eventData = useEventData(orgId, eventId).data;
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
   const availParticipants = eventData?.num_participants_available ?? 0;

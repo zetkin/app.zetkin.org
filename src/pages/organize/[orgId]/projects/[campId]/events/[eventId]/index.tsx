@@ -4,14 +4,11 @@ import { Grid } from '@mui/material';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventParticipantsCard';
 import EventRelatedCard from 'features/events/components/EventRelatedCard';
-import { EventsModel } from 'features/events/models/EventsModel';
-import LocationsModel from 'features/events/models/LocationsModel';
-import useModel from 'core/useModel';
+import useEventData from 'features/events/hooks/useEventData';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -49,34 +46,26 @@ interface EventPageProps {
 }
 
 const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
-  const dataModel = useModel(
-    (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
-  );
-  const eventsModel = useModel((env) => new EventsModel(env, parseInt(orgId)));
-  const locationsModel = useModel(
-    (env) => new LocationsModel(env, parseInt(orgId))
-  );
-  const event = dataModel.getData().data;
-  if (!event) {
+  const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
+
+  if (!eventFuture.data) {
     return null;
   }
 
   return (
-    <ZUIFuture future={dataModel.getData()}>
+    <ZUIFuture future={eventFuture}>
       {(data) => {
         return (
           <Grid container spacing={2}>
             <Grid item md={8} xs={12}>
-              <EventOverviewCard
-                data={data}
-                dataModel={dataModel}
-                eventsModel={eventsModel}
-                locationsModel={locationsModel}
-              />
+              <EventOverviewCard data={data} orgId={parseInt(orgId)} />
             </Grid>
             <Grid item md={4} xs={6}>
-              <EventParticipantsCard model={dataModel} />
-              <EventRelatedCard data={data} model={eventsModel} />
+              <EventParticipantsCard
+                eventId={parseInt(eventId)}
+                orgId={parseInt(orgId)}
+              />
+              <EventRelatedCard data={data} orgId={parseInt(orgId)} />
             </Grid>
           </Grid>
         );

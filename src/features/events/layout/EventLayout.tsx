@@ -12,6 +12,7 @@ import EventTypesModel from '../models/EventTypesModel';
 import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
+import useEventData from '../hooks/useEventData';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -38,6 +39,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
 
   const model = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
+  const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
   );
 
   const typesModel = useModel(
@@ -47,13 +49,13 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={
-        <ZUIFuture future={model.getData()}>
+        <ZUIFuture future={eventFuture}>
           {(data) => {
             return <EventActionButtons event={data} />;
           }}
         </ZUIFuture>
       }
-      baseHref={getEventUrl(model.getData().data)}
+      baseHref={getEventUrl(eventFuture.data)}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
@@ -62,7 +64,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
           </Box>
           <ZUIFutures
             futures={{
-              currentEvent: model.getData(),
+              currentEvent: eventFuture,
               types: typesModel.getTypes(),
             }}
           >
@@ -85,7 +87,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
             }}
           </ZUIFutures>
           <Box marginX={1}>
-            <ZUIFuture future={model.getData()}>
+            <ZUIFuture future={eventFuture}>
               {(data) => {
                 const startDate = new Date(removeOffset(data.start_time));
                 const endDate = new Date(removeOffset(data.end_time));
@@ -125,7 +127,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
         },
       ]}
       title={
-        <ZUIFuture future={model.getData()}>
+        <ZUIFuture future={eventFuture}>
           {(data) => {
             return (
               <ZUIEditTextinPlace

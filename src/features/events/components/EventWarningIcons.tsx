@@ -8,17 +8,24 @@ import {
 
 import EventDataModel from '../models/EventDataModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
+import useEventData from '../hooks/useEventData';
 import { useMessages } from 'core/i18n';
 
 type EventWarningIconsProps = {
   compact?: boolean;
   model: EventDataModel;
+  eventId: number;
+  orgId: number;
 };
 
-const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
-  const data = model.getData().data;
+const EventWarningIcons: FC<EventWarningIconsProps> = ({
+  compact,
+  eventId,
+  orgId,
+}) => {
+  const eventData = useEventData(orgId, eventId).data;
 
-  if (!data) {
+  if (!eventData) {
     return null;
   }
 
@@ -26,7 +33,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
   return (
     <EventWarningIconsSansModel
       compact={compact}
-      hasContact={!!data.contact}
+      hasContact={!!eventData.contact}
       numParticipants={participants.data?.length ?? 0}
       numRemindersSent={
         participants.data?.filter((p) => !!p.reminder_sent).length ?? 0
