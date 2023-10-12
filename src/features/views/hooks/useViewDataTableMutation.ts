@@ -1,3 +1,4 @@
+import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   columnAdded,
   columnDeleted,
@@ -12,6 +13,7 @@ interface UseViewDataTableMutationReturn {
   addPerson: (personId: number) => Promise<void>;
   deleteColumn: (columnId: number) => Promise<void>;
   deleteContentQuery: () => Promise<void>;
+  updateContentQuery: (data: Pick<ZetkinQuery, 'filter_spec'>) => Promise<void>;
 }
 
 export default function useViewDataTableMutation(
@@ -52,5 +54,19 @@ export default function useViewDataTableMutation(
     );
     dispatch(viewQueryUpdated([viewId, null]));
   };
-  return { addColumn, addPerson, deleteColumn, deleteContentQuery };
+
+  const updateContentQuery = async (data: Pick<ZetkinQuery, 'filter_spec'>) => {
+    const query = await apiClient.patch<ZetkinQuery>(
+      `/api/orgs/${orgId}/people/views/${viewId}/content_query`,
+      data
+    );
+    dispatch(viewQueryUpdated([viewId, query]));
+  };
+  return {
+    addColumn,
+    addPerson,
+    deleteColumn,
+    deleteContentQuery,
+    updateContentQuery,
+  };
 }
