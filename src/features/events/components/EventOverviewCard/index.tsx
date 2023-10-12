@@ -21,7 +21,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useMemo, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
-import { EventsModel } from 'features/events/models/EventsModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
@@ -30,6 +29,7 @@ import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useEventLocation from 'features/events/hooks/useEventLocation';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
+import useParallelEvents from 'features/events/hooks/useParallelEvents';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
@@ -43,16 +43,12 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 type EventOverviewCardProps = {
   data: ZetkinEvent;
   dataModel: EventDataModel;
-  eventsModel: EventsModel;
   orgId: number;
 };
 
-const EventOverviewCard: FC<EventOverviewCardProps> = ({
-  data,
   dataModel,
-  eventsModel,
-  orgId,
-}) => {
+const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
+  const { updateEvent } = useEventMutations(orgId, data.id);
   const locations = useEventLocation(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
   const messages = useMessages(messageIds);
@@ -114,10 +110,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     ? [...sortedLocation, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
-  const events = eventsModel.getParallelEvents(
-    data.start_time,
-    data.end_time
-  ).data;
+  const events = useParallelEvents(orgId, data.start_time, data.end_time).data;
 
   return (
     <ClickAwayListener {...clickAwayProps}>
