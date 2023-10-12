@@ -8,7 +8,7 @@ import ShareViewDialog from '../components/ShareViewDialog';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from '../hooks/useView';
-import useViewDataTableMutation from '../hooks/useViewDataTableMutation';
+import useViewDataTableMutations from '../hooks/useViewDataTableMutations';
 import useViewGrid from '../hooks/useViewGrid';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
 import ViewSharingModel from '../models/ViewSharingModel';
@@ -65,7 +65,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteView: deleteList, getView, setTitle } = useView(parsedOrgId);
 
-  const { deleteContentQuery } = useViewDataTableMutation(
+  const { deleteContentQuery } = useViewDataTableMutations(
     parsedOrgId,
     parsedViewId
   );

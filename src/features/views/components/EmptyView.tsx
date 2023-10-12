@@ -15,7 +15,7 @@ import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinView } from 'features/views/components/types';
 
 import messageIds from '../l10n/messageIds';
-import UseViewDataTableMutation from '../hooks/useViewDataTableMutation';
+import UseViewDataTableMutations from '../hooks/useViewDataTableMutations';
 
 export interface EmptyViewProps {
   orgId: string | number;
@@ -25,7 +25,7 @@ export interface EmptyViewProps {
 const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const { addPerson, deleteContentQuery } = UseViewDataTableMutation(
+  const { addPerson, deleteContentQuery } = UseViewDataTableMutations(
     parseInt(orgId as string),
     view.id
   );

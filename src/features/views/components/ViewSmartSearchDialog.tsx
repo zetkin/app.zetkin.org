@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 
-import useViewDataTableMutation from '../hooks/useViewDataTableMutation';
+import useViewDataTableMutations from '../hooks/useViewDataTableMutations';
 import { ZetkinView } from 'features/views/components/types';
 import SmartSearchDialog, {
   SmartSearchDialogProps,
@@ -17,7 +17,7 @@ const ViewSmartSearchDialog: FunctionComponent<ViewSmartSearchDialogProps> = ({
   view,
   ...dialogProps
 }) => {
-  const { updateContentQuery } = useViewDataTableMutation(
+  const { updateContentQuery } = useViewDataTableMutations(
     parseInt(orgId as string),
     view.id
   );

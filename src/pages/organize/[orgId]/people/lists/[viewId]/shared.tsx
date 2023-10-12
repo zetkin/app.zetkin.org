@@ -11,8 +11,6 @@ import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
-import ViewDataModel from 'features/views/models/ViewDataModel';
-import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
@@ -93,9 +91,6 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   orgId,
   viewId,
 }) => {
-  const model = useModel(
-    (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
-  );
   const parsedOrgId = parseInt(orgId);
   const parsedViewId = parseInt(viewId);
 
@@ -121,21 +116,19 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
           <Head>
             <title>{view.title}</title>
           </Head>
-          <ViewDataModelProvider model={model}>
-            <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
-              <>
-                {!columnsFuture.isLoading && (
-                  <ViewDataTable
-                    columns={cols}
-                    disableBulkActions
-                    disableConfigure={!canConfigure}
-                    rows={rows}
-                    view={view}
-                  />
-                )}
-              </>
-            </AccessLevelProvider>
-          </ViewDataModelProvider>
+          <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
+            <>
+              {!columnsFuture.isLoading && (
+                <ViewDataTable
+                  columns={cols}
+                  disableBulkActions
+                  disableConfigure={!canConfigure}
+                  rows={rows}
+                  view={view}
+                />
+              )}
+            </>
+          </AccessLevelProvider>
         </>
       )}
     </ZUIFutures>

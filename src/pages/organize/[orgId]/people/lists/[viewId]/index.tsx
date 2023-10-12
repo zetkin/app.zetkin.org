@@ -11,8 +11,6 @@ import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
-import ViewDataModel from 'features/views/models/ViewDataModel';
-import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIFutures from 'zui/ZUIFutures';
 
@@ -71,9 +69,6 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   viewId,
 }) => {
   const onServer = useServerSide();
-  const model = useModel(
-    (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
-  );
 
   const parsedOrgId = parseInt(orgId);
   const parsedViewId = parseInt(viewId);
@@ -98,15 +93,14 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           <Head>
             <title>{view.title}</title>
           </Head>
-          <ViewDataModelProvider model={model}>
-            <AccessLevelProvider>
-              <>
-                {(!columnsFuture.isLoading || !!columnsFuture.data?.length) && (
-                  <ViewDataTable columns={cols} rows={rows} view={view} />
-                )}
-              </>
-            </AccessLevelProvider>
-          </ViewDataModelProvider>
+
+          <AccessLevelProvider>
+            <>
+              {(!columnsFuture.isLoading || !!columnsFuture.data?.length) && (
+                <ViewDataTable columns={cols} rows={rows} view={view} />
+              )}
+            </>
+          </AccessLevelProvider>
         </>
       )}
     </ZUIFutures>

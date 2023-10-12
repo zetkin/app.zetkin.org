@@ -8,7 +8,7 @@ import {
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
-interface UseViewDataTableMutationReturn {
+interface UseViewDataTableMutationsReturn {
   addColumn: (data: Omit<ZetkinViewColumn, 'id'>) => Promise<void>;
   addPerson: (personId: number) => Promise<void>;
   deleteColumn: (columnId: number) => Promise<void>;
@@ -16,10 +16,10 @@ interface UseViewDataTableMutationReturn {
   updateContentQuery: (data: Pick<ZetkinQuery, 'filter_spec'>) => Promise<void>;
 }
 
-export default function useViewDataTableMutation(
+export default function useViewDataTableMutations(
   orgId: number,
   viewId: number
-): UseViewDataTableMutationReturn {
+): UseViewDataTableMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 

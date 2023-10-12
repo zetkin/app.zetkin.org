@@ -20,7 +20,7 @@ import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useC
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useView from 'features/views/hooks/useView';
-import UseViewDataTableMutation from 'features/views/hooks/useViewDataTableMutation';
+import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
@@ -98,7 +98,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const parsedOrgId = parseInt(orgId as string);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { addColumn, addPerson, deleteColumn } = UseViewDataTableMutation(
+  const { addColumn, addPerson, deleteColumn } = UseViewDataTableMutations(
     parsedOrgId,
     view.id
   );
