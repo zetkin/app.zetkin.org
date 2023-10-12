@@ -36,7 +36,7 @@ const CallAssignmentStatusCards = () => {
     orgId,
     assignmentId
   );
-  const { getOrganizerActionView } = useOrganizerActionView(orgId);
+  const getOrganizerActionView = useOrganizerActionView(orgId);
 
   const cooldownNumber = assignmentData?.cooldown ?? null;
 

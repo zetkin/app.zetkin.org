@@ -3,13 +3,9 @@ import { ZetkinView } from '../components/types';
 import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 import { viewCreate, viewCreated } from '../store';
 
-interface UseOrganizerActionViewReturn {
-  getOrganizerActionView: () => Promise<ZetkinView>;
-}
-
 export default function useOrganizerActionView(
   orgId: number
-): UseOrganizerActionViewReturn {
+): () => Promise<ZetkinView> {
   const apiClient = useApiClient();
   const env = useEnv();
   const dispatch = useAppDispatch();
@@ -26,5 +22,5 @@ export default function useOrganizerActionView(
     return view;
   };
 
-  return { getOrganizerActionView };
+  return getOrganizerActionView;
 }
