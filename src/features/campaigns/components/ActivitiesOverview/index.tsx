@@ -4,7 +4,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverviewCard from './ActivitiesOverviewCard';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import useCampaignActivities from 'features/campaigns/hooks/useCampaignActivities';
+import useActivitiyOverview from 'features/campaigns/hooks/useActivityOverview';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
@@ -19,7 +19,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const { activityOverview } = useCampaignActivities(orgId, campaignId);
+  const activityOverview = useActivitiyOverview(orgId, campaignId);
 
   const todayDate = new Date();
   const tomorrowDate = new Date();
