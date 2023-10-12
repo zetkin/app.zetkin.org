@@ -27,6 +27,8 @@ import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
+import useEventLocation from 'features/events/hooks/useEventLocation';
+import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
@@ -37,27 +39,22 @@ import {
   removeOffset,
 } from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
-import useEventLocation from 'features/events/hooks/useEventLocation';
-import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 
 type EventOverviewCardProps = {
   data: ZetkinEvent;
   dataModel: EventDataModel;
   eventsModel: EventsModel;
+  orgId: number;
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({
   data,
   dataModel,
   eventsModel,
+  orgId,
 }) => {
   const locations = useEventLocation(orgId);
-  const {
-    addLocation,
-    setLocationDescription,
-    setLocationLatLng,
-    setLocationTitle,
-  } = useEventLocationMutations(orgId);
+  const { addLocation } = useEventLocationMutations(orgId);
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
   const [link, setLink] = useState(data.url);

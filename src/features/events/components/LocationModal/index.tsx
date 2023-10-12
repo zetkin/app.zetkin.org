@@ -9,13 +9,12 @@ import 'leaflet/dist/leaflet.css';
 import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
-import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import MoveLocationCard from './MoveLocationCard';
-import { useMessages } from 'core/i18n';
-import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
+import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
   cardIsFullHeight: boolean;

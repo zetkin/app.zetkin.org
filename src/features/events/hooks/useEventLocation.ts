@@ -1,4 +1,3 @@
-import { futureToObject, IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinLocation } from 'utils/types/zetkin';
 import { locationsLoad, locationsLoaded } from '../store';
