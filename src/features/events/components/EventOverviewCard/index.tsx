@@ -24,7 +24,6 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import { EventsModel } from 'features/events/models/EventsModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
-import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
@@ -38,21 +37,27 @@ import {
   removeOffset,
 } from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+import useEventLocation from 'features/events/hooks/useEventLocation';
+import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 
 type EventOverviewCardProps = {
   data: ZetkinEvent;
   dataModel: EventDataModel;
   eventsModel: EventsModel;
-  locationsModel: LocationsModel;
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({
   data,
   dataModel,
   eventsModel,
-  locationsModel,
 }) => {
-  const locations = locationsModel.getLocations().data;
+  const locations = useEventLocation(orgId);
+  const {
+    addLocation,
+    setLocationDescription,
+    setLocationLatLng,
+    setLocationTitle,
+  } = useEventLocationMutations(orgId);
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
   const [link, setLink] = useState(data.url);
@@ -476,11 +481,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             events={events || []}
                             locationId={locationId}
                             locations={sortedLocation || []}
-                            model={locationsModel}
                             onCreateLocation={(
                               newLocation: Partial<ZetkinLocation>
                             ) => {
-                              locationsModel.addLocation(newLocation);
+                              addLocation(newLocation);
                             }}
                             onMapClose={() => {
                               setLocationModalOpen(false);

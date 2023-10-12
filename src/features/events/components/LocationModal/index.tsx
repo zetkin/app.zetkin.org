@@ -14,6 +14,8 @@ import messageIds from 'features/events/l10n/messageIds';
 import MoveLocationCard from './MoveLocationCard';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface StyleProps {
   cardIsFullHeight: boolean;
@@ -43,7 +45,6 @@ interface LocationModalProps {
   currentEventId: number;
   events: ZetkinEvent[];
   locations: ZetkinLocation[];
-  model: LocationsModel;
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
@@ -56,16 +57,17 @@ const LocationModal: FC<LocationModalProps> = ({
   currentEventId,
   events,
   locations,
-  model,
   onCreateLocation,
   onMapClose,
   onSelectLocation,
   open,
   locationId = null,
 }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
+  const { setLocationLatLng } = useEventLocationMutations(orgId);
   const [pendingLocation, setPendingLocation] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -150,7 +152,6 @@ const LocationModal: FC<LocationModalProps> = ({
           {selectedLocation && !inMoveState && (
             <LocationDetailsCard
               location={selectedLocation}
-              model={model}
               onClose={() => {
                 setSearchString('');
                 setSelectedLocationId(null);
@@ -191,7 +192,7 @@ const LocationModal: FC<LocationModalProps> = ({
               }}
               onSaveLocation={() => {
                 if (newLatLng) {
-                  model.setLocationLatLng(
+                  setLocationLatLng(
                     selectedLocation.id,
                     newLatLng.lat,
                     newLatLng.lng

@@ -10,10 +10,11 @@ import {
 import { Close, EventOutlined, OpenWith } from '@mui/icons-material';
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import RelatedEventCard from '../RelatedEvent';
+import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
@@ -27,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface LocationDetailsCardProps {
-  model: LocationsModel;
   onClose: () => void;
   onMove: () => void;
   onUseLocation: () => void;
@@ -37,12 +37,12 @@ interface LocationDetailsCardProps {
 
 const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   location,
-  model,
   onClose,
   onMove,
   onUseLocation,
   relatedEvents,
 }) => {
+  const { orgId } = useNumericRouteParams();
   const classes = useStyles();
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(location.title);
@@ -50,6 +50,8 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   const [fieldEditing, setFieldEditing] = useState<
     'title' | 'description' | null
   >(null);
+  const { setLocationDescription, setLocationTitle } =
+    useEventLocationMutations(orgId);
 
   const handleDescriptionTextAreaRef = useCallback(
     (el: HTMLTextAreaElement | null) => {
@@ -85,10 +87,10 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
         onClickAway={() => {
           if (fieldEditing === 'title') {
             setFieldEditing(null);
-            model.setLocationTitle(location.id, title);
+            setLocationTitle(location.id, title);
           } else if (fieldEditing === 'description') {
             setFieldEditing(null);
-            model.setLocationDescription(location.id, description);
+            setLocationDescription(location.id, description);
           }
         }}
       >
