@@ -1,11 +1,16 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ResolvedFuture } from 'core/caching/futures';
-import { ZetkinTask } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
   ActivityOverview,
   CampaignActivity,
 } from './useCampaignActivities';
+import {
+  campaignSurveyIdsLoad,
+  campaignSurveyIdsLoaded,
+  surveysLoad,
+  surveysLoaded,
+} from 'features/surveys/store';
 import {
   campaignTaskIdsLoad,
   campaignTaskIdsLoaded,
@@ -14,11 +19,13 @@ import {
 } from 'features/tasks/store';
 import { getUTCDateWithoutTime, isSameDate } from 'utils/dateUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { ZetkinSurvey, ZetkinTask } from 'utils/types/zetkin';
 
 export default function useActivitiyOverview(orgId: number, campId?: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const tasksSlice = useAppSelector((state) => state.tasks);
+  const surveysSlice = useAppSelector((state) => state.surveys);
 
   const activities: CampaignActivity[] = [];
 
@@ -62,6 +69,50 @@ export default function useActivitiyOverview(orgId: number, campId?: number) {
         }
       });
     }
+
+    const surveyIdsByCampaignId = surveysSlice.surveyIdsByCampaignId[campId];
+    const surveyIdsFuture = loadListIfNecessary(
+      surveyIdsByCampaignId,
+      dispatch,
+      {
+        actionOnLoad: () => campaignSurveyIdsLoad(campId),
+        actionOnSuccess: (data) => campaignSurveyIdsLoaded([campId, data]),
+        loader: async () => {
+          const tasks = await apiClient.get<ZetkinTask[]>(
+            `/api/orgs/${orgId}/campaigns/${campId}/surveys`
+          );
+          return tasks.map((survey) => ({ id: survey.id }));
+        },
+      }
+    );
+
+    const surveyList = surveysSlice.surveyList;
+    const surveysFuture = loadListIfNecessary(surveyList, dispatch, {
+      actionOnLoad: () => surveysLoad(),
+      actionOnSuccess: (data) => surveysLoaded(data),
+      loader: () =>
+        apiClient.get<ZetkinSurvey[]>(
+          `/api/orgs/${orgId}/campaigns/${campId}/surveys`
+        ),
+    });
+
+    if (surveyIdsFuture.data && surveysFuture.data) {
+      const surveys = surveysFuture.data;
+      const surveyIds = surveyIdsFuture.data;
+
+      surveyIds.forEach(({ id: surveyId }) => {
+        const survey = surveys.find((item) => item.id === surveyId);
+
+        if (survey) {
+          activities.push({
+            data: survey,
+            kind: ACTIVITIES.SURVEY,
+            visibleFrom: getUTCDateWithoutTime(survey.published || null),
+            visibleUntil: getUTCDateWithoutTime(survey.expires || null),
+          });
+        }
+      });
+    }
   } else {
     const tasksList = tasksSlice.tasksList;
     const allTasksFuture = loadListIfNecessary(tasksList, dispatch, {
@@ -78,6 +129,25 @@ export default function useActivitiyOverview(orgId: number, campId?: number) {
           kind: ACTIVITIES.TASK,
           visibleFrom: getUTCDateWithoutTime(task.published || null),
           visibleUntil: getUTCDateWithoutTime(task.expires || null),
+        });
+      });
+    }
+
+    const surveyList = surveysSlice.surveyList;
+    const allSurveysFuture = loadListIfNecessary(surveyList, dispatch, {
+      actionOnLoad: () => surveysLoad(),
+      actionOnSuccess: (data) => surveysLoaded(data),
+      loader: () => apiClient.get<ZetkinSurvey[]>(`/api/orgs/${orgId}/surveys`),
+    });
+
+    if (allSurveysFuture.data) {
+      const allSurveys = allSurveysFuture.data;
+      allSurveys.forEach((survey) => {
+        activities.push({
+          data: survey,
+          kind: ACTIVITIES.SURVEY,
+          visibleFrom: getUTCDateWithoutTime(survey.published || null),
+          visibleUntil: getUTCDateWithoutTime(survey.expires || null),
         });
       });
     }

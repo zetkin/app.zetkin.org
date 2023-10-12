@@ -22,6 +22,7 @@ export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
   submissionList: RemoteList<ZetkinSurveySubmission>;
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
+  surveyIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
   surveyList: RemoteList<ZetkinSurvey>;
 }
 
@@ -29,6 +30,7 @@ const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
   statsBySurveyId: {},
   submissionList: remoteList(),
+  surveyIdsByCampaignId: {},
   surveyList: remoteList(),
 };
 
@@ -36,6 +38,23 @@ const surveysSlice = createSlice({
   initialState,
   name: 'surveys',
   reducers: {
+    campaignSurveyIdsLoad: (state, action: PayloadAction<number>) => {
+      const campaignId = action.payload;
+      if (!state.surveyIdsByCampaignId[campaignId]) {
+        state.surveyIdsByCampaignId[campaignId] = remoteList();
+      }
+      state.surveyIdsByCampaignId[campaignId].isLoading = true;
+    },
+    campaignSurveyIdsLoaded: (
+      state,
+      action: PayloadAction<[number, { id: string | number }[]]>
+    ) => {
+      const [campaignId, surveyIds] = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.surveyIdsByCampaignId[campaignId] = remoteList(surveyIds);
+      state.surveyIdsByCampaignId[campaignId].loaded = timestamp;
+    },
     elementAdded: (
       state,
       action: PayloadAction<[number, ZetkinSurveyElement]>
@@ -309,6 +328,8 @@ const surveysSlice = createSlice({
 
 export default surveysSlice;
 export const {
+  campaignSurveyIdsLoad,
+  campaignSurveyIdsLoaded,
   elementAdded,
   elementDeleted,
   elementOptionAdded,

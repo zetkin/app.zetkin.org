@@ -44,6 +44,7 @@ describe('SurveyDataModel', () => {
         elementsBySurveyId: {},
         statsBySurveyId: {},
         submissionList: mockList<ZetkinSurveySubmission>([]),
+        surveyIdsByCampaignId: {},
         surveyList: mockList<ZetkinSurveyExtended>([
           {
             access: 'open',
