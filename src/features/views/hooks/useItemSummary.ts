@@ -2,14 +2,10 @@ import useViewTree from './useViewTree';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
 
-interface UseItemSummaryReturn {
-  itemSummaryFuture: IFuture<{ folders: number; views: number }>;
-}
-
 export default function useItemSummary(
   orgId: number,
   folderId: number | null
-): UseItemSummaryReturn {
+): IFuture<{ folders: number; views: number }> {
   const itemsFuture = useViewTree(orgId);
 
   const getItemSummary = (itemsFuture: IFuture<ViewTreeData>) => {
@@ -31,5 +27,5 @@ export default function useItemSummary(
 
   const itemSummaryFuture = getItemSummary(itemsFuture);
 
-  return { itemSummaryFuture };
+  return itemSummaryFuture;
 }

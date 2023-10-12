@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
@@ -9,6 +7,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 
 import messageIds from '../l10n/messageIds';
 import useItemSummary from '../hooks/useItemSummary';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface PeopleLayoutProps {
   children: React.ReactNode;
@@ -17,9 +16,9 @@ interface PeopleLayoutProps {
 const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
   children,
 }) => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const { itemSummaryFuture } = useItemSummary(parseInt(orgId as string));
+  const itemSummaryFuture = useItemSummary(orgId, null);
 
   const onServer = useServerSide();
   if (onServer) {

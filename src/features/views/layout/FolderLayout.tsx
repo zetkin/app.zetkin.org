@@ -20,7 +20,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   const { orgId } = useNumericRouteParams();
 
   const { folderFuture } = useFolder(orgId, folderId);
-  const { itemSummaryFuture } = useItemSummary(orgId, folderId);
+  const itemSummaryFuture = useItemSummary(orgId, folderId);
   const { renameItem } = useItemsMutations(orgId);
 
   return (
