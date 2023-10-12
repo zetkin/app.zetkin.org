@@ -5,10 +5,9 @@ import { FC, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
+import useItemsMutations from 'features/views/hooks/useItemsMutations';
 import { useNumericRouteParams } from 'core/hooks';
-import useItemsMutations, {
-  ViewBrowserItem,
-} from 'features/views/hooks/useItemsMutations';
+import { ViewBrowserItem } from 'features/views/hooks/useItems';
 
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
 
