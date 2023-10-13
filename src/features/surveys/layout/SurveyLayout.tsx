@@ -2,6 +2,7 @@ import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
+import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -29,6 +30,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   surveyId,
 }) => {
   const messages = useMessages(messageIds);
+  const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
@@ -73,7 +75,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
             <ZUIFutures
               futures={{
                 elements: model.getElements(),
-                stats: model.getStats(),
+                stats: statsFuture,
               }}
             >
               {({ data: { elements, stats } }) => {

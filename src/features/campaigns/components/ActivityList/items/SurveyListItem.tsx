@@ -4,6 +4,7 @@ import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 import ActivityListItemWithStats from './ActivityListItemWithStats';
 import { STATUS_COLORS } from './ActivityListItem';
 import useModel from 'core/useModel';
+import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
 import SurveyDataModel, {
   SurveyState,
 } from 'features/surveys/models/SurveyDataModel';
@@ -14,11 +15,12 @@ interface SurveyListItemProps {
 }
 
 const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
+  const statsFuture = useSurveyStats(orgId, surveyId);
+  const stats = statsFuture.data;
   const dataModel = useModel(
     (env) => new SurveyDataModel(env, orgId, surveyId)
   );
   const data = dataModel.getData().data;
-  const stats = dataModel.getStats().data;
 
   if (!data) {
     return null;
@@ -47,7 +49,6 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
   const submissionCount = stats?.submissionCount || 0;
   const unlinkedSubmissionCount = stats?.unlinkedSubmissionCount || 0;
   const linkedSubmissionCount = submissionCount - unlinkedSubmissionCount || 0;
-  const statsLoading = dataModel.getStats().isLoading;
 
   return (
     <ActivityListItemWithStats
@@ -60,7 +61,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
       orangeChipValue={unlinkedSubmissionCount}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
-      statsLoading={statsLoading}
+      statsLoading={statsFuture.isLoading}
       title={data.title}
     />
   );

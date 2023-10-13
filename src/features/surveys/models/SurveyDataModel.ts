@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import { SurveyStats } from '../rpc/getSurveyStats';
 import SurveysRepo, {
   OptionsQuestionPatchBody,
   ZetkinSurveyElementPatchBody,
@@ -75,10 +74,6 @@ export default class SurveyDataModel extends ModelBase {
 
   getElements(): IFuture<ZetkinSurveyElement[]> {
     return this._repo.getSurveyElements(this._orgId, this._surveyId);
-  }
-
-  getStats(): IFuture<SurveyStats> {
-    return this._repo.getSurveyStats(this._orgId, this._surveyId);
   }
 
   publish(): void {

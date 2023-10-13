@@ -1,6 +1,7 @@
 import addBulkOptions from '../rpc/addBulkOptions';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
@@ -26,8 +27,6 @@ import {
   elementsLoaded,
   elementsReordered,
   elementUpdated,
-  statsLoad,
-  statsLoaded,
   surveyCreate,
   surveyCreated,
   surveyLoad,
@@ -37,12 +36,7 @@ import {
   surveyUpdate,
   surveyUpdated,
 } from '../store';
-import getSurveyStats, { SurveyStats } from '../rpc/getSurveyStats';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-import {
-  loadItemIfNecessary,
-  loadListIfNecessary,
-} from 'core/caching/cacheUtils';
 
 export type ZetkinSurveyElementPostBody =
   | Partial<Omit<ZetkinSurveyTextElement, 'id'>>
@@ -216,19 +210,6 @@ export default class SurveysRepo {
         return survey.elements;
       },
     });
-  }
-
-  getSurveyStats(orgId: number, surveyId: number): IFuture<SurveyStats> {
-    const state = this._store.getState();
-    return loadItemIfNecessary(
-      state.surveys.statsBySurveyId[surveyId],
-      this._store.dispatch,
-      {
-        actionOnLoad: () => statsLoad(surveyId),
-        actionOnSuccess: (stats) => statsLoaded([surveyId, stats]),
-        loader: () => this._apiClient.rpc(getSurveyStats, { orgId, surveyId }),
-      }
-    );
   }
 
   getSurveys(orgId: number): IFuture<ZetkinSurvey[]> {

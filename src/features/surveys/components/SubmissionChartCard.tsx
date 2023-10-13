@@ -4,8 +4,7 @@ import { linearGradientDef } from '@nivo/core';
 import { ResponsiveLine } from '@nivo/line';
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 
-import SurveyDataModel from '../models/SurveyDataModel';
-import useModel from 'core/useModel';
+import useSurveyStats from '../hooks/useSurveyStats';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
@@ -24,10 +23,10 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const model = useModel((env) => new SurveyDataModel(env, orgId, surveyId));
+  const statsFuture = useSurveyStats(orgId, surveyId);
 
   return (
-    <ZUIFuture future={model.getStats()}>
+    <ZUIFuture future={statsFuture}>
       {(data) => {
         const hasChartData = data.submissionsByDay.length > 1;
 
