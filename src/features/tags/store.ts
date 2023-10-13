@@ -47,6 +47,9 @@ const tagsSlice = createSlice({
           remoteItem(tag.id, { data: tag, loaded: new Date().toISOString() }),
         ]);
     },
+    tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
+      doNothing(state, action);
+    },
     tagsLoad: (state) => {
       state.tagList.isLoading = true;
     },
@@ -58,18 +61,15 @@ const tagsSlice = createSlice({
       state.tagList.loaded = timestamp;
       state.tagList.items.forEach((item) => (item.loaded = timestamp));
     },
-    tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
-      doNothing(state, action);
-    },
   },
 });
 
 export default tagsSlice;
 export const {
   tagAssigned,
-  tagUnassigned,
   tagLoad,
   tagLoaded,
   tagsLoad,
   tagsLoaded,
+  tagUnassigned,
 } = tagsSlice.actions;
