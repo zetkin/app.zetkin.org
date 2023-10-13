@@ -47,6 +47,17 @@ const tagsSlice = createSlice({
           remoteItem(tag.id, { data: tag, loaded: new Date().toISOString() }),
         ]);
     },
+    tagsLoad: (state) => {
+      state.tagList.isLoading = true;
+    },
+    tagsLoaded: (state, action: PayloadAction<ZetkinTag[]>) => {
+      const tags = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.tagList = remoteList(tags);
+      state.tagList.loaded = timestamp;
+      state.tagList.items.forEach((item) => (item.loaded = timestamp));
+    },
     tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
       doNothing(state, action);
     },
@@ -54,5 +65,11 @@ const tagsSlice = createSlice({
 });
 
 export default tagsSlice;
-export const { tagAssigned, tagUnassigned, tagLoad, tagLoaded } =
-  tagsSlice.actions;
+export const {
+  tagAssigned,
+  tagUnassigned,
+  tagLoad,
+  tagLoaded,
+  tagsLoad,
+  tagsLoaded,
+} = tagsSlice.actions;
