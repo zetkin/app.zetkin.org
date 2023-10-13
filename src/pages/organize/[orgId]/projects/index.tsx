@@ -12,6 +12,7 @@ import getUpcomingEvents from 'features/events/fetching/getUpcomingEvents';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import { Suspense } from 'react';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCampaign } from 'utils/types/zetkin';
@@ -98,7 +99,9 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
       <Head>
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
-      <ActivitiesOverview orgId={parseInt(orgId)} />
+      <Suspense>
+        <ActivitiesOverview orgId={parseInt(orgId)} />
+      </Suspense>
       <Box mt={4}>
         <Typography mb={2} variant="h4">
           <Msg id={messageIds.all.heading} />

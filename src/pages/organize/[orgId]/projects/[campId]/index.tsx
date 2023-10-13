@@ -9,6 +9,7 @@ import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import { Suspense } from 'react';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCampaign } from 'utils/types/zetkin';
@@ -90,10 +91,12 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             )}
           </Grid>
         </Box>
-        <ActivitiesOverview
-          campaignId={parseInt(campId)}
-          orgId={parseInt(orgId)}
-        />
+        <Suspense>
+          <ActivitiesOverview
+            campaignId={parseInt(campId)}
+            orgId={parseInt(orgId)}
+          />
+        </Suspense>
       </>
     </>
   );
