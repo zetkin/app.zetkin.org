@@ -2,14 +2,14 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import { tagAssigned, tagUnassigned } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
-interface UseTagMutationReturn {
+interface UseTagMutationsReturn {
   assignToPerson: (personId: number, value?: string) => void;
   removeFromPerson: (personId: number) => Promise<void>;
 }
-export default function useTagMutation(
+export default function useTagMutations(
   orgId: number,
   tagId: number
-): UseTagMutationReturn {
+): UseTagMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 

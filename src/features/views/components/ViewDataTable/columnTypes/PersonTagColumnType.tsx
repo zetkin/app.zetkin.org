@@ -12,7 +12,7 @@ import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
-import useTagMutation from 'features/tags/hooks/useTagMutation';
+import useTagMutations from 'features/tags/hooks/useTagMutations';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -124,7 +124,7 @@ const Cell: FC<{
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
   const { tagFuture } = useTag(orgId, tagId);
-  const { assignToPerson, removeFromPerson } = useTagMutation(orgId, tagId);
+  const { assignToPerson, removeFromPerson } = useTagMutations(orgId, tagId);
 
   const styles = useStyles();
 
