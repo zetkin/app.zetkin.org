@@ -1,8 +1,7 @@
 import messageIds from '../l10n/messageIds';
-import SurveyDataModel from '../models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import useSurvey from '../hooks/useSurvey';
+import useSurveyMutations from '../hooks/useSurveyMutations';
 import ZUICard from 'zui/ZUICard';
 import { Box, Switch } from '@mui/material';
 
@@ -14,8 +13,8 @@ const SurveySuborgsCard = ({
   surveyId: number;
 }) => {
   const messages = useMessages(messageIds);
-  const model = useModel((env) => new SurveyDataModel(env, orgId, surveyId));
   const { data } = useSurvey(orgId, surveyId);
+  const { updateSurvey } = useSurveyMutations(orgId, surveyId);
   const orgAccess = data?.org_access === 'sameorg' ? false : true;
 
   return (
@@ -27,8 +26,8 @@ const SurveySuborgsCard = ({
             checked={orgAccess}
             onChange={(ev) =>
               ev.target.checked
-                ? model.updateSurveyAccess('suborgs')
-                : model.updateSurveyAccess('sameorg')
+                ? updateSurvey({ org_access: 'suborgs' })
+                : updateSurvey({ org_access: 'sameorg' })
             }
           />
         }

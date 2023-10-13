@@ -110,17 +110,6 @@ export default class SurveyDataModel extends ModelBase {
     }
   }
 
-  setDates(published: string | null, expires: string | null): void {
-    this._repo.updateSurvey(this._orgId, this._surveyId, {
-      expires: expires,
-      published: published,
-    });
-  }
-
-  setTitle(title: string) {
-    this._repo.updateSurvey(this._orgId, this._surveyId, { title });
-  }
-
   get surveyIsEmpty(): boolean {
     const { data } = this.getElements();
 
@@ -161,11 +150,5 @@ export default class SurveyDataModel extends ModelBase {
 
   updateOptionOrder(elemId: number, ids: (string | number)[]) {
     this._repo.updateOptionOrder(this._orgId, this._surveyId, elemId, ids);
-  }
-
-  updateSurveyAccess(access: 'sameorg' | 'suborgs') {
-    this._repo.updateSurvey(this._orgId, this._surveyId, {
-      org_access: access,
-    });
   }
 }

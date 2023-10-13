@@ -4,6 +4,7 @@ import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import useSurvey from '../hooks/useSurvey';
+import useSurveyMutations from '../hooks/useSurveyMutations';
 import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -34,6 +35,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
   const dataFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const { updateSurvey } = useSurveyMutations(
+    parseInt(orgId),
+    parseInt(surveyId)
+  );
   const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
@@ -63,7 +68,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         <ZUIDateRangePicker
           endDate={dataFuture.data?.expires || null}
           onChange={(startDate, endDate) => {
-            model.setDates(startDate, endDate);
+            updateSurvey({ expires: endDate, published: startDate });
           }}
           startDate={dataFuture.data?.published || null}
         />
@@ -139,7 +144,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
             return (
               <ZUIEditTextinPlace
                 onChange={(val) => {
-                  model.setTitle(val);
+                  updateSurvey({ title: val });
                 }}
                 value={data.title}
               />
