@@ -5,19 +5,6 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
-  ELEMENT_TYPE,
-  ZetkinOptionsQuestion,
-  ZetkinSurvey,
-  ZetkinSurveyElement,
-  ZetkinSurveyElementOrder,
-  ZetkinSurveyExtended,
-  ZetkinSurveyOption,
-  ZetkinSurveyPostBody,
-  ZetkinSurveyTextElement,
-  ZetkinTextQuestion,
-} from 'utils/types/zetkin';
-import {
-  elementAdded,
   elementDeleted,
   elementOptionAdded,
   elementOptionDeleted,
@@ -37,25 +24,15 @@ import {
   surveyUpdated,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-
-export type ZetkinSurveyElementPostBody =
-  | Partial<Omit<ZetkinSurveyTextElement, 'id'>>
-  | ZetkinSurveyTextQuestionElementPostBody
-  | ZetkinSurveyOptionsQuestionElementPostBody;
-
-type ZetkinSurveyTextQuestionElementPostBody = {
-  hidden: boolean;
-  question: Omit<ZetkinTextQuestion, 'required'>;
-  type: ELEMENT_TYPE.QUESTION;
-};
-
-type ZetkinSurveyOptionsQuestionElementPostBody = {
-  hidden: boolean;
-  question: Omit<ZetkinOptionsQuestion, 'required' | 'options'> & {
-    options?: string[];
-  };
-  type: ELEMENT_TYPE.QUESTION;
-};
+import {
+  ZetkinSurvey,
+  ZetkinSurveyElement,
+  ZetkinSurveyElementOrder,
+  ZetkinSurveyExtended,
+  ZetkinSurveyOption,
+  ZetkinSurveyPostBody,
+  ZetkinTextQuestion,
+} from 'utils/types/zetkin';
 
 export type ZetkinSurveyElementPatchBody =
   | ZetkinSurveyTextElementPatchBody
@@ -88,22 +65,6 @@ export type OptionsQuestionPatchBody = {
 export default class SurveysRepo {
   private _apiClient: IApiClient;
   private _store: Store;
-
-  async addElement(
-    orgId: number,
-    surveyId: number,
-    data: ZetkinSurveyElementPostBody
-  ) {
-    return await this._apiClient
-      .post<ZetkinSurveyElement, ZetkinSurveyElementPostBody>(
-        `/api/orgs/${orgId}/surveys/${surveyId}/elements`,
-        data
-      )
-      .then((newElement) => {
-        this._store.dispatch(elementAdded([surveyId, newElement]));
-        return newElement;
-      });
-  }
 
   async addElementOption(orgId: number, surveyId: number, elemId: number) {
     const option = await this._apiClient.post<ZetkinSurveyOption>(

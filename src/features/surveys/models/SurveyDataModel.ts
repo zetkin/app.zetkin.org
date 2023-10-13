@@ -5,7 +5,6 @@ import { ModelBase } from 'core/models';
 import SurveysRepo, {
   OptionsQuestionPatchBody,
   ZetkinSurveyElementPatchBody,
-  ZetkinSurveyElementPostBody,
 } from '../repos/SurveysRepo';
 import {
   ZetkinSurvey,
@@ -17,10 +16,6 @@ export default class SurveyDataModel extends ModelBase {
   private _orgId: number;
   private _repo: SurveysRepo;
   private _surveyId: number;
-
-  addElement(element: ZetkinSurveyElementPostBody) {
-    this._repo.addElement(this._orgId, this._surveyId, element);
-  }
 
   addElementOption(elemId: number) {
     this._repo.addElementOption(this._orgId, this._surveyId, elemId);

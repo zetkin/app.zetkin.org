@@ -17,11 +17,18 @@ import {
 } from 'utils/types/zetkin';
 
 interface SurveyEditorProps {
+  orgId: number;
+  surveyId: number;
   model: SurveyDataModel;
   readOnly: boolean;
 }
 
-const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
+const SurveyEditor: FC<SurveyEditorProps> = ({
+  model,
+  orgId,
+  readOnly,
+  surveyId,
+}) => {
   const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
     number | undefined
   >();
@@ -140,7 +147,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
           );
         }}
       </ZUIFuture>
-      {!readOnly && <AddBlocks model={model} />}
+      {!readOnly && <AddBlocks orgId={orgId} surveyId={surveyId} />}
     </>
   );
 };

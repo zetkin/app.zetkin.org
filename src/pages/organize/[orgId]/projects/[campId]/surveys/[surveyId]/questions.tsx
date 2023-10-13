@@ -70,7 +70,9 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
               <Grid item md={8} xs={12}>
                 <SurveyEditor
                   model={model}
+                  orgId={parseInt(orgId)}
                   readOnly={receivingSubmissions && !forceEditable}
+                  surveyId={parseInt(surveyId)}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
