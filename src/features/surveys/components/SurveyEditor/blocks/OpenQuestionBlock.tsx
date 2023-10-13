@@ -13,6 +13,7 @@ import DeleteHideButtons from '../DeleteHideButtons';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
+import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
@@ -25,7 +26,9 @@ interface OpenQuestionBlockProps {
   model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
+  orgId: number;
   readOnly: boolean;
+  surveyId: number;
 }
 
 enum FIELDTYPE {
@@ -39,10 +42,13 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   model,
   onEditModeEnter,
   onEditModeExit,
+  orgId,
   readOnly,
+  surveyId,
 }) => {
   const elemQuestion = element.question;
   const messages = useMessages(messageIds);
+  const { updateElement } = useSurveyMutations(orgId, surveyId);
 
   const [fieldType, setFieldType] = useState(
     elemQuestion.response_config.multiline === true
@@ -67,7 +73,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
       onEditModeExit,
       readOnly,
       save: () => {
-        model.updateOpenQuestionBlock(element.id, {
+        updateElement(element.id, {
           question: {
             description: description,
             question: title,
@@ -156,7 +162,14 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           value=""
         />
         <Box display="flex" justifyContent="end" m={2}>
-          {!readOnly && <DeleteHideButtons element={element} model={model} />}
+          {!readOnly && (
+            <DeleteHideButtons
+              element={element}
+              model={model}
+              orgId={orgId}
+              surveyId={surveyId}
+            />
+          )}
         </Box>
       </Box>
     </ClickAwayListener>

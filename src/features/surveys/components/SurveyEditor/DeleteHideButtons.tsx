@@ -5,23 +5,32 @@ import { FC, useContext } from 'react';
 import messageIds from 'features/surveys/l10n/messageIds';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
+import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyElement } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface DeleteHideButtonsProps {
   element: ZetkinSurveyElement;
   model: SurveyDataModel;
+  orgId: number;
+  surveyId: number;
 }
 
-const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({ element, model }) => {
+const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({
+  element,
+  model,
+  orgId,
+  surveyId,
+}) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { updateElement } = useSurveyMutations(orgId, surveyId);
   const messages = useMessages(messageIds);
 
   return (
     <Box display="flex">
       <IconButton
         onClick={(ev) => {
-          model.updateElement(element.id, { hidden: !element.hidden });
+          updateElement(element.id, { hidden: !element.hidden });
           ev.stopPropagation();
         }}
       >

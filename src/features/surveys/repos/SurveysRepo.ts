@@ -13,7 +13,6 @@ import {
   elementsLoad,
   elementsLoaded,
   elementsReordered,
-  elementUpdated,
   surveyCreate,
   surveyCreated,
   surveyLoad,
@@ -185,19 +184,6 @@ export default class SurveysRepo {
           `/api/orgs/${orgId}/surveys/`
         ),
     });
-  }
-
-  async updateElement(
-    orgId: number,
-    surveyId: number,
-    elemId: number,
-    data: ZetkinSurveyElementPatchBody
-  ) {
-    const element = await this._apiClient.patch<
-      ZetkinSurveyElement,
-      ZetkinSurveyElementPatchBody
-    >(`/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`, data);
-    this._store.dispatch(elementUpdated([surveyId, elemId, element]));
   }
 
   async updateElementOption(

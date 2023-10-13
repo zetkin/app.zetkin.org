@@ -82,7 +82,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                               onEditModeExit={() => {
                                 setIdOfBlockInEditMode(undefined);
                               }}
+                              orgId={orgId}
                               readOnly={readOnly}
+                              surveyId={surveyId}
                             />
                           </BlockWrapper>
                         );
@@ -107,7 +109,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                               onEditModeExit={() => {
                                 setIdOfBlockInEditMode(undefined);
                               }}
+                              orgId={orgId}
                               readOnly={readOnly}
+                              surveyId={surveyId}
                             />
                           </BlockWrapper>
                         );
@@ -129,7 +133,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                             onEditModeExit={() => {
                               setIdOfBlockInEditMode(undefined);
                             }}
+                            orgId={orgId}
                             readOnly={readOnly}
+                            surveyId={surveyId}
                           />
                         </BlockWrapper>
                       );

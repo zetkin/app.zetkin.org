@@ -24,6 +24,7 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
+import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
@@ -36,7 +37,9 @@ interface ChoiceQuestionBlockProps {
   model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
+  orgId: number;
   readOnly: boolean;
+  surveyId: number;
 }
 
 const widgetTypes = {
@@ -62,7 +65,9 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   model,
   onEditModeEnter,
   onEditModeExit,
+  orgId,
   readOnly,
+  surveyId,
 }) => {
   const elemQuestion = element.question;
   const messages = useMessages(messageIds);
@@ -77,6 +82,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [widgetType, setWidgetType] = useState<WidgetTypeValue>(
     elemQuestion.response_config.widget_type || 'checkbox'
   );
+  const { updateElement } = useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
     setOptions(elemQuestion.options || []);
@@ -110,7 +116,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       onEditModeExit,
       readOnly,
       save: () => {
-        model.updateOptionsQuestion(element.id, {
+        updateElement(element.id, {
           question: {
             description: description,
             question: title,
@@ -367,7 +373,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               </>
             )}
           </Box>
-          {!readOnly && <DeleteHideButtons element={element} model={model} />}
+          {!readOnly && (
+            <DeleteHideButtons
+              element={element}
+              model={model}
+              orgId={orgId}
+              surveyId={surveyId}
+            />
+          )}
         </Box>
       </Box>
     </ClickAwayListener>

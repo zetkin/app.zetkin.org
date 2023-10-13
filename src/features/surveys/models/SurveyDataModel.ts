@@ -2,15 +2,8 @@ import dayjs from 'dayjs';
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import SurveysRepo, {
-  OptionsQuestionPatchBody,
-  ZetkinSurveyElementPatchBody,
-} from '../repos/SurveysRepo';
-import {
-  ZetkinSurvey,
-  ZetkinSurveyElement,
-  ZetkinSurveyTextElement,
-} from 'utils/types/zetkin';
+import SurveysRepo from '../repos/SurveysRepo';
+import { ZetkinSurvey, ZetkinSurveyElement } from 'utils/types/zetkin';
 
 export default class SurveyDataModel extends ModelBase {
   private _orgId: number;
@@ -142,10 +135,6 @@ export default class SurveyDataModel extends ModelBase {
     return data.length ? false : true;
   }
 
-  toggleElementHidden(elemId: number, hidden: boolean) {
-    this._repo.updateElement(this._orgId, this._surveyId, elemId, { hidden });
-  }
-
   unpublish(): void {
     const { data } = this.getData();
     if (!data) {
@@ -158,10 +147,6 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       expires: today,
     });
-  }
-
-  updateElement(elemId: number, data: ZetkinSurveyElementPatchBody) {
-    this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
   }
 
   updateElementOption(elemId: number, optionId: number, text: string) {
@@ -178,38 +163,13 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.updateElementOrder(this._orgId, this._surveyId, ids);
   }
 
-  updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {
-    this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
-  }
-
   updateOptionOrder(elemId: number, ids: (string | number)[]) {
     this._repo.updateOptionOrder(this._orgId, this._surveyId, elemId, ids);
-  }
-
-  updateOptionsQuestion(
-    elemId: number,
-    optionsQuestion: OptionsQuestionPatchBody
-  ) {
-    this._repo.updateElement(
-      this._orgId,
-      this._surveyId,
-      elemId,
-      optionsQuestion
-    );
   }
 
   updateSurveyAccess(access: 'sameorg' | 'suborgs') {
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       org_access: access,
-    });
-  }
-
-  updateTextBlock(
-    elemId: number,
-    textBlock: ZetkinSurveyTextElement['text_block']
-  ) {
-    this._repo.updateElement(this._orgId, this._surveyId, elemId, {
-      text_block: textBlock,
     });
   }
 }
