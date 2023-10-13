@@ -7,6 +7,7 @@ import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIReorderable from 'zui/ZUIReorderable';
 import {
@@ -34,9 +35,10 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
   >();
 
   const lengthRef = useRef<number>();
+  const elementsFuture = useSurveyElements(orgId, surveyId);
 
   useEffect(() => {
-    const elements = model.getElements().data;
+    const elements = elementsFuture.data;
     if (elements) {
       // If the previous length is null, it's because it only now loaded for the
       // first time and the length has not really been read before.
@@ -50,11 +52,11 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
 
       lengthRef.current = elements.length;
     }
-  }, [model.getElements().data]);
+  }, [elementsFuture.data]);
 
   return (
     <>
-      <ZUIFuture future={model.getElements()}>
+      <ZUIFuture future={elementsFuture}>
         {(elements) => {
           return (
             <Box paddingBottom={elements.length ? 4 : 0}>

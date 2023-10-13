@@ -1,9 +1,8 @@
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
-import SurveyDataModel from '../models/SurveyDataModel';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
-import useModel from 'core/useModel';
 import useSurvey from '../hooks/useSurvey';
+import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
 import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
@@ -39,12 +38,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     parseInt(orgId),
     parseInt(surveyId)
   );
-  const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
-  const model = useModel(
-    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
+  const { surveyIsEmpty, ...elementsFuture } = useSurveyElements(
+    parseInt(orgId),
+    parseInt(surveyId)
   );
-
-  const hasQuestions = !!model.getElements().data?.length;
+  const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
 
   return (
     <TabbedLayout
@@ -55,7 +53,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         ) : (
           <Button
-            disabled={!hasQuestions}
+            disabled={surveyIsEmpty}
             onClick={() => publish()}
             variant="contained"
           >
@@ -82,7 +80,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           <Box display="flex" marginX={1}>
             <ZUIFutures
               futures={{
-                elements: model.getElements(),
+                elements: elementsFuture,
                 stats: statsFuture,
               }}
             >

@@ -9,8 +9,6 @@ import {
   elementOptionDeleted,
   elementOptionsReordered,
   elementOptionUpdated,
-  elementsLoad,
-  elementsLoaded,
   elementsReordered,
   surveyCreate,
   surveyCreated,
@@ -22,7 +20,6 @@ import {
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
   ZetkinSurvey,
-  ZetkinSurveyElement,
   ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
@@ -139,27 +136,6 @@ export default class SurveysRepo {
     } else {
       return new RemoteItemFuture(item);
     }
-  }
-
-  getSurveyElements(
-    orgId: number,
-    surveyId: number
-  ): IFuture<ZetkinSurveyElement[]> {
-    const state = this._store.getState();
-    return loadListIfNecessary<
-      ZetkinSurveyElement,
-      number,
-      [number, ZetkinSurveyElement[]]
-    >(state.surveys.elementsBySurveyId[surveyId], this._store.dispatch, {
-      actionOnLoad: () => elementsLoad(surveyId),
-      actionOnSuccess: (elements) => elementsLoaded([surveyId, elements]),
-      loader: async () => {
-        const survey = await this._apiClient.get<ZetkinSurveyExtended>(
-          `/api/orgs/${orgId}/surveys/${surveyId}`
-        );
-        return survey.elements;
-      },
-    });
   }
 
   getSurveys(orgId: number): IFuture<ZetkinSurvey[]> {

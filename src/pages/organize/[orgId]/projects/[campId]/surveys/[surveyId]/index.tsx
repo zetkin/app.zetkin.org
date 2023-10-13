@@ -7,13 +7,12 @@ import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useSurvey from 'features/surveys/hooks/useSurvey';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import { ZetkinSurvey } from 'utils/types/zetkin';
 import useSurveyState, {
   SurveyState,
@@ -60,12 +59,13 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   orgId,
   surveyId,
 }) => {
-  const model = useModel(
-    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
-  );
   const onServer = useServerSide();
   const { data: survey } = useSurvey(parseInt(orgId), parseInt(surveyId));
   const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
+  const { surveyIsEmpty } = useSurveyElements(
+    parseInt(orgId),
+    parseInt(surveyId)
+  );
   const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   if (onServer) {
@@ -84,7 +84,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
         <title>{survey?.title}</title>
       </Head>
       <Box>
-        {model.surveyIsEmpty ? (
+        {surveyIsEmpty ? (
           <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
         ) : (
           <Grid container spacing={2}>
