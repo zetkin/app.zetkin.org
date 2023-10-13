@@ -11,7 +11,6 @@ import {
 
 import DeleteHideButtons from '../DeleteHideButtons';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
@@ -23,7 +22,6 @@ import messageIds from 'features/surveys/l10n/messageIds';
 interface OpenQuestionBlockProps {
   editable: boolean;
   element: ZetkinSurveyTextQuestionElement;
-  model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
   orgId: number;
@@ -39,7 +37,6 @@ enum FIELDTYPE {
 const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   editable,
   element,
-  model,
   onEditModeEnter,
   onEditModeExit,
   orgId,
@@ -165,7 +162,6 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           {!readOnly && (
             <DeleteHideButtons
               element={element}
-              model={model}
               orgId={orgId}
               surveyId={surveyId}
             />

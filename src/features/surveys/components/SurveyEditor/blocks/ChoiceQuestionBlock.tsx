@@ -376,7 +376,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           {!readOnly && (
             <DeleteHideButtons
               element={element}
-              model={model}
               orgId={orgId}
               surveyId={surveyId}
             />

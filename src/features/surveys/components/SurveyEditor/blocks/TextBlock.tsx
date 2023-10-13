@@ -3,7 +3,6 @@ import { FC, useState } from 'react';
 
 import DeleteHideButtons from '../DeleteHideButtons';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
@@ -14,7 +13,6 @@ import messageIds from 'features/surveys/l10n/messageIds';
 interface TextBlockProps {
   editable: boolean;
   element: ZetkinSurveyTextElement;
-  model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
   orgId: number;
@@ -25,7 +23,6 @@ interface TextBlockProps {
 const TextBlock: FC<TextBlockProps> = ({
   editable,
   element,
-  model,
   onEditModeEnter,
   onEditModeExit,
   orgId,
@@ -78,7 +75,6 @@ const TextBlock: FC<TextBlockProps> = ({
           {!readOnly && (
             <DeleteHideButtons
               element={element}
-              model={model}
               orgId={orgId}
               surveyId={surveyId}
             />

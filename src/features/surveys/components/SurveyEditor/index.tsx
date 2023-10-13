@@ -75,7 +75,6 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                             <OpenQuestionBlock
                               editable={elem.id == idOfBlockInEditMode}
                               element={elem as ZetkinSurveyTextQuestionElement}
-                              model={model}
                               onEditModeEnter={() =>
                                 setIdOfBlockInEditMode(elem.id)
                               }
@@ -126,7 +125,6 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                           <TextBlock
                             editable={elem.id == idOfBlockInEditMode}
                             element={elem}
-                            model={model}
                             onEditModeEnter={() =>
                               setIdOfBlockInEditMode(elem.id)
                             }

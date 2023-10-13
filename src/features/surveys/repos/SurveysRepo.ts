@@ -5,7 +5,6 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
-  elementDeleted,
   elementOptionAdded,
   elementOptionDeleted,
   elementOptionsReordered,
@@ -125,13 +124,6 @@ export default class SurveysRepo {
       `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`
     );
     this._store.dispatch(elementOptionDeleted([surveyId, elemId, optionId]));
-  }
-
-  async deleteSurveyElement(orgId: number, surveyId: number, elemId: number) {
-    await this._apiClient.delete(
-      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`
-    );
-    this._store.dispatch(elementDeleted([surveyId, elemId]));
   }
 
   getSurvey(orgId: number, id: number): IFuture<ZetkinSurvey> {
