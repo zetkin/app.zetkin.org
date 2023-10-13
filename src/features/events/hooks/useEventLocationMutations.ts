@@ -1,7 +1,8 @@
 import { ZetkinLocation } from 'utils/types/zetkin';
-import { ZetkinLocationPatchBody } from '../repo/EventsRepo';
 import { locationAdded, locationUpdate, locationUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
+
+type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 type useEventLocationMutationsReturn = {
   addLocation: (newLocation: Partial<ZetkinLocation>) => void;
