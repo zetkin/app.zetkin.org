@@ -2,29 +2,24 @@ import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 
+import { ACTIVITIES } from 'features/campaigns/hooks/useActivityOverview';
 import ActivityList from 'features/campaigns/components/ActivityList';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import useActivityArchive from 'features/campaigns/hooks/useActivityArchive';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import useCampaignActivities, {
-  ACTIVITIES,
-} from 'features/campaigns/hooks/useCampaignActivities';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
-  async (ctx) => {
-    const { campId, orgId } = ctx.params!;
-
+  async () => {
     return {
-      props: {
-        campId,
-        orgId,
-      },
+      props: {},
     };
   },
   {
@@ -33,21 +28,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface CampaignArchivePageProps {
-  campId: string;
-  orgId: string;
-}
-
-const CampaignArchivePage: PageWithLayout<CampaignArchivePageProps> = ({
-  campId,
-  orgId,
-}) => {
+const CampaignArchivePage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const { archivedActivities } = useCampaignActivities(
-    parseInt(orgId),
-    parseInt(campId)
-  );
+  const { orgId, campId } = useNumericRouteParams();
+  const archivedActivities = useActivityArchive(orgId, campId);
   const [searchString, setSearchString] = useState('');
 
   const [filters, setFilters] = useState<ACTIVITIES[]>([
@@ -93,7 +78,7 @@ const CampaignArchivePage: PageWithLayout<CampaignArchivePageProps> = ({
                 <ActivityList
                   allActivities={data}
                   filters={filters}
-                  orgId={parseInt(orgId)}
+                  orgId={orgId}
                   searchString={searchString}
                 />
               </Grid>

@@ -7,16 +7,17 @@ import FilterActivities from 'features/campaigns/components/ActivityList/FilterA
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useActivityArchive from 'features/campaigns/hooks/useActivityArchive';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ChangeEvent, useState } from 'react';
-import useCampaignActivities, {
+import {
   ACTIVITIES,
   CampaignActivity,
 } from 'features/campaigns/hooks/useCampaignActivities';
+import { ChangeEvent, useState } from 'react';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -34,7 +35,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const { orgId, campId } = useNumericRouteParams();
-  const { archivedActivities } = useCampaignActivities(orgId, campId);
+  const archivedActivities = useActivityArchive(orgId, campId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
