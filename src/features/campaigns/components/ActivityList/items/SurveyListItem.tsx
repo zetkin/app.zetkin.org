@@ -3,12 +3,11 @@ import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
 import { STATUS_COLORS } from './ActivityListItem';
-import useModel from 'core/useModel';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
-import SurveyDataModel, {
+import useSurveyState, {
   SurveyState,
-} from 'features/surveys/models/SurveyDataModel';
+} from 'features/surveys/hooks/useSurveyState';
 
 interface SurveyListItemProps {
   orgId: number;
@@ -18,10 +17,8 @@ interface SurveyListItemProps {
 const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
   const statsFuture = useSurveyStats(orgId, surveyId);
   const { data } = useSurvey(orgId, surveyId);
+  const state = useSurveyState(orgId, surveyId);
   const stats = statsFuture.data;
-  const dataModel = useModel(
-    (env) => new SurveyDataModel(env, orgId, surveyId)
-  );
 
   if (!data) {
     return null;
@@ -37,7 +34,6 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
     }
   }
 
-  const state = dataModel.state;
   let color = STATUS_COLORS.GRAY;
   if (state === SurveyState.PUBLISHED) {
     color = STATUS_COLORS.GREEN;

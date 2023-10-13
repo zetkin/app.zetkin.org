@@ -1,4 +1,5 @@
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
+import SurveyDataModel from '../models/SurveyDataModel';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
@@ -13,7 +14,7 @@ import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Box, Button } from '@mui/material';
 import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
-import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
+import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 
 import messageIds from '../l10n/messageIds';
 
@@ -33,6 +34,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
   const dataFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
@@ -42,7 +44,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={
-        model.state == SurveyState.PUBLISHED ? (
+        state == SurveyState.PUBLISHED ? (
           <Button onClick={() => model.unpublish()} variant="outlined">
             <Msg id={messageIds.layout.actions.unpublish} />
           </Button>
@@ -70,7 +72,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            <SurveyStatusChip state={model.state} />
+            <SurveyStatusChip state={state} />
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFutures

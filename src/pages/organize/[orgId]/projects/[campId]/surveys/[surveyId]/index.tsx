@@ -7,6 +7,7 @@ import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
+import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
@@ -14,9 +15,9 @@ import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import { ZetkinSurvey } from 'utils/types/zetkin';
-import SurveyDataModel, {
+import useSurveyState, {
   SurveyState,
-} from 'features/surveys/models/SurveyDataModel';
+} from 'features/surveys/hooks/useSurveyState';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -64,13 +65,14 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   );
   const onServer = useServerSide();
   const { data: survey } = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
   const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   if (onServer) {
     return null;
   }
 
-  const isOpen = model.state === SurveyState.PUBLISHED;
+  const isOpen = state === SurveyState.PUBLISHED;
 
   if (!survey) {
     return null;
