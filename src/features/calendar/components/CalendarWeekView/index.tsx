@@ -25,8 +25,8 @@ import { scrollToEarliestEvent } from './utils';
 import theme from 'theme';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { ZetkinEventPostBody } from 'features/events/repo/EventsRepo';
 import { useAppDispatch, useEnv, useNumericRouteParams } from 'core/hooks';
+import { ZetkinEventPostBody } from 'features/events/hooks/useEventMutations';
 
 dayjs.extend(isoWeek);
 
