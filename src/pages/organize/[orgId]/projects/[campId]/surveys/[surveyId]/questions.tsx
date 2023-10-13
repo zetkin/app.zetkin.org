@@ -10,6 +10,7 @@ import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyEditor from 'features/surveys/components/SurveyEditor';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import useModel from 'core/useModel';
+import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -42,6 +43,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   surveyId,
 }) => {
   const [forceEditable, setForceEditable] = useState(false);
+  const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
   const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
@@ -54,7 +56,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{surveyFuture.data?.title}</title>
       </Head>
       <ZUIFuture future={statsFuture}>
         {(stats) => {

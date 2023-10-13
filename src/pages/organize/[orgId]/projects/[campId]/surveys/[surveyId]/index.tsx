@@ -12,6 +12,7 @@ import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import useSurvey from 'features/surveys/hooks/useSurvey';
 import { ZetkinSurvey } from 'utils/types/zetkin';
 import SurveyDataModel, {
   SurveyState,
@@ -62,13 +63,13 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
   const onServer = useServerSide();
+  const { data: survey } = useSurvey(parseInt(orgId), parseInt(surveyId));
   const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   if (onServer) {
     return null;
   }
 
-  const { data: survey } = model.getData();
   const isOpen = model.state === SurveyState.PUBLISHED;
 
   if (!survey) {
@@ -78,7 +79,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{survey?.title}</title>
       </Head>
       <Box>
         {model.surveyIsEmpty ? (

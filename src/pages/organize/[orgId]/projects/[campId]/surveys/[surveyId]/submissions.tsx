@@ -6,11 +6,10 @@ import { useRouter } from 'next/router';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionWarningAlert from 'features/surveys/components/SubmissionWarningAlert';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
 import SurveySuborgsCard from 'features/surveys/components/SurveySuborgsCard';
-import useModel from 'core/useModel';
+import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveySubmissions from 'features/surveys/hooks/useSurveySubmissions';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -47,9 +46,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   orgId,
   surveyId,
 }) => {
-  const model = useModel(
-    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
-  );
+  const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
   const submissionsFuture = useSurveySubmissions(
     parseInt(orgId),
     parseInt(surveyId)
@@ -61,7 +58,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{surveyFuture.data?.title}</title>
       </Head>
       <Grid container spacing={2}>
         <Grid item md={8} sm={12} xs={12}>

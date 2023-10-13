@@ -4,6 +4,7 @@ import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 import ActivityListItemWithStats from './ActivityListItemWithStats';
 import { STATUS_COLORS } from './ActivityListItem';
 import useModel from 'core/useModel';
+import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
 import SurveyDataModel, {
   SurveyState,
@@ -16,11 +17,11 @@ interface SurveyListItemProps {
 
 const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
   const statsFuture = useSurveyStats(orgId, surveyId);
+  const { data } = useSurvey(orgId, surveyId);
   const stats = statsFuture.data;
   const dataModel = useModel(
     (env) => new SurveyDataModel(env, orgId, surveyId)
   );
-  const data = dataModel.getData().data;
 
   if (!data) {
     return null;
