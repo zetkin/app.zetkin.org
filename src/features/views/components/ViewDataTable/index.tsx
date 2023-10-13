@@ -114,7 +114,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   ) => {
     NProgress.start();
     try {
-      viewGridHook.updateColumn(id, data);
+      await viewGridHook.updateColumn(id, data);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
     } finally {
