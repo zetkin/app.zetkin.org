@@ -18,8 +18,6 @@ import {
   surveyLoaded,
   surveysLoad,
   surveysLoaded,
-  surveyUpdate,
-  surveyUpdated,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
@@ -223,21 +221,5 @@ export default class SurveysRepo {
     );
 
     this._store.dispatch(elementOptionsReordered([surveyId, elemId, newOrder]));
-  }
-
-  updateSurvey(
-    orgId: number,
-    surveyId: number,
-    data: Partial<Omit<ZetkinSurvey, 'id'>>
-  ) {
-    this._store.dispatch(surveyUpdate([surveyId, Object.keys(data)]));
-    this._apiClient
-      .patch<ZetkinSurveyExtended>(
-        `/api/orgs/${orgId}/surveys/${surveyId}`,
-        data
-      )
-      .then((survey) => {
-        this._store.dispatch(surveyUpdated(survey));
-      });
   }
 }

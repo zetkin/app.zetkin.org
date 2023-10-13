@@ -35,7 +35,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
   const dataFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
-  const { updateSurvey } = useSurveyMutations(
+  const { publish, unpublish, updateSurvey } = useSurveyMutations(
     parseInt(orgId),
     parseInt(surveyId)
   );
@@ -50,13 +50,13 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     <TabbedLayout
       actionButtons={
         state == SurveyState.PUBLISHED ? (
-          <Button onClick={() => model.unpublish()} variant="outlined">
+          <Button onClick={() => unpublish()} variant="outlined">
             <Msg id={messageIds.layout.actions.unpublish} />
           </Button>
         ) : (
           <Button
             disabled={!hasQuestions}
-            onClick={() => model.publish()}
+            onClick={() => publish()}
             variant="contained"
           >
             <Msg id={messageIds.layout.actions.publish} />
