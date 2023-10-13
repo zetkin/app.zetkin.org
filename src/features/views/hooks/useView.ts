@@ -13,11 +13,9 @@ export default function useView(
   const views = useAppSelector((state) => state.views);
   const item = views.viewList.items.find((item) => item.id == viewId);
 
-  const viewFuture = loadItemIfNecessary(item, dispatch, {
+  return loadItemIfNecessary(item, dispatch, {
     actionOnLoad: () => viewLoad(viewId),
     actionOnSuccess: (view) => viewLoaded(view),
     loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
   });
-
-  return viewFuture;
 }
