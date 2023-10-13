@@ -1,14 +1,9 @@
 import EventsRepo from 'features/events/repo/EventsRepo';
+import { getUTCDateWithoutTime } from 'utils/dateUtils';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import { useEnv } from 'core/hooks';
 import useTasks from 'features/tasks/hooks/useTasks';
-import {
-  dateIsAfter,
-  dateIsBefore,
-  getUTCDateWithoutTime,
-  isSameDate,
-} from 'utils/dateUtils';
 import {
   ErrorFuture,
   IFuture,
@@ -68,7 +63,6 @@ export type ActivityOverview = {
 
 interface UseCampaignActivitiesReturn {
   archivedActivities: IFuture<CampaignActivity[]>;
-  activityOverview: IFuture<ActivityOverview>;
   campaignActivities: IFuture<CampaignActivity[]>;
   currentActivities: IFuture<CampaignActivity[]>;
 }
@@ -82,97 +76,6 @@ export default function useCampaignActivities(
   const surveysRepo = new SurveysRepo(env);
   const callAssignmentsFuture = useCallAssignments(orgId);
   const tasksFuture = useTasks(orgId);
-
-  const getActivityOverview = (): IFuture<ActivityOverview> => {
-    const activitiesFuture = campaignId
-      ? getCampaignActivities()
-      : getCurrentActivities();
-
-    if (activitiesFuture.isLoading) {
-      return new LoadingFuture();
-    } else if (activitiesFuture.error) {
-      return new ErrorFuture(activitiesFuture.error);
-    }
-
-    const overview: ActivityOverview = {
-      alsoThisWeek: [],
-      today: [],
-      tomorrow: [],
-    };
-
-    const todayDate = new Date();
-    const tomorrowDate = new Date();
-    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-
-    if (activitiesFuture.data) {
-      const currentActivities = activitiesFuture.data;
-
-      overview.today = currentActivities.filter((activity) => {
-        if (activity.kind == ACTIVITIES.EVENT) {
-          const startDate = new Date(activity.data.start_time);
-          return isSameDate(startDate, todayDate);
-        } else {
-          return (
-            (activity.visibleFrom &&
-              isSameDate(activity.visibleFrom, todayDate)) ||
-            (activity.visibleUntil &&
-              isSameDate(activity.visibleUntil, todayDate))
-          );
-        }
-      });
-
-      overview.tomorrow = currentActivities.filter((activity) => {
-        if (activity.kind == ACTIVITIES.EVENT) {
-          const startDate = new Date(activity.data.start_time);
-          return isSameDate(startDate, tomorrowDate);
-        } else {
-          return (
-            (activity.visibleFrom &&
-              isSameDate(activity.visibleFrom, tomorrowDate)) ||
-            (activity.visibleUntil &&
-              isSameDate(activity.visibleUntil, tomorrowDate))
-          );
-        }
-      });
-
-      const startOfToday = new Date(new Date().toISOString().slice(0, 10));
-      const weekFromNow = new Date(startOfToday);
-      weekFromNow.setDate(startOfToday.getDate() + 8);
-
-      overview.alsoThisWeek = currentActivities.filter((activity) => {
-        if (
-          overview.today.includes(activity) ||
-          overview.tomorrow.includes(activity)
-        ) {
-          return false;
-        }
-
-        if (activity.kind == ACTIVITIES.EVENT) {
-          const startDate = new Date(activity.data.start_time);
-          const endDate = new Date(activity.data.end_time);
-          const startsDuringWeek =
-            dateIsAfter(startDate, startOfToday) &&
-            dateIsBefore(startDate, weekFromNow);
-          const isOnGoing =
-            dateIsBefore(startDate, startOfToday) &&
-            dateIsAfter(endDate, weekFromNow);
-          const endsDuringWeek =
-            dateIsBefore(startDate, startOfToday) &&
-            dateIsBefore(endDate, weekFromNow);
-
-          return startsDuringWeek || isOnGoing || endsDuringWeek;
-        } else {
-          return (
-            activity.visibleFrom &&
-            activity.visibleFrom < weekFromNow &&
-            (!activity.visibleUntil || activity.visibleUntil >= startOfToday)
-          );
-        }
-      });
-    }
-
-    return new ResolvedFuture(overview);
-  };
 
   const getAllActivities = (
     campaignId?: number
@@ -303,7 +206,6 @@ export default function useCampaignActivities(
   };
 
   return {
-    activityOverview: getActivityOverview(),
     archivedActivities: getArchivedActivities(),
     campaignActivities: getCampaignActivities(),
     currentActivities: getCurrentActivities(),
