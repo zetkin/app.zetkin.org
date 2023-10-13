@@ -60,10 +60,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     orgId,
     event.id
   );
-  const { cancelEvent, deleteEvent, publishEvent } = useEventMutations(
-    orgId,
-    event.id
-  );
+  const { cancelEvent, deleteEvent, publishEvent } = useEventMutations(orgId);
   const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
 
   const dispatch = useAppDispatch();
@@ -90,7 +87,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       onSelect: () =>
         showConfirmDialog({
           onSubmit: () => {
-            deleteEvent();
+            deleteEvent(event.id);
             dispatch(eventsDeselected([event]));
             onClickAway();
           },
@@ -112,7 +109,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       onSelect: () =>
         showConfirmDialog({
           onSubmit: () => {
-            cancelEvent();
+            cancelEvent(event.id);
             onClickAway();
           },
           title: messages.eventPopper.confirmCancel(),
@@ -277,7 +274,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         {showPublishButton && (
           <Button
             onClick={() => {
-              publishEvent();
+              publishEvent(event.id);
               onClickAway();
             }}
             variant="contained"

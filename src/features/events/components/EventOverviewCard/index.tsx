@@ -46,7 +46,7 @@ type EventOverviewCardProps = {
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
-  const { updateEvent } = useEventMutations(orgId, data.id);
+  const { updateEvent } = useEventMutations(orgId);
   const locations = useEventLocation(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
   const messages = useMessages(messageIds);
@@ -76,7 +76,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
         setShowEndDate(false);
       },
       save: () => {
-        updateEvent({
+        updateEvent(data.id, {
           end_time: dayjs(endDate)
             .hour(endDate.hour())
             .minute(endDate.minute())

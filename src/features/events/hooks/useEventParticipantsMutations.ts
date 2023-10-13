@@ -28,7 +28,7 @@ export default function useEventParticipantsMutations(
 ): useEventParticipantsMutationsMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const { updateEvent } = useEventMutations(orgId, eventId);
+  const { updateEvent } = useEventMutations(orgId);
 
   const addParticipant = async (personId: number) => {
     const participant = await apiClient.put<ZetkinEventParticipant>(
@@ -87,7 +87,7 @@ export default function useEventParticipantsMutations(
   };
 
   const setReqParticipants = (reqParticipants: number) => {
-    updateEvent({
+    updateEvent(eventId, {
       num_participants_required: reqParticipants,
     });
   };

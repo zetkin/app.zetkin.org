@@ -37,10 +37,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
   const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
   const eventState = useEventState(parseInt(orgId), parseInt(eventId));
-  const { setTitle, setType } = useEventMutations(
-    parseInt(orgId),
-    parseInt(eventId)
-  );
+  const { setTitle, setType } = useEventMutations(parseInt(orgId));
 
   const { eventTypes } = useEventTypes(parseInt(orgId));
 
@@ -71,10 +68,12 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 <EventTypeAutocomplete
                   onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
-                    setType(newValue ? newValue.id : newValue);
+                    setType(currentEvent.id, newValue ? newValue.id : newValue);
                     setEditingTypeOrTitle(false);
                   }}
-                  onChangeNewOption={(newValueId) => setType(newValueId)}
+                  onChangeNewOption={(newValueId) =>
+                    setType(currentEvent.id, newValueId)
+                  }
                   onFocus={() => setEditingTypeOrTitle(true)}
                   showBorder={editingTypeOrTitle}
                   types={types}
@@ -134,7 +133,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 }}
                 onChange={(val) => {
                   setEditingTypeOrTitle(false);
-                  setTitle(val);
+                  setTitle(data.id, val);
                 }}
                 onFocus={() => setEditingTypeOrTitle(true)}
                 placeholder={

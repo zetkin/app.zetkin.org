@@ -11,12 +11,12 @@ export default function useEventContact(
   orgId: number,
   eventId: number
 ): useEventContacReturn {
-  const { updateEvent } = useEventMutations(orgId, eventId);
+  const { updateEvent } = useEventMutations(orgId);
   const { participantsFuture } = useEventParticipantsData(orgId, eventId);
   const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
 
   const removeContact = () => {
-    updateEvent({
+    updateEvent(eventId, {
       contact_id: null,
     });
   };
@@ -26,7 +26,7 @@ export default function useEventContact(
     if (!eventParticipantsList?.find((item) => item.id == contactId)) {
       await addParticipant(contactId);
     }
-    updateEvent({
+    updateEvent(eventId, {
       contact_id: contactId,
     });
   };

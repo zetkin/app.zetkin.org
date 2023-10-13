@@ -1,6 +1,5 @@
 import useEventData from './useEventData';
-import useEventMutations from './useEventMutations';
-import { ZetkinEventPostBody } from '../repo/EventsRepo';
+import useEventMutations, { ZetkinEventPostBody } from './useEventMutations';
 
 type useDuplicateEventReturn = {
   duplicateEvent: () => void;
@@ -10,7 +9,7 @@ export default function useDuplicateEvent(
   orgId: number,
   eventId: number
 ): useDuplicateEventReturn {
-  const { createEvent } = useEventMutations(orgId, eventId);
+  const { createEvent } = useEventMutations(orgId);
   const event = useEventData(orgId, eventId);
 
   const duplicateEvent = () => {
