@@ -1,7 +1,6 @@
 import {
   createUseMutation,
   createUseMutationPatch,
-  createUseQuery,
 } from '../../../utils/api/resourceHookFactories';
 
 import { NewTagGroup } from 'features/tags/components/TagManager/types';
@@ -21,7 +20,6 @@ export const tagsResource = (orgId: string) => {
       key,
       url,
     }),
-    useQuery: createUseQuery<ZetkinTag[]>(key, url),
   };
 };
 
@@ -31,6 +29,5 @@ export const tagGroupsResource = (orgId: string) => {
 
   return {
     useCreate: createUseMutation<NewTagGroup, ZetkinTagGroup>(key, url),
-    useQuery: createUseQuery<ZetkinTagGroup[]>(key, url),
   };
 };

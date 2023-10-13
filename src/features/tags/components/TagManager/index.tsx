@@ -1,18 +1,19 @@
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import GroupToggle from './components/GroupToggle';
+import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useTagGroups from 'features/tags/hooks/useTagGroups';
+import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
-import ZUIQuery from 'zui/ZUIQuery';
+import ZUIFutures from 'zui/ZUIFutures';
 import ZUISection from 'zui/ZUISection';
-import { tagGroupsResource, tagsResource } from 'features/tags/api/tags';
 import TagManagerController, {
   TagManagerControllerProps,
 } from './TagManagerController';
 import { useCreateTag, useEditTag } from './utils';
 
 import messageIds from '../../l10n/messageIds';
-import { useMessages } from 'core/i18n';
 
 type TagManagerProps = Omit<
   TagManagerControllerProps,
@@ -20,26 +21,29 @@ type TagManagerProps = Omit<
 > & { disableEditTags?: boolean; onTagEdited?: (tag: ZetkinTag) => void };
 
 const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
-  const { orgId } = useRouter().query;
-
-  const tagsQuery = tagsResource(orgId as string).useQuery();
-  const tagGroupsQuery = tagGroupsResource(orgId as string).useQuery();
+  const { orgId } = useNumericRouteParams();
+  const { tagsFuture } = useTags(orgId);
+  const { tagGroupsFuture } = useTagGroups(orgId);
 
   const createTag = useCreateTag();
   const editTag = useEditTag(props.onTagEdited);
 
   return (
-    <ZUIQuery queries={{ tagGroupsQuery, tagsQuery }}>
-      {({ queries: { tagGroupsQuery, tagsQuery } }) => (
-        <TagManagerController
-          availableGroups={tagGroupsQuery.data}
-          availableTags={tagsQuery.data}
-          onCreateTag={createTag}
-          onEditTag={editTag}
-          {...props}
-        />
-      )}
-    </ZUIQuery>
+    <ZUIFutures
+      futures={{ tagGroupsQuery: tagGroupsFuture, tagsQuery: tagsFuture }}
+    >
+      {({ data: { tagGroupsQuery, tagsQuery } }) => {
+        return (
+          <TagManagerController
+            availableGroups={tagGroupsQuery}
+            availableTags={tagsQuery}
+            onCreateTag={createTag}
+            onEditTag={editTag}
+            {...props}
+          />
+        );
+      }}
+    </ZUIFutures>
   );
 };
 

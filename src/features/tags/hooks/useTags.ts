@@ -1,10 +1,11 @@
+import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { tagsLoad, tagsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseTagsReturn {
-  data: ZetkinTag[] | null;
+  tagsFuture: IFuture<ZetkinTag[]>;
 }
 export default function useTags(orgId: number): UseTagsReturn {
   const tagList = useAppSelector((state) => state.tags.tagList);
@@ -16,5 +17,5 @@ export default function useTags(orgId: number): UseTagsReturn {
     actionOnSuccess: (tags) => tagsLoaded(tags),
     loader: () => apiClient.get<ZetkinTag[]>(`/api/orgs/${orgId}/people/tags`),
   });
-  return { data: tagsFuture.data };
+  return { tagsFuture };
 }

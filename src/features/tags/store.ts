@@ -4,10 +4,12 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface TagsStoreSlice {
+  tagGroupList: RemoteList<ZetkinTag>;
   tagList: RemoteList<ZetkinTag>;
 }
 
 const initialState: TagsStoreSlice = {
+  tagGroupList: remoteList(),
   tagList: remoteList(),
 };
 
@@ -27,6 +29,17 @@ const tagsSlice = createSlice({
   reducers: {
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       doNothing(state, action);
+    },
+    tagGroupsLoad: (state) => {
+      state.tagGroupList.isLoading = true;
+    },
+    tagGroupsLoaded: (state, action: PayloadAction<ZetkinTag[]>) => {
+      const tagGroups = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.tagGroupList = remoteList(tagGroups);
+      state.tagGroupList.loaded = timestamp;
+      state.tagGroupList.items.forEach((item) => (item.loaded = timestamp));
     },
     tagLoad: (state, action: PayloadAction<number>) => {
       const tagId = action.payload;
@@ -67,6 +80,8 @@ const tagsSlice = createSlice({
 export default tagsSlice;
 export const {
   tagAssigned,
+  tagGroupsLoad,
+  tagGroupsLoaded,
   tagLoad,
   tagLoaded,
   tagsLoad,
