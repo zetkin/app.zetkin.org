@@ -6,7 +6,7 @@ import {
   ZetkinSurveyTextElement,
   ZetkinTextQuestion,
 } from 'utils/types/zetkin';
-import { elementAdded, elementUpdated } from '../store';
+import { elementAdded, elementDeleted, elementUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 type ZetkinSurveyTextQuestionElementPostBody = {
@@ -58,6 +58,7 @@ type ZetkinSurveyTextElementPatchBody = {
 
 type UseSurveyEditingReturn = {
   addElement: (data: ZetkinSurveyElementPostBody) => Promise<void>;
+  deleteElement: (elemId: number) => Promise<void>;
   updateElement: (
     elemId: number,
     data: ZetkinSurveyElementPatchBody
@@ -82,6 +83,12 @@ export default function useSurveyMutations(
           dispatch(elementAdded([surveyId, newElement]));
           return newElement;
         });
+    },
+    async deleteElement(elemId) {
+      await apiClient.delete(
+        `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`
+      );
+      dispatch(elementDeleted([surveyId, elemId]));
     },
     async updateElement(elemId, data) {
       const element = await apiClient.patch<
