@@ -1,7 +1,7 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
+import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
   elementOptionDeleted,
@@ -10,12 +10,9 @@ import {
   elementsReordered,
   surveyCreate,
   surveyCreated,
-  surveyLoad,
-  surveyLoaded,
   surveysLoad,
   surveysLoaded,
 } from '../store';
-import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
   ZetkinSurvey,
   ZetkinSurveyElementOrder,
@@ -87,23 +84,6 @@ export default class SurveysRepo {
       `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`
     );
     this._store.dispatch(elementOptionDeleted([surveyId, elemId, optionId]));
-  }
-
-  getSurvey(orgId: number, id: number): IFuture<ZetkinSurvey> {
-    const state = this._store.getState();
-    const item = state.surveys.surveyList.items.find((item) => item.id == id);
-    if (!item || shouldLoad(item)) {
-      this._store.dispatch(surveyLoad(id));
-      const promise = this._apiClient
-        .get<ZetkinSurveyExtended>(`/api/orgs/${orgId}/surveys/${id}`)
-        .then((survey) => {
-          this._store.dispatch(surveyLoaded(survey));
-          return survey;
-        });
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(item);
-    }
   }
 
   getSurveys(orgId: number): IFuture<ZetkinSurvey[]> {
