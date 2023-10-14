@@ -8,6 +8,7 @@ import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIReorderable from 'zui/ZUIReorderable';
 import {
@@ -36,6 +37,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
 
   const lengthRef = useRef<number>();
   const elementsFuture = useSurveyElements(orgId, surveyId);
+  const { updateElementOrder } = useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
     const elements = elementsFuture.data;
@@ -146,7 +148,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                   },
                 }))}
                 onReorder={(ids) => {
-                  model.updateElementOrder(ids);
+                  updateElementOrder(ids);
                 }}
               />
             </Box>

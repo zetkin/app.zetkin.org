@@ -62,7 +62,6 @@ type WidgetTypeValue = keyof typeof widgetTypes;
 const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   editable,
   element,
-  model,
   onEditModeEnter,
   onEditModeExit,
   orgId,
@@ -88,6 +87,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     deleteElementOption,
     updateElement,
     updateElementOption,
+    updateOptionOrder,
   } = useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
@@ -271,7 +271,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             ),
           }))}
           onReorder={(ids) => {
-            model.updateOptionOrder(element.id, ids);
+            updateOptionOrder(element.id, ids);
           }}
         />
         {options.length > 3 && !editable && (
