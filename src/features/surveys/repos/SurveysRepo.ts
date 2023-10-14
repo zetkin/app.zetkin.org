@@ -5,7 +5,6 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { Store } from 'core/store';
 import {
   elementOptionsReordered,
-  elementOptionUpdated,
   elementsReordered,
   surveyCreate,
   surveyCreated,
@@ -85,22 +84,6 @@ export default class SurveysRepo {
           `/api/orgs/${orgId}/surveys/`
         ),
     });
-  }
-
-  async updateElementOption(
-    orgId: number,
-    surveyId: number,
-    elemId: number,
-    optionId: number,
-    text: string
-  ) {
-    const option = await this._apiClient.patch<ZetkinSurveyOption>(
-      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`,
-      { text }
-    );
-    this._store.dispatch(
-      elementOptionUpdated([surveyId, elemId, optionId, option])
-    );
   }
 
   async updateElementOrder(

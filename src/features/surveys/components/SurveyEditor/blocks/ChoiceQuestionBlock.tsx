@@ -87,6 +87,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     addElementOptionsFromText,
     deleteElementOption,
     updateElement,
+    updateElementOption,
   } = useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
@@ -219,7 +220,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       fullWidth
                       inputProps={props}
                       onBlur={(ev) => {
-                        model.updateElementOption(
+                        updateElementOption(
                           element.id,
                           option.id,
                           ev.target.value

@@ -14,16 +14,6 @@ export default class SurveyDataModel extends ModelBase {
     this._repo = new SurveysRepo(env);
   }
 
-  updateElementOption(elemId: number, optionId: number, text: string) {
-    this._repo.updateElementOption(
-      this._orgId,
-      this._surveyId,
-      elemId,
-      optionId,
-      text
-    );
-  }
-
   updateElementOrder(ids: (string | number)[]) {
     this._repo.updateElementOrder(this._orgId, this._surveyId, ids);
   }
