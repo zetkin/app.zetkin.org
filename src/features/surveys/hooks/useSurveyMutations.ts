@@ -5,6 +5,7 @@ import {
   ZetkinOptionsQuestion,
   ZetkinSurvey,
   ZetkinSurveyElement,
+  ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
   ZetkinSurveyTextElement,
@@ -15,7 +16,9 @@ import {
   elementDeleted,
   elementOptionAdded,
   elementOptionDeleted,
+  elementOptionsReordered,
   elementOptionUpdated,
+  elementsReordered,
   elementUpdated,
   surveyUpdate,
   surveyUpdated,
@@ -90,6 +93,11 @@ type UseSurveyEditingReturn = {
     elemId: number,
     optionId: number,
     text: string
+  ) => Promise<void>;
+  updateElementOrder: (ids: (string | number)[]) => Promise<void>;
+  updateOptionOrder: (
+    elemId: number,
+    ids: (string | number)[]
   ) => Promise<void>;
   updateSurvey: (data: ZetkinSurveyPatchBody) => Promise<void>;
 };
@@ -265,6 +273,28 @@ export default function useSurveyMutations(
     dispatch(elementOptionUpdated([surveyId, elemId, optionId, option]));
   }
 
+  async function updateElementOrder(ids: (string | number)[]) {
+    const newOrder = await apiClient.patch<ZetkinSurveyElementOrder>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/element_order`,
+      {
+        default: ids.map((id) => parseInt(id as string)),
+      }
+    );
+
+    dispatch(elementsReordered([surveyId, newOrder]));
+  }
+
+  async function updateOptionOrder(elemId: number, ids: (string | number)[]) {
+    const newOrder = await apiClient.patch<ZetkinSurveyElementOrder>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/option_order`,
+      {
+        default: ids.map((id) => parseInt(id as string)),
+      }
+    );
+
+    dispatch(elementOptionsReordered([surveyId, elemId, newOrder]));
+  }
+
   return {
     addElement,
     addElementOption,
@@ -275,6 +305,8 @@ export default function useSurveyMutations(
     unpublish,
     updateElement,
     updateElementOption,
+    updateElementOrder,
+    updateOptionOrder,
     updateSurvey,
   };
 }
