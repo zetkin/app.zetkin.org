@@ -82,8 +82,12 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [widgetType, setWidgetType] = useState<WidgetTypeValue>(
     elemQuestion.response_config.widget_type || 'checkbox'
   );
-  const { addElementOption, addElementOptionsFromText, updateElement } =
-    useSurveyMutations(orgId, surveyId);
+  const {
+    addElementOption,
+    addElementOptionsFromText,
+    deleteElementOption,
+    updateElement,
+  } = useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
     setOptions(elemQuestion.options || []);
@@ -236,7 +240,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       onClick={() => {
                         showConfirmDialog({
                           onSubmit: () =>
-                            model.deleteElementOption(element.id, option.id),
+                            deleteElementOption(element.id, option.id),
                           title: messages.blocks.deleteOptionDialog.title(),
                           warningText:
                             messages.blocks.deleteOptionDialog.warningText(),

@@ -4,7 +4,6 @@ import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { Store } from 'core/store';
 import {
-  elementOptionDeleted,
   elementOptionsReordered,
   elementOptionUpdated,
   elementsReordered,
@@ -72,18 +71,6 @@ export default class SurveysRepo {
 
     this._store.dispatch(surveyCreated(survey));
     return survey;
-  }
-
-  async deleteElementOption(
-    orgId: number,
-    surveyId: number,
-    elemId: number,
-    optionId: number
-  ) {
-    await this._apiClient.delete(
-      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`
-    );
-    this._store.dispatch(elementOptionDeleted([surveyId, elemId, optionId]));
   }
 
   getSurveys(orgId: number): IFuture<ZetkinSurvey[]> {

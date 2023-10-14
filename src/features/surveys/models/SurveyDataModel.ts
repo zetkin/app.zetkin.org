@@ -14,15 +14,6 @@ export default class SurveyDataModel extends ModelBase {
     this._repo = new SurveysRepo(env);
   }
 
-  deleteElementOption(elemId: number, optionId: number) {
-    this._repo.deleteElementOption(
-      this._orgId,
-      this._surveyId,
-      elemId,
-      optionId
-    );
-  }
-
   updateElementOption(elemId: number, optionId: number, text: string) {
     this._repo.updateElementOption(
       this._orgId,
