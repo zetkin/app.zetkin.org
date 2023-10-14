@@ -1,11 +1,9 @@
-import addBulkOptions from '../rpc/addBulkOptions';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
-  elementOptionAdded,
   elementOptionDeleted,
   elementOptionsReordered,
   elementOptionUpdated,
@@ -58,36 +56,6 @@ export type OptionsQuestionPatchBody = {
 export default class SurveysRepo {
   private _apiClient: IApiClient;
   private _store: Store;
-
-  async addElementOption(orgId: number, surveyId: number, elemId: number) {
-    const option = await this._apiClient.post<ZetkinSurveyOption>(
-      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options`,
-      { text: '' }
-    );
-    this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
-  }
-
-  async addElementOptions(
-    orgId: number,
-    surveyId: number,
-    elemId: number,
-    options: string[]
-  ) {
-    const result = await this._apiClient.rpc(addBulkOptions, {
-      elemId,
-      options,
-      orgId,
-      surveyId,
-    });
-
-    result.addedOptions.forEach((option) => {
-      this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
-    });
-
-    result.removedOptions.forEach((option) => {
-      this._store.dispatch(elementOptionDeleted([surveyId, elemId, option.id]));
-    });
-  }
 
   constructor(env: Environment) {
     this._store = env.store;

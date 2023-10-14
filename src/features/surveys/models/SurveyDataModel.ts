@@ -7,24 +7,6 @@ export default class SurveyDataModel extends ModelBase {
   private _repo: SurveysRepo;
   private _surveyId: number;
 
-  addElementOption(elemId: number) {
-    this._repo.addElementOption(this._orgId, this._surveyId, elemId);
-  }
-
-  async addElementOptionsFromText(elemId: number, bulkText: string) {
-    const lines = bulkText.split('\n');
-    const nonBlankLines = lines
-      .map((str) => str.trim())
-      .filter((str) => !!str.length);
-
-    this._repo.addElementOptions(
-      this._orgId,
-      this._surveyId,
-      elemId,
-      nonBlankLines
-    );
-  }
-
   constructor(env: Environment, orgId: number, surveyId: number) {
     super();
     this._orgId = orgId;

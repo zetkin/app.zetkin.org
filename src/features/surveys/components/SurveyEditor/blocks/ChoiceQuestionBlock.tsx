@@ -82,7 +82,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [widgetType, setWidgetType] = useState<WidgetTypeValue>(
     elemQuestion.response_config.widget_type || 'checkbox'
   );
-  const { updateElement } = useSurveyMutations(orgId, surveyId);
+  const { addElementOption, addElementOptionsFromText, updateElement } =
+    useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
     setOptions(elemQuestion.options || []);
@@ -309,10 +310,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               />
               <Button
                 onClick={async () => {
-                  await model.addElementOptionsFromText(
-                    element.id,
-                    bulkOptionsText
-                  );
+                  await addElementOptionsFromText(element.id, bulkOptionsText);
                   setBulkAddingOptions(false);
                   setBulkOptionsText('');
                 }}
@@ -354,7 +352,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               <>
                 <Button
                   onClick={(ev) => {
-                    model.addElementOption(element.id);
+                    addElementOption(element.id);
                     ev.stopPropagation();
                   }}
                   startIcon={<Add />}
