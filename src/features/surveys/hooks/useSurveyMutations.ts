@@ -15,6 +15,7 @@ import {
   elementDeleted,
   elementOptionAdded,
   elementOptionDeleted,
+  elementOptionUpdated,
   elementUpdated,
   surveyUpdate,
   surveyUpdated,
@@ -84,6 +85,11 @@ type UseSurveyEditingReturn = {
   updateElement: (
     elemId: number,
     data: ZetkinSurveyElementPatchBody
+  ) => Promise<void>;
+  updateElementOption: (
+    elemId: number,
+    optionId: number,
+    text: string
   ) => Promise<void>;
   updateSurvey: (data: ZetkinSurveyPatchBody) => Promise<void>;
 };
@@ -247,6 +253,18 @@ export default function useSurveyMutations(
     dispatch(elementUpdated([surveyId, elemId, element]));
   }
 
+  async function updateElementOption(
+    elemId: number,
+    optionId: number,
+    text: string
+  ) {
+    const option = await apiClient.patch<ZetkinSurveyOption>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`,
+      { text }
+    );
+    dispatch(elementOptionUpdated([surveyId, elemId, optionId, option]));
+  }
+
   return {
     addElement,
     addElementOption,
@@ -256,6 +274,7 @@ export default function useSurveyMutations(
     publish,
     unpublish,
     updateElement,
+    updateElementOption,
     updateSurvey,
   };
 }
