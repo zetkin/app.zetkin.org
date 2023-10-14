@@ -1,3 +1,4 @@
+import addBulkOptions from '../rpc/addBulkOptions';
 import dayjs from 'dayjs';
 import {
   ELEMENT_TYPE,
@@ -12,6 +13,8 @@ import {
 import {
   elementAdded,
   elementDeleted,
+  elementOptionAdded,
+  elementOptionDeleted,
   elementUpdated,
   surveyUpdate,
   surveyUpdated,
@@ -69,6 +72,11 @@ type ZetkinSurveyPatchBody = Partial<Omit<ZetkinSurvey, 'id'>>;
 
 type UseSurveyEditingReturn = {
   addElement: (data: ZetkinSurveyElementPostBody) => Promise<void>;
+  addElementOption: (elemId: number) => Promise<void>;
+  addElementOptionsFromText: (
+    elemId: number,
+    bulkText: string
+  ) => Promise<void>;
   deleteElement: (elemId: number) => Promise<void>;
   publish: () => Promise<void>;
   unpublish: () => Promise<void>;
@@ -111,6 +119,36 @@ export default function useSurveyMutations(
         dispatch(elementAdded([surveyId, newElement]));
         return newElement;
       });
+  }
+
+  async function addElementOption(elemId: number) {
+    const option = await apiClient.post<ZetkinSurveyOption>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options`,
+      { text: '' }
+    );
+    dispatch(elementOptionAdded([surveyId, elemId, option]));
+  }
+
+  async function addElementOptionsFromText(elemId: number, bulkText: string) {
+    const lines = bulkText.split('\n');
+    const options = lines
+      .map((str) => str.trim())
+      .filter((str) => !!str.length);
+
+    const result = await apiClient.rpc(addBulkOptions, {
+      elemId,
+      options,
+      orgId,
+      surveyId,
+    });
+
+    result.addedOptions.forEach((option) => {
+      dispatch(elementOptionAdded([surveyId, elemId, option]));
+    });
+
+    result.removedOptions.forEach((option) => {
+      dispatch(elementOptionDeleted([surveyId, elemId, option.id]));
+    });
   }
 
   async function deleteElement(elemId: number) {
@@ -203,6 +241,8 @@ export default function useSurveyMutations(
 
   return {
     addElement,
+    addElementOption,
+    addElementOptionsFromText,
     deleteElement,
     publish,
     unpublish,
