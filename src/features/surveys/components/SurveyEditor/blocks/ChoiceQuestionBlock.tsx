@@ -22,7 +22,6 @@ import DeleteHideButtons from '../DeleteHideButtons';
 import DropdownIcon from 'zui/icons/DropDown';
 import messageIds from 'features/surveys/l10n/messageIds';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
@@ -34,7 +33,6 @@ import { Msg, useMessages } from 'core/i18n';
 interface ChoiceQuestionBlockProps {
   editable: boolean;
   element: ZetkinSurveyOptionsQuestionElement;
-  model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
   orgId: number;

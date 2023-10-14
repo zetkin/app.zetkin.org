@@ -6,10 +6,8 @@ import { Grid, useMediaQuery, useTheme } from '@mui/material';
 import EditWarningCard from 'features/surveys/components/EditWarningCard';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyEditor from 'features/surveys/components/SurveyEditor';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
-import useModel from 'core/useModel';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -45,9 +43,6 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   const [forceEditable, setForceEditable] = useState(false);
   const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
   const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
-  const model = useModel(
-    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
-  );
 
   // Figure out whether to display the read-only warning on top
   const theme = useTheme();
@@ -69,7 +64,6 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
             >
               <Grid item md={8} xs={12}>
                 <SurveyEditor
-                  model={model}
                   orgId={parseInt(orgId)}
                   readOnly={receivingSubmissions && !forceEditable}
                   surveyId={parseInt(surveyId)}

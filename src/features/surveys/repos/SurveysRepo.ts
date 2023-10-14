@@ -4,8 +4,6 @@ import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { Store } from 'core/store';
 import {
-  elementOptionsReordered,
-  elementsReordered,
   surveyCreate,
   surveyCreated,
   surveysLoad,
@@ -13,40 +11,9 @@ import {
 } from '../store';
 import {
   ZetkinSurvey,
-  ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
-  ZetkinSurveyOption,
   ZetkinSurveyPostBody,
-  ZetkinTextQuestion,
 } from 'utils/types/zetkin';
-
-export type ZetkinSurveyElementPatchBody =
-  | ZetkinSurveyTextElementPatchBody
-  | OptionsQuestionPatchBody
-  | TextQuestionPatchBody;
-
-type ZetkinSurveyTextElementPatchBody = {
-  hidden?: boolean;
-  text_block?: {
-    content?: string;
-    header?: string;
-  };
-};
-
-export type TextQuestionPatchBody = {
-  question: Partial<ZetkinTextQuestion>;
-};
-
-export type OptionsQuestionPatchBody = {
-  question: {
-    description?: string | null;
-    options?: ZetkinSurveyOption[];
-    question?: string;
-    response_config?: {
-      widget_type: 'checkbox' | 'radio' | 'select';
-    };
-  };
-};
 
 export default class SurveysRepo {
   private _apiClient: IApiClient;
@@ -84,36 +51,5 @@ export default class SurveysRepo {
           `/api/orgs/${orgId}/surveys/`
         ),
     });
-  }
-
-  async updateElementOrder(
-    orgId: number,
-    surveyId: number,
-    ids: (string | number)[]
-  ) {
-    const newOrder = await this._apiClient.patch<ZetkinSurveyElementOrder>(
-      `/api/orgs/${orgId}/surveys/${surveyId}/element_order`,
-      {
-        default: ids.map((id) => parseInt(id as string)),
-      }
-    );
-
-    this._store.dispatch(elementsReordered([surveyId, newOrder]));
-  }
-
-  async updateOptionOrder(
-    orgId: number,
-    surveyId: number,
-    elemId: number,
-    ids: (string | number)[]
-  ) {
-    const newOrder = await this._apiClient.patch<ZetkinSurveyElementOrder>(
-      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/option_order`,
-      {
-        default: ids.map((id) => parseInt(id as string)),
-      }
-    );
-
-    this._store.dispatch(elementOptionsReordered([surveyId, elemId, newOrder]));
   }
 }

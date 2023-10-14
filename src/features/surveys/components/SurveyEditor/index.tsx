@@ -5,7 +5,6 @@ import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
 import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
@@ -21,16 +20,10 @@ import {
 interface SurveyEditorProps {
   orgId: number;
   surveyId: number;
-  model: SurveyDataModel;
   readOnly: boolean;
 }
 
-const SurveyEditor: FC<SurveyEditorProps> = ({
-  model,
-  orgId,
-  readOnly,
-  surveyId,
-}) => {
+const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
   const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
     number | undefined
   >();
@@ -105,7 +98,6 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                               element={
                                 elem as ZetkinSurveyOptionsQuestionElement
                               }
-                              model={model}
                               onEditModeEnter={() => {
                                 setIdOfBlockInEditMode(elem.id);
                               }}
