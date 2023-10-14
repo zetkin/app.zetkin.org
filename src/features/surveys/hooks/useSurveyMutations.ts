@@ -78,6 +78,7 @@ type UseSurveyEditingReturn = {
     bulkText: string
   ) => Promise<void>;
   deleteElement: (elemId: number) => Promise<void>;
+  deleteElementOption: (elemId: number, optionId: number) => Promise<void>;
   publish: () => Promise<void>;
   unpublish: () => Promise<void>;
   updateElement: (
@@ -156,6 +157,13 @@ export default function useSurveyMutations(
       `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`
     );
     dispatch(elementDeleted([surveyId, elemId]));
+  }
+
+  async function deleteElementOption(elemId: number, optionId: number) {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`
+    );
+    dispatch(elementOptionDeleted([surveyId, elemId, optionId]));
   }
 
   async function publish() {
@@ -244,6 +252,7 @@ export default function useSurveyMutations(
     addElementOption,
     addElementOptionsFromText,
     deleteElement,
+    deleteElementOption,
     publish,
     unpublish,
     updateElement,
