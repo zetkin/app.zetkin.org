@@ -28,7 +28,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import useEventMutations from 'features/events/hooks/useEventMutations';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
 
 enum CAMPAIGN_MENU_ITEMS {
@@ -60,7 +60,7 @@ const CampaignActionButtons: React.FunctionComponent<
     (env) => new CampaignDataModel(env, orgId, campaign.id)
   );
 
-  const { createEvent } = useEventMutations(orgId);
+  const { createEvent } = useCreateEvent(orgId);
 
   // Mutations
   const patchCampaignMutation = useMutation(patchCampaign(orgId, campaign.id));
