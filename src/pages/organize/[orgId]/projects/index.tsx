@@ -14,6 +14,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { Suspense } from 'react';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
@@ -68,9 +69,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     upcomingEventsState?.status === 'success'
   ) {
     return {
-      props: {
-        orgId,
-      },
+      props: {},
     };
   } else {
     return {
@@ -79,15 +78,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type AllCampaignsSummaryPageProps = {
-  orgId: string;
-};
-
-const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
-  orgId,
-}) => {
+const AllCampaignsSummaryPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
-  const { data: campaigns } = useCampaigns(parseInt(orgId));
+  const { orgId } = useNumericRouteParams();
+  const { data: campaigns } = useCampaigns(orgId);
   const onServer = useServerSide();
 
   if (onServer) {
@@ -100,7 +94,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
       <Suspense>
-        <ActivitiesOverview orgId={parseInt(orgId)} />
+        <ActivitiesOverview orgId={orgId} />
       </Suspense>
       <Box mt={4}>
         <Typography mb={2} variant="h4">
