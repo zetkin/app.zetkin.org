@@ -108,7 +108,7 @@ export default function useSurveyMutations(
 ): UseSurveyEditingReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const data = useAppSelector((state) =>
+  const surveyData = useAppSelector((state) =>
     state.surveys.surveyList.items.find((item) => item.id == surveyId)
   )?.data;
 
@@ -181,14 +181,14 @@ export default function useSurveyMutations(
   }
 
   async function publish() {
-    if (!data) {
+    if (!surveyData) {
       return;
     }
 
     const now = dayjs();
     const today = now.format('YYYY-MM-DD');
 
-    const { published, expires } = data;
+    const { published, expires } = surveyData;
 
     if (!published && !expires) {
       updateSurvey({
@@ -238,7 +238,7 @@ export default function useSurveyMutations(
   }
 
   async function unpublish() {
-    if (!data) {
+    if (!surveyData) {
       return;
     }
 
