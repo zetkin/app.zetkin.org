@@ -3,7 +3,7 @@ import { ZetkinLocation } from 'utils/types/zetkin';
 import { locationsLoad, locationsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function useEventLocation(
+export default function useEventLocations(
   orgId: number
 ): ZetkinLocation[] | null {
   const apiClient = useApiClient();

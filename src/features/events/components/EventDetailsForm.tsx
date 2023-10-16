@@ -10,7 +10,7 @@ import getCampaigns from 'features/campaigns/fetching/getCampaigns';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import useEventLocation from '../hooks/useEventLocation';
+import useEventLocations from '../hooks/useEventLocations';
 
 interface EventDetailsFormProps {
   onSubmit: (data: Record<string, unknown>) => void;
@@ -31,7 +31,7 @@ const EventDetailsForm = ({
   const activities = activitiesQuery.data || [];
   const campaigns = campaignsQuery.data || [];
   const messages = useMessages(messageIds);
-  const locations = useEventLocation(parseInt(orgId));
+  const locations = useEventLocations(parseInt(orgId));
 
   const formattedNow = dayjs().format('YYYY-MM-DDTHH:mm:ss');
 

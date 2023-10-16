@@ -25,7 +25,7 @@ import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
-import useEventLocation from 'features/events/hooks/useEventLocation';
+import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import useEventMutations from 'features/events/hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
@@ -47,7 +47,7 @@ type EventOverviewCardProps = {
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   const { updateEvent } = useEventMutations(orgId, data.id);
-  const locations = useEventLocation(orgId);
+  const locations = useEventLocations(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
