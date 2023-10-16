@@ -29,25 +29,25 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const router = useRouter();
   const { cancelEvent, deleteEvent, restoreEvent, setPublished } =
-    useEventMutations(orgId);
+    useEventMutations(orgId, event.id);
   const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
 
   const published =
     !!event.published && new Date(event.published) <= new Date();
 
   const handlePublish = () => {
-    setPublished(event.id, new Date().toISOString());
+    setPublished(new Date().toISOString());
   };
 
   const handleUnpublish = () => {
-    setPublished(event.id, null);
+    setPublished(null);
   };
   const handleChangeDate = (date: string | null) => {
-    setPublished(event.id, date);
+    setPublished(date);
   };
 
   const handleDelete = () => {
-    deleteEvent(event.id);
+    deleteEvent();
     router.push(`/organize/${orgId}/projects/${event.campaign?.id || ''} `);
   };
 
@@ -56,7 +56,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   };
 
   const handleCancel = () => {
-    event.cancelled ? restoreEvent(event.id) : cancelEvent(event.id);
+    event.cancelled ? restoreEvent() : cancelEvent();
   };
 
   return (
