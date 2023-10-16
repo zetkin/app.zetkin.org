@@ -10,7 +10,7 @@ import { useNumericRouteParams } from 'core/hooks';
 const CampaignActionButtons: React.FunctionComponent = () => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { createCampaign } = useCreateCampaign(orgId);
+  const createCampaign = useCreateCampaign(orgId);
 
   return (
     <Box display="flex">
