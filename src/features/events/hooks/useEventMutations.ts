@@ -1,11 +1,5 @@
 import { ZetkinEvent } from 'utils/types/zetkin';
-import {
-  eventCreate,
-  eventCreated,
-  eventDeleted,
-  eventUpdate,
-  eventUpdated,
-} from '../store';
+import { eventDeleted, eventUpdate, eventUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 export type ZetkinEventPatchBody = Partial<
@@ -27,7 +21,6 @@ export type ZetkinEventPostBody = ZetkinEventPatchBody;
 
 type useEventMutationsReturn = {
   cancelEvent: (eventId: number) => void;
-  createEvent: (eventBody: ZetkinEventPostBody) => Promise<ZetkinEvent>;
   deleteEvent: (eventId: number) => void;
   publishEvent: (eventId: number) => void;
   restoreEvent: (eventId: number) => void;
@@ -42,20 +35,6 @@ export default function useEventMutations(
 ): useEventMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-
-  const createEvent = async (
-    eventBody: ZetkinEventPostBody
-  ): Promise<ZetkinEvent> => {
-    dispatch(eventCreate());
-    const event = await apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
-      `/api/orgs/${orgId}/${
-        eventBody.campaign_id ? `campaigns/${eventBody.campaign_id}/` : ''
-      }actions`,
-      eventBody
-    );
-    dispatch(eventCreated(event));
-    return event;
-  };
 
   const cancelEvent = (eventId: number) => {
     updateEvent(eventId, {
@@ -109,7 +88,6 @@ export default function useEventMutations(
 
   return {
     cancelEvent,
-    createEvent,
     deleteEvent,
     publishEvent,
     restoreEvent,
