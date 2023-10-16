@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@mui/material';
 
-import { ACTIVITIES } from 'features/campaigns/hooks/useCampaignActivities';
+import { ACTIVITIES } from 'features/campaigns/types';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import { useMessages } from 'core/i18n';

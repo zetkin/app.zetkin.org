@@ -7,16 +7,14 @@ import FilterActivities from 'features/campaigns/components/ActivityList/FilterA
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useAcitvityList from 'features/campaigns/hooks/useActivityList';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
+import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import { ChangeEvent, useState } from 'react';
-import useCampaignActivities, {
-  ACTIVITIES,
-  CampaignActivity,
-} from 'features/campaigns/hooks/useCampaignActivities';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -34,7 +32,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const { orgId, campId } = useNumericRouteParams();
-  const { currentActivities } = useCampaignActivities(orgId, campId);
+  const activitiesFuture = useAcitvityList(orgId, campId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
@@ -59,7 +57,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
 
   return (
     <Box>
-      <ZUIFuture future={currentActivities} skeletonWidth={200}>
+      <ZUIFuture future={activitiesFuture} skeletonWidth={200}>
         {(data) => {
           if (data.length === 0) {
             return (

@@ -10,7 +10,7 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 
-export default function useActivityArchive(
+export default function useAcitvityList(
   orgId: number,
   campId?: number
 ): IFuture<CampaignActivity[]> {
@@ -49,10 +49,7 @@ export default function useActivityArchive(
   const now = new Date();
   const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const filtered = activities.filter(
-    (activity) =>
-      activity.visibleFrom &&
-      activity.visibleUntil &&
-      activity.visibleUntil < nowDate
+    (activity) => !activity.visibleUntil || activity.visibleUntil >= nowDate
   );
 
   return new ResolvedFuture(filtered);

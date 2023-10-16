@@ -6,7 +6,7 @@ import {
   CallAssignmentActivity,
   EventActivity,
   SurveyActivity,
-} from './useCampaignActivities';
+} from '../types';
 import useClusteredActivities, {
   CLUSTER_TYPE,
   ClusteredEvent,

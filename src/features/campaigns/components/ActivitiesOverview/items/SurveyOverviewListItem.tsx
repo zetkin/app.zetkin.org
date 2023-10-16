@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
 import OverviewListItem from './OverviewListItem';
-import { SurveyActivity } from 'features/campaigns/hooks/useCampaignActivities';
+import { SurveyActivity } from 'features/campaigns/types';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useModel from 'core/useModel';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';

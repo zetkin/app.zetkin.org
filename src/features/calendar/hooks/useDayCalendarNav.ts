@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { ACTIVITIES } from 'features/campaigns/hooks/useCampaignActivities';
+import { ACTIVITIES } from 'features/campaigns/types';
 import { DaySummary } from '../components/utils';
 import getPrevEventDay from 'features/events/rpc/getPrevEventDay';
 import {

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { CheckBoxOutlined, People } from '@mui/icons-material';
 
 import OverviewListItem from './OverviewListItem';
-import { TaskActivity } from 'features/campaigns/hooks/useCampaignActivities';
+import { TaskActivity } from 'features/campaigns/types';
 import useTaskStats from 'features/tasks/hooks/useTaskStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 

@@ -11,10 +11,7 @@ import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyListItem from './items/SurveyListItem';
 import TaskListItem from './items/TaskListItem';
 import { useMessages } from 'core/i18n';
-import {
-  ACTIVITIES,
-  CampaignActivity,
-} from 'features/campaigns/hooks/useCampaignActivities';
+import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import useClusteredActivities, {
   CLUSTER_TYPE,
 } from 'features/campaigns/hooks/useClusteredActivities';

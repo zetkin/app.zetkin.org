@@ -1,7 +1,6 @@
-import { ACTIVITIES } from './useActivityOverview';
-import { CampaignActivity } from './useCampaignActivities';
 import { getUTCDateWithoutTime } from 'utils/dateUtils';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
+import { ACTIVITIES, CampaignActivity } from '../types';
 import {
   campaignSurveyIdsLoad,
   campaignSurveyIdsLoaded,

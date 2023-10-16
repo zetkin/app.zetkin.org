@@ -1,8 +1,7 @@
-import { ACTIVITIES } from './useActivityOverview';
-import { CampaignActivity } from './useCampaignActivities';
 import { getUTCDateWithoutTime } from 'utils/dateUtils';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { ACTIVITIES, CampaignActivity } from '../types';
 import {
   campaignEventsLoad,
   campaignEventsLoaded,

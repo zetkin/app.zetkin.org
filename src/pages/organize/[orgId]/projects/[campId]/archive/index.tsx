@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 
-import { ACTIVITIES } from 'features/campaigns/hooks/useActivityOverview';
+import { ACTIVITIES } from 'features/campaigns/types';
 import ActivityList from 'features/campaigns/components/ActivityList';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';

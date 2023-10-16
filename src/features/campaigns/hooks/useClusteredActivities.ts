@@ -7,7 +7,7 @@ import {
   EventActivity,
   SurveyActivity,
   TaskActivity,
-} from './useCampaignActivities';
+} from '../types';
 
 export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',

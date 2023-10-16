@@ -13,10 +13,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import {
-  ACTIVITIES,
-  CampaignActivity,
-} from 'features/campaigns/hooks/useCampaignActivities';
+import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import { ChangeEvent, useState } from 'react';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
