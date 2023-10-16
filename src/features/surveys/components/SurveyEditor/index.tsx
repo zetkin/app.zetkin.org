@@ -5,8 +5,9 @@ import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
 import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIReorderable from 'zui/ZUIReorderable';
 import {
@@ -17,19 +18,22 @@ import {
 } from 'utils/types/zetkin';
 
 interface SurveyEditorProps {
-  model: SurveyDataModel;
+  orgId: number;
+  surveyId: number;
   readOnly: boolean;
 }
 
-const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
+const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
   const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
     number | undefined
   >();
 
   const lengthRef = useRef<number>();
+  const elementsFuture = useSurveyElements(orgId, surveyId);
+  const { updateElementOrder } = useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
-    const elements = model.getElements().data;
+    const elements = elementsFuture.data;
     if (elements) {
       // If the previous length is null, it's because it only now loaded for the
       // first time and the length has not really been read before.
@@ -43,11 +47,11 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
 
       lengthRef.current = elements.length;
     }
-  }, [model.getElements().data]);
+  }, [elementsFuture.data]);
 
   return (
     <>
-      <ZUIFuture future={model.getElements()}>
+      <ZUIFuture future={elementsFuture}>
         {(elements) => {
           return (
             <Box paddingBottom={elements.length ? 4 : 0}>
@@ -68,14 +72,15 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
                             <OpenQuestionBlock
                               editable={elem.id == idOfBlockInEditMode}
                               element={elem as ZetkinSurveyTextQuestionElement}
-                              model={model}
                               onEditModeEnter={() =>
                                 setIdOfBlockInEditMode(elem.id)
                               }
                               onEditModeExit={() => {
                                 setIdOfBlockInEditMode(undefined);
                               }}
+                              orgId={orgId}
                               readOnly={readOnly}
+                              surveyId={surveyId}
                             />
                           </BlockWrapper>
                         );
@@ -93,14 +98,15 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
                               element={
                                 elem as ZetkinSurveyOptionsQuestionElement
                               }
-                              model={model}
                               onEditModeEnter={() => {
                                 setIdOfBlockInEditMode(elem.id);
                               }}
                               onEditModeExit={() => {
                                 setIdOfBlockInEditMode(undefined);
                               }}
+                              orgId={orgId}
                               readOnly={readOnly}
+                              surveyId={surveyId}
                             />
                           </BlockWrapper>
                         );
@@ -115,14 +121,15 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
                           <TextBlock
                             editable={elem.id == idOfBlockInEditMode}
                             element={elem}
-                            model={model}
                             onEditModeEnter={() =>
                               setIdOfBlockInEditMode(elem.id)
                             }
                             onEditModeExit={() => {
                               setIdOfBlockInEditMode(undefined);
                             }}
+                            orgId={orgId}
                             readOnly={readOnly}
+                            surveyId={surveyId}
                           />
                         </BlockWrapper>
                       );
@@ -133,14 +140,14 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
                   },
                 }))}
                 onReorder={(ids) => {
-                  model.updateElementOrder(ids);
+                  updateElementOrder(ids);
                 }}
               />
             </Box>
           );
         }}
       </ZUIFuture>
-      {!readOnly && <AddBlocks model={model} />}
+      {!readOnly && <AddBlocks orgId={orgId} surveyId={surveyId} />}
     </>
   );
 };

@@ -2,12 +2,12 @@ import { Box } from '@mui/system';
 import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
 import { Link } from '@mui/material';
 import messageIds from '../l10n/messageIds';
-import SurveySubmissionModel from '../models/SurveySubmissionModel';
 import SurveySubmissionPane from '../panes/SurveySubmissionPane';
-import useModel from 'core/useModel';
+import { useNumericRouteParams } from 'core/hooks';
 import { usePanes } from 'utils/panes';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import useSurveySubmission from '../hooks/useSurveySubmission';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -165,7 +165,8 @@ const SurveySubmissionsList = ({
     row: ZetkinSurveySubmission;
   }> = ({ row }) => {
     const api = useGridApiContext();
-    const { orgId } = useRouter().query;
+    const { orgId } = useNumericRouteParams();
+    const { setRespondentId } = useSurveySubmission(orgId, row.id);
 
     const emailOrName =
       row.respondent?.email ||
@@ -174,7 +175,7 @@ const SurveySubmissionsList = ({
       '';
     let { data: suggestedPeople } = useQuery(
       ['peopleSearchResults', emailOrName],
-      getPeopleSearchResults(emailOrName, orgId as string),
+      getPeopleSearchResults(emailOrName, orgId.toString()),
       {
         enabled: emailOrName.length >= 2,
         retry: true,
@@ -185,16 +186,12 @@ const SurveySubmissionsList = ({
       suggestedPeople = [];
     }
 
-    const subsModel = useModel(
-      (env) => new SurveySubmissionModel(env, parseInt(orgId as string), row.id)
-    );
-
     const updateCellValue = (person: ZetkinPerson | null) => {
       api.current.stopCellEditMode({
         field: 'respondent',
         id: row.id,
       });
-      subsModel.setRespondentId(person?.id || null);
+      setRespondentId(person?.id || null);
     };
 
     return (

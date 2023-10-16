@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { Box, Button, Card, Typography } from '@mui/material';
 import {
   FormatAlignLeft,
@@ -6,13 +7,19 @@ import {
 } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import theme from 'theme';
+import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ELEMENT_TYPE, RESPONSE_TYPE } from 'utils/types/zetkin';
 
 import messageIds from 'features/surveys/l10n/messageIds';
 
-const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
+type AddBlocksProps = {
+  orgId: number;
+  surveyId: number;
+};
+
+const AddBlocks: FC<AddBlocksProps> = ({ orgId, surveyId }) => {
+  const { addElement } = useSurveyMutations(orgId, surveyId);
   return (
     <Card
       sx={{
@@ -27,7 +34,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
       <Box display="flex" paddingTop={2}>
         <Button
           onClick={() =>
-            model.addElement({
+            addElement({
               hidden: false,
               text_block: {
                 content: '',
@@ -44,7 +51,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
         </Button>
         <Button
           onClick={() =>
-            model.addElement({
+            addElement({
               hidden: false,
               question: {
                 description: '',
@@ -65,7 +72,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
         </Button>
         <Button
           onClick={() =>
-            model.addElement({
+            addElement({
               hidden: false,
               question: {
                 description: '',

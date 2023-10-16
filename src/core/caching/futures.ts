@@ -6,6 +6,14 @@ export interface IFuture<DataType> {
   isLoading: boolean;
 }
 
+export function futureToObject<DataType>(future: IFuture<DataType>) {
+  return {
+    data: future.data,
+    error: future.error,
+    isLoading: future.isLoading,
+  };
+}
+
 export class FutureBase<DataType> {
   constructor(
     protected _data: DataType | null = null,

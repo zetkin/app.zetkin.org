@@ -6,10 +6,10 @@ import { Grid, useMediaQuery, useTheme } from '@mui/material';
 import EditWarningCard from 'features/surveys/components/EditWarningCard';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyEditor from 'features/surveys/components/SurveyEditor';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
-import useModel from 'core/useModel';
+import useSurvey from 'features/surveys/hooks/useSurvey';
+import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
 import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -41,9 +41,8 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   surveyId,
 }) => {
   const [forceEditable, setForceEditable] = useState(false);
-  const model = useModel(
-    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
-  );
+  const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
 
   // Figure out whether to display the read-only warning on top
   const theme = useTheme();
@@ -52,9 +51,9 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{surveyFuture.data?.title}</title>
       </Head>
-      <ZUIFuture future={model.getStats()}>
+      <ZUIFuture future={statsFuture}>
         {(stats) => {
           const receivingSubmissions = stats.submissionCount > 0;
           return (
@@ -65,8 +64,9 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
             >
               <Grid item md={8} xs={12}>
                 <SurveyEditor
-                  model={model}
+                  orgId={parseInt(orgId)}
                   readOnly={receivingSubmissions && !forceEditable}
+                  surveyId={parseInt(surveyId)}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
