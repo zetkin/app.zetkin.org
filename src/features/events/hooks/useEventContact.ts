@@ -1,5 +1,5 @@
 import useEventMutations from '../hooks/useEventMutations';
-import useEventParticipantsData from './useEventParticipantsData';
+import useEventParticipants from './useEventParticipants';
 import useEventParticipantsMutations from './useEventParticipantsMutations';
 
 type useEventContacReturn = {
@@ -12,7 +12,7 @@ export default function useEventContact(
   eventId: number
 ): useEventContacReturn {
   const { updateEvent } = useEventMutations(orgId);
-  const { participantsFuture } = useEventParticipantsData(orgId, eventId);
+  const { participantsFuture } = useEventParticipants(orgId, eventId);
   const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
 
   const removeContact = () => {

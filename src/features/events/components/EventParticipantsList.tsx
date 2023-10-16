@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 import messageIds from 'features/events/l10n/messageIds';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
 import theme from 'theme';
-import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';
 import useParticipantStatus from '../hooks/useParticipantsStatus';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -27,7 +27,7 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
     numCancelledParticipants,
     numSignedParticipants,
     pendingSignUps,
-  } = useEventParticipantsData(orgId, data.id);
+  } = useEventParticipants(orgId, data.id);
   const participantStatus = useParticipantStatus(orgId, data.id);
 
   return (

@@ -23,7 +23,7 @@ import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
 import useDuplicateEvent from 'features/events/hooks/useDuplicateEvent';
 import useEventMutations from 'features/events/hooks/useEventMutations';
-import useEventParticipantsData from 'features/events/hooks/useEventParticipantsData';
+import useEventParticipants from 'features/events/hooks/useEventParticipants';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -56,7 +56,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
-  const { participantsFuture, respondentsFuture } = useEventParticipantsData(
+  const { participantsFuture, respondentsFuture } = useEventParticipants(
     orgId,
     event.id
   );

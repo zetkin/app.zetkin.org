@@ -14,7 +14,7 @@ import { FC, useState } from 'react';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useEventData from '../hooks/useEventData';
-import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
@@ -42,7 +42,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     numNoshowParticipants,
     numRemindedParticipants,
     numSignedParticipants,
-  } = useEventParticipantsData(orgId, eventId);
+  } = useEventParticipants(orgId, eventId);
   const { addParticipant, setReqParticipants, sendReminders } =
     useEventParticipantsMutations(orgId, eventId);
   const respondents = respondentsFuture.data;

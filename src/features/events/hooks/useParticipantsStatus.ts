@@ -1,12 +1,12 @@
 import theme from 'theme';
 import useEventData from './useEventData';
-import useEventParticipantsData from './useEventParticipantsData';
+import useEventParticipants from './useEventParticipants';
 
 export default function useParticipantStatus(
   orgId: number,
   eventId: number
 ): string {
-  const { numAvailParticipants } = useEventParticipantsData(orgId, eventId);
+  const { numAvailParticipants } = useEventParticipants(orgId, eventId);
   const event = useEventData(orgId, eventId);
   const reqParticipants = event.data?.num_participants_required ?? 0;
   const diff = reqParticipants - numAvailParticipants;

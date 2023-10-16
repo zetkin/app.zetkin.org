@@ -1,6 +1,6 @@
 import messageIds from '../l10n/messageIds';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import useEventParticipantsData from '../hooks/useEventParticipantsData';
+import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useState } from 'react';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -18,7 +18,7 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const messages = useMessages(messageIds);
   const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
-  const { participantsFuture, respondentsFuture } = useEventParticipantsData(
+  const { participantsFuture, respondentsFuture } = useEventParticipants(
     orgId,
     eventId
   );

@@ -12,7 +12,7 @@ import {
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
 
-type useEventParticipantsDataReturn = {
+type useEventParticipantsReturn = {
   bookedParticipants: ZetkinEventParticipant[] | [];
   cancelledParticipants: ZetkinEventParticipant[] | [];
   numAvailParticipants: number;
@@ -26,10 +26,10 @@ type useEventParticipantsDataReturn = {
   respondentsFuture: IFuture<ZetkinEventResponse[]>;
 };
 
-export default function useEventParticipantsData(
+export default function useEventParticipants(
   orgId: number,
   eventId: number
-): useEventParticipantsDataReturn {
+): useEventParticipantsReturn {
   const apiClient = useApiClient();
   const participantsState = useAppSelector((state) => state.events);
   const dispatch = useAppDispatch();
