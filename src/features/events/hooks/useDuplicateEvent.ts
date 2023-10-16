@@ -23,11 +23,11 @@ export default function useDuplicateEvent(
       organization_id: event.data?.organization.id,
       start_time: event.data?.start_time,
       title: event.data?.title,
+      url: event.data?.url,
     };
     if (event.data?.campaign) {
       duplicateEventPostBody.campaign_id = event.data?.campaign.id;
     }
-    // TODO: should this include URL?
     return createEvent(duplicateEventPostBody);
   };
 
