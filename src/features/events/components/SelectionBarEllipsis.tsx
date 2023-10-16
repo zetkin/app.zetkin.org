@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import messageIds from '../../calendar/l10n/messageIds';
 import { resetSelection } from '../store';
-import useEventsMutations from '../hooks/useEventsMutations';
+import useBulkEventMutations from '../hooks/useBulkEventMutations';
 import { useMessages } from 'core/i18n';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -42,7 +42,7 @@ const SelectionBarEllipsis = () => {
 
   const { orgId } = useNumericRouteParams();
 
-  const { deleteEvents, updateEvents } = useEventsMutations(orgId);
+  const { deleteEvents, updateEvents } = useBulkEventMutations(orgId);
 
   const ellipsisMenuItems = [
     {
