@@ -7,7 +7,7 @@ import {
 } from '@mui/icons-material';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
-import useEventData from '../hooks/useEventData';
+import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';
 
@@ -22,7 +22,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
   eventId,
   orgId,
 }) => {
-  const eventData = useEventData(orgId, eventId).data;
+  const eventData = useEvent(orgId, eventId).data;
   const { participantsFuture, pendingSignUps } = useEventParticipants(
     orgId,
     eventId

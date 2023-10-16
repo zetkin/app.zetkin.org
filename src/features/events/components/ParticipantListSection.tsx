@@ -16,8 +16,8 @@ import filterParticipants from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
+import useEvent from '../hooks/useEvent';
 import useEventContact from '../hooks/useEventContact';
-import useEventData from '../hooks/useEventData';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useMessages } from 'core/i18n';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
@@ -115,7 +115,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   type,
 }) => {
   const messages = useMessages(messageIds);
-  const eventFuture = useEventData(orgId, eventId);
+  const eventFuture = useEvent(orgId, eventId);
   const { setContact } = useEventContact(orgId, eventId);
   const {
     attendedParticipant,

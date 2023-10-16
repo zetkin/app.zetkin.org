@@ -13,7 +13,7 @@ import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
-import useEventData from '../hooks/useEventData';
+import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import useParticipantStatus from '../hooks/useParticipantsStatus';
@@ -32,7 +32,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   onClickRecord,
   orgId,
 }) => {
-  const eventData = useEventData(orgId, eventId).data;
+  const eventData = useEvent(orgId, eventId).data;
   const participantStatus = useParticipantStatus(orgId, eventId);
   const {
     respondentsFuture,

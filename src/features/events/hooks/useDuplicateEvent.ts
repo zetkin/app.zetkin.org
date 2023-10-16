@@ -1,5 +1,5 @@
 import useCreateEvent from './useCreateEvent';
-import useEventData from './useEventData';
+import useEvent from './useEvent';
 import { ZetkinEventPostBody } from './useEventMutations';
 
 type useDuplicateEventReturn = {
@@ -11,7 +11,7 @@ export default function useDuplicateEvent(
   eventId: number
 ): useDuplicateEventReturn {
   const { createEvent } = useCreateEvent(orgId);
-  const event = useEventData(orgId, eventId);
+  const event = useEvent(orgId, eventId);
 
   const duplicateEvent = () => {
     const duplicateEventPostBody: ZetkinEventPostBody = {

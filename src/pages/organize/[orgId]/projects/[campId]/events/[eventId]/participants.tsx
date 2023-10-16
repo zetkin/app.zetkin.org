@@ -10,7 +10,7 @@ import EventParticipantsList from 'features/events/components/EventParticipantsL
 import { PageWithLayout } from 'utils/types';
 import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
 import { scaffold } from 'utils/next';
-import useEventData from 'features/events/hooks/useEventData';
+import useEvent from 'features/events/hooks/useEvent';
 import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -44,7 +44,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
 }) => {
   const [filterString, setFilterString] = useState<string>('');
   const listRef = useRef<HTMLDivElement>();
-  const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
+  const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
   return (
     <ZUIFuture future={eventFuture}>

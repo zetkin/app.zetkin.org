@@ -7,8 +7,8 @@ import {
 import { FC, useContext } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
+import useEvent from '../hooks/useEvent';
 import useEventContact from '../hooks/useEventContact';
-import useEventData from '../hooks/useEventData';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUICard from 'zui/ZUICard';
@@ -100,7 +100,7 @@ const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
 
 const EventContactCard: FC<EventContactCardProps> = ({ data, orgId }) => {
   const messages = useMessages(messageIds);
-  const eventFuture = useEventData(orgId, data.id);
+  const eventFuture = useEvent(orgId, data.id);
 
   return (
     <Box mb={2}>

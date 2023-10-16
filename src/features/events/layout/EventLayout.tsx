@@ -10,7 +10,7 @@ import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
 import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
-import useEventData from '../hooks/useEventData';
+import useEvent from '../hooks/useEvent';
 import useEventMutations from '../hooks/useEventMutations';
 import useEventState from '../hooks/useEventState';
 import useEventTypes from '../hooks/useEventTypes';
@@ -35,7 +35,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
-  const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
+  const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
   const eventState = useEventState(parseInt(orgId), parseInt(eventId));
   const { setTitle, setType } = useEventMutations(
     parseInt(orgId),

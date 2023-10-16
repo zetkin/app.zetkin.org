@@ -17,7 +17,7 @@ import getEventUrl from '../utils/getEventUrl';
 import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
-import useEventData from '../hooks/useEventData';
+import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useMessages } from 'core/i18n';
@@ -34,7 +34,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   eventId,
   orgId,
 }) => {
-  const eventData = useEventData(orgId, eventId).data;
+  const eventData = useEvent(orgId, eventId).data;
   const { pendingSignUps } = useEventParticipants(orgId, eventId);
   const { setReqParticipants } = useEventParticipantsMutations(orgId, eventId);
   const messages = useMessages(messageIds);

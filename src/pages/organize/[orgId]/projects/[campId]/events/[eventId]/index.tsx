@@ -8,7 +8,7 @@ import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventParticipantsCard';
 import EventRelatedCard from 'features/events/components/EventRelatedCard';
-import useEventData from 'features/events/hooks/useEventData';
+import useEvent from 'features/events/hooks/useEvent';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -46,7 +46,7 @@ interface EventPageProps {
 }
 
 const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
-  const eventFuture = useEventData(parseInt(orgId), parseInt(eventId));
+  const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
   if (!eventFuture.data) {
     return null;
