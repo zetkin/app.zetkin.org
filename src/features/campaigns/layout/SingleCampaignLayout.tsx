@@ -22,8 +22,10 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
-  const { data: campaign } = useCampaign(orgId, campId);
+  const { campaignFuture } = useCampaign(orgId, campId);
   const { firstEvent, lastEvent } = useCampaignEvents(orgId, campId);
+
+  const campaign = campaignFuture.data;
 
   if (!campaign) {
     return null;

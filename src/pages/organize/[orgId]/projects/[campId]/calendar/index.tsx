@@ -11,6 +11,7 @@ import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 
@@ -58,10 +59,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     campaignTasksState?.status === 'success'
   ) {
     return {
-      props: {
-        campId,
-        orgId,
-      },
+      props: {},
     };
   } else {
     return {
@@ -70,17 +68,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type OrganizeCalendarPageProps = {
-  campId: string;
-  orgId: string;
-};
-
-const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
-  orgId,
-  campId,
-}) => {
+const CampaignCalendarPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
-  const { data: campaign } = useCampaign(parseInt(orgId), parseInt(campId));
+  const { orgId, campId } = useNumericRouteParams();
+  const { campaignFuture } = useCampaign(orgId, campId);
+  const campaign = campaignFuture.data;
 
   const isOnServer = useServerSide();
   if (isOnServer) {

@@ -15,9 +15,10 @@ const UnderlinedCampaignTitle: FC<UnderlinedCampaignTitleProps> = ({
   campId,
   orgId,
 }) => {
-  const { data } = useCampaign(orgId, campId);
+  const { campaignFuture } = useCampaign(orgId, campId);
+  const campaign = campaignFuture.data;
 
-  if (!data) {
+  if (!campaign) {
     return null;
   }
 
@@ -25,7 +26,7 @@ const UnderlinedCampaignTitle: FC<UnderlinedCampaignTitleProps> = ({
     <UnderlinedMsg
       id={localMessageIds.campaignSelect.campaign}
       values={{
-        campaign: <UnderlinedText text={data.title} />,
+        campaign: <UnderlinedText text={campaign.title} />,
       }}
     />
   );

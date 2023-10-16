@@ -1,5 +1,5 @@
 import { generateRandomColor } from 'utils/colorUtils';
-import shouldLoad from 'core/caching/shouldLoad';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import {
   campaignDeleted,
@@ -8,11 +8,11 @@ import {
   campaignUpdate,
   campaignUpdated,
 } from '../store';
-import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseCampaignReturn {
-  data: ZetkinCampaign | null;
+  campaignFuture: IFuture<ZetkinCampaign>;
   deleteCampaign: () => void;
   updateCampaign: (data: Partial<ZetkinCampaign>) => IFuture<ZetkinCampaign>;
 }
@@ -26,27 +26,21 @@ export default function useCampaign(
   const campaignsSlice = useAppSelector((state) => state.campaigns);
   const campaignItems = campaignsSlice.campaignList.items;
 
-  const getData = (): IFuture<ZetkinCampaign> => {
-    const campaignItem = campaignItems.find((item) => item.id == campId);
+  const campaignItem = campaignItems.find((item) => item.id == campId);
 
-    if (!campaignItem || shouldLoad(campaignItem)) {
-      dispatch(campaignLoad(campId));
-      const promise = apiClient
-        .get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campId}`)
-        .then((data: ZetkinCampaign) => {
-          const dataWithColor = {
-            ...data,
-            color: generateRandomColor(data.id.toString()),
-          };
-          dispatch(campaignLoaded(dataWithColor));
-          return dataWithColor;
-        });
-
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(campaignItem);
-    }
-  };
+  const campaignFuture = loadItemIfNecessary(campaignItem, dispatch, {
+    actionOnLoad: () => campaignLoad(campId),
+    actionOnSuccess: (data) => campaignLoaded(data),
+    loader: async () => {
+      const campaign = await apiClient.get<ZetkinCampaign>(
+        `/api/orgs/${orgId}/campaigns/${campId}`
+      );
+      return {
+        ...campaign,
+        color: generateRandomColor(campaign.id.toString()),
+      };
+    },
+  });
 
   const deleteCampaign = () => {
     apiClient.delete(`/api/orgs/${orgId}/campaigns/${campId}`);
@@ -69,6 +63,5 @@ export default function useCampaign(
     return new PromiseFuture(promise);
   };
 
-  const { data } = getData();
-  return { data, deleteCampaign, updateCampaign };
+  return { campaignFuture, deleteCampaign, updateCampaign };
 }

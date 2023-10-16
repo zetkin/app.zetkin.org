@@ -11,6 +11,7 @@ import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import { Suspense } from 'react';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 
@@ -60,17 +61,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type CampaignCalendarPageProps = {
-  campId: string;
-  orgId: string;
-};
-
-const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
-  orgId,
-  campId,
-}) => {
+const CampaignSummaryPage: PageWithLayout = () => {
   const isOnServer = useServerSide();
-  const { data: campaign } = useCampaign(parseInt(orgId), parseInt(campId));
+  const { orgId, campId } = useNumericRouteParams();
+  const { campaignFuture } = useCampaign(orgId, campId);
+  const campaign = campaignFuture.data;
 
   if (isOnServer) {
     return null;
@@ -92,10 +87,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
           </Grid>
         </Box>
         <Suspense>
-          <ActivitiesOverview
-            campaignId={parseInt(campId)}
-            orgId={parseInt(orgId)}
-          />
+          <ActivitiesOverview campaignId={campId} orgId={orgId} />
         </Suspense>
       </>
     </>
