@@ -1,5 +1,6 @@
+import useCreateEvent from './useCreateEvent';
 import useEventData from './useEventData';
-import useEventMutations, { ZetkinEventPostBody } from './useEventMutations';
+import { ZetkinEventPostBody } from './useEventMutations';
 
 type useDuplicateEventReturn = {
   duplicateEvent: () => void;
@@ -9,14 +10,10 @@ export default function useDuplicateEvent(
   orgId: number,
   eventId: number
 ): useDuplicateEventReturn {
-  const { createEvent } = useEventMutations(orgId);
+  const { createEvent } = useCreateEvent(orgId);
   const event = useEventData(orgId, eventId);
 
   const duplicateEvent = () => {
-    createEvent(getDuplicatePostBody());
-  };
-
-  const getDuplicatePostBody = (): ZetkinEventPostBody => {
     const duplicateEventPostBody: ZetkinEventPostBody = {
       activity_id: event.data?.activity?.id,
       end_time: event.data?.end_time,
@@ -31,7 +28,7 @@ export default function useDuplicateEvent(
       duplicateEventPostBody.campaign_id = event.data?.campaign.id;
     }
     // TODO: should this include URL?
-    return duplicateEventPostBody;
+    return createEvent(duplicateEventPostBody);
   };
 
   return { duplicateEvent };
