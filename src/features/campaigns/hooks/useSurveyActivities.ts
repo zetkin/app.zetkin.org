@@ -1,5 +1,6 @@
 import { getUTCDateWithoutTime } from 'utils/dateUtils';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
+import { ZetkinSurvey } from 'utils/types/zetkin';
 import { ACTIVITIES, CampaignActivity } from '../types';
 import {
   campaignSurveyIdsLoad,
@@ -14,7 +15,6 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { ZetkinSurvey, ZetkinTask } from 'utils/types/zetkin';
 
 export default function useSurveyActivities(
   orgId: number,
@@ -35,10 +35,10 @@ export default function useSurveyActivities(
         actionOnLoad: () => campaignSurveyIdsLoad(campId),
         actionOnSuccess: (data) => campaignSurveyIdsLoaded([campId, data]),
         loader: async () => {
-          const tasks = await apiClient.get<ZetkinTask[]>(
+          const surveys = await apiClient.get<ZetkinSurvey[]>(
             `/api/orgs/${orgId}/campaigns/${campId}/surveys`
           );
-          return tasks.map((survey) => ({ id: survey.id }));
+          return surveys.map((survey) => ({ id: survey.id }));
         },
       }
     );
