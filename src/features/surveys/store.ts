@@ -228,11 +228,8 @@ const surveysSlice = createSlice({
     surveyCreate: (state) => {
       state.surveyList.isLoading = true;
     },
-    surveyCreated: (
-      state,
-      action: PayloadAction<[ZetkinSurveyExtended, number]>
-    ) => {
-      const [survey] = action.payload;
+    surveyCreated: (state, action: PayloadAction<ZetkinSurveyExtended>) => {
+      const survey = action.payload;
       state.surveyList.isLoading = false;
       state.surveyList.items.push(remoteItem(survey.id, { data: survey }));
       state.elementsBySurveyId[survey.id] = remoteList();

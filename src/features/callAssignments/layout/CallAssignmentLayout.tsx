@@ -2,56 +2,41 @@ import { Box, Button, Typography } from '@mui/material';
 import { Headset, People } from '@mui/icons-material';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
+import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
+import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
+import useCallers from '../hooks/useCallers';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from '../l10n/messageIds';
-import useCallAssignment from '../hooks/useCallAssignment';
-import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
-import useCallers from '../hooks/useCallers';
 import useCallAssignmentState, {
   CallAssignmentState,
 } from '../hooks/useCallAssignmentState';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
-  orgId: string;
-  campaignId: string;
-  assignmentId: string;
 }
 
 const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   children,
-  orgId,
-  campaignId,
-  assignmentId,
 }) => {
   const messages = useMessages(messageIds);
+  const { orgId, campId, callAssId } = useNumericRouteParams();
+
   const {
-    data: assignmentData,
+    data: callAssignment,
     end,
     start,
     updateCallAssignment,
-  } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  } = useCallAssignment(orgId, callAssId);
+  const { statsFuture } = useCallAssignmentStats(orgId, callAssId);
+  const { filteredCallersFuture } = useCallers(orgId, callAssId);
+  const state = useCallAssignmentState(orgId, callAssId);
 
-  const {
-    data: statsData,
-    error: statsError,
-    isLoading: statsIsLoading,
-  } = useCallAssignmentStats(parseInt(orgId), parseInt(assignmentId));
-
-  const {
-    data: callersData,
-    error: callersError,
-    isLoading: callersIsLoading,
-  } = useCallers(parseInt(orgId), parseInt(assignmentId));
-
-  const state = useCallAssignmentState(parseInt(orgId), parseInt(assignmentId));
-
-  if (!assignmentData) {
+  if (!callAssignment) {
     return null;
   }
 
@@ -69,14 +54,14 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Button>
         )
       }
-      baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
+      baseHref={`/organize/${orgId}/projects/${campId}/callassignments/${callAssId}`}
       belowActionButtons={
         <ZUIDateRangePicker
-          endDate={assignmentData.end_date || null}
+          endDate={callAssignment.end_date || null}
           onChange={(startDate, endDate) => {
             updateCallAssignment({ end_date: endDate, start_date: startDate });
           }}
-          startDate={assignmentData.start_date || null}
+          startDate={callAssignment.start_date || null}
         />
       }
       defaultTab="/"
@@ -87,11 +72,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
-              future={{
-                data: statsData,
-                error: statsError,
-                isLoading: statsIsLoading,
-              }}
+              future={statsFuture}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
@@ -110,11 +91,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
-              future={{
-                data: callersData,
-                error: callersError,
-                isLoading: callersIsLoading,
-              }}
+              future={filteredCallersFuture}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
@@ -154,7 +131,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => updateCallAssignment({ title: newTitle })}
-          value={assignmentData.title}
+          value={callAssignment.title}
         />
       }
     >

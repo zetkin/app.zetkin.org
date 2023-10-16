@@ -31,11 +31,11 @@ const CallAssignmentTargets = () => {
 
   const { orgId, callAssId: assignmentId } = useNumericRouteParams();
   const {
-    data: assignmentData,
+    data: callAssignment,
     isTargeted,
     updateTargets: setTargets,
   } = useCallAssignment(orgId, assignmentId);
-  const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
+  const { statsFuture } = useCallAssignmentStats(orgId, assignmentId);
 
   return (
     <>
@@ -45,7 +45,7 @@ const CallAssignmentTargets = () => {
             <Msg id={messageIds.targets.title} />
           </Typography>
           {isTargeted && (
-            <ZUIAnimatedNumber value={statsData?.allTargets || 0}>
+            <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
               {(animatedValue) => (
                 <Box className={classes.chip}>{animatedValue}</Box>
               )}
@@ -91,7 +91,7 @@ const CallAssignmentTargets = () => {
             setTargets(query);
             setQueryDialogOpen(false);
           }}
-          query={assignmentData?.target}
+          query={callAssignment?.target}
         />
       )}
     </>

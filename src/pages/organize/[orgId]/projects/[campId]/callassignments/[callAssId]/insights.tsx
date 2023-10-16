@@ -198,16 +198,8 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   );
 };
 
-AssignmentPage.getLayout = function getLayout(page, props) {
-  return (
-    <CallAssignmentLayout
-      assignmentId={props.assignmentId}
-      campaignId={props.campId}
-      orgId={props.orgId}
-    >
-      {page}
-    </CallAssignmentLayout>
-  );
+AssignmentPage.getLayout = function getLayout(page) {
+  return <CallAssignmentLayout>{page}</CallAssignmentLayout>;
 };
 
 export default AssignmentPage;

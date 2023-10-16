@@ -59,7 +59,7 @@ export default function useCreateCampaignActivity(
         surveyBody
       )
       .then((survey) => {
-        dispatch(surveyCreated([survey, campId]));
+        dispatch(surveyCreated(survey));
         return survey;
       });
 

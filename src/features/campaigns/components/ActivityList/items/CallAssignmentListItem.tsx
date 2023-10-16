@@ -18,14 +18,11 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   caId,
   orgId,
 }) => {
-  const { data: assignmentData } = useCallAssignment(orgId, caId);
-  const { data: stats, isLoading: statsLoading } = useCallAssignmentStats(
-    orgId,
-    caId
-  );
+  const { data: callAssignment } = useCallAssignment(orgId, caId);
+  const { statsFuture } = useCallAssignmentStats(orgId, caId);
   const state = useCallAssignmentState(orgId, caId);
 
-  if (!assignmentData) {
+  if (!callAssignment) {
     return null;
   }
 
@@ -41,10 +38,10 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     color = STATUS_COLORS.BLUE;
   }
 
-  const blocked = stats?.blocked || 0;
-  const ready = stats?.ready || 0;
-  const done = stats?.done || 0;
-  const callsMade = stats?.callsMade.toString() || '0';
+  const blocked = statsFuture.data?.blocked || 0;
+  const ready = statsFuture.data?.ready || 0;
+  const done = statsFuture.data?.done || 0;
+  const callsMade = statsFuture.data?.callsMade.toString() || '0';
 
   return (
     <ActivityListItemWithStats
@@ -53,13 +50,13 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       endNumber={callsMade}
       greenChipValue={done}
       href={`/organize/${orgId}/projects/${
-        assignmentData.campaign?.id ?? 'standalone'
+        callAssignment?.campaign?.id ?? 'standalone'
       }/callassignments/${caId}`}
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
-      statsLoading={statsLoading}
-      title={assignmentData.title}
+      statsLoading={statsFuture.isLoading}
+      title={callAssignment?.title}
     />
   );
 };

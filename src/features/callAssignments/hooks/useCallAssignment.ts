@@ -1,20 +1,24 @@
-import { CallAssignmentData } from '../apiTypes';
 import dayjs from 'dayjs';
-import shouldLoad from 'core/caching/shouldLoad';
+
+import { CallAssignmentData } from '../apiTypes';
+import { futureToObject } from 'core/caching/futures';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdate,
   callAssignmentUpdated,
 } from '../store';
-import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
 interface UseCallAssignmentReturn {
   data: ZetkinCallAssignment | null;
   end: () => void;
+  error: unknown | null;
   isTargeted: boolean;
+  isLoading: boolean;
   updateGoal: (query: Partial<ZetkinQuery>) => void;
   updateTargets: (query: Partial<ZetkinQuery>) => void;
   start: () => void;
@@ -29,36 +33,26 @@ export default function useCallAssignment(
   const dispatch = useAppDispatch();
   const callAssignmentSlice = useAppSelector((state) => state.callAssignments);
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
+  const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
+  const callAssignment = caItem?.data;
 
-  const getData = (): IFuture<CallAssignmentData> => {
-    const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
-
-    if (!caItem || shouldLoad(caItem)) {
-      dispatch(callAssignmentLoad(assignmentId));
-      const promise = apiClient
-        .get<CallAssignmentData>(
-          `/api/orgs/${orgId}/call_assignments/${assignmentId}`
-        )
-        .then((data: CallAssignmentData) => {
-          dispatch(callAssignmentLoaded(data));
-          return data;
-        });
-
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(caItem);
-    }
-  };
+  const callAssignmentFuture = loadItemIfNecessary(caItem, dispatch, {
+    actionOnLoad: () => callAssignmentLoad(assignmentId),
+    actionOnSuccess: (data) => callAssignmentLoaded(data),
+    loader: () =>
+      apiClient.get<ZetkinCallAssignment>(
+        `/api/orgs/${orgId}/call_assignments/${assignmentId}`
+      ),
+  });
 
   const isTargeted = () => {
-    const { data } = getData();
-    return !!(data && data.target?.filter_spec?.length != 0);
+    return !!(
+      callAssignmentFuture.data &&
+      callAssignmentFuture.data.target?.filter_spec?.length != 0
+    );
   };
 
   const updateTargets = (query: Partial<ZetkinQuery>): void => {
-    const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
-    const callAssignment = caItem?.data;
-
     if (callAssignment) {
       dispatch(callAssignmentUpdate([assignmentId, ['target']]));
       fetch(`/api/orgs/${orgId}/people/queries/${callAssignment.target.id}`, {
@@ -82,9 +76,6 @@ export default function useCallAssignment(
 
   const updateGoal = (query: Partial<ZetkinQuery>): void => {
     // TODO: Refactor once SmartSearch is supported in redux framework
-    const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
-    const callAssignment = caItem?.data;
-
     if (callAssignment) {
       dispatch(callAssignmentUpdate([assignmentId, ['goal']]));
       fetch(`/api/orgs/${orgId}/people/queries/${callAssignment.goal.id}`, {
@@ -126,15 +117,15 @@ export default function useCallAssignment(
   };
 
   const start = () => {
-    const { data } = getData();
-    if (!data) {
+    if (!callAssignmentFuture.data) {
       return;
     }
 
     const now = dayjs();
     const today = now.format('YYYY-MM-DD');
 
-    const { start_date: startStr, end_date: endStr } = data;
+    const { start_date: startStr, end_date: endStr } =
+      callAssignmentFuture.data;
 
     if (!startStr && !endStr) {
       updateCallAssignment({
@@ -185,8 +176,7 @@ export default function useCallAssignment(
   };
 
   const end = () => {
-    const { data } = getData();
-    if (!data) {
+    if (!callAssignmentFuture.data) {
       return;
     }
 
@@ -199,7 +189,7 @@ export default function useCallAssignment(
   };
 
   return {
-    data: getData().data,
+    ...futureToObject(callAssignmentFuture),
     end,
     isTargeted: isTargeted(),
     start,

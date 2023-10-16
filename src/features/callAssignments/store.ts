@@ -222,9 +222,10 @@ const callAssignmentsSlice = createSlice({
     },
     callersLoaded: (
       state,
-      action: PayloadAction<{ callers: CallAssignmentCaller[]; id: number }>
+      action: PayloadAction<[CallAssignmentCaller[], number]>
     ) => {
-      state.callersById[action.payload.id] = remoteList(action.payload.callers);
+      const [callers, assignmentId] = action.payload;
+      state.callersById[assignmentId] = remoteList(callers);
     },
     campaignCallAssignmentsLoad: (state, action: PayloadAction<number>) => {
       const campaignId = action.payload;
