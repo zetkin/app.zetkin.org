@@ -1,5 +1,4 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { useDispatch } from 'react-redux';
 import useSurveySubmission from './useSurveySubmission';
 import {
   ELEMENT_TYPE,
@@ -10,7 +9,7 @@ import {
 } from 'utils/types/zetkin';
 import { elementsLoad, elementsLoaded } from '../store';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
-import { useApiClient, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 type HydratedQuestionBase = {
   description: string | null;
@@ -64,7 +63,7 @@ export default function useHydratedSurveySubmission(
   orgId: number,
   submissionId: number
 ): IFuture<HydratedSurveySubmission> {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const apiClient = useApiClient();
   const submissionFuture = useSurveySubmission(orgId, submissionId);
   const surveysSlice = useAppSelector((state) => state.surveys);
