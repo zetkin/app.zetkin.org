@@ -45,12 +45,10 @@ export default function useCallAssignment(
       ),
   });
 
-  const isTargeted = () => {
-    return !!(
-      callAssignmentFuture.data &&
-      callAssignmentFuture.data.target?.filter_spec?.length != 0
-    );
-  };
+  const isTargeted = !!(
+    callAssignmentFuture.data &&
+    callAssignmentFuture.data.target?.filter_spec?.length != 0
+  );
 
   const updateTargets = (query: Partial<ZetkinQuery>): void => {
     if (callAssignment) {
@@ -191,7 +189,7 @@ export default function useCallAssignment(
   return {
     ...futureToObject(callAssignmentFuture),
     end,
-    isTargeted: isTargeted(),
+    isTargeted,
     start,
     updateCallAssignment,
     updateGoal,
