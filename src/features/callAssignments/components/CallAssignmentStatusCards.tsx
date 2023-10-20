@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Box,
   Button,
@@ -12,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Edit, Settings, Visibility } from '@mui/icons-material';
+import { FC, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
@@ -20,14 +20,20 @@ import StatusCardItem from './StatusCardItem';
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import useModel from 'core/useModel';
-import { useNumericRouteParams } from 'core/hooks';
 import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import { Msg, useMessages } from 'core/i18n';
 
-const CallAssignmentStatusCards = () => {
+interface CallAssignmentStatusCardsProps {
+  orgId: number;
+  assignmentId: number;
+}
+
+const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
+  orgId,
+  assignmentId,
+}) => {
   const messages = useMessages(messageIds);
 
-  const { orgId, callAssId: assignmentId } = useNumericRouteParams();
   const {
     data: callAssignment,
     updateGoal,

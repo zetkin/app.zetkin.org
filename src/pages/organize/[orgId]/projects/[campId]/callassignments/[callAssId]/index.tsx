@@ -63,7 +63,7 @@ const AssignmentPage: PageWithLayout = () => {
       </Head>
       <Box>
         <Box mb={2}>
-          <CallAssignmentTargets />
+          <CallAssignmentTargets assignmentId={callAssId} orgId={orgId} />
         </Box>
         <Box mb={2}>
           <Typography variant="h3">
@@ -72,7 +72,7 @@ const AssignmentPage: PageWithLayout = () => {
         </Box>
         <ZUIStackedStatusBar values={statusBarStatsList} />
         <Box mt={2}>
-          <CallAssignmentStatusCards />
+          <CallAssignmentStatusCards assignmentId={callAssId} orgId={orgId} />
         </Box>
       </Box>
     </>
