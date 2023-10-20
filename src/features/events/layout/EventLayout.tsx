@@ -69,7 +69,6 @@ const EventLayout: React.FC<EventLayoutProps> = ({
             {({ data: { types, currentEvent } }) => {
               return (
                 <EventTypeAutocomplete
-                  eventId={currentEvent.id}
                   onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
                     setType(newValue ? newValue.id : newValue);

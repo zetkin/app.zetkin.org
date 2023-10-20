@@ -1,12 +1,6 @@
-import {
-  eventDeleted,
-  eventUpdate,
-  eventUpdated,
-  typeAdd,
-  typeAdded,
-} from '../store';
+import { ZetkinEvent } from 'utils/types/zetkin';
+import { eventDeleted, eventUpdate, eventUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 
 export type ZetkinEventPatchBody = Partial<
   Omit<
@@ -26,7 +20,6 @@ export type ZetkinEventPatchBody = Partial<
 export type ZetkinEventPostBody = ZetkinEventPatchBody;
 
 type useEventMutationsReturn = {
-  addType: (title: string) => void;
   cancelEvent: () => void;
   deleteEvent: () => void;
   publishEvent: () => void;
@@ -43,15 +36,6 @@ export default function useEventMutations(
 ): useEventMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-
-  const addType = (title: string) => {
-    dispatch(typeAdd([orgId, { title }]));
-    apiClient
-      .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, { title })
-      .then((event) => {
-        dispatch(typeAdded(event));
-      });
-  };
 
   const cancelEvent = () => {
     updateEvent({
@@ -104,7 +88,6 @@ export default function useEventMutations(
   };
 
   return {
-    addType,
     cancelEvent,
     deleteEvent,
     publishEvent,
