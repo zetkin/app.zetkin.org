@@ -6,13 +6,12 @@ import { FC, ReactNode } from 'react';
 
 import { Msg } from 'core/i18n';
 import PaneHeader from 'utils/panes/PaneHeader';
-import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import SurveySubmissionModel, {
+import useHydratedSurveySubmission, {
   ELEM_TYPE,
-} from '../models/SurveySubmissionModel';
+} from '../hooks/useHydratedSurveySubmission';
 
 import messageIds from '../l10n/messageIds';
 
@@ -60,8 +59,8 @@ const useStyles = makeStyles({
 
 const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
   const styles = useStyles();
-  const model = useModel((env) => new SurveySubmissionModel(env, orgId, id));
-  const subFuture = model.getHydrated();
+
+  const subFuture = useHydratedSurveySubmission(orgId, id);
 
   return (
     <ZUIFuture future={subFuture}>
