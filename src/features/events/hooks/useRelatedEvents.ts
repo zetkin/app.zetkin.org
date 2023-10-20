@@ -1,29 +1,25 @@
-import useAllEvents from './useAllEvents';
+import useEventsFromDateRange from './useEventsFromDateRange';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import {
-  ErrorFuture,
-  IFuture,
-  LoadingFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
+import { IFuture, ResolvedFuture } from 'core/caching/futures';
 
 export default function useRelatedEvents(
   currentEvent: ZetkinEvent,
   orgId: number
 ): IFuture<ZetkinEvent[]> {
   const relatedEvents: ZetkinEvent[] = [];
-  const allEvents = useAllEvents(orgId);
+  const start = new Date(currentEvent.start_time);
+  const end = new Date(currentEvent.end_time);
+  const allEventsInActivities = useEventsFromDateRange(start, end);
 
-  if (allEvents.isLoading) {
-    return new LoadingFuture();
-  } else if (allEvents.error) {
-    return new ErrorFuture(allEvents.error);
-  }
+  const allEvents = allEventsInActivities
+    .map((event) => event.data)
+    .filter((event) => orgId == event.organization.id);
 
-  if (!allEvents.data) {
+  if (allEvents.length === 0) {
     return new ResolvedFuture(relatedEvents);
   }
-  for (const event of allEvents.data) {
+
+  for (const event of allEvents) {
     if (event.id !== currentEvent.id) {
       //check if it's same start date or same end date and same location and activity
       if (
@@ -48,5 +44,6 @@ export default function useRelatedEvents(
       }
     }
   }
+
   return new ResolvedFuture(relatedEvents || []);
 }
