@@ -16,11 +16,12 @@ import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
+import useCreateView from 'features/views/hooks/useCreateView';
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
+import { useNumericRouteParams } from 'core/hooks';
 import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
 import useViewGrid from 'features/views/hooks/useViewGrid';
-import useViewMutations from 'features/views/hooks/useViewMutations';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -44,7 +45,6 @@ import ViewDataTableToolbar, {
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
-import { useNumericRouteParams } from 'core/hooks';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -101,7 +101,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     orgId,
     view.id
   );
-  const { createView } = useViewMutations(orgId);
+  const createView = useCreateView(orgId);
   const viewGridHook = useViewGrid(orgId, view.id);
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {

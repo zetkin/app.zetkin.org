@@ -53,7 +53,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { deleteView: deleteList, setTitle } = useViewMutations(orgId);
+  const { deleteView: deleteList, updateView } = useViewMutations(orgId);
   const viewFuture = useView(orgId, viewId);
   const { deleteContentQuery } = useViewDataTableMutations(orgId, viewId);
   const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
@@ -76,7 +76,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                 key={view.id}
                 onChange={(newTitle) => {
                   try {
-                    setTitle(viewId, newTitle);
+                    updateView(viewId, { title: newTitle });
                     showSnackbar(
                       'success',
                       messages.editViewTitleAlert.success()
