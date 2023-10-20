@@ -9,6 +9,7 @@ import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useCreateTagGroup from 'features/tags/hooks/useCreateTagGroup';
 
 export interface TagManagerControllerProps {
   assignedTags: ZetkinTag[];
@@ -40,7 +41,7 @@ export const TagManagerController: React.FunctionComponent<
   onUnassignTag,
 }) => {
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
-
+  // const createTagGroup = useCreateTagGroup(1);
   return (
     <>
       <TagsList
@@ -49,6 +50,9 @@ export const TagManagerController: React.FunctionComponent<
         tags={assignedTags}
       />
       <Box mt={assignedTags.length > 0 ? 2 : 0}>
+        <Button onClick={() => createTagGroup({ title: 'Road' })}>
+          test yeahe
+        </Button>
         <Button
           color="primary"
           onClick={(event) => setAddTagButton(event.currentTarget)}
@@ -69,6 +73,7 @@ export const TagManagerController: React.FunctionComponent<
             ignoreValues={ignoreValues}
             onClose={() => setAddTagButton(null)}
             onCreateTag={async (tag) => {
+              console.log('yeah new tag');
               const newTag = await onCreateTag(tag);
               if (!newTag.value_type) {
                 // If not a value tag, assign to resource directly
