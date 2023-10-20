@@ -77,6 +77,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                   }}
                   onChangeNewOption={(newValueId) => setType(newValueId)}
                   onFocus={() => setEditingTypeOrTitle(true)}
+                  orgId={currentEvent.organization.id}
                   showBorder={editingTypeOrTitle}
                   types={types}
                   value={currentEvent.activity}

@@ -21,6 +21,7 @@ import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
+import { useAppDispatch } from 'core/hooks';
 import useDuplicateEvent from 'features/events/hooks/useDuplicateEvent';
 import useEventMutations from 'features/events/hooks/useEventMutations';
 import useEventParticipants from 'features/events/hooks/useEventParticipants';
@@ -31,7 +32,6 @@ import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 
 const useStyles = makeStyles(() => ({
@@ -52,24 +52,23 @@ interface SingleEventProps {
 }
 
 const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
-  const { orgId } = useNumericRouteParams();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
   const { participantsFuture, respondentsFuture } = useEventParticipants(
-    orgId,
+    event.organization.id,
     event.id
   );
   const { cancelEvent, deleteEvent, publishEvent } = useEventMutations(
-    orgId,
+    event.organization.id,
     event.id
   );
-  const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
+  const { duplicateEvent } = useDuplicateEvent(event.organization.id, event.id);
 
   const dispatch = useAppDispatch();
   const participants = participantsFuture.data || [];
   const respondents = respondentsFuture.data || [];
-  const state = useEventState(orgId, event.id);
+  const state = useEventState(event.organization.id, event.id);
 
   const showPublishButton =
     state == EventState.DRAFT ||

@@ -465,7 +465,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                             sx={{ cursor: 'pointer', marginLeft: 1 }}
                           />
                           <LocationModal
-                            currentEventId={data.id}
+                            currentEvent={data}
                             events={events || []}
                             locationId={locationId}
                             locations={sortedLocation || []}

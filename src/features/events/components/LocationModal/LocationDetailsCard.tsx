@@ -14,7 +14,6 @@ import messageIds from 'features/events/l10n/messageIds';
 import RelatedEventCard from '../RelatedEvent';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
@@ -31,6 +30,7 @@ interface LocationDetailsCardProps {
   onClose: () => void;
   onMove: () => void;
   onUseLocation: () => void;
+  orgId: number;
   location: ZetkinLocation;
   relatedEvents: ZetkinEvent[];
 }
@@ -40,9 +40,9 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   onClose,
   onMove,
   onUseLocation,
+  orgId,
   relatedEvents,
 }) => {
-  const { orgId } = useNumericRouteParams();
   const classes = useStyles();
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(location.title);

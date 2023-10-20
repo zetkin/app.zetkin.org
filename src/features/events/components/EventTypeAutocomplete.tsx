@@ -8,7 +8,6 @@ import { FC, useEffect, useState } from 'react';
 import messageIds from '../l10n/messageIds';
 import useEventMutations from '../hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 
 interface StyleProps {
@@ -39,6 +38,7 @@ type EventTypeAutocompleteProps = {
   onChange: (newValue: ZetkinEvent['activity'] | null) => void;
   onChangeNewOption: (newId: number) => void;
   onFocus: () => void;
+  orgId: number;
   showBorder?: boolean;
   types: ZetkinActivity[];
   value: ZetkinEvent['activity'];
@@ -55,12 +55,12 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   onChange,
   onChangeNewOption,
   onFocus,
+  orgId,
   showBorder,
   types,
   value,
 }) => {
   const [createdType, setCreatedType] = useState<string>('');
-  const { orgId } = useNumericRouteParams();
   const classes = useStyles({ showBorder });
   const messages = useMessages(messageIds);
   const { addType } = useEventMutations(orgId, eventId);

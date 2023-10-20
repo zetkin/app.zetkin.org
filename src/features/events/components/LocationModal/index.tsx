@@ -13,7 +13,6 @@ import messageIds from 'features/events/l10n/messageIds';
 import MoveLocationCard from './MoveLocationCard';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
@@ -41,7 +40,7 @@ export type PendingLocation = {
 };
 
 interface LocationModalProps {
-  currentEventId: number;
+  currentEvent: ZetkinEvent;
   events: ZetkinEvent[];
   locations: ZetkinLocation[];
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
@@ -53,7 +52,7 @@ interface LocationModalProps {
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
-  currentEventId,
+  currentEvent,
   events,
   locations,
   onCreateLocation,
@@ -62,11 +61,12 @@ const LocationModal: FC<LocationModalProps> = ({
   open,
   locationId = null,
 }) => {
-  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
-  const { setLocationLatLng } = useEventLocationMutations(orgId);
+  const { setLocationLatLng } = useEventLocationMutations(
+    currentEvent.organization.id
+  );
   const [pendingLocation, setPendingLocation] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -92,7 +92,7 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box border={1} padding={2}>
         <Map
-          currentEventId={currentEventId}
+          currentEventId={currentEvent.id}
           inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
@@ -160,10 +160,11 @@ const LocationModal: FC<LocationModalProps> = ({
                 onSelectLocation(selectedLocation);
                 onMapClose();
               }}
+              orgId={currentEvent.organization.id}
               relatedEvents={events.filter(
                 (event) =>
                   event.location?.id === selectedLocation.id &&
-                  event.id !== currentEventId
+                  event.id !== currentEvent.id
               )}
             />
           )}

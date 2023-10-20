@@ -12,7 +12,6 @@ import { removeOffset } from 'utils/dateUtils';
 import StatusDot from '../StatusDot';
 import useEventState from 'features/events/hooks/useEventState';
 import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 
@@ -27,10 +26,9 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   event,
   onEventClick,
 }) => {
-  const { orgId } = useNumericRouteParams();
   const intl = useIntl();
   const messages = useMessages(messageIds);
-  const state = useEventState(orgId, event.id);
+  const state = useEventState(event.organization.id, event.id);
   const timeSpan = `${intl.formatTime(
     removeOffset(event.start_time)
   )}-${intl.formatTime(removeOffset(event.end_time))}`;
@@ -67,7 +65,10 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
             </Typography>
           </Box>
           <Box alignItems="center" display="flex">
-            <EventWarningIcons eventId={event.id} orgId={orgId} />
+            <EventWarningIcons
+              eventId={event.id}
+              orgId={event.organization.id}
+            />
             <Box paddingRight={2}>
               <ZUIIconLabel
                 color={
