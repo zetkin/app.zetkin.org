@@ -18,12 +18,14 @@ import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
 import useEvent from '../hooks/useEvent';
 import useEventContact from '../hooks/useEventContact';
-import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useMessages } from 'core/i18n';
 import ZUINumberChip from '../../../zui/ZUINumberChip';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import useEventParticipantsMutations, {
+  participantStatus,
+} from '../hooks/useEventParticipantsMutations';
 import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
@@ -117,12 +119,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   const messages = useMessages(messageIds);
   const eventFuture = useEvent(orgId, eventId);
   const { setContact } = useEventContact(orgId, eventId);
-  const {
-    attendedParticipant,
-    cancelParticipant,
-    noShowParticipant,
-    reBookParticipant,
-  } = useEventParticipantsMutations(orgId, eventId);
+  const { setParticipantStatus } = useEventParticipantsMutations(
+    orgId,
+    eventId
+  );
 
   const columns: GridColDef[] = [
     {
@@ -253,14 +253,17 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               options={[
                 {
                   callback: () => {
-                    cancelParticipant(params.row.id);
+                    setParticipantStatus(
+                      params.row.id,
+                      participantStatus.CANCELLED
+                    );
                   },
                   title: messages.eventParticipantsList.buttonCancel(),
                   variant: 'text',
                 },
                 {
                   callback: () => {
-                    reBookParticipant(params.row.id);
+                    setParticipantStatus(params.row.id, null);
                   },
                   title: messages.eventParticipantsList.buttonBook(),
                   variant: 'outlined',
@@ -276,7 +279,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             const options: ButtonOption[] = [
               {
                 callback: () => {
-                  cancelParticipant(params.row.id);
+                  setParticipantStatus(
+                    params.row.id,
+                    participantStatus.CANCELLED
+                  );
                 },
                 title: messages.eventParticipantsList.buttonCancelled(),
                 value: 'cancelled',
@@ -284,7 +290,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               },
               {
                 callback: () => {
-                  noShowParticipant(params.row.id);
+                  setParticipantStatus(params.row.id, participantStatus.NOSHOW);
                 },
                 longTitle: messages.eventParticipantsList.dropDownNoshow(),
                 title: messages.eventParticipantsList.buttonNoshow(),
@@ -293,7 +299,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               },
               {
                 callback: () => {
-                  attendedParticipant(params.row.id);
+                  setParticipantStatus(
+                    params.row.id,
+                    participantStatus.ATTENDED
+                  );
                 },
                 longTitle: messages.eventParticipantsList.dropDownAttended(),
                 title: messages.eventParticipantsList.buttonAttended(),
@@ -320,7 +329,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
                 options={[
                   {
                     callback: () => {
-                      cancelParticipant(params.row.id);
+                      setParticipantStatus(
+                        params.row.id,
+                        participantStatus.CANCELLED
+                      );
                     },
                     title: messages.eventParticipantsList.buttonCancel(),
                     variant: 'text',
@@ -335,7 +347,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               options={[
                 {
                   callback: () => {
-                    reBookParticipant(params.row.id);
+                    setParticipantStatus(params.row.id, null);
                   },
                   title: messages.eventParticipantsList.buttonBook(),
                   variant: 'text',

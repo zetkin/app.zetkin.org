@@ -1,6 +1,5 @@
 import useEventMutations from './useEventMutations';
 import { ZetkinEventParticipant } from 'utils/types/zetkin';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import {
   participantAdded,
   participantsReminded,
@@ -8,13 +7,19 @@ import {
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
+export enum participantStatus {
+  ATTENDED = 'attended',
+  CANCELLED = 'cancelled',
+  NOSHOW = 'noshow',
+}
+
 type useEventParticipantsMutationsMutationsReturn = {
   addParticipant: (personId: number) => void;
-  attendedParticipant: (personId: number) => void;
-  cancelParticipant: (personId: number) => void;
-  noShowParticipant: (personId: number) => void;
-  reBookParticipant: (personId: number) => void;
   sendReminders: (eventId: number) => void;
+  setParticipantStatus: (
+    personId: number,
+    status: participantStatus | null
+  ) => void;
   setReqParticipants: (reqParticipants: number) => void;
   updateParticipant: (
     personId: number,
@@ -38,21 +43,6 @@ export default function useEventParticipantsMutations(
     dispatch(participantAdded([eventId, participant]));
   };
 
-  const attendedParticipant = (personId: number) => {
-    updateParticipant(personId, {
-      status: 'attended',
-    });
-  };
-
-  const cancelParticipant = (
-    personId: number
-  ): IFuture<ZetkinEventParticipant> => {
-    const promise = updateParticipant(personId, {
-      status: 'cancelled',
-    });
-    return new PromiseFuture(promise);
-  };
-
   const updateParticipant = (
     personId: number,
     data: Partial<ZetkinEventParticipant>
@@ -69,18 +59,6 @@ export default function useEventParticipantsMutations(
       });
   };
 
-  const noShowParticipant = (personId: number) => {
-    updateParticipant(personId, {
-      status: 'noshow',
-    });
-  };
-
-  const reBookParticipant = (personId: number) => {
-    updateParticipant(personId, {
-      status: null,
-    });
-  };
-
   const sendReminders = async (eventId: number) => {
     await apiClient.post(`/api/orgs/${orgId}/actions/${eventId}/reminders`, {});
     dispatch(participantsReminded(eventId));
@@ -91,13 +69,20 @@ export default function useEventParticipantsMutations(
       num_participants_required: reqParticipants,
     });
   };
+
+  const setParticipantStatus = (
+    personId: number,
+    status: participantStatus | null
+  ) => {
+    updateParticipant(personId, {
+      status: status,
+    });
+  };
+
   return {
     addParticipant,
-    attendedParticipant,
-    cancelParticipant,
-    noShowParticipant,
-    reBookParticipant,
     sendReminders,
+    setParticipantStatus,
     setReqParticipants,
     updateParticipant,
   };
