@@ -1,11 +1,11 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { ZetkinTag } from 'utils/types/zetkin';
 import { tagGroupsLoad, tagGroupsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
 interface UseTagGroupsReturn {
-  tagGroupsFuture: IFuture<ZetkinTag[]>;
+  tagGroupsFuture: IFuture<ZetkinTagGroup[]>;
 }
 export default function useTagGroups(orgId: number): UseTagGroupsReturn {
   const tagGroupsList = useAppSelector((state) => state.tags.tagGroupList);
@@ -14,7 +14,7 @@ export default function useTagGroups(orgId: number): UseTagGroupsReturn {
 
   const tagGroupsFuture = loadListIfNecessary(tagGroupsList, dispatch, {
     actionOnLoad: () => tagGroupsLoad(),
-    actionOnSuccess: (tags) => tagGroupsLoaded(tags),
+    actionOnSuccess: (tagGroups) => tagGroupsLoaded(tagGroups),
     loader: () => apiClient.get<ZetkinTag[]>(`/api/orgs/${orgId}/tag_groups`),
   });
   return { tagGroupsFuture };

@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ZetkinTag } from 'utils/types/zetkin';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
 export interface TagsStoreSlice {
-  tagGroupList: RemoteList<ZetkinTag>;
+  tagGroupList: RemoteList<ZetkinTagGroup>;
   tagList: RemoteList<ZetkinTag>;
 }
 
@@ -30,10 +30,20 @@ const tagsSlice = createSlice({
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       doNothing(state, action);
     },
+    tagGroupCreate: (state) => {
+      state.tagGroupList.isLoading;
+    },
+    tagGroupCreated: (state, action: PayloadAction<ZetkinTagGroup>) => {
+      const tagGroup = action.payload;
+      state.tagGroupList.isLoading = false;
+      state.tagGroupList.items.push(
+        remoteItem(tagGroup.id, { data: tagGroup })
+      );
+    },
     tagGroupsLoad: (state) => {
       state.tagGroupList.isLoading = true;
     },
-    tagGroupsLoaded: (state, action: PayloadAction<ZetkinTag[]>) => {
+    tagGroupsLoaded: (state, action: PayloadAction<ZetkinTagGroup[]>) => {
       const tagGroups = action.payload;
       const timestamp = new Date().toISOString();
 

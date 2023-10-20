@@ -1,12 +1,10 @@
-import { IFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinTag } from 'utils/types/zetkin';
 import { NewTag } from '../components/TagManager/types';
 import useCreateTagGroup from './useCreateTagGroup';
 
 export default function useCreateTag(orgId: number) {
-  const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
+  //   const apiClient = useApiClient();
+  //   const dispatch = useAppDispatch();
 
   const createTag = async (tag: NewTag) => {
     if ('group' in tag) {

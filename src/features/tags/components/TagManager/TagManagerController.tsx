@@ -68,7 +68,6 @@ export const TagManagerController: React.FunctionComponent<
             ignoreValues={ignoreValues}
             onClose={() => setAddTagButton(null)}
             onCreateTag={async (tag) => {
-              console.log('yeah new tag');
               const newTag = await onCreateTag(tag);
               if (!newTag.value_type) {
                 // If not a value tag, assign to resource directly

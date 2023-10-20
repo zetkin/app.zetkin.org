@@ -1,7 +1,7 @@
 import { PromiseFuture } from 'core/caching/futures';
-import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinTagGroup } from 'utils/types/zetkin';
 import { NewTag, ZetkinTagGroupPostBody } from '../components/TagManager/types';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 
 export default function useCreateTagGroup(orgId: number, newGroup: NewTag) {
   const apiClient = useApiClient();
