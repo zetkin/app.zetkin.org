@@ -23,7 +23,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
   const dispatch = useAppDispatch();
   const messages = useMessages(messageIds);
   const state = useAppSelector((state) => state.events.filters);
-  const { eventTypes } = useEventTypes(orgId);
+  const eventTypes = useEventTypes(orgId);
 
   const disableReset =
     state.selectedActions.length === 0 &&
