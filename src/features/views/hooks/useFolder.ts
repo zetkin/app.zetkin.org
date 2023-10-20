@@ -48,16 +48,11 @@ export default function useFolder(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const getFolder = (): IFuture<ZetkinViewFolder> => {
-    if (!itemsFuture.data) {
-      return new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
-    }
-
-    return new ResolvedFuture(
-      itemsFuture.data.folders.find((folder) => folder.id == folderId) || null
-    );
-  };
-  const folderFuture = getFolder();
+  const folderFuture = itemsFuture.data
+    ? new ResolvedFuture(
+        itemsFuture.data.folders.find((folder) => folder.id == folderId) || null
+      )
+    : new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
 
   const recentlyCreatedFolder = views.recentlyCreatedFolder;
 
