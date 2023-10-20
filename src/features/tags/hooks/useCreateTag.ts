@@ -7,31 +7,20 @@ import useCreateTagGroup from './useCreateTagGroup';
 export default function useCreateTag(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  //   return (tag: NewTag): IFuture<ZetkinTag> => {
-  //     if ('group' in tag) {
-  //       const newGroup = useCreateTagGroup(orgId);
-  //       const tagWithNewGroup = {
-  //         ...tag,
-  //         group: undefined,
-  //         group_id: newGroup.id,
-  //       };
-  //       //dispatch어쩌고 하면 될듯?
-  //     } else {
-  //       //dispatch어쩌고
-  //     }
-  //   };
+
   const createTag = async (tag: NewTag) => {
     if ('group' in tag) {
-      const newGroup = await useCreateTagGroup(orgId, tag.group);
-      //   const newGroup = await createGroup(tag);
-      const tagWithNewGroup = {
-        ...tag,
-        group: undefined,
-        group_id: newGroup.id,
-      };
-      //dispatch어쩌고 하면 될듯?
+      const newGroup = useCreateTagGroup(orgId, tag.group);
+      if (newGroup) {
+        const tagWithNewGroup = {
+          ...tag,
+          group: undefined,
+          group_id: newGroup.id,
+        };
+      }
+      //dispatch blah?
     } else {
-      //dispatch어쩌고
+      //dispatch blah
     }
   };
   //   return (campaignBody: ZetkinCampaignPostBody): IFuture<ZetkinCampaign> => {
