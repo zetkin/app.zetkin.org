@@ -25,8 +25,8 @@ import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
-import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
+import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventMutations from 'features/events/hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
 import useParallelEvents from 'features/events/hooks/useParallelEvents';
@@ -108,7 +108,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
     ? [...sortedLocation, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
-  const events = useParallelEvents(orgId, data.start_time, data.end_time).data;
+  const events = useParallelEvents(orgId, data.start_time, data.end_time);
 
   return (
     <ClickAwayListener {...clickAwayProps}>

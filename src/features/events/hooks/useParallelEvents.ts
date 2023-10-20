@@ -1,39 +1,30 @@
-import useAllEvents from './useAllEvents';
+import useEventsFromDateRange from './useEventsFromDateRange';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { dateIsAfter, dateIsBefore, isSameDate } from 'utils/dateUtils';
-import {
-  ErrorFuture,
-  IFuture,
-  LoadingFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
 
 export default function useParallelEvents(
   orgId: number,
   startString: string,
   endString: string
-): IFuture<ZetkinEvent[]> {
-  const allEvents = useAllEvents(orgId);
-
-  if (allEvents.isLoading) {
-    return new LoadingFuture();
-  } else if (allEvents.error) {
-    return new ErrorFuture(allEvents.error);
-  }
-
+): ZetkinEvent[] {
   const start = new Date(startString);
   const end = new Date(endString);
 
-  const filteredEvents = allEvents?.data?.filter((event) => {
-    const eventStart = new Date(event.start_time);
-    const eventEnd = new Date(event.end_time);
+  const allEvents = useEventsFromDateRange(start, end);
 
-    return (
-      isSameDate(start, eventStart) ||
-      (dateIsBefore(start, eventStart) && dateIsAfter(start, eventEnd)) ||
-      (dateIsAfter(start, eventStart) && dateIsBefore(end, eventStart))
-    );
-  });
+  const filteredEvents = allEvents
+    .filter((event) => {
+      const eventStart = new Date(event.data.start_time);
+      const eventEnd = new Date(event.data.end_time);
 
-  return new ResolvedFuture(filteredEvents || []);
+      return (
+        isSameDate(start, eventStart) ||
+        (dateIsBefore(start, eventStart) && dateIsAfter(start, eventEnd)) ||
+        (dateIsAfter(start, eventStart) && dateIsBefore(end, eventStart))
+      );
+    })
+    .filter((event) => event.data.organization.id === orgId)
+    .map((event) => event.data);
+
+  return filteredEvents || [];
 }
