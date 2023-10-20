@@ -30,6 +30,14 @@ const tagsSlice = createSlice({
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       doNothing(state, action);
     },
+    tagCreate: (state) => {
+      state.tagList.isLoading;
+    },
+    tagCreated: (state, action: PayloadAction<ZetkinTag>) => {
+      const tag = action.payload;
+      state.tagList.isLoading = false;
+      state.tagList.items.push(remoteItem(tag.id, { data: tag }));
+    },
     tagGroupCreate: (state) => {
       state.tagGroupList.isLoading;
     },
@@ -90,6 +98,10 @@ const tagsSlice = createSlice({
 export default tagsSlice;
 export const {
   tagAssigned,
+  tagCreate,
+  tagCreated,
+  tagGroupCreate,
+  tagGroupCreated,
   tagGroupsLoad,
   tagGroupsLoaded,
   tagLoad,

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 import GroupToggle from './components/GroupToggle';
+import useCreateTag from 'features/tags/hooks/useCreateTag';
+import { useEditTag } from './utils';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useTagGroups from 'features/tags/hooks/useTagGroups';
@@ -11,7 +13,6 @@ import ZUISection from 'zui/ZUISection';
 import TagManagerController, {
   TagManagerControllerProps,
 } from './TagManagerController';
-import { useCreateTag, useEditTag } from './utils';
 
 import messageIds from '../../l10n/messageIds';
 
@@ -25,7 +26,7 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   const { tagsFuture } = useTags(orgId);
   const { tagGroupsFuture } = useTagGroups(orgId);
 
-  const createTag = useCreateTag();
+  const createTag = useCreateTag(orgId);
   const editTag = useEditTag(props.onTagEdited);
 
   return (

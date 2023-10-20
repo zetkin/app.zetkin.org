@@ -1,39 +1,47 @@
-import { useApiClient, useAppDispatch } from 'core/hooks';
 import { NewTag } from '../components/TagManager/types';
 import useCreateTagGroup from './useCreateTagGroup';
+import { tagCreate, tagCreated } from '../store';
+import { useApiClient, useAppDispatch } from 'core/hooks';
+import { ZetkinTag, ZetkinTagPostBody } from 'utils/types/zetkin';
 
-export default function useCreateTag(orgId: number) {
-  //   const apiClient = useApiClient();
-  //   const dispatch = useAppDispatch();
+export default function useCreateTag(
+  orgId: number
+): (tag: NewTag) => Promise<ZetkinTag> {
+  const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
+  const createTagGroup = useCreateTagGroup(orgId);
 
-  const createTag = async (tag: NewTag) => {
+  const createTag = async (tag: NewTag): Promise<ZetkinTag> => {
     if ('group' in tag) {
-      const newGroup = useCreateTagGroup(orgId, tag.group);
-      if (newGroup) {
-        const tagWithNewGroup = {
-          ...tag,
-          group: undefined,
-          group_id: newGroup.id,
-        };
-      }
-      //dispatch blah?
+      const newGroup = await createTagGroup(tag.group);
+      const tagWithNewGroup = {
+        ...tag,
+        group: undefined,
+        group_id: newGroup.id,
+      };
+      dispatch(tagCreate);
+      const tagFuture = await apiClient
+        .post<ZetkinTag, ZetkinTagPostBody>(
+          `/api/orgs/${orgId}/people/tags`,
+          tagWithNewGroup
+        )
+        .then((data: ZetkinTag) => {
+          dispatch(tagCreated);
+          return data;
+        });
+      return tagFuture;
     } else {
-      //dispatch blah
+      const tagFuture = await apiClient
+        .post<ZetkinTag, ZetkinTagPostBody>(
+          `/api/orgs/${orgId}/people/tags`,
+          tag
+        )
+        .then((data: ZetkinTag) => {
+          //   dispatch(tagGroupCreated);
+          return data;
+        });
+      return tagFuture;
     }
   };
-  //   return (campaignBody: ZetkinCampaignPostBody): IFuture<ZetkinCampaign> => {
-  //     dispatch(campaignCreate());
-
-  //     const promise = apiClient
-  //       .post<ZetkinCampaign, ZetkinCampaignPostBody>(
-  //         `/api/orgs/${orgId}/campaigns`,
-  //         campaignBody
-  //       )
-  //       .then((campaign: ZetkinCampaign) => {
-  //         dispatch(campaignCreated(campaign));
-  //         return campaign;
-  //       });
-
-  //     return new PromiseFuture(promise);
-  //   };
+  return createTag;
 }

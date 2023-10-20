@@ -8,14 +8,12 @@ import {
   ZetkinTag,
   ZetkinTagGroup,
   ZetkinTagPatchBody,
-  ZetkinTagPostBody,
 } from 'utils/types/zetkin';
 
 export const tagsResource = (orgId: string) => {
   const key = ['tags', orgId];
   const url = `/orgs/${orgId}/people/tags`;
   return {
-    useCreate: createUseMutation<ZetkinTagPostBody, ZetkinTag>(key, url),
     useEdit: createUseMutationPatch<ZetkinTagPatchBody, ZetkinTag>({
       key,
       url,
