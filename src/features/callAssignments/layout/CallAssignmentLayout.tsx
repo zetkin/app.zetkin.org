@@ -123,10 +123,6 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           href: '/conversation',
           label: messages.tabs.conversation(),
         },
-        {
-          href: '/insights',
-          label: messages.tabs.insights(),
-        },
       ]}
       title={
         <ZUIEditTextinPlace
