@@ -42,7 +42,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
     parseInt(eventId)
   );
 
-  const { eventTypes } = useEventTypes(parseInt(orgId));
+  const eventTypes = useEventTypes(parseInt(orgId));
 
   return (
     <TabbedLayout
@@ -69,6 +69,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
             {({ data: { types, currentEvent } }) => {
               return (
                 <EventTypeAutocomplete
+                  eventId={currentEvent.id}
                   onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
                     setType(newValue ? newValue.id : newValue);

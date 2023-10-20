@@ -6,7 +6,7 @@ import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
-import useEventTypes from '../hooks/useEventTypes';
+import useEventMutations from '../hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
@@ -34,6 +34,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 }));
 
 type EventTypeAutocompleteProps = {
+  eventId: number;
   onBlur: () => void;
   onChange: (newValue: ZetkinEvent['activity'] | null) => void;
   onChangeNewOption: (newId: number) => void;
@@ -49,6 +50,7 @@ interface EventTypeOption {
 }
 
 const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
+  eventId,
   onBlur,
   onChange,
   onChangeNewOption,
@@ -61,7 +63,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const { orgId } = useNumericRouteParams();
   const classes = useStyles({ showBorder });
   const messages = useMessages(messageIds);
-  const { addType } = useEventTypes(orgId);
+  const { addType } = useEventMutations(orgId, eventId);
 
   useEffect(() => {
     //When a user creates a new type, it is missing an event ID.
