@@ -1,7 +1,7 @@
-import shouldLoad from 'core/caching/shouldLoad';
+import { IFuture } from 'core/caching/futures';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventLoad, eventLoaded } from '../store';
-import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useEvent(
@@ -10,20 +10,16 @@ export default function useEvent(
 ): IFuture<ZetkinEvent> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const eventsState = useAppSelector((state) => state.events);
+  const eventList = useAppSelector((state) => state.events.eventList);
 
-  const item = eventsState.eventList.items.find((item) => item.id == id);
+  const item = eventList.items.find((item) => item.id == id);
 
-  if (!item || shouldLoad(item)) {
-    dispatch(eventLoad(id));
-    const promise = apiClient
-      .get<ZetkinEvent>(`/api/orgs/${orgId}/actions/${id}`)
-      .then((event) => {
-        dispatch(eventLoaded(event));
-        return event;
-      });
-    return new PromiseFuture(promise);
-  } else {
-    return new RemoteItemFuture(item);
-  }
+  const eventFuture = loadItemIfNecessary(item, dispatch, {
+    actionOnLoad: () => eventLoad(id),
+    actionOnSuccess: (event) => eventLoaded(event),
+    loader: () =>
+      apiClient.get<ZetkinEvent>(`/api/orgs/${orgId}/actions/${id}`),
+  });
+
+  return eventFuture;
 }
