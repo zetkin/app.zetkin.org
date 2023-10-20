@@ -13,7 +13,7 @@ export default function useCallAssignments(
     (state) => state.callAssignments.assignmentList
   );
 
-  const promise = loadListIfNecessary(assignmentList, dispatch, {
+  return loadListIfNecessary(assignmentList, dispatch, {
     actionOnLoad: () => callAssignmentsLoad(),
     actionOnSuccess: (data) => callAssignmentsLoaded(data),
     loader: () =>
@@ -21,6 +21,4 @@ export default function useCallAssignments(
         `/api/orgs/${orgId}/call_assignments/`
       ),
   });
-
-  return promise;
 }

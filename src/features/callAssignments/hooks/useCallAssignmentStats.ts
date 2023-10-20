@@ -37,80 +37,69 @@ export default function useCallAssignmentStats(
     },
   });
 
-  const getStats = (): IFuture<CallAssignmentStats | null> => {
-    if (!isTargeted) {
-      return new ResolvedFuture(null);
-    }
+  let statsDataFuture: IFuture<CallAssignmentStats | null>;
+  if (!isTargeted) {
+    statsDataFuture = new ResolvedFuture(null);
+  }
+  if (statsFuture.isLoading && !statsFuture.data) {
+    statsDataFuture = new PlaceholderFuture({
+      allTargets: 0,
+      allocated: 0,
+      blocked: 0,
+      callBackLater: 0,
+      calledTooRecently: 0,
+      callsMade: 0,
+      done: 0,
+      id: assignmentId,
+      missingPhoneNumber: 0,
+      mostRecentCallTime: null,
+      organizerActionNeeded: 0,
+      queue: 0,
+      ready: 0,
+    });
+  } else {
+    statsDataFuture = statsFuture;
+  }
 
-    if (statsFuture.isLoading && !statsFuture.data) {
-      return new PlaceholderFuture({
-        allTargets: 0,
-        allocated: 0,
-        blocked: 0,
-        callBackLater: 0,
-        calledTooRecently: 0,
-        callsMade: 0,
-        done: 0,
-        id: assignmentId,
-        missingPhoneNumber: 0,
-        mostRecentCallTime: null,
-        organizerActionNeeded: 0,
-        queue: 0,
-        ready: 0,
-      });
-    } else {
-      return statsFuture;
-    }
-  };
+  const statsData = statsDataFuture.data;
+  const hasTargets = statsData
+    ? statsData.blocked + statsData.ready > 0
+    : false;
 
-  const hasTargets = () => {
-    const statsData = getStats().data;
-    if (statsData === null) {
-      return false;
-    }
-    return statsData.blocked + statsData.ready > 0;
-  };
-
-  const getStatusBarStatsList = () => {
-    const statsData = getStats().data;
-    const hasTargets = statsData && statsData?.blocked + statsData?.ready > 0;
-    const statusBarStatsList =
-      hasTargets && statsData
-        ? [
-            {
-              color: 'statusColors.orange',
-              value: statsData.blocked,
-            },
-            {
-              color: 'statusColors.blue',
-              value: statsData.ready,
-            },
-            {
-              color: 'statusColors.green',
-              value: statsData.done,
-            },
-          ]
-        : [
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-          ];
-
-    return statusBarStatsList;
-  };
+  const statusBarStatsList =
+    hasTargets && statsData
+      ? [
+          {
+            color: 'statusColors.orange',
+            value: statsData.blocked,
+          },
+          {
+            color: 'statusColors.blue',
+            value: statsData.ready,
+          },
+          {
+            color: 'statusColors.green',
+            value: statsData.done,
+          },
+        ]
+      : [
+          {
+            color: 'statusColors.gray',
+            value: 1,
+          },
+          {
+            color: 'statusColors.gray',
+            value: 1,
+          },
+          {
+            color: 'statusColors.gray',
+            value: 1,
+          },
+        ];
 
   return {
-    hasTargets: hasTargets(),
+    hasTargets,
     statsFuture,
-    statusBarStatsList: getStatusBarStatsList(),
+    statusBarStatsList,
   };
 }
