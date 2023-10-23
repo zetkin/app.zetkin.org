@@ -10,9 +10,9 @@ import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import JourneyStatusChip from '../components/JourneyStatusChip';
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
+import useJourneyInstance from '../hooks/useJourneyInstance';
 import useJourneys from '../hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -36,12 +36,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
-  const journeyInstanceQuery = journeyInstanceResource(
-    orgId.toString(),
-    instanceId.toString()
-  ).useQuery();
-  const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
-
+  const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const journeysFuture = useJourneys(orgId);
 
   const journeyInstanceHooks = journeyInstanceResource(
@@ -120,6 +115,11 @@ const JourneyInstanceLayout: React.FunctionComponent<
       startIcon: <Forward color="secondary" />,
       subMenuItems: submenuItems,
     });
+  }
+
+  const journeyInstance = journeyInstanceFuture.data;
+  if (!journeyInstance) {
+    return null;
   }
 
   return (

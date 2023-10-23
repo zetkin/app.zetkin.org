@@ -7,11 +7,15 @@ import { Box, Divider, Grid } from '@mui/material';
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
 import JourneyInstanceOutcome from 'features/journeys/components/JourneyInstanceOutcome';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
+import messageIds from 'features/journeys/l10n/messageIds';
 import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
+import useJourneyInstance from 'features/journeys/hooks/useJourneyInstance';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIQuery from 'zui/ZUIQuery';
 import ZUISection from 'zui/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -22,8 +26,6 @@ import {
 } from 'features/journeys/api/journeys';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'utils/types/zetkin';
-
-import messageIds from 'features/journeys/l10n/messageIds';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -38,28 +40,24 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
       orgId as string
     ).prefetch(ctx);
 
-    const { state: journeyInstanceQueryState } = await journeyInstanceResource(
-      orgId as string,
-      instanceId as string
-    ).prefetch(ctx);
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
+      `/api/orgs/${orgId}/journey_instances/${instanceId}`
+    );
 
     if (
-      journeyInstanceQueryState?.data &&
-      journeyInstanceQueryState.data.journey.id.toString() !==
-        (journeyId as string)
+      journeyInstance &&
+      journeyInstance.journey.id.toString() !== (journeyId as string)
     ) {
       return {
         redirect: {
-          destination: `/organize/${orgId}/journeys/${journeyInstanceQueryState.data.journey.id}/${instanceId}`,
+          destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
           permanent: false,
         },
       };
     }
 
-    if (
-      orgQueryState?.status === 'success' &&
-      journeyInstanceQueryState?.status === 'success'
-    ) {
+    if (orgQueryState?.status === 'success' && journeyInstance) {
       return {
         props: {
           instanceId,
@@ -78,27 +76,18 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   scaffoldOptions
 );
 
-export interface JourneyDetailsPageProps {
-  instanceId: string;
-  orgId: string;
-}
-
-const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
-  instanceId,
-  orgId,
-}) => {
+const JourneyDetailsPage: PageWithLayout = () => {
+  const { orgId, instanceId } = useNumericRouteParams();
   const {
     key,
     useAddAssignee,
     useAddSubject,
     useAssignTag,
-    useQuery,
     useRemoveAssignee,
     useRemoveSubject,
     useUnassignTag,
-  } = journeyInstanceResource(orgId, instanceId);
+  } = journeyInstanceResource(orgId.toString(), instanceId.toString());
   const messages = useMessages(messageIds);
-  const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
   const removeAssigneeMutation = useRemoveAssignee();
   const addMemberMutation = useAddSubject();
@@ -106,9 +95,9 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const assignTagMutation = useAssignTag();
   const unassignTagMutation = useUnassignTag();
   const { useQueryUpdates, useAddNote, useEditNote } =
-    journeyInstanceTimelineResource(orgId, instanceId);
+    journeyInstanceTimelineResource(orgId.toString(), instanceId.toString());
 
-  const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
+  const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
@@ -139,6 +128,11 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
       onError: () => showSnackbar('error'),
     });
   };
+
+  const journeyInstance = journeyInstanceFuture.data;
+  if (!journeyInstance) {
+    return null;
+  }
 
   return (
     <>
