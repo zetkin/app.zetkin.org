@@ -6,8 +6,12 @@ import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 
+import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import JourneyStatusChip from '../components/JourneyStatusChip';
+import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
+import useJourneys from '../hooks/useJourneys';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
@@ -16,13 +20,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import JourneyInstanceCloseButton, {
   JourneyInstanceReopenButton,
 } from '../components/JourneyInstanceCloseButton';
-import {
-  journeyInstanceResource,
-  journeysResource,
-} from 'features/journeys/api/journeys';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from '../l10n/messageIds';
 
 interface JourneyInstanceLayoutProps {
   children: React.ReactNode;
@@ -32,24 +30,23 @@ const JourneyInstanceLayout: React.FunctionComponent<
   JourneyInstanceLayoutProps
 > = ({ children }) => {
   const messages = useMessages(messageIds);
-  const { orgId, journeyId, instanceId } = useRouter().query;
+  const { orgId, journeyId, instanceId } = useNumericRouteParams();
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const journeyInstanceQuery = journeyInstanceResource(
-    orgId as string,
-    instanceId as string
+    orgId.toString(),
+    instanceId.toString()
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
-  const journeysQuery = journeysResource(orgId as string).useQuery();
-  const journeys = journeysQuery.data;
+  const journeysFuture = useJourneys(orgId);
 
   const journeyInstanceHooks = journeyInstanceResource(
-    orgId as string,
-    instanceId as string
+    orgId.toString(),
+    instanceId.toString()
   );
   const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
 
@@ -82,17 +79,17 @@ const JourneyInstanceLayout: React.FunctionComponent<
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
   const submenuItems =
-    journeys
-      ?.filter((journey) => journey.id.toString() !== journeyId)
+    journeysFuture.data
+      ?.filter((journey) => journey.id !== journeyId)
       .map((journey) => ({
         id: `convertTo-${journey.id}`,
         label: journey.singular_label,
         onSelect: () => {
           //redirect to equivalent page but new journey id
           const redirectUrl = router.pathname
-            .replace('[orgId]', orgId as string)
+            .replace('[orgId]', orgId.toString())
             .replace('[journeyId]', journey.id.toString())
-            .replace('[instanceId]', instanceId as string);
+            .replace('[instanceId]', instanceId.toString());
 
           patchJourneyInstanceMutation.mutateAsync(
             {

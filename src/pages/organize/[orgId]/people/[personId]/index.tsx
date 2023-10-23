@@ -3,15 +3,15 @@ import { Grid } from '@mui/material';
 import Head from 'next/head';
 import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
-import { useRouter } from 'next/router';
 
-import { journeysResource } from 'features/journeys/api/journeys';
 import { PageWithLayout } from 'utils/types';
 import PersonDetailsCard from 'features/profile/components/PersonDetailsCard';
 import PersonJourneysCard from 'features/profile/components/PersonJourneysCard';
 import PersonOrganizationsCard from 'features/profile/components/PersonOrganizationsCard';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import { TagManagerSection } from 'features/tags/components/TagManager';
+import useJourneys from 'features/journeys/hooks/useJourneys';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIQuery from 'zui/ZUIQuery';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import {
@@ -53,13 +53,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   scaffoldOptions
 );
 
-export type PersonPageProps = {
-  orgId: string;
-  personId: string;
-};
-
-const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
-  const { orgId, personId } = useRouter().query;
+const PersonProfilePage: PageWithLayout = () => {
+  const { orgId, personId } = useNumericRouteParams();
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
 
@@ -68,18 +63,18 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     useAssign,
     useQuery: usePersonTagsQuery,
     useUnassign,
-  } = personTagsResource(orgId as string, personId as string);
-  const customFieldsQuery = personFieldsResource(orgId as string).useQuery();
+  } = personTagsResource(orgId.toString(), personId.toString());
+  const customFieldsQuery = personFieldsResource(orgId.toString()).useQuery();
   const assignTagMutation = useAssign();
   const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
 
   const { data: person } = personResource(
-    props.orgId,
-    props.personId
+    orgId.toString(),
+    personId.toString()
   ).useQuery();
 
-  const { data: journeys } = journeysResource(orgId as string).useQuery();
+  const journeysFuture = useJourneys(orgId);
 
   if (!person) {
     return null;
@@ -126,16 +121,19 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             )}
           </ZUIQuery>
         </Grid>
-        {journeys?.length && (
+        {journeysFuture.data?.length && (
           <Grid item lg={4} xs={12}>
             <PersonJourneysCard
-              orgId={orgId as string}
-              personId={personId as string}
+              orgId={orgId.toString()}
+              personId={personId.toString()}
             />
           </Grid>
         )}
         <Grid item lg={4} xs={12}>
-          <PersonOrganizationsCard {...props} />
+          <PersonOrganizationsCard
+            orgId={orgId.toString()}
+            personId={personId.toString()}
+          />
         </Grid>
       </Grid>
     </>

@@ -10,7 +10,6 @@ import {
   createUseQuery,
 } from '../../../utils/api/resourceHookFactories';
 import {
-  ZetkinJourney,
   ZetkinJourneyInstance,
   ZetkinJourneyMilestoneStatus,
   ZetkinNote,
@@ -18,16 +17,6 @@ import {
   ZetkinPerson,
   ZetkinTag,
 } from 'utils/types/zetkin';
-
-export const journeysResource = (orgId: string) => {
-  const key = ['journeys', orgId];
-  const url = `/orgs/${orgId}/journeys`;
-
-  return {
-    prefetch: createPrefetch<ZetkinJourney[]>(key, url),
-    useQuery: createUseQuery<ZetkinJourney[]>(key, url),
-  };
-};
 
 export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const key = ['journeyInstances', orgId, journeyId];
