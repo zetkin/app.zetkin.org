@@ -17,6 +17,19 @@ const journeysSlice = createSlice({
   initialState: initialJourneysState,
   name: 'journeys',
   reducers: {
+    journeyInstanceCreate: (state) => {
+      state.journeyInstanceList.isLoading = true;
+    },
+    journeyInstanceCreated: (
+      state,
+      action: PayloadAction<ZetkinJourneyInstance>
+    ) => {
+      const journeyInstance = action.payload;
+      state.journeyInstanceList.isLoading = false;
+      state.journeyInstanceList.items.push(
+        remoteItem(journeyInstance.id, { data: journeyInstance })
+      );
+    },
     journeyInstanceLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.journeyInstanceList.items.find(
@@ -83,6 +96,8 @@ const journeysSlice = createSlice({
 
 export default journeysSlice;
 export const {
+  journeyInstanceCreate,
+  journeyInstanceCreated,
   journeyInstanceLoad,
   journeyInstanceLoaded,
   journeyLoad,

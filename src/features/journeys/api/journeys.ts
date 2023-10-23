@@ -14,7 +14,6 @@ import {
   ZetkinJourneyMilestoneStatus,
   ZetkinNote,
   ZetkinNoteBody,
-  ZetkinPerson,
   ZetkinTag,
 } from 'utils/types/zetkin';
 
@@ -23,16 +22,6 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const url = `/organize/${orgId}/journeys/${journeyId}`;
 
   return {
-    useCreate: createUseMutation<
-      {
-        assignees: ZetkinPerson[];
-        note: string;
-        subjects: ZetkinPerson[];
-        tags: ZetkinTag[];
-        title: string;
-      },
-      ZetkinJourneyInstance
-    >(key, `/journeyInstances/createNew?orgId=${orgId}&journeyId=${journeyId}`),
     useQuery: createUseQuery<JourneyInstancesData>(key, url),
   };
 };

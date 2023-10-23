@@ -1,24 +1,23 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useState } from 'react';
 import { Box, Chip, Grid, Typography, useTheme } from '@mui/material';
-import { useContext, useState } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import DefaultLayout from 'utils/layout/DefaultLayout';
 import Header from 'zui/ZUIHeader';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
-import { journeyInstancesResource } from 'features/journeys/api/journeys';
 import messageIds from 'features/journeys/l10n/messageIds';
 import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
 import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
+import useCreateJourneyInstance from 'features/journeys/hooks/useCreateJourneyInstance';
 import useJourney from 'features/journeys/hooks/useJourney';
 import { useRouter } from 'next/router';
 import ZUIAutoTextArea from 'zui/ZUIAutoTextArea';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
@@ -75,8 +74,6 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   const [editedNote, setEditedNote] = useState(false);
   const [title, setTitle] = useState('');
 
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const router = useRouter();
@@ -101,11 +98,10 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   });
 
   const journeyFuture = useJourney(parseInt(orgId), parseInt(journeyId));
-
-  const createInstanceMutation = journeyInstancesResource(
-    orgId,
-    journeyId
-  ).useCreate();
+  const createJourneyInstance = useCreateJourneyInstance(
+    parseInt(orgId),
+    parseInt(journeyId)
+  );
 
   return (
     <ZUIFuture future={journeyFuture}>
@@ -166,30 +162,20 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                 <form
                   onSubmit={async (ev) => {
                     ev.preventDefault();
-                    createInstanceMutation.mutate(
-                      { assignees, note, subjects, tags, title },
-                      {
-                        onError: () => {
-                          showSnackbar('error');
-                        },
-                        onSuccess: (newInstance) => {
-                          router.push(
-                            `/organize/${orgId}/journeys/${journeyId}/${newInstance.id}`
-                          );
-                        },
-                      }
-                    );
+                    createJourneyInstance({
+                      assignees,
+                      note,
+                      subjects,
+                      tags,
+                      title,
+                    });
                   }}
                 >
                   <ZUISubmitCancelButtons
                     onCancel={() => {
                       router.push(`/organize/${orgId}/journeys/${journeyId}`);
                     }}
-                    submitDisabled={
-                      !editedNote ||
-                      createInstanceMutation.isLoading ||
-                      createInstanceMutation.isSuccess
-                    }
+                    submitDisabled={!editedNote}
                     submitText={messages.instance.newInstance.submitLabel({
                       journey: journey.singular_label,
                     })}

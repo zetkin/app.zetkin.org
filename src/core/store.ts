@@ -15,7 +15,10 @@ import campaignsSlice, {
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
-import journeysSlice, { JourneysStoreSlice } from 'features/journeys/store';
+import journeysSlice, {
+  journeyInstanceCreated,
+  JourneysStoreSlice,
+} from 'features/journeys/store';
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
@@ -97,6 +100,16 @@ listenerMiddleware.startListening({
       `/organize/${survey.organization.id}/projects/${
         survey.campaign?.id ?? 'standalone'
       }/surveys/${survey.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: journeyInstanceCreated,
+  effect: (action) => {
+    const journeyInstance = action.payload;
+    Router.push(
+      `/organize/${journeyInstance.organization.id}/journeys/${journeyInstance.journey.id}/${journeyInstance.id}`
     );
   },
 });
