@@ -13,11 +13,7 @@ export default function useTagMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const assignToPerson = async (
-    personId: number,
-
-    value?: string
-  ) => {
+  const assignToPerson = async (personId: number, value?: string) => {
     const data = value ? { value } : undefined;
     const tag = await apiClient.put<ZetkinTag>(
       `/api/orgs/${orgId}/people/${personId}/tags/${tagId}`,

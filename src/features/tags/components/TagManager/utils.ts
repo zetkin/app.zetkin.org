@@ -1,10 +1,4 @@
-import { useContext } from 'react';
-import { useRouter } from 'next/router';
-
-import { EditTag } from './types';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import { tagGroupsResource, tagsResource } from 'features/tags/api/tags';
-import { ZetkinTag, ZetkinTagPatchBody } from 'utils/types/zetkin';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 export const DEFAULT_TAG_COLOR = '#e1e1e1';
 
@@ -70,50 +64,6 @@ export const randomColor = (): string => {
 };
 
 export const hexRegex = new RegExp(/^[0-9a-f]{6}$/i);
-
-/**
- * Returns a function which handles editing tags and conditionally
- * creating a new group for it.
- */
-export const useEditTag = (
-  successCallback?: (tag: ZetkinTag) => void
-): ((tag: EditTag) => Promise<ZetkinTag>) => {
-  const { orgId } = useRouter().query;
-
-  const editTagMutation = tagsResource(orgId as string).useEdit();
-  const createTagGroupMutation = tagGroupsResource(orgId as string).useCreate();
-
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-
-  const editTag = async (tag: EditTag) => {
-    if ('group' in tag) {
-      // If creating a new group, has group object
-      const newGroup = await createTagGroupMutation.mutateAsync(tag.group, {
-        onError: () => showSnackbar('error'),
-      });
-      const tagWithNewGroup = {
-        ...tag,
-        group: undefined,
-        group_id: newGroup.id,
-      };
-      return await editTagMutation.mutateAsync(
-        tagWithNewGroup as ZetkinTagPatchBody,
-        {
-          onError: () => showSnackbar('error'),
-          onSuccess: successCallback,
-        }
-      );
-    } else {
-      // Add tag with existing or no group
-      return await editTagMutation.mutateAsync(tag, {
-        onError: () => showSnackbar('error'),
-        onSuccess: successCallback,
-      });
-    }
-  };
-
-  return editTag;
-};
 
 export const filterTags = (
   options: ZetkinTag[],
