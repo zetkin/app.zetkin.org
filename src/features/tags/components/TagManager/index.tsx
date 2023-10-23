@@ -14,7 +14,7 @@ import TagManagerController, {
 } from './TagManagerController';
 
 import messageIds from '../../l10n/messageIds';
-import useTagMutations from 'features/tags/hooks/useTagMutations';
+import useEditTag from 'features/tags/hooks/useEditTag';
 
 type TagManagerProps = Omit<
   TagManagerControllerProps,
@@ -27,15 +27,13 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   const { tagGroupsFuture } = useTagGroups(orgId);
 
   const createTag = useCreateTag(orgId);
-  // const editTag = useEditTag(props.onTagEdited);
-  const { editTag } = useTagMutations(orgId);
+  const editTag = useEditTag(orgId, props.onTagEdited);
 
   return (
     <ZUIFutures
       futures={{ tagGroupsQuery: tagGroupsFuture, tagsQuery: tagsFuture }}
     >
       {({ data: { tagGroupsQuery, tagsQuery } }) => {
-        console.log(tagsQuery, ' tagsQuery');
         return (
           <TagManagerController
             availableGroups={tagGroupsQuery}

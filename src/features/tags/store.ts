@@ -81,6 +81,21 @@ const tagsSlice = createSlice({
     tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
       doNothing(state, action);
     },
+    tagUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [tagId, mutating] = action.payload;
+      const item = state.tagList.items.find((tag) => tag.id === tagId);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    tagUpdated: (state, action: PayloadAction<ZetkinTag>) => {
+      const tag = action.payload;
+      const item = state.tagList.items.find((item) => item.id == tag.id);
+      if (item) {
+        item.data = { ...item.data, ...tag };
+        item.mutating = [];
+      }
+    },
     tagsLoad: (state) => {
       state.tagList.isLoading = true;
     },
@@ -109,4 +124,6 @@ export const {
   tagsLoad,
   tagsLoaded,
   tagUnassigned,
+  tagUpdate,
+  tagUpdated,
 } = tagsSlice.actions;
