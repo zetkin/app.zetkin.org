@@ -124,7 +124,7 @@ const Cell: FC<{
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
   const { tagFuture } = useTag(orgId, tagId);
-  const { assignToPerson, removeFromPerson } = useTagMutations(orgId, tagId);
+  const { assignToPerson, removeFromPerson } = useTagMutations(orgId);
 
   const styles = useStyles();
 
@@ -136,7 +136,7 @@ const Cell: FC<{
     return (
       <TagChip
         onDelete={() => {
-          removeFromPerson(personId);
+          removeFromPerson(personId, tagId);
         }}
         tag={cell}
       />
@@ -152,7 +152,7 @@ const Cell: FC<{
             <Box
               className={styles.ghostContainer}
               onClick={() => {
-                assignToPerson(personId);
+                assignToPerson(personId, tagId);
               }}
             >
               <Box className={styles.ghost}>

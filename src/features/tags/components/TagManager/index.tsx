@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import GroupToggle from './components/GroupToggle';
 import useCreateTag from 'features/tags/hooks/useCreateTag';
-import { useEditTag } from './utils';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useTagGroups from 'features/tags/hooks/useTagGroups';
@@ -15,6 +14,7 @@ import TagManagerController, {
 } from './TagManagerController';
 
 import messageIds from '../../l10n/messageIds';
+import useTagMutations from 'features/tags/hooks/useTagMutations';
 
 type TagManagerProps = Omit<
   TagManagerControllerProps,
@@ -23,17 +23,19 @@ type TagManagerProps = Omit<
 
 const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   const { orgId } = useNumericRouteParams();
-  const { tagsFuture } = useTags(orgId);
+  const tagsFuture = useTags(orgId);
   const { tagGroupsFuture } = useTagGroups(orgId);
 
   const createTag = useCreateTag(orgId);
-  const editTag = useEditTag(props.onTagEdited);
+  // const editTag = useEditTag(props.onTagEdited);
+  const { editTag } = useTagMutations(orgId);
 
   return (
     <ZUIFutures
       futures={{ tagGroupsQuery: tagGroupsFuture, tagsQuery: tagsFuture }}
     >
       {({ data: { tagGroupsQuery, tagsQuery } }) => {
+        console.log(tagsQuery, ' tagsQuery');
         return (
           <TagManagerController
             availableGroups={tagGroupsQuery}
