@@ -29,16 +29,6 @@ export const journeysResource = (orgId: string) => {
   };
 };
 
-export const journeyResource = (orgId: string, journeyId: string) => {
-  const key = ['journey', orgId, journeyId];
-  const url = `/orgs/${orgId}/journeys/${journeyId}`;
-
-  return {
-    prefetch: createPrefetch<ZetkinJourney>(key, url),
-    useQuery: createUseQuery<ZetkinJourney>(key, url),
-  };
-};
-
 export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const key = ['journeyInstances', orgId, journeyId];
   const url = `/organize/${orgId}/journeys/${journeyId}`;

@@ -2,17 +2,15 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import AllJourneyInstancesLayout from 'features/journeys/layout/AllJourneyInstancesLayout';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import getOrg from 'utils/fetching/getOrg';
 import JourneyInstanceCreateFab from 'features/journeys/components/JourneyInstanceCreateFab';
 import JourneyInstancesDataTable from 'features/journeys/components/JourneyInstancesDataTable';
+import { journeyInstancesResource } from 'features/journeys/api/journeys';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourney } from 'utils/types/zetkin';
+import useJourney from 'features/journeys/hooks/useJourney';
 import ZUIQuery from 'zui/ZUIQuery';
-import {
-  journeyInstancesResource,
-  journeyResource,
-} from 'features/journeys/api/journeys';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -28,15 +26,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
   const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-  const { state: journeyQueryState } = await journeyResource(
-    orgId as string,
-    journeyId as string
-  ).prefetch(ctx);
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const journey = await apiClient.get(
+    `/api/orgs/${orgId}/journeys/${journeyId}`
+  );
 
-  if (
-    orgState?.status === 'success' &&
-    journeyQueryState?.status === 'success'
-  ) {
+  if (orgState?.status === 'success' && journey) {
     return {
       props: {
         journeyId,
@@ -58,17 +53,16 @@ type ClosedJourneyInstancesPageProps = {
 const ClosedJourneyInstancesPage: PageWithLayout<
   ClosedJourneyInstancesPageProps
 > = ({ orgId, journeyId }) => {
-  const journeyQuery = journeyResource(orgId, journeyId).useQuery();
   const journeyInstancesQuery = journeyInstancesResource(
     orgId,
     journeyId
   ).useQuery();
-  const journey = journeyQuery.data as ZetkinJourney;
+  const journeyFuture = useJourney(parseInt(orgId), parseInt(journeyId));
 
   return (
     <>
       <Head>
-        <title>{journey.plural_label}</title>
+        <title>{journeyFuture.data?.plural_label}</title>
       </Head>
       <ZUIQuery queries={{ journeyInstancesQuery }}>
         {({ queries: { journeyInstancesQuery } }) => {
@@ -80,7 +74,7 @@ const ClosedJourneyInstancesPage: PageWithLayout<
           return (
             <JourneyInstancesDataTable
               journeyInstances={openJourneyInstances}
-              storageKey={`journeyInstances-${journey.id}-closed`}
+              storageKey={`journeyInstances-${journeyFuture.data?.id}-closed`}
               tagColumnsData={journeyInstancesQuery.data.tagColumnsData}
             />
           );

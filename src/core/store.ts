@@ -15,6 +15,7 @@ import campaignsSlice, {
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
+import journeysSlice, { JourneysStoreSlice } from 'features/journeys/store';
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
@@ -34,12 +35,13 @@ export interface RootState {
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
   events: EventsStoreSlice;
+  journeys: JourneysStoreSlice;
+  organizations: OrganizationsStoreSlice;
   smartSearch: smartSearchStoreSlice;
   surveys: SurveysStoreSlice;
   tags: TagsStoreSlice;
   tasks: TasksStoreSlice;
   views: ViewsStoreSlice;
-  organizations: OrganizationsStoreSlice;
   user: UserStoreSlice;
 }
 
@@ -47,6 +49,7 @@ const reducer = {
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
   events: eventsSlice.reducer,
+  journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
   smartSearch: smartSearchSlice.reducer,
   surveys: surveysSlice.reducer,
