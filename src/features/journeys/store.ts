@@ -1,30 +1,61 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ZetkinJourney } from 'utils/types/zetkin';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export interface JourneysStoreSlice {
-  journeysList: RemoteList<ZetkinJourney>;
+  journeyInstanceList: RemoteList<ZetkinJourneyInstance>;
+  journeyList: RemoteList<ZetkinJourney>;
 }
 
 const initialJourneysState: JourneysStoreSlice = {
-  journeysList: remoteList(),
+  journeyInstanceList: remoteList(),
+  journeyList: remoteList(),
 };
 
 const journeysSlice = createSlice({
   initialState: initialJourneysState,
   name: 'journeys',
   reducers: {
+    journeyInstanceLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.journeyInstanceList.items.find(
+        (item) => item.id == id
+      );
+      state.journeyInstanceList.items = state.journeyInstanceList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    journeyInstanceLoaded: (
+      state,
+      action: PayloadAction<ZetkinJourneyInstance>
+    ) => {
+      const id = action.payload.id;
+      const item = state.journeyInstanceList.items.find(
+        (item) => item.id == id
+      );
+
+      if (!item) {
+        throw new Error(
+          'Finished loading something that never started loading'
+        );
+      }
+
+      item.data = action.payload;
+      item.loaded = new Date().toISOString();
+      item.isLoading = false;
+      item.isStale = false;
+    },
     journeyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.journeysList.items.find((item) => item.id == id);
-      state.journeysList.items = state.journeysList.items
+      const item = state.journeyList.items.find((item) => item.id == id);
+      state.journeyList.items = state.journeyList.items
         .filter((item) => item.id != id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     journeyLoaded: (state, action: PayloadAction<ZetkinJourney>) => {
       const id = action.payload.id;
-      const item = state.journeysList.items.find((item) => item.id == id);
+      const item = state.journeyList.items.find((item) => item.id == id);
 
       if (!item) {
         throw new Error(
@@ -38,18 +69,24 @@ const journeysSlice = createSlice({
       item.isStale = false;
     },
     journeysLoad: (state) => {
-      state.journeysList.isLoading = true;
+      state.journeyList.isLoading = true;
     },
     journeysLoaded: (state, action: PayloadAction<ZetkinJourney[]>) => {
       const journeys = action.payload;
       const timestamp = new Date().toISOString();
-      state.journeysList = remoteList(journeys);
-      state.journeysList.loaded = timestamp;
-      state.journeysList.items.forEach((item) => (item.loaded = timestamp));
+      state.journeyList = remoteList(journeys);
+      state.journeyList.loaded = timestamp;
+      state.journeyList.items.forEach((item) => (item.loaded = timestamp));
     },
   },
 });
 
 export default journeysSlice;
-export const { journeyLoad, journeyLoaded, journeysLoad, journeysLoaded } =
-  journeysSlice.actions;
+export const {
+  journeyInstanceLoad,
+  journeyInstanceLoaded,
+  journeyLoad,
+  journeyLoaded,
+  journeysLoad,
+  journeysLoaded,
+} = journeysSlice.actions;

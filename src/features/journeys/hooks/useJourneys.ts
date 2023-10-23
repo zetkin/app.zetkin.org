@@ -7,7 +7,7 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 export default function useJourneys(orgId: number): IFuture<ZetkinJourney[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const journeysList = useAppSelector((state) => state.journeys.journeysList);
+  const journeysList = useAppSelector((state) => state.journeys.journeyList);
 
   return loadListIfNecessary(journeysList, dispatch, {
     actionOnLoad: () => journeysLoad(),

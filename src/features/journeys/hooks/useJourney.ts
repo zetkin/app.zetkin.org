@@ -11,7 +11,7 @@ export default function useJourney(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const journeyItems = useAppSelector(
-    (state) => state.journeys.journeysList.items
+    (state) => state.journeys.journeyList.items
   );
   const journeyItem = journeyItems.find((item) => item.id == journeyId);
 
