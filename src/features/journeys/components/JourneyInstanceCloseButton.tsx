@@ -13,6 +13,8 @@ import { Msg, useMessages } from 'core/i18n';
 import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
 
 import messageIds from '../l10n/messageIds';
+import useJourneyInstanceMutations from '../hooks/useJourneyInstanceMutations';
+import { useNumericRouteParams } from 'core/hooks';
 
 const JourneyInstanceCloseButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
@@ -152,34 +154,17 @@ export default JourneyInstanceCloseButton;
 export const JourneyInstanceReopenButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
-  const messages = useMessages(messageIds);
-  const { orgId } = useRouter().query;
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-
-  const { useUpdate } = journeyInstanceResource(
-    orgId as string,
-    journeyInstance.id.toString()
+  const { orgId } = useNumericRouteParams();
+  const { updateJourneyInstance } = useJourneyInstanceMutations(
+    orgId,
+    journeyInstance.id
   );
-  const journeyInstanceMutation = useUpdate();
 
   return (
     <Button
       color="secondary"
       data-testid="JourneyInstanceReopenButton"
-      onClick={() =>
-        journeyInstanceMutation.mutate(
-          { closed: null },
-          {
-            onError: () =>
-              showSnackbar(
-                'error',
-                messages.instance.reopenButton.error({
-                  singularLabel: journeyInstance.journey.singular_label,
-                })
-              ),
-          }
-        )
-      }
+      onClick={() => updateJourneyInstance({ closed: null })}
       startIcon={<ArchiveIcon />}
       variant="contained"
     >

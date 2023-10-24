@@ -2,9 +2,16 @@ import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import { journeyInstanceUpdate, journeyInstanceUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
+type ZetkinJourneyInstancePatchBody = Partial<
+  Pick<
+    ZetkinJourneyInstance,
+    'title' | 'summary' | 'opening_note' | 'outcome' | 'closed'
+  > & { journey_id: number }
+>;
+
 interface UseJourneyInstanceMutationsReturn {
   updateJourneyInstance: (
-    data: Partial<ZetkinJourneyInstance>
+    patchBody: ZetkinJourneyInstancePatchBody
   ) => Promise<ZetkinJourneyInstance>;
 }
 
@@ -16,18 +23,13 @@ export default function useJourneyInstanceMutations(
   const dispatch = useAppDispatch();
 
   async function updateJourneyInstance(
-    data: Partial<
-      Pick<
-        ZetkinJourneyInstance,
-        'title' | 'summary' | 'opening_note' | 'outcome' | 'closed'
-      > & { journey_id: number }
-    >
+    patchBody: ZetkinJourneyInstancePatchBody
   ) {
-    const mutatingAttributes = Object.keys(data);
+    const mutatingAttributes = Object.keys(patchBody);
     dispatch(journeyInstanceUpdate([instanceId, mutatingAttributes]));
     const updatedInstance = await apiClient.patch<ZetkinJourneyInstance>(
       `/api/orgs/${orgId}/journey_instances/${instanceId}`,
-      data
+      patchBody
     );
     dispatch(journeyInstanceUpdated(updatedInstance));
     return updatedInstance;

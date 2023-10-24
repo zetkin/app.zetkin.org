@@ -48,17 +48,6 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
     }),
     useRemoveSubject: createUseMutationDelete({ key, url: `${url}/subjects` }),
     useUnassignTag: createUseMutationDelete({ key, url: `${url}/tags` }),
-    useUpdate: createUseMutation<
-      Partial<
-        Pick<
-          ZetkinJourneyInstance,
-          'title' | 'summary' | 'opening_note' | 'outcome' | 'closed'
-        > & { journey_id: number }
-      >,
-      ZetkinJourneyInstance
-    >(key, url, {
-      method: 'PATCH',
-    }),
   };
 };
 

@@ -1,22 +1,19 @@
 import { FormattedDate } from 'react-intl';
 import { Forward } from '@mui/icons-material';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import { useContext } from 'react';
-import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 
-import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import JourneyStatusChip from '../components/JourneyStatusChip';
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useJourneyInstance from '../hooks/useJourneyInstance';
+import useJourneyInstanceMutations from '../hooks/useJourneyInstanceMutations';
 import useJourneys from '../hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import JourneyInstanceCloseButton, {
   JourneyInstanceReopenButton,
 } from '../components/JourneyInstanceCloseButton';
@@ -32,44 +29,14 @@ const JourneyInstanceLayout: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { orgId, journeyId, instanceId } = useNumericRouteParams();
   const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const journeysFuture = useJourneys(orgId);
 
-  const journeyInstanceHooks = journeyInstanceResource(
-    orgId.toString(),
-    instanceId.toString()
+  const { updateJourneyInstance } = useJourneyInstanceMutations(
+    orgId,
+    instanceId
   );
-  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
-
-  const updateTitle = async (newTitle: string) => {
-    patchJourneyInstanceMutation.mutateAsync(
-      { title: newTitle },
-      {
-        onError: () => {
-          showSnackbar(
-            'error',
-            messages.journeys.editJourneyTitleAlert.error()
-          );
-        },
-        onSuccess: async () => {
-          await queryClient.invalidateQueries('breadcrumbs');
-          await queryClient.invalidateQueries([
-            'journeyInstance',
-            orgId,
-            instanceId,
-          ]);
-          showSnackbar(
-            'success',
-            messages.journeys.editJourneyTitleAlert.success()
-          );
-        },
-      }
-    );
-  };
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
@@ -79,32 +46,15 @@ const JourneyInstanceLayout: React.FunctionComponent<
       .map((journey) => ({
         id: `convertTo-${journey.id}`,
         label: journey.singular_label,
-        onSelect: () => {
+        onSelect: async () => {
           //redirect to equivalent page but new journey id
           const redirectUrl = router.pathname
             .replace('[orgId]', orgId.toString())
             .replace('[journeyId]', journey.id.toString())
             .replace('[instanceId]', instanceId.toString());
 
-          patchJourneyInstanceMutation.mutateAsync(
-            {
-              journey_id: journey.id,
-            },
-            {
-              onError: () =>
-                showSnackbar(
-                  'error',
-                  messages.journeys.conversionSnackbar.error()
-                ),
-              onSuccess: () => {
-                showSnackbar(
-                  'success',
-                  messages.journeys.conversionSnackbar.success()
-                );
-                router.push(redirectUrl);
-              },
-            }
-          );
+          await updateJourneyInstance({ journey_id: journey.id });
+          router.push(redirectUrl);
         },
       })) ?? [];
 
@@ -226,8 +176,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
           }}
         >
           <ZUIEditTextinPlace
-            disabled={patchJourneyInstanceMutation.isLoading}
-            onChange={(newTitle) => updateTitle(newTitle)}
+            onChange={(newTitle) => updateJourneyInstance({ title: newTitle })}
             value={journeyInstance.title || journeyInstance.journey.title}
           />
           <Typography

@@ -1,29 +1,26 @@
 import { Edit } from '@mui/icons-material';
-import { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import ZUIAutoTextArea from 'zui/ZUIAutoTextArea';
 import ZUICollapse from 'zui/ZUICollapse';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUISection from 'zui/ZUISection';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useJourneyInstanceMutations from '../hooks/useJourneyInstanceMutations';
+import { useNumericRouteParams } from 'core/hooks';
 
 const JourneyInstanceSummary = ({
   journeyInstance,
 }: {
   journeyInstance: ZetkinJourneyInstance;
 }): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-
   const editingRef = useRef<HTMLTextAreaElement>(null);
 
   const [editingSummary, setEditingSummary] = useState<boolean>(false);
@@ -32,26 +29,16 @@ const JourneyInstanceSummary = ({
     journeyTitle: journeyInstance.journey.singular_label.toLowerCase(),
   });
 
-  const patchJourneyInstanceMutation = journeyInstanceResource(
-    orgId as string,
-    journeyInstance.id.toString()
-  ).useUpdate();
+  const { updateJourneyInstance } = useJourneyInstanceMutations(
+    orgId,
+    journeyInstance.id
+  );
 
   useEffect(() => {
     if (editingRef.current) {
       editingRef.current.focus();
     }
   }, [editingSummary]);
-
-  const saveEditedSummary = async () => {
-    return await patchJourneyInstanceMutation.mutateAsync(
-      { summary },
-      {
-        onError: () => showSnackbar('error'),
-        onSuccess: () => setEditingSummary(false),
-      }
-    );
-  };
 
   const cancelEditingSummary = () => {
     setEditingSummary(false);
@@ -81,7 +68,7 @@ const JourneyInstanceSummary = ({
           onSubmit={async (e) => {
             e.stopPropagation();
             e.preventDefault();
-            const patchedInstance = await saveEditedSummary();
+            const patchedInstance = await updateJourneyInstance({ summary });
             setEditingSummary(false);
             setSummary(patchedInstance.summary);
           }}
@@ -93,10 +80,7 @@ const JourneyInstanceSummary = ({
             placeholder={summaryPlaceholder}
             value={summary}
           />
-          <ZUISubmitCancelButtons
-            onCancel={cancelEditingSummary}
-            submitDisabled={patchJourneyInstanceMutation.isLoading}
-          />
+          <ZUISubmitCancelButtons onCancel={cancelEditingSummary} />
         </form>
       ) : (
         // Not editing
