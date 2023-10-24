@@ -10,6 +10,7 @@ import {
 import {
   ZetkinActivity,
   ZetkinCampaign,
+  ZetkinDataField,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -24,6 +25,7 @@ type EphemeralQueryStats = {
 export interface smartSearchStoreSlice {
   activityList: RemoteList<ZetkinActivity>;
   campaignList: RemoteList<ZetkinCampaign>;
+  fieldsList: RemoteList<ZetkinDataField>;
   locationList: RemoteList<ZetkinLocation>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
 }
@@ -31,6 +33,7 @@ export interface smartSearchStoreSlice {
 const initialState: smartSearchStoreSlice = {
   activityList: remoteList(),
   campaignList: remoteList(),
+  fieldsList: remoteList(),
   locationList: remoteList(),
   statsByFilterSpec: {},
 };
@@ -95,6 +98,13 @@ const smartSearchSlice = createSlice({
       state.campaignList = remoteList(action.payload);
       state.campaignList.loaded = new Date().toISOString();
     },
+    fieldsLoad: (state) => {
+      state.fieldsList.isLoading = true;
+    },
+    fieldsLoaded: (state, action: PayloadAction<ZetkinDataField[]>) => {
+      state.fieldsList = remoteList(action.payload);
+      state.fieldsList.loaded = new Date().toISOString();
+    },
     locationLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.locationList.items.find((item) => item.id == id);
@@ -155,6 +165,8 @@ export const {
   campaignLoaded,
   campaignsLoad,
   campaignsLoaded,
+  fieldsLoad,
+  fieldsLoaded,
   locationLoad,
   locationLoaded,
   locationsLoad,
