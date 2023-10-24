@@ -19,14 +19,14 @@ export default function useCreateTag(
         group: undefined,
         group_id: newGroup.id,
       };
-      dispatch(tagCreate);
+      dispatch(tagCreate());
       const tagFuture = await apiClient
         .post<ZetkinTag, ZetkinTagPostBody>(
           `/api/orgs/${orgId}/people/tags`,
           tagWithNewGroup
         )
         .then((data: ZetkinTag) => {
-          dispatch(tagCreated);
+          dispatch(tagCreated(data));
           return data;
         });
       return tagFuture;

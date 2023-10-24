@@ -10,14 +10,14 @@ export default function useCreateTagGroup(
   const dispatch = useAppDispatch();
 
   const createTagGroup = async (newGroup: NewTag) => {
-    dispatch(tagGroupCreate);
+    dispatch(tagGroupCreate());
     const tagGroupFuture = await apiClient
       .post<ZetkinTagGroup, ZetkinTagGroupPostBody>(
         `/api/orgs/${orgId}/tag_groups`,
         newGroup
       )
       .then((data: ZetkinTagGroup) => {
-        dispatch(tagGroupCreated);
+        dispatch(tagGroupCreated(data));
         return data;
       });
     return tagGroupFuture;
