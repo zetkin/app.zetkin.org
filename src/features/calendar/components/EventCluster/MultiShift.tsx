@@ -4,7 +4,7 @@ import { ScheduleOutlined } from '@mui/icons-material';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
-import { EventState } from 'features/events/models/EventDataModel';
+import { EventState } from 'features/events/hooks/useEventState';
 import getEventState from 'features/events/utils/getEventState';
 import LocationLabel from 'features/events/components/LocationLabel';
 import { removeOffset } from 'utils/dateUtils';

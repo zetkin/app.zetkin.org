@@ -7,10 +7,10 @@ import { Box, Button, Grid, GridSize, MenuItem } from '@mui/material';
 
 import getActivities from 'utils/fetching/getActivities';
 import getCampaigns from 'features/campaigns/fetching/getCampaigns';
-import getLocations from 'utils/fetching/getLocations';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useEventLocations from '../hooks/useEventLocations';
 
 interface EventDetailsFormProps {
   onSubmit: (data: Record<string, unknown>) => void;
@@ -27,12 +27,11 @@ const EventDetailsForm = ({
   const { campId } = router.query;
   const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
   const activitiesQuery = useQuery(['actvities', orgId], getActivities(orgId));
-  const locationsQuery = useQuery(['locations', orgId], getLocations(orgId));
 
   const activities = activitiesQuery.data || [];
-  const locations = locationsQuery.data || [];
   const campaigns = campaignsQuery.data || [];
   const messages = useMessages(messageIds);
+  const locations = useEventLocations(parseInt(orgId));
 
   const formattedNow = dayjs().format('YYYY-MM-DDTHH:mm:ss');
 
@@ -139,7 +138,7 @@ const EventDetailsForm = ({
           name="location_id"
           select
         >
-          {locations.map((l) => (
+          {locations?.map((l) => (
             <MenuItem key={l.id} value={l.id}>
               {l.title}
             </MenuItem>

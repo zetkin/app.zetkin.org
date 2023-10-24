@@ -27,8 +27,9 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from '../l10n/messageIds';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import { useNumericRouteParams } from 'core/hooks';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -46,7 +47,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { orgId } = router.query;
+  const { orgId } = useNumericRouteParams();
   // Dialogs
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -56,18 +57,15 @@ const CampaignActionButtons: React.FunctionComponent<
   const closeCreateTaskDialog = () => setCreateTaskDialogOpen(false);
 
   const model = useModel(
-    (env) => new CampaignDataModel(env, parseInt(orgId as string), campaign.id)
-  );
-  const eventModel = useModel(
-    (env) => new EventDataModel(env, parseInt(orgId as string), campaign.id)
+    (env) => new CampaignDataModel(env, orgId, campaign.id)
   );
 
+  const { createEvent } = useCreateEvent(orgId);
+
   // Mutations
-  const patchCampaignMutation = useMutation(
-    patchCampaign(orgId as string, campaign.id)
-  );
+  const patchCampaignMutation = useMutation(patchCampaign(orgId, campaign.id));
   const deleteCampaignMutation = useMutation(
-    deleteCampaign(orgId as string, campaign.id)
+    deleteCampaign(orgId, campaign.id)
   );
 
   // Event Handlers
@@ -82,7 +80,7 @@ const CampaignActionButtons: React.FunctionComponent<
       onError: () =>
         showSnackbar('error', messages.form.deleteCampaign.error()),
       onSuccess: () => {
-        router.push(`/organize/${orgId as string}/projects`);
+        router.push(`/organize/${orgId}/projects`);
       },
     });
   };
@@ -96,7 +94,7 @@ const CampaignActionButtons: React.FunctionComponent<
 
     const defaultEnd = new Date(defaultStart.getTime() + 60 * 60 * 1000);
 
-    eventModel.createEvent({
+    createEvent({
       activity_id: null,
       campaign_id: campaign.id,
       end_time: defaultEnd.toISOString(),
