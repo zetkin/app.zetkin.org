@@ -1,16 +1,16 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import { campaignsResource } from 'features/campaigns/api/campaigns';
-import { tasksResource } from 'features/tasks/api/tasks';
 
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
+import useTasks from 'features/tasks/hooks/useTasks';
 import { getTaskStatus, getTaskTimeFrameWithConfig } from '../../utils';
 
 import {
@@ -45,12 +45,12 @@ const Task = ({
   onCancel,
   filter: initialFilter,
 }: TaskProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
 
-  const tasksQuery = tasksResource(orgId as string).useQuery();
-  const tasks = tasksQuery?.data || [];
+  const tasksQuery = useTasks(orgId);
+  const tasks = tasksQuery.data || [];
 
-  const campaignsQuery = campaignsResource(orgId as string).useQuery();
+  const campaignsQuery = campaignsResource(orgId.toString()).useQuery();
   const campaigns = campaignsQuery?.data || [];
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(

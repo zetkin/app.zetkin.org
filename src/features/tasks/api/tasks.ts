@@ -15,7 +15,6 @@ export const tasksResource = (orgId: string) => {
   return {
     prefetch: createPrefetch(key, url),
     useDelete: createUseMutationDelete({ key, url }),
-    useQuery: createUseQuery<ZetkinTask[]>(key, url),
   };
 };
 

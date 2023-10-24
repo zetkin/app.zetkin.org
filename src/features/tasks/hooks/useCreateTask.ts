@@ -1,6 +1,6 @@
+import { taskCreate, taskCreated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinTask, ZetkinTaskRequestBody } from '../components/types';
-import { taskCreate, taskCreated } from '../store';
 
 export default function useCreateTask(orgId: number) {
   const apiClient = useApiClient();
