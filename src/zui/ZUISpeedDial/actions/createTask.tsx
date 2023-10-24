@@ -11,6 +11,7 @@ import { tasksResource } from 'features/tasks/api/tasks';
 import { ActionConfig, DialogContentBaseProps } from './types';
 
 import messageIds from 'zui/l10n/messageIds';
+import useCreateTask from 'features/tasks/hooks/useCreateTask';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
   closeDialog,
@@ -20,13 +21,24 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
 
   const { useCreate: useCreateTask } = tasksResource(orgId);
   const { mutateAsync: sendTaskRequest, isError } = useCreateTask();
-
+  // const isError = false;
+  // const createTask = useCreateTask(parseInt(orgId as string));
+  //createTask function in hook async,
   const handleFormSubmit = async (task: ZetkinTaskRequestBody) => {
     // Set defaults for config and target_filters
     const body: ZetkinTaskRequestBody = {
       ...task,
       target_filters: [],
     };
+    // const newTask = await createTask(body);
+    // closeDialog();
+    // Redirect to task page
+    // router.push(
+    //   `/organize/${orgId}/projects/${campId}/calendar/tasks/${newTask.id}`
+    // );
+    // await createTask(body);
+    // closeDialog();
+    // redirect here
     await sendTaskRequest(body, {
       onSuccess: async (newTask) => {
         closeDialog();
