@@ -38,10 +38,6 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
     useAssignTag: createUseMutationPutWithBody<Pick<ZetkinTag, 'id' | 'value'>>(
       { key, url: `${url}/tags` }
     ),
-    useClose: createUseMutation<
-      { closed: string; outcome?: string; tags?: ZetkinTag[] },
-      ZetkinJourneyInstance
-    >(key, `/journeyInstances/close?orgId=${orgId}&instanceId=${instanceId}`),
     useRemoveAssignee: createUseMutationDelete({
       key,
       url: `${url}/assignees`,

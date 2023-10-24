@@ -1,3 +1,4 @@
+import { JourneyInstanceCloseBody } from 'pages/api/journeyInstances/close';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import { journeyInstanceUpdate, journeyInstanceUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
@@ -10,6 +11,7 @@ type ZetkinJourneyInstancePatchBody = Partial<
 >;
 
 interface UseJourneyInstanceMutationsReturn {
+  closeJourneyInstance: (closeBody: JourneyInstanceCloseBody) => Promise<void>;
   updateJourneyInstance: (
     patchBody: ZetkinJourneyInstancePatchBody
   ) => Promise<ZetkinJourneyInstance>;
@@ -35,5 +37,16 @@ export default function useJourneyInstanceMutations(
     return updatedInstance;
   }
 
-  return { updateJourneyInstance };
+  async function closeJourneyInstance(closeBody: JourneyInstanceCloseBody) {
+    const mutatingAttributes = Object.keys(closeBody);
+    dispatch(journeyInstanceUpdate([instanceId, mutatingAttributes]));
+
+    const closedInstance = await apiClient.post<ZetkinJourneyInstance>(
+      `/api/journeyInstances/close?orgId=${orgId}&instanceId=${instanceId}`,
+      closeBody
+    );
+    dispatch(journeyInstanceUpdated(closedInstance));
+  }
+
+  return { closeJourneyInstance, updateJourneyInstance };
 }
