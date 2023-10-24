@@ -59,6 +59,35 @@ const journeysSlice = createSlice({
       item.isLoading = false;
       item.isStale = false;
     },
+    journeyInstanceUpdate: (
+      state,
+      action: PayloadAction<[number, string[]]>
+    ) => {
+      const [id, attributes] = action.payload;
+      const instanceItem = state.journeyInstanceList.items.find(
+        (item) => item.id == id
+      );
+
+      if (instanceItem) {
+        instanceItem.mutating = instanceItem.mutating
+          .filter((attr) => !attributes.includes(attr))
+          .concat(attributes);
+      }
+    },
+    journeyInstanceUpdated: (
+      state,
+      action: PayloadAction<ZetkinJourneyInstance>
+    ) => {
+      const journeyInstance = action.payload;
+      const instanceItem = state.journeyInstanceList.items.find(
+        (item) => item.id == journeyInstance.id
+      );
+
+      if (instanceItem) {
+        instanceItem.data = { ...instanceItem.data, ...journeyInstance };
+        instanceItem.mutating = [];
+      }
+    },
     journeyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.journeyList.items.find((item) => item.id == id);
@@ -100,6 +129,8 @@ export const {
   journeyInstanceCreated,
   journeyInstanceLoad,
   journeyInstanceLoaded,
+  journeyInstanceUpdate,
+  journeyInstanceUpdated,
   journeyLoad,
   journeyLoaded,
   journeysLoad,
