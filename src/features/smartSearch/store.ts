@@ -46,12 +46,75 @@ const smartSearchSlice = createSlice({
       state.activityList = remoteList(action.payload);
       state.activityList.loaded = new Date().toISOString();
     },
+    activityLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.activityList.items.find((item) => item.id == id);
+      state.activityList.items = state.activityList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    activityLoaded: (state, action: PayloadAction<ZetkinActivity>) => {
+      const activity = action.payload;
+      const item = state.activityList.items.find(
+        (item) => item.id == activity.id
+      );
+
+      if (!item) {
+        throw new Error('Finished loading item that never started loading');
+      }
+
+      item.data = activity;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
+    campaignLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.campaignList.items.find((item) => item.id == id);
+      state.campaignList.items = state.campaignList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    campaignLoaded: (state, action: PayloadAction<ZetkinCampaign>) => {
+      const campaign = action.payload;
+      const item = state.campaignList.items.find(
+        (item) => item.id == campaign.id
+      );
+
+      if (!item) {
+        throw new Error('Finished loading item that never started loading');
+      }
+
+      item.data = campaign;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
     campaignsLoad: (state) => {
       state.campaignList.isLoading = true;
     },
     campaignsLoaded: (state, action: PayloadAction<ZetkinCampaign[]>) => {
       state.campaignList = remoteList(action.payload);
       state.campaignList.loaded = new Date().toISOString();
+    },
+    locationLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.locationList.items.find((item) => item.id == id);
+      state.locationList.items = state.locationList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    locationLoaded: (state, action: PayloadAction<ZetkinLocation>) => {
+      const location = action.payload;
+      const item = state.locationList.items.find(
+        (item) => item.id == location.id
+      );
+
+      if (!item) {
+        throw new Error('Finished loading item that never started loading');
+      }
+
+      item.data = location;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
     },
     locationsLoad: (state) => {
       state.locationList.isLoading = true;
@@ -84,10 +147,16 @@ const smartSearchSlice = createSlice({
 
 export default smartSearchSlice;
 export const {
+  activityLoad,
+  activityLoaded,
   activitiesLoad,
   activitiesLoaded,
+  campaignLoad,
+  campaignLoaded,
   campaignsLoad,
   campaignsLoaded,
+  locationLoad,
+  locationLoaded,
   locationsLoad,
   locationsLoaded,
   statsLoad,
