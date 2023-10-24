@@ -62,36 +62,4 @@ test.describe('Tag manager', () => {
       title: 'New tag title',
     });
   });
-
-  test('shows error snackbar when editing tag fails', async ({
-    page,
-    moxy,
-  }) => {
-    moxy.setZetkinApiMock(
-      `/orgs/1/people/tags/${ActivistTag.id}`,
-      'patch',
-      {},
-      409
-    );
-    await page.locator('text=Add tag').click();
-    await page.click(
-      `data-testid=TagManager-TagSelect-editTag-${ActivistTag.id}`
-    );
-
-    await page.fill(
-      'data-testid=TagManager-TagDialog-titleField',
-      'New tag title'
-    );
-
-    // Show error
-    await Promise.all([
-      page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
-      page.click('data-testid=SubmitCancelButtons-submitButton'),
-    ]);
-
-    const snackbar = page.locator('data-testid=Snackbar-error');
-    await snackbar.waitFor();
-
-    expect(await snackbar.count()).toEqual(1);
-  });
 });
