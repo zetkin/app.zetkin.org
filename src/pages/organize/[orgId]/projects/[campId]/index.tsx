@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
-import { campaignTasksResource } from 'features/tasks/api/tasks';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
@@ -21,11 +21,7 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, campId } = ctx.params!;
 
-  const { prefetch: prefetchCampaignTasks } = campaignTasksResource(
-    orgId as string,
-    campId as string
-  );
-  const { state: campaignTasksState } = await prefetchCampaignTasks(ctx);
+  const apiClient = new BackendApiClient(ctx.req.headers);
 
   await ctx.queryClient.prefetchQuery(
     ['org', orgId],
@@ -49,6 +45,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
   const campaignState = ctx.queryClient.getQueryState([
     'campaign',
+    orgId,
+    campId,
+  ]);
+
+  await ctx.queryClient.prefetchQuery(['tasks', orgId, campId], async () => {
+    return await apiClient.get(`/api/orgs/${orgId}/campaigns/${campId}/tasks`);
+  });
+  const campaignTasksState = ctx.queryClient.getQueryState([
+    'tasks',
     orgId,
     campId,
   ]);
