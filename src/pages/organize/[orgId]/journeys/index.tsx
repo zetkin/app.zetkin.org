@@ -6,7 +6,6 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyCard from 'features/journeys/components/JourneyCard';
 import JourneysLayout from 'features/journeys/layout/JourneysLayout';
 import messageIds from 'features/journeys/l10n/messageIds';
-import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useJourneys from 'features/journeys/hooks/useJourneys';
@@ -23,14 +22,11 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  const { state: orgQueryState } = await organizationResource(
-    orgId as string
-  ).prefetch(ctx);
-
   const apiClient = new BackendApiClient(ctx.req.headers);
   const journeys = await apiClient.get(`/api/orgs/${orgId}/journeys`);
+  const organization = await apiClient.get(`/api/orgs/${orgId}`);
 
-  if (orgQueryState?.status === 'success' && journeys) {
+  if (organization && journeys) {
     return {
       props: {
         orgId,

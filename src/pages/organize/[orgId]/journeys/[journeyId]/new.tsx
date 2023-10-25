@@ -8,7 +8,6 @@ import DefaultLayout from 'utils/layout/DefaultLayout';
 import Header from 'zui/ZUIHeader';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import messageIds from 'features/journeys/l10n/messageIds';
-import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
 import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
@@ -35,16 +34,13 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId } = ctx.params!;
 
-  const { state: orgQueryState } = await organizationResource(
-    orgId as string
-  ).prefetch(ctx);
-
   const apiClient = new BackendApiClient(ctx.req.headers);
   const journey = await apiClient.get(
     `/api/orgs/${orgId}/journeys/${journeyId}`
   );
+  const organization = await apiClient.get(`/api/orgs/${orgId}`);
 
-  if (orgQueryState?.status === 'success' && journey) {
+  if (organization && journey) {
     return {
       props: {
         journeyId,

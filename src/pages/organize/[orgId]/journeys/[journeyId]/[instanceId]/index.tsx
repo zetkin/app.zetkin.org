@@ -11,7 +11,6 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
 import messageIds from 'features/journeys/l10n/messageIds';
-import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
 import useJourneyInstance from 'features/journeys/hooks/useJourneyInstance';
 import { useMessages } from 'core/i18n';
@@ -26,7 +25,11 @@ import {
   journeyInstanceTimelineResource,
 } from 'features/journeys/api/journeys';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinJourneyInstance, ZetkinPerson } from 'utils/types/zetkin';
+import {
+  ZetkinJourneyInstance,
+  ZetkinOrganization,
+  ZetkinPerson,
+} from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -37,13 +40,12 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
   async (ctx) => {
     const { orgId, instanceId, journeyId } = ctx.params!;
 
-    const { state: orgQueryState } = await organizationResource(
-      orgId as string
-    ).prefetch(ctx);
-
     const apiClient = new BackendApiClient(ctx.req.headers);
     const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
       `/api/orgs/${orgId}/journey_instances/${instanceId}`
+    );
+    const organization = await apiClient.get<ZetkinOrganization>(
+      `/api/orgs/${orgId}`
     );
 
     if (
@@ -58,7 +60,7 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
       };
     }
 
-    if (orgQueryState?.status === 'success' && journeyInstance) {
+    if (organization && journeyInstance) {
       return {
         props: {
           instanceId,
