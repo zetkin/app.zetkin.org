@@ -6,13 +6,14 @@ import React, { useContext, useState } from 'react';
 
 import PublishButton from './PublishButton';
 import TaskDetailsForm from 'features/tasks/components/TaskDetailsForm';
+import { taskResource } from 'features/tasks/api/tasks';
+import { useNumericRouteParams } from 'core/hooks';
+import useTask from 'features/tasks/hooks/useTask';
 import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
-import { taskResource, tasksResource } from 'features/tasks/api/tasks';
 
 import messageIds from 'features/tasks/l10n/messageIds';
 
@@ -30,10 +31,10 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const router = useRouter();
+  const { orgId } = useNumericRouteParams();
   // Dialogs
   const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   // Mutations
   const taskHooks = taskResource(
@@ -41,10 +42,8 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
     task.id.toString()
   );
   const patchTaskMutation = taskHooks.useUpdate();
-  const deleteTaskMutation = tasksResource(
-    task.organization.id.toString()
-  ).useDelete();
 
+  const { deleteTask } = useTask(orgId, task.id);
   // Event Handlers
   const handleEditTask = (task: Partial<ZetkinTask>) => {
     patchTaskMutation.mutateAsync(task, {
@@ -52,15 +51,10 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
     });
   };
   const handleDeleteTask = () => {
-    deleteTaskMutation.mutate(task.id, {
-      onError: () => showSnackbar('error', messages.deleteTask.error()),
-      onSuccess: () => {
-        // Navigate back to campaign page
-        router.push(
-          `/organize/${task.organization.id}/projects/${task.campaign.id}`
-        );
-      },
-    });
+    deleteTask();
+    router.push(
+      `/organize/${task.organization.id}/projects/${task.campaign.id}`
+    );
   };
 
   return (

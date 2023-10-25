@@ -2,21 +2,10 @@ import { ZetkinTaskRequestBody } from 'features/tasks/components/types';
 import {
   createPrefetch,
   createUseMutation,
-  createUseMutationDelete,
   createUseQuery,
 } from 'utils/api/resourceHookFactories';
 
 import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
-
-export const tasksResource = (orgId: string) => {
-  const key = ['tasks', orgId];
-  const url = `/orgs/${orgId}/tasks`;
-
-  return {
-    prefetch: createPrefetch(key, url),
-    useDelete: createUseMutationDelete({ key, url }),
-  };
-};
 
 export const campaignTasksResource = (orgId: string, campaignId: string) => {
   const key = ['tasks', orgId, campaignId];

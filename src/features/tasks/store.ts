@@ -43,6 +43,12 @@ const tasksSlice = createSlice({
       state.tasksList.isLoading = false;
       state.tasksList.items.push(remoteItem(task.id, { data: task }));
     },
+    taskDeleted: (state, action: PayloadAction<number>) => {
+      const taskId = action.payload;
+      state.tasksList.items = state.tasksList.items.filter(
+        (item) => item.id != taskId
+      );
+    },
     taskLoad: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
       const item = state.tasksList.items.find((task) => task.id === taskId);
@@ -80,6 +86,7 @@ export const {
   statsLoaded,
   taskCreate,
   taskCreated,
+  taskDeleted,
   taskLoad,
   taskLoaded,
   tasksLoad,
