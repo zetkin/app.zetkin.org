@@ -55,7 +55,7 @@ export function loadItemIfNecessary<
       return val;
     });
 
-    return new PromiseFuture(promise);
+    return new PromiseFuture(promise, remoteItem?.data);
   }
 
   return new RemoteItemFuture(remoteItem);

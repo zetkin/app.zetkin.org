@@ -1,19 +1,10 @@
 import { JourneyInstancesData } from 'pages/api/organize/[orgId]/journeys/[journeyId]';
 import {
-  createPrefetch,
   createUseMutation,
-  createUseMutationDelete,
   createUseMutationPatch,
-  createUseMutationPut,
-  createUseMutationPutWithBody,
   createUseQuery,
 } from '../../../utils/api/resourceHookFactories';
-import {
-  ZetkinJourneyInstance,
-  ZetkinNote,
-  ZetkinNoteBody,
-  ZetkinTag,
-} from 'utils/types/zetkin';
+import { ZetkinNote, ZetkinNoteBody } from 'utils/types/zetkin';
 
 export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const key = ['journeyInstances', orgId, journeyId];
@@ -21,27 +12,6 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
 
   return {
     useQuery: createUseQuery<JourneyInstancesData>(key, url),
-  };
-};
-
-export const journeyInstanceResource = (orgId: string, instanceId: string) => {
-  const key = ['journeyInstance', orgId, instanceId];
-  const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
-
-  return {
-    key,
-    prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
-    useAddAssignee: createUseMutationPut({ key, url: `${url}/assignees` }),
-    useAddSubject: createUseMutationPut({ key, url: `${url}/subjects` }),
-    useAssignTag: createUseMutationPutWithBody<Pick<ZetkinTag, 'id' | 'value'>>(
-      { key, url: `${url}/tags` }
-    ),
-    useRemoveAssignee: createUseMutationDelete({
-      key,
-      url: `${url}/assignees`,
-    }),
-    useRemoveSubject: createUseMutationDelete({ key, url: `${url}/subjects` }),
-    useUnassignTag: createUseMutationDelete({ key, url: `${url}/tags` }),
   };
 };
 

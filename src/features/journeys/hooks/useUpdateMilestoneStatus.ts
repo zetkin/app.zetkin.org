@@ -1,4 +1,4 @@
-import { journeyInstanceNeedsReload } from '../store';
+import { invalidateJourneyInstance } from '../store';
 import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
@@ -19,6 +19,6 @@ export default function useUpdateMilestoneStatus(
       `/api/orgs/${orgId}/journey_instances/${instanceId}/milestones/${milestoneId}`,
       milestonePatchBody
     );
-    dispatch(journeyInstanceNeedsReload(instanceId));
+    dispatch(invalidateJourneyInstance(instanceId));
   };
 }
