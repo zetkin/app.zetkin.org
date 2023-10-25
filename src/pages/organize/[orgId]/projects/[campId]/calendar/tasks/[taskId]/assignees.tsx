@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import patchQuery from 'utils/fetching/patchQuery';
@@ -34,13 +35,18 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     ['org', orgId],
     getOrg(orgId as string, ctx.apiFetch)
   );
+  const apiClient = new BackendApiClient(ctx.req.headers);
   const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-  const { prefetch: prefetchTask } = taskResource(
-    orgId as string,
-    taskId as string
-  );
-  const { state: taskState, data: taskData } = await prefetchTask(ctx);
+  await ctx.queryClient.prefetchQuery(['tasks', orgId, taskId], async () => {
+    return await apiClient.get(`/api/orgs/${orgId}/tasks/${taskId}`);
+  });
+  const taskState = ctx.queryClient.getQueryState(['tasks', orgId, taskId]);
+  const taskData = ctx.queryClient.getQueryData<ZetkinTask>([
+    'tasks',
+    orgId,
+    taskId,
+  ]);
 
   if (orgState?.status === 'success' && taskState?.status === 'success') {
     if (campId && +campId === taskData?.campaign.id) {

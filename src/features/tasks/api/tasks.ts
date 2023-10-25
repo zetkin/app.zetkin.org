@@ -1,6 +1,5 @@
 import { ZetkinTaskRequestBody } from 'features/tasks/components/types';
 import {
-  createPrefetch,
   createUseMutation,
   createUseQuery,
 } from 'utils/api/resourceHookFactories';
@@ -12,7 +11,6 @@ export const taskResource = (orgId: string, taskId: string) => {
   const url = `/orgs/${orgId}/tasks/${taskId}`;
 
   return {
-    prefetch: createPrefetch<ZetkinTask>(key, url),
     useAssignedTasksQuery: createUseQuery<ZetkinAssignedTask[]>(
       ['assignedTasks', orgId, taskId],
       `/orgs/${orgId}/tasks/${taskId}/assigned`

@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 import Head from 'next/head';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
@@ -16,9 +17,16 @@ const scaffoldOptions = {
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, campId, taskId } = ctx.params!;
+  const apiClient = new BackendApiClient(ctx.req.headers);
 
-  const { prefetch } = taskResource(orgId as string, taskId as string);
-  const { state: taskQueryState } = await prefetch(ctx);
+  await ctx.queryClient.prefetchQuery(['tasks', orgId, taskId], async () => {
+    return await apiClient.get(`/api/orgs/${orgId}/tasks/${taskId}`);
+  });
+  const taskQueryState = ctx.queryClient.getQueryState([
+    'tasks',
+    orgId,
+    taskId,
+  ]);
 
   if (taskQueryState?.status === 'success') {
     return {
