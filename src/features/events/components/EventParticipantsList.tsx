@@ -1,63 +1,70 @@
 import { Box } from '@mui/material';
 import { forwardRef } from 'react';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
 import theme from 'theme';
+import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';
+import useParticipantStatus from '../hooks/useParticipantsStatus';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 interface EventParticipantsListProps {
   data: ZetkinEvent;
   filterString: string;
-  model: EventDataModel;
   orgId: number;
 }
 
 const EventParticipantsList = forwardRef(function EventParticipantsList(
-  { data, filterString, model, orgId }: EventParticipantsListProps,
+  { data, filterString, orgId }: EventParticipantsListProps,
   ref
 ) {
   const messages = useMessages(messageIds);
+  const {
+    bookedParticipants,
+    cancelledParticipants,
+    numAvailParticipants,
+    numCancelledParticipants,
+    numSignedParticipants,
+    pendingSignUps,
+  } = useEventParticipants(orgId, data.id);
+  const participantStatus = useParticipantStatus(orgId, data.id);
 
   return (
     <Box ref={ref}>
-      {model.getNumSignedParticipants() > 0 && (
+      {numSignedParticipants > 0 && (
         <ParticipantListSection
           chipColor={theme.palette.grey[500]}
-          chipNumber={model.getNumSignedParticipants().toString()}
+          chipNumber={numSignedParticipants.toString()}
           description={messages.eventParticipantsList.descriptionSignups()}
+          eventId={data.id}
           filterString={filterString}
-          model={model}
           orgId={orgId}
-          rows={model.getPendingSignUps() ?? []}
+          rows={pendingSignUps ?? []}
           title={messages.eventParticipantsList.signUps()}
           type="signups"
         />
       )}
       <ParticipantListSection
-        chipColor={model.getParticipantStatus()}
-        chipNumber={
-          model.getNumAvailParticipants() + '/' + data.num_participants_required
-        }
+        chipColor={participantStatus}
+        chipNumber={numAvailParticipants + '/' + data.num_participants_required}
         description={messages.eventParticipantsList.descriptionBooked()}
+        eventId={data.id}
         filterString={filterString}
-        model={model}
         orgId={orgId}
-        rows={model.getBookedParticipants()}
+        rows={bookedParticipants}
         title={messages.eventParticipantsList.bookedParticipants()}
         type="booked"
       />
-      {model.getNumCancelledParticipants() > 0 && (
+      {numCancelledParticipants > 0 && (
         <ParticipantListSection
           chipColor={theme.palette.grey[500]}
-          chipNumber={model.getNumCancelledParticipants().toString()}
+          chipNumber={numCancelledParticipants.toString()}
           description={messages.eventParticipantsList.descriptionCancelled()}
+          eventId={data.id}
           filterString={filterString}
-          model={model}
           orgId={orgId}
-          rows={model.getCancelledParticipants()}
+          rows={cancelledParticipants}
           title={messages.eventParticipantsList.cancelledParticipants()}
           type="cancelled"
         />

@@ -5,14 +5,15 @@ import TabbedLayout from 'utils/layout/TabbedLayout';
 import { useState } from 'react';
 
 import EventActionButtons from '../components/EventActionButtons';
-import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
 import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
-import EventTypesModel from '../models/EventTypesModel';
 import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
-import useModel from 'core/useModel';
+import useEvent from '../hooks/useEvent';
+import useEventMutations from '../hooks/useEventMutations';
+import useEventState from '../hooks/useEventState';
+import useEventTypes from '../hooks/useEventTypes';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -32,38 +33,37 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   eventId,
   orgId,
 }) => {
-  const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
-
   const messages = useMessages(messageIds);
-
-  const model = useModel(
-    (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
+  const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
+  const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
+  const eventState = useEventState(parseInt(orgId), parseInt(eventId));
+  const { setTitle, setType } = useEventMutations(
+    parseInt(orgId),
+    parseInt(eventId)
   );
 
-  const typesModel = useModel(
-    (env) => new EventTypesModel(env, parseInt(orgId))
-  );
+  const eventTypes = useEventTypes(parseInt(orgId));
 
   return (
     <TabbedLayout
       actionButtons={
-        <ZUIFuture future={model.getData()}>
+        <ZUIFuture future={eventFuture}>
           {(data) => {
             return <EventActionButtons event={data} />;
           }}
         </ZUIFuture>
       }
-      baseHref={getEventUrl(model.getData().data)}
+      baseHref={getEventUrl(eventFuture.data)}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            <EventStatusChip state={model.state} />
+            <EventStatusChip state={eventState} />
           </Box>
           <ZUIFutures
             futures={{
-              currentEvent: model.getData(),
-              types: typesModel.getTypes(),
+              currentEvent: eventFuture,
+              types: eventTypes,
             }}
           >
             {({ data: { types, currentEvent } }) => {
@@ -71,21 +71,21 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 <EventTypeAutocomplete
                   onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
-                    model.setType(newValue ? newValue.id : newValue);
+                    setType(newValue ? newValue.id : newValue);
                     setEditingTypeOrTitle(false);
                   }}
-                  onChangeNewOption={(newValueId) => model.setType(newValueId)}
+                  onChangeNewOption={(newValueId) => setType(newValueId)}
                   onFocus={() => setEditingTypeOrTitle(true)}
+                  orgId={currentEvent.organization.id}
                   showBorder={editingTypeOrTitle}
                   types={types}
-                  typesModel={typesModel}
                   value={currentEvent.activity}
                 />
               );
             }}
           </ZUIFutures>
           <Box marginX={1}>
-            <ZUIFuture future={model.getData()}>
+            <ZUIFuture future={eventFuture}>
               {(data) => {
                 const startDate = new Date(removeOffset(data.start_time));
                 const endDate = new Date(removeOffset(data.end_time));
@@ -125,7 +125,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
         },
       ]}
       title={
-        <ZUIFuture future={model.getData()}>
+        <ZUIFuture future={eventFuture}>
           {(data) => {
             return (
               <ZUIEditTextinPlace
@@ -135,7 +135,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 }}
                 onChange={(val) => {
                   setEditingTypeOrTitle(false);
-                  model.setTitle(val);
+                  setTitle(val);
                 }}
                 onFocus={() => setEditingTypeOrTitle(true)}
                 placeholder={

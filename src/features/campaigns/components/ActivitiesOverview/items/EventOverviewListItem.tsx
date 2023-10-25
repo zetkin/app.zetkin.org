@@ -7,7 +7,6 @@ import {
 } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
-import EventDataModel from 'features/events/models/EventDataModel';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import messageIds from 'features/events/l10n/messageIds';
@@ -15,7 +14,6 @@ import OverviewListItem from './OverviewListItem';
 import { removeOffset } from 'utils/dateUtils';
 import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
@@ -30,9 +28,6 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
   focusDate,
 }) => {
   const { openEventPopper } = useEventPopper();
-  const model = useModel(
-    (env) => new EventDataModel(env, event.organization.id, event.id)
-  );
   const messages = useMessages(messageIds);
 
   return (
@@ -46,7 +41,13 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       }
       focusDate={focusDate}
       href={getEventUrl(event)}
-      meta={<EventWarningIcons compact model={model} />}
+      meta={
+        <EventWarningIcons
+          compact
+          eventId={event.id}
+          orgId={event.organization.id}
+        />
+      }
       onClick={(x: number, y: number) => {
         openEventPopper(
           { events: [event], kind: CLUSTER_TYPE.SINGLE },

@@ -1,24 +1,25 @@
 import { FC } from 'react';
 import { Box, Divider } from '@mui/material';
 
-import { EventsModel } from '../models/EventsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import RelatedEvent from './RelatedEvent';
 import { useMessages } from 'core/i18n';
+import useRelatedEvents from '../hooks/useRelatedEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface EventRelatedCardProps {
   data: ZetkinEvent;
-  model: EventsModel;
+  orgId: number;
 }
 
-const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, model }) => {
+const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, orgId }) => {
   const messages = useMessages(messageIds);
+  const relatedEvents = useRelatedEvents(data, orgId);
 
   return (
-    <ZUIFuture future={model.getRelatedEvents(data)}>
+    <ZUIFuture future={relatedEvents}>
       {(events) => {
         return (
           <>
