@@ -15,7 +15,6 @@ export const taskResource = (orgId: string, taskId: string) => {
       ['assignedTasks', orgId, taskId],
       `/orgs/${orgId}/tasks/${taskId}/assigned`
     ),
-    useQuery: createUseQuery<ZetkinTask>(key, url),
     useUpdate: createUseMutation<ZetkinTaskRequestBody, ZetkinTask>(key, url, {
       method: 'PATCH',
     }),

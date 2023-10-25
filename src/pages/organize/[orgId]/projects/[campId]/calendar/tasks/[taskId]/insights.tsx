@@ -2,7 +2,6 @@ import { FunctionComponent } from 'react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { ResponsivePie } from '@nivo/pie';
-import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -11,6 +10,8 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import { taskResource } from 'features/tasks/api/tasks';
+import { useNumericRouteParams } from 'core/hooks';
+import useTask from 'features/tasks/hooks/useTask';
 import ZUIQuery from 'zui/ZUIQuery';
 import {
   ASSIGNED_STATUS,
@@ -156,12 +157,12 @@ const PieChart: FunctionComponent<PieChartProps> = ({ tasks }) => {
 const TaskInsightsPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
 
-  const { taskId, orgId } = useRouter().query;
-  const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(
-    orgId as string,
-    taskId as string
+  const { orgId, taskId } = useNumericRouteParams();
+  const { useAssignedTasksQuery } = taskResource(
+    orgId.toString(),
+    taskId.toString()
   );
-  const { data: task } = useTaskQuery();
+  const task = useTask(orgId, taskId);
   const assignedTasksQuery = useAssignedTasksQuery();
 
   return (

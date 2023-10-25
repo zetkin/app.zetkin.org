@@ -8,7 +8,7 @@ import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import TaskDetailsSection from 'features/tasks/components/TaskDetailsSection';
 import TaskPreviewSection from 'features/tasks/components/TaskPreviewSection';
-import { taskResource } from 'features/tasks/api/tasks';
+import useTask from 'features/tasks/hooks/useTask';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -53,7 +53,7 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({
   taskId,
   orgId,
 }) => {
-  const { data: task } = taskResource(orgId, taskId).useQuery();
+  const task = useTask(parseInt(orgId), parseInt(taskId));
 
   if (!task) {
     return null;

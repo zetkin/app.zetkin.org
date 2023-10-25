@@ -1,34 +1,29 @@
+import { IFuture } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinTask } from '../components/types';
-import { taskDeleted, taskLoad, taskLoaded } from '../store';
+import { taskLoad, taskLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-interface UseTaskReturn {
-  data: ZetkinTask | null;
-  deleteTask: () => Promise<void>;
-}
-
-export default function useTask(orgId: number, taskId: number): UseTaskReturn {
+export default function useTask(
+  orgId: number,
+  taskId: number | undefined
+): ZetkinTask | null {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const tasks = useAppSelector((state) => state.tasks);
 
   const item = tasks.tasksList.items.find((item) => item.id === taskId);
 
-  const taskFuture = loadItemIfNecessary(item, dispatch, {
-    actionOnLoad: () => taskLoad(taskId),
-    actionOnSuccess: (data) => taskLoaded(data),
-    loader: () =>
-      apiClient.get<ZetkinTask>(`/api/orgs/${orgId}/tasks/${taskId}`),
-  });
+  let taskFuture: IFuture<ZetkinTask> | null = null;
 
-  const deleteTask = async () => {
-    await apiClient.delete(`/api/orgs/${orgId}/tasks/${taskId}`);
-    dispatch(taskDeleted(taskId));
-  };
+  if (taskId !== undefined) {
+    taskFuture = loadItemIfNecessary(item, dispatch, {
+      actionOnLoad: () => taskLoad(taskId),
+      actionOnSuccess: (data) => taskLoaded(data),
+      loader: () =>
+        apiClient.get<ZetkinTask>(`/api/orgs/${orgId}/tasks/${taskId}`),
+    });
+  }
 
-  return {
-    data: taskFuture.data,
-    deleteTask,
-  };
+  return taskFuture?.data ?? null;
 }

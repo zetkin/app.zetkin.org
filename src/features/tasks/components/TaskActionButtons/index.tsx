@@ -8,7 +8,7 @@ import PublishButton from './PublishButton';
 import TaskDetailsForm from 'features/tasks/components/TaskDetailsForm';
 import { taskResource } from 'features/tasks/api/tasks';
 import { useNumericRouteParams } from 'core/hooks';
-import useTask from 'features/tasks/hooks/useTask';
+import useTaskMutations from 'features/tasks/hooks/useTaskMutations';
 import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
@@ -43,7 +43,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   );
   const patchTaskMutation = taskHooks.useUpdate();
 
-  const { deleteTask } = useTask(orgId, task.id);
+  const { deleteTask } = useTaskMutations(orgId, task.id);
   // Event Handlers
   const handleEditTask = (task: Partial<ZetkinTask>) => {
     patchTaskMutation.mutateAsync(task, {

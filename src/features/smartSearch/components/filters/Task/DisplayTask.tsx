@@ -3,13 +3,13 @@ import { useRouter } from 'next/router';
 import { campaignResource } from 'features/campaigns/api/campaigns';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
-import { taskResource } from 'features/tasks/api/tasks';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
+import useTask from 'features/tasks/hooks/useTask';
 import {
   getMatchingWithConfig,
   getTaskStatus,
@@ -35,12 +35,9 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
   const timeFrame = getTimeFrameWithConfig(tf);
 
   let taskTitle = null;
+  const taskQuery = useTask(parseInt(orgId as string), config.task);
   if (config.task != undefined) {
-    const taskQuery = taskResource(
-      orgId as string,
-      config.task as unknown as string
-    ).useQuery();
-    taskTitle = taskQuery?.data?.title || null;
+    taskTitle = taskQuery?.title || null;
   }
 
   let campaignTitle;

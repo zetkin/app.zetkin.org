@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -17,6 +16,8 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
 import { taskResource } from 'features/tasks/api/tasks';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useTask from 'features/tasks/hooks/useTask';
 import ZUIQuery from 'zui/ZUIQuery';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
@@ -89,27 +90,28 @@ const TaskAssigneesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const queryClient = useQueryClient();
 
-  const { taskId, orgId } = useRouter().query;
-  const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(
-    orgId as string,
-    taskId as string
+  const { orgId, taskId } = useNumericRouteParams();
+  const { useAssignedTasksQuery } = taskResource(
+    orgId.toString(),
+    taskId.toString()
   );
-  const { data: task } = useTaskQuery();
+  const task = useTask(orgId, taskId);
   const assignedTasksQuery = useAssignedTasksQuery();
   const assignedTasks = assignedTasksQuery?.data;
   const query = task?.target;
 
   const queryMutation = useMutation(
-    patchQuery(orgId as string, query?.id as number),
+    patchQuery(orgId.toString(), query?.id as number),
     {
-      onSettled: () => queryClient.invalidateQueries(['task', taskId]),
+      onSettled: () =>
+        queryClient.invalidateQueries(['task', taskId.toString()]),
     }
   );
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogClose = () => setDialogOpen(false);
 
-  const queryStatus = getQueryStatus(task, assignedTasks);
+  const queryStatus = getQueryStatus(task ?? undefined, assignedTasks);
 
   const readOnly =
     queryStatus === QUERY_STATUS.PUBLISHED ||

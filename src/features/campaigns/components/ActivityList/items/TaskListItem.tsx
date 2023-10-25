@@ -12,7 +12,7 @@ interface TaskListItemProps {
 }
 
 const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
-  const { data: task } = useTask(orgId, taskId);
+  const task = useTask(orgId, taskId);
   const { data: stats, isLoading: statsLoading } = useTaskStats(orgId, taskId);
 
   if (!task) {
