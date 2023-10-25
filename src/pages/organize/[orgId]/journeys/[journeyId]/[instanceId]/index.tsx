@@ -16,7 +16,8 @@ import { PageWithLayout } from 'utils/types';
 import useJourneyInstance from 'features/journeys/hooks/useJourneyInstance';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import ZUIQuery from 'zui/ZUIQuery';
+import useTimelineUpdates from 'features/journeys/hooks/useTimelineUpdates';
+import ZUIFuture from 'zui/ZUIFuture';
 import ZUISection from 'zui/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUITimeline from 'zui/ZUITimeline';
@@ -94,14 +95,16 @@ const JourneyDetailsPage: PageWithLayout = () => {
   const removeMemberMutation = useRemoveSubject();
   const assignTagMutation = useAssignTag();
   const unassignTagMutation = useUnassignTag();
-  const { useQueryUpdates, useAddNote, useEditNote } =
-    journeyInstanceTimelineResource(orgId.toString(), instanceId.toString());
+  const { useAddNote, useEditNote } = journeyInstanceTimelineResource(
+    orgId.toString(),
+    instanceId.toString()
+  );
 
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
+  const timelineUpdatesFuture = useTimelineUpdates(orgId, instanceId);
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
-  const updatesQuery = useQueryUpdates();
   const addNoteMutation = useAddNote();
   const editNoteMutation = useEditNote();
 
@@ -153,8 +156,8 @@ const JourneyDetailsPage: PageWithLayout = () => {
             <Divider />
           </Box>
           <ZUISection title={messages.instance.sections.timeline()}>
-            <ZUIQuery queries={{ updatesQuery }}>
-              {({ queries: { updatesQuery } }) => (
+            <ZUIFuture future={timelineUpdatesFuture}>
+              {(updates) => (
                 <ZUITimeline
                   disabled={addNoteMutation.isLoading}
                   onAddNote={(note) => {
@@ -167,10 +170,10 @@ const JourneyDetailsPage: PageWithLayout = () => {
                       onError: () => showSnackbar('error'),
                     });
                   }}
-                  updates={updatesQuery.data}
+                  updates={updates}
                 />
               )}
-            </ZUIQuery>
+            </ZUIFuture>
           </ZUISection>
         </Grid>
         <Grid item lg={4} md={4} xs={12}>

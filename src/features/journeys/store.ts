@@ -1,16 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export interface JourneysStoreSlice {
   journeyInstanceList: RemoteList<ZetkinJourneyInstance>;
   journeyList: RemoteList<ZetkinJourney>;
+  timelineUpdatesByInstanceId: Record<
+    number,
+    RemoteList<ZetkinUpdate & { id: number }>
+  >;
 }
 
 const initialJourneysState: JourneysStoreSlice = {
   journeyInstanceList: remoteList(),
   journeyList: remoteList(),
+  timelineUpdatesByInstanceId: {},
 };
 
 const journeysSlice = createSlice({
@@ -130,6 +136,29 @@ const journeysSlice = createSlice({
       state.journeyList.loaded = timestamp;
       state.journeyList.items.forEach((item) => (item.loaded = timestamp));
     },
+    timelineUpdatesLoad: (state, action: PayloadAction<number>) => {
+      const instanceId = action.payload;
+      if (!state.timelineUpdatesByInstanceId[instanceId]) {
+        state.timelineUpdatesByInstanceId[instanceId] = remoteList();
+      }
+      state.timelineUpdatesByInstanceId[instanceId].isLoading = true;
+    },
+    timelineUpdatesLoaded: (
+      state,
+      action: PayloadAction<[ZetkinUpdate[], number]>
+    ) => {
+      const [updates, instanceId] = action.payload;
+      const timestamp = new Date().toISOString();
+
+      const updatesWithIds = updates.map((update) => ({
+        ...update,
+        id: instanceId,
+      }));
+
+      state.timelineUpdatesByInstanceId[instanceId] =
+        remoteList(updatesWithIds);
+      state.timelineUpdatesByInstanceId[instanceId].loaded = timestamp;
+    },
   },
 });
 
@@ -146,4 +175,6 @@ export const {
   journeyLoaded,
   journeysLoad,
   journeysLoaded,
+  timelineUpdatesLoad,
+  timelineUpdatesLoaded,
 } = journeysSlice.actions;

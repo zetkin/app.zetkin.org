@@ -1,5 +1,4 @@
 import { JourneyInstancesData } from 'pages/api/organize/[orgId]/journeys/[journeyId]';
-import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import {
   createPrefetch,
   createUseMutation,
@@ -62,9 +61,5 @@ export const journeyInstanceTimelineResource = (
       key,
       url: `${url}/notes`,
     }),
-    useQueryUpdates: createUseQuery<ZetkinUpdate[]>(
-      key,
-      `${url}/timeline/updates`
-    ),
   };
 };
