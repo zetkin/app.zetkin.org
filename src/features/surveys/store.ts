@@ -236,6 +236,15 @@ const surveysSlice = createSlice({
       state.surveyList.isLoading = false;
       state.surveyList.items.push(remoteItem(survey.id, { data: survey }));
       state.elementsBySurveyId[survey.id] = remoteList();
+
+      if (survey.campaign) {
+        if (!state.surveyIdsByCampaignId[survey.campaign.id]) {
+          state.surveyIdsByCampaignId[survey.campaign.id] = remoteList();
+        }
+        state.surveyIdsByCampaignId[survey.campaign.id].items.push(
+          remoteItem(survey.id)
+        );
+      }
     },
     surveyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
