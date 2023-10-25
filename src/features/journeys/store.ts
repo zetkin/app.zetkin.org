@@ -59,6 +59,16 @@ const journeysSlice = createSlice({
       item.isLoading = false;
       item.isStale = false;
     },
+    journeyInstanceNeedsReload: (state, action: PayloadAction<number>) => {
+      const instanceId = action.payload;
+      const instanceItem = state.journeyInstanceList.items.find(
+        (item) => item.id == instanceId
+      );
+
+      if (instanceItem) {
+        instanceItem.isStale = true;
+      }
+    },
     journeyInstanceUpdate: (
       state,
       action: PayloadAction<[number, string[]]>
@@ -129,6 +139,7 @@ export const {
   journeyInstanceCreated,
   journeyInstanceLoad,
   journeyInstanceLoaded,
+  journeyInstanceNeedsReload,
   journeyInstanceUpdate,
   journeyInstanceUpdated,
   journeyLoad,

@@ -11,7 +11,6 @@ import {
 } from '../../../utils/api/resourceHookFactories';
 import {
   ZetkinJourneyInstance,
-  ZetkinJourneyMilestoneStatus,
   ZetkinNote,
   ZetkinNoteBody,
   ZetkinTag,
@@ -44,22 +43,6 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
     }),
     useRemoveSubject: createUseMutationDelete({ key, url: `${url}/subjects` }),
     useUnassignTag: createUseMutationDelete({ key, url: `${url}/tags` }),
-  };
-};
-
-export const journeyMilestoneStatusResource = (
-  orgId: string,
-  instanceId: string,
-  milestoneId: string
-) => {
-  const key = ['journeyMilestone', orgId, instanceId, milestoneId];
-  const url = `/orgs/${orgId}/journey_instances/${instanceId}/milestones/${milestoneId}`;
-
-  return {
-    useUpdate: createUseMutation<
-      Partial<ZetkinJourneyMilestoneStatus>,
-      ZetkinJourneyMilestoneStatus
-    >(key, url, { method: 'PATCH' }),
   };
 };
 
