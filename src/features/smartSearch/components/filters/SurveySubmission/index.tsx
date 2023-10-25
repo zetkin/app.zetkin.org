@@ -1,10 +1,7 @@
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getSurveys from '../../../fetching/getSurveys';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -19,6 +16,8 @@ import {
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurveys from 'features/smartSearch/hooks/useSurveys';
 const localMessageIds = messageIds.filters.surveySubmission;
 
 const DEFAULT_VALUE = 'none';
@@ -40,12 +39,8 @@ const SurveySubmission = ({
   onCancel,
   filter: initialFilter,
 }: SurveySubmissionProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const surveysQuery = useQuery(
-    ['surveys', orgId],
-    getSurveys(orgId as string)
-  );
-  const surveys = surveysQuery.data || [];
+  const { orgId } = useNumericRouteParams();
+  const surveys = useSurveys(orgId);
 
   const [submittable, setSubmittable] = useState(false);
 
@@ -60,7 +55,7 @@ const SurveySubmission = ({
       });
       setSubmittable(true);
     }
-  }, [surveys]);
+  }, [surveys.length]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
