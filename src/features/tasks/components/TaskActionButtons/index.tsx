@@ -14,6 +14,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/tasks/l10n/messageIds';
+import { ZetkinTaskRequestBody } from '../types';
 
 enum TASK_MENU_ITEMS {
   EDIT_TASK = 'editTask',
@@ -37,7 +38,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   const { updateTask } = useTaskMutations(task.organization.id, task.id);
   const { deleteTask } = useTaskMutations(orgId, task.id);
   // Event Handlers
-  const handleEditTask = (task: Partial<ZetkinTask>) => {
+  const handleEditTask = (task: ZetkinTaskRequestBody) => {
     updateTask(task);
     setEditTaskDialogOpen(false);
   };
