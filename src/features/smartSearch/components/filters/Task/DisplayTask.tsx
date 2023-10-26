@@ -1,13 +1,12 @@
-import { campaignResource } from 'features/campaigns/api/campaigns';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
+import UnderlinedCampaignTitle from '../CampaignParticipation/UnderlinedCampaignTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedTaskTitle from './UnderlinedTaskTitle';
-import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
 import {
   getMatchingWithConfig,
@@ -33,43 +32,23 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
   const tf = getTaskTimeFrameWithConfig(config);
   const timeFrame = getTimeFrameWithConfig(tf);
 
-  let campaignTitle;
-  if (config.campaign && config.task == undefined) {
-    const campaignQuery = campaignResource(
-      orgId.toString(),
-      config.campaign as unknown as string
-    ).useQuery();
-    campaignTitle = campaignQuery?.data?.title || null;
-  }
-
   const matching = getMatchingWithConfig(config?.matching);
-
-  // We don't want to show the campaign if a task has been specfied
-  let campaignSelect = null;
-  if (!config.task) {
-    campaignSelect = (
-      <>
-        <Msg id={localMessageIds.campaignSelect.in} />
-        {campaignTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.campaignSelect.campaign}
-            values={{
-              campaign: <UnderlinedText text={campaignTitle} />,
-            }}
-          />
-        ) : (
-          <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
-        )}
-      </>
-    );
-  }
 
   return (
     <Msg
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        campaignSelect: campaignSelect,
+        campaignSelect: config.task ? null : (
+          <>
+            <Msg id={localMessageIds.campaignSelect.in} />
+            {config.campaign && !config.task ? (
+              <UnderlinedCampaignTitle campId={config.campaign} orgId={orgId} />
+            ) : (
+              <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
+            )}
+          </>
+        ),
         matchingSelect: (
           // TODO: Move this to reusable component
           <UnderlinedMsg

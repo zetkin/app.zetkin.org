@@ -13,7 +13,10 @@ const ConversationSettings = ({
   assignmentId,
   orgId,
 }: ConversationSettingsProps) => {
-  const { data, updateCallAssignment } = useCallAssignment(orgId, assignmentId);
+  const { data: callAssignment, updateCallAssignment } = useCallAssignment(
+    orgId,
+    assignmentId
+  );
 
   return (
     <Paper>
@@ -32,7 +35,7 @@ const ConversationSettings = ({
           </Typography>
           <Switch
             //this looks backwards bc in interface we use the positive "allow"
-            checked={!data?.disable_caller_notes}
+            checked={!callAssignment?.disable_caller_notes}
             onChange={(evt) =>
               updateCallAssignment({
                 disable_caller_notes: !evt.target.checked,
@@ -53,7 +56,7 @@ const ConversationSettings = ({
             <Msg id={messageIds.conversation.settings.targetData.title} />
           </Typography>
           <Switch
-            checked={data?.expose_target_details}
+            checked={callAssignment?.expose_target_details}
             onChange={(evt) =>
               updateCallAssignment({
                 expose_target_details: evt.target.checked,

@@ -1,7 +1,9 @@
+import Fuse from 'fuse.js';
+import { MutableRefObject, useRef, useState } from 'react';
+
 import { BodySchema } from 'pages/api/callAssignments/setCallerTags';
 import { CallAssignmentCaller } from '../apiTypes';
-import Fuse from 'fuse.js';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import {
   callerAdd,
   callerAdded,
@@ -12,25 +14,25 @@ import {
   callersLoad,
   callersLoaded,
 } from '../store';
-import {
-  IFuture,
-  PromiseFuture,
-  RemoteListFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
+import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 interface UseCallersReturn {
   addCaller: (callerId: number) => PromiseFuture<CallAssignmentCaller>;
-  data: CallAssignmentCaller[] | null;
-  error: unknown | null;
-  isLoading: boolean;
+  filteredCallersFuture: IFuture<CallAssignmentCaller[]>;
+  isCaller: (person: ZetkinPerson) => boolean;
   removeCaller: (callerId: number) => void;
+  searchString: string;
+  selectedCaller: CallAssignmentCaller | null;
+  selectInputRef: MutableRefObject<HTMLInputElement | undefined>;
   setCallerTags: (
     callerId: number,
     prioTags: ZetkinTag[],
     excludedTags: ZetkinTag[]
   ) => void;
+  setSearchString: (searchString: string) => void;
+  setSelectedCaller: (caller: CallAssignmentCaller | null) => void;
 }
 
 export default function useCallers(
@@ -40,6 +42,12 @@ export default function useCallers(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const callAssignments = useAppSelector((state) => state.callAssignments);
+  const callersList = callAssignments.callersById[assignmentId];
+
+  const [searchString, setSearchString] = useState('');
+  const [selectedCaller, setSelectedCaller] =
+    useState<CallAssignmentCaller | null>(null);
+  const selectInputRef = useRef<HTMLInputElement>();
 
   const addCaller = (callerId: number): PromiseFuture<CallAssignmentCaller> => {
     dispatch(callerAdd([assignmentId, callerId]));
@@ -55,51 +63,35 @@ export default function useCallers(
     return new PromiseFuture(promise);
   };
 
-  const getCallers = (): IFuture<CallAssignmentCaller[]> => {
-    const callersList = callAssignments.callersById[assignmentId];
+  const allCallersFuture = loadListIfNecessary(callersList, dispatch, {
+    actionOnLoad: () => callersLoad(assignmentId),
+    actionOnSuccess: (data) => callersLoaded([data, assignmentId]),
+    loader: () =>
+      apiClient.get<CallAssignmentCaller[]>(
+        `/api/orgs/${orgId}/call_assignments/${assignmentId}/callers`
+      ),
+  });
 
-    if (callersList) {
-      return new RemoteListFuture(callersList);
-    }
+  let filteredCallersFuture: IFuture<CallAssignmentCaller[]>;
+  if (allCallersFuture.isLoading) {
+    filteredCallersFuture = allCallersFuture;
+  }
 
-    dispatch(callersLoad(assignmentId));
-    const promise = fetch(
-      `/api/orgs/${orgId}/call_assignments/${assignmentId}/callers`
-    )
-      .then((res) => res.json())
-      .then((data: { data: CallAssignmentCaller[] }) => {
-        dispatch(callersLoaded({ callers: data.data, id: assignmentId }));
-        return data.data;
-      });
+  if (allCallersFuture.data && searchString) {
+    const fuse = new Fuse(allCallersFuture.data, {
+      includeScore: true,
+      keys: ['first_name', 'last_name'],
+      threshold: 0.4,
+    });
 
-    return new PromiseFuture(promise);
-  };
+    const filteredCallers = fuse
+      .search(searchString)
+      .map((fuseResult) => fuseResult.item);
 
-  const getFilteredCallers = (
-    searchString = ''
-  ): IFuture<CallAssignmentCaller[]> => {
-    const callers = getCallers();
-
-    if (callers.isLoading) {
-      return callers;
-    }
-
-    if (callers.data && searchString) {
-      const fuse = new Fuse(callers.data, {
-        includeScore: true,
-        keys: ['first_name', 'last_name'],
-        threshold: 0.4,
-      });
-
-      const filteredCallers = fuse
-        .search(searchString)
-        .map((fuseResult) => fuseResult.item);
-
-      return new ResolvedFuture(filteredCallers);
-    }
-
-    return new ResolvedFuture(callers.data || []);
-  };
+    filteredCallersFuture = new ResolvedFuture(filteredCallers);
+  } else {
+    filteredCallersFuture = new ResolvedFuture(allCallersFuture.data || []);
+  }
 
   const removeCaller = (callerId: number) => {
     dispatch(callerRemove([assignmentId, callerId]));
@@ -134,14 +126,19 @@ export default function useCallers(
       });
   };
 
-  const callersFuture = getFilteredCallers();
+  const isCaller = (person: ZetkinPerson) =>
+    !!filteredCallersFuture.data?.find((caller) => caller.id == person.id);
 
   return {
     addCaller,
-    data: callersFuture.data,
-    error: callersFuture.error,
-    isLoading: callersFuture.isLoading,
+    filteredCallersFuture,
+    isCaller,
     removeCaller,
+    searchString,
+    selectInputRef,
+    selectedCaller,
     setCallerTags,
+    setSearchString,
+    setSelectedCaller,
   };
 }

@@ -1,21 +1,17 @@
 import { CallAssignmentStats } from '../apiTypes';
-import shouldLoad from 'core/caching/shouldLoad';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useCallAssignment from './useCallAssignment';
 import {
   IFuture,
   PlaceholderFuture,
-  PromiseFuture,
-  RemoteItemFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
 import { statsLoad, statsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseCallAssignmentStatsReturn {
-  data: CallAssignmentStats | null;
-  error: unknown | null;
   hasTargets: boolean;
-  isLoading: boolean;
+  statsFuture: IFuture<CallAssignmentStats>;
   statusBarStatsList: { color: string; value: number }[];
 }
 
@@ -27,107 +23,83 @@ export default function useCallAssignmentStats(
   const dispatch = useAppDispatch();
   const callAssignmentSlice = useAppSelector((state) => state.callAssignments);
   const statsById = callAssignmentSlice.statsById;
+  const statsItem = statsById[assignmentId];
   const { isTargeted } = useCallAssignment(orgId, assignmentId);
 
-  const getCallAssignmentStats = () => {
-    const statsItem = statsById[assignmentId];
+  const statsFuture = loadItemIfNecessary(statsItem, dispatch, {
+    actionOnLoad: () => statsLoad(assignmentId),
+    actionOnSuccess: (data) => statsLoaded(data),
+    loader: async () => {
+      const data = await apiClient.get<CallAssignmentStats & { id: number }>(
+        `/api/callAssignments/targets?org=${orgId}&assignment=${assignmentId}`
+      );
+      return { ...data, id: assignmentId };
+    },
+  });
 
-    if (shouldLoad(statsItem)) {
-      dispatch(statsLoad(assignmentId));
-      const promise = apiClient
-        .get<CallAssignmentStats>(
-          `/api/callAssignments/targets?org=${orgId}&assignment=${assignmentId}`
-        )
-        .then((data: CallAssignmentStats) => {
-          dispatch(statsLoaded({ ...data, id: assignmentId }));
-          return data;
-        });
+  let statsDataFuture: IFuture<CallAssignmentStats | null>;
+  if (!isTargeted) {
+    statsDataFuture = new ResolvedFuture(null);
+  }
+  if (statsFuture.isLoading && !statsFuture.data) {
+    statsDataFuture = new PlaceholderFuture({
+      allTargets: 0,
+      allocated: 0,
+      blocked: 0,
+      callBackLater: 0,
+      calledTooRecently: 0,
+      callsMade: 0,
+      done: 0,
+      id: assignmentId,
+      missingPhoneNumber: 0,
+      mostRecentCallTime: null,
+      organizerActionNeeded: 0,
+      queue: 0,
+      ready: 0,
+    });
+  } else {
+    statsDataFuture = statsFuture;
+  }
 
-      return new PromiseFuture(promise);
-    } else {
-      return new RemoteItemFuture(statsItem);
-    }
-  };
+  const statsData = statsDataFuture.data;
+  const hasTargets = statsData
+    ? statsData.blocked + statsData.ready > 0
+    : false;
 
-  const getStats = (): IFuture<CallAssignmentStats | null> => {
-    if (!isTargeted) {
-      return new ResolvedFuture(null);
-    }
-
-    const future = getCallAssignmentStats();
-    if (future.isLoading && !future.data) {
-      return new PlaceholderFuture({
-        allTargets: 0,
-        allocated: 0,
-        blocked: 0,
-        callBackLater: 0,
-        calledTooRecently: 0,
-        callsMade: 0,
-        done: 0,
-        id: assignmentId,
-        missingPhoneNumber: 0,
-        mostRecentCallTime: null,
-        organizerActionNeeded: 0,
-        queue: 0,
-        ready: 0,
-      });
-    } else {
-      return future;
-    }
-  };
-
-  const hasTargets = () => {
-    const statsData = getStats().data;
-    if (statsData === null) {
-      return false;
-    }
-    return statsData.blocked + statsData.ready > 0;
-  };
-
-  const getStatusBarStatsList = () => {
-    const { data } = getStats();
-    const hasTargets = data && data?.blocked + data?.ready > 0;
-    const statusBarStatsList =
-      hasTargets && data
-        ? [
-            {
-              color: 'statusColors.orange',
-              value: data.blocked,
-            },
-            {
-              color: 'statusColors.blue',
-              value: data.ready,
-            },
-            {
-              color: 'statusColors.green',
-              value: data.done,
-            },
-          ]
-        : [
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-            {
-              color: 'statusColors.gray',
-              value: 1,
-            },
-          ];
-
-    return statusBarStatsList;
-  };
-
-  const statsFuture = getStats();
+  const statusBarStatsList =
+    hasTargets && statsData
+      ? [
+          {
+            color: 'statusColors.orange',
+            value: statsData.blocked,
+          },
+          {
+            color: 'statusColors.blue',
+            value: statsData.ready,
+          },
+          {
+            color: 'statusColors.green',
+            value: statsData.done,
+          },
+        ]
+      : [
+          {
+            color: 'statusColors.gray',
+            value: 1,
+          },
+          {
+            color: 'statusColors.gray',
+            value: 1,
+          },
+          {
+            color: 'statusColors.gray',
+            value: 1,
+          },
+        ];
 
   return {
-    data: statsFuture.data,
-    error: statsFuture.error,
-    hasTargets: hasTargets(),
-    isLoading: statsFuture.isLoading,
-    statusBarStatsList: getStatusBarStatsList(),
+    hasTargets,
+    statsFuture,
+    statusBarStatsList,
   };
 }

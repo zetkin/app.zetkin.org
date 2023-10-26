@@ -28,7 +28,7 @@ export default function useCallerInstructions(
     (state: RootState) => state.callAssignments
   );
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
-  const { data } = useCallAssignment(orgId, assignmentId);
+  const { data: callAssignment } = useCallAssignment(orgId, assignmentId);
 
   //Used to force re-render
   const [pointlessState, setPointlessState] = useState(0);
@@ -37,20 +37,20 @@ export default function useCallerInstructions(
     const lsInstructions = localStorage.getItem(key);
 
     if (lsInstructions === null) {
-      if (data) {
-        localStorage.setItem(key, data.instructions);
-        return data.instructions;
+      if (callAssignment) {
+        localStorage.setItem(key, callAssignment.instructions);
+        return callAssignment.instructions;
       }
     }
     return lsInstructions || '';
   };
 
   const revert = () => {
-    if (!data) {
+    if (!callAssignment) {
       return;
     }
 
-    localStorage.setItem(key, data?.instructions);
+    localStorage.setItem(key, callAssignment?.instructions);
     //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
     setPointlessState(pointlessState + 1);
   };
@@ -90,16 +90,16 @@ export default function useCallerInstructions(
   };
 
   const hasEmptyInstrunctions = (): boolean => {
-    return data?.instructions === '';
+    return callAssignment?.instructions === '';
   };
 
   const hasUnsavedChanges = (): boolean => {
-    if (!data) {
+    if (!callAssignment) {
       return false;
     }
 
     const lsInstructions = localStorage.getItem(key)?.trim() || '';
-    const dataInstructions = data.instructions.trim();
+    const dataInstructions = callAssignment.instructions.trim();
 
     return dataInstructions != lsInstructions;
   };

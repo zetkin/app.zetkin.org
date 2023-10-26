@@ -12,12 +12,14 @@ import { ZetkinAssignedTask, ZetkinTask } from './components/types';
 export interface TasksStoreSlice {
   assignedTasksByTaskId: Record<number, RemoteList<ZetkinAssignedTask>>;
   statsById: Record<number, RemoteItem<TaskStats>>;
+  taskIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
   tasksList: RemoteList<ZetkinTask>;
 }
 
 const initialState: TasksStoreSlice = {
   assignedTasksByTaskId: {},
   statsById: {},
+  taskIdsByCampaignId: {},
   tasksList: remoteList(),
 };
 
@@ -40,6 +42,22 @@ const tasksSlice = createSlice({
       state.assignedTasksByTaskId[assignedTaskId] = remoteList(assignedTask);
       state.assignedTasksByTaskId[assignedTaskId].loaded =
         new Date().toISOString();
+    },
+    campaignTaskIdsLoad: (state, action: PayloadAction<number>) => {
+      const campaignId = action.payload;
+      if (!state.taskIdsByCampaignId[campaignId]) {
+        state.taskIdsByCampaignId[campaignId] = remoteList();
+      }
+      state.taskIdsByCampaignId[campaignId].isLoading = true;
+    },
+    campaignTaskIdsLoaded: (
+      state,
+      action: PayloadAction<[number, { id: number | string }[]]>
+    ) => {
+      const [campaignId, taskIds] = action.payload;
+      const timestamp = new Date().toISOString();
+      state.taskIdsByCampaignId[campaignId] = remoteList(taskIds);
+      state.taskIdsByCampaignId[campaignId].loaded = timestamp;
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
@@ -117,6 +135,8 @@ export default tasksSlice;
 export const {
   assignedTasksLoad,
   assignedTasksLoaded,
+  campaignTaskIdsLoad,
+  campaignTaskIdsLoaded,
   statsLoad,
   statsLoaded,
   taskCreate,

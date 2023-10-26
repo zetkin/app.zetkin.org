@@ -1,17 +1,18 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import getCampaign from 'features/campaigns/fetching/getCampaign';
-import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import { Suspense } from 'react';
+import useCampaign from 'features/campaigns/hooks/useCampaign';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import { ZetkinCampaign } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -29,25 +30,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
   const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-  await ctx.queryClient.prefetchQuery(
-    ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId as string, campId as string, ctx.apiFetch)
-  );
-  const campaignEventsState = ctx.queryClient.getQueryState([
-    'campaignEvents',
-    orgId,
-    campId,
-  ]);
-
-  await ctx.queryClient.prefetchQuery(
-    ['campaign', orgId, campId],
-    getCampaign(orgId as string, campId as string, ctx.apiFetch)
-  );
-  const campaignState = ctx.queryClient.getQueryState([
-    'campaign',
-    orgId,
-    campId,
-  ]);
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    await apiClient.get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/`);
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 
   await ctx.queryClient.prefetchQuery(['tasks', orgId, campId], async () => {
     return await apiClient.get(`/api/orgs/${orgId}/campaigns/${campId}/tasks`);
@@ -60,8 +50,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
   if (
     orgState?.status === 'success' &&
-    campaignEventsState?.status === 'success' &&
-    campaignState?.status === 'success' &&
     campaignTasksState?.status === 'success'
   ) {
     return {
@@ -77,22 +65,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type CampaignCalendarPageProps = {
-  campId: string;
-  orgId: string;
-};
-
-const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
-  orgId,
-  campId,
-}) => {
+const CampaignSummaryPage: PageWithLayout = () => {
   const isOnServer = useServerSide();
-  const campaignQuery = useQuery(
-    ['campaign', orgId, campId],
-    getCampaign(orgId, campId)
-  );
-
-  const campaign = campaignQuery.data;
+  const { orgId, campId } = useNumericRouteParams();
+  const { campaignFuture } = useCampaign(orgId, campId);
+  const campaign = campaignFuture.data;
 
   if (isOnServer) {
     return null;
@@ -113,10 +90,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             )}
           </Grid>
         </Box>
-        <ActivitiesOverview
-          campaignId={parseInt(campId)}
-          orgId={parseInt(orgId)}
-        />
+        <Suspense>
+          <ActivitiesOverview campaignId={campId} orgId={orgId} />
+        </Suspense>
       </>
     </>
   );

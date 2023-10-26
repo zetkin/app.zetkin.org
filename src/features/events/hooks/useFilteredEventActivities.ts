@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js';
 
-import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
+import { EventActivity } from 'features/campaigns/types';
 import { EventState } from './useEventState';
 import getEventState from '../utils/getEventState';
 import { useAppSelector } from 'core/hooks';

@@ -1,13 +1,12 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
 
-import { campaignsResource } from 'features/campaigns/api/campaigns';
-
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTasks from 'features/tasks/hooks/useTasks';
@@ -50,8 +49,7 @@ const Task = ({
   const tasksQuery = useTasks(orgId);
   const tasks = tasksQuery.data || [];
 
-  const campaignsQuery = campaignsResource(orgId.toString()).useQuery();
-  const campaigns = campaignsQuery?.data || [];
+  const { data: campaigns } = useCampaigns(orgId);
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(
     initialFilter,
@@ -165,7 +163,7 @@ const Task = ({
                   <MenuItem key={ANY_CAMPAIGN} value={ANY_CAMPAIGN}>
                     <Msg id={localMessageIds.campaignSelect.any} />
                   </MenuItem>
-                  {campaigns.map((c) => (
+                  {campaigns?.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
                       <Msg
                         id={localMessageIds.campaignSelect.campaign}

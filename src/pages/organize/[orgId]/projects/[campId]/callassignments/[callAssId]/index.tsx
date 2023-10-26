@@ -12,6 +12,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
 import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
@@ -32,11 +33,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       return { notFound: true };
     }
     return {
-      props: {
-        assignmentId: callAssId,
-        campId,
-        orgId,
-      },
+      props: {},
     };
   },
   {
@@ -48,21 +45,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface AssignmentPageProps {
-  assignmentId: string;
-  campId: string;
-  orgId: string;
-}
-
-const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
-  orgId,
-  assignmentId,
-}) => {
-  const { data } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
-  const { statusBarStatsList } = useCallAssignmentStats(
-    parseInt(orgId),
-    parseInt(assignmentId)
-  );
+const AssignmentPage: PageWithLayout = () => {
+  const { orgId, callAssId } = useNumericRouteParams();
+  const { data: callAssignment } = useCallAssignment(orgId, callAssId);
+  const { statusBarStatsList } = useCallAssignmentStats(orgId, callAssId);
 
   const onServer = useServerSide();
 
@@ -73,11 +59,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   return (
     <>
       <Head>
-        <title>{data?.title}</title>
+        <title>{callAssignment?.title}</title>
       </Head>
       <Box>
         <Box mb={2}>
-          <CallAssignmentTargets />
+          <CallAssignmentTargets assignmentId={callAssId} orgId={orgId} />
         </Box>
         <Box mb={2}>
           <Typography variant="h3">
@@ -86,23 +72,15 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         </Box>
         <ZUIStackedStatusBar values={statusBarStatsList} />
         <Box mt={2}>
-          <CallAssignmentStatusCards />
+          <CallAssignmentStatusCards assignmentId={callAssId} orgId={orgId} />
         </Box>
       </Box>
     </>
   );
 };
 
-AssignmentPage.getLayout = function getLayout(page, props) {
-  return (
-    <CallAssignmentLayout
-      assignmentId={props.assignmentId}
-      campaignId={props.campId}
-      orgId={props.orgId}
-    >
-      {page}
-    </CallAssignmentLayout>
-  );
+AssignmentPage.getLayout = function getLayout(page) {
+  return <CallAssignmentLayout>{page}</CallAssignmentLayout>;
 };
 
 export default AssignmentPage;
