@@ -1,17 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { ZetkinCampaign } from 'utils/types/zetkin';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
-import { ZetkinCampaign, ZetkinEvent } from 'utils/types/zetkin';
 
 export interface CampaignsStoreSlice {
   campaignList: RemoteList<ZetkinCampaign>;
-  eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   recentlyCreatedCampaign: ZetkinCampaign | null;
 }
 
 const initialCampaignsState: CampaignsStoreSlice = {
   campaignList: remoteList(),
-  eventsByCampaignId: {},
   recentlyCreatedCampaign: null,
 };
 

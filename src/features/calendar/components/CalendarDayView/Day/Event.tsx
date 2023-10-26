@@ -3,7 +3,6 @@ import NextLink from 'next/link';
 import { Box, Link, Typography } from '@mui/material';
 import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import getEventState from 'features/events/utils/getEventState';
@@ -14,14 +13,10 @@ import StatusDot from 'features/events/components/EventPopper/StatusDot';
 import theme from 'theme';
 import { truncateOnMiddle } from 'utils/stringUtils';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
-  const model = useModel(
-    (env) => new EventDataModel(env, event.organization.id, event.id)
-  );
 
   const needsParticipants =
     event.num_participants_required > event.num_participants_available;
@@ -118,7 +113,11 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           </Box>
           {/* Icons */}
           <Box alignItems="center" display="flex" gap={1}>
-            <EventWarningIcons compact model={model} />
+            <EventWarningIcons
+              compact
+              eventId={event.id}
+              orgId={event.organization.id}
+            />
             <People color={needsParticipants ? 'error' : 'secondary'} />
             <Typography color={needsParticipants ? 'error' : 'secondary'}>
               {event.num_participants_available}/

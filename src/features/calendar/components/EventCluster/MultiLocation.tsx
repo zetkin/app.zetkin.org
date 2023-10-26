@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
-import { EventState } from 'features/events/models/EventDataModel';
+import { EventState } from 'features/events/hooks/useEventState';
 import { fieldsToPresent } from './utils';
 import getEventState from 'features/events/utils/getEventState';
 import MultiLocationIcon from 'zui/icons/MultiLocation';

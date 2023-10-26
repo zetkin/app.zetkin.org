@@ -5,8 +5,8 @@ import { Add, Clear } from '@mui/icons-material';
 import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import EventTypesModel from '../models/EventTypesModel';
 import messageIds from '../l10n/messageIds';
+import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 
@@ -37,9 +37,9 @@ type EventTypeAutocompleteProps = {
   onChange: (newValue: ZetkinEvent['activity'] | null) => void;
   onChangeNewOption: (newId: number) => void;
   onFocus: () => void;
+  orgId: number;
   showBorder?: boolean;
   types: ZetkinActivity[];
-  typesModel: EventTypesModel;
   value: ZetkinEvent['activity'];
 };
 
@@ -53,15 +53,15 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   onChange,
   onChangeNewOption,
   onFocus,
+  orgId,
   showBorder,
   types,
-  typesModel,
   value,
 }) => {
   const [createdType, setCreatedType] = useState<string>('');
-
   const classes = useStyles({ showBorder });
   const messages = useMessages(messageIds);
+  const { addType } = useCreateType(orgId);
 
   useEffect(() => {
     //When a user creates a new type, it is missing an event ID.
@@ -134,7 +134,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onBlur={() => onBlur()}
         onChange={(_, value) => {
           if (value.id == 'CREATE') {
-            typesModel.addType(value.title!);
+            addType(value.title!);
             setCreatedType(value.title!);
             return;
           }
