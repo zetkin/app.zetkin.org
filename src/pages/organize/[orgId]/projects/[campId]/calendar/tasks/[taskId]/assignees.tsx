@@ -14,11 +14,11 @@ import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
-import { taskResource } from 'features/tasks/api/tasks';
+import useAssignedTasks from 'features/tasks/hooks/useAssignedTasks';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useTask from 'features/tasks/hooks/useTask';
-import ZUIQuery from 'zui/ZUIQuery';
+import ZUIFuture from 'zui/ZUIFuture';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
 
@@ -91,13 +91,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
   const queryClient = useQueryClient();
 
   const { orgId, taskId } = useNumericRouteParams();
-  const { useAssignedTasksQuery } = taskResource(
-    orgId.toString(),
-    taskId.toString()
-  );
+  const assignedTasksQuery = useAssignedTasks(orgId, taskId);
   const task = useTask(orgId, taskId);
-  const assignedTasksQuery = useAssignedTasksQuery();
-  const assignedTasks = assignedTasksQuery?.data;
+  const assignedTasks = assignedTasksQuery.data ?? undefined;
   const query = task?.target;
 
   const queryMutation = useMutation(
@@ -124,23 +120,19 @@ const TaskAssigneesPage: PageWithLayout = () => {
           {`${task?.title} - ${messages.taskLayout.tabs.assignees()}`}
         </title>
       </Head>
-      <>
-        <QueryStatusAlert
-          openDialog={() => setDialogOpen(true)}
-          status={queryStatus}
-        />
-        <ZUIQuery queries={{ assignedTasksQuery }}>
-          {({ queries }) => {
-            return (
-              <Box mt={3}>
-                <TaskAssigneesList
-                  assignedTasks={queries.assignedTasksQuery.data}
-                />
-              </Box>
-            );
-          }}
-        </ZUIQuery>
-      </>
+      <QueryStatusAlert
+        openDialog={() => setDialogOpen(true)}
+        status={queryStatus}
+      />
+      <ZUIFuture future={assignedTasksQuery}>
+        {(data) => {
+          return (
+            <Box mt={3}>
+              <TaskAssigneesList assignedTasks={data} />
+            </Box>
+          );
+        }}
+      </ZUIFuture>
       {dialogOpen && (
         <SmartSearchDialog
           onDialogClose={handleDialogClose}

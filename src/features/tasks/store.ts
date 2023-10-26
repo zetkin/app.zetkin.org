@@ -1,20 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { TaskStats } from './rpc/getTaskStats';
-import { ZetkinTask } from './components/types';
 import {
   RemoteItem,
   remoteItem,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
+import { ZetkinAssignedTask, ZetkinTask } from './components/types';
 
 export interface TasksStoreSlice {
+  assignedTasksByTaskId: Record<number, RemoteList<ZetkinAssignedTask>>;
   statsById: Record<number, RemoteItem<TaskStats>>;
   tasksList: RemoteList<ZetkinTask>;
 }
 
 const initialState: TasksStoreSlice = {
+  assignedTasksByTaskId: {},
   statsById: {},
   tasksList: remoteList(),
 };
@@ -23,6 +25,22 @@ const tasksSlice = createSlice({
   initialState,
   name: 'tasks',
   reducers: {
+    assignedTasksLoad: (state, action: PayloadAction<number>) => {
+      const assignedTaskId = action.payload;
+      if (!state.assignedTasksByTaskId[assignedTaskId]) {
+        state.assignedTasksByTaskId[assignedTaskId] = remoteList();
+      }
+      state.assignedTasksByTaskId[assignedTaskId].isLoading = true;
+    },
+    assignedTasksLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinAssignedTask[]]>
+    ) => {
+      const [assignedTaskId, assignedTask] = action.payload;
+      state.assignedTasksByTaskId[assignedTaskId] = remoteList(assignedTask);
+      state.assignedTasksByTaskId[assignedTaskId].loaded =
+        new Date().toISOString();
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
       state.statsById[taskId] = remoteItem<TaskStats>(taskId, {
@@ -82,6 +100,8 @@ const tasksSlice = createSlice({
 
 export default tasksSlice;
 export const {
+  assignedTasksLoad,
+  assignedTasksLoaded,
   statsLoad,
   statsLoaded,
   taskCreate,

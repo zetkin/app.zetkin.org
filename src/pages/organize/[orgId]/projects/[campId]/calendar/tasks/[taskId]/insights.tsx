@@ -9,10 +9,10 @@ import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
-import { taskResource } from 'features/tasks/api/tasks';
+import useAssignedTasks from 'features/tasks/hooks/useAssignedTasks';
 import { useNumericRouteParams } from 'core/hooks';
 import useTask from 'features/tasks/hooks/useTask';
-import ZUIQuery from 'zui/ZUIQuery';
+import ZUIFuture from 'zui/ZUIFuture';
 import {
   ASSIGNED_STATUS,
   ZetkinAssignedTask,
@@ -158,32 +158,26 @@ const TaskInsightsPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
 
   const { orgId, taskId } = useNumericRouteParams();
-  const { useAssignedTasksQuery } = taskResource(
-    orgId.toString(),
-    taskId.toString()
-  );
+  const assignedTasksQuery = useAssignedTasks(orgId, taskId);
   const task = useTask(orgId, taskId);
-  const assignedTasksQuery = useAssignedTasksQuery();
 
   return (
     <>
       <Head>
         <title>{`${task?.title} - ${messages.taskLayout.tabs.insights}`}</title>
       </Head>
-      <>
-        <ZUIQuery queries={{ assignedTasksQuery }}>
-          {({ queries }) => {
-            return (
-              <Box height={400} maxWidth={500} mt={3} width="100%">
-                <Typography>
-                  <Msg id={messageIds.assigneeActions} />
-                </Typography>
-                <PieChart tasks={queries.assignedTasksQuery.data} />
-              </Box>
-            );
-          }}
-        </ZUIQuery>
-      </>
+      <ZUIFuture future={assignedTasksQuery}>
+        {(data) => {
+          return (
+            <Box height={400} maxWidth={500} mt={3} width="100%">
+              <Typography>
+                <Msg id={messageIds.assigneeActions} />
+              </Typography>
+              <PieChart tasks={data} />
+            </Box>
+          );
+        }}
+      </ZUIFuture>
     </>
   );
 };
