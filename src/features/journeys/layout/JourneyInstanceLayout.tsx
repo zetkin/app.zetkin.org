@@ -2,6 +2,7 @@ import { FormattedDate } from 'react-intl';
 import { Forward } from '@mui/icons-material';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import JourneyStatusChip from '../components/JourneyStatusChip';
@@ -29,6 +30,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { orgId, journeyId, instanceId } = useNumericRouteParams();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const journeysFuture = useJourneys(orgId);
@@ -176,7 +178,12 @@ const JourneyInstanceLayout: React.FunctionComponent<
           }}
         >
           <ZUIEditTextinPlace
-            onChange={(newTitle) => updateJourneyInstance({ title: newTitle })}
+            disabled={isLoading}
+            onChange={async (newTitle) => {
+              setIsLoading(true);
+              await updateJourneyInstance({ title: newTitle });
+              setIsLoading(false);
+            }}
             value={journeyInstance.title || journeyInstance.journey.title}
           />
           <Typography

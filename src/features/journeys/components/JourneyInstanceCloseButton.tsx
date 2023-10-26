@@ -19,6 +19,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const [showDialog, setShowDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { closeJourneyInstance } = useJourneyInstanceMutations(
     orgId,
@@ -54,12 +55,13 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             onSubmit={async (e) => {
               e.preventDefault();
               e.stopPropagation();
+              setIsLoading(true);
               await closeJourneyInstance({
                 closed: dayjs().toJSON(),
                 outcome: outcomeNote,
                 tags: internalTags,
               });
-
+              setIsLoading(false);
               closeAndClear();
             }}
           >
@@ -118,6 +120,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             </Box>
             <ZUISubmitCancelButtons
               onCancel={closeAndClear}
+              submitDisabled={isLoading}
               submitText={messages.instance.closeButton.label({
                 singularLabel: journeyInstance.journey.singular_label,
               })}

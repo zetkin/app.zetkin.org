@@ -1,11 +1,11 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useState } from 'react';
 import { Box, Divider, Grid } from '@mui/material';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
 import JourneyInstanceOutcome from 'features/journeys/components/JourneyInstanceOutcome';
-
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
 import messageIds from 'features/journeys/l10n/messageIds';
@@ -73,6 +73,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const JourneyDetailsPage: PageWithLayout = () => {
   const { orgId, instanceId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
+  const [isLoading, setIsLoading] = useState(false);
 
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const timelineUpdatesFuture = useTimelineUpdates(orgId, instanceId);
@@ -113,7 +114,12 @@ const JourneyDetailsPage: PageWithLayout = () => {
             <ZUIFuture future={timelineUpdatesFuture}>
               {(updates) => (
                 <ZUITimeline
-                  onAddNote={addNote}
+                  disabled={isLoading}
+                  onAddNote={async (note) => {
+                    setIsLoading(true);
+                    await addNote(note);
+                    setIsLoading(false);
+                  }}
                   onEditNote={editNote}
                   updates={updates}
                 />
