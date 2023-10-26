@@ -1,16 +1,15 @@
 import { Form } from 'react-final-form';
 import { TextField } from 'mui-rff';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Link, MenuItem } from '@mui/material';
 
-import getUserMemberships from 'utils/fetching/getUserMemberships';
 import ZUISubmitCancelButtons from '../../../zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCampaign, ZetkinPerson } from 'utils/types/zetkin';
 
 import messageIds from '../l10n/messageIds';
+import useMemberships from '../hooks/useMemberships';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface CampaignDetailsFormProps {
   campaign?: ZetkinCampaign;
@@ -23,12 +22,12 @@ const CampaignDetailsForm = ({
   onCancel,
   campaign,
 }: CampaignDetailsFormProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
 
-  const membershipsQuery = useQuery('userMemberships', getUserMemberships());
-  const activeMembership = membershipsQuery?.data?.find(
-    (m) => m.organization.id.toString() == orgId
+  const membershipsFuture = useMemberships();
+  const activeMembership = membershipsFuture.data?.find(
+    (m) => m.organization.id == orgId
   );
   const userProfile = activeMembership?.profile;
 
