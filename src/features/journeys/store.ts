@@ -7,10 +7,7 @@ import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
 export interface JourneysStoreSlice {
   journeyInstanceList: RemoteList<ZetkinJourneyInstance>;
   journeyList: RemoteList<ZetkinJourney>;
-  timelineUpdatesByInstanceId: Record<
-    number,
-    RemoteList<ZetkinUpdate & { id: number }>
-  >;
+  timelineUpdatesByInstanceId: Record<number, RemoteList<ZetkinUpdate>>;
 }
 
 const initialJourneysState: JourneysStoreSlice = {
@@ -31,6 +28,12 @@ const journeysSlice = createSlice({
 
       if (instanceItem) {
         instanceItem.isStale = true;
+      }
+    },
+    invalidateTimeline: (state, action: PayloadAction<number>) => {
+      const instanceId = action.payload;
+      if (state.timelineUpdatesByInstanceId[instanceId]) {
+        state.timelineUpdatesByInstanceId[instanceId].isStale = true;
       }
     },
     journeyInstanceCreate: (state) => {
@@ -150,13 +153,7 @@ const journeysSlice = createSlice({
       const [updates, instanceId] = action.payload;
       const timestamp = new Date().toISOString();
 
-      const updatesWithIds = updates.map((update) => ({
-        ...update,
-        id: instanceId,
-      }));
-
-      state.timelineUpdatesByInstanceId[instanceId] =
-        remoteList(updatesWithIds);
+      state.timelineUpdatesByInstanceId[instanceId] = remoteList(updates);
       state.timelineUpdatesByInstanceId[instanceId].loaded = timestamp;
     },
   },
@@ -165,6 +162,7 @@ const journeysSlice = createSlice({
 export default journeysSlice;
 export const {
   invalidateJourneyInstance,
+  invalidateTimeline,
   journeyInstanceCreate,
   journeyInstanceCreated,
   journeyInstanceLoad,

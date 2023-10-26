@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useContext } from 'react';
 import { Box, Divider, Grid } from '@mui/material';
 
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
@@ -9,17 +8,16 @@ import JourneyInstanceOutcome from 'features/journeys/components/JourneyInstance
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
-import { journeyInstanceTimelineResource } from 'features/journeys/api/journeys';
 import messageIds from 'features/journeys/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import useJourneyInstance from 'features/journeys/hooks/useJourneyInstance';
 import useJourneyInstanceMutations from 'features/journeys/hooks/useJourneyInstanceMutations';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import useTimelineNote from 'features/journeys/hooks/useTimelineNotes';
 import useTimelineUpdates from 'features/journeys/hooks/useTimelineUpdates';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUISection from 'zui/ZUISection';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUITimeline from 'zui/ZUITimeline';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinOrganization } from 'utils/types/zetkin';
@@ -75,16 +73,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const JourneyDetailsPage: PageWithLayout = () => {
   const { orgId, instanceId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const { useAddNote, useEditNote } = journeyInstanceTimelineResource(
-    orgId.toString(),
-    instanceId.toString()
-  );
-  const addNoteMutation = useAddNote();
-  const editNoteMutation = useEditNote();
-  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const timelineUpdatesFuture = useTimelineUpdates(orgId, instanceId);
+  const { addNote, editNote } = useTimelineNote(orgId, instanceId);
   const {
     addAssignee,
     addSubject,
@@ -121,17 +113,8 @@ const JourneyDetailsPage: PageWithLayout = () => {
             <ZUIFuture future={timelineUpdatesFuture}>
               {(updates) => (
                 <ZUITimeline
-                  disabled={addNoteMutation.isLoading}
-                  onAddNote={(note) => {
-                    addNoteMutation.mutate(note, {
-                      onError: () => showSnackbar('error'),
-                    });
-                  }}
-                  onEditNote={(note) => {
-                    editNoteMutation.mutate(note, {
-                      onError: () => showSnackbar('error'),
-                    });
-                  }}
+                  onAddNote={addNote}
+                  onEditNote={editNote}
                   updates={updates}
                 />
               )}

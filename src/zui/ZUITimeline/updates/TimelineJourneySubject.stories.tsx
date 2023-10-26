@@ -21,6 +21,7 @@ addSubject.args = {
     details: {
       subject: mockPerson(),
     },
+    id: '12302-3',
     organization: {
       id: 1,
       title: 'KPD',
@@ -38,6 +39,7 @@ removeSubject.args = {
     details: {
       subject: mockPerson(),
     },
+    id: '12302-3',
     organization: {
       id: 1,
       title: 'KPD',
