@@ -107,6 +107,22 @@ const journeysSlice = createSlice({
         instanceItem.mutating = [];
       }
     },
+    journeyInstancesLoad: (state) => {
+      state.journeyInstanceList.isLoading = true;
+    },
+    journeyInstancesLoaded: (
+      state,
+      action: PayloadAction<ZetkinJourneyInstance[]>
+    ) => {
+      const journeyInstances = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.journeyInstanceList = remoteList(journeyInstances);
+      state.journeyInstanceList.loaded = timestamp;
+      state.journeyInstanceList.items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
+    },
     journeyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.journeyList.items.find((item) => item.id == id);
@@ -169,6 +185,8 @@ export const {
   journeyInstanceLoaded,
   journeyInstanceUpdate,
   journeyInstanceUpdated,
+  journeyInstancesLoad,
+  journeyInstancesLoaded,
   journeyLoad,
   journeyLoaded,
   journeysLoad,
