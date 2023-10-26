@@ -85,6 +85,21 @@ const tasksSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    taskUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [taskId, mutating] = action.payload;
+      const item = state.tasksList.items.find((item) => item.id == taskId);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    taskUpdated: (state, action: PayloadAction<ZetkinTask>) => {
+      const task = action.payload;
+      const item = state.tasksList.items.find((item) => item.id == task.id);
+      if (item) {
+        item.data = { ...item.data, ...task };
+        item.mutating = [];
+      }
+    },
     tasksLoad: (state) => {
       state.tasksList.isLoading = true;
     },
@@ -109,6 +124,8 @@ export const {
   taskDeleted,
   taskLoad,
   taskLoaded,
+  taskUpdate,
+  taskUpdated,
   tasksLoad,
   tasksLoaded,
 } = tasksSlice.actions;

@@ -1,4 +1,3 @@
-import { Alert } from '@mui/material';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import { Delete, Settings } from '@mui/icons-material';
@@ -6,7 +5,6 @@ import React, { useContext, useState } from 'react';
 
 import PublishButton from './PublishButton';
 import TaskDetailsForm from 'features/tasks/components/TaskDetailsForm';
-import { taskResource } from 'features/tasks/api/tasks';
 import { useNumericRouteParams } from 'core/hooks';
 import useTaskMutations from 'features/tasks/hooks/useTaskMutations';
 import { ZetkinTask } from 'utils/types/zetkin';
@@ -36,19 +34,12 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
-  // Mutations
-  const taskHooks = taskResource(
-    task.organization.id.toString(),
-    task.id.toString()
-  );
-  const patchTaskMutation = taskHooks.useUpdate();
-
+  const { updateTask } = useTaskMutations(task.organization.id, task.id);
   const { deleteTask } = useTaskMutations(orgId, task.id);
   // Event Handlers
   const handleEditTask = (task: Partial<ZetkinTask>) => {
-    patchTaskMutation.mutateAsync(task, {
-      onSuccess: () => setEditTaskDialogOpen(false),
-    });
+    updateTask(task);
+    setEditTaskDialogOpen(false);
   };
   const handleDeleteTask = () => {
     deleteTask();
@@ -103,11 +94,6 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
         open={editTaskDialogOpen}
         title={messages.editTask.title()}
       >
-        {patchTaskMutation.isError && (
-          <Alert color="error" data-testid="error-alert">
-            <Msg id={messageIds.form.requestError} />
-          </Alert>
-        )}
         <TaskDetailsForm
           onCancel={() => setEditTaskDialogOpen(false)}
           onSubmit={(task) => {
