@@ -5,7 +5,8 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
-import getOrg from 'utils/fetching/getOrg';
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import patchQuery from 'utils/fetching/patchQuery';
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
@@ -18,9 +19,11 @@ import { taskResource } from 'features/tasks/api/tasks';
 import { useMessages } from 'core/i18n';
 import ZUIQuery from 'zui/ZUIQuery';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
-import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
+import {
+  ZetkinAssignedTask,
+  ZetkinOrganization,
+  ZetkinTask,
+} from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -30,19 +33,17 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { campId, orgId, taskId } = ctx.params!;
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const organization = await apiClient.get<ZetkinOrganization>(
+    `/api/orgs/${orgId}`
   );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
-
   const { prefetch: prefetchTask } = taskResource(
     orgId as string,
     taskId as string
   );
   const { state: taskState, data: taskData } = await prefetchTask(ctx);
 
-  if (orgState?.status === 'success' && taskState?.status === 'success') {
+  if (organization && taskState?.status === 'success') {
     if (campId && +campId === taskData?.campaign.id) {
       return {
         props: {

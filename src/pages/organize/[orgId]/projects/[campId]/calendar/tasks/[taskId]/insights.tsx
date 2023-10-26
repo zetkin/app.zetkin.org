@@ -5,19 +5,19 @@ import { ResponsivePie } from '@nivo/pie';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 
-import getOrg from 'utils/fetching/getOrg';
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import { taskResource } from 'features/tasks/api/tasks';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUIQuery from 'zui/ZUIQuery';
 import {
   ASSIGNED_STATUS,
   ZetkinAssignedTask,
 } from 'features/tasks/components/types';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -31,11 +31,10 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { campId, orgId, taskId } = ctx.params!;
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const organization = await apiClient.get<ZetkinOrganization>(
+    `/api/orgs/${orgId}`
   );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
   const { prefetch: prefetchTask } = taskResource(
     orgId as string,
@@ -43,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
   const { state: taskState, data: taskData } = await prefetchTask(ctx);
 
-  if (orgState?.status === 'success' && taskState?.status === 'success') {
+  if (organization && taskState?.status === 'success') {
     if (campId && +campId === taskData?.campaign.id) {
       return {
         props: {
