@@ -101,121 +101,128 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
 
   return (
     <ZUIFuture future={journeyFuture}>
-      {(journey) => (
-        <>
-          <Head>
-            <title>
-              {messages.instance.newInstance.title({
-                journey: journey.singular_label,
-              })}
-            </title>
-          </Head>
-          <Header
-            subtitle={
-              <Box
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                }}
-              >
-                <Chip
-                  label={messages.instance.newInstance.draft()}
-                  style={{
-                    backgroundColor: theme.palette.grey['300'],
-                    fontWeight: 'bold',
-                  }}
-                />
-              </Box>
-            }
-            title={
-              <ZUIEditTextinPlace
-                allowEmpty
-                onChange={async (value) => setTitle(value)}
-                placeholder={messages.instance.newInstance.title({
+      {(journey) => {
+        if (!editedNote) {
+          setNote(journey.opening_note_template);
+        }
+        return (
+          <>
+            <Head>
+              <title>
+                {messages.instance.newInstance.title({
                   journey: journey.singular_label,
                 })}
-                value={title}
-              />
-            }
-          />
-          <Box p={3}>
-            <Grid container justifyContent="space-between" spacing={2}>
-              <Grid item md={6}>
-                <Typography
-                  color="secondary"
-                  style={{ marginBottom: '1.5rem' }}
-                  variant="h6"
-                >
-                  <Msg id={messageIds.instance.newInstance.openingNote} />
-                </Typography>
-                <ZUIAutoTextArea
-                  onChange={(value) => {
-                    setNote(value);
-                    setEditedNote(true);
+              </title>
+            </Head>
+            <Header
+              subtitle={
+                <Box
+                  style={{
+                    alignItems: 'center',
+                    display: 'flex',
                   }}
-                  value={note}
+                >
+                  <Chip
+                    label={messages.instance.newInstance.draft()}
+                    style={{
+                      backgroundColor: theme.palette.grey['300'],
+                      fontWeight: 'bold',
+                    }}
+                  />
+                </Box>
+              }
+              title={
+                <ZUIEditTextinPlace
+                  allowEmpty
+                  onChange={setTitle}
+                  placeholder={messages.instance.newInstance.title({
+                    journey: journey.singular_label,
+                  })}
+                  value={title}
                 />
-                <form
-                  onSubmit={async (ev) => {
-                    ev.preventDefault();
-                    createJourneyInstance({
+              }
+            />
+            <Box p={3}>
+              <Grid container justifyContent="space-between" spacing={2}>
+                <Grid item md={6}>
+                  <Typography
+                    color="secondary"
+                    style={{ marginBottom: '1.5rem' }}
+                    variant="h6"
+                  >
+                    <Msg id={messageIds.instance.newInstance.openingNote} />
+                  </Typography>
+                  <ZUIAutoTextArea
+                    onChange={(value) => {
+                      setNote(value);
+                      setEditedNote(true);
+                    }}
+                    value={note}
+                  />
+                  <form
+                    onSubmit={(ev) => {
+                      ev.preventDefault();
+                      createJourneyInstance({
+                        assignees,
+                        note,
+                        subjects,
+                        tags,
+                        title,
+                      });
+                    }}
+                  >
+                    <ZUISubmitCancelButtons
+                      onCancel={() => {
+                        router.push(`/organize/${orgId}/journeys/${journeyId}`);
+                      }}
+                      submitDisabled={!editedNote}
+                      submitText={messages.instance.newInstance.submitLabel({
+                        journey: journey.singular_label,
+                      })}
+                    />
+                  </form>
+                </Grid>
+                <Grid item md={4}>
+                  <JourneyInstanceSidebar
+                    journeyInstance={{
                       assignees,
-                      note,
+                      next_milestone: null,
                       subjects,
                       tags,
-                      title,
-                    });
-                  }}
-                >
-                  <ZUISubmitCancelButtons
-                    onCancel={() => {
-                      router.push(`/organize/${orgId}/journeys/${journeyId}`);
                     }}
-                    submitDisabled={!editedNote}
-                    submitText={messages.instance.newInstance.submitLabel({
-                      journey: journey.singular_label,
-                    })}
+                    onAddAssignee={(person) =>
+                      setAssignees([...assignees, person])
+                    }
+                    onAddSubject={(person) =>
+                      setSubjects([...subjects, person])
+                    }
+                    onAssignTag={(tag) => setTags([...tags, tag])}
+                    onRemoveAssignee={(person) =>
+                      setAssignees(
+                        assignees.filter((assignee) => assignee.id != person.id)
+                      )
+                    }
+                    onRemoveSubject={(person) =>
+                      setSubjects(
+                        subjects.filter((subject) => subject.id != person.id)
+                      )
+                    }
+                    onTagEdited={(editedTag) => {
+                      setTags([
+                        ...tags.filter((tag) => tag.id != editedTag.id),
+                        editedTag,
+                      ]);
+                    }}
+                    onUnassignTag={(tagToUnassign) =>
+                      setTags(tags.filter((tag) => tag.id != tagToUnassign.id))
+                    }
                   />
-                </form>
+                </Grid>
               </Grid>
-              <Grid item md={4}>
-                <JourneyInstanceSidebar
-                  journeyInstance={{
-                    assignees,
-                    next_milestone: null,
-                    subjects,
-                    tags,
-                  }}
-                  onAddAssignee={(person) =>
-                    setAssignees([...assignees, person])
-                  }
-                  onAddSubject={(person) => setSubjects([...subjects, person])}
-                  onAssignTag={(tag) => setTags([...tags, tag])}
-                  onRemoveAssignee={(person) =>
-                    setAssignees(
-                      assignees.filter((assignee) => assignee.id != person.id)
-                    )
-                  }
-                  onRemoveSubject={(person) =>
-                    setSubjects(
-                      subjects.filter((subject) => subject.id != person.id)
-                    )
-                  }
-                  onTagEdited={(editedTag) => {
-                    setTags([
-                      ...tags.filter((tag) => tag.id != editedTag.id),
-                      editedTag,
-                    ]);
-                  }}
-                  onUnassignTag={(tagToUnassign) =>
-                    setTags(tags.filter((tag) => tag.id != tagToUnassign.id))
-                  }
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </>
-      )}
+            </Box>
+          </>
+        );
+      }}
     </ZUIFuture>
   );
 };
