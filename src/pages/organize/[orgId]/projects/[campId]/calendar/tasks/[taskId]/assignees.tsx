@@ -66,8 +66,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 const getQueryStatus = (
-  task?: ZetkinTask,
-  assignedTasks?: ZetkinAssignedTask[]
+  task: ZetkinTask | null,
+  assignedTasks: ZetkinAssignedTask[] | null
 ) => {
   const taskStatus = task ? getTaskStatus(task) : undefined;
   let queryStatus = QUERY_STATUS.ASSIGNED;
@@ -93,7 +93,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
   const { orgId, taskId } = useNumericRouteParams();
   const assignedTasksQuery = useAssignedTasks(orgId, taskId);
   const task = useTask(orgId, taskId);
-  const assignedTasks = assignedTasksQuery.data ?? undefined;
+  const assignedTasks = assignedTasksQuery?.data;
   const query = task?.target;
 
   const queryMutation = useMutation(
@@ -107,7 +107,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogClose = () => setDialogOpen(false);
 
-  const queryStatus = getQueryStatus(task ?? undefined, assignedTasks);
+  const queryStatus = getQueryStatus(task, assignedTasks);
 
   const readOnly =
     queryStatus === QUERY_STATUS.PUBLISHED ||
