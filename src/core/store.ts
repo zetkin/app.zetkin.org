@@ -89,9 +89,11 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: surveyCreated,
   effect: (action) => {
-    const [survey, campId] = action.payload;
+    const survey = action.payload;
     Router.push(
-      `/organize/${survey.organization.id}/projects/${campId}/surveys/${survey.id}`
+      `/organize/${survey.organization.id}/projects/${
+        survey.campaign?.id ?? 'standalone'
+      }/surveys/${survey.id}`
     );
   },
 });

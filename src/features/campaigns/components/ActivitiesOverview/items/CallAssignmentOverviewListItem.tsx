@@ -15,11 +15,11 @@ const CallAssignmentOverviewListItem: FC<
   CallAssignmentOverviewListItemProps
 > = ({ activity, focusDate }) => {
   const assignment = activity.data;
-  const { data: stats } = useCallAssignmentStats(
+  const { statsFuture } = useCallAssignmentStats(
     assignment.organization.id,
     assignment.id
   );
-  const callsMade = stats?.callsMade ?? 0;
+  const callsMade = statsFuture.data?.callsMade ?? 0;
 
   return (
     <OverviewListItem
@@ -33,13 +33,13 @@ const CallAssignmentOverviewListItem: FC<
       SecondaryIcon={PhoneOutlined}
       startDate={activity.visibleFrom}
       statusBar={
-        stats?.allTargets ? (
+        statsFuture.data?.allTargets ? (
           <ZUIStackedStatusBar
             height={4}
             values={[
-              { color: 'statusColors.orange', value: stats.blocked },
-              { color: 'statusColors.blue', value: stats.ready },
-              { color: 'statusColors.green', value: stats.done },
+              { color: 'statusColors.orange', value: statsFuture.data.blocked },
+              { color: 'statusColors.blue', value: statsFuture.data.ready },
+              { color: 'statusColors.green', value: statsFuture.data.done },
             ]}
           />
         ) : null

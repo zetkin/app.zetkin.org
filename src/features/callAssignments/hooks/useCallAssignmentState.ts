@@ -14,31 +14,31 @@ export default function useCallAssignmentState(
   orgId: number,
   assignmentId: number
 ): CallAssignmentState {
-  const { data: assignmentData } = useCallAssignment(orgId, assignmentId);
-  const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
+  const { data: callAssignment } = useCallAssignment(orgId, assignmentId);
+  const { statsFuture } = useCallAssignmentStats(orgId, assignmentId);
 
-  if (!assignmentData) {
+  if (!callAssignment) {
     return CallAssignmentState.UNKNOWN;
   }
 
-  if (assignmentData.start_date) {
-    const startDate = new Date(assignmentData.start_date);
+  if (callAssignment.start_date) {
+    const startDate = new Date(callAssignment.start_date);
     const now = new Date();
     if (startDate > now) {
       return CallAssignmentState.SCHEDULED;
     } else {
-      if (assignmentData.end_date) {
-        const endDate = new Date(assignmentData.end_date);
+      if (callAssignment.end_date) {
+        const endDate = new Date(callAssignment.end_date);
         if (endDate < now) {
           return CallAssignmentState.CLOSED;
         }
       }
 
-      if (!statsData?.mostRecentCallTime) {
+      if (!statsFuture.data?.mostRecentCallTime) {
         return CallAssignmentState.OPEN;
       }
 
-      const mostRecentCallTime = new Date(statsData.mostRecentCallTime);
+      const mostRecentCallTime = new Date(statsFuture.data.mostRecentCallTime);
       const diff = now.getTime() - mostRecentCallTime.getTime();
 
       return diff < 10 * 60 * 1000

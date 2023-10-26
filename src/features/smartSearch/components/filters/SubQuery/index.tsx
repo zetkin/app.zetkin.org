@@ -1,10 +1,8 @@
 import { MenuItem } from '@mui/material';
 import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getAllCallAssignments from 'features/callAssignments/api/getAllCallAssignments';
 import getStandaloneQueries from 'utils/fetching/getStandaloneQueries';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -21,6 +19,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
+import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.subQuery;
 
 const NO_QUERY_SELECTED = 'none';
@@ -40,17 +40,14 @@ const SubQuery = ({
   onCancel,
   filter: initialFilter,
 }: SubQueryProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const standaloneQuery = useQuery(
     ['standaloneQueries', orgId],
-    getStandaloneQueries(orgId as string)
+    getStandaloneQueries(orgId.toString())
   );
   const standaloneQueries = standaloneQuery?.data || [];
-  const assignmentsQuery = useQuery(
-    ['assignments', orgId],
-    getAllCallAssignments(orgId as string)
-  );
-  const assignments = assignmentsQuery?.data || [];
+  const assignmentsFuture = useCallAssignments(orgId);
+  const assignments = assignmentsFuture.data || [];
 
   const targetGroupQueriesWithTitles: ZetkinQuery[] = assignments.map((a) => ({
     ...a.target,
