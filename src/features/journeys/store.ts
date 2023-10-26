@@ -28,6 +28,10 @@ const journeysSlice = createSlice({
 
       if (instanceItem) {
         instanceItem.isStale = true;
+        if (instanceItem.data) {
+          state.timelineUpdatesByInstanceId[instanceItem.data?.id].isStale =
+            true;
+        }
       }
     },
     invalidateTimeline: (state, action: PayloadAction<number>) => {
