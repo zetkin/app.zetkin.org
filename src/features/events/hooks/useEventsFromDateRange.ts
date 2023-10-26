@@ -3,10 +3,7 @@ import dayjs from 'dayjs';
 import range from 'utils/range';
 import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import {
-  ACTIVITIES,
-  EventActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
 import {
   useApiClient,

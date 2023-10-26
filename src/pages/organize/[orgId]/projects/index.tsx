@@ -1,17 +1,17 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
+import { Suspense } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import CampaignCard from 'features/campaigns/components/CampaignCard';
-import getCampaigns from 'features/campaigns/fetching/getCampaigns';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useAllEvents from 'features/events/hooks/useAllEvents';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -40,9 +40,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
   if (orgState && campaignsState && eventsState && upcomingEventsState) {
     return {
-      props: {
-        orgId,
-      },
+      props: {},
     };
   } else {
     return {
@@ -51,40 +49,35 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type AllCampaignsSummaryPageProps = {
-  orgId: string;
-};
-
-const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
-  orgId,
-}) => {
+const AllCampaignsSummaryPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
-  const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
-  const events = useAllEvents(parseInt(orgId)).data || [];
+  const { orgId } = useNumericRouteParams();
+  const { data: campaigns } = useCampaigns(orgId);
 
   const onServer = useServerSide();
+
   if (onServer) {
     return null;
   }
-
-  const campaigns = campaignsQuery.data || [];
 
   return (
     <>
       <Head>
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
-      <ActivitiesOverview orgId={parseInt(orgId)} />
+      <Suspense>
+        <ActivitiesOverview orgId={orgId} />
+      </Suspense>
       <Box mt={4}>
         <Typography mb={2} variant="h4">
           <Msg id={messageIds.all.heading} />
         </Typography>
 
         <Grid container spacing={2}>
-          {campaigns.map((campaign) => {
+          {campaigns?.map((campaign) => {
             return (
               <Grid key={campaign.id} item lg={3} md={4} xs={12}>
-                <CampaignCard campaign={campaign} events={events} />
+                <CampaignCard campaign={campaign} />
               </Grid>
             );
           })}

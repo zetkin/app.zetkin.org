@@ -209,9 +209,15 @@ export interface ZetkinCallAssignment {
   title: string;
 }
 
-export type ZetkinCallAssignmentPostBody = Partial<
+export type ZetkinCallAssignmentPartial = Partial<
   Omit<ZetkinCallAssignment, 'organization'>
 >;
+
+export interface ZetkinCallAssignmentPostBody
+  extends ZetkinCallAssignmentPartial {
+  goal_filters: [];
+  target_filters: [];
+}
 
 export interface ZetkinSurvey {
   title: string;

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
-import { CallAssignmentActivity } from 'features/campaigns/models/CampaignActivitiesModel';
+import { CallAssignmentActivity } from 'features/campaigns/types';
 import OverviewListItem from './OverviewListItem';
 import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
