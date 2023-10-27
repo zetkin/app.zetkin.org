@@ -4,7 +4,6 @@ import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
@@ -24,41 +23,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
   const apiClient = new BackendApiClient(ctx.req.headers);
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
-
   try {
-    const apiClient = new BackendApiClient(ctx.req.headers);
-    await apiClient.get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/`);
-  } catch (error) {
+    await apiClient.get<ZetkinCampaign>(
+      `/api/orgs/${orgId}/campaigns/${campId}`
+    );
     return {
-      notFound: true,
+      props: {},
     };
-  }
-
-  await ctx.queryClient.prefetchQuery(['tasks', orgId, campId], async () => {
-    return await apiClient.get(`/api/orgs/${orgId}/campaigns/${campId}/tasks`);
-  });
-  const campaignTasksState = ctx.queryClient.getQueryState([
-    'tasks',
-    orgId,
-    campId,
-  ]);
-
-  if (
-    orgState?.status === 'success' &&
-    campaignTasksState?.status === 'success'
-  ) {
-    return {
-      props: {
-        campId,
-        orgId,
-      },
-    };
-  } else {
+  } catch (err) {
     return {
       notFound: true,
     };

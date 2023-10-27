@@ -37,20 +37,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     getOrg(orgId as string, ctx.apiFetch)
   );
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-  await ctx.queryClient.prefetchQuery(['tasks', orgId, taskId], async () => {
-    return await apiClient.get(`/api/orgs/${orgId}/tasks/${taskId}`);
-  });
-  const taskState = ctx.queryClient.getQueryState(['tasks', orgId, taskId]);
-  const taskData = ctx.queryClient.getQueryData<ZetkinTask>([
-    'tasks',
-    orgId,
-    taskId,
-  ]);
+  try {
+    const task = await apiClient.get<ZetkinTask>(
+      `/api/orgs/${orgId}/tasks/${taskId}`
+    );
 
-  if (orgState?.status === 'success' && taskState?.status === 'success') {
-    if (campId && +campId === taskData?.campaign.id) {
+    if (
+      parseInt(campId as string) == task.campaign.id &&
+      parseInt(orgId as string) == task.organization.id
+    ) {
       return {
         props: {
           campId,
@@ -58,11 +54,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
           taskId,
         },
       };
+    } else {
+      return {
+        notFound: true,
+      };
     }
+  } catch (err) {
+    return {
+      notFound: true,
+    };
   }
-  return {
-    notFound: true,
-  };
 }, scaffoldOptions);
 
 const getQueryStatus = (

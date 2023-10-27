@@ -9,6 +9,7 @@ import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import TaskDetailsSection from 'features/tasks/components/TaskDetailsSection';
 import TaskPreviewSection from 'features/tasks/components/TaskPreviewSection';
 import useTask from 'features/tasks/hooks/useTask';
+import { ZetkinTask } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -19,24 +20,27 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, campId, taskId } = ctx.params!;
   const apiClient = new BackendApiClient(ctx.req.headers);
 
-  await ctx.queryClient.prefetchQuery(['tasks', orgId, taskId], async () => {
-    return await apiClient.get(`/api/orgs/${orgId}/tasks/${taskId}`);
-  });
-  const taskQueryState = ctx.queryClient.getQueryState([
-    'tasks',
-    orgId,
-    taskId,
-  ]);
-
-  if (taskQueryState?.status === 'success') {
-    return {
-      props: {
-        campId,
-        orgId,
-        taskId,
-      },
-    };
-  } else {
+  try {
+    const task = await apiClient.get<ZetkinTask>(
+      `/api/orgs/${orgId}/tasks/${taskId}`
+    );
+    if (
+      parseInt(campId as string) == task.campaign.id &&
+      parseInt(orgId as string) == task.organization.id
+    ) {
+      return {
+        props: {
+          campId,
+          orgId,
+          taskId,
+        },
+      };
+    } else {
+      return {
+        notFound: true,
+      };
+    }
+  } catch (err) {
     return {
       notFound: true,
     };

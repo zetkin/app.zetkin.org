@@ -3,7 +3,6 @@ import Head from 'next/head';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import Calendar from 'features/calendar/components';
-import getOrg from 'utils/fetching/getOrg';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -32,40 +31,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
   const apiClient = new BackendApiClient(ctx.req.headers);
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
-
   try {
-    const apiClient = new BackendApiClient(ctx.req.headers);
     await apiClient.get<ZetkinCampaign>(
       `/api/orgs/${orgId}/campaigns/${campId}`
     );
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
-
-  await ctx.queryClient.prefetchQuery(['tasks', orgId, campId], async () => {
-    return await apiClient.get(`/api/orgs/${orgId}/campaigns/${campId}/tasks`);
-  });
-  const campaignTasksState = ctx.queryClient.getQueryState([
-    'tasks',
-    orgId,
-    campId,
-  ]);
-
-  if (
-    orgState?.status === 'success' &&
-    campaignTasksState?.status === 'success'
-  ) {
     return {
       props: {},
     };
-  } else {
+  } catch (error) {
     return {
       notFound: true,
     };

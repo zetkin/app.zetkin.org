@@ -5,7 +5,6 @@ import { ResponsivePie } from '@nivo/pie';
 import { Box, Typography } from '@mui/material';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
@@ -35,24 +34,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { campId, orgId, taskId } = ctx.params!;
   const apiClient = new BackendApiClient(ctx.req.headers);
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
-
-  await ctx.queryClient.prefetchQuery(['tasks', orgId, taskId], async () => {
-    return await apiClient.get(`/api/orgs/${orgId}/tasks/${taskId}`);
-  });
-  const taskState = ctx.queryClient.getQueryState(['tasks', orgId, taskId]);
-  const taskData = ctx.queryClient.getQueryData<ZetkinTask>([
-    'tasks',
-    orgId,
-    taskId,
-  ]);
-
-  if (orgState?.status === 'success' && taskState?.status === 'success') {
-    if (campId && +campId === taskData?.campaign.id) {
+  try {
+    const task = await apiClient.get<ZetkinTask>(
+      `/api/orgs/${orgId}/tasks/${taskId}`
+    );
+    if (
+      parseInt(campId as string) == task.campaign.id &&
+      parseInt(orgId as string) == task.organization.id
+    ) {
       return {
         props: {
           campId,
@@ -60,11 +49,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
           taskId,
         },
       };
+    } else {
+      return {
+        notFound: true,
+      };
     }
+  } catch (err) {
+    return {
+      notFound: true,
+    };
   }
-  return {
-    notFound: true,
-  };
 }, scaffoldOptions);
 
 interface PieChartProps {
