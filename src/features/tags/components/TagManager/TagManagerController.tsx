@@ -40,7 +40,6 @@ export const TagManagerController: React.FunctionComponent<
   onUnassignTag,
 }) => {
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
-
   return (
     <>
       <TagsList
