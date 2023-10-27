@@ -16,6 +16,7 @@ export const NoteUpdate: ZetkinUpdateJourneyInstanceAddNote = {
   details: {
     note: { files: [], id: 1, text: 'The sea was angry that day my friends' },
   },
+  id: '1234820',
   organization: KPD,
   target: ClarasOnboarding,
   timestamp: '2022-06-20T00:00:00',

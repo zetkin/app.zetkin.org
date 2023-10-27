@@ -8,7 +8,7 @@ import {
   JourneyTagColumnData,
 } from 'features/journeys/utils/journeyInstanceUtils';
 
-export interface JourneyInstancesData {
+interface JourneyInstancesData {
   journeyInstances: ZetkinJourneyInstance[];
   tagColumnsData: JourneyTagColumnData[];
 }

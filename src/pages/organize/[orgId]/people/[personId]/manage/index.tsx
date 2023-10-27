@@ -7,22 +7,23 @@ import PersonDeleteCard from 'features/profile/components/PersonDeleteCard';
 import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
-import {
-  getPersonScaffoldProps,
-  PersonPageProps,
-  scaffoldOptions,
-} from '../index';
+import { getPersonScaffoldProps, scaffoldOptions } from '../index';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   getPersonScaffoldProps,
   scaffoldOptions
 );
 
-const PersonManagePage: PageWithLayout<PersonPageProps> = (props) => {
-  const { data: person } = personResource(
-    props.orgId,
-    props.personId
-  ).useQuery();
+interface PersonManagePageProps {
+  orgId: string;
+  personId: string;
+}
+
+const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
+  orgId,
+  personId,
+}) => {
+  const { data: person } = personResource(orgId, personId).useQuery();
 
   if (!person) {
     return null;
@@ -37,7 +38,7 @@ const PersonManagePage: PageWithLayout<PersonPageProps> = (props) => {
       </Head>
       <Grid container direction="row" spacing={6}>
         <Grid item lg={4}>
-          <PersonDeleteCard orgId={props.orgId} person={person} />
+          <PersonDeleteCard orgId={orgId} person={person} />
         </Grid>
       </Grid>
     </>

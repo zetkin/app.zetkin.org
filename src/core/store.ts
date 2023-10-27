@@ -15,6 +15,10 @@ import campaignsSlice, {
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
+import journeysSlice, {
+  journeyInstanceCreated,
+  JourneysStoreSlice,
+} from 'features/journeys/store';
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
@@ -35,13 +39,14 @@ export interface RootState {
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
   events: EventsStoreSlice;
+  journeys: JourneysStoreSlice;
+  organizations: OrganizationsStoreSlice;
   search: SearchStoreSlice;
   smartSearch: smartSearchStoreSlice;
   surveys: SurveysStoreSlice;
   tags: TagsStoreSlice;
   tasks: TasksStoreSlice;
   views: ViewsStoreSlice;
-  organizations: OrganizationsStoreSlice;
   user: UserStoreSlice;
 }
 
@@ -49,6 +54,7 @@ const reducer = {
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
   events: eventsSlice.reducer,
+  journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
   search: searchSlice.reducer,
   smartSearch: smartSearchSlice.reducer,
@@ -97,6 +103,16 @@ listenerMiddleware.startListening({
       `/organize/${survey.organization.id}/projects/${
         survey.campaign?.id ?? 'standalone'
       }/surveys/${survey.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: journeyInstanceCreated,
+  effect: (action) => {
+    const journeyInstance = action.payload;
+    Router.push(
+      `/organize/${journeyInstance.organization.id}/journeys/${journeyInstance.journey.id}/${journeyInstance.id}`
     );
   },
 });
