@@ -9,9 +9,9 @@ import 'leaflet/dist/leaflet.css';
 import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
-import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import MoveLocationCard from './MoveLocationCard';
+import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
@@ -40,10 +40,9 @@ export type PendingLocation = {
 };
 
 interface LocationModalProps {
-  currentEventId: number;
+  currentEvent: ZetkinEvent;
   events: ZetkinEvent[];
   locations: ZetkinLocation[];
-  model: LocationsModel;
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
@@ -53,10 +52,9 @@ interface LocationModalProps {
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
-  currentEventId,
+  currentEvent,
   events,
   locations,
-  model,
   onCreateLocation,
   onMapClose,
   onSelectLocation,
@@ -66,6 +64,9 @@ const LocationModal: FC<LocationModalProps> = ({
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
+  const { setLocationLatLng } = useEventLocationMutations(
+    currentEvent.organization.id
+  );
   const [pendingLocation, setPendingLocation] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -91,7 +92,7 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box border={1} padding={2}>
         <Map
-          currentEventId={currentEventId}
+          currentEventId={currentEvent.id}
           inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
@@ -150,7 +151,6 @@ const LocationModal: FC<LocationModalProps> = ({
           {selectedLocation && !inMoveState && (
             <LocationDetailsCard
               location={selectedLocation}
-              model={model}
               onClose={() => {
                 setSearchString('');
                 setSelectedLocationId(null);
@@ -160,10 +160,11 @@ const LocationModal: FC<LocationModalProps> = ({
                 onSelectLocation(selectedLocation);
                 onMapClose();
               }}
+              orgId={currentEvent.organization.id}
               relatedEvents={events.filter(
                 (event) =>
                   event.location?.id === selectedLocation.id &&
-                  event.id !== currentEventId
+                  event.id !== currentEvent.id
               )}
             />
           )}
@@ -191,7 +192,7 @@ const LocationModal: FC<LocationModalProps> = ({
               }}
               onSaveLocation={() => {
                 if (newLatLng) {
-                  model.setLocationLatLng(
+                  setLocationLatLng(
                     selectedLocation.id,
                     newLatLng.lat,
                     newLatLng.lng

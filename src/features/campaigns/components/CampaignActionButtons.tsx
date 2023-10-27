@@ -13,11 +13,10 @@ import React, { useContext, useState } from 'react';
 
 import CampaignDetailsForm from 'features/campaigns/components/CampaignDetailsForm';
 import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actions/createTask';
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
-import useModel from 'core/useModel';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
@@ -42,14 +41,12 @@ const CampaignActionButtons: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
 
+  // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
-  const eventModel = useModel(
-    (env) => new EventDataModel(env, orgId, campaign.id)
-  );
-
+  const { createEvent } = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
     campId
@@ -65,7 +62,7 @@ const CampaignActionButtons: React.FunctionComponent<
 
     const defaultEnd = new Date(defaultStart.getTime() + 60 * 60 * 1000);
 
-    eventModel.createEvent({
+    createEvent({
       activity_id: null,
       campaign_id: campaign.id,
       end_time: defaultEnd.toISOString(),

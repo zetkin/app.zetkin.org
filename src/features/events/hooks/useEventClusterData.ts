@@ -1,5 +1,5 @@
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
-import { EventState } from 'features/events/models/EventDataModel';
+import { EventState } from './useEventState';
 import getEventStats from 'features/events/rpc/getEventStats';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import messageIds from '../l10n/messageIds';

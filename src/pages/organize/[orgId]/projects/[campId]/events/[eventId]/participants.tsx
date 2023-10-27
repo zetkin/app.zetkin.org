@@ -4,14 +4,13 @@ import { useRef, useState } from 'react';
 
 import AddPersonButton from 'features/events/components/AddPersonButton';
 import EventContactCard from 'features/events/components/EventContactCard';
-import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventParticipantsFilter from 'features/events/components/EventParticipantsFilter';
 import EventParticipantsList from 'features/events/components/EventParticipantsList';
 import { PageWithLayout } from 'utils/types';
 import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
 import { scaffold } from 'utils/next';
-import useModel from 'core/useModel';
+import useEvent from 'features/events/hooks/useEvent';
 import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -45,32 +44,27 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
 }) => {
   const [filterString, setFilterString] = useState<string>('');
   const listRef = useRef<HTMLDivElement>();
-  const dataModel = useModel(
-    (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
-  );
+  const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
   return (
-    <ZUIFuture future={dataModel.getData()}>
+    <ZUIFuture future={eventFuture}>
       {(data) => {
         return (
           <>
             <Grid container spacing={2}>
               <Grid item md={8} xs={12}>
                 <ParticipantSummaryCard
-                  model={dataModel}
+                  eventId={parseInt(eventId)}
                   onClickRecord={() => {
                     if (listRef.current) {
                       listRef.current.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
+                  orgId={parseInt(orgId)}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
-                <EventContactCard
-                  data={data}
-                  model={dataModel}
-                  orgId={parseInt(orgId)}
-                />
+                <EventContactCard data={data} orgId={parseInt(orgId)} />
               </Grid>
             </Grid>
             <Grid
@@ -88,13 +82,12 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
                   }
                 }}
               />
-              <AddPersonButton model={dataModel} />
+              <AddPersonButton eventId={data.id} orgId={parseInt(orgId)} />
             </Grid>
             <EventParticipantsList
               ref={listRef}
               data={data}
               filterString={filterString}
-              model={dataModel}
               orgId={parseInt(orgId)}
             />
           </>
