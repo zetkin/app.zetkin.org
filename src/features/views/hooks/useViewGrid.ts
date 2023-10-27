@@ -1,6 +1,6 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import useTagMutation from 'features/tags/hooks/useTagMutation';
+import useTagging from 'features/tags/hooks/useTagging';
 import {
   cellUpdate,
   cellUpdated,
@@ -35,7 +35,7 @@ export default function useViewGrid(
 ): UseViewGridReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const { assignToPerson, removeFromPerson } = useTagMutation(orgId);
+  const { assignToPerson, removeFromPerson } = useTagging(orgId);
   const views = useAppSelector((state) => state.views);
 
   const columnsFuture = loadListIfNecessary(
