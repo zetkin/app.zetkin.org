@@ -1,18 +1,13 @@
 import { makeStyles } from '@mui/styles';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Dialog } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import defaultFetch from 'utils/fetching/defaultFetch';
-import handleResponseData from 'utils/api/handleResponseData';
 import isUserTyping from 'features/search/utils/isUserTyping';
 import ResultsList from 'features/search/components/SearchDialog/ResultsList';
 import SearchField from './SearchField';
-import { SearchResult } from '../types';
-import useDebounce from 'utils/hooks/useDebounce';
-
-export const MINIMUM_CHARACTERS = 2;
+import { useNumericRouteParams } from 'core/hooks';
+import useSearch from 'features/search/hooks/useSearch';
 
 const useStyles = makeStyles(() => ({
   topPaperScrollBody: {
@@ -23,33 +18,22 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const getSearchResults = (orgId: string, searchQuery: string) => {
-  return async () => {
-    const res = await defaultFetch(`/search?orgId=${orgId}`, {
-      body: JSON.stringify({ q: searchQuery }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
-    return handleResponseData<SearchResult[]>(res, 'post');
-  };
-};
-
 const SearchDialog: React.FunctionComponent<{
   activator: (openDialog: () => void) => JSX.Element;
 }> = ({ activator }) => {
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
   const classes = useStyles();
   const router = useRouter();
-  const { orgId } = router.query as { orgId: string };
+  const { orgId } = useNumericRouteParams();
 
-  const debouncedFinishedTyping = useDebounce(async () => {
-    setIsTyping(false);
-  }, 600);
+  const {
+    error: isError,
+    results: searchResults,
+    isLoading: isFetching,
+    setQuery: setSearchQuery,
+  } = useSearch(orgId);
 
   const handleRouteChange = () => {
     // Close dialog when clicking an item
@@ -79,19 +63,6 @@ const SearchDialog: React.FunctionComponent<{
     };
   }, [router]);
 
-  const {
-    data: searchResults,
-    isFetching,
-    isError,
-  } = useQuery(
-    ['searchResults', searchQuery],
-    getSearchResults(orgId, searchQuery),
-    {
-      enabled: !isTyping && searchQuery.length >= MINIMUM_CHARACTERS,
-      retry: false,
-    }
-  );
-
   return (
     <>
       {activator(() => setOpen(true))}
@@ -109,17 +80,18 @@ const SearchDialog: React.FunctionComponent<{
       >
         <Box p={1}>
           <SearchField
-            error={isError}
+            error={!!isError}
             loading={isFetching}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={() => {
               if (!isTyping) {
                 setIsTyping(true);
               }
-              debouncedFinishedTyping();
             }}
           />
-          {searchResults && <ResultsList results={searchResults} />}
+          {searchResults && (
+            <ResultsList results={searchResults.map((item) => item.result)} />
+          )}
         </Box>
       </Dialog>
     </>
