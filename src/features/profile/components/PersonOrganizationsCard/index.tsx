@@ -14,17 +14,20 @@ import { OrganizationsTree } from './OrganizationsTree';
 import PersonCard from '../PersonCard';
 import { PersonOrganization } from 'utils/organize/people';
 import { personOrganizationsResource } from 'features/profile/api/people';
-import { PersonPageProps } from 'pages/organize/[orgId]/people/[personId]';
 import { useMessages } from 'core/i18n';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 import messageIds from 'features/profile/l10n/messageIds';
 
-const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
-  orgId,
-  personId,
-}) => {
+interface PersonOrganizationsCardProps {
+  orgId: string;
+  personId: string;
+}
+
+const PersonOrganizationsCard: React.FunctionComponent<
+  PersonOrganizationsCardProps
+> = ({ orgId, personId }) => {
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState<boolean>(false);
   const [addable, setAddable] = useState<boolean>(false);

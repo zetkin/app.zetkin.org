@@ -1,8 +1,7 @@
 import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
-import SurveyDataModel from '../models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
+import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Alert, AlertTitle, Box, Link } from '@mui/material';
 
@@ -18,11 +17,11 @@ const SubmissionWarningAlert = ({
   orgId,
   surveyId,
 }: SubmissionWarningAlertProps) => {
-  const model = useModel((env) => new SurveyDataModel(env, orgId, surveyId));
   const messages = useMessages(messageIds);
+  const statsFuture = useSurveyStats(orgId, surveyId);
 
   return (
-    <ZUIFuture future={model.getStats()}>
+    <ZUIFuture future={statsFuture}>
       {(sub) => {
         const unlinkedSubs = sub.unlinkedSubmissionCount;
 

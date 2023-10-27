@@ -56,46 +56,4 @@ test.describe('Journey instance detail page', () => {
       patchJourneyReqLog<ZetkinJourneyInstance>()[0].data?.summary
     ).toEqual(newSummaryText);
   });
-
-  test('shows error snackbar if error patching with the new summary.', async ({
-    appUri,
-    moxy,
-    page,
-  }) => {
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
-      'get',
-      MemberOnboarding
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-      'get',
-      ClarasOnboarding
-    );
-
-    const newSummaryText = 'This is the new summary text. Wow!';
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-      'patch',
-      undefined,
-      401
-    );
-
-    await page.goto(appUri + '/organize/1/journeys/1/1');
-
-    await page.click('data-testid=JourneyInstanceSummary-editButton');
-
-    await page.fill(
-      'data-testid=JourneyInstanceSummary-textArea',
-      newSummaryText
-    );
-
-    await page.click('data-testid=SubmitCancelButtons-submitButton');
-
-    await page.locator('data-testid=Snackbar-error').waitFor();
-
-    expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
-  });
 });

@@ -30,6 +30,7 @@ const newUpdate: ZetkinUpdateJourneyInstanceAddNote = {
   details: {
     note: newNote,
   },
+  id: '28347289374',
   organization: KPD,
   target: ClarasOnboarding,
   timestamp: '2022-06-20T00:00:00',

@@ -4,32 +4,28 @@ import { Grid, LinearProgress, Typography } from '@mui/material';
 
 import { getCompletionPercentage } from 'features/journeys/components/JourneyMilestoneProgress';
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
-import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import JourneyMilestoneCard from 'features/journeys/components/JourneyMilestoneCard';
+import messageIds from 'features/journeys/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourneyInstance } from 'utils/types/zetkin';
-import {
-  getJourneyInstanceScaffoldProps,
-  JourneyDetailsPageProps,
-  scaffoldOptions,
-} from '../index';
-
-import messageIds from 'features/journeys/l10n/messageIds';
+import useJourneyInstance from 'features/journeys/hooks/useJourneyInstance';
+import { useNumericRouteParams } from 'core/hooks';
+import { getJourneyInstanceScaffoldProps, scaffoldOptions } from '../index';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   getJourneyInstanceScaffoldProps,
   scaffoldOptions
 );
 
-const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
-  instanceId,
-  orgId,
-}) => {
-  const { useQuery } = journeyInstanceResource(orgId, instanceId);
-  const journeyInstanceQuery = useQuery();
-  const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
+const JourneyMilestonesPage: PageWithLayout = () => {
+  const { orgId, instanceId } = useNumericRouteParams();
+  const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
+  const journeyInstance = journeyInstanceFuture.data;
+
+  if (!journeyInstance) {
+    return null;
+  }
 
   const percentComplete = getCompletionPercentage(
     journeyInstance.milestones || []

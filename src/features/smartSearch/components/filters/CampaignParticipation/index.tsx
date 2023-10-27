@@ -3,13 +3,11 @@ import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import getActivities from 'utils/fetching/getActivities';
-import getCampaigns from 'features/campaigns/fetching/getCampaigns';
 import getLocations from 'utils/fetching/getLocations';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CampaignParticipationConfig,
@@ -20,6 +18,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 const DEFAULT_VALUE = 'any';
@@ -61,20 +61,16 @@ const CampaignParticipation = ({
   onCancel,
   filter: initialFilter,
 }: CampaignParticipationProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const campQuery = useQuery(
-    ['campaigns', orgId],
-    getCampaigns(orgId as string)
-  );
+  const { orgId } = useNumericRouteParams();
   const activitiesQuery = useQuery(
     ['activities', orgId],
-    getActivities(orgId as string)
+    getActivities(orgId.toString())
   );
   const locationsQuery = useQuery(
     ['locations', orgId],
-    getLocations(orgId as string)
+    getLocations(orgId.toString())
   );
-  const campaigns = campQuery?.data || [];
+  const { data: campaigns } = useCampaigns(orgId);
   const activities = activitiesQuery?.data || [];
   const locations = locationsQuery?.data || [];
 
@@ -218,7 +214,7 @@ const CampaignParticipation = ({
                         id={localMessageIds.campaignSelect.campaign}
                         values={{
                           campaign:
-                            campaigns.find((c) => c.id === value)?.title ?? '',
+                            campaigns?.find((c) => c.id === value)?.title ?? '',
                         }}
                       />
                     );
@@ -229,7 +225,7 @@ const CampaignParticipation = ({
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
                   <Msg id={localMessageIds.campaignSelect.any} />
                 </MenuItem>
-                {campaigns.map((c) => (
+                {campaigns?.map((c) => (
                   <MenuItem key={c.id} value={c.id}>
                     {c.title}
                   </MenuItem>

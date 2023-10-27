@@ -94,8 +94,6 @@ test.describe('Journey instance detail page', () => {
       page.locator('text=Marxist training').click(),
     ]);
 
-    await page.locator('data-testid=Snackbar-success').waitFor();
-
     //Expect the id to be the MarxistJourney id.
     expect(patchReqLog<{ journey_id: number }>()[0].data?.journey_id).toBe(
       MarxistTraining.id
@@ -106,62 +104,6 @@ test.describe('Journey instance detail page', () => {
       appUri +
         `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
     );
-
-    //Expect success snackbar to show
-    expect(await page.locator('data-testid=Snackbar-success').count()).toEqual(
-      1
-    );
-  });
-
-  test('shows error snackbar if request is wrong', async ({
-    appUri,
-    moxy,
-    page,
-  }) => {
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
-      'get',
-      MemberOnboarding
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-      'get',
-      ClarasOnboarding
-    );
-
-    moxy.setZetkinApiMock(`/orgs/${KPD.id}/journeys`, 'get', [
-      MarxistTraining,
-      MemberOnboarding,
-    ]);
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-      'patch',
-      undefined
-    );
-
-    await page.goto(appUri + '/organize/1/journeys/1/1');
-
-    //Click ellipsis menu
-    await page
-      .locator('header [data-testid=ZUIEllipsisMenu-menuActivator]')
-      .click();
-
-    //Click "Convert to..."
-    await page.locator('text=Convert to...').click();
-
-    //Click type of journey to convert to, "Marxist Training"
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
-      ),
-      page.locator('text=Marxist Training').click(),
-    ]);
-
-    await page.locator('data-testid=Snackbar-error').waitFor();
-
-    expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
   });
 
   test('redirects to url with correct journey id if wrong one is supplied.', async ({

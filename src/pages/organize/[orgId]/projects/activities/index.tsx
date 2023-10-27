@@ -7,25 +7,19 @@ import FilterActivities from 'features/campaigns/components/ActivityList/FilterA
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useAcitvityList from 'features/campaigns/hooks/useActivityList';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import CampaignActivitiesModel, {
-  ACTIVITIES,
-  CampaignActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import { ChangeEvent, useState } from 'react';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
-  async (ctx) => {
-    const { orgId } = ctx.params!;
-
+  async () => {
     return {
-      props: {
-        orgId,
-      },
+      props: {},
     };
   },
   {
@@ -34,18 +28,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface CampaignActivitiesPageProps {
-  orgId: string;
-}
-
-const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
-  orgId,
-}) => {
+const CampaignActivitiesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const model = useModel(
-    (env) => new CampaignActivitiesModel(env, parseInt(orgId))
-  );
+  const { orgId, campId } = useNumericRouteParams();
+  const activitiesFuture = useAcitvityList(orgId, campId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
@@ -70,7 +57,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 
   return (
     <Box>
-      <ZUIFuture future={model.getCurrentActivities()} skeletonWidth={200}>
+      <ZUIFuture future={activitiesFuture} skeletonWidth={200}>
         {(data) => {
           if (data.length === 0) {
             return (
@@ -93,7 +80,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
                 <ActivityList
                   allActivities={data}
                   filters={filters}
-                  orgId={parseInt(orgId)}
+                  orgId={orgId}
                   searchString={searchString}
                 />
               </Grid>

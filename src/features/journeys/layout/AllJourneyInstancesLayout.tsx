@@ -1,11 +1,10 @@
 import { FunctionComponent } from 'react';
-import { useRouter } from 'next/router';
-
-import { journeyResource } from 'features/journeys/api/journeys';
-import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import { useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import TabbedLayout from '../../../utils/layout/TabbedLayout';
+import useJourney from '../hooks/useJourney';
+import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,12 +16,8 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
   fixedHeight,
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId, journeyId } = useRouter().query;
-  const journeyQuery = journeyResource(
-    orgId as string,
-    journeyId as string
-  ).useQuery();
-  const journey = journeyQuery.data;
+  const { orgId, journeyId } = useNumericRouteParams();
+  const journeyFuture = useJourney(orgId, journeyId);
 
   return (
     <TabbedLayout
@@ -31,7 +26,7 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
       ellipsisMenuItems={[
         {
           label: messages.instances.menu.downloadCsv({
-            pluralLabel: journey?.plural_label ?? '',
+            pluralLabel: journeyFuture.data?.plural_label ?? '',
           }),
           onSelect: () => {
             location.href = `/api/journeyInstances/download?orgId=${orgId}&journeyId=${journeyId}`;
@@ -39,7 +34,7 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
         },
         {
           label: messages.instances.menu.downloadXlsx({
-            pluralLabel: journey?.plural_label ?? '',
+            pluralLabel: journeyFuture.data?.plural_label ?? '',
           }),
           onSelect: () => {
             location.href = `/api/journeyInstances/download?orgId=${orgId}&journeyId=${journeyId}&format=xlsx`;
@@ -57,7 +52,7 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
           tabProps: { disabled: true },
         },
       ]}
-      title={journey?.plural_label ?? ''}
+      title={journeyFuture.data?.plural_label ?? ''}
     >
       {children}
     </TabbedLayout>

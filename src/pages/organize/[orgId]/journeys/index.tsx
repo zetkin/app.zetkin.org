@@ -2,17 +2,17 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 import Head from 'next/head';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyCard from 'features/journeys/components/JourneyCard';
 import JourneysLayout from 'features/journeys/layout/JourneysLayout';
-import { journeysResource } from 'features/journeys/api/journeys';
-import { organizationResource } from 'features/journeys/api/organizations';
+import messageIds from 'features/journeys/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinJourney } from 'utils/types/zetkin';
 import ZUISection from 'zui/ZUISection';
-
-import messageIds from 'features/journeys/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,18 +22,11 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  const { state: orgQueryState } = await organizationResource(
-    orgId as string
-  ).prefetch(ctx);
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const journeys = await apiClient.get(`/api/orgs/${orgId}/journeys`);
+  const organization = await apiClient.get(`/api/orgs/${orgId}`);
 
-  const { state: journeysQueryState } = await journeysResource(
-    orgId as string
-  ).prefetch(ctx);
-
-  if (
-    orgQueryState?.status === 'success' &&
-    journeysQueryState?.status === 'success'
-  ) {
+  if (organization && journeys) {
     return {
       props: {
         orgId,
@@ -46,17 +39,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type AllJourneysOverviewPageProps = {
-  orgId: string;
-};
-
-const AllJourneysOverviewPage: PageWithLayout<AllJourneysOverviewPageProps> = ({
-  orgId,
-}) => {
+const AllJourneysOverviewPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
+  const { orgId } = useNumericRouteParams();
 
-  const journeysQuery = journeysResource(orgId).useQuery();
-  const journeys = journeysQuery.data || [];
+  const journeysFuture = useJourneys(orgId);
 
   return (
     <>
@@ -65,7 +52,7 @@ const AllJourneysOverviewPage: PageWithLayout<AllJourneysOverviewPageProps> = ({
       </Head>
       <ZUISection title={messages.journeys.overview.overviewTitle()}>
         <Grid container spacing={2}>
-          {journeys.map((journey: ZetkinJourney) => (
+          {journeysFuture.data?.map((journey: ZetkinJourney) => (
             <Grid key={journey.id} item lg={4} md={6} xl={3} xs={12}>
               <JourneyCard journey={journey} />
             </Grid>

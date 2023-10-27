@@ -10,12 +10,13 @@ import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import useSurvey from 'features/surveys/hooks/useSurvey';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import { ZetkinSurvey } from 'utils/types/zetkin';
-import SurveyDataModel, {
+import useSurveyState, {
   SurveyState,
-} from 'features/surveys/models/SurveyDataModel';
+} from 'features/surveys/hooks/useSurveyState';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -58,18 +59,20 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   orgId,
   surveyId,
 }) => {
-  const model = useModel(
-    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
-  );
   const onServer = useServerSide();
+  const { data: survey } = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
+  const { surveyIsEmpty } = useSurveyElements(
+    parseInt(orgId),
+    parseInt(surveyId)
+  );
   const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   if (onServer) {
     return null;
   }
 
-  const { data: survey } = model.getData();
-  const isOpen = model.state === SurveyState.PUBLISHED;
+  const isOpen = state === SurveyState.PUBLISHED;
 
   if (!survey) {
     return null;
@@ -78,10 +81,10 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{survey?.title}</title>
       </Head>
       <Box>
-        {model.surveyIsEmpty ? (
+        {surveyIsEmpty ? (
           <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
         ) : (
           <Grid container spacing={2}>

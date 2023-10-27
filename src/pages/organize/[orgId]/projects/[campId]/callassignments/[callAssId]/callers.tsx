@@ -9,21 +9,20 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
 
-import { CallAssignmentCaller } from 'features/callAssignments/apiTypes';
 import CallAssignmentCallersList from 'features/callAssignments/components/CallAssignmentCallersList';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallerConfigDialog from 'features/callAssignments/components/CallerConfigDialog';
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinPerson } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/callAssignments/l10n/messageIds';
 import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
 import useCallers from 'features/callAssignments/hooks/useCallers';
+import { useNumericRouteParams } from 'core/hooks';
+import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -47,46 +46,32 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface CallersPageProps {
-  assignmentId: string;
-  campId: string;
-  orgId: string;
-}
-
-const CallersPage: PageWithLayout<CallersPageProps> = ({
-  orgId,
-  assignmentId,
-}) => {
-  const [onServer, setOnServer] = useState(true);
-  const [searchString, setSearchString] = useState('');
-  const isSearching = searchString.length > 0;
+const CallersPage: PageWithLayout = () => {
+  const { orgId, callAssId } = useNumericRouteParams();
+  const onServer = useServerSide();
   const messages = useMessages(messageIds);
-  const selectInputRef = useRef<HTMLInputElement>();
-  const [selectedCaller, setSelectedCaller] =
-    useState<CallAssignmentCaller | null>(null);
-  const { data } = useCallAssignment(parseInt(orgId), parseInt(assignmentId));
+  const { data: callAssignment } = useCallAssignment(orgId, callAssId);
   const {
     addCaller,
-    data: callers,
+    filteredCallersFuture,
+    isCaller,
     removeCaller,
+    searchString,
+    selectInputRef,
+    selectedCaller,
     setCallerTags,
-  } = useCallers(parseInt(orgId), parseInt(assignmentId));
-
-  useEffect(() => {
-    setOnServer(false);
-  }, []);
+    setSearchString,
+    setSelectedCaller,
+  } = useCallers(orgId, callAssId);
 
   if (onServer) {
     return null;
   }
 
-  const isCaller = (person: ZetkinPerson) =>
-    !!callers?.find((caller) => caller.id == person.id);
-
   return (
     <>
       <Head>
-        <title>{data?.title}</title>
+        <title>{callAssignment?.title}</title>
       </Head>
       <Box>
         <Paper>
@@ -98,7 +83,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
               <TextField
                 InputProps={{
                   endAdornment: (
-                    <Fade in={isSearching}>
+                    <Fade in={searchString.length > 0}>
                       <IconButton onClick={() => setSearchString('')}>
                         <Close />
                       </IconButton>
@@ -114,7 +99,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
               />
             </Box>
             <CallAssignmentCallersList
-              callers={callers || []}
+              callers={filteredCallersFuture.data || []}
               onCustomize={(caller) => setSelectedCaller(caller)}
               onRemove={(caller) => removeCaller(caller.id)}
             />
@@ -155,16 +140,8 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
   );
 };
 
-CallersPage.getLayout = function getLayout(page, props) {
-  return (
-    <CallAssignmentLayout
-      assignmentId={props.assignmentId}
-      campaignId={props.campId}
-      orgId={props.orgId}
-    >
-      {page}
-    </CallAssignmentLayout>
-  );
+CallersPage.getLayout = function getLayout(page) {
+  return <CallAssignmentLayout>{page}</CallAssignmentLayout>;
 };
 
 export default CallersPage;
