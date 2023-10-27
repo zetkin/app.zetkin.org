@@ -32,7 +32,7 @@ export type ViewBrowserItem =
   | ViewBrowserViewItem
   | ViewBrowserBackItem;
 
-export default function useItems(
+export default function useViewBrowserItems(
   orgId: number,
   folderId: number | null
 ): IFuture<ViewBrowserItem[]> {

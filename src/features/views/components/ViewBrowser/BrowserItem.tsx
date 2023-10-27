@@ -7,7 +7,7 @@ import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
 import useItemsMutations from 'features/views/hooks/useItemsMutations';
 import { useNumericRouteParams } from 'core/hooks';
-import { ViewBrowserItem } from 'features/views/hooks/useItems';
+import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
 

@@ -24,7 +24,9 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import useItems, { ViewBrowserItem } from 'features/views/hooks/useItems';
+import useViewBrowserItems, {
+  ViewBrowserItem,
+} from 'features/views/hooks/useViewBrowserItems';
 
 import messageIds from 'features/views/l10n/messageIds';
 
@@ -56,7 +58,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
 
   const { deleteView } = useViewMutations(orgId);
   const { renameItem } = useItemsMutations(orgId);
-  const itemsFuture = useItems(orgId, folderId);
+  const itemsFuture = useViewBrowserItems(orgId, folderId);
   const { deleteFolder, recentlyCreatedFolder } = useFolder(orgId);
 
   // If a folder was created, go into rename state

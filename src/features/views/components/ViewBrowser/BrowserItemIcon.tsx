@@ -1,4 +1,4 @@
-import { ViewBrowserItem } from 'features/views/hooks/useItems';
+import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 import {
   ArrowBack,
   Folder,

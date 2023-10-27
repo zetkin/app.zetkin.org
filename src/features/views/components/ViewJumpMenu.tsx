@@ -19,10 +19,10 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinView } from './types';
 import ZUIFuture from 'zui/ZUIFuture';
-import useItems, {
+import useViewBrowserItems, {
   ViewBrowserItem,
   ViewBrowserViewItem,
-} from '../hooks/useItems';
+} from '../hooks/useViewBrowserItems';
 
 import messageIds from '../l10n/messageIds';
 
@@ -34,7 +34,7 @@ const ViewJumpMenu: FunctionComponent = () => {
   const [jumpMenuAnchor, setJumpMenuAnchor] = useState<Element | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(Infinity);
 
-  const itemsFuture = useItems(orgId, null);
+  const itemsFuture = useViewBrowserItems(orgId, null);
 
   const views: ZetkinView[] =
     itemsFuture.data

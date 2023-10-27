@@ -5,7 +5,7 @@ import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 
 import useItemsMutations from 'features/views/hooks/useItemsMutations';
 import { useNumericRouteParams } from 'core/hooks';
-import { ViewBrowserItem } from 'features/views/hooks/useItems';
+import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 
 interface BrowserRowProps {
   item: ViewBrowserItem;
