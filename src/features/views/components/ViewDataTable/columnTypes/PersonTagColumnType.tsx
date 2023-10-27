@@ -82,7 +82,7 @@ export default class PersonTagColumnType implements IColumnType {
   }
 
   handleKeyDown(
-    useViewGrid: UseViewGridReturn,
+    viewGrid: UseViewGridReturn,
     column: PersonTagViewColumn,
     personId: number,
     data: PersonTagViewCell,
@@ -95,7 +95,7 @@ export default class PersonTagColumnType implements IColumnType {
     }
 
     if (ev.key == 'Enter' || ev.key == ' ') {
-      useViewGrid.toggleTag(personId, column.config.tag_id, !data);
+      viewGrid.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
     }
   }

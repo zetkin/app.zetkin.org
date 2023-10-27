@@ -102,7 +102,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     view.id
   );
   const createView = useCreateView(orgId);
-  const viewGridHook = useViewGrid(orgId, view.id);
+  const viewGrid = useViewGrid(orgId, view.id);
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar('error', messages.dataTableErrors[error]());
@@ -114,7 +114,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   ) => {
     NProgress.start();
     try {
-      await viewGridHook.updateColumn(id, data);
+      await viewGrid.updateColumn(id, data);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
     } finally {
@@ -213,7 +213,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onRowsRemove = async () => {
     setWaiting(true);
     try {
-      viewGridHook.removeRows(selection);
+      viewGrid.removeRows(selection);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
     } finally {
@@ -394,7 +394,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
               const handleKeyDown = columnTypes[col.type].handleKeyDown;
               if (handleKeyDown) {
                 handleKeyDown(
-                  viewGridHook,
+                  viewGrid,
                   col,
                   params.row.id,
                   params.value,
@@ -422,7 +422,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
               const processRowUpdate = columnTypes[col.type].processRowUpdate;
               if (processRowUpdate) {
                 processRowUpdate(
-                  viewGridHook,
+                  viewGrid,
                   col.id,
                   after.id,
                   after[changedField]

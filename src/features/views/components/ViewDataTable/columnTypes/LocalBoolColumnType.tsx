@@ -40,7 +40,7 @@ export default class LocalBoolColumnType implements IColumnType {
   }
 
   handleKeyDown(
-    useViewGrid: UseViewGridReturn,
+    viewGrid: UseViewGridReturn,
     column: ZetkinViewColumn,
     personId: number,
     data: boolean,
@@ -52,7 +52,7 @@ export default class LocalBoolColumnType implements IColumnType {
     }
 
     if (ev.key == 'Enter' || ev.key == ' ') {
-      useViewGrid.setCellValue(personId, column.id, !data);
+      viewGrid.setCellValue(personId, column.id, !data);
       ev.defaultMuiPrevented = true;
       ev.preventDefault();
     }

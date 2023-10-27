@@ -27,7 +27,7 @@ export interface IColumnType<
   ): Omit<GridColDef, 'field'>;
   getSearchableStrings(cell: CellType): string[];
   handleKeyDown?(
-    useViewGrid: UseViewGridReturn,
+    viewGrid: UseViewGridReturn,
     column: ColumnType,
     personId: number,
     data: CellType,

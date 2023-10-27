@@ -33,12 +33,12 @@ export default class LocalTextColumnType implements IColumnType {
     return cell ? [cell] : [];
   }
   processRowUpdate(
-    useViewGrid: UseViewGridReturn,
+    viewGrid: UseViewGridReturn,
     colId: number,
     personId: number,
     data: LocalTextViewCell
   ): void {
-    useViewGrid.setCellValue(personId, colId, data);
+    viewGrid.setCellValue(personId, colId, data);
   }
 }
 
