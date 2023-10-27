@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useModel from 'core/useModel';
 import ViewBrowserModel from '../models/ViewBrowserModel';
-import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
+import PeopleActionButton from '../components/PeopleActionButton';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -28,7 +28,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
       {(data) => (
         <SimpleLayout
           actionButtons={
-            <ViewFolderActionButtons folderId={folderId} model={model} />
+            <PeopleActionButton folderId={folderId} model={model} />
           }
           noPad
           subtitle={
