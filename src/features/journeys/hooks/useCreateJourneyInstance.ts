@@ -1,4 +1,3 @@
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { journeyInstanceCreate, journeyInstanceCreated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
@@ -20,25 +19,25 @@ export default function useCreateJourneyInstance(
   journeyId: number
 ): (
   instanceBody: ZetkinJourneyInstancePostBody
-) => IFuture<ZetkinJourneyInstance> {
+) => Promise<ZetkinJourneyInstance> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  return (
+  return async function (
     instanceBody: ZetkinJourneyInstancePostBody
-  ): IFuture<ZetkinJourneyInstance> => {
+  ): Promise<ZetkinJourneyInstance> {
     dispatch(journeyInstanceCreate());
 
-    const promise = apiClient
-      .post<ZetkinJourneyInstance, ZetkinJourneyInstancePostBody>(
-        `/api/journeyInstances/createNew?orgId=${orgId}&journeyId=${journeyId}`,
-        instanceBody
-      )
-      .then((journeyInstance: ZetkinJourneyInstance) => {
-        dispatch(journeyInstanceCreated(journeyInstance));
-        return journeyInstance;
-      });
+    const journeyInstance = await apiClient.post<
+      ZetkinJourneyInstance,
+      ZetkinJourneyInstancePostBody
+    >(
+      `/api/journeyInstances/createNew?orgId=${orgId}&journeyId=${journeyId}`,
+      instanceBody
+    );
 
-    return new PromiseFuture(promise);
+    dispatch(journeyInstanceCreated(journeyInstance));
+
+    return journeyInstance;
   };
 }

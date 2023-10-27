@@ -69,6 +69,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   const [note, setNote] = useState('');
   const [editedNote, setEditedNote] = useState(false);
   const [title, setTitle] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const messages = useMessages(messageIds);
   const theme = useTheme();
@@ -160,22 +161,24 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     value={note}
                   />
                   <form
-                    onSubmit={(ev) => {
+                    onSubmit={async (ev) => {
                       ev.preventDefault();
-                      createJourneyInstance({
+                      setIsLoading(true);
+                      await createJourneyInstance({
                         assignees,
                         note,
                         subjects,
                         tags,
                         title,
                       });
+                      setIsLoading(false);
                     }}
                   >
                     <ZUISubmitCancelButtons
                       onCancel={() => {
                         router.push(`/organize/${orgId}/journeys/${journeyId}`);
                       }}
-                      submitDisabled={!editedNote}
+                      submitDisabled={!editedNote || isLoading}
                       submitText={messages.instance.newInstance.submitLabel({
                         journey: journey.singular_label,
                       })}

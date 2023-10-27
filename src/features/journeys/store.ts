@@ -128,11 +128,16 @@ const journeysSlice = createSlice({
       );
     },
     journeyLoad: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
-      const item = state.journeyList.items.find((item) => item.id == id);
+      const journeyId = action.payload;
+      const journeyItem = state.journeyList.items.find(
+        (item) => item.id == journeyId
+      );
+
       state.journeyList.items = state.journeyList.items
-        .filter((item) => item.id != id)
-        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+        .filter((item) => item.id != journeyId)
+        .concat([
+          remoteItem(journeyId, { data: journeyItem?.data, isLoading: true }),
+        ]);
     },
     journeyLoaded: (state, action: PayloadAction<ZetkinJourney>) => {
       const id = action.payload.id;

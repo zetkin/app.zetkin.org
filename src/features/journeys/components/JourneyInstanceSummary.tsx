@@ -23,6 +23,7 @@ const JourneyInstanceSummary = ({
   const messages = useMessages(messageIds);
   const editingRef = useRef<HTMLTextAreaElement>(null);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [editingSummary, setEditingSummary] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>(journeyInstance.summary);
   const summaryPlaceholder = messages.instance.summaryPlaceholder({
@@ -68,7 +69,9 @@ const JourneyInstanceSummary = ({
           onSubmit={async (e) => {
             e.stopPropagation();
             e.preventDefault();
+            setIsLoading(true);
             const patchedInstance = await updateJourneyInstance({ summary });
+            setIsLoading(false);
             setEditingSummary(false);
             setSummary(patchedInstance.summary);
           }}
@@ -80,7 +83,10 @@ const JourneyInstanceSummary = ({
             placeholder={summaryPlaceholder}
             value={summary}
           />
-          <ZUISubmitCancelButtons onCancel={cancelEditingSummary} />
+          <ZUISubmitCancelButtons
+            onCancel={cancelEditingSummary}
+            submitDisabled={isLoading}
+          />
         </form>
       ) : (
         // Not editing
