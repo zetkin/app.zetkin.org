@@ -5,7 +5,6 @@ import React, { useContext, useState } from 'react';
 
 import PublishButton from './PublishButton';
 import TaskDetailsForm from 'features/tasks/components/TaskDetailsForm';
-import { useNumericRouteParams } from 'core/hooks';
 import useTaskMutations from 'features/tasks/hooks/useTaskMutations';
 import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -30,13 +29,14 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const router = useRouter();
-  const { orgId } = useNumericRouteParams();
-  // Dialogs
   const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
-  const { updateTask } = useTaskMutations(task.organization.id, task.id);
-  const { deleteTask } = useTaskMutations(orgId, task.id);
+  const { deleteTask, updateTask } = useTaskMutations(
+    task.organization.id,
+    task.id
+  );
+
   // Event Handlers
   const handleEditTask = (task: ZetkinTaskRequestBody) => {
     updateTask(task);
