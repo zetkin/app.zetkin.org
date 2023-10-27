@@ -1,10 +1,6 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-import ZUIQuery from 'zui/ZUIQuery';
 import { Autocomplete, FormControl, MenuItem, TextField } from '@mui/material';
 import { ChangeEventHandler, useState } from 'react';
 
-import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import { useMessages } from 'core/i18n';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import {
@@ -14,6 +10,9 @@ import {
 } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurveysWithElements from 'features/smartSearch/hooks/useSurveysWithElements';
+import ZUIFuture from 'zui/ZUIFuture';
 
 interface SurveyResponsePluralConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -22,11 +21,8 @@ interface SurveyResponsePluralConfigProps {
 const SurveyResponsesConfig = ({
   onOutputConfigured,
 }: SurveyResponsePluralConfigProps) => {
-  const { orgId } = useRouter().query;
-  const surveysQuery = useQuery(
-    ['surveysWithElements', orgId],
-    getSurveysWithElements(orgId as string)
-  );
+  const { orgId } = useNumericRouteParams();
+  const surveysWithElementsFuture = useSurveysWithElements(orgId);
   const messages = useMessages(messageIds);
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestions, setSelectedQuestions] = useState<
@@ -50,11 +46,9 @@ const SurveyResponsesConfig = ({
   };
 
   return (
-    <ZUIQuery queries={{ surveysQuery }}>
-      {({ queries: { surveysQuery: successSurveysQuery } }) => {
-        const selectedSurvey = successSurveysQuery.data.find(
-          (survey) => survey.id == surveyId
-        );
+    <ZUIFuture future={surveysWithElementsFuture}>
+      {(data) => {
+        const selectedSurvey = data.find((survey) => survey.id == surveyId);
         const questionFromSurvey: ZetkinSurveyQuestionElement[] =
           selectedSurvey?.elements.filter(
             (elem) => elem.type == ELEMENT_TYPE.QUESTION
@@ -71,7 +65,7 @@ const SurveyResponsesConfig = ({
               value={surveyId || ''}
               variant="standard"
             >
-              {successSurveysQuery.data.map((survey) => (
+              {data.map((survey) => (
                 <MenuItem key={survey.id} value={survey.id}>
                   {survey.title}
                 </MenuItem>
@@ -107,7 +101,7 @@ const SurveyResponsesConfig = ({
           </FormControl>
         );
       }}
-    </ZUIQuery>
+    </ZUIFuture>
   );
 };
 //};

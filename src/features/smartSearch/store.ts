@@ -13,6 +13,7 @@ import {
   ZetkinDataField,
   ZetkinLocation,
   ZetkinSurvey,
+  ZetkinSurveyExtended,
 } from 'utils/types/zetkin';
 
 type EphemeralQueryStats = {
@@ -30,6 +31,7 @@ export interface smartSearchStoreSlice {
   locationList: RemoteList<ZetkinLocation>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
   surveyList: RemoteList<ZetkinSurvey>;
+  surveysWithElementsList: RemoteList<ZetkinSurveyExtended>;
 }
 
 const initialState: smartSearchStoreSlice = {
@@ -39,6 +41,7 @@ const initialState: smartSearchStoreSlice = {
   locationList: remoteList(),
   statsByFilterSpec: {},
   surveyList: remoteList(),
+  surveysWithElementsList: remoteList(),
 };
 
 const smartSearchSlice = createSlice({
@@ -162,6 +165,16 @@ const smartSearchSlice = createSlice({
       state.surveyList = remoteList(action.payload);
       state.surveyList.loaded = new Date().toISOString();
     },
+    surveysWithElementsLoad: (state) => {
+      state.surveysWithElementsList.isLoading = true;
+    },
+    surveysWithElementsLoaded: (
+      state,
+      action: PayloadAction<ZetkinSurveyExtended[]>
+    ) => {
+      state.surveysWithElementsList = remoteList(action.payload);
+      state.surveysWithElementsList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -185,4 +198,6 @@ export const {
   statsLoaded,
   surveysLoad,
   surveysLoaded,
+  surveysWithElementsLoad,
+  surveysWithElementsLoaded,
 } = smartSearchSlice.actions;

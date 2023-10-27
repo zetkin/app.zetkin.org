@@ -1,8 +1,4 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
-import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import {
   OPERATION,
   SmartSearchFilterWithId,
@@ -13,6 +9,8 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurveysWithElements from 'features/smartSearch/hooks/useSurveysWithElements';
 const localMessageIds = messageIds.filters.surveyResponse;
 
 interface DisplaySurveyResponseProps {
@@ -22,19 +20,14 @@ interface DisplaySurveyResponseProps {
 const DisplaySurveyResponse = ({
   filter,
 }: DisplaySurveyResponseProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { config } = filter;
   const { operator, value } = config;
   const questionId = 'question' in config ? config.question : undefined;
   const surveyId = 'survey' in config ? config.survey : undefined;
   const op = filter.op || OPERATION.ADD;
 
-  const surveysQuery = useQuery(
-    ['surveysWithElements', orgId],
-    getSurveysWithElements(orgId as string)
-  );
-
-  const surveys = surveysQuery.data || [];
+  const surveys = useSurveysWithElements(orgId).data ?? [];
 
   const questionElement = questionId
     ? surveys

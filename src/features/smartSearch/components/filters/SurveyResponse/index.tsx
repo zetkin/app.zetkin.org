@@ -1,10 +1,7 @@
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getSurveysWithElements from '../../../fetching/getSurveysWithElements';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -26,6 +23,8 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { truncateOnMiddle } from 'utils/stringUtils';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurveysWithElements from 'features/smartSearch/hooks/useSurveysWithElements';
 const localMessageIds = messageIds.filters.surveyResponse;
 
 const DEFAULT_VALUE = 'none';
@@ -52,12 +51,8 @@ const SurveyResponse = ({
   onCancel,
   filter: initialFilter,
 }: SurveyResponseProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const surveysQuery = useQuery(
-    ['surveysWithElements', orgId],
-    getSurveysWithElements(orgId as string)
-  );
-  const surveys = surveysQuery.data || [];
+  const { orgId } = useNumericRouteParams();
+  const surveys = useSurveysWithElements(orgId).data || [];
 
   const getSurveyIdfromQuestionId = (questionId?: number) => {
     return questionId
@@ -95,7 +90,7 @@ const SurveyResponse = ({
         value: internalConfig.value || '',
       });
     }
-  }, [surveys]);
+  }, [surveys.length]);
 
   // check if there are questions with response type of 'text'
   const validQuestions: ZetkinSurveyTextQuestionElement[] =

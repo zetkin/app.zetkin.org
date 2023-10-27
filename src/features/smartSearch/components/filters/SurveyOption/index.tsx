@@ -1,11 +1,8 @@
 import { DoneAll } from '@mui/icons-material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getSurveysWithElements from '../../../fetching/getSurveysWithElements';
 import { Msg } from 'core/i18n';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -26,6 +23,8 @@ import {
 } from 'utils/types/zetkin';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurveysWithElements from 'features/smartSearch/hooks/useSurveysWithElements';
 const localMessageIds = messageIds.filters.surveyOption;
 
 const DEFAULT_VALUE = 'none';
@@ -54,12 +53,9 @@ const SurveyOption = ({
   onCancel,
   filter: initialFilter,
 }: SurveyOptionProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const surveysQuery = useQuery(
-    ['surveysWithElements', orgId],
-    getSurveysWithElements(orgId as string)
-  );
-  const surveys = surveysQuery.data || [];
+  const { orgId } = useNumericRouteParams();
+  const surveysWithElementsFuture = useSurveysWithElements(orgId);
+  const surveys = surveysWithElementsFuture.data ?? [];
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<InternalConfig>(
     initialFilter,
