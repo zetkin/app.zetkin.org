@@ -20,9 +20,15 @@ const searchSlice = createSlice({
   initialState,
   name: 'search',
   reducers: {
+    resultsError: (state, action: PayloadAction<[string, unknown]>) => {
+      const [query, error] = action.payload;
+      state.matchesByQuery[query] = remoteList();
+      state.matchesByQuery[query].error = error;
+      state.matchesByQuery[query].loaded = new Date().toISOString();
+    },
     resultsLoad: (state, action: PayloadAction<string>) => {
       const query = action.payload;
-      state.matchesByQuery[query] = remoteList<SearchResultItem>();
+      state.matchesByQuery[query] = remoteList();
       state.matchesByQuery[query].isLoading = true;
     },
     resultsLoaded: (
@@ -37,4 +43,4 @@ const searchSlice = createSlice({
 });
 
 export default searchSlice;
-export const { resultsLoad, resultsLoaded } = searchSlice.actions;
+export const { resultsError, resultsLoad, resultsLoaded } = searchSlice.actions;

@@ -2,7 +2,12 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { SearchResult } from '../components/types';
 import useDebounce from 'utils/hooks/useDebounce';
 import { useState } from 'react';
-import { resultsLoad, resultsLoaded, SearchResultItem } from '../store';
+import {
+  resultsError,
+  resultsLoad,
+  resultsLoaded,
+  SearchResultItem,
+} from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 type UseSearchReturn = {
@@ -33,6 +38,7 @@ export default function useSearch(orgId: number): UseSearchReturn {
 
   if (!isTyping && queryString.length > 2) {
     const future = loadListIfNecessary(list, dispatch, {
+      actionOnError: (err) => resultsError([queryString, err]),
       actionOnLoad: () => resultsLoad(queryString),
       actionOnSuccess: (results) => resultsLoaded([queryString, results]),
       loader: () =>
