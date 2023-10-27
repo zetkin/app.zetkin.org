@@ -4,15 +4,16 @@ import { tagUpdate, tagUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinTag, ZetkinTagPatchBody } from 'utils/types/zetkin';
 
-export default function useEditTag(
-  orgId: number,
-  successCallback?: (tag: ZetkinTag) => void
-): (tag: EditTag) => Promise<ZetkinTag> {
+type UseTagMutationsReturn = {
+  updateTag: (tag: EditTag) => Promise<ZetkinTag>;
+};
+
+export default function useTagMutations(orgId: number): UseTagMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const createTagGroup = useCreateTagGroup(orgId);
 
-  const editTag = async (tag: EditTag) => {
+  const updateTag = async (tag: EditTag) => {
     if ('group' in tag) {
       // If creating a new group, has group object
       const newGroup = await createTagGroup(tag.group);
@@ -31,9 +32,6 @@ export default function useEditTag(
         )
         .then((data: ZetkinTag) => {
           dispatch(tagUpdated(data));
-          if (successCallback) {
-            successCallback(data);
-          }
           return data;
         });
       return tagFuture;
@@ -52,14 +50,14 @@ export default function useEditTag(
         )
         .then((data) => {
           dispatch(tagUpdated(data));
-          if (successCallback) {
-            successCallback(data);
-          }
           return data;
         });
+
       return tagFuture;
     }
   };
 
-  return editTag;
+  return {
+    updateTag,
+  };
 }
