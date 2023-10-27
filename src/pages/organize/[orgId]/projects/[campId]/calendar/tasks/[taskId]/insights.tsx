@@ -2,18 +2,20 @@ import { FunctionComponent } from 'react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { ResponsivePie } from '@nivo/pie';
-import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 
-import getOrg from 'utils/fetching/getOrg';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
-import { taskResource } from 'features/tasks/api/tasks';
-import ZUIQuery from 'zui/ZUIQuery';
+import useAssignedTasks from 'features/tasks/hooks/useAssignedTasks';
+import { useNumericRouteParams } from 'core/hooks';
+import useTask from 'features/tasks/hooks/useTask';
+import ZUIFuture from 'zui/ZUIFuture';
 import {
   ASSIGNED_STATUS,
   ZetkinAssignedTask,
+  ZetkinTask,
 } from 'features/tasks/components/types';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -30,21 +32,16 @@ const scaffoldOptions = {
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { campId, orgId, taskId } = ctx.params!;
+  const apiClient = new BackendApiClient(ctx.req.headers);
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
-
-  const { prefetch: prefetchTask } = taskResource(
-    orgId as string,
-    taskId as string
-  );
-  const { state: taskState, data: taskData } = await prefetchTask(ctx);
-
-  if (orgState?.status === 'success' && taskState?.status === 'success') {
-    if (campId && +campId === taskData?.campaign.id) {
+  try {
+    const task = await apiClient.get<ZetkinTask>(
+      `/api/orgs/${orgId}/tasks/${taskId}`
+    );
+    if (
+      parseInt(campId as string) == task.campaign.id &&
+      parseInt(orgId as string) == task.organization.id
+    ) {
       return {
         props: {
           campId,
@@ -52,11 +49,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
           taskId,
         },
       };
+    } else {
+      return {
+        notFound: true,
+      };
     }
+  } catch (err) {
+    return {
+      notFound: true,
+    };
   }
-  return {
-    notFound: true,
-  };
 }, scaffoldOptions);
 
 interface PieChartProps {
@@ -149,33 +151,27 @@ const PieChart: FunctionComponent<PieChartProps> = ({ tasks }) => {
 const TaskInsightsPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
 
-  const { taskId, orgId } = useRouter().query;
-  const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(
-    orgId as string,
-    taskId as string
-  );
-  const { data: task } = useTaskQuery();
-  const assignedTasksQuery = useAssignedTasksQuery();
+  const { orgId, taskId } = useNumericRouteParams();
+  const assignedTasksQuery = useAssignedTasks(orgId, taskId);
+  const task = useTask(orgId, taskId);
 
   return (
     <>
       <Head>
         <title>{`${task?.title} - ${messages.taskLayout.tabs.insights}`}</title>
       </Head>
-      <>
-        <ZUIQuery queries={{ assignedTasksQuery }}>
-          {({ queries }) => {
-            return (
-              <Box height={400} maxWidth={500} mt={3} width="100%">
-                <Typography>
-                  <Msg id={messageIds.assigneeActions} />
-                </Typography>
-                <PieChart tasks={queries.assignedTasksQuery.data} />
-              </Box>
-            );
-          }}
-        </ZUIQuery>
-      </>
+      <ZUIFuture future={assignedTasksQuery}>
+        {(data) => {
+          return (
+            <Box height={400} maxWidth={500} mt={3} width="100%">
+              <Typography>
+                <Msg id={messageIds.assigneeActions} />
+              </Typography>
+              <PieChart tasks={data} />
+            </Box>
+          );
+        }}
+      </ZUIFuture>
     </>
   );
 };

@@ -1,13 +1,12 @@
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
-import { taskResource } from 'features/tasks/api/tasks';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
 import UnderlinedCampaignTitle from '../CampaignParticipation/UnderlinedCampaignTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
-import UnderlinedText from '../../UnderlinedText';
+import UnderlinedTaskTitle from './UnderlinedTaskTitle';
 import { useNumericRouteParams } from 'core/hooks';
 import {
   getMatchingWithConfig,
@@ -33,15 +32,6 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
   const tf = getTaskTimeFrameWithConfig(config);
   const timeFrame = getTimeFrameWithConfig(tf);
 
-  let taskTitle = null;
-  if (config.task != undefined) {
-    const taskQuery = taskResource(
-      orgId.toString(),
-      config.task as unknown as string
-    ).useQuery();
-    taskTitle = taskQuery?.data?.title || null;
-  }
-
   const matching = getMatchingWithConfig(config?.matching);
 
   return (
@@ -49,7 +39,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        campaignSelect: taskTitle ? null : (
+        campaignSelect: config.task ? null : (
           <>
             <Msg id={localMessageIds.campaignSelect.in} />
             {config.campaign && !config.task ? (
@@ -69,13 +59,8 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
             }}
           />
         ),
-        taskSelect: taskTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.taskSelect.task}
-            values={{
-              task: <UnderlinedText text={taskTitle} />,
-            }}
-          />
+        taskSelect: config.task ? (
+          <UnderlinedTaskTitle orgId={orgId} taskId={config.task} />
         ) : (
           <UnderlinedMsg id={localMessageIds.taskSelect.any} />
         ),
