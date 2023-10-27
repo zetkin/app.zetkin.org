@@ -23,6 +23,7 @@ addSingle.args = {
     details: {
       tags: [mockTag()],
     },
+    id: '12234234',
     organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
@@ -37,6 +38,7 @@ addMultiple.args = {
     details: {
       tags: [mockTag(), mockTag({ id: 1857, title: 'Another' })],
     },
+    id: '12345',
     organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
@@ -51,6 +53,7 @@ removeSingle.args = {
     details: {
       tags: [mockTag()],
     },
+    id: '2938742',
     organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
@@ -65,6 +68,7 @@ removeMultiple.args = {
     details: {
       tags: [mockTag(), mockTag({ id: 1857, title: 'Another' })],
     },
+    id: '92380134',
     organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),

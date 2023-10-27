@@ -22,8 +22,8 @@ import DeleteHideButtons from '../DeleteHideButtons';
 import DropdownIcon from 'zui/icons/DropDown';
 import messageIds from 'features/surveys/l10n/messageIds';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
+import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
@@ -33,10 +33,11 @@ import { Msg, useMessages } from 'core/i18n';
 interface ChoiceQuestionBlockProps {
   editable: boolean;
   element: ZetkinSurveyOptionsQuestionElement;
-  model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
+  orgId: number;
   readOnly: boolean;
+  surveyId: number;
 }
 
 const widgetTypes = {
@@ -59,10 +60,11 @@ type WidgetTypeValue = keyof typeof widgetTypes;
 const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   editable,
   element,
-  model,
   onEditModeEnter,
   onEditModeExit,
+  orgId,
   readOnly,
+  surveyId,
 }) => {
   const elemQuestion = element.question;
   const messages = useMessages(messageIds);
@@ -77,6 +79,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [widgetType, setWidgetType] = useState<WidgetTypeValue>(
     elemQuestion.response_config.widget_type || 'checkbox'
   );
+  const {
+    addElementOption,
+    addElementOptionsFromText,
+    deleteElementOption,
+    updateElement,
+    updateElementOption,
+    updateOptionOrder,
+  } = useSurveyMutations(orgId, surveyId);
 
   useEffect(() => {
     setOptions(elemQuestion.options || []);
@@ -110,7 +120,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       onEditModeExit,
       readOnly,
       save: () => {
-        model.updateOptionsQuestion(element.id, {
+        updateElement(element.id, {
           question: {
             description: description,
             question: title,
@@ -208,7 +218,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       fullWidth
                       inputProps={props}
                       onBlur={(ev) => {
-                        model.updateElementOption(
+                        updateElementOption(
                           element.id,
                           option.id,
                           ev.target.value
@@ -229,7 +239,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       onClick={() => {
                         showConfirmDialog({
                           onSubmit: () =>
-                            model.deleteElementOption(element.id, option.id),
+                            deleteElementOption(element.id, option.id),
                           title: messages.blocks.deleteOptionDialog.title(),
                           warningText:
                             messages.blocks.deleteOptionDialog.warningText(),
@@ -259,7 +269,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             ),
           }))}
           onReorder={(ids) => {
-            model.updateOptionOrder(element.id, ids);
+            updateOptionOrder(element.id, ids);
           }}
         />
         {options.length > 3 && !editable && (
@@ -303,10 +313,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               />
               <Button
                 onClick={async () => {
-                  await model.addElementOptionsFromText(
-                    element.id,
-                    bulkOptionsText
-                  );
+                  await addElementOptionsFromText(element.id, bulkOptionsText);
                   setBulkAddingOptions(false);
                   setBulkOptionsText('');
                 }}
@@ -348,7 +355,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               <>
                 <Button
                   onClick={(ev) => {
-                    model.addElementOption(element.id);
+                    addElementOption(element.id);
                     ev.stopPropagation();
                   }}
                   startIcon={<Add />}
@@ -367,7 +374,13 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               </>
             )}
           </Box>
-          {!readOnly && <DeleteHideButtons element={element} model={model} />}
+          {!readOnly && (
+            <DeleteHideButtons
+              element={element}
+              orgId={orgId}
+              surveyId={surveyId}
+            />
+          )}
         </Box>
       </Box>
     </ClickAwayListener>

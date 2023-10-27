@@ -1,7 +1,10 @@
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
-import useModel from 'core/useModel';
+import useSurvey from '../hooks/useSurvey';
+import useSurveyElements from '../hooks/useSurveyElements';
+import useSurveyMutations from '../hooks/useSurveyMutations';
+import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -11,7 +14,7 @@ import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Box, Button } from '@mui/material';
 import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
-import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
+import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 
 import messageIds from '../l10n/messageIds';
 
@@ -29,24 +32,29 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   surveyId,
 }) => {
   const messages = useMessages(messageIds);
-  const model = useModel(
-    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
+  const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
+  const dataFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const { publish, unpublish, updateSurvey } = useSurveyMutations(
+    parseInt(orgId),
+    parseInt(surveyId)
   );
-
-  const hasQuestions = !!model.getElements().data?.length;
-  const dataFuture = model.getData();
+  const { surveyIsEmpty, ...elementsFuture } = useSurveyElements(
+    parseInt(orgId),
+    parseInt(surveyId)
+  );
+  const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
 
   return (
     <TabbedLayout
       actionButtons={
-        model.state == SurveyState.PUBLISHED ? (
-          <Button onClick={() => model.unpublish()} variant="outlined">
+        state == SurveyState.PUBLISHED ? (
+          <Button onClick={() => unpublish()} variant="outlined">
             <Msg id={messageIds.layout.actions.unpublish} />
           </Button>
         ) : (
           <Button
-            disabled={!hasQuestions}
-            onClick={() => model.publish()}
+            disabled={surveyIsEmpty}
+            onClick={() => publish()}
             variant="contained"
           >
             <Msg id={messageIds.layout.actions.publish} />
@@ -58,7 +66,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         <ZUIDateRangePicker
           endDate={dataFuture.data?.expires || null}
           onChange={(startDate, endDate) => {
-            model.setDates(startDate, endDate);
+            updateSurvey({ expires: endDate, published: startDate });
           }}
           startDate={dataFuture.data?.published || null}
         />
@@ -67,13 +75,13 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            <SurveyStatusChip state={model.state} />
+            <SurveyStatusChip state={state} />
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFutures
               futures={{
-                elements: model.getElements(),
-                stats: model.getStats(),
+                elements: elementsFuture,
+                stats: statsFuture,
               }}
             >
               {({ data: { elements, stats } }) => {
@@ -129,12 +137,12 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         },
       ]}
       title={
-        <ZUIFuture future={model.getData()}>
+        <ZUIFuture future={dataFuture}>
           {(data) => {
             return (
               <ZUIEditTextinPlace
                 onChange={(val) => {
-                  model.setTitle(val);
+                  updateSurvey({ title: val });
                 }}
                 value={data.title}
               />

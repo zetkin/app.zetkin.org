@@ -13,22 +13,30 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import EventDataModel from 'features/events/models/EventDataModel';
 import getEventUrl from '../utils/getEventUrl';
 import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
+import useEvent from '../hooks/useEvent';
+import useEventParticipants from '../hooks/useEventParticipants';
+import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 type EventParticipantsCardProps = {
-  model: EventDataModel;
+  eventId: number;
+  orgId: number;
 };
 
-const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
-  const eventData = model.getData().data;
+const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
+  eventId,
+  orgId,
+}) => {
+  const eventData = useEvent(orgId, eventId).data;
+  const { pendingSignUps } = useEventParticipants(orgId, eventId);
+  const { setReqParticipants } = useEventParticipantsMutations(orgId, eventId);
   const messages = useMessages(messageIds);
   const reqParticipants = eventData?.num_participants_required ?? 0;
   const availParticipants = eventData?.num_participants_available ?? 0;
@@ -76,7 +84,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
                     newReqParticipants != null &&
                     newReqParticipants != reqParticipants
                   ) {
-                    model.setReqParticipants(newReqParticipants);
+                    setReqParticipants(newReqParticipants);
                   }
                 }}
               >
@@ -102,7 +110,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
                           if (newReqParticipants != null) {
-                            model.setReqParticipants(newReqParticipants);
+                            setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {
                           setAnchorEl(null);
@@ -136,7 +144,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({ model }) => {
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.pending()}
             </Typography>
-            <Typography>{model.getPendingSignUps().length}</Typography>
+            <Typography>{pendingSignUps.length}</Typography>
           </Box>
           <Box
             alignItems="center"

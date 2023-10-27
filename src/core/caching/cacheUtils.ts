@@ -17,6 +17,7 @@ export function loadListIfNecessary<
   remoteList: RemoteList<DataType> | undefined,
   dispatch: AppDispatch,
   hooks: {
+    actionOnError?: (err: unknown) => PayloadAction<unknown>;
     actionOnLoad: () => PayloadAction<OnLoadPayload>;
     actionOnSuccess: (items: DataType[]) => PayloadAction<OnSuccessPayload>;
     loader: () => Promise<DataType[]>;
@@ -24,10 +25,20 @@ export function loadListIfNecessary<
 ): IFuture<DataType[]> {
   if (!remoteList || shouldLoad(remoteList)) {
     dispatch(hooks.actionOnLoad());
-    const promise = hooks.loader().then((val) => {
-      dispatch(hooks.actionOnSuccess(val));
-      return val;
-    });
+    const promise = hooks
+      .loader()
+      .then((val) => {
+        dispatch(hooks.actionOnSuccess(val));
+        return val;
+      })
+      .catch((err: unknown) => {
+        if (hooks.actionOnError) {
+          dispatch(hooks.actionOnError(err));
+          return null;
+        } else {
+          throw err;
+        }
+      });
 
     return new PromiseFuture(promise);
   }
@@ -55,7 +66,7 @@ export function loadItemIfNecessary<
       return val;
     });
 
-    return new PromiseFuture(promise);
+    return new PromiseFuture(promise, remoteItem?.data);
   }
 
   return new RemoteItemFuture(remoteItem);

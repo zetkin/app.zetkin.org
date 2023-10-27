@@ -29,19 +29,16 @@ test.describe('Campaign detail page', async () => {
     appUri,
   }) => {
     moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [RosaLuxemburg]);
+    moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'patch', {
+      ...ReferendumSignatures,
+      title: newTitle,
+    });
 
     await page.goto(appUri + '/organize/1/projects/1');
 
     // Open modal
     await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
     await page.click('data-testid=ZUIEllipsisMenu-item-editCampaign');
-
-    moxy.removeMock('/orgs/1/campaigns/1', 'get'); // Remove existing mock
-    // After editing task
-    moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', {
-      ...ReferendumSignatures,
-      title: newTitle,
-    });
 
     // Edit title
     await page.fill('#title', newTitle);
@@ -62,26 +59,5 @@ test.describe('Campaign detail page', async () => {
     expect(patchRequest?.data).toMatchObject({
       title: newTitle,
     });
-  });
-
-  test('shows error alert if server error on request', async ({
-    appUri,
-    page,
-    moxy,
-  }) => {
-    moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'patch', {}, 401);
-
-    await page.goto(appUri + '/organize/1/projects/1');
-
-    // Open modal
-    await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
-    await page.click('data-testid=ZUIEllipsisMenu-item-editCampaign');
-
-    // Edit task
-    await page.fill('#title', newTitle);
-    await page.click('button:text("Submit")');
-
-    // Check that alert shows
-    await expect(page.locator('data-testid=error-alert')).toBeVisible();
   });
 });

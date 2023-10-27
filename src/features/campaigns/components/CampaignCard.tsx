@@ -1,7 +1,5 @@
-import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import {
   Card,
   CardActions,
@@ -10,29 +8,24 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Msg } from 'core/i18n';
-import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
-import { ZetkinCampaign, ZetkinEvent } from 'utils/types/zetkin';
-
 import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
+import { removeOffset } from 'utils/dateUtils';
+import useCampaignEvents from '../hooks/useCampaignEvents';
+import { useNumericRouteParams } from 'core/hooks';
+import { ZetkinCampaign } from 'utils/types/zetkin';
 
 interface CampaignCardProps {
   campaign: ZetkinCampaign;
-  events: ZetkinEvent[];
 }
 
-const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+const CampaignCard = ({ campaign }: CampaignCardProps): JSX.Element => {
+  const { orgId } = useNumericRouteParams();
   const { id, title } = campaign;
-
-  const campaignEvents = events.filter(
-    (event) => event.campaign?.id === campaign.id
+  const { firstEvent, lastEvent, numberOfUpcomingEvents } = useCampaignEvents(
+    orgId,
+    id
   );
-  const numOfUpcomingEvents = campaignEvents.filter((event) =>
-    dayjs(removeOffset(event.end_time)).isAfter(dayjs())
-  ).length;
-
-  const [firstEvent, lastEvent] = getFirstAndLastEvent(campaignEvents);
 
   return (
     <Card data-testid="campaign-card">
@@ -62,7 +55,7 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
         <Typography color="secondary" gutterBottom variant="body2">
           <Msg
             id={messageIds.all.upcoming}
-            values={{ numEvents: numOfUpcomingEvents }}
+            values={{ numEvents: numberOfUpcomingEvents }}
           />
         </Typography>
         {/*TODO: labels for calls and surveys*/}

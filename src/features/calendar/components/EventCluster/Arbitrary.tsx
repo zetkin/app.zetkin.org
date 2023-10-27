@@ -1,7 +1,7 @@
 import { EventOutlined } from '@mui/icons-material';
 import { FC } from 'react';
 
-import { EventState } from 'features/events/models/EventDataModel';
+import { EventState } from 'features/events/hooks/useEventState';
 import { fieldsToPresent } from './utils';
 import getEventState from 'features/events/utils/getEventState';
 import messageIds from 'features/calendar/l10n/messageIds';

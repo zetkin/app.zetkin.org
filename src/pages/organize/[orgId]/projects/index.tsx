@@ -1,21 +1,19 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
+import { Suspense } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import CampaignCard from 'features/campaigns/components/CampaignCard';
-import getCampaigns from 'features/campaigns/fetching/getCampaigns';
-import getEvents from 'features/events/fetching/getEvents';
-import getOrg from 'utils/fetching/getOrg';
-import getUpcomingEvents from 'features/events/fetching/getUpcomingEvents';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -31,43 +29,18 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const campaignsState = await apiClient.get(`/api/orgs/${orgId}/campaigns`);
+  const eventsState = await apiClient.get(`/api/orgs/${orgId}/actions`);
+  const today = new Date(Date.now()).toISOString();
+  const upcomingEventsState = await apiClient.get(
+    `/api/orgs/${orgId}/actions?filter=start_time>${today}`
   );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
+  const orgState = await apiClient.get(`/api/orgs/${orgId}`);
 
-  await ctx.queryClient.prefetchQuery(
-    ['campaigns', orgId],
-    getCampaigns(orgId as string, ctx.apiFetch)
-  );
-  const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
-
-  await ctx.queryClient.prefetchQuery(
-    ['upcomingEvents', orgId],
-    getUpcomingEvents(orgId as string, ctx.apiFetch)
-  );
-  const upcomingEventsState = ctx.queryClient.getQueryState([
-    'upcomingEvents',
-    orgId,
-  ]);
-
-  await ctx.queryClient.prefetchQuery(
-    ['events', orgId],
-    getEvents(orgId as string, ctx.apiFetch)
-  );
-  const eventsState = ctx.queryClient.getQueryState(['events', orgId]);
-
-  if (
-    orgState?.status === 'success' &&
-    campaignsState?.status === 'success' &&
-    eventsState?.status === 'success' &&
-    upcomingEventsState?.status === 'success'
-  ) {
+  if (orgState && campaignsState && eventsState && upcomingEventsState) {
     return {
-      props: {
-        orgId,
-      },
+      props: {},
     };
   } else {
     return {
@@ -76,41 +49,35 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type AllCampaignsSummaryPageProps = {
-  orgId: string;
-};
-
-const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
-  orgId,
-}) => {
+const AllCampaignsSummaryPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
-  const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
-  const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
+  const { orgId } = useNumericRouteParams();
+  const { data: campaigns } = useCampaigns(orgId);
 
   const onServer = useServerSide();
+
   if (onServer) {
     return null;
   }
-
-  const campaigns = campaignsQuery.data || [];
-  const events = eventsQuery.data || [];
 
   return (
     <>
       <Head>
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
-      <ActivitiesOverview orgId={parseInt(orgId)} />
+      <Suspense>
+        <ActivitiesOverview orgId={orgId} />
+      </Suspense>
       <Box mt={4}>
         <Typography mb={2} variant="h4">
           <Msg id={messageIds.all.heading} />
         </Typography>
 
         <Grid container spacing={2}>
-          {campaigns.map((campaign) => {
+          {campaigns?.map((campaign) => {
             return (
               <Grid key={campaign.id} item lg={3} md={4} xs={12}>
-                <CampaignCard campaign={campaign} events={events} />
+                <CampaignCard campaign={campaign} />
               </Grid>
             );
           })}

@@ -1,14 +1,13 @@
 import { makeStyles } from '@mui/styles';
-import { useState } from 'react';
 import { Add, Edit } from '@mui/icons-material';
 import { Box, Button, Card, Divider, Typography } from '@mui/material';
+import { FC, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
-import { useNumericRouteParams } from 'core/hooks';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,17 +24,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CallAssignmentTargets = () => {
+interface CallAssignmentTargetsProps {
+  orgId: number;
+  assignmentId: number;
+}
+
+const CallAssignmentTargets: FC<CallAssignmentTargetsProps> = ({
+  orgId,
+  assignmentId,
+}) => {
   const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const { orgId, callAssId: assignmentId } = useNumericRouteParams();
   const {
-    data: assignmentData,
+    data: callAssignment,
     isTargeted,
     updateTargets: setTargets,
   } = useCallAssignment(orgId, assignmentId);
-  const { data: statsData } = useCallAssignmentStats(orgId, assignmentId);
+  const { statsFuture } = useCallAssignmentStats(orgId, assignmentId);
 
   return (
     <>
@@ -45,7 +51,7 @@ const CallAssignmentTargets = () => {
             <Msg id={messageIds.targets.title} />
           </Typography>
           {isTargeted && (
-            <ZUIAnimatedNumber value={statsData?.allTargets || 0}>
+            <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
               {(animatedValue) => (
                 <Box className={classes.chip}>{animatedValue}</Box>
               )}
@@ -91,7 +97,7 @@ const CallAssignmentTargets = () => {
             setTargets(query);
             setQueryDialogOpen(false);
           }}
-          query={assignmentData?.target}
+          query={callAssignment?.target}
         />
       )}
     </>

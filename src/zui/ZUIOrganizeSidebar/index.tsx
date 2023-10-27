@@ -90,7 +90,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
   const [open, setOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
-  const { data, error, isLoading } = useOrganization(orgId);
+  const organizationFuture = useOrganization(orgId);
 
   const handleExpansion = () => {
     setChecked(!checked);
@@ -163,13 +163,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               {!open && !hover && (
                 <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
               )}
-              <ZUIFuture
-                future={{
-                  data: data,
-                  error: error,
-                  isLoading: isLoading,
-                }}
-              >
+              <ZUIFuture future={organizationFuture}>
                 {(data) => (
                   <>
                     {open && (

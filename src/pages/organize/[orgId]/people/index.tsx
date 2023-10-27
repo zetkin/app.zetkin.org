@@ -6,10 +6,8 @@ import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewBrowser from 'features/views/components/ViewBrowser';
-import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 
 import messageIds from 'features/views/l10n/messageIds';
 
@@ -43,9 +41,6 @@ type PeopleViewsPageProps = {
 
 const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
   const messages = useMessages(messageIds);
-  const model: ViewBrowserModel = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId))
-  );
 
   const onServer = useServerSide();
   if (onServer) {
@@ -57,7 +52,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
       <Head>
         <title>{messages.browserLayout.title()}</title>
       </Head>
-      <ViewBrowser basePath={`/organize/${orgId}/people`} model={model} />
+      <ViewBrowser basePath={`/organize/${orgId}/people`} />
     </>
   );
 };

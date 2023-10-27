@@ -1,10 +1,7 @@
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import clusterEventsForWeekCalender from './clusterEventsForWeekCalender';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import {
-  ACTIVITIES,
-  EventActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 
 const mockEventData: ZetkinEvent = {
   activity: {
