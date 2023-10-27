@@ -28,12 +28,7 @@ const SearchDialog: React.FunctionComponent<{
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
 
-  const {
-    error: isError,
-    results: searchResults,
-    isLoading: isFetching,
-    setQuery: setSearchQuery,
-  } = useSearch(orgId);
+  const { error, results, isLoading, setQuery } = useSearch(orgId);
 
   const handleRouteChange = () => {
     // Close dialog when clicking an item
@@ -74,23 +69,23 @@ const SearchDialog: React.FunctionComponent<{
         fullWidth
         onClose={() => {
           setOpen(false);
-          setSearchQuery('');
+          setQuery('');
         }}
         open={open}
       >
         <Box p={1}>
           <SearchField
-            error={!!isError}
-            loading={isFetching}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            error={!!error}
+            loading={isLoading}
+            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={() => {
               if (!isTyping) {
                 setIsTyping(true);
               }
             }}
           />
-          {searchResults && (
-            <ResultsList results={searchResults.map((item) => item.result)} />
+          {results && (
+            <ResultsList results={results.map((item) => item.result)} />
           )}
         </Box>
       </Dialog>
