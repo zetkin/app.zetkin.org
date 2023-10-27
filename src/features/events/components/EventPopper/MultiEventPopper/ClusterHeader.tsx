@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
-import { EventState } from 'features/events/models/EventDataModel';
+import { EventState } from 'features/events/hooks/useEventState';
 import messageIds from 'features/events/l10n/messageIds';
 import StatusDot from '../StatusDot';
 import { useMessages } from 'core/i18n';

@@ -50,6 +50,7 @@ export type FilterCategoryType =
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
+  eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
   filters: {
     selectedActions: string[];
@@ -67,6 +68,7 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
+  eventsByCampaignId: {},
   eventsByDate: {},
   filters: {
     selectedActions: [],
@@ -86,6 +88,21 @@ const eventsSlice = createSlice({
   initialState,
   name: 'events',
   reducers: {
+    campaignEventsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.eventsByCampaignId[id] = remoteList<ZetkinEvent>();
+      state.eventsByCampaignId[id].isLoading = true;
+    },
+    campaignEventsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEvent[]]>
+    ) => {
+      const [id, events] = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.eventsByCampaignId[id] = remoteList<ZetkinEvent>(events);
+      state.eventsByCampaignId[id].loaded = timestamp;
+    },
     eventCreate: (state) => {
       state.eventList.isLoading = true;
     },
@@ -93,6 +110,7 @@ const eventsSlice = createSlice({
       const event = action.payload;
       state.eventList.isLoading = false;
       state.eventList.items.push(remoteItem(event.id, { data: event }));
+
       const dateStr = event.start_time.slice(0, 10);
       if (!state.eventsByDate[dateStr]) {
         state.eventsByDate[dateStr] = remoteList();
@@ -100,6 +118,15 @@ const eventsSlice = createSlice({
       state.eventsByDate[dateStr].items.push(
         remoteItem(event.id, { data: event })
       );
+
+      if (event.campaign) {
+        if (!state.eventsByCampaignId[event.campaign.id]) {
+          state.eventsByCampaignId[event.campaign.id] = remoteList();
+        }
+        state.eventsByCampaignId[event.campaign.id].items.push(
+          remoteItem(event.id, { data: event })
+        );
+      }
     },
     eventDeleted: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
@@ -111,6 +138,12 @@ const eventsSlice = createSlice({
         state.eventsByDate[date].items = state.eventsByDate[date].items.filter(
           (item) => item.id != eventId
         );
+      }
+
+      for (const campaignId in state.eventsByCampaignId) {
+        state.eventsByCampaignId[campaignId].items = state.eventsByCampaignId[
+          campaignId
+        ].items.filter((item) => item.id != eventId);
       }
     },
     eventLoad: (state, action: PayloadAction<number>) => {
@@ -194,6 +227,7 @@ const eventsSlice = createSlice({
         item.data = { ...item.data, ...event };
         item.mutating = [];
       }
+
       for (const date in state.eventsByDate) {
         const item = state.eventsByDate[date].items.find(
           (item) => item.id == event.id
@@ -201,6 +235,16 @@ const eventsSlice = createSlice({
         if (item) {
           item.data = { ...item.data, ...event };
           item.mutating = [];
+        }
+      }
+
+      if (event.campaign) {
+        const eventItem = state.eventsByCampaignId[
+          event.campaign.id
+        ].items.find((item) => item.id == event.id);
+        if (eventItem) {
+          eventItem.data = { ...eventItem.data, ...event };
+          eventItem.mutating = [];
         }
       }
     },
@@ -211,6 +255,7 @@ const eventsSlice = createSlice({
       const events = action.payload;
       events.map((event) => {
         state.eventList.items.push(remoteItem(event.id, { data: event }));
+
         const dateStr = event.start_time.slice(0, 10);
         if (!state.eventsByDate[dateStr]) {
           state.eventsByDate[dateStr] = remoteList();
@@ -218,6 +263,15 @@ const eventsSlice = createSlice({
         state.eventsByDate[dateStr].items.push(
           remoteItem(event.id, { data: event })
         );
+
+        if (event.campaign) {
+          if (!state.eventsByCampaignId[event.campaign.id]) {
+            state.eventsByCampaignId[event.campaign.id] = remoteList();
+          }
+          state.eventsByCampaignId[event.campaign.id].items.push(
+            remoteItem(event.id, { data: event })
+          );
+        }
       });
       state.eventList.isLoading = false;
     },
@@ -255,12 +309,19 @@ const eventsSlice = createSlice({
         item.mutating = mutating;
         if (item.data) {
           const event = item.data;
+
           const dateStr = item.data.start_time.slice(0, 10);
           state.eventsByDate[dateStr].items.map((i) => {
             if (i.id === event.id) {
               i.mutating = mutating;
             }
           });
+
+          if (event.campaign) {
+            state.eventsByCampaignId[event.campaign.id].items.push(
+              remoteItem(event.id, { data: event })
+            );
+          }
         }
       });
     },
@@ -289,6 +350,16 @@ const eventsSlice = createSlice({
           state.eventsByDate[oldDate].items = state.eventsByDate[
             oldDate
           ].items.filter((event) => event.id !== updatedEvent.id);
+
+          if (updatedEvent.campaign) {
+            const eventItem = state.eventsByCampaignId[
+              updatedEvent.campaign.id
+            ].items.find((item) => item.id == updatedEvent.id);
+            if (eventItem) {
+              eventItem.data = { ...eventItem.data, ...updatedEvent };
+              eventItem.mutating = [];
+            }
+          }
         }
       });
     },
@@ -464,6 +535,8 @@ const eventsSlice = createSlice({
 
 export default eventsSlice;
 export const {
+  campaignEventsLoad,
+  campaignEventsLoaded,
   eventCreate,
   eventCreated,
   eventDeleted,

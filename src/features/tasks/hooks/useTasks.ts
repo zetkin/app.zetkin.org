@@ -4,22 +4,14 @@ import { ZetkinTask } from '../components/types';
 import { tasksLoad, tasksLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-interface UseTasksReturn {
-  tasksFuture: IFuture<ZetkinTask[]>;
-}
-
-export default function useTasks(orgId: number): UseTasksReturn {
+export default function useTasks(orgId: number): IFuture<ZetkinTask[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const taskList = useAppSelector((state) => state.tasks.tasksList);
 
-  const tasksFuture = loadListIfNecessary(taskList, dispatch, {
+  return loadListIfNecessary(taskList, dispatch, {
     actionOnLoad: () => tasksLoad(),
     actionOnSuccess: (data) => tasksLoaded(data),
     loader: () => apiClient.get<ZetkinTask[]>(`/api/orgs/${orgId}/tasks/`),
   });
-
-  return {
-    tasksFuture,
-  };
 }

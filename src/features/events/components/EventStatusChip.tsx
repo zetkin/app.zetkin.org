@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Msg } from 'core/i18n';
 
-import { EventState } from '../models/EventDataModel';
+import { EventState } from '../hooks/useEventState';
 import messageIds from '../l10n/messageIds';
 
 interface EventStatusChipProps {

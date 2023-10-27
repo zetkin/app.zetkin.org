@@ -1,26 +1,27 @@
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useState } from 'react';
-import { Box, IconButton, Popover } from '@mui/material';
-import { EmojiPeople, People } from '@mui/icons-material';
-
-import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from '../l10n/messageIds';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import useEventParticipants from '../hooks/useEventParticipants';
+import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
+import { useState } from 'react';
 import ZUIFutures from 'zui/ZUIFutures';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
+import { Box, IconButton, Popover } from '@mui/material';
+import { EmojiPeople, People } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
 
 interface AddPersonButtonProps {
-  model: EventDataModel;
+  orgId: number;
+  eventId: number;
 }
 
-const AddPersonButton = ({ model }: AddPersonButtonProps) => {
+const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-
   const messages = useMessages(messageIds);
-
-  const handleSelectedPerson = (personId: number) => {
-    model.addParticipant(personId);
-  };
+  const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
+  const { participantsFuture, respondentsFuture } = useEventParticipants(
+    orgId,
+    eventId
+  );
 
   return (
     <>
@@ -60,8 +61,8 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
         <Box mt={1} p={2}>
           <ZUIFutures
             futures={{
-              participants: model.getParticipants(),
-              respondents: model.getRespondents(),
+              participants: participantsFuture,
+              respondents: respondentsFuture,
             }}
           >
             {({ data: { participants, respondents } }) => {
@@ -117,7 +118,7 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
                     }}
                     name="person"
                     onChange={(person) => {
-                      handleSelectedPerson(person.id);
+                      addParticipant(person.id);
                     }}
                     placeholder={messages.addPerson.addPlaceholder()}
                     selectedPerson={null}

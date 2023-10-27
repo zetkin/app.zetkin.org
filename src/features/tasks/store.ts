@@ -11,11 +11,13 @@ import {
 
 export interface TasksStoreSlice {
   statsById: Record<number, RemoteItem<TaskStats>>;
+  taskIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
   tasksList: RemoteList<ZetkinTask>;
 }
 
 const initialState: TasksStoreSlice = {
   statsById: {},
+  taskIdsByCampaignId: {},
   tasksList: remoteList(),
 };
 
@@ -23,6 +25,22 @@ const tasksSlice = createSlice({
   initialState,
   name: 'tasks',
   reducers: {
+    campaignTaskIdsLoad: (state, action: PayloadAction<number>) => {
+      const campaignId = action.payload;
+      if (!state.taskIdsByCampaignId[campaignId]) {
+        state.taskIdsByCampaignId[campaignId] = remoteList();
+      }
+      state.taskIdsByCampaignId[campaignId].isLoading = true;
+    },
+    campaignTaskIdsLoaded: (
+      state,
+      action: PayloadAction<[number, { id: number | string }[]]>
+    ) => {
+      const [campaignId, taskIds] = action.payload;
+      const timestamp = new Date().toISOString();
+      state.taskIdsByCampaignId[campaignId] = remoteList(taskIds);
+      state.taskIdsByCampaignId[campaignId].loaded = timestamp;
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
       state.statsById[taskId] = remoteItem<TaskStats>(taskId, {
@@ -68,6 +86,8 @@ const tasksSlice = createSlice({
 
 export default tasksSlice;
 export const {
+  campaignTaskIdsLoad,
+  campaignTaskIdsLoaded,
   statsLoad,
   statsLoaded,
   taskLoad,

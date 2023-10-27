@@ -8,6 +8,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedCampaignTitle from './UnderlinedCampaignTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
@@ -36,8 +37,12 @@ const DisplayCampaignParticipation = ({
     before: config.before,
   });
 
-  const { activityTitle, campaignTitle, locationTitle } =
-    useTitlesForCampaignParticipation(orgId, activityId, campId, locationId);
+  const { activityTitle, locationTitle } = useTitlesForCampaignParticipation(
+    orgId,
+    activityId,
+    campId,
+    locationId
+  );
 
   return (
     <Msg
@@ -57,13 +62,8 @@ const DisplayCampaignParticipation = ({
         bookedSelect: (
           <UnderlinedMsg id={localMessageIds.bookedSelect[state]} />
         ),
-        campaignSelect: campaignTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.campaignSelect.campaign}
-            values={{
-              campaign: <UnderlinedText text={campaignTitle} />,
-            }}
-          />
+        campaignSelect: campId ? (
+          <UnderlinedCampaignTitle campId={campId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
         ),

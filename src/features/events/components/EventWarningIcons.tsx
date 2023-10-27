@@ -6,33 +6,44 @@ import {
   MailOutline,
 } from '@mui/icons-material';
 
-import EventDataModel from '../models/EventDataModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
+import useEvent from '../hooks/useEvent';
+import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';
 
 type EventWarningIconsProps = {
   compact?: boolean;
-  model: EventDataModel;
+  eventId: number;
+  orgId: number;
 };
 
-const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
-  const data = model.getData().data;
+const EventWarningIcons: FC<EventWarningIconsProps> = ({
+  compact,
+  eventId,
+  orgId,
+}) => {
+  const eventData = useEvent(orgId, eventId).data;
+  const { participantsFuture, pendingSignUps } = useEventParticipants(
+    orgId,
+    eventId
+  );
 
-  if (!data) {
+  const numSignups = pendingSignUps.length;
+
+  if (!eventData) {
     return null;
   }
 
-  const participants = model.getParticipants();
   return (
     <EventWarningIconsSansModel
       compact={compact}
-      hasContact={!!data.contact}
-      numParticipants={participants.data?.length ?? 0}
+      hasContact={!!eventData.contact}
+      numParticipants={participantsFuture.data?.length ?? 0}
       numRemindersSent={
-        participants.data?.filter((p) => !!p.reminder_sent).length ?? 0
+        participantsFuture.data?.filter((p) => !!p.reminder_sent).length ?? 0
       }
-      numSignups={model.getPendingSignUps().length}
-      participantsLoading={!participants.data}
+      numSignups={numSignups}
+      participantsLoading={!participantsFuture.data}
     />
   );
 };

@@ -1,14 +1,16 @@
 import { useContext } from 'react';
-import { useRouter } from 'next/router';
 
-import { EventsModel } from '../models/EventsModel';
 import messageIds from '../../calendar/l10n/messageIds';
 import { resetSelection } from '../store';
+import useBulkEventMutations from '../hooks/useBulkEventMutations';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 const SelectionBarEllipsis = () => {
   const dispatch = useAppDispatch();
@@ -37,12 +39,10 @@ const SelectionBarEllipsis = () => {
       (selectedEvent) => selectedEvent == event.id && event.data?.published
     )
   );
-  const router = useRouter();
 
-  const orgId = router.query.orgId;
-  const model = useModel(
-    (env) => new EventsModel(env, parseInt(orgId as string))
-  );
+  const { orgId } = useNumericRouteParams();
+
+  const { deleteEvents, updateEvents } = useBulkEventMutations(orgId);
 
   const ellipsisMenuItems = [
     {
@@ -50,7 +50,7 @@ const SelectionBarEllipsis = () => {
       onSelect: () => {
         showConfirmDialog({
           onSubmit: () => {
-            model.deleteEvents(selectedEventIds);
+            deleteEvents(selectedEventIds);
             handleDeselect();
           },
           title: messages.selectionBar.ellipsisMenu.confirmDelete(),
@@ -65,7 +65,7 @@ const SelectionBarEllipsis = () => {
       onSelect: () => {
         showConfirmDialog({
           onSubmit: () => {
-            model.updateEvents(selectedEventIds, false, true);
+            updateEvents(selectedEventIds, false, true);
           },
           title: messages.selectionBar.ellipsisMenu.confirmCancel(),
           warningText: messages.selectionBar.ellipsisMenu.cancelWarning(),
@@ -84,7 +84,7 @@ const SelectionBarEllipsis = () => {
     ellipsisMenuItems.splice(2, 0, {
       label: messages.selectionBar.ellipsisMenu.unpublish(),
       onSelect: () => {
-        model.updateEvents(selectedEventIds, false, false);
+        updateEvents(selectedEventIds, false, false);
       },
       textColor: '#f66000',
     });
@@ -94,7 +94,7 @@ const SelectionBarEllipsis = () => {
     ellipsisMenuItems.splice(publishedEvents.length > 0 ? 3 : 2, 0, {
       label: messages.selectionBar.ellipsisMenu.publish(),
       onSelect: () => {
-        model.updateEvents(selectedEventIds, true, false);
+        updateEvents(selectedEventIds, true, false);
       },
       textColor: '',
     });
