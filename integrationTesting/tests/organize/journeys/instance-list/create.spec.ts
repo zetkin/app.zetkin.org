@@ -12,7 +12,7 @@ test.describe('Creating a journey instance from journey instance page', () => {
   test.beforeEach(async ({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
-    moxy.setZetkinApiMock('/orgs/1/journeys/1', 'get', MarxistTraining);
+    moxy.setZetkinApiMock('/orgs/1/journeys/2', 'get', MarxistTraining);
   });
 
   test.afterEach(async ({ moxy }) => {
@@ -20,9 +20,9 @@ test.describe('Creating a journey instance from journey instance page', () => {
   });
 
   test('shows new page with correct labels', async ({ appUri, moxy, page }) => {
-    moxy.setZetkinApiMock('/orgs/1/journeys/1/instances', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/journeys/2/instances', 'get', []);
 
-    await page.goto(appUri + '/organize/1/journeys/1');
+    await page.goto(appUri + '/organize/1/journeys/2');
 
     await Promise.all([
       page.waitForNavigation(),
@@ -46,12 +46,12 @@ test.describe('Creating a journey instance from journey instance page', () => {
     page,
   }) => {
     const instMock = moxy.setZetkinApiMock(
-      '/orgs/1/journeys/1/instances',
+      '/orgs/1/journeys/2/instances',
       'post',
       { id: 1857 } as ZetkinJourneyInstance
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/new');
+    await page.goto(appUri + '/organize/1/journeys/2/new');
     await page.locator('[data-testid=page-title] input').type('My training');
     await page.locator('[data-testid=page-title] input').press('Enter');
     await page.locator('data-testid=AutoTextArea-textarea').type('Some info');
@@ -73,7 +73,7 @@ test.describe('Creating a journey instance from journey instance page', () => {
     page,
   }) => {
     const instMock = moxy.setZetkinApiMock(
-      '/orgs/1/journeys/1/instances',
+      '/orgs/1/journeys/2/instances',
       'post',
       {
         id: 1857,
@@ -112,7 +112,7 @@ test.describe('Creating a journey instance from journey instance page', () => {
       'put'
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/new');
+    await page.goto(appUri + '/organize/1/journeys/2/new');
     await page.locator('data-testid=AutoTextArea-textarea').type('Some info');
 
     // Add a subject
