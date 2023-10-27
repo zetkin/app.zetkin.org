@@ -12,8 +12,8 @@ import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
-import useTagMutation from 'features/tags/hooks/useTagMutation';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import useTagging from 'features/tags/hooks/useTagging';
+import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -82,7 +82,7 @@ export default class PersonTagColumnType implements IColumnType {
   }
 
   handleKeyDown(
-    model: ViewDataModel,
+    viewGrid: UseViewGridReturn,
     column: PersonTagViewColumn,
     personId: number,
     data: PersonTagViewCell,
@@ -95,7 +95,7 @@ export default class PersonTagColumnType implements IColumnType {
     }
 
     if (ev.key == 'Enter' || ev.key == ' ') {
-      model.toggleTag(personId, column.config.tag_id, !data);
+      viewGrid.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
     }
   }
@@ -124,7 +124,7 @@ const Cell: FC<{
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
   const { tagFuture } = useTag(orgId, tagId);
-  const { assignToPerson, removeFromPerson } = useTagMutation(orgId, tagId);
+  const { assignToPerson, removeFromPerson } = useTagging(orgId);
 
   const styles = useStyles();
 
@@ -136,7 +136,7 @@ const Cell: FC<{
     return (
       <TagChip
         onDelete={() => {
-          removeFromPerson(personId);
+          removeFromPerson(personId, tagId);
         }}
         tag={cell}
       />
@@ -152,7 +152,7 @@ const Cell: FC<{
             <Box
               className={styles.ghostContainer}
               onClick={() => {
-                assignToPerson(personId);
+                assignToPerson(personId, tagId);
               }}
             >
               <Box className={styles.ghost}>

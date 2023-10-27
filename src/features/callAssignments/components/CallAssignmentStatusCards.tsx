@@ -19,8 +19,7 @@ import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
-import useModel from 'core/useModel';
-import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
+import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
 import { Msg, useMessages } from 'core/i18n';
 
 interface CallAssignmentStatusCardsProps {
@@ -43,12 +42,10 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
     orgId,
     assignmentId
   );
-  const stats = statsFuture.data;
+  const getOrganizerActionView = useOrganizerActionView(orgId);
 
   const cooldownNumber = callAssignment?.cooldown ?? null;
-  const viewsModel: ViewBrowserModel = useModel(
-    (env) => new ViewBrowserModel(env, orgId)
-  );
+  const stats = statsFuture.data;
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
@@ -154,7 +151,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
             <StatusCardItem
               action={
                 <Button
-                  onClick={() => viewsModel.getOrganizerActionView()}
+                  onClick={() => getOrganizerActionView()}
                   startIcon={<Visibility />}
                   variant="outlined"
                 >
