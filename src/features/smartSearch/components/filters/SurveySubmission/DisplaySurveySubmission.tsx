@@ -1,8 +1,4 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-
 import DisplayTimeFrame from '../DisplayTimeFrame';
-import getSurvey from 'features/smartSearch/fetching/getSurvey';
 import { getTimeFrameWithConfig } from '../../utils';
 import { Msg } from 'core/i18n';
 import {
@@ -14,6 +10,8 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurvey from 'features/surveys/hooks/useSurvey';
 const localMessageIds = messageIds.filters.surveySubmission;
 
 interface DisplaySurveySubmissionProps {
@@ -23,7 +21,7 @@ interface DisplaySurveySubmissionProps {
 const DisplaySurveySubmission = ({
   filter,
 }: DisplaySurveySubmissionProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { config } = filter;
   const { survey: surveyId } = config;
   const op = filter.op || OPERATION.ADD;
@@ -32,11 +30,7 @@ const DisplaySurveySubmission = ({
     before: config.before,
   });
 
-  const surveyQuery = useQuery(
-    ['survey', orgId, surveyId],
-    getSurvey(orgId as string, surveyId.toString())
-  );
-  const surveyTitle = surveyQuery?.data?.title ?? '';
+  const surveyTitle = useSurvey(orgId, surveyId).data?.title ?? '';
 
   return (
     <Msg
