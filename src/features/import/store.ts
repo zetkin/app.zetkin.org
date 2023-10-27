@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { RemoteList, remoteList } from 'utils/storeUtils';
 
 export interface ImportStoreSlice {
-  //TODO add interface
+  testList: RemoteList<{ id: string }>;
 }
 const initialState: ImportStoreSlice = {
-  //TODO add list
+  testList: remoteList(),
 };
 const importSlice = createSlice({
   initialState,
@@ -15,6 +16,3 @@ const importSlice = createSlice({
 });
 
 export default importSlice;
-export const {
-  //TODO add actions
-} = importSlice.actions;
