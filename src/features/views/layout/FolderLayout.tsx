@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 
+import PeopleActionButton from '../components/PeopleActionButton';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useModel from 'core/useModel';
 import ViewBrowserModel from '../models/ViewBrowserModel';
-import PeopleActionButton from '../components/PeopleActionButton';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';

@@ -1,15 +1,13 @@
 import { FC } from 'react';
-import { Box, Button } from '@mui/material';
 import {
   FolderOutlined,
   InsertDriveFileOutlined,
   UploadFileOutlined,
 } from '@mui/icons-material';
 
-import ViewBrowserModel from '../models/ViewBrowserModel';
-import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
+import { useMessages } from 'core/i18n';
+import ViewBrowserModel from '../models/ViewBrowserModel';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 
 interface PeopleActionButtonProps {

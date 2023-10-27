@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 
+import PeopleActionButton from '../components/PeopleActionButton';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewBrowserModel from '../models/ViewBrowserModel';
-import PeopleActionButton from '../components/PeopleActionButton';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
 
