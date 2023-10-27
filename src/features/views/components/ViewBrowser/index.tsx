@@ -15,9 +15,9 @@ import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
 import useFolder from 'features/views/hooks/useFolder';
-import useItemsMutations from 'features/views/hooks/useItemsMutations';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutations';
 import useViewMutations from 'features/views/hooks/useViewMutations';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -57,7 +57,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
   const gridApiRef = useGridApiRef();
 
   const { deleteView } = useViewMutations(orgId);
-  const { renameItem } = useItemsMutations(orgId);
+  const { renameItem } = useViewBrowserMutations(orgId);
   const itemsFuture = useViewBrowserItems(orgId, folderId);
   const { deleteFolder, recentlyCreatedFolder } = useFolder(orgId);
 

@@ -1,8 +1,8 @@
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useFolder from '../hooks/useFolder';
-import useItemsMutations from '../hooks/useItemsMutations';
 import useItemSummary from '../hooks/useItemSummary';
 import { useNumericRouteParams } from 'core/hooks';
+import useViewBrowserMutations from '../hooks/useViewBrowserMutations';
 import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -21,7 +21,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
 
   const { folderFuture } = useFolder(orgId, folderId);
   const itemSummaryFuture = useItemSummary(orgId, folderId);
-  const { renameItem } = useItemsMutations(orgId);
+  const { renameItem } = useViewBrowserMutations(orgId);
 
   return (
     <ZUIFuture future={folderFuture}>

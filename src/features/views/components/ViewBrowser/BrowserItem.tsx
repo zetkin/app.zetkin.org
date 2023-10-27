@@ -5,8 +5,8 @@ import { FC, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
-import useItemsMutations from 'features/views/hooks/useItemsMutations';
 import { useNumericRouteParams } from 'core/hooks';
+import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutations';
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
@@ -33,7 +33,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
   const dropProps = useContext(BrowserRowContext);
   const styles = useStyles(dropProps);
   const { orgId } = useNumericRouteParams();
-  const { itemIsRenaming } = useItemsMutations(orgId);
+  const { itemIsRenaming } = useViewBrowserMutations(orgId);
 
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';

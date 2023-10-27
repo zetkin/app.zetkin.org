@@ -2,7 +2,7 @@ import { useAppSelector } from 'core/hooks';
 import useFolder from './useFolder';
 import useViewMutations from './useViewMutations';
 
-interface UseItemsMutationsReturn {
+interface UseViewBrowserMutationsReturn {
   itemIsRenaming: (type: 'folder' | 'view', id: number) => boolean;
   moveItem: (
     type: 'folder' | 'view',
@@ -12,9 +12,9 @@ interface UseItemsMutationsReturn {
   renameItem: (type: 'folder' | 'view', id: number, title: string) => void;
 }
 
-export default function useItemsMutations(
+export default function useViewBrowserMutations(
   orgId: number
-): UseItemsMutationsReturn {
+): UseViewBrowserMutationsReturn {
   const views = useAppSelector((state) => state.views);
   const { updateFolder } = useFolder(orgId);
   const { updateView } = useViewMutations(orgId);

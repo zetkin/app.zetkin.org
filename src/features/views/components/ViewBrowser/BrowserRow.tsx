@@ -3,8 +3,8 @@ import { Box, useTheme } from '@mui/material';
 import { createContext, FC } from 'react';
 import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 
-import useItemsMutations from 'features/views/hooks/useItemsMutations';
 import { useNumericRouteParams } from 'core/hooks';
+import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutations';
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 
 interface BrowserRowProps {
@@ -28,7 +28,7 @@ export const BrowserRowContext = createContext<BrowserRowDropProps>({
 const BrowserRow: FC<BrowserRowProps> = ({ item, rowProps }) => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
-  const { moveItem } = useItemsMutations(orgId);
+  const { moveItem } = useViewBrowserMutations(orgId);
   const [dropProps, dropRef] = useDrop<
     ViewBrowserItem,
     unknown,
