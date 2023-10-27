@@ -4,6 +4,7 @@ import callAssignmentsSlice, {
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
+import importSlice, { ImportStoreSlice } from 'features/import/store';
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
@@ -19,6 +20,7 @@ import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 export interface RootState {
   callAssignments: CallAssignmentSlice;
   events: EventsStoreSlice;
+  import: ImportStoreSlice;
   smartSearch: smartSearchStoreSlice;
   surveys: SurveysStoreSlice;
   tags: TagsStoreSlice;
@@ -31,6 +33,7 @@ export interface RootState {
 const reducer = {
   callAssignments: callAssignmentsSlice.reducer,
   events: eventsSlice.reducer,
+  import: importSlice.reducer,
   organizations: organizationsSlice.reducer,
   smartSearch: smartSearchSlice.reducer,
   surveys: surveysSlice.reducer,
