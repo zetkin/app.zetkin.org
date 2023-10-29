@@ -8,10 +8,10 @@ import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
 import { NextRouter, useRouter } from 'next/router';
 
 import { Breadcrumb } from 'utils/types';
-import getBreadcrumbs from '../utils/fetching/getBreadcrumbs';
+import getBreadcrumbs from '../../../utils/fetching/getBreadcrumbs';
 import { Msg } from 'core/i18n';
 
-import messageIds from './l10n/messageIds';
+import messageIds from '../l10n/messageIds';
 
 const getQueryString = function (router: NextRouter): string {
   // Only use parameters that are part of the path (e.g. [personId])
@@ -48,15 +48,15 @@ const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
 
 function validMessageId(
   idStr: string
-): keyof typeof messageIds.breadcrumbs | null {
-  if (idStr in messageIds.breadcrumbs) {
-    return idStr as keyof typeof messageIds.breadcrumbs;
+): keyof typeof messageIds.elements | null {
+  if (idStr in messageIds.elements) {
+    return idStr as keyof typeof messageIds.elements;
   } else {
     return null;
   }
 }
 
-const ZUIBreadcrumbTrail = ({
+const BreadcrumbTrail = ({
   highlight,
 }: {
   highlight?: boolean;
@@ -81,7 +81,7 @@ const ZUIBreadcrumbTrail = ({
     if (crumb.labelMsg) {
       const msgId = validMessageId(crumb.labelMsg);
       if (msgId) {
-        return <Msg id={messageIds.breadcrumbs[msgId]} />;
+        return <Msg id={messageIds.elements[msgId]} />;
       }
     }
 
@@ -126,4 +126,4 @@ const ZUIBreadcrumbTrail = ({
   );
 };
 
-export default ZUIBreadcrumbTrail;
+export default BreadcrumbTrail;

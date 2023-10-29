@@ -10,6 +10,34 @@ core:
     info: Du nutzt eine vorläufige Version von Zetkin, in der diese Funktion nicht
       verfügbar ist. Deswegen wirst du nun zur Vorgängerversion weitergeleitet.
 feat:
+  breadcrumbs:
+    elements:
+      activities: Aktivitäten
+      archive: Archiv
+      areas: Bereiche
+      assignees: Beauftragte
+      calendar: Kalender
+      callassignments: Telefonaktionen
+      callers: Telefonierer*innen
+      campaigns: Projekte
+      closed: Beendet
+      conversation: Gespräch
+      events: Veranstaltungen
+      folders: Listen
+      insights: Statistiken
+      manage: Verwalten
+      milestones: Meilensteine
+      new: Neu
+      organize: Organize
+      participants: Teilnehmende
+      people: Personen
+      projects: Projekte
+      questions: Fragen
+      submissions: Teilnahmen
+      surveys: Umfragen
+      tasks: Aufgaben
+      untitledEvent: Veranstaltung ohne Titel
+      views: Listen
   calendar:
     createMenu:
       singleEvent: Erstelle einzelne Veranstaltung
@@ -1394,33 +1422,6 @@ glob:
 zui:
   accessList:
     removeAccess: Rechte beschränken
-  breadcrumbs:
-    activities: Aktivitäten
-    archive: Archiv
-    areas: Bereiche
-    assignees: Beauftragte
-    calendar: Kalender
-    callassignments: Telefonaktionen
-    callers: Telefonierer*innen
-    campaigns: Projekte
-    closed: Beendet
-    conversation: Gespräch
-    events: Veranstaltungen
-    folders: Listen
-    insights: Statistiken
-    manage: Verwalten
-    milestones: Meilensteine
-    new: Neu
-    organize: Organize
-    participants: Teilnehmende
-    people: Personen
-    projects: Projekte
-    questions: Fragen
-    submissions: Teilnahmen
-    surveys: Umfragen
-    tasks: Aufgaben
-    untitledEvent: Veranstaltung ohne Titel
-    views: Listen
   collapse:
     collapse: Ausblenden
     expand: Einblenden

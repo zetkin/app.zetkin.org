@@ -11,6 +11,35 @@ core:
       du vil bruge. Du bliver omdirigeret til en ældre version af Zetkin, der understøtter
       den funktion.
 feat:
+  breadcrumbs:
+    elements:
+      activities: Aktiviteter
+      archive: Arkiv
+      areas: Områder
+      assignees: Ansvarlige
+      calendar: Kalender
+      callassignments: Ringeopgaver
+      callers: Ringere
+      campaigns: Projekter
+      closed: Lukket
+      conversation: Samtale
+      events: Begivenheder
+      folders: Lister
+      insights: Indsigter
+      instances: Forekomster
+      manage: Administrer
+      milestones: Milepæle
+      new: Ny
+      organize: Organiser
+      participants: Deltagere
+      people: Personer
+      projects: Projekter
+      questions: Spørgsmål
+      submissions: Besvarelser
+      surveys: Spørgeskema
+      tasks: Opgaver
+      untitledEvent: Unnavngiven begivenhed
+      views: Lister
   calendar:
     createMenu:
       singleEvent: Opret enkel begivenhed
@@ -1605,34 +1634,6 @@ zui:
   accessList:
     added: Tilføjet af {sharer} {updated}
     removeAccess: Fjern adgang
-  breadcrumbs:
-    activities: Aktiviteter
-    archive: Arkiv
-    areas: Områder
-    assignees: Ansvarlige
-    calendar: Kalender
-    callassignments: Ringeopgaver
-    callers: Ringere
-    campaigns: Projekter
-    closed: Lukket
-    conversation: Samtale
-    events: Begivenheder
-    folders: Lister
-    insights: Indsigter
-    instances: Forekomster
-    manage: Administrer
-    milestones: Milepæle
-    new: Ny
-    organize: Organiser
-    participants: Deltagere
-    people: Personer
-    projects: Projekter
-    questions: Spørgsmål
-    submissions: Besvarelser
-    surveys: Spørgeskema
-    tasks: Opgaver
-    untitledEvent: Unnavngiven begivenhed
-    views: Lister
   collapse:
     collapse: Skjul
     expand: Vis mere
