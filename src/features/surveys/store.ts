@@ -24,6 +24,7 @@ export interface SurveysStoreSlice {
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
   surveyIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
   surveyList: RemoteList<ZetkinSurvey>;
+  surveysWithElementsList: RemoteList<ZetkinSurveyExtended>;
 }
 
 const initialState: SurveysStoreSlice = {
@@ -32,6 +33,7 @@ const initialState: SurveysStoreSlice = {
   submissionList: remoteList(),
   surveyIdsByCampaignId: {},
   surveyList: remoteList(),
+  surveysWithElementsList: remoteList(),
 };
 
 const surveysSlice = createSlice({
@@ -329,6 +331,16 @@ const surveysSlice = createSlice({
         item.mutating = [];
       }
     },
+    surveysWithElementsLoad: (state) => {
+      state.surveysWithElementsList.isLoading = true;
+    },
+    surveysWithElementsLoaded: (
+      state,
+      action: PayloadAction<ZetkinSurveyExtended[]>
+    ) => {
+      state.surveysWithElementsList = remoteList(action.payload);
+      state.surveysWithElementsList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -362,4 +374,6 @@ export const {
   surveysLoaded,
   surveyUpdate,
   surveyUpdated,
+  surveysWithElementsLoad,
+  surveysWithElementsLoaded,
 } = surveysSlice.actions;

@@ -12,8 +12,6 @@ import {
   ZetkinCampaign,
   ZetkinDataField,
   ZetkinLocation,
-  ZetkinSurvey,
-  ZetkinSurveyExtended,
 } from 'utils/types/zetkin';
 
 type EphemeralQueryStats = {
@@ -30,8 +28,6 @@ export interface smartSearchStoreSlice {
   fieldsList: RemoteList<ZetkinDataField>;
   locationList: RemoteList<ZetkinLocation>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
-  surveyList: RemoteList<ZetkinSurvey>;
-  surveysWithElementsList: RemoteList<ZetkinSurveyExtended>;
 }
 
 const initialState: smartSearchStoreSlice = {
@@ -40,8 +36,6 @@ const initialState: smartSearchStoreSlice = {
   fieldsList: remoteList(),
   locationList: remoteList(),
   statsByFilterSpec: {},
-  surveyList: remoteList(),
-  surveysWithElementsList: remoteList(),
 };
 
 const smartSearchSlice = createSlice({
@@ -158,23 +152,6 @@ const smartSearchSlice = createSlice({
       state.statsByFilterSpec[key].isLoading = false;
       state.statsByFilterSpec[key].loaded = new Date().toISOString();
     },
-    surveysLoad: (state) => {
-      state.surveyList.isLoading = true;
-    },
-    surveysLoaded: (state, action: PayloadAction<ZetkinSurvey[]>) => {
-      state.surveyList = remoteList(action.payload);
-      state.surveyList.loaded = new Date().toISOString();
-    },
-    surveysWithElementsLoad: (state) => {
-      state.surveysWithElementsList.isLoading = true;
-    },
-    surveysWithElementsLoaded: (
-      state,
-      action: PayloadAction<ZetkinSurveyExtended[]>
-    ) => {
-      state.surveysWithElementsList = remoteList(action.payload);
-      state.surveysWithElementsList.loaded = new Date().toISOString();
-    },
   },
 });
 
@@ -196,8 +173,4 @@ export const {
   locationsLoaded,
   statsLoad,
   statsLoaded,
-  surveysLoad,
-  surveysLoaded,
-  surveysWithElementsLoad,
-  surveysWithElementsLoaded,
 } = smartSearchSlice.actions;
