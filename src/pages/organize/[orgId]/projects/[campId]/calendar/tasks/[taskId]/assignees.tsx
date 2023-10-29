@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -15,15 +14,13 @@ import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
-import { taskResource } from 'features/tasks/api/tasks';
+import useAssignedTasks from 'features/tasks/hooks/useAssignedTasks';
 import { useMessages } from 'core/i18n';
-import ZUIQuery from 'zui/ZUIQuery';
+import { useNumericRouteParams } from 'core/hooks';
+import useTask from 'features/tasks/hooks/useTask';
+import ZUIFuture from 'zui/ZUIFuture';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
-import {
-  ZetkinAssignedTask,
-  ZetkinOrganization,
-  ZetkinTask,
-} from 'utils/types/zetkin';
+import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -34,17 +31,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { campId, orgId, taskId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const organization = await apiClient.get<ZetkinOrganization>(
-    `/api/orgs/${orgId}`
-  );
-  const { prefetch: prefetchTask } = taskResource(
-    orgId as string,
-    taskId as string
-  );
-  const { state: taskState, data: taskData } = await prefetchTask(ctx);
 
-  if (organization && taskState?.status === 'success') {
-    if (campId && +campId === taskData?.campaign.id) {
+  try {
+    const task = await apiClient.get<ZetkinTask>(
+      `/api/orgs/${orgId}/tasks/${taskId}`
+    );
+
+    if (
+      parseInt(campId as string) == task.campaign.id &&
+      parseInt(orgId as string) == task.organization.id
+    ) {
       return {
         props: {
           campId,
@@ -52,16 +48,21 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
           taskId,
         },
       };
+    } else {
+      return {
+        notFound: true,
+      };
     }
+  } catch (err) {
+    return {
+      notFound: true,
+    };
   }
-  return {
-    notFound: true,
-  };
 }, scaffoldOptions);
 
 const getQueryStatus = (
-  task?: ZetkinTask,
-  assignedTasks?: ZetkinAssignedTask[]
+  task: ZetkinTask | null,
+  assignedTasks: ZetkinAssignedTask[] | null
 ) => {
   const taskStatus = task ? getTaskStatus(task) : undefined;
   let queryStatus = QUERY_STATUS.ASSIGNED;
@@ -84,20 +85,17 @@ const TaskAssigneesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const queryClient = useQueryClient();
 
-  const { taskId, orgId } = useRouter().query;
-  const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(
-    orgId as string,
-    taskId as string
-  );
-  const { data: task } = useTaskQuery();
-  const assignedTasksQuery = useAssignedTasksQuery();
+  const { orgId, taskId } = useNumericRouteParams();
+  const assignedTasksQuery = useAssignedTasks(orgId, taskId);
+  const task = useTask(orgId, taskId);
   const assignedTasks = assignedTasksQuery?.data;
   const query = task?.target;
 
   const queryMutation = useMutation(
-    patchQuery(orgId as string, query?.id as number),
+    patchQuery(orgId.toString(), query?.id as number),
     {
-      onSettled: () => queryClient.invalidateQueries(['task', taskId]),
+      onSettled: () =>
+        queryClient.invalidateQueries(['task', taskId.toString()]),
     }
   );
 
@@ -117,23 +115,19 @@ const TaskAssigneesPage: PageWithLayout = () => {
           {`${task?.title} - ${messages.taskLayout.tabs.assignees()}`}
         </title>
       </Head>
-      <>
-        <QueryStatusAlert
-          openDialog={() => setDialogOpen(true)}
-          status={queryStatus}
-        />
-        <ZUIQuery queries={{ assignedTasksQuery }}>
-          {({ queries }) => {
-            return (
-              <Box mt={3}>
-                <TaskAssigneesList
-                  assignedTasks={queries.assignedTasksQuery.data}
-                />
-              </Box>
-            );
-          }}
-        </ZUIQuery>
-      </>
+      <QueryStatusAlert
+        openDialog={() => setDialogOpen(true)}
+        status={queryStatus}
+      />
+      <ZUIFuture future={assignedTasksQuery}>
+        {(data) => {
+          return (
+            <Box mt={3}>
+              <TaskAssigneesList assignedTasks={data} />
+            </Box>
+          );
+        }}
+      </ZUIFuture>
       {dialogOpen && (
         <SmartSearchDialog
           onDialogClose={handleDialogClose}

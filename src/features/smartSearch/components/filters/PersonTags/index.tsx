@@ -1,14 +1,13 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { Box, Chip, MenuItem } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getTags from 'features/tags/api/getTags';
 import StyledItemSelect from 'features/smartSearch/components/inputs/StyledItemSelect';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
+import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import {
   CONDITION_OPERATOR,
@@ -42,9 +41,9 @@ const PersonTags = ({
   onCancel,
   filter: initialFilter,
 }: PersonTagsProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
-  const tags = tagsQuery?.data || [];
+  const { orgId } = useNumericRouteParams();
+  const { data } = useTags(orgId);
+  const tags = data || [];
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<PersonTagsFilterConfig>(initialFilter, {

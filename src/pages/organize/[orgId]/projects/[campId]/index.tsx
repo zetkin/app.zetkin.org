@@ -4,7 +4,6 @@ import { Box, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { campaignTasksResource } from 'features/tasks/api/tasks';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
@@ -12,7 +11,7 @@ import { Suspense } from 'react';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
-import { ZetkinCampaign, ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinCampaign } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,28 +21,16 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, campId } = ctx.params!;
 
-  const { prefetch: prefetchCampaignTasks } = campaignTasksResource(
-    orgId as string,
-    campId as string
-  );
-  const { state: campaignTasksState } = await prefetchCampaignTasks(ctx);
-
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const organization = await apiClient.get<ZetkinOrganization>(
-    `/api/orgs/${orgId}`
-  );
-  const campaign = await apiClient.get<ZetkinCampaign>(
-    `/api/orgs/${orgId}/campaigns/`
-  );
 
-  if (organization && campaign && campaignTasksState?.status === 'success') {
+  try {
+    await apiClient.get<ZetkinCampaign>(
+      `/api/orgs/${orgId}/campaigns/${campId}`
+    );
     return {
-      props: {
-        campId,
-        orgId,
-      },
+      props: {},
     };
-  } else {
+  } catch (err) {
     return {
       notFound: true,
     };

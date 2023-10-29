@@ -11,21 +11,24 @@ import { FunctionComponent, useState } from 'react';
 
 import { Msg } from 'core/i18n';
 import { MUIOnlyPersonSelect as PersonSelect } from 'zui/ZUIPersonSelect';
-import useViewDataModel from '../hooks/useViewDataModel';
 import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinView } from 'features/views/components/types';
 
 import messageIds from '../l10n/messageIds';
+import UseViewDataTableMutations from '../hooks/useViewDataTableMutations';
 
 export interface EmptyViewProps {
-  orgId: string | number;
+  orgId: number;
   view: ZetkinView;
 }
 
 const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const model = useViewDataModel();
+  const { addPerson, deleteContentQuery } = UseViewDataTableMutations(
+    orgId,
+    view.id
+  );
 
   return (
     <Box m={2}>
@@ -43,8 +46,8 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                 <PersonSelect
                   name="person"
                   onChange={async (person) => {
-                    await model.deleteContentQuery();
-                    await model.addPerson(person);
+                    await deleteContentQuery();
+                    await addPerson(person.id);
                   }}
                   selectedPerson={null}
                   variant="outlined"

@@ -9,7 +9,7 @@ import {
 
 import { IColumnType } from '.';
 import { LocalTextViewColumn } from '../../types';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
 
 type LocalTextViewCell = string | null;
@@ -33,12 +33,12 @@ export default class LocalTextColumnType implements IColumnType {
     return cell ? [cell] : [];
   }
   processRowUpdate(
-    model: ViewDataModel,
+    viewGrid: UseViewGridReturn,
     colId: number,
     personId: number,
     data: LocalTextViewCell
   ): void {
-    model.setCellValue(personId, colId, data);
+    viewGrid.setCellValue(personId, colId, data);
   }
 }
 

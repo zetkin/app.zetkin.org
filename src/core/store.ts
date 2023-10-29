@@ -22,6 +22,7 @@ import journeysSlice, {
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
+import searchSlice, { SearchStoreSlice } from 'features/search/store';
 import smartSearchSlice, {
   smartSearchStoreSlice,
 } from 'features/smartSearch/store';
@@ -40,6 +41,7 @@ export interface RootState {
   events: EventsStoreSlice;
   journeys: JourneysStoreSlice;
   organizations: OrganizationsStoreSlice;
+  search: SearchStoreSlice;
   smartSearch: smartSearchStoreSlice;
   surveys: SurveysStoreSlice;
   tags: TagsStoreSlice;
@@ -54,6 +56,7 @@ const reducer = {
   events: eventsSlice.reducer,
   journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
+  search: searchSlice.reducer,
   smartSearch: smartSearchSlice.reducer,
   surveys: surveysSlice.reducer,
   tags: tagsSlice.reducer,

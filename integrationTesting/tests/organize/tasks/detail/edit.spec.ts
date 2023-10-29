@@ -48,25 +48,4 @@ test.describe('Task detail page', async () => {
     const taskTitle = page.locator('data-testid=page-title');
     await expect(taskTitle).toContainText(newTitle);
   });
-
-  test('shows error alert if server error on request', async ({
-    appUri,
-    page,
-    moxy,
-  }) => {
-    moxy.setZetkinApiMock('/orgs/1/tasks/1', 'patch', {}, 401);
-
-    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
-
-    // Open modal
-    await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
-    await page.click('data-testid=ZUIEllipsisMenu-item-editTask');
-
-    // Edit task
-    await page.fill('#title', newTitle);
-    await page.click('button:text("Submit")');
-
-    // Check that alert shows
-    await expect(page.locator('data-testid=error-alert')).toBeVisible();
-  });
 });

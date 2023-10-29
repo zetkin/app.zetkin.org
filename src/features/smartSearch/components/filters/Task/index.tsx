@@ -5,9 +5,11 @@ import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
-import { tasksResource } from 'features/tasks/api/tasks';
 import TimeFrame from '../TimeFrame';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
+import useTasks from 'features/tasks/hooks/useTasks';
 import { getTaskStatus, getTaskTimeFrameWithConfig } from '../../utils';
 
 import {
@@ -22,8 +24,6 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
-import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.task;
 
 const ANY_CAMPAIGN = 'any';
@@ -45,8 +45,9 @@ const Task = ({
   filter: initialFilter,
 }: TaskProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const tasksQuery = tasksResource(orgId.toString()).useQuery();
-  const tasks = tasksQuery?.data || [];
+
+  const tasksQuery = useTasks(orgId);
+  const tasks = tasksQuery.data || [];
 
   const { data: campaigns } = useCampaigns(orgId);
 

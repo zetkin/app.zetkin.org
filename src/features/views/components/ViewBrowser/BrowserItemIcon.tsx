@@ -1,3 +1,4 @@
+import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 import {
   ArrowBack,
   Folder,
@@ -7,7 +8,6 @@ import {
 import { FC, useContext } from 'react';
 
 import { BrowserRowContext } from './BrowserRow';
-import { ViewBrowserItem } from 'features/views/models/ViewBrowserModel';
 
 interface BrowserItemIconProps {
   item: ViewBrowserItem;
