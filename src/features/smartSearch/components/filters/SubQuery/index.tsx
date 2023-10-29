@@ -1,12 +1,13 @@
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getStandaloneQueries from 'utils/fetching/getStandaloneQueries';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
+import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
+import useSmartSearchQueries from 'features/smartSearch/hooks/useSmartSearchQueries';
 import {
   IN_OPERATOR,
   NewSmartSearchFilter,
@@ -19,8 +20,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
-import { useNumericRouteParams } from 'core/hooks';
+
 const localMessageIds = messageIds.filters.subQuery;
 
 const NO_QUERY_SELECTED = 'none';
@@ -41,11 +41,10 @@ const SubQuery = ({
   filter: initialFilter,
 }: SubQueryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const standaloneQuery = useQuery(
-    ['standaloneQueries', orgId],
-    getStandaloneQueries(orgId.toString())
-  );
-  const standaloneQueries = standaloneQuery?.data || [];
+
+  const queriesFuture = useSmartSearchQueries(orgId);
+  const standaloneQueries = queriesFuture.data || [];
+
   const assignmentsFuture = useCallAssignments(orgId);
   const assignments = assignmentsFuture.data || [];
 

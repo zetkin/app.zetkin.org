@@ -1,6 +1,3 @@
-import { useQuery } from 'react-query';
-
-import getStandaloneQueries from 'utils/fetching/getStandaloneQueries';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   OPERATION,
@@ -14,6 +11,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import { useNumericRouteParams } from 'core/hooks';
+import useSmartSearchQueries from 'features/smartSearch/hooks/useSmartSearchQueries';
 const localMessageIds = messageIds.filters.subQuery;
 
 interface DisplaySubQueryProps {
@@ -23,11 +21,8 @@ interface DisplaySubQueryProps {
 const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const { config } = filter;
-  const standaloneQuery = useQuery(
-    ['standaloneQueries', orgId],
-    getStandaloneQueries(orgId.toString())
-  );
-  const standaloneQueries = standaloneQuery?.data || [];
+  const queriesFuture = useSmartSearchQueries(orgId);
+  const standaloneQueries = queriesFuture.data || [];
 
   const assignmentsFuture = useCallAssignments(orgId);
   const assignments = assignmentsFuture.data || [];
