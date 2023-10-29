@@ -19,7 +19,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useSurveysWithElements from 'features/smartSearch/hooks/useSurveysWithElements';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface SurveyResponseConfigProps {

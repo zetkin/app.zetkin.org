@@ -11,7 +11,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useSurveys from 'features/smartSearch/hooks/useSurveys';
+import useSurveys from 'features/surveys/hooks/useSurveys';
 
 interface SurveySubmitDateConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;

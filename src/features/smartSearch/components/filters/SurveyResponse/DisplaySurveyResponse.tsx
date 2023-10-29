@@ -10,7 +10,7 @@ import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
-import useSurveysWithElements from 'features/smartSearch/hooks/useSurveysWithElements';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 const localMessageIds = messageIds.filters.surveyResponse;
 
 interface DisplaySurveyResponseProps {

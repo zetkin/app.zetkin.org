@@ -24,7 +24,7 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { truncateOnMiddle } from 'utils/stringUtils';
 import { useNumericRouteParams } from 'core/hooks';
-import useSurveysWithElements from 'features/smartSearch/hooks/useSurveysWithElements';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 const localMessageIds = messageIds.filters.surveyResponse;
 
 const DEFAULT_VALUE = 'none';

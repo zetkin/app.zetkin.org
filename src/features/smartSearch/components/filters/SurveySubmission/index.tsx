@@ -17,7 +17,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import useSurveys from 'features/smartSearch/hooks/useSurveys';
+import useSurveys from 'features/surveys/hooks/useSurveys';
 const localMessageIds = messageIds.filters.surveySubmission;
 
 const DEFAULT_VALUE = 'none';
