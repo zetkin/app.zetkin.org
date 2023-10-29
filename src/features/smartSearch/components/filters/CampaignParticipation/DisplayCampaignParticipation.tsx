@@ -8,11 +8,12 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedActivityTitle from './UnderlinedActivityTitle';
 import UnderlinedCampaignTitle from './UnderlinedCampaignTitle';
+import UnderlinedLocationTitle from './UnderlinedLocationTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
-import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
-import useTitlesForCampaignParticipation from 'features/smartSearch/hooks/useTitlesForCampaignParticipation';
+
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 interface DisplayCampaignParticipationProps {
@@ -37,24 +38,12 @@ const DisplayCampaignParticipation = ({
     before: config.before,
   });
 
-  const { activityTitle, locationTitle } = useTitlesForCampaignParticipation(
-    orgId,
-    activityId,
-    campId,
-    locationId
-  );
-
   return (
     <Msg
       id={messageIds.filters.campaignParticipation.inputString}
       values={{
-        activitySelect: activityTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.activitySelect.activity}
-            values={{
-              activity: <UnderlinedText text={activityTitle} />,
-            }}
-          />
+        activitySelect: activityId ? (
+          <UnderlinedActivityTitle activityId={activityId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.activitySelect.any} />
         ),
@@ -68,13 +57,8 @@ const DisplayCampaignParticipation = ({
           <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
         ),
         haveSelect: <Msg id={localMessageIds.haveSelect[operator]} />,
-        locationSelect: locationTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.locationSelect.location}
-            values={{
-              location: <UnderlinedText text={locationTitle} />,
-            }}
-          />
+        locationSelect: locationId ? (
+          <UnderlinedLocationTitle locationId={locationId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.locationSelect.any} />
         ),
