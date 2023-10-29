@@ -1,5 +1,5 @@
 import { BreadcrumbElement } from 'pages/api/breadcrumbs';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Action, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, RemoteItem } from 'utils/storeUtils';
 
 type BreadcrumbItem = {
@@ -15,7 +15,20 @@ const initialState: BreadcrumbsStoreSlice = {
   crumbsByPath: {},
 };
 
+function isUpdatedAction(action: Action<string>) {
+  return action.type.endsWith('Updated');
+}
+
 const breadcrumbsSlice = createSlice({
+  extraReducers: (builder) => {
+    builder.addMatcher(isUpdatedAction, (state) => {
+      // In lieu of a general-purpose way of identifying what changed, when
+      // anything is updated, we invalidate all breadcrumbs.
+      Object.keys(state.crumbsByPath).forEach((path) => {
+        state.crumbsByPath[path].isStale = true;
+      });
+    });
+  },
   initialState,
   name: 'breadcrumbs',
   reducers: {
