@@ -26,15 +26,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const organization = await apiClient.get<ZetkinOrganization>(
-    `/api/orgs/${orgId}`
-  );
-
-  if (organization) {
+  try {
+    await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
     return {
       props: {},
     };
-  } else {
+  } catch (err) {
     return {
       notFound: true,
     };

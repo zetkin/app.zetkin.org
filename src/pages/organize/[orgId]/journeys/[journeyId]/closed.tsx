@@ -10,8 +10,8 @@ import { scaffold } from 'utils/next';
 import useJourney from 'features/journeys/hooks/useJourney';
 import useJourneyInstances from 'features/journeys/hooks/useJourneyInstances';
 import { useNumericRouteParams } from 'core/hooks';
+import { ZetkinJourney } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ZetkinJourney, ZetkinOrganization } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,14 +22,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const organization = await apiClient.get<ZetkinOrganization>(
-    `/api/orgs/${orgId}`
-  );
   const journey = await apiClient.get<ZetkinJourney>(
     `/api/orgs/${orgId}/journeys/${journeyId}`
   );
 
-  if (organization && journey) {
+  if (journey) {
     return {
       props: {},
     };
