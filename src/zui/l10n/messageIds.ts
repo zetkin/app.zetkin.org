@@ -151,7 +151,6 @@ export default makeMessages('zui', {
     createCampaign: m('Create campaign'),
     createEvent: m('Create event'),
     createTask: m('Create task'),
-    requestError: m('There was an error'),
   },
   submitOrCancel: {
     cancel: m('Cancel'),

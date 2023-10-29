@@ -41,25 +41,5 @@ test.describe('Task detail pagee', async () => {
       expect(page.url()).toEqual(appUri + '/organize/1/projects/1');
       expect(log().length).toEqual(1);
     });
-
-    test('shows error snackbar if delete task fails', async ({
-      page,
-      moxy,
-      appUri,
-    }) => {
-      moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 404);
-
-      await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
-
-      await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
-      await page.click('data-testid=ZUIEllipsisMenu-item-deleteTask');
-      await page.click('button:text("Confirm")');
-
-      await page.locator('data-testid=Snackbar-error').waitFor();
-      const canSeeErrorSnackbar = await page
-        .locator('data-testid=Snackbar-error')
-        .isVisible();
-      expect(canSeeErrorSnackbar).toBeTruthy();
-    });
   });
 });

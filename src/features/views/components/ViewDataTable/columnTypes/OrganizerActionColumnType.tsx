@@ -19,7 +19,6 @@ import { OrganizerActionPane } from 'features/callAssignments/panes/OrganizerAct
 import theme from 'theme';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { usePanes } from 'utils/panes';
-import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 import { ZetkinViewRow } from '../../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -82,9 +81,9 @@ const Cell: FC<{
 }> = ({ cell, columnIdx, personId }) => {
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
+  const viewId = parseInt(query.viewId as string);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
-  const viewModel = useViewDataModel();
 
   const [isRestricted] = useAccessLevel();
   const numUnsolved =
@@ -122,7 +121,7 @@ const Cell: FC<{
                     columnIdx={columnIdx}
                     orgId={orgId}
                     personId={personId}
-                    viewModel={viewModel}
+                    viewId={viewId}
                   />
                 );
               },

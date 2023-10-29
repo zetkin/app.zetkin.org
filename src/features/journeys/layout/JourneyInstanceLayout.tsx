@@ -1,28 +1,24 @@
 import { FormattedDate } from 'react-intl';
 import { Forward } from '@mui/icons-material';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import { useContext } from 'react';
-import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import JourneyStatusChip from '../components/JourneyStatusChip';
+import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import { ZetkinJourneyInstance } from 'utils/types/zetkin';
+import useJourneyInstance from '../hooks/useJourneyInstance';
+import useJourneyInstanceMutations from '../hooks/useJourneyInstanceMutations';
+import useJourneys from '../hooks/useJourneys';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import JourneyInstanceCloseButton, {
   JourneyInstanceReopenButton,
 } from '../components/JourneyInstanceCloseButton';
-import {
-  journeyInstanceResource,
-  journeysResource,
-} from 'features/journeys/api/journeys';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from '../l10n/messageIds';
 
 interface JourneyInstanceLayoutProps {
   children: React.ReactNode;
@@ -32,87 +28,35 @@ const JourneyInstanceLayout: React.FunctionComponent<
   JourneyInstanceLayoutProps
 > = ({ children }) => {
   const messages = useMessages(messageIds);
-  const { orgId, journeyId, instanceId } = useRouter().query;
+  const { orgId, journeyId, instanceId } = useNumericRouteParams();
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { showSnackbar } = useContext(ZUISnackbarContext);
+  const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
+  const journeysFuture = useJourneys(orgId);
 
-  const journeyInstanceQuery = journeyInstanceResource(
-    orgId as string,
-    instanceId as string
-  ).useQuery();
-  const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
-
-  const journeysQuery = journeysResource(orgId as string).useQuery();
-  const journeys = journeysQuery.data;
-
-  const journeyInstanceHooks = journeyInstanceResource(
-    orgId as string,
-    instanceId as string
+  const { updateJourneyInstance } = useJourneyInstanceMutations(
+    orgId,
+    instanceId
   );
-  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
-
-  const updateTitle = async (newTitle: string) => {
-    patchJourneyInstanceMutation.mutateAsync(
-      { title: newTitle },
-      {
-        onError: () => {
-          showSnackbar(
-            'error',
-            messages.journeys.editJourneyTitleAlert.error()
-          );
-        },
-        onSuccess: async () => {
-          await queryClient.invalidateQueries('breadcrumbs');
-          await queryClient.invalidateQueries([
-            'journeyInstance',
-            orgId,
-            instanceId,
-          ]);
-          showSnackbar(
-            'success',
-            messages.journeys.editJourneyTitleAlert.success()
-          );
-        },
-      }
-    );
-  };
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
   const submenuItems =
-    journeys
-      ?.filter((journey) => journey.id.toString() !== journeyId)
+    journeysFuture.data
+      ?.filter((journey) => journey.id !== journeyId)
       .map((journey) => ({
         id: `convertTo-${journey.id}`,
         label: journey.singular_label,
-        onSelect: () => {
+        onSelect: async () => {
           //redirect to equivalent page but new journey id
           const redirectUrl = router.pathname
-            .replace('[orgId]', orgId as string)
+            .replace('[orgId]', orgId.toString())
             .replace('[journeyId]', journey.id.toString())
-            .replace('[instanceId]', instanceId as string);
+            .replace('[instanceId]', instanceId.toString());
 
-          patchJourneyInstanceMutation.mutateAsync(
-            {
-              journey_id: journey.id,
-            },
-            {
-              onError: () =>
-                showSnackbar(
-                  'error',
-                  messages.journeys.conversionSnackbar.error()
-                ),
-              onSuccess: () => {
-                showSnackbar(
-                  'success',
-                  messages.journeys.conversionSnackbar.success()
-                );
-                router.push(redirectUrl);
-              },
-            }
-          );
+          await updateJourneyInstance({ journey_id: journey.id });
+          router.push(redirectUrl);
         },
       })) ?? [];
 
@@ -123,6 +67,11 @@ const JourneyInstanceLayout: React.FunctionComponent<
       startIcon: <Forward color="secondary" />,
       subMenuItems: submenuItems,
     });
+  }
+
+  const journeyInstance = journeyInstanceFuture.data;
+  if (!journeyInstance) {
+    return null;
   }
 
   return (
@@ -229,8 +178,12 @@ const JourneyInstanceLayout: React.FunctionComponent<
           }}
         >
           <ZUIEditTextinPlace
-            disabled={patchJourneyInstanceMutation.isLoading}
-            onChange={(newTitle) => updateTitle(newTitle)}
+            disabled={isLoading}
+            onChange={async (newTitle) => {
+              setIsLoading(true);
+              await updateJourneyInstance({ title: newTitle });
+              setIsLoading(false);
+            }}
             value={journeyInstance.title || journeyInstance.journey.title}
           />
           <Typography

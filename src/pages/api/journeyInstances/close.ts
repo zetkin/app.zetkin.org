@@ -7,7 +7,7 @@ import handleResponseData, {
 } from 'utils/api/handleResponseData';
 import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
 
-interface JourneyInstanceCloseBody {
+export interface JourneyInstanceCloseBody {
   closed: string; // Datetime
   outcome?: string;
   tags?: ZetkinTag[];

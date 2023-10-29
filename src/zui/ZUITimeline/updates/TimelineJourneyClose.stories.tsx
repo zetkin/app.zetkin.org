@@ -21,6 +21,7 @@ withOutcome.args = {
     details: {
       outcome: 'This is the outcome',
     },
+    id: '12302-3',
     organization: { id: 1, title: 'KPD' },
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
@@ -35,6 +36,7 @@ withoutOutcome.args = {
     details: {
       outcome: '',
     },
+    id: '1223094',
     organization: { id: 1, title: 'KPD' },
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),

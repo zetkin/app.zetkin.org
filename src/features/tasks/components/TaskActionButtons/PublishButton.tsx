@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useContext } from 'react';
 import { Button, Tooltip } from '@mui/material';
 
-import { taskResource } from 'features/tasks/api/tasks';
+import useTaskMutations from 'features/tasks/hooks/useTaskMutations';
 import validateTaskConfig from 'features/tasks/utils/validateTaskConfig';
 import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -50,15 +50,9 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
-  const patchTaskMutation = taskResource(
-    task.organization.id.toString(),
-    task.id.toString()
-  ).useUpdate();
-
+  const { updateTask } = useTaskMutations(task.organization.id, task.id);
   const publishTask = () => {
-    patchTaskMutation.mutate({
-      published: dayjs().format('YYYY-MM-DDTHH:mm:ss'),
-    });
+    updateTask({ published: dayjs().format('YYYY-MM-DDTHH:mm:ss') });
   };
 
   const taskStatus = getTaskStatus(task);

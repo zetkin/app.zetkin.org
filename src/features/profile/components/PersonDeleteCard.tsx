@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { Box, Button, Typography } from '@mui/material';
 
 import PersonCard from './PersonCard';
-import { PersonPageProps } from 'pages/organize/[orgId]/people/[personId]';
 import { personResource } from 'features/profile/api/people';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -14,7 +13,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 const PersonDeleteCard: React.FunctionComponent<{
-  orgId: PersonPageProps['orgId'];
+  orgId: string;
   person: ZetkinPerson;
 }> = ({ orgId, person }) => {
   const messages = useMessages(messageIds);

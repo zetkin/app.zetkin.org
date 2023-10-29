@@ -3,11 +3,10 @@ import { ZetkinTask } from '../components/types';
 import { taskLoad, taskLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-interface UseTaskReturn {
-  data: ZetkinTask | null;
-}
-
-export default function useTask(orgId: number, taskId: number): UseTaskReturn {
+export default function useTask(
+  orgId: number,
+  taskId: number
+): ZetkinTask | null {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const tasks = useAppSelector((state) => state.tasks);
@@ -20,8 +19,5 @@ export default function useTask(orgId: number, taskId: number): UseTaskReturn {
     loader: () =>
       apiClient.get<ZetkinTask>(`/api/orgs/${orgId}/tasks/${taskId}`),
   });
-
-  return {
-    data: taskFuture.data,
-  };
+  return taskFuture.data;
 }

@@ -6,7 +6,7 @@ import messageIds from '../l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
 import { personResource } from 'features/profile/api/people';
 import useCall from '../hooks/useCall';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -16,16 +16,17 @@ interface OrganizerActionPaneProps {
   columnIdx: number;
   orgId: number;
   personId: number;
-  viewModel: ViewDataModel;
+  viewId: number;
 }
 
 export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   orgId,
   personId,
   columnIdx,
-  viewModel,
+  viewId,
 }) => {
-  const rows = viewModel.getRows().data;
+  const { rowsFuture } = useViewGrid(orgId, viewId);
+  const rows = rowsFuture.data;
   const row = rows?.find((r) => r.id == personId);
   let calls = row?.content[columnIdx] as ZetkinOrganizerAction[];
   if (!calls) {

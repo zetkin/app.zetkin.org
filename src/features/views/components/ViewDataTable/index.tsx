@@ -2,7 +2,6 @@ import { Link } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
-import { useRouter } from 'next/router';
 import {
   DataGridPro,
   GRID_CHECKBOX_SELECTION_COL_DEF,
@@ -17,11 +16,12 @@ import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
+import useCreateView from 'features/views/hooks/useCreateView';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
-import useViewDataModel from 'features/views/hooks/useViewDataModel';
-import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
+import { useNumericRouteParams } from 'core/hooks';
+import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -93,15 +93,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [, accessLevel] = useAccessLevel();
 
   const [quickSearch, setQuickSearch] = useState('');
-  const router = useRouter();
-  const { orgId } = router.query;
+  const { orgId } = useNumericRouteParams();
+
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-
-  const model = useViewDataModel();
-  const browserModel = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
+  const { addColumn, addPerson, deleteColumn } = UseViewDataTableMutations(
+    orgId,
+    view.id
   );
+  const createView = useCreateView(orgId);
+  const viewGrid = useViewGrid(orgId, view.id);
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar('error', messages.dataTableErrors[error]());
@@ -113,7 +114,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   ) => {
     NProgress.start();
     try {
-      await model.updateColumn(id, data);
+      await viewGrid.updateColumn(id, data);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
     } finally {
@@ -147,7 +148,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onCreateColumnSave = async (colSpec: SelectedViewColumn) => {
     setColumnToCreate(null);
     try {
-      await model.addColumn({
+      await addColumn({
         config: colSpec.config,
         title: colSpec.title,
         type: colSpec.type,
@@ -175,7 +176,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
     async function doDelete() {
       try {
-        await model.deleteColumn(colId);
+        await deleteColumn(colId);
       } catch (err) {
         showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
         NProgress.done();
@@ -212,7 +213,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onRowsRemove = async () => {
     setWaiting(true);
     try {
-      await model.removeRows(selection);
+      viewGrid.removeRows(selection);
     } catch (err) {
       showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
     } finally {
@@ -221,7 +222,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   };
 
   const onViewCreate = () => {
-    browserModel.createView(view.folder?.id ?? 0, selection);
+    createView(view.folder?.id ?? 0, selection);
   };
 
   const avatarColumn: GridColDef = {
@@ -313,7 +314,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     },
     footer: {
       onRowAdd: async (person) => {
-        await model.addPerson(person);
+        await addPerson(person.id);
 
         // Store ID for highlighting the new row
         setAddedId(person.id);
@@ -393,7 +394,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
               const handleKeyDown = columnTypes[col.type].handleKeyDown;
               if (handleKeyDown) {
                 handleKeyDown(
-                  model,
+                  viewGrid,
                   col,
                   params.row.id,
                   params.value,
@@ -420,7 +421,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             if (col) {
               const processRowUpdate = columnTypes[col.type].processRowUpdate;
               if (processRowUpdate) {
-                processRowUpdate(model, col.id, after.id, after[changedField]);
+                processRowUpdate(
+                  viewGrid,
+                  col.id,
+                  after.id,
+                  after[changedField]
+                );
               }
             }
           }
@@ -432,7 +438,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }}
         {...modelGridProps}
       />
-      {empty && <EmptyView orgId={orgId as string} view={view} />}
+      {empty && <EmptyView orgId={orgId} view={view} />}
       {columnToRename && (
         <ViewRenameColumnDialog
           column={columnToRename}
