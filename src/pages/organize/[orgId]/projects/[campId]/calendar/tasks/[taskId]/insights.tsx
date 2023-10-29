@@ -5,6 +5,7 @@ import { ResponsivePie } from '@nivo/pie';
 import { Box, Typography } from '@mui/material';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
@@ -18,8 +19,6 @@ import {
   ZetkinTask,
 } from 'features/tasks/components/types';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

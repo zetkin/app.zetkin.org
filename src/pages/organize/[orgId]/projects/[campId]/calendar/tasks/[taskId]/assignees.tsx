@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import getOrg from 'utils/fetching/getOrg';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import patchQuery from 'utils/fetching/patchQuery';
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
@@ -22,8 +22,6 @@ import ZUIFuture from 'zui/ZUIFuture';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
 
-import messageIds from 'features/campaigns/l10n/messageIds';
-
 const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'pages.assignees'],
@@ -32,10 +30,6 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { campId, orgId, taskId } = ctx.params!;
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
   const apiClient = new BackendApiClient(ctx.req.headers);
 
   try {
