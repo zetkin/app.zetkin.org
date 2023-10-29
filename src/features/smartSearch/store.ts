@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ZetkinSmartSearchFilterStats } from './types';
-import { RemoteItem, remoteItem } from 'utils/storeUtils';
+import {
+  RemoteItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
+import { ZetkinDataField, ZetkinQuery } from 'utils/types/zetkin';
 
 type EphemeralQueryStats = {
   // This property needs to be called `id` to meet the requirements
@@ -12,10 +18,14 @@ type EphemeralQueryStats = {
 };
 
 export interface smartSearchStoreSlice {
+  fieldsList: RemoteList<ZetkinDataField>;
+  queryList: RemoteList<ZetkinQuery>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
 }
 
 const initialState: smartSearchStoreSlice = {
+  fieldsList: remoteList(),
+  queryList: remoteList(),
   statsByFilterSpec: {},
 };
 
@@ -23,6 +33,20 @@ const smartSearchSlice = createSlice({
   initialState: initialState,
   name: 'smartSearch',
   reducers: {
+    fieldsLoad: (state) => {
+      state.fieldsList.isLoading = true;
+    },
+    fieldsLoaded: (state, action: PayloadAction<ZetkinDataField[]>) => {
+      state.fieldsList = remoteList(action.payload);
+      state.fieldsList.loaded = new Date().toISOString();
+    },
+    queriesLoad: (state) => {
+      state.queryList.isLoading = true;
+    },
+    queriesLoaded: (state, action: PayloadAction<ZetkinQuery[]>) => {
+      state.queryList = remoteList(action.payload);
+      state.queryList.loaded = new Date().toISOString();
+    },
     statsLoad: (state, action: PayloadAction<string>) => {
       const key = action.payload;
       if (!state.statsByFilterSpec[key]) {
@@ -46,4 +70,11 @@ const smartSearchSlice = createSlice({
 });
 
 export default smartSearchSlice;
-export const { statsLoad, statsLoaded } = smartSearchSlice.actions;
+export const {
+  fieldsLoad,
+  fieldsLoaded,
+  queriesLoad,
+  queriesLoaded,
+  statsLoad,
+  statsLoaded,
+} = smartSearchSlice.actions;

@@ -388,6 +388,25 @@ const eventsSlice = createSlice({
         .filter((l) => l.id !== location.id)
         .concat([remoteItem(location.id, { data: location })]);
     },
+    locationLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.locationList.items.find((item) => item.id == id);
+      state.locationList.items = state.locationList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    locationLoaded: (state, action: PayloadAction<ZetkinLocation>) => {
+      const event = action.payload;
+      const item = state.locationList.items.find((item) => item.id == event.id);
+
+      if (!item) {
+        throw new Error('Finished loading item that never started loading');
+      }
+
+      item.data = event;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
     locationUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [locationId, mutating] = action.payload;
       const item = state.locationList.items.find(
@@ -521,6 +540,25 @@ const eventsSlice = createSlice({
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
+    typeLoad: (state, action) => {
+      const id = action.payload;
+      const item = state.typeList.items.find((item) => item.id == id);
+      state.typeList.items = state.typeList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    typeLoaded: (state, action) => {
+      const activity = action.payload;
+      const item = state.typeList.items.find((item) => item.id == activity.id);
+
+      if (!item) {
+        throw new Error('Finished loading item that never started loading');
+      }
+
+      item.data = activity;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
     /* eslint-disable-next-line */
     typesLoad: (state, action: PayloadAction<number>) => {
       state.typeList.isLoading = true;
@@ -556,6 +594,8 @@ export const {
   eventsUpdated,
   filterTextUpdated,
   filterUpdated,
+  locationLoad,
+  locationLoaded,
   locationUpdate,
   locationUpdated,
   locationAdded,
@@ -573,6 +613,8 @@ export const {
   statsLoaded,
   typeAdd,
   typeAdded,
+  typeLoad,
+  typeLoaded,
   typesLoad,
   typesLoaded,
 } = eventsSlice.actions;

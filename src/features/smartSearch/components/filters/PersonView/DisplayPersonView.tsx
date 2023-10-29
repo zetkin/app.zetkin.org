@@ -1,7 +1,3 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-
-import getViews from 'features/smartSearch/fetching/getViews';
 import { Msg } from 'core/i18n';
 import {
   OPERATION,
@@ -12,6 +8,8 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
+import { useNumericRouteParams } from 'core/hooks';
+import useViewTree from 'features/views/hooks/useViewTree';
 const localMessageIds = messageIds.filters.personView;
 
 interface DisplayPersonViewProps {
@@ -19,14 +17,10 @@ interface DisplayPersonViewProps {
 }
 
 const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
-  const { orgId } = useRouter().query;
   const { config } = filter;
-
-  const personViewsQuery = useQuery(
-    ['personviews', orgId],
-    getViews(orgId as string)
-  );
-  const personViews = personViewsQuery?.data || [];
+  const { orgId } = useNumericRouteParams();
+  const viewTree = useViewTree(orgId);
+  const personViews = viewTree.data?.views ?? [];
 
   const view = personViews.find((v) => v.id == config.view);
   const operator = config.operator;

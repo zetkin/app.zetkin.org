@@ -1,10 +1,7 @@
 import { DoneAll } from '@mui/icons-material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { Box, Chip, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
-import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import { Msg } from 'core/i18n';
 import {
   ELEMENT_TYPE,
@@ -20,6 +17,9 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurvey from 'features/surveys/hooks/useSurvey';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 const localMessageIds = messageIds.filters.surveyOption;
 
 interface DisplaySurveyOptionProps {
@@ -29,7 +29,7 @@ interface DisplaySurveyOptionProps {
 const DisplaySurveyOption = ({
   filter,
 }: DisplaySurveyOptionProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { config } = filter;
   const {
     operator,
@@ -39,15 +39,10 @@ const DisplaySurveyOption = ({
   } = config;
   const op = filter.op || OPERATION.ADD;
 
-  const surveysQuery = useQuery(
-    ['surveysWithElements', orgId],
-    getSurveysWithElements(orgId as string)
-  );
+  const surveyTitle = useSurvey(orgId, surveyId).data?.title || '';
+  const surveyElements = useSurveyElements(orgId, surveyId).data || [];
 
-  const surveys = surveysQuery.data || [];
-
-  const survey = surveys.find((s) => s.id === surveyId);
-  const element = survey?.elements.find((e) => e.id == questionId);
+  const element = surveyElements?.find((e) => e.id == questionId);
   const question =
     element?.type == ELEMENT_TYPE.QUESTION ? element.question : null;
 
@@ -106,7 +101,7 @@ const DisplaySurveyOption = ({
           <Msg
             id={localMessageIds.surveySelect.survey}
             values={{
-              surveyTitle: <UnderlinedText text={survey?.title ?? ''} />,
+              surveyTitle: <UnderlinedText text={surveyTitle} />,
             }}
           />
         ),

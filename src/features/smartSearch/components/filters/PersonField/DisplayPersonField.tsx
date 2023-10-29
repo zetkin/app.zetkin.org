@@ -1,8 +1,4 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-
 import DisplayTimeFrame from '../DisplayTimeFrame';
-import getCustomFields from 'features/smartSearch/fetching/getCustomFields';
 import { getTimeFrameWithConfig } from '../../utils';
 import { Msg } from 'core/i18n';
 import {
@@ -14,6 +10,8 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
+import useCustomFields from 'features/smartSearch/hooks/useCustomFields';
+import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -23,12 +21,8 @@ interface DisplayPersonFieldProps {
 const DisplayPersonField = ({
   filter,
 }: DisplayPersonFieldProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const fieldsQuery = useQuery(
-    ['customFields', orgId],
-    getCustomFields(orgId as string)
-  );
-  const fields = fieldsQuery.data || [];
+  const { orgId } = useNumericRouteParams();
+  const fields = useCustomFields(orgId);
   const { config } = filter;
   const { field: slug, search } = config;
   const op = filter.op || OPERATION.ADD;

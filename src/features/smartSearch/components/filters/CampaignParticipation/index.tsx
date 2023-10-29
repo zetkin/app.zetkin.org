@@ -2,12 +2,13 @@ import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
-import getActivities from 'utils/fetching/getActivities';
-import getLocations from 'utils/fetching/getLocations';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { useQuery } from 'react-query';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useEventLocations from 'features/events/hooks/useEventLocations';
+import useEventTypes from 'features/events/hooks/useEventTypes';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CampaignParticipationConfig,
@@ -18,8 +19,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
-import { useNumericRouteParams } from 'core/hooks';
+
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 const DEFAULT_VALUE = 'any';
@@ -62,17 +62,11 @@ const CampaignParticipation = ({
   filter: initialFilter,
 }: CampaignParticipationProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const activitiesQuery = useQuery(
-    ['activities', orgId],
-    getActivities(orgId.toString())
-  );
-  const locationsQuery = useQuery(
-    ['locations', orgId],
-    getLocations(orgId.toString())
-  );
-  const { data: campaigns } = useCampaigns(orgId);
-  const activities = activitiesQuery?.data || [];
-  const locations = locationsQuery?.data || [];
+
+  // TODO: Show loading indicator instead of empty arrays?
+  const activities = useEventTypes(orgId).data || [];
+  const campaigns = useCampaigns(orgId).data || [];
+  const locations = useEventLocations(orgId) || [];
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CampaignParticipationConfig>(initialFilter, {
@@ -214,7 +208,7 @@ const CampaignParticipation = ({
                         id={localMessageIds.campaignSelect.campaign}
                         values={{
                           campaign:
-                            campaigns?.find((c) => c.id === value)?.title ?? '',
+                            campaigns.find((c) => c.id === value)?.title ?? '',
                         }}
                       />
                     );
@@ -225,7 +219,7 @@ const CampaignParticipation = ({
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
                   <Msg id={localMessageIds.campaignSelect.any} />
                 </MenuItem>
-                {campaigns?.map((c) => (
+                {campaigns.map((c) => (
                   <MenuItem key={c.id} value={c.id}>
                     {c.title}
                   </MenuItem>
