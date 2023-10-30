@@ -14,7 +14,7 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
-import usePersonTags from 'features/profile/hooks/usePersonTags';
+import usePersonTags from 'features/tags/hooks/usePersonTags';
 import useTagging from 'features/tags/hooks/useTagging';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';

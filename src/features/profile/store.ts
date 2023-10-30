@@ -5,18 +5,16 @@ import {
   RemoteList,
   remoteList,
 } from 'utils/storeUtils';
-import { ZetkinCustomField, ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 
 export interface ProfilesStoreSlice {
   fieldsList: RemoteList<ZetkinCustomField>;
   personById: Record<number, RemoteItem<ZetkinPerson>>;
-  tagsByPersonId: Record<number, RemoteList<ZetkinTag>>;
 }
 
 const initialState: ProfilesStoreSlice = {
   fieldsList: remoteList(),
   personById: {},
-  tagsByPersonId: {},
 };
 
 const profilesSlice = createSlice({
@@ -44,27 +42,9 @@ const profilesSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
-    personTagsLoad: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
-      if (!state.tagsByPersonId[id]) {
-        state.tagsByPersonId[id] = remoteList();
-      }
-      state.tagsByPersonId[id].isLoading = true;
-    },
-    personTagsLoaded: (state, action: PayloadAction<[number, ZetkinTag[]]>) => {
-      const [id, tags] = action.payload;
-      state.tagsByPersonId[id] = remoteList(tags);
-      state.tagsByPersonId[id].loaded = new Date().toISOString();
-    },
   },
 });
 
 export default profilesSlice;
-export const {
-  fieldsLoad,
-  fieldsLoaded,
-  personLoad,
-  personLoaded,
-  personTagsLoad,
-  personTagsLoaded,
-} = profilesSlice.actions;
+export const { fieldsLoad, fieldsLoaded, personLoad, personLoaded } =
+  profilesSlice.actions;

@@ -6,11 +6,13 @@ import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 export interface TagsStoreSlice {
   tagGroupList: RemoteList<ZetkinTagGroup>;
   tagList: RemoteList<ZetkinTag>;
+  tagsByPersonId: Record<number, RemoteList<ZetkinTag>>;
 }
 
 const initialState: TagsStoreSlice = {
   tagGroupList: remoteList(),
   tagList: remoteList(),
+  tagsByPersonId: {},
 };
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
@@ -27,6 +29,18 @@ const tagsSlice = createSlice({
   initialState: initialState,
   name: 'tags',
   reducers: {
+    personTagsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      if (!state.tagsByPersonId[id]) {
+        state.tagsByPersonId[id] = remoteList();
+      }
+      state.tagsByPersonId[id].isLoading = true;
+    },
+    personTagsLoaded: (state, action: PayloadAction<[number, ZetkinTag[]]>) => {
+      const [id, tags] = action.payload;
+      state.tagsByPersonId[id] = remoteList(tags);
+      state.tagsByPersonId[id].loaded = new Date().toISOString();
+    },
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       doNothing(state, action);
     },
@@ -112,6 +126,8 @@ const tagsSlice = createSlice({
 
 export default tagsSlice;
 export const {
+  personTagsLoad,
+  personTagsLoaded,
   tagAssigned,
   tagCreate,
   tagCreated,
