@@ -109,10 +109,7 @@ const PersonProfilePage: PageWithLayout = () => {
           </Grid>
         )}
         <Grid item lg={4} xs={12}>
-          <PersonOrganizationsCard
-            orgId={orgId.toString()}
-            personId={personId.toString()}
-          />
+          <PersonOrganizationsCard orgId={orgId} personId={personId} />
         </Grid>
       </Grid>
     </>

@@ -15,14 +15,15 @@ import PersonCard from '../PersonCard';
 import { PersonOrganization } from 'utils/organize/people';
 import { personOrganizationsResource } from 'features/profile/api/people';
 import { useMessages } from 'core/i18n';
+import usePersonOrgData from 'features/profile/hooks/usePersonOrgData';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 import messageIds from 'features/profile/l10n/messageIds';
 
 interface PersonOrganizationsCardProps {
-  orgId: string;
-  personId: string;
+  orgId: number;
+  personId: number;
 }
 
 const PersonOrganizationsCard: React.FunctionComponent<
@@ -34,12 +35,15 @@ const PersonOrganizationsCard: React.FunctionComponent<
   const [selected, setSelected] = useState<PersonOrganization>();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const { data } = personOrganizationsResource(orgId, personId).useQuery();
+  const data = usePersonOrgData(orgId, personId).data;
 
-  const addOrgMutation = personOrganizationsResource(orgId, personId).useAdd();
+  const addOrgMutation = personOrganizationsResource(
+    orgId.toString(),
+    personId.toString()
+  ).useAdd();
   const removeOrgMutation = personOrganizationsResource(
-    orgId,
-    personId
+    orgId.toString(),
+    personId.toString()
   ).useRemove();
 
   useEffect(() => {
