@@ -16,6 +16,7 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
+import useTagging from 'features/tags/hooks/useTagging';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIQuery from 'zui/ZUIQuery';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -57,19 +58,15 @@ const PersonProfilePage: PageWithLayout = () => {
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
 
-  const {
-    key: personTagsKey,
-    useAssign,
-    useQuery: usePersonTagsQuery,
-    useUnassign,
-  } = personTagsResource(orgId.toString(), personId.toString());
+  const { assignToPerson, removeFromPerson } = useTagging(orgId);
+
+  const { key: personTagsKey, useQuery: usePersonTagsQuery } =
+    personTagsResource(orgId.toString(), personId.toString());
 
   const fieldsFuture = useCustomFields(orgId);
   const personFuture = usePerson(orgId, personId);
   const person = personFuture.data;
 
-  const assignTagMutation = useAssign();
-  const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
 
   const journeysFuture = useJourneys(orgId);
@@ -98,20 +95,23 @@ const PersonProfilePage: PageWithLayout = () => {
             {({ queries: { personTagsQuery } }) => (
               <TagManagerSection
                 assignedTags={personTagsQuery.data}
-                onAssignTag={(tag) => {
-                  const tagBody = { id: tag.id, value: tag.value };
-                  assignTagMutation.mutate(tagBody, {
-                    onError: () => showSnackbar('error'),
-                  });
+                onAssignTag={async (tag) => {
+                  try {
+                    await assignToPerson(personId, tag.id, tag.value);
+                  } catch (err) {
+                    showSnackbar('error');
+                  }
                 }}
                 onTagEdited={() => {
                   queryClient.invalidateQueries(personTagsKey);
                 }}
-                onUnassignTag={(tag) =>
-                  unassignTagMutation.mutate(tag.id, {
-                    onError: () => showSnackbar('error'),
-                  })
-                }
+                onUnassignTag={async (tag) => {
+                  try {
+                    await removeFromPerson(personId, tag.id);
+                  } catch (err) {
+                    showSnackbar('error');
+                  }
+                }}
               />
             )}
           </ZUIQuery>
