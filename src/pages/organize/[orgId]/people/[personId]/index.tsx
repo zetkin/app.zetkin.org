@@ -4,21 +4,21 @@ import Head from 'next/head';
 import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import PersonDetailsCard from 'features/profile/components/PersonDetailsCard';
 import PersonJourneysCard from 'features/profile/components/PersonJourneysCard';
 import PersonOrganizationsCard from 'features/profile/components/PersonOrganizationsCard';
+import { personTagsResource } from 'features/profile/api/people';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import { TagManagerSection } from 'features/tags/components/TagManager';
+import useCustomFields from 'features/smartSearch/hooks/useCustomFields';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
+import usePerson from 'features/profile/hooks/usePerson';
+import ZUIFuture from 'zui/ZUIFuture';
 import ZUIQuery from 'zui/ZUIQuery';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import {
-  personFieldsResource,
-  personResource,
-  personTagsResource,
-} from 'features/profile/api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
 export const scaffoldOptions = {
@@ -31,17 +31,16 @@ export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
 ) => {
   const { orgId, personId } = ctx.params!;
 
-  const { prefetch } = personResource(orgId as string, personId as string);
-  const { state: personQueryState } = await prefetch(ctx);
-
-  if (personQueryState?.status === 'success') {
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    await apiClient.get(`/api/orgs/${orgId}/people/${personId}`);
     return {
       props: {
         orgId,
         personId,
       },
     };
-  } else {
+  } catch (err) {
     return {
       notFound: true,
     };
@@ -64,15 +63,14 @@ const PersonProfilePage: PageWithLayout = () => {
     useQuery: usePersonTagsQuery,
     useUnassign,
   } = personTagsResource(orgId.toString(), personId.toString());
-  const customFieldsQuery = personFieldsResource(orgId.toString()).useQuery();
+
+  const fieldsFuture = useCustomFields(orgId);
+  const personFuture = usePerson(orgId, personId);
+  const person = personFuture.data;
+
   const assignTagMutation = useAssign();
   const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
-
-  const { data: person } = personResource(
-    orgId.toString(),
-    personId.toString()
-  ).useQuery();
 
   const journeysFuture = useJourneys(orgId);
 
@@ -89,14 +87,11 @@ const PersonProfilePage: PageWithLayout = () => {
       </Head>
       <Grid container direction="row" spacing={6}>
         <Grid item lg={4} xs={12}>
-          <ZUIQuery queries={{ customFieldsQuery }}>
-            {({ queries: { customFieldsQuery } }) => (
-              <PersonDetailsCard
-                customFields={customFieldsQuery.data}
-                person={person}
-              />
+          <ZUIFuture future={fieldsFuture}>
+            {(fields) => (
+              <PersonDetailsCard customFields={fields} person={person} />
             )}
-          </ZUIQuery>
+          </ZUIFuture>
         </Grid>
         <Grid item lg={4} xs={12}>
           <ZUIQuery queries={{ personTagsQuery }}>
