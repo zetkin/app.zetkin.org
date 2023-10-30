@@ -109,6 +109,15 @@ const tagsSlice = createSlice({
         item.data = { ...item.data, ...tag };
         item.mutating = [];
       }
+
+      // Update tags on people
+      Object.values(state.tagsByPersonId).forEach((tagList) => {
+        tagList.items.forEach((item) => {
+          if (item.id == tag.id) {
+            item.data = { ...tag, value: item.data?.value };
+          }
+        });
+      });
     },
     tagsLoad: (state) => {
       state.tagList.isLoading = true;
