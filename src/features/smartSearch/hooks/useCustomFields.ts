@@ -1,9 +1,9 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { ZetkinDataField } from 'utils/types/zetkin';
+import { ZetkinCustomField } from 'utils/types/zetkin';
 import { fieldsLoad, fieldsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function useCustomFields(orgId: number): ZetkinDataField[] {
+export default function useCustomFields(orgId: number): ZetkinCustomField[] {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const fieldsList = useAppSelector((state) => state.smartSearch.fieldsList);
@@ -12,7 +12,7 @@ export default function useCustomFields(orgId: number): ZetkinDataField[] {
     actionOnLoad: () => fieldsLoad(),
     actionOnSuccess: (fields) => fieldsLoaded(fields),
     loader: async () =>
-      apiClient.get<ZetkinDataField[]>(`/api/orgs/${orgId}/people/fields`),
+      apiClient.get<ZetkinCustomField[]>(`/api/orgs/${orgId}/people/fields`),
   });
 
   return fields.data ?? [];

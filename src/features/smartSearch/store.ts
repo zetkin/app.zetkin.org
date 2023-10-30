@@ -7,7 +7,7 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { ZetkinDataField, ZetkinQuery } from 'utils/types/zetkin';
+import { ZetkinCustomField, ZetkinQuery } from 'utils/types/zetkin';
 
 type EphemeralQueryStats = {
   // This property needs to be called `id` to meet the requirements
@@ -18,7 +18,7 @@ type EphemeralQueryStats = {
 };
 
 export interface smartSearchStoreSlice {
-  fieldsList: RemoteList<ZetkinDataField>;
+  fieldsList: RemoteList<ZetkinCustomField>;
   queryList: RemoteList<ZetkinQuery>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
 }
@@ -36,7 +36,7 @@ const smartSearchSlice = createSlice({
     fieldsLoad: (state) => {
       state.fieldsList.isLoading = true;
     },
-    fieldsLoaded: (state, action: PayloadAction<ZetkinDataField[]>) => {
+    fieldsLoaded: (state, action: PayloadAction<ZetkinCustomField[]>) => {
       state.fieldsList = remoteList(action.payload);
       state.fieldsList.loaded = new Date().toISOString();
     },
