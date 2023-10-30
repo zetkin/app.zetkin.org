@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
 import { Box, Chip, Grid, Typography, useTheme } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import DefaultLayout from 'utils/layout/DefaultLayout';
@@ -9,8 +9,8 @@ import Header from 'zui/ZUIHeader';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import messageIds from 'features/journeys/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
-import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
+import { useApiClient } from 'core/hooks';
 import useCreateJourneyInstance from 'features/journeys/hooks/useCreateJourneyInstance';
 import useJourney from 'features/journeys/hooks/useJourney';
 import { useRouter } from 'next/router';
@@ -84,15 +84,18 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   // Maybe in the future we can support multiple subjects added using
   // the link, but for now a single subject (the first) is enough.
   const subjectId = inputSubjectIds[0];
-  personResource(orgId, subjectId).useQuery({
-    // Only load if there is a subjectId and no subjects added already
-    enabled: !!subjectId && !subjects.length,
-    onSuccess: (person) => {
-      if (subjects.length == 0) {
+  const apiClient = useApiClient();
+  useEffect(() => {
+    async function loadSubject() {
+      if (subjectId) {
+        const person = await apiClient.get<ZetkinPerson>(
+          `/api/orgs/${orgId}/people/${subjectId}`
+        );
         setSubjects([...subjects, person]);
       }
-    },
-  });
+    }
+    loadSubject();
+  }, []);
 
   const journeyFuture = useJourney(parseInt(orgId), parseInt(journeyId));
   const createJourneyInstance = useCreateJourneyInstance(
