@@ -1,3 +1,4 @@
+import { PersonOrganization } from 'utils/organize/people';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
@@ -7,13 +8,23 @@ import {
 } from 'utils/storeUtils';
 import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 
+export type PersonOrgData = {
+  id: string;
+  memberships: PersonOrganization[];
+  organizationTree: PersonOrganization;
+  personOrganizationTree: PersonOrganization;
+  subOrganizations: PersonOrganization[];
+};
+
 export interface ProfilesStoreSlice {
   fieldsList: RemoteList<ZetkinCustomField>;
+  orgsByPersonId: Record<number, RemoteItem<PersonOrgData>>;
   personById: Record<number, RemoteItem<ZetkinPerson>>;
 }
 
 const initialState: ProfilesStoreSlice = {
   fieldsList: remoteList(),
+  orgsByPersonId: {},
   personById: {},
 };
 
@@ -42,9 +53,32 @@ const profilesSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    personOrgsLoad: (state, action: PayloadAction<number>) => {
+      const personId = action.payload;
+      if (!state.orgsByPersonId[personId]) {
+        state.orgsByPersonId[personId] = remoteItem(personId);
+      }
+      state.orgsByPersonId[personId].isLoading = true;
+    },
+    personOrgsLoaded: (
+      state,
+      action: PayloadAction<[number, PersonOrgData]>
+    ) => {
+      const [personId, orgs] = action.payload;
+      state.orgsByPersonId[personId] = remoteItem(orgs.id, {
+        data: orgs,
+        loaded: new Date().toISOString(),
+      });
+    },
   },
 });
 
 export default profilesSlice;
-export const { fieldsLoad, fieldsLoaded, personLoad, personLoaded } =
-  profilesSlice.actions;
+export const {
+  fieldsLoad,
+  fieldsLoaded,
+  personLoad,
+  personLoaded,
+  personOrgsLoad,
+  personOrgsLoaded,
+} = profilesSlice.actions;
