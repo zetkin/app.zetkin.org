@@ -4,8 +4,8 @@ import { FC, useMemo } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
-import { personResource } from 'features/profile/api/people';
 import useCall from '../hooks/useCall';
+import usePerson from 'features/profile/hooks/usePerson';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
@@ -34,10 +34,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   }
 
   const messages = useMessages(messageIds);
-  const { data: recipient } = personResource(
-    orgId.toString(),
-    personId.toString()
-  ).useQuery();
+  const { data: recipient } = usePerson(orgId, personId);
 
   const { setOrganizerActionNeeded, setOrganizerActionTaken } = useCall(orgId);
 
