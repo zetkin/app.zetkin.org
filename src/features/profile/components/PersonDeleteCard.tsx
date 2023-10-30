@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Box, Button, Typography } from '@mui/material';
 
 import PersonCard from './PersonCard';
-import { personResource } from 'features/profile/api/people';
+import usePersonMutations from '../hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -13,25 +13,25 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 const PersonDeleteCard: React.FunctionComponent<{
-  orgId: string;
+  orgId: number;
   person: ZetkinPerson;
 }> = ({ orgId, person }) => {
   const messages = useMessages(messageIds);
   const router = useRouter();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const useRemoveMutation = personResource(
-    orgId.toString(),
-    person.id.toString()
-  ).useRemove();
+  const { deletePerson } = usePersonMutations(orgId, person.id);
 
-  const deletePerson = () => {
+  const handleDelete = () => {
     showConfirmDialog({
-      onSubmit: () =>
-        useRemoveMutation.mutate(undefined, {
-          onError: () => showSnackbar('error'),
-          onSuccess: () => router.push(`/organize/${orgId}/people/views`),
-        }),
+      onSubmit: async () => {
+        try {
+          await deletePerson();
+          router.push(`/organize/${orgId}/people`);
+        } catch (err) {
+          showSnackbar('error');
+        }
+      },
       warningText: messages.delete.confirm({
         name: person.first_name + ' ' + person.last_name,
       }),
@@ -56,7 +56,7 @@ const PersonDeleteCard: React.FunctionComponent<{
         <Button
           color="primary"
           fullWidth
-          onClick={deletePerson}
+          onClick={handleDelete}
           variant="contained"
         >
           <Msg id={messageIds.delete.button} />
