@@ -53,6 +53,14 @@ const profilesSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    personOrgAdded: (state, action: PayloadAction<number>) => {
+      const personId = action.payload;
+      state.orgsByPersonId[personId].isStale = true;
+    },
+    personOrgRemoved: (state, action: PayloadAction<number>) => {
+      const personId = action.payload;
+      state.orgsByPersonId[personId].isStale = true;
+    },
     personOrgsLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
       if (!state.orgsByPersonId[personId]) {
@@ -81,4 +89,6 @@ export const {
   personLoaded,
   personOrgsLoad,
   personOrgsLoaded,
+  personOrgAdded,
+  personOrgRemoved,
 } = profilesSlice.actions;

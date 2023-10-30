@@ -1,14 +1,30 @@
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
-import { PersonOrgData, personOrgsLoad, personOrgsLoaded } from '../store';
+import { futureToObject, IFuture } from 'core/caching/futures';
+import {
+  personOrgAdded,
+  PersonOrgData,
+  personOrgRemoved,
+  personOrgsLoad,
+  personOrgsLoaded,
+} from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function usePersonOrgData(orgId: number, personId: number) {
+type UsePersonOrgDataReturn = IFuture<PersonOrgData> & {
+  addToOrg: (targetOrgId: number) => Promise<void>;
+  removeFromOrg: (targetOrgId: number) => Promise<void>;
+};
+
+export default function usePersonOrgData(
+  orgId: number,
+  personId: number
+): UsePersonOrgDataReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const orgDataItem = useAppSelector(
     (state) => state.profiles.orgsByPersonId[personId]
   );
-  return loadItemIfNecessary(orgDataItem, dispatch, {
+
+  const future = loadItemIfNecessary(orgDataItem, dispatch, {
     actionOnLoad: () => personOrgsLoad(personId),
     actionOnSuccess: (orgs) => personOrgsLoaded([personId, orgs]),
     loader: () =>
@@ -16,4 +32,24 @@ export default function usePersonOrgData(orgId: number, personId: number) {
         `/api/organize/${orgId}/people/${personId}/organizations`
       ),
   });
+
+  const addToOrg = async (targetOrgId: number) => {
+    await apiClient.put(
+      `/api/orgs/${orgId}/people/${personId}/connections/${targetOrgId}`
+    );
+    dispatch(personOrgAdded(personId));
+  };
+
+  const removeFromOrg = async (targetOrgId: number) => {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/people/${personId}/connections/${targetOrgId}`
+    );
+    dispatch(personOrgRemoved(personId));
+  };
+
+  return {
+    ...futureToObject(future),
+    addToOrg,
+    removeFromOrg,
+  };
 }
