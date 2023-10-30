@@ -1,10 +1,10 @@
 import { FunctionComponent } from 'react';
-import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 
-import { personResource } from 'features/profile/api/people';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import usePerson from '../hooks/usePerson';
 
 import messageIds from '../l10n/messageIds';
 
@@ -18,11 +18,8 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
   fixedHeight,
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId, personId } = useRouter().query;
-  const { data: person } = personResource(
-    orgId as string,
-    personId as string
-  ).useQuery();
+  const { orgId, personId } = useNumericRouteParams();
+  const { data: person } = usePerson(orgId, personId);
 
   if (!person) {
     return null;
