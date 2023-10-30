@@ -2,23 +2,21 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 import Head from 'next/head';
 import { useContext } from 'react';
-import { useQueryClient } from 'react-query';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import PersonDetailsCard from 'features/profile/components/PersonDetailsCard';
 import PersonJourneysCard from 'features/profile/components/PersonJourneysCard';
 import PersonOrganizationsCard from 'features/profile/components/PersonOrganizationsCard';
-import { personTagsResource } from 'features/profile/api/people';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
+import usePersonTags from 'features/profile/hooks/usePersonTags';
 import useTagging from 'features/tags/hooks/useTagging';
 import ZUIFuture from 'zui/ZUIFuture';
-import ZUIQuery from 'zui/ZUIQuery';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
@@ -56,19 +54,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const PersonProfilePage: PageWithLayout = () => {
   const { orgId, personId } = useNumericRouteParams();
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const queryClient = useQueryClient();
-
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
-
-  const { key: personTagsKey, useQuery: usePersonTagsQuery } =
-    personTagsResource(orgId.toString(), personId.toString());
-
   const fieldsFuture = useCustomFields(orgId);
   const personFuture = usePerson(orgId, personId);
   const person = personFuture.data;
-
-  const personTagsQuery = usePersonTagsQuery();
-
+  const personTagsFuture = usePersonTags(orgId, personId);
   const journeysFuture = useJourneys(orgId);
 
   if (!person) {
@@ -91,19 +81,16 @@ const PersonProfilePage: PageWithLayout = () => {
           </ZUIFuture>
         </Grid>
         <Grid item lg={4} xs={12}>
-          <ZUIQuery queries={{ personTagsQuery }}>
-            {({ queries: { personTagsQuery } }) => (
+          <ZUIFuture future={personTagsFuture}>
+            {(personTags) => (
               <TagManagerSection
-                assignedTags={personTagsQuery.data}
+                assignedTags={personTags}
                 onAssignTag={async (tag) => {
                   try {
                     await assignToPerson(personId, tag.id, tag.value);
                   } catch (err) {
                     showSnackbar('error');
                   }
-                }}
-                onTagEdited={() => {
-                  queryClient.invalidateQueries(personTagsKey);
                 }}
                 onUnassignTag={async (tag) => {
                   try {
@@ -114,7 +101,7 @@ const PersonProfilePage: PageWithLayout = () => {
                 }}
               />
             )}
-          </ZUIQuery>
+          </ZUIFuture>
         </Grid>
         {journeysFuture.data?.length && (
           <Grid item lg={4} xs={12}>
