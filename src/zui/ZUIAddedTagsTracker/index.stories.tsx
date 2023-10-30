@@ -1,14 +1,14 @@
 import mockTag from 'utils/testing/mocks/mockTag';
-import ZUIAddedTagsIndicator from '.';
+import ZUIAddedTagsTracker from '.';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
-  component: ZUIAddedTagsIndicator,
-  title: 'Import/ZUIAddedTagsIndicator',
-} as ComponentMeta<typeof ZUIAddedTagsIndicator>;
+  component: ZUIAddedTagsTracker,
+  title: 'Import/ZUIAddedTagsTracker',
+} as ComponentMeta<typeof ZUIAddedTagsTracker>;
 
-const Template: ComponentStory<typeof ZUIAddedTagsIndicator> = (args) => (
-  <ZUIAddedTagsIndicator
+const Template: ComponentStory<typeof ZUIAddedTagsTracker> = (args) => (
+  <ZUIAddedTagsTracker
     count={args.count}
     desc={args.desc}
     fieldName={args.fieldName}
@@ -16,8 +16,8 @@ const Template: ComponentStory<typeof ZUIAddedTagsIndicator> = (args) => (
   />
 );
 const tag = mockTag();
-export const addedTagsIndicator = Template.bind({});
-addedTagsIndicator.args = {
+export const addedTagsTracker = Template.bind({});
+addedTagsTracker.args = {
   count: 7,
   desc: 'people will have',
   fieldName: 'Tags',
