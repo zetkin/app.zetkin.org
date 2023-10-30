@@ -4,18 +4,17 @@ import { useState } from 'react';
 import { Button, List, ListItem, Menu, MenuItem } from '@mui/material';
 
 import PersonCard from '../PersonCard';
-import { personJourneysResource } from 'features/profile/api/people';
 import ZUIJourneyInstanceItem from 'zui/ZUIJourneyInstanceItem';
-import ZUIQuery from 'zui/ZUIQuery';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/profile/l10n/messageIds';
 import useJourneys from 'features/journeys/hooks/useJourneys';
+import usePersonJourneyInstances from 'features/journeys/hooks/usePersonJourneyInstances';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface PersonJourneysCardProps {
-  orgId: string;
-  personId: string;
+  orgId: number;
+  personId: number;
 }
 
 const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
@@ -24,15 +23,15 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [addMenuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
-  const instancesQuery = personJourneysResource(orgId, personId).useQuery();
-  const journeysFuture = useJourneys(parseInt(orgId));
+  const instancesFuture = usePersonJourneyInstances(orgId, personId);
+  const journeysFuture = useJourneys(orgId);
 
   return (
-    <ZUIQuery queries={{ instancesQuery }}>
-      {({ queries }) => (
+    <ZUIFuture future={instancesFuture}>
+      {(instances) => (
         <PersonCard title={messages.journeys.title()}>
           <List data-testid="PersonJourneysCard-list" disablePadding>
-            {queries.instancesQuery.data
+            {instances
               .sort((i0, i1) => Number(!!i0.closed) - Number(!!i1.closed))
               .map((instance) => (
                 <ListItem key={instance.id} button divider>
@@ -81,7 +80,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
           </List>
         </PersonCard>
       )}
-    </ZUIQuery>
+    </ZUIFuture>
   );
 };
 

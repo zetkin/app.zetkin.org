@@ -105,10 +105,7 @@ const PersonProfilePage: PageWithLayout = () => {
         </Grid>
         {journeysFuture.data?.length && (
           <Grid item lg={4} xs={12}>
-            <PersonJourneysCard
-              orgId={orgId.toString()}
-              personId={personId.toString()}
-            />
+            <PersonJourneysCard orgId={orgId} personId={personId} />
           </Grid>
         )}
         <Grid item lg={4} xs={12}>
