@@ -63,7 +63,7 @@ const breadcrumbs = async (
         });
       }
     }
-    res.status(200).json({ breadcrumbs });
+    res.status(200).json({ data: breadcrumbs });
   } else {
     return res.status(400).json({ error });
   }

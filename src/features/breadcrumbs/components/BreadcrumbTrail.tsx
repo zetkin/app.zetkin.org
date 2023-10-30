@@ -3,24 +3,13 @@ import makeStyles from '@mui/styles/makeStyles';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NextLink from 'next/link';
 import { Theme } from '@mui/material/styles';
-import { useQuery } from 'react-query';
 import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
-import { NextRouter, useRouter } from 'next/router';
 
 import { Breadcrumb } from 'utils/types';
-import getBreadcrumbs from '../utils/fetching/getBreadcrumbs';
 import { Msg } from 'core/i18n';
 
-import messageIds from './l10n/messageIds';
-
-const getQueryString = function (router: NextRouter): string {
-  // Only use parameters that are part of the path (e.g. [personId])
-  // and not ones that are part of the actual querystring (e.g. ?filter_*)
-  return Object.entries(router.query)
-    .filter(([key]) => router.pathname.includes(`[${key}]`))
-    .map(([key, val]) => `${key}=${val}`)
-    .join('&');
-};
+import messageIds from '../l10n/messageIds';
+import useBreadcrumbElements from '../hooks/useBreadcrumbs';
 
 const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
   createStyles({
@@ -48,40 +37,30 @@ const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
 
 function validMessageId(
   idStr: string
-): keyof typeof messageIds.breadcrumbs | null {
-  if (idStr in messageIds.breadcrumbs) {
-    return idStr as keyof typeof messageIds.breadcrumbs;
+): keyof typeof messageIds.elements | null {
+  if (idStr in messageIds.elements) {
+    return idStr as keyof typeof messageIds.elements;
   } else {
     return null;
   }
 }
 
-const ZUIBreadcrumbTrail = ({
+const BreadcrumbTrail = ({
   highlight,
 }: {
   highlight?: boolean;
 }): JSX.Element | null => {
   const classes = useStyles({ highlight });
-  const router = useRouter();
-  const path = router.pathname;
-  const query = getQueryString(router);
-  const breadcrumbsQuery = useQuery(
-    ['breadcrumbs', path, query],
-    getBreadcrumbs(path, query)
-  );
+  const breadcrumbs = useBreadcrumbElements();
   const smallScreen = useMediaQuery('(max-width:700px)');
   const mediumScreen = useMediaQuery('(max-width:960px)');
   const largeScreen = useMediaQuery('(max-width:1200px)');
-
-  if (!breadcrumbsQuery.isSuccess) {
-    return <div />;
-  }
 
   const getLabel = (crumb: Breadcrumb) => {
     if (crumb.labelMsg) {
       const msgId = validMessageId(crumb.labelMsg);
       if (msgId) {
-        return <Msg id={messageIds.breadcrumbs[msgId]} />;
+        return <Msg id={messageIds.elements[msgId]} />;
       }
     }
 
@@ -97,8 +76,8 @@ const ZUIBreadcrumbTrail = ({
         maxItems={smallScreen ? 2 : mediumScreen ? 4 : largeScreen ? 6 : 10}
         separator={<NavigateNextIcon fontSize="small" />}
       >
-        {breadcrumbsQuery.data.map((crumb, index) => {
-          if (index < breadcrumbsQuery.data.length - 1) {
+        {breadcrumbs.map((crumb, index) => {
+          if (index < breadcrumbs.length - 1) {
             return (
               <NextLink key={crumb.href} href={crumb.href} passHref>
                 <Link
@@ -126,4 +105,4 @@ const ZUIBreadcrumbTrail = ({
   );
 };
 
-export default ZUIBreadcrumbTrail;
+export default BreadcrumbTrail;

@@ -5,6 +5,9 @@ import {
   createListenerMiddleware,
 } from '@reduxjs/toolkit';
 
+import breadcrumbsSlice, {
+  BreadcrumbsStoreSlice,
+} from 'features/breadcrumbs/store';
 import callAssignmentsSlice, {
   callAssignmentCreated,
   CallAssignmentSlice,
@@ -36,6 +39,7 @@ import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 
 export interface RootState {
+  breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
   events: EventsStoreSlice;
@@ -51,6 +55,7 @@ export interface RootState {
 }
 
 const reducer = {
+  breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
   events: eventsSlice.reducer,
