@@ -12,7 +12,7 @@ import PersonOrganizationsCard from 'features/profile/components/PersonOrganizat
 import { personTagsResource } from 'features/profile/api/people';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import { TagManagerSection } from 'features/tags/components/TagManager';
-import useCustomFields from 'features/smartSearch/hooks/useCustomFields';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';

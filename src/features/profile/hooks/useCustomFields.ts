@@ -1,7 +1,7 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinCustomField } from 'utils/types/zetkin';
-import { fieldsLoad, fieldsLoaded } from '../store';
+import { fieldsLoad, fieldsLoaded } from 'features/profile/store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useCustomFields(
@@ -9,7 +9,7 @@ export default function useCustomFields(
 ): IFuture<ZetkinCustomField[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const fieldsList = useAppSelector((state) => state.smartSearch.fieldsList);
+  const fieldsList = useAppSelector((state) => state.profiles.fieldsList);
 
   return loadListIfNecessary(fieldsList, dispatch, {
     actionOnLoad: () => fieldsLoad(),
