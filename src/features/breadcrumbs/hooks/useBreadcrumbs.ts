@@ -9,11 +9,13 @@ export default function useBreadcrumbElements() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const path = router.pathname;
-  const item = useAppSelector((state) => state.breadcrumbs.crumbsByPath[path]);
+  const crumbsItem = useAppSelector(
+    (state) => state.breadcrumbs.crumbsByPath[path]
+  );
 
-  const query = getQueryString(router);
+  const query = getPathParameters(router);
 
-  const future = loadItemIfNecessary(item, dispatch, {
+  const future = loadItemIfNecessary(crumbsItem, dispatch, {
     actionOnLoad: () => crumbsLoad(path),
     actionOnSuccess: (item) => crumbsLoaded([path, item]),
     loader: async () => {
@@ -28,7 +30,7 @@ export default function useBreadcrumbElements() {
   return future.data?.elements ?? [];
 }
 
-const getQueryString = function (router: NextRouter): string {
+const getPathParameters = function (router: NextRouter): string {
   // Only use parameters that are part of the path (e.g. [personId])
   // and not ones that are part of the actual querystring (e.g. ?filter_*)
   return Object.entries(router.query)
