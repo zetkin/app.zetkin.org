@@ -15,16 +15,6 @@ const initialState: TagsStoreSlice = {
   tagsByPersonId: {},
 };
 
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-// TODO: Refactor to use redux fully for tags
-// These are just empty for now, but when we refactor, they might
-// actually be removed and replaced with tag mappings in the stores
-// of taggable objects (like people, journey instances etc).
-function doNothing(state: TagsStoreSlice, action: PayloadAction<unknown>) {
-  // This does nothing
-}
-/* eslint-enable */
-
 const tagsSlice = createSlice({
   initialState: initialState,
   name: 'tags',
@@ -42,7 +32,10 @@ const tagsSlice = createSlice({
       state.tagsByPersonId[id].loaded = new Date().toISOString();
     },
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
-      doNothing(state, action);
+      const [personId, tag] = action.payload;
+      state.tagsByPersonId[personId].items.push(
+        remoteItem(personId, { data: tag })
+      );
     },
     tagCreate: (state) => {
       state.tagList.isLoading;
@@ -93,7 +86,10 @@ const tagsSlice = createSlice({
         ]);
     },
     tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
-      doNothing(state, action);
+      const [personId, tagId] = action.payload;
+      state.tagsByPersonId[personId].items = state.tagsByPersonId[
+        personId
+      ].items.filter((item) => item.id != tagId);
     },
     tagUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [tagId, mutating] = action.payload;
