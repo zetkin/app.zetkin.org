@@ -22,7 +22,7 @@ const DisplayPersonField = ({
   filter,
 }: DisplayPersonFieldProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const fields = useCustomFields(orgId);
+  const fields = useCustomFields(orgId).data ?? [];
   const { config } = filter;
   const { field: slug, search } = config;
   const op = filter.op || OPERATION.ADD;

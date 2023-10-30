@@ -41,7 +41,7 @@ const PersonField = ({
   filter: initialFilter,
 }: PersonFieldProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const fields = useCustomFields(orgId);
+  const fields = useCustomFields(orgId).data ?? [];
 
   const filteredFields = fields.filter(
     (f) => f.type !== CUSTOM_FIELD_TYPE.JSON

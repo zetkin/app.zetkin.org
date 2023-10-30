@@ -42,7 +42,7 @@ const PersonFieldConfig = ({
   const globalMessages = useMessages(globalMessageIds);
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const { orgId } = useNumericRouteParams();
-  const customFields = useCustomFields(orgId);
+  const customFields = useCustomFields(orgId).data ?? [];
 
   const fields: Field[] = [];
 
