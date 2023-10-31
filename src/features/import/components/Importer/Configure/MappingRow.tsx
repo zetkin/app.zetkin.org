@@ -1,7 +1,7 @@
-import { ArrowForward } from '@mui/icons-material';
-import { FC } from 'react';
+import { ArrowForward, ChevronRight } from '@mui/icons-material';
 import {
   Box,
+  Button,
   Checkbox,
   FormControl,
   InputLabel,
@@ -10,26 +10,32 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
-interface Field {
+interface ExperimentField {
+  id: number;
+  title: string;
+  needsMapping: boolean;
+}
+
+interface ExperimentColumn {
+  data: (number | string | null)[];
   id: number;
   title: string;
 }
 
 interface MappingRowProps {
-  column: (number | string | null)[];
-  fields: Field[];
+  column: ExperimentColumn;
+  zetkinFields: ExperimentField[];
   isEnabled: boolean;
   onEnable: () => void;
-  onZetkinFieldSelect: (zetkinFieldId: string) => void;
-  selectedZetkinField: string;
-  title: string;
+  onMapValues: () => void;
 }
 
-const useMappingMessage = (column: (number | string | null)[]): string => {
+const useColumnValuesMessage = (column: (number | string | null)[]): string => {
   const messages = useMessages(messageIds);
   const rowsWithValues: (string | number)[] = [];
   let numberOfEmptyRows = 0;
@@ -119,17 +125,24 @@ const useMappingMessage = (column: (number | string | null)[]): string => {
 };
 
 const MappingRow: FC<MappingRowProps> = ({
+  column,
+  zetkinFields,
   isEnabled,
   onEnable,
-  onZetkinFieldSelect: onFieldSelect,
-  fields,
-  selectedZetkinField,
-  title,
-  column,
+  onMapValues,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const mappingMessage = useMappingMessage(column);
+  const columnValuesMessage = useColumnValuesMessage(column.data);
+  const [selectedZetkinFieldId, setSelectedZetkinFieldId] = useState('');
+
+  const selectedZetkinField = zetkinFields.find(
+    (field) => field.id === parseInt(selectedZetkinFieldId)
+  );
+
+  const showColumnValuesMessage = !isEnabled || !selectedZetkinField;
+  const showNeedsMappingMessage =
+    isEnabled && selectedZetkinField && selectedZetkinField.needsMapping;
 
   return (
     <Box display="flex" flexDirection="column">
@@ -142,7 +155,7 @@ const MappingRow: FC<MappingRowProps> = ({
         <Box alignItems="center" display="flex">
           <Checkbox checked={isEnabled} onChange={onEnable} />
           <Box bgcolor={theme.palette.grey[100]} borderRadius={2} padding={1}>
-            <Typography>{title}</Typography>
+            <Typography>{column.title}</Typography>
           </Box>
         </Box>
         <Box alignItems="center" display="flex" width="50%">
@@ -154,10 +167,14 @@ const MappingRow: FC<MappingRowProps> = ({
             <Select
               disabled={!isEnabled}
               label={messages.configuration.mapping.selectZetkinField()}
-              onChange={(ev) => onFieldSelect(ev.target.value)}
-              value={selectedZetkinField}
+              onChange={(event) => {
+                if (typeof event.target.value !== 'string') {
+                  setSelectedZetkinFieldId(event.target.value);
+                }
+              }}
+              value={isEnabled ? selectedZetkinFieldId : ''}
             >
-              {fields.map((field) => (
+              {zetkinFields.map((field) => (
                 <MenuItem key={field.id} value={field.id}>
                   {field.title}
                 </MenuItem>
@@ -166,8 +183,26 @@ const MappingRow: FC<MappingRowProps> = ({
           </FormControl>
         </Box>
       </Box>
-      <Box marginLeft={5.5} paddingTop={1}>
-        <Typography color="secondary">{mappingMessage}</Typography>
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        marginLeft={5.5}
+        paddingTop={1}
+      >
+        {showColumnValuesMessage && (
+          <Typography color="secondary">{columnValuesMessage}</Typography>
+        )}
+        {showNeedsMappingMessage && (
+          <>
+            <Typography color={theme.palette.warning.main}>
+              <Msg id={messageIds.configuration.mapping.notMapped} />
+            </Typography>
+            <Button endIcon={<ChevronRight />} onClick={onMapValues}>
+              <Msg id={messageIds.configuration.mapping.mapValuesButton} />
+            </Button>
+          </>
+        )}
       </Box>
     </Box>
   );

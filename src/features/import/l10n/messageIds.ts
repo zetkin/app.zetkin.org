@@ -3,6 +3,7 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.import', {
   configuration: {
     mapping: {
+      mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{
           firstValue: string | number;
@@ -54,6 +55,7 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
+      notMapped: m('You need to map values'),
       selectZetkinField: m('Import as...'),
     },
     title: m('Import people'),

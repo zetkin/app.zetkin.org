@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import MappingRow from './MappingRow';
-import { useState } from 'react';
 
 export default {
   component: MappingRow,
@@ -9,32 +9,31 @@ export default {
 } as ComponentMeta<typeof MappingRow>;
 
 const Template: ComponentStory<typeof MappingRow> = (args) => {
-  const [enabled, setEnabled] = useState(false);
-  const [selectedZetkinField, setSelectedZetkinField] = useState('');
+  const [checked, setChecked] = useState(false);
+  const [mapping, setMapping] = useState(false);
 
   return (
     <MappingRow
       column={args.column}
-      fields={args.fields}
-      isEnabled={enabled}
-      onEnable={() => setEnabled(!enabled)}
-      onZetkinFieldSelect={(zetkinField: string) =>
-        setSelectedZetkinField(zetkinField)
-      }
-      selectedZetkinField={selectedZetkinField}
-      title={args.title}
+      isEnabled={checked}
+      onEnable={() => setChecked(!checked)}
+      onMapValues={() => setMapping(!mapping)}
+      zetkinFields={args.zetkinFields}
     />
   );
 };
 
 export const basic = Template.bind({});
 basic.args = {
-  column: ['katt', 'hund', 'get', null, null, 'ko', 'gris', 'papegoja', null],
-  fields: [
-    { id: 1, title: 'Tags' },
-    { id: 2, title: 'First name' },
-    { id: 3, title: 'Last name' },
-    { id: 4, title: 'Organization' },
+  column: {
+    data: ['katt', 'hund', 'get', null, null, 'ko', 'gris', 'papegoja', null],
+    id: 1,
+    title: 'id',
+  },
+  zetkinFields: [
+    { id: 1, needsMapping: true, title: 'Tags' },
+    { id: 2, needsMapping: false, title: 'First name' },
+    { id: 3, needsMapping: false, title: 'Last name' },
+    { id: 4, needsMapping: true, title: 'Organization' },
   ],
-  title: 'id',
 };
