@@ -6,12 +6,17 @@ import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export interface JourneysStoreSlice {
   journeyInstanceList: RemoteList<ZetkinJourneyInstance>;
+  journeyInstancesBySubjectId: Record<
+    number,
+    RemoteList<ZetkinJourneyInstance>
+  >;
   journeyList: RemoteList<ZetkinJourney>;
   timelineUpdatesByInstanceId: Record<number, RemoteList<ZetkinUpdate>>;
 }
 
 const initialJourneysState: JourneysStoreSlice = {
   journeyInstanceList: remoteList(),
+  journeyInstancesBySubjectId: {},
   journeyList: remoteList(),
   timelineUpdatesByInstanceId: {},
 };
@@ -164,6 +169,20 @@ const journeysSlice = createSlice({
       state.journeyList.loaded = timestamp;
       state.journeyList.items.forEach((item) => (item.loaded = timestamp));
     },
+    personJourneyInstancesLoad: (state, action: PayloadAction<number>) => {
+      const personId = action.payload;
+      state.journeyInstancesBySubjectId[personId] = remoteList();
+      state.journeyInstancesBySubjectId[personId].isLoading = true;
+    },
+    personJourneyInstancesLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinJourneyInstance[]]>
+    ) => {
+      const [personId, instances] = action.payload;
+      state.journeyInstancesBySubjectId[personId] = remoteList(instances);
+      state.journeyInstancesBySubjectId[personId].loaded =
+        new Date().toISOString();
+    },
     timelineUpdatesLoad: (state, action: PayloadAction<number>) => {
       const instanceId = action.payload;
       if (!state.timelineUpdatesByInstanceId[instanceId]) {
@@ -200,6 +219,8 @@ export const {
   journeyLoaded,
   journeysLoad,
   journeysLoaded,
+  personJourneyInstancesLoad,
+  personJourneyInstancesLoaded,
   timelineUpdatesLoad,
   timelineUpdatesLoaded,
 } = journeysSlice.actions;

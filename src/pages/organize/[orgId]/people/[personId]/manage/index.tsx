@@ -4,9 +4,9 @@ import Head from 'next/head';
 
 import { PageWithLayout } from 'utils/types';
 import PersonDeleteCard from 'features/profile/components/PersonDeleteCard';
-import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
+import usePerson from 'features/profile/hooks/usePerson';
 import { getPersonScaffoldProps, scaffoldOptions } from '../index';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -15,15 +15,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 interface PersonManagePageProps {
-  orgId: string;
-  personId: string;
+  orgId: number;
+  personId: number;
 }
 
 const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
   orgId,
   personId,
 }) => {
-  const { data: person } = personResource(orgId, personId).useQuery();
+  const { data: person } = usePerson(orgId, personId);
 
   if (!person) {
     return null;

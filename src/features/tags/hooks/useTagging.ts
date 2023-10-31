@@ -3,7 +3,11 @@ import { tagAssigned, tagUnassigned } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 interface UseTaggingReturn {
-  assignToPerson: (personId: number, tagId: number, value?: string) => void;
+  assignToPerson: (
+    personId: number,
+    tagId: number,
+    value?: ZetkinTag['value']
+  ) => Promise<void>;
   removeFromPerson: (personId: number, tagId: number) => Promise<void>;
 }
 
@@ -14,7 +18,7 @@ export default function useTagging(orgId: number): UseTaggingReturn {
   const assignToPerson = async (
     personId: number,
     tagId: number,
-    value?: string
+    value?: ZetkinTag['value']
   ) => {
     const data = value ? { value } : undefined;
     const tag = await apiClient.put<ZetkinTag>(

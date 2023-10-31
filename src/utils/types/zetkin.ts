@@ -177,7 +177,7 @@ export interface ZetkinCustomField {
   title: string;
   slug: string;
   description: string | null;
-  type: 'text' | 'json' | 'date' | 'url';
+  type: CUSTOM_FIELD_TYPE;
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
 }
 
@@ -419,14 +419,6 @@ export enum CUSTOM_FIELD_TYPE {
   DATE = 'date',
   TEXT = 'text',
   JSON = 'json',
-}
-
-export interface ZetkinDataField {
-  id: number;
-  title: string;
-  description: string;
-  type: CUSTOM_FIELD_TYPE;
-  slug: string;
 }
 
 export interface ZetkinJourney {

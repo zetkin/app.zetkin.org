@@ -21,7 +21,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
-import useCustomFields from 'features/smartSearch/hooks/useCustomFields';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 
 interface PersonFieldConfigProps {
@@ -42,7 +42,7 @@ const PersonFieldConfig = ({
   const globalMessages = useMessages(globalMessageIds);
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const { orgId } = useNumericRouteParams();
-  const customFields = useCustomFields(orgId);
+  const customFields = useCustomFields(orgId).data ?? [];
 
   const fields: Field[] = [];
 

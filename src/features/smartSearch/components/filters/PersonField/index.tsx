@@ -17,7 +17,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import useCustomFields from 'features/smartSearch/hooks/useCustomFields';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.personField;
 
@@ -41,7 +41,7 @@ const PersonField = ({
   filter: initialFilter,
 }: PersonFieldProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const fields = useCustomFields(orgId);
+  const fields = useCustomFields(orgId).data ?? [];
 
   const filteredFields = fields.filter(
     (f) => f.type !== CUSTOM_FIELD_TYPE.JSON

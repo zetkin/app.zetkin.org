@@ -13,16 +13,16 @@ import OrganizationSelect from './OrganizationSelect';
 import { OrganizationsTree } from './OrganizationsTree';
 import PersonCard from '../PersonCard';
 import { PersonOrganization } from 'utils/organize/people';
-import { personOrganizationsResource } from 'features/profile/api/people';
 import { useMessages } from 'core/i18n';
+import usePersonOrgData from 'features/profile/hooks/usePersonOrgData';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 import messageIds from 'features/profile/l10n/messageIds';
 
 interface PersonOrganizationsCardProps {
-  orgId: string;
-  personId: string;
+  orgId: number;
+  personId: number;
 }
 
 const PersonOrganizationsCard: React.FunctionComponent<
@@ -34,13 +34,7 @@ const PersonOrganizationsCard: React.FunctionComponent<
   const [selected, setSelected] = useState<PersonOrganization>();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const { data } = personOrganizationsResource(orgId, personId).useQuery();
-
-  const addOrgMutation = personOrganizationsResource(orgId, personId).useAdd();
-  const removeOrgMutation = personOrganizationsResource(
-    orgId,
-    personId
-  ).useRemove();
+  const { data, addToOrg, removeFromOrg } = usePersonOrgData(orgId, personId);
 
   useEffect(() => {
     if (!editable) {
@@ -53,23 +47,26 @@ const PersonOrganizationsCard: React.FunctionComponent<
     setSelected(selectedOrg);
   };
 
-  const submitSubOrg = () => {
+  const submitSubOrg = async () => {
     if (selected) {
-      addOrgMutation.mutate(selected.id, {
-        onError: () => showSnackbar('error', messages.organizations.addError()),
-        onSuccess: () => setSelected(undefined),
-      });
+      try {
+        await addToOrg(selected.id);
+        setSelected(undefined);
+      } catch (err) {
+        showSnackbar('error', messages.organizations.addError());
+      }
     }
   };
 
   const removeSubOrg = (subOrgId: PersonOrganization['id']) => {
     showConfirmDialog({
-      onSubmit: () => {
-        removeOrgMutation.mutate(subOrgId, {
-          onError: () =>
-            showSnackbar('error', messages.organizations.removeError()),
-          onSuccess: () => setSelected(undefined),
-        });
+      onSubmit: async () => {
+        try {
+          await removeFromOrg(subOrgId);
+          setSelected(undefined);
+        } catch (err) {
+          showSnackbar('error', messages.organizations.removeError());
+        }
       },
     });
   };

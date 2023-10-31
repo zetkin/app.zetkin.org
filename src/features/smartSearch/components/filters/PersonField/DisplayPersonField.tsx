@@ -10,7 +10,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
-import useCustomFields from 'features/smartSearch/hooks/useCustomFields';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.personField;
 
@@ -22,7 +22,7 @@ const DisplayPersonField = ({
   filter,
 }: DisplayPersonFieldProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const fields = useCustomFields(orgId);
+  const fields = useCustomFields(orgId).data ?? [];
   const { config } = filter;
   const { field: slug, search } = config;
   const op = filter.op || OPERATION.ADD;
