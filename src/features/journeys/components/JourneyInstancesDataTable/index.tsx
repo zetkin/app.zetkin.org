@@ -54,8 +54,16 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
       <DataGridPro
         checkboxSelection
         columns={columnsWithHeaderTitles}
-        components={{ Toolbar: Toolbar }}
-        componentsProps={{
+        disableRowSelectionOnClick={true}
+        initialState={{ pagination: { paginationModel: { pageSize: 50 } } }}
+        onColumnOrderChange={(params) => {
+          setColumnOrder(params.column.field, params.targetIndex - 1);
+        }}
+        onColumnResize={(params) => {
+          setColumnWidth(params.colDef.field, params.width);
+        }}
+        rows={rows}
+        slotProps={{
           toolbar: {
             gridColumns: columnsWithHeaderTitles,
             onQuickSearchChange: setQuickSearch,
@@ -63,15 +71,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
             sortModel: modelGridProps.sortModel,
           },
         }}
-        disableSelectionOnClick={true}
-        onColumnOrderChange={(params) => {
-          setColumnOrder(params.colDef.field, params.targetIndex - 1);
-        }}
-        onColumnResize={(params) => {
-          setColumnWidth(params.colDef.field, params.width);
-        }}
-        pageSize={50}
-        rows={rows}
+        slots={{ toolbar: Toolbar }}
         {...modelGridProps}
         {...dataGridProps}
       />

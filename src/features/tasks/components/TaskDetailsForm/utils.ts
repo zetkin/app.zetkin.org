@@ -1,18 +1,17 @@
-import dayjs from 'dayjs';
 import {
   AnyTaskTypeConfig,
   CollectDemographicsConfig,
+  NewTaskValues,
   ShareLinkConfig,
   TASK_TYPE,
   VisitLinkConfig,
-  ZetkinTaskRequestBody,
 } from 'features/tasks/components/types';
 
-export const isPublishedFirst = (values: ZetkinTaskRequestBody): boolean => {
+export const isPublishedFirst = (values: NewTaskValues): boolean => {
   const [publishedTime, deadlineTime, expiresTime] = [
-    dayjs(values?.published),
-    dayjs(values?.deadline),
-    dayjs(values?.expires),
+    values?.published,
+    values?.deadline,
+    values?.expires,
   ];
 
   return Boolean(
@@ -21,18 +20,18 @@ export const isPublishedFirst = (values: ZetkinTaskRequestBody): boolean => {
       (!values?.deadline && !values?.expires) ||
       // And it's is before deadline
       ((!values.deadline ||
-        (values?.published && publishedTime.isBefore(deadlineTime))) &&
+        (values?.published && publishedTime?.isBefore(deadlineTime))) &&
         // And it is before expires
         (!values.expires ||
-          (values?.published && publishedTime.isBefore(expiresTime))))
+          (values?.published && publishedTime?.isBefore(expiresTime))))
   );
 };
 
-export const isDeadlineSecond = (values: ZetkinTaskRequestBody): boolean => {
+export const isDeadlineSecond = (values: NewTaskValues): boolean => {
   const [publishedTime, deadlineTime, expiresTime] = [
-    dayjs(values?.published),
-    dayjs(values?.deadline),
-    dayjs(values?.expires),
+    values?.published,
+    values?.deadline,
+    values?.expires,
   ];
 
   return Boolean(
@@ -41,18 +40,18 @@ export const isDeadlineSecond = (values: ZetkinTaskRequestBody): boolean => {
       (!values?.published && !values?.expires) ||
       // If is after published
       ((!values.published ||
-        (values?.deadline && deadlineTime.isAfter(publishedTime))) &&
+        (values?.deadline && deadlineTime?.isAfter(publishedTime))) &&
         // And it is before expires
         (!values.expires ||
-          (values?.deadline && deadlineTime.isBefore(expiresTime))))
+          (values?.deadline && deadlineTime?.isBefore(expiresTime))))
   );
 };
 
-export const isExpiresThird = (values: ZetkinTaskRequestBody): boolean => {
+export const isExpiresThird = (values: NewTaskValues): boolean => {
   const [publishedTime, deadlineTime, expiresTime] = [
-    dayjs(values?.published),
-    dayjs(values?.deadline),
-    dayjs(values?.expires),
+    values?.published,
+    values?.deadline,
+    values?.expires,
   ];
 
   return Boolean(
@@ -61,10 +60,10 @@ export const isExpiresThird = (values: ZetkinTaskRequestBody): boolean => {
       (!values?.published && !values?.deadline) ||
       // If is after published
       ((!values.published ||
-        (values?.expires && expiresTime.isAfter(publishedTime))) &&
+        (values?.expires && expiresTime?.isAfter(publishedTime))) &&
         // And it is after deadline
         (!values.deadline ||
-          (values?.expires && expiresTime.isAfter(deadlineTime))))
+          (values?.expires && expiresTime?.isAfter(deadlineTime))))
   );
 };
 

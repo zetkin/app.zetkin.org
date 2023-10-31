@@ -8,9 +8,9 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
-import { LocalTextViewColumn } from '../../types';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
+import { LocalTextViewColumn, ZetkinViewRow } from '../../types';
 
 type LocalTextViewCell = string | null;
 
@@ -73,7 +73,7 @@ const Cell: FC<{ cell: LocalTextViewCell | undefined }> = ({ cell }) => {
   );
 };
 
-const EditTextarea = (props: GridRenderEditCellParams<string>) => {
+const EditTextarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
   const { id, field, value, colDef } = props;
   const [valueState, setValueState] = useState(value);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();

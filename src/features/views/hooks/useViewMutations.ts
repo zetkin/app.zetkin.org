@@ -1,7 +1,12 @@
 import { PromiseFuture } from 'core/caching/futures';
 import { ZetkinView } from '../components/types';
+import {
+  columnOrderUpdated,
+  viewDeleted,
+  viewUpdate,
+  viewUpdated,
+} from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { viewDeleted, viewUpdate, viewUpdated } from '../store';
 
 type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
   folder_id?: number | null;
@@ -9,6 +14,7 @@ type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
 
 interface UseViewMutationsReturn {
   deleteView: (viewId: number) => void;
+  updateColumnOrder: (viewId: number, columnOrder: number[]) => Promise<void>;
   updateView: (
     viewId: number,
     data: ZetkinViewUpdateBody
@@ -39,5 +45,16 @@ export default function useViewMutations(
     return new PromiseFuture(promise);
   };
 
-  return { deleteView, updateView };
+  const updateColumnOrder = async (
+    viewId: number,
+    columnOrder: number[]
+  ): Promise<void> => {
+    await apiClient.patch<{ order: number[] }>(
+      `/api/orgs/${orgId}/people/views/${viewId}/column_order`,
+      { order: columnOrder }
+    );
+    dispatch(columnOrderUpdated([viewId, columnOrder]));
+  };
+
+  return { deleteView, updateColumnOrder, updateView };
 }

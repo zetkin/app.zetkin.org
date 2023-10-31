@@ -1,15 +1,6 @@
-import { Clear } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import {
-  Box,
-  Checkbox,
-  Container,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Checkbox, Container, Typography } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
@@ -103,44 +94,30 @@ const JourneyMilestoneCard = ({
           </Box>
         ) : (
           // TODO: Move this to new ZUIDatePicker
-          <DatePicker
-            data-testid="JourneyMilestoneCard-datePicker"
-            label={messages.instance.dueDateInputLabel()}
-            onChange={(newDeadline) => {
-              if (newDeadline && newDeadline.isValid()) {
-                const dateStr = newDeadline.format('YYYY-MM-DD');
-                updateMilestoneStatus({ deadline: dateStr });
-              } else if (!newDeadline) {
-                // Deadline is cleared
-                updateMilestoneStatus({ deadline: null });
-              }
-            }}
-            renderInput={(params) => {
-              return (
-                <TextField
-                  {...params}
-                  data-testid="JourneyMilestoneCard-datePicker"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label={messages.instance.dueDateInputClear()}
-                          onClick={() => {
-                            // Deadline is cleared
-                            updateMilestoneStatus({ deadline: null });
-                          }}
-                        >
-                          <Clear />
-                        </IconButton>
-                        {params.InputProps?.endAdornment}
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              );
-            }}
-            value={milestone.deadline ? dayjs(milestone.deadline) : null}
-          />
+          <Box data-testid="JourneyMilestoneCard-datePicker">
+            <DatePicker
+              label={messages.instance.dueDateInputLabel()}
+              localeText={{
+                clearButtonLabel: messages.instance.dueDateInputClear(),
+              }}
+              onChange={(newDeadline) => {
+                if (newDeadline && newDeadline.isValid()) {
+                  const dateStr = newDeadline.format('YYYY-MM-DD');
+                  updateMilestoneStatus({ deadline: dateStr });
+                } else if (!newDeadline) {
+                  // Deadline is cleared
+                  updateMilestoneStatus({ deadline: null });
+                }
+              }}
+              slotProps={{
+                actionBar: {
+                  actions: ['clear'],
+                  'data-testid': 'JourneyMilestoneCard-datePickerActionBar',
+                },
+              }}
+              value={milestone.deadline ? dayjs(milestone.deadline) : null}
+            />
+          </Box>
         )}
       </Box>
       {milestone.description && (

@@ -3,8 +3,8 @@ import { MenuItem } from '@mui/material';
 import {
   GridColDef,
   GridColumnMenuContainer,
+  GridColumnMenuFilterItem,
   GridColumnMenuProps,
-  GridFilterMenuItem,
 } from '@mui/x-data-grid-pro';
 
 import { Msg } from 'core/i18n';
@@ -23,37 +23,34 @@ const ViewDataTableColumnMenu = forwardRef<
   HTMLUListElement,
   GridColumnMenuProps & ViewDataTableColumnMenuProps
 >(function ViewDataTableColumnMenuComponent(props, ref) {
-  const { hideMenu, currentColumn, onConfigure, onDelete, onRename, ...rest } =
-    props;
+  const { hideMenu, colDef, onConfigure, onDelete, onRename, ...rest } = props;
 
   return (
     <GridColumnMenuContainer
       ref={ref}
-      currentColumn={currentColumn}
-      data-testid={`grid-filter-column-menu-${currentColumn.field}`}
+      colDef={colDef}
+      data-testid={`grid-filter-column-menu-${colDef.field}`}
       hideMenu={hideMenu}
       {...rest}
     >
-      <GridFilterMenuItem column={currentColumn} onClick={hideMenu} />
+      <GridColumnMenuFilterItem colDef={colDef} onClick={hideMenu} />
       <MenuItem
-        data-testid={`rename-column-button-${currentColumn.field}`}
-        onClick={noPropagate(() => onRename(currentColumn.field))}
+        data-testid={`rename-column-button-${colDef.field}`}
+        onClick={noPropagate(() => onRename(colDef.field))}
       >
         <Msg id={messageIds.columnMenu.rename} />
       </MenuItem>
       {
         // Conditionally show configure button only if the column type is configurable
-        props.showConfigureButton(currentColumn.field) && (
-          <MenuItem
-            onClick={noPropagate(() => onConfigure(currentColumn.field))}
-          >
+        props.showConfigureButton(colDef.field) && (
+          <MenuItem onClick={noPropagate(() => onConfigure(colDef.field))}>
             <Msg id={messageIds.columnMenu.configure} />
           </MenuItem>
         )
       }
       <MenuItem
-        data-testid={`delete-column-button-${currentColumn.field}`}
-        onClick={noPropagate(() => onDelete(currentColumn.field))}
+        data-testid={`delete-column-button-${colDef.field}`}
+        onClick={noPropagate(() => onDelete(colDef.field))}
       >
         <Msg id={messageIds.columnMenu.delete} />
       </MenuItem>

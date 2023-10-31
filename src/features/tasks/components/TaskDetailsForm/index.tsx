@@ -1,11 +1,14 @@
+import dayjs from 'dayjs';
 import { Form } from 'react-final-form';
 import { MenuItem } from '@mui/material';
+import utc from 'dayjs/plugin/utc';
 import validator from 'validator';
 import { DateTimePicker, TextField } from 'mui-rff';
 
 import { ZetkinTask } from 'utils/types/zetkin';
 import {
   AnyTaskTypeConfig,
+  NewTaskValues,
   TASK_TYPE,
   VisitLinkConfig,
   ZetkinTaskRequestBody,
@@ -36,6 +39,8 @@ import messageIds from 'features/tasks/l10n/messageIds';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 
+dayjs.extend(utc);
+
 interface TaskDetailsFormProps {
   onSubmit: (task: ZetkinTaskRequestBody) => void;
   onCancel: () => void;
@@ -52,7 +57,7 @@ const TaskDetailsForm = ({
   const { data: campaigns } = useCampaigns(orgId);
   const taskStatus = task ? getTaskStatus(task) : null;
 
-  const validate = (values: ZetkinTaskRequestBody) => {
+  const validate = (values: NewTaskValues) => {
     const errors: Record<string, string | Record<string, string>> = {};
     if (!values.title) {
       errors.title = messages.form.required();
@@ -96,7 +101,7 @@ const TaskDetailsForm = ({
     return errors;
   };
 
-  const submit = (newTaskValues: ZetkinTaskRequestBody) => {
+  const submit = (newTaskValues: NewTaskValues) => {
     // Change shape of fields to array
     const configWithFieldsArray = {
       ...newTaskValues.config,
@@ -130,9 +135,23 @@ const TaskDetailsForm = ({
         ? parseInt(newTaskValues.reassign_limit.toString())
         : null;
 
+    //Turn dayjs into date strings
+    const deadline = newTaskValues.deadline
+      ? newTaskValues.deadline.toISOString()
+      : undefined;
+    const expires = newTaskValues.expires
+      ? newTaskValues.expires.toISOString()
+      : undefined;
+    const published = newTaskValues.published
+      ? newTaskValues.published.toISOString()
+      : undefined;
+
     onSubmit({
       ...newTaskValues,
       config,
+      deadline,
+      expires,
+      published,
       reassign_interval,
       reassign_limit,
       time_estimate,
@@ -152,10 +171,12 @@ const TaskDetailsForm = ({
               fields: task?.config?.fields[0],
             }),
         },
-        deadline: task?.deadline,
-        expires: task?.expires,
+        deadline: task?.deadline ? dayjs(task.deadline + '.000Z') : undefined,
+        expires: task?.expires ? dayjs(task.expires + '.000Z') : undefined,
         instructions: task?.instructions,
-        published: task?.published,
+        published: task?.published
+          ? dayjs(task.published + '.000Z')
+          : undefined,
         reassign_interval: task?.reassign_interval,
         reassign_limit: task?.reassign_limit,
         time_estimate: task?.time_estimate || DEFAULT_TIME_ESTIMATE,

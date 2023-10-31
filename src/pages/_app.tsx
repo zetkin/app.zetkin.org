@@ -1,6 +1,6 @@
 import '../styles.css';
 
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { AppProps } from 'next/app';
 import createStore from 'core/store';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,7 +8,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -25,7 +25,7 @@ import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
 import { PageWithLayout } from '../utils/types';
-import theme from '../theme';
+import { themeWithLocale } from '../theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
@@ -88,7 +88,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <EnvProvider env={env}>
         <UserContext.Provider value={pageProps.user}>
           <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={themeWithLocale(lang)}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <IntlProvider
                   defaultLocale="en"

@@ -54,6 +54,7 @@ const search = async (
       makeSearchRequest(SEARCH_DATA_TYPE.VIEW, query, apiFetch),
       makeSearchRequest(SEARCH_DATA_TYPE.CALL_ASSIGNMENT, query, apiFetch),
       makeSearchRequest(SEARCH_DATA_TYPE.SURVEY, query, apiFetch),
+      makeSearchRequest(SEARCH_DATA_TYPE.JOURNEY_INSTANCE, query, apiFetch),
     ]);
 
     const searchResults = results.flat();

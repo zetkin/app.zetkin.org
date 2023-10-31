@@ -131,7 +131,7 @@ feat:
       organizerActionNeeded: Organizer action needed
       subtitle: Targets not ready to be called
       title: Blocked
-      viewSheetButton: View sheet
+      viewSheetButton: View list
     callers:
       actions:
         customize: Customize queue
@@ -680,7 +680,7 @@ feat:
       project: Project
       survey: Survey
       task: Task
-      view: View
+      view: List
   smartSearch:
     buttonLabels:
       add: Save selection
@@ -704,7 +704,7 @@ feat:
       person_data: Based on their name, address or other data
       person_field: Based on custom fields
       person_tags: Based on their tags
-      person_view: People from a view
+      person_view: People from a list
       random: A random selection of people
       sub_query: Based on another Smart Search query
       survey_option: Based on the options they have selected in survey questions
@@ -827,17 +827,18 @@ feat:
           {tags}"
       personView:
         examples:
-          one: Add people who are in the view "Active Members 2022".
-          two: Remove people who are not in the view "Active Members 2022".
+          one: Add people who are in the list "Active Members 2022".
+          two: Remove people who are not in the list "Active Members 2022".
         inSelect:
           in: in
           notin: not in
-        inputString: "{addRemoveSelect} people who are {inSelect} the view {viewSelect}."
+        inputString: "{addRemoveSelect} people who are {inSelect} the list {viewSelect}."
         viewSelect:
-          none: This organization doesn't have any views yet
+          none: This organization doesn't have any lists yet
       random:
         addLimitRemoveSelect:
           add: add
+          limit: limit to
           sub: remove
         examples:
           one: Randomly add 20 people in the organization.
@@ -983,6 +984,7 @@ feat:
       noOptions: No matching tags
     operators:
       add: Add
+      limit: Limit to
       sub: Remove
     quantity:
       edit:
@@ -1379,34 +1381,34 @@ feat:
   views:
     actions:
       createFolder: Create folder
-      createView: Create view
+      createView: Create list
     browser:
       backToFolder: Back to {folder}
-      backToRoot: Back to all views
+      backToRoot: Back to all lists
       confirmDelete:
         folder:
           title: Delete folder and content
-          warning: Deleting this folder and all views within is a permanent action that
+          warning: Deleting this folder and all lists within is a permanent action that
             cannot be undone. Are you sure you want to continue?
         view:
-          title: Delete view
-          warning: Deleting this view is a permanent action which can't be undone. Are you
+          title: Delete list
+          warning: Deleting this list is a permanent action which can't be undone. Are you
             sure you want to continue?
       menu:
         delete: Delete
         rename: Rename
       moveToFolder: Move to {folder}
-      moveToRoot: Move to all views
+      moveToRoot: Move to all lists
     browserLayout:
       tabs:
-        views: Views
+        views: Lists
       title: People
     cells:
       localPerson:
-        alreadyInView: Already in view
+        alreadyInView: Already in list
         clearLabel: Unassign
         otherPeople: Other people
-        restrictedMode: Can't be edited in shared views.
+        restrictedMode: Can't be edited in shared lists.
         searchLabel: Select a person
       organizerAction:
         actionNeeded: Organizer action needed
@@ -1529,7 +1531,7 @@ feat:
           noSurveys: Your organisation does not have any surveys.
           title: Survey submit date
         tag:
-          description: Toggle a tag for each person in the view
+          description: Toggle a tag for each person in the list
           keywords: ""
           title: Tag
         toggle:
@@ -1543,7 +1545,7 @@ feat:
         last_name: Last Name
         phone: Phone number
       editor:
-        alreadyInView: Already in view
+        alreadyInView: Already in list
         buttonLabels:
           addColumns: Add {columns, plural, one {1 column} other {{columns} columns}}
           change: Change column type
@@ -1556,10 +1558,10 @@ feat:
           tag: Tag
       gallery:
         add: Add
-        alreadyInView: Already in view
+        alreadyInView: Already in list
         columns: Columns
         configure: Configure
-        header: Add column to view
+        header: Add column to list
         noSearchResults: There are no column choices that match "{searchString}"
         searchPlaceholder: Find a column
         searchResults: Results for "{searchString}"
@@ -1586,10 +1588,10 @@ feat:
     defaultViewTitles:
       organizer_action: Organizer action needed
     deleteDialog:
-      error: There was an error deleting the view
-      title: Delete view?
-      warningText: Do you really want to delete this view? This will delete any data
-        stored in the view such as notes and toggles (but will not delete the
+      error: There was an error deleting the list
+      title: Delete list?
+      warningText: Do you really want to delete this list? This will delete any data
+        stored in the list such as notes and toggles (but will not delete the
         people from the database)?
     editViewTitleAlert:
       error: Error. Title not updated
@@ -1597,30 +1599,30 @@ feat:
     empty:
       dynamic:
         configureButton: Configure
-        description: Create a dynamic view where people are added and removed
+        description: Create a dynamic list where people are added and removed
           automatically using Smart Search.
-        headline: Configure Smart Search View
+        headline: Configure Smart Search list
       notice:
-        dynamic: This is a Smart Search View but no people match the query
+        dynamic: This is a Smart Search list but no people match the query
         static: You haven't added any rows yet
       static:
-        description: Add the first person to create a static view where people are added
+        description: Add the first person to create a static list where people are added
           and removed manually.
         headline: Add people manually
     folder:
       summary:
         empty: Empty
         folderCount: "{count, plural, =1 {1 folder} other {# folders}}"
-        viewCount: "{count, plural, =1 {1 view} other {# views}}"
+        viewCount: "{count, plural, =1 {1 list} other {# lists}}"
     footer:
-      addPlaceholder: Start typing to add person to view
-      alreadyInView: Already in view
+      addPlaceholder: Start typing to add person to list
+      alreadyInView: Already in list
     newFolderTitle: New Folder
     newViewFields:
-      title: New View
+      title: New list
     removeDialog:
-      action: Are you sure you want to remove these rows from this view?
-      title: Remove people from view
+      action: Are you sure you want to remove these rows from this list?
+      title: Remove people from list
     shareDialog:
       download:
         buttons:
@@ -1638,7 +1640,7 @@ feat:
         showOfficials: Show officials
         statusLabel: Shared with {collaborators, plural, =1 {1 collaborator} other {#
           collaborators}}, {officials, plural, =1 {1 official} other {#
-          officials}} can access all views.
+          officials}} can access all lists.
         tabLabel: Share
         viewLink: restricted link
       title: Share "{title}"
@@ -1657,20 +1659,20 @@ feat:
         openButton: Show
     toolbar:
       createColumn: New column
-      createFromSelection: Create view from selection
+      createFromSelection: Create list from selection
       removeFromSelection: Remove {numSelected, plural, one {1 person} other
-        {{numSelected} people} } from view
-      removeTooltip: Smart search views do not currently support removing rows
+        {{numSelected} people} } from list
+      removeTooltip: Smart search lists do not currently support removing rows
     viewLayout:
       actions:
         share: Share
       ellipsisMenu:
-        delete: Delete view
+        delete: Delete list
         editQuery: Edit Smart Search query
-        makeDynamic: Convert to Smart Search view
-        makeStatic: Convert to static view
+        makeDynamic: Convert to Smart Search list
+        makeStatic: Convert to static list
       jumpMenu:
-        placeholder: Start typing to find view
+        placeholder: Start typing to find list
       subtitle:
         collaborators: "{count, plural, =1 {1 outside collaborator} other {# outside
           collaborators}}"
@@ -1681,7 +1683,7 @@ feat:
         created: Date created
         owner: Owner
         title: Title
-      empty: You haven't created any views yet.
+      empty: You haven't created any lists yet.
 glob:
   accessLevels:
     configure: Edit & Configure
@@ -1773,7 +1775,7 @@ zui:
     keepTyping: Keep typing..
     noResult: No matching person found
     otherPeople: Other people
-    restrictedMode: Can't be edited in shared views.
+    restrictedMode: Can't be edited in shared lists.
     searchResults: Search results
   personSelect:
     keepTyping: Keep typing to start searching

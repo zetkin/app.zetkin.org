@@ -1,6 +1,7 @@
 import {
   ZetkinCallAssignment,
   ZetkinCampaign,
+  ZetkinJourneyInstance,
   ZetkinPerson,
   ZetkinSurvey,
   ZetkinTask,
@@ -14,6 +15,7 @@ export enum SEARCH_DATA_TYPE {
   VIEW = 'view',
   CALL_ASSIGNMENT = 'callassignment',
   SURVEY = 'survey',
+  JOURNEY_INSTANCE = 'journeyinstance',
 }
 
 export interface PersonSearchResult {
@@ -40,6 +42,10 @@ export interface SurveySearchResult {
   type: SEARCH_DATA_TYPE.SURVEY;
   match: ZetkinSurvey;
 }
+export interface JourneyInstanceSearchResult {
+  type: SEARCH_DATA_TYPE.JOURNEY_INSTANCE;
+  match: ZetkinJourneyInstance;
+}
 
 export type SearchResult =
   | PersonSearchResult
@@ -47,4 +53,5 @@ export type SearchResult =
   | TaskSearchResult
   | ViewSearchResult
   | CallAssignmentSearchResult
-  | SurveySearchResult;
+  | SurveySearchResult
+  | JourneyInstanceSearchResult;

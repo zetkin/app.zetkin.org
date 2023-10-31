@@ -3,7 +3,7 @@ import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import { Add, Clear } from '@mui/icons-material';
 import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import useCreateType from '../hooks/useCreateType';
@@ -26,9 +26,24 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderColor: ({ showBorder }) =>
       showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
     borderRadius: 10,
-    maxWidth: '200px',
     paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
+    paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
     transition: 'all 0.2s ease',
+  },
+  span: {
+    // Same styles as input
+    '&:focus, &:hover': {
+      borderColor: lighten(theme.palette.primary.main, 0.65),
+      paddingLeft: 10,
+      paddingRight: 0,
+    },
+    border: '2px dotted transparent',
+    borderRadius: 10,
+    fontSize: '1rem',
+    paddingRight: 10,
+    // But invisible and positioned absolutely to not affect flow
+    position: 'absolute',
+    visibility: 'hidden',
   },
 }));
 
@@ -58,20 +73,37 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   types,
   value,
 }) => {
-  const [createdType, setCreatedType] = useState<string>('');
-  const classes = useStyles({ showBorder });
-  const messages = useMessages(messageIds);
   const { addType } = useCreateType(orgId);
+  const messages = useMessages(messageIds);
+  const uncategorizedMsg = messages.type.uncategorized();
+  const [createdType, setCreatedType] = useState<string>('');
+  const [text, setText] = useState<string>(value?.title ?? uncategorizedMsg);
+  const [dropdownListWidth, setDropdownListWidth] = useState(0);
+
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const classes = useStyles({ showBorder });
 
   useEffect(() => {
     //When a user creates a new type, it is missing an event ID.
     //In here, when the length of the type changes,
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
-      const newId = types.find((item) => item.title === createdType)!.id;
-      onChangeNewOption(newId!);
+      const newEventType = types.find((item) => item.title === createdType);
+      setText(newEventType!.title);
+      onChangeNewOption(newEventType!.id);
     }
   }, [types.length]);
+
+  useEffect(() => {
+    if (spanRef.current) {
+      const width = spanRef.current.offsetWidth;
+      setDropdownListWidth(width);
+    }
+  }, [spanRef.current, text]);
+
+  useEffect(() => {
+    setText(value ? value.title : uncategorizedMsg);
+  }, [value]);
 
   const allTypes: EventTypeOption[] = [
     ...types,
@@ -93,6 +125,12 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         classes={{
           root: classes.inputRoot,
         }}
+        componentsProps={{
+          popper: {
+            placement: 'bottom-start',
+            style: { maxWidth: 380, minWidth: 180, width: dropdownListWidth },
+          },
+        }}
         disableClearable
         filterOptions={(options, { inputValue }) => {
           const searchedResults = fuse.search(inputValue);
@@ -109,7 +147,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             }),
             {
               id: 'UNCATEGORIZED',
-              title: messages.type.uncategorized(),
+              title: uncategorizedMsg,
             },
           ];
           if (
@@ -128,11 +166,21 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           });
           return inputValue ? filteredResult : options;
         }}
-        fullWidth
         getOptionLabel={(option) => option.title!}
         isOptionEqualToValue={(option, value) => option.title === value.title}
-        onBlur={() => onBlur()}
+        onBlur={() => {
+          // show 'uncategorized' in textField when blurring
+          if (!value && text !== uncategorizedMsg) {
+            setText(uncategorizedMsg);
+          }
+          //set text to previous input value when clicking away
+          if (value && text !== value.title) {
+            setText(value.title);
+          }
+          onBlur();
+        }}
         onChange={(_, value) => {
+          setText(value.title);
           if (value.id == 'CREATE') {
             addType(value.title!);
             setCreatedType(value.title!);
@@ -150,19 +198,27 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onFocus={() => onFocus()}
         options={allTypes}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            InputLabelProps={{
-              shrink: false,
-              style: {
-                maxWidth: 180,
-              },
-            }}
-            InputProps={{
-              ...params.InputProps,
-            }}
-            size="small"
-          />
+          <>
+            <span ref={spanRef} className={classes.span}>
+              {text}
+            </span>
+            <TextField
+              {...params}
+              InputLabelProps={{
+                shrink: false,
+              }}
+              InputProps={{
+                ...params.InputProps,
+                style: {
+                  maxWidth: 380,
+                  minWidth: 60,
+                  width: dropdownListWidth + 50,
+                },
+              }}
+              onChange={(e) => setText(e.target.value)}
+              size="small"
+            />
+          </>
         )}
         renderOption={(props, option) => {
           return (
@@ -173,7 +229,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
               {option.id == 'UNCATEGORIZED' && (
                 <li {...props}>
                   <Clear />
-                  {messages.type.uncategorized()}
+                  {uncategorizedMsg}
                 </li>
               )}
               {option.id == 'CREATE' && (
@@ -190,7 +246,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
             ? value
             : {
                 id: 'UNCATEGORIZED',
-                title: messages.type.uncategorized(),
+                title: text,
               }
         }
       />

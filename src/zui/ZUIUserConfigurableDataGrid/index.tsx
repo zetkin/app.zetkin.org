@@ -29,7 +29,7 @@ const ZUIUserConfigurableDataGrid: React.FC<
           ? params.targetIndex - 1
           : params.targetIndex;
 
-        setColumnOrder(params.colDef.field, targetIndex);
+        setColumnOrder(params.column.field, targetIndex);
 
         if (gridProps.onColumnOrderChange) {
           gridProps.onColumnOrderChange(params, event, details);

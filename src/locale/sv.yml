@@ -43,7 +43,7 @@ feat:
       views: Listor
   calendar:
     createMenu:
-      singleEvent: Skapa ett enskild event
+      singleEvent: Skapa ett enskilt event
     event:
       differentLocations: '{numLocations} olika platser'
       events: Events
@@ -106,6 +106,15 @@ feat:
         publish: Publicera nu
         unpublish: Avpublicera
       move: Flytta
+      moveCopyButtons:
+        copy: Kopiera
+        copyMenuHeader: Kopiera {numberOfEvents} events till
+        createShift: Skapa skift efter varje event
+        duplicate: Samma tid och datum (duplicera)
+        move: Flytta
+        moveMenuHeader: Flytta {numberOfEvents} event till
+        nextDay: Nästa dag {dates}
+        nextWeek: Nästa vecka {dates}
     showMore: Visa
     today: Idag
   callAssignments:
@@ -170,6 +179,7 @@ feat:
       defineButton: Ändra syfte
       subtitle: Personer som uppfyller syftet
       title: Klart
+    insightsHeader: Samtal och konversationer
     organizerActionPane:
       markAsSolved: Markera som löst
       markAsUnsolved: Markera som olöst
@@ -417,7 +427,7 @@ feat:
       deleteWarning: När eventet raderats kan du inte återskapa det.
       description: Beskrivning
       duplicate: Duplicera
-      eventPageLink: Gå till kalendern
+      eventPageLink: Gå till eventets sida
       events: Event
       location: Plats
       locations: Platser
@@ -627,6 +637,12 @@ feat:
   organizations:
     page:
       title: 'Välj organisation:'
+    sidebar:
+      allOrganizations: Alla organisationer
+      filter:
+        noResults: Inga organisationer matchar det här filtret
+        topLevel: Högsta organisation
+      filtered: Filtrerad
   profile:
     delete:
       button: Ta bort person
@@ -728,8 +744,8 @@ feat:
             närsomhelt.
           two: Ta bort personer som blivit ringda åtminstone 1 gång i uppdraget 'Aktivera
             gamla medlemmar' under de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som {callSelect} minst
-          {minTimes} i {assignmentSelect} {timeFrame}.'
+        inputString: '{addRemoveSelect} personer som {callSelect} minst {minTimes}
+          i {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
         minTimesInput: '{input} {minTimes, plural, one {gång} other {gånger}}'
       campaignParticipation:

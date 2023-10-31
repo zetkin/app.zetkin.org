@@ -68,6 +68,11 @@ module.exports = {
         source: '/organize/:orgId/campaigns/:path*',
         destination: '/organize/:orgId/projects/:path*',
         permanent: false,
+      },
+      {
+        source: '/organize/:orgId/people/views/:path*',
+        destination: '/organize/:orgId/people/lists/:path*',
+        permanent: false,
       }
     ];
   },

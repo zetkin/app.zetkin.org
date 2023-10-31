@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useRef, useState } from 'react';
 
 import AddPersonButton from 'features/events/components/AddPersonButton';
@@ -50,7 +50,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
     <ZUIFuture future={eventFuture}>
       {(data) => {
         return (
-          <>
+          <Box sx={{ overflowY: 'auto' }}>
             <Grid container spacing={2}>
               <Grid item md={8} xs={12}>
                 <ParticipantSummaryCard
@@ -90,7 +90,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               filterString={filterString}
               orgId={parseInt(orgId)}
             />
-          </>
+          </Box>
         );
       }}
     </ZUIFuture>

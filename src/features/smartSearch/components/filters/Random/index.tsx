@@ -105,6 +105,9 @@ const Random = ({
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
                   <Msg id={localMessageIds.addLimitRemoveSelect.sub} />
                 </MenuItem>
+                <MenuItem key={OPERATION.LIMIT} value={OPERATION.LIMIT}>
+                  <Msg id={localMessageIds.addLimitRemoveSelect.limit} />
+                </MenuItem>
               </StyledSelect>
             ),
             quantity: (

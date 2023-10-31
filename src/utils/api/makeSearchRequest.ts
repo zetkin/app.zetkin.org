@@ -3,6 +3,7 @@ import handleResponseData from './handleResponseData';
 import {
   CallAssignmentSearchResult,
   CampaignSearchResult,
+  JourneyInstanceSearchResult,
   PersonSearchResult,
   SEARCH_DATA_TYPE,
   SurveySearchResult,
@@ -58,6 +59,14 @@ async function makeSearchRequest(
   },
   apiFetch: ApiFetch
 ): Promise<SurveySearchResult[]>;
+async function makeSearchRequest(
+  dataType: SEARCH_DATA_TYPE.JOURNEY_INSTANCE,
+  query: {
+    orgId: number | string;
+    q: string;
+  },
+  apiFetch: ApiFetch
+): Promise<JourneyInstanceSearchResult[]>;
 async function makeSearchRequest(
   dataType: unknown,
   query: {

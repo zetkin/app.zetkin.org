@@ -223,14 +223,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
               apiRef={gridApiRef}
               autoHeight
               columns={colDefs}
-              components={{
-                Row: (props: GridRowProps) => {
-                  const item = props.row as ViewBrowserItem;
-                  return <BrowserRow item={item} rowProps={props} />;
-                },
-              }}
-              disableSelectionOnClick
-              experimentalFeatures={{ newEditingApi: true }}
+              disableRowSelectionOnClick
               hideFooter
               isCellEditable={(params) => params.row.type != 'back'}
               onSortModelChange={(model) => setSortModel(model)}
@@ -241,6 +234,12 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
                 return item;
               }}
               rows={rows}
+              slots={{
+                row: (props: GridRowProps) => {
+                  const item = props.row as ViewBrowserItem;
+                  return <BrowserRow item={item} rowProps={props} />;
+                },
+              }}
               sortingMode="server"
               sx={{ borderWidth: 0 }}
             />

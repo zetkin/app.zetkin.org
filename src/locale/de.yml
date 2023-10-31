@@ -40,35 +40,45 @@ feat:
       views: Listen
   calendar:
     createMenu:
-      singleEvent: Erstelle einzelne Veranstaltung
+      singleEvent: Erstelle einzelne Aktion
     event:
-      events: Veranstaltungen
-      noContactSelected: Kein Kontakt ausgewählt
+      differentLocations: '{numLocations} verschiedene Orte'
+      events: Aktionen
+      noContactSelected: Keine Kontaktperson ausgewählt
+      remindersNotSent: '{numNotSent} Erinnerungen nicht verschickt'
+      unbookedSignups: '{numUnbooked} Ungebuchte Anmeldungen'
+      underbooked: '{numUnderbooked} Aktionen mit freien Plätzen'
+      withSignups: '{numWithSignups} mit Anmeldungen'
+      withoutContact: '{numWithoutContact} keine Kontaktperson'
     eventFilter:
       collapse: ausblenden
+      expand: '{numOfOptions, plural, one {+ 1 Aktionstyp} other {+ # Aktionstypen}}'
       filter: Filtern
       filterOptions:
         actionFilters:
-          missing: Fehlende Kontaktperson
+          missing: fehlende Kontaktperson
           overbooked: überbucht
           pending: ausstehende Anmeldungen
           title: Filtern nach Handlungsbedarf
           underbooked: freie Plätze
           unsent: ausstehende Benachrichtigungen
         eventTypes:
-          title: Filtern nach Veranstaltungsart
+          title: Filtern nach Aktionsart
         stateFilters:
           cancelled: abgesagt
           draft: Entwurf
-          published: Veröffentlicht
-          scheduled: Geplant
+          published: veröffentlicht
+          scheduled: geplant
           title: Filtern nach
       reset: Filter zurücksetzen
       toggle:
         all: Alle
         none: Keine
       type: Tippe zum Filtern des Inhalts
+    lastDayWithEvents: Es gab {numEvents, plural, one {eine Aktion} other {{numEvents}
+      Aktionen}} am letzten Tag der Aktion
     loadMore: Mehr
+    moreEvents: '{numEvents, plural, one {# Aktion mehr} other {# mehr Aktionen}}'
     next: nächste
     prev: vorherige
     rangeLabel: Option wählen
@@ -79,20 +89,28 @@ feat:
     selectionBar:
       copy: Kopieren
       deselect: Auswahl aufheben
-      editEvents: Veranstaltungen bearbeiten
+      editEvents: Aktionen bearbeiten
       ellipsisMenu:
         cancel: Absagen
         cancelWarning: Wenn du diese Aktivität löscht, informiere bitte alle Teilnehmenden
           und Angemeldeten darüber.
-        confirmCancel: Möchtest du die ausgewählten Veranstaltungen wirklich absagen?
-        confirmDelete: Möchtest du die ausgewählten Veranstaltungen wirklich löschen?
+        confirmCancel: Möchtest du die ausgewählten Aktionen wirklich absagen?
+        confirmDelete: Möchtest du die ausgewählten Aktionen wirklich löschen?
         delete: Löschen
-        deleteWarning: Nach dem Löschen kannst du auf diese Veranstaltungen nicht
-          mehr zugreifen.
+        deleteWarning: Nach dem Löschen kannst du auf diese Aktionen nicht mehr zugreifen.
         print: Zeitplan drucken
         publish: Veröffentlichen
         unpublish: Verbergen
       move: Verschieben
+      moveCopyButtons:
+        copy: Kopieren
+        copyMenuHeader: Kopiere {numberOfEvents} Aktionen zu
+        createShift: Nach jeder Aktion (create shift)
+        duplicate: Zeit und Datum schicken (duplicate)
+        move: Verschieben
+        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen zu
+        nextDay: Nächster Tag {dates}
+        nextWeek: Nächste Woche
     showMore: Mehr
     today: Heute
   callAssignments:
@@ -104,6 +122,7 @@ feat:
       calledTooRecently: Kürzlich angerufen
       cooldownHelperText: Lege den Mindestzeitraum zwischen zwei Anrufversuchen fest.
       cooldownLabel: Ruhezeit in Stunden
+      hours: '{cooldown, plural, =0 {keine} =1 {# Stunde} other {# Stunden}}'
       missingPhoneNumber: Fehlende Telefonnummer
       organizerActionNeeded: Aktion erforderlich
       subtitle: Zielpersonen können noch nicht angerufen werden
@@ -123,6 +142,7 @@ feat:
         prioritize:
           h: Priorisierte Stichworte
           intro: Als Erstes Zielpersonen mit diesen Stichworten anrufen.
+        title: Warteschlange anpassen für {name}
       customizeButton: Anpassen
       excludedTagsColumn: Ausgeschlossene Stichworte
       nameColumn: Name
@@ -155,10 +175,13 @@ feat:
       defineButton: Bearbeite Kriterien für Status Erledigt
       subtitle: Zielpersonen mit Status Erledigt
       title: Erledigt
+    insightsHeader: Telefonate und Gespräche
     organizerActionPane:
       markAsSolved: Als behoben markieren
       markAsUnsolved: Als nicht gelöst markieren
       messagePlaceholder: Telefonierer*in hat keine Nachricht hinterlassen
+      noteByCaller: Notiz von {person} {time}
+      subtitle: Notizen zu {person}
       title: Aktion erforderlich
     ready:
       allocated: Zugewiesene Zielpersonen
@@ -171,6 +194,11 @@ feat:
       draft: Entwurf
       open: Aktiv
       scheduled: Geplant
+    stats:
+      callers: '{numCallers, plural, =0 {keine Telefonierer*innen} one {1 Telefonierer*in}
+        other {# Telefonierer*innen}}'
+      targets: '{numTargets, plural, =0 {keine Zielpersonen} one {1 Zielperson} other
+        {# Zielpersonen}}'
     statusSectionTitle: Status
     tabs:
       callers: Telefonierer*innen
@@ -187,13 +215,16 @@ feat:
       button: Zeige alle Aktivitäten
       empty: Heute ist frei!
       endsTomorrow: endet morgen
+      extraActivities: + {numExtra} mehr
       goToActivities: Zeige alle anstehenden Aktivitäten.
       noActivities: Keine Aktivitäten diese Woche.
       nothingTomorrow: Morgen ist frei!
       startsTomorrow: startet morgen
       subtitles:
-        endsToday: Endet heute
-        startsToday: Startet heute
+        endsLater: endet {relative}
+        endsToday: endet heute
+        startsLater: startet {relative}
+        startsToday: startet heute
       thisWeekCard: Diese Woche
       title: Anstehende Aktivitäten
       todayCard: Heute
@@ -201,6 +232,9 @@ feat:
     activityList:
       eventItem:
         contact: Keine zugewiesene Kontaktperson
+        locations: '{count} Orte'
+        reminders: '{numMissing, plural, =1 {ein*e Teilnehmende*r} other {# Teilnehmende}}
+          haben noch keine Erinnerung erhalten'
         signups: Noch nicht bestätigte Anmeldungen
     all:
       cardCTA: Gehe zu Projekt
@@ -209,18 +243,20 @@ feat:
         calls: Telefonaktionen
         canvasses: Haustüreinsätze
         filter: Filterergebnisse
-        standalones: Einzelne Veranstaltungen
+        standalones: Einzelne Aktionen
         surveys: Umfragen
       heading: Alle Projekte
       indefinite: Undefiniert
       unsorted: Unsortierte Projekte
+      upcoming: '{numEvents, number} anstehende Aktionen'
     allProjects:
       linkToSummary: Gehe zu meinen aktuellen Projekten.
-      noActivities: Wenn deine Gruppe von Projekten unabhängige Veranstaltungen hat,
-        werden sie hier angezeigt.
+      noActivities: Wenn deine Gruppe von Projekten unabhängige Aktivitäten hat, werden
+        sie hier angezeigt.
       viewArchive: Archiv anzeigen
+    assigneeActions: Aktionen von Beauftragten
     calendarView: Alles einblenden
-    events: Veranstaltungen
+    events: Aktionen
     feedback:
       copy: Feedback einzuholen kann dein Engagement effektiver machen
       create: Umfrage erstellen
@@ -242,7 +278,7 @@ feat:
         submitButton: Löschen bestätigen
         title: Projekt löschen
         warning: Bist du sicher, dass du dieses Projekt löschen möchtest? Diese Aktion
-          ist endgültig.
+          kann nicht rückgängig gemacht werden.
       description: Beschreibung
       edit: Projekt bearbeiten
       editCampaignTitle:
@@ -262,7 +298,7 @@ feat:
         heading: Sichtbarkeit
         private: Verborgen
         public: Öffentlich
-    indefinite: unbegrenzte Zeitleiste
+    indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
       allCampaigns: Alle Projekte & Aktivitäten
@@ -273,7 +309,7 @@ feat:
     linkGroup:
       createActivity: Erstelle Aktivität
       createCallAssignment: Erstelle Telefonaktion
-      createEvent: Erstelle Veranstaltung
+      createEvent: Erstelle Aktion
       createSurvey: Erstelle Umfrage
       createTask: Erstelle Aufgabe
       public: Öffentliche Seite
@@ -306,7 +342,7 @@ feat:
       allDay: Ganzer Tag
       noActivity: Nicht kategorisiert
       noLocation: Kein zugewiesener Ort
-      noTitle: Unbenannte Veranstaltung
+      noTitle: Unbenannte Aktion
     eventActionButtons:
       cancel: Abbrechen
       delete: Löschen
@@ -314,11 +350,16 @@ feat:
       publish: Veröffentlichen
       restore: Zurücksetzen
       unpublish: Verstecken
+      warning: '"{eventTitle}" wird gelöscht.'
+      warningCancel: '"{eventTitle}" wird abgesagt.'
+      warningRestore: '"{eventTitle}" wird wiederhergestellt.'
     eventContactCard:
       header: Kontakt
       noContact: Kein Kontakt hinzugefügt!
       removeButton: Entfernen
       selectPlaceholder: Kontaktperson auswählen
+      warningText: '{name} wird als Kontaktperson entfernt, bleibt aber gebucht als
+        Teilnehmende*r'
     eventOverviewCard:
       buttonEndDate: + Enddatum
       createLocation: Erstelle neuen Standort
@@ -337,7 +378,7 @@ feat:
       contact: Kontakt
       header: Teilnehmende
       noContact: nicht zugeordnet
-      participantList: Zeige Teilnehmende an
+      participantList: Teilnehmende anzeigen
       pending: Ausstehende Anmeldungen
       reqParticipantsHelperText: Mindestteilnehmendenzahl
       reqParticipantsLabel: Mindestteilnehmendenzahl
@@ -367,29 +408,28 @@ feat:
       participantTooltip: Zur Kontaktperson machen
       signUps: Anmeldungen
     eventPopper:
-      backToEvents: Zurück zu Veranstaltungen
+      backToEvents: Zurück zu Aktionen
       backToLocations: Zurück zu Orten
       backToShifts: Zurück zu Schichtplan
       booked: Gebucht
       cancel: Absagen
-      cancelWarning: Wenn du diese Veranstaltung absagst, gib bitte allen Teilnehmenden
-        und Angemeldeten Bescheid.
-      confirmCancel: Bist du sicher, dass du diese Veranstaltung absagen möchtest?
-      confirmDelete: Bist du sicher, dass du diese Veranstaltung löschen möchtest?
+      cancelWarning: Wenn du diese Aktion absagst, gib bitte allen Teilnehmenden und
+        Angemeldeten Bescheid.
+      confirmCancel: Bist du sicher, dass du diese Aktion absagen möchtest?
+      confirmDelete: Bist du sicher, dass du diese Aktion löschen möchtest?
       contactPerson: Kontaktperson
       dateAndTime: Datum & Uhrzeit
       delete: Löschen
-      deleteWarning: Nach dem Löschen kannst du nicht mehr auf diese Veranstaltung
-        zugreifen.
+      deleteWarning: Nach dem Löschen kannst du nicht mehr auf diese Aktion zugreifen.
       description: Beschreibung
       duplicate: Kopieren
-      eventPageLink: Gehe zu Veranstaltungsseite
-      events: Veranstaltungen
+      eventPageLink: Gehe zu Aktionsseite
+      events: Aktionen
       location: Ort
       locations: Orte
-      multiEvent: Mehrere Veranstaltungen
-      multiLocation: Veranstaltung an mehreren Orten
-      multiShift: Veranstaltung mit mehreren Schichten
+      multiEvent: Mehrere Aktionen
+      multiLocation: Aktion an mehreren Orten
+      multiShift: Aktion mit mehreren Schichten
       noContact: Keine Kontaktperson zugeordnet
       notified: Benachrichtigt
       pendingSignups: Es gibt ausstehende Anmeldungen
@@ -397,8 +437,10 @@ feat:
       reminded: Erinnert
       shifts: Schichten
       signups: Anmeldungen
+      unsentReminders: '{numMissing, plural, =1 {ein*e Teilnehmende*r} other {# Teilnehmende}}
+        haben noch keine Erinnerung erhalten'
     eventRelatedCard:
-      header: Verwandte Veranstaltungen
+      header: Verwandte Aktionen
     eventStatus:
       cancelled: Abgesagt
       draft: Entwurf
@@ -410,8 +452,8 @@ feat:
       activity: Aktivität
       campaign: Kampagne
       cancel: Abbrechen
-      create: Erstelle neue Veranstaltung
-      edit: Bearbeite Veranstaltung
+      create: Erstelle neue Aktion
+      edit: Bearbeite Aktion
       end: Ende
       info: Information zur Anmeldung
       link: Link
@@ -420,10 +462,10 @@ feat:
       required: Pflichtfeld
       start: Start
       submit: Erstellen
-      title: Titel
+      title: Überschrift
     list:
-      events: Veranstaltungen
-      noEvents: Keine Veranstaltungen
+      events: Aktionen
+      noEvents: Keine Aktionen
     locationModal:
       cancel: Abbrechen
       createLocation: Erstelle neuen Ort
@@ -434,9 +476,8 @@ feat:
       move: Verschieben
       moveInstructions: Verschiebe die Nadel, um einen Ort auszuwählen.
       noDescription: Keine Beschreibung
-      noRelatedEvents: Es finden hier keine weiteren Veranstaltungen um diese Zeit
-        statt.
-      relatedEvents: Weitere Veranstaltungen hier um diese Zeit
+      noRelatedEvents: Es finden hier keine weiteren Aktionen um diese Zeit statt.
+      relatedEvents: Weitere Aktionen hier um diese Zeit
       save: Speichern
       saveLocation: Ort speichern
       searchBox: Ort finden
@@ -448,7 +489,9 @@ feat:
       cancelled: Abgesagt
       confirmed: Bestätigte Teilnahme
       header: Teilnehmer*innen
+      noshow: ({noshows, plural, =1 {1 Nichterscheinen} other {# Nichterscheinen}})
       pending: Ausstehende Anmeldungen
+      recordButton: Teilnahme erfassen
       remindButton: Alle erinnern
       remindButtondisabledTooltip: Du musst eine verantwortliche Person angeben bevor
         du Erinnerungen versendest
@@ -461,11 +504,14 @@ feat:
       ended: Beendet
       open: Aktiv
       scheduled: Geplant
+    stats:
+      participants: '{participants, plural, one {1 Teilnehmende*r} other {# Teilnehmende}}'
     tabs:
       overview: Überblick
       participants: Teilnehmer*innen
-    tooltipContent: Nicht benannte Veranstaltungen zeigen den Typ als Titel an
+    tooltipContent: Unbenannte Aktionen zeigen den Typ als Überschrift an
     type:
+      createType: Erstelle "{type}"
       tooltip: Klicke, um Typ zu ändern
       uncategorized: Nicht kategorisiert
   journeys:
@@ -473,16 +519,30 @@ feat:
       addAssigneeButton: Beauftragte hinzufügen
       addSubjectButton: Person hinzufügen
       addSubjectLabel: Person hinzufügen
+      assignPersonLabel: Beauftragte zuweisen
   organizations:
     page:
       title: 'Organisation auswählen:'
+    sidebar:
+      allOrganizations: Alle Organisationen
+      filter:
+        noResults: Keine Treffer
+        topLevel: übergeordnete Organisation
+      filtered: gefiltert
+      recent:
+        clear: Löschen
+        title: Letzte Organisationen
   profile:
     delete:
       button: Person entfernen
+      confirm: Bist du sicher, dass du {name} löschen möchtest? Diese Aktion kann
+        nicht rückgängig gemacht werden.
       title: Profil löschen
       warning: Diese Aktion kann nicht rückgängig gemacht werden!
     details:
       title: Details
+    editButton: '{title} bearbeiten'
+    editButtonClose: '{title} bearbeiten beenden'
     editButtonLabel: Details bearbeiten
     genders:
       f: weiblich
@@ -508,6 +568,7 @@ feat:
       campaign: Kampagne
       people: Personen
       person: Person
+      project: Projekt
       survey: Umfrage
       task: Aufgabe
       view: Ansicht
@@ -529,7 +590,7 @@ feat:
       all: Alle
       call_blocked: Für Anrufe gesperrt
       call_history: Auf Grundlage bisheriger Telefonate
-      campaign_participation: Auf Grundlage ihrer Teilnahme an Veranstaltungen
+      campaign_participation: Auf Grundlage ihrer Teilnahme an Aktionen
       most_active: Aktivste Personen
       person_data: Auf Grundlage ihres Namens, ihrer Adresse und anderer persönlicher
         Angaben
@@ -545,6 +606,7 @@ feat:
       user: Personen, die Zetkin benutzt haben
     filters:
       all:
+        inputString: Starte mit {startWithSelect}.
         startWithSelect:
           'false': leere Liste
           'true': Liste aller Personen in der Organisation
@@ -552,12 +614,15 @@ feat:
         addRemoveSelect:
           add: Hinzufügen
           sub: Entfernen
+        inputString: '{addRemoveSelect} Personen, die zum Anrufen aus irgendwelchen
+          Gründen blockiert sind'
       callHistory:
         addRemoveSelect:
           add: Hinzufügen
           sub: Entfernen
         assignmentSelect:
           any: irgendeiner Aufgabe
+          assignment: Telefonaktion "{assignmentTitle}"
           none: Diese Organisationen hat noch keine Telefonaktionen
         callSelect:
           called: angerufen wurden
@@ -568,8 +633,13 @@ feat:
             für irgendeine Aufgabe zu irgendeinem Zeitpunkt.
           two: Entferne Personen, die in den letzten 30 Tagen mindestens 1mal angerufen
             wurden für die Aufgabe "langjährige Mitglieder aktivieren".
+        inputString: '{addRemoveSelect} Personen, die {callSelect} mindestens {minTimesInput}
+          {minTimes} in {assignmentSelect} {timeFrame}.'
+        minTimes: '{minTimesInput} {minTimes, plural, one {Zeit} other {Zeiten}}'
+        minTimesInput: '{input} {minTimes, plural, one {Zeit} other {Zeiten}}'
       campaignParticipation:
         activitySelect:
+          activity: Typ "{activity}"
           any: irgendeine
         addRemoveSelect:
           add: Hinzufügen
@@ -579,6 +649,7 @@ feat:
           signed_up: angemeldet
         campaignSelect:
           any: irgendein Projekt
+          campaign: Projekt "{campaign}"
         examples:
           one: Füge Personen hinzu, die sich für irgendein Projekt irgendeiner Art
             irgendwann am Ort 'Dorfplatz' angemeldet haben.
@@ -587,8 +658,12 @@ feat:
         haveSelect:
           in: wurden
           notin: wurden nicht
+        inputString: '{addRemoveSelect} Personen, die {haveSelect} {bookedSelect}
+          für Aktionen in {campaignSelect} des Typs {activitySelect} in {locationSelect}
+          {timeFrame}'
         locationSelect:
           any: irgendein Ort
+          location: Ort "{location}"
       mostActive:
         addRemoveSelect:
           add: Hinzufügen
@@ -596,6 +671,9 @@ feat:
         examples:
           one: Füge die 100 aktivsten Mitglieder der Organisation vor heute hinzu.
           two: Entferne die zu irgendeinem Zeitpunkt 5 aktivsten Mitglieder der Organisation
+        inputString: '{addRemoveSelect} die {numPeopleSelect} aktivsten {numPeople}
+          in der Organisation {timeFrame}.'
+        numPeople: '{numPeople, plural, one {Person} other {Personen}}'
       personData:
         addRemoveSelect:
           add: Hinzufügen
@@ -605,6 +683,7 @@ feat:
           one: Füge alle Personen hinzu, deren Vorname 'Clara' und deren Nachname
             'Zetkin' ist.
           two: Entferne alle Personen, deren Ort Stockholm ist.
+        fieldMatches: '{field} entspricht {value}'
         fieldSelect:
           alt_phone: Weitere Telefonnummer
           city: Stadt
@@ -617,14 +696,24 @@ feat:
           remove: Entferne dieses Kriterium
           street_address: Straße
           zip_code: Postleitzahl
+        fieldTuple: '{first} und {second}'
+        inputString: '{addRemoveSelect} jede Person deren {criteria}.'
       personField:
         addRemoveSelect:
           add: Hinzufügen
           sub: Entfernen
         edit:
+          date: '{fieldSelect} ist {timeFrame}'
           none: Diese Organisation hat bisher keine benutzerdefinierten Felder.
+          text: '{fieldSelect} entspricht "{freeTextInput}"'
+          url: '{fieldSelect} entspricht "{freeTextInput}"'
         fieldSelect:
           any: benutzerdefiniertes Feld
+        inputString: '{addRemoveSelect} jede Person, deren {field}.'
+        preview:
+          date: '{fieldName} ist {timeFrame}'
+          text: '{fieldName} entspricht "{searchTerm}"'
+          url: '{fieldName} entspricht "{searchTerm}"'
       personTags:
         addRemoveSelect:
           add: Hinzufügen
@@ -638,11 +727,14 @@ feat:
           preview:
             all: alle
             any: irgendeinem
+            minMatching: mindestens {minMatching}
             none: keinem
         examples:
           one: 'Füge Personen hinzu mit mindestens einem der folgenden Stichwörter:
             ''Mitglied'', ''Aktivist*in'''
           two: 'Entferne Personen mit allen der folgenden Stichwörter: ''Vorstandsmitglied'''
+        inputString: '{addRemoveSelect} Personen mit {condition} der folgenden Stichworte:
+          {tags}'
       personView:
         addRemoveSelect:
           add: Hinzufügen
@@ -654,6 +746,8 @@ feat:
         inSelect:
           in: in
           notin: nicht in
+        inputString: '{addRemoveSelect} Personen, die {inSelect} der Liste {viewSelect}
+          sind.'
         viewSelect:
           none: Diese Organisation hat bisher keine angelegten Listen.
       random:
@@ -666,6 +760,7 @@ feat:
         examples:
           one: Füge zufällig 20 Personen aus der Organisation hinzu.
           two: Entferne zufällig 15% der Personen der Organisation.
+        inputString: Zufällig {addRemoveSelect} {quantity} Personen in der Organisation.
       subQuery:
         addRemoveSelect:
           add: Hinzufügen
@@ -674,10 +769,18 @@ feat:
             leben' entsprechen.
           two: Füge Personen hinzu, die der Zielgruppe der Telefonaktion 'Auftrag
             1' angehören.
+        inputString: '{addRemoveSelect} Personen, die {matchSelect} {query}.'
         matchSelect:
           in: übereinstimmen
           notin: nicht übereinstimmen
         query:
+          edit:
+            callassignment_goal: '{querySelect} der Telefonaktion "{titleSelect}"'
+            callassignment_target: '{querySelect} der Telefonaktion "{titleSelect}"'
+          preview:
+            callassignment_goal: die Zielgruppe der Telefonaktion "{queryTitle}"
+            callassignment_target: die Zielgruppe der Telefonaktion "{queryTitle}"
+            standalone: Intelligente Suchanfrage
           selectLabel:
             callassignment_goal: Zielgruppe
             callassignment_target: Zielgruppe
@@ -704,12 +807,16 @@ feat:
           two: 'Füge alle Personen hinzu, die irgendeine der folgenden Optionen in
             der Umfrage ''Mitgliederumfrage'' (Frage ''Frage 2'') ausgewählt haben:
             ''Option 2'''
+        inputString: '{addRemoveSelect} Personen, die folgende Optionen in {surveySelect}
+          ({questionSelect}) ausgewählt haben {conditionSelect}: {options}'
         questionSelect:
           any: eine Frage
           none: Es gibt keine Fragen mit Auswahloptionen in dieser Umfrage.
+          question: Frage "{question}"
         surveySelect:
           any: eine Umfrage
           none: Diese Organisation hat bisher keine angelegten Umfragen.
+          survey: Umfrage "{surveyTitle}"
       surveyResponse:
         addRemoveSelect:
           add: Hinzufügen
@@ -719,6 +826,8 @@ feat:
             Frage) 'organize' beinhalten.
           two: Personen, deren Antworten in der Umfrage 'Mitgliederumfrage' (Frage
             'Frage 1') mit 'organize' genau übereinstimmen.
+        inputString: '{addRemoveSelect} Personen, deren Antwort auf {surveyselect}
+          ({questionSelect}) {matchSelect} "{freeTextInput}"'
         matchSelect:
           eq: genau übereinstimmt mit
           in: beinhaltet
@@ -727,9 +836,11 @@ feat:
         questionSelect:
           any: irgendeine Frage
           none: Es gibt keine offenen Textfelder in dieser Umfrage.
+          question: Frage "{question}"
         surveySelect:
           any: eine Umfrage
           none: Diese Organisation hat bisher keine angelegten Umfragen.
+          survey: Umfrage "{surveyTitle}"
       surveySubmission:
         addRemoveSelect:
           add: Hinzufügen
@@ -739,23 +850,30 @@ feat:
             haben.
           two: Personen, die an der Umfrage 'Mitgliederumfrage 2020' in den letzten
             30 Tagen teilgenommen haben.
+        inputString: '{addRemoveSelect} Personen, die Antworten auf {surveySelect}
+          {timeFrame} gegeben haben.'
         surveySelect:
           any: eine Umfrage
           none: Diese Organisation hat bisher keine angelegten Umfragen.
+          survey: Umfrage "{surveyTitle}"
       task:
         addRemoveSelect:
           add: Hinzufügen
           sub: Entfernen
         campaignSelect:
           any: irgendein Projekt
+          campaign: Projekt "{campaign}"
           in: in
         examples:
           one: Füge Personen hinzu, die die Aufgabe 'Freund*innen davon erzählen'
             mindestens 1mal irgendwann erledigt haben.
           two: Füge Personen hinzu, die irgendeine Aufgabe in irgendeinem Projekt
             zwischen 2 und 5mal bis heute ignoriert haben.
+        inputString: '{addRemoveSelect} Personen, die {taskStatusSelect} {taskSelect}{campaignSelect}
+          {matchingSelect} {timeFrame} haben.'
         taskSelect:
           any: irgendeine Aufgabe
+          task: Aufgabe "{task}"
         taskStatusSelect:
           assigned: zugeordnet
           completed: beendet
@@ -765,16 +883,22 @@ feat:
           add: Hinzufügen
           sub: Entfernen
         connectedSelect:
-          'false': nicht verbunden
-          'true': verbunden
+          'false': nicht verknüpft
+          'true': verknüpft
         examples:
           one: Alle Personen entfernen, die mit einem Zetkinprofil verknüpft sind.
           two: Alle Personen hinzufügen, die nicht mit einem Zetkinprofil verknüpft
             sind.
+        inputString: '{addRemoveSelect} alle Personen, die mit einem Zetkinprofil
+          {connectedSelect} sind.'
     headers:
       examples: Beispiele
       gallery: Wie würdest du gern Personen auswählen?
     matching:
+      edit:
+        between: '{matchingSelect} {minInput} und {maxInput}'
+        max: '{matchingSelect} {maxInput} {max, plural, one {mal} other {mal}}'
+        min: '{matchingSelect} {minInput} {min, plural, one {mal} other {mal}}'
       labels:
         between: zwischen
         max: höchstens
@@ -786,6 +910,9 @@ feat:
         min: mindestens
         once: mindestens 1mal
       preview:
+        between: zwischen {min} und {max} mal
+        max: at most {max} {max, plural, one {mal} other {mal}}
+        min: at least {min} {max, plural, one {mal} other {mal}}
         once: mindestens 1mal
     misc:
       noOptions: Keine übereinstimmenden Stichworte
@@ -793,12 +920,19 @@ feat:
       add: Hinzufügen
       sub: Entfernen
     quantity:
+      preview:
+        integer: '{people} {people, plural, one {Person} other {Personen}}'
+        percent: '{people} % der Personen'
       quantitySelectLabel:
+        integer: '{people, plural, one {Person} other {Personen}}'
         percent: '% der Personen'
       quantitySelectOptions:
         integer: eine Anzahl von Personen
         percent: eine Prozentzahl von Personen
     readOnly: Diese Suchanfrage ist im Lesemodus und kann nicht bearbeitet werden.
+    resultHint:
+      countLabel: '{count, plural, =1 {eine Person} other {# Personen}}'
+      hint: Diese Intelligente Suche wird dir derzeit {count} Personen liefern.
     smartSearch: Intelligente Suche
     statsPopper:
       change: verändern
@@ -813,10 +947,17 @@ feat:
       matches: gefunden
       output: nach
     timeFrame:
+      edit:
+        between: '{timeFrameSelect} {afterDateSelect} und {beforeDateSelect}'
+        lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {Tag} other {Tage}}'
       preview:
+        afterDate: nach {afterDate}
+        beforeDate: vor {beforeDate}
         beforeToday: vor heute
+        between: zwischen {afterDate} und {beforeDate}
         ever: irgendwann
         future: in der Zukunft
+        lastFew: während des/r letzten {days} {days, plural, one {Tages} other {Tage}}
       timeFrameSelectLabel:
         afterDate: nach
         beforeDate: vor
@@ -850,7 +991,7 @@ feat:
         description: Beschreibung
         emptyDescription: Beschreibung
         emptyOption: leeres Feld
-        emptyQuestion: Titel
+        emptyQuestion: Überschrift
         question: Frage
         widget: Element
         widgets:
@@ -867,19 +1008,23 @@ feat:
           Diese Aktion kann nicht rückgängig gemacht werden.
       open:
         description: Beschreibung
-        empty: Offene Frage ohne Titel
+        empty: Offene Frage ohne Überschrift
         fieldTypePreview: Textfeld
-        label: Titel
+        label: Überschrift
         multiLine: mehrzeilig
         singleLine: einzeilig
         textFieldType: Textfeld-Art
       text:
         content: Beschreibung
-        empty: Abschnitt ohne Titel
-        header: Titel
+        empty: Abschnitt ohne Überschrift
+        header: Überschrift
     chart:
       header: Antworten
       placeholder: Sammle Umfrageteilnahmen und starte durch!
+      subheader: Gesammelte Teilnahmen des/r letzten {days, plural, =1 {Tages} other
+        {# Tage}}
+      tooltip:
+        submissions: '{count, plural, =1 {1 Teilnahme} other {# Teilnahmen}}'
     editWarning:
       editing:
         header: Umfrage kann bearbeitet werden
@@ -906,17 +1051,23 @@ feat:
       actions:
         publish: Umfrage veröffentlichen
         unpublish: Umfrage deaktivieren
+      stats:
+        questions: '{numQuestions, plural, one {1 Frage} other {# Fragen}}'
+        submissions: '{numSubmissions, plural, one {1 Teilnahme} other {# Teilnahmen}}'
     optionCollapse:
       collapse: Ausblenden
+      more: '{numOfOptions, plural, one {Zeige 1 zusätzliche Option} other {Zeige
+        # zusätzliche Optionen}}'
     organizerActionPane:
+      subtitle: Notizen bei Anrufen von {person}
       title: Aktion erforderlich
     overview:
       noQuestions:
         button: Frage erstellen
         title: Diese Umfrage enthält bisher keine Fragen.
     shareSuborgsCard:
-      caption: Mit dieser Funktion machst du die Umfrageergebnisse für Personen in
-        Unterorganisationen sichtbar.
+      caption: Mit dieser Funktion machst du die Umfrageergebnisse für Hauptamtliche
+        in Unterorganisationen sichtbar.
       title: Mit Unterorganisationen teilen
     state:
       draft: Entwurf
@@ -947,8 +1098,14 @@ feat:
         mit einem Profil kannst du nach Personen in Zetkin basierend auf ihren Umfrageantworten
         suchen.
       header: Nicht verknüpfte Teilnahmen
+      openLink: '{numUnlink, plural, one {Verknüpfe Teilnahme jetzt} other {Verknüpfe
+        Teilnahmen jetzt}}'
     unlinkedWarningAlert:
       default:
+        description: '{numUnlink, plural, one {Eine Umfrageteilnahme ist nicht mit
+          einem Zetkinprofil verknüpft, wodurch diese bei der Suche nicht berücksichtigt
+          werden kann.} other {Mehrere Umfrageteilnahmen sind nicht mit einem Zetkinprofil
+          verknüpft, wodurch diese bei der Suche nicht berücksichtigt werden können.}}'
         header: Nicht verknüpfte Teilnahmen
         viewUnlinked: Nur nicht verknüpfte Teilnahmen einblenden
       filtered:
@@ -969,6 +1126,7 @@ feat:
       colorLabel: Farbe
       createTitle: Stichwort erstellen
       editTitle: Stichwort bearbeiten
+      groupCreatePrompt: Füge "{groupName}" hinzu
       groupLabel: Gruppe
       groupSelectPlaceholder: Tippe, um Gruppe zu suchen oder zu erstellen
       submitCreateTagButton: Erstellen und anwenden
@@ -980,13 +1138,20 @@ feat:
         text: Beschreibungstext
     manager:
       addTag: Stichwort hinzufügen
+      addValue: Füge Zahl hinzu für "{tag}"
+      createNamedTag: 'Erstelle Stichwort: {name}'
       createTag: Neues Stichwort
       groupTags: Stichworte gruppieren
       title: Stichworte
       ungroupedHeader: Keine Gruppe
+      valueTagForm:
+        typeHint: '{type, select, text {Füge Text ein} other {Füge eine Zahl ein}}
+          als Ergänzung zum Stichwort.'
   tasks:
     assignees:
       completedStates:
+        completed: abgeschlossen {time}
+        ignored: ignoriert {time}
         notCompleted: Nicht fertiggestellt
       links:
         create: Erstelle Intelligente Suche
@@ -1002,6 +1167,7 @@ feat:
           mit der Intelligenten Suche erstellen.
         published: Diese Aufgabe ist momentan den Personen zugeteilt, die mit der
           Intelligenten Suchanfrage übereinstimmen.
+      title: '{numPeople, plural, one {# Person} other {# Personen}} zugewiesen'
     common:
       notSet: Nicht eingestellt
     configs:
@@ -1043,10 +1209,14 @@ feat:
         published: Zeitpunkt der Veröffentlichung
         reassignInterval: Neu zuteilen nach Erledigung
         reassignIntervalOptions:
+          days: '{days, plural, =1 {am nächsten Tag} other {nach # Tagen}}'
+          hours: Nach {hours, plural, =1 {einer Stunde} other {# Stunden}}
           noReassign: Niemals neu zuteilen
         reassignLimit: Maximale Anzahl der (Neu-) Zuteilungen
         timeEstimate: Geschätzte Dauer
         timeEstimateOptions:
+          hoursAndMinutes: '{hours, plural, =0{} one{# Stunde} other{# Stunden}} {minutes,
+            plural, =0{} one {# Minute} other {# Minuten}}'
           lessThanOneMinute: weniger als eine Minute
           noEstimate: Keine Angabe
         timeValidationErrors:
@@ -1054,7 +1224,7 @@ feat:
             dem Ablaufdatum geplant werden.
           expiresNotThird: Diese Aufgabe muss als Letztes geplant werden
           publishedNotFirst: Diese Aufgabe muss als Erstes geplant werden
-        title: Titel
+        title: Überschrift
         type: Art der Aufgabe
         types:
           demographic: Daten einholen
@@ -1090,26 +1260,39 @@ feat:
     taskDetails:
       deadlineTime: Frist
       editButton: Bearbeiten
-      expiresTime: Überschreitet Zeitraum
+      expiresTime: Ablaufdatum
       instructionsLabel: Anleitung
       publishedTime: Zeitpunkt der Veröffentlichung
       reassignInterval:
         label: Zeitraum bis Neuzuteilung
+        value: Neu zugewiesen {value, plural, =1{eine Stunde} other{# Stunden}} nach
+          Fertigstellung
       reassignLimit:
         label: Grenze für Neuzuteilungen
+        value: Maximal {value, plural, =1{einmal} other{# mal}} pro Person wiederholt.
       statusLabel: Stand
       timeEstimateLabel: Geschätzte Dauer
       title: Details
-      titleLabel: Titel
+      titleLabel: Überschrift
       typeLabel: Art der Aufgabe
     taskLayout:
       tabs:
         assignees: Beauftragte
         insights: Statistik
         summary: Überblick
+    taskListItem:
+      relativeTimes:
+        active: Frist {time}
+        closed: beendet {time}
+        expired: abgelaufen {time}
+        expires: läuft ab {time}
+        indefinite: veröffentlicht {time}
+        scheduled: wird veröffentlicht {time}
     taskPreview:
       addImage: Bild hinzufügen
       sectionTitle: Vorschau
+      timeEstimate: '{minutes, plural, =0 {weniger als eine Minute} =1 {eine Minute}
+        other {# Minuten}}'
     taskTypeDetails:
       demographic:
         title: Einstellungen Daten erfassen
@@ -1128,6 +1311,7 @@ feat:
       createFolder: Ordner erstellen
       createView: Liste erstellen
     browser:
+      backToFolder: zurück zu {folder}
       backToRoot: Zurück zu allen Listen
       confirmDelete:
         folder:
@@ -1139,7 +1323,9 @@ feat:
           warning: Diese Liste zu löschen kann nicht rückgängig gemacht werden. Möchtest
             du fortfahren?
       menu:
+        delete: Löschen
         rename: Umbenennen
+      moveToFolder: verschieben zu {folder}
       moveToRoot: Verschieben zu alle Listen
     browserLayout:
       tabs:
@@ -1155,6 +1341,7 @@ feat:
       organizerAction:
         actionNeeded: Aktion erforderlich
         showDetails: Details einblenden
+        solvedIssues: '{count, plural, =1 {1 gelöstes Problem} other {# gelöste Probleme}}'
     columnDialog:
       categories:
         basic:
@@ -1282,6 +1469,7 @@ feat:
       editor:
         alreadyInView: Bereits in der Liste
         buttonLabels:
+          addColumns: Add {columns, plural, one {1 Spalte} other {{Spalten} columns}}
           change: Spaltenart ändern
         defaultTitle: Neue Spalte
         fieldLabels:
@@ -1296,7 +1484,9 @@ feat:
         columns: Spalten
         configure: Erstellen
         header: Spalte zur Liste hinzufügen
+        noSearchResults: Es gibt keine Spaltenauswahl, die "{searchString}" entspricht
         searchPlaceholder: Spalte finden
+        searchResults: Treffer für "{searchString}"
     columnMenu:
       configure: Spalte erstellen
       confirmDelete: Bist du sicher, dass du diese Spalte löschen möchtest? Die enthaltenen
@@ -1305,7 +1495,7 @@ feat:
       rename: Spalte umbenennen
     columnRenameDialog:
       save: Speichern
-      title: Titel
+      title: Überschrift
     dataTableErrors:
       create_column: Es ist ein Fehler aufgetreten beim Erstellen der Spalte
       delete_column: Es ist ein Fehler aufgetreten beim Löschen der Spalte
@@ -1314,6 +1504,7 @@ feat:
         Zeilen
     defaultColumnTitles:
       local_bool: Kontrollkästchen
+      local_person: Personenverweis
       organizer_action: Markierte Anrufe
       person_notes: Notizen
     defaultViewTitles:
@@ -1324,8 +1515,8 @@ feat:
       warningText: Möchtest du diese Liste wirklich löschen? Alle Daten in der Liste
         wie Notizen und Checklisten werden gelöscht.
     editViewTitleAlert:
-      error: Fehler. Titel wurde nicht geändert
-      success: Titel geändert!
+      error: Fehler. Überschrift wurde nicht geändert
+      success: Überschrift geändert!
     empty:
       dynamic:
         configureButton: Erstellen
@@ -1343,6 +1534,8 @@ feat:
     folder:
       summary:
         empty: Leer
+        folderCount: '{count, plural, =1 {1 Ordner} other {# Ordner}}'
+        viewCount: '{count, plural, =1 {1 Liste} other {# Listen}}'
     footer:
       addPlaceholder: Tippe, um Person zur Liste hinzuzufügen
       alreadyInView: Bereits in Liste
@@ -1361,12 +1554,22 @@ feat:
         tabLabel: Herunterladen
         warning1: Achtung! Vermeide Datenexporte aus Zetkin unter allen Umständen,
           um die Datenbank aktuell und übersichtlich zu halten.
+        warning2: Du kannst {shareLink} innerhalb Zetkins. Export macht nur Sinn,
+          wenn du die Daten in ein anderes System übertragen möchtest. Bitte kontaktiere
+          deine Organisation.
       share:
         addPlaceholder: Mitstreiter*in hinzufügen
+        collabInstructions: Nachdem du Mitstreiter*innen hinzugefügt hast, kopiere
+          und versende {viewLink}
         showOfficials: Admins anzeigen
+        statusLabel: Geteilt mit {collaborators, plural, =1 {1 Mitstreiter*in kann}
+          other {# Mitstreiter*innen können}}, {officials, plural, =1 {1 Hauptamtliche*r
+          kann} other {# Hauptamtliche können}} auf alle Listen zugreifen.
         tabLabel: Teilen
         viewLink: zugriffsbeschränkter Link
+      title: Teile "{title}"
     suggested:
+      created: Erstellt von {name}
       sectionTitle: Vorschläge
     surveyOptionCell:
       notSelected: Nicht ausgewählt
@@ -1381,6 +1584,8 @@ feat:
     toolbar:
       createColumn: Neue Spalte
       createFromSelection: Erstelle Liste aus Auswahl
+      removeFromSelection: Entferne {numSelected, plural, one {1 Person} other {{numSelected}
+        Personen} } von der Liste
       removeTooltip: In Listen erstellt aus Intelligenter Suche können momentan keine
         Zeilen gelöscht werden
     viewLayout:
@@ -1388,17 +1593,22 @@ feat:
         share: Teilen
       ellipsisMenu:
         delete: Liste löschen
-        editQuery: Bearbeite Intelligente Suchanfrage
+        editQuery: Bearbeite Intelligente Suche
         makeDynamic: Umwandeln in dynamische Liste (basierend auf Intelligenter Suche)
         makeStatic: Umwandeln in statische Liste
       jumpMenu:
         placeholder: Tippe, um Liste zu finden
+      subtitle:
+        collaborators: '{count, plural, =1 {1 externe*r Mitstreiter*in} other {# externe
+          Mitstreiter*innen}}'
+        columns: '{count, plural, =0 {Keine Spalten} =1 {1 Spalte} other {# Spalten}}'
+        people: '{count, plural, =0 {leer} =1 {1 Person} other {# Personen}}'
     viewsList:
       columns:
         created: Erstellt am
         owner: Erstellt von
-        title: Titel
-      empty: Du hast noch keine Listen erstellt
+        title: Überschrift
+      empty: Du hast noch keine Listen erstellt.
 glob:
   accessLevels:
     configure: Bearbeiten & Erstellen
@@ -1410,8 +1620,11 @@ glob:
     co_address: Adresszusatz
     country: Land
     email: Email
+    ext_id: Externe ID
     first_name: Vorname
     gender: Geschlechtsidentität
+    id: ID
+    is_user: hat Profil
     last_name: Nachname
     phone: Telefonnummer
     street_address: Adresse
@@ -1421,6 +1634,7 @@ glob:
     organizer: Organizer*in
 zui:
   accessList:
+    added: Hinzugefügt durch {sharer} {updated}
     removeAccess: Rechte beschränken
   collapse:
     collapse: Ausblenden
@@ -1432,20 +1646,31 @@ zui:
       kann nicht rückgängig gemach t werden.
   copyToClipboard:
     copied: Kopiert
+    copiedValue: '"{value}" kopiert'
     copy: Kopieren
   dataTableSearch:
     button: Suche
+    helpText: Tippe mindestens {minSearchLength} Buchstaben
+    idSearchHelpText: Gib eine ID ein (nur Ziffern)
     placeholder: Tabelle durchsuchen
+    placeholderWithIdSearch: 'Suche - nutze # für ID, z.B. #123'
     title: Suche
   dataTableSorting:
     addButton: Füge Sortierspalte hinzu
     button: Sortieren
+    hint: 'Hinweis: Drücke {shiftKeyIcon} während du mehrere Spalten anklickst'
     title: Sortieren
   dateRange:
     draft: Kein Startdatum
     end: Ende
-    invisible: Nicht sichtbar oder geplant
+    finite: Sichtbar von {start} bis {end}
+    indefinite: Sichtbar ab {start}
+    invisible: unsichtbar oder geplant
     start: Startdatum
+  dateSpan:
+    multiDayEndsToday: '{startDate} - Heute'
+    multiDayToday: Heute - {endDate}
+    singleDayToday: Heute
   editTextInPlace:
     tooltip:
       edit: Klicke, um zu bearbeiten
@@ -1463,9 +1688,12 @@ zui:
   organizeSidebar:
     allOrganizations: Alle Organisationen
     areas: Bereiche
+    filter: Tippe, um zu filtern
     home: Startseite
+    journeys: Mitgliederentwicklung
     people: Personen
     projects: Projekte & Aktivitäten
+    search: Suche
     signOut: Abmelden
     userSettings: Einstellungen
   personGridEditCell:
@@ -1485,12 +1713,16 @@ zui:
     warning: Achtung!
   speedDial:
     createCampaign: Erstelle Kampagne
-    createEvent: Erstelle Veranstaltung
+    createEvent: Erstelle Aktion
     createTask: Erstelle Aufgabe
     requestError: Es ist ein Fehler aufgetreten.
   submitOrCancel:
     cancel: Abbrechen
-    submit: Einreichen
+    submit: Erstellen
+  timeSpan:
+    multiDayEndsToday: '{startDate}, {start} - Heute, {end}'
+    multiDayToday: Heute, {start} - {endDate}, {end}
+    singleDayToday: Heute, {start} - {end}
   timeline:
     addNotePlaceholder: Tippe, um eine Notiz zu erstellen
     email:
@@ -1507,10 +1739,20 @@ zui:
         notes: Notizen
         people: Personen
         tags: Stichworte
+      filterSelectLabel: 'Zeige: {filter}'
       warning: Die Zeitleiste erscheint gefiltert. Klicke hier, um den Filter zu entfernen.
     updates:
+      any:
+        addtags: '{actor} hat {count, plural, =1 {ein Stichwort} other {# Stichworte}}
+          hinzugefügt'
+        removetags: '{actor} hat {count, plural, =1 {ein Stichwort} other {# Stichworte}}
+          entfernt'
       journeyinstance:
+        addassignee: '{actor} hat {assignee} zugewiesen'
+        addnote: '{actor} hat eine Notiz hinzugefügt'
+        addsubject: '{actor} hat {subject} hinzugefügt'
         update:
           readMore: Mehr
         updatemilestone:
           deadlineRemove: Frist gelöscht
+          incomplete: '{actor} hat Meilenstein als unvollständig markiert'

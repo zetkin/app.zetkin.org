@@ -18,6 +18,22 @@ Also see [TESTING.md](./TESTING.md) for details about automated testing.
 
 ## Instructions
 
+### Windows
+
+1. Fork zetkin/app.zetking.org into your personal GitHub account.
+1. Install Git for Windows from https://git-scm.com/download/win
+2. Generate an SSH key, for example with
+   Git Gui / Help / Show SSH Key / Generate Key
+3. Add your key to GitHub by copying the public part of it to
+   your GitHub settings at https://github.com/settings/keys
+4. Install Visual Studio Code.
+5. In Visual Studio Code use Clone Repository and from GitHub, connect your
+   installation of Visual Studio Code to your GitHub account, and then clone
+   your fork from GitHub. Note that you will be prompted for the passphrase of
+   your private key if you chose to use one when you created your SSH Key.
+
+### Common
+
 Install all the dependencies using [`yarn` (Classic)](https://classic.yarnpkg.com):
 
 ```

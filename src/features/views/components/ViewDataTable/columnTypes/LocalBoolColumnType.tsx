@@ -26,7 +26,7 @@ export default class LocalBoolColumnType implements IColumnType {
   getColDef(column: LocalBoolViewColumn): Omit<GridColDef, 'field'> {
     return {
       headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<boolean, ZetkinViewRow>) => {
+      renderCell: (params: GridRenderCellParams<ZetkinViewRow, boolean>) => {
         return (
           <Cell cell={params.value} column={column} personId={params.row.id} />
         );
