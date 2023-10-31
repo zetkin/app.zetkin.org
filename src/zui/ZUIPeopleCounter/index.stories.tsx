@@ -1,14 +1,10 @@
-import ZUIPeopleCounter from '.';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import ZUIPeopleCounter, { COUNT_STATUS } from '.';
 
 export default {
   component: ZUIPeopleCounter,
   title: 'Import/ZUIPeopleCounter',
 } as ComponentMeta<typeof ZUIPeopleCounter>;
-export enum COUNT_STATUS {
-  CREATED = 'created',
-  UPDATED = 'updated',
-}
 
 const Template: ComponentStory<typeof ZUIPeopleCounter> = (args) => (
   <ZUIPeopleCounter count={args.count} status={args.status} />

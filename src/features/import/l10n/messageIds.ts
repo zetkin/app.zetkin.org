@@ -13,6 +13,10 @@ export default makeMessages('feat.import', {
     validate: m('Validate'),
   },
   validation: {
+    alerts: {
+      back: m('Go back'),
+      checkbox: m('I understand'),
+    },
     title: m('Pending changes'),
     trackers: {
       created: m('new people will be created'),

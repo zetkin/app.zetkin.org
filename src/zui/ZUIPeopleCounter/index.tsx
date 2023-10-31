@@ -1,8 +1,12 @@
 import { Box } from '@mui/system';
-import { COUNT_STATUS } from './index.stories';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { Typography } from '@mui/material';
+
+export enum COUNT_STATUS {
+  CREATED = 'created',
+  UPDATED = 'updated',
+}
 
 interface ZUIPeopleCounterProps {
   count: number;
