@@ -2,8 +2,6 @@ import { applySession } from 'next-session';
 import { IncomingMessage } from 'http';
 import { NextApiRequestCookies } from 'next/dist/server/api-utils';
 import { ParsedUrlQuery } from 'querystring';
-import { QueryClient } from 'react-query';
-import { dehydrate, DehydratedState } from 'react-query/hydration';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -29,7 +27,6 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
-  dehydratedState: DehydratedState;
   lang: string;
   messages: Record<string, string>;
   user: ZetkinUser | null;
@@ -37,7 +34,6 @@ export type ScaffoldedProps = RegularProps & {
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
   apiFetch: ApiFetch;
-  queryClient: QueryClient;
   user: ZetkinUser | null;
   z: ZetkinZ;
 };
@@ -93,7 +89,6 @@ export const scaffold =
   async (contextFromNext: GetServerSidePropsContext) => {
     const ctx = contextFromNext as ScaffoldedContext;
 
-    ctx.queryClient = new QueryClient();
     ctx.apiFetch = createApiFetch(ctx.req.headers);
 
     ctx.z = Z.construct({
@@ -199,7 +194,6 @@ export const scaffold =
     if (hasProps(result)) {
       result.props = {
         ...result.props,
-        dehydratedState: dehydrate(ctx.queryClient),
         lang,
         messages,
         user: ctx.user,

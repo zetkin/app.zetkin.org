@@ -6,7 +6,6 @@ import createStore from 'core/store';
 import CssBaseline from '@mui/material/CssBaseline';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,7 +13,6 @@ import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import { Provider as ReduxProvider } from 'react-redux';
 import { useEffect } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import Router, { useRouter } from 'next/router';
 import {
   StyledEngineProvider,
@@ -57,14 +55,6 @@ Router.events.on(
   (url, { shallow }) => !shallow && NProgress.done()
 );
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 declare global {
   interface Window {
     __reactRendered: boolean;
@@ -75,7 +65,7 @@ const store = createStore();
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const router = useRouter();
-  const { dehydratedState, lang, messages, ...restProps } = pageProps;
+  const { lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
   const getLayout = c.getLayout || ((page) => <>{page}</>);
 
@@ -105,25 +95,18 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
                   locale={lang}
                   messages={messages}
                 >
-                  <QueryClientProvider client={queryClient}>
-                    <ZUISnackbarProvider>
-                      <ZUIConfirmDialogProvider>
-                        <EventPopperProvider>
-                          <DndProvider backend={HTML5Backend}>
-                            <Hydrate state={dehydratedState}>
-                              <CssBaseline />
-                              <NoSsr>
-                                {getLayout(
-                                  <Component {...restProps} />,
-                                  restProps
-                                )}
-                              </NoSsr>
-                            </Hydrate>
-                          </DndProvider>
-                        </EventPopperProvider>
-                      </ZUIConfirmDialogProvider>
-                    </ZUISnackbarProvider>
-                  </QueryClientProvider>
+                  <ZUISnackbarProvider>
+                    <ZUIConfirmDialogProvider>
+                      <EventPopperProvider>
+                        <DndProvider backend={HTML5Backend}>
+                          <CssBaseline />
+                          <NoSsr>
+                            {getLayout(<Component {...restProps} />, restProps)}
+                          </NoSsr>
+                        </DndProvider>
+                      </EventPopperProvider>
+                    </ZUIConfirmDialogProvider>
+                  </ZUISnackbarProvider>
                 </IntlProvider>
               </LocalizationProvider>
             </ThemeProvider>

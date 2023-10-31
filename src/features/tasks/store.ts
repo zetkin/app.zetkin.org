@@ -78,12 +78,27 @@ const tasksSlice = createSlice({
       const task = action.payload;
       state.tasksList.isLoading = false;
       state.tasksList.items.push(remoteItem(task.id, { data: task }));
+
+      if (task.campaign) {
+        if (!state.taskIdsByCampaignId[task.campaign.id]) {
+          state.taskIdsByCampaignId[task.campaign.id] = remoteList();
+        }
+        state.taskIdsByCampaignId[task.campaign.id].items.push(
+          remoteItem(task.id, { data: task })
+        );
+      }
     },
     taskDeleted: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
       state.tasksList.items = state.tasksList.items.filter(
         (item) => item.id != taskId
       );
+
+      for (const campaignId in state.taskIdsByCampaignId) {
+        state.taskIdsByCampaignId[campaignId].items = state.taskIdsByCampaignId[
+          campaignId
+        ].items.filter((item) => item.id != taskId);
+      }
     },
     taskLoad: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;

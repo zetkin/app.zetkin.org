@@ -1,13 +1,9 @@
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
-
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
-import patchQuery from 'utils/fetching/patchQuery';
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
 import QueryStatusAlert from 'features/tasks/components/QueryStatusAlert';
 import { scaffold } from 'utils/next';
@@ -17,7 +13,9 @@ import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
 import useAssignedTasks from 'features/tasks/hooks/useAssignedTasks';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import { useState } from 'react';
 import useTask from 'features/tasks/hooks/useTask';
+import useTaskMutations from 'features/tasks/hooks/useTaskMutations';
 import ZUIFuture from 'zui/ZUIFuture';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
@@ -83,21 +81,13 @@ const getQueryStatus = (
 
 const TaskAssigneesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
-  const queryClient = useQueryClient();
 
   const { orgId, taskId } = useNumericRouteParams();
   const assignedTasksQuery = useAssignedTasks(orgId, taskId);
   const task = useTask(orgId, taskId);
+  const { updateTargetQuery } = useTaskMutations(orgId, taskId);
   const assignedTasks = assignedTasksQuery?.data;
   const query = task?.target;
-
-  const queryMutation = useMutation(
-    patchQuery(orgId.toString(), query?.id as number),
-    {
-      onSettled: () =>
-        queryClient.invalidateQueries(['task', taskId.toString()]),
-    }
-  );
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogClose = () => setDialogOpen(false);
@@ -132,7 +122,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
         <SmartSearchDialog
           onDialogClose={handleDialogClose}
           onSave={(query) => {
-            queryMutation.mutate(query);
+            updateTargetQuery(query);
             setDialogOpen(false);
           }}
           query={query}

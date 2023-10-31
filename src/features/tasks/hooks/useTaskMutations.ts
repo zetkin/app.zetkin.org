@@ -1,8 +1,13 @@
+import { ZetkinQuery } from 'utils/types/zetkin';
 import { taskDeleted, taskUpdate, taskUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinTask, ZetkinTaskRequestBody } from '../components/types';
+
+type ZetkinQueryPatchBody = Omit<ZetkinQuery, 'id'>;
+
 interface UseTaskReturn {
   deleteTask: () => Promise<void>;
+  updateTargetQuery: (body: ZetkinQueryPatchBody) => Promise<ZetkinQuery>;
   updateTask: (body: ZetkinTaskRequestBody) => Promise<ZetkinTask>;
 }
 
@@ -32,8 +37,29 @@ export default function useTaskMutations(
     return taskFuture;
   };
 
+  const updateTargetQuery = async (body: ZetkinQueryPatchBody) => {
+    const task = await apiClient.get<ZetkinTask>(
+      `/api/orgs/${orgId}/tasks/${taskId}`
+    );
+    const queryId = task.target.id;
+    const query = await apiClient.patch<ZetkinQuery, ZetkinQueryPatchBody>(
+      `/api/orgs/${orgId}/people/queries/${queryId}`,
+      body
+    );
+
+    dispatch(
+      taskUpdated({
+        ...task,
+        target: query,
+      })
+    );
+
+    return query;
+  };
+
   return {
     deleteTask,
+    updateTargetQuery,
     updateTask,
   };
 }
