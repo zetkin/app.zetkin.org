@@ -14,22 +14,25 @@ import BrowserDragLayer from './BrowserDragLayer';
 import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
+import useFolder from 'features/views/hooks/useFolder';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutations';
+import useViewMutations from 'features/views/hooks/useViewMutations';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ViewBrowserModel, {
+import useViewBrowserItems, {
   ViewBrowserItem,
-} from '../../models/ViewBrowserModel';
+} from 'features/views/hooks/useViewBrowserItems';
 
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ViewBrowserProps {
   basePath: string;
   folderId?: number | null;
-  model: ViewBrowserModel;
 }
 
 const TYPE_SORT_ORDER = ['back', 'folder', 'view'];
@@ -40,11 +43,9 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
   return index0 - index1;
 }
 
-const ViewBrowser: FC<ViewBrowserProps> = ({
-  basePath,
-  folderId = null,
-  model,
-}) => {
+const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
+  const { orgId } = useNumericRouteParams();
+
   const messages = useMessages(messageIds);
   const [sortModel, setSortModel] = useState<GridSortModel>([
     { field: 'title', sort: 'asc' },
@@ -53,18 +54,22 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
-
   const gridApiRef = useGridApiRef();
+
+  const { deleteView } = useViewMutations(orgId);
+  const { renameItem } = useViewBrowserMutations(orgId);
+  const itemsFuture = useViewBrowserItems(orgId, folderId);
+  const { deleteFolder, recentlyCreatedFolder } = useFolder(orgId);
 
   // If a folder was created, go into rename state
   useEffect(() => {
-    if (gridApiRef.current && model.recentlyCreatedFolder) {
+    if (gridApiRef.current && recentlyCreatedFolder) {
       gridApiRef.current.startCellEditMode({
         field: 'title',
-        id: 'folders/' + model.recentlyCreatedFolder.id,
+        id: 'folders/' + recentlyCreatedFolder.id,
       });
     }
-  }, [model.recentlyCreatedFolder]);
+  }, [recentlyCreatedFolder]);
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
@@ -105,9 +110,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       flex: 2,
       headerName: messages.viewsList.columns.title(),
       renderCell: (params) => {
-        return (
-          <BrowserItem basePath={basePath} item={params.row} model={model} />
-        );
+        return <BrowserItem basePath={basePath} item={params.row} />;
       },
     },
   ];
@@ -162,9 +165,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                   showConfirmDialog({
                     onSubmit: () => {
                       if (item.type == 'folder') {
-                        model.deleteFolder(item.data.id);
+                        deleteFolder(item.data.id);
                       } else if (params.row.type == 'view') {
-                        model.deleteView(item.data.id);
+                        deleteView(item.data.id);
                       }
                     },
                     title: messages.browser.confirmDelete[item.type].title(),
@@ -182,7 +185,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   }
 
   return (
-    <ZUIFuture future={model.getItems(folderId)}>
+    <ZUIFuture future={itemsFuture}>
       {(data) => {
         const rows = data.sort((item0, item1) => {
           const typeSort = typeComparator(item0, item1);
@@ -226,7 +229,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
               onSortModelChange={(model) => setSortModel(model)}
               processRowUpdate={(item) => {
                 if (item.type != 'back') {
-                  model.renameItem(item.type, item.data.id, item.title);
+                  renameItem(item.type, item.data.id, item.title);
                 }
                 return item;
               }}
@@ -234,9 +237,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
               slots={{
                 row: (props: GridRowProps) => {
                   const item = props.row as ViewBrowserItem;
-                  return (
-                    <BrowserRow item={item} model={model} rowProps={props} />
-                  );
+                  return <BrowserRow item={item} rowProps={props} />;
                 },
               }}
               sortingMode="server"

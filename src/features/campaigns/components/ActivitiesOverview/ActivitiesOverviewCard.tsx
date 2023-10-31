@@ -12,10 +12,7 @@ import SurveyOverviewListItem from './items/SurveyOverviewListItem';
 import TaskOverviewListItem from './items/TaskOverviewListItem';
 import ZUICard from 'zui/ZUICard';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import {
-  ACTIVITIES,
-  CampaignActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import { Msg, useMessages } from 'core/i18n';
 import useClusteredActivities, {
   CLUSTER_TYPE,

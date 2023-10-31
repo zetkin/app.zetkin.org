@@ -1,8 +1,7 @@
 import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
-import SurveyDataModel from '../models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
+import useSurveyStats from '../hooks/useSurveyStats';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
@@ -21,10 +20,10 @@ const SurveyUnlinkedCard = ({
 }: SurveyUnlinkedCardProps) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const model = useModel((env) => new SurveyDataModel(env, orgId, surveyId));
+  const statsFuture = useSurveyStats(orgId, surveyId);
 
   return (
-    <ZUIFuture future={model.getStats()}>
+    <ZUIFuture future={statsFuture}>
       {(sub) => {
         const unlinkedSubmitters = sub.unlinkedSubmissionCount;
 

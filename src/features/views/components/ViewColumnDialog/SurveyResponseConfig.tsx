@@ -1,6 +1,3 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-import ZUIQuery from 'zui/ZUIQuery';
 import {
   Autocomplete,
   FormControl,
@@ -11,7 +8,6 @@ import {
 } from '@mui/material';
 import { ChangeEventHandler, useState } from 'react';
 
-import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import {
   ELEMENT_TYPE,
@@ -22,6 +18,9 @@ import {
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/views/l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
+import ZUIFuture from 'zui/ZUIFuture';
 
 interface SurveyResponseConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -35,11 +34,8 @@ export enum SURVEY_QUESTION_OPTIONS {
 const SurveyResponseConfig = ({
   onOutputConfigured,
 }: SurveyResponseConfigProps) => {
-  const { orgId } = useRouter().query;
-  const surveysQuery = useQuery(
-    ['surveysWithElements', orgId],
-    getSurveysWithElements(orgId as string)
-  );
+  const { orgId } = useNumericRouteParams();
+  const surveysWithElementsFuture = useSurveysWithElements(orgId);
   const messages = useMessages(messageIds);
 
   const [surveyId, setSurveyId] = useState<number | null>();
@@ -68,11 +64,9 @@ const SurveyResponseConfig = ({
   };
 
   return (
-    <ZUIQuery queries={{ surveysQuery }}>
-      {({ queries: { surveysQuery: successSurveysQuery } }) => {
-        const selectedSurvey = successSurveysQuery.data.find(
-          (survey) => survey.id == surveyId
-        );
+    <ZUIFuture future={surveysWithElementsFuture}>
+      {(data) => {
+        const selectedSurvey = data.find((survey) => survey.id == surveyId);
         const questionsFromSurvey: ZetkinSurveyQuestionElement[] =
           (selectedSurvey?.elements.filter(
             (elem) =>
@@ -80,7 +74,6 @@ const SurveyResponseConfig = ({
               (elem.question.response_type == RESPONSE_TYPE.TEXT ||
                 elem.question.options?.length)
           ) as ZetkinSurveyQuestionElement[]) ?? [];
-
         return (
           <FormControl sx={{ width: 300 }}>
             <TextField
@@ -92,7 +85,7 @@ const SurveyResponseConfig = ({
               value={surveyId || ''}
               variant="standard"
             >
-              {successSurveysQuery.data.map((survey) => (
+              {surveysWithElementsFuture.data?.map((survey) => (
                 <MenuItem key={survey.id} value={survey.id}>
                   {survey.title}
                 </MenuItem>
@@ -211,7 +204,7 @@ const SurveyResponseConfig = ({
           </FormControl>
         );
       }}
-    </ZUIQuery>
+    </ZUIFuture>
   );
 };
 

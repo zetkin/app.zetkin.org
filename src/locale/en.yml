@@ -12,6 +12,36 @@ core:
       feature you want to use. You are being redirected to the older version of
       Zetkin which supports that feature.
 feat:
+  breadcrumbs:
+    elements:
+      activities: Activities
+      archive: Archive
+      areas: Areas
+      assignees: Assignees
+      calendar: Calendar
+      callassignments: Call assignments
+      callers: Callers
+      campaigns: Projects
+      closed: Closed
+      conversation: Conversation
+      events: Events
+      folders: Views
+      insights: Insights
+      instances: Instances
+      journeys: Journeys
+      manage: Manage
+      milestones: Milestones
+      new: New
+      organize: Organize
+      participants: Participants
+      people: People
+      projects: Projects
+      questions: Questions
+      submissions: Submissions
+      surveys: Surveys
+      tasks: Tasks
+      untitledEvent: Untitled event
+      views: Views
   calendar:
     createMenu:
       singleEvent: Create single event
@@ -1681,35 +1711,6 @@ zui:
   accessList:
     added: Added by {sharer} {updated}
     removeAccess: Remove access
-  breadcrumbs:
-    activities: Activities
-    archive: Archive
-    areas: Areas
-    assignees: Assignees
-    calendar: Calendar
-    callassignments: Call assignments
-    callers: Callers
-    campaigns: Projects
-    closed: Closed
-    conversation: Conversation
-    events: Events
-    folders: Lists
-    insights: Insights
-    instances: Instances
-    journeys: Journeys
-    manage: Manage
-    milestones: Milestones
-    new: New
-    organize: Organize
-    participants: Participants
-    people: People
-    projects: Projects
-    questions: Questions
-    submissions: Submissions
-    surveys: Surveys
-    tasks: Tasks
-    untitledEvent: Untitled event
-    views: Lists
   collapse:
     collapse: Collapse
     expand: Expand

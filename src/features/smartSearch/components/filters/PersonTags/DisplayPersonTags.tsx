@@ -1,8 +1,8 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { Box, Chip } from '@mui/material';
 
-import getTags from 'features/tags/api/getTags';
+import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import {
   OPERATION,
@@ -11,8 +11,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
+
 const localMessageIds = messageIds.filters.personTags;
 
 interface DisplayPersonTagProps {
@@ -20,12 +20,12 @@ interface DisplayPersonTagProps {
 }
 
 const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { config } = filter;
   const op = filter.op || OPERATION.ADD;
   const { condition, tags: tagIds, min_matching } = config;
-  const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
-  const tags = tagsQuery?.data || [];
+  const { data } = useTags(orgId);
+  const tags = data || [];
 
   // preserve the order of the tag array
   const selectedTags = tagIds.reduce((acc: ZetkinTag[], id) => {

@@ -1,10 +1,4 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-
 import DisplayTimeFrame from '../DisplayTimeFrame';
-import getActivity from 'features/smartSearch/fetching/getActivity';
-import getCampaign from 'features/campaigns/fetching/getCampaign';
-import getLocation from 'features/smartSearch/fetching/getLocation';
 import { getTimeFrameWithConfig } from '../../utils';
 import { Msg } from 'core/i18n';
 import {
@@ -14,8 +8,12 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import UnderlinedActivityTitle from './UnderlinedActivityTitle';
+import UnderlinedCampaignTitle from './UnderlinedCampaignTitle';
+import UnderlinedLocationTitle from './UnderlinedLocationTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
-import UnderlinedText from '../../UnderlinedText';
+import { useNumericRouteParams } from 'core/hooks';
+
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 interface DisplayCampaignParticipationProps {
@@ -25,7 +23,7 @@ interface DisplayCampaignParticipationProps {
 const DisplayCampaignParticipation = ({
   filter,
 }: DisplayCampaignParticipationProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { config } = filter;
   const {
     operator,
@@ -40,37 +38,12 @@ const DisplayCampaignParticipation = ({
     before: config.before,
   });
 
-  const campaignQuery = useQuery(
-    ['campaign', orgId, campId],
-    getCampaign(orgId as string, campId?.toString() as string),
-    { enabled: !!campId }
-  );
-  const activityQuery = useQuery(
-    ['activity', orgId, activityId],
-    getActivity(orgId as string, activityId?.toString() as string),
-    { enabled: !!activityId }
-  );
-  const locationQuery = useQuery(
-    ['location', orgId, locationId],
-    getLocation(orgId as string, locationId?.toString() as string),
-    { enabled: !!locationId }
-  );
-
-  const campaignTitle = campaignQuery?.data?.title || null;
-  const activityTitle = activityQuery?.data?.title || null;
-  const locationTitle = locationQuery?.data?.title || null;
-
   return (
     <Msg
       id={messageIds.filters.campaignParticipation.inputString}
       values={{
-        activitySelect: activityTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.activitySelect.activity}
-            values={{
-              activity: <UnderlinedText text={activityTitle} />,
-            }}
-          />
+        activitySelect: activityId ? (
+          <UnderlinedActivityTitle activityId={activityId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.activitySelect.any} />
         ),
@@ -78,24 +51,14 @@ const DisplayCampaignParticipation = ({
         bookedSelect: (
           <UnderlinedMsg id={localMessageIds.bookedSelect[state]} />
         ),
-        campaignSelect: campaignTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.campaignSelect.campaign}
-            values={{
-              campaign: <UnderlinedText text={campaignTitle} />,
-            }}
-          />
+        campaignSelect: campId ? (
+          <UnderlinedCampaignTitle campId={campId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
         ),
         haveSelect: <Msg id={localMessageIds.haveSelect[operator]} />,
-        locationSelect: locationTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.locationSelect.location}
-            values={{
-              location: <UnderlinedText text={locationTitle} />,
-            }}
-          />
+        locationSelect: locationId ? (
+          <UnderlinedLocationTitle locationId={locationId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.locationSelect.any} />
         ),

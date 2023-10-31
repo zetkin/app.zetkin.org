@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, CircularProgress } from '@mui/material';
 
-import { CallAssignmentState } from '../models/CallAssignmentModel';
+import { CallAssignmentState } from '../hooks/useCallAssignmentState';
 import { Msg } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';

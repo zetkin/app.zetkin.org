@@ -1,10 +1,12 @@
-import { useDispatch } from 'react-redux';
-
 import copyEvents from '../rpc/copyEvents';
 import getNewEventTimes from '../utils/getNewEventTimes';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventsCreate, eventsCreated, resetSelection } from '../store';
-import { useApiClient, useNumericRouteParams } from 'core/hooks';
+import {
+  useApiClient,
+  useAppDispatch,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 const makeZetkinEventPatchBody = (e: ZetkinEvent) => {
   return {
@@ -27,7 +29,7 @@ const makeZetkinEventPatchBody = (e: ZetkinEvent) => {
 export default function useCopyEvents() {
   const { orgId } = useNumericRouteParams();
   const apiClient = useApiClient();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const duplicate = async (events: ZetkinEvent[]) => {
     const eventsToDuplicate = events.map((e) => makeZetkinEventPatchBody(e));

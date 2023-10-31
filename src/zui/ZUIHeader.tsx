@@ -10,8 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import BreadcrumbTrail from 'features/breadcrumbs/components/BreadcrumbTrail';
 import { Msg } from 'core/i18n';
-import ZUIBreadcrumbTrail from 'zui/ZUIBreadcrumbTrail';
 import ZUIEllipsisMenu, { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 
 import messageIds from './l10n/messageIds';
@@ -84,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({
     <Box component="header" flexGrow={0} flexShrink={0}>
       <Box mb={collapsed ? 1 : 2} pt={3} px={3}>
         <Box display="flex" flexDirection="row" justifyContent="space-between">
-          <ZUIBreadcrumbTrail highlight={collapsed} />
+          <BreadcrumbTrail highlight={collapsed} />
           {/* Search and collapse buttons */}
           <Box display="flex" flexDirection="row">
             {!!onToggleCollapsed && (

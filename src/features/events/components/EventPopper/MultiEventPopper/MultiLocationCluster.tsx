@@ -4,9 +4,8 @@ import { Box, Divider } from '@mui/material';
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import ClusterBody from './ClusterBody';
 import ClusterHeader from './ClusterHeader';
-import EventDataModel from 'features/events/models/EventDataModel';
 import MultiEventListItem from './MultiEventListItem';
-import useModel from 'core/useModel';
+import useEventState from 'features/events/hooks/useEventState';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 interface MultiLocationClusterProps {
@@ -18,13 +17,11 @@ const MultiLocationCluster: FC<MultiLocationClusterProps> = ({
   events,
   onEventClick,
 }) => {
-  const model = useModel(
-    (env) => new EventDataModel(env, events[0].organization.id, events[0].id)
-  );
+  const state = useEventState(events[0].organization.id, events[0].id);
 
   return (
     <Box>
-      <ClusterHeader event={events[0]} state={model.state} />
+      <ClusterHeader event={events[0]} state={state} />
       <ClusterBody clusterType={CLUSTER_TYPE.MULTI_LOCATION} events={events} />
       <Divider />
       <Box paddingTop={1}>

@@ -1,16 +1,16 @@
 import dayjs from 'dayjs';
-import { useDispatch, useSelector } from 'react-redux';
 
 import range from 'utils/range';
-import { RootState } from 'core/store';
 import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import {
-  ACTIVITIES,
-  EventActivity,
-} from 'features/campaigns/models/CampaignActivitiesModel';
+import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
-import { useApiClient, useNumericRouteParams } from 'core/hooks';
+import {
+  useApiClient,
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 export default function useEventsFromDateRange(
   startDate: Date,
@@ -18,8 +18,8 @@ export default function useEventsFromDateRange(
 ): EventActivity[] {
   const { campId, orgId } = useNumericRouteParams();
   const apiClient = useApiClient();
-  const dispatch = useDispatch();
-  const eventsState = useSelector((state: RootState) => state.events);
+  const dispatch = useAppDispatch();
+  const eventsState = useAppSelector((state) => state.events);
 
   const dateRange = range(dayjs(endDate).diff(startDate, 'day') + 2).map(
     (diff) => {

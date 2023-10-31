@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AccessTime, Image as ImageIcon } from '@mui/icons-material';
 import { Box, Button, Card, Typography } from '@mui/material';
 
-import { taskResource } from 'features/tasks/api/tasks';
+import useTaskMutations from '../hooks/useTaskMutations';
 import { ZetkinTask } from 'features/tasks/components/types';
 import ZUIEditableImage from 'zui/ZUIEditableImage';
 import ZUIImageSelectDialog from 'zui/ZUIImageSelectDialog';
@@ -20,11 +20,7 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
   const messages = useMessages(messageIds);
   const [selecting, setSelecting] = useState(false);
 
-  const taskMutation = taskResource(
-    task.organization.id.toString(),
-    task.id.toString()
-  ).useUpdate();
-
+  const { updateTask } = useTaskMutations(task.organization.id, task.id);
   return (
     <ZUISection
       action={
@@ -50,7 +46,7 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
             objectFit="cover"
             onEdit={() => setSelecting(true)}
             onReset={() => {
-              taskMutation.mutate({
+              updateTask({
                 cover_file_id: null,
               });
             }}
@@ -83,7 +79,7 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
         onClose={() => setSelecting(false)}
         onSelectFile={(file) => {
           setSelecting(false);
-          taskMutation.mutate({
+          updateTask({
             cover_file_id: file.id,
           });
         }}

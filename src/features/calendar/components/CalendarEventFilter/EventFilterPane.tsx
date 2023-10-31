@@ -1,13 +1,8 @@
-import { Box, Button } from '@mui/material';
-import { useSelector, useStore } from 'react-redux';
-
 import CheckboxFilterList from './CheckboxFilterList';
 import EventInputFilter from './EventInputFilter';
-import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/calendar/l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
-import { RootState } from 'core/store';
-import useModel from 'core/useModel';
+import useEventTypes from 'features/events/hooks/useEventTypes';
 import { ZetkinActivity } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
@@ -17,16 +12,18 @@ import {
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
+import { Box, Button } from '@mui/material';
 import { Msg, useMessages } from 'core/i18n';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface EventFilterPaneProps {
   orgId: number;
 }
 const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
+  const dispatch = useAppDispatch();
   const messages = useMessages(messageIds);
-  const store = useStore<RootState>();
-  const state = useSelector((state: RootState) => state.events.filters);
-  const typesModel = useModel((env) => new EventTypesModel(env, orgId));
+  const state = useAppSelector((state) => state.events.filters);
+  const eventTypes = useEventTypes(orgId);
 
   const disableReset =
     state.selectedActions.length === 0 &&
@@ -41,14 +38,14 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       'selectedTypes',
     ];
     filterCategories.forEach((filterCategory) =>
-      store.dispatch(
+      dispatch(
         filterUpdated({
           filterCategory: filterCategory,
           selectedFilterValue: [],
         })
       )
     );
-    store.dispatch(filterTextUpdated({ filterText: '' }));
+    dispatch(filterTextUpdated({ filterText: '' }));
   };
 
   return (
@@ -66,7 +63,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
       <Box sx={{ mt: 2 }}>
         <EventInputFilter
           onChangeFilterText={(value: string) =>
-            store.dispatch(filterTextUpdated({ filterText: value }))
+            dispatch(filterTextUpdated({ filterText: value }))
           }
           placeholder={messages.eventFilter.type()}
           reset={disableReset}
@@ -76,7 +73,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
           <CheckboxFilterList
             maxCollapsed={5}
             onFilterChange={(value) =>
-              store.dispatch(
+              dispatch(
                 filterUpdated({
                   filterCategory: 'selectedActions',
                   selectedFilterValue: value,
@@ -93,7 +90,7 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
           <CheckboxFilterList
             maxCollapsed={4}
             onFilterChange={(value) =>
-              store.dispatch(
+              dispatch(
                 filterUpdated({
                   filterCategory: 'selectedStates',
                   selectedFilterValue: value,
@@ -107,13 +104,13 @@ const EventFilterPane = ({ orgId }: EventFilterPaneProps) => {
             selectedValues={state.selectedStates}
             title={messages.eventFilter.filterOptions.stateFilters.title()}
           />
-          <ZUIFuture future={typesModel.getTypes()}>
+          <ZUIFuture future={eventTypes}>
             {(data) => {
               return (
                 <CheckboxFilterList
                   maxCollapsed={5}
                   onFilterChange={(value) =>
-                    store.dispatch(
+                    dispatch(
                       filterUpdated({
                         filterCategory: 'selectedTypes',
                         selectedFilterValue: value,

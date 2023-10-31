@@ -11,6 +11,33 @@ core:
       vil bruke, du blir videresendt til den gamle versjonen av Zetkin som støtter
       denne funksjonen.
 feat:
+  breadcrumbs:
+    elements:
+      activities: Aktiviteter
+      archive: Arkiv
+      areas: Områder
+      assignees: Kontaktpersoner
+      calendar: Kalender
+      callassignments: Ringeoppdrag
+      callers: Ringere
+      campaigns: Prosjekter
+      closed: Stengt
+      conversation: Samtale
+      events: Arrangementer
+      folders: Lister
+      insights: Analyse
+      manage: Behandle
+      new: Ny
+      organize: Organiser
+      participants: Deltakere
+      people: Folk
+      projects: Prosjekter
+      questions: Spørsmål
+      submissions: Svar
+      surveys: Spørreundersøkelser
+      tasks: App-innhold
+      untitledEvent: Arrangement uten tittel
+      views: Lister
   calendar:
     createMenu:
       singleEvent: Nytt arrangement
@@ -1557,32 +1584,6 @@ zui:
   accessList:
     added: Lagt til av {sharer} {updated}
     removeAccess: Fjern tilgang
-  breadcrumbs:
-    activities: Aktiviteter
-    archive: Arkiv
-    areas: Områder
-    assignees: Kontaktpersoner
-    calendar: Kalender
-    callassignments: Ringeoppdrag
-    callers: Ringere
-    campaigns: Prosjekter
-    closed: Stengt
-    conversation: Samtale
-    events: Arrangementer
-    folders: Lister
-    insights: Analyse
-    manage: Behandle
-    new: Ny
-    organize: Organiser
-    participants: Deltakere
-    people: Folk
-    projects: Prosjekter
-    questions: Spørsmål
-    submissions: Svar
-    surveys: Spørreundersøkelser
-    tasks: App-innhold
-    untitledEvent: Arrangement uten tittel
-    views: Lister
   collapse:
     collapse: Skjul
     expand: Vis

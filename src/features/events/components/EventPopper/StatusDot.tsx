@@ -2,7 +2,7 @@ import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/system';
 import { Box, Tooltip } from '@mui/material';
 
-import { EventState } from 'features/events/models/EventDataModel';
+import { EventState } from 'features/events/hooks/useEventState';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivitiesOverview/items/OverviewListItem';
 

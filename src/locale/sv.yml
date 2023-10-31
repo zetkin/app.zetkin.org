@@ -11,6 +11,36 @@ core:
       använda. Du omdirigeras nu till den äldre versionen av Zetkin som stödjer den
       funktionen.
 feat:
+  breadcrumbs:
+    elements:
+      activities: Aktiviteter
+      archive: Arkiv
+      areas: Areas
+      assignees: Ansvariga
+      calendar: Kalender
+      callassignments: Ringuppdrag
+      callers: Ringare
+      campaigns: Projekt
+      closed: Stängd
+      conversation: Samtal
+      events: Events
+      folders: Listor
+      insights: Insikter
+      instances: Exempel
+      journeys: Journeys
+      manage: Hantera
+      milestones: Milstolpar
+      new: Ny
+      organize: Organisera
+      participants: Deltagare
+      people: Människor
+      projects: Projekt
+      questions: Frågor
+      submissions: Enkätsvar
+      surveys: Enkäter
+      tasks: Uppgifter
+      untitledEvent: Event utan titel
+      views: Listor
   calendar:
     createMenu:
       singleEvent: Skapa ett enskilt event
@@ -1721,35 +1751,6 @@ zui:
   accessList:
     added: Tillagd av {sharer} {updated}
     removeAccess: Ta bort behörighet
-  breadcrumbs:
-    activities: Aktiviteter
-    archive: Arkiv
-    areas: Areas
-    assignees: Ansvariga
-    calendar: Kalender
-    callassignments: Ringuppdrag
-    callers: Ringare
-    campaigns: Projekt
-    closed: Stängd
-    conversation: Samtal
-    events: Events
-    folders: Listor
-    insights: Insikter
-    instances: Exempel
-    journeys: Journeys
-    manage: Hantera
-    milestones: Milstolpar
-    new: Ny
-    organize: Organisera
-    participants: Deltagare
-    people: Människor
-    projects: Projekt
-    questions: Frågor
-    submissions: Enkätsvar
-    surveys: Enkäter
-    tasks: Uppgifter
-    untitledEvent: Event utan titel
-    views: Listor
   collapse:
     collapse: Kollapsa
     expand: Expandera

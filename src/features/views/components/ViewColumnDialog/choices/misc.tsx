@@ -130,9 +130,6 @@ export const localText: ColumnChoice = {
   color: blue,
   defaultColumns: (messages, columns) => [
     {
-      config: {
-        field: COLUMN_TYPE.LOCAL_TEXT,
-      },
       title: getUniqueColumnName(
         messages.columnDialog.choices.localText.columnTitle(),
         columns

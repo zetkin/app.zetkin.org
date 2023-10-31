@@ -1,5 +1,3 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Box,
@@ -12,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import getCustomFields from 'features/smartSearch/fetching/getCustomFields';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -24,6 +21,8 @@ import { Msg, useMessages } from 'core/i18n';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface PersonFieldConfigProps {
   existingColumns: ZetkinViewColumn[];
@@ -42,14 +41,8 @@ const PersonFieldConfig = ({
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
-
-  //TODO: refactor to use model logic
-  const { orgId } = useRouter().query;
-  const fieldsQuery = useQuery(
-    ['customFields', orgId],
-    getCustomFields(orgId as string)
-  );
-  const customFields = fieldsQuery.data || [];
+  const { orgId } = useNumericRouteParams();
+  const customFields = useCustomFields(orgId).data ?? [];
 
   const fields: Field[] = [];
 

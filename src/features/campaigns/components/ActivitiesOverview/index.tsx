@@ -3,9 +3,8 @@ import NextLink from 'next/link';
 import { Box, Button, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverviewCard from './ActivitiesOverviewCard';
-import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import useModel from 'core/useModel';
+import useActivitiyOverview from 'features/campaigns/hooks/useActivityOverview';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
@@ -20,9 +19,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const activitiesModel = useModel(
-    (env) => new CampaignActivitiesModel(env, orgId)
-  );
+  const activityOverview = useActivitiyOverview(orgId, campaignId);
 
   const todayDate = new Date();
   const tomorrowDate = new Date();
@@ -54,7 +51,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
           </NextLink>
         </Box>
       </Box>
-      <ZUIFuture future={activitiesModel.getActivityOverview(campaignId)}>
+      <ZUIFuture future={activityOverview}>
         {(data) => {
           const totalLength =
             data.today.length + data.tomorrow.length + data.alsoThisWeek.length;

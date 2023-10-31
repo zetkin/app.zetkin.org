@@ -1,19 +1,16 @@
 import Fuse from 'fuse.js';
-import { useSelector } from 'react-redux';
 
-import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
-import { EventState } from '../models/EventDataModel';
+import { EventActivity } from 'features/campaigns/types';
+import { EventState } from './useEventState';
 import getEventState from '../utils/getEventState';
-import { RootState } from 'core/store';
+import { useAppSelector } from 'core/hooks';
 import { ACTION_FILTER_OPTIONS, STATE_FILTER_OPTIONS } from '../store';
 
 export default function useFilteredEventActivities(
   input: EventActivity[]
 ): EventActivity[] {
-  const filterState = useSelector((state: RootState) => state.events.filters);
-  const statsByEventId = useSelector(
-    (state: RootState) => state.events.statsByEventId
-  );
+  const filterState = useAppSelector((state) => state.events.filters);
+  const statsByEventId = useAppSelector((state) => state.events.statsByEventId);
 
   const filtered = input.filter((activity) => {
     const event = activity.data;

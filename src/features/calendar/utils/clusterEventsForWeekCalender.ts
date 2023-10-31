@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 import { clusterEvents } from 'features/campaigns/hooks/useClusteredActivities';
-import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
+import { EventActivity } from 'features/campaigns/types';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   CLUSTER_TYPE,

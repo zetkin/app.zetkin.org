@@ -20,15 +20,16 @@ import {
 } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 
-import EventDataModel from 'features/events/models/EventDataModel';
-import { EventsModel } from 'features/events/models/EventsModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
-import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
+import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
+import useEventLocations from 'features/events/hooks/useEventLocations';
+import useEventMutations from 'features/events/hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
+import useParallelEvents from 'features/events/hooks/useParallelEvents';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
@@ -43,18 +44,13 @@ dayjs.extend(utc);
 
 type EventOverviewCardProps = {
   data: ZetkinEvent;
-  dataModel: EventDataModel;
-  eventsModel: EventsModel;
-  locationsModel: LocationsModel;
+  orgId: number;
 };
 
-const EventOverviewCard: FC<EventOverviewCardProps> = ({
-  data,
-  dataModel,
-  eventsModel,
-  locationsModel,
-}) => {
-  const locations = locationsModel.getLocations().data;
+const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
+  const { updateEvent } = useEventMutations(orgId, data.id);
+  const locations = useEventLocations(orgId);
+  const { addLocation } = useEventLocationMutations(orgId);
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
   const [link, setLink] = useState(data.url);
@@ -87,7 +83,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
         setWantsToShowEndDate(false);
       },
       save: () => {
-        dataModel.updateEventData({
+        updateEvent({
           end_time: `${naiveEnd}:00`,
           info_text: infoText,
           location_id: locationId,
@@ -112,10 +108,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     ? [...sortedLocation, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
-  const events = eventsModel.getParallelEvents(
-    data.start_time,
-    data.end_time
-  ).data;
+  const events = useParallelEvents(orgId, data.start_time, data.end_time);
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -386,15 +379,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         sx={{ cursor: 'pointer', marginLeft: 1 }}
                       />
                       <LocationModal
-                        currentEventId={data.id}
+                        currentEvent={data}
                         events={events || []}
                         locationId={locationId}
                         locations={locations || []}
-                        model={locationsModel}
                         onCreateLocation={(
                           newLocation: Partial<ZetkinLocation>
                         ) => {
-                          locationsModel.addLocation(newLocation);
+                          addLocation(newLocation);
                         }}
                         onMapClose={() => {
                           setLocationModalOpen(false);

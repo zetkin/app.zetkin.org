@@ -1,10 +1,7 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 
 import FilterForm from '../../FilterForm';
-import getAllCallAssignments from 'features/callAssignments/api/getAllCallAssignments';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -17,6 +14,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
+import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.callBlocked;
 
 interface CallBlockedProps {
@@ -36,12 +35,8 @@ const CallBlocked = ({
   onCancel,
   filter: initialFilter,
 }: CallBlockedProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const assignmentsQuery = useQuery(
-    ['assignments', orgId],
-    getAllCallAssignments(orgId as string)
-  );
-  const assignments = assignmentsQuery?.data || [];
+  const { orgId } = useNumericRouteParams();
+  const assignmentsFuture = useCallAssignments(orgId);
   const { filter, setOp } = useSmartSearchFilter<CallBlockedFilterConfig>(
     initialFilter,
     {
@@ -50,7 +45,7 @@ const CallBlocked = ({
   );
 
   // only submit if assignments exist
-  const submittable = !!assignments.length;
+  const submittable = !!assignmentsFuture.data?.length;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

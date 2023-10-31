@@ -1,11 +1,8 @@
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { FormEvent, useEffect } from 'react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import FilterForm from '../../FilterForm';
-import getCustomFields from 'features/smartSearch/fetching/getCustomFields';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
@@ -20,6 +17,8 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
+import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.personField;
 
 interface PersonFieldProps {
@@ -41,12 +40,8 @@ const PersonField = ({
   onCancel,
   filter: initialFilter,
 }: PersonFieldProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const fieldsQuery = useQuery(
-    ['customFields', orgId],
-    getCustomFields(orgId as string)
-  );
-  const fields = fieldsQuery.data || [];
+  const { orgId } = useNumericRouteParams();
+  const fields = useCustomFields(orgId).data ?? [];
 
   const filteredFields = fields.filter(
     (f) => f.type !== CUSTOM_FIELD_TYPE.JSON
@@ -66,7 +61,7 @@ const PersonField = ({
         field: filter.config.field || filteredFields[0]?.slug,
       });
     }
-  }, [fields]);
+  }, [fields.length]);
 
   // submit if there is a field selected and if the search field is not blank if type is text / url
   const submittable =

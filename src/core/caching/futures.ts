@@ -6,6 +6,14 @@ export interface IFuture<DataType> {
   isLoading: boolean;
 }
 
+export function futureToObject<DataType>(future: IFuture<DataType>) {
+  return {
+    data: future.data,
+    error: future.error,
+    isLoading: future.isLoading,
+  };
+}
+
 export class FutureBase<DataType> {
   constructor(
     protected _data: DataType | null = null,
@@ -32,11 +40,12 @@ export class PromiseFuture<DataType>
 {
   private _promise: Promise<DataType>;
 
-  constructor(promise: Promise<DataType>) {
+  constructor(promise: Promise<DataType>, existingData?: DataType) {
     super();
 
     this._promise = promise;
     this._isLoading = true;
+    this._data = existingData || null;
 
     this._promise.then((res) => {
       this._data = res;

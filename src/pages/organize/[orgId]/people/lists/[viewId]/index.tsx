@@ -7,10 +7,9 @@ import getUserMemberships from 'utils/getUserMemberships';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
-import ViewDataModel from 'features/views/models/ViewDataModel';
-import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
+import useView from 'features/views/hooks/useView';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIFutures from 'zui/ZUIFutures';
 
@@ -69,22 +68,22 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   viewId,
 }) => {
   const onServer = useServerSide();
-  const model = useModel(
-    (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
-  );
+
+  const parsedOrgId = parseInt(orgId);
+  const parsedViewId = parseInt(viewId);
+  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
+  const viewFuture = useView(parsedOrgId, parsedViewId);
 
   if (onServer) {
     return null;
   }
 
-  const columnsFuture = model.getColumns();
-
   return (
     <ZUIFutures
       futures={{
         cols: columnsFuture,
-        rows: model.getRows(),
-        view: model.getView(),
+        rows: rowsFuture,
+        view: viewFuture,
       }}
     >
       {({ data: { cols, rows, view } }) => (
@@ -92,15 +91,14 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           <Head>
             <title>{view.title}</title>
           </Head>
-          <ViewDataModelProvider model={model}>
-            <AccessLevelProvider>
-              <>
-                {(!columnsFuture.isLoading || !!columnsFuture.data?.length) && (
-                  <ViewDataTable columns={cols} rows={rows} view={view} />
-                )}
-              </>
-            </AccessLevelProvider>
-          </ViewDataModelProvider>
+
+          <AccessLevelProvider>
+            <>
+              {(!columnsFuture.isLoading || !!columnsFuture.data?.length) && (
+                <ViewDataTable columns={cols} rows={rows} view={view} />
+              )}
+            </>
+          </AccessLevelProvider>
         </>
       )}
     </ZUIFutures>
