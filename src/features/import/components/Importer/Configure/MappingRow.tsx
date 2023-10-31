@@ -14,10 +14,19 @@ import {
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
-interface MappingRowProps {
-  fields: string[];
+interface Field {
+  id: number;
   title: string;
+}
+
+interface MappingRowProps {
   column: (number | string | null)[];
+  fields: Field[];
+  isEnabled: boolean;
+  onEnable: () => void;
+  onZetkinFieldSelect: (zetkinFieldId: string) => void;
+  selectedZetkinField: string;
+  title: string;
 }
 
 const useMappingMessage = (column: (number | string | null)[]): string => {
@@ -109,7 +118,15 @@ const useMappingMessage = (column: (number | string | null)[]): string => {
   return '';
 };
 
-const MappingRow: FC<MappingRowProps> = ({ fields, title, column }) => {
+const MappingRow: FC<MappingRowProps> = ({
+  isEnabled,
+  onEnable,
+  onZetkinFieldSelect: onFieldSelect,
+  fields,
+  selectedZetkinField,
+  title,
+  column,
+}) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const mappingMessage = useMappingMessage(column);
@@ -123,7 +140,7 @@ const MappingRow: FC<MappingRowProps> = ({ fields, title, column }) => {
         width="100%"
       >
         <Box alignItems="center" display="flex">
-          <Checkbox checked={false} />
+          <Checkbox checked={isEnabled} onChange={onEnable} />
           <Box bgcolor={theme.palette.grey[100]} borderRadius={2} padding={1}>
             <Typography>{title}</Typography>
           </Box>
@@ -134,10 +151,15 @@ const MappingRow: FC<MappingRowProps> = ({ fields, title, column }) => {
             <InputLabel>
               <Msg id={messageIds.configuration.mapping.selectZetkinField} />
             </InputLabel>
-            <Select label={messages.configuration.mapping.selectZetkinField()}>
+            <Select
+              disabled={!isEnabled}
+              label={messages.configuration.mapping.selectZetkinField()}
+              onChange={(ev) => onFieldSelect(ev.target.value)}
+              value={selectedZetkinField}
+            >
               {fields.map((field) => (
-                <MenuItem key={field} value={field}>
-                  {field}
+                <MenuItem key={field.id} value={field.id}>
+                  {field.title}
                 </MenuItem>
               ))}
             </Select>
