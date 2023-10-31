@@ -1,11 +1,10 @@
 import { Box } from '@mui/system';
-import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
 import { Link } from '@mui/material';
 import messageIds from '../l10n/messageIds';
 import SurveySubmissionPane from '../panes/SurveySubmissionPane';
 import { useNumericRouteParams } from 'core/hooks';
 import { usePanes } from 'utils/panes';
-import { useQuery } from 'react-query';
+import usePersonSearch from 'features/profile/hooks/usePersonSearch';
 import { useRouter } from 'next/router';
 import useSurveySubmission from '../hooks/useSurveySubmission';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
@@ -18,7 +17,7 @@ import {
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 
@@ -173,18 +172,14 @@ const SurveySubmissionsList = ({
       row.respondent?.first_name ||
       row.respondent?.last_name ||
       '';
-    let { data: suggestedPeople } = useQuery(
-      ['peopleSearchResults', emailOrName],
-      getPeopleSearchResults(emailOrName, orgId.toString()),
-      {
-        enabled: emailOrName.length >= 2,
-        retry: true,
-      }
-    );
 
-    if (!suggestedPeople) {
-      suggestedPeople = [];
-    }
+    const { results: suggestedPeople, setQuery } = usePersonSearch(orgId);
+
+    useEffect(() => {
+      if (emailOrName.length > 2) {
+        setQuery(emailOrName);
+      }
+    }, [emailOrName]);
 
     const updateCellValue = (person: ZetkinPerson | null) => {
       api.current.stopCellEditMode({
