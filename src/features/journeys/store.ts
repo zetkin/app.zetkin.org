@@ -34,8 +34,10 @@ const journeysSlice = createSlice({
       if (instanceItem) {
         instanceItem.isStale = true;
         if (instanceItem.data) {
-          state.timelineUpdatesByInstanceId[instanceItem.data?.id].isStale =
-            true;
+          if (state.timelineUpdatesByInstanceId[instanceItem.data?.id]) {
+            state.timelineUpdatesByInstanceId[instanceItem.data?.id].isStale =
+              true;
+          }
         }
       }
     },
