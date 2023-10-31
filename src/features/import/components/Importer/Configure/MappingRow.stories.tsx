@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import MappingRow from './MappingRow';
+import MappingRow, {
+  ExperimentalFieldTypes,
+  ExperimentalMappingResults,
+} from './MappingRow';
 
 export default {
   component: MappingRow,
@@ -10,14 +13,26 @@ export default {
 
 const Template: ComponentStory<typeof MappingRow> = (args) => {
   const [checked, setChecked] = useState(false);
-  const [mapping, setMapping] = useState(false);
+  const [mappingResults, setMappingResults] =
+    useState<ExperimentalMappingResults | null>(null);
+  const [selectedZetkinFieldId, setSelectedZetkinFieldId] = useState('');
 
   return (
     <MappingRow
       column={args.column}
       isEnabled={checked}
-      onEnable={() => setChecked(!checked)}
-      onMapValues={() => setMapping(!mapping)}
+      mappingResults={mappingResults}
+      onEnable={() => {
+        setChecked(!checked);
+        setMappingResults(null);
+        setSelectedZetkinFieldId('');
+      }}
+      onMapValues={() => setMappingResults({ numMappedTo: 5, numPeople: 234 })}
+      onSelectField={(id: string) => {
+        setSelectedZetkinFieldId(id);
+        setMappingResults(null);
+      }}
+      selectedZetkinFieldId={selectedZetkinFieldId}
       zetkinFields={args.zetkinFields}
     />
   );
@@ -31,9 +46,29 @@ basic.args = {
     title: 'id',
   },
   zetkinFields: [
-    { id: 1, needsMapping: true, title: 'Tags' },
-    { id: 2, needsMapping: false, title: 'First name' },
-    { id: 3, needsMapping: false, title: 'Last name' },
-    { id: 4, needsMapping: true, title: 'Organization' },
+    {
+      id: 1,
+      needsMapping: true,
+      title: 'Tags',
+      type: ExperimentalFieldTypes.TAG,
+    },
+    {
+      id: 2,
+      needsMapping: false,
+      title: 'First name',
+      type: ExperimentalFieldTypes.BASIC,
+    },
+    {
+      id: 3,
+      needsMapping: false,
+      title: 'Last name',
+      type: ExperimentalFieldTypes.BASIC,
+    },
+    {
+      id: 4,
+      needsMapping: true,
+      title: 'Organization',
+      type: ExperimentalFieldTypes.ORGANIZATION,
+    },
   ],
 };

@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { ArrowForward, ChevronRight } from '@mui/icons-material';
 import {
   Box,
@@ -10,14 +11,20 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
+export enum ExperimentalFieldTypes {
+  ORGANIZATION = 'organization',
+  TAG = 'tag',
+  BASIC = 'basic',
+}
+
 interface ExperimentField {
   id: number;
   title: string;
+  type: ExperimentalFieldTypes;
   needsMapping: boolean;
 }
 
@@ -27,12 +34,20 @@ interface ExperimentColumn {
   title: string;
 }
 
+export interface ExperimentalMappingResults {
+  numMappedTo: number;
+  numPeople: number;
+}
+
 interface MappingRowProps {
   column: ExperimentColumn;
-  zetkinFields: ExperimentField[];
   isEnabled: boolean;
+  mappingResults: ExperimentalMappingResults | null;
   onEnable: () => void;
   onMapValues: () => void;
+  onSelectField: (id: string) => void;
+  selectedZetkinFieldId: string;
+  zetkinFields: ExperimentField[];
 }
 
 const useColumnValuesMessage = (column: (number | string | null)[]): string => {
@@ -128,21 +143,32 @@ const MappingRow: FC<MappingRowProps> = ({
   column,
   zetkinFields,
   isEnabled,
+  mappingResults,
   onEnable,
   onMapValues,
+  onSelectField,
+  selectedZetkinFieldId,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const columnValuesMessage = useColumnValuesMessage(column.data);
-  const [selectedZetkinFieldId, setSelectedZetkinFieldId] = useState('');
 
   const selectedZetkinField = zetkinFields.find(
     (field) => field.id === parseInt(selectedZetkinFieldId)
   );
 
-  const showColumnValuesMessage = !isEnabled || !selectedZetkinField;
+  const showColumnValuesMessage =
+    !isEnabled || !selectedZetkinField || !selectedZetkinField.needsMapping;
   const showNeedsMappingMessage =
-    isEnabled && selectedZetkinField && selectedZetkinField.needsMapping;
+    isEnabled &&
+    !mappingResults &&
+    selectedZetkinField &&
+    selectedZetkinField.needsMapping;
+  const showMappingResultMessage =
+    isEnabled &&
+    mappingResults &&
+    selectedZetkinField &&
+    selectedZetkinField.needsMapping;
 
   return (
     <Box display="flex" flexDirection="column">
@@ -169,7 +195,7 @@ const MappingRow: FC<MappingRowProps> = ({
               label={messages.configuration.mapping.selectZetkinField()}
               onChange={(event) => {
                 if (typeof event.target.value !== 'string') {
-                  setSelectedZetkinFieldId(event.target.value);
+                  onSelectField(event.target.value);
                 }
               }}
               value={isEnabled ? selectedZetkinFieldId : ''}
@@ -202,6 +228,22 @@ const MappingRow: FC<MappingRowProps> = ({
               <Msg id={messageIds.configuration.mapping.mapValuesButton} />
             </Button>
           </>
+        )}
+        {showMappingResultMessage && (
+          <Typography color="secondary">
+            <Msg
+              id={
+                selectedZetkinField.type == ExperimentalFieldTypes.ORGANIZATION
+                  ? messageIds.configuration.mapping
+                      .finishedMappingOrganizations
+                  : messageIds.configuration.mapping.finishedMappingTags
+              }
+              values={{
+                numMappedTo: mappingResults.numMappedTo,
+                numPeople: mappingResults.numPeople,
+              }}
+            />
+          </Typography>
         )}
       </Box>
     </Box>

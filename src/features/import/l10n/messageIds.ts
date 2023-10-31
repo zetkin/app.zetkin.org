@@ -3,6 +3,18 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.import', {
   configuration: {
     mapping: {
+      finishedMappingOrganizations: m<{
+        numMappedTo: number;
+        numPeople: number;
+      }>(
+        '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 organization} other {# organizations}}'
+      ),
+      finishedMappingTags: m<{
+        numMappedTo: number;
+        numPeople: number;
+      }>(
+        '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
+      ),
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{
