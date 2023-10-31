@@ -1,24 +1,36 @@
 import { Box } from '@mui/system';
+import messageIds from 'features/import/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { Typography } from '@mui/material';
 import { ZetkinTag } from 'utils/types/zetkin';
 
 interface ZUIAddedTagsTrackerProps {
   count: number;
-  desc: string;
   fieldName: string;
   tags: ZetkinTag[];
 }
 const ZUIAddedTagsTracker: React.FunctionComponent<
   ZUIAddedTagsTrackerProps
-> = ({ count, desc, fieldName, tags }) => {
+> = ({ count, fieldName, tags }) => {
   return (
     <Box sx={{ border: 'solid 1px lightgrey', borderRadius: '4px', p: 2 }}>
-      <Box display="flex" mb={1}>
-        <Typography sx={{ mr: 0.5 }}>
-          {count} {desc} {fieldName} added. This message will be fixed later
-          with messageIds
-        </Typography>
+      <Box alignItems="center" display="flex" mb={1}>
+        <Msg
+          id={messageIds.validation.trackers.tags}
+          values={{
+            count: (
+              <Typography fontWeight="bold" sx={{ mr: 0.5 }}>
+                {count}
+              </Typography>
+            ),
+            fieldName: (
+              <Typography fontWeight="bold" sx={{ mx: 0.5 }}>
+                {fieldName}
+              </Typography>
+            ),
+          }}
+        />
       </Box>
       <Box display="flex" flexWrap="wrap" gap={1}>
         {tags.map((tag) => (

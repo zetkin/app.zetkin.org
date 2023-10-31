@@ -1,10 +1,11 @@
 import { Box } from '@mui/system';
 import { COUNT_STATUS } from './index.stories';
+import messageIds from 'features/import/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { Typography } from '@mui/material';
 
 interface ZUIPeopleCounterProps {
   count: number;
-  desc: string;
   status: COUNT_STATUS;
 }
 
@@ -14,7 +15,6 @@ enum CounterColors {
 }
 const ZUIPeopleCounter: React.FunctionComponent<ZUIPeopleCounterProps> = ({
   count,
-  desc,
   status,
 }) => {
   return (
@@ -22,8 +22,13 @@ const ZUIPeopleCounter: React.FunctionComponent<ZUIPeopleCounterProps> = ({
       <Typography color={CounterColors[status]} variant="h2">
         {count}
       </Typography>
-
-      <Typography>{desc}</Typography>
+      <Msg
+        id={
+          status === COUNT_STATUS.CREATED
+            ? messageIds.validation.trackers.created
+            : messageIds.validation.trackers.updated
+        }
+      />
     </Box>
   );
 };
