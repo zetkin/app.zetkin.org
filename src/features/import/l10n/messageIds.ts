@@ -17,6 +17,7 @@ export default makeMessages('feat.import', {
       }>(
         '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
       ),
+      header: m('Mapping'),
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{
@@ -75,6 +76,7 @@ export default makeMessages('feat.import', {
     },
     settings: {
       firstRowIsHeaders: m('First row is headers'),
+      header: m('Settings'),
       sheetSelectHelpText: m(
         'Your file has multiple sheets, select which one to use.'
       ),

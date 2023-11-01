@@ -14,7 +14,7 @@ import { ExperimentRow } from '../Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
-interface ExperimentSheet {
+export interface ExperimentSheet {
   data: ExperimentRow[];
   id: number;
   title: string;
@@ -23,8 +23,8 @@ interface ExperimentSheet {
 interface SheetSettingsProps {
   firstRowIsHeaders: boolean;
   onChangeFirstRowIsHeaders: () => void;
-  onChangeSelectedSheet: (id: string) => void;
-  selectedSheet: string;
+  onChangeSelectedSheet: (id: number) => void;
+  selectedSheet: number;
   sheets: ExperimentSheet[];
 }
 
@@ -48,7 +48,7 @@ const SheetSettings: FC<SheetSettingsProps> = ({
             <Select
               label={messages.configuration.settings.sheetSelectLabel()}
               onChange={(event) => {
-                onChangeSelectedSheet(event.target.value);
+                onChangeSelectedSheet(event.target.value as number);
               }}
               value={selectedSheet}
             >

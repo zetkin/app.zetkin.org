@@ -12,19 +12,19 @@ export interface ExperimentRow {
 
 interface MappingProps {
   firstRowIsHeaders: boolean;
-  rows: ExperimentRow[];
+  rows?: ExperimentRow[];
 }
 
 const Mapping: FC<MappingProps> = ({ firstRowIsHeaders, rows }) => {
   const messages = useMessages(messageIds);
-  const numberOfColumns = rows[0].data.length;
+  const numberOfColumns = rows ? rows[0].data.length : 0;
 
   const columns: ExperimentColumn[] = [];
   range(numberOfColumns).forEach((number) =>
     columns.push({ data: [], id: number + 1, title: '' })
   );
 
-  rows.forEach((row, rowIndex) => {
+  rows?.forEach((row, rowIndex) => {
     row.data.forEach((cellValue, cellIndex) => {
       const column = columns[cellIndex];
       if (rowIndex == 0) {
@@ -69,7 +69,7 @@ const Mapping: FC<MappingProps> = ({ firstRowIsHeaders, rows }) => {
               onEnable={() => null}
               onMapValues={() => null}
               onSelectField={() => null}
-              selectedZetkinFieldId={''}
+              selectedZetkinFieldId={0}
               zetkinFields={[]}
             />
             <Divider />

@@ -47,8 +47,8 @@ interface MappingRowProps {
   mappingResults: ExperimentalMappingResults | null;
   onEnable: () => void;
   onMapValues: () => void;
-  onSelectField: (id: string) => void;
-  selectedZetkinFieldId: string;
+  onSelectField: (id: number) => void;
+  selectedZetkinFieldId: number;
   zetkinFields: ExperimentField[];
 }
 
@@ -68,7 +68,7 @@ const MappingRow: FC<MappingRowProps> = ({
   const columnValuesMessage = useColumnValuesMessage(column.data);
 
   const selectedZetkinField = zetkinFields.find(
-    (field) => field.id === parseInt(selectedZetkinFieldId)
+    (field) => field.id === selectedZetkinFieldId
   );
 
   const showColumnValuesMessage =
@@ -119,7 +119,7 @@ const MappingRow: FC<MappingRowProps> = ({
               disabled={!isEnabled}
               label={messages.configuration.mapping.selectZetkinField()}
               onChange={(event) => {
-                if (typeof event.target.value !== 'string') {
+                if (typeof event.target.value == 'number') {
                   onSelectField(event.target.value);
                 }
               }}

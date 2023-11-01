@@ -15,7 +15,7 @@ const Template: ComponentStory<typeof MappingRow> = (args) => {
   const [checked, setChecked] = useState(false);
   const [mappingResults, setMappingResults] =
     useState<ExperimentalMappingResults | null>(null);
-  const [selectedZetkinFieldId, setSelectedZetkinFieldId] = useState('');
+  const [selectedZetkinFieldId, setSelectedZetkinFieldId] = useState(0);
   const [currentlyMapping, setCurrentlyMapping] = useState<number | null>(null);
 
   return (
@@ -27,7 +27,7 @@ const Template: ComponentStory<typeof MappingRow> = (args) => {
       onEnable={() => {
         setChecked(!checked);
         setMappingResults(null);
-        setSelectedZetkinFieldId('');
+        setSelectedZetkinFieldId(0);
       }}
       onMapValues={() => {
         setCurrentlyMapping(args.column.id);
@@ -35,7 +35,7 @@ const Template: ComponentStory<typeof MappingRow> = (args) => {
           setMappingResults({ numMappedTo: 5, numPeople: 234 });
         }, 3000);
       }}
-      onSelectField={(id: string) => {
+      onSelectField={(id: number) => {
         setSelectedZetkinFieldId(id);
         setMappingResults(null);
       }}

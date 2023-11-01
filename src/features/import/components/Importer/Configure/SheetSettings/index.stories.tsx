@@ -10,12 +10,12 @@ export default {
 
 const Template: ComponentStory<typeof SheetSettings> = (args) => {
   const [checked, setChecked] = useState(false);
-  const [selectedSheetId, setSelectedSheetId] = useState('');
+  const [selectedSheetId, setSelectedSheetId] = useState(args.sheets[0].id);
   return (
     <SheetSettings
       firstRowIsHeaders={checked}
       onChangeFirstRowIsHeaders={() => setChecked(!checked)}
-      onChangeSelectedSheet={(id: string) => setSelectedSheetId(id)}
+      onChangeSelectedSheet={(id: number) => setSelectedSheetId(id)}
       selectedSheet={selectedSheetId}
       sheets={args.sheets}
     />
