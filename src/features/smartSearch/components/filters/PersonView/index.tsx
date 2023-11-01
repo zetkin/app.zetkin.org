@@ -1,13 +1,12 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 
 import FilterForm from '../../FilterForm';
-import getViews from 'features/smartSearch/fetching/getViews';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
+import useViewTree from 'features/views/hooks/useViewTree';
 import {
   IN_OPERATOR,
   NewSmartSearchFilter,
@@ -37,13 +36,9 @@ const PersonView = ({
   onCancel,
   filter: initialFilter,
 }: PersonViewProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-
-  const personViewsQuery = useQuery(
-    ['personviews', orgId],
-    getViews(orgId as string)
-  );
-  const personViews = personViewsQuery?.data || [];
+  const { orgId } = useNumericRouteParams();
+  const viewTree = useViewTree(orgId);
+  const personViews = viewTree.data?.views ?? [];
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<PersonViewFilterConfig>(initialFilter, {

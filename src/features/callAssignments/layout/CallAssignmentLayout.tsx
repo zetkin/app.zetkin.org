@@ -2,74 +2,73 @@ import { Box, Button, Typography } from '@mui/material';
 import { Headset, People } from '@mui/icons-material';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
+import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import useModel from 'core/useModel';
+import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
+import useCallers from '../hooks/useCallers';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
-import CallAssignmentModel, {
-  CallAssignmentState,
-} from '../models/CallAssignmentModel';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from '../l10n/messageIds';
+import useCallAssignmentState, {
+  CallAssignmentState,
+} from '../hooks/useCallAssignmentState';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
-  orgId: string;
-  campaignId: string;
-  assignmentId: string;
 }
 
 const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   children,
-  orgId,
-  campaignId,
-  assignmentId,
 }) => {
   const messages = useMessages(messageIds);
-  const model = useModel(
-    (env) =>
-      new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
-  );
+  const { orgId, campId, callAssId } = useNumericRouteParams();
 
-  const dataFuture = model.getData();
-  const statsFuture = model.getStats();
-  const callersFuture = model.getFilteredCallers();
+  const {
+    data: callAssignment,
+    end,
+    start,
+    updateCallAssignment,
+  } = useCallAssignment(orgId, callAssId);
+  const { statsFuture } = useCallAssignmentStats(orgId, callAssId);
+  const { filteredCallersFuture } = useCallers(orgId, callAssId);
+  const state = useCallAssignmentState(orgId, callAssId);
 
-  if (!dataFuture.data) {
+  if (!callAssignment) {
     return null;
   }
 
   return (
     <TabbedLayout
       actionButtons={
-        model.state == CallAssignmentState.OPEN ||
-        model.state == CallAssignmentState.ACTIVE ? (
-          <Button onClick={() => model.end()} variant="outlined">
+        state == CallAssignmentState.OPEN ||
+        state == CallAssignmentState.ACTIVE ? (
+          <Button onClick={() => end()} variant="outlined">
             <Msg id={messageIds.actions.end} />
           </Button>
         ) : (
-          <Button onClick={() => model.start()} variant="contained">
+          <Button onClick={() => start()} variant="contained">
             <Msg id={messageIds.actions.start} />
           </Button>
         )
       }
-      baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
+      baseHref={`/organize/${orgId}/projects/${campId}/callassignments/${callAssId}`}
       belowActionButtons={
         <ZUIDateRangePicker
-          endDate={dataFuture.data.end_date || null}
+          endDate={callAssignment.end_date || null}
           onChange={(startDate, endDate) => {
-            model.setDates(startDate, endDate);
+            updateCallAssignment({ end_date: endDate, start_date: startDate });
           }}
-          startDate={dataFuture.data.start_date || null}
+          startDate={callAssignment.start_date || null}
         />
       }
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            <CallAssignmentStatusChip state={model.state} />
+            <CallAssignmentStatusChip state={state} />
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
@@ -92,7 +91,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
-              future={callersFuture}
+              future={filteredCallersFuture}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
@@ -124,15 +123,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           href: '/conversation',
           label: messages.tabs.conversation(),
         },
-        {
-          href: '/insights',
-          label: messages.tabs.insights(),
-        },
       ]}
       title={
         <ZUIEditTextinPlace
-          onChange={(newTitle) => model.setTitle(newTitle)}
-          value={dataFuture.data.title}
+          onChange={(newTitle) => updateCallAssignment({ title: newTitle })}
+          value={callAssignment.title}
         />
       }
     >

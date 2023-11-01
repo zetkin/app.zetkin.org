@@ -2,30 +2,24 @@ import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 
+import { ACTIVITIES } from 'features/campaigns/types';
 import ActivityList from 'features/campaigns/components/ActivityList';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import useActivityArchive from 'features/campaigns/hooks/useActivityArchive';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import CampaignActivitiesModel, {
-  ACTIVITIES,
-} from 'features/campaigns/models/CampaignActivitiesModel';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
-  async (ctx) => {
-    const { campId, orgId } = ctx.params!;
-
+  async () => {
     return {
-      props: {
-        campId,
-        orgId,
-      },
+      props: {},
     };
   },
   {
@@ -34,20 +28,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface CampaignArchivePageProps {
-  campId: string;
-  orgId: string;
-}
-
-const CampaignArchivePage: PageWithLayout<CampaignArchivePageProps> = ({
-  campId,
-  orgId,
-}) => {
+const CampaignArchivePage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const model = useModel(
-    (env) => new CampaignActivitiesModel(env, parseInt(orgId))
-  );
+  const { orgId, campId } = useNumericRouteParams();
+  const archivedActivities = useActivityArchive(orgId, campId);
   const [searchString, setSearchString] = useState('');
 
   const [filters, setFilters] = useState<ACTIVITIES[]>([
@@ -72,7 +57,7 @@ const CampaignArchivePage: PageWithLayout<CampaignArchivePageProps> = ({
   }
   return (
     <Box>
-      <ZUIFuture future={model.getArchivedActivities(parseInt(campId))}>
+      <ZUIFuture future={archivedActivities}>
         {(data) => {
           if (data.length === 0) {
             return (
@@ -93,7 +78,7 @@ const CampaignArchivePage: PageWithLayout<CampaignArchivePageProps> = ({
                 <ActivityList
                   allActivities={data}
                   filters={filters}
-                  orgId={parseInt(orgId)}
+                  orgId={orgId}
                   searchString={searchString}
                 />
               </Grid>

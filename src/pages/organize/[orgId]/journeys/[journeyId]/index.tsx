@@ -2,17 +2,16 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import AllJourneyInstancesLayout from 'features/journeys/layout/AllJourneyInstancesLayout';
-import getOrg from 'utils/fetching/getOrg';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyInstanceCreateFab from 'features/journeys/components/JourneyInstanceCreateFab';
 import JourneyInstancesDataTable from 'features/journeys/components/JourneyInstancesDataTable';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useJourney from 'features/journeys/hooks/useJourney';
+import useJourneyInstances from 'features/journeys/hooks/useJourneyInstances';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinJourney } from 'utils/types/zetkin';
-import ZUIQuery from 'zui/ZUIQuery';
-import {
-  journeyInstancesResource,
-  journeyResource,
-} from 'features/journeys/api/journeys';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,26 +21,14 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId } = ctx.params!;
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const journey = await apiClient.get<ZetkinJourney>(
+    `/api/orgs/${orgId}/journeys/${journeyId}`
   );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-  const { state: journeyQueryState } = await journeyResource(
-    orgId as string,
-    journeyId as string
-  ).prefetch(ctx);
-
-  if (
-    orgState?.status === 'success' &&
-    journeyQueryState?.status === 'success'
-  ) {
+  if (journey) {
     return {
-      props: {
-        journeyId,
-        orgId,
-      },
+      props: {},
     };
   } else {
     return {
@@ -50,42 +37,31 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type OpenJourneyInstancesPageProps = {
-  journeyId: string;
-  orgId: string;
-};
-
-const OpenJourneyInstancesPage: PageWithLayout<
-  OpenJourneyInstancesPageProps
-> = ({ orgId, journeyId }) => {
-  const journeyQuery = journeyResource(orgId, journeyId).useQuery();
-  const journeyInstancesQuery = journeyInstancesResource(
-    orgId,
-    journeyId
-  ).useQuery();
-  const journey = journeyQuery.data as ZetkinJourney;
+const OpenJourneyInstancesPage: PageWithLayout = () => {
+  const { orgId, journeyId } = useNumericRouteParams();
+  const journeyFuture = useJourney(orgId, journeyId);
+  const journeyInstancesFuture = useJourneyInstances(orgId, journeyId);
 
   return (
     <>
       <Head>
-        <title>{journey.plural_label}</title>
+        <title>{journeyFuture.data?.plural_label}</title>
       </Head>
-      <ZUIQuery queries={{ journeyInstancesQuery }}>
-        {({ queries: { journeyInstancesQuery } }) => {
-          const openJourneyInstances =
-            journeyInstancesQuery.data.journeyInstances.filter(
-              (journeyInstance) => journeyInstance.closed == null
-            );
+      <ZUIFuture future={journeyInstancesFuture}>
+        {(data) => {
+          const openJourneyInstances = data.journeyInstances.filter(
+            (journeyInstance) => journeyInstance.closed == null
+          );
 
           return (
             <JourneyInstancesDataTable
               journeyInstances={openJourneyInstances}
-              storageKey={`journeyInstances-${journey.id}-open`}
-              tagColumnsData={journeyInstancesQuery.data.tagColumnsData}
+              storageKey={`journeyInstances-${journeyFuture.data?.id}-open`}
+              tagColumnsData={data.tagColumnsData}
             />
           );
         }}
-      </ZUIQuery>
+      </ZUIFuture>
       <JourneyInstanceCreateFab />
     </>
   );

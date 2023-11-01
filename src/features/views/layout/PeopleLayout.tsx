@@ -1,15 +1,13 @@
-import { useRouter } from 'next/router';
-
 import PeopleActionButton from '../components/PeopleActionButton';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
-import ViewBrowserModel from '../models/ViewBrowserModel';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
 
 import messageIds from '../l10n/messageIds';
+import useItemSummary from '../hooks/useItemSummary';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface PeopleLayoutProps {
   children: React.ReactNode;
@@ -18,12 +16,9 @@ interface PeopleLayoutProps {
 const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
   children,
 }) => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-
-  const model = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
-  );
+  const itemSummaryFuture = useItemSummary(orgId, null);
 
   const onServer = useServerSide();
   if (onServer) {
@@ -32,10 +27,10 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
 
   return (
     <SimpleLayout
-      actionButtons={<PeopleActionButton folderId={null} model={model} />}
+      actionButtons={<PeopleActionButton folderId={null} />}
       noPad
       subtitle={
-        <ZUIFuture future={model.getItemSummary()}>
+        <ZUIFuture future={itemSummaryFuture}>
           {(data) => (
             <ViewFolderSubtitle
               numFolders={data.folders}

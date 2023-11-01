@@ -16,13 +16,13 @@ import {
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinView } from './types';
 import ZUIFuture from 'zui/ZUIFuture';
-import ViewBrowserModel, {
+import useViewBrowserItems, {
   ViewBrowserItem,
   ViewBrowserViewItem,
-} from '../models/ViewBrowserModel';
+} from '../hooks/useViewBrowserItems';
 
 import messageIds from '../l10n/messageIds';
 
@@ -30,13 +30,12 @@ const ViewJumpMenu: FunctionComponent = () => {
   const messages = useMessages(messageIds);
   const listRef = useRef<HTMLUListElement>(null);
   const router = useRouter();
-  const { orgId, viewId } = router.query;
+  const { orgId, viewId } = useNumericRouteParams();
   const [jumpMenuAnchor, setJumpMenuAnchor] = useState<Element | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(Infinity);
-  const model = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
-  );
-  const itemsFuture = model.getItems();
+
+  const itemsFuture = useViewBrowserItems(orgId, null);
+
   const views: ZetkinView[] =
     itemsFuture.data
       ?.filter((item) => item.type == 'view')
@@ -87,10 +86,8 @@ const ViewJumpMenu: FunctionComponent = () => {
   const allOptions = (
     inputValue.length ? groupedOptions : views || []
   ) as ZetkinView[];
-  const options = allOptions.filter(
-    (view) => view.id.toString() != (viewId as string)
-  );
 
+  const options = allOptions.filter((view) => view.id != viewId);
   const tfProps = getInputProps();
 
   return (

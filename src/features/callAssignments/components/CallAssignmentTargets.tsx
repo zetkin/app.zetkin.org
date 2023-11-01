@@ -1,12 +1,13 @@
 import { makeStyles } from '@mui/styles';
-import { useState } from 'react';
 import { Add, Edit } from '@mui/icons-material';
 import { Box, Button, Card, Divider, Typography } from '@mui/material';
+import { FC, useState } from 'react';
 
-import CallAssignmentModel from '../models/CallAssignmentModel';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
+import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,14 +24,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
-  const classes = useStyles();
+interface CallAssignmentTargetsProps {
+  orgId: number;
+  assignmentId: number;
+}
 
+const CallAssignmentTargets: FC<CallAssignmentTargetsProps> = ({
+  orgId,
+  assignmentId,
+}) => {
+  const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const { data: stats } = model.getStats();
-  const { data } = model.getData();
-  const target = data?.target;
+  const {
+    data: callAssignment,
+    isTargeted,
+    updateTargets: setTargets,
+  } = useCallAssignment(orgId, assignmentId);
+  const { statsFuture } = useCallAssignmentStats(orgId, assignmentId);
 
   return (
     <>
@@ -39,15 +50,15 @@ const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          {model.isTargeted && (
-            <ZUIAnimatedNumber value={stats?.allTargets || 0}>
+          {isTargeted && (
+            <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
               {(animatedValue) => (
                 <Box className={classes.chip}>{animatedValue}</Box>
               )}
             </ZUIAnimatedNumber>
           )}
         </Box>
-        {model.isTargeted ? (
+        {isTargeted ? (
           <>
             <Divider />
             <Box p={2}>
@@ -83,10 +94,10 @@ const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
         <SmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}
           onSave={(query) => {
-            model.setTargets(query);
+            setTargets(query);
             setQueryDialogOpen(false);
           }}
-          query={target}
+          query={callAssignment?.target}
         />
       )}
     </>

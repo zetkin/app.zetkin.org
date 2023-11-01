@@ -24,6 +24,7 @@ simple.args = {
           'This is the opening note with information about the journey',
       }),
     },
+    id: '6287346-8',
     organization: {
       id: 1,
       title: 'KPD',

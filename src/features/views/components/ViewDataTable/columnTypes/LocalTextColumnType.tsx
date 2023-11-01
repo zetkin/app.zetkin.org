@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { LocalTextViewColumn, ZetkinViewRow } from '../../types';
 
@@ -33,12 +33,12 @@ export default class LocalTextColumnType implements IColumnType {
     return cell ? [cell] : [];
   }
   processRowUpdate(
-    model: ViewDataModel,
+    viewGrid: UseViewGridReturn,
     colId: number,
     personId: number,
     data: LocalTextViewCell
   ): void {
-    model.setCellValue(personId, colId, data);
+    viewGrid.setCellValue(personId, colId, data);
   }
 }
 

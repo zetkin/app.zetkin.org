@@ -1,6 +1,5 @@
 import MailIcon from '@mui/icons-material/Mail';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { useRouter } from 'next/router';
 import {
   Box,
   BoxProps,
@@ -14,13 +13,12 @@ import {
 import { useEffect, useState } from 'react';
 
 import TagsList from 'features/tags/components/TagManager/components/TagsList';
+import { useNumericRouteParams } from 'core/hooks';
+import usePerson from 'features/profile/hooks/usePerson';
+import usePersonTags from 'features/tags/hooks/usePersonTags';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUICopyToClipboard from 'zui/ZUICopyToClipboard';
 import ZUIPerson from 'zui/ZUIPerson';
-import {
-  personResource,
-  personTagsResource,
-} from 'features/profile/api/people';
 
 const ZUIPersonHoverCard: React.FunctionComponent<{
   BoxProps?: BoxProps;
@@ -48,15 +46,9 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
     setOpen(false);
   };
 
-  const { orgId } = useRouter().query;
-  const { data: person } = personResource(
-    orgId as string,
-    personId.toString()
-  ).useQuery({ enabled: Boolean(anchorEl) });
-  const { data: tags } = personTagsResource(
-    orgId as string,
-    personId.toString()
-  ).useQuery({ enabled: Boolean(anchorEl) });
+  const { orgId } = useNumericRouteParams();
+  const person = usePerson(orgId, personId).data;
+  const tags = usePersonTags(orgId, personId).data;
 
   return (
     <Box

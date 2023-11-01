@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router';
-
 import PeopleActionButton from '../components/PeopleActionButton';
 import SimpleLayout from 'utils/layout/SimpleLayout';
-import useModel from 'core/useModel';
-import ViewBrowserModel from '../models/ViewBrowserModel';
+import useFolder from '../hooks/useFolder';
+import useItemSummary from '../hooks/useItemSummary';
+import { useNumericRouteParams } from 'core/hooks';
+import useViewBrowserMutations from '../hooks/useViewBrowserMutations';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -17,22 +17,20 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   children,
   folderId,
 }) => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
 
-  const model = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
-  );
+  const { folderFuture } = useFolder(orgId, folderId);
+  const itemSummaryFuture = useItemSummary(orgId, folderId);
+  const { renameItem } = useViewBrowserMutations(orgId);
 
   return (
-    <ZUIFuture future={model.getFolder(folderId)}>
+    <ZUIFuture future={folderFuture}>
       {(data) => (
         <SimpleLayout
-          actionButtons={
-            <PeopleActionButton folderId={folderId} model={model} />
-          }
+          actionButtons={<PeopleActionButton folderId={folderId} />}
           noPad
           subtitle={
-            <ZUIFuture future={model.getItemSummary(folderId)}>
+            <ZUIFuture future={itemSummaryFuture}>
               {(data) => (
                 <ViewFolderSubtitle
                   numFolders={data.folders}
@@ -45,7 +43,7 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
             <ZUIEditTextinPlace
               key={data.id}
               onChange={(newTitle) => {
-                model.renameItem('folder', data.id, newTitle);
+                renameItem('folder', data.id, newTitle);
               }}
               value={data.title}
             />

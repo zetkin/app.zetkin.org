@@ -5,17 +5,17 @@ import { FC, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutations';
+import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
+
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
-import ViewBrowserModel, {
-  ViewBrowserItem,
-} from 'features/views/models/ViewBrowserModel';
 
 import messageIds from 'features/views/l10n/messageIds';
 
 interface BrowserItemProps {
   basePath: string;
   item: ViewBrowserItem;
-  model: ViewBrowserModel;
 }
 
 const useStyles = makeStyles<Theme, BrowserRowDropProps>({
@@ -29,9 +29,11 @@ const useStyles = makeStyles<Theme, BrowserRowDropProps>({
   },
 });
 
-const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
+const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
   const dropProps = useContext(BrowserRowContext);
   const styles = useStyles(dropProps);
+  const { orgId } = useNumericRouteParams();
+  const { itemIsRenaming } = useViewBrowserMutations(orgId);
 
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
@@ -66,7 +68,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
         <NextLink href={`${basePath}/${item.id}`} passHref>
           <Link className={styles.itemLink}>{item.title}</Link>
         </NextLink>
-        {model.itemIsRenaming(item.type, item.data.id) && (
+        {itemIsRenaming(item.type, item.data.id) && (
           <CircularProgress size={20} />
         )}
       </BrowserDraggableItem>

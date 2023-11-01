@@ -1,4 +1,4 @@
-import { EventState } from '../models/EventDataModel';
+import { EventState } from '../hooks/useEventState';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivityList/items/ActivityListItem';

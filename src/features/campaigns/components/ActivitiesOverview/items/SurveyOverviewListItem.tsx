@@ -2,9 +2,8 @@ import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
 import OverviewListItem from './OverviewListItem';
-import { SurveyActivity } from 'features/campaigns/models/CampaignActivitiesModel';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
-import useModel from 'core/useModel';
+import { SurveyActivity } from 'features/campaigns/types';
+import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 interface SurveyOverviewListItemProps {
@@ -17,11 +16,7 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
   focusDate,
 }) => {
   const survey = activity.data;
-  const dataModel = useModel(
-    (env) => new SurveyDataModel(env, survey.organization.id, survey.id)
-  );
-
-  const stats = dataModel.getStats().data;
+  const stats = useSurveyStats(survey.organization.id, survey.id).data;
   const submissionCount = stats?.submissionCount || 0;
 
   return (
