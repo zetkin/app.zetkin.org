@@ -51,10 +51,8 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
         label={messages.actions.create()}
       />
       <Importer
-        activeStep={1}
         onClose={() => setOpen(false)}
         onRestart={() => setOpen(false)}
-        onValidate={() => setOpen(false)}
         open={open}
       />
     </>
