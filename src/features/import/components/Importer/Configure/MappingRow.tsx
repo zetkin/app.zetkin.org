@@ -41,6 +41,7 @@ export interface ExperimentalMappingResults {
 
 interface MappingRowProps {
   column: ExperimentColumn;
+  currentlyMapping: number | null;
   isEnabled: boolean;
   mappingResults: ExperimentalMappingResults | null;
   onEnable: () => void;
@@ -141,13 +142,14 @@ const useColumnValuesMessage = (column: (number | string | null)[]): string => {
 
 const MappingRow: FC<MappingRowProps> = ({
   column,
-  zetkinFields,
+  currentlyMapping,
   isEnabled,
   mappingResults,
   onEnable,
   onMapValues,
   onSelectField,
   selectedZetkinFieldId,
+  zetkinFields,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -169,9 +171,16 @@ const MappingRow: FC<MappingRowProps> = ({
     mappingResults &&
     selectedZetkinField &&
     selectedZetkinField.needsMapping;
+  const showGreyBackground =
+    currentlyMapping === column.id && showNeedsMappingMessage;
 
   return (
-    <Box display="flex" flexDirection="column">
+    <Box
+      bgcolor={showGreyBackground ? theme.palette.transparentGrey.light : ''}
+      display="flex"
+      flexDirection="column"
+      padding={1}
+    >
       <Box
         alignItems="center"
         display="flex"
@@ -180,7 +189,11 @@ const MappingRow: FC<MappingRowProps> = ({
       >
         <Box alignItems="center" display="flex">
           <Checkbox checked={isEnabled} onChange={onEnable} />
-          <Box bgcolor={theme.palette.grey[100]} borderRadius={2} padding={1}>
+          <Box
+            bgcolor={theme.palette.transparentGrey.light}
+            borderRadius={2}
+            padding={1}
+          >
             <Typography>{column.title}</Typography>
           </Box>
         </Box>
@@ -214,23 +227,20 @@ const MappingRow: FC<MappingRowProps> = ({
         display="flex"
         justifyContent="space-between"
         marginLeft={5.5}
-        paddingTop={1}
+        minHeight="40px"
       >
         {showColumnValuesMessage && (
           <Typography color="secondary">{columnValuesMessage}</Typography>
         )}
-        {showNeedsMappingMessage && (
-          <>
-            <Typography color={theme.palette.warning.main}>
-              <Msg id={messageIds.configuration.mapping.notMapped} />
-            </Typography>
-            <Button endIcon={<ChevronRight />} onClick={onMapValues}>
-              <Msg id={messageIds.configuration.mapping.mapValuesButton} />
-            </Button>
-          </>
-        )}
-        {showMappingResultMessage && (
-          <Typography color="secondary">
+        <Typography
+          color={
+            showNeedsMappingMessage ? theme.palette.warning.main : 'secondary'
+          }
+        >
+          {showNeedsMappingMessage && (
+            <Msg id={messageIds.configuration.mapping.notMapped} />
+          )}
+          {showMappingResultMessage && (
             <Msg
               id={
                 selectedZetkinField.type == ExperimentalFieldTypes.ORGANIZATION
@@ -243,7 +253,16 @@ const MappingRow: FC<MappingRowProps> = ({
                 numPeople: mappingResults.numPeople,
               }}
             />
-          </Typography>
+          )}
+        </Typography>
+        {(showNeedsMappingMessage || showMappingResultMessage) && (
+          <Button
+            endIcon={<ChevronRight />}
+            onClick={onMapValues}
+            variant="text"
+          >
+            <Msg id={messageIds.configuration.mapping.mapValuesButton} />
+          </Button>
         )}
       </Box>
     </Box>
