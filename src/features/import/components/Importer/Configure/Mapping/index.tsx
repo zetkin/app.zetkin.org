@@ -58,10 +58,9 @@ const Mapping: FC<MappingProps> = ({ firstRowIsHeaders, rows }) => {
       </Box>
       <Box>
         {columns.map((column, index) => (
-          <>
+          <Box key={column.id}>
             {index == 0 && <Divider />}
             <MappingRow
-              key={column.id}
               column={column}
               currentlyMapping={null}
               isEnabled={false}
@@ -73,7 +72,7 @@ const Mapping: FC<MappingProps> = ({ firstRowIsHeaders, rows }) => {
               zetkinFields={[]}
             />
             <Divider />
-          </>
+          </Box>
         ))}
       </Box>
     </Box>
