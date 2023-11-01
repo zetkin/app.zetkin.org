@@ -1,5 +1,4 @@
 import { Clear } from '@mui/icons-material';
-import { FC } from 'react';
 import {
   Box,
   Button,
@@ -12,27 +11,23 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import Validation from '../validation';
 
 interface ImporterProps {
-  activeStep: 0 | 1 | 2 | 3;
   onClose: () => void;
   onRestart: () => void;
-  onValidate: () => void;
   open: boolean;
 }
+type StepType = 0 | 1 | 2 | 3;
 
-const Importer: FC<ImporterProps> = ({
-  activeStep,
-  onRestart,
-  onValidate,
-  open,
-  onClose,
-}) => {
+const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [activeStep, setActiveStep] = useState<StepType>(1);
 
   return (
     <Dialog
@@ -88,6 +83,7 @@ const Importer: FC<ImporterProps> = ({
             </IconButton>
           </Box>
         </Box>
+        {activeStep === 2 && <Validation />}
         <Box alignItems="center" display="flex" justifyContent="flex-end">
           <Typography color="secondary">
             This message will depend on the state of the import.
@@ -96,8 +92,15 @@ const Importer: FC<ImporterProps> = ({
             <Msg id={messageIds.restart} />
           </Button>
           <Button
-            disabled={true}
-            onClick={onValidate}
+            disabled={false}
+            onClick={() => {
+              if (activeStep === 3) {
+                onClose();
+                setActiveStep(1);
+              } else {
+                setActiveStep((prev) => (prev + 1) as StepType);
+              }
+            }}
             sx={{ ml: 1 }}
             variant="contained"
           >
