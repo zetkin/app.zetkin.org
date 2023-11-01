@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { ExperimentRow } from '../Configure/Mapping';
+import { ExperimentRow } from '../Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 

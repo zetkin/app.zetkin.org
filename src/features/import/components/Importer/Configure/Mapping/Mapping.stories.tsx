@@ -1,4 +1,4 @@
-import Mapping from './Mapping';
+import Mapping from '.';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
