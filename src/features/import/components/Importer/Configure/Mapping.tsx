@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
 import { FC } from 'react';
+import { Box, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import range from 'utils/range';
@@ -44,20 +44,38 @@ const Mapping: FC<MappingProps> = ({ firstRowIsHeaders, rows }) => {
 
   return (
     <Box>
-      {columns.map((column) => (
-        <MappingRow
-          key={column.id}
-          column={column}
-          currentlyMapping={null}
-          isEnabled={false}
-          mappingResults={null}
-          onEnable={() => null}
-          onMapValues={() => null}
-          onSelectField={() => null}
-          selectedZetkinFieldId={''}
-          zetkinFields={[]}
-        />
-      ))}
+      <Box alignItems="center" display="flex" paddingBottom={1}>
+        <Box paddingLeft={2} width="50%">
+          <Typography variant="body2">
+            {messages.configuration.mapping.fileHeader().toUpperCase()}
+          </Typography>
+        </Box>
+        <Box paddingLeft={3.2} width="50%">
+          <Typography variant="body2">
+            {messages.configuration.mapping.zetkinHeader().toUpperCase()}
+          </Typography>
+        </Box>
+      </Box>
+      <Box>
+        {columns.map((column, index) => (
+          <>
+            {index == 0 && <Divider />}
+            <MappingRow
+              key={column.id}
+              column={column}
+              currentlyMapping={null}
+              isEnabled={false}
+              mappingResults={null}
+              onEnable={() => null}
+              onMapValues={() => null}
+              onSelectField={() => null}
+              selectedZetkinFieldId={''}
+              zetkinFields={[]}
+            />
+            <Divider />
+          </>
+        ))}
+      </Box>
     </Box>
   );
 };

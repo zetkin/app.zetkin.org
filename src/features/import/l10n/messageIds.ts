@@ -4,6 +4,7 @@ export default makeMessages('feat.import', {
   configuration: {
     mapping: {
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
+      fileHeader: m('File'),
       finishedMappingOrganizations: m<{
         numMappedTo: number;
         numPeople: number;
@@ -70,6 +71,7 @@ export default makeMessages('feat.import', {
       },
       notMapped: m('You need to map values'),
       selectZetkinField: m('Import as...'),
+      zetkinHeader: m('Zetkin'),
     },
     title: m('Import people'),
   },
