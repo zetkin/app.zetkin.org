@@ -8,7 +8,7 @@ export default {
 
 const Template: ComponentStory<typeof ImportAlerts> = (args) => (
   <ImportAlerts
-    bulletOptions={args.bulletOptions}
+    bullets={args.bullets}
     msg={args.msg}
     onClickBack={args.onClickBack}
     onClickCheckbox={args.onClickCheckbox}
@@ -34,7 +34,7 @@ info.args = {
 };
 export const error = Template.bind({});
 error.args = {
-  bulletOptions: ['option 1', 'option 2'],
+  bullets: ['option 1', 'option 2'],
   msg: 'Error!!',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onClickBack: () => {},

@@ -9,7 +9,7 @@ export default {
 
 const Template: ComponentStory<typeof AddedTagsTracker> = (args) => (
   <AddedTagsTracker
-    count={args.count}
+    changedNum={args.changedNum}
     fieldName={args.fieldName}
     tags={args.tags}
   />
@@ -17,7 +17,7 @@ const Template: ComponentStory<typeof AddedTagsTracker> = (args) => (
 const tag = mockTag();
 export const addedTagsTracker = Template.bind({});
 addedTagsTracker.args = {
-  count: 7,
+  changedNum: 7,
   fieldName: 'Tags',
   tags: [tag, tag, tag, tag, tag, tag, tag],
 };

@@ -19,7 +19,7 @@ export enum ALERT_STATUS {
   SUCCESS = 'success',
 }
 interface ImportAlertsProps {
-  bulletOptions?: string[];
+  bullets?: string[];
   msg: string;
   status: ALERT_STATUS;
   title: string;
@@ -27,7 +27,7 @@ interface ImportAlertsProps {
   onClickCheckbox?: () => void;
 }
 const ImportAlerts: React.FunctionComponent<ImportAlertsProps> = ({
-  bulletOptions,
+  bullets,
   msg,
   status,
   title,
@@ -59,9 +59,9 @@ const ImportAlerts: React.FunctionComponent<ImportAlertsProps> = ({
             />
           </Box>
         )}
-        {bulletOptions && (
+        {bullets && (
           <Box mt={2}>
-            {bulletOptions.map((item, index) => (
+            {bullets.map((item, index) => (
               <Box
                 key={`bulletOpt-${index}`}
                 alignItems="center"

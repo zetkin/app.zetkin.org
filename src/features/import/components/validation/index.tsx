@@ -14,13 +14,13 @@ const Validation = () => {
       </Typography>
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
-          <PeopleCounter count={22} status={COUNT_STATUS.CREATED} />
-          <PeopleCounter count={100} status={COUNT_STATUS.UPDATED} />
+          <PeopleCounter changedNum={22} status={COUNT_STATUS.CREATED} />
+          <PeopleCounter changedNum={100} status={COUNT_STATUS.UPDATED} />
         </Stack>
-        <ImportChangeTracker count={2} fieldName={'First name'} />
-        <ImportChangeTracker count={4} fieldName={'Last name'} />
+        <ImportChangeTracker changedNum={2} fieldName={'First name'} />
+        <ImportChangeTracker changedNum={4} fieldName={'Last name'} />
         {/* <AddedTagsTracker count={2000} fieldName={'Tag'} tags={tags} /> */}
-        <ImportChangeTracker count={2080} fieldName={'Organization'} />
+        <ImportChangeTracker changedNum={2080} fieldName={'Organization'} />
       </Stack>
     </Box>
   );

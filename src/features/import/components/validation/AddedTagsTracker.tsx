@@ -6,12 +6,12 @@ import { Typography } from '@mui/material';
 import { ZetkinTag } from 'utils/types/zetkin';
 
 interface AddedTagsTrackerProps {
-  count: number;
+  changedNum: number;
   fieldName: string;
   tags: ZetkinTag[];
 }
 const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
-  count,
+  changedNum,
   fieldName,
   tags,
 }) => {
@@ -23,7 +23,7 @@ const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
           values={{
             count: (
               <Typography fontWeight="bold" sx={{ mr: 0.5 }}>
-                {count}
+                {changedNum}
               </Typography>
             ),
             fieldName: (

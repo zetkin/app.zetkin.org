@@ -5,13 +5,13 @@ import { Typography } from '@mui/material';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
 interface ImportChangeTrackerProps {
-  count: number;
+  changedNum: number;
   fieldName: string;
   orgs?: ZetkinOrganization[];
 }
 const ImportChangeTracker: React.FunctionComponent<
   ImportChangeTrackerProps
-> = ({ count, fieldName, orgs }) => {
+> = ({ changedNum, fieldName, orgs }) => {
   if (orgs !== undefined && orgs.length === 0) {
     return null;
   }
@@ -19,7 +19,7 @@ const ImportChangeTracker: React.FunctionComponent<
     <Box sx={{ border: 'solid 1px lightgrey', borderRadius: '4px', p: 2 }}>
       <Box alignItems="center" display="flex">
         <Typography fontWeight="bold" sx={{ mr: 0.5 }}>
-          {count}
+          {changedNum}
         </Typography>
         <Msg
           id={

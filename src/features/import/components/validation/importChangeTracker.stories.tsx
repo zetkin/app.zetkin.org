@@ -9,7 +9,7 @@ export default {
 
 const Template: ComponentStory<typeof ImportChangeTracker> = (args) => (
   <ImportChangeTracker
-    count={args.count}
+    changedNum={args.changedNum}
     fieldName={args.fieldName}
     orgs={args.orgs}
   />
@@ -18,18 +18,18 @@ const org = mockOrganization();
 
 export const firstName = Template.bind({});
 firstName.args = {
-  count: 7,
+  changedNum: 7,
   fieldName: 'First name',
 };
 
 export const lastName = Template.bind({});
 lastName.args = {
-  count: 43,
+  changedNum: 43,
   fieldName: 'Last name',
 };
 export const orgs = Template.bind({});
 orgs.args = {
-  count: 2070,
+  changedNum: 2070,
   fieldName: 'Organization',
   orgs: [org, org, org, org, org, org, org, org, org, org, org, org],
 };

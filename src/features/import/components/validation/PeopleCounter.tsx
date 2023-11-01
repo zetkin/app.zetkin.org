@@ -9,7 +9,7 @@ export enum COUNT_STATUS {
 }
 
 interface PeopleCounterProps {
-  count: number;
+  changedNum: number;
   status: COUNT_STATUS;
 }
 
@@ -18,7 +18,7 @@ enum CounterColors {
   updated = '#03A9F4',
 }
 const PeopleCounter: React.FunctionComponent<PeopleCounterProps> = ({
-  count,
+  changedNum,
   status,
 }) => {
   return (
@@ -31,7 +31,7 @@ const PeopleCounter: React.FunctionComponent<PeopleCounterProps> = ({
       }}
     >
       <Typography color={CounterColors[status]} variant="h2">
-        {count}
+        {changedNum}
       </Typography>
       <Msg
         id={
