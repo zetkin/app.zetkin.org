@@ -2,9 +2,12 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.import', {
+  back: m('Back'),
   configuration: {
     title: m('Import people'),
   },
+  done: m('Done'),
+  import: m('Import'),
   restart: m('Restart'),
   steps: {
     configure: m('Configure'),
@@ -12,6 +15,7 @@ export default makeMessages('feat.import', {
     upload: m('Upload'),
     validate: m('Validate'),
   },
+  validate: m('Validate'),
   validation: {
     alerts: {
       back: m('Go back'),

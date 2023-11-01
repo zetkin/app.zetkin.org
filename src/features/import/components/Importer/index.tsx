@@ -22,6 +22,7 @@ interface ImporterProps {
   onRestart: () => void;
   open: boolean;
 }
+
 type StepType = 0 | 1 | 2 | 3;
 
 const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
@@ -87,8 +88,16 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           <Typography color="secondary">
             This message will depend on the state of the import.
           </Typography>
-          <Button onClick={onRestart} sx={{ mx: 1 }} variant="text">
-            <Msg id={messageIds.restart} />
+          <Button
+            onClick={() => {
+              activeStep > 1
+                ? setActiveStep((prev) => (prev - 1) as StepType)
+                : onRestart();
+            }}
+            sx={{ mx: 1 }}
+            variant="text"
+          >
+            <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
           </Button>
           <Button
             disabled={false}
@@ -103,7 +112,15 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             sx={{ ml: 1 }}
             variant="contained"
           >
-            Validate
+            <Msg
+              id={
+                activeStep === 1
+                  ? messageIds.validate
+                  : activeStep === 2
+                  ? messageIds.import
+                  : messageIds.done
+              }
+            />
           </Button>
         </Box>
       </Box>
