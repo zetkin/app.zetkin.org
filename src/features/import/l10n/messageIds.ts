@@ -73,6 +73,13 @@ export default makeMessages('feat.import', {
       selectZetkinField: m('Import as...'),
       zetkinHeader: m('Zetkin'),
     },
+    settings: {
+      firstRowIsHeaders: m('First row is headers'),
+      sheetSelectHelpText: m(
+        'Your file has multiple sheets, select which one to use.'
+      ),
+      sheetSelectLabel: m('Sheet'),
+    },
     title: m('Import people'),
   },
   restart: m('Restart'),

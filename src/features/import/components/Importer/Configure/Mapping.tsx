@@ -6,7 +6,7 @@ import range from 'utils/range';
 import { useMessages } from 'core/i18n';
 import MappingRow, { ExperimentColumn } from './MappingRow';
 
-interface ExperimentRow {
+export interface ExperimentRow {
   data: (string | number | null)[];
 }
 
