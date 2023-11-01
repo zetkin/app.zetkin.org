@@ -50,28 +50,30 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             width="50%"
           >
             <Box width="100%">
-              <Stepper activeStep={activeStep}>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.upload} />
-                  </StepLabel>
-                </Step>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.configure} />
-                  </StepLabel>
-                </Step>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.validate} />
-                  </StepLabel>
-                </Step>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.import} />
-                  </StepLabel>
-                </Step>
-              </Stepper>
+              {activeStep < 3 && (
+                <Stepper activeStep={activeStep}>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.upload} />
+                    </StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.configure} />
+                    </StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.validate} />
+                    </StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.import} />
+                    </StepLabel>
+                  </Step>
+                </Stepper>
+              )}
             </Box>
             <IconButton>
               <Clear color="secondary" onClick={onClose} />
