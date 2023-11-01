@@ -21,6 +21,7 @@ export default makeMessages('feat.import', {
       back: m('Go back'),
       checkbox: m('I understand'),
     },
+    messages: m('Messages'),
     pendingChanges: m('Pending changes'),
     trackers: {
       created: m('new people will be created'),

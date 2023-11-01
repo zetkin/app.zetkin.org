@@ -18,7 +18,7 @@ export enum ALERT_STATUS {
   INFO = 'info',
   SUCCESS = 'success',
 }
-interface ImportAlertsProps {
+interface ImportAlertProps {
   bullets?: string[];
   msg: string;
   status: ALERT_STATUS;
@@ -26,7 +26,7 @@ interface ImportAlertsProps {
   onClickBack?: () => void;
   onClickCheckbox?: () => void;
 }
-const ImportAlerts: React.FunctionComponent<ImportAlertsProps> = ({
+const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
   bullets,
   msg,
   status,
@@ -77,4 +77,4 @@ const ImportAlerts: React.FunctionComponent<ImportAlertsProps> = ({
     </Alert>
   );
 };
-export default ImportAlerts;
+export default ImportAlert;

@@ -1,13 +1,13 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import ImportAlerts, { ALERT_STATUS } from './importAlerts';
+import ImportAlert, { ALERT_STATUS } from './importAlert';
 
 export default {
-  component: ImportAlerts,
-  title: 'Import/ImportAlerts',
-} as ComponentMeta<typeof ImportAlerts>;
+  component: ImportAlert,
+  title: 'Import/ImportAlert',
+} as ComponentMeta<typeof ImportAlert>;
 
-const Template: ComponentStory<typeof ImportAlerts> = (args) => (
-  <ImportAlerts
+const Template: ComponentStory<typeof ImportAlert> = (args) => (
+  <ImportAlert
     bullets={args.bullets}
     msg={args.msg}
     onClickBack={args.onClickBack}
