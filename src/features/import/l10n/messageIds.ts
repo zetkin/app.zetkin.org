@@ -2,6 +2,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.import', {
   configuration: {
+    hide: m('Hide'),
     mapping: {
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
       fileHeader: m('File'),
@@ -82,6 +83,7 @@ export default makeMessages('feat.import', {
       ),
       sheetSelectLabel: m('Sheet'),
     },
+    show: m('Show'),
     title: m('Import people'),
   },
   restart: m('Restart'),

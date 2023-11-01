@@ -2,15 +2,17 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
   AccordionDetails,
   AccordionSummary,
+  Box,
   styled,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { FC, useState } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import SheetSettings, { ExperimentSheet } from './SheetSettings';
 
 interface ConfigureProps {
@@ -27,8 +29,12 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 
 const Configure: FC<ConfigureProps> = ({ sheets }) => {
+  const messages = useMessages(messageIds);
+  const theme = useTheme();
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
   const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
+  const [settingsExpanded, setSettingsExpanded] = useState(true);
+  const [mappingExpanded, setMappingExpanded] = useState(true);
 
   const selectedSheet = sheets.find((sheet) => {
     return sheet.id == selectedSheetId;
@@ -36,11 +42,24 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
 
   return (
     <>
-      <Accordion defaultExpanded disableGutters>
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography variant="h5">
-            <Msg id={messageIds.configuration.settings.header} />
-          </Typography>
+      <Accordion
+        defaultExpanded
+        disableGutters
+        onChange={(ev, isExpanded) => setSettingsExpanded(isExpanded)}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMore sx={{ color: theme.palette.primary.main }} />}
+        >
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h5">
+              <Msg id={messageIds.configuration.settings.header} />
+            </Typography>
+            <Typography color={theme.palette.primary.main} paddingRight={1}>
+              {settingsExpanded
+                ? messages.configuration.hide().toLocaleUpperCase()
+                : messages.configuration.show().toLocaleUpperCase()}
+            </Typography>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <SheetSettings
@@ -54,11 +73,24 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
           />
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded disableGutters>
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography variant="h5">
-            <Msg id={messageIds.configuration.mapping.header} />
-          </Typography>
+      <Accordion
+        defaultExpanded
+        disableGutters
+        onChange={(ev, isExpanded) => setMappingExpanded(isExpanded)}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMore sx={{ color: theme.palette.primary.main }} />}
+        >
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h5">
+              <Msg id={messageIds.configuration.mapping.header} />
+            </Typography>
+            <Typography color={theme.palette.primary.main} paddingRight={1}>
+              {mappingExpanded
+                ? messages.configuration.hide().toLocaleUpperCase()
+                : messages.configuration.show().toLocaleUpperCase()}
+            </Typography>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Mapping
