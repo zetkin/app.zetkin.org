@@ -47,9 +47,9 @@ const SheetSettings: FC<SheetSettingsProps> = ({
             </InputLabel>
             <Select
               label={messages.configuration.settings.sheetSelectLabel()}
-              onChange={(event) => {
-                onChangeSelectedSheet(event.target.value as number);
-              }}
+              onChange={(event) =>
+                onChangeSelectedSheet(event.target.value as number)
+              }
               value={selectedSheet}
             >
               {sheets.map((sheet, index) => (
