@@ -3,6 +3,7 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.import', {
   configuration: {
     mapping: {
+      defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
       finishedMappingOrganizations: m<{
         numMappedTo: number;
         numPeople: number;
