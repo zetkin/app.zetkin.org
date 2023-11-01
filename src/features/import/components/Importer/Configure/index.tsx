@@ -30,7 +30,9 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
   const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
 
-  const selectedSheet = sheets.find((sheet) => sheet.id === selectedSheetId);
+  const selectedSheet = sheets.find((sheet) => {
+    return sheet.id == selectedSheetId;
+  });
 
   return (
     <>
