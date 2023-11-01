@@ -1,6 +1,12 @@
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import {
+  AccordionDetails,
+  AccordionSummary,
+  styled,
+  Typography,
+} from '@mui/material';
 import { FC, useState } from 'react';
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
@@ -10,6 +16,15 @@ import SheetSettings, { ExperimentSheet } from './SheetSettings';
 interface ConfigureProps {
   sheets: ExperimentSheet[];
 }
+
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(() => ({
+  '&:before': {
+    display: 'none',
+  },
+  border: 0,
+}));
 
 const Configure: FC<ConfigureProps> = ({ sheets }) => {
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
@@ -21,7 +36,9 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
     <>
       <Accordion defaultExpanded disableGutters>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Msg id={messageIds.configuration.settings.header} />
+          <Typography variant="h5">
+            <Msg id={messageIds.configuration.settings.header} />
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <SheetSettings
@@ -37,7 +54,9 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
       </Accordion>
       <Accordion defaultExpanded disableGutters>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Msg id={messageIds.configuration.mapping.header} />
+          <Typography variant="h5">
+            <Msg id={messageIds.configuration.mapping.header} />
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Mapping
