@@ -22,7 +22,14 @@ const PeopleCounter: React.FunctionComponent<PeopleCounterProps> = ({
   status,
 }) => {
   return (
-    <Box sx={{ border: 'solid 1px lightgrey', borderRadius: '4px', p: 2 }}>
+    <Box
+      sx={{
+        border: 'solid 1px lightgrey',
+        borderRadius: '4px',
+        p: 2,
+        width: '100%',
+      }}
+    >
       <Typography color={CounterColors[status]} variant="h2">
         {count}
       </Typography>

@@ -17,7 +17,7 @@ export default makeMessages('feat.import', {
       back: m('Go back'),
       checkbox: m('I understand'),
     },
-    title: m('Pending changes'),
+    pendingChanges: m('Pending changes'),
     trackers: {
       created: m('new people will be created'),
       defaultDesc: m('people will recieve changes to their'),
