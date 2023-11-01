@@ -37,13 +37,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
       onClose={onClose}
       open={open}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="90vh"
-        justifyContent="space-between"
-        padding={2}
-      >
+      <Box display="flex" flexDirection="column" height="90vh" padding={2}>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography variant="h4">
             <Msg id={messageIds.configuration.title} />
@@ -84,7 +78,12 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           </Box>
         </Box>
         {activeStep === 2 && <Validation />}
-        <Box alignItems="center" display="flex" justifyContent="flex-end">
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="flex-end"
+          sx={{ bottom: 15, position: 'absolute', right: 15 }}
+        >
           <Typography color="secondary">
             This message will depend on the state of the import.
           </Typography>

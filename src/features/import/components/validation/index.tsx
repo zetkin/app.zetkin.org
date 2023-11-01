@@ -8,7 +8,7 @@ import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
 
 const Validation = () => {
   return (
-    <Box>
+    <Box mt={3} width="50%">
       <Typography sx={{ mb: 2 }} variant="h5">
         <Msg id={messageIds.validation.pendingChanges} />
       </Typography>
