@@ -32,7 +32,7 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
           thirdValue: string | number;
         }>(
-          '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues, plural, =1 {one other value} other {# other values}}.'
+          '{firstValue}, {secondValue}, {thirdValue} and {numMoreValues, plural, =1 {one other value} other {# other values}}.'
         ),
         oneValueAndEmpty: m<{ firstValue: string | number; numEmpty: number }>(
           '{firstValue} and {numEmpty, plural, =1 {one empty row} other {# empty rows}}.'

@@ -29,7 +29,7 @@ interface ExperimentField {
   needsMapping: boolean;
 }
 
-interface ExperimentColumn {
+export interface ExperimentColumn {
   data: (number | string | null)[];
   id: number;
   title: string;
