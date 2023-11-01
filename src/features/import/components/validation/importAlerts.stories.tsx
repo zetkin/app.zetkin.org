@@ -1,13 +1,13 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import ZUIImportAlerts, { ALERT_STATUS } from '.';
+import ImportAlerts, { ALERT_STATUS } from './importAlerts';
 
 export default {
-  component: ZUIImportAlerts,
-  title: 'Import/ZUIImportAlerts',
-} as ComponentMeta<typeof ZUIImportAlerts>;
+  component: ImportAlerts,
+  title: 'Import/ImportAlerts',
+} as ComponentMeta<typeof ImportAlerts>;
 
-const Template: ComponentStory<typeof ZUIImportAlerts> = (args) => (
-  <ZUIImportAlerts
+const Template: ComponentStory<typeof ImportAlerts> = (args) => (
+  <ImportAlerts
     bulletOptions={args.bulletOptions}
     msg={args.msg}
     onClickBack={args.onClickBack}

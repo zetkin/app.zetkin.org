@@ -1,14 +1,14 @@
+import ImportChangeTracker from './importChangeTracker';
 import mockOrganization from 'utils/testing/mocks/mockOrganization';
-import ZUIImportChangeTracker from '.';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
-  component: ZUIImportChangeTracker,
-  title: 'Import/ZUIImportChangeTracker',
-} as ComponentMeta<typeof ZUIImportChangeTracker>;
+  component: ImportChangeTracker,
+  title: 'Import/ImportChangeTracker',
+} as ComponentMeta<typeof ImportChangeTracker>;
 
-const Template: ComponentStory<typeof ZUIImportChangeTracker> = (args) => (
-  <ZUIImportChangeTracker
+const Template: ComponentStory<typeof ImportChangeTracker> = (args) => (
+  <ImportChangeTracker
     count={args.count}
     fieldName={args.fieldName}
     orgs={args.orgs}

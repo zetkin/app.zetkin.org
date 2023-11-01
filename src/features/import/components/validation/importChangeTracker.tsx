@@ -4,13 +4,13 @@ import { Msg } from 'core/i18n';
 import { Typography } from '@mui/material';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
-interface ZUIImportChangeTrackerProps {
+interface ImportChangeTrackerProps {
   count: number;
   fieldName: string;
   orgs?: ZetkinOrganization[];
 }
-const ZUIImportChangeTracker: React.FunctionComponent<
-  ZUIImportChangeTrackerProps
+const ImportChangeTracker: React.FunctionComponent<
+  ImportChangeTrackerProps
 > = ({ count, fieldName, orgs }) => {
   if (orgs !== undefined && orgs.length === 0) {
     return null;
@@ -42,4 +42,4 @@ const ZUIImportChangeTracker: React.FunctionComponent<
     </Box>
   );
 };
-export default ZUIImportChangeTracker;
+export default ImportChangeTracker;

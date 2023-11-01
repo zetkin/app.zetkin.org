@@ -5,14 +5,16 @@ import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { Typography } from '@mui/material';
 import { ZetkinTag } from 'utils/types/zetkin';
 
-interface ZUIAddedTagsTrackerProps {
+interface AddedTagsTrackerProps {
   count: number;
   fieldName: string;
   tags: ZetkinTag[];
 }
-const ZUIAddedTagsTracker: React.FunctionComponent<
-  ZUIAddedTagsTrackerProps
-> = ({ count, fieldName, tags }) => {
+const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
+  count,
+  fieldName,
+  tags,
+}) => {
   return (
     <Box sx={{ border: 'solid 1px lightgrey', borderRadius: '4px', p: 2 }}>
       <Box alignItems="center" display="flex" mb={1}>
@@ -42,4 +44,4 @@ const ZUIAddedTagsTracker: React.FunctionComponent<
     </Box>
   );
 };
-export default ZUIAddedTagsTracker;
+export default AddedTagsTracker;

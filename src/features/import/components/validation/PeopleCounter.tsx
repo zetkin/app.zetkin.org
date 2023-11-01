@@ -8,7 +8,7 @@ export enum COUNT_STATUS {
   UPDATED = 'updated',
 }
 
-interface ZUIPeopleCounterProps {
+interface PeopleCounterProps {
   count: number;
   status: COUNT_STATUS;
 }
@@ -17,7 +17,7 @@ enum CounterColors {
   created = '#4CAF50',
   updated = '#03A9F4',
 }
-const ZUIPeopleCounter: React.FunctionComponent<ZUIPeopleCounterProps> = ({
+const PeopleCounter: React.FunctionComponent<PeopleCounterProps> = ({
   count,
   status,
 }) => {
@@ -36,4 +36,4 @@ const ZUIPeopleCounter: React.FunctionComponent<ZUIPeopleCounterProps> = ({
     </Box>
   );
 };
-export default ZUIPeopleCounter;
+export default PeopleCounter;

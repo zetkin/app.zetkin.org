@@ -1,13 +1,13 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import ZUIPeopleCounter, { COUNT_STATUS } from '.';
+import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
 
 export default {
-  component: ZUIPeopleCounter,
-  title: 'Import/ZUIPeopleCounter',
-} as ComponentMeta<typeof ZUIPeopleCounter>;
+  component: PeopleCounter,
+  title: 'Import/PeopleCounter',
+} as ComponentMeta<typeof PeopleCounter>;
 
-const Template: ComponentStory<typeof ZUIPeopleCounter> = (args) => (
-  <ZUIPeopleCounter count={args.count} status={args.status} />
+const Template: ComponentStory<typeof PeopleCounter> = (args) => (
+  <PeopleCounter count={args.count} status={args.status} />
 );
 
 export const create = Template.bind({});
