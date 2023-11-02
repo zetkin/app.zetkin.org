@@ -95,7 +95,12 @@ const MappingRow: FC<MappingRowProps> = ({
         <Box alignItems="center" display="flex">
           <Checkbox
             checked={isSelected}
-            onChange={(ev, isChecked) => onCheck(isChecked)}
+            onChange={(ev, isChecked) => {
+              onCheck(isChecked);
+              if (!isChecked) {
+                setSelectedField(null);
+              }
+            }}
           />
           <Box
             bgcolor={theme.palette.transparentGrey.light}
