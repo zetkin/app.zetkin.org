@@ -1,21 +1,26 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
+import { MappingData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import range from 'utils/range';
 import useFields from 'features/import/hooks/useFields';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import MappingRow, { ExperimentColumn } from './MappingRow';
+import MappingRow, {
+  ExperimentalFieldTypes,
+  ExperimentColumn,
+} from './MappingRow';
 
 export interface ExperimentRow {
   data: (string | number | null)[];
 }
 
 interface MappingProps {
-  currentlyMapping: number | null;
+  currentlyMapping: MappingData | null;
   firstRowIsHeaders: boolean;
-  onMapValues: (id: number) => void;
+  clearCurrentlyMapping: () => void;
+  onMapValues: (columnId: number, type: ExperimentalFieldTypes) => void;
   onSelectColumn: (columnId: number, isChecked: boolean) => void;
   rows?: ExperimentRow[];
   selectedColumns: number[];
@@ -24,6 +29,7 @@ interface MappingProps {
 const Mapping: FC<MappingProps> = ({
   currentlyMapping,
   firstRowIsHeaders,
+  clearCurrentlyMapping,
   onMapValues,
   onSelectColumn,
   rows,
@@ -79,6 +85,7 @@ const Mapping: FC<MappingProps> = ({
             <Box key={column.id}>
               {index == 0 && <Divider />}
               <MappingRow
+                clearCurrentlyMapping={clearCurrentlyMapping}
                 column={column}
                 currentlyMapping={currentlyMapping}
                 isSelected={isSelected}
@@ -86,7 +93,9 @@ const Mapping: FC<MappingProps> = ({
                 onCheck={(isChecked: boolean) => {
                   onSelectColumn(column.id, isChecked);
                 }}
-                onMapValues={() => onMapValues(column.id)}
+                onMapValues={(type: ExperimentalFieldTypes) =>
+                  onMapValues(column.id, type)
+                }
                 zetkinFields={fields}
               />
               <Divider />

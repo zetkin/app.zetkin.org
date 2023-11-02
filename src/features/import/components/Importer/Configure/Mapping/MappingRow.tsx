@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
+import { MappingData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import { Msg, useMessages } from 'core/i18n';
@@ -43,16 +44,18 @@ export interface ExperimentalMappingResults {
 
 interface MappingRowProps {
   column: ExperimentColumn;
-  currentlyMapping: number | null;
+  clearCurrentlyMapping: () => void;
+  currentlyMapping: MappingData | null;
   isSelected: boolean;
   mappingResults: ExperimentalMappingResults | null;
   onCheck: (isChecked: boolean) => void;
-  onMapValues: () => void;
+  onMapValues: (type: ExperimentalFieldTypes) => void;
   zetkinFields: ExperimentField[];
 }
 
 const MappingRow: FC<MappingRowProps> = ({
   column,
+  clearCurrentlyMapping,
   currentlyMapping,
   isSelected,
   mappingResults,
@@ -77,7 +80,7 @@ const MappingRow: FC<MappingRowProps> = ({
   const showMappingResultMessage =
     isSelected && mappingResults && selectedField && needsConfig;
   const showGreyBackground =
-    currentlyMapping === column.id && showNeedsConfigMessage;
+    currentlyMapping?.columnId === column.id && showNeedsConfigMessage;
 
   return (
     <Box
@@ -99,6 +102,9 @@ const MappingRow: FC<MappingRowProps> = ({
               onCheck(isChecked);
               if (!isChecked) {
                 setSelectedField(null);
+                if (currentlyMapping?.columnId == column.id) {
+                  clearCurrentlyMapping();
+                }
               }
             }}
           />
@@ -182,7 +188,7 @@ const MappingRow: FC<MappingRowProps> = ({
         {(showNeedsConfigMessage || showMappingResultMessage) && (
           <Button
             endIcon={<ChevronRight />}
-            onClick={onMapValues}
+            onClick={() => onMapValues(selectedField.type)}
             variant="text"
           >
             <Msg
