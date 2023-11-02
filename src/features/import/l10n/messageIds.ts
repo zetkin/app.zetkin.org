@@ -26,6 +26,10 @@ export default makeMessages('feat.import', {
         ),
         title: m('Something went wrong, and the import was interrupted.'),
       },
+      info: {
+        desc: m('Data for the uploaded file looks ready'),
+        title: m('Ready for import'),
+      },
       warning: {
         unselectedId: {
           desc: m(

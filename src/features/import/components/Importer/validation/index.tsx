@@ -17,14 +17,14 @@ interface ValidationProps {
 const Validation = ({ onClickBack }: ValidationProps) => {
   const fakeData = {
     changedField: [
-      { changedNum: 0, field: 'First name' },
-      { changedNum: 0, field: 'Last name' },
-      { changedNum: 0, field: 'Tags', tags: [mockTag()] },
-      { changedNum: 0, field: 'Organization', orgs: [mockOrganization()] },
+      { changedNum: 23, field: 'First name' },
+      { changedNum: 5, field: 'Last name' },
+      { changedNum: 1, field: 'Tags', tags: [mockTag()] },
+      { changedNum: 5, field: 'Organization', orgs: [mockOrganization()] },
     ],
-    createdPeople: 0,
-    unselectedId: true,
-    updatedPeople: 0,
+    createdPeople: 30,
+    unSelectedId: true,
+    updatedPeople: 60,
   };
   const message = useMessages(messageIds);
 
@@ -41,15 +41,23 @@ const Validation = ({ onClickBack }: ValidationProps) => {
         onChecked: undefined,
         title: message.validation.alerts.error.title(),
       };
-    } else {
+    }
+    //unchosen ID column
+    if (fakeData.unSelectedId) {
       return {
         alertStatus: ALERT_STATUS.WARNING,
-        msg: message.validation.alerts.error.desc(),
-        onBack: onClickBack,
-        onChecked: undefined,
-        title: message.validation.alerts.error.title(),
+        msg: message.validation.alerts.warning.unselectedId.desc(),
+        onBack: undefined,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onChecked: () => {},
+        title: message.validation.alerts.warning.unselectedId.title(),
       };
     }
+    return {
+      alertStatus: ALERT_STATUS.INFO,
+      msg: message.validation.alerts.info.desc(),
+      title: message.validation.alerts.info.title(),
+    };
   };
   const alertStates = getAlertContent();
 
@@ -97,8 +105,8 @@ const Validation = ({ onClickBack }: ValidationProps) => {
         </Typography>
         <ImportAlert
           msg={alertStates.msg}
-          onClickBack={alertStates.onBack}
-          onClickCheckbox={alertStates.onChecked}
+          onClickBack={alertStates?.onBack}
+          onClickCheckbox={alertStates?.onChecked}
           status={alertStates.alertStatus}
           title={alertStates.title}
         />
