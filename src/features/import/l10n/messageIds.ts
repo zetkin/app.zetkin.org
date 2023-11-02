@@ -27,10 +27,18 @@ export default makeMessages('feat.import', {
         title: m('Something went wrong, and the import was interrupted.'),
       },
       info: {
-        desc: m('Data for the uploaded file looks ready'),
+        desc: m('The data you want to upload looks good!'),
         title: m('Ready for import'),
       },
       warning: {
+        manyChanges: {
+          desc: m(
+            'Sometimes this is a result of a misconfiguration of the import.'
+          ),
+          title: m<{ fieldName: string }>(
+            'This import will change alot of {fieldName}'
+          ),
+        },
         unselectedId: {
           desc: m(
             'This may result in difficulty in updating people in Zetkin. This is not recommended.'

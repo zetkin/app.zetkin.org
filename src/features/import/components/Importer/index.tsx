@@ -29,6 +29,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activeStep, setActiveStep] = useState<StepType>(1);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   return (
     <Dialog
@@ -83,6 +84,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
         {activeStep === 2 && (
           <Validation
             onClickBack={() => setActiveStep((prev) => (prev - 1) as StepType)}
+            onDisabled={(value) => setDisabled(value)}
           />
         )}
         <Box
@@ -96,9 +98,12 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           </Typography>
           <Button
             onClick={() => {
-              activeStep > 1
-                ? setActiveStep((prev) => (prev - 1) as StepType)
-                : onRestart();
+              if (activeStep > 1) {
+                setActiveStep((prev) => (prev - 1) as StepType);
+                setDisabled(false);
+              } else {
+                onRestart();
+              }
             }}
             sx={{ mx: 1 }}
             variant="text"
@@ -106,7 +111,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
           </Button>
           <Button
-            disabled={false}
+            disabled={disabled}
             onClick={() => {
               if (activeStep === 3) {
                 onClose();
