@@ -33,7 +33,10 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
           onChangeFirstRowIsHeaders={() =>
             setFirstRowIsHeaders(!firstRowIsHeaders)
           }
-          onChangeSelectedSheet={(id: number) => setSelectedSheetId(id)}
+          onChangeSelectedSheet={(id: number) => {
+            setSelectedSheetId(id);
+            setSelectedColumns([]);
+          }}
           selectedSheet={selectedSheetId}
           sheets={sheets}
         />
