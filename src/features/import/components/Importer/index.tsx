@@ -13,6 +13,7 @@ import {
   useTheme,
 } from '@mui/material';
 
+import Configure from './Configure';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 
@@ -88,6 +89,32 @@ const Importer: FC<ImporterProps> = ({
             </IconButton>
           </Box>
         </Box>
+        <Configure
+          sheets={[
+            {
+              data: [
+                { data: ['Name', 'Last name', 'Email', 'Age'] },
+                { data: ['Angela', 'Davies', 'angela@gmail.com', 34] },
+                { data: ['Maya', 'Angelou', 'maya@gmail.com', 66] },
+                { data: ['Rosa', 'Parks', 'rosa@gmail.com', 81] },
+                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51] },
+              ],
+              id: 1,
+              title: 'Members',
+            },
+            {
+              data: [
+                { data: ['Name', 'Last name', 'Email', 'Age'] },
+                { data: ['Kitty', 'Jonsson', 'kitty@gmail.com', 36] },
+                { data: ['Lasse', 'Brandeby', 'lasse@gmail.com', 81] },
+                { data: ['Pamela', 'Andersson', 'pamela@gmail.com', 61] },
+                { data: ['Jane', 'Austen', 'jane@gmail.com', 102] },
+              ],
+              id: 2,
+              title: 'Old Members',
+            },
+          ]}
+        />
         <Box alignItems="center" display="flex" justifyContent="flex-end">
           <Typography color="secondary">
             This message will depend on the state of the import.

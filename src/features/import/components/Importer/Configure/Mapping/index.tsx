@@ -1,10 +1,18 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/import/l10n/messageIds';
+import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import range from 'utils/range';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useMessages } from 'core/i18n';
-import MappingRow, { ExperimentColumn } from './MappingRow';
+import { useNumericRouteParams } from 'core/hooks';
+import MappingRow, {
+  ExperimentalFieldTypes,
+  ExperimentColumn,
+  ExperimentField,
+} from './MappingRow';
 
 export interface ExperimentRow {
   data: (string | number | null)[];
@@ -19,6 +27,36 @@ interface MappingProps {
   selectedColumns: number[];
 }
 
+const useFields = (orgId: number): ExperimentField[] => {
+  const globalMessages = useMessages(globalMessageIds);
+  const customFields = useCustomFields(orgId).data ?? [];
+
+  const fieldsWithoutId: { slug: string; title: string }[] = [];
+
+  customFields.forEach((field) =>
+    fieldsWithoutId.push({
+      slug: field.slug,
+      title: field.title,
+    })
+  );
+
+  Object.values(NATIVE_PERSON_FIELDS).forEach((fieldSlug) =>
+    fieldsWithoutId.push({
+      slug: fieldSlug,
+      title: globalMessages.personFields[fieldSlug](),
+    })
+  );
+
+  return fieldsWithoutId
+    .filter((field) => field.slug != 'id' && field.slug != 'ext_id')
+    .map((field, index) => ({
+      ...field,
+      id: index + 1,
+      type: ExperimentalFieldTypes.BASIC,
+    }))
+    .sort((field1, field2) => field1.title.localeCompare(field2.title));
+};
+
 const Mapping: FC<MappingProps> = ({
   currentlyMapping,
   firstRowIsHeaders,
@@ -27,7 +65,10 @@ const Mapping: FC<MappingProps> = ({
   rows,
   selectedColumns,
 }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
+  const fields = useFields(orgId);
+
   const numberOfColumns = rows ? rows[0].data.length : 0;
 
   const columns: ExperimentColumn[] = [];
@@ -82,9 +123,7 @@ const Mapping: FC<MappingProps> = ({
                   onSelectColumn(column.id, isChecked);
                 }}
                 onMapValues={() => onMapValues(column.id)}
-                onSelectField={() => null}
-                selectedZetkinFieldId={0}
-                zetkinFields={[]}
+                zetkinFields={fields}
               />
               <Divider />
             </Box>

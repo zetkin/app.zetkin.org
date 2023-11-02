@@ -15,7 +15,6 @@ const Template: ComponentStory<typeof MappingRow> = (args) => {
   const [checked, setChecked] = useState(false);
   const [mappingResults, setMappingResults] =
     useState<ExperimentalMappingResults | null>(null);
-  const [selectedZetkinFieldId, setSelectedZetkinFieldId] = useState(0);
   const [currentlyMapping, setCurrentlyMapping] = useState<number | null>(null);
 
   return (
@@ -27,7 +26,6 @@ const Template: ComponentStory<typeof MappingRow> = (args) => {
       onCheck={() => {
         setChecked(!checked);
         setMappingResults(null);
-        setSelectedZetkinFieldId(0);
       }}
       onMapValues={() => {
         setCurrentlyMapping(args.column.id);
@@ -35,11 +33,6 @@ const Template: ComponentStory<typeof MappingRow> = (args) => {
           setMappingResults({ numMappedTo: 5, numPeople: 234 });
         }, 3000);
       }}
-      onSelectField={(id: number) => {
-        setSelectedZetkinFieldId(id);
-        setMappingResults(null);
-      }}
-      selectedZetkinFieldId={selectedZetkinFieldId}
       zetkinFields={args.zetkinFields}
     />
   );
@@ -55,25 +48,25 @@ basic.args = {
   zetkinFields: [
     {
       id: 1,
-      needsMapping: true,
-      title: 'Tags',
+      slug: 'tags',
+      title: 'tags',
       type: ExperimentalFieldTypes.TAG,
     },
     {
       id: 2,
-      needsMapping: false,
+      slug: 'first_name',
       title: 'First name',
       type: ExperimentalFieldTypes.BASIC,
     },
     {
       id: 3,
-      needsMapping: false,
+      slug: 'last_name',
       title: 'Last name',
       type: ExperimentalFieldTypes.BASIC,
     },
     {
       id: 4,
-      needsMapping: true,
+      slug: 'org',
       title: 'Organization',
       type: ExperimentalFieldTypes.ORGANIZATION,
     },
