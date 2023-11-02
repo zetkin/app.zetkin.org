@@ -11,7 +11,9 @@ const Template: ComponentStory<typeof Mapping> = (args) => (
     currentlyMapping={null}
     firstRowIsHeaders={args.firstRowIsHeaders}
     onMapValues={() => null}
+    onSelectColumn={() => null}
     rows={args.rows}
+    selectedColumns={[]}
   />
 );
 

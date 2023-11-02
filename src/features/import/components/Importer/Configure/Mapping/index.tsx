@@ -14,14 +14,18 @@ interface MappingProps {
   currentlyMapping: number | null;
   firstRowIsHeaders: boolean;
   onMapValues: (id: number) => void;
+  onSelectColumn: (columnId: number, isChecked: boolean) => void;
   rows?: ExperimentRow[];
+  selectedColumns: number[];
 }
 
 const Mapping: FC<MappingProps> = ({
   currentlyMapping,
   firstRowIsHeaders,
   onMapValues,
+  onSelectColumn,
   rows,
+  selectedColumns,
 }) => {
   const messages = useMessages(messageIds);
   const numberOfColumns = rows ? rows[0].data.length : 0;
@@ -64,23 +68,28 @@ const Mapping: FC<MappingProps> = ({
         </Box>
       </Box>
       <Box>
-        {columns.map((column, index) => (
-          <Box key={column.id}>
-            {index == 0 && <Divider />}
-            <MappingRow
-              column={column}
-              currentlyMapping={currentlyMapping}
-              isEnabled={false}
-              mappingResults={null}
-              onEnable={() => null}
-              onMapValues={() => onMapValues(column.id)}
-              onSelectField={() => null}
-              selectedZetkinFieldId={0}
-              zetkinFields={[]}
-            />
-            <Divider />
-          </Box>
-        ))}
+        {columns.map((column, index) => {
+          const isSelected = !!selectedColumns.find((id) => id == column.id);
+          return (
+            <Box key={column.id}>
+              {index == 0 && <Divider />}
+              <MappingRow
+                column={column}
+                currentlyMapping={currentlyMapping}
+                isSelected={isSelected}
+                mappingResults={null}
+                onCheck={(isChecked: boolean) => {
+                  onSelectColumn(column.id, isChecked);
+                }}
+                onMapValues={() => onMapValues(column.id)}
+                onSelectField={() => null}
+                selectedZetkinFieldId={0}
+                zetkinFields={[]}
+              />
+              <Divider />
+            </Box>
+          );
+        })}
       </Box>
     </Box>
   );

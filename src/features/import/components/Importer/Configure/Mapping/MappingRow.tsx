@@ -43,9 +43,9 @@ export interface ExperimentalMappingResults {
 interface MappingRowProps {
   column: ExperimentColumn;
   currentlyMapping: number | null;
-  isEnabled: boolean;
+  isSelected: boolean;
   mappingResults: ExperimentalMappingResults | null;
-  onEnable: () => void;
+  onCheck: (isChecked: boolean) => void;
   onMapValues: () => void;
   onSelectField: (id: number) => void;
   selectedZetkinFieldId: number;
@@ -55,9 +55,9 @@ interface MappingRowProps {
 const MappingRow: FC<MappingRowProps> = ({
   column,
   currentlyMapping,
-  isEnabled,
+  isSelected,
   mappingResults,
-  onEnable,
+  onCheck,
   onMapValues,
   onSelectField,
   selectedZetkinFieldId,
@@ -72,14 +72,14 @@ const MappingRow: FC<MappingRowProps> = ({
   );
 
   const showColumnValuesMessage =
-    !isEnabled || !selectedZetkinField || !selectedZetkinField.needsMapping;
+    !isSelected || !selectedZetkinField || !selectedZetkinField.needsMapping;
   const showNeedsMappingMessage =
-    isEnabled &&
+    isSelected &&
     !mappingResults &&
     selectedZetkinField &&
     selectedZetkinField.needsMapping;
   const showMappingResultMessage =
-    isEnabled &&
+    isSelected &&
     mappingResults &&
     selectedZetkinField &&
     selectedZetkinField.needsMapping;
@@ -100,7 +100,10 @@ const MappingRow: FC<MappingRowProps> = ({
         width="100%"
       >
         <Box alignItems="center" display="flex">
-          <Checkbox checked={isEnabled} onChange={onEnable} />
+          <Checkbox
+            checked={isSelected}
+            onChange={(ev, isChecked) => onCheck(isChecked)}
+          />
           <Box
             bgcolor={theme.palette.transparentGrey.light}
             borderRadius={2}
@@ -116,14 +119,14 @@ const MappingRow: FC<MappingRowProps> = ({
               <Msg id={messageIds.configuration.mapping.selectZetkinField} />
             </InputLabel>
             <Select
-              disabled={!isEnabled}
+              disabled={!isSelected}
               label={messages.configuration.mapping.selectZetkinField()}
               onChange={(event) => {
                 if (typeof event.target.value == 'number') {
                   onSelectField(event.target.value);
                 }
               }}
-              value={isEnabled ? selectedZetkinFieldId : ''}
+              value={isSelected ? selectedZetkinFieldId : ''}
             >
               {zetkinFields.map((field) => (
                 <MenuItem key={field.id} value={field.id}>

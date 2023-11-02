@@ -22,9 +22,9 @@ const Template: ComponentStory<typeof MappingRow> = (args) => {
     <MappingRow
       column={args.column}
       currentlyMapping={currentlyMapping}
-      isEnabled={checked}
+      isSelected={checked}
       mappingResults={mappingResults}
-      onEnable={() => {
+      onCheck={() => {
         setChecked(!checked);
         setMappingResults(null);
         setSelectedZetkinFieldId(0);

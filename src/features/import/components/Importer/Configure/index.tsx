@@ -19,6 +19,7 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
 
   //mapping
   const [currentlyMapping, setCurrentlyMapping] = useState<number | null>(null);
+  const [selectedColumns, setSelectedColumns] = useState<number[]>([]);
 
   const selectedSheet = sheets.find((sheet) => {
     return sheet.id == selectedSheetId;
@@ -41,8 +42,18 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
         <Mapping
           currentlyMapping={currentlyMapping}
           firstRowIsHeaders={firstRowIsHeaders}
-          onMapValues={(id: number) => setCurrentlyMapping(id)}
+          onMapValues={(columnId: number) => setCurrentlyMapping(columnId)}
+          onSelectColumn={(columnId: number, isChecked: boolean) => {
+            if (isChecked) {
+              setSelectedColumns([...selectedColumns, columnId]);
+            } else {
+              setSelectedColumns(
+                selectedColumns.filter((id) => id != columnId)
+              );
+            }
+          }}
           rows={selectedSheet?.data}
+          selectedColumns={selectedColumns}
         />
       </AccordionSection>
     </>
