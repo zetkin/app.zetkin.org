@@ -4,8 +4,15 @@ export default makeMessages('feat.import', {
   configuration: {
     hide: m('Hide'),
     mapping: {
+      configButton: m('Configure'),
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
       fileHeader: m('File'),
+      finishedMappingIds: m<{
+        numMappedTo: number;
+        numPeople: number;
+      }>(
+        '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 Zetkin ID} other {# Zetkin IDs}}'
+      ),
       finishedMappingOrganizations: m<{
         numMappedTo: number;
         numPeople: number;
@@ -72,7 +79,8 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
-      notMapped: m('You need to map values'),
+      needsConfig: m('You need to configure the ids'),
+      needsMapping: m('You need to map values'),
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
       tags: m('Tags'),

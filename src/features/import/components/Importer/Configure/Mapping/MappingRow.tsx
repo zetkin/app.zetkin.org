@@ -67,17 +67,17 @@ const MappingRow: FC<MappingRowProps> = ({
     null
   );
 
-  const needsMapping =
+  const needsConfig =
     selectedField?.type == ExperimentalFieldTypes.ORGANIZATION ||
-    selectedField?.type == ExperimentalFieldTypes.TAG;
-  const showColumnValuesMessage =
-    !isSelected || !selectedField || !needsMapping;
-  const showNeedsMappingMessage =
-    isSelected && !mappingResults && selectedField && needsMapping;
+    selectedField?.type == ExperimentalFieldTypes.TAG ||
+    selectedField?.type == ExperimentalFieldTypes.ID;
+  const showColumnValuesMessage = !isSelected || !selectedField || !needsConfig;
+  const showNeedsConfigMessage =
+    isSelected && !mappingResults && selectedField && needsConfig;
   const showMappingResultMessage =
-    isSelected && mappingResults && selectedField && needsMapping;
+    isSelected && mappingResults && selectedField && needsConfig;
   const showGreyBackground =
-    currentlyMapping === column.id && showNeedsMappingMessage;
+    currentlyMapping === column.id && showNeedsConfigMessage;
 
   return (
     <Box
@@ -145,16 +145,24 @@ const MappingRow: FC<MappingRowProps> = ({
         )}
         <Typography
           color={
-            showNeedsMappingMessage ? theme.palette.warning.main : 'secondary'
+            showNeedsConfigMessage ? theme.palette.warning.main : 'secondary'
           }
         >
-          {showNeedsMappingMessage && (
-            <Msg id={messageIds.configuration.mapping.notMapped} />
+          {showNeedsConfigMessage && (
+            <Msg
+              id={
+                selectedField.type == ExperimentalFieldTypes.ID
+                  ? messageIds.configuration.mapping.needsConfig
+                  : messageIds.configuration.mapping.needsMapping
+              }
+            />
           )}
           {showMappingResultMessage && (
             <Msg
               id={
-                selectedField.type == ExperimentalFieldTypes.ORGANIZATION
+                selectedField.type == ExperimentalFieldTypes.ID
+                  ? messageIds.configuration.mapping.finishedMappingIds
+                  : selectedField.type == ExperimentalFieldTypes.ORGANIZATION
                   ? messageIds.configuration.mapping
                       .finishedMappingOrganizations
                   : messageIds.configuration.mapping.finishedMappingTags
@@ -166,13 +174,19 @@ const MappingRow: FC<MappingRowProps> = ({
             />
           )}
         </Typography>
-        {(showNeedsMappingMessage || showMappingResultMessage) && (
+        {(showNeedsConfigMessage || showMappingResultMessage) && (
           <Button
             endIcon={<ChevronRight />}
             onClick={onMapValues}
             variant="text"
           >
-            <Msg id={messageIds.configuration.mapping.mapValuesButton} />
+            <Msg
+              id={
+                selectedField.type == ExperimentalFieldTypes.ID
+                  ? messageIds.configuration.mapping.configButton
+                  : messageIds.configuration.mapping.mapValuesButton
+              }
+            />
           </Button>
         )}
       </Box>

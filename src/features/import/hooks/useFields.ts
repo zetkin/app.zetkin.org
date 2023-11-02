@@ -48,7 +48,7 @@ export default function useFields(orgId: number): ExperimentField[] {
   });
   fields.push({
     slug: 'id',
-    title: messages.configuration.mapping.id(),
+    title: messages.configuration.mapping.id().toLocaleUpperCase(),
     type: ExperimentalFieldTypes.ID,
   });
 
