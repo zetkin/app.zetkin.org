@@ -39,7 +39,13 @@ const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
     <Alert
       action={
         onClickBack && (
-          <Button color="inherit" sx={{ fontWeight: 'bold' }} variant="text">
+          <Button
+            color="inherit"
+            onClick={onClickBack}
+            size="small"
+            sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}
+            variant="text"
+          >
             {message.validation.alerts.back()}
           </Button>
         )

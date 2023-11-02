@@ -20,6 +20,20 @@ export default makeMessages('feat.import', {
     alerts: {
       back: m('Go back'),
       checkbox: m('I understand'),
+      error: {
+        desc: m(
+          'No people have been imported. You can go back and check the import settings or choose a new file to import. There were errors in the form you submitted. Please try again and make sure you fill in all the required information.'
+        ),
+        title: m('Something went wrong, and the import was interrupted.'),
+      },
+      warning: {
+        unselectedId: {
+          desc: m(
+            'This may result in difficulty in updating people in Zetkin. This is not recommended.'
+          ),
+          title: m('You have not chosen an ID column'),
+        },
+      },
     },
     messages: m('Messages'),
     pendingChanges: m('Pending changes'),

@@ -80,7 +80,11 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             </IconButton>
           </Box>
         </Box>
-        {activeStep === 2 && <Validation />}
+        {activeStep === 2 && (
+          <Validation
+            onClickBack={() => setActiveStep((prev) => (prev - 1) as StepType)}
+          />
+        )}
         <Box
           alignItems="center"
           display="flex"
