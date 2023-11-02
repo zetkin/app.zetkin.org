@@ -19,18 +19,31 @@ interface ValidationProps {
 const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
   const fakeData = {
     changedField: [
-      { changedNum: 23, field: 'First name' },
-      // { id: 2, changed: ['first_name', 'org', 'email'] } ???,
-      { changedNum: 11, field: 'Last name' },
-      { changedNum: 25, field: 'Tags', tags: [mockTag()] },
-      { changedNum: 13, field: 'Organization', orgs: [mockOrganization()] },
+      { changedNum: 0, field: 'First name' },
+      { changedNum: 0, field: 'Last name' },
+      { changedNum: 10, field: 'Tags', tags: [mockTag()] },
+      { changedNum: 0, field: 'Organization', orgs: [mockOrganization()] },
     ],
-    createdPeople: 200,
+    createdPeople: 0,
     unSelectedId: true,
-    updatedPeople: 100,
+    updatedPeople: 20,
   };
-  const [checked, setChecked] = useState<boolean>(false);
+  const [allChecked, setAllchecked] = useState<number>(0);
+
+  const itemsWithManyChanges = fakeData.changedField.filter(
+    (item) => fakeData.updatedPeople * 0.2 <= item.changedNum
+  );
+
   const message = useMessages(messageIds);
+
+  if (
+    itemsWithManyChanges.length + (fakeData.unSelectedId ? 1 : 0) ===
+    allChecked
+  ) {
+    onDisabled(false);
+  } else {
+    onDisabled(true);
+  }
 
   const getAlertContent = () => {
     //Error when no one imported
@@ -52,16 +65,12 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     }
     //Warning when unchosen ID column
     if (fakeData.unSelectedId) {
-      if (!checked) {
-        onDisabled(true);
-      }
       return {
         alertStatus: ALERT_STATUS.WARNING,
         msg: message.validation.alerts.warning.unselectedId.desc(),
         onBack: undefined,
         onChecked: (value: boolean) => {
-          setChecked(value);
-          onDisabled(!value);
+          setAllchecked((prev) => (value ? prev + 1 : prev - 1));
         },
         title: message.validation.alerts.warning.unselectedId.title(),
       };
@@ -73,6 +82,7 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
       title: message.validation.alerts.info.title(),
     };
   };
+
   const alertStates = getAlertContent();
 
   return (
@@ -125,12 +135,17 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
             status={alertStates.alertStatus}
             title={alertStates.title}
           />
-          {fakeData.changedField.map((item) => {
-            if (fakeData.updatedPeople * 0.2 < item.changedNum) {
+          {itemsWithManyChanges.map((item) => {
+            if (
+              fakeData.updatedPeople !== 0 &&
+              fakeData.updatedPeople * 0.2 < item.changedNum
+            ) {
               return (
                 <ImportAlert
                   msg={message.validation.alerts.warning.manyChanges.desc()}
-                  onChecked={alertStates?.onChecked}
+                  onChecked={(value) =>
+                    setAllchecked((prev) => (value ? prev + 1 : prev - 1))
+                  }
                   status={ALERT_STATUS.WARNING}
                   title={message.validation.alerts.warning.manyChanges.title({
                     fieldName: item.field,
