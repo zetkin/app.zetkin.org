@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import { CompareArrows } from '@mui/icons-material';
+import { Box, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
 import AccordionSection from './AccordionSection';
@@ -6,6 +7,7 @@ import { ExperimentalFieldTypes } from './Mapping/MappingRow';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
 import SheetSettings, { ExperimentSheet } from './SheetSettings';
 
 export interface MappingData {
@@ -19,6 +21,7 @@ interface ConfigureProps {
 
 const Configure: FC<ConfigureProps> = ({ sheets }) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
 
   //settings
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
@@ -76,7 +79,20 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
       </Box>
       <Box width="50%">
         {currentlyMapping && <>Mapping</>}
-        {!currentlyMapping && <>Empty state</>}
+        {!currentlyMapping && (
+          <Box
+            alignItems="center"
+            bgcolor={theme.palette.transparentGrey.light}
+            display="flex"
+            height="100%"
+            justifyContent="center"
+          >
+            <ZUIEmptyState
+              message={messages.configuration.mapping.emptyStateMessage()}
+              renderIcon={(props) => <CompareArrows {...props} />}
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   );

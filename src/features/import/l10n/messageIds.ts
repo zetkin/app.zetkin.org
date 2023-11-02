@@ -6,6 +6,7 @@ export default makeMessages('feat.import', {
     mapping: {
       configButton: m('Configure'),
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
+      emptyStateMessage: m('Start by mapping file columns.'),
       fileHeader: m('File'),
       finishedMappingIds: m<{
         numMappedTo: number;
