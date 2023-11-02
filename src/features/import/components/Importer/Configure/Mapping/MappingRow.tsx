@@ -17,9 +17,10 @@ import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage
 import { Msg, useMessages } from 'core/i18n';
 
 export enum ExperimentalFieldTypes {
+  BASIC = 'basic',
+  ID = 'id',
   ORGANIZATION = 'organization',
   TAG = 'tag',
-  BASIC = 'basic',
 }
 
 export interface ExperimentField {

@@ -19,6 +19,7 @@ export default makeMessages('feat.import', {
         '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
       ),
       header: m('Mapping'),
+      id: m('Id'),
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{
@@ -72,7 +73,9 @@ export default makeMessages('feat.import', {
         }>('{firstValue} and {secondValue}.'),
       },
       notMapped: m('You need to map values'),
+      organization: m('Organization'),
       selectZetkinField: m('Import as...'),
+      tags: m('Tags'),
       zetkinHeader: m('Zetkin'),
     },
     settings: {

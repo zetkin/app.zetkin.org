@@ -70,5 +70,11 @@ basic.args = {
       title: 'Organization',
       type: ExperimentalFieldTypes.ORGANIZATION,
     },
+    {
+      id: 5,
+      slug: 'id',
+      title: 'Id',
+      type: ExperimentalFieldTypes.ID,
+    },
   ],
 };

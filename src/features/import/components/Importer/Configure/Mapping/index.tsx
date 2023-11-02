@@ -29,6 +29,7 @@ interface MappingProps {
 
 const useFields = (orgId: number): ExperimentField[] => {
   const globalMessages = useMessages(globalMessageIds);
+  const messages = useMessages(messageIds);
   const customFields = useCustomFields(orgId).data ?? [];
 
   const fieldsWithoutId: { slug: string; title: string }[] = [];
@@ -47,12 +48,33 @@ const useFields = (orgId: number): ExperimentField[] => {
     })
   );
 
-  return fieldsWithoutId
+  const fields = fieldsWithoutId
     .filter((field) => field.slug != 'id' && field.slug != 'ext_id')
+    .map((field) => ({
+      ...field,
+      type: ExperimentalFieldTypes.BASIC,
+    }));
+
+  fields.push({
+    slug: 'org',
+    title: messages.configuration.mapping.organization(),
+    type: ExperimentalFieldTypes.ORGANIZATION,
+  });
+  fields.push({
+    slug: 'tags',
+    title: messages.configuration.mapping.tags(),
+    type: ExperimentalFieldTypes.TAG,
+  });
+  fields.push({
+    slug: 'id',
+    title: messages.configuration.mapping.id(),
+    type: ExperimentalFieldTypes.ID,
+  });
+
+  return fields
     .map((field, index) => ({
       ...field,
       id: index + 1,
-      type: ExperimentalFieldTypes.BASIC,
     }))
     .sort((field1, field2) => field1.title.localeCompare(field2.title));
 };
