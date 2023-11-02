@@ -11,11 +11,18 @@ export interface ExperimentRow {
 }
 
 interface MappingProps {
+  currentlyMapping: number | null;
   firstRowIsHeaders: boolean;
+  onMapValues: (id: number) => void;
   rows?: ExperimentRow[];
 }
 
-const Mapping: FC<MappingProps> = ({ firstRowIsHeaders, rows }) => {
+const Mapping: FC<MappingProps> = ({
+  currentlyMapping,
+  firstRowIsHeaders,
+  onMapValues,
+  rows,
+}) => {
   const messages = useMessages(messageIds);
   const numberOfColumns = rows ? rows[0].data.length : 0;
 
@@ -62,11 +69,11 @@ const Mapping: FC<MappingProps> = ({ firstRowIsHeaders, rows }) => {
             {index == 0 && <Divider />}
             <MappingRow
               column={column}
-              currentlyMapping={null}
+              currentlyMapping={currentlyMapping}
               isEnabled={false}
               mappingResults={null}
               onEnable={() => null}
-              onMapValues={() => null}
+              onMapValues={() => onMapValues(column.id)}
               onSelectField={() => null}
               selectedZetkinFieldId={0}
               zetkinFields={[]}

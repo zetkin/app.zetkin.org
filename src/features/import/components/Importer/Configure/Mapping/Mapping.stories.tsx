@@ -7,7 +7,12 @@ export default {
 } as ComponentMeta<typeof Mapping>;
 
 const Template: ComponentStory<typeof Mapping> = (args) => (
-  <Mapping firstRowIsHeaders={args.firstRowIsHeaders} rows={args.rows} />
+  <Mapping
+    currentlyMapping={null}
+    firstRowIsHeaders={args.firstRowIsHeaders}
+    onMapValues={() => null}
+    rows={args.rows}
+  />
 );
 
 export const firstRowIsHeaders = Template.bind({});

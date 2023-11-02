@@ -12,8 +12,13 @@ interface ConfigureProps {
 
 const Configure: FC<ConfigureProps> = ({ sheets }) => {
   const messages = useMessages(messageIds);
+
+  //settings
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
   const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
+
+  //mapping
+  const [currentlyMapping, setCurrentlyMapping] = useState<number | null>(null);
 
   const selectedSheet = sheets.find((sheet) => {
     return sheet.id == selectedSheetId;
@@ -34,7 +39,9 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
       </AccordionSection>
       <AccordionSection header={messages.configuration.mapping.header()}>
         <Mapping
+          currentlyMapping={currentlyMapping}
           firstRowIsHeaders={firstRowIsHeaders}
+          onMapValues={(id: number) => setCurrentlyMapping(id)}
           rows={selectedSheet?.data}
         />
       </AccordionSection>
