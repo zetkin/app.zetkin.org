@@ -1,13 +1,10 @@
 import { Typography } from '@mui/material';
-import { useState } from 'react';
 import { Box, Stack } from '@mui/system';
 
-import AddedTagsTracker from './AddedTagsTracker';
+// import AddedTagsTracker from './AddedTagsTracker';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import ImportChangeTracker from './importChangeTracker';
 import messageIds from 'features/import/l10n/messageIds';
-import mockOrganization from 'utils/testing/mocks/mockOrganization';
-import mockTag from 'utils/testing/mocks/mockTag';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import ImportAlert, { ALERT_STATUS } from './importAlert';
 import { Msg, useMessages } from 'core/i18n';
@@ -19,19 +16,6 @@ interface ValidationProps {
 }
 
 const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
-  const fakeData = {
-    changedField: [
-      { changedNum: 0, field: 'First name' },
-      { changedNum: 0, field: 'Last name' },
-      { changedNum: 0, field: 'Custom' },
-      { changedNum: 10, field: 'Tags', tags: [mockTag()] },
-      { changedNum: 0, field: 'Organization', orgs: [mockOrganization()] },
-    ],
-    createdPeople: 0,
-    unSelectedId: true,
-    updatedPeople: 20,
-  };
-
   const fake = {
     summary: {
       createdPeople: {
@@ -54,8 +38,9 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
         },
         fields: {
           // custom_field: 96,
-          first_name: 1,
-          last_name: 4,
+          email: 15,
+          first_name: 22,
+          last_name: 42,
         },
         organizationMembershipsCreated: {
           1: 5,
@@ -67,70 +52,66 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
       },
     },
   };
-  const orgChangeSum = Object.values(
+  // const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
+
+  const orgsChangeSum = Object.values(
     fake.summary.updatedPeople.organizationMembershipsCreated
   ).reduce((acc, cur) => acc + cur, 0);
+
   const orgs = Object.keys(
     fake.summary.updatedPeople.organizationMembershipsCreated
   );
 
-  const [allChecked, setAllchecked] = useState<number>(0);
   const globalMessages = useMessages(globalMessageIds);
-
-  const itemsWithManyChanges = fakeData.changedField.filter(
-    (item) => fakeData.updatedPeople * 0.2 <= item.changedNum
-  );
 
   const message = useMessages(messageIds);
 
-  if (
-    itemsWithManyChanges.length + (fakeData.unSelectedId ? 1 : 0) ===
-    allChecked
-  ) {
-    onDisabled(false);
-  } else {
-    onDisabled(true);
-  }
+  const getAlerts = (fake: any) => {
+    const result = [];
 
-  const getAlertContent = () => {
+    const fieldsWithManyChanges = Object.entries(
+      fake.summary.updatedPeople.fields
+    ).filter((item) => {
+      const fieldValue = item[1] as number;
+      return fake.summary.updatedPeople.total * 0.2 < fieldValue;
+    });
+
     //Error when no one imported
-    if (
-      fakeData.changedField.every((item) => item.changedNum === 0) &&
-      fakeData.createdPeople + fakeData.updatedPeople === 0
-    ) {
+    if (fake.createdPeople === null && fake.updatedPeople === null) {
       onDisabled(true);
-      return {
+      result.push({
         alertStatus: ALERT_STATUS.ERROR,
         msg: message.validation.alerts.error.desc(),
         onBack: () => {
           onClickBack();
           onDisabled(false);
         },
-        onChecked: undefined,
         title: message.validation.alerts.error.title(),
-      };
+      });
     }
-    //Warning when unchosen ID column
-    if (fakeData.unSelectedId) {
-      return {
-        alertStatus: ALERT_STATUS.WARNING,
-        msg: message.validation.alerts.warning.unselectedId.desc(),
-        onBack: undefined,
-        onChecked: (value: boolean) => {
-          setAllchecked((prev) => (value ? prev + 1 : prev - 1));
-        },
-        title: message.validation.alerts.warning.unselectedId.title(),
-      };
+    //Warning when there are many changes to field
+    else if (fieldsWithManyChanges.length > 0) {
+      fieldsWithManyChanges.forEach((item) =>
+        result.push({
+          alertStatus: ALERT_STATUS.WARNING,
+          msg: message.validation.alerts.warning.manyChanges.desc(),
+          title: message.validation.alerts.warning.manyChanges.title({
+            fieldName:
+              globalMessages.personFields[item[0] as NATIVE_PERSON_FIELDS](),
+          }),
+        })
+      );
+    } else {
+      result.push({
+        alertStatus: ALERT_STATUS.INFO,
+        msg: message.validation.alerts.info.desc(),
+        title: message.validation.alerts.info.title(),
+      });
     }
-    //Info when ready to import
-    return {
-      alertStatus: ALERT_STATUS.INFO,
-      msg: message.validation.alerts.info.desc(),
-      title: message.validation.alerts.info.title(),
-    };
-  };
 
-  const alertStates = getAlertContent();
+    return result;
+  };
+  const alertStates = getAlerts(fake);
 
   return (
     <Box display="flex" mt={3}>
@@ -149,20 +130,6 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               status={COUNT_STATUS.UPDATED}
             />
           </Stack>
-
-          {/* {item.tags ? (
-                  <AddedTagsTracker
-                    changedNum={item.changedNum}
-                    fieldName={item.field}
-                    tags={item.tags}
-                  />
-                ) : (
-                  <ImportChangeTracker
-                    changedNum={item.changedNum}
-                    fieldName={item.field}
-                    orgs={item.orgs ?? undefined}
-                  />
-                )} */}
           {Object.entries(fake.summary.updatedPeople.fields).map(
             (item, index) => {
               return (
@@ -177,8 +144,15 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               );
             }
           )}
+          {/* {fakeTag.tags && (
+            <AddedTagsTracker
+              changedNum={fakeTag.changedNum}
+              fieldName={fakeTag.field}
+              tags={fakeTag.tags}
+            />
+          )} */}
           <ImportChangeTracker
-            changedNum={orgChangeSum}
+            changedNum={orgsChangeSum}
             fieldName={message.validation.organization()}
             orgs={orgs}
           />
@@ -189,31 +163,17 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
           <Msg id={messageIds.validation.messages} />
         </Typography>
         <Stack spacing={2}>
-          <ImportAlert
-            msg={alertStates.msg}
-            onChecked={alertStates?.onChecked}
-            onClickBack={alertStates?.onBack}
-            status={alertStates.alertStatus}
-            title={alertStates.title}
-          />
-          {itemsWithManyChanges.map((item) => {
-            if (
-              fakeData.updatedPeople !== 0 &&
-              fakeData.updatedPeople * 0.2 < item.changedNum
-            ) {
-              return (
+          {alertStates.map((item, index) => {
+            return (
+              <Box key={`alert-${index}`}>
                 <ImportAlert
-                  msg={message.validation.alerts.warning.manyChanges.desc()}
-                  onChecked={(value) =>
-                    setAllchecked((prev) => (value ? prev + 1 : prev - 1))
-                  }
-                  status={ALERT_STATUS.WARNING}
-                  title={message.validation.alerts.warning.manyChanges.title({
-                    fieldName: item.field,
-                  })}
+                  msg={item.msg}
+                  onClickBack={item?.onBack}
+                  status={item.alertStatus}
+                  title={item.title}
                 />
-              );
-            }
+              </Box>
+            );
           })}
         </Stack>
       </Box>
