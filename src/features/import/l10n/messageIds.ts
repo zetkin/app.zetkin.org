@@ -3,6 +3,12 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.import', {
   back: m('Back'),
   configuration: {
+    configure: {
+      tags: {
+        header: m('Map values to tags'),
+        tagsHeader: m('Tags'),
+      },
+    },
     hide: m('Hide'),
     mapping: {
       configButton: m('Configure'),
