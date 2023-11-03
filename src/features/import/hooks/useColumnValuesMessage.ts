@@ -1,5 +1,5 @@
 import messageIds from '../l10n/messageIds';
-import { useColumn } from '../components/Importer/Configure';
+import useColumn from './useColumn';
 import { useMessages } from 'core/i18n';
 
 export default function useColumnValuesMessage(
