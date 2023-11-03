@@ -5,12 +5,12 @@ import { MappingData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import range from 'utils/range';
 import useFields from 'features/import/hooks/useFields';
-import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import MappingRow, {
   ExperimentalFieldTypes,
   ExperimentColumn,
 } from './MappingRow';
+import { Msg, useMessages } from 'core/i18n';
 
 export interface ExperimentRow {
   data: (string | number | null)[];
@@ -65,7 +65,17 @@ const Mapping: FC<MappingProps> = ({
   });
 
   return (
-    <Box>
+    <Box
+      display="flex"
+      flexDirection="column"
+      flexShrink={1}
+      height="100%"
+      overflow="hidden"
+      padding={1}
+    >
+      <Typography sx={{ paddingBottom: 2, paddingX: 1 }} variant="h5">
+        <Msg id={messageIds.configuration.mapping.header} />
+      </Typography>
       <Box alignItems="center" display="flex" paddingBottom={1}>
         <Box paddingLeft={2} width="50%">
           <Typography variant="body2">
@@ -78,7 +88,7 @@ const Mapping: FC<MappingProps> = ({
           </Typography>
         </Box>
       </Box>
-      <Box>
+      <Box flexGrow={1} sx={{ overflowY: 'scroll' }}>
         {columns.map((column, index) => {
           const isSelected = !!selectedColumns.find((id) => id == column.id);
           return (

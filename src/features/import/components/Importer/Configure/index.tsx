@@ -55,49 +55,46 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
   });
 
   return (
-    <Box display="flex">
-      <Box width="50%">
-        <Accordion
-          defaultExpanded
-          disableGutters
-          onChange={(ev, isExpanded) => setSettingsExpanded(isExpanded)}
-        >
-          <AccordionSummary
-            expandIcon={
-              <ExpandMore sx={{ color: theme.palette.primary.main }} />
-            }
+    <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
+      <Box display="flex" flexGrow={1} overflow="hidden">
+        <Box display="flex" flexDirection="column" width="50%">
+          <Accordion
+            defaultExpanded
+            disableGutters
+            onChange={(ev, isExpanded) => setSettingsExpanded(isExpanded)}
           >
-            <Box display="flex" justifyContent="space-between" width="100%">
-              <Typography variant="h5">
-                <Msg id={messageIds.configuration.settings.header} />
-              </Typography>
-              <Typography color={theme.palette.primary.main} paddingRight={1}>
-                {settingsExpanded
-                  ? messages.configuration.hide().toLocaleUpperCase()
-                  : messages.configuration.show().toLocaleUpperCase()}
-              </Typography>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <SheetSettings
-              firstRowIsHeaders={firstRowIsHeaders}
-              onChangeFirstRowIsHeaders={() =>
-                setFirstRowIsHeaders(!firstRowIsHeaders)
+            <AccordionSummary
+              expandIcon={
+                <ExpandMore sx={{ color: theme.palette.primary.main }} />
               }
-              onChangeSelectedSheet={(id: number) => {
-                setSelectedSheetId(id);
-                setSelectedColumns([]);
-                setCurrentlyMapping(null);
-              }}
-              selectedSheet={selectedSheetId}
-              sheets={sheets}
-            />
-          </AccordionDetails>
-        </Accordion>
-        <Box padding={1}>
-          <Typography sx={{ paddingBottom: 2, paddingX: 1 }} variant="h5">
-            <Msg id={messageIds.configuration.mapping.header} />
-          </Typography>
+            >
+              <Box display="flex" justifyContent="space-between" width="100%">
+                <Typography variant="h5">
+                  <Msg id={messageIds.configuration.settings.header} />
+                </Typography>
+                <Typography color={theme.palette.primary.main} paddingRight={1}>
+                  {settingsExpanded
+                    ? messages.configuration.hide().toLocaleUpperCase()
+                    : messages.configuration.show().toLocaleUpperCase()}
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <SheetSettings
+                firstRowIsHeaders={firstRowIsHeaders}
+                onChangeFirstRowIsHeaders={() =>
+                  setFirstRowIsHeaders(!firstRowIsHeaders)
+                }
+                onChangeSelectedSheet={(id: number) => {
+                  setSelectedSheetId(id);
+                  setSelectedColumns([]);
+                  setCurrentlyMapping(null);
+                }}
+                selectedSheet={selectedSheetId}
+                sheets={sheets}
+              />
+            </AccordionDetails>
+          </Accordion>
           <Mapping
             clearCurrentlyMapping={() => setCurrentlyMapping(null)}
             currentlyMapping={currentlyMapping}
@@ -118,24 +115,25 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
             selectedColumns={selectedColumns}
           />
         </Box>
+        <Box width="50%">
+          {currentlyMapping && <>Mapping</>}
+          {!currentlyMapping && (
+            <Box
+              alignItems="center"
+              bgcolor={theme.palette.transparentGrey.light}
+              display="flex"
+              height="100%"
+              justifyContent="center"
+            >
+              <ZUIEmptyState
+                message={messages.configuration.mapping.emptyStateMessage()}
+                renderIcon={(props) => <CompareArrows {...props} />}
+              />
+            </Box>
+          )}
+        </Box>
       </Box>
-      <Box width="50%">
-        {currentlyMapping && <>Mapping</>}
-        {!currentlyMapping && (
-          <Box
-            alignItems="center"
-            bgcolor={theme.palette.transparentGrey.light}
-            display="flex"
-            height="100%"
-            justifyContent="center"
-          >
-            <ZUIEmptyState
-              message={messages.configuration.mapping.emptyStateMessage()}
-              renderIcon={(props) => <CompareArrows {...props} />}
-            />
-          </Box>
-        )}
-      </Box>
+      <Box padding={4}>Preview</Box>
     </Box>
   );
 };
