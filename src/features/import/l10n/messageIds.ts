@@ -1,6 +1,7 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.import', {
+  back: m('Back'),
   configuration: {
     hide: m('Hide'),
     mapping: {
@@ -98,6 +99,8 @@ export default makeMessages('feat.import', {
     show: m('Show'),
     title: m('Import people'),
   },
+  done: m('Done'),
+  import: m('Import'),
   restart: m('Restart'),
   steps: {
     configure: m('Configure'),
@@ -105,4 +108,5 @@ export default makeMessages('feat.import', {
     upload: m('Upload'),
     validate: m('Validate'),
   },
+  validate: m('Validate'),
 });

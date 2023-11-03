@@ -1,5 +1,4 @@
 import { Clear } from '@mui/icons-material';
-import { FC } from 'react';
 import {
   Box,
   Button,
@@ -12,28 +11,24 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { FC, useState } from 'react';
 
 import Configure from './Configure';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 interface ImporterProps {
-  activeStep: 0 | 1 | 2 | 3;
   onClose: () => void;
   onRestart: () => void;
-  onValidate: () => void;
   open: boolean;
 }
 
-const Importer: FC<ImporterProps> = ({
-  activeStep,
-  onRestart,
-  onValidate,
-  open,
-  onClose,
-}) => {
+type StepType = 0 | 1 | 2 | 3;
+
+const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [activeStep, setActiveStep] = useState<StepType>(1);
 
   return (
     <Dialog
@@ -43,13 +38,7 @@ const Importer: FC<ImporterProps> = ({
       onClose={onClose}
       open={open}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="90vh"
-        justifyContent="space-between"
-        padding={2}
-      >
+      <Box display="flex" flexDirection="column" height="90vh" padding={2}>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography variant="h4">
             <Msg id={messageIds.configuration.title} />
@@ -61,28 +50,30 @@ const Importer: FC<ImporterProps> = ({
             width="50%"
           >
             <Box width="100%">
-              <Stepper activeStep={activeStep}>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.upload} />
-                  </StepLabel>
-                </Step>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.configure} />
-                  </StepLabel>
-                </Step>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.validate} />
-                  </StepLabel>
-                </Step>
-                <Step>
-                  <StepLabel>
-                    <Msg id={messageIds.steps.import} />
-                  </StepLabel>
-                </Step>
-              </Stepper>
+              {activeStep < 3 && (
+                <Stepper activeStep={activeStep}>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.upload} />
+                    </StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.configure} />
+                    </StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.validate} />
+                    </StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>
+                      <Msg id={messageIds.steps.import} />
+                    </StepLabel>
+                  </Step>
+                </Stepper>
+              )}
             </Box>
             <IconButton>
               <Clear color="secondary" onClick={onClose} />
@@ -116,20 +107,50 @@ const Importer: FC<ImporterProps> = ({
           ]}
         />
         <Box alignItems="center" display="flex" justifyContent="flex-end">
-          <Typography color="secondary">
-            This message will depend on the state of the import.
-          </Typography>
-          <Button onClick={onRestart} sx={{ mx: 1 }} variant="text">
-            <Msg id={messageIds.restart} />
-          </Button>
-          <Button
-            disabled={true}
-            onClick={onValidate}
-            sx={{ ml: 1 }}
-            variant="contained"
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="flex-end"
+            sx={{ bottom: 15, position: 'absolute', right: 15 }}
           >
-            Validate
-          </Button>
+            <Typography color="secondary">
+              This message will depend on the state of the import.
+            </Typography>
+            <Button
+              onClick={() => {
+                activeStep > 1
+                  ? setActiveStep((prev) => (prev - 1) as StepType)
+                  : onRestart();
+              }}
+              sx={{ mx: 1 }}
+              variant="text"
+            >
+              <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
+            </Button>
+            <Button
+              disabled={false}
+              onClick={() => {
+                if (activeStep === 3) {
+                  onClose();
+                  setActiveStep(1);
+                } else {
+                  setActiveStep((prev) => (prev + 1) as StepType);
+                }
+              }}
+              sx={{ ml: 1 }}
+              variant="contained"
+            >
+              <Msg
+                id={
+                  activeStep === 1
+                    ? messageIds.validate
+                    : activeStep === 2
+                    ? messageIds.import
+                    : messageIds.done
+                }
+              />
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Dialog>
