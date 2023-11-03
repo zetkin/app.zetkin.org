@@ -1,14 +1,30 @@
-import { CompareArrows } from '@mui/icons-material';
-import { Box, useTheme } from '@mui/material';
+import {
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  styled,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { CompareArrows, ExpandMore } from '@mui/icons-material';
 import { FC, useState } from 'react';
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
-import AccordionSection from './AccordionSection';
 import { ExperimentalFieldTypes } from './Mapping/MappingRow';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
-import { useMessages } from 'core/i18n';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
+import { Msg, useMessages } from 'core/i18n';
 import SheetSettings, { ExperimentSheet } from './SheetSettings';
+
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(() => ({
+  '&:before': {
+    display: 'none',
+  },
+  border: 0,
+}));
 
 export interface MappingData {
   columnId: number;
@@ -26,6 +42,7 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
   //settings
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
   const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
+  const [settingsExpanded, setSettingsExpanded] = useState(true);
 
   //mapping
   const [currentlyMapping, setCurrentlyMapping] = useState<MappingData | null>(
@@ -40,22 +57,47 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
   return (
     <Box display="flex">
       <Box width="50%">
-        <AccordionSection header={messages.configuration.settings.header()}>
-          <SheetSettings
-            firstRowIsHeaders={firstRowIsHeaders}
-            onChangeFirstRowIsHeaders={() =>
-              setFirstRowIsHeaders(!firstRowIsHeaders)
+        <Accordion
+          defaultExpanded
+          disableGutters
+          onChange={(ev, isExpanded) => setSettingsExpanded(isExpanded)}
+        >
+          <AccordionSummary
+            expandIcon={
+              <ExpandMore sx={{ color: theme.palette.primary.main }} />
             }
-            onChangeSelectedSheet={(id: number) => {
-              setSelectedSheetId(id);
-              setSelectedColumns([]);
-              setCurrentlyMapping(null);
-            }}
-            selectedSheet={selectedSheetId}
-            sheets={sheets}
-          />
-        </AccordionSection>
-        <AccordionSection header={messages.configuration.mapping.header()}>
+          >
+            <Box display="flex" justifyContent="space-between" width="100%">
+              <Typography variant="h5">
+                <Msg id={messageIds.configuration.settings.header} />
+              </Typography>
+              <Typography color={theme.palette.primary.main} paddingRight={1}>
+                {settingsExpanded
+                  ? messages.configuration.hide().toLocaleUpperCase()
+                  : messages.configuration.show().toLocaleUpperCase()}
+              </Typography>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <SheetSettings
+              firstRowIsHeaders={firstRowIsHeaders}
+              onChangeFirstRowIsHeaders={() =>
+                setFirstRowIsHeaders(!firstRowIsHeaders)
+              }
+              onChangeSelectedSheet={(id: number) => {
+                setSelectedSheetId(id);
+                setSelectedColumns([]);
+                setCurrentlyMapping(null);
+              }}
+              selectedSheet={selectedSheetId}
+              sheets={sheets}
+            />
+          </AccordionDetails>
+        </Accordion>
+        <Box padding={1}>
+          <Typography sx={{ paddingBottom: 2, paddingX: 1 }} variant="h5">
+            <Msg id={messageIds.configuration.mapping.header} />
+          </Typography>
           <Mapping
             clearCurrentlyMapping={() => setCurrentlyMapping(null)}
             currentlyMapping={currentlyMapping}
@@ -75,7 +117,7 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
             rows={selectedSheet?.data}
             selectedColumns={selectedColumns}
           />
-        </AccordionSection>
+        </Box>
       </Box>
       <Box width="50%">
         {currentlyMapping && <>Mapping</>}
