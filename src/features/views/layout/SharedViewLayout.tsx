@@ -1,12 +1,12 @@
 import { FunctionComponent } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
-import useModel from 'core/useModel';
-import ViewDataModel from '../models/ViewDataModel';
+import { useNumericRouteParams } from 'core/hooks';
+import useView from '../hooks/useView';
+import useViewGrid from '../hooks/useViewGrid';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
@@ -42,30 +42,21 @@ interface SharedViewLayoutProps {
 const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   children,
 }) => {
-  const router = useRouter();
-  const { orgId, viewId } = router.query;
+  const { orgId, viewId } = useNumericRouteParams();
   const classes = useStyles();
 
-  const dataModel = useModel(
-    (env) =>
-      new ViewDataModel(
-        env,
-        parseInt(orgId as string),
-        parseInt(viewId as string)
-      )
-  );
+  const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
+  const viewFuture = useView(orgId, viewId);
 
   const title = (
-    <ZUIFuture future={dataModel.getView()}>
-      {(view) => <>{view.title}</>}
-    </ZUIFuture>
+    <ZUIFuture future={viewFuture}>{(view) => <>{view.title}</>}</ZUIFuture>
   );
   const subtitle = (
     // TODO: Replace with model eventually
     <ZUIFutures
       futures={{
-        cols: dataModel.getColumns(),
-        rows: dataModel.getRows(),
+        cols: columnsFuture,
+        rows: rowsFuture,
       }}
     >
       {({ data: { cols, rows } }) => (

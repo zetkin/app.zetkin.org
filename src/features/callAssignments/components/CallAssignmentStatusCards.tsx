@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Box,
   Button,
@@ -12,42 +11,46 @@ import {
   Typography,
 } from '@mui/material';
 import { Edit, Settings, Visibility } from '@mui/icons-material';
+import { FC, useState } from 'react';
 
-import CallAssignmentModel from '../models/CallAssignmentModel';
+import messageIds from '../l10n/messageIds';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
-import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
+import useCallAssignment from '../hooks/useCallAssignment';
+import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
+import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
 import { Msg, useMessages } from 'core/i18n';
 
-import messageIds from '../l10n/messageIds';
-import useModel from 'core/useModel';
-import { useRouter } from 'next/router';
-
-interface CallAssignmentStatusCardProps {
-  model: CallAssignmentModel;
+interface CallAssignmentStatusCardsProps {
+  orgId: number;
+  assignmentId: number;
 }
 
-const CallAssignmentStatusCards = ({
-  model,
-}: CallAssignmentStatusCardProps) => {
+const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
+  orgId,
+  assignmentId,
+}) => {
   const messages = useMessages(messageIds);
-  const { data: stats } = model.getStats();
-  const { data } = model.getData();
-  const cooldown = data?.cooldown ?? null;
-  const hasTargets = model.hasTargets;
-  const goalQuery = data?.goal;
 
-  const { orgId } = useRouter().query;
-
-  const viewsModel: ViewBrowserModel = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
+  const {
+    data: callAssignment,
+    updateGoal,
+    updateCallAssignment,
+  } = useCallAssignment(orgId, assignmentId);
+  const { statsFuture, hasTargets } = useCallAssignmentStats(
+    orgId,
+    assignmentId
   );
+  const getOrganizerActionView = useOrganizerActionView(orgId);
+
+  const cooldownNumber = callAssignment?.cooldown ?? null;
+  const stats = statsFuture.data;
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
   >(null);
-  const [newCooldown, setNewCooldown] = useState<number | null>(cooldown);
+  const [newCooldown, setNewCooldown] = useState<number | null>(cooldownNumber);
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   return (
@@ -67,7 +70,7 @@ const CallAssignmentStatusCards = ({
                   <Typography color="secondary" variant="h5">
                     <Msg
                       id={messageIds.blocked.hours}
-                      values={{ cooldown: cooldown || 0 }}
+                      values={{ cooldown: cooldownNumber || 0 }}
                     />
                   </Typography>
                   <Box ml={1}>
@@ -83,8 +86,11 @@ const CallAssignmentStatusCards = ({
                     <ClickAwayListener
                       onClickAway={() => {
                         setAnchorEl(null);
-                        if (newCooldown != null && newCooldown != cooldown) {
-                          model.setCooldown(newCooldown);
+                        if (
+                          newCooldown != null &&
+                          newCooldown != callAssignment?.cooldown
+                        ) {
+                          updateCallAssignment({ cooldown: newCooldown });
                         }
                       }}
                     >
@@ -109,12 +115,17 @@ const CallAssignmentStatusCards = ({
                             onKeyDown={(ev) => {
                               if (ev.key === 'Enter') {
                                 setAnchorEl(null);
-                                if (newCooldown != null) {
-                                  model.setCooldown(newCooldown);
+                                if (
+                                  newCooldown != null &&
+                                  newCooldown != callAssignment?.cooldown
+                                ) {
+                                  updateCallAssignment({
+                                    cooldown: newCooldown,
+                                  });
                                 }
                               } else if (ev.key === 'Escape') {
                                 setAnchorEl(null);
-                                setNewCooldown(cooldown);
+                                setNewCooldown(cooldownNumber);
                               }
                             }}
                             value={newCooldown === null ? '' : newCooldown}
@@ -140,7 +151,7 @@ const CallAssignmentStatusCards = ({
             <StatusCardItem
               action={
                 <Button
-                  onClick={() => viewsModel.getOrganizerActionView()}
+                  onClick={() => getOrganizerActionView()}
                   startIcon={<Visibility />}
                   variant="outlined"
                 >
@@ -193,10 +204,10 @@ const CallAssignmentStatusCards = ({
               <SmartSearchDialog
                 onDialogClose={() => setQueryDialogOpen(false)}
                 onSave={(query) => {
-                  model.setGoal(query);
+                  updateGoal(query);
                   setQueryDialogOpen(false);
                 }}
-                query={goalQuery}
+                query={callAssignment?.goal}
               />
             )}
           </Box>

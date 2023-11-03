@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'react';
 
-import useModel from 'core/useModel';
-import ViewDataModel from '../models/ViewDataModel';
+import useViewDataTableMutations from '../hooks/useViewDataTableMutations';
 import { ZetkinView } from 'features/views/components/types';
 import SmartSearchDialog, {
   SmartSearchDialogProps,
@@ -9,7 +8,7 @@ import SmartSearchDialog, {
 
 interface ViewSmartSearchDialogProps {
   onDialogClose: SmartSearchDialogProps['onDialogClose'];
-  orgId: string | number;
+  orgId: number;
   view: ZetkinView;
 }
 
@@ -18,15 +17,13 @@ const ViewSmartSearchDialog: FunctionComponent<ViewSmartSearchDialogProps> = ({
   view,
   ...dialogProps
 }) => {
-  const model = useModel(
-    (env) => new ViewDataModel(env, parseInt(orgId as string), view.id)
-  );
+  const { updateContentQuery } = useViewDataTableMutations(orgId, view.id);
 
   return (
     <SmartSearchDialog
       {...dialogProps}
       onSave={(query) => {
-        model.updateContentQuery(query);
+        updateContentQuery(query);
         dialogProps.onDialogClose();
       }}
       query={view.content_query}

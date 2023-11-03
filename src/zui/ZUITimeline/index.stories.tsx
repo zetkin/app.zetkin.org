@@ -26,7 +26,7 @@ export default {
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof ZUITimeline> = (args) => (
   <div style={{ maxWidth: 450 }}>
-    <ZUITimeline {...args} showAll />
+    <ZUITimeline {...args} />
   </div>
 );
 

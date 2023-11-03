@@ -1,13 +1,18 @@
 import { FC } from 'react';
+import { useRouter } from 'next/router';
 import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
+import { IFuture } from 'core/caching/futures';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
-import useViewDataModel from 'features/views/hooks/useViewDataModel';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
-import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
+import {
+  COLUMN_TYPE,
+  LocalPersonViewColumn,
+  ZetkinViewColumn,
+} from '../../types';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
@@ -75,10 +80,15 @@ const EditCell: FC<{
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
   const api = useGridApiContext();
-  const model = useViewDataModel();
+  const { orgId, viewId } = useRouter().query;
+
+  const { columnsFuture, rowsFuture, setCellValue } = useViewGrid(
+    parseInt(orgId as string),
+    parseInt(viewId as string)
+  );
   const messages = useMessages(messageIds);
 
-  const suggestedPeople = getPeopleInView(model);
+  const suggestedPeople = getPeopleInView(columnsFuture, rowsFuture);
   const [isRestrictedMode] = useAccessLevel();
 
   const updateCellValue = (person: ZetkinPerson | null) => {
@@ -86,7 +96,7 @@ const EditCell: FC<{
       field: 'col_' + column.id,
       id: row.id,
     });
-    model.setCellValue(row.id, column.id, person?.id ?? null);
+    setCellValue(row.id, column.id, person?.id ?? null);
   };
 
   return (
@@ -101,9 +111,12 @@ const EditCell: FC<{
   );
 };
 
-function getPeopleInView(model: ViewDataModel): ZetkinPerson[] {
-  const rows = model.getRows().data;
-  const cols = model.getColumns().data;
+function getPeopleInView(
+  columnsFuture: IFuture<ZetkinViewColumn[]>,
+  rowsFuture: IFuture<ZetkinViewRow[]>
+): ZetkinPerson[] {
+  const rows = rowsFuture.data;
+  const cols = columnsFuture.data;
 
   if (!rows || !cols) {
     return [];

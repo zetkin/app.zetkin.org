@@ -1,21 +1,20 @@
 import { GetServerSideProps } from 'next';
+import { useState } from 'react';
 import { Box, Grid } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
 
+import { ACTIVITIES } from 'features/campaigns/types';
 import ActivityList from 'features/campaigns/components/ActivityList';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import useAcitvityList from 'features/campaigns/hooks/useActivityList';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import CampaignActivitiesModel, {
-  ACTIVITIES,
-} from 'features/campaigns/models/CampaignActivitiesModel';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -39,40 +38,28 @@ interface CampaignActivitiesPageProps {
   orgId: string;
 }
 
-const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
-  campId,
-  orgId,
-}) => {
+const CampaignActivitiesPage: PageWithLayout<
+  CampaignActivitiesPageProps
+> = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const model = useModel(
-    (env) => new CampaignActivitiesModel(env, parseInt(orgId))
-  );
-  const [searchString, setSearchString] = useState('');
+  const { orgId, campId } = useNumericRouteParams();
+  const campaignActivitiesFuture = useAcitvityList(orgId, campId);
 
+  const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
     ACTIVITIES.SURVEY,
     ACTIVITIES.TASK,
   ]);
 
-  const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const filter = evt.target.value as ACTIVITIES;
-    if (filters.includes(filter)) {
-      setFilters(filters.filter((a) => a !== filter));
-    } else {
-      setFilters([...filters, filter]);
-    }
-  };
-
-  const onSearchStringChange = (value: string) => setSearchString(value);
-
   if (onServer) {
     return null;
   }
+
   return (
     <Box>
-      <ZUIFuture future={model.getCampaignActivities(parseInt(campId))}>
+      <ZUIFuture future={campaignActivitiesFuture}>
         {(data) => {
           if (data.length === 0) {
             return (
@@ -93,7 +80,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
                 <ActivityList
                   allActivities={data}
                   filters={filters}
-                  orgId={parseInt(orgId)}
+                  orgId={orgId}
                   searchString={searchString}
                 />
               </Grid>
@@ -101,8 +88,15 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
                 <FilterActivities
                   filters={filters}
                   filterTypes={filterTypes}
-                  onFiltersChange={onFiltersChange}
-                  onSearchStringChange={onSearchStringChange}
+                  onFiltersChange={(evt) => {
+                    const filter = evt.target.value as ACTIVITIES;
+                    if (filters.includes(filter)) {
+                      setFilters(filters.filter((a) => a !== filter));
+                    } else {
+                      setFilters([...filters, filter]);
+                    }
+                  }}
+                  onSearchStringChange={(value) => setSearchString(value)}
                 />
               </Grid>
             </Grid>

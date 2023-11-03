@@ -87,8 +87,13 @@ export default class FetchApiClient implements IApiClient {
 
     assertOk(res);
 
-    const body = await res.json();
-    return body.data;
+    try {
+      const body = await res.json();
+      return body.data;
+    } catch (err) {
+      //TODO: Update type to reflect this possibility
+      return null as unknown as DataType;
+    }
   }
 
   async rpc<ParamsType, ResultType>(

@@ -1,14 +1,12 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 
 import FilterForm from '../../FilterForm';
-import getAllCallAssignments from 'features/callAssignments/api/getAllCallAssignments';
 import { Msg } from 'core/i18n';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CALL_OPERATOR,
@@ -21,6 +19,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.callHistory;
 
 const ANY_ASSIGNMENT = 'any';
@@ -42,12 +41,8 @@ const CallHistory = ({
   onCancel,
   filter: initialFilter,
 }: CallHistoryProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const assignmentsQuery = useQuery(
-    ['assignments', orgId],
-    getAllCallAssignments(orgId as string)
-  );
-  const assignments = assignmentsQuery?.data || [];
+  const { orgId } = useNumericRouteParams();
+  const assignmentsFuture = useCallAssignments(orgId);
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CallHistoryFilterConfig>(initialFilter, {
       minTimes: 1,
@@ -55,7 +50,7 @@ const CallHistory = ({
     });
 
   // only submit if assignments exist
-  const submittable = !!assignments.length;
+  const submittable = !!assignmentsFuture.data?.length;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -122,8 +117,8 @@ const CallHistory = ({
                         id={localMessageIds.assignmentSelect.assignment}
                         values={{
                           assignmentTitle:
-                            assignments.find((a) => a.id === value)?.title ??
-                            '',
+                            assignmentsFuture.data?.find((a) => a.id === value)
+                              ?.title ?? '',
                         }}
                       />
                     );
@@ -131,17 +126,17 @@ const CallHistory = ({
                 }}
                 value={filter.config.assignment || ANY_ASSIGNMENT}
               >
-                {!assignments.length && (
+                {!assignmentsFuture.data?.length && (
                   <MenuItem key={ANY_ASSIGNMENT} value={ANY_ASSIGNMENT}>
                     <Msg id={localMessageIds.assignmentSelect.none} />
                   </MenuItem>
                 )}
-                {assignments.length && (
+                {assignmentsFuture.data?.length && (
                   <MenuItem key={ANY_ASSIGNMENT} value={ANY_ASSIGNMENT}>
                     <Msg id={localMessageIds.assignmentSelect.any} />
                   </MenuItem>
                 )}
-                {assignments.map((a) => (
+                {assignmentsFuture.data?.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
                     {a.title}
                   </MenuItem>

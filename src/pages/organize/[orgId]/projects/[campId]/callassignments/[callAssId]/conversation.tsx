@@ -3,23 +3,17 @@ import { Grid } from '@mui/material';
 import Head from 'next/head';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
-import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import CallerInstructions from 'features/callAssignments/components/CallerInstructions';
 import ConversationSettings from 'features/callAssignments/components/ConversationSettings';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useModel from 'core/useModel';
+import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
+import { useNumericRouteParams } from 'core/hooks';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
-  async (ctx) => {
-    const { orgId, campId, callAssId } = ctx.params!;
-
+  async () => {
     return {
-      props: {
-        assignmentId: callAssId,
-        campId,
-        orgId,
-      },
+      props: {},
     };
   },
   {
@@ -32,53 +26,29 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface ConversationPageProps {
-  assignmentId: string;
-  campId: string;
-  orgId: string;
-}
+const ConversationPage: PageWithLayout = () => {
+  const { orgId, callAssId } = useNumericRouteParams();
+  const { data } = useCallAssignment(orgId, callAssId);
 
-const ConversationPage: PageWithLayout<ConversationPageProps> = ({
-  assignmentId,
-  orgId,
-}) => {
-  const model = useModel(
-    (env) =>
-      new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
-  );
   return (
     <>
       <Head>
-        <title>{model.getData().data?.title}</title>
+        <title>{data?.title}</title>
       </Head>
       <Grid container spacing={2}>
         <Grid item lg={8} md={6} sm={12}>
-          <CallerInstructions
-            assignmentId={parseInt(assignmentId)}
-            orgId={parseInt(orgId)}
-          />
+          <CallerInstructions assignmentId={callAssId} orgId={orgId} />
         </Grid>
         <Grid item lg={4} md={6} sm={12}>
-          <ConversationSettings
-            assignmentId={parseInt(assignmentId)}
-            orgId={parseInt(orgId)}
-          />
+          <ConversationSettings assignmentId={callAssId} orgId={orgId} />
         </Grid>
       </Grid>
     </>
   );
 };
 
-ConversationPage.getLayout = function getLayout(page, props) {
-  return (
-    <CallAssignmentLayout
-      assignmentId={props.assignmentId}
-      campaignId={props.campId}
-      orgId={props.orgId}
-    >
-      {page}
-    </CallAssignmentLayout>
-  );
+ConversationPage.getLayout = function getLayout(page) {
+  return <CallAssignmentLayout>{page}</CallAssignmentLayout>;
 };
 
 export default ConversationPage;

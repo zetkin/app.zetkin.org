@@ -7,10 +7,9 @@ import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
-import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
-import ViewDataModel from 'features/views/models/ViewDataModel';
-import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
+import useView from 'features/views/hooks/useView';
+import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
@@ -91,9 +90,11 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   orgId,
   viewId,
 }) => {
-  const model = useModel(
-    (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
-  );
+  const parsedOrgId = parseInt(orgId);
+  const parsedViewId = parseInt(viewId);
+
+  const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
+  const viewFuture = useView(parsedOrgId, parsedViewId);
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -104,9 +105,9 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   return (
     <ZUIFutures
       futures={{
-        cols: model.getColumns(),
-        rows: model.getRows(),
-        view: model.getView(),
+        cols: columnsFuture,
+        rows: rowsFuture,
+        view: viewFuture,
       }}
     >
       {({ data: { cols, rows, view } }) => (
@@ -114,21 +115,19 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
           <Head>
             <title>{view.title}</title>
           </Head>
-          <ViewDataModelProvider model={model}>
-            <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
-              <>
-                {!model.getColumns().isLoading && (
-                  <ViewDataTable
-                    columns={cols}
-                    disableBulkActions
-                    disableConfigure={!canConfigure}
-                    rows={rows}
-                    view={view}
-                  />
-                )}
-              </>
-            </AccessLevelProvider>
-          </ViewDataModelProvider>
+          <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
+            <>
+              {!columnsFuture.isLoading && (
+                <ViewDataTable
+                  columns={cols}
+                  disableBulkActions
+                  disableConfigure={!canConfigure}
+                  rows={rows}
+                  view={view}
+                />
+              )}
+            </>
+          </AccessLevelProvider>
         </>
       )}
     </ZUIFutures>

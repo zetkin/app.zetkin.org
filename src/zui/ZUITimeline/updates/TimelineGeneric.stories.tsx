@@ -19,6 +19,7 @@ openJourney.args = {
   update: {
     actor: mockPerson(),
     details: null,
+    id: '12302-3',
     organization: { id: 1, title: 'KPD' },
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),

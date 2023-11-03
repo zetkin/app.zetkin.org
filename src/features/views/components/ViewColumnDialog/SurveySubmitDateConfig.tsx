@@ -1,5 +1,3 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import {
   FormControl,
   InputLabel,
@@ -8,11 +6,12 @@ import {
   Typography,
 } from '@mui/material';
 
-import getSurveys from 'features/smartSearch/fetching/getSurveys';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/views/l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
+import useSurveys from 'features/surveys/hooks/useSurveys';
 
 interface SurveySubmitDateConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -22,14 +21,8 @@ const SurveySubmitDateConfig = ({
   onOutputConfigured,
 }: SurveySubmitDateConfigProps) => {
   const messages = useMessages(messageIds);
-
-  //TODO: Refactor to use model pattern
-  const { orgId } = useRouter().query;
-  const surveysQuery = useQuery(
-    ['surveysWithElements', orgId],
-    getSurveys(orgId as string)
-  );
-  const surveys = surveysQuery.data;
+  const { orgId } = useNumericRouteParams();
+  const surveys = useSurveys(orgId);
 
   return !surveys || surveys.length > 0 ? (
     <FormControl sx={{ width: 300 }}>

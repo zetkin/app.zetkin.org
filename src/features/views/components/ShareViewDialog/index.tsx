@@ -6,14 +6,12 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ShareViewDialogDownloadTab from './ShareViewDialogDownloadTab';
 import ShareViewDialogShareTab from './ShareViewDialogShareTab';
 import { useMessages } from 'core/i18n';
-import ViewSharingModel from 'features/views/models/ViewSharingModel';
 import { ZetkinView } from '../types';
 import ZUIDialog from 'zui/ZUIDialog';
 
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ShareViewDialogProps {
-  model: ViewSharingModel;
   onClose: () => void;
   view: ZetkinView;
 }
@@ -28,11 +26,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ShareViewDialog: FC<ShareViewDialogProps> = ({
-  model,
-  onClose,
-  view,
-}) => {
+const ShareViewDialog: FC<ShareViewDialogProps> = ({ onClose, view }) => {
   const messages = useMessages(messageIds);
   const styles = useStyles();
   const [tab, setTab] = useState<'share' | 'download'>('share');
@@ -53,7 +47,7 @@ const ShareViewDialog: FC<ShareViewDialogProps> = ({
           />
         </TabList>
         <TabPanel className={styles.tabPanel} value="share">
-          <ShareViewDialogShareTab model={model} />
+          <ShareViewDialogShareTab />
         </TabPanel>
         <TabPanel className={styles.tabPanel} value="download">
           <ShareViewDialogDownloadTab onAbort={() => setTab('share')} />

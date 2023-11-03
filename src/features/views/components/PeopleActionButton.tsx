@@ -6,22 +6,26 @@ import {
 } from '@mui/icons-material';
 
 import Importer from 'features/import/components/Importer';
-import messageIds from '../l10n/messageIds';
+import useCreateView from '../hooks/useCreateView';
+import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
-import ViewBrowserModel from '../models/ViewBrowserModel';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
+
+import messageIds from '../l10n/messageIds';
 
 interface PeopleActionButtonProps {
   folderId: number | null;
-  model: ViewBrowserModel;
 }
 
-const PeopleActionButton: FC<PeopleActionButtonProps> = ({
-  folderId,
-  model,
-}) => {
+const PeopleActionButton: FC<PeopleActionButtonProps> = ({ folderId }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const [open, setOpen] = useState(false);
+
+  const createView = useCreateView(orgId);
+  const { createFolder } = useFolder(orgId);
+
   return (
     <>
       <ZUIButtonMenu
@@ -30,14 +34,14 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             icon: <InsertDriveFileOutlined />,
             label: messages.actions.createView(),
             onClick: () => {
-              model.createView(folderId || undefined);
+              createView(folderId || undefined);
             },
           },
           {
             icon: <FolderOutlined />,
             label: messages.actions.createFolder(),
             onClick: () => {
-              model.createView(folderId || undefined);
+              createFolder(messages.newFolderTitle(), folderId || undefined);
             },
           },
           {

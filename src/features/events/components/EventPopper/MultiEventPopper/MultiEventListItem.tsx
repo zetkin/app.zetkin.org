@@ -4,15 +4,14 @@ import { Box, Typography } from '@mui/material';
 import { ChevronRightOutlined, People } from '@mui/icons-material';
 
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
-import EventDataModel from 'features/events/models/EventDataModel';
 import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from '../StatusDot';
+import useEventState from 'features/events/hooks/useEventState';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 
@@ -29,10 +28,7 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
 }) => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
-  const model = useModel(
-    (env) => new EventDataModel(env, event.organization.id, event.id)
-  );
-  const state = model.state;
+  const state = useEventState(event.organization.id, event.id);
   const timeSpan = `${intl.formatTime(
     removeOffset(event.start_time)
   )}-${intl.formatTime(removeOffset(event.end_time))}`;
@@ -69,7 +65,10 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
             </Typography>
           </Box>
           <Box alignItems="center" display="flex">
-            <EventWarningIcons model={model} />
+            <EventWarningIcons
+              eventId={event.id}
+              orgId={event.organization.id}
+            />
             <Box paddingRight={2}>
               <ZUIIconLabel
                 color={

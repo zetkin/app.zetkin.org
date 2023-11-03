@@ -1,7 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { useMessages } from 'core/i18n';
-import { useStore } from 'react-redux';
 import {
   AccessTime,
   ArrowForward,
@@ -21,9 +20,11 @@ import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
-import { RootState } from 'core/store';
 import StatusDot from './StatusDot';
-import useModel from 'core/useModel';
+import { useAppDispatch } from 'core/hooks';
+import useDuplicateEvent from 'features/events/hooks/useDuplicateEvent';
+import useEventMutations from 'features/events/hooks/useEventMutations';
+import useEventParticipants from 'features/events/hooks/useEventParticipants';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -31,9 +32,7 @@ import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import EventDataModel, {
-  EventState,
-} from 'features/events/models/EventDataModel';
+import useEventState, { EventState } from 'features/events/hooks/useEventState';
 
 const useStyles = makeStyles(() => ({
   description: {
@@ -56,14 +55,20 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
-
-  const model = useModel(
-    (env) => new EventDataModel(env, event.organization.id, event.id)
+  const { participantsFuture, respondentsFuture } = useEventParticipants(
+    event.organization.id,
+    event.id
   );
-  const store = useStore<RootState>();
-  const participants = model.getParticipants().data || [];
-  const respondents = model.getRespondents().data || [];
-  const state = model.state;
+  const { cancelEvent, deleteEvent, publishEvent } = useEventMutations(
+    event.organization.id,
+    event.id
+  );
+  const { duplicateEvent } = useDuplicateEvent(event.organization.id, event.id);
+
+  const dispatch = useAppDispatch();
+  const participants = participantsFuture.data || [];
+  const respondents = respondentsFuture.data || [];
+  const state = useEventState(event.organization.id, event.id);
 
   const showPublishButton =
     state == EventState.DRAFT ||
@@ -84,8 +89,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       onSelect: () =>
         showConfirmDialog({
           onSubmit: () => {
-            model.deleteEvent();
-            store.dispatch(eventsDeselected([event]));
+            deleteEvent();
+            dispatch(eventsDeselected([event]));
             onClickAway();
           },
           title: messages.eventPopper.confirmDelete(),
@@ -95,7 +100,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     {
       label: messages.eventPopper.duplicate(),
       onSelect: () => {
-        model.duplicateEvent();
+        duplicateEvent();
         onClickAway();
       },
     },
@@ -106,7 +111,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       onSelect: () =>
         showConfirmDialog({
           onSubmit: () => {
-            model.cancel();
+            cancelEvent();
             onClickAway();
           },
           title: messages.eventPopper.confirmCancel(),
@@ -271,7 +276,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         {showPublishButton && (
           <Button
             onClick={() => {
-              model.publish();
+              publishEvent();
               onClickAway();
             }}
             variant="contained"

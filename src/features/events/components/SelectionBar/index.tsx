@@ -1,6 +1,5 @@
 import { CheckBoxOutlined } from '@mui/icons-material';
 import { Box, Button, Divider, Paper, Typography } from '@mui/material';
-import { useSelector, useStore } from 'react-redux';
 
 import messageIds from '../../../calendar/l10n/messageIds';
 import MoveCopyButtons from './MoveCopyButtons';
@@ -8,15 +7,16 @@ import { Msg } from 'core/i18n';
 import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 const SelectionBar = () => {
-  const store = useStore<RootState>();
-  const selectedEventIds = useSelector(
+  const dispatch = useAppDispatch();
+  const selectedEventIds = useAppSelector(
     (state: RootState) => state.events.selectedEventIds
   );
 
   const handleDeselect = () => {
-    store.dispatch(resetSelection());
+    dispatch(resetSelection());
   };
 
   return (

@@ -1,18 +1,14 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { useContext } from 'react';
-import { useQueryClient } from 'react-query';
-import { useRouter } from 'next/router';
 import { Box, Checkbox, Container, Typography } from '@mui/material';
 
-import { journeyMilestoneStatusResource } from 'features/journeys/api/journeys';
+import messageIds from '../l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
+import useUpdateMilestoneStatus from '../hooks/useUpdateMilestoneStatus';
 import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from '../l10n/messageIds';
 
 const JourneyMilestoneCard = ({
   milestone,
@@ -20,30 +16,12 @@ const JourneyMilestoneCard = ({
   milestone: ZetkinJourneyMilestoneStatus;
 }): JSX.Element => {
   const messages = useMessages(messageIds);
-  const { orgId, instanceId } = useRouter().query;
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-  const queryClient = useQueryClient();
-
-  const journeyMilestoneStatusHooks = journeyMilestoneStatusResource(
-    orgId as string,
-    instanceId as string,
-    milestone.id.toString()
+  const { orgId, instanceId } = useNumericRouteParams();
+  const updateMilestoneStatus = useUpdateMilestoneStatus(
+    orgId,
+    instanceId,
+    milestone.id
   );
-  const patchJourneyMilestoneStatusMutation =
-    journeyMilestoneStatusHooks.useUpdate();
-
-  const patchMilestoneStatus = (
-    data:
-      | Pick<ZetkinJourneyMilestoneStatus, 'completed'>
-      | Pick<ZetkinJourneyMilestoneStatus, 'deadline'>
-  ) => {
-    patchJourneyMilestoneStatusMutation.mutateAsync(data, {
-      onError: () => showSnackbar('error'),
-      onSuccess: () => {
-        queryClient.invalidateQueries(['journeyInstance', orgId, instanceId]);
-      },
-    });
-  };
 
   const toggleCompleted = (
     milestone: ZetkinJourneyMilestoneStatus
@@ -68,14 +46,14 @@ const JourneyMilestoneCard = ({
             checked={milestone.completed ? true : false}
             data-testid="JourneyMilestoneCard-completed"
             onChange={() => {
-              patchMilestoneStatus({
+              updateMilestoneStatus({
                 completed: toggleCompleted(milestone),
               });
             }}
           />
           <Typography
             onClick={() => {
-              patchMilestoneStatus({
+              updateMilestoneStatus({
                 completed: toggleCompleted(milestone),
               });
             }}
@@ -125,10 +103,10 @@ const JourneyMilestoneCard = ({
               onChange={(newDeadline) => {
                 if (newDeadline && newDeadline.isValid()) {
                   const dateStr = newDeadline.format('YYYY-MM-DD');
-                  patchMilestoneStatus({ deadline: dateStr });
+                  updateMilestoneStatus({ deadline: dateStr });
                 } else if (!newDeadline) {
                   // Deadline is cleared
-                  patchMilestoneStatus({ deadline: null });
+                  updateMilestoneStatus({ deadline: null });
                 }
               }}
               slotProps={{

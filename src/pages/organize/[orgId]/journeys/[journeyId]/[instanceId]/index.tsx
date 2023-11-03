@@ -1,29 +1,26 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useContext } from 'react';
-import { useQueryClient } from 'react-query';
+import { useState } from 'react';
 import { Box, Divider, Grid } from '@mui/material';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
 import JourneyInstanceOutcome from 'features/journeys/components/JourneyInstanceOutcome';
-
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
-import { organizationResource } from 'features/journeys/api/organizations';
-import { PageWithLayout } from 'utils/types';
-import { useMessages } from 'core/i18n';
-import ZUIQuery from 'zui/ZUIQuery';
-import ZUISection from 'zui/ZUISection';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ZUITimeline from 'zui/ZUITimeline';
-import {
-  journeyInstanceResource,
-  journeyInstanceTimelineResource,
-} from 'features/journeys/api/journeys';
-import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinJourneyInstance, ZetkinPerson } from 'utils/types/zetkin';
-
 import messageIds from 'features/journeys/l10n/messageIds';
+import { PageWithLayout } from 'utils/types';
+import useJourneyInstance from 'features/journeys/hooks/useJourneyInstance';
+import useJourneyInstanceMutations from 'features/journeys/hooks/useJourneyInstanceMutations';
+import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useTimelineNote from 'features/journeys/hooks/useTimelineNotes';
+import useTimelineUpdates from 'features/journeys/hooks/useTimelineUpdates';
+import ZUIFuture from 'zui/ZUIFuture';
+import ZUISection from 'zui/ZUISection';
+import ZUITimeline from 'zui/ZUITimeline';
+import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
+import { ZetkinJourneyInstance, ZetkinOrganization } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -34,32 +31,27 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
   async (ctx) => {
     const { orgId, instanceId, journeyId } = ctx.params!;
 
-    const { state: orgQueryState } = await organizationResource(
-      orgId as string
-    ).prefetch(ctx);
-
-    const { state: journeyInstanceQueryState } = await journeyInstanceResource(
-      orgId as string,
-      instanceId as string
-    ).prefetch(ctx);
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
+      `/api/orgs/${orgId}/journey_instances/${instanceId}`
+    );
+    const organization = await apiClient.get<ZetkinOrganization>(
+      `/api/orgs/${orgId}`
+    );
 
     if (
-      journeyInstanceQueryState?.data &&
-      journeyInstanceQueryState.data.journey.id.toString() !==
-        (journeyId as string)
+      journeyInstance &&
+      journeyInstance.journey.id.toString() !== (journeyId as string)
     ) {
       return {
         redirect: {
-          destination: `/organize/${orgId}/journeys/${journeyInstanceQueryState.data.journey.id}/${instanceId}`,
+          destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
           permanent: false,
         },
       };
     }
 
-    if (
-      orgQueryState?.status === 'success' &&
-      journeyInstanceQueryState?.status === 'success'
-    ) {
+    if (organization && journeyInstance) {
       return {
         props: {
           instanceId,
@@ -78,67 +70,27 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   scaffoldOptions
 );
 
-export interface JourneyDetailsPageProps {
-  instanceId: string;
-  orgId: string;
-}
-
-const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
-  instanceId,
-  orgId,
-}) => {
-  const {
-    key,
-    useAddAssignee,
-    useAddSubject,
-    useAssignTag,
-    useQuery,
-    useRemoveAssignee,
-    useRemoveSubject,
-    useUnassignTag,
-  } = journeyInstanceResource(orgId, instanceId);
+const JourneyDetailsPage: PageWithLayout = () => {
+  const { orgId, instanceId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const journeyInstanceQuery = useQuery();
-  const addAssigneeMutation = useAddAssignee();
-  const removeAssigneeMutation = useRemoveAssignee();
-  const addMemberMutation = useAddSubject();
-  const removeMemberMutation = useRemoveSubject();
-  const assignTagMutation = useAssignTag();
-  const unassignTagMutation = useUnassignTag();
-  const { useQueryUpdates, useAddNote, useEditNote } =
-    journeyInstanceTimelineResource(orgId, instanceId);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
+  const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
+  const timelineUpdatesFuture = useTimelineUpdates(orgId, instanceId);
+  const { addNote, editNote } = useTimelineNote(orgId, instanceId);
+  const {
+    addAssignee,
+    addSubject,
+    assignTag,
+    removeAssignee,
+    removeSubject,
+    unassignTag,
+  } = useJourneyInstanceMutations(orgId, instanceId);
 
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-  const queryClient = useQueryClient();
-  const updatesQuery = useQueryUpdates();
-  const addNoteMutation = useAddNote();
-  const editNoteMutation = useEditNote();
-
-  const onAddAssignee = (person: ZetkinPerson) => {
-    addAssigneeMutation.mutate(person.id, {
-      onError: () => showSnackbar('error'),
-    });
-  };
-
-  const onRemoveAssignee = (person: ZetkinPerson) => {
-    removeAssigneeMutation.mutate(person.id, {
-      onError: () => showSnackbar('error'),
-    });
-  };
-
-  const onAddSubject = (person: ZetkinPerson) => {
-    addMemberMutation.mutate(person.id, {
-      onError: () => showSnackbar('error'),
-    });
-  };
-
-  const onRemoveSubject = (person: ZetkinPerson) => {
-    removeMemberMutation.mutate(person.id, {
-      onError: () => showSnackbar('error'),
-    });
-  };
+  const journeyInstance = journeyInstanceFuture.data;
+  if (!journeyInstance) {
+    return null;
+  }
 
   return (
     <>
@@ -159,44 +111,40 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
             <Divider />
           </Box>
           <ZUISection title={messages.instance.sections.timeline()}>
-            <ZUIQuery queries={{ updatesQuery }}>
-              {({ queries: { updatesQuery } }) => (
+            <ZUIFuture future={timelineUpdatesFuture}>
+              {(updates) => (
                 <ZUITimeline
-                  disabled={addNoteMutation.isLoading}
-                  onAddNote={(note) => {
-                    addNoteMutation.mutate(note, {
-                      onError: () => showSnackbar('error'),
-                    });
+                  disabled={isLoading}
+                  onAddNote={async (note) => {
+                    setIsLoading(true);
+                    await addNote(note);
+                    setIsLoading(false);
                   }}
-                  onEditNote={(note) => {
-                    editNoteMutation.mutate(note, {
-                      onError: () => showSnackbar('error'),
-                    });
-                  }}
-                  updates={updatesQuery.data}
+                  onEditNote={editNote}
+                  updates={updates}
                 />
               )}
-            </ZUIQuery>
+            </ZUIFuture>
           </ZUISection>
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
-            onAddAssignee={onAddAssignee}
-            onAddSubject={onAddSubject}
+            onAddAssignee={addAssignee}
+            onAddSubject={addSubject}
             onAssignTag={(tag) => {
-              assignTagMutation.mutate({
+              assignTag({
                 id: tag.id,
                 value: tag.value,
               });
             }}
-            onRemoveAssignee={onRemoveAssignee}
-            onRemoveSubject={onRemoveSubject}
+            onRemoveAssignee={removeAssignee}
+            onRemoveSubject={removeSubject}
             onTagEdited={() => {
-              queryClient.invalidateQueries(key);
+              //TODO: Mark tag as stale
             }}
             onUnassignTag={(tag) => {
-              unassignTagMutation.mutate(tag.id);
+              unassignTag(tag.id);
             }}
           />
         </Grid>

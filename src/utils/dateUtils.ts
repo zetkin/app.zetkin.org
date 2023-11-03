@@ -104,3 +104,20 @@ export function dateIsAfter(first: Date, second: Date): boolean {
 export function dateIsBefore(first: Date, second: Date): boolean {
   return first.toISOString().slice(0, 10) > second.toISOString().slice(0, 10);
 }
+
+export function getUTCDateWithoutTime(
+  naiveDateString: string | null
+): Date | null {
+  if (!naiveDateString) {
+    return null;
+  }
+
+  const dateFromNaive = new Date(naiveDateString);
+  const utcTime = Date.UTC(
+    dateFromNaive.getFullYear(),
+    dateFromNaive.getMonth(),
+    dateFromNaive.getDate()
+  );
+
+  return new Date(utcTime);
+}

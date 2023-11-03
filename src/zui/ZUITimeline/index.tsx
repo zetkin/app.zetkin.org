@@ -2,9 +2,7 @@ import { Alert } from '@mui/material';
 import React from 'react';
 import {
   Box,
-  Button,
   CardActionArea,
-  Collapse,
   Divider,
   Fade,
   Grid,
@@ -26,24 +24,17 @@ import messageIds from './l10n/messageIds';
 
 export interface ZUITimelineProps {
   disabled?: boolean;
-  expandable?: boolean;
   onAddNote: (note: ZetkinNoteBody) => void;
   onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
-  showAll?: boolean;
   updates: ZetkinUpdate[];
 }
 
-export const SHOW_INITIALLY = 5;
-
 const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
   disabled,
-  expandable,
   onAddNote,
   onEditNote,
-  showAll,
   updates,
 }) => {
-  const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
   const {
     groupedUpdates,
     filteredUpdates,
@@ -118,7 +109,6 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
           </Grid>
         )}
         {renderUpdateList()}
-        {expandable && renderExpandButton()}
       </Grid>
     </Fade>
   );
@@ -126,20 +116,9 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
   function renderUpdateList() {
     return (
       <>
-        {(expandable
-          ? filteredUpdates.slice(0, SHOW_INITIALLY)
-          : filteredUpdates
-        ).map((update, idx) =>
-          renderUpdate(
-            update,
-            idx <
-              (!expandable || expanded
-                ? filteredUpdates.length
-                : SHOW_INITIALLY) -
-                1
-          )
+        {filteredUpdates.map((update, idx) =>
+          renderUpdate(update, idx < filteredUpdates.length)
         )}
-        {expandable && renderExpandedUpdates()}
       </>
     );
   }
@@ -156,36 +135,6 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
           </Grid>
         )}
       </React.Fragment>
-    );
-  }
-
-  function renderExpandButton() {
-    return (
-      <Grid item>
-        <Button onClick={() => setExpanded(!expanded)} variant="outlined">
-          <Msg id={messageIds.expand} />
-        </Button>
-      </Grid>
-    );
-  }
-
-  function renderExpandedUpdates() {
-    return (
-      // Because MUI Collapse typing is wrong
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      <Collapse component={Grid} in={expanded} item>
-        <Grid container direction="column" spacing={6}>
-          {filteredUpdates
-            .slice(SHOW_INITIALLY)
-            .map((update, idx) =>
-              renderUpdate(
-                update,
-                idx < filteredUpdates.length - SHOW_INITIALLY - 1
-              )
-            )}
-        </Grid>
-      </Collapse>
     );
   }
 };

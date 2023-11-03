@@ -1,4 +1,4 @@
-import { EventState } from '../models/EventDataModel';
+import { EventState } from '../hooks/useEventState';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 export default function getEventState(event: ZetkinEvent): EventState {

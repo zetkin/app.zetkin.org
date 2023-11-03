@@ -2,32 +2,31 @@ import { Box, Button, Typography } from '@mui/material';
 import { Check, PriorityHigh } from '@mui/icons-material';
 import { FC, useMemo } from 'react';
 
-import CallModel from '../models/CallModel';
+import messageIds from '../l10n/messageIds';
 import PaneHeader from 'utils/panes/PaneHeader';
-import { personResource } from 'features/profile/api/people';
-import useModel from 'core/useModel';
-import ViewDataModel from 'features/views/models/ViewDataModel';
+import useCall from '../hooks/useCall';
+import usePerson from 'features/profile/hooks/usePerson';
+import useViewGrid from 'features/views/hooks/useViewGrid';
+import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
-
-import messageIds from '../l10n/messageIds';
-import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 
 interface OrganizerActionPaneProps {
   columnIdx: number;
   orgId: number;
   personId: number;
-  viewModel: ViewDataModel;
+  viewId: number;
 }
 
 export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   orgId,
   personId,
   columnIdx,
-  viewModel,
+  viewId,
 }) => {
-  const rows = viewModel.getRows().data;
+  const { rowsFuture } = useViewGrid(orgId, viewId);
+  const rows = rowsFuture.data;
   const row = rows?.find((r) => r.id == personId);
   let calls = row?.content[columnIdx] as ZetkinOrganizerAction[];
   if (!calls) {
@@ -35,11 +34,9 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   }
 
   const messages = useMessages(messageIds);
-  const model = useModel((env) => new CallModel(env, orgId));
-  const { data: recipient } = personResource(
-    orgId.toString(),
-    personId.toString()
-  ).useQuery();
+  const { data: recipient } = usePerson(orgId, personId);
+
+  const { setOrganizerActionNeeded, setOrganizerActionTaken } = useCall(orgId);
 
   const sorted: ZetkinOrganizerAction[] = useMemo(
     () =>
@@ -102,7 +99,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
           <Box display="flex" justifyContent="flex-end" my={2}>
             {!call?.organizer_action_taken ? (
               <Button
-                onClick={() => call && model.setOrganizerActionTaken(call.id)}
+                onClick={() => call && setOrganizerActionTaken(call.id)}
                 startIcon={<Check />}
                 variant="contained"
               >
@@ -110,7 +107,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               </Button>
             ) : (
               <Button
-                onClick={() => call && model.setOrganizerActionNeeded(call.id)}
+                onClick={() => call && setOrganizerActionNeeded(call.id)}
                 startIcon={<PriorityHigh />}
                 variant="text"
               >
