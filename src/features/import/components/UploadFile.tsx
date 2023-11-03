@@ -75,8 +75,8 @@ const UploadFile = () => {
             <Typography>{messages.importDialog.loading()}</Typography>
           </Box>
         )}
-        <input className="input-zone" type="file" {...getInputProps()} />
-        <Box className="text-center">
+        <input type="file" {...getInputProps()} />
+        <Box>
           {!uploadedFile && !loading && (
             <Box>
               <IconButton
@@ -96,9 +96,7 @@ const UploadFile = () => {
                 />
               </IconButton>
               {isDragActive ? (
-                <Typography className="dropzone-content">
-                  {messages.importDialog.release()}
-                </Typography>
+                <Typography>{messages.importDialog.release()}</Typography>
               ) : (
                 <>
                   <Box pt={2}>
