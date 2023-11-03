@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import { MappingData } from '..';
+import { ConfiguringData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import { Msg, useMessages } from 'core/i18n';
@@ -44,8 +44,8 @@ export interface ExperimentalMappingResults {
 
 interface MappingRowProps {
   column: ExperimentColumn;
-  clearCurrentlyMapping: () => void;
-  currentlyMapping: MappingData | null;
+  clearCurrentlyConfiguring: () => void;
+  currentlyConfiguring: ConfiguringData | null;
   isSelected: boolean;
   mappingResults: ExperimentalMappingResults | null;
   onCheck: (isChecked: boolean) => void;
@@ -55,8 +55,8 @@ interface MappingRowProps {
 
 const MappingRow: FC<MappingRowProps> = ({
   column,
-  clearCurrentlyMapping,
-  currentlyMapping,
+  clearCurrentlyConfiguring,
+  currentlyConfiguring: currentlyMapping,
   isSelected,
   mappingResults,
   onCheck,
@@ -103,7 +103,7 @@ const MappingRow: FC<MappingRowProps> = ({
               if (!isChecked) {
                 setSelectedField(null);
                 if (currentlyMapping?.columnId == column.id) {
-                  clearCurrentlyMapping();
+                  clearCurrentlyConfiguring();
                 }
               }
             }}

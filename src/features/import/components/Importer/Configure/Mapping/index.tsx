@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
-import { MappingData } from '..';
+import { ConfiguringData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import range from 'utils/range';
 import useFields from 'features/import/hooks/useFields';
@@ -17,9 +17,9 @@ export interface ExperimentRow {
 }
 
 interface MappingProps {
-  currentlyMapping: MappingData | null;
+  currentlyConfiguring: ConfiguringData | null;
   firstRowIsHeaders: boolean;
-  clearCurrentlyMapping: () => void;
+  clearCurrentlyConfiguring: () => void;
   onMapValues: (columnId: number, type: ExperimentalFieldTypes) => void;
   onSelectColumn: (columnId: number, isChecked: boolean) => void;
   rows?: ExperimentRow[];
@@ -27,9 +27,9 @@ interface MappingProps {
 }
 
 const Mapping: FC<MappingProps> = ({
-  currentlyMapping,
+  currentlyConfiguring,
   firstRowIsHeaders,
-  clearCurrentlyMapping,
+  clearCurrentlyConfiguring,
   onMapValues,
   onSelectColumn,
   rows,
@@ -95,9 +95,9 @@ const Mapping: FC<MappingProps> = ({
             <Box key={column.id}>
               {index == 0 && <Divider />}
               <MappingRow
-                clearCurrentlyMapping={clearCurrentlyMapping}
+                clearCurrentlyConfiguring={clearCurrentlyConfiguring}
                 column={column}
-                currentlyMapping={currentlyMapping}
+                currentlyConfiguring={currentlyConfiguring}
                 isSelected={isSelected}
                 mappingResults={null}
                 onCheck={(isChecked: boolean) => {

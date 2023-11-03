@@ -26,7 +26,7 @@ const Accordion = styled((props: AccordionProps) => (
   border: 0,
 }));
 
-export interface MappingData {
+export interface ConfiguringData {
   columnId: number;
   type: ExperimentalFieldTypes;
 }
@@ -45,9 +45,8 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(true);
 
   //mapping
-  const [currentlyMapping, setCurrentlyMapping] = useState<MappingData | null>(
-    null
-  );
+  const [currentlyConfiguring, setCurrentlyConfiguring] =
+    useState<ConfiguringData | null>(null);
   const [selectedColumns, setSelectedColumns] = useState<number[]>([]);
 
   const selectedSheet = sheets.find((sheet) => {
@@ -88,7 +87,7 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
                 onChangeSelectedSheet={(id: number) => {
                   setSelectedSheetId(id);
                   setSelectedColumns([]);
-                  setCurrentlyMapping(null);
+                  setCurrentlyConfiguring(null);
                 }}
                 selectedSheet={selectedSheetId}
                 sheets={sheets}
@@ -96,11 +95,11 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
             </AccordionDetails>
           </Accordion>
           <Mapping
-            clearCurrentlyMapping={() => setCurrentlyMapping(null)}
-            currentlyMapping={currentlyMapping}
+            clearCurrentlyConfiguring={() => setCurrentlyConfiguring(null)}
+            currentlyConfiguring={currentlyConfiguring}
             firstRowIsHeaders={firstRowIsHeaders}
             onMapValues={(columnId: number, type: ExperimentalFieldTypes) =>
-              setCurrentlyMapping({ columnId, type })
+              setCurrentlyConfiguring({ columnId, type })
             }
             onSelectColumn={(columnId: number, isChecked: boolean) => {
               if (isChecked) {
@@ -116,8 +115,8 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
           />
         </Box>
         <Box width="50%">
-          {currentlyMapping && <>Mapping</>}
-          {!currentlyMapping && (
+          {currentlyConfiguring && <>Mapping</>}
+          {!currentlyConfiguring && (
             <Box
               alignItems="center"
               bgcolor={theme.palette.transparentGrey.light}
