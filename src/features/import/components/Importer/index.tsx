@@ -89,11 +89,13 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           sheets={[
             {
               data: [
-                { data: ['Name', 'Last name', 'Email', 'Age'] },
-                { data: ['Angela', 'Davies', 'angela@gmail.com', 34] },
-                { data: ['Maya', 'Angelou', 'maya@gmail.com', 66] },
-                { data: ['Rosa', 'Parks', 'rosa@gmail.com', 81] },
-                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51] },
+                { data: ['Name', 'Last name', 'Email', 'Age', 'Pet'] },
+                {
+                  data: ['Angela', 'Davies', 'angela@gmail.com', 34, 'Rabbit'],
+                },
+                { data: ['Maya', 'Angelou', 'maya@gmail.com', 66, null] },
+                { data: ['Rosa', 'Parks', 'rosa@gmail.com', 81, 'Cat'] },
+                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Cat'] },
               ],
               id: 1,
               title: 'Members',

@@ -5,7 +5,11 @@ export default makeMessages('feat.import', {
   configuration: {
     configure: {
       tags: {
+        empty: m('Empty'),
         header: m('Map values to tags'),
+        numberOfRows: m<{ numRows: number }>(
+          '{numRows, plural, =1 {1 row} other {# rows}}'
+        ),
         tagsHeader: m('Tags'),
       },
     },

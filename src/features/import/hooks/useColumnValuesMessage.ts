@@ -1,22 +1,12 @@
 import messageIds from '../l10n/messageIds';
+import { useColumn } from '../components/Importer/Configure';
 import { useMessages } from 'core/i18n';
 
 export default function useColumnValuesMessage(
   column: (number | string | null)[]
 ): string {
   const messages = useMessages(messageIds);
-  const rowsWithValues: (string | number)[] = [];
-  let numberOfEmptyRows = 0;
-
-  column.forEach((rowValue) => {
-    if (typeof rowValue === 'string' || typeof rowValue === 'number') {
-      rowsWithValues.push(rowValue);
-    } else {
-      numberOfEmptyRows += 1;
-    }
-  });
-
-  const uniqueValues = Array.from(new Set(rowsWithValues));
+  const { numberOfEmptyRows, uniqueValues } = useColumn(column);
 
   if (numberOfEmptyRows > 0 && uniqueValues.length == 0) {
     return messages.configuration.mapping.messages.onlyEmpty({

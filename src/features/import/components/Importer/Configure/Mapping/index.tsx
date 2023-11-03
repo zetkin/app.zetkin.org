@@ -3,7 +3,6 @@ import { Box, Divider, Typography } from '@mui/material';
 
 import { ConfiguringData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
-import range from 'utils/range';
 import useFields from 'features/import/hooks/useFields';
 import { useNumericRouteParams } from 'core/hooks';
 import MappingRow, {
@@ -17,52 +16,25 @@ export interface ExperimentRow {
 }
 
 interface MappingProps {
-  currentlyConfiguring: ConfiguringData | null;
-  firstRowIsHeaders: boolean;
   clearCurrentlyConfiguring: () => void;
+  columns: ExperimentColumn[];
+  currentlyConfiguring: ConfiguringData | null;
   onMapValues: (columnId: number, type: ExperimentalFieldTypes) => void;
   onSelectColumn: (columnId: number, isChecked: boolean) => void;
-  rows?: ExperimentRow[];
   selectedColumns: number[];
 }
 
 const Mapping: FC<MappingProps> = ({
-  currentlyConfiguring,
-  firstRowIsHeaders,
   clearCurrentlyConfiguring,
+  columns,
+  currentlyConfiguring,
   onMapValues,
   onSelectColumn,
-  rows,
   selectedColumns,
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const fields = useFields(orgId);
-
-  const numberOfColumns = rows ? rows[0].data.length : 0;
-
-  const columns: ExperimentColumn[] = [];
-  range(numberOfColumns).forEach((number) =>
-    columns.push({ data: [], id: number + 1, title: '' })
-  );
-
-  rows?.forEach((row, rowIndex) => {
-    row.data.forEach((cellValue, cellIndex) => {
-      const column = columns[cellIndex];
-      if (rowIndex == 0) {
-        if (firstRowIsHeaders && cellValue !== null) {
-          column.title = cellValue as string;
-        } else {
-          column.title = messages.configuration.mapping.defaultColumnHeader({
-            columnIndex: cellIndex + 1,
-          });
-          column.data.push(cellValue);
-        }
-      } else {
-        column.data.push(cellValue);
-      }
-    });
-  });
 
   return (
     <Box
