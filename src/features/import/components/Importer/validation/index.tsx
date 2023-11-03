@@ -21,6 +21,7 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     changedField: [
       { changedNum: 0, field: 'First name' },
       { changedNum: 0, field: 'Last name' },
+      { changedNum: 0, field: 'Custom' },
       { changedNum: 10, field: 'Tags', tags: [mockTag()] },
       { changedNum: 0, field: 'Organization', orgs: [mockOrganization()] },
     ],
@@ -28,6 +29,40 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     unSelectedId: true,
     updatedPeople: 20,
   };
+
+  const fake = {
+    summary: {
+      createdPeople: {
+        appliedTagsCreated: {
+          2: 20,
+          3: 10,
+        },
+        organizationMembershipCreated: {
+          4: 10,
+        },
+        total: 200,
+      },
+      updatedPeople: {
+        appliedTagsCreated: {
+          2: 20,
+          3: 10,
+        },
+        appliedTagsUpdated: {
+          2: 10,
+        },
+        fields: {
+          custom_field: 96,
+          first_name: 1,
+          last_name: 4,
+        },
+        organizationMembershipsCreated: {
+          4: 10,
+        },
+        total: 100,
+      },
+    },
+  };
+
   const [allChecked, setAllchecked] = useState<number>(0);
 
   const itemsWithManyChanges = fakeData.changedField.filter(
