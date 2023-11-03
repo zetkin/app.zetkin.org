@@ -48,6 +48,7 @@ export default makeMessages('feat.import', {
       },
     },
     messages: m('Messages'),
+    organization: m('Organization'),
     pendingChanges: m('Pending changes'),
     trackers: {
       created: m('new people will be created'),

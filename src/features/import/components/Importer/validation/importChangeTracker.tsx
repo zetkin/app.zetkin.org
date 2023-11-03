@@ -2,19 +2,25 @@ import { Box } from '@mui/system';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { Typography } from '@mui/material';
-import { ZetkinOrganization } from 'utils/types/zetkin';
+import useOrganizations from 'features/organizations/hooks/useOrganizations';
 
 interface ImportChangeTrackerProps {
   changedNum: number;
   fieldName: string;
-  orgs?: ZetkinOrganization[];
+  orgs?: string[];
 }
 const ImportChangeTracker: React.FunctionComponent<
   ImportChangeTrackerProps
 > = ({ changedNum, fieldName, orgs }) => {
+  const organizations = useOrganizations();
+
   if (orgs !== undefined && orgs.length === 0) {
     return null;
   }
+  const filteredOrg = organizations.data?.filter((item) =>
+    orgs?.some((org) => org === item.id.toString())
+  );
+
   return (
     <Box sx={{ border: 'solid 1px lightgrey', borderRadius: '4px', p: 2 }}>
       <Box alignItems="center" display="flex">
@@ -33,7 +39,7 @@ const ImportChangeTracker: React.FunctionComponent<
         </Typography>
       </Box>
       <Box display="flex" flexWrap="wrap" gap={0.5}>
-        {orgs?.map((org) => (
+        {filteredOrg?.map((org) => (
           <Typography key={org.id} color="secondary">
             {org.title},
           </Typography>

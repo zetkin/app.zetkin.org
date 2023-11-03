@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { Box, Stack } from '@mui/system';
 
 import AddedTagsTracker from './AddedTagsTracker';
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import ImportChangeTracker from './importChangeTracker';
 import messageIds from 'features/import/l10n/messageIds';
 import mockOrganization from 'utils/testing/mocks/mockOrganization';
 import mockTag from 'utils/testing/mocks/mockTag';
+import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import ImportAlert, { ALERT_STATUS } from './importAlert';
 import { Msg, useMessages } from 'core/i18n';
 import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
@@ -51,19 +53,29 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
           2: 10,
         },
         fields: {
-          custom_field: 96,
+          // custom_field: 96,
           first_name: 1,
           last_name: 4,
         },
         organizationMembershipsCreated: {
+          1: 5,
+          2: 1,
           4: 10,
+          7: 10,
         },
         total: 100,
       },
     },
   };
+  const orgChangeSum = Object.values(
+    fake.summary.updatedPeople.organizationMembershipsCreated
+  ).reduce((acc, cur) => acc + cur, 0);
+  const orgs = Object.keys(
+    fake.summary.updatedPeople.organizationMembershipsCreated
+  );
 
   const [allChecked, setAllchecked] = useState<number>(0);
+  const globalMessages = useMessages(globalMessageIds);
 
   const itemsWithManyChanges = fakeData.changedField.filter(
     (item) => fakeData.updatedPeople * 0.2 <= item.changedNum
@@ -129,18 +141,16 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
             <PeopleCounter
-              changedNum={fakeData.createdPeople}
+              changedNum={fake.summary.createdPeople.total}
               status={COUNT_STATUS.CREATED}
             />
             <PeopleCounter
-              changedNum={fakeData.updatedPeople}
+              changedNum={fake.summary.updatedPeople.total}
               status={COUNT_STATUS.UPDATED}
             />
           </Stack>
-          {fakeData.changedField.map((item, index) => {
-            return (
-              <Box key={`tracker-${index}`}>
-                {item.tags ? (
+
+          {/* {item.tags ? (
                   <AddedTagsTracker
                     changedNum={item.changedNum}
                     fieldName={item.field}
@@ -152,10 +162,26 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
                     fieldName={item.field}
                     orgs={item.orgs ?? undefined}
                   />
-                )}
-              </Box>
-            );
-          })}
+                )} */}
+          {Object.entries(fake.summary.updatedPeople.fields).map(
+            (item, index) => {
+              return (
+                <Box key={`tracker-${index}`}>
+                  <ImportChangeTracker
+                    changedNum={item[1]}
+                    fieldName={globalMessages.personFields[
+                      item[0] as NATIVE_PERSON_FIELDS
+                    ]()}
+                  />
+                </Box>
+              );
+            }
+          )}
+          <ImportChangeTracker
+            changedNum={orgChangeSum}
+            fieldName={message.validation.organization()}
+            orgs={orgs}
+          />
         </Stack>
       </Box>
       <Box ml={2} width="50%">
