@@ -31,11 +31,21 @@ const Configuration: FC<ConfigurationProps> = ({
   const { numberOfEmptyRows, uniqueValues } = useColumn(column?.data || []);
 
   return (
-    <Box bgcolor={theme.palette.transparentGrey.light} height="100%">
+    <Box
+      bgcolor={theme.palette.transparentGrey.light}
+      display="flex"
+      flexDirection="column"
+      height="100%"
+    >
       {currentlyConfiguring &&
         column &&
         currentlyConfiguring.type === ExperimentalFieldTypes.TAG && (
-          <Box padding={2}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            overflow="hidden"
+            padding={2}
+          >
             <Typography variant="h5">
               <Msg id={messageIds.configuration.configure.tags.header} />
             </Typography>
@@ -58,27 +68,29 @@ const Configuration: FC<ConfigurationProps> = ({
                 </Typography>
               </Box>
             </Box>
-            {uniqueValues.map((uniqueValue, index) => (
-              <>
-                {index != 0 && <Divider sx={{ marginY: 1 }} />}
-                <TagConfigRow
-                  numRows={
-                    column.data.filter((value) => value == uniqueValue).length
-                  }
-                  title={uniqueValue as string}
-                />
-              </>
-            ))}
-            {numberOfEmptyRows > 0 && (
-              <>
-                <Divider sx={{ marginY: 1 }} />
-                <TagConfigRow
-                  italic
-                  numRows={numberOfEmptyRows}
-                  title={messages.configuration.configure.tags.empty()}
-                />
-              </>
-            )}
+            <Box sx={{ overflowY: 'scroll' }}>
+              {uniqueValues.map((uniqueValue, index) => (
+                <>
+                  {index != 0 && <Divider sx={{ marginY: 1 }} />}
+                  <TagConfigRow
+                    numRows={
+                      column.data.filter((value) => value == uniqueValue).length
+                    }
+                    title={uniqueValue as string}
+                  />
+                </>
+              ))}
+              {numberOfEmptyRows > 0 && (
+                <>
+                  <Divider sx={{ marginY: 1 }} />
+                  <TagConfigRow
+                    italic
+                    numRows={numberOfEmptyRows}
+                    title={messages.configuration.configure.tags.empty()}
+                  />
+                </>
+              )}
+            </Box>
           </Box>
         )}
       {!currentlyConfiguring && !column && (

@@ -120,7 +120,7 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
             selectedColumns={selectedColumns}
           />
         </Box>
-        <Box width="50%">
+        <Box display="flex" flexDirection="column" width="50%">
           <Configuration
             columns={columns}
             currentlyConfiguring={currentlyConfiguring}

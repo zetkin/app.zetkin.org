@@ -95,7 +95,12 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 },
                 { data: ['Maya', 'Angelou', 'maya@gmail.com', 66, null] },
                 { data: ['Rosa', 'Parks', 'rosa@gmail.com', 81, 'Cat'] },
-                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Cat'] },
+                {
+                  data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Tortoise'],
+                },
+                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Parrot'] },
+                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Cow'] },
+                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Dog'] },
               ],
               id: 1,
               title: 'Members',
