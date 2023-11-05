@@ -1,6 +1,6 @@
 core:
   err404:
-    backToHomePage: Tillbaka till startsidan
+    backToHomePage: Tillbaka till startsidan 2
     pageNotFound: Sidan hittades inte
   home:
     welcome: Det här kommer att bli Zetkin
@@ -8,8 +8,8 @@ core:
     continueButton: Fortsätt till gamla Zetkin
     header: Du blir omdirigerad
     info: Du använder en betaversion av Zetkin som inte stödjer den funktion du vill
-      använda. Du omdirigeras nu till den äldre versionen av Zetkin som stödjer den
-      funktionen.
+      använda. Du omdirigeras nu till den äldre versionen av Zetkin som stödjer
+      den funktionen.
 feat:
   breadcrumbs:
     elements:
@@ -55,7 +55,8 @@ feat:
       withoutContact: '{numWithoutContact} Utan kontaktperson'
     eventFilter:
       collapse: Minska
-      expand: '{numOfOptions, plural, one {+ 1 till eventtyp} other {+ # fler eventtyper}}'
+      expand: '{numOfOptions, plural, one {+ 1 till eventtyp} other {+ # fler
+        eventtyper}}'
       filter: Filter
       filterOptions:
         actionFilters:
@@ -78,8 +79,8 @@ feat:
         all: Alla
         none: Inga
       type: Skriv för att filtrera innehåll
-    lastDayWithEvents: Det {numEvents, plural, one {var ett event} other {var {numEvents}
-      events}} på den senaste aktiva dagen
+    lastDayWithEvents: Det {numEvents, plural, one {var ett event} other {var
+      {numEvents} events}} på den senaste aktiva dagen
     loadMore: Ladda mer
     moreEvents: '{numEvents, plural, one {# event till} other {# fler event}}'
     next: NÄSTA
@@ -100,8 +101,7 @@ feat:
         confirmCancel: Är du säker på att du vill ställa in valda event?
         confirmDelete: Är du säker på att du vill radera valda event?
         delete: Radera
-        deleteWarning: När eventen har raderats så kommer du inte kunna återskapa
-          dem.
+        deleteWarning: När eventen har raderats så kommer du inte kunna återskapa dem.
         print: Skriv ut schema
         publish: Publicera nu
         unpublish: Avpublicera
@@ -166,12 +166,12 @@ feat:
         unsavedMessage: Du har ändringar som inte sparats
       settings:
         notes:
-          message: Att inaktivera anteckningar kan öka samtalshastigheten men kan
-            också leda till att viktig information går förlorad.
+          message: Att inaktivera anteckningar kan öka samtalshastigheten men kan också
+            leda till att viktig information går förlorad.
           title: Tillåt ringare att göra anteckningar
         targetData:
-          message: Personens namn och telefonnummer är alltid synliga för ringare.
-            Om du aktiverar ytterligare persondata delas alla informationsfält med
+          message: Personens namn och telefonnummer är alltid synliga för ringare. Om du
+            aktiverar ytterligare persondata delas alla informationsfält med
             ringare.
           title: Visa ytterligare persondata
         title: Samtalsinställningar
@@ -199,8 +199,10 @@ feat:
       open: Öppen
       scheduled: Schemalagd
     stats:
-      callers: '{numCallers, plural, =0 {Inga ringare} one {1 ringare} other {# ringare}}'
-      targets: '{numTargets, plural, =0 {Inga personer} one {1 person} other {# personer}}'
+      callers: '{numCallers, plural, =0 {Inga ringare} one {1 ringare} other {#
+        ringare}}'
+      targets: '{numTargets, plural, =0 {Inga personer} one {1 person} other {#
+        personer}}'
     statusSectionTitle: Status
     tabs:
       callers: Ringare
@@ -235,8 +237,8 @@ feat:
       eventItem:
         contact: Ingen kontaktperson vald
         locations: '{count} platser'
-        reminders: '{numMissing, plural, =1 {en deltagare} other {# deltagare}} har
-          inte fått en påminnelse'
+        reminders: '{numMissing, plural, =1 {en deltagare} other {# deltagare}} har inte
+          fått en påminnelse'
         signups: Det finns väntande anmälningar
     all:
       cardCTA: Gå till projekt
@@ -260,8 +262,8 @@ feat:
     calendarView: Se alla i kalendern
     events: Event
     feedback:
-      copy: Att samla in feedback (vid gemensamma ringningar eller enskilda ringuppdrag)
-        kan hjälpa dig att arbeta mer effektivt
+      copy: Att samla in feedback (vid gemensamma ringningar eller enskilda
+        ringuppdrag) kan hjälpa dig att arbeta mer effektivt
       create: Skapa enkät
       heading: Feedback och Enkäter (ingen konfiguerad)
     form:
@@ -362,8 +364,8 @@ feat:
       noContact: Ingen kontakt tilldelad!
       removeButton: Ta bort
       selectPlaceholder: Välj en kontaktperson
-      warningText: '{name} kommer inte längre vara kontaktperson, men kommer fortfarande
-        vara bokad på eventet som deltagare'
+      warningText: '{name} kommer inte längre vara kontaktperson, men kommer
+        fortfarande vara bokad på eventet som deltagare'
     eventOverviewCard:
       buttonEndDate: + Slutdatum
       createLocation: Skapa en ny plats
@@ -400,11 +402,11 @@ feat:
       columnNotified: Påmind
       columnPhone: Telefon
       contactTooltip: Kontaktperson
-      descriptionBooked: Dessa är de personer du har bokat och räknar med ska delta
-        på eventet. För att avboka sin medverkan måste de kontakta dig och du kan
+      descriptionBooked: Dessa är de personer du har bokat och räknar med ska delta på
+        eventet. För att avboka sin medverkan måste de kontakta dig och du kan
         avboka dem manuellt.
-      descriptionCancelled: Dessa personer har av någon anledning avbokat sitt deltagande.
-        Vi behåller dem här så att du inte försöker boka dem igen.
+      descriptionCancelled: Dessa personer har av någon anledning avbokat sitt
+        deltagande. Vi behåller dem här så att du inte försöker boka dem igen.
       descriptionSignups: Dessa personer har anmält sig via aktivistportalen. De kan
         fortfarande ställa in anmälan när som helst.
       dropDownAttended: Bekräftad närvaro
@@ -475,8 +477,8 @@ feat:
       createLocation: Skapa en ny plats
       description: Beskrivning
       infoText: Du kan klicka och dra för att flytta runt dig på kartan och nypa eller
-        scrolla för att zooma. För att skapa en ny plats kan du klicka på en tom plats
-        på kartan.
+        scrolla för att zooma. För att skapa en ny plats kan du klicka på en tom
+        plats på kartan.
       move: Flytta
       moveInstructions: Dra nålen för att välja plats
       noDescription: Ingen beskrivning
@@ -498,8 +500,7 @@ feat:
       pending: Anmälningar väntar
       recordButton: Rekordstor närvaro
       remindButton: Påminn alla
-      remindButtondisabledTooltip: Du behöver utse en kontaktperson innan du skickar
-        ut påminnelser
+      remindButtondisabledTooltip: Du behöver utse en kontaktperson innan du skickar ut påminnelser
       reqParticipantsHelperText: Minsta antal deltagare som behövs
       reqParticipantsLabel: Minsta antal deltagare
     search: Sök
@@ -725,8 +726,8 @@ feat:
         addRemoveSelect:
           add: Lägg till
           sub: Ta bort
-        inputString: '{addRemoveSelect} personer som är blockerade från att ringa
-          av någon som helst anledning'
+        inputString: '{addRemoveSelect} personer som är blockerade från att ringa av
+          någon som helst anledning'
       callHistory:
         addRemoveSelect:
           add: Lägg till
@@ -744,8 +745,8 @@ feat:
             närsomhelt.
           two: Ta bort personer som blivit ringda åtminstone 1 gång i uppdraget 'Aktivera
             gamla medlemmar' under de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som {callSelect} minst {minTimes}
-          i {assignmentSelect} {timeFrame}.'
+        inputString: '{addRemoveSelect} personer som {callSelect} minst {minTimes} i
+          {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
         minTimesInput: '{input} {minTimes, plural, one {gång} other {gånger}}'
       campaignParticipation:
@@ -764,13 +765,14 @@ feat:
         examples:
           one: Lägg till personer som har anmält sig till event i något projekt vid
             platsen 'Möllevången' någon gång tidigare
-          two: Ta bort personer som aldrig har blivit bokade för event i något projekt
-            av typen 'Affischera' på någon plats före idag.
+          two: Ta bort personer som aldrig har blivit bokade för event i något projekt av
+            typen 'Affischera' på någon plats före idag.
         haveSelect:
           in: har
           notin: har inte
         inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} för
-          event {campaignSelect} av {activitySelect} på {locationSelect} {timeFrame}'
+          event {campaignSelect} av {activitySelect} på {locationSelect}
+          {timeFrame}'
         locationSelect:
           any: någon plats
           location: plats "{location}"
@@ -781,18 +783,18 @@ feat:
         examples:
           one: Lägg till organisationens 100 mest aktiva medlemmar fram till idag.
           two: Ta bort organisationens 5 mest aktiva medlemmar närsomhelst i tiden.
-        inputString: '{addRemoveSelect} den {numPeopleSelect} mest aktiva{numPeople}
-          i organisationen {timeFrame}.'
+        inputString: '{addRemoveSelect} den {numPeopleSelect} mest aktiva{numPeople} i
+          organisationen {timeFrame}.'
         numPeople: '{numPeople, plural, one {person} other {personer}}'
         numPeopleSelect: '{numPeopleSelect}'
       personData:
         addRemoveSelect:
           add: Lägg till
           sub: ta bort
-        ellipsis: '...'
+        ellipsis: ...
         examples:
-          one: Lägg till alla personer vars förnamn är 'Clara' och vars efternamn
-            är 'Zetkin'.
+          one: Lägg till alla personer vars förnamn är 'Clara' och vars efternamn är
+            'Zetkin'.
           two: Ta bort alla personer vars stad är Stockholm.
         fieldMatches: '{field} matchar {value}'
         fieldSelect:
@@ -846,9 +848,8 @@ feat:
             minMatching: minst {minMatching}
             none: ingen
         examples:
-          one: 'Lägg till personer med minst en av följande etiketter: ''Medlem'',
-            ''Aktivist'''
-          two: 'Ta bort personer med alla följande etiketter: ''Styrelseledamot'''
+          one: "Lägg till personer med minst en av följande etiketter: 'Medlem', 'Aktivist'"
+          two: "Ta bort personer med alla följande etiketter: 'Styrelseledamot'"
         inputString: '{addRemoveSelect} personer med {condition} av följande etiketter:
           {tags}'
       personView:
@@ -861,7 +862,8 @@ feat:
         inSelect:
           in: i
           notin: inte finns i
-        inputString: '{addRemoveSelect} personer som är med i {inSelect} listan {viewSelect}.'
+        inputString: '{addRemoveSelect} personer som är med i {inSelect} listan
+          {viewSelect}.'
         viewSelect:
           none: Organisationen har inte några listor ännu
       random:
@@ -880,10 +882,9 @@ feat:
           add: Lägg till
           sub: Under
         examples:
-          one: Ta bort personer som matchar den Smarta sökningen 'Personer som bor
-            i Stockholm'
-          two: Lägg till personer som finns i målgruppen för ringuppdraget 'Uppdrag
-            ett'
+          one: Ta bort personer som matchar den Smarta sökningen 'Personer som bor i
+            Stockholm'
+          two: Lägg till personer som finns i målgruppen för ringuppdraget 'Uppdrag ett'
         inputString: '{addRemoveSelect} personer som {matchSelect} {query}.'
         matchSelect:
           in: matchar
@@ -907,8 +908,8 @@ feat:
           selectOptions:
             callassignment_goal: målgruppen i ett ringuppdrag
             callassignment_target: målgruppen i ett ringuppdrag
-            none: Den här organisationen har inga ringuppdrag eller sparade Smarta
-              sökningar än.
+            none: Den här organisationen har inga ringuppdrag eller sparade Smarta sökningar
+              än.
             standalone: En fristående Smart sökning
       surveyOption:
         addRemoveSelect:
@@ -919,11 +920,8 @@ feat:
           any: någon
           none: ingen
         examples:
-          one: 'Ta bort alla personer som har valt något av alternativen i enkäten
-            ''Medlemsenkät 2020'' (frågan ''Fråga ett''): ''Ibland'', ''Aldrig'''
-          two: 'Lägg till alla personer som har valt någon av följande alternativ
-            i enkäten ''Medlemsenkäten'' (question ''Question two''): ''Alternativ
-            två'''
+          one: "Ta bort alla personer som har valt något av alternativen i enkäten 'Medlemsenkät 2020' (frågan 'Fråga ett'): 'Ibland', 'Aldrig'"
+          two: "Lägg till alla personer som har valt någon av följande alternativ i enkäten 'Medlemsenkäten' (question 'Question two'): 'Alternativ två'"
         inputString: '{addRemoveSelect} personer som har valt {conditionSelect} av
           följande alternativ {surveySelect} ({questionSelect}): {options}'
         questionSelect:
@@ -940,8 +938,8 @@ feat:
           sub: Ta bort
         examples:
           one: Personer som svarat 'organisera' på någon fråga i 'Medlemsenkäten'
-          two: Personer som har svarat i enkäten 'Medlemsenkäten' (fråga 'Fråga ett')
-            som exakt matchar 'organisera'.
+          two: Personer som har svarat i enkäten 'Medlemsenkäten' (fråga 'Fråga ett') som
+            exakt matchar 'organisera'.
         inputString: '{addRemoveSelect} personer som har svarat på {surveySelect}
           ({questionSelect}) {matchSelect} "{freeTextInput}"'
         matchSelect:
@@ -962,12 +960,11 @@ feat:
           add: Lägg till
           sub: Ta bort
         examples:
-          one: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' före
-            idag.
-          two: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' under
-            de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som har lämnat in svar på {surveySelect}
-          {timeFrame}.'
+          one: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' före idag.
+          two: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' under de
+            senaste 30 dagarna.
+        inputString: '{addRemoveSelect} personer som har lämnat in svar på
+          {surveySelect} {timeFrame}.'
         surveySelect:
           any: en enkät
           none: Organisationen har inga enkäter ännu
@@ -983,10 +980,10 @@ feat:
         examples:
           one: Lägg till personer som har slutfört uppgiften "Berätta för dina vänner"
             minst en gång vid vilken tidspunkt som helst
-          two: Lägg till personer som har ignorerat någon uppgift i något projekt
-            mellan 2 till 5 gånger före idag
-        inputString: '{addRemoveSelect} personer som har {taskStatusSelect} {taskSelect}{campaignSelect}
-          {matchingSelect} {timeFrame}'
+          two: Lägg till personer som har ignorerat någon uppgift i något projekt mellan 2
+            till 5 gånger före idag
+        inputString: '{addRemoveSelect} personer som har {taskStatusSelect}
+          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: någon uppgift
           task: uppgift "{task}"
@@ -1004,8 +1001,8 @@ feat:
         examples:
           one: Ta bort alla personer som är ansluta Zetkinanvändare.
           two: Lägg till alla personer som inte är ansluta Zetkinanvändare.
-        inputString: '{addRemoveSelect} alla personer som är {connectedSelect} till
-          en Zetkinanvändare.'
+        inputString: '{addRemoveSelect} alla personer som är {connectedSelect} till en
+          Zetkinanvändare.'
     headers:
       examples: Exempel
       gallery: Hur vill du välja personer?
@@ -1056,11 +1053,12 @@ feat:
     statsPopper:
       change: ändra
       details: Smarta sökningar är dynamiska. Det betyder att antal matchningar kan
-        variera över tid. Andra användare kan se ett annat resultat om de har tillgång
-        till fler eller färre personer.
+        variera över tid. Andra användare kan se ett annat resultat om de har
+        tillgång till fler eller färre personer.
       exit: Resultat
       headline: Effekt av urval
-      info: Det här ett dynamiskt urval och antalet personer kan förändras i framtiden.
+      info: Det här ett dynamiskt urval och antalet personer kan förändras i
+        framtiden.
       input: innan
       matches: hittat
       output: efter
@@ -1144,8 +1142,7 @@ feat:
     chart:
       header: Enkätsvar
       placeholder: Börja samla in enkätsvar för att se framsteg här.
-      subheader: Inlämnade svar under de senaste {days, plural, =1 {dag} other {#
-        dagar}}
+      subheader: Inlämnade svar under de senaste {days, plural, =1 {dag} other {# dagar}}
       tooltip:
         submissions: '{count, plural, =1 {1 enkätsvar} other {# enkätsvar}}'
     editWarning:
@@ -1166,8 +1163,8 @@ feat:
           header: Osäker
       locked:
         header: Enkät låst
-        subheader: Den här enkäten har börjat få in enkätsvar. Att ändra enkäten nu
-          kan orsaka problem med datan. Fortsätt med försiktighet.
+        subheader: Den här enkäten har börjat få in enkätsvar. Att ändra enkäten nu kan
+          orsaka problem med datan. Fortsätt med försiktighet.
         unlockButton: Lås upp
     layout:
       actions:
@@ -1178,8 +1175,8 @@ feat:
         submissions: '{numSubmissions, plural, one {1 enkätsvar} other {# enkätsvar}}'
     optionCollapse:
       collapse: Minska
-      more: '{numOfOptions, plural, one {Visa 1 alternativ till} other {Visa # alternativ
-        till}}'
+      more: '{numOfOptions, plural, one {Visa 1 alternativ till} other {Visa #
+        alternativ till}}'
     organizerActionPane:
       subtitle: Anteckningar under samtal till {person}
       title: Organisatör Behövs
@@ -1189,7 +1186,8 @@ feat:
         title: Det finns inga frågor i den här enkäten än
     shareSuborgsCard:
       caption: När det här är aktiverat kan, organisatörer i underorganisationer läsa
-        och söka i enkäter inlämnade av personer som är anslutna till deras organisation.
+        och söka i enkäter inlämnade av personer som är anslutna till deras
+        organisation.
       title: Dela med underorganisationer
     state:
       draft: Utkast
@@ -1217,22 +1215,23 @@ feat:
       submissions: Enkätsvar
     unlinkedCard:
       description: När någon svarar på en enkät utan att vara inloggad så blir enkäten
-        olänkad. Att hitta människor i Zetkin baserat på enkätsvar kommer inte fungera
-        på olänkade enkätsvar.
+        olänkad. Att hitta människor i Zetkin baserat på enkätsvar kommer inte
+        fungera på olänkade enkätsvar.
       header: Olänkade enkätsvar
       openLink: '{numUnlink, plural, one {Länka enkätsvar nu} other {Länka enkätsvar
         nu}}'
     unlinkedWarningAlert:
       default:
-        description: '{numUnlink, plural, one {Ett enkätsvar har inte kopplats till
-          en Zetkinprofil, vilket betyder att svaren inte kommer vara med i sökningar.}
-          other {Det finns flera enkätsvar som inte kopplats till Zetkinprofiler,
-          vilket betyder att enkätsvaren inte kommer vara med i sökningar.}}'
+        description: '{numUnlink, plural, one {Ett enkätsvar har inte kopplats till en
+          Zetkinprofil, vilket betyder att svaren inte kommer vara med i
+          sökningar.} other {Det finns flera enkätsvar som inte kopplats till
+          Zetkinprofiler, vilket betyder att enkätsvaren inte kommer vara med i
+          sökningar.}}'
         header: Olänkade enkätsvar
         viewUnlinked: Visa endast olänkade
       filtered:
-        description: Detta är en filtrerad lista och visar bara signerade enkätsvar
-          som inte har blivit länkade till en profil.
+        description: Detta är en filtrerad lista och visar bara signerade enkätsvar som
+          inte har blivit länkade till en profil.
         header: Visar endast olänkade
         viewAll: Visa alla
     urlCard:
@@ -1285,7 +1284,8 @@ feat:
         editable: När den har uppgiften publiceras, kommer den tilldelas alla som
           matchar den Smarta sökningen.
         new: Den här uppgiften kommer tilldelas personer som matchar en Smart sökning.
-          Innan du kan publicera, måste du skapa en målgrupp med hjälp av Smarta sökningar.
+          Innan du kan publicera, måste du skapa en målgrupp med hjälp av Smarta
+          sökningar.
         published: Den har uppgiften håller just nu på att tilldelas till alla som
           matchar den Smarta sökningen
       title: Tilldelad till {numPeople, plural, one {# person} other {# personer}}
@@ -1338,8 +1338,8 @@ feat:
           lessThanOneMinute: Mindre än en minut
           noEstimate: Ingen uppskattning
         timeValidationErrors:
-          deadlineNotSecond: Det här måste schemaläggas efter Publiceringsdatum, och
-            före Avslutningsdatum
+          deadlineNotSecond: Det här måste schemaläggas efter Publiceringsdatum, och före
+            Avslutningsdatum
           expiresNotThird: Det här måste schemaläggas sist
           publishedNotFirst: Det här måste schemaläggas först
         title: Titel
@@ -1387,8 +1387,7 @@ feat:
           slutförandet
       reassignLimit:
         label: Gräns för tilldelning på nytt
-        value: Upprepas som mest {value, plural, =1{en gång} other{# gånger}} per
-          person
+        value: Upprepas som mest {value, plural, =1{en gång} other{# gånger}} per person
       statusLabel: Status
       timeEstimateLabel: Uppskattad tid för bli klar
       title: Uppgiftsdetaljer
@@ -1410,8 +1409,8 @@ feat:
     taskPreview:
       addImage: Lägg till omslagsbild
       sectionTitle: Förhandsvisning
-      timeEstimate: '{minutes, plural, =0 {Mindre än en minut} =1 {En minut} other
-        {# minuter}}'
+      timeEstimate: '{minutes, plural, =0 {Mindre än en minut} =1 {En minut} other {#
+        minuter}}'
     taskTypeDetails:
       demographic:
         title: Inställningar för insamlande av personuppgifter
@@ -1435,12 +1434,12 @@ feat:
       confirmDelete:
         folder:
           title: Radera mapp och innehåll
-          warning: Att radera den här mappen är det en permanent handling som inte
-            går att ändra. Är du säker på att du vill fortsätta?
+          warning: Att radera den här mappen är det en permanent handling som inte går att
+            ändra. Är du säker på att du vill fortsätta?
         view:
           title: Radera lista
-          warning: Att radera den listan är en permanent handling som inte går att
-            ändra. Är du säker på att fortsätta?
+          warning: Att radera den listan är en permanent handling som inte går att ändra.
+            Är du säker på att fortsätta?
       menu:
         rename: Döp om
       moveToFolder: Flytta till {folder}
@@ -1606,8 +1605,9 @@ feat:
         searchResults: Resultat för "{searchString}"
     columnMenu:
       configure: Konfigurera kolumn
-      confirmDelete: Är du säker på att du vill radera den här kolumnen? Den innehåller
-        data som kommer försvinna permanent. Det går inte att ändra i efterhand.
+      confirmDelete: Är du säker på att du vill radera den här kolumnen? Den
+        innehåller data som kommer försvinna permanent. Det går inte att ändra i
+        efterhand.
       delete: Radera kolumn
       rename: Döp om kolumn
     columnRenameDialog:
@@ -1641,8 +1641,8 @@ feat:
           automatiskt genom Smarta sökningar.
         headline: Konfigurera en lista baserad på en Smart sökning
       notice:
-        dynamic: Det här är en lista baserat på en Smart sökning men ingen matchade
-          den Smarta sökningen
+        dynamic: Det här är en lista baserat på en Smart sökning men ingen matchade den
+          Smarta sökningen
         static: Du har inte lagt till några rader ännu
       static:
         description: Lägg till en person för att skapa en statisk lista där personer
@@ -1671,16 +1671,17 @@ feat:
         tabLabel: Ladda ner
         warning1: Undvik att exportera data från Zetkin om du inte måste, för att
           försäkra dig om att ingen data kommer på villovägar.
-        warning2: Du kan {shareLink} göra det mesta du behöver i Zetkin. Export är
-          en god idé när du vill kopiera data till ett annat system.
+        warning2: Du kan {shareLink} göra det mesta du behöver i Zetkin. Export är en
+          god idé när du vill kopiera data till ett annat system.
       share:
         addPlaceholder: Dela med person utan administratörsbehörighet
-        collabInstructions: Efter att du lagt till personer utan administratörsbehörighet,
-          kopiera och skicka {viewLink}
+        collabInstructions: Efter att du lagt till personer utan
+          administratörsbehörighet, kopiera och skicka {viewLink}
         showOfficials: Visa administratörer
-        statusLabel: Delad med {collaborators, plural, =1 {1 person utan administratörsbehörighet}
-          other {# personer utan administratörsbehörighet}}, {officials, plural, =1
-          {1 administratör} other {# administratörer}} har tillgång till alla listor.
+        statusLabel: Delad med {collaborators, plural, =1 {1 person utan
+          administratörsbehörighet} other {# personer utan
+          administratörsbehörighet}}, {officials, plural, =1 {1 administratör}
+          other {# administratörer}} har tillgång till alla listor.
         tabLabel: Dela
         viewLink: begränsad länk
       title: Dela "{title}"
@@ -1700,8 +1701,8 @@ feat:
     toolbar:
       createColumn: Ny kolumn
       createFromSelection: Skapa lista från urval
-      removeFromSelection: Ta bort {numSelected, plural, one {1 person} other {{numSelected}
-        personer} } från listan
+      removeFromSelection: Ta bort {numSelected, plural, one {1 person} other
+        {{numSelected} personer} } från listan
       removeTooltip: Listor som baseras på Smarta sökningar går det för tillfället
         inte att ta bort rader på
     viewLayout:
@@ -1856,7 +1857,8 @@ zui:
       warning: Tidslinjen filtreras. Klicka här för att ta bort filtret.
     updates:
       any:
-        addtags: '{actor} lade till {count, plural, =1 {en etikett} other {# etiketter}}'
+        addtags: '{actor} lade till {count, plural, =1 {en etikett} other {#
+          etiketter}}'
         removetags: '{actor} tog bort {count, plural, =1 {en etikett} other {# etiketter}}'
       journeyinstance:
         addassignee: '{actor} tilldelas {assignee}'
