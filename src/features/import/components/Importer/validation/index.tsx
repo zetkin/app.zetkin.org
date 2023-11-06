@@ -3,12 +3,30 @@ import { Box, Stack } from '@mui/system';
 
 import AddedTagsTracker from './AddedTagsTracker';
 import globalMessageIds from 'core/i18n/globalMessageIds';
+import ImportAlert from './importAlert';
 import ImportChangeTracker from './importChangeTracker';
 import messageIds from 'features/import/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import ImportAlert, { ALERT_STATUS } from './importAlert';
+import useAlertsStates from 'features/import/hooks/useAlertsStates';
 import { Msg, useMessages } from 'core/i18n';
 import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
+
+interface FakeDataType {
+  summary: {
+    createdPeople: {
+      appliedTagsCreated: { [key: number]: number };
+      organizationMembershipsCreated: { [key: number]: number };
+      total: number;
+    };
+    updatedPeople: {
+      appliedTagsCreated: { [key: number]: number };
+      appliedTagsUpdated: { [key: number]: number };
+      fields: any;
+      organizationMembershipsCreated: { [key: number]: number };
+      total: number;
+    };
+  };
+}
 
 interface ValidationProps {
   onClickBack: () => void;
@@ -55,71 +73,54 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
   // const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
 
   const globalMessages = useMessages(globalMessageIds);
-
   const message = useMessages(messageIds);
 
-  const getAlerts = (fake: any) => {
-    const result = [];
+  const isEmptyObj = (obj: { [key: number]: number }) => {
+    return Object.values(obj).every((value) => value === 0);
+  };
+  const alertStates = useAlertsStates(fake, onDisabled, onClickBack);
 
-    const fieldsWithManyChanges = Object.entries(
-      fake.summary.updatedPeople.fields
-    ).filter((item) => {
-      const fieldValue = item[1] as number;
-      return fake.summary.updatedPeople.total * 0.2 < fieldValue;
-    });
-
-    //Error when no one imported
-    if (fake.createdPeople === null && fake.updatedPeople === null) {
-      onDisabled(true);
-      result.push({
-        alertStatus: ALERT_STATUS.ERROR,
-        msg: message.validation.alerts.error.desc(),
-        onBack: () => {
-          onClickBack();
-          onDisabled(false);
-        },
-        title: message.validation.alerts.error.title(),
-      });
-    }
-    //Warning when there are many changes to field
-    else if (fieldsWithManyChanges.length > 0) {
-      fieldsWithManyChanges.forEach((item) =>
-        result.push({
-          alertStatus: ALERT_STATUS.WARNING,
-          msg: message.validation.alerts.warning.manyChanges.desc(),
-          title: message.validation.alerts.warning.manyChanges.title({
-            fieldName:
-              globalMessages.personFields[item[0] as NATIVE_PERSON_FIELDS](),
-          }),
-        })
+  const getOrgsStates = (
+    createdOrgs: FakeDataType['summary']['createdPeople']['organizationMembershipsCreated'],
+    updatedOrgs: FakeDataType['summary']['updatedPeople']['organizationMembershipsCreated']
+  ) => {
+    let resultNum = 0;
+    const resultOrgs = [];
+    if (!isEmptyObj(createdOrgs)) {
+      const yeah = Object.values(createdOrgs).reduce(
+        (acc, val) => acc + val,
+        0
       );
-    } else {
-      result.push({
-        alertStatus: ALERT_STATUS.INFO,
-        msg: message.validation.alerts.info.desc(),
-        title: message.validation.alerts.info.title(),
-      });
+      resultNum += yeah;
     }
-
-    return result;
+    if (!isEmptyObj(updatedOrgs)) {
+      resultNum += Object.values(updatedOrgs).reduce(
+        (acc, val) => acc + val,
+        0
+      );
+    }
+    return { resultNum, resultOrgs };
   };
 
-  const alertStates = getAlerts(fake);
-
-  const createdPeopleOrgsNum = Object.values(
-    fake.summary.createdPeople.organizationMembershipsCreated
-  ).reduce((acc, val) => acc + val, 0);
-
-  const updatedPeopleOrgsNum = Object.values(
-    fake.summary.updatedPeople.organizationMembershipsCreated
-  ).reduce((acc, val) => acc + val, 0);
-
-  const createdOrgs = Object.keys(
-    fake.summary.createdPeople.organizationMembershipsCreated
-  );
-  const updatedOrgs = Object.keys(
+  const test = getOrgsStates(
+    fake.summary.createdPeople.organizationMembershipsCreated,
     fake.summary.updatedPeople.organizationMembershipsCreated
   );
+
+  // const createdPeopleOrgsNum = Object.values(
+  //   fake.summary.createdPeople.organizationMembershipsCreated
+  // ).reduce((acc, val) => acc + val, 0);
+
+  // const updatedPeopleOrgsNum = Object.values(
+  //   fake.summary.updatedPeople.organizationMembershipsCreated
+  // ).reduce((acc, val) => acc + val, 0);
+
+  // const createdOrgs = Object.keys(
+  //   fake.summary.createdPeople.organizationMembershipsCreated
+  // );
+  // const updatedOrgs = Object.keys(
+  //   fake.summary.updatedPeople.organizationMembershipsCreated
+  // );
 
   return (
     <Box display="flex" mt={3}>
@@ -157,9 +158,9 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
             updatedTags={fake.summary.updatedPeople.appliedTagsCreated}
           />
           <ImportChangeTracker
-            changedNum={createdPeopleOrgsNum + updatedPeopleOrgsNum}
+            changedNum={test.resultNum}
             fieldName={message.validation.organization()}
-            orgs={[...createdOrgs, ...updatedOrgs]}
+            orgs={test.resultOrgs}
           />
         </Stack>
       </Box>
