@@ -38,31 +38,32 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     summary: {
       createdPeople: {
         appliedTagsCreated: {
-          11: 12,
+          11: 20,
           9: 20,
         },
         organizationMembershipsCreated: {
           4: 10,
+          7: 10,
         },
         total: 200,
       },
       updatedPeople: {
         appliedTagsCreated: {
           11: 20,
-          12: 10,
+          12: 20,
         },
         appliedTagsUpdated: {
           2: 10,
         },
         fields: {
           // custom_field: 96,
-          email: 15,
-          first_name: 22,
-          last_name: 42,
+          email: 22,
+          first_name: 21,
+          last_name: 11,
         },
         organizationMembershipsCreated: {
-          1: 5,
-          2: 1,
+          1: 10,
+          2: 10,
           4: 10,
           7: 10,
         },
@@ -76,7 +77,7 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
   const message = useMessages(messageIds);
 
   const isEmptyObj = (obj: { [key: number]: number }) => {
-    return Object.values(obj).every((value) => value === 0);
+    return Object.keys(obj).every((value) => value.length === 0);
   };
   const alertStates = useAlertsStates(fake, onDisabled, onClickBack);
 
@@ -84,43 +85,31 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     createdOrgs: FakeDataType['summary']['createdPeople']['organizationMembershipsCreated'],
     updatedOrgs: FakeDataType['summary']['updatedPeople']['organizationMembershipsCreated']
   ) => {
-    let resultNum = 0;
-    const resultOrgs = [];
+    const orgs = [];
+    let updatedNum = 0;
+
     if (!isEmptyObj(createdOrgs)) {
-      const yeah = Object.values(createdOrgs).reduce(
+      updatedNum += Object.values(createdOrgs).reduce(
         (acc, val) => acc + val,
         0
       );
-      resultNum += yeah;
+      orgs.push(...Object.keys(createdOrgs));
     }
+
     if (!isEmptyObj(updatedOrgs)) {
-      resultNum += Object.values(updatedOrgs).reduce(
+      updatedNum += Object.values(updatedOrgs).reduce(
         (acc, val) => acc + val,
         0
       );
+      orgs.push(...Object.keys(updatedOrgs));
     }
-    return { resultNum, resultOrgs };
+    return { orgs, updatedNum };
   };
 
   const test = getOrgsStates(
     fake.summary.createdPeople.organizationMembershipsCreated,
     fake.summary.updatedPeople.organizationMembershipsCreated
   );
-
-  // const createdPeopleOrgsNum = Object.values(
-  //   fake.summary.createdPeople.organizationMembershipsCreated
-  // ).reduce((acc, val) => acc + val, 0);
-
-  // const updatedPeopleOrgsNum = Object.values(
-  //   fake.summary.updatedPeople.organizationMembershipsCreated
-  // ).reduce((acc, val) => acc + val, 0);
-
-  // const createdOrgs = Object.keys(
-  //   fake.summary.createdPeople.organizationMembershipsCreated
-  // );
-  // const updatedOrgs = Object.keys(
-  //   fake.summary.updatedPeople.organizationMembershipsCreated
-  // );
 
   return (
     <Box display="flex" mt={3}>
@@ -158,9 +147,9 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
             updatedTags={fake.summary.updatedPeople.appliedTagsCreated}
           />
           <ImportChangeTracker
-            changedNum={test.resultNum}
+            changedNum={test.updatedNum}
             fieldName={message.validation.organization()}
-            orgs={test.resultOrgs}
+            orgs={test.orgs}
           />
         </Stack>
       </Box>

@@ -50,7 +50,9 @@ export default function useAlertsStates(
     isEmptyObj(fake.summary.createdPeople.appliedTagsCreated) &&
     isEmptyObj(fake.summary.createdPeople.organizationMembershipsCreated) &&
     isEmptyObj(fake.summary.updatedPeople.appliedTagsCreated) &&
-    isEmptyObj(fake.summary.updatedPeople.organizationMembershipsCreated);
+    isEmptyObj(fake.summary.updatedPeople.organizationMembershipsCreated) &&
+    fake.summary.createdPeople.total === 0 &&
+    fake.summary.updatedPeople.total === 0;
 
   if (allObjsAreEmpty) {
     onDisabled(true);
