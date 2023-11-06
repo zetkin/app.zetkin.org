@@ -2,6 +2,7 @@ import { Typography } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 
 import AddedTagsTracker from './AddedTagsTracker';
+import { getOrgsStates } from 'features/import/utils/getOrgsStates';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import ImportAlert from './importAlert';
 import ImportChangeTracker from './importChangeTracker';
@@ -11,7 +12,7 @@ import useAlertsStates from 'features/import/hooks/useAlertsStates';
 import { Msg, useMessages } from 'core/i18n';
 import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
 
-interface FakeDataType {
+export interface FakeDataType {
   summary: {
     createdPeople: {
       appliedTagsCreated: { [key: number]: number };
@@ -76,37 +77,9 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
   const globalMessages = useMessages(globalMessageIds);
   const message = useMessages(messageIds);
 
-  const isEmptyObj = (obj: { [key: number]: number }) => {
-    return Object.keys(obj).every((value) => value.length === 0);
-  };
   const alertStates = useAlertsStates(fake, onDisabled, onClickBack);
 
-  const getOrgsStates = (
-    createdOrgs: FakeDataType['summary']['createdPeople']['organizationMembershipsCreated'],
-    updatedOrgs: FakeDataType['summary']['updatedPeople']['organizationMembershipsCreated']
-  ) => {
-    const orgs = [];
-    let updatedNum = 0;
-
-    if (!isEmptyObj(createdOrgs)) {
-      updatedNum += Object.values(createdOrgs).reduce(
-        (acc, val) => acc + val,
-        0
-      );
-      orgs.push(...Object.keys(createdOrgs));
-    }
-
-    if (!isEmptyObj(updatedOrgs)) {
-      updatedNum += Object.values(updatedOrgs).reduce(
-        (acc, val) => acc + val,
-        0
-      );
-      orgs.push(...Object.keys(updatedOrgs));
-    }
-    return { orgs, updatedNum };
-  };
-
-  const test = getOrgsStates(
+  const orgsStates: { orgs: string[]; updatedNum: number } = getOrgsStates(
     fake.summary.createdPeople.organizationMembershipsCreated,
     fake.summary.updatedPeople.organizationMembershipsCreated
   );
@@ -147,9 +120,9 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
             updatedTags={fake.summary.updatedPeople.appliedTagsCreated}
           />
           <ImportChangeTracker
-            changedNum={test.updatedNum}
+            changedNum={orgsStates.updatedNum}
             fieldName={message.validation.organization()}
-            orgs={test.orgs}
+            orgs={orgsStates.orgs}
           />
         </Stack>
       </Box>

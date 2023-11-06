@@ -1,5 +1,6 @@
 import { ALERT_STATUS } from '../components/Importer/validation/importAlert';
 import globalMessageIds from 'core/i18n/globalMessageIds';
+import { isEmptyObj } from '../utils/getOrgsStates';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 
 import messageIds from '../l10n/messageIds';
@@ -31,10 +32,6 @@ export default function useAlertsStates(
   const globalMessages = useMessages(globalMessageIds);
 
   const result = [];
-
-  const isEmptyObj = (obj: { [key: number]: number }) => {
-    return Object.values(obj).every((value) => value === 0);
-  };
 
   const fieldsWithManyChanges = Object.entries(
     fake.summary.updatedPeople.fields
