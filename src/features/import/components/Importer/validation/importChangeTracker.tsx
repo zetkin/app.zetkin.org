@@ -39,9 +39,12 @@ const ImportChangeTracker: React.FunctionComponent<
         </Typography>
       </Box>
       <Box display="flex" flexWrap="wrap" gap={0.5}>
-        {filteredOrg?.map((org) => (
+        {filteredOrg?.map((org, index) => (
           <Typography key={org.id} color="secondary">
-            {org.title},
+            {org.title}
+            {filteredOrg.length === 1 || filteredOrg.length - 1 === index
+              ? ''
+              : ','}
           </Typography>
         ))}
       </Box>
