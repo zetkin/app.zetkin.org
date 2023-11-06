@@ -7,7 +7,7 @@ export const isEmptyObj = (obj: { [key: number]: number }) => {
 export const getOrgsStates = (
   createdOrgs: FakeDataType['summary']['createdPeople']['organizationMembershipsCreated'],
   updatedOrgs: FakeDataType['summary']['updatedPeople']['organizationMembershipsCreated']
-) => {
+): { orgs: string[]; updatedNum: number } => {
   const orgs = [];
   let updatedNum = 0;
 

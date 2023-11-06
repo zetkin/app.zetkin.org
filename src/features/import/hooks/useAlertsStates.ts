@@ -22,12 +22,19 @@ interface FakeDataType {
     };
   };
 }
+interface useAlertsStatesReturn {
+  alertStatus: ALERT_STATUS;
+  msg: string;
+  onBack?: () => void;
+  onChecked?: () => void;
+  title: string;
+}
 
 export default function useAlertsStates(
   fake: FakeDataType,
   onDisabled: (value: boolean) => void,
   onClickBack: () => void
-) {
+): useAlertsStatesReturn[] {
   const message = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
 

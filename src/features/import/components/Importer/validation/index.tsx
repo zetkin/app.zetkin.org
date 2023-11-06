@@ -79,7 +79,7 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
 
   const alertStates = useAlertsStates(fake, onDisabled, onClickBack);
 
-  const orgsStates: { orgs: string[]; updatedNum: number } = getOrgsStates(
+  const orgsStates = getOrgsStates(
     fake.summary.createdPeople.organizationMembershipsCreated,
     fake.summary.updatedPeople.organizationMembershipsCreated
   );
