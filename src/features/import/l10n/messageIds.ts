@@ -54,7 +54,8 @@ export default makeMessages('feat.import', {
       created: m('new people will be created'),
       defaultDesc: m('people will recieve changes to their'),
       orgs: m('people will be added to an'),
-      tags: m<{ count: ReactElement; fieldName: ReactElement }>(
+      tags: m('Tags'),
+      tagsDesc: m<{ count: ReactElement; fieldName: ReactElement }>(
         '{count} people will have {fieldName} added'
       ),
       updated: m('people will be updated'),

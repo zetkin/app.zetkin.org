@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 
-// import AddedTagsTracker from './AddedTagsTracker';
+import AddedTagsTracker from './AddedTagsTracker';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import ImportChangeTracker from './importChangeTracker';
 import messageIds from 'features/import/l10n/messageIds';
@@ -20,18 +20,18 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     summary: {
       createdPeople: {
         appliedTagsCreated: {
-          2: 20,
-          3: 10,
+          11: 12,
+          9: 20,
         },
-        organizationMembershipCreated: {
+        organizationMembershipsCreated: {
           4: 10,
         },
         total: 200,
       },
       updatedPeople: {
         appliedTagsCreated: {
-          2: 20,
-          3: 10,
+          11: 20,
+          12: 10,
         },
         appliedTagsUpdated: {
           2: 10,
@@ -53,14 +53,6 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     },
   };
   // const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
-
-  const orgsChangeSum = Object.values(
-    fake.summary.updatedPeople.organizationMembershipsCreated
-  ).reduce((acc, cur) => acc + cur, 0);
-
-  const orgs = Object.keys(
-    fake.summary.updatedPeople.organizationMembershipsCreated
-  );
 
   const globalMessages = useMessages(globalMessageIds);
 
@@ -111,7 +103,23 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
 
     return result;
   };
+
   const alertStates = getAlerts(fake);
+
+  const createdPeopleOrgsNum = Object.values(
+    fake.summary.createdPeople.organizationMembershipsCreated
+  ).reduce((acc, val) => acc + val, 0);
+
+  const updatedPeopleOrgsNum = Object.values(
+    fake.summary.updatedPeople.organizationMembershipsCreated
+  ).reduce((acc, val) => acc + val, 0);
+
+  const createdOrgs = Object.keys(
+    fake.summary.createdPeople.organizationMembershipsCreated
+  );
+  const updatedOrgs = Object.keys(
+    fake.summary.updatedPeople.organizationMembershipsCreated
+  );
 
   return (
     <Box display="flex" mt={3}>
@@ -144,17 +152,14 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               );
             }
           )}
-          {/* {fakeTag.tags && (
-            <AddedTagsTracker
-              changedNum={fakeTag.changedNum}
-              fieldName={fakeTag.field}
-              tags={fakeTag.tags}
-            />
-          )} */}
+          <AddedTagsTracker
+            createdTags={fake.summary.createdPeople.appliedTagsCreated}
+            updatedTags={fake.summary.updatedPeople.appliedTagsCreated}
+          />
           <ImportChangeTracker
-            changedNum={orgsChangeSum}
+            changedNum={createdPeopleOrgsNum + updatedPeopleOrgsNum}
             fieldName={message.validation.organization()}
-            orgs={orgs}
+            orgs={[...createdOrgs, ...updatedOrgs]}
           />
         </Stack>
       </Box>
