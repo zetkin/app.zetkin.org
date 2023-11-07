@@ -106,12 +106,16 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               status={COUNT_STATUS.UPDATED}
             />
           </Stack>
-          <ImportChangeTracker fields={fake.summary.updatedPeople.fields} />
+          <ImportChangeTracker
+            fields={fake.summary.updatedPeople.fields}
+            orgId={orgId}
+          />
           <AddedTagsTracker
             createdTags={fake.summary.createdPeople.appliedTagsCreated}
+            orgId={orgId}
             updatedTags={fake.summary.updatedPeople.appliedTagsCreated}
           />
-          <ImportChangeTracker orgsStates={orgsStates} />
+          <ImportChangeTracker orgId={orgId} orgsStates={orgsStates} />
         </Stack>
       </Box>
       <Box ml={2} width="50%">

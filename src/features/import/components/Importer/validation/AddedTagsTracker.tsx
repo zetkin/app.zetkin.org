@@ -3,19 +3,19 @@ import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { Typography } from '@mui/material';
-import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 
 interface AddedTagsTrackerProps {
   createdTags: { [key: number]: number };
   updatedTags: { [key: number]: number };
+  orgId: number;
 }
 const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
   createdTags,
   updatedTags,
+  orgId,
 }) => {
-  const { orgId } = useNumericRouteParams();
   const { data } = useTags(orgId);
   const tags = data || [];
   const createdTagsKeys = Object.keys(createdTags);

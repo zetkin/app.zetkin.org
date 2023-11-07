@@ -5,7 +5,6 @@ import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/import/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
-import { useNumericRouteParams } from 'core/hooks';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import { Msg, useMessages } from 'core/i18n';
 import {
@@ -20,13 +19,13 @@ interface ImportChangeTrackerProps {
       | keyof Partial<ZetkinPersonNativeFields>
       | keyof Partial<ZetkinCustomField>]?: number;
   };
+  orgId: number;
 }
 
 const ImportChangeTracker: React.FunctionComponent<
   ImportChangeTrackerProps
-> = ({ orgsStates, fields }) => {
+> = ({ orgsStates, fields, orgId }) => {
   const organizations = useOrganizations();
-  const { orgId } = useNumericRouteParams();
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
 
