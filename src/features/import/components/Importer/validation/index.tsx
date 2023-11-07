@@ -3,14 +3,16 @@ import { Box, Stack } from '@mui/system';
 
 import AddedTagsTracker from './AddedTagsTracker';
 import { getOrgsStates } from 'features/import/utils/getOrgsStates';
-import globalMessageIds from 'core/i18n/globalMessageIds';
 import ImportAlert from './importAlert';
 import ImportChangeTracker from './importChangeTracker';
 import messageIds from 'features/import/l10n/messageIds';
-import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
+import { Msg } from 'core/i18n';
 import useAlertsStates from 'features/import/hooks/useAlertsStates';
-import { Msg, useMessages } from 'core/i18n';
 import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
+import {
+  ZetkinCustomField,
+  ZetkinPersonNativeFields,
+} from 'utils/types/zetkin';
 
 export interface FakeDataType {
   summary: {
@@ -22,7 +24,11 @@ export interface FakeDataType {
     updatedPeople: {
       appliedTagsCreated: { [key: number]: number };
       appliedTagsUpdated: { [key: number]: number };
-      fields: any;
+      fields: {
+        [key in
+          | keyof Partial<ZetkinPersonNativeFields>
+          | keyof Partial<ZetkinCustomField>]?: number;
+      };
       organizationMembershipsCreated: { [key: number]: number };
       total: number;
     };
@@ -57,9 +63,10 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
           2: 10,
         },
         fields: {
-          // custom_field: 96,
+          date_of_birth: 12,
           email: 22,
           first_name: 21,
+          join_date: 97,
           last_name: 11,
         },
         organizationMembershipsCreated: {
@@ -73,9 +80,6 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     },
   };
   // const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
-
-  const globalMessages = useMessages(globalMessageIds);
-  const message = useMessages(messageIds);
 
   const alertStates = useAlertsStates(fake, onDisabled, onClickBack);
 
@@ -101,29 +105,12 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               status={COUNT_STATUS.UPDATED}
             />
           </Stack>
-          {Object.entries(fake.summary.updatedPeople.fields).map(
-            (item, index) => {
-              return (
-                <Box key={`tracker-${index}`}>
-                  <ImportChangeTracker
-                    changedNum={item[1]}
-                    fieldName={globalMessages.personFields[
-                      item[0] as NATIVE_PERSON_FIELDS
-                    ]()}
-                  />
-                </Box>
-              );
-            }
-          )}
+          <ImportChangeTracker fields={fake.summary.updatedPeople.fields} />
           <AddedTagsTracker
             createdTags={fake.summary.createdPeople.appliedTagsCreated}
             updatedTags={fake.summary.updatedPeople.appliedTagsCreated}
           />
-          <ImportChangeTracker
-            changedNum={orgsStates.updatedNum}
-            fieldName={message.validation.organization()}
-            orgs={orgsStates.orgs}
-          />
+          <ImportChangeTracker orgsStates={orgsStates} />
         </Stack>
       </Box>
       <Box ml={2} width="50%">
