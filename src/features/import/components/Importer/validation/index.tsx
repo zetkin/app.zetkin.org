@@ -8,6 +8,7 @@ import ImportChangeTracker from './importChangeTracker';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useAlertsStates from 'features/import/hooks/useAlertsStates';
+import { useNumericRouteParams } from 'core/hooks';
 import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
 import {
   ZetkinCustomField,
@@ -80,8 +81,8 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
     },
   };
   // const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
-
-  const alertStates = useAlertsStates(fake, onDisabled, onClickBack);
+  const { orgId } = useNumericRouteParams();
+  const alertStates = useAlertsStates(fake, onDisabled, onClickBack, orgId);
 
   const orgsStates = getOrgsStates(
     fake.summary.createdPeople.organizationMembershipsCreated,
