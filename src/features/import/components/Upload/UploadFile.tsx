@@ -9,7 +9,7 @@ import {
 import { FileCopy, UploadFileOutlined } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 
-import messageIds from '../../l10n/messagesIds';
+import messageIds from '../../l10n/messageIds';
 import theme from 'theme';
 import useImportedFile from '../../hooks/useImportedFile';
 import { Msg, useMessages } from 'core/i18n';
@@ -79,7 +79,7 @@ const UploadFile = () => {
         {loading && (
           <Box>
             <CircularProgress sx={{ color: '#1976D2' }} />
-            <Typography>{messages.importDialog.loading()}</Typography>
+            <Typography>{messages.uploadDialog.loading()}</Typography>
           </Box>
         )}
         {!loading && (
@@ -98,9 +98,9 @@ const UploadFile = () => {
               <FileCopy sx={{ color: '#1976D2', fontSize: 40 }} />
             </IconButton>
             <Typography sx={{ fontWeight: 'bold' }}>
-              {messages.importDialog.dataDetected()}
+              {messages.uploadDialog.dataDetected()}
             </Typography>
-            <Typography>{messages.importDialog.infoDetected()}</Typography>
+            <Typography>{messages.uploadDialog.infoDetected()}</Typography>
           </>
         )}
         <input type="file" {...getInputProps()} />
@@ -124,7 +124,7 @@ const UploadFile = () => {
                 />
               </IconButton>
               {isDragActive ? (
-                <Typography>{messages.importDialog.release()}</Typography>
+                <Typography>{messages.uploadDialog.release()}</Typography>
               ) : (
                 <>
                   <Box pt={2}>
@@ -138,25 +138,25 @@ const UploadFile = () => {
                         textDecorationLine: 'underline',
                       }}
                     >
-                      {messages.importDialog.instructions()}
+                      {messages.uploadDialog.instructions()}
                     </Typography>
                     <Typography
                       sx={{
                         display: 'inline-block',
                       }}
                     >
-                      {messages.importDialog.instructionsEnd()}
+                      {messages.uploadDialog.instructionsEnd()}
                     </Typography>
                   </Box>
 
                   <Box sx={{ gap: 10 }} />
                   {error ? (
                     <Typography sx={{ color: theme.palette.primary.main }}>
-                      {messages.importDialog.unsupportedFile()}
+                      {messages.uploadDialog.unsupportedFile()}
                     </Typography>
                   ) : (
                     <Typography sx={{ color: theme.palette.secondary.main }}>
-                      {messages.importDialog.types()}
+                      {messages.uploadDialog.types()}
                     </Typography>
                   )}
                 </>
@@ -176,7 +176,7 @@ const UploadFile = () => {
                 setError(false);
               }}
             >
-              <Msg id={messageIds.importDialog.dialogButtons.restart} />
+              <Msg id={messageIds.uploadDialog.dialogButtons.restart} />
             </Button>
           </Box>
           <Box m={1}>
@@ -187,7 +187,7 @@ const UploadFile = () => {
               type="submit"
               variant="contained"
             >
-              <Msg id={messageIds.importDialog.dialogButtons.configure} />
+              <Msg id={messageIds.uploadDialog.dialogButtons.configure} />
             </Button>
           </Box>
         </Box>
@@ -202,7 +202,7 @@ const UploadFile = () => {
                 setIsSameData(false);
               }}
             >
-              <Msg id={messageIds.importDialog.dialogButtons.restart} />
+              <Msg id={messageIds.uploadDialog.dialogButtons.restart} />
             </Button>
           </Box>
           <Box m={1}>
@@ -213,7 +213,7 @@ const UploadFile = () => {
               type="submit"
               variant="contained"
             >
-              <Msg id={messageIds.importDialog.dialogButtons.configure} />
+              <Msg id={messageIds.uploadDialog.dialogButtons.configure} />
             </Button>
           </Box>
         </Box>
