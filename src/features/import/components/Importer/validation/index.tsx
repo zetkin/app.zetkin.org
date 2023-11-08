@@ -1,4 +1,5 @@
 import { Typography } from '@mui/material';
+import { useState } from 'react';
 import { Box, Stack } from '@mui/system';
 
 import AddedTagsTracker from './AddedTagsTracker';
@@ -53,7 +54,7 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
           4: 10,
           7: 10,
         },
-        total: 200,
+        total: 100,
       },
       updatedPeople: {
         appliedTagsCreated: {
@@ -64,10 +65,10 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
           2: 10,
         },
         fields: {
-          date_of_birth: 12,
-          email: 22,
+          date_of_birth: 22,
+          email: 12,
           first_name: 21,
-          join_date: 97,
+          join_date: 21,
           last_name: 11,
         },
         organizationMembershipsCreated: {
@@ -80,14 +81,28 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
       },
     },
   };
-  // const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
+  const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
   const { orgId } = useNumericRouteParams();
-  const alertStates = useAlertsStates(fake, onDisabled, onClickBack, orgId);
+  const alertStates = useAlertsStates(fake, orgId);
 
   const orgsStates = getOrgsStates(
     fake.summary.createdPeople.organizationMembershipsCreated,
     fake.summary.updatedPeople.organizationMembershipsCreated
   );
+  const warningAlerts = alertStates.filter(
+    (item) => item.alertStatus === 'warning'
+  );
+  const errorExists =
+    alertStates.filter((item) => item.alertStatus === 'error').length > 0;
+
+  if (
+    (warningAlerts.length === checkedIndexes.length && !errorExists) ||
+    alertStates.filter((item) => item.alertStatus === 'info').length > 0
+  ) {
+    onDisabled(false);
+  } else {
+    onDisabled(true);
+  }
 
   return (
     <Box display="flex" mt={3}>
@@ -128,7 +143,19 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               <Box key={`alert-${index}`}>
                 <ImportAlert
                   msg={item.msg}
-                  onClickBack={item?.onBack}
+                  onChecked={() =>
+                    setCheckedIndexes((prev) => {
+                      if (!checkedIndexes.includes(index)) {
+                        return [...prev, index];
+                      } else {
+                        return checkedIndexes.filter((item) => item !== index);
+                      }
+                    })
+                  }
+                  onClickBack={() => {
+                    onClickBack();
+                    onDisabled(false);
+                  }}
                   status={item.alertStatus}
                   title={item.title}
                 />

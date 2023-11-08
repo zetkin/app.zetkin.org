@@ -24,7 +24,7 @@ interface ImportAlertProps {
   status: ALERT_STATUS;
   title: string;
   onClickBack?: () => void;
-  onChecked?: (value: boolean) => void;
+  onChecked?: () => void;
 }
 const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
   bullets,
@@ -39,7 +39,7 @@ const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
   return (
     <Alert
       action={
-        onClickBack && (
+        status === ALERT_STATUS.ERROR && (
           <Button
             color="inherit"
             onClick={onClickBack}
@@ -58,12 +58,10 @@ const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
       </AlertTitle>
       <>
         {msg}
-        {onChecked && (
+        {status === ALERT_STATUS.WARNING && (
           <Box sx={{ ml: 1.5, mt: 1.5 }}>
             <FormControlLabel
-              control={
-                <Checkbox onChange={(e) => onChecked(e.target.checked)} />
-              }
+              control={<Checkbox onChange={onChecked} />}
               label={message.validation.alerts.checkbox()}
             />
           </Box>

@@ -12,15 +12,11 @@ import { useMessages } from 'core/i18n';
 interface useAlertsStatesReturn {
   alertStatus: ALERT_STATUS;
   msg: string;
-  onBack?: () => void;
-  onChecked?: () => void;
   title: string;
 }
 
 export default function useAlertsStates(
   fake: FakeDataType,
-  onDisabled: (value: boolean) => void,
-  onClickBack: () => void,
   orgId: number
 ): useAlertsStatesReturn[] {
   const message = useMessages(messageIds);
@@ -40,17 +36,10 @@ export default function useAlertsStates(
     .map((item) => item[0]);
 
   //Error when no one imported
-  const allObjsAreEmpty = isEmptyObj(fake.summary);
-
-  if (allObjsAreEmpty) {
-    onDisabled(true);
+  if (isEmptyObj(fake.summary)) {
     result.push({
       alertStatus: ALERT_STATUS.ERROR,
       msg: message.validation.alerts.error.desc(),
-      onBack: () => {
-        onClickBack();
-        onDisabled(false);
-      },
       title: message.validation.alerts.error.title(),
     });
   }
@@ -74,6 +63,5 @@ export default function useAlertsStates(
       title: message.validation.alerts.info.title(),
     });
   }
-
   return result;
 }
