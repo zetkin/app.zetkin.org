@@ -6,32 +6,23 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
+import { FileCopy, UploadFileOutlined } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 
-import { ImportedFile } from '../utils/parseFile';
-import messageIds from '../l10n/messagesIds';
+import messageIds from '../../l10n/messagesIds';
 import theme from 'theme';
-import { UploadFileOutlined } from '@mui/icons-material';
-import useImportedFile from '../hooks/useImportedFile';
+import useImportedFile from '../../hooks/useImportedFile';
 import { Msg, useMessages } from 'core/i18n';
 
 const UploadFile = () => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>();
-  const [rawData, setRawData] = useState<ImportedFile>();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
-  const { importData } = useImportedFile();
+  const { parseData, loading } = useImportedFile();
+  const [isSameData, setIsSameData] = useState<boolean>(false);
 
   const onDrop = useCallback((acceptedFiles: File[]): void => {
     acceptedFiles.map((file: File) => {
-      setLoading(true);
-      setUploadedFile(file);
-
-      importData(file)?.then((res) => {
-        setRawData(res);
-        setLoading(false);
-      });
+      parseData(file);
     });
   }, []);
 
@@ -53,31 +44,68 @@ const UploadFile = () => {
   return (
     <>
       <Box
-        {...getRootProps({ className: 'dropzone' })}
+        {...getRootProps()}
         p={12}
-        style={{
-          alignItems: 'center',
-          backgroundColor: error ? '#fdf7f7' : 'transparent',
-          borderColor: error ? theme.palette.error.dark : '#E0E0E0',
-          borderRadius: 4,
-          borderStyle: error ? 'solid' : 'dashed',
-          borderWidth: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'wrap',
-          margin: 16,
-          textAlign: 'center',
-        }}
+        style={
+          loading
+            ? {
+                alignItems: 'center',
+                backgroundColor: '#1976D214',
+                borderColor: '#1976D2',
+                borderRadius: 4,
+                borderStyle: 'dashed',
+                borderWidth: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                flexWrap: 'wrap',
+                margin: 16,
+                textAlign: 'center',
+              }
+            : {
+                alignItems: 'center',
+                backgroundColor: error ? '#fdf7f7' : 'transparent',
+                borderColor: error ? theme.palette.error.dark : '#E0E0E0',
+                borderRadius: 4,
+                borderStyle: error ? 'solid' : 'dashed',
+                borderWidth: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                flexWrap: 'wrap',
+                margin: 16,
+                textAlign: 'center',
+              }
+        }
       >
-        {loading && !rawData && (
+        {loading && (
           <Box>
-            <CircularProgress />
+            <CircularProgress sx={{ color: '#1976D2' }} />
             <Typography>{messages.importDialog.loading()}</Typography>
           </Box>
         )}
+        {!loading && (
+          <>
+            <IconButton
+              style={{
+                backgroundColor: '#1976D214',
+                borderColor: '#1976D2',
+                borderRadius: 100,
+                height: 40,
+                marginBottom: 12,
+                padding: 30,
+                width: 40,
+              }}
+            >
+              <FileCopy sx={{ color: '#1976D2', fontSize: 40 }} />
+            </IconButton>
+            <Typography sx={{ fontWeight: 'bold' }}>
+              {messages.importDialog.dataDetected()}
+            </Typography>
+            <Typography>{messages.importDialog.infoDetected()}</Typography>
+          </>
+        )}
         <input type="file" {...getInputProps()} />
         <Box>
-          {!uploadedFile && !loading && (
+          {!loading && (
             <Box>
               <IconButton
                 onClick={open}
@@ -135,13 +163,8 @@ const UploadFile = () => {
               )}
             </Box>
           )}
-          {/* TODO: To be removed when mapping dialog is ready */}
-          {!loading && rawData && (
-            <Button variant="contained">{'Ready to import!'}</Button>
-          )}
         </Box>
       </Box>
-
       {error && !loading && (
         <Box display="flex" justifyContent="flex-end" p={1} width={1}>
           <Box m={1}>
@@ -149,7 +172,34 @@ const UploadFile = () => {
               color="primary"
               onClick={(ev) => {
                 ev.stopPropagation();
+                setIsSameData(false);
                 setError(false);
+              }}
+            >
+              <Msg id={messageIds.importDialog.dialogButtons.restart} />
+            </Button>
+          </Box>
+          <Box m={1}>
+            <Button
+              color="primary"
+              disabled={error}
+              onClick={(ev) => ev.stopPropagation()}
+              type="submit"
+              variant="contained"
+            >
+              <Msg id={messageIds.importDialog.dialogButtons.configure} />
+            </Button>
+          </Box>
+        </Box>
+      )}
+      {isSameData && !loading && (
+        <Box display="flex" justifyContent="flex-end" p={1} width={1}>
+          <Box m={1}>
+            <Button
+              color="primary"
+              onClick={(ev) => {
+                ev.stopPropagation();
+                setIsSameData(false);
               }}
             >
               <Msg id={messageIds.importDialog.dialogButtons.restart} />
