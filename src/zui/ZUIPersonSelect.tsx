@@ -1,6 +1,4 @@
 import { Autocomplete as MUIAutocomplete } from '@mui/material';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import { Box, TextField } from '@mui/material';
 import React, {
   FunctionComponent,
@@ -11,9 +9,9 @@ import React, {
   useState,
 } from 'react';
 
-import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
-import useDebounce from 'utils/hooks/useDebounce';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import usePersonSearch from 'features/profile/hooks/usePersonSearch';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
 
@@ -79,21 +77,13 @@ export const usePersonSelect: UsePersonSelect = ({
   selectedPerson,
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const [searchFieldValue, setSearchFieldValue] = useState<string>(
     initialValue || ''
   );
   const [shiftHeld, setShiftHeld] = useState(false);
 
-  const {
-    isLoading,
-    refetch,
-    data: results,
-  } = useQuery(
-    ['peopleSearchResults', searchFieldValue],
-    getPeopleSearchResults(searchFieldValue, orgId as string),
-    { enabled: false }
-  );
+  const { isLoading, setQuery, results } = usePersonSearch(orgId);
 
   let searchLabel = searchFieldValue.length
     ? messages.personSelect.keepTyping()
@@ -104,17 +94,6 @@ export const usePersonSelect: UsePersonSelect = ({
   } else if (results?.length == 0) {
     searchLabel = messages.personSelect.noResult();
   }
-
-  const debouncedQuery = useDebounce(async () => {
-    refetch();
-  }, 600);
-
-  // Watch for changes on the search field value and debounce search if changed
-  useEffect(() => {
-    if (searchFieldValue.length >= 3) {
-      debouncedQuery();
-    }
-  }, [searchFieldValue.length, debouncedQuery]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -161,11 +140,13 @@ export const usePersonSelect: UsePersonSelect = ({
       noOptionsText: searchLabel,
       onChange: (ev, value) => {
         setSearchFieldValue('');
+        setQuery('');
         onChange(value as ZetkinPerson);
       },
       onInputChange: (ev: unknown, value: string) => {
         if (ev !== null) {
           setSearchFieldValue(value);
+          setQuery(value);
         }
       },
       options: personOptions,

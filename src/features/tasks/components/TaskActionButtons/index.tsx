@@ -1,4 +1,3 @@
-import { Alert } from '@mui/material';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import { Delete, Settings } from '@mui/icons-material';
@@ -6,15 +5,15 @@ import React, { useContext, useState } from 'react';
 
 import PublishButton from './PublishButton';
 import TaskDetailsForm from 'features/tasks/components/TaskDetailsForm';
+import useTaskMutations from 'features/tasks/hooks/useTaskMutations';
 import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
-import { taskResource, tasksResource } from 'features/tasks/api/tasks';
 
 import messageIds from 'features/tasks/l10n/messageIds';
+import { ZetkinTaskRequestBody } from '../types';
 
 enum TASK_MENU_ITEMS {
   EDIT_TASK = 'editTask',
@@ -30,37 +29,24 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const router = useRouter();
-  // Dialogs
   const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { showSnackbar } = useContext(ZUISnackbarContext);
 
-  // Mutations
-  const taskHooks = taskResource(
-    task.organization.id.toString(),
-    task.id.toString()
+  const { deleteTask, updateTask } = useTaskMutations(
+    task.organization.id,
+    task.id
   );
-  const patchTaskMutation = taskHooks.useUpdate();
-  const deleteTaskMutation = tasksResource(
-    task.organization.id.toString()
-  ).useDelete();
 
   // Event Handlers
-  const handleEditTask = (task: Partial<ZetkinTask>) => {
-    patchTaskMutation.mutateAsync(task, {
-      onSuccess: () => setEditTaskDialogOpen(false),
-    });
+  const handleEditTask = (task: ZetkinTaskRequestBody) => {
+    updateTask(task);
+    setEditTaskDialogOpen(false);
   };
   const handleDeleteTask = () => {
-    deleteTaskMutation.mutate(task.id, {
-      onError: () => showSnackbar('error', messages.deleteTask.error()),
-      onSuccess: () => {
-        // Navigate back to campaign page
-        router.push(
-          `/organize/${task.organization.id}/projects/${task.campaign.id}`
-        );
-      },
-    });
+    deleteTask();
+    router.push(
+      `/organize/${task.organization.id}/projects/${task.campaign.id}`
+    );
   };
 
   return (
@@ -109,11 +95,6 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
         open={editTaskDialogOpen}
         title={messages.editTask.title()}
       >
-        {patchTaskMutation.isError && (
-          <Alert color="error" data-testid="error-alert">
-            <Msg id={messageIds.form.requestError} />
-          </Alert>
-        )}
         <TaskDetailsForm
           onCancel={() => setEditTaskDialogOpen(false)}
           onSubmit={(task) => {

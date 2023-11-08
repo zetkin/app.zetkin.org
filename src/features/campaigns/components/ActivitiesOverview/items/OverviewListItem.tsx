@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
 
-import { CampaignActivity } from 'features/campaigns/models/CampaignActivitiesModel';
+import { CampaignActivity } from 'features/campaigns/types';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/campaigns/l10n/messageIds';

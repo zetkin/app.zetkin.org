@@ -1,15 +1,17 @@
-import { useDispatch } from 'react-redux';
-
 import getNewEventTimes from '../utils/getNewEventTimes';
 import updateEvents from '../rpc/updateEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { eventsUpdate, eventsUpdated, resetSelection } from '../store';
-import { useApiClient, useNumericRouteParams } from 'core/hooks';
+import {
+  useApiClient,
+  useAppDispatch,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 export default function useMoveEvents() {
   const { orgId } = useNumericRouteParams();
   const apiClient = useApiClient();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const moveEvents = async (events: ZetkinEvent[], offset: number) => {
     const eventsWithNewDates = events.map((event) => {

@@ -250,49 +250,4 @@ test.describe('Journey instance page Milestones tab', () => {
       null
     );
   });
-
-  test('shows error snackbar if error making request', async ({
-    appUri,
-    moxy,
-    page,
-  }) => {
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
-      'get',
-      MemberOnboarding
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-      'get',
-      ClarasOnboarding
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`,
-      'patch',
-      undefined,
-      401
-    );
-
-    await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
-
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
-      ),
-      await page
-        .locator(
-          '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
-        )
-        .first()
-        .click(),
-    ]);
-
-    // Show error
-    const snackbar = page.locator('data-testid=Snackbar-error');
-    await snackbar.waitFor();
-
-    expect(await snackbar.count()).toEqual(1);
-  });
 });

@@ -2,9 +2,8 @@ import { FC } from 'react';
 import { CheckBoxOutlined, People } from '@mui/icons-material';
 
 import OverviewListItem from './OverviewListItem';
-import { TaskActivity } from 'features/campaigns/models/CampaignActivitiesModel';
-import TaskModel from 'features/tasks/models/TaskModel';
-import useModel from 'core/useModel';
+import { TaskActivity } from 'features/campaigns/types';
+import useTaskStats from 'features/tasks/hooks/useTaskStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 interface TasksOverviewListItemProps {
@@ -17,11 +16,7 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
   focusDate,
 }) => {
   const task = activity.data;
-  const model = useModel(
-    (env) => new TaskModel(env, task.organization.id, task.id)
-  );
-
-  const stats = model.getTaskStats().data;
+  const { data: stats } = useTaskStats(task.organization.id, task.id);
 
   return (
     <OverviewListItem

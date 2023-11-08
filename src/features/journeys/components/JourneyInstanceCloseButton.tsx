@@ -1,33 +1,30 @@
 import ArchiveIcon from '@mui/icons-material/Archive';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useContext, useState } from 'react';
 
-import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import TagManager from 'features/tags/components/TagManager';
 import ZUIDialog from 'zui/ZUIDialog';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
 
 import messageIds from '../l10n/messageIds';
+import useJourneyInstanceMutations from '../hooks/useJourneyInstanceMutations';
+import { useNumericRouteParams } from 'core/hooks';
 
 const JourneyInstanceCloseButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
   const messages = useMessages(messageIds);
-  const { orgId } = useRouter().query;
-
-  const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { orgId } = useNumericRouteParams();
   const [showDialog, setShowDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { useClose } = journeyInstanceResource(
-    orgId as string,
-    journeyInstance.id.toString()
+  const { closeJourneyInstance } = useJourneyInstanceMutations(
+    orgId,
+    journeyInstance.id
   );
-  const closeJourneyInstanceMutation = useClose();
 
   const [outcomeNote, setOutcomeNote] = useState('');
   const [internalTags, setInternalTags] = useState<ZetkinTag[]>([]);
@@ -36,25 +33,6 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
     setShowDialog(false);
     setInternalTags([]);
     setOutcomeNote('');
-  };
-
-  const onSubmit = () => {
-    const body = {
-      closed: dayjs().toJSON(),
-      outcome: outcomeNote,
-      tags: internalTags,
-    };
-
-    closeJourneyInstanceMutation.mutate(body, {
-      onError: () =>
-        showSnackbar(
-          'error',
-          messages.instance.closeButton.error({
-            singularLabel: journeyInstance.journey.singular_label,
-          })
-        ),
-      onSuccess: () => closeAndClear(),
-    });
   };
 
   return (
@@ -74,10 +52,17 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
       <ZUIDialog onClose={closeAndClear} open={showDialog}>
         <Box data-testid="JourneyInstanceCloseButton-outcomeDialog">
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
               e.stopPropagation();
-              onSubmit();
+              setIsLoading(true);
+              await closeJourneyInstance({
+                closed: dayjs().toJSON(),
+                outcome: outcomeNote,
+                tags: internalTags,
+              });
+              setIsLoading(false);
+              closeAndClear();
             }}
           >
             <Typography variant="h6">
@@ -135,7 +120,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             </Box>
             <ZUISubmitCancelButtons
               onCancel={closeAndClear}
-              submitDisabled={closeJourneyInstanceMutation.isLoading}
+              submitDisabled={isLoading}
               submitText={messages.instance.closeButton.label({
                 singularLabel: journeyInstance.journey.singular_label,
               })}
@@ -152,34 +137,17 @@ export default JourneyInstanceCloseButton;
 export const JourneyInstanceReopenButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
-  const messages = useMessages(messageIds);
-  const { orgId } = useRouter().query;
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-
-  const { useUpdate } = journeyInstanceResource(
-    orgId as string,
-    journeyInstance.id.toString()
+  const { orgId } = useNumericRouteParams();
+  const { updateJourneyInstance } = useJourneyInstanceMutations(
+    orgId,
+    journeyInstance.id
   );
-  const journeyInstanceMutation = useUpdate();
 
   return (
     <Button
       color="secondary"
       data-testid="JourneyInstanceReopenButton"
-      onClick={() =>
-        journeyInstanceMutation.mutate(
-          { closed: null },
-          {
-            onError: () =>
-              showSnackbar(
-                'error',
-                messages.instance.reopenButton.error({
-                  singularLabel: journeyInstance.journey.singular_label,
-                })
-              ),
-          }
-        )
-      }
+      onClick={() => updateJourneyInstance({ closed: null })}
       startIcon={<ArchiveIcon />}
       variant="contained"
     >

@@ -1,15 +1,13 @@
-import { useRouter } from 'next/router';
-
-import { campaignResource } from 'features/campaigns/api/campaigns';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
-import { taskResource } from 'features/tasks/api/tasks';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
+import UnderlinedCampaignTitle from '../CampaignParticipation/UnderlinedCampaignTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
-import UnderlinedText from '../../UnderlinedText';
+import UnderlinedTaskTitle from './UnderlinedTaskTitle';
+import { useNumericRouteParams } from 'core/hooks';
 import {
   getMatchingWithConfig,
   getTaskStatus,
@@ -27,59 +25,30 @@ interface DisplayTaskProps {
 }
 
 const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { config } = filter;
   const op = filter.op || OPERATION.ADD;
 
   const tf = getTaskTimeFrameWithConfig(config);
   const timeFrame = getTimeFrameWithConfig(tf);
 
-  let taskTitle = null;
-  if (config.task != undefined) {
-    const taskQuery = taskResource(
-      orgId as string,
-      config.task as unknown as string
-    ).useQuery();
-    taskTitle = taskQuery?.data?.title || null;
-  }
-
-  let campaignTitle;
-  if (config.campaign && config.task == undefined) {
-    const campaignQuery = campaignResource(
-      orgId as string,
-      config.campaign as unknown as string
-    ).useQuery();
-    campaignTitle = campaignQuery?.data?.title || null;
-  }
-
   const matching = getMatchingWithConfig(config?.matching);
-
-  // We don't want to show the campaign if a task has been specfied
-  let campaignSelect = null;
-  if (!taskTitle) {
-    campaignSelect = (
-      <>
-        <Msg id={localMessageIds.campaignSelect.in} />
-        {campaignTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.campaignSelect.campaign}
-            values={{
-              campaign: <UnderlinedText text={campaignTitle} />,
-            }}
-          />
-        ) : (
-          <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
-        )}
-      </>
-    );
-  }
 
   return (
     <Msg
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        campaignSelect: campaignSelect,
+        campaignSelect: config.task ? null : (
+          <>
+            <Msg id={localMessageIds.campaignSelect.in} />
+            {config.campaign && !config.task ? (
+              <UnderlinedCampaignTitle campId={config.campaign} orgId={orgId} />
+            ) : (
+              <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
+            )}
+          </>
+        ),
         matchingSelect: (
           // TODO: Move this to reusable component
           <UnderlinedMsg
@@ -90,13 +59,8 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
             }}
           />
         ),
-        taskSelect: taskTitle ? (
-          <UnderlinedMsg
-            id={localMessageIds.taskSelect.task}
-            values={{
-              task: <UnderlinedText text={taskTitle} />,
-            }}
-          />
+        taskSelect: config.task ? (
+          <UnderlinedTaskTitle orgId={orgId} taskId={config.task} />
         ) : (
           <UnderlinedMsg id={localMessageIds.taskSelect.any} />
         ),

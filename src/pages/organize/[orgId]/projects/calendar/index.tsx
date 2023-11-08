@@ -2,14 +2,14 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import Calendar from 'features/calendar/components';
-import getOrg from 'utils/fetching/getOrg';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
 import useServerSide from 'core/useServerSide';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -25,39 +25,21 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
-
-  if (orgState?.status === 'success') {
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  try {
+    await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
     return {
-      props: {
-        orgId,
-      },
+      props: {},
     };
-  } else {
+  } catch (err) {
     return {
       notFound: true,
     };
   }
 }, scaffoldOptions);
 
-type AllCampaignsCalendarPageProps = {
-  orgId: string;
-};
-
-const AllCampaignsCalendarPage: PageWithLayout<
-  AllCampaignsCalendarPageProps
-> = () => {
+const AllCampaignsCalendarPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
-  // const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
-  // const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
-  // const tasksQuery = tasksResource(orgId).useQuery();
-  // const events = eventsQuery.data || [];
-  // const tasks = tasksQuery.data || [];
-  // const campaigns = campaignsQuery.data || [];
 
   const isOnServer = useServerSide();
   if (isOnServer) {

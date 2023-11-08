@@ -10,18 +10,19 @@ import {
 
 import messageIds from '../l10n/messageIds';
 import UploadFile from '../../import/components/Upload/UploadFile';
+import useCreateView from '../hooks/useCreateView';
+import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
-import ViewBrowserModel from '../models/ViewBrowserModel';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 
 interface PeopleActionButtonProps {
   folderId: number | null;
-  model: ViewBrowserModel;
+  orgId: number;
 }
 
 const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   folderId,
-  model,
+  orgId,
 }) => {
   const messages = useMessages(messageIds);
   const [showDialog, setShowDialog] = useState(false);
@@ -29,6 +30,8 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   const handleClick = () => {
     setShowDialog(!showDialog);
   };
+  const createView = useCreateView(orgId);
+  const { createFolder } = useFolder(orgId, folderId);
 
   return (
     <Box>
@@ -38,14 +41,14 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             icon: <InsertDriveFileOutlined />,
             label: messages.actions.createView(),
             onClick: () => {
-              model.createView(folderId || undefined);
+              createView(folderId || undefined);
             },
           },
           {
             icon: <FolderOutlined />,
             label: messages.actions.createFolder(),
             onClick: () => {
-              model.createView(folderId || undefined);
+              createFolder(messages.newFolderTitle(), folderId || undefined);
             },
           },
           {

@@ -6,9 +6,7 @@ import FolderLayout from 'features/views/layout/FolderLayout';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
-import useModel from 'core/useModel';
 import ViewBrowser from 'features/views/components/ViewBrowser';
-import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 
 import messageIds from 'features/views/l10n/messageIds';
 
@@ -49,9 +47,6 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const model: ViewBrowserModel = useModel(
-    (env) => new ViewBrowserModel(env, parseInt(orgId))
-  );
 
   return (
     <>
@@ -61,7 +56,6 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({
       <ViewBrowser
         basePath={`/organize/${orgId}/people`}
         folderId={parseInt(folderId)}
-        model={model}
       />
     </>
   );

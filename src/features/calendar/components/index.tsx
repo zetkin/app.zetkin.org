@@ -65,7 +65,7 @@ const Calendar = () => {
   }, [timeScaleStr]);
 
   useEffect(() => {
-    const focusedDate = dayjs(focusDate).format('YYYY-MM-DD');
+    const focusedDate = dayjs.utc(focusDate).format('YYYY-MM-DD');
     router.push(
       {
         pathname: undefined,

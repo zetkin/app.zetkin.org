@@ -3,7 +3,6 @@ import { CssBaseline } from '@mui/material';
 import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { FC, ReactElement } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import {
   StyledEngineProvider,
@@ -30,13 +29,6 @@ interface ZetkinAppProvidersProps {
 }
 
 const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
   const router = useRouter();
   const store = createStore();
   const env = new Environment(store, new BrowserApiClient(), router);
@@ -57,13 +49,11 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
                 throw err;
               }}
             >
-              <QueryClientProvider client={queryClient}>
-                <EnvProvider env={env}>
-                  <CssBaseline />
+              <EnvProvider env={env}>
+                <CssBaseline />
 
-                  {children}
-                </EnvProvider>
-              </QueryClientProvider>
+                {children}
+              </EnvProvider>
             </IntlProvider>
           </LocalizationProvider>
         </ThemeProvider>

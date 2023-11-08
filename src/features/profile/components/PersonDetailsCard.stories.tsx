@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import mockOrganization from 'utils/testing/mocks/mockOrganization';
 import mockPerson from 'utils/testing/mocks/mockPerson';
 import PersonDetailsCard from './PersonDetailsCard';
@@ -28,7 +29,7 @@ Primary.args = {
       organization: mockOrganization(),
       slug: 'birthday',
       title: 'Birthday',
-      type: 'date',
+      type: CUSTOM_FIELD_TYPE.DATE,
     },
     {
       description: null,
@@ -36,7 +37,7 @@ Primary.args = {
       organization: mockOrganization(),
       slug: 'facebook',
       title: 'Facebook Profile',
-      type: 'url',
+      type: CUSTOM_FIELD_TYPE.URL,
     },
     {
       description: null,
@@ -44,7 +45,7 @@ Primary.args = {
       organization: mockOrganization(),
       slug: 'twitter',
       title: 'Twitter Profile',
-      type: 'url',
+      type: CUSTOM_FIELD_TYPE.URL,
     },
   ],
   person: mockPerson({

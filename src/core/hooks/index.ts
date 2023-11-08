@@ -1,4 +1,4 @@
-import { AppDispatch, RootState } from 'core/store';
+import type { AppDispatch, RootState } from '../store';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export { default as useApiClient } from './useApiClient';

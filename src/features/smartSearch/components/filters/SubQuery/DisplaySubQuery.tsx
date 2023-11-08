@@ -1,8 +1,3 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-
-import getAllCallAssignments from 'features/callAssignments/api/getAllCallAssignments';
-import getStandaloneQueries from 'utils/fetching/getStandaloneQueries';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   OPERATION,
@@ -14,6 +9,9 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
+import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
+import { useNumericRouteParams } from 'core/hooks';
+import useSmartSearchQueries from 'features/smartSearch/hooks/useSmartSearchQueries';
 const localMessageIds = messageIds.filters.subQuery;
 
 interface DisplaySubQueryProps {
@@ -21,18 +19,13 @@ interface DisplaySubQueryProps {
 }
 
 const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { config } = filter;
-  const standaloneQuery = useQuery(
-    ['standaloneQueries', orgId],
-    getStandaloneQueries(orgId as string)
-  );
-  const standaloneQueries = standaloneQuery?.data || [];
-  const assignmentsQuery = useQuery(
-    ['assignments', orgId],
-    getAllCallAssignments(orgId as string)
-  );
-  const assignments = assignmentsQuery?.data || [];
+  const queriesFuture = useSmartSearchQueries(orgId);
+  const standaloneQueries = queriesFuture.data || [];
+
+  const assignmentsFuture = useCallAssignments(orgId);
+  const assignments = assignmentsFuture.data || [];
 
   const targetGroupQueriesWithTitles: ZetkinQuery[] = assignments.map((a) => ({
     ...a.target,

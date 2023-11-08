@@ -2,14 +2,13 @@ import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
-import getActivities from 'utils/fetching/getActivities';
-import getCampaigns from 'features/campaigns/fetching/getCampaigns';
-import getLocations from 'utils/fetching/getLocations';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
+import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useEventLocations from 'features/events/hooks/useEventLocations';
+import useEventTypes from 'features/events/hooks/useEventTypes';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CampaignParticipationConfig,
@@ -20,6 +19,7 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+
 const localMessageIds = messageIds.filters.campaignParticipation;
 
 const DEFAULT_VALUE = 'any';
@@ -61,22 +61,12 @@ const CampaignParticipation = ({
   onCancel,
   filter: initialFilter,
 }: CampaignParticipationProps): JSX.Element => {
-  const { orgId } = useRouter().query;
-  const campQuery = useQuery(
-    ['campaigns', orgId],
-    getCampaigns(orgId as string)
-  );
-  const activitiesQuery = useQuery(
-    ['activities', orgId],
-    getActivities(orgId as string)
-  );
-  const locationsQuery = useQuery(
-    ['locations', orgId],
-    getLocations(orgId as string)
-  );
-  const campaigns = campQuery?.data || [];
-  const activities = activitiesQuery?.data || [];
-  const locations = locationsQuery?.data || [];
+  const { orgId } = useNumericRouteParams();
+
+  // TODO: Show loading indicator instead of empty arrays?
+  const activities = useEventTypes(orgId).data || [];
+  const campaigns = useCampaigns(orgId).data || [];
+  const locations = useEventLocations(orgId) || [];
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CampaignParticipationConfig>(initialFilter, {
