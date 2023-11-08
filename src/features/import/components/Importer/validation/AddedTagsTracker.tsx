@@ -8,13 +8,13 @@ import { ZetkinTag } from 'utils/types/zetkin';
 
 interface AddedTagsTrackerProps {
   createdTags: { [key: number]: number };
-  updatedTags: { [key: number]: number };
   orgId: number;
+  updatedTags: { [key: number]: number };
 }
 const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
   createdTags,
-  updatedTags,
   orgId,
+  updatedTags,
 }) => {
   const { data } = useTags(orgId);
   const tags = data || [];

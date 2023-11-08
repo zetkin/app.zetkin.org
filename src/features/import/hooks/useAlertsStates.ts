@@ -40,13 +40,7 @@ export default function useAlertsStates(
     .map((item) => item[0]);
 
   //Error when no one imported
-  const allObjsAreEmpty =
-    isEmptyObj(fake.summary.createdPeople.appliedTagsCreated) &&
-    isEmptyObj(fake.summary.createdPeople.organizationMembershipsCreated) &&
-    isEmptyObj(fake.summary.updatedPeople.appliedTagsCreated) &&
-    isEmptyObj(fake.summary.updatedPeople.organizationMembershipsCreated) &&
-    fake.summary.createdPeople.total === 0 &&
-    fake.summary.updatedPeople.total === 0;
+  const allObjsAreEmpty = isEmptyObj(fake.summary);
 
   if (allObjsAreEmpty) {
     onDisabled(true);
