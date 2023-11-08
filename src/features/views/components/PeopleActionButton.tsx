@@ -26,12 +26,8 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   const messages = useMessages(messageIds);
   const [showDialog, setShowDialog] = useState(false);
 
-  const handleClickOpen = () => {
-    setShowDialog(true);
-  };
-
-  const handleClose = () => {
-    setShowDialog(false);
+  const handleClick = () => {
+    setShowDialog(!showDialog);
   };
 
   return (
@@ -55,18 +51,18 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
           {
             icon: <UploadFileOutlined />,
             label: messages.actions.importPeople(),
-            onClick: handleClickOpen,
+            onClick: handleClick,
           },
         ]}
         label={messages.actions.create()}
       />
-      <Dialog onClose={handleClose} open={showDialog}>
+      <Dialog onClose={handleClick} open={showDialog}>
         <Typography sx={{ fontSize: 32, padding: 2 }}>
           {messages.actions.importPeople()}
         </Typography>
         <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={handleClick}
           sx={{
             color: (theme) => theme.palette.grey[500],
             position: 'absolute',
