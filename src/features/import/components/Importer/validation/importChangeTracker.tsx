@@ -1,8 +1,6 @@
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 
-import globalMessageIds from 'core/i18n/globalMessageIds';
-import messageIds from 'features/import/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
@@ -11,6 +9,9 @@ import {
   ZetkinCustomField,
   ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
+
+import globalMessageIds from 'core/i18n/globalMessageIds';
+import messageIds from 'features/import/l10n/messageIds';
 
 interface ImportChangeTrackerProps {
   orgsStates?: { orgs: string[]; updatedNum: number };

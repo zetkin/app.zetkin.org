@@ -1,3 +1,4 @@
+import { Circle } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
@@ -8,7 +9,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Circle } from '@mui/icons-material';
 import messageIds from 'features/import/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 

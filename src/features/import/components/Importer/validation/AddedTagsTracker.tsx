@@ -1,10 +1,12 @@
 import { Box } from '@mui/system';
-import messageIds from 'features/import/l10n/messageIds';
+import { Typography } from '@mui/material';
+
 import { Msg } from 'core/i18n';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
-import { Typography } from '@mui/material';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
+
+import messageIds from 'features/import/l10n/messageIds';
 
 interface AddedTagsTrackerProps {
   createdTags: { [key: number]: number };

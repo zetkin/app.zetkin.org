@@ -6,7 +6,6 @@ import AddedTagsTracker from './AddedTagsTracker';
 import { getOrgsStates } from 'features/import/utils/getOrgsStates';
 import ImportAlert from './importAlert';
 import ImportChangeTracker from './importChangeTracker';
-import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useAlertsStates from 'features/import/hooks/useAlertsStates';
 import { useNumericRouteParams } from 'core/hooks';
@@ -15,6 +14,8 @@ import {
   ZetkinCustomField,
   ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
+
+import messageIds from 'features/import/l10n/messageIds';
 
 export interface FakeDataType {
   summary: {
