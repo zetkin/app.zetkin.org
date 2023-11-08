@@ -6,7 +6,7 @@ import { useMessages } from 'core/i18n';
 import {
   ExperimentalFieldTypes,
   ExperimentField,
-} from '../components/Importer/Configure/Mapping/MappingRow';
+} from '../components/Configure/Mapping/MappingRow';
 
 export default function useFields(orgId: number): ExperimentField[] {
   const globalMessages = useMessages(globalMessageIds);

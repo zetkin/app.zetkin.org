@@ -27,7 +27,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
 
   return (
     <SimpleLayout
-      actionButtons={<PeopleActionButton folderId={null} />}
+      actionButtons={<PeopleActionButton folderId={null} orgId={orgId} />}
       noPad
       subtitle={
         <ZUIFuture future={itemSummaryFuture}>

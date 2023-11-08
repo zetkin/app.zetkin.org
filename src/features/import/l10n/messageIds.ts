@@ -118,5 +118,17 @@ export default makeMessages('feat.import', {
     upload: m('Upload'),
     validate: m('Validate'),
   },
+  uploadDialog: {
+    dialogButtons: {
+      configure: m('Configure'),
+      restart: m('Restart'),
+    },
+    instructions: m('Click to upload'),
+    instructionsEnd: m(' or drag and drop'),
+    loading: m('Loading file...'),
+    release: m('Release the file here'),
+    types: m('CSV, XLS or XLSX'),
+    unsupportedFile: m('Unsupported file.'),
+  },
   validate: m('Validate'),
 });

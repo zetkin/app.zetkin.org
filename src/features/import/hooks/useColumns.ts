@@ -1,5 +1,5 @@
-import { ExperimentColumn } from '../components/Importer/Configure/Mapping/MappingRow';
-import { ExperimentRow } from '../components/Importer/Configure/Mapping';
+import { ExperimentColumn } from '../components/Configure/Mapping/MappingRow';
+import { ExperimentRow } from '../components/Configure/Mapping';
 import messageIds from '../l10n/messageIds';
 import range from 'utils/range';
 import { useMessages } from 'core/i18n';
