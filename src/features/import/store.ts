@@ -1,18 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { RemoteList, remoteList } from 'utils/storeUtils';
+import { ImportedFile } from './utils/parseFile';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
-  testList: RemoteList<{ id: string }>;
+  files: ImportedFile[];
 }
 const initialState: ImportStoreSlice = {
-  testList: remoteList(),
+  files: [],
 };
 const importSlice = createSlice({
   initialState,
   name: 'import',
   reducers: {
-    //TODO add actions
+    addFiles: (state, action: PayloadAction<ImportedFile>) => {
+      const file = action.payload;
+      state.files.push(file);
+    },
   },
 });
 
 export default importSlice;
+export const { addFiles } = importSlice.actions;
