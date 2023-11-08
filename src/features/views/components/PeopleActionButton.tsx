@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, DialogTitle, IconButton } from '@mui/material';
+import { Dialog, IconButton, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import {
   FolderOutlined,
@@ -9,7 +9,7 @@ import {
 } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
-import UploadFile from '../../import/components/UploadFile';
+import UploadFile from '../../import/components/Upload/UploadFile';
 import { useMessages } from 'core/i18n';
 import ViewBrowserModel from '../models/ViewBrowserModel';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
@@ -61,9 +61,9 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
         label={messages.actions.create()}
       />
       <Dialog onClose={handleClose} open={showDialog}>
-        <DialogTitle sx={{ fontSize: 32 }}>
+        <Typography sx={{ fontSize: 32, padding: 2 }}>
           {messages.actions.importPeople()}
-        </DialogTitle>
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={handleClose}
