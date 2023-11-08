@@ -15,12 +15,10 @@ export default makeMessages('feat.import', {
     validate: m('Validate'),
   },
   uploadDialog: {
-    dataDetected: m('Identical data detected'),
     dialogButtons: {
       configure: m('Configure'),
       restart: m('Restart'),
     },
-    infoDetected: m('This file was used in an import done 5 days ago'),
     instructions: m('Click to upload'),
     instructionsEnd: m(' or drag and drop'),
     loading: m('Loading file...'),

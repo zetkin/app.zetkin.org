@@ -1,16 +1,11 @@
 import { addFiles } from '../store';
 import { parseExcelFile } from '../utils/parseFile';
+import { useAppDispatch } from 'core/hooks';
 import { useState } from 'react';
 import { ImportedFile, parseCSVFile } from '../utils/parseFile';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useFileImport() {
   const [loading, setLoading] = useState(false);
-  const [parsedFile, setParsedFile] = useState<ImportedFile>({
-    sheets: [],
-    title: '',
-  });
-  const files = useAppSelector((state) => state.import.files);
   const dispatch = useAppDispatch();
 
   function parseData(file: File) {
@@ -22,7 +17,6 @@ export default function useFileImport() {
     ) {
       parseCSVFile(file).then((res) => {
         saveData(res);
-        setParsedFile(res);
         setLoading(false);
       });
     } else if (
@@ -33,7 +27,6 @@ export default function useFileImport() {
     ) {
       parseExcelFile(file).then((res) => {
         saveData(res);
-        setParsedFile(res);
         setLoading(false);
       });
     } else {
@@ -45,6 +38,5 @@ export default function useFileImport() {
     dispatch(addFiles(data));
   }
 
-
-  return { checkIfFileIsAlreadyInStore, loading, parseData };
+  return { loading, parseData };
 }

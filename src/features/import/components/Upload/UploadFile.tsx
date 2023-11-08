@@ -1,3 +1,4 @@
+import { UploadFileOutlined } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import {
   Box,
@@ -6,7 +7,6 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import { FileCopy, UploadFileOutlined } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 
 import messageIds from '../../l10n/messageIds';
@@ -18,7 +18,6 @@ const UploadFile = () => {
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
   const { parseData, loading } = useImportedFile();
-  const [isSameData, setIsSameData] = useState<boolean>(false);
 
   const onDrop = useCallback((acceptedFiles: File[]): void => {
     acceptedFiles.map((file: File) => {
@@ -81,27 +80,6 @@ const UploadFile = () => {
             <CircularProgress sx={{ color: '#1976D2' }} />
             <Typography>{messages.uploadDialog.loading()}</Typography>
           </Box>
-        )}
-        {!loading && (
-          <>
-            <IconButton
-              style={{
-                backgroundColor: '#1976D214',
-                borderColor: '#1976D2',
-                borderRadius: 100,
-                height: 40,
-                marginBottom: 12,
-                padding: 30,
-                width: 40,
-              }}
-            >
-              <FileCopy sx={{ color: '#1976D2', fontSize: 40 }} />
-            </IconButton>
-            <Typography sx={{ fontWeight: 'bold' }}>
-              {messages.uploadDialog.dataDetected()}
-            </Typography>
-            <Typography>{messages.uploadDialog.infoDetected()}</Typography>
-          </>
         )}
         <input type="file" {...getInputProps()} />
         <Box>
@@ -172,34 +150,8 @@ const UploadFile = () => {
               color="primary"
               onClick={(ev) => {
                 ev.stopPropagation();
-                setIsSameData(false);
+
                 setError(false);
-              }}
-            >
-              <Msg id={messageIds.uploadDialog.dialogButtons.restart} />
-            </Button>
-          </Box>
-          <Box m={1}>
-            <Button
-              color="primary"
-              disabled={error}
-              onClick={(ev) => ev.stopPropagation()}
-              type="submit"
-              variant="contained"
-            >
-              <Msg id={messageIds.uploadDialog.dialogButtons.configure} />
-            </Button>
-          </Box>
-        </Box>
-      )}
-      {isSameData && !loading && (
-        <Box display="flex" justifyContent="flex-end" p={1} width={1}>
-          <Box m={1}>
-            <Button
-              color="primary"
-              onClick={(ev) => {
-                ev.stopPropagation();
-                setIsSameData(false);
               }}
             >
               <Msg id={messageIds.uploadDialog.dialogButtons.restart} />
