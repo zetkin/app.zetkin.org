@@ -1,15 +1,15 @@
-import { Box } from '@mui/system';
-import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, IconButton, Typography } from '@mui/material';
-import { FC, useState } from 'react';
+import { Box, Dialog, IconButton, Typography } from '@mui/material';
 import {
+  Close,
   FolderOutlined,
   InsertDriveFileOutlined,
   UploadFileOutlined,
 } from '@mui/icons-material';
+import { FC, useState } from 'react';
 
+import Importer from 'features/import/components/Importer';
 import messageIds from '../l10n/messageIds';
-import UploadFile from '../../import/components/Upload/UploadFile';
+import UploadFile from 'features/import/components/UploadFile';
 import useCreateView from '../hooks/useCreateView';
 import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
@@ -25,11 +25,9 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const [showDialog, setShowDialog] = useState(false);
+  const [importerDialogOpen, setImporterDialogOpen] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
-  const handleClick = () => {
-    setShowDialog(!showDialog);
-  };
   const createView = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
 
@@ -53,19 +51,27 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
           },
           {
             icon: <UploadFileOutlined />,
-            label: messages.actions.importPeople(),
-            onClick: handleClick,
+            label: 'importer', //messages.actions.importPeople(),
+            onClick: () => setImporterDialogOpen(true),
+          },
+          {
+            icon: <UploadFileOutlined />,
+            label: 'upload', //messages.actions.importPeople(),
+            onClick: () => setUploadDialogOpen(true),
           },
         ]}
         label={messages.actions.create()}
       />
-      <Dialog onClose={handleClick} open={showDialog}>
+      <Dialog
+        onClose={() => setUploadDialogOpen(false)}
+        open={uploadDialogOpen}
+      >
         <Typography sx={{ fontSize: 32, padding: 2 }}>
           {messages.actions.importPeople()}
         </Typography>
         <IconButton
           aria-label="close"
-          onClick={handleClick}
+          onClick={() => setUploadDialogOpen(false)}
           sx={{
             color: (theme) => theme.palette.grey[500],
             position: 'absolute',
@@ -73,10 +79,15 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             top: 8,
           }}
         >
-          <CloseIcon />
+          <Close />
         </IconButton>
         <UploadFile />
       </Dialog>
+      <Importer
+        onClose={() => setImporterDialogOpen(false)}
+        onRestart={() => setImporterDialogOpen(false)}
+        open={importerDialogOpen}
+      />
     </Box>
   );
 };

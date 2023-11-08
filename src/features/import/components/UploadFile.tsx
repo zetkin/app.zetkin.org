@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import { useCallback, useState } from 'react';
 
-import messageIds from '../../l10n/messageIds';
+import messageIds from '../l10n/messageIds';
 import theme from 'theme';
-import useImportedFile from '../../hooks/useImportedFile';
+import useImportedFile from '../hooks/useImportedFile';
 import { Msg, useMessages } from 'core/i18n';
 
 const UploadFile = () => {
