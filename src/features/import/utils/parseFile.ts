@@ -1,13 +1,46 @@
 import * as XLSX from 'xlsx';
 import { parse } from 'papaparse';
 
-export type ImportedFile = Array<Sheet>;
-type Sheet = { [key: string]: Array<Rows> };
-type Rows = Array<Record<string | number, string | number>>;
+export type ImportedFile = {
+  sheets: Sheet[];
+  title: string;
+};
+type Sheet = {
+  data: Row[];
+  title: string;
+};
+type Row = {
+  data: (string | number | null)[];
+};
+
+type ListMeta = {
+  items: {
+    data: (string | number | null)[];
+  };
+};
+
+export function createList(meta: ListMeta) {
+  return {
+    items: createListItems(meta.items.data),
+  };
+}
+
+export function createListItems(rawList: (string | number | null)[]) {
+  return rawList.map((i) => createListItem(i));
+}
+
+export function createListItem(data: string | number | null) {
+  return {
+    data,
+  };
+}
 
 export async function parseCSVFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
-    const rawData: ImportedFile = [];
+    const rawData: ImportedFile = {
+      sheets: [],
+      title: file.name,
+    };
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
@@ -16,14 +49,15 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
         complete: (result) => {
           if (result.data) {
             const sheetObject = {
-              //use name of file as key
-              [file.name.split('.csv').join('')]: result.data as Rows[],
+              data: result.data,
+              title: file.name,
             };
-            rawData.push(sheetObject);
+            rawData.sheets = [sheetObject as Sheet];
+            rawData.title = file.name;
           }
           resolve(rawData);
         },
-        header: true,
+        header: false,
       });
     };
 
@@ -35,26 +69,62 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
 
 export async function parseExcelFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
-    const rawData: ImportedFile = [];
+    const rawData: ImportedFile = {
+      sheets: [],
+      title: file.name,
+    };
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
-    reader.onload = (evt) => {
+
+    (reader.onload = (evt) => {
       const bstr = evt.target?.result;
-      const workbook = XLSX.read(bstr, { type: 'binary' });
+      const workbook = XLSX.read(bstr, {
+        cellStyles: true,
+        dateNF: 'yyyy"-"mm"-"dd',
+        type: 'binary',
+      });
+      workbook.SheetNames.forEach((name) => {
+        const sheet = workbook.Sheets[name];
+        if ('!ref' in sheet && sheet['!ref'] !== undefined) {
+          const range = XLSX.utils.decode_range(sheet['!ref']);
 
-      workbook.SheetNames.forEach((sheetName) => {
-        const ws = workbook.Sheets[sheetName];
-        const data = XLSX.utils.sheet_to_json<Rows>(ws);
+          const table = {
+            columnList: createList({
+              items: {
+                data: [],
+              },
+            }),
+            name: name,
+            numEmptyColumnsRemoved: 0,
+            rows: [] as Row[],
+            useFirstRowAsHeader: false,
+          };
 
-        const sheetObject = {
-          [sheetName]: data,
-        };
-        rawData.push(sheetObject);
+          for (let c = range.s.c; c <= range.e.c; c++) {
+            table.columnList.items.push(createListItem(null));
+          }
+
+          for (let r = range.s.r; r <= range.e.r; r++) {
+            const rowValues = table.columnList.items.map((col, idx) => {
+              const addr = XLSX.utils.encode_cell({ c: idx, r });
+              const cell = sheet[addr];
+              return cell ? cell.d || cell.w || cell.v : undefined;
+            });
+
+            // Only include if there are non-null values in the row
+            if (rowValues.find((v) => v != null)) {
+              table.rows.push({
+                data: rowValues.flat(),
+              });
+            }
+          }
+          rawData.sheets.push({ data: table.rows, title: table.name });
+        }
       });
       resolve(rawData);
-    };
-    reader.onerror = (error) => {
-      reject(error);
-    };
+    }),
+      (reader.onerror = (error) => {
+        reject(error);
+      });
   });
 }
