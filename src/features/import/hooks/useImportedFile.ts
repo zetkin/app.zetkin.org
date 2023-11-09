@@ -1,4 +1,4 @@
-import { addFiles } from '../store';
+import { addFile } from '../store';
 import { parseExcelFile } from '../utils/parseFile';
 import { useAppDispatch } from 'core/hooks';
 import { useState } from 'react';
@@ -35,7 +35,7 @@ export default function useFileImport() {
   }
 
   function saveData(data: ImportedFile) {
-    dispatch(addFiles(data));
+    dispatch(addFile(data));
   }
 
   return { loading, parseData };
