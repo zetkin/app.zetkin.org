@@ -2,21 +2,23 @@ import { ImportedFile } from './utils/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
-  files: ImportedFile[];
+  pendingFile: ImportedFile;
 }
+
 const initialState: ImportStoreSlice = {
-  files: [],
+  pendingFile: { sheets: [], title: '' },
 };
+
 const importSlice = createSlice({
   initialState,
   name: 'import',
   reducers: {
-    addFiles: (state, action: PayloadAction<ImportedFile>) => {
+    addFile: (state, action: PayloadAction<ImportedFile>) => {
       const file = action.payload;
-      state.files.push(file);
+      state.pendingFile = file;
     },
   },
 });
 
 export default importSlice;
-export const { addFiles } = importSlice.actions;
+export const { addFile } = importSlice.actions;

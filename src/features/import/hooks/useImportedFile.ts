@@ -1,4 +1,4 @@
-import { addFiles } from '../store';
+import { addFile } from '../store';
 import { ImportedFile } from '../utils/types';
 import { parseCSVFile } from '../utils/parseFile';
 import { parseExcelFile } from '../utils/parseFile';
@@ -36,7 +36,7 @@ export default function useFileImport() {
   }
 
   function saveData(data: ImportedFile) {
-    dispatch(addFiles(data));
+    dispatch(addFile(data));
   }
 
   return { loading, parseData };

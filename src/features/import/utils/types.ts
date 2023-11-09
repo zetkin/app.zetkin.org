@@ -14,12 +14,6 @@ export type Row = {
   data: CellData[];
 };
 
-export type ListMeta = {
-  items: {
-    data: CellData[];
-  };
-};
-
 export enum FieldTypes {
   BASIC = 'basic',
   ID = 'id',
