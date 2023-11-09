@@ -114,9 +114,9 @@ const UploadFile = () => {
                   backgroundColor: theme.palette.grey[300],
                   borderRadius: 100,
                   cursor: 'pointer',
-                  height: 40,
-                  padding: 30,
-                  width: 40,
+                  height: '40px',
+                  padding: '30px',
+                  width: '40px',
                 }}
               >
                 <UploadFileOutlined
