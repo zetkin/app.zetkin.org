@@ -1,12 +1,15 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
-import { ConfiguringData } from '..';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
 import useFields from 'features/import/hooks/useFields';
 import { useNumericRouteParams } from 'core/hooks';
-import { Column, FieldTypes } from 'features/import/utils/types';
+import {
+  Column,
+  ConfiguringData,
+  FieldTypes,
+} from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
@@ -15,7 +18,7 @@ interface MappingProps {
   currentlyConfiguring: ConfiguringData | null;
   onMapValues: (columnId: number, type: FieldTypes) => void;
   onSelectColumn: (columnId: number, isChecked: boolean) => void;
-  selectedColumns: number[];
+  selectedColumnIds: number[];
 }
 
 const Mapping: FC<MappingProps> = ({
@@ -24,7 +27,7 @@ const Mapping: FC<MappingProps> = ({
   currentlyConfiguring,
   onMapValues,
   onSelectColumn,
-  selectedColumns,
+  selectedColumnIds,
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
@@ -56,7 +59,7 @@ const Mapping: FC<MappingProps> = ({
       </Box>
       <Box flexGrow={1} sx={{ overflowY: 'scroll' }}>
         {columns.map((column, index) => {
-          const isSelected = !!selectedColumns.find((id) => id == column.id);
+          const isSelected = !!selectedColumnIds.find((id) => id == column.id);
           return (
             <Box key={column.id}>
               {index == 0 && <Divider />}

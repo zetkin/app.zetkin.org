@@ -38,3 +38,8 @@ export interface MappingResults {
   numMappedTo: number;
   numPeople: number;
 }
+
+export interface ConfiguringData {
+  columnId: number;
+  type: FieldTypes;
+}

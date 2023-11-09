@@ -6,14 +6,7 @@ import Mapping from './Mapping';
 import SheetSettings from './SheetSettings';
 import useColumns from 'features/import/hooks/useColumns';
 import useSheets from 'features/import/hooks/useSheets';
-import { FieldTypes, Sheet } from 'features/import/utils/types';
-
-export interface ConfiguringData {
-  columnId: number;
-  type: FieldTypes;
-}
-
-export type SheetWithId = Sheet & { id: number };
+import { ConfiguringData, FieldTypes } from 'features/import/utils/types';
 
 const Configure: FC = () => {
   const {
@@ -25,13 +18,13 @@ const Configure: FC = () => {
     updateSelectedSheetIndex,
   } = useSheets();
 
-  //mapping
   const [currentlyConfiguring, setCurrentlyConfiguring] =
     useState<ConfiguringData | null>(null);
 
-  const [selectedColumns, setSelectedColumns] = useState<number[]>([]);
-
-  const columns = useColumns(firstRowIsHeaders, selectedSheet?.data || []);
+  const { allColumns, selectedColumnIds, updateSelectedColumnIds } = useColumns(
+    firstRowIsHeaders,
+    selectedSheet?.data || []
+  );
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -42,7 +35,7 @@ const Configure: FC = () => {
             onChangeFirstRowIsHeaders={updateFirstRowIsHeaders}
             onChangeSelectedSheet={(index: number) => {
               updateSelectedSheetIndex(index);
-              setSelectedColumns([]);
+              updateSelectedColumnIds([]);
               setCurrentlyConfiguring(null);
             }}
             selectedSheetIndex={selectedSheetIndex}
@@ -50,26 +43,26 @@ const Configure: FC = () => {
           />
           <Mapping
             clearCurrentlyConfiguring={() => setCurrentlyConfiguring(null)}
-            columns={columns}
+            columns={allColumns}
             currentlyConfiguring={currentlyConfiguring}
             onMapValues={(columnId: number, type: FieldTypes) =>
               setCurrentlyConfiguring({ columnId, type })
             }
             onSelectColumn={(columnId: number, isChecked: boolean) => {
               if (isChecked) {
-                setSelectedColumns([...selectedColumns, columnId]);
+                updateSelectedColumnIds([...selectedColumnIds, columnId]);
               } else {
-                setSelectedColumns(
-                  selectedColumns.filter((id) => id != columnId)
+                updateSelectedColumnIds(
+                  selectedColumnIds.filter((id) => id != columnId)
                 );
               }
             }}
-            selectedColumns={selectedColumns}
+            selectedColumnIds={selectedColumnIds}
           />
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
           <Configuration
-            columns={columns}
+            columns={allColumns}
             currentlyConfiguring={currentlyConfiguring}
           />
         </Box>

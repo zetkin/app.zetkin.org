@@ -12,11 +12,11 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import { ConfiguringData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import {
   Column,
+  ConfiguringData,
   Field,
   FieldTypes,
   MappingResults,

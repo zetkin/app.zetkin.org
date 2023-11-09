@@ -2,12 +2,15 @@ import { CompareArrows } from '@mui/icons-material';
 import { FC } from 'react';
 import { Box, Divider, Typography, useTheme } from '@mui/material';
 
-import { ConfiguringData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import TagConfigRow from './TagConfigRow';
 import useColumn from 'features/import/hooks/useColumn';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import { Column, FieldTypes } from 'features/import/utils/types';
+import {
+  Column,
+  ConfiguringData,
+  FieldTypes,
+} from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ConfigurationProps {
