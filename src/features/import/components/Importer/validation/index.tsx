@@ -10,29 +10,30 @@ import { Msg } from 'core/i18n';
 import useAlertsStates from 'features/import/hooks/useAlertsStates';
 import { useNumericRouteParams } from 'core/hooks';
 import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
-import {
-  ZetkinCustomField,
-  ZetkinPersonNativeFields,
-} from 'utils/types/zetkin';
 
 import messageIds from 'features/import/l10n/messageIds';
 
 export interface FakeDataType {
   summary: {
-    createdPeople: {
-      appliedTagsCreated: { [key: number]: number };
-      organizationMembershipsCreated: { [key: number]: number };
+    membershipsCreated: {
+      byOrganization: {
+        [key: number]: number;
+      };
       total: number;
     };
-    updatedPeople: {
-      appliedTagsCreated: { [key: number]: number };
-      appliedTagsUpdated: { [key: number]: number };
-      fields: {
-        [key in
-          | keyof Partial<ZetkinPersonNativeFields>
-          | keyof Partial<ZetkinCustomField>]?: number;
+    peopleCreated: {
+      total: number;
+    };
+    peopleUpdated: {
+      byField: {
+        [key: string]: number;
       };
-      organizationMembershipsCreated: { [key: number]: number };
+      total: number;
+    };
+    tagsCreated: {
+      byTag: {
+        [key: number]: number;
+      };
       total: number;
     };
   };
@@ -46,50 +47,44 @@ interface ValidationProps {
 const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
   const fake = {
     summary: {
-      createdPeople: {
-        appliedTagsCreated: {
-          11: 20,
-          9: 20,
-        },
-        organizationMembershipsCreated: {
-          4: 10,
-          7: 10,
-        },
-        total: 100,
-      },
-      updatedPeople: {
-        appliedTagsCreated: {
-          11: 20,
-          12: 20,
-        },
-        appliedTagsUpdated: {
-          2: 10,
-        },
-        fields: {
-          date_of_birth: 22,
-          email: 12,
-          first_name: 21,
-          join_date: 21,
-          last_name: 11,
-        },
-        organizationMembershipsCreated: {
+      membershipsCreated: {
+        byOrganization: {
           1: 10,
           2: 10,
           4: 10,
           7: 10,
         },
+        total: 60,
+      },
+      peopleCreated: {
+        total: 60,
+      },
+      peopleUpdated: {
+        byField: {
+          date_of_birth: 25,
+          email: 10,
+          first_name: 25,
+          join_date: 20,
+          last_name: 20,
+        },
         total: 100,
+      },
+      tagsCreated: {
+        byTag: {
+          11: 20,
+          12: 20,
+          9: 20,
+        },
+        total: 60,
       },
     },
   };
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
   const { orgId } = useNumericRouteParams();
-  const alertStates = useAlertsStates(fake, orgId);
+  const alertStates = useAlertsStates(fake.summary, orgId);
 
-  const orgsStates = getOrgsStates(
-    fake.summary.createdPeople.organizationMembershipsCreated,
-    fake.summary.updatedPeople.organizationMembershipsCreated
-  );
+  const orgsStates = getOrgsStates(fake.summary.membershipsCreated);
+
   const warningAlerts = alertStates.filter(
     (item) => item.alertStatus === 'warning'
   );
@@ -114,22 +109,21 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
             <PeopleCounter
-              changedNum={fake.summary.createdPeople.total}
+              changedNum={fake.summary.peopleCreated.total}
               status={COUNT_STATUS.CREATED}
             />
             <PeopleCounter
-              changedNum={fake.summary.updatedPeople.total}
+              changedNum={fake.summary.peopleUpdated.total}
               status={COUNT_STATUS.UPDATED}
             />
           </Stack>
           <ImportChangeTracker
-            fields={fake.summary.updatedPeople.fields}
+            fields={fake.summary.peopleUpdated.byField}
             orgId={orgId}
           />
           <AddedTagsTracker
-            createdTags={fake.summary.createdPeople.appliedTagsCreated}
+            createdTags={fake.summary.tagsCreated}
             orgId={orgId}
-            updatedTags={fake.summary.updatedPeople.appliedTagsCreated}
           />
           <ImportChangeTracker orgId={orgId} orgsStates={orgsStates} />
         </Stack>

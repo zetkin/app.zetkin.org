@@ -1,6 +1,11 @@
 import { FakeDataType } from '../components/Importer/validation';
 
-export const isEmptyObj = (
+export const checkAllValuesAreZero = (obj: FakeDataType['summary']) => {
+  const objs = Object.values(obj);
+  return objs.every((item) => item.total === 0);
+};
+
+export const checkEmptyObj = (
   obj: FakeDataType['summary'] | { [key: number]: number }
 ): boolean => {
   const objs = Object.values(obj);
@@ -8,35 +13,22 @@ export const isEmptyObj = (
     if (typeof value === 'number' && value === 0) {
       return true;
     } else if (value instanceof Object === true) {
-      return isEmptyObj(value);
+      return checkEmptyObj(value);
     } else {
       return false;
     }
   });
 };
 
-export const getOrgsStates = (
-  createdOrgs: FakeDataType['summary']['createdPeople']['organizationMembershipsCreated'],
-  updatedOrgs: FakeDataType['summary']['updatedPeople']['organizationMembershipsCreated']
-): { orgs: string[]; updatedNum: number } => {
+export const getOrgsStates = (membershipsAdded: {
+  byOrganization: { [key: number]: number };
+  total: number;
+}): { createdNum: number; orgs: string[] } => {
   const orgs: string[] = [];
-  let updatedNum = 0;
 
-  const calcOrgState = (
-    org:
-      | FakeDataType['summary']['createdPeople']['organizationMembershipsCreated']
-      | FakeDataType['summary']['updatedPeople']['organizationMembershipsCreated']
-  ) => {
-    updatedNum += Object.values(org).reduce((acc, val) => acc + val, 0);
-    orgs.push(...Object.keys(org));
-  };
-
-  if (!isEmptyObj(createdOrgs)) {
-    calcOrgState(createdOrgs);
+  if (!checkEmptyObj(membershipsAdded.byOrganization)) {
+    orgs.push(...Object.keys(membershipsAdded.byOrganization));
   }
 
-  if (!isEmptyObj(updatedOrgs)) {
-    calcOrgState(updatedOrgs);
-  }
-  return { orgs, updatedNum };
+  return { createdNum: membershipsAdded.total, orgs };
 };

@@ -1,6 +1,6 @@
 import { ALERT_STATUS } from '../components/Importer/validation/importAlert';
 import globalMessageIds from 'core/i18n/globalMessageIds';
-import { isEmptyObj } from '../utils/getOrgsStates';
+import { checkAllValuesAreZero, checkEmptyObj } from '../utils/getOrgsStates';
 
 import { FakeDataType } from '../components/Importer/validation';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
@@ -16,7 +16,7 @@ interface useAlertsStatesReturn {
 }
 
 export default function useAlertsStates(
-  fake: FakeDataType,
+  fake: FakeDataType['summary'],
   orgId: number
 ): useAlertsStatesReturn[] {
   const message = useMessages(messageIds);
@@ -26,17 +26,15 @@ export default function useAlertsStates(
 
   const result = [];
 
-  const fieldsWithManyChanges = Object.entries(
-    fake.summary.updatedPeople.fields
-  )
+  const fieldsWithManyChanges = Object.entries(fake.peopleUpdated.byField)
     .filter((item) => {
       const fieldValue = item[1] as number;
-      return fake.summary.updatedPeople.total * 0.2 < fieldValue;
+      return fake.peopleUpdated.total * 0.2 < fieldValue;
     })
     .map((item) => item[0]);
 
   //Error when no one imported
-  if (isEmptyObj(fake.summary)) {
+  if (checkEmptyObj(fake) || checkAllValuesAreZero(fake)) {
     result.push({
       alertStatus: ALERT_STATUS.ERROR,
       msg: message.validation.alerts.error.desc(),

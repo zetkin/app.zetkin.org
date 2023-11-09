@@ -14,7 +14,7 @@ import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/import/l10n/messageIds';
 
 interface ImportChangeTrackerProps {
-  orgsStates?: { orgs: string[]; updatedNum: number };
+  orgsStates?: { createdNum: number; orgs: string[] };
   fields?: {
     [key in
       | keyof Partial<ZetkinPersonNativeFields>
@@ -69,7 +69,7 @@ const ImportChangeTracker: React.FunctionComponent<
         <Box sx={{ border: 'solid 1px lightgrey', borderRadius: '4px', p: 2 }}>
           <Box alignItems="center" display="flex">
             <Typography fontWeight="bold" sx={{ mr: 0.5 }}>
-              {orgsStates.updatedNum}
+              {orgsStates.createdNum}
             </Typography>
             <Msg id={messageIds.validation.trackers.orgs} />
             <Typography fontWeight="bold" sx={{ ml: 0.5 }}>
