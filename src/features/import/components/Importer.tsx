@@ -104,7 +104,6 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Cow'] },
                 { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Dog'] },
               ],
-              id: 1,
               title: 'Members',
             },
             {
@@ -115,7 +114,6 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 { data: ['Pamela', 'Andersson', 'pamela@gmail.com', 61] },
                 { data: ['Jane', 'Austen', 'jane@gmail.com', 102] },
               ],
-              id: 2,
               title: 'Old Members',
             },
           ]}

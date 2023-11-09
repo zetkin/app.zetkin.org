@@ -1,4 +1,4 @@
-import { ImportedFile } from './utils/parseFile';
+import { ImportedFile } from './utils/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {

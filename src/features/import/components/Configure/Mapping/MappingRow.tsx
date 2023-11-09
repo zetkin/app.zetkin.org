@@ -15,42 +15,23 @@ import { FC, useState } from 'react';
 import { ConfiguringData } from '..';
 import messageIds from 'features/import/l10n/messageIds';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
+import {
+  Column,
+  Field,
+  FieldTypes,
+  MappingResults,
+} from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
-export enum ExperimentalFieldTypes {
-  BASIC = 'basic',
-  ID = 'id',
-  ORGANIZATION = 'organization',
-  TAG = 'tag',
-}
-
-export interface ExperimentField {
-  id: number;
-  slug: string;
-  title: string;
-  type: ExperimentalFieldTypes;
-}
-
-export interface ExperimentColumn {
-  data: (number | string | null)[];
-  id: number;
-  title: string;
-}
-
-export interface ExperimentalMappingResults {
-  numMappedTo: number;
-  numPeople: number;
-}
-
 interface MappingRowProps {
-  column: ExperimentColumn;
+  column: Column;
   clearCurrentlyConfiguring: () => void;
   currentlyConfiguring: ConfiguringData | null;
   isSelected: boolean;
-  mappingResults: ExperimentalMappingResults | null;
+  mappingResults: MappingResults | null;
   onCheck: (isChecked: boolean) => void;
-  onMapValues: (type: ExperimentalFieldTypes) => void;
-  zetkinFields: ExperimentField[];
+  onMapValues: (type: FieldTypes) => void;
+  zetkinFields: Field[];
 }
 
 const MappingRow: FC<MappingRowProps> = ({
@@ -66,14 +47,12 @@ const MappingRow: FC<MappingRowProps> = ({
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const columnValuesMessage = useColumnValuesMessage(column.data);
-  const [selectedField, setSelectedField] = useState<ExperimentField | null>(
-    null
-  );
+  const [selectedField, setSelectedField] = useState<Field | null>(null);
 
   const needsConfig =
-    selectedField?.type == ExperimentalFieldTypes.ORGANIZATION ||
-    selectedField?.type == ExperimentalFieldTypes.TAG ||
-    selectedField?.type == ExperimentalFieldTypes.ID;
+    selectedField?.type == FieldTypes.ORGANIZATION ||
+    selectedField?.type == FieldTypes.TAG ||
+    selectedField?.type == FieldTypes.ID;
   const showColumnValuesMessage = !isSelected || !selectedField || !needsConfig;
   const showNeedsConfigMessage =
     isSelected && !mappingResults && selectedField && needsConfig;
@@ -162,7 +141,7 @@ const MappingRow: FC<MappingRowProps> = ({
           {showNeedsConfigMessage && (
             <Msg
               id={
-                selectedField.type == ExperimentalFieldTypes.ID
+                selectedField.type == FieldTypes.ID
                   ? messageIds.configuration.mapping.needsConfig
                   : messageIds.configuration.mapping.needsMapping
               }
@@ -171,9 +150,9 @@ const MappingRow: FC<MappingRowProps> = ({
           {showMappingResultMessage && (
             <Msg
               id={
-                selectedField.type == ExperimentalFieldTypes.ID
+                selectedField.type == FieldTypes.ID
                   ? messageIds.configuration.mapping.finishedMappingIds
-                  : selectedField.type == ExperimentalFieldTypes.ORGANIZATION
+                  : selectedField.type == FieldTypes.ORGANIZATION
                   ? messageIds.configuration.mapping
                       .finishedMappingOrganizations
                   : messageIds.configuration.mapping.finishedMappingTags
@@ -193,7 +172,7 @@ const MappingRow: FC<MappingRowProps> = ({
           >
             <Msg
               id={
-                selectedField.type == ExperimentalFieldTypes.ID
+                selectedField.type == FieldTypes.ID
                   ? messageIds.configuration.mapping.configButton
                   : messageIds.configuration.mapping.mapValuesButton
               }

@@ -1,8 +1,9 @@
 import { addFiles } from '../store';
+import { ImportedFile } from '../utils/types';
+import { parseCSVFile } from '../utils/parseFile';
 import { parseExcelFile } from '../utils/parseFile';
 import { useAppDispatch } from 'core/hooks';
 import { useState } from 'react';
-import { ImportedFile, parseCSVFile } from '../utils/parseFile';
 
 export default function useFileImport() {
   const [loading, setLoading] = useState(false);

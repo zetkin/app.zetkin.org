@@ -1,23 +1,6 @@
 import * as XLSX from 'xlsx';
 import { parse } from 'papaparse';
-
-export type ImportedFile = {
-  sheets: Sheet[];
-  title: string;
-};
-type Sheet = {
-  data: Row[];
-  title: string;
-};
-type Row = {
-  data: (string | number | null)[];
-};
-
-type ListMeta = {
-  items: {
-    data: (string | number | null)[];
-  };
-};
+import { CellData, ImportedFile, ListMeta, Row, Sheet } from './types';
 
 export function createList(meta: ListMeta) {
   return {
@@ -25,11 +8,11 @@ export function createList(meta: ListMeta) {
   };
 }
 
-export function createListItems(rawList: (string | number | null)[]) {
+export function createListItems(rawList: CellData[]) {
   return rawList.map((i) => createListItem(i));
 }
 
-export function createListItem(data: string | number | null) {
+export function createListItem(data: CellData) {
   return {
     data,
   };

@@ -2,24 +2,18 @@ import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
 import { ConfiguringData } from '..';
+import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
 import useFields from 'features/import/hooks/useFields';
 import { useNumericRouteParams } from 'core/hooks';
-import MappingRow, {
-  ExperimentalFieldTypes,
-  ExperimentColumn,
-} from './MappingRow';
+import { Column, FieldTypes } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
-
-export interface ExperimentRow {
-  data: (string | number | null)[];
-}
 
 interface MappingProps {
   clearCurrentlyConfiguring: () => void;
-  columns: ExperimentColumn[];
+  columns: Column[];
   currentlyConfiguring: ConfiguringData | null;
-  onMapValues: (columnId: number, type: ExperimentalFieldTypes) => void;
+  onMapValues: (columnId: number, type: FieldTypes) => void;
   onSelectColumn: (columnId: number, isChecked: boolean) => void;
   selectedColumns: number[];
 }
@@ -75,9 +69,7 @@ const Mapping: FC<MappingProps> = ({
                 onCheck={(isChecked: boolean) => {
                   onSelectColumn(column.id, isChecked);
                 }}
-                onMapValues={(type: ExperimentalFieldTypes) =>
-                  onMapValues(column.id, type)
-                }
+                onMapValues={(type: FieldTypes) => onMapValues(column.id, type)}
                 zetkinFields={fields}
               />
               <Divider />

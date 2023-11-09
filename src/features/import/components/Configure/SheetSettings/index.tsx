@@ -16,8 +16,8 @@ import {
 import { FC, useState } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
-import { ExperimentRow } from '../Mapping';
 import messageIds from 'features/import/l10n/messageIds';
+import { SheetWithId } from '..';
 import { Msg, useMessages } from 'core/i18n';
 
 const Accordion = styled((props: AccordionProps) => (
@@ -29,18 +29,12 @@ const Accordion = styled((props: AccordionProps) => (
   border: 0,
 }));
 
-export interface ExperimentSheet {
-  data: ExperimentRow[];
-  id: number;
-  title: string;
-}
-
 interface SheetSettingsProps {
   firstRowIsHeaders: boolean;
   onChangeFirstRowIsHeaders: () => void;
   onChangeSelectedSheet: (id: number) => void;
   selectedSheet: number;
-  sheets: ExperimentSheet[];
+  sheets: SheetWithId[];
 }
 
 const SheetSettings: FC<SheetSettingsProps> = ({

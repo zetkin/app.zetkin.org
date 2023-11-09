@@ -3,12 +3,9 @@ import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useMessages } from 'core/i18n';
-import {
-  ExperimentalFieldTypes,
-  ExperimentField,
-} from '../components/Configure/Mapping/MappingRow';
+import { Field, FieldTypes } from '../utils/types';
 
-export default function useFields(orgId: number): ExperimentField[] {
+export default function useFields(orgId: number): Field[] {
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const customFields = useCustomFields(orgId).data ?? [];
@@ -33,23 +30,23 @@ export default function useFields(orgId: number): ExperimentField[] {
     .filter((field) => field.slug != 'id' && field.slug != 'ext_id')
     .map((field) => ({
       ...field,
-      type: ExperimentalFieldTypes.BASIC,
+      type: FieldTypes.BASIC,
     }));
 
   fields.push({
     slug: 'org',
     title: messages.configuration.mapping.organization(),
-    type: ExperimentalFieldTypes.ORGANIZATION,
+    type: FieldTypes.ORGANIZATION,
   });
   fields.push({
     slug: 'tags',
     title: messages.configuration.mapping.tags(),
-    type: ExperimentalFieldTypes.TAG,
+    type: FieldTypes.TAG,
   });
   fields.push({
     slug: 'id',
     title: messages.configuration.mapping.id().toLocaleUpperCase(),
-    type: ExperimentalFieldTypes.ID,
+    type: FieldTypes.ID,
   });
 
   return fields

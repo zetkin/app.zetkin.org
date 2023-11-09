@@ -7,14 +7,11 @@ import messageIds from 'features/import/l10n/messageIds';
 import TagConfigRow from './TagConfigRow';
 import useColumn from 'features/import/hooks/useColumn';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import {
-  ExperimentalFieldTypes,
-  ExperimentColumn,
-} from '../Mapping/MappingRow';
+import { Column, FieldTypes } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ConfigurationProps {
-  columns: ExperimentColumn[];
+  columns: Column[];
   currentlyConfiguring: ConfiguringData | null;
 }
 
@@ -40,7 +37,7 @@ const Configuration: FC<ConfigurationProps> = ({
     >
       {currentlyConfiguring &&
         column &&
-        currentlyConfiguring.type === ExperimentalFieldTypes.TAG && (
+        currentlyConfiguring.type === FieldTypes.TAG && (
           <Box
             display="flex"
             flexDirection="column"

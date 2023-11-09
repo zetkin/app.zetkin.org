@@ -2,31 +2,37 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
-import { ExperimentalFieldTypes } from './Mapping/MappingRow';
 import Mapping from './Mapping';
+import SheetSettings from './SheetSettings';
 import useColumns from 'features/import/hooks/useColumns';
-import SheetSettings, { ExperimentSheet } from './SheetSettings';
+import { FieldTypes, Sheet } from 'features/import/utils/types';
 
 export interface ConfiguringData {
   columnId: number;
-  type: ExperimentalFieldTypes;
+  type: FieldTypes;
 }
 
+export type SheetWithId = Sheet & { id: number };
+
 interface ConfigureProps {
-  sheets: ExperimentSheet[];
+  sheets: Sheet[];
 }
 
 const Configure: FC<ConfigureProps> = ({ sheets }) => {
+  const sheetsWithIds: SheetWithId[] = sheets.map((sheet, index) => ({
+    ...sheet,
+    id: index + 1,
+  }));
   //settings
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
-  const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
+  const [selectedSheetId, setSelectedSheetId] = useState(sheetsWithIds[0].id);
 
   //mapping
   const [currentlyConfiguring, setCurrentlyConfiguring] =
     useState<ConfiguringData | null>(null);
   const [selectedColumns, setSelectedColumns] = useState<number[]>([]);
 
-  const selectedSheet = sheets.find((sheet) => {
+  const selectedSheet = sheetsWithIds.find((sheet) => {
     return sheet.id == selectedSheetId;
   });
 
@@ -47,13 +53,13 @@ const Configure: FC<ConfigureProps> = ({ sheets }) => {
               setCurrentlyConfiguring(null);
             }}
             selectedSheet={selectedSheetId}
-            sheets={sheets}
+            sheets={sheetsWithIds}
           />
           <Mapping
             clearCurrentlyConfiguring={() => setCurrentlyConfiguring(null)}
             columns={columns}
             currentlyConfiguring={currentlyConfiguring}
-            onMapValues={(columnId: number, type: ExperimentalFieldTypes) =>
+            onMapValues={(columnId: number, type: FieldTypes) =>
               setCurrentlyConfiguring({ columnId, type })
             }
             onSelectColumn={(columnId: number, isChecked: boolean) => {
