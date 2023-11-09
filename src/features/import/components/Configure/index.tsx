@@ -17,18 +17,18 @@ export type SheetWithId = Sheet & { id: number };
 
 const Configure: FC = () => {
   const {
-    sheets,
-    updateSelectedSheetIndex,
+    firstRowIsHeaders,
     selectedSheet,
     selectedSheetIndex,
+    sheets,
+    updateFirstRowIsHeaders,
+    updateSelectedSheetIndex,
   } = useSheets();
-
-  //settings
-  const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
 
   //mapping
   const [currentlyConfiguring, setCurrentlyConfiguring] =
     useState<ConfiguringData | null>(null);
+
   const [selectedColumns, setSelectedColumns] = useState<number[]>([]);
 
   const columns = useColumns(firstRowIsHeaders, selectedSheet?.data || []);
@@ -39,9 +39,7 @@ const Configure: FC = () => {
         <Box display="flex" flexDirection="column" width="50%">
           <SheetSettings
             firstRowIsHeaders={firstRowIsHeaders}
-            onChangeFirstRowIsHeaders={() =>
-              setFirstRowIsHeaders(!firstRowIsHeaders)
-            }
+            onChangeFirstRowIsHeaders={updateFirstRowIsHeaders}
             onChangeSelectedSheet={(index: number) => {
               updateSelectedSheetIndex(index);
               setSelectedColumns([]);
