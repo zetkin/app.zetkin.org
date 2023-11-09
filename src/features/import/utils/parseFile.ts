@@ -1,22 +1,6 @@
 import * as XLSX from 'xlsx';
 import { parse } from 'papaparse';
-import { CellData, ImportedFile, ListMeta, Row, Sheet } from './types';
-
-export function createList(meta: ListMeta) {
-  return {
-    items: createListItems(meta.items.data),
-  };
-}
-
-export function createListItems(rawList: CellData[]) {
-  return rawList.map((i) => createListItem(i));
-}
-
-export function createListItem(data: CellData) {
-  return {
-    data,
-  };
-}
+import { CellData, ImportedFile, Row, Sheet } from './types';
 
 export async function parseCSVFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
@@ -32,10 +16,10 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
         complete: (result) => {
           if (result.data) {
             const sheetObject = {
-              data: result.data,
+              data: result.data as Sheet['data'],
               title: file.name,
             };
-            rawData.sheets = [sheetObject as Sheet];
+            rawData.sheets = [sheetObject];
             rawData.title = file.name;
           }
           resolve(rawData);
@@ -48,6 +32,14 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
       reject(error);
     };
   });
+}
+
+interface ExcelTable {
+  columnList: CellData[];
+  name: string;
+  numEmptyColumnsRemoved: number;
+  rows: Row[];
+  useFirstRowAsHeader: boolean;
 }
 
 export async function parseExcelFile(file: File): Promise<ImportedFile> {
@@ -71,24 +63,20 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
         if ('!ref' in sheet && sheet['!ref'] !== undefined) {
           const range = XLSX.utils.decode_range(sheet['!ref']);
 
-          const table = {
-            columnList: createList({
-              items: {
-                data: [],
-              },
-            }),
+          const table: ExcelTable = {
+            columnList: [],
             name: name,
             numEmptyColumnsRemoved: 0,
-            rows: [] as Row[],
+            rows: [],
             useFirstRowAsHeader: false,
           };
 
           for (let c = range.s.c; c <= range.e.c; c++) {
-            table.columnList.items.push(createListItem(null));
+            table.columnList.push(null);
           }
 
           for (let r = range.s.r; r <= range.e.r; r++) {
-            const rowValues = table.columnList.items.map((col, idx) => {
+            const rowValues = table.columnList.map((col, idx) => {
               const addr = XLSX.utils.encode_cell({ c: idx, r });
               const cell = sheet[addr];
               return cell ? cell.d || cell.w || cell.v : undefined;
