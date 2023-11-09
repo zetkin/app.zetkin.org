@@ -55,20 +55,33 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
   const orgsStates = getOrgsStates(fake.summary.membershipsCreated);
 
   return (
-    <Box mt={2}>
+    <Box display="flex" flexDirection="column" height="100%" mt={2}>
       <ImportAlert
+        bullets={[
+          'Hello',
+          'long time no see',
+          'hello',
+          'hello',
+          'hello',
+          'hello',
+          'hello',
+          'hello',
+          'hello',
+          'hello',
+        ]}
         msg={'Error!'}
+        onClickBack={onClickBack}
         status={ALERT_STATUS.ERROR}
         title={'This is error!'}
       />
       <Typography sx={{ fontWeight: 500, my: 2 }} variant="h4">
         <Msg id={messageIds.importStatus.completedChanges} />
       </Typography>
-      <Stack spacing={2}>
-        <Stack direction="row" spacing={2}>
-          <PeopleCounter changedNum={22} status={COUNT_STATUS.CREATED} />
-          <PeopleCounter changedNum={100} status={COUNT_STATUS.UPDATED} />
-        </Stack>
+      <Stack direction="row" spacing={2}>
+        <PeopleCounter changedNum={22} status={COUNT_STATUS.CREATED} />
+        <PeopleCounter changedNum={100} status={COUNT_STATUS.UPDATED} />
+      </Stack>
+      <Stack spacing={2} sx={{ mt: 2, overflowY: 'auto' }}>
         <ImportChangeTracker
           fields={fake.summary.peopleUpdated.byField}
           orgId={orgId}

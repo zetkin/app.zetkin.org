@@ -90,7 +90,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             </IconButton>
           </Box>
         </Box>
-        <Box sx={{ height: '80%' }}>
+        <Box sx={{ height: activeStep === 2 ? '80%' : '85%' }}>
           {activeStep === 2 && (
             <Validation
               onClickBack={() =>
