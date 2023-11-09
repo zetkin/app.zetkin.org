@@ -61,11 +61,15 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
       },
       peopleUpdated: {
         byField: {
+          alt_phone: 20,
+          city: 2,
           date_of_birth: 25,
           email: 10,
           first_name: 25,
+          gender: 3,
           join_date: 20,
           last_name: 20,
+          zip_code: 2,
         },
         total: 100,
       },
@@ -101,12 +105,12 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
   }
 
   return (
-    <Box display="flex" mt={3}>
+    <Box display="flex" height="100%" mt={3}>
       <Box width="50%">
         <Typography sx={{ mb: 2 }} variant="h5">
           <Msg id={messageIds.validation.pendingChanges} />
         </Typography>
-        <Stack spacing={2}>
+        <Box display="flex" flexDirection="column" height="100%">
           <Stack direction="row" spacing={2}>
             <PeopleCounter
               changedNum={fake.summary.peopleCreated.total}
@@ -117,47 +121,53 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               status={COUNT_STATUS.UPDATED}
             />
           </Stack>
-          <ImportChangeTracker
-            fields={fake.summary.peopleUpdated.byField}
-            orgId={orgId}
-          />
-          <AddedTagsTracker
-            createdTags={fake.summary.tagsCreated}
-            orgId={orgId}
-          />
-          <ImportChangeTracker orgId={orgId} orgsStates={orgsStates} />
-        </Stack>
+          <Stack spacing={2} sx={{ mt: 2, overflowY: 'auto' }}>
+            <ImportChangeTracker
+              fields={fake.summary.peopleUpdated.byField}
+              orgId={orgId}
+            />
+            <AddedTagsTracker
+              createdTags={fake.summary.tagsCreated}
+              orgId={orgId}
+            />
+            <ImportChangeTracker orgId={orgId} orgsStates={orgsStates} />
+          </Stack>
+        </Box>
       </Box>
       <Box ml={2} width="50%">
         <Typography sx={{ mb: 2 }} variant="h5">
           <Msg id={messageIds.validation.messages} />
         </Typography>
-        <Stack spacing={2}>
-          {alertStates.map((item, index) => {
-            return (
-              <Box key={`alert-${index}`}>
-                <ImportAlert
-                  msg={item.msg}
-                  onChecked={() =>
-                    setCheckedIndexes((prev) => {
-                      if (!checkedIndexes.includes(index)) {
-                        return [...prev, index];
-                      } else {
-                        return checkedIndexes.filter((item) => item !== index);
-                      }
-                    })
-                  }
-                  onClickBack={() => {
-                    onClickBack();
-                    onDisabled(false);
-                  }}
-                  status={item.alertStatus}
-                  title={item.title}
-                />
-              </Box>
-            );
-          })}
-        </Stack>
+        <Box display="flex" flexDirection="column" height="100%">
+          <Stack spacing={2} sx={{ overflowY: 'auto' }}>
+            {alertStates.map((item, index) => {
+              return (
+                <Box key={`alert-${index}`}>
+                  <ImportAlert
+                    msg={item.msg}
+                    onChecked={() =>
+                      setCheckedIndexes((prev) => {
+                        if (!checkedIndexes.includes(index)) {
+                          return [...prev, index];
+                        } else {
+                          return checkedIndexes.filter(
+                            (item) => item !== index
+                          );
+                        }
+                      })
+                    }
+                    onClickBack={() => {
+                      onClickBack();
+                      onDisabled(false);
+                    }}
+                    status={item.alertStatus}
+                    title={item.title}
+                  />
+                </Box>
+              );
+            })}
+          </Stack>
+        </Box>
       </Box>
     </Box>
   );
