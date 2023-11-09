@@ -87,37 +87,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             </IconButton>
           </Box>
         </Box>
-        <Configure
-          sheets={[
-            {
-              data: [
-                { data: ['Name', 'Last name', 'Email', 'Age', 'Pet'] },
-                {
-                  data: ['Angela', 'Davies', 'angela@gmail.com', 34, 'Rabbit'],
-                },
-                { data: ['Maya', 'Angelou', 'maya@gmail.com', 66, null] },
-                { data: ['Rosa', 'Parks', 'rosa@gmail.com', 81, 'Cat'] },
-                {
-                  data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Tortoise'],
-                },
-                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Parrot'] },
-                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Cow'] },
-                { data: ['Huey', 'P Newton', 'huey@gmail.com', 51, 'Dog'] },
-              ],
-              title: 'Members',
-            },
-            {
-              data: [
-                { data: ['Name', 'Last name', 'Email', 'Age'] },
-                { data: ['Kitty', 'Jonsson', 'kitty@gmail.com', 36] },
-                { data: ['Lasse', 'Brandeby', 'lasse@gmail.com', 81] },
-                { data: ['Pamela', 'Andersson', 'pamela@gmail.com', 61] },
-                { data: ['Jane', 'Austen', 'jane@gmail.com', 102] },
-              ],
-              title: 'Old Members',
-            },
-          ]}
-        />
+        <Configure />
         <Box alignItems="center" display="flex" justifyContent="flex-end">
           <Box
             alignItems="center"

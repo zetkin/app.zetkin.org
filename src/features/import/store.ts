@@ -3,10 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
   pendingFile: ImportedFile;
+  selectedSheetIndex: number;
 }
 
 const initialState: ImportStoreSlice = {
   pendingFile: { sheets: [], title: '' },
+  selectedSheetIndex: 0,
 };
 
 const importSlice = createSlice({

@@ -5,6 +5,7 @@ import Configuration from './Configuration';
 import Mapping from './Mapping';
 import SheetSettings from './SheetSettings';
 import useColumns from 'features/import/hooks/useColumns';
+import useFile from 'features/import/hooks/useFile';
 import { FieldTypes, Sheet } from 'features/import/utils/types';
 
 export interface ConfiguringData {
@@ -14,12 +15,9 @@ export interface ConfiguringData {
 
 export type SheetWithId = Sheet & { id: number };
 
-interface ConfigureProps {
-  sheets: Sheet[];
-}
-
-const Configure: FC<ConfigureProps> = ({ sheets }) => {
-  const sheetsWithIds: SheetWithId[] = sheets.map((sheet, index) => ({
+const Configure: FC = () => {
+  const file = useFile();
+  const sheetsWithIds: SheetWithId[] = file.sheets.map((sheet, index) => ({
     ...sheet,
     id: index + 1,
   }));
