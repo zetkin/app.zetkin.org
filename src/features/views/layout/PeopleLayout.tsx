@@ -27,7 +27,11 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
 
   return (
     <SimpleLayout
+<<<<<<< HEAD
       actionButtons={<PeopleActionButton folderId={null} />}
+=======
+      actionButtons={<PeopleActionButton folderId={null} orgId={orgId} />}
+>>>>>>> epic-1595/import
       noPad
       subtitle={
         <ZUIFuture future={itemSummaryFuture}>

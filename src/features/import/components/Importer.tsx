@@ -15,7 +15,7 @@ import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import Validation from './validation';
+import Validation from './Importer/validation';
 
 interface ImporterProps {
   onClose: () => void;
@@ -31,15 +31,22 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const [activeStep, setActiveStep] = useState<StepType>(1);
   const [disabled, setDisabled] = useState<boolean>(false);
 
+  const showStepper = activeStep == 1 || activeStep == 2;
+
   return (
     <Dialog
       fullScreen={fullScreen}
-      fullWidth
+      fullWidth={activeStep == 0 ? false : true}
       maxWidth="lg"
       onClose={onClose}
       open={open}
     >
-      <Box display="flex" flexDirection="column" height="90vh" padding={2}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        height={activeStep == 0 ? '' : '90vh'}
+        padding={2}
+      >
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography variant="h4">
             <Msg id={messageIds.configuration.title} />
@@ -51,7 +58,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             width="50%"
           >
             <Box width="100%">
-              {activeStep < 3 && (
+              {showStepper && (
                 <Stepper activeStep={activeStep}>
                   <Step>
                     <StepLabel>
