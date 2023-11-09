@@ -42,6 +42,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     numNoshowParticipants,
     numRemindedParticipants,
     numSignedParticipants,
+    bookedParticipants,
   } = useEventParticipants(orgId, eventId);
   const { addParticipant, setReqParticipants, sendReminders } =
     useEventParticipantsMutations(orgId, eventId);
@@ -153,7 +154,11 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                 <Button
                   onClick={() => {
                     respondents?.map((r) => {
-                      addParticipant(r.person.id);
+                      if (
+                        !bookedParticipants.some((p) => p.id === r.person.id)
+                      ) {
+                        addParticipant(r.person.id);
+                      }
                     });
                   }}
                   size="small"
