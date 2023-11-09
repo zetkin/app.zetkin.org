@@ -8,6 +8,9 @@ export default makeMessages('feat.import', {
   },
   done: m('Done'),
   import: m('Import'),
+  importStatus: {
+    completedChanges: m('Completed changes'),
+  },
   restart: m('Restart'),
   steps: {
     configure: m('Configure'),

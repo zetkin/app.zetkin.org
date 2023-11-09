@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
+import ImportStatus from './Importer/importStatus';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import Validation from './Importer/validation';
@@ -36,7 +37,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   return (
     <Dialog
       fullScreen={fullScreen}
-      fullWidth={activeStep == 0 ? false : true}
+      fullWidth={activeStep !== 3}
       maxWidth="lg"
       onClose={onClose}
       open={open}
@@ -44,8 +45,9 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
       <Box
         display="flex"
         flexDirection="column"
-        height={activeStep == 0 ? '' : '90vh'}
+        height="90vh"
         padding={2}
+        width={activeStep !== 3 ? '100%' : '700px'}
       >
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography variant="h4">
@@ -95,6 +97,13 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 setActiveStep((prev) => (prev - 1) as StepType)
               }
               onDisabled={(value) => setDisabled(value)}
+            />
+          )}
+          {activeStep === 3 && (
+            <ImportStatus
+              onClickBack={() =>
+                setActiveStep((prev) => (prev - 1) as StepType)
+              }
             />
           )}
         </Box>
