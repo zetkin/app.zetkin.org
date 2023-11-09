@@ -19,8 +19,11 @@ const importSlice = createSlice({
       const file = action.payload;
       state.pendingFile = file;
     },
+    setSelectedSheetIndex: (state, action: PayloadAction<number>) => {
+      state.selectedSheetIndex = action.payload;
+    },
   },
 });
 
 export default importSlice;
-export const { addFile } = importSlice.actions;
+export const { addFile, setSelectedSheetIndex } = importSlice.actions;

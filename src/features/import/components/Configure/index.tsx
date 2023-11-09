@@ -5,7 +5,7 @@ import Configuration from './Configuration';
 import Mapping from './Mapping';
 import SheetSettings from './SheetSettings';
 import useColumns from 'features/import/hooks/useColumns';
-import useFile from 'features/import/hooks/useFile';
+import useSheets from 'features/import/hooks/useSheets';
 import { FieldTypes, Sheet } from 'features/import/utils/types';
 
 export interface ConfiguringData {
@@ -16,23 +16,20 @@ export interface ConfiguringData {
 export type SheetWithId = Sheet & { id: number };
 
 const Configure: FC = () => {
-  const file = useFile();
-  const sheetsWithIds: SheetWithId[] = file.sheets.map((sheet, index) => ({
-    ...sheet,
-    id: index + 1,
-  }));
+  const {
+    sheets,
+    updateSelectedSheetIndex,
+    selectedSheet,
+    selectedSheetIndex,
+  } = useSheets();
+
   //settings
   const [firstRowIsHeaders, setFirstRowIsHeaders] = useState(true);
-  const [selectedSheetId, setSelectedSheetId] = useState(sheetsWithIds[0].id);
 
   //mapping
   const [currentlyConfiguring, setCurrentlyConfiguring] =
     useState<ConfiguringData | null>(null);
   const [selectedColumns, setSelectedColumns] = useState<number[]>([]);
-
-  const selectedSheet = sheetsWithIds.find((sheet) => {
-    return sheet.id == selectedSheetId;
-  });
 
   const columns = useColumns(firstRowIsHeaders, selectedSheet?.data || []);
 
@@ -45,13 +42,13 @@ const Configure: FC = () => {
             onChangeFirstRowIsHeaders={() =>
               setFirstRowIsHeaders(!firstRowIsHeaders)
             }
-            onChangeSelectedSheet={(id: number) => {
-              setSelectedSheetId(id);
+            onChangeSelectedSheet={(index: number) => {
+              updateSelectedSheetIndex(index);
               setSelectedColumns([]);
               setCurrentlyConfiguring(null);
             }}
-            selectedSheet={selectedSheetId}
-            sheets={sheetsWithIds}
+            selectedSheetIndex={selectedSheetIndex}
+            sheets={sheets}
           />
           <Mapping
             clearCurrentlyConfiguring={() => setCurrentlyConfiguring(null)}

@@ -17,7 +17,7 @@ import { FC, useState } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { SheetWithId } from '..';
+import { Sheet } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 const Accordion = styled((props: AccordionProps) => (
@@ -32,16 +32,16 @@ const Accordion = styled((props: AccordionProps) => (
 interface SheetSettingsProps {
   firstRowIsHeaders: boolean;
   onChangeFirstRowIsHeaders: () => void;
-  onChangeSelectedSheet: (id: number) => void;
-  selectedSheet: number;
-  sheets: SheetWithId[];
+  onChangeSelectedSheet: (index: number) => void;
+  selectedSheetIndex: number;
+  sheets: Sheet[];
 }
 
 const SheetSettings: FC<SheetSettingsProps> = ({
   firstRowIsHeaders,
   onChangeFirstRowIsHeaders,
   onChangeSelectedSheet,
-  selectedSheet,
+  selectedSheetIndex,
   sheets,
 }) => {
   const messages = useMessages(messageIds);
@@ -79,10 +79,10 @@ const SheetSettings: FC<SheetSettingsProps> = ({
               onChange={(event) =>
                 onChangeSelectedSheet(event.target.value as number)
               }
-              value={selectedSheet}
+              value={selectedSheetIndex}
             >
               {sheets.map((sheet, index) => (
-                <MenuItem key={index} value={sheet.id.toString()}>
+                <MenuItem key={index} value={index}>
                   {sheet.title}
                 </MenuItem>
               ))}

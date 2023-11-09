@@ -8,7 +8,7 @@ export default function useColumns(
   rows: Row[]
 ): Column[] {
   const messages = useMessages(messageIds);
-  const numberOfColumns = rows ? rows[0].data.length : 0;
+  const numberOfColumns = rows.length > 0 ? rows[0].data.length : 0;
 
   const columns: Column[] = [];
   range(numberOfColumns).forEach((number) =>
