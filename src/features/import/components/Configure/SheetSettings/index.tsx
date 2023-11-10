@@ -17,7 +17,7 @@ import { FC, useState } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { Sheet } from 'features/import/utils/types';
+import useSheets from 'features/import/hooks/useSheets';
 import { Msg, useMessages } from 'core/i18n';
 
 const Accordion = styled((props: AccordionProps) => (
@@ -30,22 +30,18 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 
 interface SheetSettingsProps {
-  firstRowIsHeaders: boolean;
-  onChangeFirstRowIsHeaders: () => void;
   onChangeSelectedSheet: (index: number) => void;
-  selectedSheetIndex: number;
-  sheets: Sheet[];
 }
 
-const SheetSettings: FC<SheetSettingsProps> = ({
-  firstRowIsHeaders,
-  onChangeFirstRowIsHeaders,
-  onChangeSelectedSheet,
-  selectedSheetIndex,
-  sheets,
-}) => {
+const SheetSettings: FC<SheetSettingsProps> = ({ onChangeSelectedSheet }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
+  const {
+    firstRowIsHeaders,
+    selectedSheetIndex,
+    sheets,
+    updateFirstRowIsHeaders,
+  } = useSheets();
   const [settingsExpanded, setSettingsExpanded] = useState(true);
 
   return (
@@ -95,7 +91,7 @@ const SheetSettings: FC<SheetSettingsProps> = ({
         <Box alignItems="center" display="flex">
           <Checkbox
             checked={firstRowIsHeaders}
-            onChange={onChangeFirstRowIsHeaders}
+            onChange={(ev, isChecked) => updateFirstRowIsHeaders(isChecked)}
           />
           <Typography>
             <Msg id={messageIds.configuration.settings.firstRowIsHeaders} />

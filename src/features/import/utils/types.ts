@@ -1,12 +1,15 @@
 export type CellData = string | number | null;
 
 export type ImportedFile = {
+  selectedSheetIndex: number;
   sheets: Sheet[];
   title: string;
 };
 
 export type Sheet = {
   data: Row[];
+  firstRowIsHeaders: boolean;
+  selectedColumnIds: number[];
   title: string;
 };
 

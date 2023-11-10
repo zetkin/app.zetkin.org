@@ -9,37 +9,24 @@ import useSheets from 'features/import/hooks/useSheets';
 import { ConfiguringData, FieldTypes } from 'features/import/utils/types';
 
 const Configure: FC = () => {
-  const {
-    firstRowIsHeaders,
-    selectedSheet,
-    selectedSheetIndex,
-    sheets,
-    updateFirstRowIsHeaders,
-    updateSelectedSheetIndex,
-  } = useSheets();
+  const { updateSelectedSheetIndex } = useSheets();
 
   const [currentlyConfiguring, setCurrentlyConfiguring] =
     useState<ConfiguringData | null>(null);
 
-  const { allColumns, selectedColumnIds, updateSelectedColumnIds } = useColumns(
-    firstRowIsHeaders,
-    selectedSheet?.data || []
-  );
+  const { allColumns, selectedColumnIds, updateSelectedColumnIds } =
+    useColumns();
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
       <Box display="flex" flexGrow={1} overflow="hidden">
         <Box display="flex" flexDirection="column" width="50%">
           <SheetSettings
-            firstRowIsHeaders={firstRowIsHeaders}
-            onChangeFirstRowIsHeaders={updateFirstRowIsHeaders}
             onChangeSelectedSheet={(index: number) => {
               updateSelectedSheetIndex(index);
               updateSelectedColumnIds([]);
               setCurrentlyConfiguring(null);
             }}
-            selectedSheetIndex={selectedSheetIndex}
-            sheets={sheets}
           />
           <Mapping
             clearCurrentlyConfiguring={() => setCurrentlyConfiguring(null)}

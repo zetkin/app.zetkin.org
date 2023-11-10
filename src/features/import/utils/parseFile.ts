@@ -5,6 +5,7 @@ import { CellData, ImportedFile, Row, Sheet } from './types';
 export async function parseCSVFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
     const rawData: ImportedFile = {
+      selectedSheetIndex: 0,
       sheets: [],
       title: file.name,
     };
@@ -17,6 +18,8 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
           if (result.data) {
             const sheetObject = {
               data: result.data as Sheet['data'],
+              firstRowIsHeaders: true,
+              selectedColumnIds: [],
               title: file.name,
             };
             rawData.sheets = [sheetObject];
@@ -45,6 +48,7 @@ interface ExcelTable {
 export async function parseExcelFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
     const rawData: ImportedFile = {
+      selectedSheetIndex: 0,
       sheets: [],
       title: file.name,
     };
@@ -89,7 +93,12 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
               });
             }
           }
-          rawData.sheets.push({ data: table.rows, title: table.name });
+          rawData.sheets.push({
+            data: table.rows,
+            firstRowIsHeaders: true,
+            selectedColumnIds: [],
+            title: table.name,
+          });
         }
       });
       resolve(rawData);

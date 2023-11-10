@@ -5,22 +5,20 @@ export default function useSheets() {
   const dispatch = useAppDispatch();
   const importSlice = useAppSelector((state) => state.import);
   const pendingFile = importSlice.pendingFile;
-  const selectedSheetIndex = importSlice.selectedSheetIndex;
-  const firstRowIsHeaders = importSlice.firstRowIsHeaders;
 
-  const selectedSheet = pendingFile.sheets[selectedSheetIndex];
+  const selectedSheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
   const sheets = pendingFile.sheets;
 
   const updateSelectedSheetIndex = (newIndex: number) => {
     dispatch(setSelectedSheetIndex(newIndex));
   };
 
-  const updateFirstRowIsHeaders = () => dispatch(setFirstRowIsHeaders());
+  const updateFirstRowIsHeaders = (firstRowIsHeaders: boolean) =>
+    dispatch(setFirstRowIsHeaders(firstRowIsHeaders));
 
   return {
-    firstRowIsHeaders,
-    selectedSheet,
-    selectedSheetIndex,
+    firstRowIsHeaders: selectedSheet.firstRowIsHeaders,
+    selectedSheetIndex: pendingFile.selectedSheetIndex,
     sheets,
     updateFirstRowIsHeaders,
     updateSelectedSheetIndex,

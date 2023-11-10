@@ -2,17 +2,15 @@ import { ImportedFile } from './utils/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
-  firstRowIsHeaders: boolean;
   pendingFile: ImportedFile;
-  selectedColumnIds: number[];
-  selectedSheetIndex: number;
 }
 
 const initialState: ImportStoreSlice = {
-  firstRowIsHeaders: true,
-  pendingFile: { sheets: [], title: '' },
-  selectedColumnIds: [],
-  selectedSheetIndex: 0,
+  pendingFile: {
+    selectedSheetIndex: 0,
+    sheets: [],
+    title: '',
+  },
 };
 
 const importSlice = createSlice({
@@ -23,14 +21,16 @@ const importSlice = createSlice({
       const file = action.payload;
       state.pendingFile = file;
     },
-    setFirstRowIsHeaders: (state) => {
-      state.firstRowIsHeaders = !state.firstRowIsHeaders;
+    setFirstRowIsHeaders: (state, action: PayloadAction<boolean>) => {
+      const sheetIndex = state.pendingFile.selectedSheetIndex;
+      state.pendingFile.sheets[sheetIndex].firstRowIsHeaders = action.payload;
     },
     setSelectedColumnIds: (state, action: PayloadAction<number[]>) => {
-      state.selectedColumnIds = action.payload;
+      const sheetIndex = state.pendingFile.selectedSheetIndex;
+      state.pendingFile.sheets[sheetIndex].selectedColumnIds = action.payload;
     },
     setSelectedSheetIndex: (state, action: PayloadAction<number>) => {
-      state.selectedSheetIndex = action.payload;
+      state.pendingFile.selectedSheetIndex = action.payload;
     },
   },
 });
