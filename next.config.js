@@ -58,22 +58,6 @@ module.exports = {
         destination: '/legacy?path=/campaign/action%3A:eventId&orgId=:orgId',
         permanent: false,
       },
-      // all paths with /o redirected to Gen2
-      {
-        source: '/o/:path*',
-        destination: 'https://zetk.in/o/:path*',
-        permanent: false,
-      },
-      {
-        source: '/organize/:orgId/campaigns/:path*',
-        destination: '/organize/:orgId/projects/:path*',
-        permanent: false,
-      },
-      {
-        source: '/organize/:orgId/people/views/:path*',
-        destination: '/organize/:orgId/people/lists/:path*',
-        permanent: false,
-      }
     ];
   },
 };
