@@ -238,7 +238,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                         anchorEl={ghostAnchorEl}
                         anchorOrigin={{
                           horizontal: index > 3 ? 'left' : 'right',
-                          vertical: 'top',
+                          vertical: 'bottom',
                         }}
                         onClose={() => {
                           setPendingEvent(null);
