@@ -103,8 +103,18 @@ const Page: FC<PageProps> = () => {
       <h1>My Todo</h1>
 
       <Box>
-        <EventIcon />
-        <h2>Events</h2>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: '5px',
+            margin: 2,
+          }}
+        >
+          <EventIcon />
+          <h2>Events</h2>
+        </Box>
+
         <p>TODO: Add events here</p>
       </Box>
 
@@ -113,8 +123,18 @@ const Page: FC<PageProps> = () => {
       </Box>
 
       <Box sx={{ width: '100%' }}>
-        <CheckBoxSharp />
-        <h2>Tasks</h2>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: '5px',
+            margin: 2,
+          }}
+        >
+          <CheckBoxSharp />
+          <h2>Tasks</h2>
+        </Box>
+
         <DataGrid
           rows={taskRows}
           columns={taskColumns}
