@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
 import { scaffold } from 'utils/next';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import EventIcon from '@mui/icons-material/Event';
 import { Architecture, CheckBoxSharp, Star } from '@mui/icons-material';
 import { Button, Tab, Tabs } from '@mui/material';
 import { FC, useState } from 'react';
@@ -56,16 +57,9 @@ const Page: FC<PageProps> = () => {
           </Button>
         </Box>
       </Box>
-      <Tabs
-        aria-label="secondary tabs example"
-        indicatorColor="secondary"
-        onChange={handleChange}
-        textColor="secondary"
-        value={value}
-        variant="scrollable"
-      >
+      <Tabs onChange={handleChange} value={value} variant="scrollable">
         <Tab
-          icon={<Architecture />}
+          icon={<EventIcon />}
           iconPosition="start"
           label="Projects"
           value="one"
