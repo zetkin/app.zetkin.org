@@ -6,24 +6,17 @@ import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
 import BasicMarker from '../LocationModal/BasicMarker';
 import { EventActivity } from 'features/campaigns/types';
-import { ZetkinLocation } from 'utils/types/zetkin';
+import groupEventsByLocation from './groupEventsByLocation';
 
 const MapWrapper = ({ children }: { children: (map: Map) => JSX.Element }) => {
   const map = useMap();
   return children(map);
 };
 
-export interface LocationWithEvents {
-  events: EventActivity[];
-  location: ZetkinLocation;
-}
-
-const ActivistMap = ({
-  locationsWithEvents,
-}: {
-  locationsWithEvents: LocationWithEvents[];
-}) => {
+const ActivistMap = ({ events }: { events: EventActivity[] }) => {
   const theme = useTheme();
+
+  const groupedEvents = groupEventsByLocation(events);
 
   return (
     <MapContainer
@@ -42,7 +35,7 @@ const ActivistMap = ({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
-              {locationsWithEvents.map((locationGroup) => {
+              {groupedEvents.map((locationGroup) => {
                 return (
                   <Marker
                     key={locationGroup.location.id}

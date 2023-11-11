@@ -1,5 +1,10 @@
 import { EventActivity } from 'features/campaigns/types';
-import { LocationWithEvents } from '.';
+import { ZetkinLocation } from 'utils/types/zetkin';
+
+export interface LocationWithEvents {
+  events: EventActivity[];
+  location: ZetkinLocation;
+}
 
 const groupEventsByLocation = (
   events: EventActivity[]
