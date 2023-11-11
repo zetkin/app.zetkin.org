@@ -31,8 +31,8 @@ const Page: FC<PageProps> = () => {
           margin: 2,
         }}
       >
-        <h2>Call Assignments</h2>
         <HeadsetMic />
+        <h2>Call Assignments</h2>
       </Box>
       <ZUIFuture future={callAssignments}>
         {(data) => <CallAssignmentList callAssignments={data} />}
