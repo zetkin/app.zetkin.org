@@ -1,10 +1,10 @@
 import { Box } from '@mui/system';
+import CallAssignmentList from './CallAssignmentList';
 import { FC } from 'react';
+import { HeadsetMic } from '@mui/icons-material';
 import { scaffold } from 'utils/next';
 import useCurrentUserCallAssignments from 'features/user/hooks/useCurrentUserCallAssigments';
-import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
-import { List, ListItem } from '@mui/material';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -23,17 +23,19 @@ const Page: FC<PageProps> = () => {
   const callAssignments = useCurrentUserCallAssignments();
   return (
     <Box>
-      <h2>Call Assignments</h2>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          gap: '5px',
+          margin: 2,
+        }}
+      >
+        <h2>Call Assignments</h2>
+        <HeadsetMic />
+      </Box>
       <ZUIFuture future={callAssignments}>
-        {(data) => (
-          <List>
-            {data?.map((callAssignment: ZetkinCallAssignment) => (
-              <ListItem key={callAssignment.id}>
-                <p>{callAssignment.title}</p>
-              </ListItem>
-            ))}
-          </List>
-        )}
+        {(data) => <CallAssignmentList callAssignments={data} />}
       </ZUIFuture>
     </Box>
   );
