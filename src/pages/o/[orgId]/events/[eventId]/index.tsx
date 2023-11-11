@@ -31,7 +31,10 @@ type PageProps = {
   orgId: string;
 };
 
-const Map = dynamic(() => import('./Map'), { ssr: false });
+const Map = dynamic(
+  () => import('features/events/components/ActivistEventPage/Map'),
+  { ssr: false }
+);
 
 const Page: FC<PageProps> = ({ orgId, eventId }) => {
   const eventFuture = useEvent(parseInt(orgId, 10), parseInt(eventId, 10));
