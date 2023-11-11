@@ -1211,6 +1211,16 @@ feat:
       personRecordColumn: Svarande
       suggestedPeople: Föreslagna personer
       unlink: Avlänka
+    surveyForm:
+      accept: Jag accepterar nedanstående villkor
+      policy:
+        link: https://zetkin.org/sv/sekretess
+        text: Klicka här för att läsa Zetkins sekretesspolicy
+      sign:
+        anonymous: Skicka anonymt
+        nameAndEmail: Skicka med namn och e-mail
+      submit: Skicka
+      termsDescription: När du skickar in enkäten kommer informationen att lagras i Zetkin och hanteras av {organization} i deras verksamhet, i enlighet med Zetkins sekretesspolicy.
     tabs:
       overview: Översikt
       questions: Frågor

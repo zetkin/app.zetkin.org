@@ -1,5 +1,4 @@
 import { ReactElement } from 'react';
-
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.surveys', {
@@ -160,10 +159,19 @@ export default makeMessages('feat.surveys', {
     unlink: m('Unlink'),
   },
   surveyForm: {
+    accept: m('I accept the terms stated below'),
+    policy: {
+      link: m('https://zetkin.org/privacy'),
+      text: m('Click to read the full Zetkin Privacy Policy'),
+    },
     sign: {
       anonymous: m('Submit anonymously'),
       nameAndEmail: m('Sign with name and e-mail'),
     },
+    submit: m('Submit'),
+    termsDescription: m<{ organization: string }>(
+      'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
+    ),
   },
   tabs: {
     overview: m('Overview'),
@@ -172,7 +180,7 @@ export default makeMessages('feat.surveys', {
   },
   unlinkedCard: {
     description: m(
-      'When someone submits a survey without logging in,that survey will be unlinked. Searching for people in Zetkin based on their survey responses will not work on unlinked submissions.'
+      'When someone submits a survey without logging in, that survey will be unlinked. Searching for people in Zetkin based on their survey responses will not work on unlinked submissions.'
     ),
     header: m('Unlinked submissions'),
     openLink: m<{ numUnlink: number }>(
