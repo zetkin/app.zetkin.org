@@ -6,7 +6,7 @@ import RosaLuxemburg from '../../../mockData/orgs/KPD/people/RosaLuxemburg';
 import RosaLuxemburgUser from '../../../mockData/users/RosaLuxemburgUser';
 import test from '../../../fixtures/next';
 
-test.describe.only('User submitting a survey', () => {
+test.describe('User submitting a survey', () => {
   test.afterEach(({ moxy }) => {
     moxy.teardown();
   });
