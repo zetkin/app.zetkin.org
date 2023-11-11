@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
-import useSurvey from 'features/surveys/hooks/useSurvey';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -24,11 +24,26 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ orgId, surveyId }) => {
-  const surveys = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const elements = useSurveyElements(parseInt(orgId, 10), parseInt(surveyId, 10));
   return (
-    <h1>
-      Page for org {orgId}, survey {surveyId}
-    </h1>
+    <>
+      <h1>
+        Page for org {orgId}, survey {surveyId}
+      </h1>
+
+      <form>
+        {(elements.data || []).map((element) => (
+          <div key={element.id}>
+            {element.type === 'question' && (
+              <label>{element.question.question}</label>
+            )}
+            {element.type === 'text' && (
+              <p>{element.text_block.content}</p>
+            )}
+          </div>
+        ))}
+      </form>
+    </>
   );
 };
 
