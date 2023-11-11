@@ -23,7 +23,7 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
               <CardMedia
                 component="img"
                 alt="green iguana"
-                height="140"
+                height="180"
                 image="https://zetkin.org/assets/img/hero.jpg" // TODO: Add dynamic images
               />
               <CardContent>
