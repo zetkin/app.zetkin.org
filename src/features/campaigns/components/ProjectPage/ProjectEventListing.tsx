@@ -10,7 +10,7 @@ type EventListingProps = {
 }
 
 const EventListing: FC<EventListingProps> = ({orgId, campId, data}) => { 
-    const activitiesDateRange = useEventsFromDateRange(new Date(), new Date(Date.now() + 60 * 24 * 60 * 60 * 1000));
+    const activitiesDateRange = useEventsFromDateRange(new Date(), new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)); // TODO: Smarter date handling. We dont just want to do next 60 days.
     console.log("Events with date range", activitiesDateRange)
 
     return <h1>{'Hello'}</h1>;
