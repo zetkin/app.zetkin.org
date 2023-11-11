@@ -102,6 +102,11 @@ const Page: FC<PageProps> = () => {
       <h1>My Todo</h1>
 
       <Box>
+        <h2>Events</h2>
+        <p>TODO: Add events here</p>
+      </Box>
+
+      <Box>
         <CallAssignments />
       </Box>
 

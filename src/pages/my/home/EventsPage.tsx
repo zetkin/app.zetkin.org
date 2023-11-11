@@ -22,8 +22,12 @@ const Page: FC<PageProps> = () => {
         paddingLeft: '1em',
       }}
     >
-      <h1>Actions</h1>
-      <p>Sign up for more actions here.</p>
+      <h1>All Events</h1>
+      <p>Sign up for more events here.</p>
+      <p>
+        TODO: Add events here, and a button for filtering between event type and
+        project, (and organization?)
+      </p>
     </Box>
   );
 };

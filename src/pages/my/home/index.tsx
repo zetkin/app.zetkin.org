@@ -8,6 +8,7 @@ import EventIcon from '@mui/icons-material/Event';
 import { Architecture, CheckBoxSharp, Star } from '@mui/icons-material';
 import { Button, Tab, Tabs } from '@mui/material';
 import { FC, useState } from 'react';
+import { Alert, Divider, Typography, useTheme } from '@mui/material';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -30,19 +31,23 @@ const Page: FC<PageProps> = () => {
     setCurrentPage(newValue);
   };
 
+  const theme = useTheme();
+
   return (
     <Box>
       <Box
         style={{
           background: 'linear-gradient(to bottom right, #f47b9c, #f69382)',
+        }}
+        sx={{
+          pl: '1em',
           color: 'white',
-          paddingLeft: '1em',
         }}
       >
         <h1 style={{ marginTop: '0' }}>Hello {user?.first_name}</h1>
         <p>
           Welcome to your page. This is where you find events, your own bookings
-          and assignments, and sign up to new ones.
+          and assignments, and where you sign up to new ones.
         </p>
         <Box>
           <Button
@@ -52,15 +57,51 @@ const Page: FC<PageProps> = () => {
               mr: '1em',
             }}
             variant="contained"
+            onClick={() => {
+              setCurrentPage('events');
+            }}
           >
             To sign-up
           </Button>
-          <Button color="primary" sx={{ mb: '1em' }} variant="contained">
+          <Button
+            color="primary"
+            sx={{ mb: '1em' }}
+            variant="contained"
+            onClick={() => {
+              setCurrentPage('todo');
+            }}
+          >
             My events
           </Button>
         </Box>
       </Box>
-      <Tabs onChange={handleChange} value={currentPage} variant="scrollable">
+      <Box
+        sx={{
+          pl: '1em',
+          mu: '0',
+          color: 'var(--color-primary)',
+        }}
+      >
+        <h2
+          style={{
+            margin: '0',
+          }}
+        >
+          Next up
+        </h2>
+        <Box>
+          <div>TODO: Add event / call assignment / task here</div>
+        </Box>
+      </Box>
+      <Tabs
+        onChange={handleChange}
+        value={currentPage}
+        variant="scrollable"
+        sx={{
+          mu: '0',
+          height: '0',
+        }}
+      >
         <Tab
           icon={<EventIcon />}
           iconPosition="start"
