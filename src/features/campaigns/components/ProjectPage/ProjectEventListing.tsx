@@ -13,19 +13,18 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
     new Date(),
     new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)
   ); // TODO: Smarter date handling. We dont just want to do next 60 days.
-  console.log('Events with date range', eventsFromDateRange);
 
   return (
     <>
       {eventsFromDateRange &&
         eventsFromDateRange.map((data) => {
           return (
-            <Card sx={{ maxWidth: 345 }}>
+            <Card sx={{marginTop: '2rem'}}>
               <CardMedia
                 component="img"
                 alt="green iguana"
                 height="140"
-                image="/static/images/cards/contemplative-reptile.jpg"
+                image="https://manual.zetkin.org/assets/img/logo-red.png" // TODO: Add dynamic images
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
