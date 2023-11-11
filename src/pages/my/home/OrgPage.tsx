@@ -1,9 +1,10 @@
-import { Box } from '@mui/system';
 import { FC } from 'react';
+import NextLink from 'next/link';
 import { scaffold } from 'utils/next';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
+import { Box, Link } from '@mui/material';
 import { List, ListItem } from '@mui/material';
 
 const scaffoldOptions = {
@@ -29,7 +30,11 @@ const Page: FC<PageProps> = () => {
           <List>
             {data?.map((org: ZetkinMembership['organization']) => (
               <ListItem key={org.id}>
-                <h2>{org.title}</h2>
+                <NextLink href={`/o/${org.id}`} passHref>
+                  <Link color="inherit" underline="none">
+                    {org.title}
+                  </Link>
+                </NextLink>
               </ListItem>
             ))}
           </List>
