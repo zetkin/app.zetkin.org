@@ -1,6 +1,7 @@
 import Box from '@mui/system/Box';
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
+import SignUpOptions from 'features/surveys/components/surveyForm/SignUpOptions';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
@@ -68,6 +69,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
             {element.type === 'text' && <p>{element.text_block.content}</p>}
           </div>
         ))}
+        <SignUpOptions signature={survey.data?.signature} />
       </form>
     </>
   );
