@@ -41,8 +41,8 @@ const Page: FC<PageProps> = () => {
       >
         <h1 style={{ marginTop: '0' }}>Hello {user?.first_name}</h1>
         <p>
-          Welcome to your page. This is where you find ongoing projects, your
-          own bookings and assignments, and sign up to new ones.
+          Welcome to your page. This is where you find events, your own bookings
+          and assignments, and sign up to new ones.
         </p>
         <Box>
           <Button
@@ -64,7 +64,7 @@ const Page: FC<PageProps> = () => {
         <Tab
           icon={<EventIcon />}
           iconPosition="start"
-          label="Events"
+          label="All Events"
           value="events"
         />
         <Tab

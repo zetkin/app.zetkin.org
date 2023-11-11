@@ -17,8 +17,13 @@ type PageProps = void;
 
 const Page: FC<PageProps> = () => {
   return (
-    <Box>
-      <h1>Events</h1>
+    <Box
+      style={{
+        paddingLeft: '1em',
+      }}
+    >
+      <h1>Actions</h1>
+      <p>Sign up for more actions here.</p>
     </Box>
   );
 };
