@@ -57,7 +57,7 @@ const Page: FC<PageProps> = ({ orgId }) => {
 
   const { data: activities } = useEventActivities(parseInt(orgId));
 
-  if (activities) {
+  if (activities?.length) {
     const events = activities.filter(
       (activity) => activity.kind === ACTIVITIES.EVENT
     ) as EventActivity[];
