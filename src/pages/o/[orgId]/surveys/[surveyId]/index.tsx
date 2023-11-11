@@ -1,7 +1,10 @@
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import Box from '@mui/system/Box';
+import Button from '@mui/material/Button';
 import { FC } from 'react';
+import { IncomingMessage } from 'http';
+import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
-import SignUpOptions from 'features/surveys/components/surveyForm/SignUpOptions';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
@@ -11,8 +14,97 @@ const scaffoldOptions = {
   authLevelRequired: 1,
 };
 
+function parseRequest(
+  req: IncomingMessage
+): Promise<NodeJS.Dict<string | string[]>> {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', (chunk: Buffer) => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      resolve(parse(body));
+    });
+  });
+}
+
 export const getServerSideProps = scaffold(async (ctx) => {
+  const { req, res } = ctx;
   const { surveyId, orgId } = ctx.params!;
+
+  if (req.method === 'POST') {
+    const form = await parseRequest(req);
+    const responses: Record<
+      string,
+      {
+        options?: number[];
+        question_id: number;
+        response?: string;
+      }
+    > = {};
+
+    for (const name in form) {
+      const isSignature = name.startsWith('sig');
+      const isPrivacy = name.startsWith('privacy');
+      const isMetadata = isSignature || isPrivacy;
+      if (isMetadata) {
+        continue;
+      }
+
+      const fields = name.split('.');
+      const questionId = fields[0];
+      const questionType = fields[1];
+
+      if (typeof responses[questionId] === 'undefined') {
+        responses[questionId] = {
+          question_id: parseInt(fields[0]),
+        };
+      }
+
+      if (questionType == 'options') {
+        if (Array.isArray(form[name])) {
+          responses[questionId].options = (form[name] as string[]).map((o) =>
+            parseInt(o)
+          );
+        } else {
+          responses[questionId].options = [parseInt((form[name] as string)!)];
+        }
+      } else if (questionType == 'text') {
+        responses[questionId].response = form[name] as string;
+      }
+    }
+
+    let signature: null | {
+      email: string;
+      first_name: string;
+      last_name: string;
+    } = null;
+    // TODO: handle other signature types
+    if (form.sig == 'email') {
+      signature = {
+        email: form['sig.email'] as string,
+        first_name: form['sig.first_name'] as string,
+        last_name: form['sig.last_name'] as string,
+      };
+    }
+
+    const apiClient = new BackendApiClient(req.headers);
+    const requestUrl = `/api/orgs/${orgId}/surveys/${surveyId}/submissions`;
+    try {
+      await apiClient.post(requestUrl, {
+        responses: Object.values(responses),
+        signature,
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+    }
+
+    res.writeHead(302, {
+      Location: `/o/${orgId}/surveys/${surveyId}/submitted`,
+    });
+    res.end();
+  }
 
   return {
     props: {
@@ -33,6 +125,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
     parseInt(orgId, 10),
     parseInt(surveyId, 10)
   );
+
   return (
     <>
       <h1>{survey.data?.title}</h1>
@@ -44,19 +137,26 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
         {survey.data?.organization.title}
       </Box>
 
-      <form>
+      <form method="post">
         {(elements.data || []).map((element) => (
           <div key={element.id}>
             {element.type === 'question' && (
               <Box display="flex" flexDirection="column" maxWidth={256}>
-                <label htmlFor={`${element.id}`}>
+                <label htmlFor={`input-${element.id}`}>
                   {element.question.question}
                 </label>
                 {element.question.response_type === 'text' && (
-                  <input id={`${element.id}`} type="text" />
+                  <input
+                    id={`input-${element.id}`}
+                    name={`${element.id}.text`}
+                    type="text"
+                  />
                 )}
                 {element.question.response_type === 'options' && (
-                  <select id={`${element.id}`}>
+                  <select
+                    id={`input-${element.id}`}
+                    name={`${element.id}.options`}
+                  >
                     {element.question.options!.map((option) => (
                       <option key={option.id} value={option.id}>
                         {option.text}
@@ -69,7 +169,10 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
             {element.type === 'text' && <p>{element.text_block.content}</p>}
           </div>
         ))}
-        <SignUpOptions signature={survey.data?.signature} />
+
+        <Button color="primary" type="submit" variant="contained">
+          {'Submit'}
+        </Button>
       </form>
     </>
   );
