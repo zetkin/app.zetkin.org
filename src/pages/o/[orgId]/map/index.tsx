@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
 
+import groupEventsByLocation from 'features/events/components/ActivistMap/groupEventsByLocation';
 import useEventActivities from 'features/campaigns/hooks/useEventActivities';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 
@@ -30,19 +31,16 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ orgId }) => {
-  const activities = useEventActivities(parseInt(orgId));
-  if (activities.data) {
-    return (
-      <ActivistMap
-        events={
-          activities.data.filter(
-            (activity) =>
-              activity.kind === ACTIVITIES.EVENT && activity.data.location
-          ) as EventActivity[]
-        }
-      />
-    );
+  const { data: activities } = useEventActivities(parseInt(orgId));
+
+  if (activities) {
+    const events = activities.filter(
+      (activity) => activity.kind === ACTIVITIES.EVENT
+    ) as EventActivity[];
+
+    return <ActivistMap locationsWithEvents={groupEventsByLocation(events)} />;
   }
+
   return null;
 };
 

@@ -6,13 +6,23 @@ import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
 import BasicMarker from '../LocationModal/BasicMarker';
 import { EventActivity } from 'features/campaigns/types';
+import { ZetkinLocation } from 'utils/types/zetkin';
 
 const MapWrapper = ({ children }: { children: (map: Map) => JSX.Element }) => {
   const map = useMap();
   return children(map);
 };
 
-const ActivistMap = ({ events }: { events: EventActivity[] }) => {
+export interface LocationWithEvents {
+  events: EventActivity[];
+  location: ZetkinLocation;
+}
+
+const ActivistMap = ({
+  locationsWithEvents,
+}: {
+  locationsWithEvents: LocationWithEvents[];
+}) => {
   const theme = useTheme();
 
   return (
@@ -32,27 +42,25 @@ const ActivistMap = ({ events }: { events: EventActivity[] }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
-              {events.map((event) => {
-                if (event.data.location) {
-                  return (
-                    <Marker
-                      key={event.data.id}
-                      icon={divIcon({
-                        className: '',
-                        html: renderToStaticMarkup(
-                          <BasicMarker
-                            color={theme.palette.primary.main}
-                            events={0}
-                          />
-                        ),
-                      })}
-                      position={[
-                        event.data.location.lat,
-                        event.data.location.lng,
-                      ]}
-                    />
-                  );
-                }
+              {locationsWithEvents.map((locationGroup) => {
+                return (
+                  <Marker
+                    key={locationGroup.location.id}
+                    icon={divIcon({
+                      className: '',
+                      html: renderToStaticMarkup(
+                        <BasicMarker
+                          color={theme.palette.primary.main}
+                          events={0}
+                        />
+                      ),
+                    })}
+                    position={[
+                      locationGroup.location.lat,
+                      locationGroup.location.lng,
+                    ]}
+                  />
+                );
               })}
             </>
           );
