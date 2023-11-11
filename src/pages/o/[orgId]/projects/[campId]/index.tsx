@@ -1,5 +1,7 @@
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
+import EventListing from 'features/campaigns/components/ProjectPage/ProjectEventListing';
+
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -18,8 +20,8 @@ export const getServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 type PageProps = {
-  campId: string;
-  orgId: string;
+  campId: number;
+  orgId: number;
 };
 
 // event-listing-a 
@@ -27,7 +29,8 @@ type PageProps = {
 const Page: FC<PageProps> = ({ orgId, campId }) => {
   return (
     <h1>
-      Page for org {orgId}, project {campId} ☭
+      Page for org {orgId}, project {campId}
+      <EventListing campId={campId} orgId={orgId} data={undefined}></EventListing>
     </h1>
   );
 };
