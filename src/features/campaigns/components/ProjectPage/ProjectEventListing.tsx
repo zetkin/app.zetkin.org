@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import EventCard from './EventCard';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 
 type EventListingProps = {
@@ -13,6 +14,7 @@ const EventListing: FC<EventListingProps> = ({orgId, campId}) => {
     return (
         <>
             <h1>{eventsFromDateRange[0].data.title}</h1>
+            <EventCard data={eventsFromDateRange[0].data}></EventCard>
         </>
     )
 };
