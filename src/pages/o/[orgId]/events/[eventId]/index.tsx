@@ -2,15 +2,17 @@ import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import NextLink from 'next/link';
-import { Avatar, Box, Link, Typography } from '@mui/material';
+import { Avatar, Box, Button, Link, Typography } from '@mui/material';
 
 import { scaffold } from 'utils/next';
 import useEvent from 'features/events/hooks/useEvent';
+import useEventSignup from 'features/events/hooks/useEventSignup';
 import useServerSide from 'core/useServerSide';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
+  allowNonMembers: true,
   allowNonOfficials: true,
   authLevelRequired: 1,
 };
@@ -39,6 +41,10 @@ const Map = dynamic(
 const Page: FC<PageProps> = ({ orgId, eventId }) => {
   const eventFuture = useEvent(parseInt(orgId, 10), parseInt(eventId, 10));
   const onServer = useServerSide();
+  const eventSignupFuture = useEventSignup(
+    parseInt(orgId, 10),
+    parseInt(eventId, 10)
+  );
 
   if (onServer) {
     return null;
@@ -66,6 +72,17 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                 </Link>
               </NextLink>
             )}
+            <ZUIFuture future={eventSignupFuture}>
+              {({ myResponseState, signup, undoSignup }) =>
+                myResponseState == 'notSignedUp' ? (
+                  <Button onClick={signup}>Sign up</Button>
+                ) : myResponseState == 'responded' ? (
+                  <Button onClick={undoSignup}>Undo</Button>
+                ) : (
+                  <Typography>{"You're signed up!"}</Typography>
+                )
+              }
+            </ZUIFuture>
             {location && (
               <Box>
                 <Map location={location} />
