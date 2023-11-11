@@ -30,7 +30,7 @@ const Page: FC<PageProps> = ({ orgId, campId }) => {
   return (
     <h1>
       Page for org {orgId}, project {campId}
-      <EventListing campId={campId} orgId={orgId} data={undefined}></EventListing>
+      <EventListing campId={campId} orgId={orgId}></EventListing>
     </h1>
   );
 };

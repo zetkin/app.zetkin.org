@@ -10,11 +10,8 @@ type EventListingProps = {
 }
 
 const EventListing: FC<EventListingProps> = ({orgId, campId, data}) => { 
-    const activitiesDateRange = useEventsFromDateRange(new Date, new Date);
-    const activites = useCampaignEvents(orgId, campId)
-
-    console.log("Events with date range" + activitiesDateRange)
-    console.log("Events" + activites)
+    const activitiesDateRange = useEventsFromDateRange(new Date(), new Date(Date.now() + 60 * 24 * 60 * 60 * 1000));
+    console.log("Events with date range", activitiesDateRange)
 
     return <h1>{'Hello'}</h1>;
 };
