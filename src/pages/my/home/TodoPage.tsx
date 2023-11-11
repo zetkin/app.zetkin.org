@@ -1,4 +1,6 @@
 import { Box } from '@mui/system';
+import CallAssignments from './CallAssignments';
+
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
 
@@ -19,6 +21,7 @@ const Page: FC<PageProps> = () => {
   return (
     <Box>
       <h1>Todo</h1>
+      <CallAssignments />
     </Box>
   );
 };
