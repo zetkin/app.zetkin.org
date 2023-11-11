@@ -1,6 +1,6 @@
+import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import groupEventsByLocation from 'features/events/components/ActivistMap/groupEventsByLocation';
-import { InfoOutlined } from '@mui/icons-material';
 import LocationSearch from 'features/events/components/LocationModal/LocationSearch';
 import { makeStyles } from '@mui/styles';
 import messageIds from 'features/events/l10n/messageIds';
@@ -10,7 +10,6 @@ import useEventActivities from 'features/campaigns/hooks/useEventActivities';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
-import { Box, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 
 const useStyles = makeStyles<Theme>(() => ({
@@ -70,7 +69,7 @@ const Page: FC<PageProps> = ({ orgId }) => {
     );
 
     return (
-      <Box border={1} padding={2}>
+      <>
         <ActivistMap locationsWithEvents={locationsWithEvents} />
 
         <Box className={classes.overlay}>
@@ -90,13 +89,7 @@ const Page: FC<PageProps> = ({ orgId }) => {
             options={locations}
           />
         </Box>
-        <Box alignItems="center" display="flex" paddingTop={1}>
-          <InfoOutlined color="secondary" />
-          <Typography color="secondary" paddingLeft={1} variant="body2">
-            {messages.locationModal.infoText()}
-          </Typography>
-        </Box>
-      </Box>
+      </>
     );
   }
   return null;
