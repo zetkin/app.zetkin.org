@@ -160,6 +160,11 @@ export default makeMessages('feat.surveys', {
   },
   surveyForm: {
     accept: m('I accept the terms stated below'),
+    anonymousOption: m('Sign anonymously'),
+    authenticatedOption: m<{ email: string; person: string }>(
+      'Sign as {person} with email {email}'
+    ),
+    nameEmailOption: m('Sign with name and email'),
     policy: {
       link: m('https://zetkin.org/privacy'),
       text: m('Click to read the full Zetkin Privacy Policy'),
@@ -168,6 +173,7 @@ export default makeMessages('feat.surveys', {
       anonymous: m('Submit anonymously'),
       nameAndEmail: m('Sign with name and e-mail'),
     },
+    signOptions: m('Choose 1 of these signing options below'),
     submit: m('Submit'),
     termsDescription: m<{ organization: string }>(
       'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'

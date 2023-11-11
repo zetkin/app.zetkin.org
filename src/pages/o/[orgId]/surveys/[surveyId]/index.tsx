@@ -2,16 +2,25 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import Box from '@mui/system/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import { FC } from 'react';
 import { IncomingMessage } from 'http';
-import messageIds from 'features/surveys/l10n/messageIds';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import { FormControlLabel, Link, Typography } from '@mui/material';
+import { FC, useState } from 'react';
 import { Msg, useMessages } from 'core/i18n';
+
+import {
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from '@mui/material';
+
+import messageIds from 'features/surveys/l10n/messageIds';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -130,6 +139,26 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
   );
   const messages = useMessages(messageIds);
   const survey = useSurvey(parseInt(orgId, 10), parseInt(surveyId, 10));
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [customInput, setCustomInput] = useState({
+    email: '',
+    name: '',
+  });
+
+  const handleRadioChange = (option) => {
+    setSelectedOption(option);
+  };
+
+  const handleCustomInputChange = (field, value) => {
+    setCustomInput((prevInput) => ({
+      ...prevInput,
+      [field]: value,
+    }));
+  };
+
+  const currentUser = useCurrentUser();
+
   return (
     <>
       <h1>{survey.data?.title}</h1>
@@ -201,6 +230,72 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
         >
           {messages.surveyForm.submit()}
         </Button>
+
+        <Typography>
+          <Msg id={messageIds.surveyForm.signOptions} />
+        </Typography>
+
+        <RadioGroup
+          onChange={(e) => handleRadioChange(e.target.value)}
+          value={selectedOption}
+        >
+          <FormControlLabel
+            control={<Radio />}
+            label={
+              <Typography>
+                <Msg
+                  id={messageIds.surveyForm.authenticatedOption}
+                  values={{
+                    email: currentUser?.email,
+                    person: currentUser?.first_name,
+                  }}
+                />
+              </Typography>
+            }
+            value="authenticated"
+          />
+
+          <FormControlLabel
+            control={<Radio />}
+            label={
+              <div>
+                <Typography>
+                  <Msg id={messageIds.surveyForm.nameEmailOption} />
+                </Typography>
+                {selectedOption === 'name+email' && (
+                  <>
+                    <TextField
+                      label="Name"
+                      onChange={(e) =>
+                        handleCustomInputChange('name', e.target.value)
+                      }
+                      value={customInput.name}
+                    />
+                    <TextField
+                      label="Email"
+                      onChange={(e) =>
+                        handleCustomInputChange('email', e.target.value)
+                      }
+                      value={customInput.email}
+                    />
+                  </>
+                )}
+              </div>
+            }
+            value="name+email"
+          />
+          {survey.data?.signature === 'allow_anonymous' && (
+            <FormControlLabel
+              control={<Radio />}
+              label={
+                <Typography>
+                  <Msg id={messageIds.surveyForm.anonymousOption} />
+                </Typography>
+              }
+              value="anonymous"
+            />
+          )}
+        </RadioGroup>
       </form>
     </>
   );
