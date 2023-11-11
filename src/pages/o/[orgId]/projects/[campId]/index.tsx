@@ -22,10 +22,12 @@ type PageProps = {
   orgId: string;
 };
 
+// event-listing-a 
+
 const Page: FC<PageProps> = ({ orgId, campId }) => {
   return (
     <h1>
-      Page for org {orgId}, project {campId}
+      Page for org {orgId}, project {campId} ☭
     </h1>
   );
 };
