@@ -83,19 +83,22 @@ const Page: FC<PageProps> = ({ orgId }) => {
       (activity) => activity.kind === ACTIVITIES.EVENT
     ) as EventActivity[];
 
-    const filteredEvents = events.filter((event) => {
-      return (
-        (filterNeedParticipants
+    const filters = [
+      (event: EventActivity) =>
+        filterNeedParticipants
           ? event.data.num_participants_available <
             event.data.num_participants_required
-          : true) &&
-        (filterString
+          : true,
+      (event: EventActivity) =>
+        filterString
           ? !!event.data.activity?.title
               .toLowerCase()
               .match(filterString.toLowerCase())
-          : true)
-      );
-    });
+          : true,
+    ];
+    const filteredEvents = events.filter((event) =>
+      filters.every((filter) => filter(event))
+    );
 
     const locationsWithEvents = groupEventsByLocation(filteredEvents);
     const locations = locationsWithEvents.map(
