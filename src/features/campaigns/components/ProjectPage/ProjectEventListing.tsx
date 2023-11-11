@@ -36,7 +36,7 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
               </CardContent>
               <CardActions style={{justifyContent: 'space-between'}}>
                 <Button size="small">Read more</Button>
-                <Button size="small">Count me in!</Button> // two-way function
+                <Button size="small">Count me in!</Button>
               </CardActions>
             </Card>
           );
