@@ -44,7 +44,7 @@ test.describe('User submitting a survey', () => {
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
 
-    await page.fill('input', 'Topple capitalism');
+    await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       await page.click('data-testid=Survey-submit'),
