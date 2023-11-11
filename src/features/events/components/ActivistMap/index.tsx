@@ -5,18 +5,19 @@ import { divIcon, latLngBounds, Map } from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
 import BasicMarker from '../LocationModal/BasicMarker';
-import { EventActivity } from 'features/campaigns/types';
-import groupEventsByLocation from './groupEventsByLocation';
+import { LocationWithEvents } from './groupEventsByLocation';
 
 const MapWrapper = ({ children }: { children: (map: Map) => JSX.Element }) => {
   const map = useMap();
   return children(map);
 };
 
-const ActivistMap = ({ events }: { events: EventActivity[] }) => {
+const ActivistMap = ({
+  locationsWithEvents,
+}: {
+  locationsWithEvents: LocationWithEvents[];
+}) => {
   const theme = useTheme();
-
-  const groupedEvents = groupEventsByLocation(events);
 
   return (
     <MapContainer
@@ -35,10 +36,10 @@ const ActivistMap = ({ events }: { events: EventActivity[] }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
-              {groupedEvents.map((locationGroup) => {
+              {locationsWithEvents.map((location) => {
                 return (
                   <Marker
-                    key={locationGroup.location.id}
+                    key={location.location.id}
                     icon={divIcon({
                       className: '',
                       html: renderToStaticMarkup(
@@ -48,10 +49,7 @@ const ActivistMap = ({ events }: { events: EventActivity[] }) => {
                         />
                       ),
                     })}
-                    position={[
-                      locationGroup.location.lat,
-                      locationGroup.location.lng,
-                    ]}
+                    position={[location.location.lat, location.location.lng]}
                   />
                 );
               })}
