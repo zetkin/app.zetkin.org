@@ -1,5 +1,8 @@
 import { Box } from '@mui/system';
+import EventsPage from './EventsPage';
+import OrgPage from './OrgPage';
 import { scaffold } from 'utils/next';
+import TodoPage from './TodoPage';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import EventIcon from '@mui/icons-material/Event';
 import { Architecture, CheckBoxSharp, Star } from '@mui/icons-material';
@@ -21,10 +24,10 @@ type PageProps = void;
 
 const Page: FC<PageProps> = () => {
   const user = useCurrentUser();
-  const [value, setValue] = useState('one');
+  const [currentPage, setCurrentPage] = useState('events');
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+    setCurrentPage(newValue);
   };
 
   return (
@@ -57,26 +60,29 @@ const Page: FC<PageProps> = () => {
           </Button>
         </Box>
       </Box>
-      <Tabs onChange={handleChange} value={value} variant="scrollable">
+      <Tabs onChange={handleChange} value={currentPage} variant="scrollable">
         <Tab
           icon={<EventIcon />}
           iconPosition="start"
-          label="Projects"
-          value="one"
+          label="Events"
+          value="events"
         />
         <Tab
           icon={<CheckBoxSharp />}
           iconPosition="start"
           label="My Todo"
-          value="two"
+          value="todo"
         />
         <Tab
           icon={<Star />}
           iconPosition="start"
           label="Organizations"
-          value="three"
+          value="organizations"
         />
       </Tabs>
+      {currentPage === 'events' && <EventsPage />}
+      {currentPage === 'todo' && <TodoPage />}
+      {currentPage === 'organizations' && <OrgPage />}
     </Box>
   );
 };
