@@ -175,6 +175,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
         ))}
         <FormControlLabel
           control={<Checkbox required />}
+          data-testid="Survey-acceptTerms"
           label={<Msg id={messageIds.surveyForm.accept} />}
         />
         <Typography>
@@ -192,7 +193,12 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
             <Msg id={messageIds.surveyForm.policy.text} />
           </Link>
         </Typography>
-        <Button color="primary" type="submit" variant="contained">
+        <Button
+          color="primary"
+          data-testid="Survey-submit"
+          type="submit"
+          variant="contained"
+        >
           {messages.surveyForm.submit()}
         </Button>
       </form>
