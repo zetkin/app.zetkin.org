@@ -1,13 +1,12 @@
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import groupEventsByLocation from 'features/events/components/ActivistMap/groupEventsByLocation';
+import { LatLngLiteral } from 'leaflet';
 import LocationSearch from 'features/events/components/LocationModal/LocationSearch';
 import { makeStyles } from '@mui/styles';
-import messageIds from 'features/events/l10n/messageIds';
 import { scaffold } from 'utils/next';
 import { Theme } from '@mui/system';
 import useEventActivities from 'features/campaigns/hooks/useEventActivities';
-import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { FC, useState } from 'react';
@@ -51,10 +50,10 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ orgId }) => {
-  const messages = useMessages(messageIds);
   const classes = useStyles();
-
   const [searchString, setSearchString] = useState('');
+  const [, setSelectedLocation] = useState<ZetkinLocation | undefined>();
+  const [center, setCenter] = useState<LatLngLiteral | undefined>();
 
   const { data: activities } = useEventActivities(parseInt(orgId));
 
@@ -70,20 +69,30 @@ const Page: FC<PageProps> = ({ orgId }) => {
 
     return (
       <>
-        <ActivistMap locationsWithEvents={locationsWithEvents} />
+        <ActivistMap
+          center={center}
+          locationsWithEvents={locationsWithEvents}
+        />
 
         <Box className={classes.overlay}>
           <LocationSearch
             onChange={(value: ZetkinLocation) => {
-              const location = locations.find(
-                (location) => location.id === value.id
-              );
-              if (!location?.lat || !location?.lng) {
-                return;
-              }
               setSearchString(searchString);
+              setSelectedLocation(value);
             }}
-            onClickGeolocate={() => null}
+            onClickGeolocate={() => {
+              if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                  // Success getting location
+                  (position) => {
+                    setCenter({
+                      lat: position.coords.latitude,
+                      lng: position.coords.longitude,
+                    });
+                  }
+                );
+              }
+            }}
             onInputChange={(value) => setSearchString(value || '')}
             onTextFieldChange={(value) => setSearchString(value)}
             options={locations}

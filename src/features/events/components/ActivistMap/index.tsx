@@ -1,7 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTheme } from '@mui/material';
-import { divIcon, latLngBounds, Map } from 'leaflet';
+import { divIcon, latLngBounds, LatLngLiteral, Map } from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
 import BasicMarker from '../LocationModal/BasicMarker';
@@ -13,8 +13,10 @@ const MapWrapper = ({ children }: { children: (map: Map) => JSX.Element }) => {
 };
 
 const ActivistMap = ({
+  center,
   locationsWithEvents,
 }: {
+  center?: LatLngLiteral;
   locationsWithEvents: LocationWithEvents[];
 }) => {
   const theme = useTheme();
@@ -28,7 +30,11 @@ const ActivistMap = ({
       style={{ height: '100vh', width: '100%' }}
     >
       <MapWrapper>
-        {() => {
+        {(map) => {
+          // Set map center if set externally
+          if (center) {
+            map.setView(center, 13);
+          }
           return (
             <>
               <TileLayer
