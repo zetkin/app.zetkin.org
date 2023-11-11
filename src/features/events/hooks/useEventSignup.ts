@@ -15,11 +15,7 @@ import {
   ZetkinMembership,
 } from 'utils/types/zetkin';
 
-type EventResponseState =
-  | 'notSignedUp'
-  | 'responded'
-  | 'participant'
-  | 'notInOrgYet';
+type EventResponseState = 'notSignedUp' | 'signedUp' | 'booked' | 'notInOrgYet';
 
 function eventResponseState(
   eventId: number,
@@ -31,10 +27,10 @@ function eventResponseState(
     return 'notInOrgYet';
   }
   if (bookings.some((b) => b.id == eventId)) {
-    return 'participant';
+    return 'booked';
   }
   if (signups.some((b) => b.action_id == eventId)) {
-    return 'responded';
+    return 'signedUp';
   }
   return 'notSignedUp';
 }
