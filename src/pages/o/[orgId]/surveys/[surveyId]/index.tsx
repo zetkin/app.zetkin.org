@@ -7,6 +7,15 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import {
+  ZetkinSurveyOptionsQuestionElement,
+  ZetkinSurveyTextElement,
+  ZetkinSurveyTextQuestionElement,
+} from 'utils/types/zetkin';
+
+import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
+import TextBlock from 'features/surveys/components/surveyForm/TextBlock';
+import TextQuestion from 'features/surveys/components/surveyForm/TextQuestion';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
@@ -179,32 +188,22 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
         {(elements.data || []).map((element) => (
           <div key={element.id}>
             {element.type === 'question' && (
-              <Box display="flex" flexDirection="column" maxWidth={256}>
-                <label htmlFor={`input-${element.id}`}>
-                  {element.question.question}
-                </label>
+              <>
                 {element.question.response_type === 'text' && (
-                  <input
-                    id={`input-${element.id}`}
-                    name={`${element.id}.text`}
-                    type="text"
+                  <TextQuestion
+                    element={element as ZetkinSurveyTextQuestionElement}
                   />
                 )}
                 {element.question.response_type === 'options' && (
-                  <select
-                    id={`input-${element.id}`}
-                    name={`${element.id}.options`}
-                  >
-                    {element.question.options!.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.text}
-                      </option>
-                    ))}
-                  </select>
+                  <OptionsQuestion
+                    element={element as ZetkinSurveyOptionsQuestionElement}
+                  />
                 )}
-              </Box>
+              </>
             )}
-            {element.type === 'text' && <p>{element.text_block.content}</p>}
+            {element.type === 'text' && (
+              <TextBlock element={element as ZetkinSurveyTextElement} />
+            )}
           </div>
         ))}
         <Typography>
