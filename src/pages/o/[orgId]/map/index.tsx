@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { scaffold } from 'utils/next';
 
 import useEventActivities from 'features/campaigns/hooks/useEventActivities';
+import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 
 const ActivistMap = dynamic(
   () => import('features/events/components/ActivistMap'),
@@ -29,8 +30,20 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ orgId }) => {
-  useEventActivities(parseInt(orgId));
-  return <ActivistMap />;
+  const activities = useEventActivities(parseInt(orgId));
+  if (activities.data) {
+    return (
+      <ActivistMap
+        events={
+          activities.data.filter(
+            (activity) =>
+              activity.kind === ACTIVITIES.EVENT && activity.data.location
+          ) as EventActivity[]
+        }
+      />
+    );
+  }
+  return null;
 };
 
 export default Page;
