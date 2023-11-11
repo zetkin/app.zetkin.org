@@ -35,7 +35,7 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
                 </Typography>
               </CardContent>
               <CardActions style={{justifyContent: 'space-between'}}>
-                <Button size="small">Read more</Button>
+                <Button size="small" href={`/o/${data.data.organization.id}/projects/${data.data.id}`}>Read more</Button>
                 <Button size="small">Count me in!</Button>
               </CardActions>
             </Card>
