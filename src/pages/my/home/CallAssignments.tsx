@@ -1,8 +1,8 @@
 import { Box } from '@mui/system';
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
-import { ZetkinMembership } from 'utils/types/zetkin';
+import useCurrentUserCallAssignments from 'features/user/hooks/useCurrentUserCallAssigments';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { List, ListItem } from '@mui/material';
 
@@ -20,16 +20,16 @@ export const getServerSideProps = scaffold(async () => {
 type PageProps = void;
 
 const Page: FC<PageProps> = () => {
-  const organizations = useOrganizations();
+  const callAssignments = useCurrentUserCallAssignments();
   return (
     <Box>
-      <h1>Organizations</h1>
-      <ZUIFuture future={organizations}>
+      <h1>Events</h1>
+      <ZUIFuture future={callAssignments}>
         {(data) => (
           <List>
-            {data?.map((org: ZetkinMembership['organization']) => (
-              <ListItem key={org.id}>
-                <h2>{org.title}</h2>
+            {data?.map((callAssignment: ZetkinCallAssignment) => (
+              <ListItem key={callAssignment.id}>
+                <p>{callAssignment.title}</p>
               </ListItem>
             ))}
           </List>
