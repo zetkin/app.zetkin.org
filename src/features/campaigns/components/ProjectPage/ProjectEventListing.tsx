@@ -44,8 +44,13 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
               <Typography gutterBottom variant="h5" component="div">
                 {data.data.title}
               </Typography>
+<<<<<<< Updated upstream
               <Typography sx={{color: theme.palette.secondary.main, fontSize: '.7rem'}} gutterBottom variant="p" component="div">
                   {startTime} - {data.data.location?.title}
+=======
+              <Typography sx={{color: theme.palette.secondary.main, fontSize: '.7rem', fontWeight: '500'}} gutterBottom variant="p" component="div">
+                  {startTime} - {data.data.location.title}
+>>>>>>> Stashed changes
               </Typography>
               <Typography variant="body2" color={theme.palette.secondary.main}>
                 {data.data.info_text}
