@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Box, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, Button, Icon, Typography } from '@mui/material';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
 import { FC } from 'react';
 import ZUICard from 'zui/ZUICard';
@@ -23,30 +23,27 @@ const Header: FC<HeaderProps> = ({ orgId, campId }) => {
   return (
     <>
       <ZUIFuture future={campaignFuture}>
-        {(data) => {
-          return (
-            <>
-              <AppBar position="static"></AppBar>
+        {(data) => (
+          <>
+            <AppBar position="static">
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Icon></Icon>
+              </Typography>
+              <Button color="inherit">Login</Button>
+            </AppBar>
 
-              <Typography>{data.title}</Typography>
-              <Box
-                alignItems="center"
-                display="flex"
-                flexDirection="row"
-                overflow="hidden"
-              >
-                <Avatar
-                  src={`/api/orgs/${parseInt(orgId)}/avatar`}
-                  style={{ margin: '15px' }}
-                />
-                <Typography>{data.organization?.title}</Typography>
-              </Box>
-              <Box>
-                <Typography>{data.info_text ?? ''}</Typography>
-              </Box>
-            </>
-          );
-        }}
+            <Typography>{data.title}</Typography>
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              overflow="hidden"
+            ></Box>
+            <Box>
+              <Typography>{data.info_text ?? ''}</Typography>
+            </Box>
+          </>
+        )}
       </ZUIFuture>
     </>
   );
