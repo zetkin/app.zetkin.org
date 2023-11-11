@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
-//import OverviewListItem from 'features/campaigns/components/ActivitiesOverview/items/OverviewListItem'
 
 type EventListingProps = {
     orgId: number;  
@@ -12,8 +11,9 @@ const EventListing: FC<EventListingProps> = ({orgId, campId}) => {
     console.log("Events with date range", eventsFromDateRange)
 
     return (
-        //<OverviewListItem {title=''}></OverviewListItem>
-        <h1>{eventsFromDateRange[0].data.title}</h1>
+        <>
+            <h1>{eventsFromDateRange[0].data.title}</h1>
+        </>
     )
 };
 
