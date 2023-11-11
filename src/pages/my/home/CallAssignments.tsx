@@ -23,7 +23,7 @@ const Page: FC<PageProps> = () => {
   const callAssignments = useCurrentUserCallAssignments();
   return (
     <Box>
-      <h1>Events</h1>
+      <h2>Call Assignments</h2>
       <ZUIFuture future={callAssignments}>
         {(data) => (
           <List>
