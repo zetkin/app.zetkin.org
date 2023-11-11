@@ -43,7 +43,7 @@ const Page: FC<PageProps> = ({ callAssignments }) => {
 
   return (
     <Box>
-      <Table aria-label="a dense table" size="small" sx={{ minWidth: 650 }}>
+      <Table aria-label="a dense table" size="small">
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>
