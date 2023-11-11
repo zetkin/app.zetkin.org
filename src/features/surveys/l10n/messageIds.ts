@@ -159,6 +159,12 @@ export default makeMessages('feat.surveys', {
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
+  surveyForm: {
+    sign: {
+      anonymous: m('Submit anonymously'),
+      nameAndEmail: m('Sign with name and e-mail'),
+    },
+  },
   tabs: {
     overview: m('Overview'),
     questions: m('Questions'),
