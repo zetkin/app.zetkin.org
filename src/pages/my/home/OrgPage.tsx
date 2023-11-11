@@ -21,9 +21,8 @@ type PageProps = void;
 
 const Page: FC<PageProps> = () => {
   const organizations = useOrganizations();
-  //console.log("organizations", organizations);
   return (
-    <div>
+    <Box>
       <h1>Organizations</h1>
       <ZUIFuture future={organizations}>
         {(data) => (
@@ -36,7 +35,7 @@ const Page: FC<PageProps> = () => {
           </List>
         )}
       </ZUIFuture>
-    </div>
+    </Box>
   );
 };
 
