@@ -24,7 +24,7 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
                 component="img"
                 alt="green iguana"
                 height="140"
-                image="https://manual.zetkin.org/assets/img/logo-red.png" // TODO: Add dynamic images
+                image="https://zetkin.org/assets/img/hero.jpg" // TODO: Add dynamic images
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
@@ -34,7 +34,7 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
                   {data.data.info_text}
                 </Typography>
               </CardContent>
-              <CardActions>
+              <CardActions style={{justifyContent: 'space-between'}}>
                 <Button size="small">Share</Button>
                 <Button size="small">Learn More</Button>
               </CardActions>
