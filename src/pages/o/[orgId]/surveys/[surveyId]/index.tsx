@@ -10,10 +10,10 @@ import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import { FC, useState } from 'react';
-import { Msg, useMessages } from 'core/i18n';
 
 import {
   FormControlLabel,
+  Link,
   Radio,
   RadioGroup,
   TextField,
@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 
 import messageIds from 'features/surveys/l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
