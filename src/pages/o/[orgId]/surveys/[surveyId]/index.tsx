@@ -3,6 +3,7 @@ import Box from '@mui/system/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { IncomingMessage } from 'http';
+import messageIds from 'features/surveys/l10n/messageIds';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
@@ -20,7 +21,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
@@ -141,17 +141,21 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
   const messages = useMessages(messageIds);
   const survey = useSurvey(parseInt(orgId, 10), parseInt(surveyId, 10));
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState<
+    null | 'authenticated' | 'name+email' | 'anonymous'
+  >(null);
   const [customInput, setCustomInput] = useState({
     email: '',
     name: '',
   });
 
-  const handleRadioChange = (option) => {
-    setSelectedOption(option);
+  const handleRadioChange = (
+    value: 'authenticated' | 'name+email' | 'anonymous'
+  ) => {
+    setSelectedOption(value);
   };
 
-  const handleCustomInputChange = (field, value) => {
+  const handleCustomInputChange = (field: 'name' | 'email', value: string) => {
     setCustomInput((prevInput) => ({
       ...prevInput,
       [field]: value,
@@ -203,41 +207,16 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
             {element.type === 'text' && <p>{element.text_block.content}</p>}
           </div>
         ))}
-        <FormControlLabel
-          control={<Checkbox required />}
-          data-testid="Survey-acceptTerms"
-          label={<Msg id={messageIds.surveyForm.accept} />}
-        />
-        <Typography>
-          <Msg
-            id={messageIds.surveyForm.termsDescription}
-            values={{ organization: survey.data?.organization.title ?? '' }}
-          />
-        </Typography>
-        <Typography>
-          <Link
-            href={messages.surveyForm.policy.link()}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Msg id={messageIds.surveyForm.policy.text} />
-          </Link>
-        </Typography>
-        <Button
-          color="primary"
-          data-testid="Survey-submit"
-          type="submit"
-          variant="contained"
-        >
-          {messages.surveyForm.submit()}
-        </Button>
-
         <Typography>
           <Msg id={messageIds.surveyForm.signOptions} />
         </Typography>
 
         <RadioGroup
-          onChange={(e) => handleRadioChange(e.target.value)}
+          onChange={(e) =>
+            handleRadioChange(
+              e.target.value as 'authenticated' | 'name+email' | 'anonymous'
+            )
+          }
           value={selectedOption}
         >
           <FormControlLabel
@@ -247,8 +226,8 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
                 <Msg
                   id={messageIds.surveyForm.authenticatedOption}
                   values={{
-                    email: currentUser?.email,
-                    person: currentUser?.first_name,
+                    email: '', // currentUser?.email,
+                    person: currentUser?.first_name ?? '',
                   }}
                 />
               </Typography>
@@ -297,6 +276,36 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
             />
           )}
         </RadioGroup>
+
+        <FormControlLabel
+          control={<Checkbox required />}
+          data-testid="Survey-acceptTerms"
+          label={<Msg id={messageIds.surveyForm.accept} />}
+        />
+        <Typography>
+          <Msg
+            id={messageIds.surveyForm.termsDescription}
+            values={{ organization: survey.data?.organization.title ?? '' }}
+          />
+        </Typography>
+        <Typography>
+          <Link
+            href={messages.surveyForm.policy.link()}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Msg id={messageIds.surveyForm.policy.text} />
+          </Link>
+        </Typography>
+
+        <Button
+          color="primary"
+          data-testid="Survey-submit"
+          type="submit"
+          variant="contained"
+        >
+          {messages.surveyForm.submit()}
+        </Button>
       </form>
     </>
   );
