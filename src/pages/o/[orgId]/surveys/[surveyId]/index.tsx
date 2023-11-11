@@ -1,13 +1,17 @@
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import Box from '@mui/system/Box';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import { FC } from 'react';
 import { IncomingMessage } from 'http';
+import messageIds from 'features/surveys/l10n/messageIds';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import { FormControlLabel, Link, Typography } from '@mui/material';
+import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -120,12 +124,12 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ orgId, surveyId }) => {
-  const survey = useSurvey(parseInt(orgId, 10), parseInt(surveyId, 10));
   const elements = useSurveyElements(
     parseInt(orgId, 10),
     parseInt(surveyId, 10)
   );
-
+  const messages = useMessages(messageIds);
+  const survey = useSurvey(parseInt(orgId, 10), parseInt(surveyId, 10));
   return (
     <>
       <h1>{survey.data?.title}</h1>
@@ -169,7 +173,25 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
             {element.type === 'text' && <p>{element.text_block.content}</p>}
           </div>
         ))}
-
+        <FormControlLabel
+          control={<Checkbox required />}
+          label={<Msg id={messageIds.surveyForm.accept} />}
+        />
+        <Typography>
+          <Msg
+            id={messageIds.surveyForm.termsDescription}
+            values={{ organization: survey.data?.organization.title ?? '' }}
+          />
+        </Typography>
+        <Typography>
+          <Link
+            href={messages.surveyForm.policy.link()}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Msg id={messageIds.surveyForm.policy.text} />
+          </Link>
+        </Typography>{' '}
         <Button color="primary" type="submit" variant="contained">
           {'Submit'}
         </Button>
