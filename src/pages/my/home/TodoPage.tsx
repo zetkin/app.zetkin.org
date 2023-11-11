@@ -18,7 +18,7 @@ type PageProps = void;
 const Page: FC<PageProps> = () => {
   return (
     <Box>
-      <h1>Organizations</h1>
+      <h1>Todo</h1>
     </Box>
   );
 };
