@@ -191,9 +191,9 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
           >
             <Msg id={messageIds.surveyForm.policy.text} />
           </Link>
-        </Typography>{' '}
+        </Typography>
         <Button color="primary" type="submit" variant="contained">
-          {'Submit'}
+          {messages.surveyForm.submit()}
         </Button>
       </form>
     </>
