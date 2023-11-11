@@ -23,12 +23,19 @@ const ActivistMap = ({
 
   return (
     <MapContainer
-      bounds={latLngBounds(
-        locationsWithEvents.map(({ location }) => ({
-          lat: location.lat,
-          lng: location.lng,
-        }))
-      )}
+      bounds={
+        locationsWithEvents.length
+          ? latLngBounds(
+              locationsWithEvents.map(({ location }) => ({
+                lat: location.lat,
+                lng: location.lng,
+              }))
+            )
+          : [
+              [75, -170],
+              [-60, 180],
+            ]
+      }
       style={{ height: '100vh', width: '100%' }}
     >
       <MapWrapper>
