@@ -36,8 +36,8 @@ const EventListing: FC<EventListingProps> = ({ orgId, campId }) => {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
+                <Button size="small">Read more</Button>
+                <Button size="small">Count me in!</Button> // two-way function
               </CardActions>
             </Card>
           );
