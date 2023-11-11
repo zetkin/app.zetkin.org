@@ -14,7 +14,9 @@ const EventListing: FC<EventListingProps> = ({orgId, campId}) => {
     return (
         <>
             <h1>{eventsFromDateRange[0].data.title}</h1>
-            <EventCard data={eventsFromDateRange[0].data}></EventCard>
+            {eventsFromDateRange.data.map((event) => {
+                <EventCard data={event}></EventCard>
+            })}
         </>
     )
 };
