@@ -12,12 +12,14 @@ export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
   treeDataList: RemoteList<TreeItemData>;
   userOrgList: RemoteList<ZetkinMembership['organization']>;
+  subOrgsData: RemoteList<ZetkinOrganization>;
 }
 
 const initialState: OrganizationsStoreSlice = {
   orgData: remoteItem(0),
   treeDataList: remoteList(),
   userOrgList: remoteList(),
+  subOrgsData: remoteList(),
 };
 
 const OrganizationsSlice = createSlice({
@@ -57,6 +59,19 @@ const OrganizationsSlice = createSlice({
       state.userOrgList.loaded = new Date().toISOString();
       state.userOrgList.isLoading = false;
     },
+    subOrganizationsLoad: (state) => {
+      state.subOrgsData.isLoading = true;
+    },
+    subOrganizationsLoaded: (
+      state,
+      action: PayloadAction<ZetkinOrganization[]>
+    ) => {
+      const subOrgList = action.payload;
+
+      state.subOrgsData = remoteList(subOrgList);
+      state.subOrgsData.loaded = new Date().toISOString();
+      state.subOrgsData.isLoading = false;
+    },
   },
 });
 
@@ -68,4 +83,6 @@ export const {
   treeDataLoaded,
   userOrganizationsLoad,
   userOrganizationsLoaded,
+  subOrganizationsLoad,
+  subOrganizationsLoaded,
 } = OrganizationsSlice.actions;

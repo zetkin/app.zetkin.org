@@ -46,9 +46,45 @@ const userSlice = createSlice({
       state.userItem.loaded = new Date().toISOString();
       state.userItem.isLoading = false;
     },
+    followOrganizationLoad: (
+      state,
+      action: PayloadAction<{ orgId: number }>
+    ) => {
+      const { orgId } = action.payload;
+
+      const membershipData = state.membershipList.items.find(
+        (m) => m.id === orgId
+      );
+
+      if (membershipData && membershipData.data) {
+        membershipData.isLoading = true;
+      }
+    },
+    followOrganizationLoaded: (
+      state,
+      action: PayloadAction<{ orgId: number; action: 'follow' | 'unfollow' }>
+    ) => {
+      const { orgId } = action.payload;
+
+      const membershipData = state.membershipList.items.find(
+        (m) => m.id === orgId
+      );
+
+      if (membershipData && membershipData.data) {
+        membershipData.data.follow =
+          action.payload.action === 'follow' ? true : false;
+        membershipData.isLoading = false;
+      }
+    },
   },
 });
 
 export default userSlice;
-export const { membershipsLoad, membershipsLoaded, userLoad, userLoaded } =
-  userSlice.actions;
+export const {
+  membershipsLoad,
+  membershipsLoaded,
+  userLoad,
+  userLoaded,
+  followOrganizationLoad,
+  followOrganizationLoaded,
+} = userSlice.actions;
