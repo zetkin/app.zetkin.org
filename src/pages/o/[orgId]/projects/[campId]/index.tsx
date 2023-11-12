@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { CircularProgress } from '@mui/material';
+import { FC, Suspense } from 'react';
 
 import EventListing from 'features/campaigns/components/ProjectPage/ProjectEventListing';
 import Header from 'features/campaigns/components/ProjectPage/Header';
@@ -25,13 +26,13 @@ type PageProps = {
   orgId: number;
 };
 
-// event-listing-a
-
 const Page: FC<PageProps> = ({ orgId, campId }) => {
   return (
     <>
       <Header campId={campId} orgId={orgId} />
-      <EventListing />
+      <Suspense fallback={<CircularProgress />}>
+        <EventListing />
+      </Suspense>
     </>
   );
 };
