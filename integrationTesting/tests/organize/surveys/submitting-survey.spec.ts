@@ -44,11 +44,12 @@ test.describe('User submitting a survey', () => {
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
 
+    await page.click('input[name="1.options"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
-      await page.click('data-testid=Survey-submit'),
       page.waitForResponse((res) => res.request().method() == 'POST'),
+      await page.click('data-testid=Survey-submit'),
     ]);
 
     const reqLog = moxy.log(`/v1${apiPostPath}`);
