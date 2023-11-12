@@ -1,11 +1,10 @@
-/* eslint-disable sort-keys */
-/* eslint-disable sort-imports */
+
+import { FC } from 'react';
 import NextLink from 'next/link';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
-import ZUIFuture from 'zui/ZUIFuture';
-import { FC } from 'react';
-import { AppBar, Avatar, Box, Button, Icon, Typography } from '@mui/material';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import ZUIFuture from 'zui/ZUIFuture';
+import { AppBar, Avatar, Box, Typography } from '@mui/material';
 
 type HeaderProps = {
   campId: string;
@@ -43,7 +42,7 @@ const Header: FC<HeaderProps> = ({ orgId, campId }) => {
                     }} />
                 </NextLink>
                 <Typography sx={{
-                  marginTop: 'auto', marginBottom: 'auto', textAlign: 'center'
+                  marginBottom: 'auto', marginTop: 'auto', textAlign: 'center'
                 }}
 
                 >
