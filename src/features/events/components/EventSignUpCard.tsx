@@ -10,6 +10,8 @@ import {
   useTheme,
 } from '@mui/material';
 
+import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
 import useEventSignup from '../hooks/useEventSignup';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -51,7 +53,7 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
           href={`/o/${event.organization.id}/projects/${event.id}`}
           size="small"
         >
-          Read more
+          <Msg id={messageIds.signupCard.moreInfo} />
         </Button>
         <ZUIFuture future={eventSignupFuture}>
           {({ myResponseState, signup, undoSignup }) => (
@@ -64,7 +66,7 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
                   size="small"
                   variant="outlined"
                 >
-                  Undo sign-up
+                  <Msg id={messageIds.signupCard.undo} />
                 </Button>
               )}
               {myResponseState == 'notSignedUp' && (
@@ -75,7 +77,7 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
                   size="small"
                   variant="contained"
                 >
-                  Count me in!
+                  <Msg id={messageIds.signupCard.signUp} />
                 </Button>
               )}
             </>

@@ -207,6 +207,11 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   search: m('Search'),
+  signupCard: {
+    moreInfo: m('More info'),
+    signUp: m('Sign up!'),
+    undo: m('Undo sign-up'),
+  },
   state: {
     cancelled: m('Cancelled'),
     draft: m('Draft'),
