@@ -1,27 +1,19 @@
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import Box from '@mui/system/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import { IncomingMessage } from 'http';
 import messageIds from 'features/surveys/l10n/messageIds';
+import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import {
-  ZetkinSurveyOptionsQuestionElement,
-  ZetkinSurveyTextElement,
-  ZetkinSurveyTextQuestionElement,
-} from 'utils/types/zetkin';
-
-import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
 import TextBlock from 'features/surveys/components/surveyForm/TextBlock';
 import TextQuestion from 'features/surveys/components/surveyForm/TextQuestion';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import { FC, useState } from 'react';
-
 import {
+  Box,
+  Button,
+  Checkbox,
   FormControlLabel,
   Link,
   Radio,
@@ -29,8 +21,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-
+import { FC, useState } from 'react';
 import { Msg, useMessages } from 'core/i18n';
+import {
+  ZetkinSurveyOptionsQuestionElement,
+  ZetkinSurveyTextElement,
+  ZetkinSurveyTextQuestionElement,
+} from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -164,14 +161,14 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
 
   return (
     <>
-      <h1>{survey.data?.title}</h1>
-
-      {survey.data?.info_text && <p>{survey.data?.info_text}</p>}
-
       <Box alignItems="center" columnGap={1} display="flex" flexDirection="row">
         <ZUIAvatar size="md" url={`/api/orgs/${orgId}/avatar`} />
         {survey.data?.organization.title}
       </Box>
+
+      <h1>{survey.data?.title}</h1>
+
+      {survey.data?.info_text && <p>{survey.data?.info_text}</p>}
 
       <form method="post">
         {(elements.data || []).map((element) => (
@@ -205,7 +202,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
           value={selectedOption}
         >
           <FormControlLabel
-            control={<Radio />}
+            control={<Radio required />}
             label={
               <Typography>
                 <Msg
@@ -221,7 +218,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
           />
 
           <FormControlLabel
-            control={<Radio />}
+            control={<Radio required />}
             label={
               <div>
                 <Typography>
@@ -229,9 +226,17 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
                 </Typography>
                 {selectedOption === 'email' && (
                   <Box display="flex" flexDirection="column">
-                    <TextField label="First Name" name="sig.first_name" />
-                    <TextField label="Last Name" name="sig.last_name" />
-                    <TextField label="Email" name="sig.email" />
+                    <TextField
+                      label="First Name"
+                      name="sig.first_name"
+                      required
+                    />
+                    <TextField
+                      label="Last Name"
+                      name="sig.last_name"
+                      required
+                    />
+                    <TextField label="Email" name="sig.email" required />
                   </Box>
                 )}
               </div>
@@ -240,7 +245,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
           />
           {survey.data?.signature === 'allow_anonymous' && (
             <FormControlLabel
-              control={<Radio />}
+              control={<Radio required />}
               label={
                 <Typography>
                   <Msg id={messageIds.surveyForm.anonymousOption} />
@@ -251,27 +256,32 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
           )}
         </RadioGroup>
 
-        <FormControlLabel
-          control={<Checkbox required />}
-          data-testid="Survey-acceptTerms"
-          label={<Msg id={messageIds.surveyForm.accept} />}
-          name="privacy.approval"
-        />
-        <Typography>
-          <Msg
-            id={messageIds.surveyForm.termsDescription}
-            values={{ organization: survey.data?.organization.title ?? '' }}
+        <Box alignItems="center" component="section" sx={{ py: 2 }}>
+          <Typography fontWeight={'bold'}>
+            <Msg id={messageIds.surveyForm.terms.title} />
+          </Typography>
+          <FormControlLabel
+            control={<Checkbox required />}
+            data-testid="Survey-acceptTerms"
+            label={<Msg id={messageIds.surveyForm.accept} />}
+            name="privacy.approval"
           />
-        </Typography>
-        <Typography>
-          <Link
-            href={messages.surveyForm.policy.link()}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Msg id={messageIds.surveyForm.policy.text} />
-          </Link>
-        </Typography>
+          <Typography>
+            <Msg
+              id={messageIds.surveyForm.terms.description}
+              values={{ organization: survey.data?.organization.title ?? '' }}
+            />
+          </Typography>
+          <Typography>
+            <Link
+              href={messages.surveyForm.policy.link()}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Msg id={messageIds.surveyForm.policy.text} />
+            </Link>
+          </Typography>
+        </Box>
 
         <Button
           color="primary"
