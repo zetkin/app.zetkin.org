@@ -12,10 +12,6 @@ type HeaderProps = {
 };
 
 const Header: FC<HeaderProps> = ({ orgId, campId }) => {
-  //TODO: render title of project
-  //render title of organize
-  // description of project
-
   const { campaignFuture } = useCampaign(orgId, campId);
 
   const user = useCurrentUser();
@@ -44,7 +40,9 @@ const Header: FC<HeaderProps> = ({ orgId, campId }) => {
                   />
                 </NextLink>
                 <Typography
+                  variant="h7"
                   sx={{
+                    marginRight: '2vh',
                     marginBottom: 'auto',
                     marginTop: 'auto',
                     textAlign: 'center',
@@ -54,17 +52,6 @@ const Header: FC<HeaderProps> = ({ orgId, campId }) => {
                 </Typography>
               </Box>
             </AppBar>
-
-            <Typography>{data.title}</Typography>
-            <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="row"
-              overflow="hidden"
-            />
-            <Box>
-              <Typography>{data.info_text ?? ''}</Typography>
-            </Box>
           </>
         )}
       </ZUIFuture>
