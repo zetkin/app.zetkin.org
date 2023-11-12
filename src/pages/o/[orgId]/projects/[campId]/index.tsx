@@ -1,3 +1,4 @@
+import Header from 'features/campaigns/components/ProjectPage/Header';
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
 
@@ -24,9 +25,9 @@ type PageProps = {
 
 const Page: FC<PageProps> = ({ orgId, campId }) => {
   return (
-    <h1>
-      Page for org {orgId}, project {campId}
-    </h1>
+    <>
+      <Header campId={campId} orgId={orgId} />
+    </>
   );
 };
 

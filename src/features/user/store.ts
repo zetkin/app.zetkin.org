@@ -12,6 +12,7 @@ export interface UserStoreSlice {
   userItem: RemoteItem<ZetkinUser>;
 }
 
+
 const initialState: UserStoreSlice = {
   membershipList: remoteList(),
   userItem: remoteItem('me'),

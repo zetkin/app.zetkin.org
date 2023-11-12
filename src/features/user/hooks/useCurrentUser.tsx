@@ -7,8 +7,9 @@ import { userLoad, userLoaded } from '../store';
 const useCurrentUser = () => {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const userState = useAppSelector((state) => state.user);
+  const userState = useAppSelector((state) => state.user); 
   const isServer = useServerSide();
+
 
   if (isServer) {
     return null;
