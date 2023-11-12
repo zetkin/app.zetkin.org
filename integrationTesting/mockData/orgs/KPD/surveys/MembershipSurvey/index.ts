@@ -21,7 +21,7 @@ const KPDMembershipSurvey: ZetkinSurveyExtended = {
             text: 'Yes',
           },
           {
-            id: 1,
+            id: 2,
             text: 'No',
           },
         ],
