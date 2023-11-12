@@ -164,6 +164,9 @@ export default makeMessages('feat.surveys', {
     authenticatedOption: m<{ email: string; person: string }>(
       'Sign as {person} with email {email}'
     ),
+    error: m(
+      'Something went wrong when submitting your answers. Please try again later.'
+    ),
     nameEmailOption: m('Sign with name and email'),
     policy: {
       link: m('https://zetkin.org/privacy'),
