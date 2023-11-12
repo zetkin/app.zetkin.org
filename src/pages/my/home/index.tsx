@@ -60,6 +60,11 @@ const Page: FC<PageProps> = () => {
             variant="contained"
             onClick={() => {
               setCurrentPage('events');
+              setTimeout(() => {
+                document
+                  .getElementById('events')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
             }}
           >
             To sign-up
@@ -70,6 +75,11 @@ const Page: FC<PageProps> = () => {
             variant="contained"
             onClick={() => {
               setCurrentPage('todo');
+              setTimeout(() => {
+                document
+                  .getElementById('myTodo')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
             }}
           >
             My events

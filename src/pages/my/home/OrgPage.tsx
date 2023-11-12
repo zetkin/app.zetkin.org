@@ -31,7 +31,6 @@ const Page: FC<PageProps> = () => {
         pr: '1em',
       }}
     >
-      <h1>Organizations</h1>
       <p>
         In order to take part in your organization's work you have to be
         connected. These are the organizations you are connected to today.

@@ -47,12 +47,12 @@ const Page: FC<PageProps> = () => {
   const events = useCurrentUserEvents();
   return (
     <Box
+      id="events"
       sx={{
         pl: '1em',
         pr: '1em',
       }}
     >
-      <h1>All Events</h1>
       <p>Sign up for more events here.</p>
       <ZUIFuture future={events}>
         {(data) => (

@@ -95,14 +95,7 @@ type PageProps = void;
 
 const Page: FC<PageProps> = () => {
   return (
-    <Box
-      sx={{
-        pl: '1em',
-        pr: '1em',
-      }}
-    >
-      <h1>My Todo</h1>
-
+    <Box id="myTodo" px={1}>
       <Box>
         <Box
           sx={{
