@@ -35,8 +35,8 @@ const Page: FC<PageProps> = () => {
         <HeadsetMic />
         <h2
           style={{
-            marginTop: '0',
-            marginBottom: '0',
+            marginBottom: 0,
+            marginTop: 0,
           }}
         >
           Call Assignments

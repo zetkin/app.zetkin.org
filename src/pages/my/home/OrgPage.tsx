@@ -1,13 +1,11 @@
 import { FC } from 'react';
-import NextLink from 'next/link';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
 import { scaffold } from 'utils/next';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Avatar, Box, Link, List, ListItem } from '@mui/material';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import IconButton from '@mui/material/Icon';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -45,31 +43,31 @@ const Page: FC<PageProps> = () => {
             {data?.map((org: ZetkinMembership['organization']) => (
               <>
                 <ListItem
-                  divider={true}
                   key={org.id}
-                  sx={{ color: 'var(--color-primary)', ml: '-1em' }}
+                  divider={true}
                   secondaryAction={
                     <Link
+                      sx={{ alignSelf: 'flex-start', fontSize: '0.8em' }}
                       underline="hover"
-                      sx={{ fontSize: '0.8em', alignSelf: 'flex-start' }}
                     >
                       Disconnect
                       <br />
                       <br />
                     </Link>
                   }
+                  sx={{ color: 'var(--color-primary)', ml: '-1em' }}
                 >
-                  <ListItemAvatar sx={{ mr: '10px', ml: '-1em' }}>
+                  <ListItemAvatar sx={{ ml: '-1em', mr: '10px' }}>
                     <Avatar src={`/api/orgs/${org.id}/avatar`} />
                   </ListItemAvatar>
                   <ListItemText
-                    sx={{ ml: '-1em' }}
                     primary={
-                      <Link underline="hover" href={`/o/${org.id}`}>
+                      <Link href={`/o/${org.id}`} underline="hover">
                         {org.title}
                       </Link>
                     }
                     secondary="TODO"
+                    sx={{ ml: '-1em' }}
                   />
                 </ListItem>
               </>

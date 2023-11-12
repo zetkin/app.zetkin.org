@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import CallAssignments from './CallAssignments';
 import { CheckBoxSharp } from '@mui/icons-material';
 import EventIcon from '@mui/icons-material/Event';
-import EventSignUpList from 'features/events/components/EventSignUpList';
+import EventsFilterList from './EventsFilterList';
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
 import useCurrentUserEvents from 'features/user/hooks/useCurrentUserEvents';
@@ -37,8 +37,8 @@ const taskRows = [
     'Protest against crapitalism',
     60,
     new Date().toLocaleDateString(undefined, {
-      month: 'numeric',
       day: 'numeric',
+      month: 'numeric',
     })
   ),
   createTaskDisplayData(
@@ -46,8 +46,8 @@ const taskRows = [
     'Buy candy',
     30,
     new Date().toLocaleDateString(undefined, {
-      month: 'numeric',
       day: 'numeric',
+      month: 'numeric',
     })
   ),
   createTaskDisplayData(
@@ -55,8 +55,8 @@ const taskRows = [
     'Read a book',
     120,
     new Date().toLocaleDateString(undefined, {
-      month: 'numeric',
       day: 'numeric',
+      month: 'numeric',
     })
   ),
 ];
@@ -113,15 +113,15 @@ const Page: FC<PageProps> = () => {
           <EventIcon />
           <h2
             style={{
-              marginTop: '0',
               marginBottom: '0',
+              marginTop: '0',
             }}
           >
             Events
           </h2>
         </Box>
         <ZUIFuture future={events}>
-          {(data) => <EventSignUpList events={data} />}
+          {(data) => <EventsFilterList events={data} />}
         </ZUIFuture>
       </Box>
 
@@ -141,8 +141,8 @@ const Page: FC<PageProps> = () => {
           <CheckBoxSharp />
           <h2
             style={{
-              marginTop: '0',
               marginBottom: '0',
+              marginTop: '0',
             }}
           >
             Tasks
@@ -150,10 +150,10 @@ const Page: FC<PageProps> = () => {
         </Box>
 
         <DataGrid
-          rows={taskRows}
           columns={taskColumns}
-          pageSizeOptions={[5]}
           disableRowSelectionOnClick
+          pageSizeOptions={[5]}
+          rows={taskRows}
         />
       </Box>
     </Box>

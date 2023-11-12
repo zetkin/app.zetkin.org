@@ -1,6 +1,5 @@
 import { Box } from '@mui/system';
 import { FC } from 'react';
-import useCurrentUserEvents from 'features/user/hooks/useCurrentUserEvents';
 import { scaffold } from 'utils/next';
 
 const scaffoldOptions = {
