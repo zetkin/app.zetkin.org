@@ -28,7 +28,8 @@ const Page: FC<PageProps> = () => {
           alignItems: 'center',
           display: 'flex',
           gap: '5px',
-          margin: 2,
+          pl: '0',
+          pt: '1em',
         }}
       >
         <HeadsetMic />
