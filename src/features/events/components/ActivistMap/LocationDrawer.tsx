@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
-import { Drawer } from '@mui/material';
 import { FC } from 'react';
+import { Button, Drawer } from '@mui/material';
 
 interface LocationDrawerProps {
   open: boolean;
@@ -26,19 +26,17 @@ const LocationDrawer: FC<LocationDrawerProps> = ({
       onToggleOpen(open);
     };
 
-  const list = () => (
-    <Box
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-      role="presentation"
-    >
-      {children}
-    </Box>
-  );
-
   return (
     <Drawer anchor={'bottom'} onClose={toggleDrawer(false)} open={open}>
-      {list()}
+      <Button onClick={toggleDrawer(false)}>Close</Button>
+      <Box
+        onClick={toggleDrawer(false)}
+        onKeyDown={toggleDrawer(false)}
+        padding={2}
+        role="presentation"
+      >
+        {children}
+      </Box>
     </Drawer>
   );
 };

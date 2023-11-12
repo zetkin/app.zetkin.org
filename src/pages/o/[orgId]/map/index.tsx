@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import EventSignUpList from 'features/events/components/EventSignUpList';
 import { LatLngLiteral } from 'leaflet';
 import LocationDrawer from 'features/events/components/ActivistMap/LocationDrawer';
 import LocationSearch from 'features/events/components/LocationModal/LocationSearch';
@@ -30,7 +31,7 @@ const useStyles = makeStyles<Theme>(() => ({
     margin: 2,
     padding: 8,
     position: 'absolute',
-    right: 32,
+    right: 10,
     top: 100,
     zIndex: 1000,
   },
@@ -40,7 +41,7 @@ const useStyles = makeStyles<Theme>(() => ({
     justifySelf: 'flex-end',
     margin: 2,
     position: 'absolute',
-    right: 32,
+    right: 10,
     top: 32,
     width: '30%',
     zIndex: 1000,
@@ -182,11 +183,9 @@ const Page: FC<PageProps> = ({ orgId }) => {
           }}
           open={!!selectedLocation}
         >
-          <>
-            {selectedLocation?.events.map((location) => {
-              return <div key={location.data.id}>{location.data.title}</div>;
-            })}
-          </>
+          <EventSignUpList
+            events={selectedLocation?.events.map((event) => event.data) || []}
+          />
         </LocationDrawer>
       </div>
     );
