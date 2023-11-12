@@ -8,16 +8,16 @@ import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import {
+  ZetkinSurveyExtended,
   ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveyTextElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
 
+import ErrorMessage from 'features/surveys/components/surveyForm/ErrorMessage';
 import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
 import TextBlock from 'features/surveys/components/surveyForm/TextBlock';
 import TextQuestion from 'features/surveys/components/surveyForm/TextQuestion';
-import useSurvey from 'features/surveys/hooks/useSurvey';
-import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import { FC, useState } from 'react';
 
@@ -54,6 +54,17 @@ function parseRequest(
 export const getServerSideProps = scaffold(async (ctx) => {
   const { req, res } = ctx;
   const { surveyId, orgId } = ctx.params!;
+  let status: FormStatus = 'editing';
+
+  const apiClient = new BackendApiClient(req.headers);
+  let survey: ZetkinSurveyExtended;
+  try {
+    survey = await apiClient.get<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`
+    );
+  } catch (e) {
+    return { notFound: true };
+  }
 
   if (req.method === 'POST') {
     const form = await parseRequest(req);
@@ -111,46 +122,49 @@ export const getServerSideProps = scaffold(async (ctx) => {
       };
     }
 
-    const apiClient = new BackendApiClient(req.headers);
-    const requestUrl = `/api/orgs/${orgId}/surveys/${surveyId}/submissions`;
     try {
-      await apiClient.post(requestUrl, {
-        responses: Object.values(responses),
-        signature,
-      });
+      await apiClient.post(
+        `/api/orgs/${orgId}/surveys/${surveyId}/submissions`,
+        {
+          responses: Object.values(responses),
+          signature,
+        }
+      );
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
+      status = 'error';
+    }
+    if (status !== 'error') {
+      status = 'submitted';
     }
 
-    res.writeHead(302, {
-      Location: `/o/${orgId}/surveys/${surveyId}/submitted`,
-    });
-    res.end();
+    if (status === 'submitted') {
+      res.writeHead(302, {
+        Location: `/o/${orgId}/surveys/${surveyId}/submitted`,
+      });
+      res.end();
+    }
   }
 
   return {
     props: {
       orgId,
-      surveyId,
+      status,
+      survey,
     },
   };
 }, scaffoldOptions);
 
 type PageProps = {
   orgId: string;
-  surveyId: string;
+  status: FormStatus;
+  survey: ZetkinSurveyExtended;
 };
 
+type FormStatus = 'editing' | 'invalid' | 'error' | 'submitted';
 type SignatureOption = 'authenticated' | 'email' | 'anonymous';
 
-const Page: FC<PageProps> = ({ orgId, surveyId }) => {
-  const elements = useSurveyElements(
-    parseInt(orgId, 10),
-    parseInt(surveyId, 10)
-  );
+const Page: FC<PageProps> = ({ orgId, status, survey }) => {
   const messages = useMessages(messageIds);
-  const survey = useSurvey(parseInt(orgId, 10), parseInt(surveyId, 10));
 
   const [selectedOption, setSelectedOption] = useState<null | SignatureOption>(
     null
@@ -164,17 +178,19 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
 
   return (
     <>
-      <h1>{survey.data?.title}</h1>
+      <h1>{survey.title}</h1>
 
-      {survey.data?.info_text && <p>{survey.data?.info_text}</p>}
+      {status === 'error' && <ErrorMessage />}
+
+      {survey.info_text && <p>{survey.info_text}</p>}
 
       <Box alignItems="center" columnGap={1} display="flex" flexDirection="row">
         <ZUIAvatar size="md" url={`/api/orgs/${orgId}/avatar`} />
-        {survey.data?.organization.title}
+        {survey.organization.title}
       </Box>
 
       <form method="post">
-        {(elements.data || []).map((element) => (
+        {survey.elements.map((element) => (
           <div key={element.id}>
             {element.type === 'question' && (
               <>
@@ -238,7 +254,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
             }
             value="email"
           />
-          {survey.data?.signature === 'allow_anonymous' && (
+          {survey.signature === 'allow_anonymous' && (
             <FormControlLabel
               control={<Radio />}
               label={
@@ -260,7 +276,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
         <Typography>
           <Msg
             id={messageIds.surveyForm.termsDescription}
-            values={{ organization: survey.data?.organization.title ?? '' }}
+            values={{ organization: survey.organization.title ?? '' }}
           />
         </Typography>
         <Typography>
