@@ -15,7 +15,11 @@ import {
   ZetkinMembership,
 } from 'utils/types/zetkin';
 
-type EventResponseState = 'notSignedUp' | 'signedUp' | 'booked' | 'notInOrgYet';
+export type EventResponseState =
+  | 'notSignedUp'
+  | 'signedUp'
+  | 'booked'
+  | 'notInOrgYet';
 
 function eventResponseState(
   eventId: number,

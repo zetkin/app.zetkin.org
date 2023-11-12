@@ -10,7 +10,9 @@ import {
   useTheme,
 } from '@mui/material';
 
+import useEventSignup from '../hooks/useEventSignup';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import ZUIFuture from 'zui/ZUIFuture';
 
 type EventSignUpCardProps = {
   event: ZetkinEvent;
@@ -18,6 +20,7 @@ type EventSignUpCardProps = {
 
 const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
   const theme = useTheme();
+  const eventSignupFuture = useEventSignup(event.organization.id, event.id);
 
   return (
     <Card>
@@ -50,9 +53,34 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
         >
           Read more
         </Button>
-        <Button size="small" variant="contained">
-          Count me in!
-        </Button>
+        <ZUIFuture future={eventSignupFuture}>
+          {({ myResponseState, signup, undoSignup }) => (
+            <>
+              {myResponseState == 'signedUp' && (
+                <Button
+                  onClick={() => {
+                    undoSignup();
+                  }}
+                  size="small"
+                  variant="outlined"
+                >
+                  Undo sign-up
+                </Button>
+              )}
+              {myResponseState == 'notSignedUp' && (
+                <Button
+                  onClick={() => {
+                    signup();
+                  }}
+                  size="small"
+                  variant="contained"
+                >
+                  Count me in!
+                </Button>
+              )}
+            </>
+          )}
+        </ZUIFuture>
       </CardActions>
     </Card>
   );
