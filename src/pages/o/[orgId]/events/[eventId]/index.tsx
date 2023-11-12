@@ -140,31 +140,6 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                       >
                         <Msg id={messageIds.activistPortal.showBigMap} />
                       </Link>
-                      <Modal
-                        aria-describedby="parent-modal-description"
-                        aria-labelledby="parent-modal-title"
-                        disableEnforceFocus
-                        onClose={() => setShowBigMap(false)}
-                        open={showBigMap}
-                      >
-                        <Box
-                          sx={{
-                            height: '80%',
-                            left: '50%',
-                            position: 'absolute',
-                            top: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: '90%',
-                          }}
-                        >
-                          <Map
-                            interactive={true}
-                            location={location!}
-                            style={{ height: '100%', width: '100%' }}
-                            zoomLevel={17}
-                          />
-                        </Box>
-                      </Modal>
                     </Box>
                   )}
                 </Box>
@@ -232,6 +207,25 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                   </ZUIFuture>
                 </Box>
               </Drawer>
+              <Modal onClose={() => setShowBigMap(false)} open={showBigMap}>
+                <Box
+                  sx={{
+                    height: '80%',
+                    left: '50%',
+                    position: 'absolute',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '90%',
+                  }}
+                >
+                  <Map
+                    interactive={true}
+                    location={location!}
+                    style={{ height: '100%', width: '100%' }}
+                    zoomLevel={17}
+                  />
+                </Box>
+              </Modal>
             </>
           );
         }}
