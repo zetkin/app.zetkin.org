@@ -1,12 +1,15 @@
-import { AppBar, Avatar, Box, Button, Icon, Typography } from '@mui/material';
+/* eslint-disable sort-keys */
+/* eslint-disable sort-imports */
+import NextLink from 'next/link';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
-import { FC } from 'react';
-import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
+import { FC } from 'react';
+import { AppBar, Avatar, Box, Button, Icon, Typography } from '@mui/material';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 
 type HeaderProps = {
-  orgId: string;
   campId: string;
+  orgId: string;
 };
 
 const Header: FC<HeaderProps> = ({ orgId, campId }) => {
@@ -16,20 +19,38 @@ const Header: FC<HeaderProps> = ({ orgId, campId }) => {
 
   const { campaignFuture } = useCampaign(parseInt(orgId), parseInt(campId));
 
-  /*  children: ReactNode;
-  header: string | JSX.Element;
-  status?: ReactNode;
-  subheader?: string;*/
+  const user = useCurrentUser();
+
   return (
     <>
       <ZUIFuture future={campaignFuture}>
         {(data) => (
           <>
-            <AppBar position="static">
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <Icon></Icon>
+            <AppBar
+              position="static">
+              <Box sx={{
+                display: 'flex', justifyContent: 'space-between',
+              }}>
+                {/* add the right link */}
+
+                <NextLink
+                  href={`/organize/${orgId}`} passHref
+                >
+                  <Avatar src={`/api/orgs/${orgId}/avatar`}
+                    style={{
+                      cursor: 'pointer',
+                      margin: '15px'
+                    }} />
+                </NextLink>
+                <Typography sx={{
+                  marginTop: 'auto', marginBottom: 'auto', textAlign: 'center'
+                }}
+
+                >
+                  {user?.first_name ?? ""} {user?.last_name ?? ""}
               </Typography>
-              <Button color="inherit">Login</Button>
+
+              </Box>
             </AppBar>
 
             <Typography>{data.title}</Typography>
@@ -38,7 +59,7 @@ const Header: FC<HeaderProps> = ({ orgId, campId }) => {
               display="flex"
               flexDirection="row"
               overflow="hidden"
-            ></Box>
+            />
             <Box>
               <Typography>{data.info_text ?? ''}</Typography>
             </Box>
