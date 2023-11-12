@@ -7,6 +7,7 @@ export default makeMessages('feat.events', {
     ),
     contactPerson: m('Responsible for this event'),
     joinOrgButton: m('Join organization'),
+    linkText: m('Link to event information'),
     loadingButton: m('Loading...'),
     loadingTitle: m('Loading event...'),
     missingTitle: m('Nameless event'),

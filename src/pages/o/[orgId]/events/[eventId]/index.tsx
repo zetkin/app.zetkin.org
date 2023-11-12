@@ -11,6 +11,13 @@ import {
   Modal,
   Typography,
 } from '@mui/material';
+import {
+  BeachAccess,
+  CalendarToday,
+  Done,
+  Link as LinkIcon,
+  Place,
+} from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
@@ -22,7 +29,6 @@ import useServerSide from 'core/useServerSide';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIFuture from 'zui/ZUIFuture';
-import { BeachAccess, CalendarToday, Done, Place } from '@mui/icons-material';
 
 const scaffoldOptions = {
   allowNonMembers: true,
@@ -139,6 +145,19 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                         underline="hover"
                       >
                         <Msg id={messageIds.activistPortal.showBigMap} />
+                      </Link>
+                    </Box>
+                  )}
+                  {event.url && (
+                    <Box alignItems="center" display="flex">
+                      <LinkIcon color="secondary" sx={{ marginRight: 1 }} />
+                      <Link
+                        color="primary"
+                        href={event.url}
+                        target="_blank"
+                        underline="hover"
+                      >
+                        <Msg id={messageIds.activistPortal.linkText} />
                       </Link>
                     </Box>
                   )}
