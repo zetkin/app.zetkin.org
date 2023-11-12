@@ -43,33 +43,36 @@ const Page: FC<PageProps> = () => {
             }}
           >
             {data?.map((org: ZetkinMembership['organization']) => (
-              <ListItem
-                key={org.id}
-                sx={{ color: 'var(--color-primary)', ml: '-1em' }}
-                secondaryAction={
-                  <Link
-                    underline="hover"
-                    sx={{ fontSize: '0.8em', alignSelf: 'flex-start' }}
-                  >
-                    Disconnect
-                    <br />
-                    <br />
-                  </Link>
-                }
-              >
-                <ListItemAvatar sx={{ mr: '10px', ml: '-1em' }}>
-                  <Avatar src={`/api/orgs/${org.id}/avatar`} />
-                </ListItemAvatar>
-                <ListItemText
-                  sx={{ ml: '-1em' }}
-                  primary={
-                    <Link underline="hover" href={`/o/${org.id}`}>
-                      {org.title}
+              <>
+                <ListItem
+                  divider={true}
+                  key={org.id}
+                  sx={{ color: 'var(--color-primary)', ml: '-1em' }}
+                  secondaryAction={
+                    <Link
+                      underline="hover"
+                      sx={{ fontSize: '0.8em', alignSelf: 'flex-start' }}
+                    >
+                      Disconnect
+                      <br />
+                      <br />
                     </Link>
                   }
-                  secondary="TODO"
-                />
-              </ListItem>
+                >
+                  <ListItemAvatar sx={{ mr: '10px', ml: '-1em' }}>
+                    <Avatar src={`/api/orgs/${org.id}/avatar`} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    sx={{ ml: '-1em' }}
+                    primary={
+                      <Link underline="hover" href={`/o/${org.id}`}>
+                        {org.title}
+                      </Link>
+                    }
+                    secondary="TODO"
+                  />
+                </ListItem>
+              </>
             ))}
           </List>
         )}
