@@ -5,8 +5,7 @@ import OrgPage from './OrgPage';
 import { scaffold } from 'utils/next';
 import TodoPage from './TodoPage';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import { Box, ListItem, Typography } from '@mui/material';
-import { Button, Tab, Tabs } from '@mui/material';
+import { Box, Button, ListItem, Tab, Tabs, Typography } from '@mui/material';
 import { CheckBoxSharp, Star } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
@@ -45,16 +44,16 @@ const Page: FC<PageProps> = () => {
       >
         <h1
           style={{
-            marginTop: '0',
             marginBottom: '0',
+            marginTop: '0',
           }}
         >
           Hello {user?.first_name}
         </h1>
         <p
           style={{
-            marginTop: '0.5em',
             marginBottom: '1em',
+            marginTop: '0.5em',
           }}
         >
           Welcome to your page. This is where you find events, your own bookings
@@ -105,34 +104,29 @@ const Page: FC<PageProps> = () => {
       >
         <h2
           style={{
-            marginTop: '0',
             marginBottom: '0',
+            marginTop: '0',
           }}
         >
           Next up
         </h2>
         <Box>
           <ListItem
-            sx={{ color: 'var(--color-primary)', py: '0', my: '0' }}
             secondaryAction={
-              <Button
-                color="primary"
-                sx={{ mb: '1em' }}
-                variant="contained"
-                onClick={() => {}}
-              >
+              <Button color="primary" sx={{ mb: '1em' }} variant="contained">
                 To event
               </Button>
             }
+            sx={{ color: 'var(--color-primary)', my: '0', py: '0' }}
           >
             <ListItemText
-              sx={{ ml: '-1em' }}
               primary={
                 <Typography sx={{ fontWeight: 'bolder' }}>
                   Cooking with grandma
                 </Typography>
               }
               secondary="20/11"
+              sx={{ ml: '-1em' }}
             />
           </ListItem>
         </Box>
