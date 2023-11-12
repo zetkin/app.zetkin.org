@@ -40,7 +40,7 @@ const BasicMarker: FC<BasicMarkerProps> = ({ color, events }) => {
         fill="none"
         height="40"
         style={{
-          transform: 'translate(-14px, -44px)',
+          transform: 'translate(-7.5px, -34px)',
         }}
         viewBox="0 0 31 40"
         width="27"
