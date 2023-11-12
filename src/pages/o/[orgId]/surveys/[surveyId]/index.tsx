@@ -211,7 +211,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
                 <Msg
                   id={messageIds.surveyForm.authenticatedOption}
                   values={{
-                    email: '', // currentUser?.email,
+                    email: currentUser?.email ?? '',
                     person: currentUser?.first_name ?? '',
                   }}
                 />

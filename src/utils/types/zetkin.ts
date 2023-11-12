@@ -135,6 +135,7 @@ export interface ZetkinUser {
   lang: string | null;
   last_name: string;
   username: string;
+  email: string;
 }
 
 export interface ZetkinOrganization {
