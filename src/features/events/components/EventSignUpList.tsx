@@ -23,7 +23,7 @@ const EventSignUpList: FC<EventSignUpListProps> = ({ events }) => {
         return (
           <Box key={event.id} my={1}>
             {!isSameAsPrevious && (
-              <Box my={2}>
+              <Box margin={2} my={2}>
                 <Typography variant="h5">
                   <FormattedDate
                     day="numeric"

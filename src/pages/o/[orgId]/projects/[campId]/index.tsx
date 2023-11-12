@@ -40,7 +40,7 @@ const Page: FC<PageProps> = ({ orgId, campId }) => {
       <ZUIFuture future={campaignFuture}>
         {(data) => (
           <>
-            <Box margin={4}>
+            <Box margin={2} marginBottom={6}>
               <Typography variant="h4">{data.title}</Typography>
               <Typography variant="h7">{data.info_text ?? ''}</Typography>
             </Box>
