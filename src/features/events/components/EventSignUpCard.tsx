@@ -24,7 +24,7 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
   });
 
   return (
-    <Card sx={{ marginTop: '2rem' }}>
+    <Card>
       <CardMedia
         alt={event.title || undefined}
         component="img"
