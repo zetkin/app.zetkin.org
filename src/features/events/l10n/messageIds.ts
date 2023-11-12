@@ -1,6 +1,15 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  activistPortal: {
+    bookedMessage: m(
+      'You are booked! If you want to cancel, reach out to contact person'
+    ),
+    loadingButton: m('Loading...'),
+    notInOrgMessage: m('You are not member of this org yet'),
+    signupButton: m('Sign up'),
+    undoSignupButton: m('Undo signup'),
+  },
   addPerson: {
     addButton: m('Add person'),
     addPlaceholder: m('Start typing to add participant'),
@@ -198,6 +207,11 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   search: m('Search'),
+  signupCard: {
+    moreInfo: m('More info'),
+    signUp: m('Sign up!'),
+    undo: m('Undo sign-up'),
+  },
   state: {
     cancelled: m('Cancelled'),
     draft: m('Draft'),

@@ -1,6 +1,12 @@
+import { CircularProgress } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { FC, Suspense } from 'react';
+
+import EventListing from 'features/campaigns/components/ProjectPage/ProjectEventListing';
 import Header from 'features/campaigns/components/ProjectPage/Header';
-import { FC } from 'react';
 import { scaffold } from 'utils/next';
+import useCampaign from 'features/campaigns/hooks/useCampaign';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -19,14 +25,31 @@ export const getServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 type PageProps = {
-  campId: string;
-  orgId: string;
+  campId: number;
+  orgId: number;
 };
 
 const Page: FC<PageProps> = ({ orgId, campId }) => {
+  const { campaignFuture } = useCampaign(orgId, campId);
+
   return (
     <>
-      <Header campId={campId} orgId={orgId} />
+      <Header orgId={orgId} />
+
+      <ZUIFuture future={campaignFuture}>
+        {(data) => (
+          <>
+            <Box margin={2} marginBottom={6}>
+              <Typography variant="h4">{data.title}</Typography>
+              <Typography>{data.info_text ?? ''}</Typography>
+            </Box>
+          </>
+        )}
+      </ZUIFuture>
+
+      <Suspense fallback={<CircularProgress />}>
+        <EventListing />
+      </Suspense>
     </>
   );
 };
