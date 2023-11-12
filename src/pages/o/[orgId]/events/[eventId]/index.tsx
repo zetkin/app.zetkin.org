@@ -1,6 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import NextLink from 'next/link';
 import {
   Avatar,
   Box,
@@ -20,7 +21,7 @@ import useEventSignup from 'features/events/hooks/useEventSignup';
 import useServerSide from 'core/useServerSide';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIFuture from 'zui/ZUIFuture';
-import { BeachAccess, CalendarToday, Place } from '@mui/icons-material';
+import { BeachAccess, CalendarToday, Done, Place } from '@mui/icons-material';
 
 const scaffoldOptions = {
   allowNonMembers: true,
@@ -77,19 +78,15 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
               <Head>
                 <title>{event.title}</title>
               </Head>
-              <Box display="flex" flexDirection="column" padding={2}>
+              <Box display="flex" flexDirection="column" gap={1} padding={2}>
                 <Typography variant="h4">{event.title}</Typography>
-                <Box alignItems="center" display="flex">
-                  <Avatar
-                    alt="icon"
-                    src={`/api/orgs/${orgId}/avatar`}
-                    sx={{ margingRight: 1 }}
-                  />
+                <Box alignItems="center" display="flex" gap={1}>
+                  <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
                   <Typography color="secondary">
                     {event.organization.title}
                   </Typography>
                 </Box>
-                <Box display="flex" flexDirection="column" gap={1} paddingY={1}>
+                <Box display="flex" flexDirection="column" gap={1}>
                   {event.activity && (
                     <Box alignItems="center" display="flex">
                       <BeachAccess color="secondary" sx={{ marginRight: 1 }} />
@@ -154,7 +151,7 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                 )}
               </Box>
               <Drawer anchor="bottom" variant="permanent">
-                <Box display="flex" flexDirection="column" padding={2}>
+                <Box display="flex" flexDirection="column" gap={1} padding={2}>
                   <ZUIFuture
                     future={eventSignupFuture}
                     skeleton={
@@ -169,19 +166,36 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                           <Msg id={messageIds.activistPortal.signupButton} />
                         </Button>
                       ) : myResponseState == 'signedUp' ? (
-                        <Button onClick={undoSignup} variant="contained">
+                        <Button onClick={undoSignup} variant="outlined">
                           <Msg
                             id={messageIds.activistPortal.undoSignupButton}
                           />
                         </Button>
                       ) : myResponseState == 'booked' ? (
-                        <Typography>
-                          <Msg id={messageIds.activistPortal.bookedMessage} />
-                        </Typography>
+                        <>
+                          <Typography>
+                            <Msg id={messageIds.activistPortal.bookedMessage} />
+                          </Typography>
+                          <Button disabled variant="contained">
+                            <Done />
+                            <Msg id={messageIds.activistPortal.signedUp} />
+                          </Button>
+                        </>
                       ) : (
-                        <Typography>
-                          <Msg id={messageIds.activistPortal.notInOrgMessage} />
-                        </Typography>
+                        <>
+                          <Typography>
+                            <Msg
+                              id={messageIds.activistPortal.notInOrgMessage}
+                            />
+                          </Typography>
+                          <NextLink href={`/o/${orgId}`} passHref>
+                            <Button variant="contained">
+                              <Msg
+                                id={messageIds.activistPortal.joinOrgButton}
+                              />
+                            </Button>
+                          </NextLink>
+                        </>
                       )
                     }
                   </ZUIFuture>

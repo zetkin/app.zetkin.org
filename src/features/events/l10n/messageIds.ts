@@ -5,9 +5,11 @@ export default makeMessages('feat.events', {
     bookedMessage: m(
       'You are booked! If you want to cancel, reach out to contact person'
     ),
+    joinOrgButton: m('Join organization'),
     loadingButton: m('Loading...'),
     loadingTitle: m('Loading event...'),
     notInOrgMessage: m('You are not member of this org yet'),
+    signedUp: m('Signed up!'),
     signupButton: m('Sign up'),
     undoSignupButton: m('Undo signup'),
   },
