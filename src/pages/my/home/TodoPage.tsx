@@ -106,14 +106,20 @@ const Page: FC<PageProps> = () => {
             alignItems: 'center',
             display: 'flex',
             gap: '5px',
-            margin: 2,
+            pl: '0',
+            pt: '1em',
           }}
         >
           <EventIcon />
-          <h2>Events</h2>
+          <h2
+            style={{
+              marginTop: '0',
+              marginBottom: '0',
+            }}
+          >
+            Events
+          </h2>
         </Box>
-
-        <p>TODO: Add events here</p>
         <ZUIFuture future={events}>
           {(data) => <EventSignUpList events={data} />}
         </ZUIFuture>
@@ -133,7 +139,14 @@ const Page: FC<PageProps> = () => {
           }}
         >
           <CheckBoxSharp />
-          <h2>Tasks</h2>
+          <h2
+            style={{
+              marginTop: '0',
+              marginBottom: '0',
+            }}
+          >
+            Tasks
+          </h2>
         </Box>
 
         <DataGrid
