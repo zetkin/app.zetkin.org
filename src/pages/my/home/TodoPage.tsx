@@ -60,22 +60,23 @@ const taskRows = [
 
 const taskColumns: GridColDef[] = [
   {
-    field: 'description',
-    headerName: 'Description',
     disableColumnMenu: true,
+    field: 'description',
+    flex: 1,
+    headerName: 'Description',
     minWidth: 130,
   },
   {
-    field: 'expectedTime',
-    type: 'number',
-    headerName: 'Estimate',
     disableColumnMenu: true,
+    field: 'expectedTime',
+    headerName: 'Estimate',
+    type: 'number',
   },
   {
+    disableColumnMenu: true,
     field: 'dueDate',
     headerName: 'Due',
     type: 'number',
-    disableColumnMenu: true,
   },
 ];
 
