@@ -1,4 +1,3 @@
-import { Box } from '@mui/system';
 import EventsPage from './EventsPage';
 import OrgPage from './OrgPage';
 import { scaffold } from 'utils/next';
@@ -8,7 +7,16 @@ import EventIcon from '@mui/icons-material/Event';
 import { CheckBoxSharp, Star } from '@mui/icons-material';
 import { Button, Tab, Tabs } from '@mui/material';
 import { FC, useState } from 'react';
-import { Alert, Divider, Typography, useTheme } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Divider,
+  List,
+  ListItem,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import ListItemText from '@mui/material/ListItemText';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -45,8 +53,20 @@ const Page: FC<PageProps> = () => {
           color: 'white',
         }}
       >
-        <h1 style={{ marginTop: '0' }}>Hello {user?.first_name}</h1>
-        <p>
+        <h1
+          style={{
+            marginTop: '0',
+            marginBottom: '0',
+          }}
+        >
+          Hello {user?.first_name}
+        </h1>
+        <p
+          style={{
+            marginTop: '0.5em',
+            marginBottom: '1em',
+          }}
+        >
           Welcome to your page. This is where you find events, your own bookings
           and assignments, and where you sign up to new ones.
         </p>
@@ -95,13 +115,36 @@ const Page: FC<PageProps> = () => {
       >
         <h2
           style={{
-            margin: '0',
+            marginTop: '0',
+            marginBottom: '0',
           }}
         >
           Next up
         </h2>
         <Box>
-          <div>TODO: Add event / call assignment / task here</div>
+          <ListItem
+            sx={{ color: 'var(--color-primary)', py: '0', my: '0' }}
+            secondaryAction={
+              <Button
+                color="primary"
+                sx={{ mb: '1em' }}
+                variant="contained"
+                onClick={() => {}}
+              >
+                To event
+              </Button>
+            }
+          >
+            <ListItemText
+              sx={{ ml: '-1em' }}
+              primary={
+                <Typography sx={{ fontWeight: 'bolder' }}>
+                  Cooking with grandma
+                </Typography>
+              }
+              secondary="20/11"
+            />
+          </ListItem>
         </Box>
       </Box>
       <Tabs
