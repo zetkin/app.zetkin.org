@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { FormattedTime } from 'react-intl';
 import {
   Button,
   Card,
@@ -17,11 +18,6 @@ type EventSignUpCardProps = {
 
 const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
   const theme = useTheme();
-  // TODO: Instead of always using the en-US .toLocaleString, update to match the user settings.
-  const startTime = new Date(event.start_time).toLocaleString('sv-SE', {
-    hour: 'numeric',
-    minute: 'numeric',
-  });
 
   return (
     <Card>
@@ -40,7 +36,8 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
           gutterBottom
           sx={{ color: theme.palette.secondary.main, fontSize: '.7rem' }}
         >
-          {startTime} - {event.location?.title}
+          <FormattedTime hour12={false} value={event.start_time} /> -{' '}
+          {event.location?.title}
         </Typography>
         <Typography color={theme.palette.secondary.main} variant="body2">
           {event.info_text}
