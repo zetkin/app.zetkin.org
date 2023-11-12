@@ -1,11 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import CallAssignments from './CallAssignments';
-import EventIcon from '@mui/icons-material/Event';
 import { CheckBoxSharp } from '@mui/icons-material';
+import EventIcon from '@mui/icons-material/Event';
+import EventSignUpList from 'features/events/components/EventSignUpList';
 import { FC } from 'react';
 import { scaffold } from 'utils/next';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import useCurrentUserEvents from 'features/user/hooks/useCurrentUserEvents';
+import ZUIFuture from 'zui/ZUIFuture';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 interface TaskDisplayData {
   id: number;
@@ -21,10 +24,10 @@ function createTaskDisplayData(
   dueDate: string
 ): TaskDisplayData {
   return {
-    id,
     description,
-    expectedTime,
     dueDate,
+    expectedTime,
+    id,
   };
 }
 
@@ -94,6 +97,7 @@ export const getServerSideProps = scaffold(async () => {
 type PageProps = void;
 
 const Page: FC<PageProps> = () => {
+  const events = useCurrentUserEvents();
   return (
     <Box
       sx={{
@@ -117,6 +121,9 @@ const Page: FC<PageProps> = () => {
         </Box>
 
         <p>TODO: Add events here</p>
+        <ZUIFuture future={events}>
+          {(data) => <EventSignUpList events={data} />}
+        </ZUIFuture>
       </Box>
 
       <Box>
