@@ -9,7 +9,11 @@ import {
 } from 'utils/types/zetkin';
 import { z } from 'zod';
 
-const paramsSchema = z.object({});
+
+
+const paramsSchema = z.object({
+  orgId: z.number()
+});
 
 type Params = z.input<typeof paramsSchema>;
 
@@ -38,12 +42,12 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         `/api/orgs/{orgId}/actions?filter=end_time>${endDate}`
       ),
       apiClient.get<ZetkinMembership[]>(`/api/users/me/memberships`),
-      apiClient.get<ZetkinOrganization>(`/api/org/${orgId}`),
+      apiClient.get<ZetkinOrganization>(`/api/org/${params.orgId}`),
       apiClient.get<ZetkinOrganization[]>(
-        `/api/org/${orgId}/sub_organizations`
+        `/api/org/${params.orgId}/sub_organizations`
       ),
-      apiClient.get<ZetkinCampaign[]>(`/api/org/${orgId}/campaigns`),
-      apiClient.get<ZetkinSurvey[]>(`/api/org/${orgId}/surveys`),
+      apiClient.get<ZetkinCampaign[]>(`/api/org/${params.orgId}/campaigns`),
+      apiClient.get<ZetkinSurvey[]>(`/api/org/${params.orgId}/surveys`),
     ]);
 
   return {
