@@ -18,7 +18,7 @@ export const getServerSideProps = scaffold(async () => {
 
 type PageProps = { events: ZetkinEvent[] };
 
-const pageSize = 10;
+const pageSize = 5;
 const Page: FC<PageProps> = ({ events }) => {
   const [page, setPage] = useState(0);
   const [eventsView, setEventsView] = useState<ZetkinEvent[]>([]);
