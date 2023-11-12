@@ -1217,10 +1217,12 @@ feat:
         link: https://zetkin.org/sv/sekretess
         text: Klicka här för att läsa Zetkins sekretesspolicy
       sign:
-        anonymous: Skicka anonymt
-        nameAndEmail: Skicka med namn och e-mail
+        anonymous: Signera anonymt
+        nameAndEmail: Signera med namn och e-mail
       submit: Skicka
-      termsDescription: När du skickar in enkäten kommer informationen att lagras i Zetkin och hanteras av {organization} i deras verksamhet, i enlighet med Zetkins sekretesspolicy.
+      terms:
+        description: När du skickar in enkäten kommer informationen att lagras i Zetkin och hanteras av {organization} i deras verksamhet, i enlighet med Zetkins sekretesspolicy.
+        title: Sekretesspolicy
     tabs:
       overview: Översikt
       questions: Frågor
