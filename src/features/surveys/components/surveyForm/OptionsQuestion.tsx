@@ -20,7 +20,16 @@ const OptionsQuestion: FC<{ element: ZetkinSurveyOptionsQuestionElement }> = ({
 }) => {
   return (
     <FormControl>
-      <FormLabel id="demo-radio-buttons-group-label">
+      <FormLabel
+        id="demo-radio-buttons-group-label"
+        style={{
+          color: 'black',
+          fontSize: '1.5em',
+          fontWeight: '500',
+          marginBottom: '0.5em',
+          marginTop: '0.5em',
+        }}
+      >
         {element.question.question}
       </FormLabel>
       {element.question.response_config.widget_type === 'checkbox' && (

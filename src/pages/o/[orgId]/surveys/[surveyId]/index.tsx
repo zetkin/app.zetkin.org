@@ -22,12 +22,15 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import { FC, useState } from 'react';
 
 import {
+  Container,
   FormControlLabel,
+  FormControlLabelProps,
   Link,
   Radio,
   RadioGroup,
   TextField,
   Typography,
+  useRadioGroup,
 } from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
@@ -163,6 +166,31 @@ type PageProps = {
 type FormStatus = 'editing' | 'invalid' | 'error' | 'submitted';
 type SignatureOption = 'authenticated' | 'email' | 'anonymous';
 
+function RadioFormControlLabel(props: FormControlLabelProps) {
+  const radioGroup = useRadioGroup();
+
+  let checked = false;
+
+  if (radioGroup) {
+    checked = radioGroup.value === props.value;
+  }
+
+  if (checked) {
+    return (
+      <FormControlLabel
+        checked={checked}
+        sx={{
+          backgroundColor: '#fbcbd8',
+          borderRadius: '50px',
+        }}
+        {...props}
+      />
+    );
+  }
+
+  return <FormControlLabel checked={checked} {...props} />;
+}
+
 const Page: FC<PageProps> = ({ orgId, status, survey }) => {
   const messages = useMessages(messageIds);
 
@@ -177,7 +205,7 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
   const currentUser = useCurrentUser();
 
   return (
-    <>
+    <Container style={{ height: '100vh' }}>
       <h1>{survey.title}</h1>
 
       {status === 'error' && <ErrorMessage />}
@@ -211,7 +239,15 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
             )}
           </div>
         ))}
-        <Typography>
+        <Typography
+          style={{
+            color: 'black',
+            fontSize: '1.5em',
+            fontWeight: '500',
+            marginBottom: '0.5em',
+            marginTop: '0.5em',
+          }}
+        >
           <Msg id={messageIds.surveyForm.signOptions} />
         </Typography>
 
@@ -220,7 +256,7 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
           onChange={(e) => handleRadioChange(e.target.value as SignatureOption)}
           value={selectedOption}
         >
-          <FormControlLabel
+          <RadioFormControlLabel
             control={<Radio />}
             label={
               <Typography>
@@ -236,7 +272,7 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
             value="authenticated"
           />
 
-          <FormControlLabel
+          <RadioFormControlLabel
             control={<Radio />}
             label={
               <div>
@@ -254,8 +290,9 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
             }
             value="email"
           />
+
           {survey.signature === 'allow_anonymous' && (
-            <FormControlLabel
+            <RadioFormControlLabel
               control={<Radio />}
               label={
                 <Typography>
@@ -273,13 +310,13 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
           label={<Msg id={messageIds.surveyForm.accept} />}
           name="privacy.approval"
         />
-        <Typography>
+        <Typography style={{ fontSize: '0.8em' }}>
           <Msg
             id={messageIds.surveyForm.termsDescription}
             values={{ organization: survey.organization.title ?? '' }}
           />
         </Typography>
-        <Typography>
+        <Typography style={{ fontSize: '0.8em', marginBottom: '0.5em' }}>
           <Link
             href={messages.surveyForm.policy.link()}
             rel="noreferrer"
@@ -292,13 +329,14 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
         <Button
           color="primary"
           data-testid="Survey-submit"
+          style={{ textAlign: 'center', width: '100%' }}
           type="submit"
           variant="contained"
         >
           {messages.surveyForm.submit()}
         </Button>
       </form>
-    </>
+    </Container>
   );
 };
 
