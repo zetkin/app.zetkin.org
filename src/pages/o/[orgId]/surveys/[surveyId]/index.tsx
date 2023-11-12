@@ -142,6 +142,8 @@ type PageProps = {
   surveyId: string;
 };
 
+type SignatureOption = 'authenticated' | 'email' | 'anonymous';
+
 const Page: FC<PageProps> = ({ orgId, surveyId }) => {
   const elements = useSurveyElements(
     parseInt(orgId, 10),
@@ -150,25 +152,12 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
   const messages = useMessages(messageIds);
   const survey = useSurvey(parseInt(orgId, 10), parseInt(surveyId, 10));
 
-  const [selectedOption, setSelectedOption] = useState<
-    null | 'authenticated' | 'name+email' | 'anonymous'
-  >(null);
-  const [customInput, setCustomInput] = useState({
-    email: '',
-    name: '',
-  });
+  const [selectedOption, setSelectedOption] = useState<null | SignatureOption>(
+    null
+  );
 
-  const handleRadioChange = (
-    value: 'authenticated' | 'name+email' | 'anonymous'
-  ) => {
+  const handleRadioChange = (value: SignatureOption) => {
     setSelectedOption(value);
-  };
-
-  const handleCustomInputChange = (field: 'name' | 'email', value: string) => {
-    setCustomInput((prevInput) => ({
-      ...prevInput,
-      [field]: value,
-    }));
   };
 
   const currentUser = useCurrentUser();
@@ -211,11 +200,8 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
         </Typography>
 
         <RadioGroup
-          onChange={(e) =>
-            handleRadioChange(
-              e.target.value as 'authenticated' | 'name+email' | 'anonymous'
-            )
-          }
+          name="sig"
+          onChange={(e) => handleRadioChange(e.target.value as SignatureOption)}
           value={selectedOption}
         >
           <FormControlLabel
@@ -241,27 +227,16 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
                 <Typography>
                   <Msg id={messageIds.surveyForm.nameEmailOption} />
                 </Typography>
-                {selectedOption === 'name+email' && (
-                  <>
-                    <TextField
-                      label="Name"
-                      onChange={(e) =>
-                        handleCustomInputChange('name', e.target.value)
-                      }
-                      value={customInput.name}
-                    />
-                    <TextField
-                      label="Email"
-                      onChange={(e) =>
-                        handleCustomInputChange('email', e.target.value)
-                      }
-                      value={customInput.email}
-                    />
-                  </>
+                {selectedOption === 'email' && (
+                  <Box display="flex" flexDirection="column">
+                    <TextField label="First Name" name="sig.first_name" />
+                    <TextField label="Last Name" name="sig.last_name" />
+                    <TextField label="Email" name="sig.email" />
+                  </Box>
                 )}
               </div>
             }
-            value="name+email"
+            value="email"
           />
           {survey.data?.signature === 'allow_anonymous' && (
             <FormControlLabel
@@ -280,6 +255,7 @@ const Page: FC<PageProps> = ({ orgId, surveyId }) => {
           control={<Checkbox required />}
           data-testid="Survey-acceptTerms"
           label={<Msg id={messageIds.surveyForm.accept} />}
+          name="privacy.approval"
         />
         <Typography>
           <Msg
