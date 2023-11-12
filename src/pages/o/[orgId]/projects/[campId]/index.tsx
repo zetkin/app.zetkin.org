@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import { scaffold } from 'utils/next';
-import EventListing from 'features/campaigns/components/ProjectPage/ProjectEventListing';
 
+import EventListing from 'features/campaigns/components/ProjectPage/ProjectEventListing';
+import Header from 'features/campaigns/components/ProjectPage/Header';
+import { scaffold } from 'utils/next';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -24,14 +25,14 @@ type PageProps = {
   orgId: number;
 };
 
-// event-listing-a 
+// event-listing-a
 
 const Page: FC<PageProps> = ({ orgId, campId }) => {
   return (
-    <h1>
-      Page for org {orgId}, project {campId}
-      <EventListing campId={campId} orgId={orgId}></EventListing>
-    </h1>
+    <>
+      <Header campId={campId} orgId={orgId} />
+      <EventListing />
+    </>
   );
 };
 
