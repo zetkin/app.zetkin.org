@@ -6,6 +6,8 @@ import { ZetkinMembership } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Avatar, Box, Link, List, ListItem } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import IconButton from '@mui/material/Icon';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -36,25 +38,38 @@ const Page: FC<PageProps> = () => {
       </p>
       <ZUIFuture future={organizations}>
         {(data) => (
-          <List>
+          <List
+            sx={{
+              ml: '1em',
+            }}
+          >
             {data?.map((org: ZetkinMembership['organization']) => (
               <ListItem
                 key={org.id}
-                sx={{ color: 'var(--color-primary)' }}
+                sx={{ color: 'var(--color-primary)', ml: '-1em' }}
                 secondaryAction={
-                  <Box sx={{ fontSize: '0.8em' }}>
-                    <p>Disconnect</p>
-                  </Box>
+                  <Link
+                    underline="hover"
+                    sx={{ fontSize: '0.8em', alignSelf: 'flex-start' }}
+                  >
+                    Disconnect
+                    <br />
+                    <br />
+                  </Link>
                 }
               >
-                <Avatar
-                  src={`/api/orgs/${org.id}/avatar`}
-                  sx={{ mr: '10px' }}
+                <ListItemAvatar sx={{ mr: '10px', ml: '-1em' }}>
+                  <Avatar src={`/api/orgs/${org.id}/avatar`} />
+                </ListItemAvatar>
+                <ListItemText
+                  sx={{ ml: '-1em' }}
+                  primary={
+                    <Link underline="hover" href={`/o/${org.id}`}>
+                      {org.title}
+                    </Link>
+                  }
+                  secondary="TODO"
                 />
-                <NextLink href={`/o/${org.id}`} passHref>
-                  <Link underline="hover">{org.title}</Link>
-                </NextLink>
-                {/* <ListItemText primary={''} secondary={'Secondary text'} /> */}
               </ListItem>
             ))}
           </List>
