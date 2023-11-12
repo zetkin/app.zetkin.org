@@ -173,14 +173,17 @@ export default makeMessages('feat.surveys', {
       text: m('Click to read the full Zetkin Privacy Policy'),
     },
     sign: {
-      anonymous: m('Submit anonymously'),
+      anonymous: m('Sign anonymously'),
       nameAndEmail: m('Sign with name and e-mail'),
     },
     signOptions: m('Choose how to sign'),
     submit: m('Submit'),
-    termsDescription: m<{ organization: string }>(
-      'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
-    ),
+    terms: {
+      description: m<{ organization: string }>(
+        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
+      ),
+      title: m('Privacy Policy'),
+    },
   },
   tabs: {
     overview: m('Overview'),

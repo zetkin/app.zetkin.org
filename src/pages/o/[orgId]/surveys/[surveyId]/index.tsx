@@ -1,27 +1,18 @@
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import Box from '@mui/system/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
+import ErrorMessage from 'features/surveys/components/surveyForm/ErrorMessage';
 import { IncomingMessage } from 'http';
 import messageIds from 'features/surveys/l10n/messageIds';
+import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import {
-  ZetkinSurveyExtended,
-  ZetkinSurveyOptionsQuestionElement,
-  ZetkinSurveyTextElement,
-  ZetkinSurveyTextQuestionElement,
-} from 'utils/types/zetkin';
-
-import ErrorMessage from 'features/surveys/components/surveyForm/ErrorMessage';
-import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
 import TextBlock from 'features/surveys/components/surveyForm/TextBlock';
 import TextQuestion from 'features/surveys/components/surveyForm/TextQuestion';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import { FC, useState } from 'react';
-
 import {
+  Box,
+  Button,
+  Checkbox,
   Container,
   FormControlLabel,
   FormControlLabelProps,
@@ -32,8 +23,14 @@ import {
   Typography,
   useRadioGroup,
 } from '@mui/material';
-
+import { FC, useState } from 'react';
 import { Msg, useMessages } from 'core/i18n';
+import {
+  ZetkinSurveyExtended,
+  ZetkinSurveyOptionsQuestionElement,
+  ZetkinSurveyTextElement,
+  ZetkinSurveyTextQuestionElement,
+} from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -206,16 +203,16 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
 
   return (
     <Container style={{ height: '100vh' }}>
-      <h1>{survey.title}</h1>
-
-      {status === 'error' && <ErrorMessage />}
-
-      {survey.info_text && <p>{survey.info_text}</p>}
-
       <Box alignItems="center" columnGap={1} display="flex" flexDirection="row">
         <ZUIAvatar size="md" url={`/api/orgs/${orgId}/avatar`} />
         {survey.organization.title}
       </Box>
+
+      {status === 'error' && <ErrorMessage />}
+
+      <h1>{survey.title}</h1>
+
+      {survey.info_text && <p>{survey.info_text}</p>}
 
       <form method="post">
         {survey.elements.map((element) => (
@@ -257,7 +254,7 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
           value={selectedOption}
         >
           <RadioFormControlLabel
-            control={<Radio />}
+            control={<Radio required />}
             label={
               <Typography>
                 <Msg
@@ -273,27 +270,28 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
           />
 
           <RadioFormControlLabel
-            control={<Radio />}
+            control={<Radio required />}
             label={
               <div>
                 <Typography>
                   <Msg id={messageIds.surveyForm.nameEmailOption} />
                 </Typography>
-                {selectedOption === 'email' && (
-                  <Box display="flex" flexDirection="column">
-                    <TextField label="First Name" name="sig.first_name" />
-                    <TextField label="Last Name" name="sig.last_name" />
-                    <TextField label="Email" name="sig.email" />
-                  </Box>
-                )}
               </div>
             }
             value="email"
           />
 
+          {selectedOption === 'email' && (
+            <Box display="flex" flexDirection="column">
+              <TextField label="First Name" name="sig.first_name" required />
+              <TextField label="Last Name" name="sig.last_name" required />
+              <TextField label="Email" name="sig.email" required />
+            </Box>
+          )}
+
           {survey.signature === 'allow_anonymous' && (
             <RadioFormControlLabel
-              control={<Radio />}
+              control={<Radio required />}
               label={
                 <Typography>
                   <Msg id={messageIds.surveyForm.anonymousOption} />
@@ -304,27 +302,33 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
           )}
         </RadioGroup>
 
-        <FormControlLabel
-          control={<Checkbox required />}
-          data-testid="Survey-acceptTerms"
-          label={<Msg id={messageIds.surveyForm.accept} />}
-          name="privacy.approval"
-        />
-        <Typography style={{ fontSize: '0.8em' }}>
-          <Msg
-            id={messageIds.surveyForm.termsDescription}
-            values={{ organization: survey.organization.title ?? '' }}
+        <Box alignItems="center" component="section" sx={{ py: 2 }}>
+          <Typography fontWeight={'bold'}>
+            <Msg id={messageIds.surveyForm.terms.title} />
+          </Typography>
+
+          <FormControlLabel
+            control={<Checkbox required />}
+            data-testid="Survey-acceptTerms"
+            label={<Msg id={messageIds.surveyForm.accept} />}
+            name="privacy.approval"
           />
-        </Typography>
-        <Typography style={{ fontSize: '0.8em', marginBottom: '0.5em' }}>
-          <Link
-            href={messages.surveyForm.policy.link()}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Msg id={messageIds.surveyForm.policy.text} />
-          </Link>
-        </Typography>
+          <Typography style={{ fontSize: '0.8em' }}>
+            <Msg
+              id={messageIds.surveyForm.terms.description}
+              values={{ organization: survey.organization.title }}
+            />
+          </Typography>
+          <Typography style={{ fontSize: '0.8em', marginBottom: '0.5em' }}>
+            <Link
+              href={messages.surveyForm.policy.link()}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Msg id={messageIds.surveyForm.policy.text} />
+            </Link>
+          </Typography>
+        </Box>
 
         <Button
           color="primary"
