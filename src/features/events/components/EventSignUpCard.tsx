@@ -60,8 +60,9 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
             <>
               {myResponseState == 'signedUp' && (
                 <Button
-                  onClick={() => {
+                  onClick={(ev) => {
                     undoSignup();
+                    ev.stopPropagation();
                   }}
                   size="small"
                   variant="outlined"
@@ -71,8 +72,9 @@ const EventSignUpCard: FC<EventSignUpCardProps> = ({ event }) => {
               )}
               {myResponseState == 'notSignedUp' && (
                 <Button
-                  onClick={() => {
+                  onClick={(ev) => {
                     signup();
+                    ev.stopPropagation();
                   }}
                   size="small"
                   variant="contained"
