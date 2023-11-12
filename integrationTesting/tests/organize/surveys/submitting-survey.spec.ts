@@ -46,6 +46,7 @@ test.describe('User submitting a survey', () => {
 
     await page.click('input[name="1.options"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.click('input[name="sig"][value="authenticated"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
