@@ -49,6 +49,7 @@ export type FilterCategoryType =
   | 'selectedTypes';
 
 export interface EventsStoreSlice {
+  bookingsList: RemoteList<ZetkinEvent>;
   eventList: RemoteList<ZetkinEvent>;
   eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
@@ -62,11 +63,13 @@ export interface EventsStoreSlice {
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
   selectedEventIds: number[];
+  signupsList: RemoteList<ZetkinEventResponse>;
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
 }
 
 const initialState: EventsStoreSlice = {
+  bookingsList: remoteList(),
   eventList: remoteList(),
   eventsByCampaignId: {},
   eventsByDate: {},
@@ -80,6 +83,7 @@ const initialState: EventsStoreSlice = {
   participantsByEventId: {},
   respondentsByEventId: {},
   selectedEventIds: [],
+  signupsList: remoteList(),
   statsByEventId: {},
   typeList: remoteList(),
 };
@@ -88,6 +92,13 @@ const eventsSlice = createSlice({
   initialState,
   name: 'events',
   reducers: {
+    bookingsLoad: (state) => {
+      state.bookingsList.isLoading = true;
+    },
+    bookingsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.bookingsList = remoteList(action.payload);
+      state.bookingsList.loaded = new Date().toISOString();
+    },
     campaignEventsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.eventsByCampaignId[id] = remoteList<ZetkinEvent>();
@@ -515,6 +526,33 @@ const eventsSlice = createSlice({
       state.respondentsByEventId[eventId] = remoteList(respondents);
       state.respondentsByEventId[eventId].loaded = new Date().toISOString();
     },
+    signupAdd: (state) => {
+      state.signupsList.isLoading = true;
+    },
+    signupAdded: (state, action: PayloadAction<ZetkinEventResponse>) => {
+      const eventResponse = action.payload;
+      state.signupsList.isLoading = false;
+      state.signupsList.items.push(
+        remoteItem(eventResponse.action_id, { data: eventResponse })
+      );
+    },
+    signupRemove: (state) => {
+      state.signupsList.isLoading = true;
+    },
+    signupRemoved: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.signupsList.isLoading = false;
+      state.signupsList.items = state.signupsList.items.filter(
+        (s) => s.data?.action_id != eventId
+      );
+    },
+    signupsLoad: (state) => {
+      state.signupsList.isLoading = true;
+    },
+    signupsLoaded: (state, action: PayloadAction<ZetkinEventResponse[]>) => {
+      state.signupsList = remoteList(action.payload);
+      state.signupsList.loaded = new Date().toISOString();
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.statsByEventId[eventId] = remoteItem<EventStats>(eventId);
@@ -573,6 +611,8 @@ const eventsSlice = createSlice({
 
 export default eventsSlice;
 export const {
+  bookingsLoad,
+  bookingsLoaded,
   campaignEventsLoad,
   campaignEventsLoaded,
   eventCreate,
@@ -609,6 +649,12 @@ export const {
   resetSelection,
   respondentsLoad,
   respondentsLoaded,
+  signupAdd,
+  signupAdded,
+  signupRemove,
+  signupRemoved,
+  signupsLoad,
+  signupsLoaded,
   statsLoad,
   statsLoaded,
   typeAdd,

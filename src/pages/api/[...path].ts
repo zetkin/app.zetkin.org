@@ -4,7 +4,6 @@ import { applySession } from 'next-session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppSession } from 'utils/types';
-import getFilters from 'utils/getFilters';
 import { stringToBool } from 'utils/stringUtils';
 import { ZetkinZResource, ZetkinZResult } from 'utils/types/sdk';
 
@@ -20,9 +19,8 @@ interface HttpVerbMethod {
 
 const HTTP_VERBS_TO_ZETKIN_METHODS: Record<string, HttpVerbMethod> = {
   DELETE: (resource: ZetkinZResource) => resource.del(),
-  GET: (resource: ZetkinZResource, req: NextApiRequest) => {
-    const filters = getFilters(req);
-    return resource.get(null, null, filters);
+  GET: (resource: ZetkinZResource) => {
+    return resource.get();
   },
   PATCH: (resource: ZetkinZResource, req: NextApiRequestWithSession) =>
     resource.patch(req.body),

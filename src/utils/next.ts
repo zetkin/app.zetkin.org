@@ -49,6 +49,7 @@ interface ResultWithProps {
 interface ScaffoldOptions {
   // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
   authLevelRequired?: number;
+  allowNonMembers?: boolean;
   allowNonOfficials?: boolean;
   localeScope?: string[];
 }
@@ -155,7 +156,7 @@ export const scaffold =
       if (!ctx.user?.is_superuser) {
         //if the org is in your memberships, come in
         //if not, more checks
-        if (!hasOrg(reqWithSession, orgId)) {
+        if (!options?.allowNonMembers && !hasOrg(reqWithSession, orgId)) {
           //fetch your orgs again to see if they've been updated
           try {
             const allowNonOfficials = !!options?.allowNonOfficials;
