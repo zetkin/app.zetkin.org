@@ -1,22 +1,14 @@
+import EventIcon from '@mui/icons-material/Event';
 import EventsPage from './EventsPage';
+import ListItemText from '@mui/material/ListItemText';
 import OrgPage from './OrgPage';
 import { scaffold } from 'utils/next';
 import TodoPage from './TodoPage';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import EventIcon from '@mui/icons-material/Event';
-import { CheckBoxSharp, Star } from '@mui/icons-material';
+import { Box, ListItem, Typography } from '@mui/material';
 import { Button, Tab, Tabs } from '@mui/material';
+import { CheckBoxSharp, Star } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import {
-  Alert,
-  Box,
-  Divider,
-  List,
-  ListItem,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import ListItemText from '@mui/material/ListItemText';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -35,11 +27,9 @@ const Page: FC<PageProps> = () => {
   const user = useCurrentUser();
   const [currentPage, setCurrentPage] = useState('events');
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setCurrentPage(newValue);
   };
-
-  const theme = useTheme();
 
   return (
     <Box>
@@ -48,9 +38,9 @@ const Page: FC<PageProps> = () => {
           background: 'linear-gradient(to bottom right, #f47b9c, #f69382)',
         }}
         sx={{
+          color: 'white',
           pl: '1em',
           pr: '1em',
-          color: 'white',
         }}
       >
         <h1
@@ -73,11 +63,6 @@ const Page: FC<PageProps> = () => {
         <Box>
           <Button
             color="primary"
-            sx={{
-              mb: '1em',
-              mr: '1em',
-            }}
-            variant="contained"
             onClick={() => {
               setCurrentPage('events');
               setTimeout(() => {
@@ -86,13 +71,16 @@ const Page: FC<PageProps> = () => {
                   ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }, 100);
             }}
+            sx={{
+              mb: '1em',
+              mr: '1em',
+            }}
+            variant="contained"
           >
             To sign-up
           </Button>
           <Button
             color="primary"
-            sx={{ mb: '1em' }}
-            variant="contained"
             onClick={() => {
               setCurrentPage('todo');
               setTimeout(() => {
@@ -101,6 +89,8 @@ const Page: FC<PageProps> = () => {
                   ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }, 100);
             }}
+            sx={{ mb: '1em' }}
+            variant="contained"
           >
             My events
           </Button>
@@ -108,9 +98,9 @@ const Page: FC<PageProps> = () => {
       </Box>
       <Box
         sx={{
-          pl: '1em',
-          mu: '0',
           color: 'var(--color-primary)',
+          mu: '0',
+          pl: '1em',
         }}
       >
         <h2
@@ -149,12 +139,12 @@ const Page: FC<PageProps> = () => {
       </Box>
       <Tabs
         onChange={handleChange}
+        sx={{
+          height: '0',
+          mu: '0',
+        }}
         value={currentPage}
         variant="scrollable"
-        sx={{
-          mu: '0',
-          height: '0',
-        }}
       >
         <Tab
           icon={<EventIcon />}
