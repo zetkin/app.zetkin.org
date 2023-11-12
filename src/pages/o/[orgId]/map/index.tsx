@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
-import groupEventsByLocation from 'features/events/components/ActivistMap/groupEventsByLocation';
 import { LatLngLiteral } from 'leaflet';
+import LocationDrawer from 'features/events/components/ActivistMap/LocationDrawer';
 import LocationSearch from 'features/events/components/LocationModal/LocationSearch';
 import { makeStyles } from '@mui/styles';
 import { scaffold } from 'utils/next';
@@ -10,6 +10,9 @@ import { ZetkinLocation } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { Box, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { FC, useState } from 'react';
+import groupEventsByLocation, {
+  LocationWithEvents,
+} from 'features/events/components/ActivistMap/groupEventsByLocation';
 
 const useStyles = makeStyles<Theme>(() => ({
   filterLabel: {
@@ -70,8 +73,10 @@ type PageProps = {
 
 const Page: FC<PageProps> = ({ orgId }) => {
   const classes = useStyles();
-  const [searchString, setSearchString] = useState('');
-  const [, setSelectedLocation] = useState<ZetkinLocation | undefined>();
+  const [, setSearchString] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState<
+    LocationWithEvents | undefined | null
+  >();
   const [center, setCenter] = useState<LatLngLiteral | undefined>();
   const [filterNeedParticipants, setFilterNeedParticipants] = useState(false);
   const [filterString, setFilterString] = useState('');
@@ -106,17 +111,24 @@ const Page: FC<PageProps> = ({ orgId }) => {
     );
 
     return (
-      <>
+      <div>
         <ActivistMap
           center={center}
           locationsWithEvents={locationsWithEvents}
+          onLocationClick={(location) => {
+            setSelectedLocation(location);
+          }}
         />
 
         <Box className={classes.searchOverlay}>
           <LocationSearch
             onChange={(value: ZetkinLocation) => {
-              setSearchString(searchString);
-              setSelectedLocation(value);
+              const locationWithEvents = locationsWithEvents.find(
+                (location) => {
+                  return location.location.id === value.id;
+                }
+              );
+              setSelectedLocation(locationWithEvents);
             }}
             onClickGeolocate={() => {
               if ('geolocation' in navigator) {
@@ -161,7 +173,22 @@ const Page: FC<PageProps> = ({ orgId }) => {
             label={'Needs participants'}
           />
         </Box>
-      </>
+
+        <LocationDrawer
+          onToggleOpen={(open) => {
+            if (!open) {
+              setSelectedLocation(null);
+            }
+          }}
+          open={!!selectedLocation}
+        >
+          <>
+            {selectedLocation?.events.map((location) => {
+              return <div key={location.data.id}>{location.data.title}</div>;
+            })}
+          </>
+        </LocationDrawer>
+      </div>
     );
   }
   return null;

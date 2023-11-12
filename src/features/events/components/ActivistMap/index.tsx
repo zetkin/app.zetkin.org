@@ -15,9 +15,11 @@ const MapWrapper = ({ children }: { children: (map: Map) => JSX.Element }) => {
 const ActivistMap = ({
   center,
   locationsWithEvents,
+  onLocationClick,
 }: {
   center?: LatLngLiteral;
   locationsWithEvents: LocationWithEvents[];
+  onLocationClick?: (location: LocationWithEvents) => void;
 }) => {
   const theme = useTheme();
 
@@ -55,6 +57,11 @@ const ActivistMap = ({
                 return (
                   <Marker
                     key={location.location.id}
+                    eventHandlers={{
+                      click: () => {
+                        onLocationClick ? onLocationClick(location) : null;
+                      },
+                    }}
                     icon={divIcon({
                       className: '',
                       html: renderToStaticMarkup(
