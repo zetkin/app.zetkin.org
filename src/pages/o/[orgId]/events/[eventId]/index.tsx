@@ -19,6 +19,7 @@ import { scaffold } from 'utils/next';
 import useEvent from 'features/events/hooks/useEvent';
 import useEventSignup from 'features/events/hooks/useEventSignup';
 import useServerSide from 'core/useServerSide';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIFuture from 'zui/ZUIFuture';
 import { BeachAccess, CalendarToday, Done, Place } from '@mui/icons-material';
@@ -50,6 +51,27 @@ const Map = dynamic(
   { ssr: false }
 );
 
+const ContactPerson: FC<Pick<ZetkinEvent, 'contact'>> = ({ contact = null }) =>
+  contact && (
+    <Box
+      alignItems="center"
+      display="flex"
+      gap={1}
+      padding={1}
+      sx={{
+        background: '#0288D11F',
+      }}
+    >
+      <Avatar alt="icon" src={`/api/users/${contact.id}/avatar`} />
+      <Box display="flex" flexDirection="column">
+        <Typography fontSize="0.8em">
+          <Msg id={messageIds.activistPortal.contactPerson} />
+        </Typography>
+        <Typography>{contact.name}</Typography>
+      </Box>
+    </Box>
+  );
+
 const Page: FC<PageProps> = ({ orgId, eventId }) => {
   const eventFuture = useEvent(parseInt(orgId, 10), parseInt(eventId, 10));
   const onServer = useServerSide();
@@ -76,10 +98,18 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
           return (
             <>
               <Head>
-                <title>{event.title}</title>
+                <title>
+                  {event.title || (
+                    <Msg id={messageIds.activistPortal.missingTitle} />
+                  )}
+                </title>
               </Head>
-              <Box display="flex" flexDirection="column" gap={1} padding={2}>
-                <Typography variant="h4">{event.title}</Typography>
+              <Box display="flex" flexDirection="column" gap={2} padding={2}>
+                <Typography variant="h4">
+                  {event.title || (
+                    <Msg id={messageIds.activistPortal.missingTitle} />
+                  )}
+                </Typography>
                 <Box alignItems="center" display="flex" gap={1}>
                   <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
                   <Typography color="secondary">
@@ -108,7 +138,7 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                         onClick={() => setShowBigMap(true)}
                         underline="hover"
                       >
-                        Show on map
+                        <Msg id={messageIds.activistPortal.showBigMap} />
                       </Link>
                       <Modal
                         aria-describedby="parent-modal-description"
@@ -138,7 +168,7 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                     </Box>
                   )}
                 </Box>
-                <Typography>{event.info_text}</Typography>
+                {event.info_text && <Typography>{event.info_text}</Typography>}
                 {location && (
                   <Box>
                     <Map
@@ -173,6 +203,7 @@ const Page: FC<PageProps> = ({ orgId, eventId }) => {
                         </Button>
                       ) : myResponseState == 'booked' ? (
                         <>
+                          <ContactPerson {...event} />
                           <Typography>
                             <Msg id={messageIds.activistPortal.bookedMessage} />
                           </Typography>
