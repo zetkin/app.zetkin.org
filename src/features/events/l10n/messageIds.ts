@@ -6,6 +6,7 @@ export default makeMessages('feat.events', {
       'You are booked! If you want to cancel, reach out to contact person'
     ),
     loadingButton: m('Loading...'),
+    loadingTitle: m('Loading event...'),
     notInOrgMessage: m('You are not member of this org yet'),
     signupButton: m('Sign up'),
     undoSignupButton: m('Undo signup'),

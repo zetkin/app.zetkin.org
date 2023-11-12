@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { CSSProperties, FC } from 'react';
 
-const SelectedMarker: FC = () => {
+const SelectedMarker: FC<{ style?: CSSProperties }> = ({ style }) => {
   return (
-    <svg fill="none" height="50" viewBox="0 0 44 63" width="40">
+    <svg fill="none" height="50" style={style} viewBox="0 0 44 63" width="40">
       <path
         d="M22 61L21.6289 61.3351L22 61.7459L22.3711
          61.3351L22 61ZM22 61C22.3711 61.3351 22.3712

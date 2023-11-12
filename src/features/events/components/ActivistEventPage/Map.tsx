@@ -1,4 +1,5 @@
 import 'leaflet/dist/leaflet.css';
+import { CSSProperties } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { divIcon, latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
@@ -15,22 +16,32 @@ const MapWrapper = ({
 };
 
 type MapProps = {
+  interactive: boolean;
   location: {
     id: number;
     lat: number;
     lng: number;
   };
+  style: CSSProperties;
+  zoomLevel: number;
 };
 
-const Map = ({ location }: MapProps) => {
+const Map = ({ interactive, location, style, zoomLevel }: MapProps) => {
   return (
     <MapContainer
       bounds={latLngBounds([[location.lat, location.lng]])}
-      style={{ height: '80vh', width: '100%' }}
+      boxZoom={interactive}
+      doubleClickZoom={interactive}
+      dragging={interactive}
+      keyboard={interactive}
+      scrollWheelZoom={interactive}
+      style={style}
+      touchZoom={interactive}
+      zoomControl={interactive}
     >
       <MapWrapper>
         {(map) => {
-          map.setView({ lat: location.lat, lng: location.lng }, 17);
+          map.setView({ lat: location.lat, lng: location.lng }, zoomLevel);
 
           return (
             <>
@@ -42,7 +53,12 @@ const Map = ({ location }: MapProps) => {
                 key={location.id}
                 icon={divIcon({
                   className: '',
-                  html: renderToStaticMarkup(<SelectedMarker />),
+                  html: renderToStaticMarkup(
+                    <SelectedMarker
+                      style={{ transform: 'translate(-50%, -100%)' }}
+                    />
+                  ),
+                  iconAnchor: [0, 0],
                 })}
                 position={[location.lat, location.lng]}
               />
