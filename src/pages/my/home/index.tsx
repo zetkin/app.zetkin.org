@@ -5,7 +5,7 @@ import { scaffold } from 'utils/next';
 import TodoPage from './TodoPage';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import EventIcon from '@mui/icons-material/Event';
-import { Architecture, CheckBoxSharp, Star } from '@mui/icons-material';
+import { CheckBoxSharp, Star } from '@mui/icons-material';
 import { Button, Tab, Tabs } from '@mui/material';
 import { FC, useState } from 'react';
 import { Alert, Divider, Typography, useTheme } from '@mui/material';
@@ -41,6 +41,7 @@ const Page: FC<PageProps> = () => {
         }}
         sx={{
           pl: '1em',
+          pr: '1em',
           color: 'white',
         }}
       >

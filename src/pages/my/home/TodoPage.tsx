@@ -95,9 +95,9 @@ type PageProps = void;
 const Page: FC<PageProps> = () => {
   return (
     <Box
-      style={{
-        paddingLeft: '1em',
-        paddingRight: '1em',
+      sx={{
+        pl: '1em',
+        pr: '1em',
       }}
     >
       <h1>My Todo</h1>

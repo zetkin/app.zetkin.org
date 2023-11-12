@@ -18,8 +18,9 @@ type PageProps = void;
 const Page: FC<PageProps> = () => {
   return (
     <Box
-      style={{
-        paddingLeft: '1em',
+      sx={{
+        pl: '1em',
+        pr: '1em',
       }}
     >
       <h1>All Events</h1>
