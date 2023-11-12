@@ -1,14 +1,8 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import {
-  organizationLoaded,
-  subOrganizationsLoad,
-  subOrganizationsLoaded,
-  userOrganizationsLoad,
-  userOrganizationsLoaded,
-} from '../store';
-import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
+import { subOrganizationsLoad, subOrganizationsLoaded } from '../store';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 
 const useSubOrganizations = (
   orgId: number

@@ -14,6 +14,8 @@ import CampaignCard from 'features/campaigns/components/CampaignCard';
 import ActivistCampaignCard from 'features/campaigns/components/ActivistCampaignCard';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import dayjs from 'dayjs';
+import useOrgPageData from 'features/user/hooks/useOrgPageData';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -35,75 +37,109 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ orgId }) => {
-  const startOfToday = new Date(new Date().toISOString().slice(0, 10));
-  const weekFromNow = new Date(startOfToday);
-  weekFromNow.setDate(startOfToday.getDate() + 8);
+  const future = useOrgPageData(Number(orgId));
+  setTimeout(() => {
+    console.log(future);
+  }, 5000);
 
-  const events = useEventsFromDateRange(startOfToday, weekFromNow);
-  const { data: organization } = useOrganization(Number(orgId));
-  const { data: subOrgs } = useSubOrganizations(Number(orgId));
-  const { data: projects } = useCampaigns(Number(orgId));
-  const surveys = useSurveys(Number(orgId));
-  const { data: memberships } = useMemberships();
   const { followOrg, unFollowOrg } = useFollowMutations(parseInt(orgId));
 
-  const currentOrgMemberhip = memberships?.find(
-    (m) => m.organization.id == Number(orgId)
-  );
-  const isFollowingCurrentOrg = currentOrgMemberhip?.follow;
-  messageIds;
-
   return (
-    <>
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <ZUIAvatar size={'lg'} url={organization?.avatar_file?.url ?? ''} />
-        <Box display="flex" alignItems="start" flexDirection="column">
-          {organization?.parent && (
-            <Link href={`/o/${organization?.parent?.id}`}>
-              {organization?.parent.title}
-            </Link>
-          )}
-          <Typography variant="h4">{organization?.title}</Typography>
-        </Box>
-        <Box>
-          {!isFollowingCurrentOrg && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                followOrg();
-              }}
+    <ZUIFuture future={future}>
+      {({ memberships, org, subOrgs, projects, surveys, events }) => {
+        const currentOrgMemberhip = memberships?.find(
+          (m) => m.organization.id == Number(orgId)
+        );
+        const isFollowingCurrentOrg = currentOrgMemberhip?.follow;
+        return (
+          <>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              sx={{ backgroundColor: 'beige', height: '300px', mt: 2 }}
             >
-              <Msg id={messageIds.follow} />
-            </Button>
-          )}
-        </Box>
-        {subOrgs?.map((org) => (
-          <Box display="flex" flexDirection="row">
-            <ZUIAvatar size={'sm'} url={org?.avatar_file?.url ?? ''} />
-            <Link href={`/o/${org.id}`}>{org.title}</Link>
-          </Box>
-        ))}
-      </Box>
-      <Stack spacing={2}>
-        {projects?.map((pro) => (
-          <ActivistCampaignCard campaign={pro} />
-        ))}
-      </Stack>
-      <Box>
-        {isFollowingCurrentOrg && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              unFollowOrg();
-            }}
-          >
-            <Msg id={messageIds.unfollow} />
-          </Button>
-        )}
-      </Box>
-    </>
+              <Box alignItems="center" display="flex" flexDirection="column">
+                <ZUIAvatar size={'xl'} url={org?.avatar_file?.url ?? ''} />
+                <Box
+                  display="flex"
+                  alignItems="start"
+                  flexDirection="column"
+                  sx={{ mt: 2 }}
+                >
+                  {org?.parent && (
+                    <Link href={`/o/${org?.parent?.id}`}>
+                      {org?.parent.title}
+                    </Link>
+                  )}
+                  <Typography variant="h5">{org?.title}</Typography>
+                </Box>
+              </Box>
+              <Box display="flex" justifyContent="center">
+                <Button
+                  variant={isFollowingCurrentOrg ? 'outlined' : 'contained'}
+                  color="primary"
+                  onClick={() => {
+                    if (isFollowingCurrentOrg) {
+                      unFollowOrg();
+                    } else {
+                      followOrg();
+                    }
+                  }}
+                  sx={{ my: 2 }}
+                >
+                  <Msg
+                    id={
+                      isFollowingCurrentOrg
+                        ? messageIds.unfollow
+                        : messageIds.follow
+                    }
+                  />
+                </Button>
+              </Box>
+              <Stack spacing={1}>
+                {subOrgs?.map((org, index) => (
+                  <Box key={org.id} display="flex" justifyContent="center">
+                    <ZUIAvatar size={'sm'} url={org?.avatar_file?.url ?? ''} />
+                    <Link href={`/o/${org.id}`} sx={{ ml: 1 }}>
+                      {org.title}
+                    </Link>
+                  </Box>
+                ))}
+              </Stack>
+            </Box>
+            <Stack spacing={2}>
+              {projects?.map((pro) => (
+                <Box key={pro.id}>
+                  <ActivistCampaignCard
+                    campaign={pro}
+                    events={events.filter((e) => e.campaign?.id === pro.id)}
+                  />
+                </Box>
+              ))}
+            </Stack>
+            <Typography variant="h4">
+              <Msg id={messageIds.surveys} />
+            </Typography>
+            <Stack direction="column">
+              {surveys.map((survey) => {
+                return (
+                  <Link
+                    key={survey.id}
+                    href={`/o/${org.id}/campaigns/${
+                      survey.campaign?.id ?? 'standalone'
+                    }/surveys/${survey.id}`}
+                  >
+                    {survey.title}
+                  </Link>
+                );
+              })}
+            </Stack>
+          </>
+        );
+      }}
+    </ZUIFuture>
   );
 };
 

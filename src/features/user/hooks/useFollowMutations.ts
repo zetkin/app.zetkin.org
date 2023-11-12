@@ -1,10 +1,8 @@
-import { IFuture } from 'core/caching/futures';
-import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import {
   followOrganizationLoad,
   followOrganizationLoaded,
 } from 'features/user/store';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 
 interface UseFollowMutationsReturn {
   followOrg: () => Promise<void>;
@@ -20,13 +18,13 @@ export default function useFollowMutations(
   const unFollowOrg = async () => {
     dispatch(followOrganizationLoad({ orgId }));
     await apiClient.delete(`/api/users/me/following/${orgId}`);
-    dispatch(followOrganizationLoaded({ orgId, action: 'unfollow' }));
+    dispatch(followOrganizationLoaded({ action: 'unfollow', orgId }));
   };
 
   const followOrg = async () => {
     dispatch(followOrganizationLoad({ orgId }));
     await apiClient.put(`/api/users/me/following/${orgId}`);
-    dispatch(followOrganizationLoaded({ orgId, action: 'follow' }));
+    dispatch(followOrganizationLoaded({ action: 'follow', orgId }));
   };
 
   return { followOrg, unFollowOrg };

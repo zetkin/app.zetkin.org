@@ -9,20 +9,20 @@ import {
 } from 'utils/types/zetkin';
 import { z } from 'zod';
 
-
-
 const paramsSchema = z.object({
-  orgId: z.number()
+  orgId: z.number(),
 });
 
 type Params = z.input<typeof paramsSchema>;
 
-type Result = {
+export type OrgPageData = {
+  id: number;
   memberships: ZetkinMembership[];
   org: ZetkinOrganization;
   subOrgs: ZetkinOrganization[];
-  campaigns: ZetkinCampaign[];
+  projects: ZetkinCampaign[];
   surveys: ZetkinSurvey[];
+  events: ZetkinEvent[];
 };
 
 export const getOrgPageData = {
@@ -31,32 +31,35 @@ export const getOrgPageData = {
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, Result>(getOrgPageData.name);
+export default makeRPCDef<Params, OrgPageData>(getOrgPageData.name);
 
-async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
+async function handle(
+  params: Params,
+  apiClient: IApiClient
+): Promise<OrgPageData> {
   const endDate = new Date().toISOString();
   //  const organization = await apiClient.get<ZetkinOrganization>
-  const [events, memberships, org, subOrgs, campaigns, surveys] =
+  const [events, memberships, org, subOrgs, projects, surveys] =
     await Promise.all([
       apiClient.get<ZetkinEvent[]>(
-        `/api/orgs/{orgId}/actions?filter=end_time>${endDate}`
+        `/api/orgs/${params.orgId}/actions?filter=end_time>${endDate}`
       ),
       apiClient.get<ZetkinMembership[]>(`/api/users/me/memberships`),
-      apiClient.get<ZetkinOrganization>(`/api/org/${params.orgId}`),
+      apiClient.get<ZetkinOrganization>(`/api/orgs/${params.orgId}`),
       apiClient.get<ZetkinOrganization[]>(
-        `/api/org/${params.orgId}/sub_organizations`
+        `/api/orgs/${params.orgId}/sub_organizations`
       ),
-      apiClient.get<ZetkinCampaign[]>(`/api/org/${params.orgId}/campaigns`),
-      apiClient.get<ZetkinSurvey[]>(`/api/org/${params.orgId}/surveys`),
+      apiClient.get<ZetkinCampaign[]>(`/api/orgs/${params.orgId}/campaigns`),
+      apiClient.get<ZetkinSurvey[]>(`/api/orgs/${params.orgId}/surveys`),
     ]);
 
   return {
+    id: params.orgId,
     memberships,
     org,
     subOrgs,
-    campaigns: campaigns.filter((c) =>
-      events.some((e) => e.campaign?.id === c.id)
-    ),
+    projects,
     surveys,
+    events,
   };
 }

@@ -13,6 +13,7 @@ import { getSurveyStatsDef } from 'features/surveys/rpc/getSurveyStats';
 import { getTaskStatsRouteDef } from 'features/tasks/rpc/getTaskStats';
 import { getUserOrgTreeDef } from 'features/organizations/rpc/getUserOrgTree';
 import { updateEventsDef } from 'features/events/rpc/updateEvents';
+import { getOrgPageData } from 'features/user/rpc/getOrgPageData';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -30,6 +31,7 @@ export function createRPCRouter() {
   rpcRouter.register(copyEventsDef);
   rpcRouter.register(getUserOrgTreeDef);
   rpcRouter.register(deleteEventsDef);
+  rpcRouter.register(getOrgPageData);
 
   return rpcRouter;
 }

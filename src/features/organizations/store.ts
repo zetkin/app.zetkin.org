@@ -1,4 +1,5 @@
 import { TreeItemData } from './types';
+import { OrgPageData } from 'features/user/rpc/getOrgPageData';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   remoteItem,
@@ -10,16 +11,18 @@ import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
+  orgPageDataById: Record<number, RemoteItem<OrgPageData>>;
+  subOrgsData: RemoteList<ZetkinOrganization>;
   treeDataList: RemoteList<TreeItemData>;
   userOrgList: RemoteList<ZetkinMembership['organization']>;
-  subOrgsData: RemoteList<ZetkinOrganization>;
 }
 
 const initialState: OrganizationsStoreSlice = {
   orgData: remoteItem(0),
-  treeDataList: remoteList(),
+  orgPageDataById: {},
   userOrgList: remoteList(),
   subOrgsData: remoteList(),
+  treeDataList: remoteList(),
 };
 
 const OrganizationsSlice = createSlice({
@@ -35,6 +38,17 @@ const OrganizationsSlice = createSlice({
       state.orgData.data = org;
       state.orgData.loaded = new Date().toISOString();
       state.orgData.isLoading = false;
+    },
+    orgPageLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.orgPageDataById[id] = remoteItem(id, { isLoading: true });
+    },
+    orgPageLoaded: (state, action: PayloadAction<[number, OrgPageData]>) => {
+      const [id, data] = action.payload;
+      state.orgPageDataById[id] = remoteItem(id, {
+        data,
+        loaded: new Date().toISOString(),
+      });
     },
     treeDataLoad: (state) => {
       state.treeDataList.isLoading = true;
@@ -79,6 +93,8 @@ export default OrganizationsSlice;
 export const {
   organizationLoaded,
   organizationLoad,
+  orgPageLoad,
+  orgPageLoaded,
   treeDataLoad,
   treeDataLoaded,
   userOrganizationsLoad,

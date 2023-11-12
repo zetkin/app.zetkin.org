@@ -1,38 +1,27 @@
-import { FormattedDate } from 'react-in tl';
-import NextLink from 'next/link';
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Link,
-  Typography,
-} from '@mui/material';
+import { Card, CardContent, Link, Typography } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { removeOffset } from 'utils/dateUtils';
-import useCampaignEvents from '../hooks/useCampaignEvents';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinCampaign } from 'utils/types/zetkin';
+import { ZetkinCampaign, ZetkinEvent } from 'utils/types/zetkin';
 
 interface CampaignCardProps {
   campaign: ZetkinCampaign;
+  events: ZetkinEvent[];
 }
 
-const ActivistCampaignCard = ({ campaign }: CampaignCardProps): JSX.Element => {
-  const { orgId } = useNumericRouteParams();
-  const { id, title } = campaign;
-  const { firstEvent, lastEvent, numberOfUpcomingEvents } = useCampaignEvents(
-    orgId,
-    id
-  );
+const ActivistCampaignCard = ({
+  campaign,
+  events,
+}: CampaignCardProps): JSX.Element => {
+  const numberOfUpcomingEvents = events.length;
   //TODO link to project page
   return (
     <Link href="/">
       <Card data-testid="campaign-card">
         <CardContent>
           <Typography gutterBottom noWrap variant="h6">
-            {title}
+            {campaign.title}
           </Typography>
           <Typography color="secondary" gutterBottom variant="body2">
             <Msg
