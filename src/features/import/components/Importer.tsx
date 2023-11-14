@@ -34,6 +34,11 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
 
   const showStepper = activeStep == 1 || activeStep == 2;
 
+  //from API response
+  const statusScheduled = false;
+  const statusCompleted = false;
+  const statusError = true;
+
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -45,7 +50,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
       <Box
         display="flex"
         flexDirection="column"
-        height="90vh"
+        height={statusScheduled && activeStep === 3 ? '22vh' : '90vh'}
         padding={2}
         width={activeStep !== 3 ? '100%' : '700px'}
       >
@@ -116,20 +121,22 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           <Typography color="secondary">
             This message will depend on the state of the import.
           </Typography>
-          <Button
-            onClick={() => {
-              if (activeStep > 1) {
-                setActiveStep((prev) => (prev - 1) as StepType);
-                setDisabled(false);
-              } else {
-                onRestart();
-              }
-            }}
-            sx={{ mx: 1 }}
-            variant="text"
-          >
-            <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
-          </Button>
+          {!statusScheduled && !statusCompleted && (
+            <Button
+              onClick={() => {
+                if (activeStep > 1) {
+                  setActiveStep((prev) => (prev - 1) as StepType);
+                  setDisabled(false);
+                } else {
+                  onRestart();
+                }
+              }}
+              sx={{ mx: 1 }}
+              variant="text"
+            >
+              <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
+            </Button>
+          )}
           <Button
             disabled={disabled}
             onClick={() => {
@@ -149,6 +156,8 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                   ? messageIds.validate
                   : activeStep === 2
                   ? messageIds.import
+                  : statusError
+                  ? messageIds.close
                   : messageIds.done
               }
             />

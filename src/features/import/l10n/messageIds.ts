@@ -3,6 +3,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.import', {
   back: m('Back'),
+  close: m('Close'),
   configuration: {
     title: m('Import people'),
   },
