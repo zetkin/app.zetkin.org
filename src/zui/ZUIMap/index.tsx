@@ -10,6 +10,7 @@ import {
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
 import BasicMarker from './BasicMarker';
+import SelectedMarker from './SelectedMarker';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
 const MapWrapper = ({
@@ -27,10 +28,12 @@ const ZUIMap = <T extends unknown>({
   center,
   locations,
   onClickLocation,
+  selectedLocation,
 }: {
   center?: LatLngLiteral;
   locations: LocationWithData<T>[];
-  onClickLocation?: (location: LocationWithData<T>) => void;
+  onClickLocation: (location: LocationWithData<T>) => void;
+  selectedLocation?: LocationWithData<T>;
 }) => {
   const theme = useTheme();
 
@@ -70,18 +73,25 @@ const ZUIMap = <T extends unknown>({
                     key={location.id}
                     eventHandlers={{
                       click: () => {
-                        onClickLocation ? onClickLocation(location) : null;
+                        onClickLocation(location);
                       },
                     }}
-                    icon={divIcon({
-                      className: '',
-                      html: renderToStaticMarkup(
-                        <BasicMarker
-                          color={theme.palette.primary.main}
-                          events={location.data.length}
-                        />
-                      ),
-                    })}
+                    icon={
+                      selectedLocation?.id === location.id
+                        ? divIcon({
+                            className: '',
+                            html: renderToStaticMarkup(<SelectedMarker />),
+                          })
+                        : divIcon({
+                            className: '',
+                            html: renderToStaticMarkup(
+                              <BasicMarker
+                                color={theme.palette.primary.main}
+                                events={location.data.length}
+                              />
+                            ),
+                          })
+                    }
                     position={[location.lat, location.lng]}
                   />
                 );

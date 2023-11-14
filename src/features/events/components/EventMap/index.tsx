@@ -28,6 +28,7 @@ const EventMap = ({
         onClickLocation={(location) => {
           setSelectedLocation(location);
         }}
+        selectedLocation={selectedLocation}
       />
 
       <LocationDrawer
