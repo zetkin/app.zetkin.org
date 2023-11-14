@@ -8,8 +8,8 @@ import { ZetkinLocation } from 'utils/types/zetkin';
 
 interface LocationSearchProps {
   onChange: (value: ZetkinLocation) => void;
-  onInputChange?: (value: string) => void;
-  onTextFieldChange?: (value: string) => void;
+  onInputChange: (value: string) => void;
+  onTextFieldChange: (value: string) => void;
   onClickGeolocate: () => void;
   options: ZetkinLocation[];
 }
@@ -28,7 +28,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
       fullWidth
       getOptionLabel={(option) => option.title}
       onChange={(ev, value) => onChange(value)}
-      onInputChange={(ev, value) => onInputChange && onInputChange(value)}
+      onInputChange={(ev, value) => onInputChange(value)}
       options={options}
       renderInput={(params) => (
         <TextField
@@ -42,9 +42,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
             ),
           }}
           label={messages.locationModal.searchBox()}
-          onChange={(ev) =>
-            onTextFieldChange && onTextFieldChange(ev.target.value)
-          }
+          onChange={(ev) => onTextFieldChange(ev.target.value)}
           sx={{
             backgroundColor: 'white',
             borderRadius: '5px',
