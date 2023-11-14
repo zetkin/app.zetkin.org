@@ -55,7 +55,13 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
   const orgsStates = getOrgsStates(fake.summary.membershipsCreated);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" mt={2}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      height="100%"
+      mt={2}
+      sx={{ overflowY: 'auto' }}
+    >
       <ImportAlert
         bullets={[
           'Hello',
@@ -81,7 +87,7 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
         <PeopleCounter changedNum={22} status={COUNT_STATUS.CREATED} />
         <PeopleCounter changedNum={100} status={COUNT_STATUS.UPDATED} />
       </Stack>
-      <Stack spacing={2} sx={{ mt: 2, overflowY: 'auto' }}>
+      <Stack spacing={2}>
         <ImportChangeTracker
           fields={fake.summary.peopleUpdated.byField}
           orgId={orgId}

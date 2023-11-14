@@ -67,16 +67,7 @@ const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
           </Box>
         )}
         {bullets && (
-          <Box
-            mt={2}
-            sx={{
-              backgroundColor: 'red',
-              height: '50%',
-              overflowY: 'auto',
-              width: '100%',
-            }}
-            width="80%"
-          >
+          <Box mt={2}>
             {bullets.map((item, index) => (
               <Box
                 key={`bulletOpt-${index}`}
