@@ -110,7 +110,12 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
         <Typography sx={{ mb: 2 }} variant="h5">
           <Msg id={messageIds.validation.pendingChanges} />
         </Typography>
-        <Box display="flex" flexDirection="column" height="100%">
+        <Box
+          display="flex"
+          flexDirection="column"
+          height="100%"
+          sx={{ mt: 2, overflowY: 'auto' }}
+        >
           <Stack direction="row" spacing={2}>
             <PeopleCounter
               changedNum={fake.summary.peopleCreated.total}
@@ -121,7 +126,7 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
               status={COUNT_STATUS.UPDATED}
             />
           </Stack>
-          <Stack spacing={2} sx={{ mt: 2, overflowY: 'auto' }}>
+          <Stack spacing={2} sx={{ mt: 2 }}>
             <ImportChangeTracker
               fields={fake.summary.peopleUpdated.byField}
               orgId={orgId}
