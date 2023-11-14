@@ -1,18 +1,13 @@
 import { EventActivity } from 'features/campaigns/types';
-import { ZetkinLocation } from 'utils/types/zetkin';
-
-export interface LocationWithEvents {
-  events: EventActivity[];
-  location: ZetkinLocation;
-}
+import { LocationWithData } from 'zui/ZUIMap';
 
 const groupEventsByLocation = (
   events: EventActivity[]
-): LocationWithEvents[] => {
+): LocationWithData<EventActivity>[] => {
   const locationsWithEvents = events.reduce(
     (
       acc: {
-        [key: string]: LocationWithEvents;
+        [key: string]: LocationWithData<EventActivity>;
       },
       event
     ) => {
@@ -20,12 +15,13 @@ const groupEventsByLocation = (
       if (!location) {
         return acc;
       }
+      // If no location yet
       if (!acc[location.id]) {
         return {
           ...acc,
           [location.id]: {
-            events: [event],
-            location,
+            ...location,
+            data: [event],
           },
         };
       } else {
@@ -33,7 +29,7 @@ const groupEventsByLocation = (
           ...acc,
           [location.id]: {
             ...acc[location.id],
-            events: [...acc[location.id].events, event],
+            data: [...acc[location.id].data, event],
           },
         };
       }

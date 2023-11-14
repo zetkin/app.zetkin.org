@@ -1,34 +1,45 @@
 import 'leaflet/dist/leaflet.css';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTheme } from '@mui/material';
-import { divIcon, latLngBounds, LatLngLiteral, Map } from 'leaflet';
+import {
+  divIcon,
+  latLngBounds,
+  LatLngLiteral,
+  Map as LeafletMap,
+} from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
-import BasicMarker from '../LocationModal/BasicMarker';
-import { LocationWithEvents } from './groupEventsByLocation';
+import BasicMarker from './BasicMarker';
+import { ZetkinLocation } from 'utils/types/zetkin';
 
-const MapWrapper = ({ children }: { children: (map: Map) => JSX.Element }) => {
+const MapWrapper = ({
+  children,
+}: {
+  children: (map: LeafletMap) => JSX.Element;
+}) => {
   const map = useMap();
   return children(map);
 };
 
-const ActivistMap = ({
+export type LocationWithData<T = unknown> = ZetkinLocation & { data: T[] };
+
+const ZUIMap = <T extends unknown>({
   center,
-  locationsWithEvents,
-  onLocationClick,
+  locations,
+  onClickLocation,
 }: {
   center?: LatLngLiteral;
-  locationsWithEvents: LocationWithEvents[];
-  onLocationClick?: (location: LocationWithEvents) => void;
+  locations: LocationWithData<T>[];
+  onClickLocation?: (location: LocationWithData<T>) => void;
 }) => {
   const theme = useTheme();
 
   return (
     <MapContainer
       bounds={
-        locationsWithEvents.length
+        locations.length
           ? latLngBounds(
-              locationsWithEvents.map(({ location }) => ({
+              locations.map((location) => ({
                 lat: location.lat,
                 lng: location.lng,
               }))
@@ -38,7 +49,7 @@ const ActivistMap = ({
               [-60, 180],
             ]
       }
-      style={{ height: '100vh', width: '100%' }}
+      style={{ height: '100%', width: '100%' }}
     >
       <MapWrapper>
         {(map) => {
@@ -53,13 +64,13 @@ const ActivistMap = ({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
-              {locationsWithEvents.map((location) => {
+              {locations.map((location) => {
                 return (
                   <Marker
-                    key={location.location.id}
+                    key={location.id}
                     eventHandlers={{
                       click: () => {
-                        onLocationClick ? onLocationClick(location) : null;
+                        onClickLocation ? onClickLocation(location) : null;
                       },
                     }}
                     icon={divIcon({
@@ -67,11 +78,11 @@ const ActivistMap = ({
                       html: renderToStaticMarkup(
                         <BasicMarker
                           color={theme.palette.primary.main}
-                          events={0}
+                          events={location.data.length}
                         />
                       ),
                     })}
-                    position={[location.location.lat, location.location.lng]}
+                    position={[location.lat, location.lng]}
                   />
                 );
               })}
@@ -83,4 +94,4 @@ const ActivistMap = ({
   );
 };
 
-export default ActivistMap;
+export default ZUIMap;
