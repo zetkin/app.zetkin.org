@@ -108,7 +108,7 @@ const UploadFile = () => {
         <input type="file" {...getInputProps()} />
         <Box>
           {!loading && (
-            <Box>
+            <>
               <IconButton
                 onClick={open}
                 sx={{
@@ -147,7 +147,7 @@ const UploadFile = () => {
                     </Typography>
                   </Box>
 
-                  <Box sx={{ gap: 10 }} />
+                  <Box pt={1} />
                   {error ? (
                     <Typography sx={{ color: theme.palette.primary.main }}>
                       {messages.uploadDialog.unsupportedFile()}
@@ -159,7 +159,7 @@ const UploadFile = () => {
                   )}
                 </>
               )}
-            </Box>
+            </>
           )}
         </Box>
       </Box>
