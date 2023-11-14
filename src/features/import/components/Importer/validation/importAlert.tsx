@@ -66,22 +66,22 @@ const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
             />
           </Box>
         )}
-        {bullets && (
-          <Box mt={2}>
-            {bullets.map((item, index) => (
-              <Box
-                key={`bulletOpt-${index}`}
-                alignItems="center"
-                display="flex"
-                width="100%"
-              >
-                <Circle sx={{ fontSize: '5px', ml: 1, mr: 0.8 }} />
-                <Typography>{item}</Typography>
-              </Box>
-            ))}
-          </Box>
-        )}
       </Box>
+      {bullets && status === ALERT_STATUS.ERROR && (
+        <Box mt={2}>
+          {bullets.map((item, index) => (
+            <Box
+              key={`bulletOpt-${index}`}
+              alignItems="center"
+              display="flex"
+              width="100%"
+            >
+              <Circle sx={{ fontSize: '5px', ml: 1, mr: 0.8 }} />
+              <Typography>{item}</Typography>
+            </Box>
+          ))}
+        </Box>
+      )}
     </Alert>
   );
 };

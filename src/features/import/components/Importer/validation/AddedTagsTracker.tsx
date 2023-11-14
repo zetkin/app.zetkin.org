@@ -11,10 +11,12 @@ import messageIds from 'features/import/l10n/messageIds';
 interface AddedTagsTrackerProps {
   createdTags: { byTag: { [key: number]: number }; total: number };
   orgId: number;
+  statusError?: boolean;
 }
 const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
   createdTags,
   orgId,
+  statusError,
 }) => {
   const { data } = useTags(orgId);
   const tags = data || [];
@@ -38,7 +40,7 @@ const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
           values={{
             count: (
               <Typography fontWeight="bold" sx={{ mr: 0.5 }}>
-                {createdTags.total}
+                {statusError ? 0 : createdTags.total}
               </Typography>
             ),
             fieldName: (
@@ -49,13 +51,15 @@ const AddedTagsTracker: React.FunctionComponent<AddedTagsTrackerProps> = ({
           }}
         />
       </Box>
-      <Box display="flex" flexWrap="wrap" gap={1}>
-        {addedTags.map((tag) => (
-          <Box key={tag.id}>
-            <TagChip tag={tag} />
-          </Box>
-        ))}
-      </Box>
+      {!statusError && (
+        <Box display="flex" flexWrap="wrap" gap={1}>
+          {addedTags.map((tag) => (
+            <Box key={tag.id}>
+              <TagChip tag={tag} />
+            </Box>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

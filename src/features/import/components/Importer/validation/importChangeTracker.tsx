@@ -21,11 +21,12 @@ interface ImportChangeTrackerProps {
       | keyof Partial<ZetkinCustomField>]?: number;
   };
   orgId: number;
+  statusError?: boolean;
 }
 
 const ImportChangeTracker: React.FunctionComponent<
   ImportChangeTrackerProps
-> = ({ orgsStates, fields, orgId }) => {
+> = ({ orgsStates, fields, orgId, statusError }) => {
   const organizations = useOrganizations();
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
@@ -50,7 +51,7 @@ const ImportChangeTracker: React.FunctionComponent<
             >
               <Box alignItems="center" display="flex">
                 <Typography fontWeight="bold" sx={{ mr: 0.5 }}>
-                  {entry[1]}
+                  {statusError ? 0 : entry[1]}
                 </Typography>
                 <Msg id={messageIds.validation.trackers.defaultDesc} />
                 <Typography fontWeight="bold" sx={{ ml: 0.5 }}>
@@ -69,24 +70,26 @@ const ImportChangeTracker: React.FunctionComponent<
         <Box sx={{ border: 'solid 1px lightgrey', borderRadius: '4px', p: 2 }}>
           <Box alignItems="center" display="flex">
             <Typography fontWeight="bold" sx={{ mr: 0.5 }}>
-              {orgsStates.createdNum}
+              {statusError ? 0 : orgsStates.createdNum}
             </Typography>
             <Msg id={messageIds.validation.trackers.orgs} />
             <Typography fontWeight="bold" sx={{ ml: 0.5 }}>
               <Msg id={messageIds.validation.organization} />
             </Typography>
           </Box>
-          <Box display="flex" flexWrap="wrap" gap={0.5}>
-            {orgsWithNewPeople?.map((org, index) => (
-              <Typography key={org.id} color="secondary">
-                {org.title}
-                {orgsWithNewPeople.length === 1 ||
-                orgsWithNewPeople.length - 1 === index
-                  ? ''
-                  : ','}
-              </Typography>
-            ))}
-          </Box>
+          {!statusError && (
+            <Box display="flex" flexWrap="wrap" gap={0.5}>
+              {orgsWithNewPeople?.map((org, index) => (
+                <Typography key={org.id} color="secondary">
+                  {org.title}
+                  {orgsWithNewPeople.length === 1 ||
+                  orgsWithNewPeople.length - 1 === index
+                    ? ''
+                    : ','}
+                </Typography>
+              ))}
+            </Box>
+          )}
         </Box>
       )}
     </>

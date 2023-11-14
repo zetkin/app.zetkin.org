@@ -6,6 +6,7 @@ import { getOrgsStates } from 'features/import/utils/getOrgsStates';
 import ImportChangeTracker from '../validation/importChangeTracker';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import useStatusAlertsStates from 'features/import/hooks/useStatusAlertStates';
 import ImportAlert, { ALERT_STATUS } from '../validation/importAlert';
 import PeopleCounter, { COUNT_STATUS } from '../validation/PeopleCounter';
 
@@ -53,6 +54,7 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
     },
   };
   const orgsStates = getOrgsStates(fake.summary.membershipsCreated);
+  const statusRes = useStatusAlertsStates('error');
 
   return (
     <Box
@@ -63,40 +65,49 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
       sx={{ overflowY: 'auto' }}
     >
       <ImportAlert
-        bullets={[
-          'Hello',
-          'long time no see',
-          'hello',
-          'hello',
-          'hello',
-          'hello',
-          'hello',
-          'hello',
-          'hello',
-          'hello',
-        ]}
-        msg={'Error!'}
+        bullets={['Hello', 'long time no see']}
+        msg={statusRes.msg}
         onClickBack={onClickBack}
-        status={ALERT_STATUS.ERROR}
-        title={'This is error!'}
+        status={statusRes.alertStatus}
+        title={statusRes.title}
       />
       <Typography sx={{ fontWeight: 500, my: 2 }} variant="h4">
         <Msg id={messageIds.importStatus.completedChanges} />
       </Typography>
       <Stack direction="row" spacing={2}>
-        <PeopleCounter changedNum={22} status={COUNT_STATUS.CREATED} />
-        <PeopleCounter changedNum={100} status={COUNT_STATUS.UPDATED} />
+        <PeopleCounter
+          changedNum={
+            statusRes.alertStatus === 'error'
+              ? 0
+              : fake.summary.peopleCreated.total
+          }
+          status={COUNT_STATUS.CREATED}
+        />
+        <PeopleCounter
+          changedNum={
+            statusRes.alertStatus === 'error'
+              ? 0
+              : fake.summary.peopleUpdated.total
+          }
+          status={COUNT_STATUS.UPDATED}
+        />
       </Stack>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ mt: 2 }}>
         <ImportChangeTracker
           fields={fake.summary.peopleUpdated.byField}
           orgId={orgId}
+          statusError={statusRes.alertStatus === ALERT_STATUS.ERROR}
         />
         <AddedTagsTracker
           createdTags={fake.summary.tagsCreated}
           orgId={orgId}
+          statusError={statusRes.alertStatus === ALERT_STATUS.ERROR}
         />
-        <ImportChangeTracker orgId={orgId} orgsStates={orgsStates} />
+        <ImportChangeTracker
+          orgId={orgId}
+          orgsStates={orgsStates}
+          statusError={statusRes.alertStatus === ALERT_STATUS.ERROR}
+        />
       </Stack>
     </Box>
   );

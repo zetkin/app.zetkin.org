@@ -9,7 +9,21 @@ export default makeMessages('feat.import', {
   done: m('Done'),
   import: m('Import'),
   importStatus: {
+    completed: {
+      desc: m('Your data has been imported to Zetkin'),
+      title: m('Import completed'),
+    },
     completedChanges: m('Completed changes'),
+    error: {
+      desc: m('No data was imported to Zetkin'),
+      title: m('Import failed'),
+    },
+    scheduled: {
+      desc: m(
+        'Your data has been scheduled for import to Zetkin. Once finished you will recieve a notification via email.'
+      ),
+      title: m('Import scheduled'),
+    },
   },
   restart: m('Restart'),
   steps: {
