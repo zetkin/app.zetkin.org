@@ -173,8 +173,8 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                       date.getFullYear(),
                       date.getMonth(),
                       date.getDate(),
-                      endTime[0] >= 24 && endTime[1] >= 0 ? '23' : endTime[0],
-                      endTime[0] >= 24 && endTime[1] >= 0 ? '59' : endTime[0]
+                      endTime[0] >= 24 && endTime[1] >= 0 ? 23 : endTime[0],
+                      endTime[0] >= 24 && endTime[1] >= 0 ? 59 : endTime[0]
                     )
                   );
 
