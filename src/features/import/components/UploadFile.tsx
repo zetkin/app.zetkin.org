@@ -7,6 +7,7 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  Link,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -128,24 +129,23 @@ const UploadFile = () => {
               ) : (
                 <>
                   <Box pt={2}>
-                    <Typography
-                      onClick={open}
-                      sx={{
-                        color: theme.palette.primary.main,
-                        cursor: 'pointer',
-                        display: 'inline-block',
-                        padding: 1,
-                        textDecorationLine: 'underline',
-                      }}
-                    >
-                      {messages.uploadDialog.instructions()}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        display: 'inline-block',
-                      }}
-                    >
-                      {messages.uploadDialog.instructionsEnd()}
+                    <Typography>
+                      {messages.uploadDialog.instructions({
+                        link: (
+                          <Link
+                            onClick={open}
+                            sx={{
+                              color: theme.palette.primary.main,
+                              cursor: 'pointer',
+                              display: 'inline-block',
+                              padding: 1,
+                              textDecorationLine: 'underline',
+                            }}
+                          >
+                            {messages.uploadDialog.selectClick()}
+                          </Link>
+                        ),
+                      })}
                     </Typography>
                   </Box>
 
