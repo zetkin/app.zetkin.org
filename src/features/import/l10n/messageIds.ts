@@ -20,7 +20,7 @@ export default makeMessages('feat.import', {
       configure: m('Configure'),
       restart: m('Restart'),
     },
-    instructions: m<{ link: ReactJSXElement }>('{link}or drag and drop'),
+    instructions: m<{ link: ReactJSXElement }>('{link} or drag and drop'),
     loading: m('Loading file...'),
     release: m('Release the file here'),
     selectClick: m('Click to upload'),

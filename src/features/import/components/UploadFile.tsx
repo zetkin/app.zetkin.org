@@ -129,7 +129,7 @@ const UploadFile = () => {
               ) : (
                 <>
                   <Box pt={2}>
-                    <Typography>
+                    <Typography component="span">
                       {messages.uploadDialog.instructions({
                         link: (
                           <Link
@@ -137,8 +137,6 @@ const UploadFile = () => {
                             sx={{
                               color: theme.palette.primary.main,
                               cursor: 'pointer',
-                              display: 'inline-block',
-                              padding: 1,
                               textDecorationLine: 'underline',
                             }}
                           >
