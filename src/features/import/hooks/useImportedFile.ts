@@ -18,7 +18,6 @@ export default function useFileImport() {
       const res = await parseCSVFile(file);
       saveData(res);
       setLoading(false);
-      console.log('res', res);
     } else if (
       file.type === 'application/vnd.ms-excel' ||
       file.type ===
