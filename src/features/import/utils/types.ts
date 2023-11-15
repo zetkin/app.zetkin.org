@@ -8,7 +8,7 @@ export type ImportedFile = {
 
 export type Sheet = {
   columns: Column[];
-  currentlyConfiguring: ConfiguringData | null;
+  currentlyConfiguring: number | null;
   firstRowIsHeaders: boolean;
   rows: Row[];
   title: string;
@@ -32,19 +32,26 @@ export interface Field {
   type: FieldTypes;
 }
 
-export interface Column {
+interface BasicColumn {
   data: CellData[];
+  selectedField?: Field;
   id: number;
   selected: boolean;
   title: string;
 }
 
+interface ValueMapping {
+  tagId: number;
+  value: CellData;
+}
+
+type TagColumn = BasicColumn & {
+  valueMapping: ValueMapping[];
+};
+
+export type Column = BasicColumn | TagColumn;
+
 export interface MappingResults {
   numMappedTo: number;
   numPeople: number;
 }
-
-export type ConfiguringData = {
-  columnId: number;
-  type: FieldTypes;
-} | null;

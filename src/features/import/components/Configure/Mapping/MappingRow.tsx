@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { ArrowForward, ChevronRight } from '@mui/icons-material';
 import {
   Box,
@@ -10,7 +11,6 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
@@ -40,23 +40,29 @@ const MappingRow: FC<MappingRowProps> = ({
   const messages = useMessages(messageIds);
   const columnValuesMessage = useColumnValuesMessage(column.data);
 
-  const { currentlyConfiguring, updateCurrentlyConfiguring } =
-    useConfigSomething();
-
-  const [selectedField, setSelectedField] = useState<Field | null>(null);
+  const {
+    currentlyConfiguring,
+    updateCurrentlyConfiguring,
+    updateSelectedField,
+  } = useConfigSomething();
 
   const needsConfig =
-    selectedField?.type == FieldTypes.ORGANIZATION ||
-    selectedField?.type == FieldTypes.TAG ||
-    selectedField?.type == FieldTypes.ID;
+    column.selected &&
+    !!column.selectedField &&
+    column.selectedField.type !== FieldTypes.BASIC;
   const showColumnValuesMessage =
-    !column.selected || !selectedField || !needsConfig;
+    !column.selected ||
+    column.selectedField?.type != FieldTypes.BASIC ||
+    !needsConfig;
   const showNeedsConfigMessage =
-    column.selected && !mappingResults && selectedField && needsConfig;
+    column.selected && !mappingResults && !!column.selectedField && needsConfig;
   const showMappingResultMessage =
-    column.selected && mappingResults && selectedField && needsConfig;
+    column.selected &&
+    !!mappingResults &&
+    !!column.selectedField &&
+    needsConfig;
   const showGreyBackground =
-    currentlyConfiguring?.columnId === column.id && showNeedsConfigMessage;
+    currentlyConfiguring === column.id && showNeedsConfigMessage;
 
   return (
     <Box
@@ -77,8 +83,8 @@ const MappingRow: FC<MappingRowProps> = ({
             onChange={(ev, isChecked) => {
               onCheck();
               if (!isChecked) {
-                setSelectedField(null);
-                if (currentlyConfiguring?.columnId == column.id) {
+                updateSelectedField(column.id, undefined);
+                if (currentlyConfiguring == column.id) {
                   updateCurrentlyConfiguring(null);
                 }
               }
@@ -112,10 +118,16 @@ const MappingRow: FC<MappingRowProps> = ({
                   const field = zetkinFields.find(
                     (field) => field.id == event.target.value
                   );
-                  setSelectedField(field || null);
+                  if (field) {
+                    updateSelectedField(column.id, field);
+                  }
                 }
               }}
-              value={column.selected ? selectedField?.id : ''}
+              value={
+                column.selected && column.selectedField
+                  ? column.selectedField.id
+                  : ''
+              }
             >
               {zetkinFields.map((field) => (
                 <MenuItem key={field.id} value={field.id}>
@@ -144,7 +156,7 @@ const MappingRow: FC<MappingRowProps> = ({
           {showNeedsConfigMessage && (
             <Msg
               id={
-                selectedField.type == FieldTypes.ID
+                column.selectedField?.type == FieldTypes.ID
                   ? messageIds.configuration.mapping.needsConfig
                   : messageIds.configuration.mapping.needsMapping
               }
@@ -153,9 +165,9 @@ const MappingRow: FC<MappingRowProps> = ({
           {showMappingResultMessage && (
             <Msg
               id={
-                selectedField.type == FieldTypes.ID
+                column.selectedField?.type == FieldTypes.ID
                   ? messageIds.configuration.mapping.finishedMappingIds
-                  : selectedField.type == FieldTypes.ORGANIZATION
+                  : column.selectedField?.type == FieldTypes.ORGANIZATION
                   ? messageIds.configuration.mapping
                       .finishedMappingOrganizations
                   : messageIds.configuration.mapping.finishedMappingTags
@@ -170,17 +182,12 @@ const MappingRow: FC<MappingRowProps> = ({
         {(showNeedsConfigMessage || showMappingResultMessage) && (
           <Button
             endIcon={<ChevronRight />}
-            onClick={() =>
-              updateCurrentlyConfiguring({
-                columnId: column.id,
-                type: selectedField.type,
-              })
-            }
+            onClick={() => updateCurrentlyConfiguring(column.id)}
             variant="text"
           >
             <Msg
               id={
-                selectedField.type == FieldTypes.ID
+                column.selectedField?.type == FieldTypes.ID
                   ? messageIds.configuration.mapping.configButton
                   : messageIds.configuration.mapping.mapValuesButton
               }
