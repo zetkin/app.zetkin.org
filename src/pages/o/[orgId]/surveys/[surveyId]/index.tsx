@@ -56,6 +56,7 @@ export const getServerSideProps = scaffold(async (ctx) => {
   const { req } = ctx;
   const { surveyId, orgId } = ctx.params!;
   let status: FormStatus = 'editing';
+  let formData: NodeJS.Dict<string | string[]> = {};
 
   const apiClient = new BackendApiClient(req.headers);
   let survey: ZetkinSurveyExtended;
@@ -68,10 +69,10 @@ export const getServerSideProps = scaffold(async (ctx) => {
   }
 
   if (req.method === 'POST') {
-    const form = await parseRequest(req);
+    formData = await parseRequest(req);
     const responses: Record<string, ZetkinSurveyQuestionResponse> = {};
 
-    for (const name in form) {
+    for (const name in formData) {
       const isSignature = name.startsWith('sig');
       const isPrivacy = name.startsWith('privacy');
       const isMetadata = isSignature || isPrivacy;
@@ -83,22 +84,23 @@ export const getServerSideProps = scaffold(async (ctx) => {
       const questionId = fields[0];
       const questionType = fields[1];
 
+      const value = formData[name];
       if (questionType == 'options') {
-        if (Array.isArray(form[name])) {
+        if (Array.isArray(value)) {
           responses[questionId] = {
-            options: (form[name] as string[]).map((o) => parseInt(o)),
+            options: value.map((o) => parseInt(o)),
             question_id: parseInt(fields[0]),
           };
         } else {
           responses[questionId] = {
-            options: [parseInt((form[name] as string)!)],
+            options: [parseInt((formData[name] as string)!)],
             question_id: parseInt(fields[0]),
           };
         }
       } else if (questionType == 'text') {
         responses[questionId] = {
           question_id: parseInt(fields[0]),
-          response: form[name] as string,
+          response: formData[name] as string,
         };
       }
     }
@@ -109,11 +111,11 @@ export const getServerSideProps = scaffold(async (ctx) => {
       last_name: string;
     } = null;
     // TODO: handle other signature types
-    if (form.sig == 'email') {
+    if (formData.sig == 'email') {
       signature = {
-        email: form['sig.email'] as string,
-        first_name: form['sig.first_name'] as string,
-        last_name: form['sig.last_name'] as string,
+        email: formData['sig.email'] as string,
+        first_name: formData['sig.first_name'] as string,
+        last_name: formData['sig.last_name'] as string,
       };
     }
 
@@ -142,6 +144,7 @@ export const getServerSideProps = scaffold(async (ctx) => {
 
   return {
     props: {
+      formData,
       orgId,
       status,
       survey,
@@ -150,6 +153,7 @@ export const getServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 type PageProps = {
+  formData: NodeJS.Dict<string | string[]>;
   orgId: string;
   status: FormStatus;
   survey: ZetkinSurveyExtended;
@@ -183,7 +187,7 @@ function RadioFormControlLabel(props: FormControlLabelProps) {
   return <FormControlLabel checked={checked} {...props} />;
 }
 
-const Page: FC<PageProps> = ({ orgId, status, survey }) => {
+const Page: FC<PageProps> = ({ formData, orgId, status, survey }) => {
   const messages = useMessages(messageIds);
 
   const [selectedOption, setSelectedOption] = useState<null | SignatureOption>(
@@ -216,6 +220,11 @@ const Page: FC<PageProps> = ({ orgId, status, survey }) => {
               <>
                 {element.question.response_type === 'text' && (
                   <TextQuestion
+                    defaultValue={
+                      typeof formData[`${element.id}.text`] === 'string'
+                        ? (formData[`${element.id}.text`] as string)
+                        : undefined
+                    }
                     element={element as ZetkinSurveyTextQuestionElement}
                   />
                 )}
