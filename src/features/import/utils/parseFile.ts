@@ -18,6 +18,7 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
           if (result.data) {
             const sheetObject = {
               columns: [],
+              currentlyConfiguring: null,
               firstRowIsHeaders: true,
               rows: result.data as Sheet['rows'],
               title: file.name,
@@ -95,6 +96,7 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
           }
           rawData.sheets.push({
             columns: [],
+            currentlyConfiguring: null,
             firstRowIsHeaders: true,
             rows: table.rows,
             title: table.name,

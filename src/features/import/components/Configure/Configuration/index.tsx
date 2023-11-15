@@ -5,25 +5,19 @@ import { Box, Divider, Typography, useTheme } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import TagConfigRow from './TagConfigRow';
 import useColumn from 'features/import/hooks/useColumn';
+import useConfigSomething from 'features/import/hooks/useConfigSomething';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import {
-  Column,
-  ConfiguringData,
-  FieldTypes,
-} from 'features/import/utils/types';
+import { Column, FieldTypes } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ConfigurationProps {
   columns: Column[];
-  currentlyConfiguring: ConfiguringData | null;
 }
 
-const Configuration: FC<ConfigurationProps> = ({
-  columns,
-  currentlyConfiguring,
-}) => {
+const Configuration: FC<ConfigurationProps> = ({ columns }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
+  const { currentlyConfiguring } = useConfigSomething();
 
   const column = columns.find(
     (column) => column.id == currentlyConfiguring?.columnId

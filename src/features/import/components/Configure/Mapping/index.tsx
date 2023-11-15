@@ -1,32 +1,19 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
+import { Column } from 'features/import/utils/types';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
 import useFields from 'features/import/hooks/useFields';
 import { useNumericRouteParams } from 'core/hooks';
-import {
-  Column,
-  ConfiguringData,
-  FieldTypes,
-} from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
-  clearCurrentlyConfiguring: () => void;
   columns: Column[];
-  currentlyConfiguring: ConfiguringData | null;
-  onMapValues: (columnId: number, type: FieldTypes) => void;
   onSelectColumn: (columnId: number) => void;
 }
 
-const Mapping: FC<MappingProps> = ({
-  clearCurrentlyConfiguring,
-  columns,
-  currentlyConfiguring,
-  onMapValues,
-  onSelectColumn,
-}) => {
+const Mapping: FC<MappingProps> = ({ columns, onSelectColumn }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const fields = useFields(orgId);
@@ -61,14 +48,11 @@ const Mapping: FC<MappingProps> = ({
             <Box key={column.id}>
               {index == 0 && <Divider />}
               <MappingRow
-                clearCurrentlyConfiguring={clearCurrentlyConfiguring}
                 column={column}
-                currentlyConfiguring={currentlyConfiguring}
                 mappingResults={null}
                 onCheck={() => {
                   onSelectColumn(column.id);
                 }}
-                onMapValues={(type: FieldTypes) => onMapValues(column.id, type)}
                 zetkinFields={fields}
               />
               <Divider />

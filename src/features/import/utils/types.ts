@@ -8,6 +8,7 @@ export type ImportedFile = {
 
 export type Sheet = {
   columns: Column[];
+  currentlyConfiguring: ConfiguringData | null;
   firstRowIsHeaders: boolean;
   rows: Row[];
   title: string;
@@ -43,7 +44,7 @@ export interface MappingResults {
   numPeople: number;
 }
 
-export interface ConfiguringData {
+export type ConfiguringData = {
   columnId: number;
   type: FieldTypes;
-}
+} | null;

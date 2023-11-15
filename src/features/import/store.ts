@@ -1,5 +1,5 @@
 import range from 'utils/range';
-import { Column, ImportedFile } from './utils/types';
+import { Column, ConfiguringData, ImportedFile } from './utils/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
@@ -73,6 +73,15 @@ const importSlice = createSlice({
         column.selected = !column.selected;
       }
     },
+    setCurrentlyConfiguring: (
+      state,
+      action: PayloadAction<ConfiguringData>
+    ) => {
+      const configuring = action.payload;
+      state.pendingFile.sheets[
+        state.pendingFile.selectedSheetIndex
+      ].currentlyConfiguring = configuring;
+    },
     setFirstRowIsHeaders: (state, action: PayloadAction<boolean>) => {
       const sheetIndex = state.pendingFile.selectedSheetIndex;
       state.pendingFile.sheets[sheetIndex].firstRowIsHeaders = action.payload;
@@ -88,6 +97,7 @@ export const {
   addFile,
   createColumns,
   setColumnSelected,
+  setCurrentlyConfiguring,
   setFirstRowIsHeaders,
   setSelectedSheetIndex,
 } = importSlice.actions;

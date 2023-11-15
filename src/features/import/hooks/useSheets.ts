@@ -1,5 +1,7 @@
+import { ConfiguringData } from '../utils/types';
 import {
   createColumns,
+  setCurrentlyConfiguring,
   setFirstRowIsHeaders,
   setSelectedSheetIndex,
 } from '../store';
@@ -23,10 +25,15 @@ export default function useSheets() {
     dispatch(createColumns());
   };
 
+  const updateCurrentlyConfiguing = (configuring: ConfiguringData) => {
+    dispatch(setCurrentlyConfiguring(configuring));
+  };
+
   return {
     firstRowIsHeaders: selectedSheet.firstRowIsHeaders,
     selectedSheetIndex: pendingFile.selectedSheetIndex,
     sheets,
+    updateCurrentlyConfiguing,
     updateFirstRowIsHeaders,
     updateSelectedSheetIndex,
   };

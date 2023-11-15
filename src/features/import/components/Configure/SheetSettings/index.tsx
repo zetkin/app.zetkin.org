@@ -29,11 +29,7 @@ const Accordion = styled((props: AccordionProps) => (
   border: 0,
 }));
 
-interface SheetSettingsProps {
-  onChangeSelectedSheet: (index: number) => void;
-}
-
-const SheetSettings: FC<SheetSettingsProps> = ({ onChangeSelectedSheet }) => {
+const SheetSettings: FC = () => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const {
@@ -41,6 +37,7 @@ const SheetSettings: FC<SheetSettingsProps> = ({ onChangeSelectedSheet }) => {
     selectedSheetIndex,
     sheets,
     updateFirstRowIsHeaders,
+    updateSelectedSheetIndex,
   } = useSheets();
   const [settingsExpanded, setSettingsExpanded] = useState(true);
 
@@ -73,7 +70,7 @@ const SheetSettings: FC<SheetSettingsProps> = ({ onChangeSelectedSheet }) => {
             <Select
               label={messages.configuration.settings.sheetSelectLabel()}
               onChange={(event) =>
-                onChangeSelectedSheet(event.target.value as number)
+                updateSelectedSheetIndex(event.target.value as number)
               }
               value={selectedSheetIndex}
             >
