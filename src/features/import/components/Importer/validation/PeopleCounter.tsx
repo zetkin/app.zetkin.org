@@ -1,5 +1,5 @@
-import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
+import { Box, useTheme } from '@mui/system';
 
 import { Msg } from 'core/i18n';
 
@@ -15,14 +15,12 @@ interface PeopleCounterProps {
   status: COUNT_STATUS;
 }
 
-enum CounterColors {
-  created = '#4CAF50',
-  updated = '#03A9F4',
-}
 const PeopleCounter: React.FunctionComponent<PeopleCounterProps> = ({
   changedNum,
   status,
 }) => {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -32,7 +30,15 @@ const PeopleCounter: React.FunctionComponent<PeopleCounterProps> = ({
         width: '100%',
       }}
     >
-      <Typography color={CounterColors[status]} variant="h2">
+      <Typography
+        sx={{
+          color:
+            status === COUNT_STATUS.CREATED
+              ? theme.palette.success.main
+              : theme.palette.info.light,
+        }}
+        variant="h2"
+      >
         {changedNum}
       </Typography>
       <Msg
