@@ -54,7 +54,7 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
     },
   };
   const orgsStates = getOrgsStates(fake.summary.membershipsCreated);
-  const statusRes = useStatusAlertsStates('error');
+  const statusRes = useStatusAlertsStates('completed');
 
   return (
     <Box

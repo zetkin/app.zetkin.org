@@ -2,6 +2,7 @@ import { Clear } from '@mui/icons-material';
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   IconButton,
   Step,
@@ -32,12 +33,13 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const [activeStep, setActiveStep] = useState<StepType>(1);
   const [disabled, setDisabled] = useState<boolean>(false);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const showStepper = activeStep == 1 || activeStep == 2;
 
   //from API response
   const statusScheduled = false;
   const statusCompleted = false;
-  const statusError = true;
+  const statusError = false;
 
   return (
     <Dialog
@@ -50,7 +52,11 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
       <Box
         display="flex"
         flexDirection="column"
-        height={statusScheduled && activeStep === 3 ? '22vh' : '90vh'}
+        height={
+          (statusScheduled && activeStep === 3) || (loading && activeStep === 3)
+            ? '22vh'
+            : '90vh'
+        }
         padding={2}
         width={activeStep !== 3 ? '100%' : '700px'}
       >
@@ -105,11 +111,24 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             />
           )}
           {activeStep === 3 && (
-            <ImportStatus
-              onClickBack={() =>
-                setActiveStep((prev) => (prev - 1) as StepType)
-              }
-            />
+            <>
+              {loading ? (
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  height="80%"
+                  justifyContent="center"
+                >
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <ImportStatus
+                  onClickBack={() =>
+                    setActiveStep((prev) => (prev - 1) as StepType)
+                  }
+                />
+              )}
+            </>
           )}
         </Box>
         <Box
@@ -127,6 +146,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 if (activeStep > 1) {
                   setActiveStep((prev) => (prev - 1) as StepType);
                   setDisabled(false);
+                  setLoading(true);
                 } else {
                   onRestart();
                 }
@@ -144,6 +164,12 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 onClose();
                 setActiveStep(1);
               } else {
+                //fake loading
+                if (activeStep === 2 && loading) {
+                  setTimeout(() => {
+                    setLoading(false);
+                  }, 1000);
+                }
                 setActiveStep((prev) => (prev + 1) as StepType);
               }
             }}
