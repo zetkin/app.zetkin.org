@@ -89,7 +89,13 @@ const MappingRow: FC<MappingRowProps> = ({
             borderRadius={2}
             padding={1}
           >
-            <Typography>{column.title}</Typography>
+            <Typography>
+              {column.title
+                ? column.title
+                : messages.configuration.mapping.defaultColumnHeader({
+                    columnIndex: column.id,
+                  })}
+            </Typography>
           </Box>
         </Box>
         <Box alignItems="center" display="flex" width="50%">

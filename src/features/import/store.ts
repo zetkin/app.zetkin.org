@@ -46,12 +46,7 @@ const importSlice = createSlice({
             if (sheet.firstRowIsHeaders && cellValue !== null) {
               column.title = cellValue as string;
             } else {
-              column.title = 'Test ' + cellIndex + 1;
-              /* messages.configuration.mapping.defaultColumnHeader(
-                {
-                  columnIndex: cellIndex + 1,
-                }
-              ); */
+              column.title = '';
               column.data.push(cellValue);
             }
           } else {
