@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 import Configuration from './Configuration';
 import Mapping from './Mapping';
+import MappingPreview from './Preview';
 import SheetSettings from './SheetSettings';
 import useColumns from 'features/import/hooks/useColumns';
 
@@ -25,7 +26,7 @@ const Configure: FC = () => {
           <Configuration columns={columns} />
         </Box>
       </Box>
-      <Box padding={4}>Preview</Box>
+      <MappingPreview />
     </Box>
   );
 };

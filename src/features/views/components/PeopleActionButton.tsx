@@ -10,10 +10,12 @@ import { FC, useState } from 'react';
 import Importer from 'features/import/components/Importer';
 import messageIds from '../l10n/messageIds';
 import UploadFile from 'features/import/components/UploadFile';
+import { useAppDispatch } from 'core/hooks';
 import useCreateView from '../hooks/useCreateView';
 import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
+import { addFile, createColumns } from 'features/import/store';
 
 interface PeopleActionButtonProps {
   folderId: number | null;
@@ -30,7 +32,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
 
   const createView = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
-
+  const dispatch = useAppDispatch();
   return (
     <Box>
       <ZUIButtonMenu
@@ -52,7 +54,103 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
           {
             icon: <UploadFileOutlined />,
             label: 'importer', //messages.actions.importPeople(),
-            onClick: () => setImporterDialogOpen(true),
+            onClick: () => {
+              setImporterDialogOpen(true);
+              dispatch(
+                addFile({
+                  selectedSheetIndex: 0,
+                  sheets: [
+                    {
+                      columns: [],
+                      currentlyConfiguring: null,
+                      firstRowIsHeaders: true,
+                      rows: [
+                        {
+                          data: ['Name', 'Last name', 'Email', 'Age', 'Pet'],
+                        },
+                        {
+                          data: [
+                            'Angela',
+                            'Davies',
+                            'angela@gmail.com',
+                            34,
+                            'Rabbit',
+                          ],
+                        },
+                        {
+                          data: ['Maya', 'Angelou', 'maya@gmail.com', 66, null],
+                        },
+                        {
+                          data: ['Rosa', 'Parks', 'rosa@gmail.com', 81, 'Cat'],
+                        },
+                        {
+                          data: [
+                            'Huey',
+                            'P Newton',
+                            'huey@gmail.com',
+                            51,
+                            'Tortoise',
+                          ],
+                        },
+                        {
+                          data: [
+                            'Huey',
+                            'P Newton',
+                            'huey@gmail.com',
+                            51,
+                            'Parrot',
+                          ],
+                        },
+                        {
+                          data: [
+                            'Huey',
+                            'P Newton',
+                            'huey@gmail.com',
+                            51,
+                            'Cow',
+                          ],
+                        },
+                        {
+                          data: [
+                            'Huey',
+                            'P Newton',
+                            'huey@gmail.com',
+                            51,
+                            'Dog',
+                          ],
+                        },
+                      ],
+                      title: 'Members',
+                    },
+                    {
+                      columns: [],
+                      currentlyConfiguring: null,
+                      firstRowIsHeaders: true,
+                      rows: [
+                        {
+                          data: ['Name', 'Last name', 'Email', 'Age'],
+                        },
+                        {
+                          data: ['Kitty', 'Jonsson', 'kitty@gmail.com', 36],
+                        },
+                        {
+                          data: ['Lasse', 'Brandeby', 'lasse@gmail.com', 81],
+                        },
+                        {
+                          data: ['Pamela', 'Andersson', 'pamela@gmail.com', 61],
+                        },
+                        {
+                          data: ['Jane', 'Austen', 'jane@gmail.com', 102],
+                        },
+                      ],
+                      title: 'Old Members',
+                    },
+                  ],
+                  title: 'Excel file',
+                })
+              );
+              dispatch(createColumns());
+            },
           },
           {
             icon: <UploadFileOutlined />,
