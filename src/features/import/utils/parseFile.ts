@@ -17,9 +17,9 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
         complete: (result) => {
           if (result.data) {
             const sheetObject = {
-              data: result.data as Sheet['data'],
+              columns: [],
               firstRowIsHeaders: true,
-              selectedColumnIds: [],
+              rows: result.data as Sheet['rows'],
               title: file.name,
             };
             rawData.sheets = [sheetObject];
@@ -94,9 +94,9 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
             }
           }
           rawData.sheets.push({
-            data: table.rows,
+            columns: [],
             firstRowIsHeaders: true,
-            selectedColumnIds: [],
+            rows: table.rows,
             title: table.name,
           });
         }

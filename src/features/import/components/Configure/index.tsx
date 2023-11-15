@@ -14,8 +14,7 @@ const Configure: FC = () => {
   const [currentlyConfiguring, setCurrentlyConfiguring] =
     useState<ConfiguringData | null>(null);
 
-  const { allColumns, selectedColumnIds, updateSelectedColumnIds } =
-    useColumns();
+  const { columns, selectColumn } = useColumns();
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -24,32 +23,24 @@ const Configure: FC = () => {
           <SheetSettings
             onChangeSelectedSheet={(index: number) => {
               updateSelectedSheetIndex(index);
-              updateSelectedColumnIds([]);
               setCurrentlyConfiguring(null);
             }}
           />
           <Mapping
             clearCurrentlyConfiguring={() => setCurrentlyConfiguring(null)}
-            columns={allColumns}
+            columns={columns}
             currentlyConfiguring={currentlyConfiguring}
             onMapValues={(columnId: number, type: FieldTypes) =>
               setCurrentlyConfiguring({ columnId, type })
             }
-            onSelectColumn={(columnId: number, isChecked: boolean) => {
-              if (isChecked) {
-                updateSelectedColumnIds([...selectedColumnIds, columnId]);
-              } else {
-                updateSelectedColumnIds(
-                  selectedColumnIds.filter((id) => id != columnId)
-                );
-              }
+            onSelectColumn={(columnId: number) => {
+              selectColumn(columnId);
             }}
-            selectedColumnIds={selectedColumnIds}
           />
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
           <Configuration
-            columns={allColumns}
+            columns={columns}
             currentlyConfiguring={currentlyConfiguring}
           />
         </Box>

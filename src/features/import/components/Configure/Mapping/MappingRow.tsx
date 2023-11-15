@@ -27,9 +27,8 @@ interface MappingRowProps {
   column: Column;
   clearCurrentlyConfiguring: () => void;
   currentlyConfiguring: ConfiguringData | null;
-  isSelected: boolean;
   mappingResults: MappingResults | null;
-  onCheck: (isChecked: boolean) => void;
+  onCheck: () => void;
   onMapValues: (type: FieldTypes) => void;
   zetkinFields: Field[];
 }
@@ -38,7 +37,6 @@ const MappingRow: FC<MappingRowProps> = ({
   column,
   clearCurrentlyConfiguring,
   currentlyConfiguring: currentlyMapping,
-  isSelected,
   mappingResults,
   onCheck,
   onMapValues,
@@ -53,11 +51,12 @@ const MappingRow: FC<MappingRowProps> = ({
     selectedField?.type == FieldTypes.ORGANIZATION ||
     selectedField?.type == FieldTypes.TAG ||
     selectedField?.type == FieldTypes.ID;
-  const showColumnValuesMessage = !isSelected || !selectedField || !needsConfig;
+  const showColumnValuesMessage =
+    !column.selected || !selectedField || !needsConfig;
   const showNeedsConfigMessage =
-    isSelected && !mappingResults && selectedField && needsConfig;
+    column.selected && !mappingResults && selectedField && needsConfig;
   const showMappingResultMessage =
-    isSelected && mappingResults && selectedField && needsConfig;
+    column.selected && mappingResults && selectedField && needsConfig;
   const showGreyBackground =
     currentlyMapping?.columnId === column.id && showNeedsConfigMessage;
 
@@ -76,9 +75,9 @@ const MappingRow: FC<MappingRowProps> = ({
       >
         <Box alignItems="center" display="flex">
           <Checkbox
-            checked={isSelected}
+            checked={column.selected}
             onChange={(ev, isChecked) => {
-              onCheck(isChecked);
+              onCheck();
               if (!isChecked) {
                 setSelectedField(null);
                 if (currentlyMapping?.columnId == column.id) {
@@ -102,7 +101,7 @@ const MappingRow: FC<MappingRowProps> = ({
               <Msg id={messageIds.configuration.mapping.selectZetkinField} />
             </InputLabel>
             <Select
-              disabled={!isSelected}
+              disabled={!column.selected}
               label={messages.configuration.mapping.selectZetkinField()}
               onChange={(event) => {
                 if (typeof event.target.value == 'number') {
@@ -112,7 +111,7 @@ const MappingRow: FC<MappingRowProps> = ({
                   setSelectedField(field || null);
                 }
               }}
-              value={isSelected ? selectedField?.id : ''}
+              value={column.selected ? selectedField?.id : ''}
             >
               {zetkinFields.map((field) => (
                 <MenuItem key={field.id} value={field.id}>

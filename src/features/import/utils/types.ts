@@ -7,9 +7,9 @@ export type ImportedFile = {
 };
 
 export type Sheet = {
-  data: Row[];
+  columns: Column[];
   firstRowIsHeaders: boolean;
-  selectedColumnIds: number[];
+  rows: Row[];
   title: string;
 };
 
@@ -34,6 +34,7 @@ export interface Field {
 export interface Column {
   data: CellData[];
   id: number;
+  selected: boolean;
   title: string;
 }
 

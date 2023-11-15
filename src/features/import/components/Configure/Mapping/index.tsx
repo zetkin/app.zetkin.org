@@ -17,8 +17,7 @@ interface MappingProps {
   columns: Column[];
   currentlyConfiguring: ConfiguringData | null;
   onMapValues: (columnId: number, type: FieldTypes) => void;
-  onSelectColumn: (columnId: number, isChecked: boolean) => void;
-  selectedColumnIds: number[];
+  onSelectColumn: (columnId: number) => void;
 }
 
 const Mapping: FC<MappingProps> = ({
@@ -27,7 +26,6 @@ const Mapping: FC<MappingProps> = ({
   currentlyConfiguring,
   onMapValues,
   onSelectColumn,
-  selectedColumnIds,
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
@@ -59,7 +57,6 @@ const Mapping: FC<MappingProps> = ({
       </Box>
       <Box flexGrow={1} sx={{ overflowY: 'scroll' }}>
         {columns.map((column, index) => {
-          const isSelected = !!selectedColumnIds.find((id) => id == column.id);
           return (
             <Box key={column.id}>
               {index == 0 && <Divider />}
@@ -67,10 +64,9 @@ const Mapping: FC<MappingProps> = ({
                 clearCurrentlyConfiguring={clearCurrentlyConfiguring}
                 column={column}
                 currentlyConfiguring={currentlyConfiguring}
-                isSelected={isSelected}
                 mappingResults={null}
-                onCheck={(isChecked: boolean) => {
-                  onSelectColumn(column.id, isChecked);
+                onCheck={() => {
+                  onSelectColumn(column.id);
                 }}
                 onMapValues={(type: FieldTypes) => onMapValues(column.id, type)}
                 zetkinFields={fields}
