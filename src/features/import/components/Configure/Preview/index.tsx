@@ -13,9 +13,9 @@ interface testProp {
 const MappingPreview = () => {
   const theme = useTheme();
   const [data, setData] = useState<testProp[][]>([
-    [{ title: 'title', value: '0' }],
-    [{ title: 'title1', value: '1' }],
-    [{ title: 'title2', value: '2' }],
+    // [],
+    // [{ title: 'title1', value: '1' }],
+    // [{ title: 'title2', value: '2' }],
   ]);
   const [personIndex, setPersonIndex] = useState(0);
 
@@ -27,11 +27,14 @@ const MappingPreview = () => {
     };
     setData((prev) => {
       const newData = [...prev];
-      newData[personIndex] = [...newData[personIndex], yeah];
+      if (newData.length !== 0) {
+        newData[personIndex] = [...newData[personIndex], yeah];
+      } else {
+        newData[personIndex] = [yeah];
+      }
       return newData;
     });
   };
-
   return (
     <Box p={2} sx={{ bgColor: 'beige' }}>
       <Button onClick={add} variant="contained">
@@ -78,29 +81,50 @@ const MappingPreview = () => {
           sx={{ minWidth: '150px' }}
           width="100%"
         >
-          {data[personIndex].map((item, index) => {
-            return (
-              <Box
-                key={index}
-                flexGrow={1}
-                sx={{ display: 'flex', flexDirection: 'column', mr: 2 }}
-              >
-                <Typography
-                  fontSize="12px"
+          {data.length === 0 &&
+            Array(5)
+              .fill(2)
+              .map((item, index) => {
+                return (
+                  <Box
+                    key={`empty-preview-${index}`}
+                    flexGrow={1}
+                    sx={{
+                      backgroundColor: theme.palette.transparentGrey.light,
+                      height: '14px',
+                      mr: item,
+                    }}
+                  />
+                );
+              })}
+          {data.length > 0 &&
+            data[personIndex].map((item, index) => {
+              return (
+                <Box
+                  key={index}
+                  flexGrow={1}
                   sx={{
-                    color: theme.palette.grey['600'],
-                    letterSpacing: '1px',
-                    mb: 0.5,
-                    textTransform: 'uppercase',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    mr: 2,
                   }}
-                  variant="body1"
                 >
-                  {item.title}
-                </Typography>
-                <Typography variant="body1">{item.value}</Typography>
-              </Box>
-            );
-          })}
+                  <Typography
+                    fontSize="12px"
+                    sx={{
+                      color: theme.palette.grey['600'],
+                      letterSpacing: '1px',
+                      mb: 0.5,
+                      textTransform: 'uppercase',
+                    }}
+                    variant="body1"
+                  >
+                    {item.title}
+                  </Typography>
+                  <Typography variant="body1">{item.value}</Typography>
+                </Box>
+              );
+            })}
         </Box>
       </Box>
     </Box>
