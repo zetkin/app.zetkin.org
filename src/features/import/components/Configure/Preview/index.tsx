@@ -6,29 +6,50 @@ import { Msg } from 'core/i18n';
 
 import messageIds from 'features/import/l10n/messageIds';
 interface testProp {
-  title: string;
-  value: string;
+  title?: string;
+  value?: string;
 }
 
 const MappingPreview = () => {
   const theme = useTheme();
   const [data, setData] = useState<testProp[][]>([
-    // [],
-    // [{ title: 'title1', value: '1' }],
-    // [{ title: 'title2', value: '2' }],
+    [],
+    [{ title: 'title1', value: '1' }],
+    [{ title: 'title2' }],
+    [{ value: '3' }],
   ]);
   const [personIndex, setPersonIndex] = useState(0);
 
-  const add = () => {
-    const ranNum = Math.random().toFixed(2);
+  const addTitle = (index: number) => {
+    const ranNum = Math.floor(Math.random() * 10);
     const yeah = {
       title: `title ${ranNum}`,
-      value: ranNum,
     };
     setData((prev) => {
       const newData = [...prev];
       if (newData.length !== 0) {
-        newData[personIndex] = [...newData[personIndex], yeah];
+        newData[personIndex][index] = {
+          ...newData[personIndex][index],
+          title: `title ${ranNum}`,
+        };
+      } else {
+        newData[personIndex] = [yeah];
+      }
+      return newData;
+    });
+  };
+  const addValue = (index: number) => {
+    const ranNum = Math.floor(Math.random() * 10);
+    const yeah = {
+      value: `${ranNum}`,
+    };
+    setData((prev) => {
+      const newData = [...prev];
+      if (newData.length !== 0) {
+        newData[personIndex][index] = {
+          ...newData[personIndex][index],
+          value: `${ranNum}`,
+        };
       } else {
         newData[personIndex] = [yeah];
       }
@@ -37,8 +58,11 @@ const MappingPreview = () => {
   };
   return (
     <Box p={2} sx={{ bgColor: 'beige' }}>
-      <Button onClick={add} variant="contained">
-        Click
+      <Button onClick={() => addTitle(1)} sx={{ mr: 2 }} variant="contained">
+        Add Title
+      </Button>
+      <Button color="info" onClick={() => addValue(1)} variant="contained">
+        Add value
       </Button>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
         <Typography sx={{ mr: 2 }} variant="h5">
@@ -81,7 +105,7 @@ const MappingPreview = () => {
           sx={{ minWidth: '150px' }}
           width="100%"
         >
-          {data.length === 0 &&
+          {data[personIndex].length === 0 &&
             Array(5)
               .fill(2)
               .map((item, index) => {
@@ -109,19 +133,39 @@ const MappingPreview = () => {
                     mr: 2,
                   }}
                 >
-                  <Typography
-                    fontSize="12px"
+                  <Box
                     sx={{
-                      color: theme.palette.grey['600'],
-                      letterSpacing: '1px',
-                      mb: 0.5,
-                      textTransform: 'uppercase',
+                      backgroundColor: item.title
+                        ? 'transparent'
+                        : theme.palette.transparentGrey.light,
+                      height: '14px',
+                      mb: 1,
                     }}
-                    variant="body1"
                   >
-                    {item.title}
-                  </Typography>
-                  <Typography variant="body1">{item.value}</Typography>
+                    <Typography
+                      fontSize="12px"
+                      sx={{
+                        color: theme.palette.grey['600'],
+                        letterSpacing: '1px',
+                        textTransform: 'uppercase',
+                      }}
+                      variant="body1"
+                    >
+                      {item.title}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      backgroundColor: item.value
+                        ? 'transparent'
+                        : theme.palette.transparentGrey.light,
+                      display: 'flex',
+                      height: '14px',
+                    }}
+                  >
+                    <Typography variant="body1">{item.value}</Typography>
+                  </Box>
                 </Box>
               );
             })}
