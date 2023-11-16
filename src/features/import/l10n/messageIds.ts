@@ -98,6 +98,11 @@ export default makeMessages('feat.import', {
       tags: m('Tags'),
       zetkinHeader: m('Zetkin'),
     },
+    preview: {
+      next: m('Next'),
+      previous: m('Previous'),
+      title: m('Mapping preview'),
+    },
     settings: {
       firstRowIsHeaders: m('First row is headers'),
       header: m('Settings'),
