@@ -3,8 +3,10 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 
 import { Msg } from 'core/i18n';
+import { useAppSelector } from 'core/hooks';
 
 import messageIds from 'features/import/l10n/messageIds';
+
 interface testProp {
   title?: string;
   value?: string;
@@ -17,8 +19,35 @@ const MappingPreview = () => {
     [{ title: 'title1', value: '1' }],
     [{ title: 'title2' }],
     [{ value: '3' }],
+    [
+      { title: 'Name', value: 'Haeju' },
+      { title: 'Ort', value: 'Linköping' },
+      { title: 'Peronal number' },
+    ],
   ]);
   const [personIndex, setPersonIndex] = useState(0);
+  const sheet = useAppSelector((state) => state.import.pendingFile.sheets[0]);
+  const test = sheet.columns
+    .filter((item) => item.selected)
+    .map((item) => item.title);
+
+  const ye = sheet.rows[0].data
+    .map((item, index) => {
+      if (item !== null && test.includes(item.toString())) {
+        return index;
+      }
+    })
+    .filter((item) => item !== undefined);
+
+  const rows = ye.map((item) =>
+    sheet.rows
+      .map((row, index) => {
+        if (item !== undefined && index !== 0) {
+          return row.data[item];
+        }
+      })
+      .filter((item) => item !== undefined)
+  );
 
   const addTitle = (index: number) => {
     const ranNum = Math.floor(Math.random() * 10);
@@ -56,12 +85,13 @@ const MappingPreview = () => {
       return newData;
     });
   };
+
   return (
     <Box p={2} sx={{ bgColor: 'beige' }}>
-      <Button onClick={() => addTitle(1)} sx={{ mr: 2 }} variant="contained">
+      <Button onClick={() => addTitle(2)} sx={{ mr: 2 }} variant="contained">
         Add Title
       </Button>
-      <Button color="info" onClick={() => addValue(1)} variant="contained">
+      <Button color="info" onClick={() => addValue(2)} variant="contained">
         Add value
       </Button>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
