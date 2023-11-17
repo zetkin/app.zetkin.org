@@ -52,7 +52,7 @@ function parseRequest(
 }
 
 export const getServerSideProps = scaffold(async (ctx) => {
-  const { req, res } = ctx;
+  const { req } = ctx;
   const { surveyId, orgId } = ctx.params!;
   let status: FormStatus = 'editing';
 
@@ -136,10 +136,12 @@ export const getServerSideProps = scaffold(async (ctx) => {
     }
 
     if (status === 'submitted') {
-      res.writeHead(302, {
-        Location: `/o/${orgId}/surveys/${surveyId}/submitted`,
-      });
-      res.end();
+      return {
+        redirect: {
+          destination: `/o/${orgId}/surveys/${surveyId}/submitted`,
+          permanent: false,
+        },
+      };
     }
   }
 
