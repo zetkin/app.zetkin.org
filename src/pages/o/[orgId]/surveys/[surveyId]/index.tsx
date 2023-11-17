@@ -130,11 +130,9 @@ export const getServerSideProps = scaffold(async (ctx) => {
           signature,
         }
       );
+      status = 'submitted';
     } catch (e) {
       status = 'error';
-    }
-    if (status !== 'error') {
-      status = 'submitted';
     }
 
     if (status === 'submitted') {
