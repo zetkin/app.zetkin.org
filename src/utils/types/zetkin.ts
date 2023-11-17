@@ -318,7 +318,7 @@ export interface ZetkinSurveyOption {
   text: string;
 }
 
-type ZetkinSurveyQuestionResponse =
+export type ZetkinSurveyQuestionResponse =
   | {
       question_id: number;
       response: string;

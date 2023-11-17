@@ -28,6 +28,7 @@ import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyOptionsQuestionElement,
+  ZetkinSurveyQuestionResponse,
   ZetkinSurveyTextElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
@@ -68,14 +69,7 @@ export const getServerSideProps = scaffold(async (ctx) => {
 
   if (req.method === 'POST') {
     const form = await parseRequest(req);
-    const responses: Record<
-      string,
-      {
-        options?: number[];
-        question_id: number;
-        response?: string;
-      }
-    > = {};
+    const responses: Record<string, ZetkinSurveyQuestionResponse> = {};
 
     for (const name in form) {
       const isSignature = name.startsWith('sig');
