@@ -38,7 +38,7 @@ export default makeMessages('feat.import', {
         '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
       ),
       header: m('Mapping'),
-      id: m('Id'),
+      id: m('Id'), //Vad var det Richard kallade detta? "Id for merging"?
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{

@@ -1,8 +1,4 @@
-import {
-  createColumns,
-  setFirstRowIsHeaders,
-  setSelectedSheetIndex,
-} from '../store';
+import { setFirstRowIsHeaders, setSelectedSheetIndex } from '../store';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useSheets() {
@@ -15,12 +11,10 @@ export default function useSheets() {
 
   const updateSelectedSheetIndex = (newIndex: number) => {
     dispatch(setSelectedSheetIndex(newIndex));
-    dispatch(createColumns());
   };
 
   const updateFirstRowIsHeaders = (firstRowIsHeaders: boolean) => {
     dispatch(setFirstRowIsHeaders(firstRowIsHeaders));
-    dispatch(createColumns());
   };
 
   return {

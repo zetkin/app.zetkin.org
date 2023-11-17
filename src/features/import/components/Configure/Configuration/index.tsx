@@ -2,26 +2,23 @@ import { CompareArrows } from '@mui/icons-material';
 import { FC } from 'react';
 import { Box, Divider, Typography, useTheme } from '@mui/material';
 
-import { Column } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import TagConfigRow from './TagConfigRow';
-import useColumn from 'features/import/hooks/useColumn';
-import useConfigSomething from 'features/import/hooks/useConfigSomething';
+import { UIDataColumn } from 'features/import/utils/types';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ConfigurationProps {
-  columns: Column[];
+  columnIndexBeingConfigured: number | null;
+  uiDataColumns: UIDataColumn[];
 }
 
-const Configuration: FC<ConfigurationProps> = ({ columns }) => {
+const Configuration: FC<ConfigurationProps> = ({
+  columnIndexBeingConfigured,
+  uiDataColumns,
+}) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const { currentlyConfiguring } = useConfigSomething();
-
-  const column = columns.find((column) => column.id == currentlyConfiguring);
-
-  const { numberOfEmptyRows, uniqueValues } = useColumn(column?.data || []);
 
   return (
     <Box
@@ -30,7 +27,7 @@ const Configuration: FC<ConfigurationProps> = ({ columns }) => {
       flexDirection="column"
       height="100%"
     >
-      {currentlyConfiguring && column && (
+      {columnIndexBeingConfigured && (
         <Box
           display="flex"
           flexDirection="column"
@@ -48,7 +45,9 @@ const Configuration: FC<ConfigurationProps> = ({ columns }) => {
           >
             <Box width="50%">
               <Typography variant="body2">
-                {column.title.toLocaleUpperCase()}
+                {uiDataColumns[
+                  columnIndexBeingConfigured
+                ].title.toLocaleUpperCase()}
               </Typography>
             </Box>
             <Box width="50%">
@@ -60,23 +59,31 @@ const Configuration: FC<ConfigurationProps> = ({ columns }) => {
             </Box>
           </Box>
           <Box sx={{ overflowY: 'scroll' }}>
-            {uniqueValues.map((uniqueValue, index) => (
-              <>
-                {index != 0 && <Divider sx={{ marginY: 1 }} />}
-                <TagConfigRow
-                  numRows={
-                    column.data.filter((value) => value == uniqueValue).length
-                  }
-                  title={uniqueValue as string}
-                />
-              </>
-            ))}
-            {numberOfEmptyRows > 0 && (
+            {uiDataColumns[columnIndexBeingConfigured].uniqueValues.map(
+              (uniqueValue, index) => (
+                <>
+                  {index != 0 && <Divider sx={{ marginY: 1 }} />}
+                  {'test'}
+                  {/* <TagConfigRow
+                    numRows={
+                      //göra detta i hooken och skicka ut det
+                      uiDataColumn.data.filter((value) => value == uniqueValue)
+                        .length
+                    }
+                    title={uniqueValue as string}
+                  /> */}
+                </>
+              )
+            )}
+            {uiDataColumns[columnIndexBeingConfigured].numberOfEmptyRows >
+              0 && (
               <>
                 <Divider sx={{ marginY: 1 }} />
                 <TagConfigRow
                   italic
-                  numRows={numberOfEmptyRows}
+                  numRows={
+                    uiDataColumns[columnIndexBeingConfigured].numberOfEmptyRows
+                  }
                   title={messages.configuration.configure.tags.empty()}
                 />
               </>
@@ -84,7 +91,7 @@ const Configuration: FC<ConfigurationProps> = ({ columns }) => {
           </Box>
         </Box>
       )}
-      {!currentlyConfiguring && !column && (
+      {!columnIndexBeingConfigured && (
         <Box alignItems="center" display="flex" justifyContent="center">
           <ZUIEmptyState
             message={messages.configuration.mapping.emptyStateMessage()}
