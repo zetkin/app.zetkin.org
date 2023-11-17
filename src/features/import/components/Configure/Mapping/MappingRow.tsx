@@ -19,23 +19,36 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface MappingRowProps {
   column: UIDataColumn;
+  columnOptions: { label: string; value: string }[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
   onDeselectColumn: () => void;
-  options: { label: string; value: string }[];
 }
 
 const MappingRow: FC<MappingRowProps> = ({
   column,
+  columnOptions,
   isBeingConfigured,
   onChange,
   onDeselectColumn,
   onConfigureStart,
-  options,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+
+  const getValue = () => {
+    if (column.originalColumn.kind == ColumnKind.FIELD) {
+      return `field:${column.originalColumn.field}`;
+    }
+
+    if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
+      return column.originalColumn.kind.toString();
+    }
+
+    //Column kind is UNKNOWN, so we want no selected value
+    return '';
+  };
 
   return (
     <Box
@@ -107,20 +120,15 @@ const MappingRow: FC<MappingRowProps> = ({
                   });
                 } else if (event.target.value.startsWith('field')) {
                   onChange({
-                    field: event.target.value.slice(7),
+                    field: event.target.value.slice(6),
                     kind: ColumnKind.FIELD,
                     selected: true,
                   });
                 }
               }}
-              value={
-                column.originalColumn.selected &&
-                column.originalColumn.kind != ColumnKind.UNKNOWN
-                  ? column.originalColumn.kind
-                  : ''
-              }
+              value={getValue()}
             >
-              {options.map((option) => {
+              {columnOptions.map((option) => {
                 return (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}

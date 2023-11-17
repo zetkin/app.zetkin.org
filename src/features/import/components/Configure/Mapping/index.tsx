@@ -58,11 +58,11 @@ const Mapping: FC<MappingProps> = ({
               {index == 0 && <Divider />}
               <MappingRow
                 column={column}
+                columnOptions={columnOptions}
                 isBeingConfigured={columnIndexBeingConfigured == index}
                 onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}
                 onDeselectColumn={onDeselectColumn}
-                options={columnOptions}
               />
               <Divider />
             </Box>

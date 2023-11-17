@@ -19,9 +19,9 @@ export type Row = {
 
 export enum ColumnKind {
   FIELD = 'field',
-  ID_FIELD = 'idField',
+  ID_FIELD = 'id',
   TAG = 'tag',
-  ORGANIZATION = 'organization',
+  ORGANIZATION = 'org',
   UNKNOWN = 'unknown',
 }
 
