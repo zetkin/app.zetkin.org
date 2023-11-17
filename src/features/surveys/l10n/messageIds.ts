@@ -185,6 +185,12 @@ export default makeMessages('feat.surveys', {
       title: m('Privacy Policy'),
     },
   },
+  surveyFormSubmitted: {
+    text: m<{ title: string }>(
+      'Your responses to “{title}” have been submitted.'
+    ),
+    title: m('Survey Submitted'),
+  },
   tabs: {
     overview: m('Overview'),
     questions: m('Questions'),
