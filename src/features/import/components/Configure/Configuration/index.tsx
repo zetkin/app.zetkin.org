@@ -4,19 +4,15 @@ import { Box, Divider, Typography, useTheme } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import TagConfigRow from './TagConfigRow';
-import { UIDataColumn } from 'features/import/utils/types';
+import { UIDataColumn } from 'features/import/hooks/useColumns';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ConfigurationProps {
-  columnIndexBeingConfigured: number | null;
-  uiDataColumns: UIDataColumn[];
+  uiDataColumn: UIDataColumn | null;
 }
 
-const Configuration: FC<ConfigurationProps> = ({
-  columnIndexBeingConfigured,
-  uiDataColumns,
-}) => {
+const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
 
@@ -27,7 +23,7 @@ const Configuration: FC<ConfigurationProps> = ({
       flexDirection="column"
       height="100%"
     >
-      {columnIndexBeingConfigured && (
+      {uiDataColumn && (
         <Box
           display="flex"
           flexDirection="column"
@@ -45,9 +41,7 @@ const Configuration: FC<ConfigurationProps> = ({
           >
             <Box width="50%">
               <Typography variant="body2">
-                {uiDataColumns[
-                  columnIndexBeingConfigured
-                ].title.toLocaleUpperCase()}
+                {uiDataColumn.title.toLocaleUpperCase()}
               </Typography>
             </Box>
             <Box width="50%">
@@ -59,31 +53,22 @@ const Configuration: FC<ConfigurationProps> = ({
             </Box>
           </Box>
           <Box sx={{ overflowY: 'scroll' }}>
-            {uiDataColumns[columnIndexBeingConfigured].uniqueValues.map(
-              (uniqueValue, index) => (
-                <>
-                  {index != 0 && <Divider sx={{ marginY: 1 }} />}
-                  {'test'}
-                  {/* <TagConfigRow
-                    numRows={
-                      //göra detta i hooken och skicka ut det
-                      uiDataColumn.data.filter((value) => value == uniqueValue)
-                        .length
-                    }
-                    title={uniqueValue as string}
-                  /> */}
-                </>
-              )
-            )}
-            {uiDataColumns[columnIndexBeingConfigured].numberOfEmptyRows >
-              0 && (
+            {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
+              <>
+                {index != 0 && <Divider sx={{ marginY: 1 }} />}
+                {'test'}
+                <TagConfigRow
+                  numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
+                  title={uniqueValue.toString()}
+                />
+              </>
+            ))}
+            {uiDataColumn.numberOfEmptyRows > 0 && (
               <>
                 <Divider sx={{ marginY: 1 }} />
                 <TagConfigRow
                   italic
-                  numRows={
-                    uiDataColumns[columnIndexBeingConfigured].numberOfEmptyRows
-                  }
+                  numRows={uiDataColumn.numberOfEmptyRows}
                   title={messages.configuration.configure.tags.empty()}
                 />
               </>
@@ -91,7 +76,7 @@ const Configuration: FC<ConfigurationProps> = ({
           </Box>
         </Box>
       )}
-      {!columnIndexBeingConfigured && (
+      {!uiDataColumn && (
         <Box alignItems="center" display="flex" justifyContent="center">
           <ZUIEmptyState
             message={messages.configuration.mapping.emptyStateMessage()}

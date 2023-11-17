@@ -66,17 +66,6 @@ export type Column =
   | TagColumn
   | OrgColumn;
 
-export type UIDataColumn = {
-  columnValuesMessage: string;
-  numberOfEmptyRows: number;
-  originalColumn: Column;
-  showColumnValuesMessage: boolean;
-  showMappingResultMessage: boolean;
-  showNeedsConfigMessage: boolean;
-  title: string;
-  uniqueValues: (string | number)[];
-};
-
 export interface MappingResults {
   numMappedTo: number;
   numRows: number;

@@ -1,7 +1,19 @@
 import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';
 import { useMessages } from 'core/i18n';
-import { ColumnKind, UIDataColumn } from '../utils/types';
+import { Column, ColumnKind } from '../utils/types';
+
+export type UIDataColumn = {
+  columnValuesMessage: string;
+  numRowsByUniqueValue: Record<string | number, number>;
+  numberOfEmptyRows: number;
+  originalColumn: Column;
+  showColumnValuesMessage: boolean;
+  showMappingResultMessage: boolean;
+  showNeedsConfigMessage: boolean;
+  title: string;
+  uniqueValues: (string | number)[];
+};
 
 export default function useUIDataColumns(): UIDataColumn[] {
   const messages = useMessages(messageIds);
@@ -115,8 +127,17 @@ export default function useUIDataColumns(): UIDataColumn[] {
       !needsConfig;
     const showNeedsConfigMessage = originalColumn.selected && needsConfig; //&& !mappingResults
     const showMappingResultMessage = originalColumn.selected && needsConfig; //&& mappingResults
+
+    const numRowsByUniqueValue: Record<string | number, number> = {};
+    uniqueValues.forEach((uniqueValue) => {
+      numRowsByUniqueValue[uniqueValue] = cellValues.filter(
+        (cellValue) => cellValue == uniqueValue
+      ).length;
+    });
+
     return {
       columnValuesMessage,
+      numRowsByUniqueValue,
       numberOfEmptyRows,
       originalColumn,
       showColumnValuesMessage,

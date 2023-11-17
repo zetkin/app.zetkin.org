@@ -13,7 +13,8 @@ import {
 } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { Column, ColumnKind, UIDataColumn } from 'features/import/utils/types';
+import { UIDataColumn } from 'features/import/hooks/useColumns';
+import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingRowProps {

@@ -28,8 +28,11 @@ const Configure: FC = () => {
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
           <Configuration
-            columnIndexBeingConfigured={columnIndexBeingConfigured}
-            uiDataColumns={uiDataColumns}
+            uiDataColumn={
+              columnIndexBeingConfigured
+                ? uiDataColumns[columnIndexBeingConfigured]
+                : null
+            }
           />
         </Box>
       </Box>

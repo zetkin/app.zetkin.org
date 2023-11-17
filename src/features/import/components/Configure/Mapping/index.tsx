@@ -3,7 +3,7 @@ import { Box, Divider, Typography } from '@mui/material';
 
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
-import { UIDataColumn } from 'features/import/utils/types';
+import { UIDataColumn } from 'features/import/hooks/useColumns';
 import useColumn from 'features/import/hooks/useColumn';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useNumericRouteParams } from 'core/hooks';
@@ -25,7 +25,6 @@ const Mapping: FC<MappingProps> = ({
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const columnOptions = useColumnOptions(orgId);
-
   const updateColumn = useColumn();
 
   return (
