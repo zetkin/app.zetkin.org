@@ -83,21 +83,23 @@ export const getServerSideProps = scaffold(async (ctx) => {
       const questionId = fields[0];
       const questionType = fields[1];
 
-      if (typeof responses[questionId] === 'undefined') {
-        responses[questionId] = {
-          question_id: parseInt(fields[0]),
-        };
-      }
-
-      const value = form[name];
       if (questionType == 'options') {
-        if (Array.isArray(value)) {
-          responses[questionId].options = value.map((o) => parseInt(o));
-        } else if (value) {
-          responses[questionId].options = [parseInt(value)];
+        if (Array.isArray(form[name])) {
+          responses[questionId] = {
+            options: (form[name] as string[]).map((o) => parseInt(o)),
+            question_id: parseInt(fields[0]),
+          };
+        } else {
+          responses[questionId] = {
+            options: [parseInt((form[name] as string)!)],
+            question_id: parseInt(fields[0]),
+          };
         }
       } else if (questionType == 'text') {
-        responses[questionId].response = value as string;
+        responses[questionId] = {
+          question_id: parseInt(fields[0]),
+          response: form[name] as string,
+        };
       }
     }
 
