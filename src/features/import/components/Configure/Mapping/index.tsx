@@ -24,7 +24,7 @@ const Mapping: FC<MappingProps> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const fields = useColumnOptions(orgId);
+  const columnOptions = useColumnOptions(orgId);
 
   const updateColumn = useColumn();
 
@@ -63,7 +63,7 @@ const Mapping: FC<MappingProps> = ({
                 onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}
                 onDeselectColumn={onDeselectColumn}
-                options={fields}
+                options={columnOptions}
               />
               <Divider />
             </Box>
