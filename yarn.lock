@@ -7910,6 +7910,11 @@ eslint-plugin-jsx-a11y@^6.4.1, eslint-plugin-jsx-a11y@^6.5.1:
     language-tags "^1.0.5"
     minimatch "^3.0.4"
 
+eslint-plugin-local-rules@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-local-rules/-/eslint-plugin-local-rules-2.0.0.tgz#cda95d7616cc0e2609d76c347c187ca2be1e252e"
+  integrity sha512-sWueme0kUcP0JC1+6OBDQ9edBDVFJR92WJHSRbhiRExlenMEuUisdaVBPR+ItFBFXo2Pdw6FD2UfGZWkz8e93g==
+
 eslint-plugin-next@^0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-next/-/eslint-plugin-next-0.0.0.tgz#f9ef680e8f68763c716ab44697c4b3cc3e0b2069"
