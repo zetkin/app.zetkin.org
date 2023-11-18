@@ -81,14 +81,15 @@ module.exports = {
             html: true,
           },
         ],
-        'sort-imports': [
-          'error',
-          {
-            ignoreCase: true,
-            allowSeparatedGroups: true,
-            memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
-          },
-        ],
+        'local-rules/sort-imports': 'error',
+        // 'sort-imports': [
+        //   'error',
+        //   {
+        //     ignoreCase: true,
+        //     allowSeparatedGroups: true,
+        //     memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+        //   },
+        // ],
         'sort-keys': 'error',
         'sort-vars': 'error',
       },
