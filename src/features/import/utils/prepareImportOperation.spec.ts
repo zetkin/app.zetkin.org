@@ -89,7 +89,7 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -138,7 +138,7 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -188,7 +188,7 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           op: 'person.import',
@@ -232,7 +232,7 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -299,7 +299,7 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -362,7 +362,7 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -431,7 +431,7 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -500,7 +500,7 @@ describe('prepareImportOperations when first row is not header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -560,7 +560,7 @@ describe('prepareImportOperations when first row is not header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -604,7 +604,7 @@ describe('prepareImportOperations when first row is not header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -650,7 +650,7 @@ describe('prepareImportOperations when first row is not header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
@@ -697,7 +697,7 @@ describe('prepareImportOperations when first row is not header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           op: 'person.import',
@@ -753,7 +753,7 @@ describe('prepareImportOperations when first row is not header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ops: [
         {
           fields: {
