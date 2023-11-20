@@ -35,10 +35,10 @@ export default makeMessages('feat.import', {
         numMappedTo: number;
         numPeople: number;
       }>(
-        '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
+        'Mapping {numPeople, plural, =1 {1 row} other {# rows}} to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
       ),
       header: m('Mapping'),
-      id: m('Id'), //Vad var det Richard kallade detta? "Id for merging"?
+      id: m('Id'),
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{
