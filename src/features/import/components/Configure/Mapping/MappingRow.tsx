@@ -95,7 +95,7 @@ const MappingRow: FC<MappingRowProps> = ({
                 } else if (event.target.value == 'org') {
                   onChange({
                     kind: ColumnKind.ORGANIZATION,
-                    mapping: { orgIds: [], value: null },
+                    mapping: [],
                     selected: true,
                   });
                 } else if (event.target.value == 'tag') {

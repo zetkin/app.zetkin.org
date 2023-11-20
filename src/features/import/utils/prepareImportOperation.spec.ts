@@ -4,6 +4,8 @@ import { describe, it } from '@jest/globals';
 type OpsType = {
   fields: Record<string, CellData>;
   op: 'person.import';
+  organizations?: number[];
+  tags?: number[];
 };
 type ImportOpsObj = {
   ops: OpsType[];
@@ -15,9 +17,11 @@ function prepareImportOperations(configData: Sheet): ImportOpsObj {
   configData.columns.forEach((column, colIdx) => {
     if (column.selected) {
       configData.rows.forEach((row, rowIdx) => {
+        const personIndex = configData.firstRowIsHeaders ? rowIdx - 1 : rowIdx;
         if (configData.firstRowIsHeaders && rowIdx === 0) {
           return;
         }
+        //Id column
         if (column.kind === ColumnKind.ID_FIELD) {
           result.ops.push({
             fields: {
@@ -25,44 +29,34 @@ function prepareImportOperations(configData: Sheet): ImportOpsObj {
             },
             op: 'person.import',
           });
-        } else if (column.kind === ColumnKind.FIELD) {
-          if (result.ops.length > 0) {
-            result.ops[rowIdx - 1]['fields'][`${column.field}`] =
-              row.data[colIdx];
+        }
+        //fields
+        if (column.kind === ColumnKind.FIELD) {
+          const opsFieldData = result.ops[personIndex] || {
+            fields: {},
+            op: 'person.import',
+          };
+          opsFieldData.fields[column.field] = row.data[colIdx];
+
+          if (!result.ops[personIndex]) {
+            result.ops.push(opsFieldData);
           }
         }
+        //tags and orgs
+        if (column.kind === ColumnKind.TAG) {
+          result.ops[personIndex].tags = column.mapping[personIndex].tagIds;
+        }
+        if (column.kind === ColumnKind.ORGANIZATION) {
+          result.ops[personIndex].organizations =
+            column.mapping[personIndex].orgIds;
+        }
       });
-
-      // else if (column.kind === ColumnKind.FIELD) {
-      //   if (result.ops.length > 0) {
-      //     console.log(result.ops[personIdx], ' what');
-      //     // result.ops[personIdx].fields[`${column.field}`] =
-      //     //   configData.rows[colIdx + 1].data[colIdx];
-      //     // result.ops[personIdx].fields[`${column.field}`] =
-      //     //   configData.rows[colIdx + 1].data[colIdx];
-      //     // result.ops[personIdx].fields.op = 'person.import';
-      //   }
-      // }
-      // personIdx++;
-      // if (item.kind === ColumnKind.ID_FIELD) {
-      //   result.ops.push({
-      //     fields: {
-      //       [`${item.idField}`]: configData.rows[index + 1].data[index],
-      //     },
-      //     op: 'person.import',
-      //   });
-      // } else if (item.kind === ColumnKind.FIELD) {
-      //   result.ops[index]?.fields[`${item.field}`] =
-      //     configData.rows[index + 1].data[index];
-      // }
     }
   });
-
-  console.log(result.ops[0].fields, ' result');
   return result;
 }
 
-describe('prepareImportOperations', () => {
+describe('prepareImportOperations when first row is header', () => {
   it('converts simple fields with ID', () => {
     const configData: Sheet = {
       columns: [
@@ -98,7 +92,6 @@ describe('prepareImportOperations', () => {
       ops: [
         {
           fields: {
-            ext_id: '123',
             first_name: 'Jane',
             last_name: 'Doe',
           },
@@ -106,7 +99,6 @@ describe('prepareImportOperations', () => {
         },
         {
           fields: {
-            ext_id: '124',
             first_name: 'John',
             last_name: 'Doe',
           },
@@ -115,5 +107,324 @@ describe('prepareImportOperations', () => {
       ],
     });
   });
-  //   it('skips first row if first row is header', () => {});
+  it('converts ID, fields, tags and orgs', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [233, 200], value: 'Frontend' },
+            { tagIds: [234, 200], value: 'Backend' },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgIds: [272], value: 1 },
+            { orgIds: [272, 100], value: 2 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: true,
+      rows: [
+        {
+          data: ['ID', 'First name', 'Last Name', 'DevTag'],
+        },
+        {
+          data: ['123', 'Jane', 'Doe', 'Frontend', 1],
+        },
+        {
+          data: ['124', 'John', 'Doe', 'Backend', 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toMatchObject({
+      ops: [
+        {
+          fields: {
+            ext_id: '123',
+            first_name: 'Jane',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          organizations: [272],
+          tags: [233, 200],
+        },
+        {
+          fields: {
+            ext_id: '124',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          organizations: [272, 100],
+          tags: [234, 200],
+        },
+      ],
+    });
+  });
+  it('converts ID, fields and tags', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [233, 200], value: 'Frontend' },
+            { tagIds: [234, 200], value: 'Backend' },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: true,
+      rows: [
+        {
+          data: ['ID', 'First name', 'Last Name', 'DevTag'],
+        },
+        {
+          data: ['123', 'Jane', 'Doe', 'Frontend', 1],
+        },
+        {
+          data: ['124', 'John', 'Doe', 'Backend', 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toMatchObject({
+      ops: [
+        {
+          fields: {
+            ext_id: '123',
+            first_name: 'Jane',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          tags: [233, 200],
+        },
+        {
+          fields: {
+            ext_id: '124',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          tags: [234, 200],
+        },
+      ],
+    });
+  });
+  it('coverts other columns when ID column is not chosen', () => {
+    const configData: Sheet = {
+      columns: [
+        { kind: ColumnKind.UNKNOWN, selected: false },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [233, 200], value: 'Frontend' },
+            { tagIds: [234, 200], value: 'Backend' },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: true,
+      rows: [
+        {
+          data: ['ID', 'First name', 'Last Name', 'DevTag'],
+        },
+        {
+          data: ['123', 'Jane', 'Doe', 'Frontend', 1],
+        },
+        {
+          data: ['124', 'John', 'Doe', 'Backend', 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toMatchObject({
+      ops: [
+        {
+          fields: {
+            first_name: 'Jane',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          tags: [233, 200],
+        },
+        {
+          fields: {
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          tags: [234, 200],
+        },
+      ],
+    });
+  });
+});
+
+describe('prepareImportOperations when first row is not header', () => {
+  it('converts fields, tags and orgs', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [233, 200], value: 'Frontend' },
+            { tagIds: [234, 200], value: 'Backend' },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgIds: [272], value: 1 },
+            { orgIds: [272, 100], value: 2 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Jane', 'Doe', 'Frontend', 1],
+        },
+        {
+          data: ['124', 'John', 'Doe', 'Backend', 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toMatchObject({
+      ops: [
+        {
+          fields: {
+            ext_id: '123',
+            first_name: 'Jane',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          organizations: [272],
+          tags: [233, 200],
+        },
+        {
+          fields: {
+            ext_id: '124',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          organizations: [272, 100],
+          tags: [234, 200],
+        },
+      ],
+    });
+  });
+  it('converts fields and tag', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [233, 200], value: 'Frontend' },
+            { tagIds: [234, 200], value: 'Backend' },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Jane', 'Doe', 'Frontend', 1],
+        },
+        {
+          data: ['124', 'John', 'Doe', 'Backend', 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toMatchObject({
+      ops: [
+        {
+          fields: {
+            ext_id: '123',
+            first_name: 'Jane',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          tags: [233, 200],
+        },
+        {
+          fields: {
+            ext_id: '124',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+          tags: [234, 200],
+        },
+      ],
+    });
+  });
 });

@@ -56,7 +56,7 @@ type OrgColumn = BaseColumn & {
   mapping: {
     orgIds: number[];
     value: CellData;
-  };
+  }[];
 };
 
 export type Column =
