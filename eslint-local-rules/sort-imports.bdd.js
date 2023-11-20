@@ -1,3 +1,7 @@
+// This test suite is used when developing the rule. Execute by simply running
+// `node ./eslint-local-rules/sort-imports.bdd.js` in the terminal.
+// These tests should not be made part of the regular unit test suite.
+
 const rule = require('./sort-imports.rule');
 const RuleTester = require('eslint').RuleTester;
 
@@ -80,7 +84,7 @@ const y = x.bar;
     // Illegal since 3rd - local - 3rd (with line)
     {
       code: `
-// Random comment
+// Random comment 5
 import { useState } from 'react';
 
 import { someUtil } from 'utils/foo';
@@ -89,7 +93,7 @@ import { store } from '@reduxjs/toolkit';
 const y = x.bar;
       `,
       output: `
-// Random comment
+// Random comment 5
 import { useState } from 'react';
 import { store } from '@reduxjs/toolkit';
 
