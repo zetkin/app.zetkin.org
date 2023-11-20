@@ -3,7 +3,7 @@ import { Box, Divider, Typography } from '@mui/material';
 
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
-import { UIDataColumn } from 'features/import/hooks/useColumns';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import useColumn from 'features/import/hooks/useColumn';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useNumericRouteParams } from 'core/hooks';

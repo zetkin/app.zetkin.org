@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { UIDataColumn } from 'features/import/hooks/useColumns';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -167,22 +167,8 @@ const MappingRow: FC<MappingRowProps> = ({
               }
             />
           )}
-          {/* {column.showMappingResultMessage && (
-            <Msg
-              id={
-                column.originalColumn.kind == ColumnKind.ID_FIELD
-                  ? messageIds.configuration.mapping.finishedMappingIds
-                  : column.originalColumn.kind == ColumnKind.ORGANIZATION
-                  ? messageIds.configuration.mapping
-                      .finishedMappingOrganizations
-                  : messageIds.configuration.mapping.finishedMappingTags
-              }
-              values={{
-                numMappedTo: mappingResults.numMappedTo,
-                numPeople: mappingResults.numRows,
-              }}
-            />
-          )} */}
+          {column.showMappingResultMessage &&
+            column.renderMappingResultsMessage()}
         </Typography>
         {(column.showNeedsConfigMessage || column.showMappingResultMessage) && (
           <Button

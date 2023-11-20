@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import Configuration from './Configuration';
 import Mapping from './Mapping';
 import SheetSettings from './SheetSettings';
-import useUIDataColumns from 'features/import/hooks/useColumns';
+import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
 const Configure: FC = () => {
   const [columnIndexBeingConfigured, setColumnIndexBeingConfigured] = useState<
