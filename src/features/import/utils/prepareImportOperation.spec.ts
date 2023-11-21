@@ -1,8 +1,11 @@
+import mockTag from 'utils/testing/mocks/mockTag';
 import { prepareImportOperations } from './prepareImportOperation';
 import { ColumnKind, Sheet } from './types';
 import { describe, it } from '@jest/globals';
 
 describe('prepareImportOperations when first row is header', () => {
+  const mockingTag = mockTag();
+
   it('converts ID only', () => {
     const configData: Sheet = {
       columns: [
@@ -104,8 +107,8 @@ describe('prepareImportOperations when first row is header', () => {
         {
           kind: ColumnKind.TAG,
           mapping: [
-            { tagIds: [233, 200], value: 'Frontend' },
-            { tagIds: [234, 200], value: 'Backend' },
+            { tags: [mockingTag], value: 'Frontend' },
+            { tags: [mockingTag], value: 'Backend' },
           ],
           selected: true,
         },
@@ -130,11 +133,11 @@ describe('prepareImportOperations when first row is header', () => {
       ops: [
         {
           op: 'person.import',
-          tags: [233, 200],
+          tags: [1],
         },
         {
           op: 'person.import',
-          tags: [234, 200],
+          tags: [1],
         },
       ],
     });
@@ -208,8 +211,8 @@ describe('prepareImportOperations when first row is header', () => {
         {
           kind: ColumnKind.TAG,
           mapping: [
-            { tagIds: [233, 200], value: 'Frontend' },
-            { tagIds: [234, 200], value: 'Backend' },
+            { tags: [mockingTag], value: 'Frontend' },
+            { tags: [mockingTag], value: 'Backend' },
           ],
           selected: true,
         },
@@ -247,7 +250,7 @@ describe('prepareImportOperations when first row is header', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [233, 200],
+          tags: [1],
         },
         {
           fields: {
@@ -257,7 +260,7 @@ describe('prepareImportOperations when first row is header', () => {
           },
           op: 'person.import',
           organizations: [272, 100],
-          tags: [234, 200],
+          tags: [1],
         },
       ],
     });
@@ -279,8 +282,8 @@ describe('prepareImportOperations when first row is header', () => {
         {
           kind: ColumnKind.TAG,
           mapping: [
-            { tagIds: [233, 200], value: 'Frontend' },
-            { tagIds: [234, 200], value: 'Backend' },
+            { tags: [mockingTag], value: 'Frontend' },
+            { tags: [mockingTag], value: 'Backend' },
           ],
           selected: true,
         },
@@ -309,7 +312,7 @@ describe('prepareImportOperations when first row is header', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [233, 200],
+          tags: [1],
         },
         {
           fields: {
@@ -318,7 +321,7 @@ describe('prepareImportOperations when first row is header', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [234, 200],
+          tags: [1],
         },
       ],
     });
@@ -340,8 +343,8 @@ describe('prepareImportOperations when first row is header', () => {
         {
           kind: ColumnKind.TAG,
           mapping: [
-            { tagIds: [233, 200], value: 'Frontend' },
-            { tagIds: [234, 200], value: 'Backend' },
+            { tags: [mockingTag], value: 'Frontend' },
+            { tags: [mockingTag], value: 'Backend' },
           ],
           selected: true,
         },
@@ -378,7 +381,7 @@ describe('prepareImportOperations when first row is header', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [233, 200],
+          tags: [1],
         },
         {
           fields: {
@@ -387,7 +390,7 @@ describe('prepareImportOperations when first row is header', () => {
           },
           op: 'person.import',
           organizations: [272, 100],
-          tags: [234, 200],
+          tags: [1],
         },
       ],
     });
@@ -395,6 +398,7 @@ describe('prepareImportOperations when first row is header', () => {
 });
 
 describe('prepareImportOperations when first row is not header', () => {
+  const mockingTag = mockTag();
   it('converts ID, fields, tags and orgs', () => {
     const configData: Sheet = {
       columns: [
@@ -412,8 +416,8 @@ describe('prepareImportOperations when first row is not header', () => {
         {
           kind: ColumnKind.TAG,
           mapping: [
-            { tagIds: [233, 200], value: 'Frontend' },
-            { tagIds: [234, 200], value: 'Backend' },
+            { tags: [mockingTag], value: 'Frontend' },
+            { tags: [mockingTag], value: 'Backend' },
           ],
           selected: true,
         },
@@ -448,7 +452,7 @@ describe('prepareImportOperations when first row is not header', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [233, 200],
+          tags: [1],
         },
         {
           fields: {
@@ -458,7 +462,7 @@ describe('prepareImportOperations when first row is not header', () => {
           },
           op: 'person.import',
           organizations: [272, 100],
-          tags: [234, 200],
+          tags: [1],
         },
       ],
     });

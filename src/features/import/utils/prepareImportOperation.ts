@@ -45,7 +45,9 @@ export function prepareImportOperations(configData: Sheet): ImportOpsProp {
           if (!result.ops[personIndex]) {
             result.ops.push({ op: 'person.import', tags: [] });
           }
-          result.ops[personIndex].tags = column.mapping[personIndex].tagIds;
+          result.ops[personIndex].tags = column.mapping[personIndex].tags.map(
+            (item) => item.id
+          );
         }
         if (column.kind === ColumnKind.ORGANIZATION) {
           if (!result.ops[personIndex]) {
