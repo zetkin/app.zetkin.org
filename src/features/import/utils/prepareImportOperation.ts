@@ -16,7 +16,7 @@ export function prepareImportOperations(configData: Sheet): ImportOpsProp {
   configData.columns.forEach((column, colIdx) => {
     if (column.selected) {
       configData.rows.forEach((row, rowIdx) => {
-        const personIndex = configData.firstRowIsHeaders ? rowIdx - 1 : rowIdx;
+        const rowIndex = configData.firstRowIsHeaders ? rowIdx - 1 : rowIdx;
 
         if (configData.firstRowIsHeaders && rowIdx === 0) {
           return;
@@ -34,30 +34,29 @@ export function prepareImportOperations(configData: Sheet): ImportOpsProp {
 
         //fields
         if (column.kind === ColumnKind.FIELD) {
-          if (!result.ops[personIndex]) {
+          if (!result.ops[rowIndex]) {
             result.ops.push({ fields: {}, op: 'person.import' });
           }
-          result.ops[personIndex].fields![column.field] = row.data[colIdx];
+          result.ops[rowIndex].fields![column.field] = row.data[colIdx];
         }
 
         //tags and orgs
         if (column.kind === ColumnKind.TAG) {
-          if (!result.ops[personIndex]) {
+          if (!result.ops[rowIndex]) {
             result.ops.push({ op: 'person.import', tags: [] });
           }
-          result.ops[personIndex].tags = column.mapping[personIndex].tags.map(
+          result.ops[rowIndex].tags = column.mapping[rowIndex].tags.map(
             (item) => item.id
           );
         }
         if (column.kind === ColumnKind.ORGANIZATION) {
-          if (!result.ops[personIndex]) {
+          if (!result.ops[rowIndex]) {
             result.ops.push({
               op: 'person.import',
               organizations: [],
             });
           }
-          result.ops[personIndex].organizations =
-            column.mapping[personIndex].orgIds;
+          result.ops[rowIndex].organizations = column.mapping[rowIndex].orgIds;
         }
       });
     }
