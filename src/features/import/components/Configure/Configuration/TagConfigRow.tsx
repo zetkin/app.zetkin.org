@@ -5,14 +5,25 @@ import { Box, Typography } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import TagManager from 'features/tags/components/TagManager';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 interface TagConfigRowProps {
+  assignedTags: ZetkinTag[];
   italic?: boolean;
   numRows: number;
+  onAssignTag: (tag: ZetkinTag) => void;
+  onUnassignTag: (tag: ZetkinTag) => void;
   title: string;
 }
 
-const TagConfigRow: FC<TagConfigRowProps> = ({ italic, numRows, title }) => {
+const TagConfigRow: FC<TagConfigRowProps> = ({
+  assignedTags,
+  italic,
+  numRows,
+  onAssignTag,
+  onUnassignTag,
+  title,
+}) => {
   return (
     <Box display="flex" flexDirection="column">
       <Box display="flex">
@@ -27,9 +38,9 @@ const TagConfigRow: FC<TagConfigRowProps> = ({ italic, numRows, title }) => {
         </Box>
         <Box width="50%">
           <TagManager
-            assignedTags={[]}
-            onAssignTag={() => null}
-            onUnassignTag={() => null}
+            assignedTags={assignedTags}
+            onAssignTag={(tag) => onAssignTag(tag)}
+            onUnassignTag={(tag) => onUnassignTag(tag)}
           />
         </Box>
       </Box>

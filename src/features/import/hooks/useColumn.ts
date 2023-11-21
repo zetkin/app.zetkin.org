@@ -1,16 +1,11 @@
-export default function useColumn(column: (string | number | null)[]) {
-  const rowsWithValues: (string | number)[] = [];
-  let numberOfEmptyRows = 0;
+import { Column } from '../utils/types';
+import { updateColumn } from '../store';
+import { useAppDispatch } from 'core/hooks';
 
-  column.forEach((rowValue) => {
-    if (typeof rowValue === 'string' || typeof rowValue === 'number') {
-      rowsWithValues.push(rowValue);
-    } else {
-      numberOfEmptyRows += 1;
-    }
-  });
+export default function useColumn() {
+  const dispatch = useAppDispatch();
 
-  const uniqueValues = Array.from(new Set(rowsWithValues));
-
-  return { numberOfEmptyRows, uniqueValues };
+  return (index: number, column: Column) => {
+    dispatch(updateColumn([index, column]));
+  };
 }

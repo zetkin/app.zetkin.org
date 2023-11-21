@@ -96,7 +96,6 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
           }
           rawData.sheets.push({
             columns: [],
-            currentlyConfiguring: null,
             firstRowIsHeaders: true,
             rows: table.rows,
             title: table.name,

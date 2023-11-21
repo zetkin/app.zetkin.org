@@ -1,29 +1,21 @@
 import { CompareArrows } from '@mui/icons-material';
 import { FC } from 'react';
-import { Box, Divider, Typography, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import TagConfigRow from './TagConfigRow';
-import useColumn from 'features/import/hooks/useColumn';
-import useConfigSomething from 'features/import/hooks/useConfigSomething';
+import TagConfig from './TagConfig';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import { useMessages } from 'core/i18n';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import { Column, FieldTypes } from 'features/import/utils/types';
-import { Msg, useMessages } from 'core/i18n';
+import { ColumnKind, TagColumn } from 'features/import/utils/types';
 
 interface ConfigurationProps {
-  columns: Column[];
+  uiDataColumn: UIDataColumn | null;
 }
 
-const Configuration: FC<ConfigurationProps> = ({ columns }) => {
+const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const { currentlyConfiguring } = useConfigSomething();
-
-  const column = columns.find(
-    (column) => column.id == currentlyConfiguring?.columnId
-  );
-
-  const { numberOfEmptyRows, uniqueValues } = useColumn(column?.data || []);
 
   return (
     <Box
@@ -32,63 +24,14 @@ const Configuration: FC<ConfigurationProps> = ({ columns }) => {
       flexDirection="column"
       height="100%"
     >
-      {currentlyConfiguring &&
-        column &&
-        currentlyConfiguring.type === FieldTypes.TAG && (
-          <Box
-            display="flex"
-            flexDirection="column"
-            overflow="hidden"
-            padding={2}
-          >
-            <Typography variant="h5">
-              <Msg id={messageIds.configuration.configure.tags.header} />
-            </Typography>
-            <Box
-              alignItems="center"
-              display="flex"
-              paddingBottom={2}
-              paddingTop={2}
-            >
-              <Box width="50%">
-                <Typography variant="body2">
-                  {column.title.toLocaleUpperCase()}
-                </Typography>
-              </Box>
-              <Box width="50%">
-                <Typography variant="body2">
-                  {messages.configuration.configure.tags
-                    .tagsHeader()
-                    .toLocaleUpperCase()}
-                </Typography>
-              </Box>
-            </Box>
-            <Box sx={{ overflowY: 'scroll' }}>
-              {uniqueValues.map((uniqueValue, index) => (
-                <>
-                  {index != 0 && <Divider sx={{ marginY: 1 }} />}
-                  <TagConfigRow
-                    numRows={
-                      column.data.filter((value) => value == uniqueValue).length
-                    }
-                    title={uniqueValue as string}
-                  />
-                </>
-              ))}
-              {numberOfEmptyRows > 0 && (
-                <>
-                  <Divider sx={{ marginY: 1 }} />
-                  <TagConfigRow
-                    italic
-                    numRows={numberOfEmptyRows}
-                    title={messages.configuration.configure.tags.empty()}
-                  />
-                </>
-              )}
-            </Box>
-          </Box>
-        )}
-      {!currentlyConfiguring && !column && (
+      {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.TAG && (
+        <TagConfig
+          uiDataColumn={
+            uiDataColumn as UIDataColumn & { originalColumn: TagColumn }
+          }
+        />
+      )}
+      {!uiDataColumn && (
         <Box alignItems="center" display="flex" justifyContent="center">
           <ZUIEmptyState
             message={messages.configuration.mapping.emptyStateMessage()}

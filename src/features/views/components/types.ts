@@ -178,6 +178,7 @@ export enum NATIVE_PERSON_FIELDS {
   EXT_ID = 'ext_id',
   FIRST_NAME = 'first_name',
   GENDER = 'gender',
+  ID = 'id',
   LAST_NAME = 'last_name',
   PHONE = 'phone',
   STREET_ADDRESS = 'street_address',

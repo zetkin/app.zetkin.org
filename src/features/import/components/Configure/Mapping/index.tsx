@@ -1,22 +1,31 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
-import { Column } from 'features/import/utils/types';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
-import useFields from 'features/import/hooks/useFields';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useColumn from 'features/import/hooks/useColumn';
+import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
-  columns: Column[];
-  onSelectColumn: (columnId: number) => void;
+  columns: UIDataColumn[];
+  columnIndexBeingConfigured: number | null;
+  onConfigureStart: (columnIndex: number) => void;
+  onDeselectColumn: () => void;
 }
 
-const Mapping: FC<MappingProps> = ({ columns, onSelectColumn }) => {
+const Mapping: FC<MappingProps> = ({
+  columns,
+  columnIndexBeingConfigured,
+  onConfigureStart,
+  onDeselectColumn,
+}) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const fields = useFields(orgId);
+  const columnOptions = useColumnOptions(orgId);
+  const updateColumn = useColumn();
 
   return (
     <Box
@@ -45,15 +54,15 @@ const Mapping: FC<MappingProps> = ({ columns, onSelectColumn }) => {
       <Box flexGrow={1} sx={{ overflowY: 'scroll' }}>
         {columns.map((column, index) => {
           return (
-            <Box key={column.id}>
+            <Box key={index}>
               {index == 0 && <Divider />}
               <MappingRow
                 column={column}
-                mappingResults={null}
-                onCheck={() => {
-                  onSelectColumn(column.id);
-                }}
-                zetkinFields={fields}
+                columnOptions={columnOptions}
+                isBeingConfigured={columnIndexBeingConfigured == index}
+                onChange={(column) => updateColumn(index, column)}
+                onConfigureStart={() => onConfigureStart(index)}
+                onDeselectColumn={onDeselectColumn}
               />
               <Divider />
             </Box>

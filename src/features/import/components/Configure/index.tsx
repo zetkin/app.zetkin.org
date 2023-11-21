@@ -1,14 +1,17 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
 import Mapping from './Mapping';
 import MappingPreview from './Preview';
 import SheetSettings from './SheetSettings';
-import useColumns from 'features/import/hooks/useColumns';
+import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
 const Configure: FC = () => {
-  const { columns, selectColumn } = useColumns();
+  const [columnIndexBeingConfigured, setColumnIndexBeingConfigured] = useState<
+    number | null
+  >(null);
+  const uiDataColumns = useUIDataColumns();
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -16,14 +19,22 @@ const Configure: FC = () => {
         <Box display="flex" flexDirection="column" width="50%">
           <SheetSettings />
           <Mapping
-            columns={columns}
-            onSelectColumn={(columnId: number) => {
-              selectColumn(columnId);
-            }}
+            columnIndexBeingConfigured={columnIndexBeingConfigured}
+            columns={uiDataColumns}
+            onConfigureStart={(columnIndex: number) =>
+              setColumnIndexBeingConfigured(columnIndex)
+            }
+            onDeselectColumn={() => setColumnIndexBeingConfigured(null)}
           />
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
-          <Configuration columns={columns} />
+          <Configuration
+            uiDataColumn={
+              columnIndexBeingConfigured
+                ? uiDataColumns[columnIndexBeingConfigured]
+                : null
+            }
+          />
         </Box>
       </Box>
       <MappingPreview />
