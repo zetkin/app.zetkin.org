@@ -134,7 +134,7 @@ export default function useUIDataColumns(): UIDataColumn[] {
       originalColumn.mapping.length == 0;
     const showOrgConfigMessage =
       originalColumn.kind == ColumnKind.ORGANIZATION &&
-      originalColumn.mapping.orgIds.length == 0;
+      originalColumn.mapping.length == 0;
     const showIdConfigMessage =
       originalColumn.kind == ColumnKind.ID_FIELD &&
       originalColumn.idField == null;
