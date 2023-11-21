@@ -3,11 +3,11 @@ import { Box, Divider, Typography } from '@mui/material';
 
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
-import { UIDataColumn } from 'features/import/utils/types';
-import { updateColumn } from 'features/import/store';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useColumn from 'features/import/hooks/useColumn';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
+import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
-import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 
 interface MappingProps {
   columns: UIDataColumn[];
@@ -24,8 +24,8 @@ const Mapping: FC<MappingProps> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const fields = useColumnOptions(orgId);
-  const dispatch = useAppDispatch();
+  const columnOptions = useColumnOptions(orgId);
+  const updateColumn = useColumn();
 
   return (
     <Box
@@ -58,13 +58,11 @@ const Mapping: FC<MappingProps> = ({
               {index == 0 && <Divider />}
               <MappingRow
                 column={column}
+                columnOptions={columnOptions}
                 isBeingConfigured={columnIndexBeingConfigured == index}
-                onChange={(column) => {
-                  dispatch(updateColumn([index, column]));
-                }}
+                onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}
                 onDeselectColumn={onDeselectColumn}
-                options={fields}
               />
               <Divider />
             </Box>

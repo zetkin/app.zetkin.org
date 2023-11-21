@@ -1,3 +1,5 @@
+import { ZetkinTag } from 'utils/types/zetkin';
+
 export type CellData = string | number | null;
 
 export type ImportedFile = {
@@ -19,9 +21,9 @@ export type Row = {
 
 export enum ColumnKind {
   FIELD = 'field',
-  ID_FIELD = 'idField',
+  ID_FIELD = 'id',
   TAG = 'tag',
-  ORGANIZATION = 'organization',
+  ORGANIZATION = 'org',
   UNKNOWN = 'unknown',
 }
 
@@ -43,10 +45,10 @@ type IDFieldColumn = BaseColumn & {
   kind: ColumnKind.ID_FIELD;
 };
 
-type TagColumn = BaseColumn & {
+export type TagColumn = BaseColumn & {
   kind: ColumnKind.TAG;
   mapping: {
-    tagIds: number[];
+    tags: ZetkinTag[];
     value: CellData;
   }[];
 };
@@ -65,19 +67,3 @@ export type Column =
   | IDFieldColumn
   | TagColumn
   | OrgColumn;
-
-export type UIDataColumn = {
-  columnValuesMessage: string;
-  numberOfEmptyRows: number;
-  originalColumn: Column;
-  showColumnValuesMessage: boolean;
-  showMappingResultMessage: boolean;
-  showNeedsConfigMessage: boolean;
-  title: string;
-  uniqueValues: (string | number)[];
-};
-
-export interface MappingResults {
-  numMappedTo: number;
-  numRows: number;
-}

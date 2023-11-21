@@ -13,28 +13,42 @@ import {
 } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { Column, ColumnKind, UIDataColumn } from 'features/import/utils/types';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingRowProps {
   column: UIDataColumn;
+  columnOptions: { label: string; value: string }[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
   onDeselectColumn: () => void;
-  options: { label: string; value: string }[];
 }
 
 const MappingRow: FC<MappingRowProps> = ({
   column,
+  columnOptions,
   isBeingConfigured,
   onChange,
   onDeselectColumn,
   onConfigureStart,
-  options,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+
+  const getValue = () => {
+    if (column.originalColumn.kind == ColumnKind.FIELD) {
+      return `field:${column.originalColumn.field}`;
+    }
+
+    if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
+      return column.originalColumn.kind.toString();
+    }
+
+    //Column kind is UNKNOWN, so we want no selected value
+    return '';
+  };
 
   return (
     <Box
@@ -106,20 +120,15 @@ const MappingRow: FC<MappingRowProps> = ({
                   });
                 } else if (event.target.value.startsWith('field')) {
                   onChange({
-                    field: event.target.value.slice(7),
+                    field: event.target.value.slice(6),
                     kind: ColumnKind.FIELD,
                     selected: true,
                   });
                 }
               }}
-              value={
-                column.originalColumn.selected &&
-                column.originalColumn.kind != ColumnKind.UNKNOWN
-                  ? column.originalColumn.kind
-                  : ''
-              }
+              value={getValue()}
             >
-              {options.map((option) => {
+              {columnOptions.map((option) => {
                 return (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
@@ -158,22 +167,8 @@ const MappingRow: FC<MappingRowProps> = ({
               }
             />
           )}
-          {/* {column.showMappingResultMessage && (
-            <Msg
-              id={
-                column.originalColumn.kind == ColumnKind.ID_FIELD
-                  ? messageIds.configuration.mapping.finishedMappingIds
-                  : column.originalColumn.kind == ColumnKind.ORGANIZATION
-                  ? messageIds.configuration.mapping
-                      .finishedMappingOrganizations
-                  : messageIds.configuration.mapping.finishedMappingTags
-              }
-              values={{
-                numMappedTo: mappingResults.numMappedTo,
-                numPeople: mappingResults.numRows,
-              }}
-            />
-          )} */}
+          {column.showMappingResultMessage &&
+            column.renderMappingResultsMessage()}
         </Typography>
         {(column.showNeedsConfigMessage || column.showMappingResultMessage) && (
           <Button
