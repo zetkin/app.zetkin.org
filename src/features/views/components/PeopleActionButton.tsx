@@ -7,6 +7,8 @@ import {
 } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
+import { addFile } from 'features/import/store';
+import { ColumnKind } from 'features/import/utils/types';
 import Importer from 'features/import/components/Importer';
 import messageIds from '../l10n/messageIds';
 import UploadFile from 'features/import/components/UploadFile';
@@ -15,7 +17,6 @@ import useCreateView from '../hooks/useCreateView';
 import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
-import { addFile, createColumns } from 'features/import/store';
 
 interface PeopleActionButtonProps {
   folderId: number | null;
@@ -61,8 +62,28 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
                   selectedSheetIndex: 0,
                   sheets: [
                     {
-                      columns: [],
-                      currentlyConfiguring: null,
+                      columns: [
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                      ],
                       firstRowIsHeaders: true,
                       rows: [
                         {
@@ -123,8 +144,24 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
                       title: 'Members',
                     },
                     {
-                      columns: [],
-                      currentlyConfiguring: null,
+                      columns: [
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                        {
+                          kind: ColumnKind.UNKNOWN,
+                          selected: false,
+                        },
+                      ],
                       firstRowIsHeaders: true,
                       rows: [
                         {
@@ -149,7 +186,6 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
                   title: 'Excel file',
                 })
               );
-              dispatch(createColumns());
             },
           },
           {

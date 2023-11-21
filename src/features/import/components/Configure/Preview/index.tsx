@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 
+import { ColumnKind } from 'features/import/utils/types';
 import { Msg } from 'core/i18n';
 import { useAppSelector } from 'core/hooks';
 
@@ -25,75 +26,82 @@ const MappingPreview = () => {
       { title: 'Peronal number' },
     ],
   ]);
+
   const [personIndex, setPersonIndex] = useState(0);
-  const sheet = useAppSelector((state) => state.import.pendingFile.sheets[0]);
-  const test = sheet.columns
-    .filter((item) => item.selected)
-    .map((item) => item.title);
-
-  const ye = sheet.rows[0].data
-    .map((item, index) => {
-      if (item !== null && test.includes(item.toString())) {
-        return index;
-      }
-    })
-    .filter((item) => item !== undefined);
-
-  const rows = ye.map((item) =>
-    sheet.rows
-      .map((row, index) => {
-        if (item !== undefined && index !== 0) {
-          return row.data[item];
+  const pendingFile = useAppSelector((state) => state.import.pendingFile);
+  const storedMappedData = pendingFile.sheets
+    .map((item) =>
+      item.columns.filter((column) => {
+        if (column.kind === ColumnKind.FIELD) {
+          return column.field;
         }
       })
-      .filter((item) => item !== undefined)
-  );
+    )
+    .filter((item) => item.length > 0)[pendingFile.selectedSheetIndex];
 
-  const addTitle = (index: number) => {
-    const ranNum = Math.floor(Math.random() * 10);
-    const yeah = {
-      title: `title ${ranNum}`,
-    };
-    setData((prev) => {
-      const newData = [...prev];
-      if (newData.length !== 0) {
-        newData[personIndex][index] = {
-          ...newData[personIndex][index],
-          title: `title ${ranNum}`,
-        };
-      } else {
-        newData[personIndex] = [yeah];
-      }
-      return newData;
-    });
-  };
-  const addValue = (index: number) => {
-    const ranNum = Math.floor(Math.random() * 10);
-    const yeah = {
-      value: `${ranNum}`,
-    };
-    setData((prev) => {
-      const newData = [...prev];
-      if (newData.length !== 0) {
-        newData[personIndex][index] = {
-          ...newData[personIndex][index],
-          value: `${ranNum}`,
-        };
-      } else {
-        newData[personIndex] = [yeah];
-      }
-      return newData;
-    });
-  };
+  console.log(storedMappedData, ' what');
 
+  // const test = sheet.columns
+  //   .filter((item) => item.selected)
+  //   .map((item) => item.title);
+
+  // const ye = sheet.rows[0].data
+  //   .map((item, index) => {
+  //     if (item !== null && test.includes(item.toString())) {
+  //       return index;
+  //     }
+  //   })
+  //   .filter((item) => item !== undefined);
+
+  // const rows = ye.map((item) =>
+  //   sheet.rows
+  //     .map((row, index) => {
+  //       if (item !== undefined && index !== 0) {
+  //         return row.data[item];
+  //       }
+  //     })
+  //     .filter((item) => item !== undefined)
+  // );
+
+  // const addTitle = (index: number) => {
+  //   const ranNum = Math.floor(Math.random() * 10);
+  //   const yeah = {
+  //     title: `title ${ranNum}`,
+  //   };
+  //   setData((prev) => {
+  //     const newData = [...prev];
+  //     if (newData.length !== 0) {
+  //       newData[personIndex][index] = {
+  //         ...newData[personIndex][index],
+  //         title: `title ${ranNum}`,
+  //       };
+  //     } else {
+  //       newData[personIndex] = [yeah];
+  //     }
+  //     return newData;
+  //   });
+  // };
+  // const addValue = (index: number) => {
+  //   const ranNum = Math.floor(Math.random() * 10);
+  //   const yeah = {
+  //     value: `${ranNum}`,
+  //   };
+  //   setData((prev) => {
+  //     const newData = [...prev];
+  //     if (newData.length !== 0) {
+  //       newData[personIndex][index] = {
+  //         ...newData[personIndex][index],
+  //         value: `${ranNum}`,
+  //       };
+  //     } else {
+  //       newData[personIndex] = [yeah];
+  //     }
+  //     return newData;
+  //   });
+  // };
+  console.log(storedMappedData, ' ???');
   return (
     <Box p={2} sx={{ bgColor: 'beige' }}>
-      <Button onClick={() => addTitle(2)} sx={{ mr: 2 }} variant="contained">
-        Add Title
-      </Button>
-      <Button color="info" onClick={() => addValue(2)} variant="contained">
-        Add value
-      </Button>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
         <Typography sx={{ mr: 2 }} variant="h5">
           <Msg id={messageIds.configuration.preview.title} />
@@ -135,7 +143,7 @@ const MappingPreview = () => {
           sx={{ minWidth: '150px' }}
           width="100%"
         >
-          {data[personIndex].length === 0 &&
+          {storedMappedData === undefined &&
             Array(5)
               .fill(2)
               .map((item, index) => {
@@ -151,7 +159,47 @@ const MappingPreview = () => {
                   />
                 );
               })}
-          {data.length > 0 &&
+          {storedMappedData?.map((item, index) => {
+            let field = '';
+            if (item.kind === ColumnKind.FIELD) {
+              field = item.field;
+            }
+            return (
+              <Box
+                key={index}
+                flexGrow={1}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  mr: 2,
+                }}
+              >
+                <Box
+                  sx={{
+                    backgroundColor:
+                      field !== ''
+                        ? 'transparent'
+                        : theme.palette.transparentGrey.light,
+                    height: '14px',
+                    mb: 1,
+                  }}
+                >
+                  <Typography
+                    fontSize="12px"
+                    sx={{
+                      color: theme.palette.grey['600'],
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                    }}
+                    variant="body1"
+                  >
+                    {field}
+                  </Typography>
+                </Box>
+              </Box>
+            );
+          })}
+          {/* {data.length > 0 &&
             data[personIndex].map((item, index) => {
               return (
                 <Box
@@ -198,7 +246,7 @@ const MappingPreview = () => {
                   </Box>
                 </Box>
               );
-            })}
+            })} */}
         </Box>
       </Box>
     </Box>
