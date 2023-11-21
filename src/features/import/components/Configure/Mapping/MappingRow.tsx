@@ -23,7 +23,7 @@ interface MappingRowProps {
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
-  onDeselectColumn: () => void;
+  clearConfiguration: () => void;
 }
 
 const MappingRow: FC<MappingRowProps> = ({
@@ -31,7 +31,7 @@ const MappingRow: FC<MappingRowProps> = ({
   columnOptions,
   isBeingConfigured,
   onChange,
-  onDeselectColumn,
+  clearConfiguration,
   onConfigureStart,
 }) => {
   const theme = useTheme();
@@ -78,8 +78,8 @@ const MappingRow: FC<MappingRowProps> = ({
                   kind: ColumnKind.UNKNOWN,
                   selected: isChecked,
                 });
-                onDeselectColumn();
               }
+              clearConfiguration();
             }}
           />
           <Box

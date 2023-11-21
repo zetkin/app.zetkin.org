@@ -18,18 +18,18 @@ const Configure: FC = () => {
         <Box display="flex" flexDirection="column" width="50%">
           <SheetSettings />
           <Mapping
+            clearConfiguration={() => setColumnIndexBeingConfigured(null)}
             columnIndexBeingConfigured={columnIndexBeingConfigured}
             columns={uiDataColumns}
             onConfigureStart={(columnIndex: number) =>
               setColumnIndexBeingConfigured(columnIndex)
             }
-            onDeselectColumn={() => setColumnIndexBeingConfigured(null)}
           />
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
           <Configuration
             uiDataColumn={
-              columnIndexBeingConfigured
+              typeof columnIndexBeingConfigured == 'number'
                 ? uiDataColumns[columnIndexBeingConfigured]
                 : null
             }

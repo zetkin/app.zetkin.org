@@ -2,12 +2,17 @@ import { CompareArrows } from '@mui/icons-material';
 import { FC } from 'react';
 import { Box, useTheme } from '@mui/material';
 
+import IdConfig from './IdConfig';
 import messageIds from 'features/import/l10n/messageIds';
 import TagConfig from './TagConfig';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import { useMessages } from 'core/i18n';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import { ColumnKind, TagColumn } from 'features/import/utils/types';
+import {
+  ColumnKind,
+  IDFieldColumn,
+  TagColumn,
+} from 'features/import/utils/types';
 
 interface ConfigurationProps {
   uiDataColumn: UIDataColumn | null;
@@ -31,6 +36,14 @@ const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
           }
         />
       )}
+      {uiDataColumn &&
+        uiDataColumn.originalColumn.kind == ColumnKind.ID_FIELD && (
+          <IdConfig
+            uiDataColumn={
+              uiDataColumn as UIDataColumn & { originalColumn: IDFieldColumn }
+            }
+          />
+        )}
       {!uiDataColumn && (
         <Box alignItems="center" display="flex" justifyContent="center">
           <ZUIEmptyState

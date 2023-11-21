@@ -4,6 +4,23 @@ export default makeMessages('feat.import', {
   back: m('Back'),
   configuration: {
     configure: {
+      ids: {
+        configExplanation: m(
+          'If the file you are importing is from another system than Zetkin, we can save your IDs to each person. Or, if your file is based on a sheet you exported from Zetkin, we can use the Zetkin IDs to match each row with a person in Zetkin.'
+        ),
+        externalID: m('External ID'),
+        externalIDExplanation: m(
+          'The values in this column are IDs, but they do not come from Zetkin.'
+        ),
+        externalIDFile: m('File is from another system.'),
+        header: m('Configure IDs'),
+        wrongIDFormatWarning: m(
+          'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
+        ),
+        zetkinID: m('Zetkin ID'),
+        zetkinIDExplanation: m('The values in this column are Zetkin IDs.'),
+        zetkinIDFile: m('File is from a Zetkin export.'),
+      },
       tags: {
         empty: m('Empty'),
         header: m('Map values to tags'),
@@ -20,10 +37,10 @@ export default makeMessages('feat.import', {
       emptyStateMessage: m('Start by mapping file columns.'),
       fileHeader: m('File'),
       finishedMappingIds: m<{
-        numMappedTo: number;
-        numPeople: number;
+        idField: 'ext_id' | 'id';
+        numValues: number;
       }>(
-        '{numPeople, plural, =1 {1 person} other {# people}} mapped to {numMappedTo, plural, =1 {1 Zetkin ID} other {# Zetkin IDs}}'
+        'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} other {external ID}}'
       ),
       finishedMappingOrganizations: m<{
         numMappedTo: number;
@@ -38,7 +55,7 @@ export default makeMessages('feat.import', {
         'Mapping {numPeople, plural, =1 {1 row} other {# rows}} to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
       ),
       header: m('Mapping'),
-      id: m('Id'),
+      id: m('ID'),
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{

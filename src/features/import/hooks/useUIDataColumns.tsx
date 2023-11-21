@@ -19,6 +19,8 @@ export type UIDataColumn = {
   title: string;
   unAssignTag: (tag: ZetkinTag, value: CellData) => void;
   uniqueValues: (string | number)[];
+  updateIdField: (field: 'ext_id' | 'id') => void;
+  wrongIDFormat: boolean;
 };
 
 export default function useUIDataColumns(): UIDataColumn[] {
@@ -170,6 +172,23 @@ export default function useUIDataColumns(): UIDataColumn[] {
           />
         );
       }
+
+      if (originalColumn.kind == ColumnKind.ID_FIELD) {
+        if (!originalColumn.idField) {
+          return null;
+        }
+
+        return (
+          <Msg
+            id={messageIds.configuration.mapping.finishedMappingIds}
+            values={{
+              idField: originalColumn.idField,
+              numValues: rowsWithValues.length,
+            }}
+          />
+        );
+      }
+
       return null;
     };
 
@@ -251,6 +270,37 @@ export default function useUIDataColumns(): UIDataColumn[] {
       return [];
     };
 
+    const updateIdField = (idField: 'ext_id' | 'id') => {
+      if (originalColumn.kind == ColumnKind.ID_FIELD) {
+        dispatch(
+          updateColumn([index, { ...originalColumn, idField: idField }])
+        );
+      }
+    };
+
+    const valuesAreValidZetkinIDs = cellValues.every((value, index) => {
+      if (index == 0 && firstRowIsHeaders) {
+        return true;
+      }
+
+      if (!value) {
+        return false;
+      }
+      const stringValue = value.toString();
+      const parsedToNumber = Number(stringValue);
+
+      if (isNaN(parsedToNumber)) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+
+    const wrongIDFormat =
+      !valuesAreValidZetkinIDs &&
+      originalColumn.kind == ColumnKind.ID_FIELD &&
+      originalColumn.idField == 'id';
+
     return {
       assignTag,
       columnValuesMessage,
@@ -265,6 +315,8 @@ export default function useUIDataColumns(): UIDataColumn[] {
       title,
       unAssignTag,
       uniqueValues,
+      updateIdField,
+      wrongIDFormat,
     };
   });
 

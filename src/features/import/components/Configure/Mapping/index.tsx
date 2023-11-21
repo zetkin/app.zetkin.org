@@ -10,17 +10,17 @@ import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
+  clearConfiguration: () => void;
   columns: UIDataColumn[];
   columnIndexBeingConfigured: number | null;
   onConfigureStart: (columnIndex: number) => void;
-  onDeselectColumn: () => void;
 }
 
 const Mapping: FC<MappingProps> = ({
+  clearConfiguration,
   columns,
   columnIndexBeingConfigured,
   onConfigureStart,
-  onDeselectColumn,
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
@@ -57,12 +57,12 @@ const Mapping: FC<MappingProps> = ({
             <Box key={index}>
               {index == 0 && <Divider />}
               <MappingRow
+                clearConfiguration={clearConfiguration}
                 column={column}
                 columnOptions={columnOptions}
                 isBeingConfigured={columnIndexBeingConfigured == index}
                 onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}
-                onDeselectColumn={onDeselectColumn}
               />
               <Divider />
             </Box>

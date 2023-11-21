@@ -40,7 +40,7 @@ type FieldColumn = BaseColumn & {
   kind: ColumnKind.FIELD;
 };
 
-type IDFieldColumn = BaseColumn & {
+export type IDFieldColumn = BaseColumn & {
   idField: 'ext_id' | 'id' | null;
   kind: ColumnKind.ID_FIELD;
 };
