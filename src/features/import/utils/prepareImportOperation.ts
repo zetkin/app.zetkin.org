@@ -6,19 +6,23 @@ export type OpsType = {
   organizations?: number | null;
   tags?: number[];
 };
-export interface ImportOpsProp {
+export interface ImportOpsProps {
   ops: OpsType[];
 }
 
-export function prepareImportOperations(configData: Sheet): ImportOpsProp {
-  const result: ImportOpsProp = { ops: [] };
+export function prepareImportOperations(
+  configuredSheet: Sheet
+): ImportOpsProps {
+  const result: ImportOpsProps = { ops: [] };
 
-  configData.columns.forEach((column, colIdx) => {
+  configuredSheet.columns.forEach((column, colIdx) => {
     if (column.selected) {
-      configData.rows.forEach((row, rowIdx) => {
-        const rowIndex = configData.firstRowIsHeaders ? rowIdx - 1 : rowIdx;
+      configuredSheet.rows.forEach((row, rowIdx) => {
+        const rowIndex = configuredSheet.firstRowIsHeaders
+          ? rowIdx - 1
+          : rowIdx;
 
-        if (configData.firstRowIsHeaders && rowIdx === 0) {
+        if (configuredSheet.firstRowIsHeaders && rowIdx === 0) {
           return;
         }
 
