@@ -91,9 +91,17 @@ const MappingRow: FC<MappingRowProps> = ({
           </Box>
         </Box>
         <Box alignItems="center" display="flex" width="50%">
-          <ArrowForward color="secondary" sx={{ marginRight: 1 }} />
+          <ArrowForward
+            color="secondary"
+            sx={{
+              marginRight: 1,
+              opacity: column.originalColumn.selected ? '' : '50%',
+            }}
+          />
           <FormControl fullWidth size="small">
-            <InputLabel>
+            <InputLabel
+              sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
+            >
               <Msg id={messageIds.configuration.mapping.selectZetkinField} />
             </InputLabel>
             <Select
@@ -126,6 +134,7 @@ const MappingRow: FC<MappingRowProps> = ({
                   });
                 }
               }}
+              sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
               value={getValue()}
             >
               {columnOptions.map((option) => {
