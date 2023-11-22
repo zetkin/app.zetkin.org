@@ -157,14 +157,14 @@ export default function useUIDataColumns(): UIDataColumn[] {
     const renderMappingResultsMessage = () => {
       if (originalColumn.kind == ColumnKind.TAG) {
         let tags: ZetkinTag[] = [];
-        let numPeople = 0;
+        let numRows = 0;
         originalColumn.mapping.forEach((map) => {
           tags = tags.concat(map.tags);
           if (map.value) {
-            numPeople += numRowsByUniqueValue[map.value];
+            numRows += numRowsByUniqueValue[map.value];
           }
           if (!map.value) {
-            numPeople += numberOfEmptyRows;
+            numRows += numberOfEmptyRows;
           }
         });
 
@@ -173,7 +173,7 @@ export default function useUIDataColumns(): UIDataColumn[] {
             id={messageIds.configuration.mapping.finishedMappingTags}
             values={{
               numMappedTo: Array.from(new Set(tags)).length,
-              numPeople,
+              numRows,
             }}
           />
         );

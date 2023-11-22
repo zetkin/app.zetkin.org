@@ -55,9 +55,9 @@ export default makeMessages('feat.import', {
       ),
       finishedMappingTags: m<{
         numMappedTo: number;
-        numPeople: number;
+        numRows: number;
       }>(
-        'Mapping {numPeople, plural, =1 {1 row} other {# rows}} to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
+        'Mapping {numRows, plural, =1 {1 row} other {# rows}} to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
       ),
       header: m('Mapping'),
       id: m('ID'),
