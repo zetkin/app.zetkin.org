@@ -33,7 +33,6 @@ const Mapping: FC<MappingProps> = ({
       flexDirection="column"
       flexShrink={1}
       height="100%"
-      overflow="hidden"
       padding={1}
     >
       <Typography sx={{ paddingBottom: 2, paddingX: 1 }} variant="h5">
@@ -51,7 +50,7 @@ const Mapping: FC<MappingProps> = ({
           </Typography>
         </Box>
       </Box>
-      <Box flexGrow={1} sx={{ overflowY: 'scroll' }}>
+      <Box flexGrow={1}>
         {columns.map((column, index) => {
           return (
             <Box key={index}>

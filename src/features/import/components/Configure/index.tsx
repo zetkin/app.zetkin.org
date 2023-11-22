@@ -15,7 +15,12 @@ const Configure: FC = () => {
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
       <Box display="flex" flexGrow={1} overflow="hidden">
-        <Box display="flex" flexDirection="column" width="50%">
+        <Box
+          display="flex"
+          flexDirection="column"
+          sx={{ overflowY: 'scroll' }}
+          width="50%"
+        >
           <SheetSettings
             clearConfiguration={() => setColumnIndexBeingConfigured(null)}
           />

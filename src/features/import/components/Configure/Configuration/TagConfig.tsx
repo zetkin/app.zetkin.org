@@ -15,7 +15,13 @@ interface TagConfigProps {
 const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
   const messages = useMessages(messageIds);
   return (
-    <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      overflow="hidden"
+      padding={2}
+      sx={{ overflowY: 'scroll' }}
+    >
       <Typography sx={{ paddingBottom: 2 }} variant="h5">
         <Msg id={messageIds.configuration.configure.tags.header} />
       </Typography>
@@ -33,41 +39,37 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ overflowY: 'scroll' }}>
-        {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
-          <>
-            {index != 0 && <Divider sx={{ marginY: 1 }} />}
-            <TagConfigRow
-              assignedTags={uiDataColumn.getAssignedTags(uniqueValue)}
-              numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
-              onAssignTag={(tag: ZetkinTag) =>
-                uiDataColumn.assignTag(tag, uniqueValue)
-              }
-              onUnassignTag={(tag: ZetkinTag) =>
-                uiDataColumn.unAssignTag(tag, uniqueValue)
-              }
-              title={uniqueValue.toString()}
-            />
-          </>
-        ))}
-        {uiDataColumn.numberOfEmptyRows > 0 && (
-          <>
-            <Divider sx={{ marginY: 1 }} />
-            <TagConfigRow
-              assignedTags={uiDataColumn.getAssignedTags(null)}
-              italic
-              numRows={uiDataColumn.numberOfEmptyRows}
-              onAssignTag={(tag: ZetkinTag) =>
-                uiDataColumn.assignTag(tag, null)
-              }
-              onUnassignTag={(tag: ZetkinTag) =>
-                uiDataColumn.unAssignTag(tag, null)
-              }
-              title={messages.configuration.configure.tags.empty()}
-            />
-          </>
-        )}
-      </Box>
+      {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
+        <>
+          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          <TagConfigRow
+            assignedTags={uiDataColumn.getAssignedTags(uniqueValue)}
+            numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
+            onAssignTag={(tag: ZetkinTag) =>
+              uiDataColumn.assignTag(tag, uniqueValue)
+            }
+            onUnassignTag={(tag: ZetkinTag) =>
+              uiDataColumn.unAssignTag(tag, uniqueValue)
+            }
+            title={uniqueValue.toString()}
+          />
+        </>
+      ))}
+      {uiDataColumn.numberOfEmptyRows > 0 && (
+        <>
+          <Divider sx={{ marginY: 1 }} />
+          <TagConfigRow
+            assignedTags={uiDataColumn.getAssignedTags(null)}
+            italic
+            numRows={uiDataColumn.numberOfEmptyRows}
+            onAssignTag={(tag: ZetkinTag) => uiDataColumn.assignTag(tag, null)}
+            onUnassignTag={(tag: ZetkinTag) =>
+              uiDataColumn.unAssignTag(tag, null)
+            }
+            title={messages.configuration.configure.tags.empty()}
+          />
+        </>
+      )}
     </Box>
   );
 };

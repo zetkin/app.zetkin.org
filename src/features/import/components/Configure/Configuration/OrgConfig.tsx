@@ -21,7 +21,13 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      overflow="hidden"
+      padding={2}
+      sx={{ overflowY: 'scroll' }}
+    >
       <Typography sx={{ paddingBottom: 2 }} variant="h5">
         <Msg id={messageIds.configuration.configure.orgs.header} />
       </Typography>
@@ -39,37 +45,33 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ overflowY: 'scroll' }}>
-        {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
-          <>
-            {index != 0 && <Divider sx={{ marginY: 1 }} />}
-            <OrgConfigRow
-              numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
-              onDeselectOrg={() => uiDataColumn.deselectOrg(uniqueValue)}
-              onSelectOrg={(orgId) =>
-                uiDataColumn.selectOrg(orgId, uniqueValue)
-              }
-              orgs={organizations.data || []}
-              selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
-              title={uniqueValue.toString()}
-            />
-          </>
-        ))}
-        {uiDataColumn.numberOfEmptyRows > 0 && (
-          <>
-            <Divider sx={{ marginY: 1 }} />
-            <OrgConfigRow
-              italic
-              numRows={uiDataColumn.numberOfEmptyRows}
-              onDeselectOrg={() => uiDataColumn.deselectOrg(null)}
-              onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, null)}
-              orgs={organizations.data || []}
-              selectedOrgId={uiDataColumn.getSelectedOrgId(null)}
-              title={messages.configuration.configure.tags.empty()}
-            />
-          </>
-        )}
-      </Box>
+      {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
+        <>
+          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          <OrgConfigRow
+            numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
+            onDeselectOrg={() => uiDataColumn.deselectOrg(uniqueValue)}
+            onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, uniqueValue)}
+            orgs={organizations.data || []}
+            selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
+            title={uniqueValue.toString()}
+          />
+        </>
+      ))}
+      {uiDataColumn.numberOfEmptyRows > 0 && (
+        <>
+          <Divider sx={{ marginY: 1 }} />
+          <OrgConfigRow
+            italic
+            numRows={uiDataColumn.numberOfEmptyRows}
+            onDeselectOrg={() => uiDataColumn.deselectOrg(null)}
+            onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, null)}
+            orgs={organizations.data || []}
+            selectedOrgId={uiDataColumn.getSelectedOrgId(null)}
+            title={messages.configuration.configure.tags.empty()}
+          />
+        </>
+      )}
     </Box>
   );
 };
