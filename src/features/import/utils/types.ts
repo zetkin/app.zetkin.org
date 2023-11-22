@@ -1,5 +1,3 @@
-import { ZetkinTag } from 'utils/types/zetkin';
-
 export type CellData = string | number | null;
 
 export type ImportedFile = {
@@ -40,7 +38,7 @@ type FieldColumn = BaseColumn & {
   kind: ColumnKind.FIELD;
 };
 
-type IDFieldColumn = BaseColumn & {
+export type IDFieldColumn = BaseColumn & {
   idField: 'ext_id' | 'id' | null;
   kind: ColumnKind.ID_FIELD;
 };
@@ -48,15 +46,15 @@ type IDFieldColumn = BaseColumn & {
 export type TagColumn = BaseColumn & {
   kind: ColumnKind.TAG;
   mapping: {
-    tags: ZetkinTag[];
+    tagIds: number[];
     value: CellData;
   }[];
 };
 
-type OrgColumn = BaseColumn & {
+export type OrgColumn = BaseColumn & {
   kind: ColumnKind.ORGANIZATION;
   mapping: {
-    orgIds: number[];
+    orgId: number | null;
     value: CellData;
   }[];
 };

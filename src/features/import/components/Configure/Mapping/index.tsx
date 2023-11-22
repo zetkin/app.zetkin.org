@@ -10,17 +10,17 @@ import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
+  clearConfiguration: () => void;
   columns: UIDataColumn[];
   columnIndexBeingConfigured: number | null;
   onConfigureStart: (columnIndex: number) => void;
-  onDeselectColumn: () => void;
 }
 
 const Mapping: FC<MappingProps> = ({
+  clearConfiguration,
   columns,
   columnIndexBeingConfigured,
   onConfigureStart,
-  onDeselectColumn,
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
@@ -33,7 +33,6 @@ const Mapping: FC<MappingProps> = ({
       flexDirection="column"
       flexShrink={1}
       height="100%"
-      overflow="hidden"
       padding={1}
     >
       <Typography sx={{ paddingBottom: 2, paddingX: 1 }} variant="h5">
@@ -51,18 +50,18 @@ const Mapping: FC<MappingProps> = ({
           </Typography>
         </Box>
       </Box>
-      <Box flexGrow={1} sx={{ overflowY: 'scroll' }}>
+      <Box flexGrow={1}>
         {columns.map((column, index) => {
           return (
             <Box key={index}>
               {index == 0 && <Divider />}
               <MappingRow
+                clearConfiguration={clearConfiguration}
                 column={column}
                 columnOptions={columnOptions}
                 isBeingConfigured={columnIndexBeingConfigured == index}
                 onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}
-                onDeselectColumn={onDeselectColumn}
               />
               <Divider />
             </Box>
