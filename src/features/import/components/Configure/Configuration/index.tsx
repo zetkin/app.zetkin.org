@@ -4,6 +4,7 @@ import { Box, useTheme } from '@mui/material';
 
 import IdConfig from './IdConfig';
 import messageIds from 'features/import/l10n/messageIds';
+import OrgConfig from './OrgConfig';
 import TagConfig from './TagConfig';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import { useMessages } from 'core/i18n';
@@ -11,6 +12,7 @@ import ZUIEmptyState from 'zui/ZUIEmptyState';
 import {
   ColumnKind,
   IDFieldColumn,
+  OrgColumn,
   TagColumn,
 } from 'features/import/utils/types';
 
@@ -41,6 +43,14 @@ const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
           <IdConfig
             uiDataColumn={
               uiDataColumn as UIDataColumn & { originalColumn: IDFieldColumn }
+            }
+          />
+        )}
+      {uiDataColumn &&
+        uiDataColumn.originalColumn.kind == ColumnKind.ORGANIZATION && (
+          <OrgConfig
+            uiDataColumn={
+              uiDataColumn as UIDataColumn & { originalColumn: OrgColumn }
             }
           />
         )}

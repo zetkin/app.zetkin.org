@@ -21,6 +21,11 @@ export default makeMessages('feat.import', {
         zetkinIDExplanation: m('The values in this column are Zetkin IDs.'),
         zetkinIDFile: m('File is from a Zetkin export.'),
       },
+      orgs: {
+        header: m('Map values to organizations'),
+        organizations: m('Organization'),
+        status: m('Status'),
+      },
       tags: {
         empty: m('Empty'),
         header: m('Map values to tags'),

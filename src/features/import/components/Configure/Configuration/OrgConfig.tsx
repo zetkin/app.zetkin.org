@@ -2,33 +2,39 @@ import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { TagColumn } from 'features/import/utils/types';
-import TagConfigRow from './TagConfigRow';
+import { OrgColumn } from 'features/import/utils/types';
+import OrgConfigRow from './OrgConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import { ZetkinTag } from 'utils/types/zetkin';
+import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import { Msg, useMessages } from 'core/i18n';
 
-interface TagConfigProps {
-  uiDataColumn: UIDataColumn & { originalColumn: TagColumn };
+interface OrgConfigProps {
+  uiDataColumn: UIDataColumn & { originalColumn: OrgColumn };
 }
 
-const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
+const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const messages = useMessages(messageIds);
+  const organizations = useOrganizations();
+
+  if (!organizations.data) {
+    return null;
+  }
+
   return (
     <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
       <Typography sx={{ paddingBottom: 2 }} variant="h5">
-        <Msg id={messageIds.configuration.configure.tags.header} />
+        <Msg id={messageIds.configuration.configure.orgs.header} />
       </Typography>
       <Box alignItems="center" display="flex" paddingY={2}>
         <Box width="50%">
           <Typography variant="body2">
-            {uiDataColumn.title.toLocaleUpperCase()}
+            {messages.configuration.configure.orgs.status().toLocaleUpperCase()}
           </Typography>
         </Box>
         <Box width="50%">
           <Typography variant="body2">
-            {messages.configuration.configure.tags
-              .tagsHeader()
+            {messages.configuration.configure.orgs
+              .organizations()
               .toLocaleUpperCase()}
           </Typography>
         </Box>
@@ -37,15 +43,14 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
         {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
           <>
             {index != 0 && <Divider sx={{ marginY: 1 }} />}
-            <TagConfigRow
-              assignedTags={uiDataColumn.getAssignedTags(uniqueValue)}
+            <OrgConfigRow
               numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
-              onAssignTag={(tag: ZetkinTag) =>
-                uiDataColumn.assignTag(tag, uniqueValue)
+              onDeselectOrg={() => uiDataColumn.deselectOrg(uniqueValue)}
+              onSelectOrg={(orgId) =>
+                uiDataColumn.selectOrg(orgId, uniqueValue)
               }
-              onUnassignTag={(tag: ZetkinTag) =>
-                uiDataColumn.unAssignTag(tag, uniqueValue)
-              }
+              orgs={organizations.data || []}
+              selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
               title={uniqueValue.toString()}
             />
           </>
@@ -53,16 +58,13 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
         {uiDataColumn.numberOfEmptyRows > 0 && (
           <>
             <Divider sx={{ marginY: 1 }} />
-            <TagConfigRow
-              assignedTags={uiDataColumn.getAssignedTags(null)}
+            <OrgConfigRow
               italic
               numRows={uiDataColumn.numberOfEmptyRows}
-              onAssignTag={(tag: ZetkinTag) =>
-                uiDataColumn.assignTag(tag, null)
-              }
-              onUnassignTag={(tag: ZetkinTag) =>
-                uiDataColumn.unAssignTag(tag, null)
-              }
+              onDeselectOrg={() => uiDataColumn.deselectOrg(null)}
+              onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, null)}
+              orgs={organizations.data || []}
+              selectedOrgId={uiDataColumn.getSelectedOrgId(null)}
               title={messages.configuration.configure.tags.empty()}
             />
           </>
@@ -72,4 +74,4 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
   );
 };
 
-export default TagConfig;
+export default OrgConfig;

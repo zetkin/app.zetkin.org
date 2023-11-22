@@ -53,12 +53,12 @@ export type TagColumn = BaseColumn & {
   }[];
 };
 
-type OrgColumn = BaseColumn & {
+export type OrgColumn = BaseColumn & {
   kind: ColumnKind.ORGANIZATION;
   mapping: {
-    orgIds: number[];
+    orgId: number | null;
     value: CellData;
-  };
+  }[];
 };
 
 export type Column =
