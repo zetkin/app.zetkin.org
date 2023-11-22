@@ -191,6 +191,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
         label={messages.actions.create()}
       />
       <Dialog
+        fullWidth
         onClose={() => setUploadDialogOpen(false)}
         open={uploadDialogOpen}
       >

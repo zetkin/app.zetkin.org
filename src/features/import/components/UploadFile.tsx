@@ -1,3 +1,5 @@
+import { alpha } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { UploadFileOutlined } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import {
@@ -5,19 +7,71 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  Link,
   Typography,
+  useTheme,
 } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { CSSProperties, useCallback, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
-import theme from 'theme';
 import useImportedFile from '../hooks/useImportedFile';
 import { Msg, useMessages } from 'core/i18n';
+
+const sharedProperties: CSSProperties = {
+  alignItems: 'center',
+  borderRadius: 4,
+  borderWidth: 2,
+  display: 'flex',
+  flexDirection: 'column',
+  flexWrap: 'wrap',
+  margin: 16,
+  padding: 50,
+  textAlign: 'center',
+};
+
+const useStyles = makeStyles((theme) => ({
+  errorState: {
+    backgroundColor: alpha(
+      theme.palette.statusColors.red,
+      theme.palette.action.selectedOpacity
+    ),
+    borderColor: theme.palette.error.dark,
+    borderStyle: 'solid',
+    ...sharedProperties,
+  },
+  initialState: {
+    backgroundColor: 'transparent',
+    borderColor: theme.palette.grey[300],
+    borderStyle: 'dashed',
+    ...sharedProperties,
+  },
+  loadingState: {
+    backgroundColor: alpha(
+      theme.palette.statusColors.blue,
+      theme.palette.action.selectedOpacity
+    ),
+    borderColor: theme.palette.statusColors.blue,
+    borderStyle: 'dashed',
+    ...sharedProperties,
+  },
+  sharedProperties: {
+    ...sharedProperties,
+  },
+}));
 
 const UploadFile = () => {
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
   const { parseData, loading } = useImportedFile();
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
+  let boxClass = classes.initialState;
+  if (error) {
+    boxClass = classes.errorState;
+  } else if (loading) {
+    boxClass = classes.loadingState;
+  }
 
   const onDrop = useCallback((acceptedFiles: File[]): void => {
     acceptedFiles.map((file: File) => {
@@ -42,60 +96,29 @@ const UploadFile = () => {
 
   return (
     <>
-      <Box
-        {...getRootProps()}
-        p={12}
-        style={
-          loading
-            ? {
-                alignItems: 'center',
-                backgroundColor: '#1976D214',
-                borderColor: '#1976D2',
-                borderRadius: 4,
-                borderStyle: 'dashed',
-                borderWidth: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                flexWrap: 'wrap',
-                margin: 16,
-                textAlign: 'center',
-              }
-            : {
-                alignItems: 'center',
-                backgroundColor: error ? '#fdf7f7' : 'transparent',
-                borderColor: error ? theme.palette.error.dark : '#E0E0E0',
-                borderRadius: 4,
-                borderStyle: error ? 'solid' : 'dashed',
-                borderWidth: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                flexWrap: 'wrap',
-                margin: 16,
-                textAlign: 'center',
-              }
-        }
-      >
+      <Box {...getRootProps()} className={boxClass}>
         {loading && (
           <Box>
-            <CircularProgress sx={{ color: '#1976D2' }} />
-            <Typography>{messages.uploadDialog.loading()}</Typography>
+            <CircularProgress sx={{ color: theme.palette.statusColors.blue }} />
+            <Typography sx={{ color: theme.palette.text.primary }}>
+              {messages.uploadDialog.loading()}
+            </Typography>
           </Box>
         )}
         <input type="file" {...getInputProps()} />
         <Box>
           {!loading && (
-            <Box>
+            <>
               <IconButton
                 onClick={open}
-                style={{
-                  backgroundColor: '#E0E0E0',
+                sx={{
+                  backgroundColor: theme.palette.grey[300],
                   borderRadius: 100,
                   cursor: 'pointer',
-                  height: 40,
-                  padding: 30,
-                  width: 40,
+                  height: '40px',
+                  padding: '30px',
+                  width: '40px',
                 }}
-                type="button"
               >
                 <UploadFileOutlined
                   sx={{ color: theme.palette.primary.main, fontSize: 40 }}
@@ -106,28 +129,25 @@ const UploadFile = () => {
               ) : (
                 <>
                   <Box pt={2}>
-                    <Typography
-                      onClick={open}
-                      sx={{
-                        color: theme.palette.primary.main,
-                        cursor: 'pointer',
-                        display: 'inline-block',
-                        padding: 1,
-                        textDecorationLine: 'underline',
-                      }}
-                    >
-                      {messages.uploadDialog.instructions()}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        display: 'inline-block',
-                      }}
-                    >
-                      {messages.uploadDialog.instructionsEnd()}
+                    <Typography component="span">
+                      {messages.uploadDialog.instructions({
+                        link: (
+                          <Link
+                            onClick={open}
+                            sx={{
+                              color: theme.palette.primary.main,
+                              cursor: 'pointer',
+                              textDecorationLine: 'underline',
+                            }}
+                          >
+                            {messages.uploadDialog.selectClick()}
+                          </Link>
+                        ),
+                      })}
                     </Typography>
                   </Box>
 
-                  <Box sx={{ gap: 10 }} />
+                  <Box pt={1} />
                   {error ? (
                     <Typography sx={{ color: theme.palette.primary.main }}>
                       {messages.uploadDialog.unsupportedFile()}
@@ -139,7 +159,7 @@ const UploadFile = () => {
                   )}
                 </>
               )}
-            </Box>
+            </>
           )}
         </Box>
       </Box>
@@ -150,7 +170,6 @@ const UploadFile = () => {
               color="primary"
               onClick={(ev) => {
                 ev.stopPropagation();
-
                 setError(false);
               }}
             >
