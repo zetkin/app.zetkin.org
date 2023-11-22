@@ -6,12 +6,14 @@ import { ColumnKind } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
+import { useNumericRouteParams } from 'core/hooks';
 import useSheets from 'features/import/hooks/useSheets';
 
 const MappingPreview = () => {
   const theme = useTheme();
+  const { orgId } = useNumericRouteParams();
 
-  const columnOptions = useColumnOptions(6);
+  const columnOptions = useColumnOptions(orgId);
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const currentSheet = sheets[selectedSheetIndex];
   const [personIndex, setPersonIndex] = useState(0);
@@ -69,7 +71,7 @@ const MappingPreview = () => {
           width="100%"
         >
           {emptyPreview &&
-            Array(5)
+            Array(currentSheet.columns.length)
               .fill(2)
               .map((item, index) => {
                 return (
