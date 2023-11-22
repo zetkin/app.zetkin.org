@@ -29,7 +29,11 @@ const Accordion = styled((props: AccordionProps) => (
   border: 0,
 }));
 
-const SheetSettings: FC = () => {
+interface SheetSettingsProps {
+  clearConfiguration: () => void;
+}
+
+const SheetSettings: FC<SheetSettingsProps> = ({ clearConfiguration }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const {
@@ -69,9 +73,10 @@ const SheetSettings: FC = () => {
             </InputLabel>
             <Select
               label={messages.configuration.settings.sheetSelectLabel()}
-              onChange={(event) =>
-                updateSelectedSheetIndex(event.target.value as number)
-              }
+              onChange={(event) => {
+                updateSelectedSheetIndex(event.target.value as number);
+                clearConfiguration();
+              }}
               value={selectedSheetIndex}
             >
               {sheets.map((sheet, index) => (

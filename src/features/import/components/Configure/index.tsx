@@ -16,7 +16,9 @@ const Configure: FC = () => {
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
       <Box display="flex" flexGrow={1} overflow="hidden">
         <Box display="flex" flexDirection="column" width="50%">
-          <SheetSettings />
+          <SheetSettings
+            clearConfiguration={() => setColumnIndexBeingConfigured(null)}
+          />
           <Mapping
             clearConfiguration={() => setColumnIndexBeingConfigured(null)}
             columnIndexBeingConfigured={columnIndexBeingConfigured}
