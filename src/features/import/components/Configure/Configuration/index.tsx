@@ -55,7 +55,12 @@ const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
           />
         )}
       {!uiDataColumn && (
-        <Box alignItems="center" display="flex" justifyContent="center">
+        <Box
+          alignItems="center"
+          display="flex"
+          height="100%"
+          justifyContent="center"
+        >
           <ZUIEmptyState
             message={messages.configuration.mapping.emptyStateMessage()}
             renderIcon={(props) => <CompareArrows {...props} />}
