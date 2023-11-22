@@ -46,10 +46,10 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
             assignedTags={uiDataColumn.getAssignedTags(uniqueValue)}
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onAssignTag={(tag: ZetkinTag) =>
-              uiDataColumn.assignTag(tag, uniqueValue)
+              uiDataColumn.assignTag(tag.id, uniqueValue)
             }
             onUnassignTag={(tag: ZetkinTag) =>
-              uiDataColumn.unAssignTag(tag, uniqueValue)
+              uiDataColumn.unAssignTag(tag.id, uniqueValue)
             }
             title={uniqueValue.toString()}
           />
@@ -62,9 +62,11 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
             assignedTags={uiDataColumn.getAssignedTags(null)}
             italic
             numRows={uiDataColumn.numberOfEmptyRows}
-            onAssignTag={(tag: ZetkinTag) => uiDataColumn.assignTag(tag, null)}
+            onAssignTag={(tag: ZetkinTag) =>
+              uiDataColumn.assignTag(tag.id, null)
+            }
             onUnassignTag={(tag: ZetkinTag) =>
-              uiDataColumn.unAssignTag(tag, null)
+              uiDataColumn.unAssignTag(tag.id, null)
             }
             title={messages.configuration.configure.tags.empty()}
           />

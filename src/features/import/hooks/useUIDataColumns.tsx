@@ -1,12 +1,14 @@
 import messageIds from '../l10n/messageIds';
+import notEmpty from 'utils/notEmpty';
 import { updateColumn } from '../store';
+import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { CellData, Column, ColumnKind } from '../utils/types';
 import { Msg, useMessages } from 'core/i18n';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn = {
-  assignTag: (tag: ZetkinTag, value: CellData) => void;
+  assignTag: (tagId: number, value: CellData) => void;
   columnValuesMessage: string;
   deselectOrg: (value: CellData) => void;
   getAssignedTags: (value: CellData) => ZetkinTag[];
@@ -20,16 +22,19 @@ export type UIDataColumn = {
   showMappingResultMessage: boolean;
   showNeedsConfigMessage: boolean;
   title: string;
-  unAssignTag: (tag: ZetkinTag, value: CellData) => void;
+  unAssignTag: (tagId: number, value: CellData) => void;
   uniqueValues: (string | number)[];
   updateIdField: (field: 'ext_id' | 'id') => void;
   wrongIDFormat: boolean;
 };
 
-export default function useUIDataColumns(): UIDataColumn[] {
+export default function useUIDataColumns(orgId: number): UIDataColumn[] {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
+  const tagsFuture = useTags(orgId);
+  const tags = tagsFuture.data;
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
+
   const sheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
   const originalColumns = sheet.columns;
   const rows = sheet.rows;
@@ -156,10 +161,10 @@ export default function useUIDataColumns(): UIDataColumn[] {
 
     const renderMappingResultsMessage = () => {
       if (originalColumn.kind == ColumnKind.TAG) {
-        let tags: ZetkinTag[] = [];
+        let tagIds: number[] = [];
         let numRows = 0;
         originalColumn.mapping.forEach((map) => {
-          tags = tags.concat(map.tags);
+          tagIds = tagIds.concat(map.tagIds);
           if (map.value) {
             numRows += numRowsByUniqueValue[map.value];
           }
@@ -172,7 +177,7 @@ export default function useUIDataColumns(): UIDataColumn[] {
           <Msg
             id={messageIds.configuration.mapping.finishedMappingTags}
             values={{
-              numMappedTo: Array.from(new Set(tags)).length,
+              numMappedTo: Array.from(new Set(tagIds)).length,
               numRows,
             }}
           />
@@ -224,11 +229,12 @@ export default function useUIDataColumns(): UIDataColumn[] {
       return null;
     };
 
-    const assignTag = (tag: ZetkinTag, value: CellData) => {
-      if (originalColumn.kind == ColumnKind.TAG) {
+    const assignTag = (tagId: number, value: CellData) => {
+      if (originalColumn.kind == ColumnKind.TAG && tags != null) {
         const map = originalColumn.mapping.find((map) => map.value == value);
+
         if (!map) {
-          const newMap = { tags: [tag], value: value };
+          const newMap = { tagIds: [tagId], value: value };
           dispatch(
             updateColumn([
               index,
@@ -242,8 +248,8 @@ export default function useUIDataColumns(): UIDataColumn[] {
           const filteredMapping = originalColumn.mapping.filter(
             (m) => m.value != value
           );
-          const updatedTags = map.tags.concat(tag);
-          const updatedMap = { ...map, tags: updatedTags };
+          const updatedTagIds = map.tagIds.concat([tagId]);
+          const updatedMap = { ...map, tagIds: updatedTagIds };
 
           dispatch(
             updateColumn([
@@ -258,16 +264,16 @@ export default function useUIDataColumns(): UIDataColumn[] {
       }
     };
 
-    const unAssignTag = (tag: ZetkinTag, value: CellData) => {
+    const unAssignTag = (tagId: number, value: CellData) => {
       if (originalColumn.kind == ColumnKind.TAG) {
         const map = originalColumn.mapping.find((map) => map.value == value);
         if (map) {
           const filteredMapping = originalColumn.mapping.filter(
             (m) => m.value != value
           );
-          const updatedTags = map.tags.filter((t) => t.id != tag.id);
+          const updatedTagIds = map.tagIds.filter((t) => t != tagId);
 
-          if (updatedTags.length == 0) {
+          if (updatedTagIds.length == 0) {
             dispatch(
               updateColumn([
                 index,
@@ -278,7 +284,7 @@ export default function useUIDataColumns(): UIDataColumn[] {
               ])
             );
           } else {
-            const updatedMap = { ...map, tags: updatedTags };
+            const updatedMap = { ...map, tagIds: updatedTagIds };
 
             dispatch(
               updateColumn([
@@ -294,10 +300,13 @@ export default function useUIDataColumns(): UIDataColumn[] {
       }
     };
 
-    const getAssignedTags = (value: CellData) => {
-      if (originalColumn.kind == ColumnKind.TAG) {
+    const getAssignedTags = (value: CellData): ZetkinTag[] => {
+      if (originalColumn.kind == ColumnKind.TAG && tags != null) {
         const map = originalColumn.mapping.find((m) => m.value === value);
-        return map?.tags || [];
+        const assignedTags = map?.tagIds
+          .map((tagId) => tags.find((tag) => tag.id == tagId))
+          .filter(notEmpty);
+        return assignedTags || [];
       }
       return [];
     };

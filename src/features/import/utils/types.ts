@@ -1,5 +1,3 @@
-import { ZetkinTag } from 'utils/types/zetkin';
-
 export type CellData = string | number | null;
 
 export type ImportedFile = {
@@ -48,7 +46,7 @@ export type IDFieldColumn = BaseColumn & {
 export type TagColumn = BaseColumn & {
   kind: ColumnKind.TAG;
   mapping: {
-    tags: ZetkinTag[];
+    tagIds: number[];
     value: CellData;
   }[];
 };

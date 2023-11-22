@@ -4,13 +4,15 @@ import { FC, useState } from 'react';
 import Configuration from './Configuration';
 import Mapping from './Mapping';
 import SheetSettings from './SheetSettings';
+import { useNumericRouteParams } from 'core/hooks';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
 const Configure: FC = () => {
   const [columnIndexBeingConfigured, setColumnIndexBeingConfigured] = useState<
     number | null
   >(null);
-  const uiDataColumns = useUIDataColumns();
+  const { orgId } = useNumericRouteParams();
+  const uiDataColumns = useUIDataColumns(orgId);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
