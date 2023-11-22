@@ -7,6 +7,7 @@ import { Msg } from 'core/i18n';
 import { useAppSelector } from 'core/hooks';
 
 import messageIds from 'features/import/l10n/messageIds';
+import useColumnOptions from 'features/import/hooks/useColumnOptions';
 
 interface testProp {
   title?: string;
@@ -27,79 +28,29 @@ const MappingPreview = () => {
     ],
   ]);
 
+  const columnOptions = useColumnOptions(6);
   const [personIndex, setPersonIndex] = useState(0);
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
-  const storedMappedData = pendingFile.sheets
-    .map((item) =>
-      item.columns.filter((column) => {
-        if (column.kind === ColumnKind.FIELD) {
-          return column.field;
-        }
-      })
-    )
-    .filter((item) => item.length > 0)[pendingFile.selectedSheetIndex];
+  const currentSheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
 
-  console.log(storedMappedData, ' what');
+  const storedMappedData = currentSheet.columns
+    .map((column, columnIndex) => {
+      if (column.kind === ColumnKind.FIELD) {
+        return {
+          header: column.field,
+          value: currentSheet.rows
+            .map((item, rowIndex) => {
+              if (currentSheet.firstRowIsHeaders && rowIndex === 0) {
+                return;
+              }
+              return item.data[columnIndex];
+            })
+            .filter((item) => item !== undefined),
+        };
+      }
+    })
+    .filter((item) => item !== undefined);
 
-  // const test = sheet.columns
-  //   .filter((item) => item.selected)
-  //   .map((item) => item.title);
-
-  // const ye = sheet.rows[0].data
-  //   .map((item, index) => {
-  //     if (item !== null && test.includes(item.toString())) {
-  //       return index;
-  //     }
-  //   })
-  //   .filter((item) => item !== undefined);
-
-  // const rows = ye.map((item) =>
-  //   sheet.rows
-  //     .map((row, index) => {
-  //       if (item !== undefined && index !== 0) {
-  //         return row.data[item];
-  //       }
-  //     })
-  //     .filter((item) => item !== undefined)
-  // );
-
-  // const addTitle = (index: number) => {
-  //   const ranNum = Math.floor(Math.random() * 10);
-  //   const yeah = {
-  //     title: `title ${ranNum}`,
-  //   };
-  //   setData((prev) => {
-  //     const newData = [...prev];
-  //     if (newData.length !== 0) {
-  //       newData[personIndex][index] = {
-  //         ...newData[personIndex][index],
-  //         title: `title ${ranNum}`,
-  //       };
-  //     } else {
-  //       newData[personIndex] = [yeah];
-  //     }
-  //     return newData;
-  //   });
-  // };
-  // const addValue = (index: number) => {
-  //   const ranNum = Math.floor(Math.random() * 10);
-  //   const yeah = {
-  //     value: `${ranNum}`,
-  //   };
-  //   setData((prev) => {
-  //     const newData = [...prev];
-  //     if (newData.length !== 0) {
-  //       newData[personIndex][index] = {
-  //         ...newData[personIndex][index],
-  //         value: `${ranNum}`,
-  //       };
-  //     } else {
-  //       newData[personIndex] = [yeah];
-  //     }
-  //     return newData;
-  //   });
-  // };
-  console.log(storedMappedData, ' ???');
   return (
     <Box p={2} sx={{ bgColor: 'beige' }}>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
@@ -161,9 +112,11 @@ const MappingPreview = () => {
               })}
           {storedMappedData?.map((item, index) => {
             let field = '';
-            if (item.kind === ColumnKind.FIELD) {
-              field = item.field;
-            }
+            columnOptions.forEach((columnOp) => {
+              if (columnOp.value === `field:${item?.header}`) {
+                field = columnOp.label;
+              }
+            });
             return (
               <Box
                 key={index}
@@ -195,6 +148,19 @@ const MappingPreview = () => {
                   >
                     {field}
                   </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    backgroundColor:
+                      item?.value[index] !== undefined
+                        ? 'transparent'
+                        : theme.palette.transparentGrey.light,
+                    display: 'flex',
+                    height: '14px',
+                  }}
+                >
+                  <Typography variant="body1">{item?.value[index]}</Typography>
                 </Box>
               </Box>
             );
