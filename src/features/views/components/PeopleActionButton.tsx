@@ -114,17 +114,11 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
                           ],
                         },
                         {
-                          data: [
-                            'Huey',
-                            'P Newton',
-                            'huey@gmail.com',
-                            51,
-                            'Parrot',
-                          ],
+                          data: ['Hey', 'P', 'huey@gmail.com', 51, 'Parrot'],
                         },
                         {
                           data: [
-                            'Huey',
+                            'Haeju',
                             'P Newton',
                             'huey@gmail.com',
                             51,
@@ -133,7 +127,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
                         },
                         {
                           data: [
-                            'Huey',
+                            'Hello',
                             'P Newton',
                             'huey@gmail.com',
                             51,
