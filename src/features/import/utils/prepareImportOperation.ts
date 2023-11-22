@@ -3,7 +3,7 @@ import { CellData, ColumnKind, Sheet } from './types';
 export type OpsType = {
   fields?: Record<string, CellData>;
   op: 'person.import';
-  organizations?: number[];
+  organizations?: number | null;
   tags?: number[];
 };
 export interface ImportOpsProp {
@@ -45,18 +45,16 @@ export function prepareImportOperations(configData: Sheet): ImportOpsProp {
           if (!result.ops[rowIndex]) {
             result.ops.push({ op: 'person.import', tags: [] });
           }
-          result.ops[rowIndex].tags = column.mapping[rowIndex].tags.map(
-            (item) => item.id
-          );
+          result.ops[rowIndex].tags = column.mapping[rowIndex].tagIds;
         }
         if (column.kind === ColumnKind.ORGANIZATION) {
           if (!result.ops[rowIndex]) {
             result.ops.push({
               op: 'person.import',
-              organizations: [],
+              organizations: null,
             });
           }
-          result.ops[rowIndex].organizations = column.mapping[rowIndex].orgIds;
+          result.ops[rowIndex].organizations = column.mapping[rowIndex].orgId;
         }
       });
     }
