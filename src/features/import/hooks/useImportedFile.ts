@@ -39,10 +39,9 @@ export default function useFileImport() {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       file.type === 'application/xls'
     ) {
-      parseExcelFile(file).then((res) => {
-        saveData(res);
-        setLoading(false);
-      });
+      const res = await parseExcelFile(file);
+      saveData(res);
+      setLoading(false);
     } else {
       return null;
     }
