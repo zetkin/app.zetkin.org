@@ -163,6 +163,9 @@ export default function useUIDataColumns(): UIDataColumn[] {
           if (map.value) {
             numPeople += numRowsByUniqueValue[map.value];
           }
+          if (!map.value) {
+            numPeople += numberOfEmptyRows;
+          }
         });
 
         return (
@@ -186,7 +189,7 @@ export default function useUIDataColumns(): UIDataColumn[] {
             id={messageIds.configuration.mapping.finishedMappingIds}
             values={{
               idField: originalColumn.idField,
-              numValues: rowsWithValues.length,
+              numValues: rowsWithValues.length + numberOfEmptyRows,
             }}
           />
         );
@@ -202,7 +205,11 @@ export default function useUIDataColumns(): UIDataColumn[] {
           if (map.value) {
             numPeople += numRowsByUniqueValue[map.value];
           }
+          if (!map.value) {
+            numPeople += numberOfEmptyRows;
+          }
         });
+
         return (
           <Msg
             id={messageIds.configuration.mapping.finishedMappingOrganizations}
@@ -375,14 +382,12 @@ export default function useUIDataColumns(): UIDataColumn[] {
             (m) => m.value != value
           );
 
-          const updatedMap = { ...map, orgId: null };
-
           dispatch(
             updateColumn([
               index,
               {
                 ...originalColumn,
-                mapping: filteredMapping.concat(updatedMap),
+                mapping: filteredMapping,
               },
             ])
           );
