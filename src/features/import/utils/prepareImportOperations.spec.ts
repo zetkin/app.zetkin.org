@@ -1,4 +1,4 @@
-import { prepareImportOperations } from './prepareImportOperation';
+import prepareImportOperations from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
 import { describe, it } from '@jest/globals';
 
@@ -27,22 +27,20 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          fields: {
-            ext_id: '123',
-          },
-          op: 'person.import',
+    expect(result).toEqual([
+      {
+        fields: {
+          ext_id: '123',
         },
-        {
-          fields: {
-            ext_id: '124',
-          },
-          op: 'person.import',
+        op: 'person.import',
+      },
+      {
+        fields: {
+          ext_id: '124',
         },
-      ],
-    });
+        op: 'person.import',
+      },
+    ]);
   });
   it('converts fields only', () => {
     const configData: Sheet = {
@@ -76,24 +74,22 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          fields: {
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
+    expect(result).toEqual([
+      {
+        fields: {
+          first_name: 'Jane',
+          last_name: 'Doe',
         },
-        {
-          fields: {
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
+        op: 'person.import',
+      },
+      {
+        fields: {
+          first_name: 'John',
+          last_name: 'Doe',
         },
-      ],
-    });
+        op: 'person.import',
+      },
+    ]);
   });
   it('converts tags only', () => {
     const configData: Sheet = {
@@ -126,18 +122,16 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          op: 'person.import',
-          tags: [123, 100],
-        },
-        {
-          op: 'person.import',
-          tags: [124, 100],
-        },
-      ],
-    });
+    expect(result).toEqual([
+      {
+        op: 'person.import',
+        tags: [123, 100],
+      },
+      {
+        op: 'person.import',
+        tags: [124, 100],
+      },
+    ]);
   });
   it('converts simple fields with ID', () => {
     const configData: Sheet = {
@@ -170,26 +164,24 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          fields: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
+    expect(result).toEqual([
+      {
+        fields: {
+          ext_id: '123',
+          first_name: 'Jane',
+          last_name: 'Doe',
         },
-        {
-          fields: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
+        op: 'person.import',
+      },
+      {
+        fields: {
+          ext_id: '124',
+          first_name: 'John',
+          last_name: 'Doe',
         },
-      ],
-    });
+        op: 'person.import',
+      },
+    ]);
   });
   it('converts ID, fields, tags and orgs', () => {
     const configData: Sheet = {
@@ -237,30 +229,28 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          fields: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: 272,
-          tags: [123, 100],
+    expect(result).toEqual([
+      {
+        fields: {
+          ext_id: '123',
+          first_name: 'Jane',
+          last_name: 'Doe',
         },
-        {
-          fields: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: 272,
-          tags: [124, 100],
+        op: 'person.import',
+        organizations: 272,
+        tags: [123, 100],
+      },
+      {
+        fields: {
+          ext_id: '124',
+          first_name: 'John',
+          last_name: 'Doe',
         },
-      ],
-    });
+        op: 'person.import',
+        organizations: 272,
+        tags: [124, 100],
+      },
+    ]);
   });
   it('converts ID, fields and tags', () => {
     const configData: Sheet = {
@@ -300,28 +290,26 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          fields: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          tags: [123, 100],
+    expect(result).toEqual([
+      {
+        fields: {
+          ext_id: '123',
+          first_name: 'Jane',
+          last_name: 'Doe',
         },
-        {
-          fields: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          tags: [124, 100],
+        op: 'person.import',
+        tags: [123, 100],
+      },
+      {
+        fields: {
+          ext_id: '124',
+          first_name: 'John',
+          last_name: 'Doe',
         },
-      ],
-    });
+        op: 'person.import',
+        tags: [124, 100],
+      },
+    ]);
   });
   it('converts other columns when ID column is not chosen', () => {
     const configData: Sheet = {
@@ -369,28 +357,26 @@ describe('prepareImportOperations when first row is header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          fields: {
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: 272,
-          tags: [123, 100],
+    expect(result).toEqual([
+      {
+        fields: {
+          first_name: 'Jane',
+          last_name: 'Doe',
         },
-        {
-          fields: {
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: 272,
-          tags: [124, 100],
+        op: 'person.import',
+        organizations: 272,
+        tags: [123, 100],
+      },
+      {
+        fields: {
+          first_name: 'John',
+          last_name: 'Doe',
         },
-      ],
-    });
+        op: 'person.import',
+        organizations: 272,
+        tags: [124, 100],
+      },
+    ]);
   });
 });
 
@@ -438,29 +424,27 @@ describe('prepareImportOperations when first row is not header', () => {
       title: 'My sheet',
     };
     const result = prepareImportOperations(configData);
-    expect(result).toEqual({
-      ops: [
-        {
-          fields: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: 272,
-          tags: [123, 100],
+    expect(result).toEqual([
+      {
+        fields: {
+          ext_id: '123',
+          first_name: 'Jane',
+          last_name: 'Doe',
         },
-        {
-          fields: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: 272,
-          tags: [124, 100],
+        op: 'person.import',
+        organizations: 272,
+        tags: [123, 100],
+      },
+      {
+        fields: {
+          ext_id: '124',
+          first_name: 'John',
+          last_name: 'Doe',
         },
-      ],
-    });
+        op: 'person.import',
+        organizations: 272,
+        tags: [124, 100],
+      },
+    ]);
   });
 });
