@@ -2,9 +2,9 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import MappedPreview from './MappedPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import PreviewWithValues from './PreviewWithValues';
 import useSheets from 'features/import/hooks/useSheets';
 
 const MappingPreview = () => {
@@ -86,7 +86,7 @@ const MappingPreview = () => {
             currentSheet.columns.map((column, index) => {
               return (
                 column.selected && (
-                  <PreviewWithValues
+                  <MappedPreview
                     column={column}
                     columnIndex={index}
                     currentSheet={currentSheet}

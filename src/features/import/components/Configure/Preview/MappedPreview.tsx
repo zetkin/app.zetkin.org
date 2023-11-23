@@ -9,18 +9,18 @@ import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useSheets from 'features/import/hooks/useSheets';
 import { Column, ColumnKind, Sheet } from 'features/import/utils/types';
 
-interface PreviewWithValuesProps {
+interface MappedPreviewProps {
   column: Column;
   columnIndex: number;
   currentSheet: Sheet;
   personIndex: number;
 }
-const PreviewWithValues = ({
+const MappedPreview = ({
   column,
   columnIndex,
   currentSheet,
   personIndex,
-}: PreviewWithValuesProps) => {
+}: MappedPreviewProps) => {
   const theme = useTheme();
 
   const { orgId } = useNumericRouteParams();
@@ -124,4 +124,4 @@ const PreviewWithValues = ({
   );
 };
 
-export default PreviewWithValues;
+export default MappedPreview;
