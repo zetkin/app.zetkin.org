@@ -122,9 +122,10 @@ export default makeMessages('feat.import', {
       zetkinHeader: m('Zetkin'),
     },
     preview: {
-      id: {
+      columnHeader: {
         ext: m('External ID'),
         int: m('ID'),
+        org: m('Organization'),
       },
       next: m('Next'),
       previous: m('Previous'),

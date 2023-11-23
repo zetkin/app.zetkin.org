@@ -2,24 +2,20 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import { ColumnKind } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
-import useColumnOptions from 'features/import/hooks/useColumnOptions';
-import { useNumericRouteParams } from 'core/hooks';
+import { Msg } from 'core/i18n';
+import PreviewWithValues from './PreviewWithValues';
 import useSheets from 'features/import/hooks/useSheets';
-import { Msg, useMessages } from 'core/i18n';
 
 const MappingPreview = () => {
   const theme = useTheme();
-  const { orgId } = useNumericRouteParams();
-  const messages = useMessages(messageIds);
-  const columnOptions = useColumnOptions(orgId);
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const currentSheet = sheets[selectedSheetIndex];
   const [personIndex, setPersonIndex] = useState(0);
   const emptyPreview = currentSheet.columns.every(
     (item) => item.selected === false
   );
+
   useEffect(() => {
     setPersonIndex(0);
   }, [selectedSheetIndex]);
@@ -88,76 +84,14 @@ const MappingPreview = () => {
               })}
           {!emptyPreview &&
             currentSheet.columns.map((column, index) => {
-              let columnName = '';
-              const rowValue =
-                currentSheet.rows[personIndex] !== undefined
-                  ? currentSheet?.rows[
-                      firstRowIsHeaders ? personIndex + 1 : personIndex
-                    ].data[index]
-                  : null;
-              columnOptions.forEach((columnOp) => {
-                if (column.kind === ColumnKind.ID_FIELD) {
-                  columnName =
-                    column.idField === null
-                      ? ''
-                      : column.idField === 'id'
-                      ? messages.configuration.preview.id.int()
-                      : messages.configuration.preview.id.ext();
-                }
-                if (
-                  column.kind === ColumnKind.FIELD &&
-                  columnOp.value === `field:${column.field}`
-                ) {
-                  columnName = columnOp.label;
-                }
-              });
               return (
                 column.selected && (
-                  <Box
-                    key={index}
-                    flexGrow={1}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      mr: 2,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        backgroundColor:
-                          columnName !== ''
-                            ? 'transparent'
-                            : theme.palette.transparentGrey.light,
-                        height: '14px',
-                        mb: 1,
-                      }}
-                    >
-                      <Typography
-                        fontSize="12px"
-                        sx={{
-                          color: theme.palette.grey['600'],
-                          letterSpacing: '1px',
-                          textTransform: 'uppercase',
-                        }}
-                        variant="body1"
-                      >
-                        {columnName}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        backgroundColor:
-                          rowValue !== null
-                            ? 'transparent'
-                            : theme.palette.transparentGrey.light,
-                        display: 'flex',
-                        height: '14px',
-                      }}
-                    >
-                      <Typography variant="body1">{rowValue}</Typography>
-                    </Box>
-                  </Box>
+                  <PreviewWithValues
+                    column={column}
+                    columnIndex={index}
+                    currentSheet={currentSheet}
+                    personIndex={personIndex}
+                  />
                 )
               );
             })}
