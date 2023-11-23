@@ -28,7 +28,15 @@ export type UIDataColumn = {
   wrongIDFormat: boolean;
 };
 
-export default function useUIDataColumns(orgId: number): UIDataColumn[] {
+interface UseUIDataColumnsReturn {
+  forwardMessageDisabled: boolean;
+  numRows: number;
+  uiDataColumns: UIDataColumn[];
+}
+
+export default function useUIDataColumns(
+  orgId: number
+): UseUIDataColumnsReturn {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const tagsFuture = useTags(orgId);
@@ -426,5 +434,27 @@ export default function useUIDataColumns(orgId: number): UIDataColumn[] {
     };
   });
 
-  return uiDataColumns;
+  const noSelectedColumns = uiDataColumns.every(
+    (uiDataColumn) => uiDataColumn.originalColumn.selected == false
+  );
+  const unfinishedMapping = uiDataColumns.some((uiDataColumn) => {
+    if (
+      //A column was selected but not what to import it as
+      (uiDataColumn.originalColumn.selected &&
+        uiDataColumn.originalColumn.kind == ColumnKind.UNKNOWN) ||
+      //A column that needs config was selected but config was not finished
+      uiDataColumn.showNeedsConfigMessage == true ||
+      //A selected column is used as Zetkin IDs but the format of the cell values are wrong
+      uiDataColumn.wrongIDFormat
+    ) {
+      return true;
+    }
+    return false;
+  });
+
+  const forwardMessageDisabled = noSelectedColumns || unfinishedMapping;
+
+  const numRows = firstRowIsHeaders ? rows.length - 1 : rows.length;
+
+  return { forwardMessageDisabled, numRows, uiDataColumns };
 }

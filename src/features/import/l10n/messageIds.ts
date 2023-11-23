@@ -130,6 +130,12 @@ export default makeMessages('feat.import', {
       sheetSelectLabel: m('Sheet'),
     },
     show: m('Show'),
+    statusMessage: {
+      done: m<{ numConfiguredPeople: number }>(
+        'Configures import of {numConfiguredPeople, plural, =1 {1 person} other {# people}}'
+      ),
+      notDone: m('You need to map values'),
+    },
     title: m('Import people'),
   },
   done: m('Done'),

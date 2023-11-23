@@ -2,17 +2,27 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
+import ImportFooter from '../ImportFooter';
 import Mapping from './Mapping';
+import messageIds from 'features/import/l10n/messageIds';
 import SheetSettings from './SheetSettings';
+import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
-const Configure: FC = () => {
+interface ConfigureProps {
+  onClickBack: () => void;
+  onClickForward: () => void;
+}
+
+const Configure: FC<ConfigureProps> = ({ onClickBack, onClickForward }) => {
+  const messages = useMessages(messageIds);
   const [columnIndexBeingConfigured, setColumnIndexBeingConfigured] = useState<
     number | null
   >(null);
   const { orgId } = useNumericRouteParams();
-  const uiDataColumns = useUIDataColumns(orgId);
+  const { forwardMessageDisabled, numRows, uiDataColumns } =
+    useUIDataColumns(orgId);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -46,6 +56,20 @@ const Configure: FC = () => {
         </Box>
       </Box>
       <Box padding={4}>Preview</Box>
+      <ImportFooter
+        backButtonMsg={messages.restart()}
+        forwardButtonDisabled={forwardMessageDisabled}
+        forwardButtonMsg={messages.validate()}
+        onClickBack={onClickBack}
+        onClickForward={onClickForward}
+        statusMessage={
+          forwardMessageDisabled
+            ? messages.configuration.statusMessage.notDone()
+            : messages.configuration.statusMessage.done({
+                numConfiguredPeople: numRows,
+              })
+        }
+      />
     </Box>
   );
 };

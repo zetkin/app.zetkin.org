@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UploadFile = () => {
+const Upload = () => {
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
   const { parseData, loading } = useImportedFile();
@@ -193,4 +193,4 @@ const UploadFile = () => {
   );
 };
 
-export default UploadFile;
+export default Upload;

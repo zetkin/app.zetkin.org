@@ -1,7 +1,6 @@
 import { Clear } from '@mui/icons-material';
 import {
   Box,
-  Button,
   Dialog,
   IconButton,
   Step,
@@ -16,16 +15,16 @@ import { FC, useState } from 'react';
 import Configure from './Configure';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import Upload from './Upload';
 
 interface ImporterProps {
   onClose: () => void;
-  onRestart: () => void;
   open: boolean;
 }
 
 type StepType = 0 | 1 | 2 | 3;
 
-const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
+const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activeStep, setActiveStep] = useState<StepType>(1);
@@ -83,57 +82,23 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
               )}
             </Box>
             <IconButton>
-              <Clear color="secondary" onClick={onClose} />
+              <Clear
+                color="secondary"
+                onClick={() => {
+                  onClose();
+                  setActiveStep(1);
+                }}
+              />
             </IconButton>
           </Box>
         </Box>
-        <Configure />
-        <Box alignItems="center" display="flex" justifyContent="flex-end">
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="flex-end"
-            padding={2}
-          >
-            <Typography color="secondary">
-              This message will depend on the state of the import.
-            </Typography>
-            <Button
-              onClick={() => {
-                activeStep > 1
-                  ? setActiveStep((prev) => (prev - 1) as StepType)
-                  : onRestart();
-              }}
-              sx={{ mx: 1 }}
-              variant="text"
-            >
-              <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
-            </Button>
-            <Button
-              disabled={false}
-              onClick={() => {
-                if (activeStep === 3) {
-                  onClose();
-                  setActiveStep(1);
-                } else {
-                  setActiveStep((prev) => (prev + 1) as StepType);
-                }
-              }}
-              sx={{ ml: 1 }}
-              variant="contained"
-            >
-              <Msg
-                id={
-                  activeStep === 1
-                    ? messageIds.validate
-                    : activeStep === 2
-                    ? messageIds.import
-                    : messageIds.done
-                }
-              />
-            </Button>
-          </Box>
-        </Box>
+        {activeStep == 0 && <Upload />}
+        {activeStep == 1 && (
+          <Configure
+            onClickBack={() => setActiveStep(0)}
+            onClickForward={() => setActiveStep(2)}
+          />
+        )}
       </Box>
     </Dialog>
   );
