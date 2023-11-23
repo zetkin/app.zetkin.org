@@ -102,7 +102,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
                           data: ['Maya', 'Angelou', 'maya@gmail.com', 66, null],
                         },
                         {
-                          data: ['Rosa', 'Parks', 'rosa@gmail.com', 81, 'Cat'],
+                          data: ['Rosa', 'Parks', 'rosa@gmail.com', 34, 'Cat'],
                         },
                         {
                           data: [

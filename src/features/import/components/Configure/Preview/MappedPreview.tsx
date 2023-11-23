@@ -1,12 +1,15 @@
-import { Typography } from '@mui/material';
 import { Box, useTheme } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
+import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useSheets from 'features/import/hooks/useSheets';
+import useTags from 'features/tags/hooks/useTags';
+import { ZetkinTag } from 'utils/types/zetkin';
 import { Column, ColumnKind, Sheet } from 'features/import/utils/types';
 
 interface MappedPreviewProps {
@@ -28,11 +31,16 @@ const MappedPreview = ({
   const messages = useMessages(messageIds);
   const organizations = useOrganizations();
   const { firstRowIsHeaders } = useSheets();
+  const { data } = useTags(orgId);
+  const tags = data || [];
 
   const rowIndex = firstRowIsHeaders ? personIndex + 1 : personIndex;
   const columnIsOrg = column.kind === ColumnKind.ORGANIZATION;
+  const columnIsTags = column.kind === ColumnKind.TAG;
+
   let columnName = '';
-  let orgName = '';
+  let orgTitle = '';
+  let mappedTags: ZetkinTag[] = [];
 
   const rowValue =
     currentSheet.rows[personIndex] !== undefined
@@ -68,9 +76,27 @@ const MappedPreview = ({
       const org = organizations.data?.find(
         (item) => item.id === mappedOrg.orgId
       );
-      orgName = org?.title || '';
+      orgTitle = org?.title || '';
     }
     columnName = messages.configuration.preview.columnHeader.org();
+  }
+
+  if (column.kind === ColumnKind.TAG) {
+    const tagValueInRow = currentSheet.rows[rowIndex].data[columnIndex];
+    const tagIdsInColumn = column.mapping.find(
+      (item) => item.value === tagValueInRow
+    )?.tagIds;
+
+    mappedTags =
+      tagIdsInColumn?.reduce((acc: ZetkinTag[], tagId) => {
+        const tag = tags.find((tag) => tag.id === tagId);
+        if (tag) {
+          return acc.concat(tag);
+        }
+        return acc;
+      }, []) ?? [];
+
+    columnName = messages.configuration.preview.columnHeader.tags();
   }
 
   return (
@@ -109,15 +135,27 @@ const MappedPreview = ({
         sx={{
           alignItems: 'center',
           backgroundColor:
-            (!columnIsOrg && rowValue !== null) || orgName !== ''
+            (!columnIsOrg && !columnIsTags && rowValue !== null) ||
+            orgTitle !== '' ||
+            mappedTags.length !== 0
               ? 'transparent'
               : theme.palette.transparentGrey.light,
           display: 'flex',
           height: '14px',
         }}
       >
-        <Typography variant="body1">
-          {columnIsOrg ? orgName : rowValue}
+        <Typography sx={{ mt: 0.5 }} variant="body1">
+          {columnIsOrg ? (
+            orgTitle
+          ) : columnIsTags ? (
+            <Stack direction="row" spacing={1}>
+              {mappedTags.map((tag, index) => {
+                return <TagChip key={index} size="small" tag={tag} />;
+              })}
+            </Stack>
+          ) : (
+            rowValue
+          )}
         </Typography>
       </Box>
     </Box>

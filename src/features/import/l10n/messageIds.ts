@@ -126,6 +126,7 @@ export default makeMessages('feat.import', {
         ext: m('External ID'),
         int: m('ID'),
         org: m('Organization'),
+        tags: m('Tags'),
       },
       next: m('Next'),
       previous: m('Previous'),
