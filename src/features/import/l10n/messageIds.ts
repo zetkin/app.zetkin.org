@@ -122,6 +122,10 @@ export default makeMessages('feat.import', {
       zetkinHeader: m('Zetkin'),
     },
     preview: {
+      id: {
+        ext: m('External ID'),
+        int: m('ID'),
+      },
       next: m('Next'),
       previous: m('Previous'),
       title: m('Mapping preview'),

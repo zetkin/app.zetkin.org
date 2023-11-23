@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react';
 
 import { ColumnKind } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useNumericRouteParams } from 'core/hooks';
 import useSheets from 'features/import/hooks/useSheets';
+import { Msg, useMessages } from 'core/i18n';
 
 const MappingPreview = () => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
-
+  const messages = useMessages(messageIds);
   const columnOptions = useColumnOptions(orgId);
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const currentSheet = sheets[selectedSheetIndex];
@@ -96,6 +96,14 @@ const MappingPreview = () => {
                     ].data[index]
                   : null;
               columnOptions.forEach((columnOp) => {
+                if (column.kind === ColumnKind.ID_FIELD) {
+                  columnName =
+                    column.idField === null
+                      ? ''
+                      : column.idField === 'id'
+                      ? messages.configuration.preview.id.int()
+                      : messages.configuration.preview.id.ext();
+                }
                 if (
                   column.kind === ColumnKind.FIELD &&
                   columnOp.value === `field:${column.field}`
