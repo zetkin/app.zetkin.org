@@ -42,7 +42,7 @@ module.exports = {
       },
       {
         source: '/organize/:orgId(\\d{1,})/areas',
-        destination: '/legacy?path=/maps&orgId=:orgId',
+        destination: `https://organize.${process.env.ZETKIN_API_DOMAIN}/maps&orgId=:orgId`,
         permanent: false,
       },
       {
