@@ -11,11 +11,11 @@ import { useNumericRouteParams } from 'core/hooks';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
 interface ConfigureProps {
-  onClickBack: () => void;
-  onClickForward: () => void;
+  onRestart: () => void;
+  onValidate: () => void;
 }
 
-const Configure: FC<ConfigureProps> = ({ onClickBack, onClickForward }) => {
+const Configure: FC<ConfigureProps> = ({ onRestart, onValidate }) => {
   const messages = useMessages(messageIds);
   const [columnIndexBeingConfigured, setColumnIndexBeingConfigured] = useState<
     number | null
@@ -57,11 +57,11 @@ const Configure: FC<ConfigureProps> = ({ onClickBack, onClickForward }) => {
       </Box>
       <Box padding={4}>Preview</Box>
       <ImportFooter
-        backButtonMsg={messages.restart()}
-        forwardButtonDisabled={forwardMessageDisabled}
-        forwardButtonMsg={messages.validate()}
-        onClickBack={onClickBack}
-        onClickForward={onClickForward}
+        onClickPrimary={onValidate}
+        onClickSecondary={onRestart}
+        primaryButtonDisabled={forwardMessageDisabled}
+        primaryButtonMsg={messages.actionButtons.validate()}
+        secondaryButtonMsg={messages.actionButtons.restart()}
         statusMessage={
           forwardMessageDisabled
             ? messages.configuration.statusMessage.notDone()

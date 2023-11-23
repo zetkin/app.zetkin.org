@@ -4,18 +4,18 @@ import { UploadFileOutlined } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import {
   Box,
-  Button,
   CircularProgress,
   IconButton,
   Link,
   Typography,
   useTheme,
 } from '@mui/material';
-import { CSSProperties, useCallback, useState } from 'react';
+import { CSSProperties, FC, useCallback, useState } from 'react';
 
+import ImportFooter from './ImportFooter';
 import messageIds from '../l10n/messageIds';
 import useImportedFile from '../hooks/useImportedFile';
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 
 const sharedProperties: CSSProperties = {
   alignItems: 'center',
@@ -25,8 +25,10 @@ const sharedProperties: CSSProperties = {
   flexDirection: 'column',
   flexWrap: 'wrap',
   margin: 16,
+  minWidth: 600,
   padding: 50,
   textAlign: 'center',
+  transition: 'height 1s',
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -59,7 +61,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Upload = () => {
+interface UploadProps {
+  onSuccess: () => void;
+}
+
+const Upload: FC<UploadProps> = ({ onSuccess }) => {
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
   const { parseData, loading } = useImportedFile();
@@ -74,8 +80,11 @@ const Upload = () => {
   }
 
   const onDrop = useCallback((acceptedFiles: File[]): void => {
-    acceptedFiles.map((file: File) => {
-      parseData(file);
+    acceptedFiles.map(async (file: File) => {
+      const uploadStatus = await parseData(file);
+      if (uploadStatus == 'success') {
+        onSuccess();
+      }
     });
   }, []);
 
@@ -106,88 +115,67 @@ const Upload = () => {
           </Box>
         )}
         <input type="file" {...getInputProps()} />
-        <Box>
-          {!loading && (
-            <>
-              <IconButton
-                onClick={open}
-                sx={{
-                  backgroundColor: theme.palette.grey[300],
-                  borderRadius: 100,
-                  cursor: 'pointer',
-                  height: '40px',
-                  padding: '30px',
-                  width: '40px',
-                }}
-              >
-                <UploadFileOutlined
-                  sx={{ color: theme.palette.primary.main, fontSize: 40 }}
-                />
-              </IconButton>
-              {isDragActive ? (
-                <Typography>{messages.uploadDialog.release()}</Typography>
-              ) : (
-                <>
-                  <Box pt={2}>
-                    <Typography component="span">
-                      {messages.uploadDialog.instructions({
-                        link: (
-                          <Link
-                            onClick={open}
-                            sx={{
-                              color: theme.palette.primary.main,
-                              cursor: 'pointer',
-                              textDecorationLine: 'underline',
-                            }}
-                          >
-                            {messages.uploadDialog.selectClick()}
-                          </Link>
-                        ),
-                      })}
-                    </Typography>
-                  </Box>
-
-                  <Box pt={1} />
-                  {error ? (
-                    <Typography sx={{ color: theme.palette.primary.main }}>
-                      {messages.uploadDialog.unsupportedFile()}
-                    </Typography>
-                  ) : (
-                    <Typography sx={{ color: theme.palette.secondary.main }}>
-                      {messages.uploadDialog.types()}
-                    </Typography>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </Box>
-      </Box>
-      {error && !loading && (
-        <Box display="flex" justifyContent="flex-end" p={1} width={1}>
-          <Box m={1}>
-            <Button
-              color="primary"
-              onClick={(ev) => {
-                ev.stopPropagation();
-                setError(false);
+        {!loading && (
+          <>
+            <IconButton
+              onClick={open}
+              sx={{
+                backgroundColor: theme.palette.grey[300],
+                borderRadius: 100,
+                cursor: 'pointer',
+                height: '40px',
+                padding: '30px',
+                width: '40px',
               }}
             >
-              <Msg id={messageIds.uploadDialog.dialogButtons.restart} />
-            </Button>
-          </Box>
-          <Box m={1}>
-            <Button
-              color="primary"
-              disabled={error}
-              onClick={(ev) => ev.stopPropagation()}
-              type="submit"
-              variant="contained"
-            >
-              <Msg id={messageIds.uploadDialog.dialogButtons.configure} />
-            </Button>
-          </Box>
-        </Box>
+              <UploadFileOutlined
+                sx={{ color: theme.palette.primary.main, fontSize: 40 }}
+              />
+            </IconButton>
+            {isDragActive ? (
+              <Typography>{messages.uploadDialog.release()}</Typography>
+            ) : (
+              <>
+                <Typography component="span" sx={{ paddingTop: 2 }}>
+                  {messages.uploadDialog.instructions({
+                    link: (
+                      <Link
+                        onClick={open}
+                        sx={{
+                          color: theme.palette.primary.main,
+                          cursor: 'pointer',
+                          textDecorationLine: 'underline',
+                        }}
+                      >
+                        {messages.uploadDialog.selectClick()}
+                      </Link>
+                    ),
+                  })}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: error
+                      ? theme.palette.primary.main
+                      : theme.palette.secondary.main,
+                    paddingTop: 1,
+                  }}
+                >
+                  {error
+                    ? messages.uploadDialog.unsupportedFile()
+                    : messages.uploadDialog.types()}
+                </Typography>
+              </>
+            )}
+          </>
+        )}
+      </Box>
+      {error && !loading && (
+        <ImportFooter
+          onClickSecondary={() => setError(false)}
+          primaryButtonDisabled={true}
+          primaryButtonMsg={messages.actionButtons.configure()}
+          secondaryButtonMsg={messages.actionButtons.restart()}
+        />
       )}
     </>
   );

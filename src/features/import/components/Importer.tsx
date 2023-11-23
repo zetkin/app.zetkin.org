@@ -27,7 +27,7 @@ type StepType = 0 | 1 | 2 | 3;
 const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeStep, setActiveStep] = useState<StepType>(1);
+  const [activeStep, setActiveStep] = useState<StepType>(0);
 
   const showStepper = activeStep == 1 || activeStep == 2;
 
@@ -92,11 +92,11 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
             </IconButton>
           </Box>
         </Box>
-        {activeStep == 0 && <Upload />}
+        {activeStep == 0 && <Upload onSuccess={() => setActiveStep(1)} />}
         {activeStep == 1 && (
           <Configure
-            onClickBack={() => setActiveStep(0)}
-            onClickForward={() => setActiveStep(2)}
+            onRestart={() => setActiveStep(0)}
+            onValidate={() => setActiveStep(2)}
           />
         )}
       </Box>

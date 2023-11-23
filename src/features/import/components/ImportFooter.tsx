@@ -2,21 +2,21 @@ import { FC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 
 interface ImportFooterProps {
-  backButtonMsg: string;
-  forwardButtonDisabled: boolean;
-  forwardButtonMsg: string;
+  secondaryButtonMsg?: string;
+  primaryButtonDisabled: boolean;
+  primaryButtonMsg: string;
   statusMessage?: string;
-  onClickForward: () => void;
-  onClickBack: () => void;
+  onClickPrimary?: () => void;
+  onClickSecondary?: () => void;
 }
 
 const ImportFooter: FC<ImportFooterProps> = ({
-  backButtonMsg,
-  forwardButtonDisabled,
-  forwardButtonMsg,
+  secondaryButtonMsg,
+  primaryButtonDisabled,
+  primaryButtonMsg,
   statusMessage,
-  onClickBack,
-  onClickForward,
+  onClickSecondary,
+  onClickPrimary,
 }) => {
   return (
     <Box alignItems="center" display="flex" justifyContent="flex-end">
@@ -29,16 +29,16 @@ const ImportFooter: FC<ImportFooterProps> = ({
         {statusMessage && (
           <Typography color="secondary">{statusMessage}</Typography>
         )}
-        <Button onClick={onClickBack} sx={{ mx: 1 }} variant="text">
-          {backButtonMsg}
+        <Button onClick={onClickSecondary} sx={{ mx: 1 }} variant="text">
+          {secondaryButtonMsg}
         </Button>
         <Button
-          disabled={forwardButtonDisabled}
-          onClick={onClickForward}
+          disabled={primaryButtonDisabled}
+          onClick={onClickPrimary}
           sx={{ ml: 1 }}
           variant="contained"
         >
-          {forwardButtonMsg}
+          {primaryButtonMsg}
         </Button>
       </Box>
     </Box>

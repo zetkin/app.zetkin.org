@@ -33,6 +33,7 @@ export default function useFileImport() {
       const withColumns = fileWithColumns(res);
       saveData(withColumns);
       setLoading(false);
+      return 'success';
     } else if (
       file.type === 'application/vnd.ms-excel' ||
       file.type ===
@@ -42,8 +43,9 @@ export default function useFileImport() {
       const res = await parseExcelFile(file);
       saveData(res);
       setLoading(false);
+      return 'success';
     } else {
-      return null;
+      return 'fail';
     }
   }
 
