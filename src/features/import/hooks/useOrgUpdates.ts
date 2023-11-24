@@ -1,4 +1,4 @@
-import { FakeDataType } from '../components/Importer/Validation';
+import { FakeDataType } from '../components/Validation';
 import getAddedOrgsSummary from '../utils/getAddedOrgsSummary';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 

@@ -1,5 +1,5 @@
-import { ALERT_STATUS } from '../components/Importer/Validation/ImportAlert';
-import { FakeDataType } from '../components/Importer/Validation';
+import { ALERT_STATUS } from '../components/ImportAlert';
+import { FakeDataType } from '../components/Validation';
 import messageIds from '../l10n/messageIds';
 import useFieldTitle from './useFieldTitle';
 import { useMessages } from 'core/i18n';

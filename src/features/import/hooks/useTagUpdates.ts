@@ -1,4 +1,4 @@
-import { FakeDataType } from '../components/Importer/Validation';
+import { FakeDataType } from '../components/Validation';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 

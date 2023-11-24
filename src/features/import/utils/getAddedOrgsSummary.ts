@@ -1,4 +1,4 @@
-import { FakeDataType } from '../components/Importer/Validation';
+import { FakeDataType } from '../components/Validation';
 
 export const checkAllValuesAreZero = (obj: FakeDataType['summary']) => {
   const objs = Object.values(obj);

@@ -15,7 +15,7 @@ import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import Validation from './Importer/Validation';
+import Validation from './Validation';
 
 interface ImporterProps {
   onClose: () => void;
