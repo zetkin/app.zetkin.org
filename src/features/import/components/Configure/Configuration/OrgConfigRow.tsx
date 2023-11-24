@@ -38,17 +38,25 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
   const messages = useMessages(messageIds);
   return (
     <Box display="flex" flexDirection="column">
-      <Box display="flex" paddingTop={1}>
+      <Box display="flex">
         <Box
-          alignItems="center"
+          alignItems="flex-start"
           display="flex"
           justifyContent="space-between"
+          paddingTop={1}
           width="50%"
         >
-          <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
+          <Box display="flex" sx={{ wordBreak: 'break-all' }} width="100%">
+            <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
+          </Box>
           <ArrowForward color="secondary" sx={{ marginRight: 1 }} />
         </Box>
-        <Box display="flex" paddingRight={1} width="50%">
+        <Box
+          alignItems="flex-start"
+          display="flex"
+          paddingRight={1}
+          width="50%"
+        >
           <FormControl fullWidth size="small">
             <InputLabel>
               <Msg id={messageIds.configuration.configure.orgs.organizations} />

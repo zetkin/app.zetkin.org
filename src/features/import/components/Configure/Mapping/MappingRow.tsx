@@ -157,9 +157,11 @@ const MappingRow: FC<MappingRowProps> = ({
         minHeight="40px"
       >
         {column.showColumnValuesMessage && (
-          <Typography color="secondary">
-            {column.columnValuesMessage}
-          </Typography>
+          <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
+            <Typography color="secondary">
+              {column.columnValuesMessage}
+            </Typography>
+          </Box>
         )}
         <Typography
           color={

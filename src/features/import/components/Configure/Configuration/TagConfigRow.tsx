@@ -33,7 +33,9 @@ const TagConfigRow: FC<TagConfigRowProps> = ({
           justifyContent="space-between"
           width="50%"
         >
-          <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
+          <Box display="flex" sx={{ wordBreak: 'break-all' }} width="100%">
+            <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
+          </Box>
           <ArrowForward color="secondary" sx={{ marginRight: 1 }} />
         </Box>
         <Box width="50%">
