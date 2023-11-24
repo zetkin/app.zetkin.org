@@ -81,14 +81,13 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
                 </Stepper>
               )}
             </Box>
-            <IconButton>
-              <Clear
-                color="secondary"
-                onClick={() => {
-                  onClose();
-                  setActiveStep(1);
-                }}
-              />
+            <IconButton
+              onClick={() => {
+                onClose();
+                setActiveStep(0);
+              }}
+            >
+              <Clear color="secondary" />
             </IconButton>
           </Box>
         </Box>
