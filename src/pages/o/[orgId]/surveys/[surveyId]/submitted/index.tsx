@@ -1,6 +1,9 @@
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { FC } from 'react';
+import messageIds from 'features/surveys/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { scaffold } from 'utils/next';
-import useSurvey from 'features/surveys/hooks/useSurvey';
+import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -8,27 +11,41 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps = scaffold(async (ctx) => {
+  const { req } = ctx;
   const { surveyId, orgId } = ctx.params!;
+
+  const apiClient = new BackendApiClient(req.headers);
+  let survey: ZetkinSurveyExtended;
+  try {
+    survey = await apiClient.get<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`
+    );
+  } catch (e) {
+    return { notFound: true };
+  }
+
   return {
     props: {
-      orgId,
-      surveyId,
+      survey,
     },
   };
 }, scaffoldOptions);
 
 type PageProps = {
-  orgId: string;
-  surveyId: string;
+  survey: ZetkinSurveyExtended;
 };
 
-const Page: FC<PageProps> = ({ orgId, surveyId }) => {
-  const survey = useSurvey(parseInt(orgId, 10), parseInt(surveyId, 10));
+const Page: FC<PageProps> = ({ survey }) => {
   return (
     <>
-      <h1>Survey Submitted</h1>
+      <h1>
+        <Msg id={messageIds.surveyFormSubmitted.title} />
+      </h1>
       <p>
-        Your responses to &quot;{survey.data?.title}&quot; have been submitted.
+        <Msg
+          id={messageIds.surveyFormSubmitted.text}
+          values={{ title: survey.title }}
+        />
       </p>
     </>
   );
