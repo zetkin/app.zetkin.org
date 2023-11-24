@@ -34,7 +34,7 @@ export default makeMessages('feat.import', {
       checkbox: m('I understand'),
       error: {
         desc: m(
-          'No people have been imported. You can go back and check the import settings or choose a new file to import. There were errors in the form you submitted. Please try again and make sure you fill in all the required information.'
+          'Nothing will be imported. Please go back and check that the configurations you made are correct or select a new file to upload.'
         ),
         title: m('Something went wrong and the import was interrupted.'),
       },

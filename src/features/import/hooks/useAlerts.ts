@@ -30,7 +30,7 @@ export default function useAlerts(
     })
     .map((item) => item[0]);
 
-  //Error: nothing was imported
+  //Error: nothing will be imported
   if (checkEmptyObj(fake) || checkAllValuesAreZero(fake)) {
     alerts.push({
       msg: message.validation.alerts.error.desc(),
