@@ -8,12 +8,12 @@ import {
 import { FC, useState } from 'react';
 
 import Importer from 'features/import/components/Importer';
-import messageIds from '../l10n/messageIds';
-import UploadFile from 'features/import/components/UploadFile';
 import useCreateView from '../hooks/useCreateView';
 import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
+
+import messageIds from '../l10n/messageIds';
 
 interface PeopleActionButtonProps {
   folderId: number | null;
@@ -82,11 +82,9 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
         >
           <Close />
         </IconButton>
-        <UploadFile />
       </Dialog>
       <Importer
         onClose={() => setImporterDialogOpen(false)}
-        onRestart={() => setImporterDialogOpen(false)}
         open={importerDialogOpen}
       />
     </Box>
