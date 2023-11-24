@@ -95,16 +95,15 @@ export const getServerSideProps = scaffold(async (ctx) => {
         };
       }
 
+      const value = form[name];
       if (questionType == 'options') {
-        if (Array.isArray(form[name])) {
-          responses[questionId].options = (form[name] as string[]).map((o) =>
-            parseInt(o)
-          );
-        } else {
-          responses[questionId].options = [parseInt((form[name] as string)!)];
+        if (Array.isArray(value)) {
+          responses[questionId].options = value.map((o) => parseInt(o));
+        } else if (value) {
+          responses[questionId].options = [parseInt(value)];
         }
       } else if (questionType == 'text') {
-        responses[questionId].response = form[name] as string;
+        responses[questionId].response = value as string;
       }
     }
 
