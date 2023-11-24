@@ -17,7 +17,7 @@ interface StyleProps {
   hover: boolean;
   size: TagChipSize;
   tag: ZetkinTag;
-  ellipsisLabel: boolean;
+  noWrappedLabel: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
@@ -71,7 +71,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     overflow: 'hidden',
     padding: '0.2em 0.4em 0.2em 1em',
     textOverflow: 'ellipsis',
-    whiteSpace: ({ ellipsisLabel }) => (ellipsisLabel ? 'nowrap' : 'normal'),
+    whiteSpace: ({ noWrappedLabel }) => (noWrappedLabel ? 'nowrap' : 'normal'),
   },
   value: {
     backgroundColor: ({ tag }) => lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
@@ -102,14 +102,14 @@ const TagToolTip: React.FunctionComponent<{
 
 const TagChip: React.FunctionComponent<{
   disabled?: boolean;
-  ellipsisLabel?: boolean;
+  noWrappedLabel?: boolean;
   onClick?: (tag: ZetkinTag) => void;
   onDelete?: (tag: ZetkinTag) => void;
   size?: TagChipSize;
   tag: ZetkinTag;
 }> = ({
   disabled = false,
-  ellipsisLabel = false,
+  noWrappedLabel = false,
   onClick,
   onDelete,
   size = 'medium',
@@ -120,8 +120,8 @@ const TagChip: React.FunctionComponent<{
     clickable: !!onClick,
     deletable: !!onDelete,
     disabled,
-    ellipsisLabel,
     hover,
+    noWrappedLabel,
     size,
     tag,
   });

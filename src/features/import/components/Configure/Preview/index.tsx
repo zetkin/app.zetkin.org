@@ -22,7 +22,7 @@ const MappingPreview = () => {
   }, [selectedSheetIndex]);
 
   return (
-    <Box p={2} sx={{ bgColor: 'beige' }}>
+    <Box p={2}>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
         <Typography sx={{ mr: 2 }} variant="h5">
           <Msg id={messageIds.configuration.preview.title} />
@@ -57,7 +57,7 @@ const MappingPreview = () => {
           border: '1px solid lightgrey',
           borderRadius: '5px',
           display: 'flex',
-          minHeight: '80px',
+          height: '95px',
           overflowX: 'auto',
         }}
       >
@@ -69,7 +69,7 @@ const MappingPreview = () => {
           {emptyPreview &&
             Array(currentSheet.columns.length)
               .fill(2)
-              .map((item, index) => {
+              .map((marginSize, index) => {
                 return (
                   <Box
                     key={`empty-preview-${index}`}
@@ -77,7 +77,7 @@ const MappingPreview = () => {
                     sx={{
                       backgroundColor: theme.palette.transparentGrey.light,
                       height: '14px',
-                      m: 2,
+                      m: marginSize,
                     }}
                   />
                 );

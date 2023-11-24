@@ -50,15 +50,7 @@ const MappedPreview = ({
 
   const rowHasValue = !columnIsOrg && !columnIsTags && rowValue != null;
 
-  columnOptions.forEach((columnOp) => {
-    if (
-      column.kind === ColumnKind.FIELD &&
-      columnOp.value === `field:${column.field}`
-    ) {
-      columnName = columnOp.label;
-    }
-  });
-
+  //when column is ID
   if (column.kind === ColumnKind.ID_FIELD) {
     columnName =
       column.idField === null
@@ -68,6 +60,19 @@ const MappedPreview = ({
         : messages.configuration.preview.columnHeader.ext();
   }
 
+  //when column is field
+  if (column.kind === ColumnKind.FIELD) {
+    columnOptions.forEach((columnOp) => {
+      if (
+        column.kind === ColumnKind.FIELD &&
+        columnOp.value === `field:${column.field}`
+      ) {
+        columnName = columnOp.label;
+      }
+    });
+  }
+
+  //when column is org
   if (column.kind === ColumnKind.ORGANIZATION) {
     const orgValueInRow = currentSheet.rows[rowIndex].data[columnIndex];
 
@@ -84,6 +89,7 @@ const MappedPreview = ({
     columnName = messages.configuration.preview.columnHeader.org();
   }
 
+  //when column is tags
   if (column.kind === ColumnKind.TAG) {
     const tagValueInRow = currentSheet.rows[rowIndex].data[columnIndex];
     const tagIdsInColumn = column.mapping.find(
@@ -153,7 +159,6 @@ const MappedPreview = ({
             rowHasValue || orgTitle !== '' || mappedTags.length > 0
               ? '0'
               : '5px',
-          // overflow: 'hidden',
         }}
       >
         <Typography variant="body1">
@@ -165,7 +170,7 @@ const MappedPreview = ({
                 return (
                   <TagChip
                     key={index}
-                    ellipsisLabel={true}
+                    noWrappedLabel={true}
                     size="small"
                     tag={tag}
                   />
