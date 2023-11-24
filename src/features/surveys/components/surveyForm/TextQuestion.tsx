@@ -2,9 +2,10 @@ import { FC } from 'react';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import { FormControl, FormLabel, TextField } from '@mui/material';
 
-const OptionsQuestion: FC<{ element: ZetkinSurveyTextQuestionElement }> = ({
-  element,
-}) => {
+const OptionsQuestion: FC<{
+  defaultValue?: string;
+  element: ZetkinSurveyTextQuestionElement;
+}> = ({ element, defaultValue = '' }) => {
   return (
     <FormControl sx={{ width: '100%' }}>
       <FormLabel
@@ -19,6 +20,7 @@ const OptionsQuestion: FC<{ element: ZetkinSurveyTextQuestionElement }> = ({
         {element.question.question}
       </FormLabel>
       <TextField
+        defaultValue={defaultValue}
         fullWidth
         id={`input-${element.id}`}
         name={`${element.id}.text`}
