@@ -48,7 +48,7 @@ export default makeMessages('feat.import', {
             'Sometimes this is a result of a misconfiguration of the import.'
           ),
           title: m<{ fieldName: string }>(
-            'This import will change alot of {fieldName}'
+            "This import will change a lot of people's {fieldName}"
           ),
         },
         unselectedId: {
