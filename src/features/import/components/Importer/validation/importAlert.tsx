@@ -35,7 +35,6 @@ const ImportAlert: FC<ImportAlertProps> = ({
   onClickBack,
 }) => {
   const messages = useMessages(messageIds);
-
   return (
     <Alert
       action={

@@ -5,11 +5,12 @@ import { Typography, useTheme } from '@mui/material';
 import AddedOrgs from './AddedOrgs';
 import AddedTags from './AddedTags';
 import ChangedFields from './ChangedFields';
-import getAddedOrgsSummary from 'features/import/utils/getAddedOrgsSummary';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useAlerts from 'features/import/hooks/useAlerts';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrgUpdates from 'features/import/hooks/useOrgUpdates';
+import useTagUpdates from 'features/import/hooks/useTagUpdates';
 import ImportAlert, { ALERT_STATUS } from './ImportAlert';
 
 export interface FakeDataType {
@@ -85,8 +86,14 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onDisabled }) => {
   const theme = useTheme();
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
   const { orgId } = useNumericRouteParams();
+  const { numPeopleWithOrgsAdded, orgsWithNewPeople } = useOrgUpdates(
+    fake.summary.membershipsCreated
+  );
+  const { numPeopleWithTagsAdded, addedTags } = useTagUpdates(
+    orgId,
+    fake.summary.tagsCreated
+  );
   const alerts = useAlerts(fake.summary, orgId);
-  const addedOrgsSummary = getAddedOrgsSummary(fake.summary.membershipsCreated);
 
   const warningAlerts = alerts.filter(
     (alert) => alert.status === ALERT_STATUS.WARNING
@@ -170,8 +177,18 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onDisabled }) => {
               changedFields={fake.summary.peopleUpdated.byField}
               orgId={orgId}
             />
-            <AddedTags orgId={orgId} tagsCreated={fake.summary.tagsCreated} />
-            <AddedOrgs addedOrgsSummary={addedOrgsSummary} />
+            {addedTags.length > 0 && (
+              <AddedTags
+                addedTags={addedTags}
+                numPeopleWithTagsAdded={numPeopleWithTagsAdded}
+              />
+            )}
+            {orgsWithNewPeople.length > 0 && (
+              <AddedOrgs
+                numPeopleWithOrgsAdded={numPeopleWithOrgsAdded}
+                orgsWithNewPeople={orgsWithNewPeople}
+              />
+            )}
           </Stack>
         </Box>
       </Box>

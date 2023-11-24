@@ -22,7 +22,6 @@ interface ChangedFieldsProps {
 const ChangedFields: FC<ChangedFieldsProps> = ({ changedFields, orgId }) => {
   const theme = useTheme();
   const getFieldTitle = useFieldTitle(orgId);
-
   return (
     <>
       {Object.entries(changedFields).map((field) => {
