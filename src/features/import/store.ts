@@ -11,7 +11,7 @@ const importSlice = createSlice({
   initialState,
   name: 'import',
   reducers: {
-    addFiles: (state, action: PayloadAction<ImportedFile>) => {
+    addFile: (state, action: PayloadAction<ImportedFile>) => {
       const file = action.payload;
       state.files.push(file);
     },
@@ -19,4 +19,4 @@ const importSlice = createSlice({
 });
 
 export default importSlice;
-export const { addFiles } = importSlice.actions;
+export const { addFile } = importSlice.actions;
