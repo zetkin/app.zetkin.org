@@ -28,9 +28,10 @@ const TagConfigRow: FC<TagConfigRowProps> = ({
     <Box display="flex" flexDirection="column">
       <Box display="flex">
         <Box
-          alignItems="center"
+          alignItems="flex-start"
           display="flex"
           justifyContent="space-between"
+          paddingTop={1}
           width="50%"
         >
           <Box display="flex" sx={{ wordBreak: 'break-all' }} width="100%">
