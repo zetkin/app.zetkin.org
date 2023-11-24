@@ -7,7 +7,7 @@ import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useSheets from 'features/import/hooks/useSheets';
 
-const MappingPreview = () => {
+const Preview = () => {
   const theme = useTheme();
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const [personIndex, setPersonIndex] = useState(0);
@@ -101,4 +101,4 @@ const MappingPreview = () => {
   );
 };
 
-export default MappingPreview;
+export default Preview;
