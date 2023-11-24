@@ -53,7 +53,7 @@ export default makeMessages('feat.import', {
         },
         unselectedId: {
           desc: m(
-            'This may result in difficulty in updating people in Zetkin. This is not recommended.'
+            'This can make updating people in Zetkin difficult and is not recommended.'
           ),
           title: m('You have not chosen an ID column'),
         },

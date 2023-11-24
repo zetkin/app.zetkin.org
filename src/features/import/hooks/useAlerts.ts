@@ -30,16 +30,30 @@ export default function useAlerts(
     })
     .map((item) => item[0]);
 
+  //TODO: use actual data to determine if id field was selected.
+  const noIDFieldSelected = true;
+  const emptyImport = checkEmptyObj(fake) || checkAllValuesAreZero(fake);
+
   //Error: nothing will be imported
-  if (checkEmptyObj(fake) || checkAllValuesAreZero(fake)) {
+  if (emptyImport) {
     alerts.push({
       msg: message.validation.alerts.error.desc(),
       status: ALERT_STATUS.ERROR,
       title: message.validation.alerts.error.title(),
     });
   }
-  //Warning when there are many changes to field
-  else if (fieldsWithManyChanges.length > 0) {
+
+  //Warning: No ID column was selected
+  if (noIDFieldSelected) {
+    alerts.push({
+      msg: message.validation.alerts.warning.unselectedId.desc(),
+      status: ALERT_STATUS.WARNING,
+      title: message.validation.alerts.warning.unselectedId.title(),
+    });
+  }
+
+  //Warning: unusual amount of changes to field/s
+  if (fieldsWithManyChanges.length > 0) {
     fieldsWithManyChanges.forEach((fieldSlug) =>
       alerts.push({
         msg: message.validation.alerts.warning.manyChanges.desc(),
@@ -49,12 +63,16 @@ export default function useAlerts(
         }),
       })
     );
-  } else {
+  }
+
+  //Success!
+  if (!emptyImport && !noIDFieldSelected && fieldsWithManyChanges.length == 0) {
     alerts.push({
       msg: message.validation.alerts.info.desc(),
       status: ALERT_STATUS.INFO,
       title: message.validation.alerts.info.title(),
     });
   }
+
   return alerts;
 }
