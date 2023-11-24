@@ -8,7 +8,6 @@ const OptionsQuestion: FC<{ element: ZetkinSurveyTextQuestionElement }> = ({
   return (
     <FormControl sx={{ width: '100%' }}>
       <FormLabel
-        id="demo-radio-buttons-group-label"
         style={{
           color: 'black',
           fontSize: '1.5em',

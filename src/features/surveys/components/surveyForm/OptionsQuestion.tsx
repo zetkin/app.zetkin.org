@@ -21,7 +21,7 @@ const OptionsQuestion: FC<{ element: ZetkinSurveyOptionsQuestionElement }> = ({
   return (
     <FormControl>
       <FormLabel
-        id="demo-radio-buttons-group-label"
+        id={`label-${element.id}`}
         style={{
           color: 'black',
           fontSize: '1.5em',
@@ -33,7 +33,7 @@ const OptionsQuestion: FC<{ element: ZetkinSurveyOptionsQuestionElement }> = ({
         {element.question.question}
       </FormLabel>
       {element.question.response_config.widget_type === 'checkbox' && (
-        <FormGroup aria-labelledby="demo-radio-buttons-group-label">
+        <FormGroup aria-labelledby={`#label-${element.id}`}>
           {element.question.options!.map((option: ZetkinSurveyOption) => (
             <FormControlLabel
               key={option.id}
@@ -47,7 +47,7 @@ const OptionsQuestion: FC<{ element: ZetkinSurveyOptionsQuestionElement }> = ({
       )}
       {element.question.response_config.widget_type === 'radio' && (
         <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
+          aria-labelledby={`#label-${element.id}`}
           name={`${element.id}.options`}
         >
           {element.question.options!.map((option: ZetkinSurveyOption) => (
