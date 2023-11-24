@@ -49,7 +49,7 @@ export default function useUIDataColumns(orgId: number): UIDataColumn[] {
       if (index == 0 && firstRowIsHeaders) {
         return;
       }
-      if (typeof rowValue === 'string' || typeof rowValue === 'number') {
+      if (rowValue) {
         rowsWithValues.push(rowValue);
       } else {
         numberOfEmptyRows += 1;
