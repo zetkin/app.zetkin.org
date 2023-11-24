@@ -16,19 +16,20 @@ import { FC, useState } from 'react';
 import Configure from './Configure';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import Validation from './Validation';
 
 interface ImporterProps {
   onClose: () => void;
-  onRestart: () => void;
   open: boolean;
 }
 
-type StepType = 0 | 1 | 2 | 3;
+type ImportSteps = 0 | 1 | 2 | 3;
 
-const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
+const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeStep, setActiveStep] = useState<StepType>(1);
+  const [activeStep, setActiveStep] = useState<ImportSteps>(1);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   const showStepper = activeStep == 1 || activeStep == 2;
 
@@ -88,6 +89,12 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           </Box>
         </Box>
         <Configure />
+        {activeStep === 2 && (
+          <Validation
+            onClickBack={() => setActiveStep(0)}
+            onDisabled={(value) => setDisabled(value)}
+          />
+        )}
         <Box alignItems="center" display="flex" justifyContent="flex-end">
           <Box
             alignItems="center"
@@ -100,9 +107,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             </Typography>
             <Button
               onClick={() => {
-                activeStep > 1
-                  ? setActiveStep((prev) => (prev - 1) as StepType)
-                  : onRestart();
+                setActiveStep(0);
               }}
               sx={{ mx: 1 }}
               variant="text"
@@ -110,15 +115,8 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
               <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
             </Button>
             <Button
-              disabled={false}
-              onClick={() => {
-                if (activeStep === 3) {
-                  onClose();
-                  setActiveStep(1);
-                } else {
-                  setActiveStep((prev) => (prev + 1) as StepType);
-                }
-              }}
+              disabled={disabled}
+              onClick={() => setActiveStep(1)}
               sx={{ ml: 1 }}
               variant="contained"
             >
