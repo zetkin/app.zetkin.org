@@ -114,7 +114,7 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
-      needsConfig: m('You need to configure the ids'),
+      needsConfig: m('You need to configure the IDs'),
       needsMapping: m('You need to map values'),
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
@@ -130,6 +130,12 @@ export default makeMessages('feat.import', {
       sheetSelectLabel: m('Sheet'),
     },
     show: m('Show'),
+    statusMessage: {
+      done: m<{ numConfiguredPeople: number }>(
+        'Configures import of {numConfiguredPeople, plural, =1 {1 person} other {# people}}'
+      ),
+      notDone: m('Your configuration is incomplete'),
+    },
     title: m('Import people'),
   },
   done: m('Done'),

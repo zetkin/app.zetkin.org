@@ -108,6 +108,7 @@ const MappingRow: FC<MappingRowProps> = ({
               disabled={!column.originalColumn.selected}
               label={messages.configuration.mapping.selectZetkinField()}
               onChange={(event) => {
+                clearConfiguration();
                 if (event.target.value == 'id') {
                   onChange({
                     idField: null,
