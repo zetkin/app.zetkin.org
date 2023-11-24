@@ -1,17 +1,16 @@
-import { Typography } from '@mui/material';
-import { useState } from 'react';
 import { Box, Stack } from '@mui/system';
+import { FC, useState } from 'react';
+import { Typography, useTheme } from '@mui/material';
 
-import AddedTagsTracker from './AddedTagsTracker';
-import { getOrgsStates } from 'features/import/utils/getOrgsStates';
-import ImportAlert from './importAlert';
-import ImportChangeTracker from './importChangeTracker';
-import { Msg } from 'core/i18n';
-import useAlertsStates from 'features/import/hooks/useAlertsStates';
-import { useNumericRouteParams } from 'core/hooks';
-import PeopleCounter, { COUNT_STATUS } from './PeopleCounter';
-
+import AddedOrgs from './AddedOrgs';
+import AddedTags from './AddedTags';
+import ChangedFields from './ChangedFields';
+import getAddedOrgsSummary from 'features/import/utils/getAddedOrgsSummary';
 import messageIds from 'features/import/l10n/messageIds';
+import { Msg } from 'core/i18n';
+import useAlerts from 'features/import/hooks/useAlerts';
+import { useNumericRouteParams } from 'core/hooks';
+import ImportAlert, { ALERT_STATUS } from './ImportAlert';
 
 export interface FakeDataType {
   summary: {
@@ -44,7 +43,7 @@ interface ValidationProps {
   onDisabled: (value: boolean) => void;
 }
 
-const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
+const Validation: FC<ValidationProps> = ({ onClickBack, onDisabled }) => {
   const fake = {
     summary: {
       membershipsCreated: {
@@ -83,21 +82,21 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
       },
     },
   };
+  const theme = useTheme();
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
   const { orgId } = useNumericRouteParams();
-  const alertStates = useAlertsStates(fake.summary, orgId);
+  const alerts = useAlerts(fake.summary, orgId);
+  const addedOrgsSummary = getAddedOrgsSummary(fake.summary.membershipsCreated);
 
-  const orgsStates = getOrgsStates(fake.summary.membershipsCreated);
-
-  const warningAlerts = alertStates.filter(
-    (item) => item.alertStatus === 'warning'
+  const warningAlerts = alerts.filter(
+    (alert) => alert.status === ALERT_STATUS.WARNING
   );
-  const errorExists =
-    alertStates.filter((item) => item.alertStatus === 'error').length > 0;
+  const hasError =
+    alerts.filter((item) => item.status === ALERT_STATUS.ERROR).length > 0;
 
   if (
-    (warningAlerts.length === checkedIndexes.length && !errorExists) ||
-    alertStates.filter((item) => item.alertStatus === 'info').length > 0
+    (warningAlerts.length === checkedIndexes.length && !hasError) ||
+    alerts.filter((item) => item.status === ALERT_STATUS.INFO).length > 0
   ) {
     onDisabled(false);
   } else {
@@ -114,28 +113,65 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
           display="flex"
           flexDirection="column"
           height="100%"
-          sx={{ mt: 2, overflowY: 'auto' }}
+          sx={{ mt: 2, overflowY: 'scroll' }}
         >
           <Stack direction="row" spacing={2}>
-            <PeopleCounter
-              changedNum={fake.summary.peopleCreated.total}
-              status={COUNT_STATUS.CREATED}
-            />
-            <PeopleCounter
-              changedNum={fake.summary.peopleUpdated.total}
-              status={COUNT_STATUS.UPDATED}
-            />
+            <Box
+              border={1}
+              borderColor={theme.palette.grey[300]}
+              borderRadius={1}
+              padding={2}
+              width="100%"
+            >
+              <Msg
+                id={messageIds.validation.updateOverview.created}
+                values={{
+                  numPeople: fake.summary.peopleCreated.total,
+                  number: (
+                    <Typography
+                      sx={{
+                        color: theme.palette.success.main,
+                      }}
+                      variant="h2"
+                    >
+                      {fake.summary.peopleCreated.total}
+                    </Typography>
+                  ),
+                }}
+              />
+            </Box>
+            <Box
+              border={1}
+              borderColor={theme.palette.grey[300]}
+              borderRadius={1}
+              padding={2}
+              width="100%"
+            >
+              <Msg
+                id={messageIds.validation.updateOverview.updated}
+                values={{
+                  numPeople: fake.summary.peopleUpdated.total,
+                  number: (
+                    <Typography
+                      sx={{
+                        color: theme.palette.info.light,
+                      }}
+                      variant="h2"
+                    >
+                      {fake.summary.peopleUpdated.total}
+                    </Typography>
+                  ),
+                }}
+              />
+            </Box>
           </Stack>
           <Stack spacing={2} sx={{ mt: 2 }}>
-            <ImportChangeTracker
-              fields={fake.summary.peopleUpdated.byField}
+            <ChangedFields
+              changedFields={fake.summary.peopleUpdated.byField}
               orgId={orgId}
             />
-            <AddedTagsTracker
-              createdTags={fake.summary.tagsCreated}
-              orgId={orgId}
-            />
-            <ImportChangeTracker orgId={orgId} orgsStates={orgsStates} />
+            <AddedTags orgId={orgId} tagsCreated={fake.summary.tagsCreated} />
+            <AddedOrgs addedOrgsSummary={addedOrgsSummary} />
           </Stack>
         </Box>
       </Box>
@@ -144,33 +180,26 @@ const Validation = ({ onClickBack, onDisabled }: ValidationProps) => {
           <Msg id={messageIds.validation.messages} />
         </Typography>
         <Box display="flex" flexDirection="column" height="100%">
-          <Stack spacing={2} sx={{ overflowY: 'auto' }}>
-            {alertStates.map((item, index) => {
-              return (
-                <Box key={`alert-${index}`}>
-                  <ImportAlert
-                    msg={item.msg}
-                    onChecked={() =>
-                      setCheckedIndexes((prev) => {
-                        if (!checkedIndexes.includes(index)) {
-                          return [...prev, index];
-                        } else {
-                          return checkedIndexes.filter(
-                            (item) => item !== index
-                          );
-                        }
-                      })
+          <Stack spacing={2} sx={{ overflowY: 'scroll' }}>
+            {alerts.map((alert, index) => (
+              <ImportAlert
+                key={`alert-${index}`}
+                alert={alert}
+                onCheck={() =>
+                  setCheckedIndexes((prev) => {
+                    if (!checkedIndexes.includes(index)) {
+                      return [...prev, index];
+                    } else {
+                      return checkedIndexes.filter((item) => item !== index);
                     }
-                    onClickBack={() => {
-                      onClickBack();
-                      onDisabled(false);
-                    }}
-                    status={item.alertStatus}
-                    title={item.title}
-                  />
-                </Box>
-              );
-            })}
+                  })
+                }
+                onClickBack={() => {
+                  onClickBack();
+                  onDisabled(false);
+                }}
+              />
+            ))}
           </Stack>
         </Box>
       </Box>

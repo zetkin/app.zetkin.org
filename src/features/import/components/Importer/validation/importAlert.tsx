@@ -1,4 +1,5 @@
 import { Circle } from '@mui/icons-material';
+import { FC } from 'react';
 import {
   Alert,
   AlertTitle,
@@ -9,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { Alert as AlertType } from 'features/import/hooks/useAlerts';
 import messageIds from 'features/import/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
@@ -18,28 +20,26 @@ export enum ALERT_STATUS {
   INFO = 'info',
   SUCCESS = 'success',
 }
+
 interface ImportAlertProps {
+  alert: AlertType;
   bullets?: string[];
-  msg: string;
-  status: ALERT_STATUS;
-  title: string;
   onClickBack?: () => void;
-  onChecked?: () => void;
+  onCheck?: () => void;
 }
-const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
+
+const ImportAlert: FC<ImportAlertProps> = ({
+  alert,
   bullets,
-  msg,
-  status,
-  title,
-  onChecked,
+  onCheck,
   onClickBack,
 }) => {
-  const message = useMessages(messageIds);
+  const messages = useMessages(messageIds);
 
   return (
     <Alert
       action={
-        status === ALERT_STATUS.ERROR && (
+        alert.status === ALERT_STATUS.ERROR && (
           <Button
             color="inherit"
             onClick={onClickBack}
@@ -47,41 +47,39 @@ const ImportAlert: React.FunctionComponent<ImportAlertProps> = ({
             sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}
             variant="text"
           >
-            {message.validation.alerts.back()}
+            {messages.validation.alerts.back()}
           </Button>
         )
       }
-      severity={status}
+      severity={alert.status}
     >
-      <AlertTitle>
-        <strong>{title}</strong>
-      </AlertTitle>
-      <>
-        {msg}
-        {status === ALERT_STATUS.WARNING && (
-          <Box sx={{ ml: 1.5, mt: 1.5 }}>
-            <FormControlLabel
-              control={<Checkbox onChange={onChecked} />}
-              label={message.validation.alerts.checkbox()}
-            />
-          </Box>
+      <AlertTitle>{alert.title}</AlertTitle>
+      <Box display="flex" flexDirection="column">
+        {alert.msg}
+        {alert.status === ALERT_STATUS.WARNING && (
+          <FormControlLabel
+            control={<Checkbox onChange={onCheck} />}
+            label={messages.validation.alerts.checkbox()}
+            sx={{ marginLeft: 0.5, marginTop: 1 }}
+          />
         )}
         {bullets && (
           <Box mt={2}>
-            {bullets.map((item, index) => (
+            {bullets.map((bulletText, index) => (
               <Box
                 key={`bulletOpt-${index}`}
                 alignItems="center"
                 display="flex"
               >
                 <Circle sx={{ fontSize: '5px', ml: 1, mr: 0.8 }} />
-                <Typography>{item}</Typography>
+                <Typography>{bulletText}</Typography>
               </Box>
             ))}
           </Box>
         )}
-      </>
+      </Box>
     </Alert>
   );
 };
+
 export default ImportAlert;

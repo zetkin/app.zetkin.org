@@ -15,7 +15,7 @@ import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import Validation from './Importer/validation';
+import Validation from './Importer/Validation';
 
 interface ImporterProps {
   onClose: () => void;
@@ -23,12 +23,12 @@ interface ImporterProps {
   open: boolean;
 }
 
-type StepType = 0 | 1 | 2 | 3;
+type ImportSteps = 0 | 1 | 2 | 3;
 
 const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeStep, setActiveStep] = useState<StepType>(1);
+  const [activeStep, setActiveStep] = useState<ImportSteps>(1);
   const [disabled, setDisabled] = useState<boolean>(false);
 
   const showStepper = activeStep == 1 || activeStep == 2;
@@ -91,9 +91,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
         <Box sx={{ height: '80%' }}>
           {activeStep === 2 && (
             <Validation
-              onClickBack={() =>
-                setActiveStep((prev) => (prev - 1) as StepType)
-              }
+              onClickBack={() => setActiveStep(0)}
               onDisabled={(value) => setDisabled(value)}
             />
           )}
@@ -110,7 +108,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           <Button
             onClick={() => {
               if (activeStep > 1) {
-                setActiveStep((prev) => (prev - 1) as StepType);
+                setActiveStep((prev) => (prev - 1) as ImportSteps);
                 setDisabled(false);
               } else {
                 onRestart();
@@ -128,7 +126,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 onClose();
                 setActiveStep(1);
               } else {
-                setActiveStep((prev) => (prev + 1) as StepType);
+                setActiveStep((prev) => (prev + 1) as ImportSteps);
               }
             }}
             sx={{ ml: 1 }}
