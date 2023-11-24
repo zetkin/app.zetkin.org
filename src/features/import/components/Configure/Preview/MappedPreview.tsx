@@ -44,8 +44,11 @@ const MappedPreview = ({
 
   const rowValue =
     currentSheet.rows[personIndex] !== undefined
-      ? currentSheet?.rows[rowIndex].data[columnIndex]
+      ? currentSheet?.rows[firstRowIsHeaders ? personIndex + 1 : personIndex]
+          .data[columnIndex]
       : null;
+
+  const rowHasValue = !columnIsOrg && !columnIsTags && rowValue != null;
 
   columnOptions.forEach((columnOp) => {
     if (
@@ -106,7 +109,9 @@ const MappedPreview = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        mr: 2,
+        minWidth: 'fit-content',
+        overflowX: 'auto',
+        padding: 2,
       }}
     >
       <Box
@@ -116,7 +121,8 @@ const MappedPreview = ({
               ? 'transparent'
               : theme.palette.transparentGrey.light,
           height: '14px',
-          mb: 1,
+          mb: 0.5,
+          minWidth: '150px',
         }}
       >
         <Typography
@@ -135,22 +141,35 @@ const MappedPreview = ({
         sx={{
           alignItems: 'center',
           backgroundColor:
-            (!columnIsOrg && !columnIsTags && rowValue !== null) ||
-            orgTitle !== '' ||
-            mappedTags.length !== 0
+            rowHasValue || orgTitle !== '' || mappedTags.length > 0
               ? 'transparent'
               : theme.palette.transparentGrey.light,
           display: 'flex',
-          height: '14px',
+          height:
+            rowHasValue || orgTitle !== '' || mappedTags.length > 0
+              ? 'fit-content'
+              : '14px',
+          my:
+            rowHasValue || orgTitle !== '' || mappedTags.length > 0
+              ? '0'
+              : '5px',
+          // overflow: 'hidden',
         }}
       >
-        <Typography sx={{ mt: 0.5 }} variant="body1">
+        <Typography variant="body1">
           {columnIsOrg ? (
             orgTitle
           ) : columnIsTags ? (
             <Stack direction="row" spacing={1}>
               {mappedTags.map((tag, index) => {
-                return <TagChip key={index} size="small" tag={tag} />;
+                return (
+                  <TagChip
+                    key={index}
+                    ellipsisLabel={true}
+                    size="small"
+                    tag={tag}
+                  />
+                );
               })}
             </Stack>
           ) : (

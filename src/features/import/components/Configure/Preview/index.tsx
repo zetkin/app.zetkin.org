@@ -10,8 +10,9 @@ import useSheets from 'features/import/hooks/useSheets';
 const MappingPreview = () => {
   const theme = useTheme();
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
-  const currentSheet = sheets[selectedSheetIndex];
   const [personIndex, setPersonIndex] = useState(0);
+
+  const currentSheet = sheets[selectedSheetIndex];
   const emptyPreview = currentSheet.columns.every(
     (item) => item.selected === false
   );
@@ -56,15 +57,14 @@ const MappingPreview = () => {
           border: '1px solid lightgrey',
           borderRadius: '5px',
           display: 'flex',
-          height: '80px',
-          p: 2,
+          minHeight: '80px',
+          overflowX: 'auto',
         }}
       >
         <Box
           display="flex"
           justifyContent="space-between"
-          sx={{ minWidth: '150px' }}
-          width="100%"
+          sx={{ width: '100%' }}
         >
           {emptyPreview &&
             Array(currentSheet.columns.length)
@@ -77,7 +77,7 @@ const MappingPreview = () => {
                     sx={{
                       backgroundColor: theme.palette.transparentGrey.light,
                       height: '14px',
-                      mr: item,
+                      m: 2,
                     }}
                   />
                 );
