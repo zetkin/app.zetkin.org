@@ -1,32 +1,19 @@
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import ErrorMessage from 'features/surveys/components/surveyForm/ErrorMessage';
+import { Container } from '@mui/material';
 import { FC } from 'react';
 import { IncomingMessage } from 'http';
-import messageIds from 'features/surveys/l10n/messageIds';
-import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
+import SurveyElements from 'features/surveys/components/surveyForm/SurveyElements';
+import SurveyHeading from 'features/surveys/components/surveyForm/SurveyHeading';
+import SurveyPrivacyPolicy from 'features/surveys/components/surveyForm/SurveyPrivacyPolicy';
 import SurveySignature from 'features/surveys/components/surveyForm/SurveySignature';
-import TextBlock from 'features/surveys/components/surveyForm/TextBlock';
-import TextQuestion from 'features/surveys/components/surveyForm/TextQuestion';
-import ZUIAvatar from 'zui/ZUIAvatar';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormControlLabel,
-  Link,
-  Typography,
-} from '@mui/material';
-import { Msg, useMessages } from 'core/i18n';
+import SurveySubmitButton from 'features/surveys/components/surveyForm/SurveySubmitButton';
 import {
   ZetkinSurveyExtended,
-  ZetkinSurveyOptionsQuestionElement,
+  ZetkinSurveyFormStatus,
   ZetkinSurveyQuestionResponse,
   ZetkinSurveySignaturePayload,
-  ZetkinSurveyTextElement,
-  ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
@@ -51,7 +38,7 @@ function parseRequest(
 export const getServerSideProps = scaffold(async (ctx) => {
   const { req } = ctx;
   const { surveyId, orgId } = ctx.params!;
-  let status: FormStatus = 'editing';
+  let status: ZetkinSurveyFormStatus = 'editing';
   let formData: NodeJS.Dict<string | string[]> = {};
 
   const apiClient = new BackendApiClient(req.headers);
@@ -153,96 +140,19 @@ export const getServerSideProps = scaffold(async (ctx) => {
 
 type PageProps = {
   formData: NodeJS.Dict<string | string[]>;
-  orgId: string;
-  status: FormStatus;
+  status: ZetkinSurveyFormStatus;
   survey: ZetkinSurveyExtended;
 };
 
-type FormStatus = 'editing' | 'invalid' | 'error' | 'submitted';
-
-const Page: FC<PageProps> = ({ formData, orgId, status, survey }) => {
-  const messages = useMessages(messageIds);
-
+const Page: FC<PageProps> = ({ formData, status, survey }) => {
   return (
     <Container style={{ height: '100vh' }}>
-      <Box alignItems="center" columnGap={1} display="flex" flexDirection="row">
-        <ZUIAvatar size="md" url={`/api/orgs/${orgId}/avatar`} />
-        {survey.organization.title}
-      </Box>
-
-      {status === 'error' && <ErrorMessage />}
-
-      <h1>{survey.title}</h1>
-
-      {survey.info_text && <p>{survey.info_text}</p>}
-
+      <SurveyHeading status={status} survey={survey} />
       <form method="post">
-        {survey.elements.map((element) => (
-          <div key={element.id}>
-            {element.type === 'question' && (
-              <>
-                {element.question.response_type === 'text' && (
-                  <TextQuestion
-                    defaultValue={
-                      typeof formData[`${element.id}.text`] === 'string'
-                        ? (formData[`${element.id}.text`] as string)
-                        : undefined
-                    }
-                    element={element as ZetkinSurveyTextQuestionElement}
-                  />
-                )}
-                {element.question.response_type === 'options' && (
-                  <OptionsQuestion
-                    element={element as ZetkinSurveyOptionsQuestionElement}
-                  />
-                )}
-              </>
-            )}
-            {element.type === 'text' && (
-              <TextBlock element={element as ZetkinSurveyTextElement} />
-            )}
-          </div>
-        ))}
-
+        <SurveyElements formData={formData} survey={survey} />
         <SurveySignature formData={formData} survey={survey} />
-
-        <Box alignItems="center" component="section" sx={{ py: 2 }}>
-          <Typography fontWeight={'bold'}>
-            <Msg id={messageIds.surveyForm.terms.title} />
-          </Typography>
-
-          <FormControlLabel
-            control={<Checkbox required />}
-            data-testid="Survey-acceptTerms"
-            label={<Msg id={messageIds.surveyForm.accept} />}
-            name="privacy.approval"
-          />
-          <Typography style={{ fontSize: '0.8em' }}>
-            <Msg
-              id={messageIds.surveyForm.terms.description}
-              values={{ organization: survey.organization.title }}
-            />
-          </Typography>
-          <Typography style={{ fontSize: '0.8em', marginBottom: '0.5em' }}>
-            <Link
-              href={messages.surveyForm.policy.link()}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <Msg id={messageIds.surveyForm.policy.text} />
-            </Link>
-          </Typography>
-        </Box>
-
-        <Button
-          color="primary"
-          data-testid="Survey-submit"
-          style={{ textAlign: 'center', width: '100%' }}
-          type="submit"
-          variant="contained"
-        >
-          {messages.surveyForm.submit()}
-        </Button>
+        <SurveyPrivacyPolicy formData={formData} survey={survey} />
+        <SurveySubmitButton />
       </form>
     </Container>
   );

@@ -4,11 +4,12 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useTheme } from '@mui/material';
 
-const ErrorMessage: FC = () => {
+const SurveyErrorMessage: FC = () => {
   const theme = useTheme();
   return (
     <Box
       bgcolor={theme.palette.error.light}
+      data-testid="Survey-error"
       mx={4}
       my={4}
       p={2}
@@ -19,4 +20,4 @@ const ErrorMessage: FC = () => {
   );
 };
 
-export default ErrorMessage;
+export default SurveyErrorMessage;
