@@ -45,20 +45,6 @@ const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
 
   return (
     <FormControl>
-      <FormLabel id="survey-signature">
-        <Typography
-          style={{
-            color: 'black',
-            fontSize: '1.5em',
-            fontWeight: '500',
-            marginBottom: '0.5em',
-            marginTop: '0.5em',
-          }}
-        >
-          <Msg id={messageIds.surveySignature.title} />
-        </Typography>
-      </FormLabel>
-
       <RadioGroup
         aria-labelledby="survey-signature"
         defaultValue={formData['sig'] as ZetkinSurveySignatureType | undefined}
@@ -67,6 +53,20 @@ const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
           handleRadioChange(e.target.value as ZetkinSurveySignatureType)
         }
       >
+        <FormLabel id="survey-signature">
+          <Typography
+            style={{
+              color: 'black',
+              fontSize: '1.5em',
+              fontWeight: '500',
+              marginBottom: '0.5em',
+              marginTop: '0.5em',
+            }}
+          >
+            <Msg id={messageIds.surveySignature.title} />
+          </Typography>
+        </FormLabel>
+
         <FormControlLabel
           control={<Radio required />}
           label={

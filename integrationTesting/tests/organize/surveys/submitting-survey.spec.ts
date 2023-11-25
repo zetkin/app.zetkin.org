@@ -20,14 +20,6 @@ test.describe('User submitting a survey', () => {
       KPDMembershipSurvey
     );
 
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
-    );
-
     login(RosaLuxemburgUser, [
       {
         organization: KPD,
@@ -49,6 +41,14 @@ test.describe('User submitting a survey', () => {
   });
 
   test('submits responses', async ({ moxy, page }) => {
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
+      'post',
+      {
+        timestamp: '1857-05-07T13:37:00.000Z',
+      }
+    );
+
     await page.click('input[name="1.options"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="user"]');
@@ -78,6 +78,14 @@ test.describe('User submitting a survey', () => {
   });
 
   test('submits email signature', async ({ moxy, page }) => {
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
+      'post',
+      {
+        timestamp: '1857-05-07T13:37:00.000Z',
+      }
+    );
+
     await page.click('input[name="1.options"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="email"]');
@@ -104,7 +112,15 @@ test.describe('User submitting a survey', () => {
   });
 
   test('submits user signature', async ({ moxy, page }) => {
-    await page.click('input[name="1.options"]');
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
+      'post',
+      {
+        timestamp: '1857-05-07T13:37:00.000Z',
+      }
+    );
+
+    await page.click('input[name="1.options"][value="1"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="user"]');
     await page.click('data-testid=Survey-acceptTerms');
@@ -123,7 +139,15 @@ test.describe('User submitting a survey', () => {
   });
 
   test('submits anonymous signature', async ({ moxy, page }) => {
-    await page.click('input[name="1.options"]');
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
+      'post',
+      {
+        timestamp: '1857-05-07T13:37:00.000Z',
+      }
+    );
+
+    await page.click('input[name="1.options"][value="1"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
@@ -139,5 +163,29 @@ test.describe('User submitting a survey', () => {
       signature: ZetkinSurveySignaturePayload;
     };
     expect(data.signature).toBe(null);
+  });
+
+  test('preserves inputs on error', async ({ page }) => {
+    await page.click('input[name="1.options"][value="1"]');
+    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.click('input[name="sig"][value="anonymous"]');
+    await page.click('data-testid=Survey-acceptTerms');
+
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'POST'),
+      await page.click('data-testid=Survey-submit'),
+    ]);
+
+    await expect(page.locator('data-testid=Survey-error')).toBeVisible();
+    await expect(
+      page.locator('input[name="1.options"][value="1"]')
+    ).toBeChecked();
+    await expect(page.locator('input[name="2.text"]')).toHaveValue(
+      'Topple capitalism'
+    );
+    await expect(
+      page.locator('input[name="sig"][value="anonymous"]')
+    ).toBeChecked();
+    await expect(page.locator('data-testid=Survey-acceptTerms')).toBeChecked();
   });
 });

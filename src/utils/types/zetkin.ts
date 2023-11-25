@@ -278,6 +278,12 @@ export type ZetkinSurveyElement =
   | ZetkinSurveyTextElement
   | ZetkinSurveyQuestionElement;
 
+export type ZetkinSurveyFormStatus =
+  | 'editing'
+  | 'invalid'
+  | 'error'
+  | 'submitted';
+
 export enum RESPONSE_TYPE {
   OPTIONS = 'options',
   TEXT = 'text',
