@@ -1,13 +1,14 @@
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ErrorMessage from 'features/surveys/components/surveyForm/ErrorMessage';
+import { FC } from 'react';
 import { IncomingMessage } from 'http';
 import messageIds from 'features/surveys/l10n/messageIds';
 import OptionsQuestion from 'features/surveys/components/surveyForm/OptionsQuestion';
 import { parse } from 'querystring';
 import { scaffold } from 'utils/next';
+import SurveySignature from 'features/surveys/components/surveyForm/SurveySignature';
 import TextBlock from 'features/surveys/components/surveyForm/TextBlock';
 import TextQuestion from 'features/surveys/components/surveyForm/TextQuestion';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   Box,
@@ -15,20 +16,15 @@ import {
   Checkbox,
   Container,
   FormControlLabel,
-  FormControlLabelProps,
   Link,
-  Radio,
-  RadioGroup,
-  TextField,
   Typography,
-  useRadioGroup,
 } from '@mui/material';
-import { FC, useState } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveyQuestionResponse,
+  ZetkinSurveySignaturePayload,
   ZetkinSurveyTextElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
@@ -105,12 +101,15 @@ export const getServerSideProps = scaffold(async (ctx) => {
       }
     }
 
-    let signature: null | {
-      email: string;
-      first_name: string;
-      last_name: string;
-    } = null;
-    // TODO: handle other signature types
+    let signature: ZetkinSurveySignaturePayload = null;
+
+    if (formData.sig === 'user') {
+      const session = await ctx.z.resource('session').get();
+      if (session) {
+        signature = 'user';
+      }
+    }
+
     if (formData.sig == 'email') {
       signature = {
         email: formData['sig.email'] as string,
@@ -160,45 +159,9 @@ type PageProps = {
 };
 
 type FormStatus = 'editing' | 'invalid' | 'error' | 'submitted';
-type SignatureOption = 'authenticated' | 'email' | 'anonymous';
-
-function RadioFormControlLabel(props: FormControlLabelProps) {
-  const radioGroup = useRadioGroup();
-
-  let checked = false;
-
-  if (radioGroup) {
-    checked = radioGroup.value === props.value;
-  }
-
-  if (checked) {
-    return (
-      <FormControlLabel
-        checked={checked}
-        sx={{
-          backgroundColor: '#fbcbd8',
-          borderRadius: '50px',
-        }}
-        {...props}
-      />
-    );
-  }
-
-  return <FormControlLabel checked={checked} {...props} />;
-}
 
 const Page: FC<PageProps> = ({ formData, orgId, status, survey }) => {
   const messages = useMessages(messageIds);
-
-  const [selectedOption, setSelectedOption] = useState<null | SignatureOption>(
-    null
-  );
-
-  const handleRadioChange = (value: SignatureOption) => {
-    setSelectedOption(value);
-  };
-
-  const currentUser = useCurrentUser();
 
   return (
     <Container style={{ height: '100vh' }}>
@@ -240,71 +203,8 @@ const Page: FC<PageProps> = ({ formData, orgId, status, survey }) => {
             )}
           </div>
         ))}
-        <Typography
-          style={{
-            color: 'black',
-            fontSize: '1.5em',
-            fontWeight: '500',
-            marginBottom: '0.5em',
-            marginTop: '0.5em',
-          }}
-        >
-          <Msg id={messageIds.surveyForm.signOptions} />
-        </Typography>
 
-        <RadioGroup
-          name="sig"
-          onChange={(e) => handleRadioChange(e.target.value as SignatureOption)}
-          value={selectedOption}
-        >
-          <RadioFormControlLabel
-            control={<Radio required />}
-            label={
-              <Typography>
-                <Msg
-                  id={messageIds.surveyForm.authenticatedOption}
-                  values={{
-                    email: currentUser?.email ?? '',
-                    person: currentUser?.first_name ?? '',
-                  }}
-                />
-              </Typography>
-            }
-            value="authenticated"
-          />
-
-          <RadioFormControlLabel
-            control={<Radio required />}
-            label={
-              <div>
-                <Typography>
-                  <Msg id={messageIds.surveyForm.nameEmailOption} />
-                </Typography>
-              </div>
-            }
-            value="email"
-          />
-
-          {selectedOption === 'email' && (
-            <Box display="flex" flexDirection="column">
-              <TextField label="First Name" name="sig.first_name" required />
-              <TextField label="Last Name" name="sig.last_name" required />
-              <TextField label="Email" name="sig.email" required />
-            </Box>
-          )}
-
-          {survey.signature === 'allow_anonymous' && (
-            <RadioFormControlLabel
-              control={<Radio required />}
-              label={
-                <Typography>
-                  <Msg id={messageIds.surveyForm.anonymousOption} />
-                </Typography>
-              }
-              value="anonymous"
-            />
-          )}
-        </RadioGroup>
+        <SurveySignature formData={formData} survey={survey} />
 
         <Box alignItems="center" component="section" sx={{ py: 2 }}>
           <Typography fontWeight={'bold'}>

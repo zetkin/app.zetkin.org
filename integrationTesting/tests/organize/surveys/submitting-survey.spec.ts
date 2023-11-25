@@ -5,7 +5,10 @@ import KPDMembershipSurvey from '../../../mockData/orgs/KPD/surveys/MembershipSu
 import RosaLuxemburg from '../../../mockData/orgs/KPD/people/RosaLuxemburg';
 import RosaLuxemburgUser from '../../../mockData/users/RosaLuxemburgUser';
 import test from '../../../fixtures/next';
-import { ZetkinSurveyQuestionResponse } from 'utils/types/zetkin';
+import {
+  ZetkinSurveyQuestionResponse,
+  ZetkinSurveySignaturePayload,
+} from 'utils/types/zetkin';
 
 test.describe('User submitting a survey', () => {
   const apiPostPath = `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`;
@@ -48,7 +51,7 @@ test.describe('User submitting a survey', () => {
   test('submits responses', async ({ moxy, page }) => {
     await page.click('input[name="1.options"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
-    await page.click('input[name="sig"][value="authenticated"]');
+    await page.click('input[name="sig"][value="user"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
@@ -91,16 +94,50 @@ test.describe('User submitting a survey', () => {
     expect(log.length).toBe(1);
     const [request] = log;
     const data = request.data as {
-      signature: {
-        email: string;
-        first_name: string;
-        last_name: string;
-      };
+      signature: ZetkinSurveySignaturePayload;
     };
     expect(data.signature).toMatchObject({
       email: 'testuser@example.org',
       first_name: 'Test',
       last_name: 'User',
     });
+  });
+
+  test('submits user signature', async ({ moxy, page }) => {
+    await page.click('input[name="1.options"]');
+    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.click('input[name="sig"][value="user"]');
+    await page.click('data-testid=Survey-acceptTerms');
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'POST'),
+      await page.click('data-testid=Survey-submit'),
+    ]);
+
+    const log = moxy.log(`/v1${apiPostPath}`);
+    expect(log.length).toBe(1);
+    const [request] = log;
+    const data = request.data as {
+      signature: ZetkinSurveySignaturePayload;
+    };
+    expect(data.signature).toBe('user');
+  });
+
+  test('submits anonymous signature', async ({ moxy, page }) => {
+    await page.click('input[name="1.options"]');
+    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.click('input[name="sig"][value="anonymous"]');
+    await page.click('data-testid=Survey-acceptTerms');
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'POST'),
+      await page.click('data-testid=Survey-submit'),
+    ]);
+
+    const log = moxy.log(`/v1${apiPostPath}`);
+    expect(log.length).toBe(1);
+    const [request] = log;
+    const data = request.data as {
+      signature: ZetkinSurveySignaturePayload;
+    };
+    expect(data.signature).toBe(null);
   });
 });
