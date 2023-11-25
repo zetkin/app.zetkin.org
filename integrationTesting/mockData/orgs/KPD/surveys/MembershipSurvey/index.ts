@@ -58,7 +58,7 @@ const KPDMembershipSurvey: ZetkinSurveyExtended = {
     title: KPD.title,
   },
   published: '1857-05-07T13:37:00.000Z',
-  signature: 'require_signature',
+  signature: 'allow_anonymous',
   title: 'Membership survey',
 };
 
