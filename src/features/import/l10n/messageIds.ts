@@ -181,7 +181,7 @@ export default makeMessages('feat.import', {
       warning: {
         manyChanges: {
           desc: m(
-            'Sometimes this is a result of a misconfiguration of the import.'
+            'If this is not intentional you should go back and check the configuration.'
           ),
           title: m<{ fieldName: string }>(
             "This import will change a lot of people's {fieldName}"
