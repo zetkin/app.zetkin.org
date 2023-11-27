@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import ImportStatus from './Importer/importStatus';
+import ImportStatus from './ImportStatus';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import Validation from './Validation';

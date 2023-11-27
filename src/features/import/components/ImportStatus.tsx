@@ -1,16 +1,16 @@
 import { Box, Stack, Typography } from '@mui/material';
 
-import AddedOrgs from '../../AddedOrgs';
-import AddedTags from '../../AddedTags';
-import ChangedFields from '../../ChangedFields';
-import CreatedAndUpdated from '../../CreatedAndUpdated';
+import AddedOrgs from './AddedOrgs';
+import AddedTags from './AddedTags';
+import ChangedFields from './ChangedFields';
+import CreatedAndUpdated from './CreatedAndUpdated';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useImportAlert from 'features/import/hooks/useImportAlert';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrgUpdates from 'features/import/hooks/useOrgUpdates';
 import useTagUpdates from 'features/import/hooks/useTagUpdates';
-import ImportAlert, { ALERT_STATUS } from '../../ImportAlert';
+import ImportAlert, { ALERT_STATUS } from './ImportAlert';
 
 interface ImportStatusProps {
   onClickBack: () => void;
