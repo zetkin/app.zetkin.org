@@ -36,8 +36,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const [loading] = useState<boolean>(false);
   const showStepper = activeStep == 1 || activeStep == 2;
 
-  //from API response
-  const statusScheduled = false;
+  //TODO: use real data from API response
   const statusError = false;
 
   return (
@@ -51,11 +50,6 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
       <Box
         display="flex"
         flexDirection="column"
-        height={
-          (statusScheduled && activeStep === 3) || (loading && activeStep === 3)
-            ? '22vh'
-            : '90vh'
-        }
         padding={2}
         width={activeStep !== 3 ? '100%' : '700px'}
       >
@@ -132,7 +126,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           alignItems="center"
           display="flex"
           justifyContent="flex-end"
-          sx={{ bottom: 15, position: 'absolute', right: 15 }}
+          sx={{ bottom: 15, right: 15 }}
         >
           <Typography color="secondary">
             This message will depend on the state of the import.

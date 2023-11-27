@@ -21,9 +21,11 @@ export default makeMessages('feat.import', {
     },
     scheduled: {
       desc: m(
-        'Your data has been scheduled for import to Zetkin. Once finished you will recieve a notification via email.'
+        'You can safely close this dialog and we will send you an email when the import is done.'
       ),
-      title: m('Import scheduled'),
+      title: m(
+        'This is a big import that will take a while to get into Zetkin!'
+      ),
     },
   },
   restart: m('Restart'),

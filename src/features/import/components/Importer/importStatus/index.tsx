@@ -5,9 +5,9 @@ import AddedTags from '../../AddedTags';
 import ChangedFields from '../../ChangedFields';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useImportAlert from 'features/import/hooks/useImportAlert';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrgUpdates from 'features/import/hooks/useOrgUpdates';
-import useStatusAlertsStates from 'features/import/hooks/useStatusAlertStates';
 import useTagUpdates from 'features/import/hooks/useTagUpdates';
 import ImportAlert, { ALERT_STATUS } from '../../ImportAlert';
 
@@ -53,7 +53,7 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
     },
   };
   const theme = useTheme();
-  const alert = useStatusAlertsStates('completed');
+  const importAlert = useImportAlert('error');
   const { numPeopleWithOrgsAdded, orgsWithNewPeople } = useOrgUpdates(
     fake.summary.membershipsCreated
   );
@@ -66,17 +66,11 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
     <Box
       display="flex"
       flexDirection="column"
-      height="100%"
       mt={2}
       sx={{ overflowY: 'auto' }}
     >
-      <ImportAlert
-        alert={alert}
-        bullets={['Hello', 'long time no see']}
-        onCheck={() => null}
-        onClickBack={onClickBack}
-      />
-      {alert.status !== ALERT_STATUS.INFO && (
+      <ImportAlert alert={importAlert} onClickBack={onClickBack} />
+      {importAlert.status !== ALERT_STATUS.INFO && (
         <>
           <Typography sx={{ fontWeight: 500, my: 2 }} variant="h4">
             <Msg id={messageIds.importStatus.completedChanges} />

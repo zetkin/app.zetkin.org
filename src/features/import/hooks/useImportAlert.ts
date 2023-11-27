@@ -8,7 +8,7 @@ interface Alert {
   title: string;
 }
 
-export default function useStatusAlertsStates(
+export default function useImportAlert(
   data: 'error' | 'completed' | 'scheduled'
 ): Alert {
   const message = useMessages(messageIds);
