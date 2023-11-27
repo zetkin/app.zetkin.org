@@ -574,4 +574,71 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
       },
     ]);
   });
+
+  it('excludes empty string and null in orgs', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [123, 100], value: 'Frontend' },
+            { tagIds: [124, 100], value: 'Backend' },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 272, value: 1 },
+            { orgId: 270, value: 2 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', null, null, 1],
+        },
+        {
+          data: ['124', 'Linköping', 'Backend', 2],
+        },
+        {
+          data: ['125', '', 'yeah', 3],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toEqual([
+      {
+        fields: {
+          ext_id: '123',
+        },
+        op: 'person.import',
+        organizations: 272,
+      },
+      {
+        fields: {
+          city: 'Linköping',
+          ext_id: '124',
+        },
+        op: 'person.import',
+        organizations: 270,
+        tags: [124, 100],
+      },
+      {
+        fields: {
+          ext_id: '125',
+        },
+        op: 'person.import',
+      },
+    ]);
+  });
 });

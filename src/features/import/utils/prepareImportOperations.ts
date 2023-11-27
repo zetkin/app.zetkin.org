@@ -62,7 +62,11 @@ export default function prepareImportOperations(
               organizations: null,
             });
           }
-          result[rowIndex].organizations = column.mapping[rowIndex].orgId;
+          column.mapping.forEach((item) => {
+            if (item.value === row.data[colIdx]) {
+              result[rowIndex].organizations = column.mapping[rowIndex].orgId;
+            }
+          });
         }
       });
     }
