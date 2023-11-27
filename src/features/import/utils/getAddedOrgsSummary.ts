@@ -1,4 +1,4 @@
-import { FakeDataType } from '../components/Importer/validation';
+import { FakeDataType } from '../components/Validation';
 
 export const checkAllValuesAreZero = (obj: FakeDataType['summary']) => {
   const objs = Object.values(obj);
@@ -20,15 +20,20 @@ export const checkEmptyObj = (
   });
 };
 
-export const getOrgsStates = (membershipsAdded: {
+export interface AddedOrgsSummary {
+  numCreated: number;
+  orgs: string[];
+}
+
+export default function getAddedOrgsSummary(membershipsAdded: {
   byOrganization: { [key: number]: number };
   total: number;
-}): { createdNum: number; orgs: string[] } => {
+}): AddedOrgsSummary {
   const orgs: string[] = [];
 
   if (!checkEmptyObj(membershipsAdded.byOrganization)) {
     orgs.push(...Object.keys(membershipsAdded.byOrganization));
   }
 
-  return { createdNum: membershipsAdded.total, orgs };
-};
+  return { numCreated: membershipsAdded.total, orgs };
+}

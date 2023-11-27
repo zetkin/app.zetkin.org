@@ -1,4 +1,4 @@
-import { addFiles } from '../store';
+import { addFile } from '../store';
 import { parseExcelFile } from '../utils/parseFile';
 import { useAppDispatch } from 'core/hooks';
 import { useState } from 'react';
@@ -8,34 +8,32 @@ export default function useFileImport() {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
-  function parseData(file: File) {
+  async function parseData(file: File) {
     setLoading(true);
     if (
       file.type === 'text/comma-separated-values' ||
       file.type === 'text/csv' ||
       file.type === 'application/csv'
     ) {
-      parseCSVFile(file).then((res) => {
-        saveData(res);
-        setLoading(false);
-      });
+      const res = await parseCSVFile(file);
+      saveData(res);
+      setLoading(false);
     } else if (
       file.type === 'application/vnd.ms-excel' ||
       file.type ===
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       file.type === 'application/xls'
     ) {
-      parseExcelFile(file).then((res) => {
-        saveData(res);
-        setLoading(false);
-      });
+      const res = await parseExcelFile(file);
+      saveData(res);
+      setLoading(false);
     } else {
       return null;
     }
   }
 
   function saveData(data: ImportedFile) {
-    dispatch(addFiles(data));
+    dispatch(addFile(data));
   }
 
   return { loading, parseData };

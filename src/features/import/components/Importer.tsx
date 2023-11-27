@@ -17,7 +17,7 @@ import { FC, useState } from 'react';
 import ImportStatus from './Importer/importStatus';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import Validation from './Importer/validation';
+import Validation from './Validation';
 
 interface ImporterProps {
   onClose: () => void;
@@ -25,20 +25,19 @@ interface ImporterProps {
   open: boolean;
 }
 
-type StepType = 0 | 1 | 2 | 3;
+type ImportSteps = 0 | 1 | 2 | 3;
 
 const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeStep, setActiveStep] = useState<StepType>(1);
+  const [activeStep, setActiveStep] = useState<ImportSteps>(1);
   const [disabled, setDisabled] = useState<boolean>(false);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading] = useState<boolean>(false);
   const showStepper = activeStep == 1 || activeStep == 2;
 
   //from API response
   const statusScheduled = false;
-  const statusCompleted = false;
   const statusError = false;
 
   return (
@@ -104,9 +103,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
         <Box sx={{ height: activeStep === 2 ? '80%' : '85%' }}>
           {activeStep === 2 && (
             <Validation
-              onClickBack={() =>
-                setActiveStep((prev) => (prev - 1) as StepType)
-              }
+              onClickBack={() => setActiveStep(0)}
               onDisabled={(value) => setDisabled(value)}
             />
           )}
@@ -124,7 +121,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
               ) : (
                 <ImportStatus
                   onClickBack={() =>
-                    setActiveStep((prev) => (prev - 1) as StepType)
+                    setActiveStep((prev) => (prev - 1) as ImportSteps)
                   }
                 />
               )}
@@ -140,23 +137,20 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           <Typography color="secondary">
             This message will depend on the state of the import.
           </Typography>
-          {!statusScheduled && !statusCompleted && (
-            <Button
-              onClick={() => {
-                if (activeStep > 1) {
-                  setActiveStep((prev) => (prev - 1) as StepType);
-                  setDisabled(false);
-                  setLoading(true);
-                } else {
-                  onRestart();
-                }
-              }}
-              sx={{ mx: 1 }}
-              variant="text"
-            >
-              <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
-            </Button>
-          )}
+          <Button
+            onClick={() => {
+              if (activeStep > 1) {
+                setActiveStep((prev) => (prev - 1) as ImportSteps);
+                setDisabled(false);
+              } else {
+                onRestart();
+              }
+            }}
+            sx={{ mx: 1 }}
+            variant="text"
+          >
+            <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
+          </Button>
           <Button
             disabled={disabled}
             onClick={() => {
@@ -164,13 +158,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
                 onClose();
                 setActiveStep(1);
               } else {
-                //fake loading
-                if (activeStep === 2 && loading) {
-                  setTimeout(() => {
-                    setLoading(false);
-                  }, 1000);
-                }
-                setActiveStep((prev) => (prev + 1) as StepType);
+                setActiveStep((prev) => (prev + 1) as ImportSteps);
               }
             }}
             sx={{ ml: 1 }}

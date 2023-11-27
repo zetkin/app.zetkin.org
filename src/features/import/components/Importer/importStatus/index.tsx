@@ -1,16 +1,15 @@
-import { Typography } from '@mui/material';
-import { Box, Stack } from '@mui/system';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 
-import AddedTagsTracker from '../validation/AddedTagsTracker';
-import { getOrgsStates } from 'features/import/utils/getOrgsStates';
-import ImportChangeTracker from '../validation/importChangeTracker';
+import AddedOrgs from '../../AddedOrgs';
+import AddedTags from '../../AddedTags';
+import ChangedFields from '../../ChangedFields';
+import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrgUpdates from 'features/import/hooks/useOrgUpdates';
 import useStatusAlertsStates from 'features/import/hooks/useStatusAlertStates';
-import ImportAlert, { ALERT_STATUS } from '../validation/importAlert';
-import PeopleCounter, { COUNT_STATUS } from '../validation/PeopleCounter';
-
-import messageIds from 'features/import/l10n/messageIds';
+import useTagUpdates from 'features/import/hooks/useTagUpdates';
+import ImportAlert, { ALERT_STATUS } from '../../ImportAlert';
 
 interface ImportStatusProps {
   onClickBack: () => void;
@@ -53,8 +52,15 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
       },
     },
   };
-  const orgsStates = getOrgsStates(fake.summary.membershipsCreated);
-  const statusRes = useStatusAlertsStates('completed');
+  const theme = useTheme();
+  const alert = useStatusAlertsStates('completed');
+  const { numPeopleWithOrgsAdded, orgsWithNewPeople } = useOrgUpdates(
+    fake.summary.membershipsCreated
+  );
+  const { numPeopleWithTagsAdded, addedTags } = useTagUpdates(
+    orgId,
+    fake.summary.tagsCreated
+  );
 
   return (
     <Box
@@ -65,50 +71,78 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
       sx={{ overflowY: 'auto' }}
     >
       <ImportAlert
+        alert={alert}
         bullets={['Hello', 'long time no see']}
-        msg={statusRes.msg}
+        onCheck={() => null}
         onClickBack={onClickBack}
-        status={statusRes.alertStatus}
-        title={statusRes.title}
       />
-      {statusRes.alertStatus !== ALERT_STATUS.INFO && (
+      {alert.status !== ALERT_STATUS.INFO && (
         <>
           <Typography sx={{ fontWeight: 500, my: 2 }} variant="h4">
             <Msg id={messageIds.importStatus.completedChanges} />
           </Typography>
           <Stack direction="row" spacing={2}>
-            <PeopleCounter
-              changedNum={
-                statusRes.alertStatus === 'error'
-                  ? 0
-                  : fake.summary.peopleCreated.total
-              }
-              status={COUNT_STATUS.CREATED}
-            />
-            <PeopleCounter
-              changedNum={
-                statusRes.alertStatus === 'error'
-                  ? 0
-                  : fake.summary.peopleUpdated.total
-              }
-              status={COUNT_STATUS.UPDATED}
-            />
+            <Box
+              border={1}
+              borderColor={theme.palette.grey[300]}
+              borderRadius={1}
+              padding={2}
+              width="100%"
+            >
+              <Msg
+                id={messageIds.validation.updateOverview.created}
+                values={{
+                  numPeople: fake.summary.peopleCreated.total,
+                  number: (
+                    <Typography
+                      sx={{
+                        color: theme.palette.success.main,
+                      }}
+                      variant="h2"
+                    >
+                      {fake.summary.peopleCreated.total}
+                    </Typography>
+                  ),
+                }}
+              />
+            </Box>
+            <Box
+              border={1}
+              borderColor={theme.palette.grey[300]}
+              borderRadius={1}
+              padding={2}
+              width="100%"
+            >
+              <Msg
+                id={messageIds.validation.updateOverview.updated}
+                values={{
+                  numPeople: fake.summary.peopleUpdated.total,
+                  number: (
+                    <Typography
+                      sx={{
+                        color: theme.palette.info.light,
+                      }}
+                      variant="h2"
+                    >
+                      {fake.summary.peopleUpdated.total}
+                    </Typography>
+                  ),
+                }}
+              />
+            </Box>
           </Stack>
           <Stack spacing={2} sx={{ mt: 2 }}>
-            <ImportChangeTracker
-              fields={fake.summary.peopleUpdated.byField}
+            <ChangedFields
+              changedFields={fake.summary.peopleUpdated.byField}
               orgId={orgId}
-              statusError={statusRes.alertStatus === ALERT_STATUS.ERROR}
             />
-            <AddedTagsTracker
-              createdTags={fake.summary.tagsCreated}
-              orgId={orgId}
-              statusError={statusRes.alertStatus === ALERT_STATUS.ERROR}
+            <AddedTags
+              addedTags={addedTags}
+              numPeopleWithTagsAdded={numPeopleWithTagsAdded}
             />
-            <ImportChangeTracker
-              orgId={orgId}
-              orgsStates={orgsStates}
-              statusError={statusRes.alertStatus === ALERT_STATUS.ERROR}
+            <AddedOrgs
+              numPeopleWithOrgsAdded={numPeopleWithOrgsAdded}
+              orgsWithNewPeople={orgsWithNewPeople}
             />
           </Stack>
         </>

@@ -38,10 +38,10 @@ export default makeMessages('feat.import', {
       configure: m('Configure'),
       restart: m('Restart'),
     },
-    instructions: m('Click to upload'),
-    instructionsEnd: m(' or drag and drop'),
+    instructions: m<{ link: ReactElement }>('{link} or drag and drop'),
     loading: m('Loading file...'),
     release: m('Release the file here'),
+    selectClick: m('Click to upload'),
     types: m('CSV, XLS or XLSX'),
     unsupportedFile: m('Unsupported file.'),
   },
@@ -52,9 +52,9 @@ export default makeMessages('feat.import', {
       checkbox: m('I understand'),
       error: {
         desc: m(
-          'No people have been imported. You can go back and check the import settings or choose a new file to import. There were errors in the form you submitted. Please try again and make sure you fill in all the required information.'
+          'Nothing will be imported. Please go back and check that the configurations you made are correct or select a new file to upload.'
         ),
-        title: m('Something went wrong, and the import was interrupted.'),
+        title: m('Something went wrong and the import was interrupted.'),
       },
       info: {
         desc: m('The data you want to upload looks good!'),
@@ -66,29 +66,40 @@ export default makeMessages('feat.import', {
             'Sometimes this is a result of a misconfiguration of the import.'
           ),
           title: m<{ fieldName: string }>(
-            'This import will change alot of {fieldName}'
+            "This import will change a lot of people's {fieldName}"
           ),
         },
         unselectedId: {
           desc: m(
-            'This may result in difficulty in updating people in Zetkin. This is not recommended.'
+            'This can make updating people in Zetkin difficult and is not recommended.'
           ),
           title: m('You have not chosen an ID column'),
         },
       },
     },
     messages: m('Messages'),
-    organization: m('Organization'),
     pendingChanges: m('Pending changes'),
-    trackers: {
-      created: m('new people will be created'),
-      defaultDesc: m('people will recieve changes to their'),
-      orgs: m('people will be added to an'),
-      tags: m('Tags'),
-      tagsDesc: m<{ count: ReactElement; fieldName: ReactElement }>(
-        '{count} people will have {fieldName} added'
+    updateOverview: {
+      created: m<{ numPeople: number; number: ReactElement }>(
+        '{number} new {numPeople, plural, =1 {person} other {people}} will be created'
       ),
-      updated: m('people will be updated'),
+      defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
+        '{numPeople} will recieve changes to their {field}'
+      ),
+      organization: m('Organization'),
+      orgs: m<{ numPeople: ReactElement; org: ReactElement }>(
+        '{numPeople} will be added to an {org}'
+      ),
+      people: m<{ numPeople: number; number: ReactElement }>(
+        '{number} {numPeople, plural, =1 {person} other {people}}'
+      ),
+      tags: m('Tags'),
+      tagsDesc: m<{ numPeople: ReactElement; tags: ReactElement }>(
+        '{numPeople} will have {tags} added'
+      ),
+      updated: m<{ numPeople: number; number: ReactElement }>(
+        '{number} {numPeople, plural, =1 {person} other {people}} will be updated'
+      ),
     },
   },
 });
