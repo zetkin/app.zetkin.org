@@ -12,6 +12,7 @@ import useAlerts from 'features/import/hooks/useAlerts';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrgUpdates from 'features/import/hooks/useOrgUpdates';
 import useTagUpdates from 'features/import/hooks/useTagUpdates';
+import useValidationStatusMessage from '../hooks/useValidationStatusMessage';
 import { Msg, useMessages } from 'core/i18n';
 
 export interface FakeDataType {
@@ -98,6 +99,7 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onImport }) => {
     fake.summary,
     orgId
   );
+  const statusMessage = useValidationStatusMessage(orgId, fake.summary);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -206,6 +208,7 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onImport }) => {
         primaryButtonDisabled={importDisabled}
         primaryButtonMsg={messages.actionButtons.import()}
         secondaryButtonMsg={messages.actionButtons.back()}
+        statusMessage={statusMessage}
       />
     </Box>
   );

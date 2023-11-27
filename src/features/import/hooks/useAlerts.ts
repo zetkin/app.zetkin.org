@@ -23,7 +23,7 @@ interface UseAlertsReturn {
 }
 
 export default function useAlerts(
-  fake: FakeDataType['summary'],
+  summary: FakeDataType['summary'],
   orgId: number
 ): UseAlertsReturn {
   const message = useMessages(messageIds);
@@ -34,16 +34,16 @@ export default function useAlerts(
 
   const alerts: Alert[] = [];
 
-  const fieldsWithManyChanges = Object.entries(fake.peopleUpdated.byField)
+  const fieldsWithManyChanges = Object.entries(summary.peopleUpdated.byField)
     .filter((item) => {
       const fieldValue = item[1] as number;
-      return fake.peopleUpdated.total * 0.2 < fieldValue;
+      return summary.peopleUpdated.total * 0.2 < fieldValue;
     })
     .map((item) => item[0]);
 
   //TODO: use actual data to determine if id field was selected.
   const noIDFieldSelected = true;
-  const emptyImport = checkEmptyObj(fake) || checkAllValuesAreZero(fake);
+  const emptyImport = checkEmptyObj(summary) || checkAllValuesAreZero(summary);
 
   //Error: nothing will be imported
   if (emptyImport) {

@@ -197,6 +197,21 @@ export default makeMessages('feat.import', {
     },
     messages: m('Messages'),
     pendingChanges: m('Pending changes'),
+    people: m<{ numPeople: number }>(
+      '{numPeople, plural, =1 {person} other {people}}'
+    ),
+    statusMessages: {
+      create: m<{ numCreated: number }>(
+        'This import will create {numCreated, plural, =1 {1 person} other {# people}}.'
+      ),
+      createAndUpdate: m<{ numCreated: number; numUpdated: number }>(
+        'This import will create {numCreated, plural, =1 {1 person} other {# people}} and update {numUpdated, plural, =1 {1 person} other {# people}}.'
+      ),
+      error: m('This import will error.'),
+      update: m<{ numUpdated: number }>(
+        'This import will update {numUpdated, plural, =1 {1 person} other {# people}}.'
+      ),
+    },
     updateOverview: {
       created: m<{ numPeople: number; number: ReactElement }>(
         '{number} new {numPeople, plural, =1 {person} other {people}} will be created'
