@@ -87,6 +87,7 @@ const Preview = () => {
               return (
                 column.selected && (
                   <MappedPreview
+                    key={`preview-${index}`}
                     column={column}
                     columnIndex={index}
                     currentSheet={currentSheet}
