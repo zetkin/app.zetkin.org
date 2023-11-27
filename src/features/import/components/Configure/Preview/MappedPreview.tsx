@@ -162,9 +162,8 @@ const MappedPreview = ({
         }}
       >
         <Typography variant="body1">
-          {columnIsOrg ? (
-            orgTitle
-          ) : columnIsTags ? (
+          {columnIsOrg && orgTitle}
+          {columnIsTags && (
             <Stack direction="row" spacing={1}>
               {mappedTags.map((tag, index) => {
                 return (
@@ -177,9 +176,8 @@ const MappedPreview = ({
                 );
               })}
             </Stack>
-          ) : (
-            rowValue
           )}
+          {!columnIsOrg && !columnIsTags && rowValue}
         </Typography>
       </Box>
     </Box>
