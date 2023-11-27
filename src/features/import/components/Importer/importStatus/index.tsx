@@ -1,8 +1,9 @@
-import { Box, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 import AddedOrgs from '../../AddedOrgs';
 import AddedTags from '../../AddedTags';
 import ChangedFields from '../../ChangedFields';
+import CreatedAndUpdated from '../../CreatedAndUpdated';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useImportAlert from 'features/import/hooks/useImportAlert';
@@ -52,7 +53,6 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
       },
     },
   };
-  const theme = useTheme();
   const importAlert = useImportAlert('error');
   const { numPeopleWithOrgsAdded, orgsWithNewPeople } = useOrgUpdates(
     fake.summary.membershipsCreated
@@ -75,56 +75,7 @@ const ImportStatus = ({ onClickBack }: ImportStatusProps) => {
           <Typography sx={{ fontWeight: 500, my: 2 }} variant="h4">
             <Msg id={messageIds.importStatus.completedChanges} />
           </Typography>
-          <Stack direction="row" spacing={2}>
-            <Box
-              border={1}
-              borderColor={theme.palette.grey[300]}
-              borderRadius={1}
-              padding={2}
-              width="100%"
-            >
-              <Msg
-                id={messageIds.validation.updateOverview.created}
-                values={{
-                  numPeople: fake.summary.peopleCreated.total,
-                  number: (
-                    <Typography
-                      sx={{
-                        color: theme.palette.success.main,
-                      }}
-                      variant="h2"
-                    >
-                      {fake.summary.peopleCreated.total}
-                    </Typography>
-                  ),
-                }}
-              />
-            </Box>
-            <Box
-              border={1}
-              borderColor={theme.palette.grey[300]}
-              borderRadius={1}
-              padding={2}
-              width="100%"
-            >
-              <Msg
-                id={messageIds.validation.updateOverview.updated}
-                values={{
-                  numPeople: fake.summary.peopleUpdated.total,
-                  number: (
-                    <Typography
-                      sx={{
-                        color: theme.palette.info.light,
-                      }}
-                      variant="h2"
-                    >
-                      {fake.summary.peopleUpdated.total}
-                    </Typography>
-                  ),
-                }}
-              />
-            </Box>
-          </Stack>
+          <CreatedAndUpdated summary={fake.summary} />
           <Stack spacing={2} sx={{ mt: 2 }}>
             <ChangedFields
               changedFields={fake.summary.peopleUpdated.byField}
