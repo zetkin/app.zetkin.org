@@ -5,7 +5,10 @@ import { FakeDataType } from '../components/Validation';
 import messageIds from '../l10n/messageIds';
 import useFieldTitle from './useFieldTitle';
 import { useMessages } from 'core/i18n';
-import {
+import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import useTags from 'features/tags/hooks/useTags';
+import { ZetkinTag } from 'utils/types/zetkin';
+import getAddedOrgsSummary, {
   checkAllValuesAreZero,
   checkEmptyObj,
 } from '../utils/getAddedOrgsSummary';
@@ -16,20 +19,34 @@ export interface Alert {
   title: string;
 }
 
-interface UseAlertsReturn {
-  alerts: Alert[];
-  importDisabled: boolean;
-  onCheckAlert: (index: number) => void;
-}
-
-export default function useAlerts(
-  summary: FakeDataType['summary'],
-  orgId: number
-): UseAlertsReturn {
-  const message = useMessages(messageIds);
-  const getFieldTitle = useFieldTitle(orgId);
+export default function useValidationStep(
+  orgId: number,
+  summary: FakeDataType['summary']
+) {
+  const messages = useMessages(messageIds);
   const [approvedWarningAlerts, setApprovedWarningAlerts] = useState<number[]>(
     []
+  );
+  const tags = useTags(orgId).data ?? [];
+  const organizations = useOrganizations().data ?? [];
+  const getFieldTitle = useFieldTitle(orgId);
+
+  const { membershipsCreated, tagsCreated } = summary;
+
+  const addedTags = Object.keys(tagsCreated.byTag).reduce(
+    (acc: ZetkinTag[], id) => {
+      const tag = tags.find((tag) => tag.id === parseInt(id));
+      if (tag) {
+        return acc.concat(tag);
+      }
+      return acc;
+    },
+    []
+  );
+
+  const addedOrgsSummary = getAddedOrgsSummary(membershipsCreated);
+  const orgsWithNewPeople = organizations.filter((organization) =>
+    addedOrgsSummary.orgs.some((orgId) => orgId == organization.id.toString())
   );
 
   const alerts: Alert[] = [];
@@ -48,18 +65,18 @@ export default function useAlerts(
   //Error: nothing will be imported
   if (emptyImport) {
     alerts.push({
-      msg: message.validation.alerts.error.desc(),
+      msg: messages.validation.alerts.error.desc(),
       status: ALERT_STATUS.ERROR,
-      title: message.validation.alerts.error.title(),
+      title: messages.validation.alerts.error.title(),
     });
   }
 
   //Warning: No ID column was selected
   if (noIDFieldSelected) {
     alerts.push({
-      msg: message.validation.alerts.warning.unselectedId.desc(),
+      msg: messages.validation.alerts.warning.unselectedId.desc(),
       status: ALERT_STATUS.WARNING,
-      title: message.validation.alerts.warning.unselectedId.title(),
+      title: messages.validation.alerts.warning.unselectedId.title(),
     });
   }
 
@@ -67,9 +84,9 @@ export default function useAlerts(
   if (fieldsWithManyChanges.length > 0) {
     fieldsWithManyChanges.forEach((fieldSlug) =>
       alerts.push({
-        msg: message.validation.alerts.warning.manyChanges.desc(),
+        msg: messages.validation.alerts.warning.manyChanges.desc(),
         status: ALERT_STATUS.WARNING,
-        title: message.validation.alerts.warning.manyChanges.title({
+        title: messages.validation.alerts.warning.manyChanges.title({
           fieldName: getFieldTitle(fieldSlug),
         }),
       })
@@ -79,9 +96,9 @@ export default function useAlerts(
   //Success!
   if (!emptyImport && !noIDFieldSelected && fieldsWithManyChanges.length == 0) {
     alerts.push({
-      msg: message.validation.alerts.info.desc(),
+      msg: messages.validation.alerts.info.desc(),
       status: ALERT_STATUS.INFO,
-      title: message.validation.alerts.info.title(),
+      title: messages.validation.alerts.info.title(),
     });
   }
 
@@ -110,5 +127,40 @@ export default function useAlerts(
     }
   };
 
-  return { alerts, importDisabled, onCheckAlert };
+  let statusMessage = '';
+
+  if (alerts.find((alert) => alert.status == ALERT_STATUS.ERROR)) {
+    statusMessage = messages.validation.statusMessages.error();
+  } else if (
+    summary.peopleUpdated.total > 0 &&
+    summary.peopleCreated.total > 0
+  ) {
+    statusMessage = messages.validation.statusMessages.createAndUpdate({
+      numCreated: summary.peopleCreated.total,
+      numUpdated: summary.peopleUpdated.total,
+    });
+  } else if (
+    summary.peopleUpdated.total > 0 &&
+    summary.peopleCreated.total == 0
+  ) {
+    statusMessage = messages.validation.statusMessages.update({
+      numUpdated: summary.peopleUpdated.total,
+    });
+  } else if (
+    summary.peopleUpdated.total == 0 &&
+    summary.peopleCreated.total > 0
+  ) {
+    statusMessage = messages.validation.statusMessages.create({
+      numCreated: summary.peopleCreated.total,
+    });
+  }
+
+  return {
+    addedTags,
+    alerts,
+    importDisabled,
+    onCheckAlert,
+    orgsWithNewPeople,
+    statusMessage,
+  };
 }

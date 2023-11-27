@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Alert as AlertType } from 'features/import/hooks/useAlerts';
+import { Alert as AlertType } from '../hooks/useValidationStep';
 import messageIds from 'features/import/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 

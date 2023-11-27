@@ -8,11 +8,8 @@ import ChangedFields from './ChangedFields';
 import ImportAlert from './ImportAlert';
 import ImportFooter from './ImportFooter';
 import messageIds from 'features/import/l10n/messageIds';
-import useAlerts from 'features/import/hooks/useAlerts';
 import { useNumericRouteParams } from 'core/hooks';
-import useOrgUpdates from 'features/import/hooks/useOrgUpdates';
-import useTagUpdates from 'features/import/hooks/useTagUpdates';
-import useValidationStatusMessage from '../hooks/useValidationStatusMessage';
+import useValidationStep from '../hooks/useValidationStep';
 import { Msg, useMessages } from 'core/i18n';
 
 export interface FakeDataType {
@@ -88,18 +85,14 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onImport }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { numPeopleWithOrgsAdded, orgsWithNewPeople } = useOrgUpdates(
-    fake.summary.membershipsCreated
-  );
-  const { numPeopleWithTagsAdded, addedTags } = useTagUpdates(
-    orgId,
-    fake.summary.tagsCreated
-  );
-  const { alerts, importDisabled, onCheckAlert } = useAlerts(
-    fake.summary,
-    orgId
-  );
-  const statusMessage = useValidationStatusMessage(orgId, fake.summary);
+  const {
+    orgsWithNewPeople,
+    addedTags,
+    alerts,
+    importDisabled,
+    onCheckAlert,
+    statusMessage,
+  } = useValidationStep(orgId, fake.summary);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -172,12 +165,12 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onImport }) => {
               {addedTags.length > 0 && (
                 <AddedTags
                   addedTags={addedTags}
-                  numPeopleWithTagsAdded={numPeopleWithTagsAdded}
+                  numPeopleWithTagsAdded={fake.summary.tagsCreated.total}
                 />
               )}
               {orgsWithNewPeople.length > 0 && (
                 <AddedOrgs
-                  numPeopleWithOrgsAdded={numPeopleWithOrgsAdded}
+                  numPeopleWithOrgsAdded={fake.summary.membershipsCreated.total}
                   orgsWithNewPeople={orgsWithNewPeople}
                 />
               )}
