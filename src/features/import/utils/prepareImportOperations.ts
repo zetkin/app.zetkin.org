@@ -38,7 +38,9 @@ export default function prepareImportOperations(
           if (!result[rowIndex]) {
             result.push({ fields: {}, op: 'person.import' });
           }
-          result[rowIndex].fields![column.field] = row.data[colIdx];
+          if (row.data[colIdx]) {
+            result[rowIndex].fields![column.field] = row.data[colIdx];
+          }
         }
 
         //tags and orgs

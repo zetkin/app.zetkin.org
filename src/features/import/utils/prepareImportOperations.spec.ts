@@ -448,3 +448,61 @@ describe('prepareImportOperations when first row is not header', () => {
     ]);
   });
 });
+
+describe('prepareImportOperations excludes rows with empty or null values', () => {
+  it('excludes empty string and null in fields', () => {
+    const configData: Sheet = {
+      columns: [
+        { kind: ColumnKind.UNKNOWN, selected: false },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [123, 100], value: 'Frontend' },
+            { tagIds: [124, 100], value: 'Backend' },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 272, value: 1 },
+            { orgId: 272, value: 2 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', null, 'Frontend', 1],
+        },
+        {
+          data: ['124', 'Linköping', 'Backend', 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toEqual([
+      {
+        fields: {},
+        op: 'person.import',
+        organizations: 272,
+        tags: [123, 100],
+      },
+      {
+        fields: {
+          city: 'Linköping',
+        },
+        op: 'person.import',
+        organizations: 272,
+        tags: [124, 100],
+      },
+    ]);
+  });
+});
