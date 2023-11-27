@@ -471,13 +471,16 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           kind: ColumnKind.ORGANIZATION,
           mapping: [
             { orgId: 272, value: 1 },
-            { orgId: 272, value: 2 },
+            { orgId: 273, value: 2 },
           ],
           selected: true,
         },
       ],
-      firstRowIsHeaders: false,
+      firstRowIsHeaders: true,
       rows: [
+        {
+          data: ['ID', 'City', 'DevTag', 'Org'],
+        },
         {
           data: ['123', null, 'Frontend', 1],
         },
@@ -490,7 +493,6 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
     const result = prepareImportOperations(configData);
     expect(result).toEqual([
       {
-        fields: {},
         op: 'person.import',
         organizations: 272,
         tags: [123, 100],
@@ -500,13 +502,13 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           city: 'Linköping',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: 273,
         tags: [124, 100],
       },
     ]);
   });
 
-  it('excludes empty string and null in tags', () => {
+  it('excludes empty string, null or not matched value tags', () => {
     const configData: Sheet = {
       columns: [
         { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -525,24 +527,20 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
         },
         {
           kind: ColumnKind.ORGANIZATION,
-          mapping: [
-            { orgId: 272, value: 1 },
-            { orgId: 272, value: 2 },
-            { orgId: 272, value: 2 },
-          ],
+          mapping: [{ orgId: 272, value: 1 }],
           selected: true,
         },
       ],
       firstRowIsHeaders: false,
       rows: [
         {
-          data: ['123', null, null, 1],
+          data: ['123', 'Linköping', null, 1],
         },
         {
-          data: ['124', 'Linköping', 'Backend', 2],
+          data: ['124', 'Linköping', 'Backend', 1],
         },
         {
-          data: ['125', '', 'yeah', 2],
+          data: ['125', 'Linköping', 'Designer', 1],
         },
       ],
       title: 'My sheet',
@@ -551,6 +549,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
     expect(result).toEqual([
       {
         fields: {
+          city: 'Linköping',
           ext_id: '123',
         },
         op: 'person.import',
@@ -567,6 +566,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
       },
       {
         fields: {
+          city: 'Linköping',
           ext_id: '125',
         },
         op: 'person.import',
@@ -575,7 +575,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
     ]);
   });
 
-  it('excludes empty string and null in orgs', () => {
+  it('excludes empty string or null in orgs', () => {
     const configData: Sheet = {
       columns: [
         { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -596,7 +596,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           kind: ColumnKind.ORGANIZATION,
           mapping: [
             { orgId: 272, value: 1 },
-            { orgId: 270, value: 2 },
+            { orgId: 273, value: 2 },
           ],
           selected: true,
         },
@@ -604,13 +604,13 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
       firstRowIsHeaders: false,
       rows: [
         {
-          data: ['123', null, null, 1],
+          data: ['123', 'Linköping', 'Frontend', 1],
         },
         {
-          data: ['124', 'Linköping', 'Backend', 2],
+          data: ['124', 'Linköping', 'Backend', null],
         },
         {
-          data: ['125', '', 'yeah', 3],
+          data: ['125', 'Linköping', 'Backend', 3],
         },
       ],
       title: 'My sheet',
@@ -619,10 +619,12 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
     expect(result).toEqual([
       {
         fields: {
+          city: 'Linköping',
           ext_id: '123',
         },
         op: 'person.import',
         organizations: 272,
+        tags: [123, 100],
       },
       {
         fields: {
@@ -630,11 +632,77 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           ext_id: '124',
         },
         op: 'person.import',
-        organizations: 270,
         tags: [124, 100],
       },
       {
         fields: {
+          city: 'Linköping',
+          ext_id: '125',
+        },
+        op: 'person.import',
+        tags: [124, 100],
+      },
+    ]);
+  });
+
+  it('excludes all rows that has empty string or null', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 272, value: 1 },
+            { orgId: 273, value: 2 },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [123, 100], value: 'Frontend' },
+            { tagIds: [124, 100], value: 'Backend' },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['Linköping', '123', 1, ''],
+        },
+        {
+          data: ['', '', 2, 'Backend'],
+        },
+        {
+          data: ['Malmö', '125', null, 'Designer'],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toEqual([
+      {
+        fields: {
+          city: 'Linköping',
+          ext_id: '123',
+        },
+        op: 'person.import',
+        organizations: 272,
+      },
+      {
+        op: 'person.import',
+        organizations: 273,
+        tags: [124, 100],
+      },
+      {
+        fields: {
+          city: 'Malmö',
           ext_id: '125',
         },
         op: 'person.import',
