@@ -18,7 +18,6 @@ export enum ALERT_STATUS {
   ERROR = 'error',
   WARNING = 'warning',
   INFO = 'info',
-  SUCCESS = 'success',
 }
 
 interface ImportAlertProps {

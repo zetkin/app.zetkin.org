@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { ALERT_STATUS } from '../components/ImportAlert';
 import { FakeDataType } from '../components/Validation';
 import messageIds from '../l10n/messageIds';
@@ -14,12 +16,21 @@ export interface Alert {
   title: string;
 }
 
+interface UseAlertsReturn {
+  alerts: Alert[];
+  importDisabled: boolean;
+  onCheckAlert: (index: number) => void;
+}
+
 export default function useAlerts(
   fake: FakeDataType['summary'],
   orgId: number
-): Alert[] {
+): UseAlertsReturn {
   const message = useMessages(messageIds);
   const getFieldTitle = useFieldTitle(orgId);
+  const [approvedWarningAlerts, setApprovedWarningAlerts] = useState<number[]>(
+    []
+  );
 
   const alerts: Alert[] = [];
 
@@ -74,5 +85,30 @@ export default function useAlerts(
     });
   }
 
-  return alerts;
+  const warningAlerts = alerts.filter(
+    (alert) => alert.status == ALERT_STATUS.WARNING
+  );
+  const hasError =
+    alerts.filter((item) => item.status == ALERT_STATUS.ERROR).length > 0;
+  const allWarningsApproved =
+    warningAlerts.length == approvedWarningAlerts.length;
+  const hasSuccessMessage =
+    alerts.filter((item) => item.status == ALERT_STATUS.INFO).length > 0;
+
+  const importDisabled =
+    (!allWarningsApproved || hasError) && !hasSuccessMessage;
+
+  const onCheckAlert = (index: number) => {
+    if (!approvedWarningAlerts.includes(index)) {
+      const updatedAlerts = [...approvedWarningAlerts, index];
+      setApprovedWarningAlerts(updatedAlerts);
+    } else {
+      const filteredAlerts = approvedWarningAlerts.filter(
+        (item) => item !== index
+      );
+      setApprovedWarningAlerts(filteredAlerts);
+    }
+  };
+
+  return { alerts, importDisabled, onCheckAlert };
 }

@@ -28,8 +28,7 @@ type ImportSteps = 0 | 1 | 2 | 3;
 const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeStep, setActiveStep] = useState<ImportSteps>(1);
-  const [, setDisabled] = useState<boolean>(false);
+  const [activeStep, setActiveStep] = useState<ImportSteps>(2);
 
   const showStepper = activeStep == 1 || activeStep == 2;
 
@@ -102,8 +101,8 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
         )}
         {activeStep === 2 && (
           <Validation
-            onClickBack={() => setActiveStep(0)}
-            onDisabled={(value) => setDisabled(value)}
+            onClickBack={() => setActiveStep(1)}
+            onImport={() => setActiveStep(3)}
           />
         )}
       </Box>
