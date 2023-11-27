@@ -43,13 +43,18 @@ export default function prepareImportOperations(
           }
         }
 
-        //tags and orgs
+        //tags
         if (column.kind === ColumnKind.TAG) {
           if (!result[rowIndex]) {
             result.push({ op: 'person.import', tags: [] });
           }
-          result[rowIndex].tags = column.mapping[rowIndex].tagIds;
+          column.mapping.forEach((item) => {
+            if (item.value === row.data[colIdx]) {
+              result[rowIndex].tags = column.mapping[rowIndex].tagIds;
+            }
+          });
         }
+        //orgs
         if (column.kind === ColumnKind.ORGANIZATION) {
           if (!result[rowIndex]) {
             result.push({
