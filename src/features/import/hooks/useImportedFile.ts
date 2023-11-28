@@ -1,8 +1,22 @@
 import { addFile } from '../store';
+import { parseCSVFile } from '../utils/parseFile';
 import { parseExcelFile } from '../utils/parseFile';
 import { useAppDispatch } from 'core/hooks';
 import { useState } from 'react';
-import { ImportedFile, parseCSVFile } from '../utils/parseFile';
+import { ColumnKind, ImportedFile } from '../utils/types';
+
+function fileWithColumns(file: ImportedFile): ImportedFile {
+  return {
+    ...file,
+    sheets: file.sheets.map((sheet) => ({
+      ...sheet,
+      columns: sheet.rows[0].data.map(() => ({
+        kind: ColumnKind.UNKNOWN,
+        selected: false,
+      })),
+    })),
+  };
+}
 
 export default function useFileImport() {
   const [loading, setLoading] = useState(false);
@@ -16,7 +30,8 @@ export default function useFileImport() {
       file.type === 'application/csv'
     ) {
       const res = await parseCSVFile(file);
-      saveData(res);
+      const withColumns = fileWithColumns(res);
+      saveData(withColumns);
       setLoading(false);
     } else if (
       file.type === 'application/vnd.ms-excel' ||
@@ -33,7 +48,7 @@ export default function useFileImport() {
   }
 
   function saveData(data: ImportedFile) {
-    dispatch(addFile(data));
+    dispatch(addFile(fileWithColumns(data)));
   }
 
   return { loading, parseData };

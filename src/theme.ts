@@ -22,6 +22,9 @@ declare module '@mui/material/styles/createPalette' {
       orange: string;
       red: string;
     };
+    transparentGrey: {
+      light: string;
+    };
     viewColumnGallery: {
       blue: string;
       purple: string;
@@ -37,7 +40,6 @@ declare module '@mui/material/styles/createPalette' {
 const themePalette = {
   background: {
     default: '#F9F9F9',
-    secondary: 'rgba(0,0,0,0.04)',
   },
   error: {
     main: '#EE323E',
@@ -73,6 +75,9 @@ const themePalette = {
   },
   text: {
     secondary: 'rgba(0, 0, 0, 0.6)',
+  },
+  transparentGrey: {
+    light: 'rgba(0,0,0,0.04)',
   },
   viewColumnGallery: {
     blue: '#1976D2',

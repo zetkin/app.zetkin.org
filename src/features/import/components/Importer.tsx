@@ -13,19 +13,19 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
+import Configure from './Configure';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import Validation from './Validation';
 
 interface ImporterProps {
   onClose: () => void;
-  onRestart: () => void;
   open: boolean;
 }
 
 type ImportSteps = 0 | 1 | 2 | 3;
 
-const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
+const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activeStep, setActiveStep] = useState<ImportSteps>(1);
@@ -88,60 +88,49 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             </IconButton>
           </Box>
         </Box>
-        <Box sx={{ height: '80%' }}>
-          {activeStep === 2 && (
-            <Validation
-              onClickBack={() => setActiveStep(0)}
-              onDisabled={(value) => setDisabled(value)}
-            />
-          )}
-        </Box>
-        <Box
-          alignItems="center"
-          display="flex"
-          justifyContent="flex-end"
-          sx={{ bottom: 15, position: 'absolute', right: 15 }}
-        >
-          <Typography color="secondary">
-            This message will depend on the state of the import.
-          </Typography>
-          <Button
-            onClick={() => {
-              if (activeStep > 1) {
-                setActiveStep((prev) => (prev - 1) as ImportSteps);
-                setDisabled(false);
-              } else {
-                onRestart();
-              }
-            }}
-            sx={{ mx: 1 }}
-            variant="text"
+        <Configure />
+        {activeStep === 2 && (
+          <Validation
+            onClickBack={() => setActiveStep(0)}
+            onDisabled={(value) => setDisabled(value)}
+          />
+        )}
+        <Box alignItems="center" display="flex" justifyContent="flex-end">
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="flex-end"
+            padding={2}
           >
-            <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
-          </Button>
-          <Button
-            disabled={disabled}
-            onClick={() => {
-              if (activeStep === 3) {
-                onClose();
-                setActiveStep(1);
-              } else {
-                setActiveStep((prev) => (prev + 1) as ImportSteps);
-              }
-            }}
-            sx={{ ml: 1 }}
-            variant="contained"
-          >
-            <Msg
-              id={
-                activeStep === 1
-                  ? messageIds.validate
-                  : activeStep === 2
-                  ? messageIds.import
-                  : messageIds.done
-              }
-            />
-          </Button>
+            <Typography color="secondary">
+              This message will depend on the state of the import.
+            </Typography>
+            <Button
+              onClick={() => {
+                setActiveStep(0);
+              }}
+              sx={{ mx: 1 }}
+              variant="text"
+            >
+              <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
+            </Button>
+            <Button
+              disabled={disabled}
+              onClick={() => setActiveStep(1)}
+              sx={{ ml: 1 }}
+              variant="contained"
+            >
+              <Msg
+                id={
+                  activeStep === 1
+                    ? messageIds.validate
+                    : activeStep === 2
+                    ? messageIds.import
+                    : messageIds.done
+                }
+              />
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Dialog>
