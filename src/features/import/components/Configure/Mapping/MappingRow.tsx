@@ -18,21 +18,23 @@ import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingRowProps {
+  clearConfiguration: () => void;
   column: UIDataColumn;
   columnOptions: { label: string; value: string }[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
-  clearConfiguration: () => void;
+  optionAlreadySelected: (value: string) => boolean;
 }
 
 const MappingRow: FC<MappingRowProps> = ({
+  clearConfiguration,
   column,
   columnOptions,
   isBeingConfigured,
   onChange,
-  clearConfiguration,
   onConfigureStart,
+  optionAlreadySelected,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -139,8 +141,13 @@ const MappingRow: FC<MappingRowProps> = ({
               value={getValue()}
             >
               {columnOptions.map((option) => {
+                const alreadySelected = optionAlreadySelected(option.value);
                 return (
-                  <MenuItem key={option.value} value={option.value}>
+                  <MenuItem
+                    key={option.value}
+                    disabled={alreadySelected}
+                    value={option.value}
+                  >
                     {option.label}
                   </MenuItem>
                 );

@@ -7,6 +7,7 @@ import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import useColumn from 'features/import/hooks/useColumn';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useNumericRouteParams } from 'core/hooks';
+import useSelectedOptions from 'features/import/hooks/useSelectedOptions';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
@@ -26,6 +27,7 @@ const Mapping: FC<MappingProps> = ({
   const messages = useMessages(messageIds);
   const columnOptions = useColumnOptions(orgId);
   const updateColumn = useColumn();
+  const optionAlreadySelected = useSelectedOptions();
 
   return (
     <Box
@@ -62,6 +64,7 @@ const Mapping: FC<MappingProps> = ({
                 isBeingConfigured={columnIndexBeingConfigured == index}
                 onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}
+                optionAlreadySelected={optionAlreadySelected}
               />
               <Divider />
             </Box>
