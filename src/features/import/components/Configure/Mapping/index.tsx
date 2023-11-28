@@ -4,7 +4,7 @@ import { Box, Divider, Typography } from '@mui/material';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import useColumn from 'features/import/hooks/useColumn';
+import useColumnMutations from 'features/import/hooks/useColumnMutations';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useNumericRouteParams } from 'core/hooks';
 import useSelectedOptions from 'features/import/hooks/useSelectedOptions';
@@ -26,7 +26,7 @@ const Mapping: FC<MappingProps> = ({
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const columnOptions = useColumnOptions(orgId);
-  const updateColumn = useColumn();
+  const { updateColumn } = useColumnMutations();
   const optionAlreadySelected = useSelectedOptions();
 
   return (
