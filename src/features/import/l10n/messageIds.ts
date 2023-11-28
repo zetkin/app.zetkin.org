@@ -3,6 +3,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.import', {
   back: m('Back'),
+  close: m('Close'),
   configuration: {
     configure: {
       ids: {
@@ -140,6 +141,25 @@ export default makeMessages('feat.import', {
   },
   done: m('Done'),
   import: m('Import'),
+  importStatus: {
+    completed: {
+      desc: m('Your data has been imported to Zetkin'),
+      title: m('Import completed'),
+    },
+    completedChanges: m('Completed changes'),
+    error: {
+      desc: m('No data was imported to Zetkin'),
+      title: m('Import failed'),
+    },
+    scheduled: {
+      desc: m(
+        'You can safely close this dialog and we will send you an email when the import is done.'
+      ),
+      title: m(
+        'This is a big import that will take a while to get into Zetkin!'
+      ),
+    },
+  },
   restart: m('Restart'),
   steps: {
     configure: m('Configure'),
