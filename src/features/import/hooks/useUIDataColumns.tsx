@@ -7,7 +7,7 @@ import { CellData, Column, ColumnKind } from '../utils/types';
 import { Msg, useMessages } from 'core/i18n';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
-export type UIDataColumn = {
+export type UIDataColumn<CType extends Column> = {
   assignTag: (tagId: number, value: CellData) => void;
   columnValuesMessage: string;
   deselectOrg: (value: CellData) => void;
@@ -15,7 +15,7 @@ export type UIDataColumn = {
   getSelectedOrgId: (value: CellData) => number | null;
   numRowsByUniqueValue: Record<string | number, number>;
   numberOfEmptyRows: number;
-  originalColumn: Column;
+  originalColumn: CType;
   renderMappingResultsMessage: () => JSX.Element | null;
   selectOrg: (orgId: number, value: CellData) => void;
   showColumnValuesMessage: boolean;
@@ -28,7 +28,9 @@ export type UIDataColumn = {
   wrongIDFormat: boolean;
 };
 
-export default function useUIDataColumns(orgId: number): UIDataColumn[] {
+export default function useUIDataColumns(
+  orgId: number
+): UIDataColumn<Column>[] {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const tagsFuture = useTags(orgId);

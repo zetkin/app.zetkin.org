@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
+import { Column } from 'features/import/utils/types';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
@@ -12,7 +13,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
   clearConfiguration: () => void;
-  columns: UIDataColumn[];
+  columns: UIDataColumn<Column>[];
   columnIndexBeingConfigured: number | null;
   onConfigureStart: (columnIndex: number) => void;
 }

@@ -10,6 +10,7 @@ import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import { useMessages } from 'core/i18n';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import {
+  Column,
   ColumnKind,
   IDFieldColumn,
   OrgColumn,
@@ -17,7 +18,7 @@ import {
 } from 'features/import/utils/types';
 
 interface ConfigurationProps {
-  uiDataColumn: UIDataColumn | null;
+  uiDataColumn: UIDataColumn<Column> | null;
 }
 
 const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
@@ -32,27 +33,17 @@ const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
       height="100%"
     >
       {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.TAG && (
-        <TagConfig
-          uiDataColumn={
-            uiDataColumn as UIDataColumn & { originalColumn: TagColumn }
-          }
-        />
+        <TagConfig uiDataColumn={uiDataColumn as UIDataColumn<TagColumn>} />
       )}
       {uiDataColumn &&
         uiDataColumn.originalColumn.kind == ColumnKind.ID_FIELD && (
           <IdConfig
-            uiDataColumn={
-              uiDataColumn as UIDataColumn & { originalColumn: IDFieldColumn }
-            }
+            uiDataColumn={uiDataColumn as UIDataColumn<IDFieldColumn>}
           />
         )}
       {uiDataColumn &&
         uiDataColumn.originalColumn.kind == ColumnKind.ORGANIZATION && (
-          <OrgConfig
-            uiDataColumn={
-              uiDataColumn as UIDataColumn & { originalColumn: OrgColumn }
-            }
-          />
+          <OrgConfig uiDataColumn={uiDataColumn as UIDataColumn<OrgColumn>} />
         )}
       {!uiDataColumn && (
         <Box

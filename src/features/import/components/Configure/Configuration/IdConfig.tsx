@@ -15,7 +15,7 @@ import { Msg } from 'core/i18n';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 
 interface IdConfigProps {
-  uiDataColumn: UIDataColumn & { originalColumn: IDFieldColumn };
+  uiDataColumn: UIDataColumn<IDFieldColumn>;
 }
 
 const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {

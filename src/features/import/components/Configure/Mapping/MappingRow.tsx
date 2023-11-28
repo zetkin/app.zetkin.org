@@ -19,7 +19,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface MappingRowProps {
   clearConfiguration: () => void;
-  column: UIDataColumn;
+  column: UIDataColumn<Column>;
   columnOptions: { label: string; value: string }[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
