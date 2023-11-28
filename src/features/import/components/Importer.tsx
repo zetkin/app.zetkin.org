@@ -1,6 +1,7 @@
 import { Clear } from '@mui/icons-material';
 import {
   Box,
+  CircularProgress,
   Dialog,
   IconButton,
   Step,
@@ -13,6 +14,7 @@ import {
 import { FC, useState } from 'react';
 
 import Configure from './Configure';
+import ImportStatus from './ImportStatus';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import Upload from './Upload';
@@ -29,13 +31,13 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activeStep, setActiveStep] = useState<ImportSteps>(2);
-
+  const [loading] = useState<boolean>(false);
   const showStepper = activeStep == 1 || activeStep == 2;
 
   return (
     <Dialog
       fullScreen={fullScreen}
-      fullWidth={activeStep == 0 ? false : true}
+      fullWidth={activeStep !== 3}
       maxWidth="lg"
       onClose={onClose}
       open={open}
@@ -43,8 +45,8 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
       <Box
         display="flex"
         flexDirection="column"
-        height={activeStep == 0 ? '' : '90vh'}
         padding={2}
+        width={activeStep !== 3 ? '100%' : '700px'}
       >
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography variant="h4">
@@ -104,6 +106,26 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
             onClickBack={() => setActiveStep(1)}
             onImport={() => setActiveStep(3)}
           />
+        )}
+        {activeStep === 3 && (
+          <>
+            {loading ? (
+              <Box
+                alignItems="center"
+                display="flex"
+                height="80%"
+                justifyContent="center"
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <ImportStatus
+                onClickBack={() =>
+                  setActiveStep((prev) => (prev - 1) as ImportSteps)
+                }
+              />
+            )}
+          </>
         )}
       </Box>
     </Dialog>

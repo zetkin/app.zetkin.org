@@ -28,12 +28,15 @@ const TagConfigRow: FC<TagConfigRowProps> = ({
     <Box display="flex" flexDirection="column">
       <Box display="flex">
         <Box
-          alignItems="center"
+          alignItems="flex-start"
           display="flex"
           justifyContent="space-between"
+          paddingTop={1}
           width="50%"
         >
-          <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
+          <Box display="flex" sx={{ wordBreak: 'break-all' }} width="100%">
+            <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
+          </Box>
           <ArrowForward color="secondary" sx={{ marginRight: 1 }} />
         </Box>
         <Box width="50%">

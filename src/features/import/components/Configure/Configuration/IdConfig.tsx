@@ -15,14 +15,20 @@ import { Msg } from 'core/i18n';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 
 interface IdConfigProps {
-  uiDataColumn: UIDataColumn & { originalColumn: IDFieldColumn };
+  uiDataColumn: UIDataColumn<IDFieldColumn>;
 }
 
 const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const theme = useTheme();
 
   return (
-    <Box padding={2}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      overflow="hidden"
+      padding={2}
+      sx={{ overflowY: 'scroll' }}
+    >
       <Typography sx={{ paddingBottom: 2 }} variant="h5">
         <Msg id={messageIds.configuration.configure.ids.header} />
       </Typography>
@@ -47,6 +53,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
         >
           <Box alignItems="center" display="flex" padding={1}>
             <Radio
+              checked={uiDataColumn.originalColumn.idField == 'ext_id'}
               onChange={(event) => {
                 if (
                   event.target.value == 'ext_id' ||
@@ -85,6 +92,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
         >
           <Box alignItems="center" display="flex" padding={1}>
             <Radio
+              checked={uiDataColumn.originalColumn.idField == 'id'}
               onChange={(event) => {
                 if (
                   event.target.value == 'ext_id' ||

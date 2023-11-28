@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { Box, Stack } from '@mui/system';
-import { Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 import AddedOrgs from './AddedOrgs';
 import AddedTags from './AddedTags';
 import ChangedFields from './ChangedFields';
+import CreatedAndUpdated from './CreatedAndUpdated';
 import ImportAlert from './ImportAlert';
 import ImportFooter from './ImportFooter';
 import messageIds from 'features/import/l10n/messageIds';
@@ -82,7 +82,6 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onImport }) => {
       },
     },
   };
-  const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const {
@@ -103,79 +102,25 @@ const Validation: FC<ValidationProps> = ({ onClickBack, onImport }) => {
           sx={{ overflowY: 'scroll' }}
           width="50%"
         >
-          <Typography sx={{ mb: 2 }} variant="h5">
-            <Msg id={messageIds.validation.pendingChanges} />
-          </Typography>
-          <Box display="flex" flexDirection="column" height="100%">
-            <Stack direction="row" spacing={2}>
-              <Box
-                border={1}
-                borderColor={theme.palette.grey[300]}
-                borderRadius={1}
-                padding={2}
-                width="100%"
-              >
-                <Msg
-                  id={messageIds.validation.updateOverview.created}
-                  values={{
-                    numPeople: fake.summary.peopleCreated.total,
-                    number: (
-                      <Typography
-                        sx={{
-                          color: theme.palette.success.main,
-                        }}
-                        variant="h2"
-                      >
-                        {fake.summary.peopleCreated.total}
-                      </Typography>
-                    ),
-                  }}
-                />
-              </Box>
-              <Box
-                border={1}
-                borderColor={theme.palette.grey[300]}
-                borderRadius={1}
-                padding={2}
-                width="100%"
-              >
-                <Msg
-                  id={messageIds.validation.updateOverview.updated}
-                  values={{
-                    numPeople: fake.summary.peopleUpdated.total,
-                    number: (
-                      <Typography
-                        sx={{
-                          color: theme.palette.info.light,
-                        }}
-                        variant="h2"
-                      >
-                        {fake.summary.peopleUpdated.total}
-                      </Typography>
-                    ),
-                  }}
-                />
-              </Box>
-            </Stack>
-            <Stack spacing={2} sx={{ mt: 2 }}>
-              <ChangedFields
-                changedFields={fake.summary.peopleUpdated.byField}
-                orgId={orgId}
+          <CreatedAndUpdated summary={fake.summary} />
+          <Stack spacing={2} sx={{ mt: 2 }}>
+            <ChangedFields
+              changedFields={fake.summary.peopleUpdated.byField}
+              orgId={orgId}
+            />
+            {addedTags.length > 0 && (
+              <AddedTags
+                addedTags={addedTags}
+                numPeopleWithTagsAdded={fake.summary.tagsCreated.total}
               />
-              {addedTags.length > 0 && (
-                <AddedTags
-                  addedTags={addedTags}
-                  numPeopleWithTagsAdded={fake.summary.tagsCreated.total}
-                />
-              )}
-              {orgsWithNewPeople.length > 0 && (
-                <AddedOrgs
-                  numPeopleWithOrgsAdded={fake.summary.membershipsCreated.total}
-                  orgsWithNewPeople={orgsWithNewPeople}
-                />
-              )}
-            </Stack>
-          </Box>
+            )}
+            {orgsWithNewPeople.length > 0 && (
+              <AddedOrgs
+                numPeopleWithOrgsAdded={fake.summary.membershipsCreated.total}
+                orgsWithNewPeople={orgsWithNewPeople}
+              />
+            )}
+          </Stack>
         </Box>
         <Box ml={2} sx={{ overflowY: 'scroll' }} width="50%">
           <Typography sx={{ mb: 2 }} variant="h5">

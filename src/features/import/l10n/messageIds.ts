@@ -10,6 +10,7 @@ export default makeMessages('feat.import', {
     restart: m('Restart'),
     validate: m('Validate'),
   },
+  close: m('Close'),
   configuration: {
     configure: {
       ids: {
@@ -121,7 +122,7 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
-      needsConfig: m('You need to configure the ids'),
+      needsConfig: m('You need to configure the IDs'),
       needsMapping: m('You need to map values'),
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
@@ -141,10 +142,32 @@ export default makeMessages('feat.import', {
       done: m<{ numConfiguredPeople: number }>(
         'Configures import of {numConfiguredPeople, plural, =1 {1 person} other {# people}}'
       ),
-      notDone: m('You need to map values'),
+      notDone: m('Your configuration is incomplete'),
     },
     title: m('Import people'),
   },
+  done: m('Done'),
+  import: m('Import'),
+  importStatus: {
+    completed: {
+      desc: m('Your data has been imported to Zetkin'),
+      title: m('Import completed'),
+    },
+    completedChanges: m('Completed changes'),
+    error: {
+      desc: m('No data was imported to Zetkin'),
+      title: m('Import failed'),
+    },
+    scheduled: {
+      desc: m(
+        'You can safely close this dialog and we will send you an email when the import is done.'
+      ),
+      title: m(
+        'This is a big import that will take a while to get into Zetkin!'
+      ),
+    },
+  },
+  restart: m('Restart'),
   steps: {
     configure: m('Configure'),
     import: m('Import'),

@@ -9,7 +9,7 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
 interface TagConfigProps {
-  uiDataColumn: UIDataColumn & { originalColumn: TagColumn };
+  uiDataColumn: UIDataColumn<TagColumn>;
 }
 
 const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {

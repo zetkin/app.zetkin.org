@@ -33,7 +33,7 @@ type UnknownColumn = BaseColumn & {
   kind: ColumnKind.UNKNOWN;
 };
 
-type FieldColumn = BaseColumn & {
+export type FieldColumn = BaseColumn & {
   field: string;
   kind: ColumnKind.FIELD;
 };

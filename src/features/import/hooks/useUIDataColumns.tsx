@@ -7,7 +7,7 @@ import { CellData, Column, ColumnKind } from '../utils/types';
 import { Msg, useMessages } from 'core/i18n';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
-export type UIDataColumn = {
+export type UIDataColumn<CType extends Column> = {
   assignTag: (tagId: number, value: CellData) => void;
   columnValuesMessage: string;
   deselectOrg: (value: CellData) => void;
@@ -15,7 +15,7 @@ export type UIDataColumn = {
   getSelectedOrgId: (value: CellData) => number | null;
   numRowsByUniqueValue: Record<string | number, number>;
   numberOfEmptyRows: number;
-  originalColumn: Column;
+  originalColumn: CType;
   renderMappingResultsMessage: () => JSX.Element | null;
   selectOrg: (orgId: number, value: CellData) => void;
   showColumnValuesMessage: boolean;
@@ -31,7 +31,7 @@ export type UIDataColumn = {
 interface UseUIDataColumnsReturn {
   forwardMessageDisabled: boolean;
   numRows: number;
-  uiDataColumns: UIDataColumn[];
+  uiDataColumns: UIDataColumn<Column>[];
 }
 
 export default function useUIDataColumns(
@@ -57,7 +57,7 @@ export default function useUIDataColumns(
       if (index == 0 && firstRowIsHeaders) {
         return;
       }
-      if (typeof rowValue === 'string' || typeof rowValue === 'number') {
+      if (rowValue) {
         rowsWithValues.push(rowValue);
       } else {
         numberOfEmptyRows += 1;
@@ -137,35 +137,6 @@ export default function useUIDataColumns(
         : messages.configuration.mapping.defaultColumnHeader({
             columnIndex: index,
           });
-
-    const isConfigurable = [
-      ColumnKind.ID_FIELD,
-      ColumnKind.ORGANIZATION,
-      ColumnKind.TAG,
-    ].includes(originalColumn.kind);
-
-    const needsConfig = originalColumn.selected && isConfigurable;
-    const showColumnValuesMessage = !needsConfig;
-
-    const showTagsConfigMessage =
-      originalColumn.kind == ColumnKind.TAG &&
-      originalColumn.mapping.length == 0;
-    const showOrgConfigMessage =
-      originalColumn.kind == ColumnKind.ORGANIZATION &&
-      originalColumn.mapping.length == 0;
-    const showIdConfigMessage =
-      originalColumn.kind == ColumnKind.ID_FIELD &&
-      originalColumn.idField == null;
-    const showNeedsConfigMessage =
-      showTagsConfigMessage || showOrgConfigMessage || showIdConfigMessage;
-    const showMappingResultMessage = needsConfig && !showNeedsConfigMessage;
-
-    const numRowsByUniqueValue: Record<string | number, number> = {};
-    uniqueValues.forEach((uniqueValue) => {
-      numRowsByUniqueValue[uniqueValue] = cellValues.filter(
-        (cellValue) => cellValue == uniqueValue
-      ).length;
-    });
 
     const renderMappingResultsMessage = () => {
       if (originalColumn.kind == ColumnKind.TAG) {
@@ -349,6 +320,38 @@ export default function useUIDataColumns(
       !valuesAreValidZetkinIDs &&
       originalColumn.kind == ColumnKind.ID_FIELD &&
       originalColumn.idField == 'id';
+
+    const isConfigurable = [
+      ColumnKind.ID_FIELD,
+      ColumnKind.ORGANIZATION,
+      ColumnKind.TAG,
+    ].includes(originalColumn.kind);
+
+    const needsConfig = originalColumn.selected && isConfigurable;
+    const showColumnValuesMessage = !needsConfig;
+
+    const showTagsConfigMessage =
+      originalColumn.kind == ColumnKind.TAG &&
+      originalColumn.mapping.length == 0;
+    const showOrgConfigMessage =
+      originalColumn.kind == ColumnKind.ORGANIZATION &&
+      originalColumn.mapping.length == 0;
+    const showIdConfigMessage =
+      originalColumn.kind == ColumnKind.ID_FIELD &&
+      originalColumn.idField == null;
+    const showNeedsConfigMessage =
+      showTagsConfigMessage ||
+      showOrgConfigMessage ||
+      showIdConfigMessage ||
+      wrongIDFormat;
+    const showMappingResultMessage = needsConfig && !showNeedsConfigMessage;
+
+    const numRowsByUniqueValue: Record<string | number, number> = {};
+    uniqueValues.forEach((uniqueValue) => {
+      numRowsByUniqueValue[uniqueValue] = cellValues.filter(
+        (cellValue) => cellValue == uniqueValue
+      ).length;
+    });
 
     const getSelectedOrgId = (value: CellData) => {
       if (originalColumn.kind == ColumnKind.ORGANIZATION) {
