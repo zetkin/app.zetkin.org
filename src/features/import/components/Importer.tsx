@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
+import Configure from './Configure';
 import ImportStatus from './ImportStatus';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -21,13 +22,12 @@ import Validation from './Validation';
 
 interface ImporterProps {
   onClose: () => void;
-  onRestart: () => void;
   open: boolean;
 }
 
 type ImportSteps = 0 | 1 | 2 | 3;
 
-const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
+const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activeStep, setActiveStep] = useState<ImportSteps>(1);
@@ -95,6 +95,7 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
           </Box>
         </Box>
         <Box sx={{ height: activeStep === 2 ? '80%' : '85%' }}>
+          {activeStep == 1 && <Configure />}
           {activeStep === 2 && (
             <Validation
               onClickBack={() => setActiveStep(0)}
@@ -136,8 +137,6 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
               if (activeStep > 1) {
                 setActiveStep((prev) => (prev - 1) as ImportSteps);
                 setDisabled(false);
-              } else {
-                onRestart();
               }
             }}
             sx={{ mx: 1 }}
