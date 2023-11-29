@@ -1,7 +1,6 @@
 import { Clear } from '@mui/icons-material';
 import {
   Box,
-  CircularProgress,
   Dialog,
   IconButton,
   Step,
@@ -31,23 +30,17 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activeStep, setActiveStep] = useState<ImportSteps>(2);
-  const [loading] = useState<boolean>(false);
-  const showStepper = activeStep == 1 || activeStep == 2;
+  const configureOrValidateStep = activeStep == 1 || activeStep == 2;
 
   return (
     <Dialog
       fullScreen={fullScreen}
-      fullWidth={activeStep !== 3}
-      maxWidth="lg"
+      fullWidth
+      maxWidth={configureOrValidateStep ? 'lg' : 'sm'}
       onClose={onClose}
       open={open}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        padding={2}
-        width={activeStep !== 3 ? '100%' : '700px'}
-      >
+      <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography variant="h4">
             <Msg id={messageIds.configuration.title} />
@@ -59,7 +52,7 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
             width="50%"
           >
             <Box width="100%">
-              {showStepper && (
+              {configureOrValidateStep && (
                 <Stepper activeStep={activeStep}>
                   <Step>
                     <StepLabel>
@@ -108,24 +101,7 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
           />
         )}
         {activeStep === 3 && (
-          <>
-            {loading ? (
-              <Box
-                alignItems="center"
-                display="flex"
-                height="80%"
-                justifyContent="center"
-              >
-                <CircularProgress />
-              </Box>
-            ) : (
-              <ImportStatus
-                onClickBack={() =>
-                  setActiveStep((prev) => (prev - 1) as ImportSteps)
-                }
-              />
-            )}
-          </>
+          <ImportStatus onClickBack={() => setActiveStep(2)} onDone={onClose} />
         )}
       </Box>
     </Dialog>

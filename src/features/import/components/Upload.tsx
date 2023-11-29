@@ -25,7 +25,6 @@ const sharedProperties: CSSProperties = {
   flexDirection: 'column',
   flexWrap: 'wrap',
   margin: 16,
-  minWidth: 600,
   padding: 50,
   textAlign: 'center',
   transition: 'height 1s',

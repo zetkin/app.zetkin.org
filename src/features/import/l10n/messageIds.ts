@@ -10,7 +10,6 @@ export default makeMessages('feat.import', {
     restart: m('Restart'),
     validate: m('Validate'),
   },
-  close: m('Close'),
   configuration: {
     configure: {
       ids: {
@@ -146,8 +145,6 @@ export default makeMessages('feat.import', {
     },
     title: m('Import people'),
   },
-  done: m('Done'),
-  import: m('Import'),
   importStatus: {
     completed: {
       desc: m('Your data has been imported to Zetkin'),
@@ -158,6 +155,7 @@ export default makeMessages('feat.import', {
       desc: m('No data was imported to Zetkin'),
       title: m('Import failed'),
     },
+    loadingState: m('Importing'),
     scheduled: {
       desc: m(
         'You can safely close this dialog and we will send you an email when the import is done.'
@@ -167,7 +165,6 @@ export default makeMessages('feat.import', {
       ),
     },
   },
-  restart: m('Restart'),
   steps: {
     configure: m('Configure'),
     import: m('Import'),
@@ -186,7 +183,6 @@ export default makeMessages('feat.import', {
     types: m('CSV, XLS or XLSX'),
     unsupportedFile: m('Unsupported file format.'),
   },
-  validate: m('Validate'),
   validation: {
     alerts: {
       back: m('Go back'),

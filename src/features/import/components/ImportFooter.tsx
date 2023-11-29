@@ -19,13 +19,13 @@ const ImportFooter: FC<ImportFooterProps> = ({
   onClickPrimary,
 }) => {
   return (
-    <Box alignItems="center" display="flex" justifyContent="flex-end">
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="flex-end"
-        padding={2}
-      >
+    <Box
+      alignItems="center"
+      display="flex"
+      justifyContent="flex-end"
+      paddingTop={1}
+    >
+      <Box alignItems="center" display="flex" justifyContent="flex-end">
         {statusMessage && (
           <Typography color="secondary">{statusMessage}</Typography>
         )}
