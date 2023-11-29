@@ -1,16 +1,15 @@
-import { Box, useTheme } from '@mui/material';
-import { Stack, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import TagChip from 'features/tags/components/TagManager/components/TagChip';
+import RowValue from './RowValue';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
+import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useSheets from 'features/import/hooks/useSheets';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Column, ColumnKind, Sheet } from 'features/import/utils/types';
-import { Msg, useMessages } from 'core/i18n';
 
 interface MappedPreviewProps {
   column: Column;
@@ -35,8 +34,6 @@ const MappedPreview = ({
   const tags = data || [];
 
   const rowIndex = firstRowIsHeaders ? personIndex + 1 : personIndex;
-  const columnIsOrg = column.kind === ColumnKind.ORGANIZATION;
-  const columnIsTags = column.kind === ColumnKind.TAG;
 
   let columnName = '';
   let orgTitle = '';
@@ -50,7 +47,6 @@ const MappedPreview = ({
 
   const rowHasValue = rowValue !== null && rowValue !== '';
 
-  console.log(rowHasValue, '??');
   //when column is ID
   if (column.kind === ColumnKind.ID_FIELD) {
     columnName =
@@ -147,9 +143,6 @@ const MappedPreview = ({
       <Box
         sx={{
           alignItems: 'center',
-          // backgroundColor: rowHasValue
-          //   ? 'transparent'
-          //   : theme.palette.transparentGrey.light,
           display: 'flex',
           height:
             rowHasValue || orgTitle !== '' || mappedTags.length > 0
@@ -162,37 +155,13 @@ const MappedPreview = ({
         }}
       >
         <Typography variant="body1">
-          {columnIsOrg && rowValue && orgTitle === '' ? (
-            <Msg
-              id={messageIds.configuration.preview.notMapped}
-              values={{ value: rowValue }}
-            />
-          ) : (
-            orgTitle
-          )}
-          {columnIsTags && (
-            <Stack direction="row" spacing={1}>
-              {mappedTags.map((tag, index) => {
-                return (
-                  <TagChip
-                    key={index}
-                    noWrappedLabel={true}
-                    size="small"
-                    tag={tag}
-                  />
-                );
-              })}
-            </Stack>
-          )}
-          {!columnIsOrg && !columnIsTags && rowHasValue ? (
-            rowValue
-          ) : (
-            <Typography
-              sx={{ color: theme.palette.grey[400], fontStyle: 'italic' }}
-            >
-              ({<Msg id={messageIds.configuration.preview.empty} />})
-            </Typography>
-          )}
+          <RowValue
+            emptyValue={!rowHasValue}
+            kind={column.kind}
+            orgTitle={orgTitle}
+            rowValue={rowValue}
+            tags={mappedTags}
+          />
         </Typography>
       </Box>
     </Box>
