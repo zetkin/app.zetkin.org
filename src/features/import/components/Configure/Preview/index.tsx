@@ -57,8 +57,9 @@ const Preview = () => {
           border: '1px solid lightgrey',
           borderRadius: '5px',
           display: 'flex',
-          height: '95px',
+          height: '98px',
           overflowX: 'auto',
+          overflowY: 'hidden',
         }}
       >
         <Box

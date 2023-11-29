@@ -144,19 +144,10 @@ const MappedPreview = ({
         sx={{
           alignItems: 'center',
           display: 'flex',
-          height:
-            rowHasValue || orgTitle !== '' || mappedTags.length > 0
-              ? 'fit-content'
-              : '14px',
-          my:
-            rowHasValue || orgTitle !== '' || mappedTags.length > 0
-              ? '0'
-              : '5px',
         }}
       >
         <Typography variant="body1">
           <RowValue
-            emptyValue={!rowHasValue}
             kind={column.kind}
             orgTitle={orgTitle}
             rowValue={rowValue}
