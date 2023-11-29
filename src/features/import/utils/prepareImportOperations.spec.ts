@@ -4,7 +4,7 @@ import { describe, it } from '@jest/globals';
 
 describe('prepareImportOperations()', () => {
   describe('when first row is header', () => {
-    it.only('converts Zetkin ID', () => {
+    it('converts Zetkin ID', () => {
       const configData: Sheet = {
         columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
         firstRowIsHeaders: true,
