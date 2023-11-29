@@ -8,6 +8,7 @@ import {
   MuiEvent,
 } from '@mui/x-data-grid-pro';
 
+import compareTags from 'features/tags/utils/compareTags';
 import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
@@ -42,37 +43,7 @@ export default class PersonTagColumnType implements IColumnType {
         );
       },
       sortComparator: (v1: ZetkinTag, v2: ZetkinTag) => {
-        // TODO: simplify code when v1.value, v2.value can't be null
-        //if v1 or v1.value is null and v2 or v2.value is null then it should return 0 otherwise v1(null) should be placed before v2(value)
-        if (!v1 || !v1.value) {
-          return !v2 || !v2.value ? 0 : -1;
-        }
-        //if v2 or v2.value is null then v1(value) should be placed after v2(null)
-        if (!v2 || !v2.value) {
-          return 1;
-        }
-
-        if (typeof v1.value === 'string' && typeof v2.value === 'string') {
-          if (isNaN(Number(v1.value)) && isNaN(Number(v2.value))) {
-            return v1.value.localeCompare(v2.value);
-          }
-          if (!isNaN(Number(v1.value)) && !isNaN(Number(v2.value))) {
-            return parseInt(v1.value) - parseInt(v2.value);
-          }
-          if (isNaN(Number(v1.value))) {
-            return 1;
-          }
-          if (isNaN(Number(v2.value))) {
-            return -1;
-          } else {
-            return v1.value.localeCompare(v2.value);
-          }
-        }
-
-        if (typeof v1.value === 'number' && typeof v2.value === 'number') {
-          return v1.value - v2.value;
-        }
-        return 0;
+        return compareTags(v1, v2);
       },
     };
   }
