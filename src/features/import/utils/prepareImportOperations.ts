@@ -10,7 +10,7 @@ export type ZetkinPersonImportOp = {
 export default function prepareImportOperations(
   configuredSheet: Sheet
 ): ZetkinPersonImportOp[] {
-  const personImportOp: ZetkinPersonImportOp[] = [];
+  const personImportOps: ZetkinPersonImportOp[] = [];
 
   configuredSheet.columns.forEach((column, colIdx) => {
     if (column.selected) {
@@ -23,8 +23,8 @@ export default function prepareImportOperations(
           ? rowIdx - 1
           : rowIdx;
 
-        if (!personImportOp[rowIndex]) {
-          personImportOp.push({
+        if (!personImportOps[rowIndex]) {
+          personImportOps.push({
             op: 'person.import',
           });
         }
@@ -38,8 +38,8 @@ export default function prepareImportOperations(
             column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
 
           if (row.data[colIdx]) {
-            personImportOp[rowIndex].fields = {
-              ...personImportOp[rowIndex].fields,
+            personImportOps[rowIndex].fields = {
+              ...personImportOps[rowIndex].fields,
               [`${fieldKey}`]: row.data[colIdx],
             };
           }
@@ -49,10 +49,10 @@ export default function prepareImportOperations(
         if (column.kind === ColumnKind.TAG) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
-              if (!personImportOp[rowIndex].tags) {
-                personImportOp[rowIndex].tags = [];
+              if (!personImportOps[rowIndex].tags) {
+                personImportOps[rowIndex].tags = [];
               }
-              personImportOp[rowIndex].tags = personImportOp[
+              personImportOps[rowIndex].tags = personImportOps[
                 rowIndex
               ].tags?.concat(mappedColumn.tagIds);
             }
@@ -63,10 +63,10 @@ export default function prepareImportOperations(
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
-              if (!personImportOp[rowIndex].organizations) {
-                personImportOp[rowIndex].organizations = [];
+              if (!personImportOps[rowIndex].organizations) {
+                personImportOps[rowIndex].organizations = [];
               }
-              personImportOp[rowIndex].organizations = personImportOp[
+              personImportOps[rowIndex].organizations = personImportOps[
                 rowIndex
               ].organizations?.concat(mappedColumn.orgId as number);
             }
@@ -75,5 +75,5 @@ export default function prepareImportOperations(
       });
     }
   });
-  return personImportOp;
+  return personImportOps;
 }
