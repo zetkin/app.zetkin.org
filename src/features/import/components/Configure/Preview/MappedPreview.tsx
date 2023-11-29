@@ -45,8 +45,6 @@ const MappedPreview = ({
           .data[columnIndex]
       : null;
 
-  const rowHasValue = rowValue !== null && rowValue !== '';
-
   //when column is ID
   if (column.kind === ColumnKind.ID_FIELD) {
     columnName =

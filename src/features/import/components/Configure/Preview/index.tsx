@@ -6,6 +6,7 @@ import MappedPreview from './MappedPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useSheets from 'features/import/hooks/useSheets';
+import { Column, ColumnKind, TagColumn } from 'features/import/utils/types';
 
 const Preview = () => {
   const theme = useTheme();
@@ -21,6 +22,33 @@ const Preview = () => {
     setPersonIndex(0);
   }, [selectedSheetIndex]);
 
+  const result: Column[] = currentSheet.columns.reduce(
+    (acc: Column[], column, index) => {
+      if (column.kind === ColumnKind.TAG && column.selected) {
+        const tagColumnIndex = acc.findIndex(
+          (item) => item.kind === ColumnKind.TAG
+        );
+        const tagColumn = acc[tagColumnIndex] as TagColumn;
+        const mappedTagWithIndex = column.mapping.map((item) => ({
+          ...item,
+          tagColumnIndex: index,
+        }));
+
+        if (tagColumnIndex !== -1) {
+          tagColumn.mapping = [...tagColumn.mapping, ...mappedTagWithIndex];
+          acc.push({ kind: ColumnKind.UNKNOWN, selected: false });
+        } else {
+          acc.push({ ...column, mapping: [...mappedTagWithIndex] });
+        }
+      } else {
+        acc.push({ ...column });
+      }
+
+      return acc;
+    },
+    []
+  );
+  console.log(result, ' result');
   return (
     <Box p={2}>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
@@ -84,7 +112,7 @@ const Preview = () => {
                 );
               })}
           {!emptyPreview &&
-            currentSheet.columns.map((column, index) => {
+            result.map((column, index) => {
               return (
                 column.selected && (
                   <MappedPreview
