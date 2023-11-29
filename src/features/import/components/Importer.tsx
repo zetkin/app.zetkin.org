@@ -2,6 +2,7 @@ import { Clear } from '@mui/icons-material';
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   IconButton,
   Step,
@@ -14,28 +15,34 @@ import {
 import { FC, useState } from 'react';
 
 import Configure from './Configure';
+import ImportStatus from './ImportStatus';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import Validation from './Validation';
 
 interface ImporterProps {
   onClose: () => void;
-  onRestart: () => void;
   open: boolean;
 }
 
-type StepType = 0 | 1 | 2 | 3;
+type ImportSteps = 0 | 1 | 2 | 3;
 
-const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
+const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeStep, setActiveStep] = useState<StepType>(1);
+  const [activeStep, setActiveStep] = useState<ImportSteps>(1);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
+  const [loading] = useState<boolean>(false);
   const showStepper = activeStep == 1 || activeStep == 2;
+
+  //TODO: use real data from API response
+  const statusError = false;
 
   return (
     <Dialog
       fullScreen={fullScreen}
-      fullWidth={activeStep == 0 ? false : true}
+      fullWidth={activeStep !== 3}
       maxWidth="lg"
       onClose={onClose}
       open={open}
@@ -43,8 +50,8 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
       <Box
         display="flex"
         flexDirection="column"
-        height={activeStep == 0 ? '' : '90vh'}
         padding={2}
+        width={activeStep !== 3 ? '100%' : '700px'}
       >
         <Box
           alignItems="center"
@@ -92,52 +99,81 @@ const Importer: FC<ImporterProps> = ({ onRestart, open, onClose }) => {
             </IconButton>
           </Box>
         </Box>
-        <Configure />
-        <Box alignItems="center" display="flex" justifyContent="flex-end">
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="flex-end"
-            padding={2}
+        <Box sx={{ height: activeStep === 2 ? '80%' : '85%' }}>
+          {activeStep == 1 && <Configure />}
+          {activeStep === 2 && (
+            <Validation
+              onClickBack={() => setActiveStep(0)}
+              onDisabled={(value) => setDisabled(value)}
+            />
+          )}
+          {activeStep === 3 && (
+            <>
+              {loading ? (
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  height="80%"
+                  justifyContent="center"
+                >
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <ImportStatus
+                  onClickBack={() =>
+                    setActiveStep((prev) => (prev - 1) as ImportSteps)
+                  }
+                />
+              )}
+            </>
+          )}
+        </Box>
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="flex-end"
+          sx={{ bottom: 15, right: 15 }}
+        >
+          <Typography color="secondary">
+            This message will depend on the state of the import.
+          </Typography>
+          <Button
+            onClick={() => {
+              if (activeStep > 1) {
+                setActiveStep((prev) => (prev - 1) as ImportSteps);
+                setDisabled(false);
+              }
+            }}
+            sx={{ mx: 1 }}
+            variant="text"
           >
-            <Typography color="secondary">
-              This message will depend on the state of the import.
-            </Typography>
-            <Button
-              onClick={() => {
-                activeStep > 1
-                  ? setActiveStep((prev) => (prev - 1) as StepType)
-                  : onRestart();
-              }}
-              sx={{ mx: 1 }}
-              variant="text"
-            >
-              <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
-            </Button>
-            <Button
-              disabled={false}
-              onClick={() => {
-                if (activeStep === 3) {
-                  onClose();
-                  setActiveStep(1);
-                } else {
-                  setActiveStep((prev) => (prev + 1) as StepType);
-                }
-              }}
-              sx={{ ml: 1 }}
-              variant="contained"
-            >
-              <Msg
-                id={
-                  activeStep === 1
-                    ? messageIds.validate
-                    : activeStep === 2
-                    ? messageIds.import
-                    : messageIds.done
-                }
-              />
-            </Button>
-          </Box>
+            <Msg id={activeStep > 1 ? messageIds.back : messageIds.restart} />
+          </Button>
+          <Button
+            disabled={disabled}
+            onClick={() => {
+              if (activeStep === 3) {
+                onClose();
+                setActiveStep(1);
+              } else {
+                setActiveStep((prev) => (prev + 1) as ImportSteps);
+              }
+            }}
+            sx={{ ml: 1 }}
+            variant="contained"
+          >
+            <Msg
+              id={
+                activeStep === 1
+                  ? messageIds.validate
+                  : activeStep === 2
+                  ? messageIds.import
+                  : statusError
+                  ? messageIds.close
+                  : messageIds.done
+              }
+            />
+          </Button>
         </Box>
       </Box>
     </Dialog>

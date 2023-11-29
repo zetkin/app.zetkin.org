@@ -9,7 +9,7 @@ import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import { Msg, useMessages } from 'core/i18n';
 
 interface OrgConfigProps {
-  uiDataColumn: UIDataColumn & { originalColumn: OrgColumn };
+  uiDataColumn: UIDataColumn<OrgColumn>;
 }
 
 const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
