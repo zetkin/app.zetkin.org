@@ -3,14 +3,14 @@ import { CellData, ColumnKind, Sheet } from './types';
 export type ZetkinPersonImportOp = {
   fields?: Record<string, CellData>;
   op: 'person.import';
-  organizations?: number | null;
+  organizations?: number[];
   tags?: number[];
 };
 
 export default function prepareImportOperations(
   configuredSheet: Sheet
 ): ZetkinPersonImportOp[] {
-  const result: ZetkinPersonImportOp[] = [];
+  const personImportOp: ZetkinPersonImportOp[] = [];
 
   configuredSheet.columns.forEach((column, colIdx) => {
     if (column.selected) {
@@ -23,8 +23,8 @@ export default function prepareImportOperations(
           ? rowIdx - 1
           : rowIdx;
 
-        if (!result[rowIndex]) {
-          result.push({
+        if (!personImportOp[rowIndex]) {
+          personImportOp.push({
             op: 'person.import',
           });
         }
@@ -38,30 +38,42 @@ export default function prepareImportOperations(
             column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
 
           if (row.data[colIdx]) {
-            result[rowIndex].fields = {
-              ...result[rowIndex].fields,
+            personImportOp[rowIndex].fields = {
+              ...personImportOp[rowIndex].fields,
               [`${fieldKey}`]: row.data[colIdx],
             };
           }
         }
+
         //tags
         if (column.kind === ColumnKind.TAG) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
-              result[rowIndex].tags = mappedColumn.tagIds;
+              if (!personImportOp[rowIndex].tags) {
+                personImportOp[rowIndex].tags = [];
+              }
+              personImportOp[rowIndex].tags = personImportOp[
+                rowIndex
+              ].tags?.concat(mappedColumn.tagIds);
             }
           });
         }
+
         //orgs
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
-              result[rowIndex].organizations = mappedColumn.orgId;
+              if (!personImportOp[rowIndex].organizations) {
+                personImportOp[rowIndex].organizations = [];
+              }
+              personImportOp[rowIndex].organizations = personImportOp[
+                rowIndex
+              ].organizations?.concat(mappedColumn.orgId as number);
             }
           });
         }
       });
     }
   });
-  return result;
+  return personImportOp;
 }

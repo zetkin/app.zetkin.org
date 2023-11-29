@@ -237,7 +237,7 @@ describe('prepareImportOperations when first row is header', () => {
           last_name: 'Doe',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [123, 100],
       },
       {
@@ -247,7 +247,7 @@ describe('prepareImportOperations when first row is header', () => {
           last_name: 'Doe',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [124, 100],
       },
     ]);
@@ -364,7 +364,7 @@ describe('prepareImportOperations when first row is header', () => {
           last_name: 'Doe',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [123, 100],
       },
       {
@@ -373,7 +373,7 @@ describe('prepareImportOperations when first row is header', () => {
           last_name: 'Doe',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [124, 100],
       },
     ]);
@@ -432,7 +432,7 @@ describe('prepareImportOperations when first row is not header', () => {
           last_name: 'Doe',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [123, 100],
       },
       {
@@ -442,7 +442,7 @@ describe('prepareImportOperations when first row is not header', () => {
           last_name: 'Doe',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [124, 100],
       },
     ]);
@@ -494,7 +494,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
     expect(result).toEqual([
       {
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [123, 100],
       },
       {
@@ -502,7 +502,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           city: 'Linköping',
         },
         op: 'person.import',
-        organizations: 273,
+        organizations: [273],
         tags: [124, 100],
       },
     ]);
@@ -553,7 +553,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           ext_id: '123',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
       },
       {
         fields: {
@@ -561,7 +561,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           ext_id: '124',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [124, 100],
       },
       {
@@ -570,7 +570,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           ext_id: '125',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
       },
     ]);
   });
@@ -623,7 +623,7 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           ext_id: '123',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
         tags: [123, 100],
       },
       {
@@ -693,11 +693,11 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
           ext_id: '123',
         },
         op: 'person.import',
-        organizations: 272,
+        organizations: [272],
       },
       {
         op: 'person.import',
-        organizations: 273,
+        organizations: [273],
         tags: [124, 100],
       },
       {
