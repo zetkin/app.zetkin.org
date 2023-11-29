@@ -709,4 +709,82 @@ describe('prepareImportOperations excludes mapping rows with empty or null value
       },
     ]);
   });
+
+  it('correctly adds up multiple columns of tags and orgs', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 272, value: 1 },
+            { orgId: 273, value: 2 },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 111, value: 3 },
+            { orgId: 222, value: 4 },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [123, 100], value: 'Frontend' },
+            { tagIds: [124, 100], value: 'Backend' },
+          ],
+
+          selected: true,
+        },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            { tagIds: [111, 222], value: 'Cat' },
+            { tagIds: [333, 444], value: 'Dog' },
+          ],
+
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['Linköping', '123', 1, 3, 'Frontend', 'Cat'],
+        },
+        {
+          data: ['Linköping', '125', 2, 4, 'Backend', 'Dog'],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData);
+    expect(result).toEqual([
+      {
+        fields: {
+          city: 'Linköping',
+          ext_id: '123',
+        },
+        op: 'person.import',
+        organizations: [272, 111],
+        tags: [123, 100, 111, 222],
+      },
+      {
+        fields: {
+          city: 'Linköping',
+          ext_id: '125',
+        },
+        op: 'person.import',
+        organizations: [273, 222],
+        tags: [124, 100, 333, 444],
+      },
+    ]);
+  });
 });
