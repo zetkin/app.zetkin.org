@@ -4,7 +4,41 @@ import { describe, it } from '@jest/globals';
 
 describe('prepareImportOperations()', () => {
   describe('when first row is header', () => {
-    it('converts ID only', () => {
+    it.only('converts Zetkin ID', () => {
+      const configData: Sheet = {
+        columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
+        firstRowIsHeaders: true,
+        rows: [
+          {
+            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
+          },
+          {
+            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
+          },
+          {
+            data: ['124', 'John', 'Doe', 'Backend', 2],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = prepareImportOperations(configData);
+      expect(result).toEqual([
+        {
+          fields: {
+            id: '123',
+          },
+          op: 'person.import',
+        },
+        {
+          fields: {
+            id: '124',
+          },
+          op: 'person.import',
+        },
+      ]);
+    });
+
+    it('converts external ID', () => {
       const configData: Sheet = {
         columns: [
           { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -43,6 +77,7 @@ describe('prepareImportOperations()', () => {
         },
       ]);
     });
+
     it('converts fields only', () => {
       const configData: Sheet = {
         columns: [
