@@ -128,7 +128,11 @@ export default makeMessages('feat.import', {
         org: m('Organization'),
         tags: m('Tags'),
       },
+      empty: m('Empty'),
       next: m('Next'),
+      notMapped: m<{
+        value: string | number;
+      }>('Not mapped "{value}"'),
       previous: m('Previous'),
       title: m('Mapping preview'),
     },
