@@ -5,15 +5,23 @@ import { useEffect, useState } from 'react';
 import MappedPreview from './MappedPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
-import { Column, ColumnKind, TagColumn } from 'features/import/utils/types';
+import {
+  Column,
+  ColumnKind,
+  Sheet,
+  TagColumn,
+} from 'features/import/utils/types';
+import FieldsPreview from './FieldsPreview';
 
 const Preview = () => {
   const theme = useTheme();
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const [personIndex, setPersonIndex] = useState(0);
+  const currentSheet: Sheet = sheets[selectedSheetIndex];
+  const { fields } = usePersonPreview(currentSheet, personIndex);
 
-  const currentSheet = sheets[selectedSheetIndex];
   const emptyPreview = currentSheet.columns.every(
     (item) => item.selected === false
   );
@@ -22,33 +30,6 @@ const Preview = () => {
     setPersonIndex(0);
   }, [selectedSheetIndex]);
 
-  const result: Column[] = currentSheet.columns.reduce(
-    (acc: Column[], column, index) => {
-      if (column.kind === ColumnKind.TAG && column.selected) {
-        const tagColumnIndex = acc.findIndex(
-          (item) => item.kind === ColumnKind.TAG
-        );
-        const tagColumn = acc[tagColumnIndex] as TagColumn;
-        const mappedTagWithIndex = column.mapping.map((item) => ({
-          ...item,
-          tagColumnIndex: index,
-        }));
-
-        if (tagColumnIndex !== -1) {
-          tagColumn.mapping = [...tagColumn.mapping, ...mappedTagWithIndex];
-          acc.push({ kind: ColumnKind.UNKNOWN, selected: false });
-        } else {
-          acc.push({ ...column, mapping: [...mappedTagWithIndex] });
-        }
-      } else {
-        acc.push({ ...column });
-      }
-
-      return acc;
-    },
-    []
-  );
-  console.log(result, ' result');
   return (
     <Box p={2}>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
@@ -112,18 +93,59 @@ const Preview = () => {
                 );
               })}
           {!emptyPreview &&
-            result.map((column, index) => {
-              return (
-                column.selected && (
-                  <MappedPreview
-                    key={`preview-${index}`}
-                    column={column}
-                    columnIndex={index}
-                    currentSheet={currentSheet}
-                    personIndex={personIndex}
-                  />
-                )
-              );
+            currentSheet.columns.map((column, index) => {
+              if (column.selected) {
+                if (column.kind === ColumnKind.UNKNOWN) {
+                  return (
+                    <Box
+                      flexGrow={1}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        minWidth: 'fit-content',
+                        overflowX: 'auto',
+                        padding: 2,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          backgroundColor: theme.palette.transparentGrey.light,
+                          height: '14px',
+                          mb: 0.5,
+                          minWidth: '150px',
+                        }}
+                      >
+                        <Typography
+                          fontSize="12px"
+                          sx={{
+                            color: theme.palette.grey['600'],
+                            letterSpacing: '1px',
+                            textTransform: 'uppercase',
+                          }}
+                          variant="body1"
+                        ></Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                        }}
+                      >
+                        {
+                          currentSheet.rows[
+                            firstRowIsHeaders ? personIndex + 1 : personIndex
+                          ].data[index]
+                        }
+                      </Box>
+                    </Box>
+                  );
+                }
+                if (column.kind === ColumnKind.FIELD) {
+                  return (
+                    <FieldsPreview fields={Object.entries(fields!)[index]} />
+                  );
+                }
+              }
             })}
         </Box>
       </Box>
