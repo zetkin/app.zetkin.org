@@ -1,7 +1,7 @@
 import { CellData, ColumnKind, Sheet } from './types';
 
 export type ZetkinPersonImportOp = {
-  fields?: Record<string, CellData>;
+  data?: Record<string, CellData>;
   op: 'person.import';
   organizations?: number[];
   tags?: number[];
@@ -29,17 +29,34 @@ export default function prepareImportOperations(
           });
         }
 
-        //ID column and fields
-        if (
-          column.kind === ColumnKind.ID_FIELD ||
-          column.kind === ColumnKind.FIELD
-        ) {
-          const fieldKey =
-            column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
+        //ID column
+        if (column.kind === ColumnKind.ID_FIELD) {
+          const fieldKey = column.idField;
+          let value = row.data[colIdx];
+
+          if (value) {
+            if (fieldKey == 'ext_id') {
+              value = value.toString();
+            }
+
+            if (fieldKey == 'id') {
+              value = parseInt(value.toString());
+            }
+
+            personImportOps[rowIndex].data = {
+              ...personImportOps[rowIndex].data,
+              [`${fieldKey}`]: value,
+            };
+          }
+        }
+
+        //Fields
+        if (column.kind === ColumnKind.FIELD) {
+          const fieldKey = column.field;
 
           if (row.data[colIdx]) {
-            personImportOps[rowIndex].fields = {
-              ...personImportOps[rowIndex].fields,
+            personImportOps[rowIndex].data = {
+              ...personImportOps[rowIndex].data,
               [`${fieldKey}`]: row.data[colIdx],
             };
           }

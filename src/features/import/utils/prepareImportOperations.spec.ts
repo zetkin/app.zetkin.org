@@ -24,14 +24,14 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
-            id: '123',
+          data: {
+            id: 123,
           },
           op: 'person.import',
         },
         {
-          fields: {
-            id: '124',
+          data: {
+            id: 124,
           },
           op: 'person.import',
         },
@@ -64,13 +64,13 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             ext_id: '123',
           },
           op: 'person.import',
         },
         {
-          fields: {
+          data: {
             ext_id: '124',
           },
           op: 'person.import',
@@ -112,14 +112,14 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             first_name: 'Jane',
             last_name: 'Doe',
           },
           op: 'person.import',
         },
         {
-          fields: {
+          data: {
             first_name: 'John',
             last_name: 'Doe',
           },
@@ -202,7 +202,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             ext_id: '123',
             first_name: 'Jane',
             last_name: 'Doe',
@@ -210,7 +210,7 @@ describe('prepareImportOperations()', () => {
           op: 'person.import',
         },
         {
-          fields: {
+          data: {
             ext_id: '124',
             first_name: 'John',
             last_name: 'Doe',
@@ -267,7 +267,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             ext_id: '123',
             first_name: 'Jane',
             last_name: 'Doe',
@@ -277,7 +277,7 @@ describe('prepareImportOperations()', () => {
           tags: [123, 100],
         },
         {
-          fields: {
+          data: {
             ext_id: '124',
             first_name: 'John',
             last_name: 'Doe',
@@ -328,7 +328,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             ext_id: '123',
             first_name: 'Jane',
             last_name: 'Doe',
@@ -337,7 +337,7 @@ describe('prepareImportOperations()', () => {
           tags: [123, 100],
         },
         {
-          fields: {
+          data: {
             ext_id: '124',
             first_name: 'John',
             last_name: 'Doe',
@@ -395,7 +395,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             first_name: 'Jane',
             last_name: 'Doe',
           },
@@ -404,7 +404,7 @@ describe('prepareImportOperations()', () => {
           tags: [123, 100],
         },
         {
-          fields: {
+          data: {
             first_name: 'John',
             last_name: 'Doe',
           },
@@ -462,7 +462,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             ext_id: '123',
             first_name: 'Jane',
             last_name: 'Doe',
@@ -472,7 +472,7 @@ describe('prepareImportOperations()', () => {
           tags: [123, 100],
         },
         {
-          fields: {
+          data: {
             ext_id: '124',
             first_name: 'John',
             last_name: 'Doe',
@@ -534,7 +534,7 @@ describe('prepareImportOperations()', () => {
           tags: [123, 100],
         },
         {
-          fields: {
+          data: {
             city: 'Linköping',
           },
           op: 'person.import',
@@ -584,7 +584,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '123',
           },
@@ -592,7 +592,7 @@ describe('prepareImportOperations()', () => {
           organizations: [272],
         },
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '124',
           },
@@ -601,7 +601,7 @@ describe('prepareImportOperations()', () => {
           tags: [124, 100],
         },
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '125',
           },
@@ -654,7 +654,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '123',
           },
@@ -663,7 +663,7 @@ describe('prepareImportOperations()', () => {
           tags: [123, 100],
         },
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '124',
           },
@@ -671,7 +671,7 @@ describe('prepareImportOperations()', () => {
           tags: [124, 100],
         },
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '125',
           },
@@ -724,7 +724,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '123',
           },
@@ -737,7 +737,7 @@ describe('prepareImportOperations()', () => {
           tags: [124, 100],
         },
         {
-          fields: {
+          data: {
             city: 'Malmö',
             ext_id: '125',
           },
@@ -804,7 +804,7 @@ describe('prepareImportOperations()', () => {
       const result = prepareImportOperations(configData);
       expect(result).toEqual([
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '123',
           },
@@ -813,7 +813,7 @@ describe('prepareImportOperations()', () => {
           tags: [123, 100, 111, 222],
         },
         {
-          fields: {
+          data: {
             city: 'Linköping',
             ext_id: '125',
           },
