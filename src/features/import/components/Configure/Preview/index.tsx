@@ -14,13 +14,13 @@ import {
   TagColumn,
 } from 'features/import/utils/types';
 import FieldsPreview from './FieldsPreview';
+import PreviewGrid from './PreviewGrid';
 
 const Preview = () => {
   const theme = useTheme();
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
-  const { fields } = usePersonPreview(currentSheet, personIndex);
 
   const emptyPreview = currentSheet.columns.every(
     (item) => item.selected === false
@@ -93,56 +93,26 @@ const Preview = () => {
                 );
               })}
           {!emptyPreview &&
-            currentSheet.columns.map((column, index) => {
+            currentSheet.columns.map((column, columnIdx) => {
               if (column.selected) {
                 if (column.kind === ColumnKind.UNKNOWN) {
                   return (
-                    <Box
-                      flexGrow={1}
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        minWidth: 'fit-content',
-                        overflowX: 'auto',
-                        padding: 2,
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          backgroundColor: theme.palette.transparentGrey.light,
-                          height: '14px',
-                          mb: 0.5,
-                          minWidth: '150px',
-                        }}
-                      >
-                        <Typography
-                          fontSize="12px"
-                          sx={{
-                            color: theme.palette.grey['600'],
-                            letterSpacing: '1px',
-                            textTransform: 'uppercase',
-                          }}
-                          variant="body1"
-                        ></Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                        }}
-                      >
-                        {
-                          currentSheet.rows[
-                            firstRowIsHeaders ? personIndex + 1 : personIndex
-                          ].data[index]
-                        }
-                      </Box>
-                    </Box>
+                    <PreviewGrid
+                      rowValue={
+                        currentSheet.rows[
+                          firstRowIsHeaders ? personIndex + 1 : personIndex
+                        ].data[columnIdx]
+                      }
+                    />
                   );
                 }
                 if (column.kind === ColumnKind.FIELD) {
                   return (
-                    <FieldsPreview fields={Object.entries(fields!)[index]} />
+                    <FieldsPreview
+                      fieldKey={column.field}
+                      currentSheet={currentSheet}
+                      personIndex={personIndex}
+                    />
                   );
                 }
               }
