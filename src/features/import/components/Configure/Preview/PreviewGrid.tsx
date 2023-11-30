@@ -1,14 +1,22 @@
 import { Box, Typography, useTheme } from '@mui/material';
 
-import { CellData } from 'features/import/utils/types';
+import RowValue from './RowValue';
+import { ZetkinTag } from 'utils/types/zetkin';
+import { CellData, ColumnKind } from 'features/import/utils/types';
 
 interface PreviewGridProps {
   columnHeader?: string;
-  rowValue?: CellData;
+  kind: ColumnKind;
+  rowValues: CellData[];
+  tags?: ZetkinTag[];
 }
-const PreviewGrid = ({ columnHeader, rowValue }: PreviewGridProps) => {
+const PreviewGrid = ({
+  columnHeader,
+  rowValues,
+  kind,
+  tags,
+}: PreviewGridProps) => {
   const theme = useTheme();
-
   return (
     <Box
       flexGrow={1}
@@ -48,7 +56,9 @@ const PreviewGrid = ({ columnHeader, rowValue }: PreviewGridProps) => {
           display: 'flex',
         }}
       >
-        <Typography variant="body1">{rowValue}</Typography>
+        <Typography variant="body1">
+          <RowValue kind={kind} rowValues={rowValues} tags={tags} />
+        </Typography>
       </Box>
     </Box>
   );

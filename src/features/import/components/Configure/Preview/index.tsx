@@ -2,21 +2,15 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import MappedPreview from './MappedPreview';
+import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import PreviewGrid from './PreviewGrid';
+import TagsPreview from './TagsPreview';
+import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
-import {
-  Column,
-  ColumnKind,
-  Sheet,
-  TagColumn,
-} from 'features/import/utils/types';
-import FieldsPreview from './FieldsPreview';
-import PreviewGrid from './PreviewGrid';
-import { useNumericRouteParams } from 'core/hooks';
-import TagsPreview from './TagsPreview';
+import { ColumnKind, Sheet } from 'features/import/utils/types';
 
 const Preview = () => {
   const theme = useTheme();
@@ -96,30 +90,36 @@ const Preview = () => {
                   />
                 );
               })}
-          {!emptyPreview &&
-            currentSheet.columns.map((column, columnIdx) => {
-              if (column.selected) {
-                if (column.kind === ColumnKind.UNKNOWN) {
-                  return (
-                    <PreviewGrid
-                      rowValue={
-                        currentSheet.rows[
-                          firstRowIsHeaders ? personIndex + 1 : personIndex
-                        ].data[columnIdx]
-                      }
-                    />
-                  );
+          {!emptyPreview && (
+            <>
+              {currentSheet.columns.map((column, columnIdx) => {
+                if (column.selected) {
+                  if (column.kind === ColumnKind.UNKNOWN) {
+                    return (
+                      <PreviewGrid
+                        kind={ColumnKind.UNKNOWN}
+                        rowValues={[
+                          currentSheet.rows[
+                            firstRowIsHeaders ? personIndex + 1 : personIndex
+                          ].data[columnIdx],
+                        ]}
+                      />
+                    );
+                  }
+                  if (column.kind === ColumnKind.FIELD) {
+                    return (
+                      <FieldsPreview fieldKey={column.field} fields={fields} />
+                    );
+                  }
                 }
-                if (column.kind === ColumnKind.FIELD) {
-                  return (
-                    <FieldsPreview fieldKey={column.field} fields={fields} />
-                  );
-                }
-                if (column.kind === ColumnKind.TAG) {
-                  return <TagsPreview tags={tags} />;
-                }
-              }
-            })}
+              })}
+              <TagsPreview
+                currentSheet={currentSheet}
+                personIndex={firstRowIsHeaders ? personIndex + 1 : personIndex}
+                tags={tags}
+              />
+            </>
+          )}
         </Box>
       </Box>
     </Box>

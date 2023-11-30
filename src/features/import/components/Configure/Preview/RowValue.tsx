@@ -9,9 +9,8 @@ import { CellData, ColumnKind } from 'features/import/utils/types';
 
 interface RowValueProps {
   kind: ColumnKind;
-  rowValue: CellData;
-  orgTitle: string;
-  tags: ZetkinTag[];
+  rowValues: CellData[];
+  tags?: ZetkinTag[];
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -30,23 +29,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RowValue = ({ kind, rowValue, orgTitle, tags }: RowValueProps) => {
+const RowValue = ({ kind, rowValues, tags }: RowValueProps) => {
   const theme = useTheme();
   const classes = useStyles();
+  const rowValue = rowValues
+    .filter((value) => value !== '' && value !== null)
+    .join(',');
 
-  const columnIsOrg = kind === ColumnKind.ORGANIZATION;
-  const columnIsTags = kind === ColumnKind.TAG;
   const notMapped = (
     <Msg
       id={messageIds.configuration.preview.notMapped}
       values={{ value: rowValue }}
     />
   );
-  const emptyValue = rowValue === null || rowValue === '';
+  const emptyValue =
+    (rowValue === null || rowValue === '') &&
+    (tags === undefined || tags.length === 0);
 
-  const displayedTags = tags.slice(0, 3);
-  const hiddenTags = tags.slice(3);
-  const tooltipTitle = hiddenTags.map((tag) => tag.title).join(', ');
+  const displayedTags = tags?.slice(0, 3);
+  const hiddenTags = tags?.slice(3);
+  const tooltipTitle = hiddenTags?.map((tag) => tag.title).join(', ');
 
   return (
     <>
@@ -59,13 +61,14 @@ const RowValue = ({ kind, rowValue, orgTitle, tags }: RowValueProps) => {
       )}
       {!emptyValue && (
         <>
-          {columnIsOrg && orgTitle === '' ? notMapped : orgTitle}
-          {columnIsTags &&
-            (tags.length === 0 ? (
+          {kind === ColumnKind.ORGANIZATION &&
+            (rowValue === '' ? notMapped : rowValue)}
+          {kind === ColumnKind.TAG &&
+            (tags?.length === 0 ? (
               notMapped
             ) : (
               <Stack direction="row" mt="5px" spacing={1} width="300px">
-                {displayedTags.map((tag) => (
+                {displayedTags?.map((tag) => (
                   <TagChip
                     key={tag.id}
                     noWrappedLabel={true}
@@ -73,18 +76,19 @@ const RowValue = ({ kind, rowValue, orgTitle, tags }: RowValueProps) => {
                     tag={tag}
                   />
                 ))}
-                {hiddenTags.length > 0 && (
+                {hiddenTags!.length > 0 && (
                   <Tooltip title={tooltipTitle}>
                     <Box border={2} className={classes.chip}>
-                      {`${displayedTags.length > 0 ? '+' : ''}${
-                        hiddenTags.length
+                      {`${displayedTags!.length > 0 ? '+' : ''}${
+                        hiddenTags?.length
                       }`}
                     </Box>
                   </Tooltip>
                 )}
               </Stack>
             ))}
-          {!columnIsOrg && !columnIsTags && rowValue}
+          {(kind === ColumnKind.FIELD || kind === ColumnKind.UNKNOWN) &&
+            rowValue}
         </>
       )}
     </>

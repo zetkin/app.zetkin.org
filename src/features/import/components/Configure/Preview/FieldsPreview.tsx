@@ -1,9 +1,9 @@
-import { CellData } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import { CellData, ColumnKind } from 'features/import/utils/types';
 
 interface FieldsPreviewProps {
   fieldKey: string;
@@ -32,7 +32,8 @@ const FieldsPreview = ({ fieldKey, fields }: FieldsPreviewProps) => {
   return (
     <PreviewGrid
       columnHeader={idColumnHeader || fieldColumnHeader}
-      rowValue={value}
+      kind={ColumnKind.FIELD}
+      rowValues={[value ?? '']}
     />
   );
 };
