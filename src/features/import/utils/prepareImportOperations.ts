@@ -52,9 +52,11 @@ export default function prepareImportOperations(
               if (!personImportOps[rowIndex].tags) {
                 personImportOps[rowIndex].tags = [];
               }
-              personImportOps[rowIndex].tags = personImportOps[
-                rowIndex
-              ].tags?.concat(mappedColumn.tagIds);
+              personImportOps[rowIndex].tags = [
+                ...new Set(
+                  personImportOps[rowIndex].tags?.concat(mappedColumn.tagIds)
+                ),
+              ];
             }
           });
         }

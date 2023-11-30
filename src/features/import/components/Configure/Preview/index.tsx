@@ -15,12 +15,16 @@ import {
 } from 'features/import/utils/types';
 import FieldsPreview from './FieldsPreview';
 import PreviewGrid from './PreviewGrid';
+import { useNumericRouteParams } from 'core/hooks';
+import TagsPreview from './TagsPreview';
 
 const Preview = () => {
   const theme = useTheme();
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
+  const { orgId } = useNumericRouteParams();
+  const { fields, tags } = usePersonPreview(currentSheet, personIndex, orgId);
 
   const emptyPreview = currentSheet.columns.every(
     (item) => item.selected === false
@@ -108,12 +112,11 @@ const Preview = () => {
                 }
                 if (column.kind === ColumnKind.FIELD) {
                   return (
-                    <FieldsPreview
-                      fieldKey={column.field}
-                      currentSheet={currentSheet}
-                      personIndex={personIndex}
-                    />
+                    <FieldsPreview fieldKey={column.field} fields={fields} />
                   );
+                }
+                if (column.kind === ColumnKind.TAG) {
+                  return <TagsPreview tags={tags} />;
                 }
               }
             })}
