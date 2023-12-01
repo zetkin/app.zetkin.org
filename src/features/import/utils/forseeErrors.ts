@@ -1,13 +1,7 @@
 import isEmail from 'validator/lib/isEmail';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
-import { ColumnKind, Sheet } from './types';
-
-const enum IMPORT_ERROR {
-  EMAIL = 'email',
-  GENDER = 'gender',
-  PHONE = 'phone',
-}
+import { ColumnKind, IMPORT_ERROR, Sheet } from './types';
 
 export default function forseeErrors(
   configuredSheet: Sheet,

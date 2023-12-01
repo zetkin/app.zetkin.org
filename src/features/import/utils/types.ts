@@ -65,3 +65,31 @@ export type Column =
   | IDFieldColumn
   | TagColumn
   | OrgColumn;
+
+export const enum IMPORT_ERROR {
+  EMAIL = 'email',
+  GENDER = 'gender',
+  PHONE = 'phone',
+}
+
+export type PersonImportSummary = {
+  addedToOrg: {
+    byOrg: { [key: number]: number };
+    total: number;
+  };
+  created: {
+    total: number;
+  };
+  tagged: {
+    byTag: { [key: number]: number };
+    total: number;
+  };
+  updated: {
+    byField: { [key: string]: number };
+    total: number;
+  };
+};
+
+export type PersonImport = {
+  summary: PersonImportSummary;
+};
