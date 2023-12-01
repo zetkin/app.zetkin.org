@@ -2,33 +2,30 @@ import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import { useMessages } from 'core/i18n';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { CellData, ColumnKind, Sheet } from 'features/import/utils/types';
+import { ColumnKind, Sheet } from 'features/import/utils/types';
 interface TagPreviewProps {
   currentSheet: Sheet;
   tags: ZetkinTag[];
-  personIndex: number;
 }
-const TagsPreview = ({ tags, currentSheet, personIndex }: TagPreviewProps) => {
+const TagsPreview = ({ tags, currentSheet }: TagPreviewProps) => {
   const messages = useMessages(messageIds);
-  const tagColumnIndexesBeforeMapping = currentSheet.columns
-    .map((item, index) =>
-      item.kind === ColumnKind.TAG && item.selected && item.mapping.length === 0
-        ? index
-        : undefined
-    )
-    .filter((item) => item !== undefined);
-
-  const tagRowValues: CellData[] = tagColumnIndexesBeforeMapping.map(
-    (tagIndex) => currentSheet.rows[personIndex].data[tagIndex!]
+  const tagColumnSelected = currentSheet.columns.some(
+    (column) => column.kind === ColumnKind.TAG && column.selected
+  );
+  const hasMapped = currentSheet.columns.some(
+    (column) =>
+      column.kind === ColumnKind.TAG &&
+      column.selected &&
+      column.mapping.length > 0
   );
 
   return (
     <>
-      {(tagRowValues.length > 0 || tags.length > 0) && (
+      {tagColumnSelected && (
         <PreviewGrid
           columnHeader={messages.configuration.preview.columnHeader.tags()}
+          hasMapped={hasMapped}
           kind={ColumnKind.TAG}
-          rowValues={tagRowValues}
           tags={tags}
         />
       )}

@@ -1,4 +1,3 @@
-import { CellData } from '../utils/types';
 import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
@@ -132,9 +131,7 @@ export default makeMessages('feat.import', {
       },
       empty: m('Empty'),
       next: m('Next'),
-      notMapped: m<{
-        value: CellData;
-      }>('Not mapped "{value}"'),
+      noTags: m('No tags'),
       previous: m('Previous'),
       title: m('Mapping preview'),
     },

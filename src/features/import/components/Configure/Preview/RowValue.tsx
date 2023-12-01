@@ -8,8 +8,9 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import { CellData, ColumnKind } from 'features/import/utils/types';
 
 interface RowValueProps {
+  hasMapped: boolean;
   kind: ColumnKind;
-  rowValues: CellData[];
+  rowValue?: CellData;
   tags?: ZetkinTag[];
 }
 
@@ -29,22 +30,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RowValue = ({ kind, rowValues, tags }: RowValueProps) => {
+const RowValue = ({ hasMapped, kind, rowValue, tags }: RowValueProps) => {
   const theme = useTheme();
   const classes = useStyles();
-  const rowValue = rowValues
-    .filter((value) => value !== '' && value !== null)
-    .join(',');
+  // const rowValue = rowValues
+  //   .filter((value) => value !== '' && value !== null)
+  //   .join(',');
 
-  const notMapped = (
-    <Msg
-      id={messageIds.configuration.preview.notMapped}
-      values={{ value: rowValue }}
-    />
-  );
+  // const notMapped = (
+  //   <Msg
+  //     id={messageIds.configuration.preview.notMapped}
+  //     values={{ value: rowValue }}
+  //   />
+  // );
+  console.log(rowValue, ' rowvalue');
+  console.log(tags, ' tags');
+
+  const noTags = <Msg id={messageIds.configuration.preview.noTags} />;
   const emptyValue =
-    (rowValue === null || rowValue === '') &&
-    (tags === undefined || tags.length === 0);
+    (rowValue === null || rowValue === '') && kind !== ColumnKind.TAG;
 
   const displayedTags = tags?.slice(0, 3);
   const hiddenTags = tags?.slice(3);
@@ -62,10 +66,10 @@ const RowValue = ({ kind, rowValues, tags }: RowValueProps) => {
       {!emptyValue && (
         <>
           {kind === ColumnKind.ORGANIZATION &&
-            (rowValue === '' ? notMapped : rowValue)}
+            (rowValue === '' ? noTags : rowValue)}
           {kind === ColumnKind.TAG &&
             (tags?.length === 0 ? (
-              notMapped
+              noTags
             ) : (
               <Stack direction="row" mt="5px" spacing={1} width="300px">
                 {displayedTags?.map((tag) => (

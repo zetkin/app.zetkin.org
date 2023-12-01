@@ -98,11 +98,11 @@ const Preview = () => {
                     return (
                       <PreviewGrid
                         kind={ColumnKind.UNKNOWN}
-                        rowValues={[
+                        rowValue={
                           currentSheet.rows[
                             firstRowIsHeaders ? personIndex + 1 : personIndex
-                          ].data[columnIdx],
-                        ]}
+                          ].data[columnIdx]
+                        }
                       />
                     );
                   }
@@ -115,7 +115,7 @@ const Preview = () => {
               })}
               <TagsPreview
                 currentSheet={currentSheet}
-                personIndex={firstRowIsHeaders ? personIndex + 1 : personIndex}
+                // personIndex={firstRowIsHeaders ? personIndex + 1 : personIndex}
                 tags={tags}
               />
             </>

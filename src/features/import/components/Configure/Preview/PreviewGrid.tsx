@@ -7,13 +7,15 @@ import { CellData, ColumnKind } from 'features/import/utils/types';
 interface PreviewGridProps {
   columnHeader?: string;
   kind: ColumnKind;
-  rowValues: CellData[];
+  rowValue?: CellData;
+  hasMapped?: boolean;
   tags?: ZetkinTag[];
 }
 const PreviewGrid = ({
   columnHeader,
-  rowValues,
+  rowValue,
   kind,
+  hasMapped,
   tags,
 }: PreviewGridProps) => {
   const theme = useTheme();
@@ -53,11 +55,24 @@ const PreviewGrid = ({
       <Box
         sx={{
           alignItems: 'center',
+          backgroundColor:
+            (rowValue != null && kind !== ColumnKind.TAG) ||
+            (kind === ColumnKind.TAG && hasMapped)
+              ? 'transparent'
+              : theme.palette.transparentGrey.light,
           display: 'flex',
+          height: '14px',
+          minWidth: '150px',
+          mt: 0.5,
         }}
       >
         <Typography variant="body1">
-          <RowValue kind={kind} rowValues={rowValues} tags={tags} />
+          <RowValue
+            hasMapped={hasMapped}
+            kind={kind}
+            rowValue={rowValue}
+            tags={tags}
+          />
         </Typography>
       </Box>
     </Box>
