@@ -1,8 +1,10 @@
+import isEmail from 'validator/lib/isEmail';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 import { ColumnKind, Sheet } from './types';
 
 const enum IMPORT_ERROR {
+  EMAIL = 'email',
   GENDER = 'gender',
   PHONE = 'phone',
 }
@@ -43,6 +45,13 @@ export default function forseeErrors(
               value = value.toString().toLowerCase();
               if (!zetkinGenders.includes(value)) {
                 errors.push(IMPORT_ERROR.GENDER);
+              }
+            }
+
+            //Check if emails match correct email format
+            if (fieldKey == 'email') {
+              if (!isEmail(value.toString())) {
+                errors.push(IMPORT_ERROR.EMAIL);
               }
             }
           }

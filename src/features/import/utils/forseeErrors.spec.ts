@@ -54,13 +54,34 @@ describe('forseeErrors()', () => {
             data: ['female'], //string, but wrong content
           },
           {
-            data: ['M'], // we parse this to lowercase
+            data: ['M'], // we parse this to lowercase, so it's ok
           },
         ],
       };
 
       const errors = forseeErrors(configuredSheet, countryCode);
       expect(errors).toEqual(['gender']);
+    });
+
+    it('identifies malformed emails', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [{ field: 'email', kind: ColumnKind.FIELD, selected: true }],
+        rows: [
+          {
+            data: ['EMAIL'],
+          },
+          {
+            data: ['angela@gmail.com'],
+          },
+          {
+            data: ['no email'],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['email']);
     });
   });
 });
