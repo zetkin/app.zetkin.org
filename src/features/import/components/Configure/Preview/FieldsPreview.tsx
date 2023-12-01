@@ -8,7 +8,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 
 interface FieldsPreviewProps {
-  fieldKey: string;
+  fieldKey: string | null;
   fields: Record<string, CellData> | undefined;
 }
 const FieldsPreview = ({ fieldKey, fields }: FieldsPreviewProps) => {
@@ -16,8 +16,6 @@ const FieldsPreview = ({ fieldKey, fields }: FieldsPreviewProps) => {
   const columnOptions = useColumnOptions(orgId);
   const messages = useMessages(messageIds);
   const theme = useTheme();
-
-  const value = fields?.[fieldKey];
 
   const idColumnHeader =
     fieldKey === 'id'
@@ -37,7 +35,7 @@ const FieldsPreview = ({ fieldKey, fields }: FieldsPreviewProps) => {
     <PreviewGrid
       columnHeader={idColumnHeader || fieldColumnHeader}
       rowValue={
-        value ?? (
+        (fieldKey && fields?.[fieldKey]) ?? (
           <Typography
             sx={{ color: theme.palette.grey[400], fontStyle: 'italic' }}
           >

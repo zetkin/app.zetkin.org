@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import OrgsPreview from './OrgsPreview';
 import PreviewGrid from './PreviewGrid';
 import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
@@ -120,14 +121,25 @@ const Preview = () => {
                       />
                     );
                   }
-                  if (column.kind === ColumnKind.FIELD) {
+                  if (
+                    column.kind === ColumnKind.FIELD ||
+                    column.kind === ColumnKind.ID_FIELD
+                  ) {
                     return (
-                      <FieldsPreview fieldKey={column.field} fields={fields} />
+                      <FieldsPreview
+                        fieldKey={
+                          column.kind === ColumnKind.FIELD
+                            ? column.field
+                            : column.idField
+                        }
+                        fields={fields}
+                      />
                     );
                   }
                 }
               })}
               <TagsPreview currentSheet={currentSheet} tags={tags} />
+              <OrgsPreview />
             </>
           )}
         </Box>
