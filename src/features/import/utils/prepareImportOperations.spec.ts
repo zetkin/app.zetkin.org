@@ -1,6 +1,11 @@
+import { CountryCode } from 'libphonenumber-js/types.cjs';
+import { describe, it } from '@jest/globals';
+
+import { organization as mockOrganization } from 'utils/testing/mocks/mockOrganization';
 import prepareImportOperations from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
-import { describe, it } from '@jest/globals';
+
+const countryCode = mockOrganization.country as CountryCode;
 
 describe('prepareImportOperations()', () => {
   describe('when first row is header', () => {
@@ -21,7 +26,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -61,7 +66,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -109,7 +114,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -157,7 +162,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           op: 'person.import',
@@ -199,7 +204,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -264,7 +269,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -325,7 +330,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -392,7 +397,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -459,7 +464,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -526,7 +531,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           op: 'person.import',
@@ -581,7 +586,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -651,7 +656,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -721,7 +726,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -801,7 +806,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {

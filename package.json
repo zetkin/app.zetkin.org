@@ -54,6 +54,7 @@
     "isomorphic-dompurify": "^0.19.0",
     "leaflet": "^1.9.3",
     "letterparser": "^0.0.8",
+    "libphonenumber-js": "^1.10.51",
     "lodash": "^4.17.21",
     "marked": "^4.0.16",
     "mui-rff": "^6.1.2",

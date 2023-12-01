@@ -1,4 +1,5 @@
 import { CellData, ColumnKind, Sheet } from './types';
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
@@ -8,7 +9,8 @@ export type ZetkinPersonImportOp = {
 };
 
 export default function prepareImportOperations(
-  configuredSheet: Sheet
+  configuredSheet: Sheet,
+  countryCode: CountryCode
 ): ZetkinPersonImportOp[] {
   const personImportOps: ZetkinPersonImportOp[] = [];
 
@@ -53,11 +55,21 @@ export default function prepareImportOperations(
         //Fields
         if (column.kind === ColumnKind.FIELD) {
           const fieldKey = column.field;
+          let value = row.data[colIdx];
 
-          if (row.data[colIdx]) {
+          if (value) {
+            //Parse phone numbers to international format
+            if (fieldKey == 'phone') {
+              const parsedPhoneNumber = parsePhoneNumber(
+                typeof value == 'string' ? value : value.toString(),
+                countryCode
+              );
+              value = parsedPhoneNumber.formatInternational();
+            }
+
             personImportOps[rowIndex].data = {
               ...personImportOps[rowIndex].data,
-              [`${fieldKey}`]: row.data[colIdx],
+              [`${fieldKey}`]: value,
             };
           }
         }

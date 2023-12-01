@@ -139,7 +139,7 @@ export interface ZetkinUser {
 
 export interface ZetkinOrganization {
   avatar_file: ZetkinFile | null;
-  country: string | null;
+  country: string;
   email: string | null;
   is_active: boolean;
   is_open: boolean;
