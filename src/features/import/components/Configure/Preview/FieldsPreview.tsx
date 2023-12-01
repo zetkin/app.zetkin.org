@@ -1,9 +1,11 @@
+import { Typography, useTheme } from '@mui/material';
+
+import { CellData } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
-import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import { CellData, ColumnKind } from 'features/import/utils/types';
+import { Msg, useMessages } from 'core/i18n';
 
 interface FieldsPreviewProps {
   fieldKey: string;
@@ -13,6 +15,7 @@ const FieldsPreview = ({ fieldKey, fields }: FieldsPreviewProps) => {
   const { orgId } = useNumericRouteParams();
   const columnOptions = useColumnOptions(orgId);
   const messages = useMessages(messageIds);
+  const theme = useTheme();
 
   const value = fields?.[fieldKey];
 
@@ -29,11 +32,19 @@ const FieldsPreview = ({ fieldKey, fields }: FieldsPreviewProps) => {
       fieldColumnHeader = columnOp.label;
     }
   });
+
   return (
     <PreviewGrid
       columnHeader={idColumnHeader || fieldColumnHeader}
-      kind={ColumnKind.FIELD}
-      rowValues={[value ?? '']}
+      rowValue={
+        value ?? (
+          <Typography
+            sx={{ color: theme.palette.grey[400], fontStyle: 'italic' }}
+          >
+            ({<Msg id={messageIds.configuration.preview.empty} />})
+          </Typography>
+        )
+      }
     />
   );
 };

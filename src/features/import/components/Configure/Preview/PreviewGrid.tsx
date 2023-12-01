@@ -1,24 +1,20 @@
+import { ReactElement } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 
-import RowValue from './RowValue';
-import { ZetkinTag } from 'utils/types/zetkin';
-import { CellData, ColumnKind } from 'features/import/utils/types';
+import { CellData } from 'features/import/utils/types';
 
 interface PreviewGridProps {
   columnHeader?: string;
-  kind: ColumnKind;
-  rowValue?: CellData;
-  hasMapped?: boolean;
-  tags?: ZetkinTag[];
+  unmappedRow?: boolean;
+  rowValue: ReactElement | CellData;
 }
 const PreviewGrid = ({
   columnHeader,
+  unmappedRow,
   rowValue,
-  kind,
-  hasMapped,
-  tags,
 }: PreviewGridProps) => {
   const theme = useTheme();
+
   return (
     <Box
       flexGrow={1}
@@ -55,25 +51,16 @@ const PreviewGrid = ({
       <Box
         sx={{
           alignItems: 'center',
-          backgroundColor:
-            (rowValue != null && kind !== ColumnKind.TAG) ||
-            (kind === ColumnKind.TAG && hasMapped)
-              ? 'transparent'
-              : theme.palette.transparentGrey.light,
+          backgroundColor: unmappedRow
+            ? theme.palette.transparentGrey.light
+            : 'transparent',
           display: 'flex',
           height: '14px',
           minWidth: '150px',
           mt: 0.5,
         }}
       >
-        <Typography variant="body1">
-          <RowValue
-            hasMapped={hasMapped}
-            kind={kind}
-            rowValue={rowValue}
-            tags={tags}
-          />
-        </Typography>
+        <Typography variant="body1">{rowValue}</Typography>
       </Box>
     </Box>
   );

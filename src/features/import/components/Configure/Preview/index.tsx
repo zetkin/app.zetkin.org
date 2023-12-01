@@ -97,11 +97,25 @@ const Preview = () => {
                   if (column.kind === ColumnKind.UNKNOWN) {
                     return (
                       <PreviewGrid
-                        kind={ColumnKind.UNKNOWN}
                         rowValue={
                           currentSheet.rows[
                             firstRowIsHeaders ? personIndex + 1 : personIndex
-                          ].data[columnIdx]
+                          ].data[columnIdx] || (
+                            <Typography
+                              sx={{
+                                color: theme.palette.grey[400],
+                                fontStyle: 'italic',
+                              }}
+                            >
+                              (
+                              {
+                                <Msg
+                                  id={messageIds.configuration.preview.empty}
+                                />
+                              }
+                              )
+                            </Typography>
+                          )
                         }
                       />
                     );
@@ -113,11 +127,7 @@ const Preview = () => {
                   }
                 }
               })}
-              <TagsPreview
-                currentSheet={currentSheet}
-                // personIndex={firstRowIsHeaders ? personIndex + 1 : personIndex}
-                tags={tags}
-              />
+              <TagsPreview currentSheet={currentSheet} tags={tags} />
             </>
           )}
         </Box>
