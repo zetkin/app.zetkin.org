@@ -67,6 +67,11 @@ export default function prepareImportOperations(
               value = parsedPhoneNumber.formatInternational();
             }
 
+            //If they have uppecase letters we parse to lower
+            if (fieldKey == 'gender') {
+              value = value.toString().toLowerCase();
+            }
+
             personImportOps[rowIndex].data = {
               ...personImportOps[rowIndex].data,
               [`${fieldKey}`]: value,

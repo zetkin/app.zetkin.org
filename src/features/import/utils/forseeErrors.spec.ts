@@ -36,8 +36,31 @@ describe('forseeErrors()', () => {
       };
 
       const errors = forseeErrors(configuredSheet, countryCode);
-
       expect(errors).toEqual(['phone', 'phone']);
+    });
+
+    it('identifies malformed genders', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [{ field: 'gender', kind: ColumnKind.FIELD, selected: true }],
+        rows: [
+          {
+            data: ['GENDER'],
+          },
+          {
+            data: ['o'], //Correct - API can take 'o', 'f', 'm' and null
+          },
+          {
+            data: ['female'], //string, but wrong content
+          },
+          {
+            data: ['M'], // we parse this to lowercase
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['gender']);
     });
   });
 });
