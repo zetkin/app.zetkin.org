@@ -84,4 +84,28 @@ describe('forseeErrors()', () => {
       expect(errors).toEqual(['email']);
     });
   });
+
+  describe('when first row is not headers', () => {
+    it('correctly finds all types of errors', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { field: 'phone', kind: ColumnKind.FIELD, selected: true },
+          { field: 'gender', kind: ColumnKind.FIELD, selected: true },
+          { field: 'email', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['076291837', 'f', 'angela@gmail.com'],
+          },
+          {
+            data: ['missing phone number', 'Man', 'no email'],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['phone', 'gender', 'email']);
+    });
+  });
 });
