@@ -21,7 +21,7 @@ export type ZUIReorderableRenderProps = {
 type ReorderableItem = {
   hidden?: boolean;
   id: IDType;
-  renderContent: (props: ZUIReorderableRenderProps) => JSX.Element;
+  renderContent: (props: ZUIReorderableRenderProps) => JSX.Element | null;
 };
 
 export enum ZUIReorderableWidget {

@@ -181,7 +181,9 @@ const SubQuery = ({
                       </MenuItem>
                     </StyledSelect>
                   ),
-                  titleSelect: <></>, // Not actually used, but required for interface consistency
+                  // Not actually used, but required for interface consistency
+                  // eslint-disable-next-line react/jsx-no-useless-fragment
+                  titleSelect: <></>,
                 }}
               />
             ) : (

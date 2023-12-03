@@ -49,7 +49,9 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   const viewFuture = useView(orgId, viewId);
 
   const title = (
-    <ZUIFuture future={viewFuture}>{(view) => <>{view.title}</>}</ZUIFuture>
+    <ZUIFuture future={viewFuture}>
+      {(view) => <span>{view.title}</span>}
+    </ZUIFuture>
   );
   const subtitle = (
     // TODO: Replace with model eventually

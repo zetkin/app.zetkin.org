@@ -266,9 +266,7 @@ const ZUIPersonGridEditCell: FC<{
             )}
           </Paper>
         </Popper>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </Box>
   );
 };

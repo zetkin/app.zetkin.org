@@ -151,39 +151,33 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         if (params.row.person) {
           return <Typography>{params.row.person.name}</Typography>;
         } else {
-          return (
-            <>
-              {eventFuture.data?.contact?.id === params.row.id ? (
-                <Typography>
-                  {params.row.first_name + ' ' + params.row.last_name}
-                  <Tooltip
-                    title={messages.eventParticipantsList.contactTooltip()}
-                  >
-                    <FaceOutlinedIcon
-                      sx={{ marginLeft: '8px', verticalAlign: 'bottom' }}
-                    />
-                  </Tooltip>
-                </Typography>
-              ) : (
-                <Typography>
-                  {params.row.first_name + ' ' + params.row.last_name}
+          return eventFuture.data?.contact?.id === params.row.id ? (
+            <Typography>
+              {params.row.first_name + ' ' + params.row.last_name}
+              <Tooltip title={messages.eventParticipantsList.contactTooltip()}>
+                <FaceOutlinedIcon
+                  sx={{ marginLeft: '8px', verticalAlign: 'bottom' }}
+                />
+              </Tooltip>
+            </Typography>
+          ) : (
+            <Typography>
+              {params.row.first_name + ' ' + params.row.last_name}
 
-                  <Tooltip
-                    title={messages.eventParticipantsList.participantTooltip()}
-                  >
-                    <FaceOutlinedIcon
-                      onClick={noPropagate(() => setContact(params.row.id))}
-                      sx={{
-                        display: 'none',
-                        marginLeft: '8px',
-                        opacity: '50%',
-                        verticalAlign: 'bottom',
-                      }}
-                    />
-                  </Tooltip>
-                </Typography>
-              )}
-            </>
+              <Tooltip
+                title={messages.eventParticipantsList.participantTooltip()}
+              >
+                <FaceOutlinedIcon
+                  onClick={noPropagate(() => setContact(params.row.id))}
+                  sx={{
+                    display: 'none',
+                    marginLeft: '8px',
+                    opacity: '50%',
+                    verticalAlign: 'bottom',
+                  }}
+                />
+              </Tooltip>
+            </Typography>
           );
         }
       },
