@@ -328,6 +328,17 @@ export type ZetkinSurveyQuestionResponse =
       question_id: number;
     };
 
+export type ZetkinSurveySignatureType = 'email' | 'user' | 'anonymous';
+
+export type ZetkinSurveySignaturePayload =
+  | null
+  | 'user'
+  | {
+      email: string;
+      first_name: string;
+      last_name: string;
+    };
+
 export interface ZetkinSurveySubmission {
   id: number;
   organization: {

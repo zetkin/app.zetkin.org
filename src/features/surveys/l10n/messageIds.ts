@@ -160,14 +160,9 @@ export default makeMessages('feat.surveys', {
   },
   surveyForm: {
     accept: m('I accept the terms stated below'),
-    anonymousOption: m('Sign anonymously'),
-    authenticatedOption: m<{ email: string; person: string }>(
-      'Sign as {person} with email {email}'
-    ),
     error: m(
       'Something went wrong when submitting your answers. Please try again later.'
     ),
-    nameEmailOption: m('Sign with name and email'),
     policy: {
       link: m('https://zetkin.org/privacy'),
       text: m('Click to read the full Zetkin Privacy Policy'),
@@ -176,7 +171,6 @@ export default makeMessages('feat.surveys', {
       anonymous: m('Sign anonymously'),
       nameAndEmail: m('Sign with name and e-mail'),
     },
-    signOptions: m('Choose how to sign'),
     submit: m('Submit'),
     terms: {
       description: m<{ organization: string }>(
@@ -190,6 +184,21 @@ export default makeMessages('feat.surveys', {
       'Your responses to “{title}” have been submitted.'
     ),
     title: m('Survey Submitted'),
+  },
+  surveySignature: {
+    email: {
+      email: m('Email'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+    },
+    title: m('Choose how to sign'),
+    type: {
+      anonymous: m('Sign anonymously'),
+      email: m('Sign with name and email'),
+      user: m<{ email: string; person: string }>(
+        'Sign as {person} with email {email}'
+      ),
+    },
   },
   tabs: {
     overview: m('Overview'),
