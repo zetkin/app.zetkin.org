@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
-import { Tooltip } from '@mui/material';
-import { Box, Stack } from '@mui/system';
+import { Box, Stack, Theme } from '@mui/system';
+import { Tooltip, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
@@ -12,6 +12,7 @@ import { Msg, useMessages } from 'core/i18n';
 interface TagPreviewProps {
   currentSheet: Sheet;
   tags: ZetkinTag[];
+  theme: Theme;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -30,58 +31,57 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TagsPreview = ({ tags, currentSheet }: TagPreviewProps) => {
+const TagsPreview = ({ tags, currentSheet, theme }: TagPreviewProps) => {
   const messages = useMessages(messageIds);
-  const tagColumnSelected = currentSheet.columns.some(
-    (column) => column.kind === ColumnKind.TAG && column.selected
-  );
   const classes = useStyles();
 
   const hasMapped = currentSheet.columns.some(
-    (column) =>
-      column.kind === ColumnKind.TAG &&
-      column.selected &&
-      column.mapping.length > 0
+    (column) => column.kind === ColumnKind.TAG && column.mapping.length > 0
   );
-  const noTags = <Msg id={messageIds.configuration.preview.noTags} />;
+  const noTags = (
+    <Typography
+      sx={{
+        color: theme.palette.grey[400],
+        fontStyle: 'italic',
+      }}
+    >
+      (<Msg id={messageIds.configuration.preview.noTags} />)
+    </Typography>
+  );
 
   const displayedTags = tags?.slice(0, 3);
   const hiddenTags = tags?.slice(3);
   const tooltipTitle = hiddenTags?.map((tag) => tag.title).join(', ');
   return (
-    <>
-      {tagColumnSelected && (
-        <PreviewGrid
-          columnHeader={messages.configuration.preview.columnHeader.tags()}
-          rowValue={
-            hasMapped && tags.length === 0 ? (
-              noTags
-            ) : (
-              <Stack direction="row" maxWidth={'300px'} mt="5px" spacing={1}>
-                {displayedTags?.map((tag) => (
-                  <TagChip
-                    key={tag.id}
-                    noWrappedLabel={true}
-                    size="small"
-                    tag={tag}
-                  />
-                ))}
-                {hiddenTags!.length > 0 && (
-                  <Tooltip title={tooltipTitle}>
-                    <Box border={2} className={classes.chip}>
-                      {`${displayedTags!.length > 0 ? '+' : ''}${
-                        hiddenTags?.length
-                      }`}
-                    </Box>
-                  </Tooltip>
-                )}
-              </Stack>
-            )
-          }
-          unmappedRow={!hasMapped}
-        />
-      )}
-    </>
+    <PreviewGrid
+      columnHeader={messages.configuration.preview.columnHeader.tags()}
+      rowValue={
+        hasMapped && tags.length === 0 ? (
+          noTags
+        ) : (
+          <Stack direction="row" maxWidth={'300px'} mt="5px" spacing={1}>
+            {displayedTags?.map((tag) => (
+              <TagChip
+                key={tag.id}
+                noWrappedLabel={true}
+                size="small"
+                tag={tag}
+              />
+            ))}
+            {hiddenTags!.length > 0 && (
+              <Tooltip title={tooltipTitle}>
+                <Box border={2} className={classes.chip}>
+                  {`${displayedTags!.length > 0 ? '+' : ''}${
+                    hiddenTags?.length
+                  }`}
+                </Box>
+              </Tooltip>
+            )}
+          </Stack>
+        )
+      }
+      unmappedRow={!hasMapped}
+    />
   );
 };
 

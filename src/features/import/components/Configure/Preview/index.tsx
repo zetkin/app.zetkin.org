@@ -19,10 +19,21 @@ const Preview = () => {
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
   const { orgId } = useNumericRouteParams();
-  const { fields, tags } = usePersonPreview(currentSheet, personIndex, orgId);
+  const { fields, orgs, tags } = usePersonPreview(
+    currentSheet,
+    personIndex,
+    orgId
+  );
 
   const emptyPreview = currentSheet.columns.every(
     (item) => item.selected === false
+  );
+
+  const tagColumnSelected = currentSheet.columns.some(
+    (column) => column.kind === ColumnKind.TAG && column.selected
+  );
+  const orgColumnSelected = currentSheet.columns.some(
+    (column) => column.kind === ColumnKind.ORGANIZATION && column.selected
   );
 
   useEffect(() => {
@@ -111,7 +122,7 @@ const Preview = () => {
                               (
                               {
                                 <Msg
-                                  id={messageIds.configuration.preview.empty}
+                                  id={messageIds.configuration.preview.noValue}
                                 />
                               }
                               )
@@ -138,8 +149,20 @@ const Preview = () => {
                   }
                 }
               })}
-              <TagsPreview currentSheet={currentSheet} tags={tags} />
-              <OrgsPreview />
+              {tagColumnSelected && (
+                <TagsPreview
+                  currentSheet={currentSheet}
+                  tags={tags}
+                  theme={theme}
+                />
+              )}
+              {orgColumnSelected && (
+                <OrgsPreview
+                  currentSheet={currentSheet}
+                  orgs={orgs}
+                  theme={theme}
+                />
+              )}
             </>
           )}
         </Box>

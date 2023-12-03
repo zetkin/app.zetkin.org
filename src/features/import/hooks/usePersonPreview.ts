@@ -1,5 +1,6 @@
 import prepareImportOperations from '../utils/prepareImportOperations';
 import { Sheet } from '../utils/types';
+import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 
@@ -9,6 +10,8 @@ export default function usePersonPreview(
   orgId: number
 ) {
   const allTags = useTags(orgId).data ?? [];
+  const organizations = useOrganizations().data ?? [];
+
   const configuredSheet = prepareImportOperations(sheet)[personIndex];
   const fields = configuredSheet?.fields;
   const tags =
@@ -19,8 +22,19 @@ export default function usePersonPreview(
       }
       return acc;
     }, []) ?? [];
+
+  const orgs =
+    configuredSheet?.organizations?.reduce((acc: string[], orgId) => {
+      const org = organizations.find((org) => org.id === orgId);
+      if (org) {
+        return acc.concat(org.title);
+      }
+      return acc;
+    }, []) ?? [];
+
   return {
     fields,
+    orgs,
     tags,
   };
 }

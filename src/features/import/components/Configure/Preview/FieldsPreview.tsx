@@ -39,7 +39,7 @@ const FieldsPreview = ({ fieldKey, fields }: FieldsPreviewProps) => {
           <Typography
             sx={{ color: theme.palette.grey[400], fontStyle: 'italic' }}
           >
-            ({<Msg id={messageIds.configuration.preview.empty} />})
+            ({<Msg id={messageIds.configuration.preview.noValue} />})
           </Typography>
         )
       }

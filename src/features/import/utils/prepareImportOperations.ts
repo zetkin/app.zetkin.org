@@ -68,9 +68,13 @@ export default function prepareImportOperations(
               if (!personImportOps[rowIndex].organizations) {
                 personImportOps[rowIndex].organizations = [];
               }
-              personImportOps[rowIndex].organizations = personImportOps[
-                rowIndex
-              ].organizations?.concat(mappedColumn.orgId as number);
+              personImportOps[rowIndex].organizations = [
+                ...new Set(
+                  personImportOps[rowIndex].organizations?.concat(
+                    mappedColumn.orgId as number
+                  )
+                ),
+              ];
             }
           });
         }
