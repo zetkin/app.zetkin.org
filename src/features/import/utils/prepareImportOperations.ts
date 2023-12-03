@@ -83,3 +83,64 @@ export default function prepareImportOperations(
   });
   return personImportOps;
 }
+
+export function prepareImportOperationsForRow(
+  configuredSheet: Sheet,
+  personIndex: number
+) {
+  const personImportOps: Partial<ZetkinPersonImportOp> = {};
+  const row = configuredSheet.rows[personIndex].data;
+
+  configuredSheet.columns.forEach((column, colIdx) => {
+    if (column.selected) {
+      personImportOps.op = 'person.import';
+    }
+    //ID column and fields
+    if (
+      column.kind === ColumnKind.ID_FIELD ||
+      column.kind === ColumnKind.FIELD
+    ) {
+      const fieldKey =
+        column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
+
+      if (row[colIdx]) {
+        personImportOps.fields = {
+          ...personImportOps.fields,
+          [`${fieldKey}`]: row[colIdx],
+        };
+      }
+    }
+    //tags
+    if (column.kind === ColumnKind.TAG) {
+      column.mapping.forEach((mappedColumn) => {
+        if (mappedColumn.value === row[colIdx]) {
+          if (!personImportOps.tags) {
+            personImportOps.tags = [];
+          }
+          personImportOps.tags = [
+            ...new Set(personImportOps.tags.concat(mappedColumn.tagIds)),
+          ];
+        }
+      });
+    }
+    //orgs
+    if (column.kind === ColumnKind.ORGANIZATION) {
+      column.mapping.forEach((mappedColumn) => {
+        if (mappedColumn.value === row[colIdx]) {
+          if (!personImportOps.organizations) {
+            personImportOps.organizations = [];
+          }
+          personImportOps.organizations = [
+            ...new Set(
+              personImportOps.organizations?.concat(
+                mappedColumn.orgId as number
+              )
+            ),
+          ];
+        }
+      });
+    }
+  });
+
+  return personImportOps;
+}

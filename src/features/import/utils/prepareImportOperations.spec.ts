@@ -1,6 +1,8 @@
-import prepareImportOperations from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
 import { describe, it } from '@jest/globals';
+import prepareImportOperations, {
+  prepareImportOperationsForRow,
+} from './prepareImportOperations';
 
 describe('prepareImportOperations()', () => {
   describe('when first row is header', () => {
@@ -899,6 +901,59 @@ describe('prepareImportOperations()', () => {
           tags: [124, 100, 333, 444],
         },
       ]);
+    });
+  });
+});
+
+describe('prepareImportOperationsForRow()', () => {
+  describe('When it has a person index for preview', () => {
+    it('returns a mapped object', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'city',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            kind: ColumnKind.TAG,
+            mapping: [
+              { tagIds: [123, 100], value: 'Frontend' },
+              { tagIds: [124, 100], value: 'Backend' },
+            ],
+            selected: true,
+          },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [{ orgId: 272, value: 1 }],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: ['123', 'Linköping', null, 1],
+          },
+          {
+            data: ['124', 'Linköping', 'Backend', 1],
+          },
+          {
+            data: ['125', 'Linköping', 'Designer', 1],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = prepareImportOperationsForRow(configData, 1);
+      expect(result).toEqual({
+        fields: {
+          city: 'Linköping',
+          ext_id: '124',
+        },
+        op: 'person.import',
+        organizations: [272],
+        tags: [124, 100],
+      });
     });
   });
 });
