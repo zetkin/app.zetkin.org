@@ -98,11 +98,11 @@ const PersonDetailsCard: React.FunctionComponent<{
   return (
     <ZUISection
       action={
-        <NextLink href={`${router.asPath}/edit`} passHref>
+        <Link href={`${router.asPath}/edit`} target="_blank">
           <Button color="primary" startIcon={<OpenInNew />}>
             <Msg id={messageIds.editButtonLabel} />
           </Button>
-        </NextLink>
+        </Link>
       }
       title={messages.details.title()}
     >
