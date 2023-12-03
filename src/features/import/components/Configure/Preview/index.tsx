@@ -21,7 +21,7 @@ const Preview = () => {
   const { orgId } = useNumericRouteParams();
   const { fields, orgs, tags } = usePersonPreview(
     currentSheet,
-    personIndex,
+    firstRowIsHeaders ? personIndex + 1 : personIndex,
     orgId
   );
 
