@@ -65,15 +65,8 @@ export default function prepareImportOperations(
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
-              if (!personImportOps[rowIndex].organizations) {
-                personImportOps[rowIndex].organizations = [];
-              }
               personImportOps[rowIndex].organizations = [
-                ...new Set(
-                  personImportOps[rowIndex].organizations?.concat(
-                    mappedColumn.orgId as number
-                  )
-                ),
+                mappedColumn.orgId as number,
               ];
             }
           });
@@ -127,16 +120,7 @@ export function prepareImportOperationsForRow(
     if (column.kind === ColumnKind.ORGANIZATION) {
       column.mapping.forEach((mappedColumn) => {
         if (mappedColumn.value === row[colIdx]) {
-          if (!personImportOps.organizations) {
-            personImportOps.organizations = [];
-          }
-          personImportOps.organizations = [
-            ...new Set(
-              personImportOps.organizations?.concat(
-                mappedColumn.orgId as number
-              )
-            ),
-          ];
+          personImportOps.organizations = [mappedColumn?.orgId as number];
         }
       });
     }

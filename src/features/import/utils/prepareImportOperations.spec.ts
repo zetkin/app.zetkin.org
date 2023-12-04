@@ -748,7 +748,7 @@ describe('prepareImportOperations()', () => {
       ]);
     });
 
-    it('correctly adds up multiple columns of tags and orgs', () => {
+    it('correctly adds up multiple columns of tags', () => {
       const configData: Sheet = {
         columns: [
           {
@@ -765,14 +765,7 @@ describe('prepareImportOperations()', () => {
             ],
             selected: true,
           },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 111, value: 3 },
-              { orgId: 222, value: 4 },
-            ],
-            selected: true,
-          },
+          { kind: ColumnKind.UNKNOWN, selected: false },
           {
             kind: ColumnKind.TAG,
             mapping: [
@@ -811,7 +804,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organizations: [272, 111],
+          organizations: [272],
           tags: [123, 100, 111, 222],
         },
         {
@@ -820,12 +813,12 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organizations: [273, 222],
+          organizations: [273],
           tags: [124, 100, 333, 444],
         },
       ]);
     });
-    it('remove duplicated tagIds and orgIds', () => {
+    it('remove duplicated tagIds', () => {
       const configData: Sheet = {
         columns: [
           {
@@ -842,14 +835,7 @@ describe('prepareImportOperations()', () => {
             ],
             selected: true,
           },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 111, value: 3 },
-              { orgId: 222, value: 4 },
-            ],
-            selected: true,
-          },
+          { kind: ColumnKind.UNKNOWN, selected: false },
           {
             kind: ColumnKind.TAG,
             mapping: [
@@ -897,7 +883,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organizations: [333, 222],
+          organizations: [333],
           tags: [124, 100, 333, 444],
         },
       ]);
