@@ -4,6 +4,7 @@ import { FC, useState } from 'react';
 import Configuration from './Configuration';
 import ImportFooter from '../../ImportFooter';
 import ImportHeader from '../../ImportHeader';
+import { ImportStep } from '../..';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import SheetSettings from './SheetSettings';
@@ -30,7 +31,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
-      <ImportHeader activeStep={1} onClose={onClose} />
+      <ImportHeader activeStep={ImportStep.CONFIGURE} onClose={onClose} />
       <Box display="flex" flexGrow={1} overflow="hidden">
         <Box
           display="flex"

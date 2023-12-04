@@ -2,10 +2,16 @@ import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
 import Configure from './Steps/Configure';
-import { ImportStep } from './ImportHeader';
 import ParseFile from './Steps/ParseFile';
 import Preflight from './Steps/Preflight';
 import StatusReport from './Steps/StatusReport';
+
+export enum ImportStep {
+  PARSE = 0,
+  CONFIGURE = 1,
+  PREFLIGHT = 2,
+  REPORT = 3,
+}
 
 interface ImportDialogProps {
   onClose: () => void;
@@ -16,7 +22,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('sm');
-  const [activeStep, setActiveStep] = useState<ImportStep>(0);
+  const [activeStep, setActiveStep] = useState<ImportStep>(ImportStep.PARSE);
 
   return (
     <Dialog
@@ -25,51 +31,51 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
       maxWidth={maxWidth}
       onClose={() => {
         onClose();
-        setActiveStep(0);
+        setActiveStep(ImportStep.PARSE);
       }}
       open={open}
     >
       <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
-        {activeStep == 0 && (
+        {activeStep == ImportStep.PARSE && (
           <ParseFile
             onClose={onClose}
             onSuccess={() => {
-              setActiveStep(1);
+              setActiveStep(ImportStep.CONFIGURE);
               setMaxWidth('lg');
             }}
           />
         )}
-        {activeStep == 1 && (
+        {activeStep == ImportStep.CONFIGURE && (
           <Configure
             onClose={() => {
               onClose();
-              setActiveStep(0);
+              setActiveStep(ImportStep.PARSE);
             }}
-            onRestart={() => setActiveStep(0)}
-            onValidate={() => setActiveStep(2)}
+            onRestart={() => setActiveStep(ImportStep.PARSE)}
+            onValidate={() => setActiveStep(ImportStep.PREFLIGHT)}
           />
         )}
-        {activeStep === 2 && (
+        {activeStep === ImportStep.CONFIGURE && (
           <Preflight
-            onClickBack={() => setActiveStep(1)}
+            onClickBack={() => setActiveStep(ImportStep.CONFIGURE)}
             onClose={() => {
               onClose();
-              setActiveStep(0);
+              setActiveStep(ImportStep.PARSE);
             }}
-            onImportDone={() => setActiveStep(3)}
+            onImportDone={() => setActiveStep(ImportStep.REPORT)}
             onImportStart={() => setMaxWidth('sm')}
           />
         )}
-        {activeStep === 3 && (
+        {activeStep === ImportStep.REPORT && (
           <StatusReport
-            onClickBack={() => setActiveStep(2)}
+            onClickBack={() => setActiveStep(ImportStep.PREFLIGHT)}
             onClose={() => {
               onClose();
-              setActiveStep(0);
+              setActiveStep(ImportStep.PARSE);
             }}
             onDone={() => {
               onClose();
-              setActiveStep(0);
+              setActiveStep(ImportStep.PARSE);
             }}
           />
         )}

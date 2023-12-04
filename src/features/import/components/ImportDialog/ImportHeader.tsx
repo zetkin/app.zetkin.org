@@ -9,10 +9,9 @@ import {
   Typography,
 } from '@mui/material';
 
+import { ImportStep } from '.';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
-
-export type ImportStep = 0 | 1 | 2 | 3;
 
 interface ImportHeaderProps {
   activeStep?: ImportStep;

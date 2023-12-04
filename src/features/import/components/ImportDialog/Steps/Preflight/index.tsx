@@ -14,6 +14,7 @@ import CreatedAndUpdated from '../CreatedAndUpdated';
 import ImportAlert from '../ImportAlert';
 import ImportFooter from '../../ImportFooter';
 import ImportHeader from '../../ImportHeader';
+import { ImportStep } from '../..';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useValidation from '../../../../hooks/useValidation';
@@ -50,7 +51,7 @@ const Preflight: FC<PreflightProps> = ({
   return (
     <Box display="flex" flexDirection="column" height="90vh">
       <ImportHeader
-        activeStep={loading ? undefined : 2}
+        activeStep={loading ? undefined : ImportStep.PREFLIGHT}
         onClose={loading ? undefined : onClose}
       />
       {loading && (
