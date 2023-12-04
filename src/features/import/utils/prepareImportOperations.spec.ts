@@ -1,8 +1,6 @@
+import prepareImportOperations from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
 import { describe, it } from '@jest/globals';
-import prepareImportOperations, {
-  prepareImportOperationsForRow,
-} from './prepareImportOperations';
 
 describe('prepareImportOperations()', () => {
   describe('when first row is header', () => {
@@ -275,7 +273,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [123, 100],
         },
         {
@@ -285,7 +283,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [124, 100],
         },
       ]);
@@ -402,7 +400,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [123, 100],
         },
         {
@@ -411,7 +409,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [124, 100],
         },
       ]);
@@ -470,7 +468,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [123, 100],
         },
         {
@@ -480,7 +478,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [124, 100],
         },
       ]);
@@ -532,7 +530,7 @@ describe('prepareImportOperations()', () => {
       expect(result).toEqual([
         {
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [123, 100],
         },
         {
@@ -540,7 +538,7 @@ describe('prepareImportOperations()', () => {
             city: 'Linköping',
           },
           op: 'person.import',
-          organizations: [273],
+          organization: [273],
           tags: [124, 100],
         },
       ]);
@@ -591,7 +589,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
         },
         {
           data: {
@@ -599,7 +597,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '124',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [124, 100],
         },
         {
@@ -608,7 +606,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
         },
       ]);
     });
@@ -661,7 +659,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [123, 100],
         },
         {
@@ -731,11 +729,11 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
         },
         {
           op: 'person.import',
-          organizations: [273],
+          organization: [273],
           tags: [124, 100],
         },
         {
@@ -804,7 +802,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organizations: [272],
+          organization: [272],
           tags: [123, 100, 111, 222],
         },
         {
@@ -813,7 +811,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organizations: [273],
+          organization: [273],
           tags: [124, 100, 333, 444],
         },
       ]);
@@ -874,7 +872,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organizations: [111],
+          organization: [111],
           tags: [123, 100, 222],
         },
         {
@@ -883,63 +881,10 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organizations: [333],
+          organization: [333],
           tags: [124, 100, 333, 444],
         },
       ]);
-    });
-  });
-});
-
-describe('prepareImportOperationsForRow()', () => {
-  describe('When it has a person index for preview', () => {
-    it('returns a mapped object', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [{ orgId: 272, value: 1 }],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['123', 'Linköping', null, 1],
-          },
-          {
-            data: ['124', 'Linköping', 'Backend', 1],
-          },
-          {
-            data: ['125', 'Linköping', 'Designer', 1],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperationsForRow(configData, 1);
-      expect(result).toEqual({
-        data: {
-          city: 'Linköping',
-          ext_id: '124',
-        },
-        op: 'person.import',
-        organizations: [272],
-        tags: [124, 100],
-      });
     });
   });
 });

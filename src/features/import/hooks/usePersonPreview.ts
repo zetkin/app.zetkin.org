@@ -1,4 +1,4 @@
-import { prepareImportOperationsForRow } from '../utils/prepareImportOperations';
+import createPreviewData from '../utils/createPreviewData';
 import { Sheet } from '../utils/types';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useTags from 'features/tags/hooks/useTags';
@@ -12,7 +12,7 @@ export default function usePersonPreview(
   const allTags = useTags(orgId).data ?? [];
   const organizations = useOrganizations().data ?? [];
 
-  const previewRow = prepareImportOperationsForRow(sheet, personIndex);
+  const previewRow = createPreviewData(sheet, personIndex);
 
   const fields = previewRow?.data;
   const tags =
@@ -25,7 +25,7 @@ export default function usePersonPreview(
     }, []) ?? [];
 
   const org = organizations.find(
-    (org) => org.id === (previewRow?.organizations?.[0] || [])
+    (org) => org.id === (previewRow?.organization?.[0] || [])
   );
 
   return {
