@@ -9,9 +9,14 @@ export default function forseeErrors(
 ) {
   const errors: IMPORT_ERROR[] = [];
   const zetkinGenders = ['o', 'f', 'm'];
+  let hasIDField = false;
 
   configuredSheet.columns.forEach((column, colIdx) => {
     if (column.selected) {
+      if (column.kind == ColumnKind.ID_FIELD) {
+        hasIDField = true;
+      }
+
       configuredSheet.rows.forEach((row, rowIdx) => {
         if (configuredSheet.firstRowIsHeaders && rowIdx === 0) {
           return;
@@ -54,5 +59,9 @@ export default function forseeErrors(
     }
   });
 
-  return errors;
+  if (!hasIDField) {
+    errors.push(IMPORT_ERROR.ID_MISSING);
+  }
+
+  return Array.from(new Set(errors));
 }

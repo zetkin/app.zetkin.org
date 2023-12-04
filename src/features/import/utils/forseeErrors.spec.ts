@@ -15,7 +15,7 @@ const countryCode = mockOrganization.country as CountryCode;
 
 describe('forseeErrors()', () => {
   describe('when first row is headers', () => {
-    it('identifies an error in parsing malformed phone numbers', () => {
+    it('identifies if ID column has not been selected', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
         columns: [{ field: 'phone', kind: ColumnKind.FIELD, selected: true }],
@@ -26,11 +26,32 @@ describe('forseeErrors()', () => {
           {
             data: ['0739567148'],
           },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['idMissing']);
+    });
+
+    it('identifies an error in parsing malformed phone numbers', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'phone', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
           {
-            data: ['missing'], //not a number
+            data: ['ID', 'PHONE'],
           },
           {
-            data: ['6'], //too short
+            data: [1, '0739567148'],
+          },
+          {
+            data: [2, 'missing'], //not a number
+          },
+          {
+            data: [3, '6'], //too short
           },
         ],
       };
@@ -42,19 +63,22 @@ describe('forseeErrors()', () => {
     it('identifies malformed genders', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
-        columns: [{ field: 'gender', kind: ColumnKind.FIELD, selected: true }],
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'gender', kind: ColumnKind.FIELD, selected: true },
+        ],
         rows: [
           {
-            data: ['GENDER'],
+            data: ['ID', 'GENDER'],
           },
           {
-            data: ['o'], //Correct - API can take 'o', 'f', 'm' and null
+            data: [1, 'o'], //Correct - API can take 'o', 'f', 'm' and null
           },
           {
-            data: ['female'], //string, but wrong content
+            data: [2, 'female'], //string, but wrong content
           },
           {
-            data: ['M'], // we parse this to lowercase, so it's ok
+            data: [3, 'M'], // we parse this to lowercase, so it's ok
           },
         ],
       };
@@ -66,16 +90,19 @@ describe('forseeErrors()', () => {
     it('identifies malformed emails', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
-        columns: [{ field: 'email', kind: ColumnKind.FIELD, selected: true }],
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'email', kind: ColumnKind.FIELD, selected: true },
+        ],
         rows: [
           {
-            data: ['EMAIL'],
+            data: ['ID', 'EMAIL'],
           },
           {
-            data: ['angela@gmail.com'],
+            data: [1, 'angela@gmail.com'],
           },
           {
-            data: ['no email'],
+            data: [2, 'no email'],
           },
         ],
       };
@@ -90,22 +117,23 @@ describe('forseeErrors()', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
         columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
           { field: 'phone', kind: ColumnKind.FIELD, selected: true },
           { field: 'gender', kind: ColumnKind.FIELD, selected: true },
           { field: 'email', kind: ColumnKind.FIELD, selected: true },
         ],
         rows: [
           {
-            data: ['076291837', 'f', 'angela@gmail.com'],
+            data: [1, '076291837', 'f', 'angela@gmail.com'],
           },
           {
-            data: ['missing phone number', 'Man', 'no email'],
+            data: ['2', 'missing phone number', 'Man', 'no email'],
           },
         ],
       };
 
       const errors = forseeErrors(configuredSheet, countryCode);
-      expect(errors).toEqual(['phone', 'gender', 'email']);
+      expect(errors).toEqual(['id', 'phone', 'gender', 'email']);
     });
   });
 });
