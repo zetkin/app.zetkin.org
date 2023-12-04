@@ -6,8 +6,6 @@ import { ImportStep } from './ImportHeader';
 import ParseFile from './Steps/ParseFile';
 import Preflight from './Steps/Preflight';
 import StatusReport from './Steps/StatusReport';
-import { useNumericRouteParams } from 'core/hooks';
-import usePreflight from '../../hooks/usePreflight';
 
 interface ImportDialogProps {
   onClose: () => void;
@@ -15,13 +13,10 @@ interface ImportDialogProps {
 }
 
 const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
-  const { orgId } = useNumericRouteParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('sm');
   const [activeStep, setActiveStep] = useState<ImportStep>(0);
-
-  const importPreview = usePreflight(orgId);
 
   return (
     <Dialog
@@ -51,12 +46,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
               setActiveStep(0);
             }}
             onRestart={() => setActiveStep(0)}
-            onValidate={async () => {
-              if (importPreview) {
-                await importPreview();
-              }
-              setActiveStep(2);
-            }}
+            onValidate={() => setActiveStep(2)}
           />
         )}
         {activeStep === 2 && (

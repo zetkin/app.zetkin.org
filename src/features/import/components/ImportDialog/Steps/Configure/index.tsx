@@ -9,6 +9,7 @@ import messageIds from 'features/import/l10n/messageIds';
 import SheetSettings from './SheetSettings';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import usePreflight from 'features/import/hooks/usePreflight';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
 interface ConfigureProps {
@@ -25,6 +26,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
   const { orgId } = useNumericRouteParams();
   const { forwardMessageDisabled, numRows, uiDataColumns } =
     useUIDataColumns(orgId);
+  const preflight = usePreflight(orgId);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -60,7 +62,12 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
       </Box>
       <Box padding={4}>Preview</Box>
       <ImportFooter
-        onClickPrimary={onValidate}
+        onClickPrimary={async () => {
+          if (preflight) {
+            await preflight();
+          }
+          onValidate();
+        }}
         onClickSecondary={onRestart}
         primaryButtonDisabled={forwardMessageDisabled}
         primaryButtonMsg={messages.actionButtons.validate()}
