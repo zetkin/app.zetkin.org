@@ -1,7 +1,7 @@
 import { CellData, ColumnKind, Sheet } from './types';
 
 export type ZetkinPersonImportOp = {
-  fields?: Record<string, CellData>;
+  data?: Record<string, CellData>;
   op: 'person.import';
   organizations?: number[];
   tags?: number[];
@@ -38,8 +38,8 @@ export default function prepareImportOperations(
             column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
 
           if (row.data[colIdx]) {
-            personImportOps[rowIndex].fields = {
-              ...personImportOps[rowIndex].fields,
+            personImportOps[rowIndex].data = {
+              ...personImportOps[rowIndex].data,
               [`${fieldKey}`]: row.data[colIdx],
             };
           }
@@ -81,12 +81,12 @@ export function prepareImportOperationsForRow(
   configuredSheet: Sheet,
   personIndex: number
 ) {
-  const personImportOps: Partial<ZetkinPersonImportOp> = {};
+  const personImportOp: Partial<ZetkinPersonImportOp> = {};
   const row = configuredSheet.rows[personIndex].data;
 
   configuredSheet.columns.forEach((column, colIdx) => {
     if (column.selected) {
-      personImportOps.op = 'person.import';
+      personImportOp.op = 'person.import';
     }
     //ID column and fields
     if (
@@ -97,8 +97,8 @@ export function prepareImportOperationsForRow(
         column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
 
       if (row[colIdx]) {
-        personImportOps.fields = {
-          ...personImportOps.fields,
+        personImportOp.data = {
+          ...personImportOp.data,
           [`${fieldKey}`]: row[colIdx],
         };
       }
@@ -107,11 +107,11 @@ export function prepareImportOperationsForRow(
     if (column.kind === ColumnKind.TAG) {
       column.mapping.forEach((mappedColumn) => {
         if (mappedColumn.value === row[colIdx]) {
-          if (!personImportOps.tags) {
-            personImportOps.tags = [];
+          if (!personImportOp.tags) {
+            personImportOp.tags = [];
           }
-          personImportOps.tags = [
-            ...new Set(personImportOps.tags.concat(mappedColumn.tagIds)),
+          personImportOp.tags = [
+            ...new Set(personImportOp.tags.concat(mappedColumn.tagIds)),
           ];
         }
       });
@@ -120,11 +120,11 @@ export function prepareImportOperationsForRow(
     if (column.kind === ColumnKind.ORGANIZATION) {
       column.mapping.forEach((mappedColumn) => {
         if (mappedColumn.value === row[colIdx]) {
-          personImportOps.organizations = [mappedColumn?.orgId as number];
+          personImportOp.organizations = [mappedColumn?.orgId as number];
         }
       });
     }
   });
 
-  return personImportOps;
+  return personImportOp;
 }

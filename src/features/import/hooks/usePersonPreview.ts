@@ -14,7 +14,7 @@ export default function usePersonPreview(
 
   const previewRow = prepareImportOperationsForRow(sheet, personIndex);
 
-  const fields = previewRow?.fields;
+  const fields = previewRow?.data;
   const tags =
     previewRow?.tags?.reduce((acc: ZetkinTag[], tagId) => {
       const tag = allTags.find((tag) => tag.id === tagId);
