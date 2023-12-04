@@ -28,7 +28,10 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
       fullScreen={fullScreen}
       fullWidth
       maxWidth={maxWidth}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        setActiveStep(0);
+      }}
       open={open}
     >
       <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>

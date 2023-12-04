@@ -48,7 +48,7 @@ const Validation: FC<ValidationProps> = ({
   const { importPeople, loading } = useImport(orgId);
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" height="90vh">
       <ImportHeader
         activeStep={loading ? undefined : 2}
         onClose={loading ? undefined : onClose}
@@ -72,6 +72,7 @@ const Validation: FC<ValidationProps> = ({
           display="flex"
           flexDirection="column"
           height="100%"
+          justifyContent="space-between"
           overflow="hidden"
         >
           <Box display="flex" mt={3} overflow="hidden">
@@ -133,7 +134,7 @@ const Validation: FC<ValidationProps> = ({
           />
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 
