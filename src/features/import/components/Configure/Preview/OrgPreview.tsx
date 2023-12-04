@@ -27,7 +27,7 @@ const OrgPreview = ({ currentSheet, org, theme }: OrgPreviewProps) => {
         fontStyle: 'italic',
       }}
     >
-      (<Msg id={messageIds.configuration.preview.noOrgs} />)
+      (<Msg id={messageIds.configuration.preview.noOrg} />)
     </Typography>
   );
 

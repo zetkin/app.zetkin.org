@@ -130,7 +130,7 @@ export default makeMessages('feat.import', {
         tags: m('Tags'),
       },
       next: m('Next'),
-      noOrgs: m('No organization'),
+      noOrg: m('No organization'),
       noTags: m('No tags'),
       noValue: m('No value'),
       previous: m('Previous'),

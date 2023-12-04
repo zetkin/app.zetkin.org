@@ -34,7 +34,6 @@ describe('createPreviewData()', () => {
           city: 'Linköping',
           ext_id: '124',
         },
-        op: 'person.import',
       });
     });
     it('converts tags to preview object', () => {
@@ -78,51 +77,126 @@ describe('createPreviewData()', () => {
           city: 'Malmö',
           id: '123',
         },
-        op: 'person.import',
         tags: [123, 100],
       });
     });
-  });
-  it('converts orgs to preview object', () => {
-    const configData: Sheet = {
-      columns: [
-        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
-        {
-          field: 'city',
-          kind: ColumnKind.FIELD,
-          selected: true,
+    it('converts orgs to preview object', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'city',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [
+              { orgId: 111, value: 1 },
+              { orgId: 333, value: 2 },
+            ],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: ['123', 'Malmö', 1],
+          },
+          {
+            data: ['124', 'Linköping', 2],
+          },
+          {
+            data: ['125', 'Linköping', 1],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = createPreviewData(configData, 0);
+      expect(result).toEqual({
+        data: {
+          city: 'Malmö',
+          id: '123',
         },
-        {
-          kind: ColumnKind.ORGANIZATION,
-          mapping: [
-            { orgId: 111, value: 1 },
-            { orgId: 333, value: 2 },
-          ],
-          selected: true,
+        organization: [111],
+      });
+    });
+    it('returns empty obejct when there are no values', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'city',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [
+              { orgId: 111, value: 1 },
+              { orgId: 333, value: 2 },
+            ],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: [null, '', null],
+          },
+          {
+            data: ['124', 'Linköping', 2],
+          },
+          {
+            data: ['125', 'Linköping', 1],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = createPreviewData(configData, 0);
+      expect(result).toEqual({});
+    });
+    it('returns tagIds for empty value', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'city',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            kind: ColumnKind.TAG,
+            mapping: [
+              { tagIds: [123, 100], value: 'Frontend' },
+              { tagIds: [124, 100], value: 'Backend' },
+              { tagIds: [222, 100], value: null },
+            ],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: ['123', 'Malmö', null],
+          },
+          {
+            data: ['124', 'Linköping', 'Frontend'],
+          },
+          {
+            data: ['125', 'Linköping', ''],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = createPreviewData(configData, 0);
+      expect(result).toEqual({
+        data: {
+          city: 'Malmö',
+          id: '123',
         },
-      ],
-      firstRowIsHeaders: false,
-      rows: [
-        {
-          data: ['123', 'Malmö', 1],
-        },
-        {
-          data: ['124', 'Linköping', 2],
-        },
-        {
-          data: ['125', 'Linköping', 1],
-        },
-      ],
-      title: 'My sheet',
-    };
-    const result = createPreviewData(configData, 0);
-    expect(result).toEqual({
-      data: {
-        city: 'Malmö',
-        id: '123',
-      },
-      op: 'person.import',
-      organization: [111],
+        tags: [222, 100],
+      });
     });
   });
 });
