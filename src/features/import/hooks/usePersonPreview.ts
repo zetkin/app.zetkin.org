@@ -24,18 +24,13 @@ export default function usePersonPreview(
       return acc;
     }, []) ?? [];
 
-  const orgs =
-    previewRow?.organizations?.reduce((acc: string[], orgId) => {
-      const org = organizations.find((org) => org.id === orgId);
-      if (org) {
-        return acc.concat(org.title);
-      }
-      return acc;
-    }, []) ?? [];
+  const org = organizations.find(
+    (org) => org.id === (previewRow?.organizations?.[0] || [])
+  );
 
   return {
     fields,
-    orgs,
+    org,
     tags,
   };
 }

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import OrgsPreview from './OrgsPreview';
+import OrgPreview from './OrgPreview';
 import PreviewGrid from './PreviewGrid';
 import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
@@ -19,7 +19,7 @@ const Preview = () => {
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
   const { orgId } = useNumericRouteParams();
-  const { fields, orgs, tags } = usePersonPreview(
+  const { fields, org, tags } = usePersonPreview(
     currentSheet,
     firstRowIsHeaders ? personIndex + 1 : personIndex,
     orgId
@@ -31,9 +31,6 @@ const Preview = () => {
 
   const tagColumnSelected = currentSheet.columns.some(
     (column) => column.kind === ColumnKind.TAG && column.selected
-  );
-  const orgColumnSelected = currentSheet.columns.some(
-    (column) => column.kind === ColumnKind.ORGANIZATION && column.selected
   );
 
   useEffect(() => {
@@ -147,19 +144,21 @@ const Preview = () => {
                       />
                     );
                   }
+                  if (column.kind === ColumnKind.ORGANIZATION) {
+                    return (
+                      <OrgPreview
+                        currentSheet={currentSheet}
+                        org={org}
+                        theme={theme}
+                      />
+                    );
+                  }
                 }
               })}
               {tagColumnSelected && (
                 <TagsPreview
                   currentSheet={currentSheet}
                   tags={tags}
-                  theme={theme}
-                />
-              )}
-              {orgColumnSelected && (
-                <OrgsPreview
-                  currentSheet={currentSheet}
-                  orgs={orgs}
                   theme={theme}
                 />
               )}
