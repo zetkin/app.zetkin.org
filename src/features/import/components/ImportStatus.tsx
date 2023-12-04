@@ -45,14 +45,18 @@ const ImportStatus = ({ onClickBack, onClose, onDone }: ImportStatusProps) => {
                 changedFields={summary.updated.byField}
                 orgId={orgId}
               />
-              <AddedTags
-                addedTags={addedTags}
-                numPeopleWithTagsAdded={summary.tagged.total}
-              />
-              <AddedOrgs
-                numPeopleWithOrgsAdded={summary.addedToOrg.total}
-                orgsWithNewPeople={orgsWithNewPeople}
-              />
+              {addedTags.length > 0 && (
+                <AddedTags
+                  addedTags={addedTags}
+                  numPeopleWithTagsAdded={summary.tagged.total}
+                />
+              )}
+              {orgsWithNewPeople.length > 0 && (
+                <AddedOrgs
+                  numPeopleWithOrgsAdded={summary.addedToOrg.total}
+                  orgsWithNewPeople={orgsWithNewPeople}
+                />
+              )}
             </Stack>
           </>
         )}
