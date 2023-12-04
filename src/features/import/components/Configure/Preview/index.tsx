@@ -141,6 +141,7 @@ const Preview = () => {
                             : column.idField
                         }
                         fields={fields}
+                        kind={column.kind}
                       />
                     );
                   }
