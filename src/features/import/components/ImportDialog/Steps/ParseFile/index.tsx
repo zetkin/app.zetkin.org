@@ -12,10 +12,10 @@ import {
 } from '@mui/material';
 import { CSSProperties, FC, useCallback, useState } from 'react';
 
-import ImportFooter from './ImportFooter';
-import ImportHeader from './ImportHeader';
-import messageIds from '../l10n/messageIds';
-import useFileParsing from '../hooks/useFileParsing';
+import ImportFooter from '../../ImportFooter';
+import ImportHeader from '../../ImportHeader';
+import messageIds from '../../../../l10n/messageIds';
+import useFileParsing from '../../../../hooks/useFileParsing';
 import { useMessages } from 'core/i18n';
 
 const sharedProperties: CSSProperties = {
@@ -61,12 +61,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface UploadProps {
+interface ParseFileProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
-const Upload: FC<UploadProps> = ({ onClose, onSuccess }) => {
+const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
   const { parseData, loading } = useFileParsing();
@@ -183,4 +183,4 @@ const Upload: FC<UploadProps> = ({ onClose, onSuccess }) => {
   );
 };
 
-export default Upload;
+export default ParseFile;

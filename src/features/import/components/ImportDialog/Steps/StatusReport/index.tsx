@@ -1,24 +1,24 @@
 import { Box, Stack, Typography } from '@mui/material';
 
-import AddedOrgs from './AddedOrgs';
-import AddedTags from './AddedTags';
-import ChangedFields from './ChangedFields';
-import CreatedAndUpdated from './CreatedAndUpdated';
-import ImportFooter from './ImportFooter';
-import ImportHeader from './ImportHeader';
+import AddedOrgs from '../AddedOrgs';
+import AddedTags from '../AddedTags';
+import ChangedFields from '../ChangedFields';
+import CreatedAndUpdated from '../CreatedAndUpdated';
+import ImportFooter from '../../ImportFooter';
+import ImportHeader from '../../ImportHeader';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useStatusReport from '../hooks/useStatusReport';
-import ImportAlert, { ALERT_STATUS } from './ImportAlert';
+import useStatusReport from '../../../../hooks/useStatusReport';
+import ImportAlert, { ALERT_STATUS } from '../ImportAlert';
 import { Msg, useMessages } from 'core/i18n';
 
-interface ImportStatusProps {
+interface StatusReportProps {
   onClickBack: () => void;
   onClose: () => void;
   onDone: () => void;
 }
 
-const ImportStatus = ({ onClickBack, onClose, onDone }: ImportStatusProps) => {
+const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const { addedTags, alert, orgsWithNewPeople, summary } = useStatusReport(
@@ -83,4 +83,4 @@ const ImportStatus = ({ onClickBack, onClose, onDone }: ImportStatusProps) => {
   );
 };
 
-export default ImportStatus;
+export default StatusReport;

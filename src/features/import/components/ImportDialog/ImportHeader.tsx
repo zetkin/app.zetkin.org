@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import messageIds from '../l10n/messageIds';
+import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 export type ImportStep = 0 | 1 | 2 | 3;

@@ -1,20 +1,20 @@
 import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
-import Configure from './Configure';
-import ImportStatus from './ImportStatus';
+import Configure from './Steps/Configure';
 import { ImportStep } from './ImportHeader';
-import Upload from './Upload';
+import ParseFile from './Steps/ParseFile';
+import Preflight from './Steps/Preflight';
+import StatusReport from './Steps/StatusReport';
 import { useNumericRouteParams } from 'core/hooks';
-import usePreflight from '../hooks/usePreflight';
-import Validation from './Validation';
+import usePreflight from '../../hooks/usePreflight';
 
-interface ImporterProps {
+interface ImportDialogProps {
   onClose: () => void;
   open: boolean;
 }
 
-const Importer: FC<ImporterProps> = ({ open, onClose }) => {
+const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
   const { orgId } = useNumericRouteParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -36,7 +36,7 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
     >
       <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
         {activeStep == 0 && (
-          <Upload
+          <ParseFile
             onClose={onClose}
             onSuccess={() => {
               setActiveStep(1);
@@ -60,7 +60,7 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
           />
         )}
         {activeStep === 2 && (
-          <Validation
+          <Preflight
             onClickBack={() => setActiveStep(1)}
             onClose={() => {
               onClose();
@@ -71,7 +71,7 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
           />
         )}
         {activeStep === 3 && (
-          <ImportStatus
+          <StatusReport
             onClickBack={() => setActiveStep(2)}
             onClose={() => {
               onClose();
@@ -88,4 +88,4 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   );
 };
 
-export default Importer;
+export default ImportDialog;

@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 
-import messageIds from '../l10n/messageIds';
+import messageIds from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { PersonImport } from '../utils/types';
+import { PersonImport } from '../../../utils/types';
 
 interface CreatedAndUpdatedProps {
   summary: PersonImport['summary'];

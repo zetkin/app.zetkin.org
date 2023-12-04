@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ALERT_STATUS } from '../components/ImportAlert';
+import { ALERT_STATUS } from '../components/ImportDialog/Steps/ImportAlert';
 import { importResultAdd } from '../store';
 import messageIds from '../l10n/messageIds';
 import useFieldTitle from '../../../utils/hooks/useFieldTitle';

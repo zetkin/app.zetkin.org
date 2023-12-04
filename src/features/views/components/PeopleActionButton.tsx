@@ -6,7 +6,7 @@ import {
   UploadFileOutlined,
 } from '@mui/icons-material';
 
-import Importer from 'features/import/components/Importer';
+import ImportDialog from 'features/import/components/ImportDialog';
 import messageIds from '../l10n/messageIds';
 import useCreateView from '../hooks/useCreateView';
 import useFolder from '../hooks/useFolder';
@@ -23,7 +23,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const [importerDialogOpen, setImporterDialogOpen] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   const createView = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
@@ -50,15 +50,15 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             icon: <UploadFileOutlined />,
             label: messages.actions.importPeople(),
             onClick: () => {
-              setImporterDialogOpen(true);
+              setImportDialogOpen(true);
             },
           },
         ]}
         label={messages.actions.create()}
       />
-      <Importer
-        onClose={() => setImporterDialogOpen(false)}
-        open={importerDialogOpen}
+      <ImportDialog
+        onClose={() => setImportDialogOpen(false)}
+        open={importDialogOpen}
       />
     </Box>
   );

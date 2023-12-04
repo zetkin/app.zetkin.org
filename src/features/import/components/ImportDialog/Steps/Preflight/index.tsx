@@ -7,26 +7,26 @@ import {
   useTheme,
 } from '@mui/material';
 
-import AddedOrgs from './AddedOrgs';
-import AddedTags from './AddedTags';
-import ChangedFields from './ChangedFields';
-import CreatedAndUpdated from './CreatedAndUpdated';
-import ImportAlert from './ImportAlert';
-import ImportFooter from './ImportFooter';
-import ImportHeader from './ImportHeader';
+import AddedOrgs from '../AddedOrgs';
+import AddedTags from '../AddedTags';
+import ChangedFields from '../ChangedFields';
+import CreatedAndUpdated from '../CreatedAndUpdated';
+import ImportAlert from '../ImportAlert';
+import ImportFooter from '../../ImportFooter';
+import ImportHeader from '../../ImportHeader';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useValidation from '../hooks/useValidation';
+import useValidation from '../../../../hooks/useValidation';
 import { Msg, useMessages } from 'core/i18n';
 
-interface ValidationProps {
+interface PreflightProps {
   onClose: () => void;
   onClickBack: () => void;
   onImportDone: () => void;
   onImportStart: () => void;
 }
 
-const Validation: FC<ValidationProps> = ({
+const Preflight: FC<PreflightProps> = ({
   onClickBack,
   onClose,
   onImportDone,
@@ -138,4 +138,4 @@ const Validation: FC<ValidationProps> = ({
   );
 };
 
-export default Validation;
+export default Preflight;

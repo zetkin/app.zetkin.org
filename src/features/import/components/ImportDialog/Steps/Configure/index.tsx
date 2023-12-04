@@ -2,8 +2,8 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
-import ImportFooter from '../ImportFooter';
-import ImportHeader from '../ImportHeader';
+import ImportFooter from '../../ImportFooter';
+import ImportHeader from '../../ImportHeader';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import SheetSettings from './SheetSettings';
