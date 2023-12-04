@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
 import { ALERT_STATUS } from '../components/ImportAlert';
-import { FakeDataType } from '../components/Validation';
+import { IMPORT_ERROR } from '../utils/types';
 import messageIds from '../l10n/messageIds';
+import { useAppSelector } from 'core/hooks';
 import useFieldTitle from './useFieldTitle';
 import { useMessages } from 'core/i18n';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
@@ -19,11 +20,10 @@ export interface Alert {
   title: string;
 }
 
-export default function useValidationStep(
-  orgId: number,
-  summary: FakeDataType['summary']
-) {
+export default function useValidationStep(orgId: number) {
   const messages = useMessages(messageIds);
+  const importErrors = useAppSelector((state) => state.import.importErrors);
+  const summary = useAppSelector((state) => state.import.importPreview).summary;
   const [approvedWarningAlerts, setApprovedWarningAlerts] = useState<number[]>(
     []
   );
@@ -31,43 +31,52 @@ export default function useValidationStep(
   const organizations = useOrganizations().data ?? [];
   const getFieldTitle = useFieldTitle(orgId);
 
-  const { membershipsCreated, tagsCreated } = summary;
+  const { addedToOrg, tagged } = summary;
 
-  const addedTags = Object.keys(tagsCreated.byTag).reduce(
-    (acc: ZetkinTag[], id) => {
-      const tag = tags.find((tag) => tag.id === parseInt(id));
-      if (tag) {
-        return acc.concat(tag);
-      }
-      return acc;
-    },
-    []
-  );
+  const addedTags = Object.keys(tagged.byTag).reduce((acc: ZetkinTag[], id) => {
+    const tag = tags.find((tag) => tag.id === parseInt(id));
+    if (tag) {
+      return acc.concat(tag);
+    }
+    return acc;
+  }, []);
 
-  const addedOrgsSummary = getAddedOrgsSummary(membershipsCreated);
+  const addedOrgsSummary = getAddedOrgsSummary(addedToOrg);
   const orgsWithNewPeople = organizations.filter((organization) =>
     addedOrgsSummary.orgs.some((orgId) => orgId == organization.id.toString())
   );
 
   const alerts: Alert[] = [];
 
-  const fieldsWithManyChanges = Object.entries(summary.peopleUpdated.byField)
+  const fieldsWithManyChanges = Object.entries(summary.updated.byField)
     .filter((item) => {
       const fieldValue = item[1] as number;
-      return summary.peopleUpdated.total * 0.2 < fieldValue;
+      return summary.updated.total * 0.2 < fieldValue;
     })
     .map((item) => item[0]);
 
-  //TODO: use actual data to determine if id field was selected.
-  const noIDFieldSelected = true;
-  const emptyImport = checkEmptyObj(summary) || checkAllValuesAreZero(summary);
+  const noIDFieldSelected = importErrors.includes(IMPORT_ERROR.ID_MISSING);
+  const emptyImport =
+    importErrors.length == 0 &&
+    (checkEmptyObj(summary) || checkAllValuesAreZero(summary));
+
+  //Errors from forseeErrors (no API-call was made)
+  importErrors.forEach((error) => {
+    if (error != IMPORT_ERROR.ID_MISSING) {
+      alerts.push({
+        msg: messages.validation.alerts.errors.messages[error](),
+        status: ALERT_STATUS.ERROR,
+        title: messages.validation.alerts.errors.titles[error](),
+      });
+    }
+  });
 
   //Error: nothing will be imported
   if (emptyImport) {
     alerts.push({
-      msg: messages.validation.alerts.error.desc(),
+      msg: messages.validation.alerts.errors.messages['empty'](),
       status: ALERT_STATUS.ERROR,
-      title: messages.validation.alerts.error.title(),
+      title: messages.validation.alerts.errors.titles['empty'](),
     });
   }
 
@@ -94,7 +103,12 @@ export default function useValidationStep(
   }
 
   //Success!
-  if (!emptyImport && !noIDFieldSelected && fieldsWithManyChanges.length == 0) {
+  if (
+    !emptyImport &&
+    !noIDFieldSelected &&
+    fieldsWithManyChanges.length == 0 &&
+    importErrors.length == 0
+  ) {
     alerts.push({
       msg: messages.validation.alerts.info.desc(),
       status: ALERT_STATUS.INFO,
@@ -131,27 +145,18 @@ export default function useValidationStep(
 
   if (alerts.find((alert) => alert.status == ALERT_STATUS.ERROR)) {
     statusMessage = messages.validation.statusMessages.error();
-  } else if (
-    summary.peopleUpdated.total > 0 &&
-    summary.peopleCreated.total > 0
-  ) {
+  } else if (summary.updated.total > 0 && summary.created.total > 0) {
     statusMessage = messages.validation.statusMessages.createAndUpdate({
-      numCreated: summary.peopleCreated.total,
-      numUpdated: summary.peopleUpdated.total,
+      numCreated: summary.updated.total,
+      numUpdated: summary.updated.total,
     });
-  } else if (
-    summary.peopleUpdated.total > 0 &&
-    summary.peopleCreated.total == 0
-  ) {
+  } else if (summary.updated.total > 0 && summary.created.total == 0) {
     statusMessage = messages.validation.statusMessages.update({
-      numUpdated: summary.peopleUpdated.total,
+      numUpdated: summary.updated.total,
     });
-  } else if (
-    summary.peopleUpdated.total == 0 &&
-    summary.peopleCreated.total > 0
-  ) {
+  } else if (summary.updated.total == 0 && summary.created.total > 0) {
     statusMessage = messages.validation.statusMessages.create({
-      numCreated: summary.peopleCreated.total,
+      numCreated: summary.created.total,
     });
   }
 
@@ -162,5 +167,6 @@ export default function useValidationStep(
     onCheckAlert,
     orgsWithNewPeople,
     statusMessage,
+    summary,
   };
 }

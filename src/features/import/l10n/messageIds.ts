@@ -187,11 +187,31 @@ export default makeMessages('feat.import', {
     alerts: {
       back: m('Go back'),
       checkbox: m('I understand'),
-      error: {
-        desc: m(
-          'Nothing will be imported. Please go back and check that the configurations you made are correct or select a new file to upload.'
-        ),
-        title: m('Something went wrong and the import was interrupted.'),
+      errors: {
+        messages: {
+          email: m(
+            'Some of the values in your email column are not valid email addresses.'
+          ),
+          empty: m(
+            'Nothing will be imported. Please go back and check that the configurations you made are correct or select a new file to upload.'
+          ),
+          gender: m(
+            'Some of the values in the gender column are incompatible with Zetkin gender formats. The values need to be either one of the letters f, m or o, or an empty cell.'
+          ),
+          id: m(
+            'Some of the values in the Zetkin ID column are not numbers. Zetkin IDs are always only numbers.'
+          ),
+          phone: m(
+            'Some of the values in the phone number column are not valid phone numbers.'
+          ),
+        },
+        titles: {
+          email: m('Invalid email address formats.'),
+          empty: m('Something went wrong and the import was interrupted.'),
+          gender: m('Invalid gender formats.'),
+          id: m('Zetkin IDs are not correct format.'),
+          phone: m('Invalid phone number formats.'),
+        },
       },
       info: {
         desc: m('The data you want to upload looks good!'),

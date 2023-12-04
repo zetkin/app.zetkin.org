@@ -1,25 +1,19 @@
 import { CountryCode } from 'libphonenumber-js';
 
 import forseeErrors from '../utils/forseeErrors';
-import { PersonImport } from '../utils/types';
+import prepareImportOperations from '../utils/prepareImportOperations';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import { importErrorsAdd, importErrorsClear, importPreviewAdd } from '../store';
-import prepareImportOperations, {
-  ZetkinPersonImportOp,
-} from '../utils/prepareImportOperations';
+import {
+  importErrorsAdd,
+  importErrorsClear,
+  importOperationsAdd,
+  importPreviewAdd,
+  importPreviewClear,
+} from '../store';
+import { ImportRes, ZetkinPersonImportPostBody } from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-interface ZetkinPesonImportPostBody {
-  ops: ZetkinPersonImportOp[];
-}
-
-interface ImportRes {
-  stats: {
-    person: PersonImport;
-  };
-}
-
-export default function useImportOperations(orgId: number) {
+export default function useImportPreview(orgId: number) {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
@@ -36,6 +30,7 @@ export default function useImportOperations(orgId: number) {
     const errors = forseeErrors(configuredSheet, countryCode);
 
     if (errors.length > 0) {
+      dispatch(importPreviewClear());
       dispatch(importErrorsAdd(errors));
     }
 
@@ -47,12 +42,15 @@ export default function useImportOperations(orgId: number) {
         countryCode
       );
 
+      dispatch(importOperationsAdd(importOperations));
+
       const previewRes = await apiClient.post<
         ImportRes,
-        ZetkinPesonImportPostBody
+        ZetkinPersonImportPostBody
       >(`/api/orgs/${orgId}/bulk/preview`, {
         ops: importOperations,
       });
+
       dispatch(importPreviewAdd(previewRes.stats.person));
     }
   };

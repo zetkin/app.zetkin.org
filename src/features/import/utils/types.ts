@@ -1,3 +1,5 @@
+import { ZetkinPersonImportOp } from './prepareImportOperations';
+
 export type CellData = string | number | null;
 
 export type ImportedFile = {
@@ -69,6 +71,8 @@ export type Column =
 export const enum IMPORT_ERROR {
   EMAIL = 'email',
   GENDER = 'gender',
+  ID_MISSING = 'idMissing',
+  ID = 'id',
   PHONE = 'phone',
 }
 
@@ -93,3 +97,13 @@ export type PersonImportSummary = {
 export type PersonImport = {
   summary: PersonImportSummary;
 };
+
+export interface ZetkinPersonImportPostBody {
+  ops: ZetkinPersonImportOp[];
+}
+
+export interface ImportRes {
+  stats: {
+    person: PersonImport;
+  };
+}

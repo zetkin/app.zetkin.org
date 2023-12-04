@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 
-import { FakeDataType } from './Validation';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { PersonImport } from '../utils/types';
 
 interface CreatedAndUpdatedProps {
-  summary: FakeDataType['summary'];
+  summary: PersonImport['summary'];
 }
 
 const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
@@ -23,7 +23,7 @@ const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
         <Msg
           id={messageIds.validation.updateOverview.created}
           values={{
-            numPeople: summary.peopleCreated.total,
+            numPeople: summary.created.total,
             number: (
               <Typography
                 sx={{
@@ -31,7 +31,7 @@ const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
                 }}
                 variant="h2"
               >
-                {summary.peopleCreated.total}
+                {summary.created.total}
               </Typography>
             ),
           }}
@@ -47,7 +47,7 @@ const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
         <Msg
           id={messageIds.validation.updateOverview.updated}
           values={{
-            numPeople: summary.peopleUpdated.total,
+            numPeople: summary.updated.total,
             number: (
               <Typography
                 sx={{
@@ -55,7 +55,7 @@ const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
                 }}
                 variant="h2"
               >
-                {summary.peopleUpdated.total}
+                {summary.updated.total}
               </Typography>
             ),
           }}

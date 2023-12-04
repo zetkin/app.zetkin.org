@@ -9,17 +9,17 @@ interface Alert {
 }
 
 export default function useImportAlert(
-  data: 'error' | 'completed' | 'scheduled'
+  status: 'error' | 'completed' | 'scheduled'
 ): Alert {
   const message = useMessages(messageIds);
 
-  if (data === 'error') {
+  if (status === 'error') {
     return {
       msg: message.importStatus.error.desc(),
       status: ALERT_STATUS.ERROR,
       title: message.importStatus.error.title(),
     };
-  } else if (data === 'scheduled') {
+  } else if (status === 'scheduled') {
     return {
       msg: message.importStatus.scheduled.desc(),
       status: ALERT_STATUS.INFO,

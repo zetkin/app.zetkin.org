@@ -13,6 +13,7 @@ import {
 import { CSSProperties, FC, useCallback, useState } from 'react';
 
 import ImportFooter from './ImportFooter';
+import ImportHeader from './ImportHeader';
 import messageIds from '../l10n/messageIds';
 import useImportedFile from '../hooks/useImportedFile';
 import { useMessages } from 'core/i18n';
@@ -24,7 +25,7 @@ const sharedProperties: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   flexWrap: 'wrap',
-  margin: 16,
+  marginTop: 8,
   padding: 50,
   textAlign: 'center',
   transition: 'height 1s',
@@ -61,10 +62,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface UploadProps {
+  onClose: () => void;
   onSuccess: () => void;
 }
 
-const Upload: FC<UploadProps> = ({ onSuccess }) => {
+const Upload: FC<UploadProps> = ({ onClose, onSuccess }) => {
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
   const { parseData, loading } = useImportedFile();
@@ -104,6 +106,7 @@ const Upload: FC<UploadProps> = ({ onSuccess }) => {
 
   return (
     <>
+      <ImportHeader onClose={loading ? undefined : onClose} />
       <Box {...getRootProps()} className={boxClass}>
         {loading && (
           <Box>

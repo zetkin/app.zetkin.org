@@ -1,37 +1,47 @@
+import { ZetkinPersonImportOp } from './utils/prepareImportOperations';
 import {
   Column,
   IMPORT_ERROR,
   ImportedFile,
   PersonImport,
+  PersonImportSummary,
 } from './utils/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
   importErrors: IMPORT_ERROR[];
+  importOperations: ZetkinPersonImportOp[];
   importPreview: PersonImport;
+  importResult: PersonImport;
   pendingFile: ImportedFile;
 }
 
+const emptySummary: PersonImportSummary = {
+  addedToOrg: {
+    byOrg: {},
+    total: 0,
+  },
+  created: {
+    total: 0,
+  },
+  tagged: {
+    byTag: {},
+    total: 0,
+  },
+  updated: {
+    byField: {},
+    total: 0,
+  },
+};
+
 const initialState: ImportStoreSlice = {
   importErrors: [],
+  importOperations: [],
   importPreview: {
-    summary: {
-      addedToOrg: {
-        byOrg: {},
-        total: 0,
-      },
-      created: {
-        total: 0,
-      },
-      tagged: {
-        byTag: {},
-        total: 0,
-      },
-      updated: {
-        byField: {},
-        total: 0,
-      },
-    },
+    summary: emptySummary,
+  },
+  importResult: {
+    summary: emptySummary,
   },
   pendingFile: {
     selectedSheetIndex: 0,
@@ -54,8 +64,23 @@ const importSlice = createSlice({
     importErrorsClear: (state) => {
       state.importErrors = [];
     },
+    importOperationsAdd: (
+      state,
+      action: PayloadAction<ZetkinPersonImportOp[]>
+    ) => {
+      state.importOperations = action.payload;
+    },
+    importOperationsClear: (state) => {
+      state.importOperations = [];
+    },
     importPreviewAdd: (state, action: PayloadAction<PersonImport>) => {
       state.importPreview = action.payload;
+    },
+    importPreviewClear: (state) => {
+      state.importPreview = { summary: emptySummary };
+    },
+    importResultAdd: (state, action: PayloadAction<PersonImport>) => {
+      state.importResult = action.payload;
     },
     setFirstRowIsHeaders: (state, action: PayloadAction<boolean>) => {
       const sheetIndex = state.pendingFile.selectedSheetIndex;
@@ -77,7 +102,11 @@ export const {
   addFile,
   importErrorsAdd,
   importErrorsClear,
+  importOperationsAdd,
+  importOperationsClear,
   importPreviewAdd,
+  importPreviewClear,
+  importResultAdd,
   setFirstRowIsHeaders,
   setSelectedSheetIndex,
   updateColumn,

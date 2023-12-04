@@ -3,6 +3,7 @@ import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
 import ImportFooter from '../ImportFooter';
+import ImportHeader from '../ImportHeader';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import SheetSettings from './SheetSettings';
@@ -11,11 +12,12 @@ import { useNumericRouteParams } from 'core/hooks';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
 interface ConfigureProps {
+  onClose: () => void;
   onRestart: () => void;
   onValidate: () => void;
 }
 
-const Configure: FC<ConfigureProps> = ({ onRestart, onValidate }) => {
+const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
   const messages = useMessages(messageIds);
   const [columnIndexBeingConfigured, setColumnIndexBeingConfigured] = useState<
     number | null
@@ -26,6 +28,7 @@ const Configure: FC<ConfigureProps> = ({ onRestart, onValidate }) => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
+      <ImportHeader activeStep={1} onClose={onClose} />
       <Box display="flex" flexGrow={1} overflow="hidden">
         <Box
           display="flex"

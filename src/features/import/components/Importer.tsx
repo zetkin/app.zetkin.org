@@ -1,22 +1,12 @@
-import { Clear } from '@mui/icons-material';
-import {
-  Box,
-  Dialog,
-  IconButton,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
 import Configure from './Configure';
 import ImportStatus from './ImportStatus';
-import messageIds from 'features/import/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { ImportStep } from './ImportHeader';
 import Upload from './Upload';
+import useImportPreview from '../hooks/useImportPreview';
+import { useNumericRouteParams } from 'core/hooks';
 import Validation from './Validation';
 
 interface ImporterProps {
@@ -24,85 +14,74 @@ interface ImporterProps {
   open: boolean;
 }
 
-type ImportSteps = 0 | 1 | 2 | 3;
-
 const Importer: FC<ImporterProps> = ({ open, onClose }) => {
+  const { orgId } = useNumericRouteParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeStep, setActiveStep] = useState<ImportSteps>(2);
-  const configureOrValidateStep = activeStep == 1 || activeStep == 2;
+  const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('sm');
+  const [activeStep, setActiveStep] = useState<ImportStep>(0);
+
+  const importPreview = useImportPreview(orgId);
 
   return (
     <Dialog
       fullScreen={fullScreen}
       fullWidth
-      maxWidth={configureOrValidateStep ? 'lg' : 'sm'}
+      maxWidth={maxWidth}
       onClose={onClose}
       open={open}
     >
       <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
-        <Box alignItems="center" display="flex" justifyContent="space-between">
-          <Typography variant="h4">
-            <Msg id={messageIds.configuration.title} />
-          </Typography>
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="space-between"
-            width="50%"
-          >
-            <Box width="100%">
-              {configureOrValidateStep && (
-                <Stepper activeStep={activeStep}>
-                  <Step>
-                    <StepLabel>
-                      <Msg id={messageIds.steps.upload} />
-                    </StepLabel>
-                  </Step>
-                  <Step>
-                    <StepLabel>
-                      <Msg id={messageIds.steps.configure} />
-                    </StepLabel>
-                  </Step>
-                  <Step>
-                    <StepLabel>
-                      <Msg id={messageIds.steps.validate} />
-                    </StepLabel>
-                  </Step>
-                  <Step>
-                    <StepLabel>
-                      <Msg id={messageIds.steps.import} />
-                    </StepLabel>
-                  </Step>
-                </Stepper>
-              )}
-            </Box>
-            <IconButton
-              onClick={() => {
+        <>
+          {activeStep == 0 && (
+            <Upload
+              onClose={onClose}
+              onSuccess={() => {
+                setActiveStep(1);
+                setMaxWidth('lg');
+              }}
+            />
+          )}
+          {activeStep == 1 && (
+            <Configure
+              onClose={() => {
                 onClose();
                 setActiveStep(0);
               }}
-            >
-              <Clear color="secondary" />
-            </IconButton>
-          </Box>
-        </Box>
-        {activeStep == 0 && <Upload onSuccess={() => setActiveStep(1)} />}
-        {activeStep == 1 && (
-          <Configure
-            onRestart={() => setActiveStep(0)}
-            onValidate={() => setActiveStep(2)}
-          />
-        )}
-        {activeStep === 2 && (
-          <Validation
-            onClickBack={() => setActiveStep(1)}
-            onImport={() => setActiveStep(3)}
-          />
-        )}
-        {activeStep === 3 && (
-          <ImportStatus onClickBack={() => setActiveStep(2)} onDone={onClose} />
-        )}
+              onRestart={() => setActiveStep(0)}
+              onValidate={async () => {
+                if (importPreview) {
+                  await importPreview();
+                }
+                setActiveStep(2);
+              }}
+            />
+          )}
+          {activeStep === 2 && (
+            <Validation
+              onClickBack={() => setActiveStep(1)}
+              onClose={() => {
+                onClose();
+                setActiveStep(0);
+              }}
+              onImportDone={() => setActiveStep(3)}
+              onImportStart={() => setMaxWidth('sm')}
+            />
+          )}
+          {activeStep === 3 && (
+            <ImportStatus
+              onClickBack={() => setActiveStep(2)}
+              onClose={() => {
+                onClose();
+                setActiveStep(0);
+              }}
+              onDone={() => {
+                onClose();
+                setActiveStep(0);
+              }}
+            />
+          )}
+        </>
       </Box>
     </Dialog>
   );

@@ -1,12 +1,12 @@
-import { FakeDataType } from '../components/Validation';
+import { PersonImport } from './types';
 
-export const checkAllValuesAreZero = (obj: FakeDataType['summary']) => {
+export const checkAllValuesAreZero = (obj: PersonImport['summary']) => {
   const objs = Object.values(obj);
   return objs.every((item) => item.total === 0);
 };
 
 export const checkEmptyObj = (
-  obj: FakeDataType['summary'] | { [key: number]: number }
+  obj: PersonImport['summary'] | { [key: number]: number }
 ): boolean => {
   const objs = Object.values(obj);
   return Object.values(objs).every((value) => {
@@ -26,13 +26,13 @@ export interface AddedOrgsSummary {
 }
 
 export default function getAddedOrgsSummary(membershipsAdded: {
-  byOrganization: { [key: number]: number };
+  byOrg: { [key: number]: number };
   total: number;
 }): AddedOrgsSummary {
   const orgs: string[] = [];
 
-  if (!checkEmptyObj(membershipsAdded.byOrganization)) {
-    orgs.push(...Object.keys(membershipsAdded.byOrganization));
+  if (!checkEmptyObj(membershipsAdded.byOrg)) {
+    orgs.push(...Object.keys(membershipsAdded.byOrg));
   }
 
   return { numCreated: membershipsAdded.total, orgs };
