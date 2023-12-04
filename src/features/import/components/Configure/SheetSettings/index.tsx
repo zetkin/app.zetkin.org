@@ -17,7 +17,7 @@ import { FC, useState } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
 import messageIds from 'features/import/l10n/messageIds';
-import useSheets from 'features/import/hooks/useSheets';
+import useSheetSettings from 'features/import/hooks/useSheetSettings';
 import { Msg, useMessages } from 'core/i18n';
 
 const Accordion = styled((props: AccordionProps) => (
@@ -42,7 +42,7 @@ const SheetSettings: FC<SheetSettingsProps> = ({ clearConfiguration }) => {
     sheets,
     updateFirstRowIsHeaders,
     updateSelectedSheetIndex,
-  } = useSheets();
+  } = useSheetSettings();
   const [settingsExpanded, setSettingsExpanded] = useState(true);
 
   return (

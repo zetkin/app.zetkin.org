@@ -7,9 +7,8 @@ import CreatedAndUpdated from './CreatedAndUpdated';
 import ImportFooter from './ImportFooter';
 import ImportHeader from './ImportHeader';
 import messageIds from 'features/import/l10n/messageIds';
-import useImportAlert from 'features/import/hooks/useImportAlert';
-import useImportSummary from '../hooks/useImportSummary';
 import { useNumericRouteParams } from 'core/hooks';
+import useStatusReport from '../hooks/useStatusReport';
 import ImportAlert, { ALERT_STATUS } from './ImportAlert';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -22,10 +21,10 @@ interface ImportStatusProps {
 const ImportStatus = ({ onClickBack, onClose, onDone }: ImportStatusProps) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { addedTags, orgsWithNewPeople, summary } = useImportSummary(orgId);
-
-  //TODO: get importAlert from real data
-  const importAlert = useImportAlert('completed');
+  const { addedTags, alert, orgsWithNewPeople, summary } = useStatusReport(
+    orgId,
+    'completed'
+  );
 
   return (
     <Box
@@ -39,9 +38,9 @@ const ImportStatus = ({ onClickBack, onClose, onDone }: ImportStatusProps) => {
         <ImportHeader onClose={onClose} />
         <Box display="flex" flexDirection="column" sx={{ overflowY: 'scroll' }}>
           <Box paddingY={2}>
-            <ImportAlert alert={importAlert} onClickBack={onClickBack} />
+            <ImportAlert alert={alert} onClickBack={onClickBack} />
           </Box>
-          {importAlert.status !== ALERT_STATUS.INFO && (
+          {alert.status !== ALERT_STATUS.INFO && (
             <>
               <Typography paddingBottom={2} variant="h5">
                 <Msg id={messageIds.importStatus.completedChanges} />
@@ -75,7 +74,7 @@ const ImportStatus = ({ onClickBack, onClose, onDone }: ImportStatusProps) => {
         primaryButtonDisabled={false}
         primaryButtonMsg={messages.actionButtons.done()}
         secondaryButtonMsg={
-          importAlert.status == ALERT_STATUS.ERROR
+          alert.status == ALERT_STATUS.ERROR
             ? messages.actionButtons.back()
             : undefined
         }

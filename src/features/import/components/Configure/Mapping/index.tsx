@@ -5,10 +5,8 @@ import { Column } from 'features/import/utils/types';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import useColumnMutations from 'features/import/hooks/useColumnMutations';
-import useColumnOptions from 'features/import/hooks/useColumnOptions';
+import useMapping from 'features/import/hooks/useMapping';
 import { useNumericRouteParams } from 'core/hooks';
-import useSelectedOptions from 'features/import/hooks/useSelectedOptions';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
@@ -26,9 +24,8 @@ const Mapping: FC<MappingProps> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const columnOptions = useColumnOptions(orgId);
-  const { updateColumn } = useColumnMutations();
-  const optionAlreadySelected = useSelectedOptions();
+  const { columnOptions, optionAlreadySelected, updateColumn } =
+    useMapping(orgId);
 
   return (
     <Box

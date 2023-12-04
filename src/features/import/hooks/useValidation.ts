@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
 import { ALERT_STATUS } from '../components/ImportAlert';
-import { IMPORT_ERROR } from '../utils/types';
+import { importResultAdd } from '../store';
 import messageIds from '../l10n/messageIds';
-import { useAppSelector } from 'core/hooks';
-import useFieldTitle from './useFieldTitle';
+import useFieldTitle from '../../../utils/hooks/useFieldTitle';
 import { useMessages } from 'core/i18n';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useTags from 'features/tags/hooks/useTags';
@@ -13,6 +12,12 @@ import getAddedOrgsSummary, {
   checkAllValuesAreZero,
   checkEmptyObj,
 } from '../utils/getAddedOrgsSummary';
+import {
+  IMPORT_ERROR,
+  ImportRes,
+  ZetkinPersonImportPostBody,
+} from '../utils/types';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export interface Alert {
   msg: string;
@@ -20,13 +25,19 @@ export interface Alert {
   title: string;
 }
 
-export default function useValidationStep(orgId: number) {
+export default function useValidation(orgId: number) {
   const messages = useMessages(messageIds);
+  const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
+  const importOperations = useAppSelector(
+    (state) => state.import.importOperations
+  );
   const importErrors = useAppSelector((state) => state.import.importErrors);
   const summary = useAppSelector((state) => state.import.importPreview).summary;
   const [approvedWarningAlerts, setApprovedWarningAlerts] = useState<number[]>(
     []
   );
+  const [loading, setLoading] = useState(false);
   const tags = useTags(orgId).data ?? [];
   const organizations = useOrganizations().data ?? [];
   const getFieldTitle = useFieldTitle(orgId);
@@ -71,7 +82,7 @@ export default function useValidationStep(orgId: number) {
     }
   });
 
-  //Error: nothing will be imported
+  //Error: API call was made, but nothing will be imported
   if (emptyImport) {
     alerts.push({
       msg: messages.validation.alerts.errors.messages['empty'](),
@@ -160,10 +171,24 @@ export default function useValidationStep(orgId: number) {
     });
   }
 
+  const importPeople = async () => {
+    setLoading(true);
+    const importResult = await apiClient.post<
+      ImportRes,
+      ZetkinPersonImportPostBody
+    >(`/api/orgs/${orgId}/bulk/execute`, {
+      ops: importOperations,
+    });
+    dispatch(importResultAdd(importResult.stats.person));
+    setLoading(false);
+  };
+
   return {
     addedTags,
     alerts,
     importDisabled,
+    importPeople,
+    loading,
     onCheckAlert,
     orgsWithNewPeople,
     statusMessage,

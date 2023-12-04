@@ -1,6 +1,6 @@
+import { columnUpdate } from '../store';
 import messageIds from '../l10n/messageIds';
 import notEmpty from 'utils/notEmpty';
-import { updateColumn } from '../store';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { CellData, Column, ColumnKind } from '../utils/types';
@@ -215,7 +215,7 @@ export default function useUIDataColumns(
         if (!map) {
           const newMap = { tagIds: [tagId], value: value };
           dispatch(
-            updateColumn([
+            columnUpdate([
               index,
               {
                 ...originalColumn,
@@ -231,7 +231,7 @@ export default function useUIDataColumns(
           const updatedMap = { ...map, tagIds: updatedTagIds };
 
           dispatch(
-            updateColumn([
+            columnUpdate([
               index,
               {
                 ...originalColumn,
@@ -254,7 +254,7 @@ export default function useUIDataColumns(
 
           if (updatedTagIds.length == 0) {
             dispatch(
-              updateColumn([
+              columnUpdate([
                 index,
                 {
                   ...originalColumn,
@@ -266,7 +266,7 @@ export default function useUIDataColumns(
             const updatedMap = { ...map, tagIds: updatedTagIds };
 
             dispatch(
-              updateColumn([
+              columnUpdate([
                 index,
                 {
                   ...originalColumn,
@@ -293,7 +293,7 @@ export default function useUIDataColumns(
     const updateIdField = (idField: 'ext_id' | 'id') => {
       if (originalColumn.kind == ColumnKind.ID_FIELD) {
         dispatch(
-          updateColumn([index, { ...originalColumn, idField: idField }])
+          columnUpdate([index, { ...originalColumn, idField: idField }])
         );
       }
     };
@@ -367,7 +367,7 @@ export default function useUIDataColumns(
         if (!map) {
           const newMap = { orgId: orgId, value: value };
           dispatch(
-            updateColumn([
+            columnUpdate([
               index,
               {
                 ...originalColumn,
@@ -382,7 +382,7 @@ export default function useUIDataColumns(
           const updatedMap = { ...map, orgId: orgId };
 
           dispatch(
-            updateColumn([
+            columnUpdate([
               index,
               {
                 ...originalColumn,
@@ -403,7 +403,7 @@ export default function useUIDataColumns(
           );
 
           dispatch(
-            updateColumn([
+            columnUpdate([
               index,
               {
                 ...originalColumn,

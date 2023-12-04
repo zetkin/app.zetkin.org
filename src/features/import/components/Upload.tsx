@@ -15,7 +15,7 @@ import { CSSProperties, FC, useCallback, useState } from 'react';
 import ImportFooter from './ImportFooter';
 import ImportHeader from './ImportHeader';
 import messageIds from '../l10n/messageIds';
-import useImportedFile from '../hooks/useImportedFile';
+import useFileParsing from '../hooks/useFileParsing';
 import { useMessages } from 'core/i18n';
 
 const sharedProperties: CSSProperties = {
@@ -69,7 +69,7 @@ interface UploadProps {
 const Upload: FC<UploadProps> = ({ onClose, onSuccess }) => {
   const [error, setError] = useState<boolean>(false);
   const messages = useMessages(messageIds);
-  const { parseData, loading } = useImportedFile();
+  const { parseData, loading } = useFileParsing();
   const theme = useTheme();
   const classes = useStyles(theme);
 

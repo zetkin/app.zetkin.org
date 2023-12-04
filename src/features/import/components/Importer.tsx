@@ -5,8 +5,8 @@ import Configure from './Configure';
 import ImportStatus from './ImportStatus';
 import { ImportStep } from './ImportHeader';
 import Upload from './Upload';
-import useImportPreview from '../hooks/useImportPreview';
 import { useNumericRouteParams } from 'core/hooks';
+import usePreflight from '../hooks/usePreflight';
 import Validation from './Validation';
 
 interface ImporterProps {
@@ -21,7 +21,7 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
   const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('sm');
   const [activeStep, setActiveStep] = useState<ImportStep>(0);
 
-  const importPreview = useImportPreview(orgId);
+  const importPreview = usePreflight(orgId);
 
   return (
     <Dialog

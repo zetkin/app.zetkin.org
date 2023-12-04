@@ -18,7 +18,7 @@ function fileWithColumns(file: ImportedFile): ImportedFile {
   };
 }
 
-export default function useFileImport() {
+export default function useFileParsing() {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 

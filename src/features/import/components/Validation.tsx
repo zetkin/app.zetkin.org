@@ -15,9 +15,8 @@ import ImportAlert from './ImportAlert';
 import ImportFooter from './ImportFooter';
 import ImportHeader from './ImportHeader';
 import messageIds from 'features/import/l10n/messageIds';
-import useImport from '../hooks/useImport';
 import { useNumericRouteParams } from 'core/hooks';
-import useValidationStep from '../hooks/useValidationStep';
+import useValidation from '../hooks/useValidation';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ValidationProps {
@@ -41,11 +40,12 @@ const Validation: FC<ValidationProps> = ({
     addedTags,
     alerts,
     importDisabled,
+    importPeople,
+    loading,
     onCheckAlert,
     statusMessage,
     summary,
-  } = useValidationStep(orgId);
-  const { importPeople, loading } = useImport(orgId);
+  } = useValidation(orgId);
 
   return (
     <Box display="flex" flexDirection="column" height="90vh">

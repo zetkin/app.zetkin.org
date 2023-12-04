@@ -13,7 +13,7 @@ import {
 import { ImportRes, ZetkinPersonImportPostBody } from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function useImportPreview(orgId: number) {
+export default function usePreflight(orgId: number) {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
   const pendingFile = useAppSelector((state) => state.import.pendingFile);

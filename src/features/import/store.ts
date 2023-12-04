@@ -58,6 +58,11 @@ const importSlice = createSlice({
       const file = action.payload;
       state.pendingFile = file;
     },
+    columnUpdate: (state, action: PayloadAction<[number, Column]>) => {
+      const [index, newColumn] = action.payload;
+      const sheetIndex = state.pendingFile.selectedSheetIndex;
+      state.pendingFile.sheets[sheetIndex].columns[index] = newColumn;
+    },
     importErrorsAdd: (state, action: PayloadAction<IMPORT_ERROR[]>) => {
       state.importErrors = action.payload;
     },
@@ -89,17 +94,13 @@ const importSlice = createSlice({
     setSelectedSheetIndex: (state, action: PayloadAction<number>) => {
       state.pendingFile.selectedSheetIndex = action.payload;
     },
-    updateColumn: (state, action: PayloadAction<[number, Column]>) => {
-      const [index, newColumn] = action.payload;
-      const sheetIndex = state.pendingFile.selectedSheetIndex;
-      state.pendingFile.sheets[sheetIndex].columns[index] = newColumn;
-    },
   },
 });
 
 export default importSlice;
 export const {
   addFile,
+  columnUpdate,
   importErrorsAdd,
   importErrorsClear,
   importOperationsAdd,
@@ -109,5 +110,4 @@ export const {
   importResultAdd,
   setFirstRowIsHeaders,
   setSelectedSheetIndex,
-  updateColumn,
 } = importSlice.actions;

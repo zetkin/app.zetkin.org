@@ -4,7 +4,7 @@ import { Typography, useTheme } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import useFieldTitle from 'features/import/hooks/useFieldTitle';
+import useFieldTitle from 'utils/hooks/useFieldTitle';
 import {
   ZetkinCustomField,
   ZetkinPersonNativeFields,
