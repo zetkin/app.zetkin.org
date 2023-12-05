@@ -46,7 +46,7 @@ const PersonFieldConfig = ({
 
   const fields: Field[] = [];
 
-  customFields.map((field) => {
+  customFields.forEach((field) => {
     if (field.type !== 'json') {
       fields.push({
         slug: field.slug,
