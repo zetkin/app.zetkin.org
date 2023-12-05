@@ -49,7 +49,7 @@ const Preflight: FC<PreflightProps> = ({
   } = usePreflight(orgId);
 
   return (
-    <Box display="flex" flexDirection="column" height="90vh">
+    <Box display="flex" flexDirection="column" height={loading ? '' : '90vh'}>
       <ImportHeader
         activeStep={loading ? undefined : ImportStep.PREFLIGHT}
         onClose={loading ? undefined : onClose}

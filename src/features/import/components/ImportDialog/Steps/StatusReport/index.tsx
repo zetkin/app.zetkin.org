@@ -23,11 +23,13 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
   const { orgId } = useNumericRouteParams();
   const { addedTags, alert, orgsWithNewPeople, summary } =
     useStatusReport(orgId);
+  const fullHeight = alert.status != ALERT_STATUS.INFO;
 
   return (
     <Box
       display="flex"
       flexDirection="column"
+      height={fullHeight ? '90vh' : ''}
       justifyContent="space-between"
       overflow="hidden"
     >
