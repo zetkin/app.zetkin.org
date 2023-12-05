@@ -273,7 +273,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [123, 100],
         },
         {
@@ -283,7 +283,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [124, 100],
         },
       ]);
@@ -400,7 +400,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [123, 100],
         },
         {
@@ -409,7 +409,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [124, 100],
         },
       ]);
@@ -468,7 +468,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [123, 100],
         },
         {
@@ -478,7 +478,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [124, 100],
         },
       ]);
@@ -530,7 +530,7 @@ describe('prepareImportOperations()', () => {
       expect(result).toEqual([
         {
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [123, 100],
         },
         {
@@ -538,7 +538,7 @@ describe('prepareImportOperations()', () => {
             city: 'Linköping',
           },
           op: 'person.import',
-          organization: [273],
+          organizations: [273],
           tags: [124, 100],
         },
       ]);
@@ -589,7 +589,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
         },
         {
           data: {
@@ -597,7 +597,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '124',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [124, 100],
         },
         {
@@ -606,7 +606,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
         },
       ]);
     });
@@ -659,7 +659,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [123, 100],
         },
         {
@@ -729,11 +729,11 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
         },
         {
           op: 'person.import',
-          organization: [273],
+          organizations: [273],
           tags: [124, 100],
         },
         {
@@ -802,7 +802,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organization: [272],
+          organizations: [272],
           tags: [123, 100, 111, 222],
         },
         {
@@ -811,7 +811,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organization: [273],
+          organizations: [273],
           tags: [124, 100, 333, 444],
         },
       ]);
@@ -872,7 +872,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organization: [111],
+          organizations: [111],
           tags: [123, 100, 222],
         },
         {
@@ -881,7 +881,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organization: [333],
+          organizations: [333],
           tags: [124, 100, 333, 444],
         },
       ]);

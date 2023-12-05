@@ -3,7 +3,7 @@ import { CellData, ColumnKind, Sheet } from './types';
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
   op: 'person.import';
-  organization?: number[];
+  organizations?: number[];
   tags?: number[];
 };
 
@@ -65,7 +65,7 @@ export default function prepareImportOperations(
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
-              personImportOps[rowIndex].organization = [
+              personImportOps[rowIndex].organizations = [
                 mappedColumn.orgId as number,
               ];
             }

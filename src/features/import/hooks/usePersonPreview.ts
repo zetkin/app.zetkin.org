@@ -25,7 +25,7 @@ export default function usePersonPreview(
     }, []) ?? [];
 
   const org = organizations.find(
-    (org) => org.id === (previewRow?.organization?.[0] || [])
+    (org) => org.id === (previewRow?.organizations?.[0] || [])
   );
 
   return {
