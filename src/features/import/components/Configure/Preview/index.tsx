@@ -46,7 +46,7 @@ const Preview = () => {
         <Button
           disabled={personIndex === 0}
           onClick={() =>
-            setPersonIndex((prev) => (personIndex !== 0 ? prev - 1 : prev))
+            setPersonIndex((prev) => (prev !== 0 ? prev - 1 : prev))
           }
           startIcon={<ArrowBackIos />}
         >
@@ -60,7 +60,7 @@ const Preview = () => {
           endIcon={<ArrowForwardIos />}
           onClick={() =>
             setPersonIndex((prev) =>
-              personIndex < currentSheet.rows.length - 1 ? prev + 1 : prev
+              prev < currentSheet.rows.length - 1 ? prev + 1 : prev
             )
           }
         >
@@ -85,8 +85,8 @@ const Preview = () => {
         >
           {emptyPreview &&
             Array(currentSheet.columns.length)
-              .fill(2)
-              .map((marginSize, index) => {
+              .fill(null)
+              .map((_, index) => {
                 return (
                   <Box
                     key={`empty-preview-${index}`}
@@ -94,7 +94,7 @@ const Preview = () => {
                     sx={{
                       backgroundColor: theme.palette.transparentGrey.light,
                       height: '14px',
-                      m: marginSize,
+                      m: 2,
                     }}
                   />
                 );
