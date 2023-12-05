@@ -117,7 +117,7 @@ describe('createPreviewData()', () => {
         city: 'Malmö',
         id: '123',
       },
-      organization: [111],
+      organizations: [111],
     });
   });
   it('returns empty obejct when there are no values', () => {

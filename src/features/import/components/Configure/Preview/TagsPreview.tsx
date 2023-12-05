@@ -1,18 +1,17 @@
 import { makeStyles } from '@mui/styles';
-import { Box, Stack, Theme } from '@mui/system';
-import { Tooltip, Typography } from '@mui/material';
+import { Tooltip } from '@mui/material';
+import { Box, Stack } from '@mui/system';
 
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
+import { useMessages } from 'core/i18n';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { ColumnKind, Sheet } from 'features/import/utils/types';
-import { Msg, useMessages } from 'core/i18n';
 
 interface TagPreviewProps {
   currentSheet: Sheet;
   tags: ZetkinTag[];
-  theme: Theme;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -31,22 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TagsPreview = ({ tags, currentSheet, theme }: TagPreviewProps) => {
+const TagsPreview = ({ tags, currentSheet }: TagPreviewProps) => {
   const messages = useMessages(messageIds);
   const classes = useStyles();
 
   const hasMapped = currentSheet.columns.some(
     (column) => column.kind === ColumnKind.TAG && column.mapping.length > 0
-  );
-  const noTags = (
-    <Typography
-      sx={{
-        color: theme.palette.grey[400],
-        fontStyle: 'italic',
-      }}
-    >
-      (<Msg id={messageIds.configuration.preview.noTags} />)
-    </Typography>
   );
 
   const displayedTags = tags?.slice(0, 3);
@@ -55,10 +44,13 @@ const TagsPreview = ({ tags, currentSheet, theme }: TagPreviewProps) => {
   return (
     <PreviewGrid
       columnHeader={messages.configuration.preview.columnHeader.tags()}
+      emptyLabel={
+        hasMapped && tags.length === 0
+          ? messages.configuration.preview.noTags()
+          : ''
+      }
       rowValue={
-        hasMapped && tags.length === 0 ? (
-          noTags
-        ) : (
+        tags.length > 0 ? (
           <Stack direction="row" maxWidth={'300px'} mt="5px" spacing={1}>
             {displayedTags?.map((tag) => (
               <TagChip
@@ -78,7 +70,7 @@ const TagsPreview = ({ tags, currentSheet, theme }: TagPreviewProps) => {
               </Tooltip>
             )}
           </Stack>
-        )
+        ) : null
       }
       unmappedRow={!hasMapped}
     />

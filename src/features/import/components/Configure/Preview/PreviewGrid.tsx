@@ -7,11 +7,13 @@ interface PreviewGridProps {
   columnHeader?: string;
   unmappedRow?: boolean;
   rowValue: ReactElement | CellData;
+  emptyLabel?: string;
 }
 const PreviewGrid = ({
   columnHeader,
   unmappedRow,
   rowValue,
+  emptyLabel,
 }: PreviewGridProps) => {
   const theme = useTheme();
 
@@ -60,7 +62,18 @@ const PreviewGrid = ({
           mt: 0.5,
         }}
       >
-        <Typography variant="body1">{rowValue}</Typography>
+        {emptyLabel ? (
+          <Typography
+            sx={{
+              color: theme.palette.grey[400],
+              fontStyle: 'italic',
+            }}
+          >
+            ({emptyLabel})
+          </Typography>
+        ) : (
+          <Typography variant="body1">{rowValue}</Typography>
+        )}
       </Box>
     </Box>
   );

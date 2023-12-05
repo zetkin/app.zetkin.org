@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import OrgPreview from './OrgPreview';
 import PreviewGrid from './PreviewGrid';
 import TagsPreview from './TagsPreview';
@@ -12,6 +11,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
 import { ColumnKind, Sheet } from 'features/import/utils/types';
+import { Msg, useMessages } from 'core/i18n';
 
 const Preview = () => {
   const theme = useTheme();
@@ -24,6 +24,7 @@ const Preview = () => {
     firstRowIsHeaders ? personIndex + 1 : personIndex,
     orgId
   );
+  const messages = useMessages(messageIds);
 
   const emptyPreview = currentSheet.columns.every(
     (item) => item.selected === false
@@ -104,28 +105,18 @@ const Preview = () => {
               {currentSheet.columns.map((column, columnIdx) => {
                 if (column.selected) {
                   if (column.kind === ColumnKind.UNKNOWN) {
+                    const rowValue =
+                      currentSheet.rows[
+                        firstRowIsHeaders ? personIndex + 1 : personIndex
+                      ].data[columnIdx];
                     return (
                       <PreviewGrid
-                        rowValue={
-                          currentSheet.rows[
-                            firstRowIsHeaders ? personIndex + 1 : personIndex
-                          ].data[columnIdx] || (
-                            <Typography
-                              sx={{
-                                color: theme.palette.grey[400],
-                                fontStyle: 'italic',
-                              }}
-                            >
-                              (
-                              {
-                                <Msg
-                                  id={messageIds.configuration.preview.noValue}
-                                />
-                              }
-                              )
-                            </Typography>
-                          )
+                        emptyLabel={
+                          !rowValue
+                            ? messages.configuration.preview.noValue()
+                            : ''
                         }
+                        rowValue={rowValue}
                       />
                     );
                   }
@@ -146,22 +137,12 @@ const Preview = () => {
                     );
                   }
                   if (column.kind === ColumnKind.ORGANIZATION) {
-                    return (
-                      <OrgPreview
-                        currentSheet={currentSheet}
-                        org={org}
-                        theme={theme}
-                      />
-                    );
+                    return <OrgPreview currentSheet={currentSheet} org={org} />;
                   }
                 }
               })}
               {tagColumnSelected && (
-                <TagsPreview
-                  currentSheet={currentSheet}
-                  tags={tags}
-                  theme={theme}
-                />
+                <TagsPreview currentSheet={currentSheet} tags={tags} />
               )}
             </>
           )}

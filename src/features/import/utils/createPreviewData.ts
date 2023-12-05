@@ -45,7 +45,7 @@ export default function createPreviewData(
       if (column.kind === ColumnKind.ORGANIZATION) {
         column.mapping.forEach((mappedColumn) => {
           if (mappedColumn.value === row[colIdx]) {
-            personPreviewOp.organization = [mappedColumn?.orgId as number];
+            personPreviewOp.organizations = [mappedColumn?.orgId as number];
           }
         });
       }
