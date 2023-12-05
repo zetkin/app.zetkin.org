@@ -55,7 +55,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
             onValidate={() => setActiveStep(ImportStep.PREFLIGHT)}
           />
         )}
-        {activeStep === ImportStep.CONFIGURE && (
+        {activeStep === ImportStep.PREFLIGHT && (
           <Preflight
             onClickBack={() => setActiveStep(ImportStep.CONFIGURE)}
             onClose={() => {
