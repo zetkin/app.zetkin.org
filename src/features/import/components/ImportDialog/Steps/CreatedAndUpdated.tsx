@@ -3,10 +3,10 @@ import { Box, Stack, Typography, useTheme } from '@mui/material';
 
 import messageIds from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { PersonImport } from '../../../utils/types';
+import { PersonImportSummary } from '../../../utils/types';
 
 interface CreatedAndUpdatedProps {
-  summary: PersonImport['summary'];
+  summary: PersonImportSummary;
 }
 
 const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {

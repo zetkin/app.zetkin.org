@@ -17,7 +17,7 @@ import ImportHeader from '../../ImportHeader';
 import { ImportStep } from '../..';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useValidation from '../../../../hooks/useValidation';
+import usePreflight from '../../../../hooks/usePreflight';
 import { Msg, useMessages } from 'core/i18n';
 
 interface PreflightProps {
@@ -46,7 +46,7 @@ const Preflight: FC<PreflightProps> = ({
     onCheckAlert,
     statusMessage,
     summary,
-  } = useValidation(orgId);
+  } = usePreflight(orgId);
 
   return (
     <Box display="flex" flexDirection="column" height="90vh">

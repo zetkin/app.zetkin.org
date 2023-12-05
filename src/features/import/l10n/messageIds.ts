@@ -4,6 +4,7 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.import', {
   actionButtons: {
     back: m('Back'),
+    close: m('Close'),
     configure: m('Configure'),
     done: m('Done'),
     import: m('Import'),

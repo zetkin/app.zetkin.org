@@ -76,6 +76,10 @@ export const enum IMPORT_ERROR {
   PHONE = 'phone',
 }
 
+export interface ZetkinPersonImportPostBody {
+  ops: ZetkinPersonImportOp[];
+}
+
 export type PersonImportSummary = {
   addedToOrg: {
     byOrg: { [key: number]: number };
@@ -94,16 +98,19 @@ export type PersonImportSummary = {
   };
 };
 
+type ImportStatus = 'completed' | 'error' | 'pending' | 'in_progress';
+
 export type PersonImport = {
-  summary: PersonImportSummary;
+  accepted: string;
+  completed: string | null;
+  report: {
+    person: {
+      summary: PersonImportSummary;
+    };
+  };
+  status: ImportStatus | null;
 };
 
-export interface ZetkinPersonImportPostBody {
-  ops: ZetkinPersonImportOp[];
-}
-
-export interface ImportRes {
-  stats: {
-    person: PersonImport;
-  };
-}
+export type ImportPreview = {
+  stats: PersonImport['report'];
+};

@@ -1,12 +1,12 @@
-import { PersonImport } from './types';
+import { PersonImportSummary } from './types';
 
-export const checkAllValuesAreZero = (obj: PersonImport['summary']) => {
+export const checkAllValuesAreZero = (obj: PersonImportSummary) => {
   const objs = Object.values(obj);
   return objs.every((item) => item.total === 0);
 };
 
 export const checkEmptyObj = (
-  obj: PersonImport['summary'] | { [key: number]: number }
+  obj: PersonImportSummary | { [key: number]: number }
 ): boolean => {
   const objs = Object.values(obj);
   return Object.values(objs).every((value) => {

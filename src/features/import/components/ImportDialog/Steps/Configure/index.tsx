@@ -8,9 +8,9 @@ import { ImportStep } from '../..';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import SheetSettings from './SheetSettings';
+import useConfigure from 'features/import/hooks/useConfigure';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import usePreflight from 'features/import/hooks/usePreflight';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 
 interface ConfigureProps {
@@ -27,7 +27,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
   const { orgId } = useNumericRouteParams();
   const { forwardMessageDisabled, numRows, uiDataColumns } =
     useUIDataColumns(orgId);
-  const preflight = usePreflight(orgId);
+  const getPreflightStats = useConfigure(orgId);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
@@ -64,8 +64,8 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
       <Box padding={4}>Preview</Box>
       <ImportFooter
         onClickPrimary={async () => {
-          if (preflight) {
-            await preflight();
+          if (getPreflightStats) {
+            await getPreflightStats();
           }
           onValidate();
         }}

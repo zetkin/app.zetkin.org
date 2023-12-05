@@ -13,15 +13,13 @@ interface Alert {
   title: string;
 }
 
-export default function useStatusReport(
-  orgId: number,
-  status: 'error' | 'completed' | 'scheduled'
-) {
+export default function useStatusReport(orgId: number) {
   const message = useMessages(messageIds);
-  const summary = useAppSelector((state) => state.import.importResult).summary;
+  const importResult = useAppSelector((state) => state.import.importResult);
   const tags = useTags(orgId).data ?? [];
   const organizations = useOrganizations().data ?? [];
 
+  const summary = importResult.report.person.summary;
   const { tagged, addedToOrg } = summary;
 
   const addedTags = Object.keys(tagged.byTag).reduce((acc: ZetkinTag[], id) => {
@@ -39,13 +37,16 @@ export default function useStatusReport(
 
   let alert: Alert;
 
-  if (status === 'error') {
+  if (!importResult.status || importResult.status === 'error') {
     alert = {
       msg: message.importStatus.error.desc(),
       status: ALERT_STATUS.ERROR,
       title: message.importStatus.error.title(),
     };
-  } else if (status === 'scheduled') {
+  } else if (
+    importResult.status === 'pending' ||
+    importResult.status === 'in_progress'
+  ) {
     alert = {
       msg: message.importStatus.scheduled.desc(),
       status: ALERT_STATUS.INFO,
@@ -59,5 +60,10 @@ export default function useStatusReport(
     };
   }
 
-  return { addedTags, alert, orgsWithNewPeople, summary };
+  return {
+    addedTags,
+    alert,
+    orgsWithNewPeople,
+    summary,
+  };
 }

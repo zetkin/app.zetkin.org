@@ -9,10 +9,10 @@ import {
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
+  importResult: PersonImport;
   importErrors: IMPORT_ERROR[];
   importOperations: ZetkinPersonImportOp[];
-  importPreview: PersonImport;
-  importResult: PersonImport;
+  preflightSummary: PersonImportSummary;
   pendingFile: ImportedFile;
 }
 
@@ -37,17 +37,22 @@ const emptySummary: PersonImportSummary = {
 const initialState: ImportStoreSlice = {
   importErrors: [],
   importOperations: [],
-  importPreview: {
-    summary: emptySummary,
-  },
   importResult: {
-    summary: emptySummary,
+    accepted: '',
+    completed: null,
+    report: {
+      person: {
+        summary: emptySummary,
+      },
+    },
+    status: null,
   },
   pendingFile: {
     selectedSheetIndex: 0,
     sheets: [],
     title: '',
   },
+  preflightSummary: emptySummary,
 };
 
 const importSlice = createSlice({
@@ -78,11 +83,11 @@ const importSlice = createSlice({
     importOperationsClear: (state) => {
       state.importOperations = [];
     },
-    importPreviewAdd: (state, action: PayloadAction<PersonImport>) => {
-      state.importPreview = action.payload;
+    importPreviewAdd: (state, action: PayloadAction<PersonImportSummary>) => {
+      state.preflightSummary = action.payload;
     },
     importPreviewClear: (state) => {
-      state.importPreview = { summary: emptySummary };
+      state.preflightSummary = emptySummary;
     },
     importResultAdd: (state, action: PayloadAction<PersonImport>) => {
       state.importResult = action.payload;

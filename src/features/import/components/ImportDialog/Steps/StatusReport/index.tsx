@@ -21,16 +21,13 @@ interface StatusReportProps {
 const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { addedTags, alert, orgsWithNewPeople, summary } = useStatusReport(
-    orgId,
-    'completed'
-  );
+  const { addedTags, alert, orgsWithNewPeople, summary } =
+    useStatusReport(orgId);
 
   return (
     <Box
       display="flex"
       flexDirection="column"
-      height="90vh"
       justifyContent="space-between"
       overflow="hidden"
     >
@@ -72,7 +69,11 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
         onClickPrimary={onDone}
         onClickSecondary={onClickBack}
         primaryButtonDisabled={false}
-        primaryButtonMsg={messages.actionButtons.done()}
+        primaryButtonMsg={
+          alert.status == ALERT_STATUS.INFO
+            ? messages.actionButtons.close()
+            : messages.actionButtons.done()
+        }
         secondaryButtonMsg={
           alert.status == ALERT_STATUS.ERROR
             ? messages.actionButtons.back()
