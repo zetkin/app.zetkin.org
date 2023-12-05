@@ -124,8 +124,6 @@ export default makeMessages('feat.import', {
     },
     preview: {
       columnHeader: {
-        ext: m('External ID'),
-        int: m('ID'),
         org: m('Organization'),
         tags: m('Tags'),
       },

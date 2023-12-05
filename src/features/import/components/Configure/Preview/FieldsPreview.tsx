@@ -1,5 +1,6 @@
 import { Typography, useTheme } from '@mui/material';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import useColumnOptions from 'features/import/hooks/useColumnOptions';
@@ -15,16 +16,17 @@ interface FieldsPreviewProps {
 const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
   const { orgId } = useNumericRouteParams();
   const columnOptions = useColumnOptions(orgId);
-  const messages = useMessages(messageIds);
+  const globalMessages = useMessages(globalMessageIds);
+
   const theme = useTheme();
   let idColumnHeader = '';
 
   if (kind === ColumnKind.ID_FIELD) {
     idColumnHeader =
       fieldKey === 'id'
-        ? messages.configuration.preview.columnHeader.int()
+        ? globalMessages.personFields.id()
         : fieldKey === 'ext_id'
-        ? messages.configuration.preview.columnHeader.ext()
+        ? globalMessages.personFields.ext_id()
         : '';
   }
 
