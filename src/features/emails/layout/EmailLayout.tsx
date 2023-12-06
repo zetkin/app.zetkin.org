@@ -1,12 +1,13 @@
-import { Box } from '@mui/material';
 import { FC } from 'react';
+import { Box, Typography } from '@mui/material';
 
 import EmailActionButtons from '../components/EmailActionButtons';
 import messageIds from '../l10n/messageIds';
+import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import { useMessages } from 'core/i18n';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import EmailStatusChip, { EmailState } from '../components/EmailStatusChip';
+import { Msg, useMessages } from 'core/i18n';
 
 interface EmailLayoutProps {
   children: React.ReactNode;
@@ -28,6 +29,12 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
           <Box marginRight={1}>
             {/* emailState here*/}
             <EmailStatusChip state={EmailState.DRAFT} />
+          </Box>
+          <Box display="flex" marginX={1}>
+            <People />
+            <Typography marginLeft={1}>
+              <Msg id={messageIds.stats.targets} values={{ numTargets: 0 }} />
+            </Typography>
           </Box>
         </Box>
       }
