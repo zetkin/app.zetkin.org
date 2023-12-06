@@ -40,13 +40,12 @@ const EmailPage: PageWithLayout = () => {
       </Head>
       <Box>
         <Box mb={2}>
-          <h1>what?</h1>
+          Welcome
           {/* <CallAssignmentTargets assignmentId={callAssId} orgId={orgId} /> */}
         </Box>
         <Box mb={2}>
           <Typography variant="h3">
             {/* <Msg id={messageIds.statusSectionTitle} /> */}
-            yo
           </Typography>
         </Box>
         {/* <ZUIStackedStatusBar values={statusBarStatsList} /> */}

@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { ContentCopy } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -14,7 +15,14 @@ const EmailActionButtons = () => {
           items={[]}
           label={messages.emailActionButtons.delevery()}
         />
-        <ZUIEllipsisMenu items={[]} />
+        <ZUIEllipsisMenu
+          items={[
+            {
+              label: <>{messages.emailActionButtons.duplicate()}</>,
+              startIcon: <ContentCopy />,
+            },
+          ]}
+        />
       </Box>
     </Box>
   );

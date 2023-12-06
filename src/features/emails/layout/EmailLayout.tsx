@@ -6,6 +6,7 @@ import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useMessages } from 'core/i18n';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import EmailStatusChip, { EmailState } from '../components/EmailStatusChip';
 
 interface EmailLayoutProps {
   children: React.ReactNode;
@@ -13,7 +14,8 @@ interface EmailLayoutProps {
 
 const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const messages = useMessages(messageIds);
-  //   const emailFuture = useEmail()
+  //const emailFuture = useEmail()
+  //const emailState = useEmailState()
 
   return (
     <TabbedLayout
@@ -21,7 +23,14 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
       baseHref={`/}`}
       //   belowActionButtons={}
       defaultTab="/"
-      subtitle={<Box alignItems="center" display="flex" />}
+      subtitle={
+        <Box alignItems="center" display="flex">
+          <Box marginRight={1}>
+            {/* emailState here*/}
+            <EmailStatusChip state={EmailState.DRAFT} />
+          </Box>
+        </Box>
+      }
       tabs={[
         {
           href: '/',
