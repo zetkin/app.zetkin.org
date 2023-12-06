@@ -53,7 +53,12 @@ const Importer: FC<ImporterProps> = ({ open, onClose }) => {
         padding={2}
         width={activeStep !== 3 ? '100%' : '700px'}
       >
-        <Box alignItems="center" display="flex" justifyContent="space-between">
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          sx={{ mb: 1.5 }}
+        >
           <Typography variant="h4">
             <Msg id={messageIds.configuration.title} />
           </Typography>

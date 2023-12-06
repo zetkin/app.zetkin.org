@@ -3,6 +3,7 @@ import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
 import Mapping from './Mapping';
+import Preview from './Preview';
 import SheetSettings from './SheetSettings';
 import { useNumericRouteParams } from 'core/hooks';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
@@ -45,7 +46,7 @@ const Configure: FC = () => {
           />
         </Box>
       </Box>
-      <Box padding={4}>Preview</Box>
+      <Preview />
     </Box>
   );
 };

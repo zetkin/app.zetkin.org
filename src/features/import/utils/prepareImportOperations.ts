@@ -1,7 +1,7 @@
 import { CellData, ColumnKind, Sheet } from './types';
 
 export type ZetkinPersonImportOp = {
-  fields?: Record<string, CellData>;
+  data?: Record<string, CellData>;
   op: 'person.import';
   organizations?: number[];
   tags?: number[];
@@ -38,8 +38,8 @@ export default function prepareImportOperations(
             column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
 
           if (row.data[colIdx]) {
-            personImportOps[rowIndex].fields = {
-              ...personImportOps[rowIndex].fields,
+            personImportOps[rowIndex].data = {
+              ...personImportOps[rowIndex].data,
               [`${fieldKey}`]: row.data[colIdx],
             };
           }
@@ -52,9 +52,11 @@ export default function prepareImportOperations(
               if (!personImportOps[rowIndex].tags) {
                 personImportOps[rowIndex].tags = [];
               }
-              personImportOps[rowIndex].tags = personImportOps[
-                rowIndex
-              ].tags?.concat(mappedColumn.tagIds);
+              personImportOps[rowIndex].tags = [
+                ...new Set(
+                  personImportOps[rowIndex].tags?.concat(mappedColumn.tagIds)
+                ),
+              ];
             }
           });
         }
@@ -63,12 +65,9 @@ export default function prepareImportOperations(
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
-              if (!personImportOps[rowIndex].organizations) {
-                personImportOps[rowIndex].organizations = [];
-              }
-              personImportOps[rowIndex].organizations = personImportOps[
-                rowIndex
-              ].organizations?.concat(mappedColumn.orgId as number);
+              personImportOps[rowIndex].organizations = [
+                mappedColumn.orgId as number,
+              ];
             }
           });
         }
