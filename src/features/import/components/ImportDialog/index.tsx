@@ -50,8 +50,12 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
             onClose={() => {
               onClose();
               setActiveStep(ImportStep.PARSE);
+              setMaxWidth('sm');
             }}
-            onRestart={() => setActiveStep(ImportStep.PARSE)}
+            onRestart={() => {
+              setActiveStep(ImportStep.PARSE);
+              setMaxWidth('sm');
+            }}
             onValidate={() => setActiveStep(ImportStep.PREFLIGHT)}
           />
         )}
@@ -61,6 +65,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
             onClose={() => {
               onClose();
               setActiveStep(ImportStep.PARSE);
+              setMaxWidth('sm');
             }}
             onImportDone={() => setActiveStep(ImportStep.REPORT)}
             onImportStart={() => setMaxWidth('sm')}
@@ -68,7 +73,10 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
         )}
         {activeStep === ImportStep.REPORT && (
           <StatusReport
-            onClickBack={() => setActiveStep(ImportStep.PREFLIGHT)}
+            onClickBack={() => {
+              setActiveStep(ImportStep.PREFLIGHT);
+              setMaxWidth('lg');
+            }}
             onClose={() => {
               onClose();
               setActiveStep(ImportStep.PARSE);
