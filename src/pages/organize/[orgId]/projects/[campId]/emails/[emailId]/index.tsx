@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { Box, Typography } from '@mui/material';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
+import EmailTargets from 'features/emails/components/EmailTargets';
 import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 // import { useNumericRouteParams } from 'core/hooks';
@@ -40,7 +41,7 @@ const EmailPage: PageWithLayout = () => {
       </Head>
       <Box>
         <Box mb={2}>
-          Welcome
+          <EmailTargets />
           {/* <CallAssignmentTargets assignmentId={callAssId} orgId={orgId} /> */}
         </Box>
         <Box mb={2}>

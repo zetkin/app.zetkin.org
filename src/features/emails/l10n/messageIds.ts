@@ -25,4 +25,7 @@ export default makeMessages('feat.emails', {
     design: m('Design'),
     overview: m('Overview'),
   },
+  targets: {
+    title: m('Targets'),
+  },
 });
