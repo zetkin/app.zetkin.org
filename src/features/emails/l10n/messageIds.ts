@@ -4,6 +4,8 @@ export default makeMessages('feat.emails', {
   emailActionButtons: {
     delevery: m('Delivery'),
     duplicate: m('Duplicate'),
+    sendLater: m('Send later'),
+    sendNow: m('Send now'),
   },
   state: {
     draft: m('Draft'),
