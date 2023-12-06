@@ -91,7 +91,11 @@ const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: {
-      types: ['.csv', '.xls', '.xlsx'],
+      'application/vnd.ms-excel': ['.xls'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
+        '.xlsx',
+      ],
+      'text/csv': ['.csv'],
     },
     maxFiles: 1,
     noClick: true,

@@ -7,6 +7,7 @@ import ImportHeader from '../../ImportHeader';
 import { ImportStep } from '../..';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
+import Preview from './Preview';
 import SheetSettings from './SheetSettings';
 import useConfigure from 'features/import/hooks/useConfigure';
 import { useMessages } from 'core/i18n';
@@ -61,7 +62,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
           />
         </Box>
       </Box>
-      <Box padding={4}>Preview</Box>
+      <Preview />
       <ImportFooter
         onClickPrimary={async () => {
           if (getPreflightStats) {

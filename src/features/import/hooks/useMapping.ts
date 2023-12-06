@@ -4,7 +4,7 @@ import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useMessages } from 'core/i18n';
-import { Column, ColumnKind, FieldColumn } from '../utils/types';
+import { Column, ColumnKind } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface Option {
@@ -28,13 +28,19 @@ export default function useMapping(orgId: number) {
     (column) => column.selected && column.kind != ColumnKind.UNKNOWN
   );
 
-  const selectedFieldColumns: FieldColumn[] = allSelectedColumns
-    .filter((column) => column.kind == ColumnKind.FIELD)
-    .map((column) => column as FieldColumn);
+  const selectedColumns = allSelectedColumns.filter(
+    (column) => column.kind != ColumnKind.TAG
+  );
 
   const optionAlreadySelected = (value: string) => {
-    if (value == 'org' || value == 'tag') {
+    if (value == 'tag') {
       return false;
+    }
+
+    if (value == 'org') {
+      return !!selectedColumns.find(
+        (column) => column.kind == ColumnKind.ORGANIZATION
+      );
     }
 
     if (value == 'id') {
@@ -43,9 +49,9 @@ export default function useMapping(orgId: number) {
       );
     }
 
-    const exists = selectedFieldColumns.find(
-      (column) => column.field == value.slice(6)
-    );
+    const exists = selectedColumns.find((column) => {
+      return column.kind == ColumnKind.FIELD && column.field == value.slice(6);
+    });
 
     return !!exists;
   };

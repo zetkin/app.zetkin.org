@@ -129,6 +129,18 @@ export default makeMessages('feat.import', {
       tags: m('Tags'),
       zetkinHeader: m('Zetkin'),
     },
+    preview: {
+      columnHeader: {
+        org: m('Organization'),
+        tags: m('Tags'),
+      },
+      next: m('Next'),
+      noOrg: m('No organization'),
+      noTags: m('No tags'),
+      noValue: m('No value'),
+      previous: m('Previous'),
+      title: m('Mapping preview'),
+    },
     settings: {
       firstRowIsHeaders: m('First row is headers'),
       header: m('Settings'),

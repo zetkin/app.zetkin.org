@@ -86,9 +86,11 @@ export default function prepareImportOperations(
               if (!personImportOps[rowIndex].tags) {
                 personImportOps[rowIndex].tags = [];
               }
-              personImportOps[rowIndex].tags = personImportOps[
-                rowIndex
-              ].tags?.concat(mappedColumn.tagIds);
+              personImportOps[rowIndex].tags = [
+                ...new Set(
+                  personImportOps[rowIndex].tags?.concat(mappedColumn.tagIds)
+                ),
+              ];
             }
           });
         }
@@ -96,13 +98,8 @@ export default function prepareImportOperations(
         //orgs
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
-            if (mappedColumn.value === row.data[colIdx]) {
-              if (!personImportOps[rowIndex].organizations) {
-                personImportOps[rowIndex].organizations = [];
-              }
-              personImportOps[rowIndex].organizations = personImportOps[
-                rowIndex
-              ].organizations?.concat(mappedColumn.orgId as number);
+            if (mappedColumn.value === row.data[colIdx] && mappedColumn.orgId) {
+              personImportOps[rowIndex].organizations = [mappedColumn.orgId];
             }
           });
         }

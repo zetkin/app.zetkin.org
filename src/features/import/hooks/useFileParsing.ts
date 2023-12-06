@@ -24,11 +24,7 @@ export default function useFileParsing() {
 
   async function parseData(file: File) {
     setLoading(true);
-    if (
-      file.type === 'text/comma-separated-values' ||
-      file.type === 'text/csv' ||
-      file.type === 'application/csv'
-    ) {
+    if (file.type === 'text/csv') {
       const res = await parseCSVFile(file);
       const withColumns = fileWithColumns(res);
       saveData(withColumns);
@@ -37,8 +33,7 @@ export default function useFileParsing() {
     } else if (
       file.type === 'application/vnd.ms-excel' ||
       file.type ===
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-      file.type === 'application/xls'
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ) {
       const res = await parseExcelFile(file);
       saveData(res);

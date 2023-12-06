@@ -83,7 +83,7 @@ describe('prepareImportOperations()', () => {
       ]);
     });
 
-    it('converts fields only', () => {
+    it('converts data only', () => {
       const configData: Sheet = {
         columns: [
           { kind: ColumnKind.UNKNOWN, selected: false },
@@ -174,7 +174,7 @@ describe('prepareImportOperations()', () => {
         },
       ]);
     });
-    it('converts simple fields with ID', () => {
+    it('converts simple data with ID', () => {
       const configData: Sheet = {
         columns: [
           { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -224,7 +224,7 @@ describe('prepareImportOperations()', () => {
         },
       ]);
     });
-    it('converts ID, fields, tags and orgs', () => {
+    it('converts ID, data, tags and orgs', () => {
       const configData: Sheet = {
         columns: [
           { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -293,7 +293,7 @@ describe('prepareImportOperations()', () => {
         },
       ]);
     });
-    it('converts ID, fields and tags', () => {
+    it('converts ID, data and tags', () => {
       const configData: Sheet = {
         columns: [
           { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -422,7 +422,7 @@ describe('prepareImportOperations()', () => {
   });
 
   describe('when first row is not header', () => {
-    it('converts ID, fields, tags and orgs', () => {
+    it('converts ID, data, tags and orgs', () => {
       const configData: Sheet = {
         columns: [
           { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -491,7 +491,7 @@ describe('prepareImportOperations()', () => {
   });
 
   describe('prepareImportOperations excludes mapping rows with empty or null values', () => {
-    it('excludes empty string and null in fields', () => {
+    it('excludes empty string and null in data', () => {
       const configData: Sheet = {
         columns: [
           { kind: ColumnKind.UNKNOWN, selected: false },
@@ -751,7 +751,7 @@ describe('prepareImportOperations()', () => {
       ]);
     });
 
-    it('correctly adds up multiple columns of tags and orgs', () => {
+    it('correctly adds up multiple columns of tags', () => {
       const configData: Sheet = {
         columns: [
           {
@@ -768,14 +768,7 @@ describe('prepareImportOperations()', () => {
             ],
             selected: true,
           },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 111, value: 3 },
-              { orgId: 222, value: 4 },
-            ],
-            selected: true,
-          },
+          { kind: ColumnKind.UNKNOWN, selected: false },
           {
             kind: ColumnKind.TAG,
             mapping: [
@@ -814,7 +807,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '123',
           },
           op: 'person.import',
-          organizations: [272, 111],
+          organizations: [272],
           tags: [123, 100, 111, 222],
         },
         {
@@ -823,7 +816,77 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          organizations: [273, 222],
+          organizations: [273],
+          tags: [124, 100, 333, 444],
+        },
+      ]);
+    });
+    it('remove duplicated tagIds', () => {
+      const configData: Sheet = {
+        columns: [
+          {
+            field: 'city',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [
+              { orgId: 111, value: 1 },
+              { orgId: 333, value: 2 },
+            ],
+            selected: true,
+          },
+          { kind: ColumnKind.UNKNOWN, selected: false },
+          {
+            kind: ColumnKind.TAG,
+            mapping: [
+              { tagIds: [123, 100], value: 'Frontend' },
+              { tagIds: [124, 100], value: 'Backend' },
+            ],
+
+            selected: true,
+          },
+          {
+            kind: ColumnKind.TAG,
+            mapping: [
+              { tagIds: [100, 222], value: 'Cat' },
+              { tagIds: [333, 444], value: 'Dog' },
+            ],
+
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: ['Linköping', '123', 1, 3, 'Frontend', 'Cat'],
+          },
+          {
+            data: ['Linköping', '125', 2, 4, 'Backend', 'Dog'],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = prepareImportOperations(configData, countryCode);
+      expect(result).toEqual([
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '123',
+          },
+          op: 'person.import',
+          organizations: [111],
+          tags: [123, 100, 222],
+        },
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '125',
+          },
+          op: 'person.import',
+          organizations: [333],
           tags: [124, 100, 333, 444],
         },
       ]);
