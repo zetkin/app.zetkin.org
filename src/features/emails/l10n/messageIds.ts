@@ -3,9 +3,13 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.emails', {
   emailActionButtons: {
     delevery: m('Delivery'),
+    deliveryDate: m('Delivery date'),
+    deliveryTime: m('Delivery time'),
     duplicate: m('Duplicate'),
+    schedule: m('Schedule'),
     sendLater: m('Send later'),
     sendNow: m('Send now'),
+    timeZone: m('Timezone'),
   },
   state: {
     draft: m('Draft'),

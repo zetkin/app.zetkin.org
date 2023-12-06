@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
+import SendLaterPanel from './SendLaterPanel';
 import { useMessages } from 'core/i18n';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -37,7 +38,7 @@ const EmailActionButtons = () => {
               setAnchorEl(null);
             }}
           >
-            <Paper sx={{ p: 2 }}>
+            <Paper sx={{ p: 2, width: '500px' }}>
               <TabContext value={tab}>
                 <TabList onChange={(ev, value) => setTab(value)} value={tab}>
                   <Tab
@@ -49,10 +50,16 @@ const EmailActionButtons = () => {
                     value="now"
                   />
                 </TabList>
-
-                <TabPanel value="later">Item One</TabPanel>
-                <TabPanel value="now">Item Two</TabPanel>
+                <TabPanel value="later">
+                  <SendLaterPanel />
+                </TabPanel>
+                <TabPanel value="now">send now</TabPanel>
               </TabContext>
+              <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                <Button sx={{ mt: 2 }} variant="contained">
+                  {messages.emailActionButtons.schedule()}
+                </Button>
+              </Box>
             </Paper>
           </ClickAwayListener>
         </Popper>
