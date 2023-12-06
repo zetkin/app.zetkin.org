@@ -17,7 +17,6 @@ interface StyleProps {
   hover: boolean;
   size: TagChipSize;
   tag: ZetkinTag;
-  noWrappedLabel: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
@@ -71,7 +70,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     overflow: 'hidden',
     padding: '0.2em 0.4em 0.2em 1em',
     textOverflow: 'ellipsis',
-    whiteSpace: ({ noWrappedLabel }) => (noWrappedLabel ? 'nowrap' : 'normal'),
+    whiteSpace: 'nowrap',
   },
   value: {
     backgroundColor: ({ tag }) => lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
@@ -107,21 +106,13 @@ const TagChip: React.FunctionComponent<{
   onDelete?: (tag: ZetkinTag) => void;
   size?: TagChipSize;
   tag: ZetkinTag;
-}> = ({
-  disabled = false,
-  noWrappedLabel = false,
-  onClick,
-  onDelete,
-  size = 'medium',
-  tag,
-}) => {
+}> = ({ disabled = false, onClick, onDelete, size = 'medium', tag }) => {
   const [hover, setHover] = useState(false);
   const classes = useStyles({
     clickable: !!onClick,
     deletable: !!onDelete,
     disabled,
     hover,
-    noWrappedLabel,
     size,
     tag,
   });
