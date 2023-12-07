@@ -65,6 +65,14 @@ export default function forseeErrors(
                 errors.push(IMPORT_ERROR.ALT_PHONE);
               }
             }
+
+            //Check if alt phone number match correct phone format
+            if (fieldKey == 'zip_code') {
+              const stringValue = value.toString();
+              if (stringValue.length > 10) {
+                errors.push(IMPORT_ERROR.POST_CODE);
+              }
+            }
           }
         }
       });

@@ -75,6 +75,7 @@ export const enum IMPORT_ERROR {
   ID = 'id',
   PHONE = 'phone',
   ALT_PHONE = 'altPhone',
+  POST_CODE = 'postCode',
 }
 
 export interface ZetkinPersonImportPostBody {

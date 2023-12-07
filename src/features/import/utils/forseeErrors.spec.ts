@@ -134,6 +134,30 @@ describe('forseeErrors()', () => {
       const errors = forseeErrors(configuredSheet, countryCode);
       expect(errors).toEqual(['altPhone']);
     });
+
+    it('identifies malformed post codes', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'zip_code', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['ID', 'POST CODE'],
+          },
+          {
+            data: [1, '34519'], //string, max 10 characters long
+          },
+          {
+            data: [2, 'no post code'], //string, but more than 10 characters
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['postCode']);
+    });
   });
 
   describe('when first row is not headers', () => {

@@ -220,6 +220,9 @@ export default makeMessages('feat.import', {
           phone: m(
             'Some of the values in the phone number column are not valid phone numbers.'
           ),
+          postCode: m(
+            'Some of the values in the post code column are not valid post codes.'
+          ),
         },
         titles: {
           altPhone: m('Invalid alternate phone number formats'),
@@ -228,6 +231,7 @@ export default makeMessages('feat.import', {
           gender: m('Invalid gender formats.'),
           id: m('Zetkin IDs are not correct format.'),
           phone: m('Invalid phone number formats.'),
+          postCode: m('Invalid post code formats'),
         },
       },
       info: {
