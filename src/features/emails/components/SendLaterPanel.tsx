@@ -1,10 +1,11 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { TimeField } from '@mui/x-date-pickers-pro';
-import { Autocomplete, Box, Stack, TextField } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import ZUITimezonePicker from 'zui/ZUITimezonePicker';
 
 const SendLaterPanel = () => {
   const messages = useMessages(messageIds);
@@ -27,21 +28,7 @@ const SendLaterPanel = () => {
           label={messages.emailActionButtons.deliveryTime()}
           value={dayjs(new Date())}
         />
-        <Autocomplete
-          disableClearable
-          fullWidth
-          options={[]}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={messages.emailActionButtons.timeZone()}
-              sx={{
-                backgroundColor: 'white',
-                borderRadius: '5px',
-              }}
-            />
-          )}
-        />
+        <ZUITimezonePicker />
       </Stack>
     </Box>
   );

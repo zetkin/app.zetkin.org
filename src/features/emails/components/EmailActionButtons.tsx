@@ -34,11 +34,12 @@ const EmailActionButtons = () => {
         </Button>
         <Popper anchorEl={anchorEl} open={!!anchorEl} placement="bottom-end">
           <ClickAwayListener
-            onClickAway={() => {
+            mouseEvent="onMouseUp"
+            onClickAway={(event) => {
               setAnchorEl(null);
             }}
           >
-            <Paper sx={{ p: 2, width: '500px' }}>
+            <Paper sx={{ p: 2, width: '550px' }}>
               <TabContext value={tab}>
                 <TabList onChange={(ev, value) => setTab(value)} value={tab}>
                   <Tab
