@@ -5,7 +5,8 @@ import messageIds from 'features/import/l10n/messageIds';
 import { OrgColumn } from 'features/import/utils/types';
 import OrgConfigRow from './OrgConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import { useNumericRouteParams } from 'core/hooks';
+import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import { Msg, useMessages } from 'core/i18n';
 
 interface OrgConfigProps {
@@ -13,10 +14,11 @@ interface OrgConfigProps {
 }
 
 const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const organizations = useOrganizations();
+  const subOrgs = useSubOrganizations(orgId);
 
-  if (!organizations.data) {
+  if (!subOrgs.data) {
     return null;
   }
 
@@ -52,7 +54,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectOrg={() => uiDataColumn.deselectOrg(uniqueValue)}
             onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, uniqueValue)}
-            orgs={organizations.data || []}
+            orgs={subOrgs.data || []}
             selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
             title={uniqueValue.toString()}
           />
@@ -66,7 +68,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             numRows={uiDataColumn.numberOfEmptyRows}
             onDeselectOrg={() => uiDataColumn.deselectOrg(null)}
             onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, null)}
-            orgs={organizations.data || []}
+            orgs={subOrgs.data || []}
             selectedOrgId={uiDataColumn.getSelectedOrgId(null)}
             title={messages.configuration.configure.tags.empty()}
           />

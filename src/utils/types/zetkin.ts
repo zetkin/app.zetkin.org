@@ -152,6 +152,10 @@ export interface ZetkinOrganization {
   title: string;
 }
 
+export type ZetkinSubOrganization = ZetkinOrganization & {
+  sub_orgs: ZetkinSubOrganization[];
+};
+
 export interface ZetkinPersonNativeFields {
   alt_phone: string | null;
   is_user: boolean;
