@@ -48,7 +48,7 @@ export type IDFieldColumn = BaseColumn & {
 export type TagColumn = BaseColumn & {
   kind: ColumnKind.TAG;
   mapping: {
-    tagIds: number[];
+    tags: { id: number }[];
     value: CellData;
   }[];
 };

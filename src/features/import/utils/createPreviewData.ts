@@ -35,9 +35,15 @@ export default function createPreviewData(
             if (!personPreviewOp.tags) {
               personPreviewOp.tags = [];
             }
-            personPreviewOp.tags = [
-              ...new Set(personPreviewOp.tags.concat(mappedColumn.tagIds)),
+            const allTags = personPreviewOp.tags.concat(
+              mappedColumn.tags.map((t) => ({ tag_id: t.id }))
+            );
+            const stringifiedUniqueTags = [
+              ...new Set(allTags?.map((t) => JSON.stringify(t))),
             ];
+            const uniqueTags = stringifiedUniqueTags.map((t) => JSON.parse(t));
+
+            personPreviewOp.tags = uniqueTags;
           }
         });
       }

@@ -42,6 +42,8 @@ const TagConfigRow: FC<TagConfigRowProps> = ({
         <Box width="50%">
           <TagManager
             assignedTags={assignedTags}
+            disableEditTags
+            disableValueTags
             onAssignTag={(tag) => onAssignTag(tag)}
             onUnassignTag={(tag) => onUnassignTag(tag)}
           />

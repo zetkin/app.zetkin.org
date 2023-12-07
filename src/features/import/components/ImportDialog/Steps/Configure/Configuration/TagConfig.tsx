@@ -46,7 +46,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
             assignedTags={uiDataColumn.getAssignedTags(uniqueValue)}
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onAssignTag={(tag: ZetkinTag) =>
-              uiDataColumn.assignTag(tag.id, uniqueValue)
+              uiDataColumn.assignTag({ id: tag.id }, uniqueValue)
             }
             onUnassignTag={(tag: ZetkinTag) =>
               uiDataColumn.unAssignTag(tag.id, uniqueValue)
@@ -63,7 +63,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
             italic
             numRows={uiDataColumn.numberOfEmptyRows}
             onAssignTag={(tag: ZetkinTag) =>
-              uiDataColumn.assignTag(tag.id, null)
+              uiDataColumn.assignTag({ id: tag.id }, null)
             }
             onUnassignTag={(tag: ZetkinTag) =>
               uiDataColumn.unAssignTag(tag.id, null)

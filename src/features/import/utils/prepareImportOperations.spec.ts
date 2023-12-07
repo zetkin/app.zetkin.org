@@ -141,8 +141,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -166,11 +166,11 @@ describe('prepareImportOperations()', () => {
       expect(result).toEqual([
         {
           op: 'person.import',
-          tags: [123, 100],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -241,8 +241,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -279,7 +279,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -289,7 +289,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -310,8 +310,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -339,7 +339,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [123, 100],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -348,7 +348,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -369,8 +369,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -406,7 +406,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -415,7 +415,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -439,8 +439,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -474,7 +474,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -484,7 +484,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -503,8 +503,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -536,7 +536,7 @@ describe('prepareImportOperations()', () => {
         {
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -544,7 +544,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [273],
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -561,8 +561,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -603,7 +603,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -628,8 +628,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -665,7 +665,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -673,7 +673,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '124',
           },
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -681,7 +681,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -706,8 +706,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -739,7 +739,7 @@ describe('prepareImportOperations()', () => {
         {
           op: 'person.import',
           organizations: [273],
-          tags: [124, 100],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -772,8 +772,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
 
             selected: true,
@@ -781,8 +781,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [111, 222], value: 'Cat' },
-              { tagIds: [333, 444], value: 'Dog' },
+              { tags: [{ id: 111 }, { id: 222 }], value: 'Cat' },
+              { tags: [{ id: 333 }, { id: 444 }], value: 'Dog' },
             ],
 
             selected: true,
@@ -808,7 +808,12 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100, 111, 222],
+          tags: [
+            { tag_id: 123 },
+            { tag_id: 100 },
+            { tag_id: 111 },
+            { tag_id: 222 },
+          ],
         },
         {
           data: {
@@ -817,7 +822,12 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [273],
-          tags: [124, 100, 333, 444],
+          tags: [
+            { tag_id: 124 },
+            { tag_id: 100 },
+            { tag_id: 333 },
+            { tag_id: 444 },
+          ],
         },
       ]);
     });
@@ -842,8 +852,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
 
             selected: true,
@@ -851,8 +861,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [100, 222], value: 'Cat' },
-              { tagIds: [333, 444], value: 'Dog' },
+              { tags: [{ id: 100 }, { id: 222 }], value: 'Cat' },
+              { tags: [{ id: 333 }, { id: 444 }], value: 'Dog' },
             ],
 
             selected: true,
@@ -878,7 +888,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [111],
-          tags: [123, 100, 222],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }, { tag_id: 222 }],
         },
         {
           data: {
@@ -887,7 +897,12 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [333],
-          tags: [124, 100, 333, 444],
+          tags: [
+            { tag_id: 124 },
+            { tag_id: 100 },
+            { tag_id: 333 },
+            { tag_id: 444 },
+          ],
         },
       ]);
     });

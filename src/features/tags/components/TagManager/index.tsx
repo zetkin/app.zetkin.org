@@ -19,7 +19,11 @@ import useTagMutations from 'features/tags/hooks/useTagMutations';
 type TagManagerProps = Omit<
   TagManagerControllerProps,
   'availableGroups' | 'availableTags' | 'onCreateTag' | 'onEditTag'
-> & { disableEditTags?: boolean; onTagEdited?: (tag: ZetkinTag) => void };
+> & {
+  disableEditTags?: boolean;
+  disableValueTags?: boolean;
+  onTagEdited?: (tag: ZetkinTag) => void;
+};
 
 const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   const { orgId } = useNumericRouteParams();
@@ -32,10 +36,13 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   return (
     <ZUIFutures futures={{ tagGroups: tagGroupsFuture, tags: tagsFuture }}>
       {({ data: { tagGroups, tags } }) => {
+        const tagsWithoutValueTags = tags.filter(
+          (tag) => tag.value_type == null
+        );
         return (
           <TagManagerController
             availableGroups={tagGroups}
-            availableTags={tags}
+            availableTags={props.disableValueTags ? tagsWithoutValueTags : tags}
             onCreateTag={createTag}
             onEditTag={async (newValue) => {
               const updated = await updateTag(newValue);

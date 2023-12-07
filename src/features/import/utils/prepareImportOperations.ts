@@ -5,7 +5,7 @@ export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
   op: 'person.import';
   organizations?: number[];
-  tags?: number[];
+  tags?: { tag_id: number }[];
 };
 
 export default function prepareImportOperations(
@@ -86,11 +86,17 @@ export default function prepareImportOperations(
               if (!personImportOps[rowIndex].tags) {
                 personImportOps[rowIndex].tags = [];
               }
-              personImportOps[rowIndex].tags = [
-                ...new Set(
-                  personImportOps[rowIndex].tags?.concat(mappedColumn.tagIds)
-                ),
+              const allTags = personImportOps[rowIndex].tags?.concat(
+                mappedColumn.tags.map((t) => ({ tag_id: t.id }))
+              );
+              const stringifiedUniqueTags = [
+                ...new Set(allTags?.map((t) => JSON.stringify(t))),
               ];
+              const uniqueTags = stringifiedUniqueTags.map((t) =>
+                JSON.parse(t)
+              );
+
+              personImportOps[rowIndex].tags = uniqueTags;
             }
           });
         }

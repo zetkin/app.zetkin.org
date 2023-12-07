@@ -19,11 +19,9 @@ export default function useConfigure(orgId: number) {
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
   const configuredSheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
   const organization = useOrganization(orgId).data;
-
   if (!organization) {
     return;
   }
-
   const countryCode = organization.country as CountryCode;
 
   return async () => {
