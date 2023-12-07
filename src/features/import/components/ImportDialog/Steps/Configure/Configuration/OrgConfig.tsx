@@ -48,7 +48,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
         </Box>
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
-        <>
+        <Box key={index}>
           {index != 0 && <Divider sx={{ marginY: 1 }} />}
           <OrgConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
@@ -58,7 +58,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
             title={uniqueValue.toString()}
           />
-        </>
+        </Box>
       ))}
       {uiDataColumn.numberOfEmptyRows > 0 && (
         <>

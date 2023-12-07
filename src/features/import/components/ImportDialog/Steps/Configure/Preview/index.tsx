@@ -108,7 +108,7 @@ const Preview = () => {
                       currentSheet.rows[
                         firstRowIsHeaders ? personIndex + 1 : personIndex
                       ].data[columnIdx];
-                    return <EmptyPreview rowValue={rowValue} />;
+                    return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
                   }
                   if (
                     column.kind === ColumnKind.FIELD ||
@@ -116,6 +116,7 @@ const Preview = () => {
                   ) {
                     return (
                       <FieldsPreview
+                        key={columnIdx}
                         fieldKey={
                           column.kind === ColumnKind.FIELD
                             ? column.field
@@ -127,7 +128,13 @@ const Preview = () => {
                     );
                   }
                   if (column.kind === ColumnKind.ORGANIZATION) {
-                    return <OrgPreview currentSheet={currentSheet} org={org} />;
+                    return (
+                      <OrgPreview
+                        key={columnIdx}
+                        currentSheet={currentSheet}
+                        org={org}
+                      />
+                    );
                   }
                 }
               })}
