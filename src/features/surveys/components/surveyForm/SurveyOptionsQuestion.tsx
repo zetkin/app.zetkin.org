@@ -32,7 +32,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
 
   return (
     <FormControl>
-      {element.question.response_config.widget_type === 'checkbox' ? (
+      {element.question.response_config.widget_type === 'checkbox' && (
         <FormGroup aria-labelledby={`label-${element.id}`}>
           <FormLabel
             id={`label-${element.id}`}
@@ -60,7 +60,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
             />
           ))}
         </FormGroup>
-      ) : element.question.response_config.widget_type === 'radio' ? (
+      )}
+      {element.question.response_config.widget_type === 'radio' && (
         <RadioGroup
           aria-labelledby={`label-${element.id}`}
           defaultValue={selectedOptions[0] ?? undefined}
@@ -87,7 +88,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
             />
           ))}
         </RadioGroup>
-      ) : (
+      )}
+      {element.question.response_config.widget_type === 'select' && (
         <Select
           aria-labelledby={`label-${element.id}`}
           defaultValue={selectedOptions[0] ?? undefined}
