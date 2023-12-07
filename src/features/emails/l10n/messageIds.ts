@@ -26,6 +26,10 @@ export default makeMessages('feat.emails', {
     overview: m('Overview'),
   },
   targets: {
+    defineButton: m('Define target group'),
+    editButton: m('Edit target group'),
+    subtitle: m('Use smart search to define the recipients of this mail.'),
     title: m('Targets'),
+    viewButton: m('View target group'),
   },
 });

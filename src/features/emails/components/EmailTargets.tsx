@@ -1,10 +1,12 @@
 import { makeStyles } from '@mui/styles';
-import { Box, Card, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Add, Edit, Visibility } from '@mui/icons-material';
+import { Box, Button, Card, Typography } from '@mui/material';
 
-// import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
+import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
-import { Msg, useMessages } from 'core/i18n';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -22,8 +24,12 @@ const useStyles = makeStyles((theme) => ({
 
 const EmailTargets = () => {
   const classes = useStyles();
-  const messages = useMessages(messageIds);
-  //   const {data:email, isTargeted,updateTargets:setTargets}= useEmail()
+  const [queryDialogOpen, setQueryDialogOpen] = useState(false);
+  // const {data:email, isTargeted,updateTargets:setTargets}= useEmail()
+  // const {statsFuture} = useEmailStats()
+
+  const isTargeted = true;
+  const statsFuture = { data: { allTargets: undefined } };
   return (
     <>
       <Card>
@@ -31,39 +37,19 @@ const EmailTargets = () => {
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          <ZUIAnimatedNumber value={0}>
+          <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
             {(animatedValue) => (
               <Box className={classes.chip}>{animatedValue}</Box>
             )}
           </ZUIAnimatedNumber>
-          {/* {isTargeted && (
-            <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
-              {(animatedValue) => (
-                <Box className={classes.chip}>{animatedValue}</Box>
-              )}
-            </ZUIAnimatedNumber>
-          )} */}
         </Box>
-        {/* {isTargeted ? (
-          <>
-            <Divider />
-            <Box p={2}>
-              <Button
-                onClick={() => setQueryDialogOpen(true)}
-                startIcon={<Edit />}
-                variant="outlined"
-              >
-                <Msg id={messageIds.targets.editButton} />
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <Box pb={2} px={2}>
-            <Box bgcolor="background.secondary" p={2}>
-              <Typography>
-                <Msg id={messageIds.targets.subtitle} />
-              </Typography>
-              <Box pt={1}>
+        <Box pb={2} px={2}>
+          <Box bgcolor="background.secondary" p={2}>
+            <Typography>
+              <Msg id={messageIds.targets.subtitle} />
+            </Typography>
+            <Box pt={1}>
+              {statsFuture.data?.allTargets === undefined ? (
                 <Button
                   onClick={() => setQueryDialogOpen(true)}
                   startIcon={<Add />}
@@ -71,21 +57,34 @@ const EmailTargets = () => {
                 >
                   <Msg id={messageIds.targets.defineButton} />
                 </Button>
-              </Box>
+              ) : (
+                <Button
+                  startIcon={isTargeted ? <Visibility /> : <Edit />}
+                  variant="outlined"
+                >
+                  <Msg
+                    id={
+                      isTargeted
+                        ? messageIds.targets.editButton
+                        : messageIds.targets.viewButton
+                    }
+                  />
+                </Button>
+              )}
             </Box>
           </Box>
-        )} */}
+        </Box>
       </Card>
-      {/* {queryDialogOpen && (
+      {queryDialogOpen && (
         <SmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}
           onSave={(query) => {
-            setTargets(query);
+            // setTargets(query);
             setQueryDialogOpen(false);
           }}
-          query={callAssignment?.target}
+          query={null}
         />
-      )} */}
+      )}
     </>
   );
 };
