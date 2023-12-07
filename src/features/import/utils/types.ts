@@ -73,9 +73,12 @@ export const enum IMPORT_ERROR {
   GENDER = 'gender',
   ID_MISSING = 'idMissing',
   ID = 'id',
+  ID_VALUE_MISSING = 'idValueMissing',
+  NOT_SELECTED_ID_TYPE = 'notSelectedIdType',
   PHONE = 'phone',
   ALT_PHONE = 'altPhone',
   POST_CODE = 'postCode',
+  NO_IDENTIFIER = 'noIdentifier',
 }
 
 export interface ZetkinPersonImportPostBody {

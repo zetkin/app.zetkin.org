@@ -217,6 +217,15 @@ export default makeMessages('feat.import', {
           id: m(
             'Some of the values in the Zetkin ID column are not numbers. Zetkin IDs are always only numbers.'
           ),
+          idValueMissing: m(
+            'Some of the values in the Zetkin ID column are empty.'
+          ),
+          noIdentifier: m(
+            'To make it possible to import you need to select either both first and last name columns, or an ID column'
+          ),
+          notSelectedIdType: m(
+            'You need to select if your ID column is Zetkin IDs or external IDs.'
+          ),
           phone: m(
             'Some of the values in the phone number column are not valid phone numbers.'
           ),
@@ -229,7 +238,12 @@ export default makeMessages('feat.import', {
           email: m('Invalid email address formats.'),
           empty: m('Something went wrong and the import was interrupted.'),
           gender: m('Invalid gender formats.'),
-          id: m('Zetkin IDs are not correct format.'),
+          id: m('Zetkin IDs are not in correct format.'),
+          idValueMissing: m('Missing Zetkin IDs'),
+          noIdentifier: m(
+            'There is nothing to identify the data you want to import'
+          ),
+          notSelectedIdType: m('Unfinished ID configuration.'),
           phone: m('Invalid phone number formats.'),
           postCode: m('Invalid post code formats'),
         },

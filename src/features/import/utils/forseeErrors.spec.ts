@@ -15,7 +15,7 @@ const countryCode = mockOrganization.country as CountryCode;
 
 describe('forseeErrors()', () => {
   describe('when first row is headers', () => {
-    it('identifies if ID column has not been selected', () => {
+    it('identifies if there is insufficient identifying info', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
         columns: [{ field: 'phone', kind: ColumnKind.FIELD, selected: true }],
@@ -24,7 +24,64 @@ describe('forseeErrors()', () => {
             data: ['PHONE'],
           },
           {
-            data: ['0739567148'],
+            data: ['040244312'],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['noIdentifier']);
+    });
+
+    it('identifies if there are missing ids in a Zetkin ID column', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
+        rows: [
+          {
+            data: ['ZETKIN ID'],
+          },
+          {
+            data: [''],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['idValueMissing']);
+    });
+
+    it('identifies if user has not selected if ID column is Zetkin IDs or external IDs', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [{ idField: null, kind: ColumnKind.ID_FIELD, selected: true }],
+        rows: [
+          {
+            data: ['ZETKIN ID'],
+          },
+          {
+            data: [12],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['notSelectedIdType']);
+    });
+
+    it('identifies if ID column has not been selected, but there are first- and last names', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
+          { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['NAME', 'LAST NAME'],
+          },
+          {
+            data: ['Angela', 'Davis'],
           },
         ],
       };
@@ -57,7 +114,7 @@ describe('forseeErrors()', () => {
       };
 
       const errors = forseeErrors(configuredSheet, countryCode);
-      expect(errors).toEqual(['phone', 'phone']);
+      expect(errors).toEqual(['phone']);
     });
 
     it('identifies malformed genders', () => {
@@ -175,7 +232,7 @@ describe('forseeErrors()', () => {
             data: [1, '076291837', 'f', 'angela@gmail.com'],
           },
           {
-            data: ['2', 'missing phone number', 'Man', 'no email'],
+            data: ['id', 'missing phone number', 'Man', 'no email'],
           },
         ],
       };

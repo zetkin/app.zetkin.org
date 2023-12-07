@@ -4,13 +4,16 @@ import forseeErrors from '../utils/forseeErrors';
 import prepareImportOperations from '../utils/prepareImportOperations';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import {
+  IMPORT_ERROR,
+  ImportPreview,
+  ZetkinPersonImportPostBody,
+} from '../utils/types';
+import {
   importErrorsAdd,
-  importErrorsClear,
   importOperationsAdd,
   importPreviewAdd,
   importPreviewClear,
 } from '../store';
-import { ImportPreview, ZetkinPersonImportPostBody } from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useConfigure(orgId: number) {
@@ -27,13 +30,16 @@ export default function useConfigure(orgId: number) {
   return async () => {
     const errors = forseeErrors(configuredSheet, countryCode);
 
-    if (errors.length > 0) {
+    if (errors.length > 0 && !errors.includes(IMPORT_ERROR.ID_MISSING)) {
       dispatch(importPreviewClear());
       dispatch(importErrorsAdd(errors));
     }
 
-    if (!errors.length) {
-      dispatch(importErrorsClear());
+    if (
+      !errors.length ||
+      (errors.length == 1 && errors.includes(IMPORT_ERROR.ID_MISSING))
+    ) {
+      dispatch(importErrorsAdd(errors));
 
       const importOperations = prepareImportOperations(
         configuredSheet,

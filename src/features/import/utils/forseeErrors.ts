@@ -10,6 +10,8 @@ export default function forseeErrors(
   const errors: IMPORT_ERROR[] = [];
   const zetkinGenders = ['o', 'f', 'm'];
   let hasIDField = false;
+  let hasFirstName = false;
+  let hasLastName = false;
 
   configuredSheet.columns.forEach((column, colIdx) => {
     if (column.selected) {
@@ -17,9 +19,37 @@ export default function forseeErrors(
         hasIDField = true;
       }
 
+      if (column.kind == ColumnKind.FIELD && column.field == 'first_name') {
+        hasFirstName = true;
+      }
+
+      if (column.kind == ColumnKind.FIELD && column.field == 'last_name') {
+        hasLastName = true;
+      }
+
       configuredSheet.rows.forEach((row, rowIdx) => {
         if (configuredSheet.firstRowIsHeaders && rowIdx === 0) {
           return;
+        }
+
+        if (column.kind === ColumnKind.ID_FIELD) {
+          const fieldKey = column.idField;
+          let value = row.data[colIdx];
+
+          if (!fieldKey) {
+            errors.push(IMPORT_ERROR.NOT_SELECTED_ID_TYPE);
+          }
+
+          if (!value) {
+            errors.push(IMPORT_ERROR.ID_VALUE_MISSING);
+          } else {
+            if (fieldKey == 'id') {
+              value = parseInt(value.toString());
+              if (isNaN(value)) {
+                errors.push(IMPORT_ERROR.ID);
+              }
+            }
+          }
         }
 
         if (column.kind === ColumnKind.FIELD) {
@@ -29,12 +59,18 @@ export default function forseeErrors(
           if (value) {
             //See if parsing phone numbers to international format works
             if (fieldKey == 'phone') {
+              let phoneNumber = 'test';
               try {
-                parsePhoneNumber(
+                const parsedPhoneNumber = parsePhoneNumber(
                   typeof value == 'string' ? value : value.toString(),
                   countryCode
                 );
+                phoneNumber = parsedPhoneNumber.formatInternational();
               } catch (err) {
+                errors.push(IMPORT_ERROR.PHONE);
+              }
+
+              if (phoneNumber.length < 5) {
                 errors.push(IMPORT_ERROR.PHONE);
               }
             }
@@ -56,12 +92,18 @@ export default function forseeErrors(
 
             //Check if alt phone number match correct phone format
             if (fieldKey == 'alt_phone') {
+              let phoneNumber = '';
               try {
-                parsePhoneNumber(
+                const parsedPhoneNumber = parsePhoneNumber(
                   typeof value == 'string' ? value : value.toString(),
                   countryCode
                 );
+                phoneNumber = parsedPhoneNumber.formatInternational();
               } catch (err) {
+                errors.push(IMPORT_ERROR.ALT_PHONE);
+              }
+
+              if (phoneNumber.length < 5) {
                 errors.push(IMPORT_ERROR.ALT_PHONE);
               }
             }
@@ -79,8 +121,12 @@ export default function forseeErrors(
     }
   });
 
-  if (!hasIDField) {
+  if (!hasIDField && hasFirstName && hasLastName) {
     errors.push(IMPORT_ERROR.ID_MISSING);
+  }
+
+  if (!hasIDField && (!hasFirstName || !hasLastName)) {
+    errors.push(IMPORT_ERROR.NO_IDENTIFIER);
   }
 
   return Array.from(new Set(errors));
