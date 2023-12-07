@@ -202,6 +202,9 @@ export default makeMessages('feat.import', {
       checkbox: m('I understand'),
       errors: {
         messages: {
+          altPhone: m(
+            'Some of the values in the alternate phone number column are not valid phone numbers.'
+          ),
           email: m(
             'Some of the values in your email column are not valid email addresses.'
           ),
@@ -219,6 +222,7 @@ export default makeMessages('feat.import', {
           ),
         },
         titles: {
+          altPhone: m('Invalid alternate phone number formats'),
           email: m('Invalid email address formats.'),
           empty: m('Something went wrong and the import was interrupted.'),
           gender: m('Invalid gender formats.'),

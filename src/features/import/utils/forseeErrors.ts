@@ -53,6 +53,18 @@ export default function forseeErrors(
                 errors.push(IMPORT_ERROR.EMAIL);
               }
             }
+
+            //Check if alt phone number match correct phone format
+            if (fieldKey == 'alt_phone') {
+              try {
+                parsePhoneNumber(
+                  typeof value == 'string' ? value : value.toString(),
+                  countryCode
+                );
+              } catch (err) {
+                errors.push(IMPORT_ERROR.ALT_PHONE);
+              }
+            }
           }
         }
       });

@@ -110,6 +110,30 @@ describe('forseeErrors()', () => {
       const errors = forseeErrors(configuredSheet, countryCode);
       expect(errors).toEqual(['email']);
     });
+
+    it('identifies malformed alt phone numbers', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'alt_phone', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['ID', 'ALT PHONE'],
+          },
+          {
+            data: [1, '0745612930'],
+          },
+          {
+            data: [2, 'no alt phone'],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(configuredSheet, countryCode);
+      expect(errors).toEqual(['altPhone']);
+    });
   });
 
   describe('when first row is not headers', () => {

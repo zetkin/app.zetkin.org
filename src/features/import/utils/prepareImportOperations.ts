@@ -59,7 +59,7 @@ export default function prepareImportOperations(
 
           if (value) {
             //Parse phone numbers to international format
-            if (fieldKey == 'phone') {
+            if (fieldKey == 'phone' || fieldKey == 'alt_phone') {
               const parsedPhoneNumber = parsePhoneNumber(
                 typeof value == 'string' ? value : value.toString(),
                 countryCode
