@@ -30,6 +30,7 @@ export default makeMessages('feat.emails', {
     editButton: m('Edit target group'),
     subtitle: m('Use smart search to define the recipients of this mail.'),
     title: m('Targets'),
+    unlock: m('Unlock'),
     viewButton: m('View target group'),
   },
 });

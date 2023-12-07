@@ -1,12 +1,10 @@
+import { Box } from '@mui/material';
 import Head from 'next/head';
-import { Box, Typography } from '@mui/material';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import EmailTargets from 'features/emails/components/EmailTargets';
 import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
-// import { useNumericRouteParams } from 'core/hooks';
-// import { Msg } from 'core/i18n';
 import { scaffold } from 'utils/next';
 import useServerSide from 'core/useServerSide';
 
@@ -29,6 +27,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 const EmailPage: PageWithLayout = () => {
+  // const { data: email } = useEmail(orgId, emailId);
+
   const onServer = useServerSide();
   if (onServer) {
     return null;
@@ -42,16 +42,6 @@ const EmailPage: PageWithLayout = () => {
       <Box>
         <Box mb={2}>
           <EmailTargets />
-          {/* <CallAssignmentTargets assignmentId={callAssId} orgId={orgId} /> */}
-        </Box>
-        <Box mb={2}>
-          <Typography variant="h3">
-            {/* <Msg id={messageIds.statusSectionTitle} /> */}
-          </Typography>
-        </Box>
-        {/* <ZUIStackedStatusBar values={statusBarStatsList} /> */}
-        <Box mt={2}>
-          {/* <CallAssignmentStatusCards assignmentId={callAssId} orgId={orgId} /> */}
         </Box>
       </Box>
     </>

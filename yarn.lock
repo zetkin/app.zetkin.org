@@ -15214,6 +15214,11 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
+timezones-list@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/timezones-list/-/timezones-list-3.0.2.tgz#8780d595571459fb8f6bc2885908d1fe0a96ceca"
+  integrity sha512-I698hm6Jp/xxkwyTSOr39pZkYKETL8LDJeSIhjxXBfPUAHM5oZNuQ4o9UK3PSkDBOkjATecSOBb3pR1IkIBUsg==
+
 tiny-invariant@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.6.tgz#b3f9b38835e36a41c843a3b0907a5a7b3755de73"

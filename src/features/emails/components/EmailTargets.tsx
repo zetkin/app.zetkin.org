@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
-import { Add, Edit, Visibility } from '@mui/icons-material';
+import { Add, Edit, Lock, Visibility } from '@mui/icons-material';
 import { Box, Button, Card, Typography } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
@@ -25,11 +25,12 @@ const useStyles = makeStyles((theme) => ({
 const EmailTargets = () => {
   const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
-  // const {data:email, isTargeted,updateTargets:setTargets}= useEmail()
-  // const {statsFuture} = useEmailStats()
-
+  // const {data:email, isTargeted,updateTargets:setTargets, isLocked}= useEmail(orgId,emailId)
+  // const {statsFuture } = useEmailStats(orgId,emailId)
   const isTargeted = true;
-  const statsFuture = { data: { allTargets: undefined } };
+  const isLocked = true;
+  const statsFuture = { data: { allTargets: 11 } };
+
   return (
     <>
       <Card>
@@ -37,11 +38,13 @@ const EmailTargets = () => {
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
-            {(animatedValue) => (
-              <Box className={classes.chip}>{animatedValue}</Box>
-            )}
-          </ZUIAnimatedNumber>
+          {isTargeted && (
+            <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
+              {(animatedValue) => (
+                <Box className={classes.chip}>{animatedValue}</Box>
+              )}
+            </ZUIAnimatedNumber>
+          )}
         </Box>
         <Box pb={2} px={2}>
           <Box bgcolor="background.secondary" p={2}>
@@ -49,26 +52,37 @@ const EmailTargets = () => {
               <Msg id={messageIds.targets.subtitle} />
             </Typography>
             <Box pt={1}>
-              {statsFuture.data?.allTargets === undefined ? (
+              {isTargeted ? (
+                <Box>
+                  <Button
+                    startIcon={isLocked ? <Visibility /> : <Edit />}
+                    variant="outlined"
+                  >
+                    <Msg
+                      id={
+                        isLocked
+                          ? messageIds.targets.viewButton
+                          : messageIds.targets.editButton
+                      }
+                    />
+                  </Button>
+                  {isLocked && (
+                    <Button
+                      startIcon={<Lock />}
+                      sx={{ ml: 2 }}
+                      variant="outlined"
+                    >
+                      <Msg id={messageIds.targets.unlock} />
+                    </Button>
+                  )}
+                </Box>
+              ) : (
                 <Button
                   onClick={() => setQueryDialogOpen(true)}
                   startIcon={<Add />}
                   variant="outlined"
                 >
                   <Msg id={messageIds.targets.defineButton} />
-                </Button>
-              ) : (
-                <Button
-                  startIcon={isTargeted ? <Visibility /> : <Edit />}
-                  variant="outlined"
-                >
-                  <Msg
-                    id={
-                      isTargeted
-                        ? messageIds.targets.editButton
-                        : messageIds.targets.viewButton
-                    }
-                  />
                 </Button>
               )}
             </Box>
