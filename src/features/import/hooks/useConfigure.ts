@@ -2,6 +2,7 @@ import { CountryCode } from 'libphonenumber-js';
 
 import forseeErrors from '../utils/forseeErrors';
 import prepareImportOperations from '../utils/prepareImportOperations';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import {
   IMPORT_ERROR,
@@ -22,13 +23,14 @@ export default function useConfigure(orgId: number) {
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
   const configuredSheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
   const organization = useOrganization(orgId).data;
+  const customFields = useCustomFields(orgId).data ?? [];
   if (!organization) {
     return;
   }
   const countryCode = organization.country as CountryCode;
 
   return async () => {
-    const errors = forseeErrors(configuredSheet, countryCode);
+    const errors = forseeErrors(configuredSheet, countryCode, customFields);
 
     if (errors.length > 0 && !errors.includes(IMPORT_ERROR.ID_MISSING)) {
       dispatch(importPreviewClear());

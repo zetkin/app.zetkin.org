@@ -3,6 +3,7 @@ import { CountryCode } from 'libphonenumber-js/types.cjs';
 import forseeErrors from './forseeErrors';
 import { organization as mockOrganization } from 'utils/testing/mocks/mockOrganization';
 import { ColumnKind, Sheet } from './types';
+import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 
 const mockSheet: Sheet = {
   columns: [],
@@ -12,6 +13,17 @@ const mockSheet: Sheet = {
 };
 
 const countryCode = mockOrganization.country as CountryCode;
+
+const mockCustomFields: ZetkinCustomField[] = [
+  {
+    description: null,
+    id: 1,
+    organization: mockOrganization,
+    slug: 'extra_url',
+    title: 'Website',
+    type: CUSTOM_FIELD_TYPE.URL,
+  },
+];
 
 describe('forseeErrors()', () => {
   describe('when first row is headers', () => {
@@ -29,7 +41,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['noIdentifier']);
     });
 
@@ -47,7 +63,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['idValueMissing']);
     });
 
@@ -65,7 +85,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['notSelectedIdType']);
     });
 
@@ -86,7 +110,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['idMissing']);
     });
 
@@ -113,7 +141,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['phone']);
     });
 
@@ -140,7 +172,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['gender']);
     });
 
@@ -164,7 +200,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['email']);
     });
 
@@ -188,7 +228,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['altPhone']);
     });
 
@@ -212,8 +256,40 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['postCode']);
+    });
+
+    it('identifies malformed values in custom URL column', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'extra_url', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['ID', 'WEBSITE'],
+          },
+          {
+            data: [1, 'www.zetkinfoundation.org'], //string that is a valid url
+          },
+          {
+            data: [2, 'no website'], //string, not an url
+          },
+        ],
+      };
+
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
+      expect(errors).toEqual(['url']);
     });
   });
 
@@ -237,7 +313,11 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(configuredSheet, countryCode);
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
       expect(errors).toEqual(['id', 'phone', 'gender', 'email']);
     });
   });

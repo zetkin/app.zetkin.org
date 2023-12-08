@@ -232,6 +232,7 @@ export default makeMessages('feat.import', {
           postCode: m(
             'Some of the values in the post code column are not valid post codes.'
           ),
+          url: m('Some of the values in the URL column are not valid URLS'),
         },
         titles: {
           altPhone: m('Invalid alternate phone number formats'),
@@ -246,6 +247,7 @@ export default makeMessages('feat.import', {
           notSelectedIdType: m('Unfinished ID configuration.'),
           phone: m('Invalid phone number formats.'),
           postCode: m('Invalid post code formats'),
+          url: m('Invalid URL formats'),
         },
       },
       info: {

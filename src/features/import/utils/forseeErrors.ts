@@ -1,11 +1,14 @@
 import isEmail from 'validator/lib/isEmail';
+import isURL from 'validator/lib/isURL';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 import { ColumnKind, IMPORT_ERROR, Sheet } from './types';
+import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 
 export default function forseeErrors(
   configuredSheet: Sheet,
-  countryCode: CountryCode
+  countryCode: CountryCode,
+  customFields: ZetkinCustomField[]
 ) {
   const errors: IMPORT_ERROR[] = [];
   const zetkinGenders = ['o', 'f', 'm'];
@@ -57,6 +60,19 @@ export default function forseeErrors(
           let value = row.data[colIdx];
 
           if (value) {
+            const customField = customFields.find(
+              (customField) => customField.slug == fieldKey
+            );
+
+            if (customField) {
+              //Check if value is a correct url
+              if (customField.type == CUSTOM_FIELD_TYPE.URL) {
+                if (!isURL(value.toString())) {
+                  errors.push(IMPORT_ERROR.URL);
+                }
+              }
+            }
+
             //See if parsing phone numbers to international format works
             if (fieldKey == 'phone') {
               let phoneNumber = 'test';
