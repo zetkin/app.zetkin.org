@@ -17,9 +17,13 @@ import {
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import { makeNaiveDateString, removeOffset } from 'utils/dateUtils';
+import ZUITimezonePicker from 'zui/ZUITimezonePicker';
+import {
+  makeNaiveDateString,
+  makeNaiveTimeString,
+  removeOffset,
+} from 'utils/dateUtils';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import ZUITimezonePicker, { TimezoneType } from 'zui/ZUITimezonePicker';
 
 dayjs.extend(utc);
 
@@ -27,20 +31,19 @@ const EmailActionButtons = () => {
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [tab, setTab] = useState<'now' | 'later'>('later');
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [tzCode, setTzCode] = useState(currentTimezone);
   //const emailFuture = useEmail(orgId, emailId)
   //const {updateEmail} = useEmailMutations(orgId, data.id)
   const fakeEmailFuture = { data: { date: '2023-12-09T10:00:00+00:00' } };
   const [sendingDate, setSendingDate] = useState(
     fakeEmailFuture.data.date.slice(0, 10)
   );
-  const [sendingTime, setSendingTIme] = useState(
+  const [sendingTime, setSendingTime] = useState(
     removeOffset(fakeEmailFuture.data.date.slice(11, 16))
   );
-  console.log(sendingDate, ' date');
 
-  const hey = (value: TimezoneType) => {
-    console.log(value, ' value');
-  };
+  const naiveSending = `${sendingDate}T${sendingTime}`;
 
   return (
     <Box alignItems="flex-end" display="flex" flexDirection="column" gap={1}>
@@ -59,6 +62,7 @@ const EmailActionButtons = () => {
             mouseEvent="onMouseUp"
             onClickAway={() => {
               setAnchorEl(null);
+              setTzCode(currentTimezone);
             }}
           >
             <Paper sx={{ p: 2, width: '550px' }}>
@@ -97,16 +101,41 @@ const EmailActionButtons = () => {
                         format="HH:mm"
                         fullWidth
                         label={messages.emailActionButtons.deliveryTime()}
-                        value={dayjs(new Date())}
+                        onChange={(newSendingTime) => {
+                          if (newSendingTime) {
+                            const sendingTimeStr = makeNaiveTimeString(
+                              newSendingTime.utc().toDate()
+                            );
+                            setSendingTime(sendingTimeStr);
+                          }
+                        }}
+                        value={dayjs(naiveSending)}
                       />
-                      <ZUITimezonePicker onChange={hey} />
+                      <ZUITimezonePicker
+                        onChange={(value) => {
+                          setTzCode(value.tzCode);
+                        }}
+                      />
                     </Stack>
                   </Box>
                 </TabPanel>
                 <TabPanel value="now">send now</TabPanel>
               </TabContext>
               <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                <Button sx={{ mt: 2 }} variant="contained">
+                <Button
+                  onClick={() => {
+                    setAnchorEl(null);
+                    setTzCode(currentTimezone);
+                    // save: () => {
+                    // updateEmail({
+                    //   date:`${naiveSending}:00`
+                    //   timezone:tzCode
+                    // });
+                    // },
+                  }}
+                  sx={{ mt: 2 }}
+                  variant="contained"
+                >
                   {messages.emailActionButtons.schedule()}
                 </Button>
               </Box>

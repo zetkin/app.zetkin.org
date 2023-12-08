@@ -28,8 +28,8 @@ const EmailTargets = () => {
   // const {data:email, isTargeted,updateTargets:setTargets, isLocked}= useEmail(orgId,emailId)
   // const {statsFuture } = useEmailStats(orgId,emailId)
   const isTargeted = false;
-  const isLocked = true;
-  const statsFuture = { data: { allTargets: 11 } };
+  const isLocked = false;
+  const statsFuture = { data: { allTargets: undefined } };
 
   return (
     <>
@@ -38,13 +38,11 @@ const EmailTargets = () => {
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          {isTargeted && (
-            <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
-              {(animatedValue) => (
-                <Box className={classes.chip}>{animatedValue}</Box>
-              )}
-            </ZUIAnimatedNumber>
-          )}
+          <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
+            {(animatedValue) => (
+              <Box className={classes.chip}>{animatedValue}</Box>
+            )}
+          </ZUIAnimatedNumber>
         </Box>
         <Box pb={2} px={2}>
           <Box bgcolor="background.secondary" p={2}>

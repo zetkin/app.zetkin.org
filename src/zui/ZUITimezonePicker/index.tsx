@@ -4,7 +4,8 @@ import { Autocomplete, TextField } from '@mui/material';
 
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-export type TimezoneType = {
+
+type TimezoneType = {
   label: string;
   name: string;
   tzCode: string;
