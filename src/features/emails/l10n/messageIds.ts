@@ -2,13 +2,31 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
   emailActionButtons: {
+    afterLock: m<{ numTargets: number }>(
+      'Will schedule email for {numTargets} people'
+    ),
+    beforeLock: m<{ numTargets: number }>(
+      'Will schedule email for currently {numTargets} people'
+    ),
     delevery: m('Delivery'),
     deliveryDate: m('Delivery date'),
     deliveryTime: m('Delivery time'),
     duplicate: m('Duplicate'),
+    lockDesc: m(
+      'Make sure the current exact targeting will be used during delivery'
+    ),
+    lockTarget: m('Lock targeting'),
     schedule: m('Schedule'),
     sendLater: m('Send later'),
-    sendNow: m('Send now'),
+    sendNow: {
+      alert: {
+        desc: m(
+          'There may be a better time of day to send. Scheduled sending also give fellow organizers a chance to coordinate with your plans.'
+        ),
+        title: m('Sending right now might not be optimal'),
+      },
+      header: m('Send now'),
+    },
     timeZone: m('Timezone'),
   },
   state: {
