@@ -38,7 +38,7 @@ const Preview = () => {
   }, [selectedSheetIndex]);
 
   return (
-    <Box p={2}>
+    <Box paddingLeft={1} paddingY={1}>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
         <Typography
           sx={{ marginRight: 2, opacity: previewIsEmpty ? '50%' : '' }}
