@@ -39,7 +39,7 @@ const Preview = () => {
 
   return (
     <Box paddingLeft={1} paddingY={1}>
-      <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
+      <Box alignItems="center" display="flex" marginBottom={1}>
         <Typography
           sx={{ marginRight: 2, opacity: previewIsEmpty ? '50%' : '' }}
           variant="h5"
