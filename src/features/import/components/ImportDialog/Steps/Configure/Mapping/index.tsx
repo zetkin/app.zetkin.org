@@ -5,7 +5,7 @@ import { Column } from 'features/import/utils/types';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import useMapping from 'features/import/hooks/useMapping';
+import useColumn from 'features/import/hooks/useColumn';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -25,7 +25,7 @@ const Mapping: FC<MappingProps> = ({
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const { columnOptions, optionAlreadySelected, updateColumn } =
-    useMapping(orgId);
+    useColumn(orgId);
 
   return (
     <Box

@@ -10,12 +10,12 @@ import OrgPreview from './OrgPreview';
 import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
-import useSheetSettings from 'features/import/hooks/useSheetSettings';
+import useSheets from 'features/import/hooks/useSheets';
 import { ColumnKind, Sheet } from 'features/import/utils/types';
 
 const Preview = () => {
   const theme = useTheme();
-  const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheetSettings();
+  const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
   const { orgId } = useNumericRouteParams();

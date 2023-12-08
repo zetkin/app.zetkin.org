@@ -1,7 +1,7 @@
 import { setFirstRowIsHeaders, setSelectedSheetIndex } from '../store';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function useSheetSettings() {
+export default function useSheets() {
   const dispatch = useAppDispatch();
   const importSlice = useAppSelector((state) => state.import);
   const pendingFile = importSlice.pendingFile;

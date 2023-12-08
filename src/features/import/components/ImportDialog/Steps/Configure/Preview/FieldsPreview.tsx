@@ -1,7 +1,7 @@
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
-import useMapping from 'features/import/hooks/useMapping';
+import useColumn from 'features/import/hooks/useColumn';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { CellData, ColumnKind } from 'features/import/utils/types';
@@ -13,7 +13,7 @@ interface FieldsPreviewProps {
 }
 const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
   const { orgId } = useNumericRouteParams();
-  const { columnOptions } = useMapping(orgId);
+  const { columnOptions } = useColumn(orgId);
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
 

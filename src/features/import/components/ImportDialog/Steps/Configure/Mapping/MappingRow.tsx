@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { Option } from 'features/import/hooks/useMapping';
+import { Option } from 'features/import/hooks/useColumn';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';

@@ -12,7 +12,7 @@ export interface Option {
   label: string;
 }
 
-export default function useMapping(orgId: number) {
+export default function useColumn(orgId: number) {
   const dispatch = useAppDispatch();
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
   const columns = pendingFile.sheets[pendingFile.selectedSheetIndex].columns;
