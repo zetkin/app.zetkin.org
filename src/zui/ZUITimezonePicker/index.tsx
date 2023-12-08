@@ -1,4 +1,5 @@
 import timezones from 'timezones-list';
+import { useState } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 
 import messageIds from 'zui/l10n/messageIds';
@@ -15,13 +16,18 @@ interface ZUITimezonePickerProps {
 
 const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
   const messages = useMessages(messageIds);
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const [value, setValue] = useState(
+    timezones.find((timezone) => timezone.tzCode === currentTimezone)
+  );
 
   return (
     <Autocomplete
       fullWidth
-      id="combo-box-demo"
       onChange={(_, value) => {
         if (value !== null) {
+          setValue(value);
           onChange(value);
         }
       }}
@@ -29,6 +35,7 @@ const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
       renderInput={(params) => (
         <TextField {...params} label={messages.timezone()} />
       )}
+      value={value}
     />
   );
 };
