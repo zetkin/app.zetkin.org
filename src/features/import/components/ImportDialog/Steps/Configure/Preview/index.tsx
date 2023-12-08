@@ -44,7 +44,7 @@ const Preview = () => {
           <Msg id={messageIds.configuration.preview.title} />
         </Typography>
         <Button
-          disabled={personIndex === 0}
+          disabled={personIndex === 0 || emptyPreview}
           onClick={() =>
             setPersonIndex((prev) => (prev !== 0 ? prev - 1 : prev))
           }
@@ -55,7 +55,8 @@ const Preview = () => {
         <Button
           disabled={
             personIndex ===
-            currentSheet.rows.length - (firstRowIsHeaders ? 2 : 1)
+              currentSheet.rows.length - (firstRowIsHeaders ? 2 : 1) ||
+            emptyPreview
           }
           endIcon={<ArrowForwardIos />}
           onClick={() =>
