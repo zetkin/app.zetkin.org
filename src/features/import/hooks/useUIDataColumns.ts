@@ -66,6 +66,13 @@ export default function useUIDataColumns(
 
     const uniqueValues = Array.from(new Set(rowsWithValues));
 
+    const numRowsByUniqueValue: Record<string | number, number> = {};
+    uniqueValues.forEach((uniqueValue) => {
+      numRowsByUniqueValue[uniqueValue] = cellValues.filter(
+        (cellValue) => cellValue == uniqueValue
+      ).length;
+    });
+
     let columnValuesMessage = '';
 
     if (numberOfEmptyRows > 0 && uniqueValues.length == 0) {
@@ -331,13 +338,6 @@ export default function useUIDataColumns(
       showIdConfigMessage ||
       wrongIDFormat;
     const showMappingResultMessage = needsConfig && !showNeedsConfigMessage;
-
-    const numRowsByUniqueValue: Record<string | number, number> = {};
-    uniqueValues.forEach((uniqueValue) => {
-      numRowsByUniqueValue[uniqueValue] = cellValues.filter(
-        (cellValue) => cellValue == uniqueValue
-      ).length;
-    });
 
     const getSelectedOrgId = (value: CellData) => {
       if (originalColumn.kind == ColumnKind.ORGANIZATION) {
