@@ -69,16 +69,17 @@ export type Column =
   | OrgColumn;
 
 export const enum IMPORT_ERROR {
+  ALT_PHONE = 'altPhone',
+  DATE = 'date',
   EMAIL = 'email',
   GENDER = 'gender',
   ID_MISSING = 'idMissing',
   ID = 'id',
   ID_VALUE_MISSING = 'idValueMissing',
+  NO_IDENTIFIER = 'noIdentifier',
   NOT_SELECTED_ID_TYPE = 'notSelectedIdType',
   PHONE = 'phone',
-  ALT_PHONE = 'altPhone',
   POST_CODE = 'postCode',
-  NO_IDENTIFIER = 'noIdentifier',
   URL = 'url',
 }
 

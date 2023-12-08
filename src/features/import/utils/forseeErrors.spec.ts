@@ -23,6 +23,14 @@ const mockCustomFields: ZetkinCustomField[] = [
     title: 'Website',
     type: CUSTOM_FIELD_TYPE.URL,
   },
+  {
+    description: null,
+    id: 2,
+    organization: mockOrganization,
+    slug: 'extra_date',
+    title: 'Birthday',
+    type: CUSTOM_FIELD_TYPE.DATE,
+  },
 ];
 
 describe('forseeErrors()', () => {
@@ -290,6 +298,34 @@ describe('forseeErrors()', () => {
         mockCustomFields
       );
       expect(errors).toEqual(['url']);
+    });
+
+    it('identifies malformed values in custom Date column', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'extra_date', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['ID', 'BIRTHDAY'],
+          },
+          {
+            data: [1, '19880514'], //string that is a valid date
+          },
+          {
+            data: [2, 'birthday unknown'], //string, but not a date
+          },
+        ],
+      };
+
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
+      expect(errors).toEqual(['date']);
     });
   });
 

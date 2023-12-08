@@ -71,6 +71,13 @@ export default function forseeErrors(
                   errors.push(IMPORT_ERROR.URL);
                 }
               }
+
+              //Check if value is valid date
+              if (customField.type == CUSTOM_FIELD_TYPE.DATE) {
+                if (isNaN(Date.parse(value.toString()))) {
+                  errors.push(IMPORT_ERROR.DATE);
+                }
+              }
             }
 
             //See if parsing phone numbers to international format works

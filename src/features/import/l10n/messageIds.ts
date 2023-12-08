@@ -205,6 +205,7 @@ export default makeMessages('feat.import', {
           altPhone: m(
             'Some of the values in the alternate phone number column are not valid phone numbers.'
           ),
+          date: m('Some of the values in a date column are not valid dates.'),
           email: m(
             'Some of the values in your email column are not valid email addresses.'
           ),
@@ -236,16 +237,17 @@ export default makeMessages('feat.import', {
         },
         titles: {
           altPhone: m('Invalid alternate phone number formats'),
-          email: m('Invalid email address formats.'),
-          empty: m('Something went wrong and the import was interrupted.'),
-          gender: m('Invalid gender formats.'),
-          id: m('Zetkin IDs are not in correct format.'),
+          date: m('Invalid date formats'),
+          email: m('Invalid email address formats'),
+          empty: m('Something went wrong and the import was interrupted'),
+          gender: m('Invalid gender formats'),
+          id: m('Zetkin IDs are not in correct format'),
           idValueMissing: m('Missing Zetkin IDs'),
           noIdentifier: m(
             'There is nothing to identify the data you want to import'
           ),
-          notSelectedIdType: m('Unfinished ID configuration.'),
-          phone: m('Invalid phone number formats.'),
+          notSelectedIdType: m('Unfinished ID configuration'),
+          phone: m('Invalid phone number formats'),
           postCode: m('Invalid post code formats'),
           url: m('Invalid URL formats'),
         },
