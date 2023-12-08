@@ -28,6 +28,7 @@ const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
   return (
     <Box
       bgcolor={theme.palette.transparentGrey.light}
+      borderRadius={1}
       display="flex"
       flexDirection="column"
       height="100%"
@@ -51,6 +52,7 @@ const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
           display="flex"
           height="100%"
           justifyContent="center"
+          sx={{ opacity: '50%' }}
         >
           <ZUIEmptyState
             message={messages.configuration.mapping.emptyStateMessage()}

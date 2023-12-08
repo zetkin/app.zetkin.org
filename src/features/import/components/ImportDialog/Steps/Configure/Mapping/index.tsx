@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Divider, Typography, useTheme } from '@mui/material';
 
 import { Column } from 'features/import/utils/types';
 import MappingRow from './MappingRow';
@@ -22,6 +22,7 @@ const Mapping: FC<MappingProps> = ({
   columnIndexBeingConfigured,
   onConfigureStart,
 }) => {
+  const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const { columnOptions, optionAlreadySelected, updateColumn } =
@@ -50,11 +51,16 @@ const Mapping: FC<MappingProps> = ({
           </Typography>
         </Box>
       </Box>
-      <Box flexGrow={1}>
+      <Box
+        border={1}
+        borderColor={theme.palette.grey[300]}
+        borderRadius={1}
+        flexGrow={1}
+      >
         {columns.map((column, index) => {
           return (
             <Box key={index}>
-              {index == 0 && <Divider />}
+              {index !== 0 && <Divider />}
               <MappingRow
                 clearConfiguration={clearConfiguration}
                 column={column}
@@ -64,7 +70,6 @@ const Mapping: FC<MappingProps> = ({
                 onConfigureStart={() => onConfigureStart(index)}
                 optionAlreadySelected={optionAlreadySelected}
               />
-              <Divider />
             </Box>
           );
         })}

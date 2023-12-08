@@ -25,7 +25,7 @@ const Preview = () => {
     orgId
   );
 
-  const emptyPreview = currentSheet.columns.every(
+  const previewIsEmpty = currentSheet.columns.every(
     (item) => item.selected === false
   );
 
@@ -40,11 +40,14 @@ const Preview = () => {
   return (
     <Box p={2}>
       <Box alignItems="center" display="flex" sx={{ mb: 1.5 }}>
-        <Typography sx={{ mr: 2 }} variant="h5">
+        <Typography
+          sx={{ marginRight: 2, opacity: previewIsEmpty ? '50%' : '' }}
+          variant="h5"
+        >
           <Msg id={messageIds.configuration.preview.title} />
         </Typography>
         <Button
-          disabled={personIndex === 0 || emptyPreview}
+          disabled={personIndex === 0 || previewIsEmpty}
           onClick={() =>
             setPersonIndex((prev) => (prev !== 0 ? prev - 1 : prev))
           }
@@ -56,7 +59,7 @@ const Preview = () => {
           disabled={
             personIndex ===
               currentSheet.rows.length - (firstRowIsHeaders ? 2 : 1) ||
-            emptyPreview
+            previewIsEmpty
           }
           endIcon={<ArrowForwardIos />}
           onClick={() =>
@@ -69,82 +72,76 @@ const Preview = () => {
         </Button>
       </Box>
       <Box
+        alignItems="center"
+        border={1}
+        borderColor={theme.palette.grey[300]}
+        borderRadius={1}
+        display="flex"
+        justifyContent="space-between"
+        minHeight="5em"
         sx={{
-          alignItems: 'center',
-          border: '1px solid lightgrey',
-          borderRadius: '5px',
-          display: 'flex',
-          height: '98px',
-          overflowX: 'auto',
+          overflowX: 'scroll',
           overflowY: 'hidden',
         }}
       >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          sx={{ width: '100%' }}
-        >
-          {emptyPreview &&
-            Array(currentSheet.columns.length)
-              .fill(null)
-              .map((_, index) => {
-                return (
-                  <Box
-                    key={`empty-preview-${index}`}
-                    flexGrow={1}
-                    sx={{
-                      backgroundColor: theme.palette.transparentGrey.light,
-                      height: '14px',
-                      m: 2,
-                    }}
-                  />
-                );
-              })}
-          {!emptyPreview && (
-            <>
-              {currentSheet.columns.map((column, columnIdx) => {
-                if (column.selected) {
-                  if (column.kind === ColumnKind.UNKNOWN) {
-                    const rowValue =
-                      currentSheet.rows[
-                        firstRowIsHeaders ? personIndex + 1 : personIndex
-                      ].data[columnIdx];
-                    return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
-                  }
-                  if (
-                    column.kind === ColumnKind.FIELD ||
-                    column.kind === ColumnKind.ID_FIELD
-                  ) {
-                    return (
-                      <FieldsPreview
-                        key={columnIdx}
-                        fieldKey={
-                          column.kind === ColumnKind.FIELD
-                            ? column.field
-                            : column.idField
-                        }
-                        fields={fields}
-                        kind={column.kind}
-                      />
-                    );
-                  }
-                  if (column.kind === ColumnKind.ORGANIZATION) {
-                    return (
-                      <OrgPreview
-                        key={columnIdx}
-                        currentSheet={currentSheet}
-                        org={org}
-                      />
-                    );
-                  }
+        {previewIsEmpty &&
+          Array(currentSheet.columns.length)
+            .fill(null)
+            .map((_, index) => {
+              return (
+                <Box
+                  key={`empty-preview-${index}`}
+                  bgcolor={theme.palette.transparentGrey.light}
+                  flexGrow={1}
+                  height="14px"
+                  margin={2}
+                />
+              );
+            })}
+        {!previewIsEmpty && (
+          <>
+            {currentSheet.columns.map((column, columnIdx) => {
+              if (column.selected) {
+                if (column.kind === ColumnKind.UNKNOWN) {
+                  const rowValue =
+                    currentSheet.rows[
+                      firstRowIsHeaders ? personIndex + 1 : personIndex
+                    ].data[columnIdx];
+                  return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
                 }
-              })}
-              {tagColumnSelected && (
-                <TagsPreview currentSheet={currentSheet} tags={tags} />
-              )}
-            </>
-          )}
-        </Box>
+                if (
+                  column.kind === ColumnKind.FIELD ||
+                  column.kind === ColumnKind.ID_FIELD
+                ) {
+                  return (
+                    <FieldsPreview
+                      key={columnIdx}
+                      fieldKey={
+                        column.kind === ColumnKind.FIELD
+                          ? column.field
+                          : column.idField
+                      }
+                      fields={fields}
+                      kind={column.kind}
+                    />
+                  );
+                }
+                if (column.kind === ColumnKind.ORGANIZATION) {
+                  return (
+                    <OrgPreview
+                      key={columnIdx}
+                      currentSheet={currentSheet}
+                      org={org}
+                    />
+                  );
+                }
+              }
+            })}
+            {tagColumnSelected && (
+              <TagsPreview currentSheet={currentSheet} tags={tags} />
+            )}
+          </>
+        )}
       </Box>
     </Box>
   );
