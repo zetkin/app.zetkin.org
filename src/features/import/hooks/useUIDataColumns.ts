@@ -1,10 +1,10 @@
 import { columnUpdate } from '../store';
 import messageIds from '../l10n/messageIds';
 import notEmpty from 'utils/notEmpty';
+import { useMessages } from 'core/i18n';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { CellData, Column, ColumnKind } from '../utils/types';
-import { Msg, useMessages } from 'core/i18n';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn<CType extends Column> = {
@@ -13,10 +13,10 @@ export type UIDataColumn<CType extends Column> = {
   deselectOrg: (value: CellData) => void;
   getAssignedTags: (value: CellData) => ZetkinTag[];
   getSelectedOrgId: (value: CellData) => number | null;
+  mappingResultsMessage: string;
   numRowsByUniqueValue: Record<string | number, number>;
   numberOfEmptyRows: number;
   originalColumn: CType;
-  renderMappingResultsMessage: () => JSX.Element | null;
   selectOrg: (orgId: number, value: CellData) => void;
   showColumnValuesMessage: boolean;
   showMappingResultMessage: boolean;
@@ -138,75 +138,56 @@ export default function useUIDataColumns(
             columnIndex: index,
           });
 
-    const renderMappingResultsMessage = () => {
-      if (originalColumn.kind == ColumnKind.TAG) {
-        let tags: { id: number }[] = [];
-        let numRows = 0;
-        originalColumn.mapping.forEach((map) => {
-          tags = tags.concat(map.tags);
-          if (map.value) {
-            numRows += numRowsByUniqueValue[map.value];
-          }
-          if (!map.value) {
-            numRows += numberOfEmptyRows;
-          }
-        });
-
-        return (
-          <Msg
-            id={messageIds.configuration.mapping.finishedMappingTags}
-            values={{
-              numMappedTo: Array.from(new Set(tags)).length,
-              numRows,
-            }}
-          />
-        );
-      }
-
-      if (originalColumn.kind == ColumnKind.ID_FIELD) {
-        if (!originalColumn.idField) {
-          return null;
+    let mappingResultsMessage = '';
+    if (originalColumn.kind == ColumnKind.TAG) {
+      let tags: { id: number }[] = [];
+      let numRows = 0;
+      originalColumn.mapping.forEach((map) => {
+        tags = tags.concat(map.tags);
+        if (map.value) {
+          numRows += numRowsByUniqueValue[map.value];
         }
+        if (!map.value) {
+          numRows += numberOfEmptyRows;
+        }
+      });
 
-        return (
-          <Msg
-            id={messageIds.configuration.mapping.finishedMappingIds}
-            values={{
-              idField: originalColumn.idField,
-              numValues: rowsWithValues.length + numberOfEmptyRows,
-            }}
-          />
-        );
-      }
-
-      if (originalColumn.kind == ColumnKind.ORGANIZATION) {
-        let orgs: number[] = [];
-        let numPeople = 0;
-        originalColumn.mapping.forEach((map) => {
-          if (map.orgId) {
-            orgs = orgs.concat(map.orgId);
-          }
-          if (map.value) {
-            numPeople += numRowsByUniqueValue[map.value];
-          }
-          if (!map.value) {
-            numPeople += numberOfEmptyRows;
-          }
+      mappingResultsMessage =
+        messages.configuration.mapping.finishedMappingTags({
+          numMappedTo: Array.from(new Set(tags)).length,
+          numRows,
         });
+    } else if (
+      originalColumn.kind == ColumnKind.ID_FIELD &&
+      originalColumn.idField
+    ) {
+      mappingResultsMessage = messages.configuration.mapping.finishedMappingIds(
+        {
+          idField: originalColumn.idField,
+          numValues: rowsWithValues.length + numberOfEmptyRows,
+        }
+      );
+    } else if (originalColumn.kind == ColumnKind.ORGANIZATION) {
+      let orgs: number[] = [];
+      let numPeople = 0;
+      originalColumn.mapping.forEach((map) => {
+        if (map.orgId) {
+          orgs = orgs.concat(map.orgId);
+        }
+        if (map.value) {
+          numPeople += numRowsByUniqueValue[map.value];
+        }
+        if (!map.value) {
+          numPeople += numberOfEmptyRows;
+        }
+      });
 
-        return (
-          <Msg
-            id={messageIds.configuration.mapping.finishedMappingOrganizations}
-            values={{
-              numMappedTo: Array.from(new Set(orgs)).length,
-              numPeople,
-            }}
-          />
-        );
-      }
-
-      return null;
-    };
+      mappingResultsMessage =
+        messages.configuration.mapping.finishedMappingOrganizations({
+          numMappedTo: Array.from(new Set(orgs)).length,
+          numPeople,
+        });
+    }
 
     const assignTag = (tag: { id: number }, value: CellData) => {
       if (originalColumn.kind == ColumnKind.TAG && tags != null) {
@@ -426,10 +407,10 @@ export default function useUIDataColumns(
       deselectOrg,
       getAssignedTags,
       getSelectedOrgId,
+      mappingResultsMessage,
       numRowsByUniqueValue,
       numberOfEmptyRows,
       originalColumn,
-      renderMappingResultsMessage,
       selectOrg,
       showColumnValuesMessage,
       showMappingResultMessage,

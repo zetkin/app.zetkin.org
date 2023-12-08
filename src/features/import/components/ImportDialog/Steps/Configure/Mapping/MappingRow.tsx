@@ -178,17 +178,19 @@ const MappingRow: FC<MappingRowProps> = ({
               : 'secondary'
           }
         >
-          {column.showNeedsConfigMessage && (
-            <Msg
-              id={
-                column.originalColumn.kind == ColumnKind.ID_FIELD
-                  ? messageIds.configuration.mapping.needsConfig
-                  : messageIds.configuration.mapping.needsMapping
-              }
-            />
-          )}
+          {column.showNeedsConfigMessage &&
+            !column.showMappingResultMessage && (
+              <Msg
+                id={
+                  column.originalColumn.kind == ColumnKind.ID_FIELD
+                    ? messageIds.configuration.mapping.needsConfig
+                    : messageIds.configuration.mapping.needsMapping
+                }
+              />
+            )}
           {column.showMappingResultMessage &&
-            column.renderMappingResultsMessage()}
+            !column.showNeedsConfigMessage &&
+            column.mappingResultsMessage}
         </Typography>
         {(column.showNeedsConfigMessage || column.showMappingResultMessage) && (
           <Button
