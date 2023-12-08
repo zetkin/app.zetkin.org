@@ -32,6 +32,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
       onClose={() => {
         onClose();
         setActiveStep(ImportStep.PARSE);
+        setMaxWidth('sm');
       }}
       open={open}
     >
