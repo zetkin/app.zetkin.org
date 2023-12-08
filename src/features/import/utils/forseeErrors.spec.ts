@@ -327,6 +327,74 @@ describe('forseeErrors()', () => {
       );
       expect(errors).toEqual(['date']);
     });
+
+    it('identifies when values are too long', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
+          { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
+          { field: 'co_address', kind: ColumnKind.FIELD, selected: true },
+          { field: 'street_address', kind: ColumnKind.FIELD, selected: true },
+          { field: 'country', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: [
+              'EXTERNAL ID',
+              'FIRST NAME',
+              'LAST NAME',
+              'CO ADDRESS',
+              'STREET ADDRESS',
+              'COUNTRY',
+            ],
+          },
+          {
+            //These values are all too long
+            data: [
+              //External id, max 96 characters
+              'ask own. Praise effect wishes change way and any wanted. Lively use looked latter regard had. Do he it part more last in. Merits ye if mr na',
+              //First name, max 50 characters
+              'Asterix Obelix Clara Angela Borrelia Amalia Henny Josephine Alexandra',
+              //Last name, max 50 characters
+              'Zetkin Johansson Fredriksson Smith Carlsson Hellberg von Ståtsson Pålsson',
+              //C/O address, max 200 characters
+              'As collected deficient objection by it discovery sincerity curiosity. Quiet decay who round three world whole has mrs man. Built the china there tried jokes which gay why. Assure in adieus wicket it is. But spoke round point and one joy. Offending her moonlight men sweetness see unwilling. Often of it tears whole oh balls share an',
+              //Street address, max 200 characters
+              'As collected deficient objection by it discovery sincerity curiosity. Quiet decay who round three world whole has mrs man. Built the china there tried jokes which gay why. Assure in adieus wicket it is. But spoke round point and one joy. Offending her moonlight men sweetness see unwilling. Often of it tears whole oh balls share an',
+              //Country, max 60 characters
+              'As collected deficient objection by it discovery sincerity cloud',
+            ],
+          },
+          {
+            //These values are within correct length
+            data: [
+              '235',
+              'Clara',
+              'Zetkin',
+              'c/o Angela Davis',
+              'HauptStrasse 23',
+              'Germany',
+            ],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
+      expect(errors).toEqual([
+        'longExtId',
+        'longFirstName',
+        'longLastName',
+        'longCoAddress',
+        'longStreetAddress',
+        'longCountry',
+      ]);
+    });
   });
 
   describe('when first row is not headers', () => {

@@ -51,6 +51,10 @@ export default function forseeErrors(
               if (isNaN(value)) {
                 errors.push(IMPORT_ERROR.ID);
               }
+            } else if (fieldKey == 'ext_id') {
+              if (value.toString().length > 96) {
+                errors.push(IMPORT_ERROR.LONG_EXT_ID);
+              }
             }
           }
         }
@@ -136,6 +140,46 @@ export default function forseeErrors(
               const stringValue = value.toString();
               if (stringValue.length > 10) {
                 errors.push(IMPORT_ERROR.POST_CODE);
+              }
+            }
+
+            //check for too long first names
+            if (fieldKey == 'first_name') {
+              const stringValue = value.toString();
+              if (stringValue.length > 50) {
+                errors.push(IMPORT_ERROR.LONG_FIRST_NAME);
+              }
+            }
+
+            //check for too long last names
+            if (fieldKey == 'last_name') {
+              const stringValue = value.toString();
+              if (stringValue.length > 50) {
+                errors.push(IMPORT_ERROR.LONG_LAST_NAME);
+              }
+            }
+
+            //check for too long c/o address
+            if (fieldKey == 'co_address') {
+              const stringValue = value.toString();
+              if (stringValue.length > 50) {
+                errors.push(IMPORT_ERROR.LONG_CO_ADDRESS);
+              }
+            }
+
+            //check for too long street address
+            if (fieldKey == 'street_address') {
+              const stringValue = value.toString();
+              if (stringValue.length > 50) {
+                errors.push(IMPORT_ERROR.LONG_STREET_ADDRESS);
+              }
+            }
+
+            //check for too long country
+            if (fieldKey == 'country') {
+              const stringValue = value.toString();
+              if (stringValue.length > 50) {
+                errors.push(IMPORT_ERROR.LONG_COUNTRY);
               }
             }
           }

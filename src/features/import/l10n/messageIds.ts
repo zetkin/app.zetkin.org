@@ -221,6 +221,24 @@ export default makeMessages('feat.import', {
           idValueMissing: m(
             'Some of the values in the Zetkin ID column are empty.'
           ),
+          longCoAddress: m(
+            'Some values in the C/O Address column are too long, please check that they are no longer than 200 characters.'
+          ),
+          longCountry: m(
+            'Some values in the Country column are too long, please check that they are no longer than 60 characters.'
+          ),
+          longExtId: m(
+            'Some values in the external ID column are too long, please check that they are no longer than 96 characters.'
+          ),
+          longFirstName: m(
+            'Some values in the First Name column are too long, please check that they are no longer than 50 characters.'
+          ),
+          longLastName: m(
+            'Some values in the Last Name column are too long, please check that they are no longer than 50 characters.'
+          ),
+          longStreetAddress: m(
+            'Some values in the Street Address column are too long, please check that they are no longer than 200 characters.'
+          ),
           noIdentifier: m(
             'To make it possible to import you need to select either both first and last name columns, or an ID column'
           ),
@@ -243,6 +261,12 @@ export default makeMessages('feat.import', {
           gender: m('Invalid gender formats'),
           id: m('Zetkin IDs are not in correct format'),
           idValueMissing: m('Missing Zetkin IDs'),
+          longCoAddress: m('Too long values in C/O Address column'),
+          longCountry: m('Too long values in Country column'),
+          longExtId: m('Too long values in external ID column'),
+          longFirstName: m('Too long values in First Name column'),
+          longLastName: m('Too long values in Last Name column'),
+          longStreetAddress: m('Too long values in Street Address column'),
           noIdentifier: m(
             'There is nothing to identify the data you want to import'
           ),
