@@ -27,7 +27,7 @@ const EmailTargets = () => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   // const {data:email, isTargeted,updateTargets:setTargets, isLocked}= useEmail(orgId,emailId)
   // const {statsFuture } = useEmailStats(orgId,emailId)
-  const isTargeted = true;
+  const isTargeted = false;
   const isLocked = true;
   const statsFuture = { data: { allTargets: 11 } };
 

@@ -1,46 +1,35 @@
 import timezones from 'timezones-list';
-import { FormControl, Menu, MenuItem, Select, TextField } from '@mui/material';
-import { useState } from 'react';
-import { Box } from '@mui/system';
-const ZUITimezonePicker = () => {
-  const [tzCode, setTzCode] = useState('');
-  //   console.log(timezones, ' ??');
+import { Autocomplete, TextField } from '@mui/material';
+
+import messageIds from 'zui/l10n/messageIds';
+import { useMessages } from 'core/i18n';
+export type TimezoneType = {
+  label: string;
+  name: string;
+  tzCode: string;
+  utc: string;
+};
+interface ZUITimezonePickerProps {
+  onChange: (value: TimezoneType) => void;
+}
+
+const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
+  const messages = useMessages(messageIds);
+
   return (
-    <Box width="300px">
-      {/* <FormControl fullWidth> */}
-      {/* <Select
-          label=""
-          onChange={(ev) => {
-            setTzCode(ev.target.value);
-          }}
-          onClickCapture={(e) => e.stopPropagation()}
-          //   onClick={(e) => e.stopPropagation()}
-          value={'Pacific/Midway'}
-        > */}
-      <TextField
-        select
-        label={'Time zone'}
-        value={tzCode}
-        onChange={(e) => setTzCode(e.target.value)}
-        // SelectProps={{
-        //   MenuProps: { disablePortal: true },
-        // }}
-      >
-        {timezones.map((timezone, index) => {
-          return (
-            <MenuItem
-              key={`timezone-${index}`}
-              id={`timezone-${index}`}
-              value={timezone.tzCode}
-            >
-              {timezone.name}
-            </MenuItem>
-          );
-        })}
-      </TextField>
-      {/* </Select> */}
-      {/* </FormControl> */}
-    </Box>
+    <Autocomplete
+      fullWidth
+      id="combo-box-demo"
+      onChange={(_, value) => {
+        if (value !== null) {
+          onChange(value);
+        }
+      }}
+      options={timezones}
+      renderInput={(params) => (
+        <TextField {...params} label={messages.timezone()} />
+      )}
+    />
   );
 };
 

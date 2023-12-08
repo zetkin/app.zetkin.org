@@ -155,4 +155,5 @@ export default makeMessages('zui', {
       'Today, {start} - {end}'
     ),
   },
+  timezone: m('Timezone'),
 });
