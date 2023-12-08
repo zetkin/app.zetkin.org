@@ -7,7 +7,7 @@ import { useMessages } from 'core/i18n';
 import { Column, ColumnKind } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
-interface Option {
+export interface Option {
   value: string;
   label: string;
 }

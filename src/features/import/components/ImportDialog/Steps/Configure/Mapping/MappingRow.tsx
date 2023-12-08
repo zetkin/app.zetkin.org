@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
+import { Option } from 'features/import/hooks/useMapping';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
@@ -20,7 +21,7 @@ import { Msg, useMessages } from 'core/i18n';
 interface MappingRowProps {
   clearConfiguration: () => void;
   column: UIDataColumn<Column>;
-  columnOptions: { label: string; value: string }[];
+  columnOptions: Option[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
