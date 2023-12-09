@@ -11,9 +11,9 @@ export type SurveySuccessProps = {
 const SurveySuccess: FC<SurveySuccessProps> = ({ survey }) => {
   return (
     <Box>
-      <h1>
+      <Typography variant="h1">
         <Msg id={messageIds.surveyFormSubmitted.title} />
-      </h1>
+      </Typography>
       <Typography>
         <Msg
           id={messageIds.surveyFormSubmitted.text}
