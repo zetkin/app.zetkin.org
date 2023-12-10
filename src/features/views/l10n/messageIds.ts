@@ -342,6 +342,7 @@ export default makeMessages('feat.views', {
         csv: m('Download CSV file'),
         xlsx: m('Download Excel file'),
       },
+      local_bool: m('Yes'),
       shareLink: m('share data securely'),
       tabLabel: m('Download'),
       warning1: m(
@@ -350,7 +351,6 @@ export default makeMessages('feat.views', {
       warning2: m<{ shareLink: ReactElement }>(
         'You can {shareLink} within Zetkin. Exporting makes sense when you want to copy data to another system.'
       ),
-      local_bool: m('Yes'),
     },
     share: {
       addPlaceholder: m('Add collaborator'),
