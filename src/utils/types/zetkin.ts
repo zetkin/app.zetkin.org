@@ -284,6 +284,11 @@ export type ZetkinSurveyFormStatus =
   | 'error'
   | 'submitted';
 
+export type ZetkinSurveyApiSubmission = {
+  responses: ZetkinSurveyQuestionResponse[];
+  signature: ZetkinSurveySignaturePayload;
+};
+
 export enum RESPONSE_TYPE {
   OPTIONS = 'options',
   TEXT = 'text',
