@@ -1,8 +1,7 @@
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { FC } from 'react';
-import messageIds from 'features/surveys/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import { scaffold } from 'utils/next';
+import SurveySuccess from 'features/surveys/components/surveyForm/SurveySuccess';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
@@ -36,19 +35,7 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ survey }) => {
-  return (
-    <>
-      <h1>
-        <Msg id={messageIds.surveyFormSubmitted.title} />
-      </h1>
-      <p>
-        <Msg
-          id={messageIds.surveyFormSubmitted.text}
-          values={{ title: survey.title }}
-        />
-      </p>
-    </>
-  );
+  return <SurveySuccess survey={survey} />;
 };
 
 export default Page;

@@ -2,13 +2,19 @@ import { FC } from 'react';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import { FormControl, FormLabel, TextField } from '@mui/material';
 
-const OptionsQuestion: FC<{
-  defaultValue?: string;
+export type SurveyOptionsQuestionProps = {
   element: ZetkinSurveyTextQuestionElement;
-}> = ({ element, defaultValue = '' }) => {
+  formData: NodeJS.Dict<string | string[]>;
+};
+
+const SurveyOptionsQuestion: FC<SurveyOptionsQuestionProps> = ({
+  element,
+  formData,
+}) => {
   return (
     <FormControl sx={{ width: '100%' }}>
       <FormLabel
+        htmlFor={`input-${element.id}`}
         style={{
           color: 'black',
           fontSize: '1.5em',
@@ -20,7 +26,11 @@ const OptionsQuestion: FC<{
         {element.question.question}
       </FormLabel>
       <TextField
-        defaultValue={defaultValue}
+        defaultValue={
+          typeof formData[`${element.id}.text`] === 'string'
+            ? (formData[`${element.id}.text`] as string)
+            : undefined
+        }
         fullWidth
         id={`input-${element.id}`}
         name={`${element.id}.text`}
@@ -30,4 +40,4 @@ const OptionsQuestion: FC<{
   );
 };
 
-export default OptionsQuestion;
+export default SurveyOptionsQuestion;
