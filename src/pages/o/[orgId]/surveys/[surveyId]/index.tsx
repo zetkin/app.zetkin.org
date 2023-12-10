@@ -3,6 +3,7 @@ import { Container } from '@mui/material';
 import { FC } from 'react';
 import { IncomingMessage } from 'http';
 import { parse } from 'querystring';
+import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import { scaffold } from 'utils/next';
 import SurveyElements from 'features/surveys/components/surveyForm/SurveyElements';
 import SurveyHeading from 'features/surveys/components/surveyForm/SurveyHeading';
@@ -12,8 +13,6 @@ import SurveySubmitButton from 'features/surveys/components/surveyForm/SurveySub
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyFormStatus,
-  ZetkinSurveyQuestionResponse,
-  ZetkinSurveySignaturePayload,
 } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
@@ -53,65 +52,13 @@ export const getServerSideProps = scaffold(async (ctx) => {
 
   if (req.method === 'POST') {
     formData = await parseRequest(req);
-    const responses: Record<string, ZetkinSurveyQuestionResponse> = {};
-
-    for (const name in formData) {
-      const isSignature = name.startsWith('sig');
-      const isPrivacy = name.startsWith('privacy');
-      const isMetadata = isSignature || isPrivacy;
-      if (isMetadata) {
-        continue;
-      }
-
-      const fields = name.split('.');
-      const questionId = fields[0];
-      const questionType = fields[1];
-
-      const value = formData[name];
-      if (questionType == 'options') {
-        if (Array.isArray(value)) {
-          responses[questionId] = {
-            options: value.map((o) => parseInt(o)),
-            question_id: parseInt(fields[0]),
-          };
-        } else {
-          responses[questionId] = {
-            options: [parseInt((formData[name] as string)!)],
-            question_id: parseInt(fields[0]),
-          };
-        }
-      } else if (questionType == 'text') {
-        responses[questionId] = {
-          question_id: parseInt(fields[0]),
-          response: formData[name] as string,
-        };
-      }
-    }
-
-    let signature: ZetkinSurveySignaturePayload = null;
-
-    if (formData.sig === 'user') {
-      const session = await ctx.z.resource('session').get();
-      if (session) {
-        signature = 'user';
-      }
-    }
-
-    if (formData.sig == 'email') {
-      signature = {
-        email: formData['sig.email'] as string,
-        first_name: formData['sig.first_name'] as string,
-        last_name: formData['sig.last_name'] as string,
-      };
-    }
+    const session = await ctx.z.resource('session').get();
+    const submission = prepareSurveyApiSubmission(formData, !!session);
 
     try {
       await apiClient.post(
         `/api/orgs/${orgId}/surveys/${surveyId}/submissions`,
-        {
-          responses: Object.values(responses),
-          signature,
-        }
+        submission
       );
       status = 'submitted';
     } catch (e) {
