@@ -18,9 +18,15 @@ import useViewGrid, {
   UseViewGridReturn,
 } from 'features/views/hooks/useViewGrid';
 
+import messageIds from 'features/views/l10n/messageIds';
+
 export default class LocalBoolColumnType implements IColumnType {
-  cellToString(cell: boolean | null): string {
-    return String(!!cell);
+  cellToString(cell: boolean | null): string {    
+    if (cell == true) {
+      return messageIds.shareDialog.download.local_bool._defaultMessage;
+    } else {
+      return '';
+    }
   }
 
   getColDef(column: LocalBoolViewColumn): Omit<GridColDef, 'field'> {
