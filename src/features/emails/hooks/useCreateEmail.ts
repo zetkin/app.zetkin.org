@@ -1,6 +1,5 @@
+import { useAppDispatch } from 'core/hooks';
 import { emailCreate, emailCreated } from '../store';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
-import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinEmail, ZetkinEmailPartial } from 'utils/types/zetkin';
 
 interface UseCreateEmailReturn {
@@ -12,7 +11,7 @@ export default function useCreateEmail(
   orgId: number,
   campId: number
 ): UseCreateEmailReturn {
-  const apiClient = useApiClient();
+  //   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
   const createEmail = (body: ZetkinEmailPartial) => {
@@ -32,7 +31,7 @@ export default function useCreateEmail(
       content: 'world',
       id: 1,
       organization: { id: 6, title: 'Casework test' },
-      published: '2022-03-03',
+      published: '2023-12-11T12:53:42',
       subject: 'any',
       title: body.title!,
     };

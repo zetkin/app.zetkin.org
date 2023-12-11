@@ -5,6 +5,7 @@ import EmailActionButtons from '../components/EmailActionButtons';
 import messageIds from '../l10n/messageIds';
 import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
+import useEmail from '../hooks/useEmail';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import EmailStatusChip, { EmailState } from '../components/EmailStatusChip';
@@ -17,8 +18,11 @@ interface EmailLayoutProps {
 const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const { orgId, campId, emailId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  //const emailFuture = useEmail()
+  const { data: email } = useEmail(orgId, emailId);
   //const emailState = useEmailState()
+  if (!email) {
+    return null;
+  }
 
   return (
     <TabbedLayout
@@ -52,7 +56,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
       title={
         <ZUIEditTextinPlace
           onChange={() => console.log('hey')}
-          value={'default'}
+          value={email.title}
         />
       }
     >
