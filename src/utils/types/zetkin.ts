@@ -496,3 +496,16 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
+//fix ZetkinEmail related types later
+export interface ZetkinEmail {
+  id: number;
+  published: string;
+  subject: string;
+  organization: {
+    id: number;
+    title: string;
+  };
+  content: string;
+  title: string;
+}
+export type ZetkinEmailPartial = Partial<Omit<ZetkinEmail, 'organization'>>;
