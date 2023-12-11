@@ -1,15 +1,10 @@
 import { Box } from '@mui/material';
+import { EmailState } from '../hooks/useEmailState';
 import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-
-export enum EmailState {
-  DRAFT = 'draft',
-  SENT = 'sent',
-  SCHEDULED = 'scheduled',
-}
 
 interface EmailStatusChipProps {
   state: EmailState;
@@ -39,8 +34,13 @@ const useStyles = makeStyles((theme) => ({
 const EmailStatusChip: FC<EmailStatusChipProps> = ({ state }) => {
   const classes = useStyles();
 
+  if (state == EmailState.UNKNOWN) {
+    return null;
+  }
+
   const classMap: Record<EmailState, string> = {
     [EmailState.DRAFT]: classes.draft,
+    [EmailState.UNKNOWN]: classes.draft,
     [EmailState.SENT]: classes.sent,
     [EmailState.SCHEDULED]: classes.scheduled,
   };

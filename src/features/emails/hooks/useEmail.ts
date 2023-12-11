@@ -25,7 +25,7 @@ export default function useEmail(
         content: 'world',
         id: 1,
         organization: { id: 6, title: 'Casework test' },
-        published: '2023-12-11T12:53:42',
+        published: '',
         subject: 'any',
         title: 'Hello!',
       }),

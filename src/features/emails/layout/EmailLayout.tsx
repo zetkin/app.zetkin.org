@@ -2,15 +2,16 @@ import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import EmailActionButtons from '../components/EmailActionButtons';
+import EmailStatusChip from '../components/EmailStatusChip';
 import messageIds from '../l10n/messageIds';
 import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
+import useEmailState from '../hooks/useEmailState';
 import useEmailStats from '../hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
-import EmailStatusChip, { EmailState } from '../components/EmailStatusChip';
 import { Msg, useMessages } from 'core/i18n';
 
 interface EmailLayoutProps {
@@ -22,7 +23,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const messages = useMessages(messageIds);
   const { data: email } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
-  //const emailState = useEmailState()
+  const emailState = useEmailState(orgId, emailId);
   if (!email) {
     return null;
   }
@@ -35,7 +36,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            <EmailStatusChip state={EmailState.DRAFT} />
+            <EmailStatusChip state={emailState} />
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
