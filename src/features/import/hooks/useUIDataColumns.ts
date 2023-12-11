@@ -49,29 +49,27 @@ export default function useUIDataColumns(
   const firstRowIsHeaders = sheet.firstRowIsHeaders;
 
   const uiDataColumns = originalColumns.map((originalColumn, index) => {
-    const rowsWithValues: (string | number)[] = [];
     let numberOfEmptyRows = 0;
     const cellValues = rows.map((row) => row.data[index]);
+    const numRowsByUniqueValue: Record<string | number, number> = {};
 
-    cellValues.forEach((rowValue, index) => {
-      if (index == 0 && firstRowIsHeaders) {
+    cellValues.forEach((value, idx) => {
+      if (firstRowIsHeaders && idx == 0) {
         return;
       }
-      if (rowValue) {
-        rowsWithValues.push(rowValue);
+
+      if (value) {
+        if (!numRowsByUniqueValue[value]) {
+          numRowsByUniqueValue[value] = 0;
+        }
+
+        numRowsByUniqueValue[value]++;
       } else {
-        numberOfEmptyRows += 1;
+        numberOfEmptyRows++;
       }
     });
 
-    const uniqueValues = Array.from(new Set(rowsWithValues));
-
-    const numRowsByUniqueValue: Record<string | number, number> = {};
-    uniqueValues.forEach((uniqueValue) => {
-      numRowsByUniqueValue[uniqueValue] = cellValues.filter(
-        (cellValue) => cellValue == uniqueValue
-      ).length;
-    });
+    const uniqueValues = Object.keys(numRowsByUniqueValue);
 
     let columnValuesMessage = '';
 
@@ -142,7 +140,7 @@ export default function useUIDataColumns(
       firstRowIsHeaders && valueInFirstRow != null
         ? valueInFirstRow.toString()
         : messages.configuration.mapping.defaultColumnHeader({
-            columnIndex: index,
+            columnIndex: index + 1,
           });
 
     let mappingResultsMessage = '';
@@ -171,7 +169,9 @@ export default function useUIDataColumns(
       mappingResultsMessage = messages.configuration.mapping.finishedMappingIds(
         {
           idField: originalColumn.idField,
-          numValues: rowsWithValues.length + numberOfEmptyRows,
+          numValues: firstRowIsHeaders
+            ? cellValues.length - 1
+            : cellValues.length,
         }
       );
     } else if (originalColumn.kind == ColumnKind.ORGANIZATION) {
@@ -291,11 +291,7 @@ export default function useUIDataColumns(
       }
     };
 
-    const valuesAreValidZetkinIDs = cellValues.every((value, index) => {
-      if (index == 0 && firstRowIsHeaders) {
-        return true;
-      }
-
+    const valuesAreValidZetkinIDs = cellValues.every((value) => {
       if (!value) {
         return false;
       }
