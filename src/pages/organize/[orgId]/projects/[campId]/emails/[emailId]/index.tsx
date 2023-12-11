@@ -6,18 +6,14 @@ import EmailTargets from 'features/emails/components/EmailTargets';
 import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useEmail from 'features/emails/hooks/useEmail';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId, campId, emailId } = ctx.params!;
-
     return {
-      props: {
-        campId,
-        emailId,
-        orgId,
-      },
+      props: {},
     };
   },
   {
@@ -27,9 +23,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 const EmailPage: PageWithLayout = () => {
-  // const { data: email } = useEmail(orgId, emailId);
+  const { orgId, emailId } = useNumericRouteParams();
+  const { data: email } = useEmail(orgId, emailId);
 
   const onServer = useServerSide();
+
   if (onServer) {
     return null;
   }
@@ -37,11 +35,11 @@ const EmailPage: PageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>email</title>
+        <title>{email?.title}</title>
       </Head>
       <Box>
         <Box mb={2}>
-          <EmailTargets />
+          <EmailTargets emailId={emailId} orgId={orgId} />
         </Box>
       </Box>
     </>
