@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 import { parse } from 'papaparse';
-import { CellData, ImportedFile, Row, Sheet } from './types';
+import { CellData, ImportedFile, Row } from './types';
 
 export async function parseCSVFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
@@ -13,14 +13,15 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
     reader.readAsDataURL(file);
 
     reader.onloadend = function () {
-      parse(file, {
+      parse<CellData[], File>(file, {
         complete: (result) => {
           if (result.data) {
+            const rows = result.data.map((rowData) => ({ data: rowData }));
             const sheetObject = {
               columns: [],
               currentlyConfiguring: null,
               firstRowIsHeaders: true,
-              rows: result.data as Sheet['rows'],
+              rows: rows,
               title: file.name,
             };
             rawData.sheets = [sheetObject];
