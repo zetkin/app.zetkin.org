@@ -30,6 +30,7 @@ export default function useEmail(
         title: 'Hello!',
       }),
     // loader: () => apiClient.get(`api/orgs/${orgId}/emails/${emailId}`),
+    //wrong loader, fix it later
     loader: () => apiClient.get(`/api/orgs/${orgId}`),
   });
   return {

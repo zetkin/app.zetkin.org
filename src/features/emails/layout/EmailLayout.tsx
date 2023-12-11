@@ -6,8 +6,10 @@ import messageIds from '../l10n/messageIds';
 import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
+import useEmailStats from '../hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import ZUIFuture from 'zui/ZUIFuture';
 import EmailStatusChip, { EmailState } from '../components/EmailStatusChip';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -19,6 +21,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const { orgId, campId, emailId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const { data: email } = useEmail(orgId, emailId);
+  const { statsFuture } = useEmailStats(orgId, emailId);
   //const emailState = useEmailState()
   if (!email) {
     return null;
@@ -32,14 +35,26 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
-            {/* emailState here*/}
             <EmailStatusChip state={EmailState.DRAFT} />
           </Box>
           <Box display="flex" marginX={1}>
-            <People />
-            <Typography marginLeft={1}>
-              <Msg id={messageIds.stats.targets} values={{ numTargets: 0 }} />
-            </Typography>
+            <ZUIFuture
+              future={statsFuture}
+              ignoreDataWhileLoading
+              skeletonWidth={100}
+            >
+              {(data) => (
+                <>
+                  <People />
+                  <Typography marginLeft={1}>
+                    <Msg
+                      id={messageIds.stats.targets}
+                      values={{ numTargets: data?.allTargets ?? 0 }}
+                    />
+                  </Typography>
+                </>
+              )}
+            </ZUIFuture>
           </Box>
         </Box>
       }
