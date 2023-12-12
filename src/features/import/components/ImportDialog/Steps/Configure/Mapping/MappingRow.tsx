@@ -166,7 +166,7 @@ const MappingRow: FC<MappingRowProps> = ({
       >
         {column.showColumnValuesMessage && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
-            <Typography color="secondary">
+            <Typography color="secondary" variant="body2">
               {column.columnValuesMessage}
             </Typography>
           </Box>
@@ -177,6 +177,7 @@ const MappingRow: FC<MappingRowProps> = ({
               ? theme.palette.warning.main
               : 'secondary'
           }
+          variant="body2"
         >
           {column.showNeedsConfigMessage &&
             !column.showMappingResultMessage && (
