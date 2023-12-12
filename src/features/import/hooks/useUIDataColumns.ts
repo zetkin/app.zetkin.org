@@ -51,7 +51,7 @@ export default function useUIDataColumns(
   const uiDataColumns = originalColumns.map((originalColumn, index) => {
     let numberOfEmptyRows = 0;
     const cellValues = rows.map((row) => row.data[index]);
-    const numRowsByUniqueValue: Record<string | number, number> = {};
+    const numRowsByUniqueValue = new Map<string | number, number>();
 
     cellValues.forEach((value, idx) => {
       if (firstRowIsHeaders && idx == 0) {
@@ -59,17 +59,18 @@ export default function useUIDataColumns(
       }
 
       if (value) {
-        if (!numRowsByUniqueValue[value]) {
-          numRowsByUniqueValue[value] = 0;
+        const currentCount = numRowsByUniqueValue.get(value);
+        if (!currentCount) {
+          numRowsByUniqueValue.set(value, 1);
+        } else {
+          numRowsByUniqueValue.set(value, currentCount + 1);
         }
-
-        numRowsByUniqueValue[value]++;
       } else {
         numberOfEmptyRows++;
       }
     });
 
-    const uniqueValues = Object.keys(numRowsByUniqueValue);
+    const uniqueValues = Array.from(numRowsByUniqueValue.keys());
 
     let columnValuesMessage = '';
 
@@ -150,7 +151,7 @@ export default function useUIDataColumns(
       originalColumn.mapping.forEach((map) => {
         tags = tags.concat(map.tags);
         if (map.value) {
-          numRows += numRowsByUniqueValue[map.value];
+          numRows += numRowsByUniqueValue.get(map.value) || 0;
         }
         if (!map.value) {
           numRows += numberOfEmptyRows;
@@ -182,7 +183,7 @@ export default function useUIDataColumns(
           orgs = orgs.concat(map.orgId);
         }
         if (map.value) {
-          numPeople += numRowsByUniqueValue[map.value];
+          numPeople += numRowsByUniqueValue.get(map.value) || 0;
         }
         if (!map.value) {
           numPeople += numberOfEmptyRows;
@@ -404,7 +405,7 @@ export default function useUIDataColumns(
       getAssignedTags,
       getSelectedOrgId,
       mappingResultsMessage,
-      numRowsByUniqueValue,
+      numRowsByUniqueValue: Object.fromEntries(numRowsByUniqueValue.entries()),
       numberOfEmptyRows,
       originalColumn,
       selectOrg,
