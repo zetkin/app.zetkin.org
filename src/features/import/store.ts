@@ -71,15 +71,6 @@ const importSlice = createSlice({
     importErrorsAdd: (state, action: PayloadAction<IMPORT_ERROR[]>) => {
       state.importErrors = action.payload;
     },
-    importOperationsAdd: (
-      state,
-      action: PayloadAction<ZetkinPersonImportOp[]>
-    ) => {
-      state.importOperations = action.payload;
-    },
-    importOperationsClear: (state) => {
-      state.importOperations = [];
-    },
     importPreviewAdd: (state, action: PayloadAction<PersonImportSummary>) => {
       state.preflightSummary = action.payload;
     },
@@ -104,8 +95,6 @@ export const {
   addFile,
   columnUpdate,
   importErrorsAdd,
-  importOperationsAdd,
-  importOperationsClear,
   importPreviewAdd,
   importPreviewClear,
   importResultAdd,

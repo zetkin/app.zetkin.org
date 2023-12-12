@@ -1,10 +1,13 @@
+import { CountryCode } from 'libphonenumber-js';
 import { useState } from 'react';
 
 import { ALERT_STATUS } from '../components/ImportDialog/Steps/ImportAlert';
 import { importResultAdd } from '../store';
 import messageIds from '../l10n/messageIds';
+import prepareImportOperations from '../utils/prepareImportOperations';
 import useFieldTitle from '../../../utils/hooks/useFieldTitle';
 import { useMessages } from 'core/i18n';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -29,10 +32,13 @@ export default function usePreflight(orgId: number) {
   const apiClient = useApiClient();
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
-  const importOperations = useAppSelector(
-    (state) => state.import.importOperations
-  );
   const importErrors = useAppSelector((state) => state.import.importErrors);
+  const selectedSheetIndex = useAppSelector(
+    (state) => state.import.pendingFile.selectedSheetIndex
+  );
+  const sheet = useAppSelector(
+    (state) => state.import.pendingFile.sheets[selectedSheetIndex]
+  );
   const preflightSummary = useAppSelector(
     (state) => state.import.preflightSummary
   );
@@ -43,6 +49,11 @@ export default function usePreflight(orgId: number) {
   const tags = useTags(orgId).data ?? [];
   const organizations = useOrganizations().data ?? [];
   const getFieldTitle = useFieldTitle(orgId);
+  const organization = useOrganization(orgId).data;
+
+  if (!organization) {
+    return;
+  }
 
   const { addedToOrg, tagged } = preflightSummary;
 
@@ -182,6 +193,11 @@ export default function usePreflight(orgId: number) {
       numCreated: preflightSummary.created.total,
     });
   }
+
+  const importOperations = prepareImportOperations(
+    sheet,
+    organization.country as CountryCode
+  );
 
   const importPeople = async () => {
     setLoading(true);

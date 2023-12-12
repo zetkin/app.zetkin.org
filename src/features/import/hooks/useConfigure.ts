@@ -11,7 +11,6 @@ import {
 } from '../utils/types';
 import {
   importErrorsAdd,
-  importOperationsAdd,
   importPreviewAdd,
   importPreviewClear,
 } from '../store';
@@ -47,8 +46,6 @@ export default function useConfigure(orgId: number) {
         configuredSheet,
         countryCode
       );
-
-      dispatch(importOperationsAdd(importOperations));
 
       const previewRes = await apiClient.post<
         ImportPreview,

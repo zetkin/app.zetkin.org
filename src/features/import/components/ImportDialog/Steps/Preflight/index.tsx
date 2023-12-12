@@ -36,6 +36,13 @@ const Preflight: FC<PreflightProps> = ({
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
+
+  const preflightData = usePreflight(orgId);
+
+  if (!preflightData) {
+    return null;
+  }
+
   const {
     orgsWithNewPeople,
     addedTags,
@@ -46,7 +53,7 @@ const Preflight: FC<PreflightProps> = ({
     onCheckAlert,
     statusMessage,
     summary,
-  } = usePreflight(orgId);
+  } = preflightData;
 
   return (
     <Box display="flex" flexDirection="column" height={loading ? '' : '90vh'}>
