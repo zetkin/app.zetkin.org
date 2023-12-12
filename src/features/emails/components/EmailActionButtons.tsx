@@ -56,7 +56,6 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
 
   // -----------fake datas-----------------
   const isTargeted = true;
-  // const statsFuture = { data: { allTargets: 11 } };
   // --------------------------------------
   const [sendingDate, setSendingDate] = useState(
     email?.published.slice(0, 10) ?? null
@@ -64,11 +63,13 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const [sendingTime, setSendingTime] = useState(
     email?.published ? removeOffset(email.published.slice(11, 16)) : '09:00'
   );
+  const targetNum = statsFuture.data?.allTargets || 0;
 
   const naiveSending = `${sendingDate || '0000-00-00'}T${sendingTime}`;
   return (
     <Box display="flex">
       <Button
+        disabled={targetNum === 0}
         endIcon={<ArrowDropDown />}
         onClick={(event) => setAnchorEl(anchorEl ? null : event.currentTarget)}
         variant="contained"
@@ -177,12 +178,12 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
                 {locked ? (
                   <Msg
                     id={messageIds.emailActionButtons.afterLock}
-                    values={{ numTargets: statsFuture.data?.allTargets || 0 }}
+                    values={{ numTargets: targetNum }}
                   />
                 ) : (
                   <Msg
                     id={messageIds.emailActionButtons.beforeLock}
-                    values={{ numTargets: statsFuture.data?.allTargets || 0 }}
+                    values={{ numTargets: targetNum }}
                   />
                 )}
               </Typography>

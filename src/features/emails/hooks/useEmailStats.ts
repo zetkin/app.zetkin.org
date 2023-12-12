@@ -21,7 +21,7 @@ export default function useEmailStats(
 
   const statsFuture = loadItemIfNecessary(statsItem, dispatch, {
     actionOnLoad: () => statsLoad(emailId),
-    actionOnSuccess: () => statsLoaded({ allTargets: 0, id: 1 }),
+    actionOnSuccess: () => statsLoaded({ allTargets: 11, id: 1 }),
     //wrong loader, fix it later
     loader: () => apiClient.get<EmailStats>(`/api/orgs/${orgId}`),
   });
