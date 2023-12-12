@@ -47,6 +47,25 @@ const emailsSlice = createSlice({
         item.isStale = false;
       }
     },
+    emailUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [id, mutating] = action.payload;
+      const item = state.emailList.items.find((item) => item.id == id);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    emailUpdated: (state, action: PayloadAction<[ZetkinEmail, string[]]>) => {
+      const [email, mutating] = action.payload;
+      const item = state.emailList.items.find((item) => item.id == email.id);
+      if (item) {
+        item.mutating = item.mutating.filter(
+          (attr) => !mutating.includes(attr)
+        );
+        if (item.data) {
+          item.data = email;
+        }
+      }
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const statsItem = state.statsById[id];
@@ -75,6 +94,8 @@ export const {
   emailCreated,
   emailLoad,
   emailLoaded,
+  emailUpdate,
+  emailUpdated,
   statsLoad,
   statsLoaded,
 } = emailsSlice.actions;

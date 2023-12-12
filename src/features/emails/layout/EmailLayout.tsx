@@ -21,7 +21,7 @@ interface EmailLayoutProps {
 const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const { orgId, campId, emailId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const { data: email } = useEmail(orgId, emailId);
+  const { data: email, updateEmail } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   if (!email) {
@@ -30,7 +30,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
 
   return (
     <TabbedLayout
-      actionButtons={<EmailActionButtons orgId={orgId} emailId={emailId} />}
+      actionButtons={<EmailActionButtons emailId={emailId} orgId={orgId} />}
       baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
       defaultTab="/"
       subtitle={
@@ -66,12 +66,14 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
         },
         {
           href: '/design',
-          label: messages.tabs.design(),
+          label: messages.tabs.compose(),
         },
       ]}
       title={
         <ZUIEditTextinPlace
-          onChange={() => console.log('hey')}
+          onChange={(newTitle) => {
+            updateEmail({ title: newTitle });
+          }}
           value={email.title}
         />
       }

@@ -40,7 +40,7 @@ export default makeMessages('feat.emails', {
     ),
   },
   tabs: {
-    design: m('Design'),
+    compose: m('Compose'),
     overview: m('Overview'),
   },
   targets: {
