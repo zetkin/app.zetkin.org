@@ -20,7 +20,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
       flexDirection="column"
       overflow="hidden"
       padding={2}
-      sx={{ overflowY: 'scroll' }}
+      sx={{ overflowY: 'auto' }}
     >
       <Typography sx={{ paddingBottom: 2 }} variant="h5">
         <Msg id={messageIds.configuration.configure.tags.header} />

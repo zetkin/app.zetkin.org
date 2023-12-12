@@ -37,7 +37,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
         <Box
           display="flex"
           flexDirection="column"
-          sx={{ overflowY: 'scroll' }}
+          sx={{ overflowY: 'auto' }}
           width="50%"
         >
           <SheetSettings

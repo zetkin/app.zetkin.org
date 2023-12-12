@@ -35,7 +35,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
     >
       <Box display="flex" flexDirection="column" overflow="hidden">
         <ImportHeader onClose={onClose} />
-        <Box display="flex" flexDirection="column" sx={{ overflowY: 'scroll' }}>
+        <Box display="flex" flexDirection="column" sx={{ overflowY: 'auto' }}>
           <Box paddingY={2}>
             <ImportAlert alert={alert} onClickBack={onClickBack} />
           </Box>

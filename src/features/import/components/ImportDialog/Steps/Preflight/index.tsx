@@ -87,7 +87,7 @@ const Preflight: FC<PreflightProps> = ({
             <Box
               display="flex"
               flexDirection="column"
-              sx={{ overflowY: 'scroll' }}
+              sx={{ overflowY: 'auto' }}
               width="50%"
             >
               <CreatedAndUpdated summary={summary} />
@@ -110,7 +110,7 @@ const Preflight: FC<PreflightProps> = ({
                 )}
               </Stack>
             </Box>
-            <Box ml={2} sx={{ overflowY: 'scroll' }} width="50%">
+            <Box ml={2} sx={{ overflowY: 'auto' }} width="50%">
               <Typography sx={{ mb: 2 }} variant="h5">
                 <Msg id={messageIds.validation.messages} />
               </Typography>

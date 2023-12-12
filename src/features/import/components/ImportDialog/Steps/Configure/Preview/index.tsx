@@ -80,7 +80,7 @@ const Preview = () => {
         justifyContent="space-between"
         minHeight="5em"
         sx={{
-          overflowX: 'scroll',
+          overflowX: 'auto',
           overflowY: 'hidden',
         }}
       >
