@@ -22,11 +22,18 @@ export default function useEmail(
     actionOnLoad: () => emailLoad(emailId),
     actionOnSuccess: () =>
       emailLoaded({
+        campaign_id: 121,
         content: 'world',
         id: 1,
         organization: { id: 6, title: 'Casework test' },
         published: '',
         subject: 'any',
+        target_query: {
+          filter_spec: [],
+          organization_id: 6,
+          query_type: 'email_target',
+          title: '',
+        },
         title: 'Hello!',
       }),
     // loader: () => apiClient.get(`api/orgs/${orgId}/emails/${emailId}`),

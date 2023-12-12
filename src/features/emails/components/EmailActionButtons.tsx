@@ -21,6 +21,8 @@ import {
 import { ArrowDropDown, ContentCopy } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
+import useEmail from '../hooks/useEmail';
+import useEmailStats from '../hooks/useEmailStats';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUITimezonePicker from 'zui/ZUITimezonePicker';
 import {
@@ -33,7 +35,12 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 dayjs.extend(utc);
 
-const EmailActionButtons = () => {
+interface EmailActionButtonsProp {
+  orgId: number;
+  emailId: number;
+}
+
+const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -42,24 +49,23 @@ const EmailActionButtons = () => {
   const [tzCode, setTzCode] = useState(currentTimezone);
   const [locked, setLocked] = useState(false);
 
-  //const {data:emailFuture, isTargeted} = useEmail(orgId, emailId)
+  // const {data:emailFuture, isTargeted} = useEmail(orgId, emailId)
+  const { data: email } = useEmail(orgId, emailId);
+  const { statsFuture } = useEmailStats(orgId, emailId);
   //const {updateEmail} = useEmailMutations(orgId, data.id)
-  // const {statsFuture} = useEmailStats(orgId,emailId)
 
   // -----------fake datas-----------------
   const isTargeted = true;
-  const fakeEmailFuture = { data: { date: '2023-12-09T10:00:00+00:00' } };
-  const statsFuture = { data: { allTargets: 11 } };
+  // const statsFuture = { data: { allTargets: 11 } };
   // --------------------------------------
   const [sendingDate, setSendingDate] = useState(
-    fakeEmailFuture.data.date.slice(0, 10)
+    email?.published.slice(0, 10) ?? null
   );
   const [sendingTime, setSendingTime] = useState(
-    removeOffset(fakeEmailFuture.data.date.slice(11, 16))
+    email?.published ? removeOffset(email.published.slice(11, 16)) : '09:00'
   );
 
-  const naiveSending = `${sendingDate}T${sendingTime}`;
-
+  const naiveSending = `${sendingDate || '0000-00-00'}T${sendingTime}`;
   return (
     <Box display="flex">
       <Button
@@ -104,7 +110,7 @@ const EmailActionButtons = () => {
                         }
                       }}
                       sx={{ marginBottom: 2 }}
-                      value={dayjs(sendingDate)}
+                      value={sendingDate != '' ? dayjs(sendingDate) : null}
                     />
                   </Box>
                   <Stack direction="row" spacing={2}>
@@ -171,12 +177,12 @@ const EmailActionButtons = () => {
                 {locked ? (
                   <Msg
                     id={messageIds.emailActionButtons.afterLock}
-                    values={{ numTargets: statsFuture.data.allTargets || 0 }}
+                    values={{ numTargets: statsFuture.data?.allTargets || 0 }}
                   />
                 ) : (
                   <Msg
                     id={messageIds.emailActionButtons.beforeLock}
-                    values={{ numTargets: statsFuture.data.allTargets || 0 }}
+                    values={{ numTargets: statsFuture.data?.allTargets || 0 }}
                   />
                 )}
               </Typography>
@@ -184,6 +190,10 @@ const EmailActionButtons = () => {
                 onClick={() => {
                   setAnchorEl(null);
                   setTzCode(currentTimezone);
+                  console.log(
+                    { date: `${naiveSending}:00`, timezone: tzCode },
+                    'yes'
+                  );
                   // save: () => {
                   // updateEmail({
                   //   date:`${naiveSending}:00`

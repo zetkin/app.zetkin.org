@@ -498,14 +498,17 @@ export type {
 };
 //fix ZetkinEmail related types later
 export interface ZetkinEmail {
+  campaign_id: number;
   id: number;
   published: string;
   subject: string;
-  organization: {
-    id: number;
-    title: string;
-  };
+  organization: { id: number; title: string };
   content: string;
   title: string;
+  target_query: {
+    filter_spec: [];
+    organization_id: number;
+    query_type: 'email_target';
+    title: string;
+  };
 }
-export type ZetkinEmailPartial = Partial<Omit<ZetkinEmail, 'organization'>>;

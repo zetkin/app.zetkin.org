@@ -1,9 +1,9 @@
 import { useAppDispatch } from 'core/hooks';
+import { ZetkinEmail } from 'utils/types/zetkin';
 import { emailCreate, emailCreated } from '../store';
-import { ZetkinEmail, ZetkinEmailPartial } from 'utils/types/zetkin';
 
 interface UseCreateEmailReturn {
-  createEmail: (body: ZetkinEmailPartial) => ZetkinEmail;
+  createEmail: (body: Partial<ZetkinEmail>) => ZetkinEmail;
   //   createEmail: (body: ZetkinEmailPartial) => IFuture<ZetkinEmail>;
 }
 
@@ -14,7 +14,7 @@ export default function useCreateEmail(
   //   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const createEmail = (body: ZetkinEmailPartial) => {
+  const createEmail = (body: Partial<ZetkinEmail>) => {
     dispatch(emailCreate);
     // const promise = apiClient
     //   .post<ZetkinEmail, ZetkinEmailPartial>(
@@ -27,12 +27,19 @@ export default function useCreateEmail(
     //   });
 
     //fake email
-    const email = {
+    const email: ZetkinEmail = {
+      campaign_id: 121,
       content: 'world',
       id: 1,
       organization: { id: 6, title: 'Casework test' },
       published: '',
       subject: 'any',
+      target_query: {
+        filter_spec: [],
+        organization_id: 6,
+        query_type: 'email_target',
+        title: '',
+      },
       title: body.title!,
     };
 
