@@ -22,13 +22,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const theme = useTheme();
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      overflow="hidden"
-      padding={2}
-      sx={{ overflowY: 'scroll' }}
-    >
+    <Box display="flex" flexDirection="column" padding={2}>
       <Typography sx={{ paddingBottom: 2 }} variant="h5">
         <Msg id={messageIds.configuration.configure.ids.header} />
       </Typography>
@@ -71,9 +65,6 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           </Box>
           <Divider />
           <Box padding={1}>
-            <Typography sx={{ paddingBottom: 1 }}>
-              <Msg id={messageIds.configuration.configure.ids.externalIDFile} />
-            </Typography>
             <Typography>
               <Msg
                 id={
@@ -110,9 +101,6 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           </Box>
           <Divider />
           <Box padding={1}>
-            <Typography sx={{ paddingBottom: 1 }}>
-              <Msg id={messageIds.configuration.configure.ids.zetkinIDFile} />
-            </Typography>
             <Typography>
               <Msg
                 id={messageIds.configuration.configure.ids.zetkinIDExplanation}

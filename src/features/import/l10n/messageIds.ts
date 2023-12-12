@@ -15,21 +15,21 @@ export default makeMessages('feat.import', {
     configure: {
       ids: {
         configExplanation: m(
-          'If the file you are importing is from another system than Zetkin, we can save your IDs to each person. Or, if your file is based on a sheet you exported from Zetkin, we can use the Zetkin IDs to match each row with a person in Zetkin.'
+          'Importing with IDs allows Zetkin (now or in the future) to update existing people in the database instead of creating duplicates.'
         ),
         externalID: m('External ID'),
         externalIDExplanation: m(
-          'The values in this column are IDs, but they do not come from Zetkin.'
+          'The values in this column are IDs from our main member system (not Zetkin).'
         ),
-        externalIDFile: m('File is from another system.'),
         header: m('Configure IDs'),
         showOrganizationSelectButton: m('Map to...'),
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
         ),
         zetkinID: m('Zetkin ID'),
-        zetkinIDExplanation: m('The values in this column are Zetkin IDs.'),
-        zetkinIDFile: m('File is from a Zetkin export.'),
+        zetkinIDExplanation: m(
+          'The values in this column are based on an export from Zetkin.'
+        ),
       },
       orgs: {
         header: m('Map values to organizations'),
@@ -292,7 +292,7 @@ export default makeMessages('feat.import', {
         },
         unselectedId: {
           desc: m(
-            'This can make updating people in Zetkin difficult and is not recommended.'
+            'This will create new records for every person, even if that results in duplicates, and can make updating people in Zetkin difficult. This is not recommended.'
           ),
           title: m('You have not chosen an ID column'),
         },
