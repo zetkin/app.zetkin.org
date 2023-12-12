@@ -23,6 +23,7 @@ export default makeMessages('feat.import', {
         ),
         externalIDFile: m('File is from another system.'),
         header: m('Configure IDs'),
+        showOrganizationSelectButton: m('Map to...'),
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
         ),

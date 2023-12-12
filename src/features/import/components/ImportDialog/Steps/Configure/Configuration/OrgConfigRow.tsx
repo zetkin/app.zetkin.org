@@ -1,15 +1,15 @@
-import { FC } from 'react';
 import { ArrowForward, Delete } from '@mui/icons-material';
 import {
   Box,
+  Button,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
   Typography,
-  useTheme,
 } from '@mui/material';
+import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { ZetkinOrganization } from 'utils/types/zetkin';
@@ -34,8 +34,11 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
   selectedOrgId,
   title,
 }) => {
-  const theme = useTheme();
   const messages = useMessages(messageIds);
+  const [mapping, setMapping] = useState(false);
+
+  const showSelect = mapping || selectedOrgId;
+
   return (
     <Box display="flex" flexDirection="column">
       <Box display="flex">
@@ -57,40 +60,50 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
           paddingRight={1}
           width="50%"
         >
-          <FormControl fullWidth size="small">
-            <InputLabel>
-              <Msg id={messageIds.configuration.configure.orgs.organizations} />
-            </InputLabel>
-            <Select
-              label={messages.configuration.configure.orgs.organizations()}
-              onChange={(event) => {
-                if (typeof event.target.value == 'number') {
-                  onSelectOrg(event.target.value);
+          {!showSelect && (
+            <Button onClick={() => setMapping(true)}>
+              <Msg
+                id={
+                  messageIds.configuration.configure.ids
+                    .showOrganizationSelectButton
                 }
-              }}
-              value={selectedOrgId || ''}
-            >
-              {orgs.map((org) => (
-                <MenuItem key={org.id} value={org.id}>
-                  {org.title}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <IconButton
-            disabled={!selectedOrgId}
-            onClick={() => {
-              if (selectedOrgId) {
-                onDeselectOrg();
-              }
-            }}
-          >
-            <Delete
-              sx={{
-                color: selectedOrgId ? 'secondary' : theme.palette.grey[400],
-              }}
-            />
-          </IconButton>
+              />
+            </Button>
+          )}
+          {showSelect && (
+            <>
+              <FormControl fullWidth size="small">
+                <InputLabel>
+                  <Msg
+                    id={messageIds.configuration.configure.orgs.organizations}
+                  />
+                </InputLabel>
+                <Select
+                  label={messages.configuration.configure.orgs.organizations()}
+                  onChange={(event) => {
+                    if (typeof event.target.value == 'number') {
+                      onSelectOrg(event.target.value);
+                    }
+                  }}
+                  value={selectedOrgId || ''}
+                >
+                  {orgs.map((org) => (
+                    <MenuItem key={org.id} value={org.id}>
+                      {org.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <IconButton
+                onClick={() => {
+                  onDeselectOrg();
+                  setMapping(false);
+                }}
+              >
+                <Delete color="secondary" />
+              </IconButton>
+            </>
+          )}
         </Box>
       </Box>
       <Typography color="secondary">
