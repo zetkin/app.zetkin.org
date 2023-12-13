@@ -1,11 +1,12 @@
 import NextLink from 'next/link';
-import ProceduralColorIcon from './ProceduralColorIcon';
-import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
-import { TreeItemData } from '../types';
 import TreeView from '@mui/lab/TreeView';
 import { Box, Typography, useTheme } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
+import React, { useMemo } from 'react';
+
+import ProceduralColorIcon from './ProceduralColorIcon';
+import { TreeItemData } from '../types';
 
 interface OrganizationTreeProps {
   treeItemData: TreeItemData[];
@@ -53,6 +54,10 @@ function OrganizationTree({
   orgId,
 }: OrganizationTreeProps): JSX.Element {
   const theme = useTheme();
+  const sortedTreeItems = useMemo(() => {
+    const sorted = treeItemData.sort((a, b) => a.title.localeCompare(b.title));
+    return sorted;
+  }, [treeItemData.length]);
 
   return (
     <div>
@@ -76,7 +81,7 @@ function OrganizationTree({
           },
         }}
       >
-        {renderTree({ onSwitchOrg, orgId, treeItemData })}
+        {renderTree({ onSwitchOrg, orgId, treeItemData: sortedTreeItems })}
       </TreeView>
     </div>
   );
