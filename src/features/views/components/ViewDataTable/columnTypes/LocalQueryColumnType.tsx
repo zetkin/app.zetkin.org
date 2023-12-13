@@ -8,6 +8,8 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import theme from '../../../../../theme';
 import { LocalQueryViewColumn, ZetkinViewColumn } from '../../types';
 
+import messageIds from 'features/views/l10n/messageIds';
+
 type LocalQueryViewCell = boolean | null;
 
 export default class LocalQueryColumnType

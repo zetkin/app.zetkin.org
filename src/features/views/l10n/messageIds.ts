@@ -342,9 +342,9 @@ export default makeMessages('feat.views', {
         csv: m('Download CSV file'),
         xlsx: m('Download Excel file'),
       },
-      true_bool: m('Yes'),
       shareLink: m('share data securely'),
       tabLabel: m('Download'),
+      true_bool: m('Yes'),
       warning1: m(
         'Avoid exporting data from Zetkin when you can, to ensure that all data is kept in order.'
       ),

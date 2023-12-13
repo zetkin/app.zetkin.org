@@ -28,7 +28,7 @@ export default class SurveyOptionColumnType
   cellToString(cell: SurveyOptionViewCell): string {
     const pickedThisOption = cell?.filter((submission) => submission.selected);
     return pickedThisOption?.length
-      ? messageIds.shareDialog.download.local_bool._defaultMessage
+      ? messageIds.shareDialog.download.true_bool._defaultMessage
       : '';
   }
 
