@@ -45,18 +45,14 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [tab, setTab] = useState<'now' | 'later'>('later');
-  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const [tzCode, setTzCode] = useState(currentTimezone);
+  // const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [utcValue, setUtcValue] = useState('');
   const [locked, setLocked] = useState(false);
 
-  // const {data:emailFuture, isTargeted} = useEmail(orgId, emailId)
-  const { data: email } = useEmail(orgId, emailId);
+  const { data: email, isTargeted } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
   //const {updateEmail} = useEmailMutations(orgId, data.id)
 
-  // -----------fake datas-----------------
-  const isTargeted = true;
-  // --------------------------------------
   const [sendingDate, setSendingDate] = useState(
     email?.published.slice(0, 10) ?? null
   );
@@ -66,6 +62,7 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const targetNum = statsFuture.data?.allTargets || 0;
 
   const naiveSending = `${sendingDate || '0000-00-00'}T${sendingTime}`;
+
   return (
     <Box display="flex">
       <Button
@@ -81,7 +78,7 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
           mouseEvent="onMouseUp"
           onClickAway={() => {
             setAnchorEl(null);
-            setTzCode(currentTimezone);
+            // setUtcTime(currentTimezone);
           }}
         >
           <Paper sx={{ p: 2, width: '550px' }}>
@@ -132,7 +129,7 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
                     />
                     <ZUITimezonePicker
                       onChange={(value) => {
-                        setTzCode(value.tzCode);
+                        setUtcValue(value.utc);
                       }}
                     />
                   </Stack>
@@ -190,15 +187,11 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
               <Button
                 onClick={() => {
                   setAnchorEl(null);
-                  setTzCode(currentTimezone);
-                  console.log(
-                    { date: `${naiveSending}:00`, timezone: tzCode },
-                    'yes'
-                  );
+                  // setUtcTime(currentTimezone);
+                  console.log({ date: `${naiveSending}:00Z${utcValue}` });
                   // save: () => {
                   // updateEmail({
                   //   date:`${naiveSending}:00`
-                  //   timezone:tzCode
                   // });
                   // },
                 }}

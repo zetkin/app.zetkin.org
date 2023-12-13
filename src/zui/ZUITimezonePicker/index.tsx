@@ -18,11 +18,9 @@ interface ZUITimezonePickerProps {
 const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
   const messages = useMessages(messageIds);
   const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   const [value, setValue] = useState(
     timezones.find((timezone) => timezone.tzCode === currentTimezone)
   );
-
   return (
     <Autocomplete
       fullWidth
