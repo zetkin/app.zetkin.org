@@ -51,7 +51,6 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
 
   const { data: email } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
-  //const {updateEmail} = useEmailMutations(orgId, data.id)
 
   const [sendingDate, setSendingDate] = useState(
     email?.published.slice(0, 10) ?? null
@@ -166,22 +165,33 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
                 mt: 2,
               }}
             >
-              <Typography
-                sx={{ color: theme.palette.grey['500'], mr: 2 }}
-                variant="body1"
-              >
-                {unlocked ? (
-                  <Msg
-                    id={messageIds.emailActionButtons.beforeLock}
-                    values={{ numTargets: targetNum }}
-                  />
-                ) : (
-                  <Msg
-                    id={messageIds.emailActionButtons.afterLock}
-                    values={{ numTargets: targetNum }}
-                  />
-                )}
-              </Typography>
+              {sendingDate == '' ? (
+                <Typography
+                  sx={{ color: theme.palette.statusColors.orange, mr: 1 }}
+                >
+                  <Msg id={messageIds.emailActionButtons.setDate} />
+                </Typography>
+              ) : (
+                <>
+                  {unlocked ? (
+                    <Typography
+                      sx={{ color: theme.palette.statusColors.orange, mr: 1 }}
+                    >
+                      <Msg id={messageIds.emailActionButtons.beforeLock} />
+                    </Typography>
+                  ) : (
+                    <Typography
+                      sx={{ color: theme.palette.grey['500'], mr: 2 }}
+                      variant="body1"
+                    >
+                      <Msg
+                        id={messageIds.emailActionButtons.afterLock}
+                        values={{ numTargets: targetNum }}
+                      />
+                    </Typography>
+                  )}
+                </>
+              )}
               <Button
                 disabled={sendingDate == '' || unlocked}
                 onClick={() => {

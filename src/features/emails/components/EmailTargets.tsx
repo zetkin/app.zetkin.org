@@ -1,7 +1,7 @@
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
-import { Add, Edit, Lock, Visibility } from '@mui/icons-material';
-import { Box, Button, Card, Typography } from '@mui/material';
+import { Add, Edit, Visibility } from '@mui/icons-material';
+import { Box, Button, Card, Typography, useTheme } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -29,17 +29,19 @@ interface EmailTargetsProps {
   orgId: number;
 }
 const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
+  const theme = useTheme();
   const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   const {
     data: email,
-    isTargeted,
+    // isTargeted,
     updateTargets: setTargets,
   } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
 
   //hard coded variables
-  const isLocked = false;
+  const isTargeted = true;
+  const isLocked = true;
 
   return (
     <>
@@ -61,7 +63,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
             </Typography>
             <Box pt={1}>
               {isTargeted ? (
-                <Box>
+                <Box alignItems="center" display="flex">
                   <Button
                     onClick={() => {
                       isLocked ? '' : setQueryDialogOpen(true);
@@ -78,13 +80,11 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
                     />
                   </Button>
                   {isLocked && (
-                    <Button
-                      startIcon={<Lock />}
-                      sx={{ ml: 2 }}
-                      variant="outlined"
+                    <Typography
+                      sx={{ color: theme.palette.statusColors.orange, ml: 2 }}
                     >
-                      <Msg id={messageIds.targets.unlock} />
-                    </Button>
+                      <Msg id={messageIds.targets.locked} />
+                    </Typography>
                   )}
                 </Box>
               ) : (

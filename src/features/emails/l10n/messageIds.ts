@@ -5,9 +5,7 @@ export default makeMessages('feat.emails', {
     afterLock: m<{ numTargets: number }>(
       'Will schedule email for {numTargets} people'
     ),
-    beforeLock: m<{ numTargets: number }>(
-      'Will schedule email for currently {numTargets} people'
-    ),
+    beforeLock: m('Lock targeting to proceed'),
     delevery: m('Delivery'),
     deliveryDate: m('Delivery date'),
     deliveryTime: m('Delivery time'),
@@ -27,6 +25,7 @@ export default makeMessages('feat.emails', {
       },
       header: m('Send now'),
     },
+    setDate: m('Set delivery date to proceed'),
     timeZone: m('Timezone'),
   },
   state: {
@@ -46,9 +45,9 @@ export default makeMessages('feat.emails', {
   targets: {
     defineButton: m('Define target group'),
     editButton: m('Edit target group'),
+    locked: m('Targets are locked for delivery'),
     subtitle: m('Use smart search to define the recipients of this mail.'),
     title: m('Targets'),
-    unlock: m('Unlock'),
     viewButton: m('View target group'),
   },
 });
