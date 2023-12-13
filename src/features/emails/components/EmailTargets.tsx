@@ -34,14 +34,13 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   const {
     data: email,
-    // isTargeted,
+    isTargeted,
     updateTargets: setTargets,
   } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
 
   //hard coded variables
-  const isTargeted = true;
-  const isLocked = true;
+  const isLocked = false;
 
   return (
     <>
@@ -65,9 +64,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
               {isTargeted ? (
                 <Box alignItems="center" display="flex">
                   <Button
-                    onClick={() => {
-                      isLocked ? '' : setQueryDialogOpen(true);
-                    }}
+                    onClick={() => setQueryDialogOpen(true)}
                     startIcon={isLocked ? <Visibility /> : <Edit />}
                     variant="outlined"
                   >
@@ -108,6 +105,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
             setQueryDialogOpen(false);
           }}
           query={email?.target_query}
+          readOnly={isLocked}
         />
       )}
     </>
