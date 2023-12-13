@@ -1,12 +1,13 @@
 import { futureToObject } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
-import { ZetkinEmail } from 'utils/types/zetkin';
 import { emailLoad, emailLoaded, emailUpdate, emailUpdated } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 
 interface UseEmailReturn {
   data: ZetkinEmail | null;
   updateEmail: (data: Partial<ZetkinEmail>) => ZetkinEmail;
+  updateTargets: (query: Partial<ZetkinQuery>) => void;
 }
 
 const fakeEmail: ZetkinEmail = {
@@ -50,8 +51,42 @@ export default function useEmail(
     return { ...fakeEmail, title: data.title! };
   };
 
+  const updateTargets = (query: Partial<ZetkinQuery>): void => {
+    if (emailItem?.data) {
+      //need to fix when there is API for it
+      dispatch(emailUpdate([emailId, ['target_query']]));
+
+      dispatch(
+        emailUpdated([
+          {
+            ...emailItem?.data,
+            target_query: {
+              filter_spec: [
+                {
+                  config: {
+                    fields: {
+                      first_name: 'z',
+                    },
+                  },
+                  op: 'add',
+                  // organization_id: 6,
+                  type: 'person_data',
+                },
+              ],
+              organization_id: 6,
+              query_type: 'email_target',
+              title: 'My call assignment',
+            },
+          },
+          ['target_query'],
+        ])
+      );
+    }
+  };
+
   return {
     ...futureToObject(emailFuture),
     updateEmail,
+    updateTargets,
   };
 }

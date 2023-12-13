@@ -6,6 +6,7 @@ import { Box, Button, Card, Typography } from '@mui/material';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
+import useEmail from '../hooks/useEmail';
 import useEmailStats from '../hooks/useEmailStats';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
@@ -30,7 +31,7 @@ interface EmailTargetsProps {
 const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
   const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
-  // const {data:email, isTargeted,updateTargets:setTargets, isLocked}= useEmail(orgId,emailId)
+  const { updateTargets: setTargets } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
 
   //hard coded variables
@@ -97,7 +98,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
         <SmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}
           onSave={(query) => {
-            // setTargets(query);
+            setTargets(query);
             setQueryDialogOpen(false);
           }}
           query={null}
