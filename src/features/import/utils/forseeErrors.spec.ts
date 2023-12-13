@@ -57,6 +57,34 @@ describe('forseeErrors()', () => {
       expect(errors).toEqual(['noIdentifier']);
     });
 
+    it('accepts empty external IDs', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['Ext id'],
+          },
+          {
+            data: ['123'],
+          },
+          {
+            data: [null],
+          },
+        ],
+      };
+
+      const errors = forseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
+
+      expect(errors).toHaveLength(0);
+    });
+
     it('identifies if there are missing ids in a Zetkin ID column', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,

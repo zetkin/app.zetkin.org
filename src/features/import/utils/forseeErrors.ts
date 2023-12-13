@@ -43,18 +43,18 @@ export default function forseeErrors(
             errors.push(IMPORT_ERROR.NOT_SELECTED_ID_TYPE);
           }
 
-          if (!value) {
-            errors.push(IMPORT_ERROR.ID_VALUE_MISSING);
-          } else {
-            if (fieldKey == 'id') {
+          if (fieldKey == 'id') {
+            if (!value) {
+              errors.push(IMPORT_ERROR.ID_VALUE_MISSING);
+            } else {
               value = parseInt(value.toString());
               if (isNaN(value)) {
                 errors.push(IMPORT_ERROR.ID);
               }
-            } else if (fieldKey == 'ext_id') {
-              if (value.toString().length > 96) {
-                errors.push(IMPORT_ERROR.LONG_EXT_ID);
-              }
+            }
+          } else if (fieldKey == 'ext_id') {
+            if (value && value.toString().length > 96) {
+              errors.push(IMPORT_ERROR.LONG_EXT_ID);
             }
           }
         }
