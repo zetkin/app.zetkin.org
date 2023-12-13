@@ -17,7 +17,10 @@ import campaignsSlice, {
   campaignDeleted,
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
-import eventsSlice, { EventsStoreSlice } from 'features/events/store';
+import eventsSlice, {
+  eventCreated,
+  EventsStoreSlice,
+} from 'features/events/store';
 import journeysSlice, {
   journeyInstanceCreated,
   JourneysStoreSlice,
@@ -99,6 +102,16 @@ listenerMiddleware.startListening({
     const [callAssignment, campId] = action.payload;
     Router.push(
       `/organize/${callAssignment.organization?.id}/projects/${campId}/callassignments/${callAssignment.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: eventCreated,
+  effect: (action) => {
+    const event = action.payload;
+    Router.push(
+      `/organize/${event.organization?.id}/projects/${event.campaign?.id}/events/${event.id}`
     );
   },
 });
