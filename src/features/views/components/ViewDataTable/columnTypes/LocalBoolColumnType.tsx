@@ -21,9 +21,9 @@ import useViewGrid, {
 import messageIds from 'features/views/l10n/messageIds';
 
 export default class LocalBoolColumnType implements IColumnType {
-  cellToString(cell: boolean | null): string {    
+  cellToString(cell: boolean | null): string {
     if (cell === true) {
-      return messageIds.shareDialog.download.local_bool._defaultMessage;
+      return messageIds.shareDialog.download.true_bool._defaultMessage;
     } else {
       return '';
     }

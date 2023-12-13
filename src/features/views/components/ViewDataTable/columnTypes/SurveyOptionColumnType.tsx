@@ -27,7 +27,9 @@ export default class SurveyOptionColumnType
 {
   cellToString(cell: SurveyOptionViewCell): string {
     const pickedThisOption = cell?.filter((submission) => submission.selected);
-    return pickedThisOption?.length ? pickedThisOption[0].submitted : '';
+    return pickedThisOption?.length
+      ? messageIds.shareDialog.download.local_bool._defaultMessage
+      : '';
   }
 
   getColDef(): Omit<GridColDef<SurveyOptionViewColumn>, 'field'> {

@@ -342,7 +342,7 @@ export default makeMessages('feat.views', {
         csv: m('Download CSV file'),
         xlsx: m('Download Excel file'),
       },
-      local_bool: m('Yes'),
+      true_bool: m('Yes'),
       shareLink: m('share data securely'),
       tabLabel: m('Download'),
       warning1: m(

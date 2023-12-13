@@ -14,7 +14,11 @@ export default class LocalQueryColumnType
   implements IColumnType<ZetkinViewColumn, LocalQueryViewCell>
 {
   cellToString(cell: LocalQueryViewCell): string {
-    return cell ? cell.toString() : '';
+    if (cell === true) {
+      return messageIds.shareDialog.download.true_bool._defaultMessage;
+    } else {
+      return '';
+    }
   }
 
   getColDef(): Omit<GridColDef, 'field'> {
