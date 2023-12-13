@@ -16,7 +16,9 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
       parse<CellData[], File>(file, {
         complete: (result) => {
           if (result.data) {
-            const rows = result.data.map((rowData) => ({ data: rowData }));
+            const rows = result.data
+              .filter((rowData) => rowData.length > 1 || rowData[0] != '')
+              .map((rowData) => ({ data: rowData }));
             const sheetObject = {
               columns: [],
               currentlyConfiguring: null,
