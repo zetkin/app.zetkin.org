@@ -47,9 +47,9 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const [tab, setTab] = useState<'now' | 'later'>('later');
   // const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [utcValue, setUtcValue] = useState('');
-  const [locked, setLocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(true);
 
-  const { data: email, isTargeted } = useEmail(orgId, emailId);
+  const { data: email } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
   //const {updateEmail} = useEmailMutations(orgId, data.id)
 
@@ -146,20 +146,18 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
                 </Alert>
               </TabPanel>
             </TabContext>
-            {isTargeted && (
-              <Box display="flex" flexDirection="column">
-                <FormControlLabel
-                  control={
-                    <Checkbox onChange={(e) => setLocked(e.target.checked)} />
-                  }
-                  label={messages.emailActionButtons.lockTarget()}
-                  sx={{ margin: '10px 10px 0 10px' }}
-                />
-                <Typography color="secondary" variant="body2">
-                  <Msg id={messageIds.emailActionButtons.lockDesc} />
-                </Typography>
-              </Box>
-            )}
+            <Box display="flex" flexDirection="column">
+              <FormControlLabel
+                control={
+                  <Checkbox onChange={(e) => setUnlocked(!e.target.checked)} />
+                }
+                label={messages.emailActionButtons.lockTarget()}
+                sx={{ margin: '10px 10px 0 10px', width: 'fit-content' }}
+              />
+              <Typography color="secondary" variant="body2">
+                <Msg id={messageIds.emailActionButtons.lockDesc} />
+              </Typography>
+            </Box>
             <Box
               sx={{
                 alignItems: 'center',
@@ -172,19 +170,20 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
                 sx={{ color: theme.palette.grey['500'], mr: 2 }}
                 variant="body1"
               >
-                {locked ? (
+                {unlocked ? (
                   <Msg
-                    id={messageIds.emailActionButtons.afterLock}
+                    id={messageIds.emailActionButtons.beforeLock}
                     values={{ numTargets: targetNum }}
                   />
                 ) : (
                   <Msg
-                    id={messageIds.emailActionButtons.beforeLock}
+                    id={messageIds.emailActionButtons.afterLock}
                     values={{ numTargets: targetNum }}
                   />
                 )}
               </Typography>
               <Button
+                disabled={sendingDate == '' || unlocked}
                 onClick={() => {
                   setAnchorEl(null);
                   // setUtcTime(currentTimezone);
