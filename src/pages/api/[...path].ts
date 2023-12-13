@@ -8,6 +8,14 @@ import getFilters from 'utils/getFilters';
 import { stringToBool } from 'utils/stringUtils';
 import { ZetkinZResource, ZetkinZResult } from 'utils/types/sdk';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
+};
+
 //TODO: Create module definition and revert to import.
 const Z = require('zetkin');
 
