@@ -505,16 +505,5 @@ export interface ZetkinEmail {
   organization: { id: number; title: string };
   content: string;
   title: string;
-  target_query: {
-    filter_spec: FilterSpecType[];
-    organization_id: number;
-    query_type: 'email_target';
-    title: string;
-  };
+  target_query: ZetkinQuery;
 }
-//remove it later
-type FilterSpecType = {
-  config: any;
-  op: string;
-  type: string;
-};

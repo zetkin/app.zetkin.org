@@ -31,11 +31,14 @@ interface EmailTargetsProps {
 const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
   const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
-  const { updateTargets: setTargets } = useEmail(orgId, emailId);
+  const {
+    data: email,
+    isTargeted,
+    updateTargets: setTargets,
+  } = useEmail(orgId, emailId);
   const { statsFuture } = useEmailStats(orgId, emailId);
 
   //hard coded variables
-  const isTargeted = false;
   const isLocked = false;
 
   return (
@@ -60,6 +63,9 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
               {isTargeted ? (
                 <Box>
                   <Button
+                    onClick={() => {
+                      isLocked ? '' : setQueryDialogOpen(true);
+                    }}
                     startIcon={isLocked ? <Visibility /> : <Edit />}
                     variant="outlined"
                   >
@@ -101,7 +107,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
             setTargets(query);
             setQueryDialogOpen(false);
           }}
-          query={null}
+          query={email?.target_query}
         />
       )}
     </>
