@@ -1,4 +1,6 @@
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
+import getSurveyUrl from '../utils/getSurveyUrl';
+import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useSurvey from '../hooks/useSurvey';
@@ -16,24 +18,20 @@ import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 
-import messageIds from '../l10n/messageIds';
-
 interface SurveyLayoutProps {
   children: React.ReactNode;
   orgId: string;
-  campaignId: string;
   surveyId: string;
 }
 
 const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   children,
   orgId,
-  campaignId,
   surveyId,
 }) => {
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
-  const dataFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
   const { publish, unpublish, updateSurvey } = useSurveyMutations(
     parseInt(orgId),
     parseInt(surveyId)
@@ -61,14 +59,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         )
       }
-      baseHref={`/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`}
+      baseHref={getSurveyUrl(surveyFuture.data)}
       belowActionButtons={
         <ZUIDateRangePicker
-          endDate={dataFuture.data?.expires || null}
+          endDate={surveyFuture.data?.expires || null}
           onChange={(startDate, endDate) => {
             updateSurvey({ expires: endDate, published: startDate });
           }}
-          startDate={dataFuture.data?.published || null}
+          startDate={surveyFuture.data?.published || null}
         />
       }
       defaultTab="/"
@@ -137,7 +135,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         },
       ]}
       title={
-        <ZUIFuture future={dataFuture}>
+        <ZUIFuture future={surveyFuture}>
           {(data) => {
             return (
               <ZUIEditTextinPlace
