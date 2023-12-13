@@ -1,4 +1,3 @@
-import { ZetkinPersonImportOp } from './utils/prepareImportOperations';
 import {
   Column,
   IMPORT_ERROR,
@@ -11,7 +10,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface ImportStoreSlice {
   importResult: PersonImport;
   importErrors: IMPORT_ERROR[];
-  importOperations: ZetkinPersonImportOp[];
   preflightSummary: PersonImportSummary;
   pendingFile: ImportedFile;
 }
@@ -36,7 +34,6 @@ const emptySummary: PersonImportSummary = {
 
 const initialState: ImportStoreSlice = {
   importErrors: [],
-  importOperations: [],
   importResult: {
     accepted: '',
     completed: null,
