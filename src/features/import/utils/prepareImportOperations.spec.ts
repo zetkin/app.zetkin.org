@@ -166,11 +166,11 @@ describe('prepareImportOperations()', () => {
       expect(result).toEqual([
         {
           op: 'person.import',
-          tags: [{ id: 123 }, { id: 100 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -279,7 +279,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -289,7 +289,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -339,7 +339,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [{ id: 123 }, { id: 100 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -348,7 +348,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -406,7 +406,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -415,7 +415,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -474,7 +474,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -484,7 +484,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -536,7 +536,7 @@ describe('prepareImportOperations()', () => {
         {
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -544,7 +544,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [273],
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -603,7 +603,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -665,7 +665,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -673,7 +673,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '124',
           },
           op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -681,7 +681,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
       ]);
     });
@@ -739,7 +739,7 @@ describe('prepareImportOperations()', () => {
         {
           op: 'person.import',
           organizations: [273],
-          tags: [{ id: 124 }, { id: 100 }],
+          tags: [{ tag_id: 124 }, { tag_id: 100 }],
         },
         {
           data: {
@@ -808,7 +808,12 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }, { id: 111 }, { id: 222 }],
+          tags: [
+            { tag_id: 123 },
+            { tag_id: 100 },
+            { tag_id: 111 },
+            { tag_id: 222 },
+          ],
         },
         {
           data: {
@@ -817,7 +822,12 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [273],
-          tags: [{ id: 124 }, { id: 100 }, { id: 333 }, { id: 444 }],
+          tags: [
+            { tag_id: 124 },
+            { tag_id: 100 },
+            { tag_id: 333 },
+            { tag_id: 444 },
+          ],
         },
       ]);
     });
@@ -878,7 +888,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [111],
-          tags: [{ id: 123 }, { id: 100 }, { id: 222 }],
+          tags: [{ tag_id: 123 }, { tag_id: 100 }, { tag_id: 222 }],
         },
         {
           data: {
@@ -887,7 +897,12 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [333],
-          tags: [{ id: 124 }, { id: 100 }, { id: 333 }, { id: 444 }],
+          tags: [
+            { tag_id: 124 },
+            { tag_id: 100 },
+            { tag_id: 333 },
+            { tag_id: 444 },
+          ],
         },
       ]);
     });
