@@ -31,13 +31,14 @@ export default function useCreateTag(
         });
       return tagFuture;
     } else {
+      dispatch(tagCreate());
       const tagFuture = await apiClient
         .post<ZetkinTag, ZetkinTagPostBody>(
           `/api/orgs/${orgId}/people/tags`,
           tag
         )
         .then((data: ZetkinTag) => {
-          //   dispatch(tagGroupCreated);
+          dispatch(tagCreated(data));
           return data;
         });
       return tagFuture;
