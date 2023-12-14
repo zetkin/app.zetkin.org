@@ -45,23 +45,7 @@ const importSlice = createSlice({
       state.preflightSummary = action.payload;
     },
     importPreviewClear: (state) => {
-      state.preflightSummary = {
-        addedToOrg: {
-          byOrg: {},
-          total: 0,
-        },
-        created: {
-          total: 0,
-        },
-        tagged: {
-          byTag: {},
-          total: 0,
-        },
-        updated: {
-          byField: {},
-          total: 0,
-        },
-      };
+      state.preflightSummary = null;
     },
     importResultAdd: (state, action: PayloadAction<PersonImport>) => {
       state.importResult = action.payload;
