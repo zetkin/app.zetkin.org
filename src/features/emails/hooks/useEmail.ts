@@ -40,7 +40,7 @@ export default function useEmail(
   };
 
   const isTargeted = !!(
-    emailFuture.data && emailFuture.data.target_query?.filter_spec?.length != 0
+    emailFuture.data && emailFuture.data.target?.filter_spec?.length != 0
   );
 
   const updateEmail = (data: Partial<ZetkinEmail>) => {
@@ -59,17 +59,17 @@ export default function useEmail(
   const updateTargets = (query: Partial<ZetkinQuery>): void => {
     if (emailItem?.data) {
       //need to fix when there is API for it
-      dispatch(emailUpdate([emailId, ['target_query']]));
+      dispatch(emailUpdate([emailId, ['target']]));
       dispatch(
         emailUpdated([
           {
             ...emailItem?.data,
-            target_query: {
+            target: {
               filter_spec: query.filter_spec!,
               id: 6,
             },
           },
-          ['target_query'],
+          ['target'],
         ])
       );
     }

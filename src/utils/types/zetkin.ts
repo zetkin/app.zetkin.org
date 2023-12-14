@@ -505,5 +505,5 @@ export interface ZetkinEmail {
   organization: { id: number; title: string };
   content: string;
   title: string;
-  target_query: ZetkinQuery;
+  target: ZetkinQuery;
 }

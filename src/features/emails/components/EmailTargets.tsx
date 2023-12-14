@@ -104,7 +104,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
             setTargets(query);
             setQueryDialogOpen(false);
           }}
-          query={email?.target_query}
+          query={email?.target}
           readOnly={isLocked}
         />
       )}
