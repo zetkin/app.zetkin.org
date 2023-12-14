@@ -93,9 +93,9 @@ export default function usePreflight(orgId: number) {
   importErrors.forEach((error) => {
     if (error != IMPORT_ERROR.ID_MISSING) {
       alerts.push({
-        msg: messages.validation.alerts.errors.messages[error](),
+        msg: messages.validation.alerts.errors[error].description(),
         status: ALERT_STATUS.ERROR,
-        title: messages.validation.alerts.errors.titles[error](),
+        title: messages.validation.alerts.errors[error].title(),
       });
     }
   });
@@ -103,9 +103,9 @@ export default function usePreflight(orgId: number) {
   //Error: API call was made, but nothing will be imported
   if (emptyImport) {
     alerts.push({
-      msg: messages.validation.alerts.errors.messages['empty'](),
+      msg: messages.validation.alerts.errors.empty.description(),
       status: ALERT_STATUS.ERROR,
-      title: messages.validation.alerts.errors.titles['empty'](),
+      title: messages.validation.alerts.errors.empty.title(),
     });
   }
 

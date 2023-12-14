@@ -202,79 +202,113 @@ export default makeMessages('feat.import', {
       back: m('Go back'),
       checkbox: m('I understand'),
       errors: {
-        messages: {
-          altPhone: m(
+        altPhone: {
+          description: m(
             'Some of the values in the alternate phone number column are not valid phone numbers.'
           ),
-          date: m('Some of the values in a date column are not valid dates.'),
-          email: m(
+          title: m('Invalid alternate phone number formats'),
+        },
+        date: {
+          description: m(
+            'Some of the values in a date column are not valid dates.'
+          ),
+          title: m('Invalid date formats'),
+        },
+        email: {
+          description: m(
             'Some of the values in your email column are not valid email addresses.'
           ),
-          empty: m(
+          title: m('Invalid email address formats'),
+        },
+        empty: {
+          description: m(
             'This import would not update or import anything so you can not proceed. Please go back and check that the configurations you made are correct or select a new file to upload.'
           ),
-          gender: m(
+          title: m('This import would not change anything'),
+        },
+        gender: {
+          description: m(
             'Some of the values in the gender column are incompatible with Zetkin gender formats. The values need to be either one of the letters f, m or o, or an empty cell.'
           ),
-          id: m(
+          title: m('Invalid gender formats'),
+        },
+        id: {
+          description: m(
             'Some of the values in the Zetkin ID column are not numbers. Zetkin IDs are always only numbers.'
           ),
-          idValueMissing: m(
+          title: m('Zetkin IDs are not in correct format'),
+        },
+        idValueMissing: {
+          description: m(
             'Some of the values in the Zetkin ID column are empty.'
           ),
-          longCoAddress: m(
+          title: m('Missing Zetkin IDs'),
+        },
+        longCoAddress: {
+          description: m(
             'Some values in the C/O Address column are too long, please check that they are no longer than 200 characters.'
           ),
-          longCountry: m(
+          title: m('Too long values in C/O Address column'),
+        },
+        longCountry: {
+          description: m(
             'Some values in the Country column are too long, please check that they are no longer than 60 characters.'
           ),
-          longExtId: m(
+          title: m('Too long values in Country column'),
+        },
+        longExtId: {
+          description: m(
             'Some values in the external ID column are too long, please check that they are no longer than 96 characters.'
           ),
-          longFirstName: m(
+          title: m('Too long values in external ID column'),
+        },
+        longFirstName: {
+          description: m(
             'Some values in the First Name column are too long, please check that they are no longer than 50 characters.'
           ),
-          longLastName: m(
+          title: m('Too long values in First Name column'),
+        },
+        longLastName: {
+          description: m(
             'Some values in the Last Name column are too long, please check that they are no longer than 50 characters.'
           ),
-          longStreetAddress: m(
+          title: m('Too long values in Last Name column'),
+        },
+        longStreetAddress: {
+          description: m(
             'Some values in the Street Address column are too long, please check that they are no longer than 200 characters.'
           ),
-          noIdentifier: m(
+          title: m('Too long values in Street Address column'),
+        },
+        noIdentifier: {
+          description: m(
             'To make it possible to import you need to select either both first and last name columns, or an ID column'
           ),
-          notSelectedIdType: m(
+          title: m('There is nothing to identify the data you want to import'),
+        },
+        notSelectedIdType: {
+          description: m(
             'You need to select if your ID column is Zetkin IDs or external IDs.'
           ),
-          phone: m(
+          title: m('Unfinished ID configuration'),
+        },
+        phone: {
+          description: m(
             'Some of the values in the phone number column are not valid phone numbers.'
           ),
-          postCode: m(
+          title: m('Invalid phone number formats'),
+        },
+        postCode: {
+          description: m(
             'Some of the values in the post code column are not valid post codes.'
           ),
-          url: m('Some of the values in the URL column are not valid URLS'),
+          title: m('Invalid post code formats'),
         },
-        titles: {
-          altPhone: m('Invalid alternate phone number formats'),
-          date: m('Invalid date formats'),
-          email: m('Invalid email address formats'),
-          empty: m('This import would not change anything'),
-          gender: m('Invalid gender formats'),
-          id: m('Zetkin IDs are not in correct format'),
-          idValueMissing: m('Missing Zetkin IDs'),
-          longCoAddress: m('Too long values in C/O Address column'),
-          longCountry: m('Too long values in Country column'),
-          longExtId: m('Too long values in external ID column'),
-          longFirstName: m('Too long values in First Name column'),
-          longLastName: m('Too long values in Last Name column'),
-          longStreetAddress: m('Too long values in Street Address column'),
-          noIdentifier: m(
-            'There is nothing to identify the data you want to import'
+        url: {
+          description: m(
+            'Some of the values in the URL column are not valid URLS'
           ),
-          notSelectedIdType: m('Unfinished ID configuration'),
-          phone: m('Invalid phone number formats'),
-          postCode: m('Invalid post code formats'),
-          url: m('Invalid URL formats'),
+          title: m('Invalid URL formats'),
         },
       },
       info: {
