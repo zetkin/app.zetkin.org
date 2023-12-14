@@ -57,7 +57,7 @@ describe('forseeErrors()', () => {
       expect(errors).toEqual(['noIdentifier']);
     });
 
-    it.only('returns error when external id is empty and first- or last name is missing', () => {
+    it('returns error when external id is empty and first- or last name is missing', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
         columns: [
