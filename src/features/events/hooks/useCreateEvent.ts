@@ -1,3 +1,4 @@
+import getEventUrl from '../utils/getEventUrl';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from './useEventMutations';
 import { eventCreate, eventCreated } from '../store';
@@ -21,9 +22,7 @@ export default function useCreateEvent(orgId: number): useCreateEventReturn {
       eventBody
     );
     dispatch(eventCreated(event));
-    env.router.push(
-      `/organize/${orgId}/projects/${event.campaign?.id}/events/${event.id}`
-    );
+    env.router.push(getEventUrl(event));
 
     return event;
   };
