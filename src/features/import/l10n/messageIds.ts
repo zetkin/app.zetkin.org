@@ -211,7 +211,7 @@ export default makeMessages('feat.import', {
             'Some of the values in your email column are not valid email addresses.'
           ),
           empty: m(
-            'Nothing will be imported. Please go back and check that the configurations you made are correct or select a new file to upload.'
+            'This import would not update or import anything so you can not proceed. Please go back and check that the configurations you made are correct or select a new file to upload.'
           ),
           gender: m(
             'Some of the values in the gender column are incompatible with Zetkin gender formats. The values need to be either one of the letters f, m or o, or an empty cell.'
@@ -258,7 +258,7 @@ export default makeMessages('feat.import', {
           altPhone: m('Invalid alternate phone number formats'),
           date: m('Invalid date formats'),
           email: m('Invalid email address formats'),
-          empty: m('Something went wrong and the import was interrupted'),
+          empty: m('This import would not change anything'),
           gender: m('Invalid gender formats'),
           id: m('Zetkin IDs are not in correct format'),
           idValueMissing: m('Missing Zetkin IDs'),

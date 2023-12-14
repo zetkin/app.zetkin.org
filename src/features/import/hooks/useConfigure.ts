@@ -1,6 +1,6 @@
 import { CountryCode } from 'libphonenumber-js';
 
-import forseeErrors from '../utils/forseeErrors';
+import foreseeErrors from '../utils/foreseeErrors';
 import prepareImportOperations from '../utils/prepareImportOperations';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useOrganization from 'features/organizations/hooks/useOrganization';
@@ -29,7 +29,7 @@ export default function useConfigure(orgId: number) {
   const countryCode = organization.country as CountryCode;
 
   return async () => {
-    const errors = forseeErrors(configuredSheet, countryCode, customFields);
+    const errors = foreseeErrors(configuredSheet, countryCode, customFields);
 
     if (errors.length > 0 && !errors.includes(IMPORT_ERROR.ID_MISSING)) {
       dispatch(importPreviewClear());

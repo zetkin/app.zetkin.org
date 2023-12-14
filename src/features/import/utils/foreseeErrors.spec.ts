@@ -1,6 +1,6 @@
 import { CountryCode } from 'libphonenumber-js/types.cjs';
 
-import forseeErrors from './forseeErrors';
+import foreseeErrors from './foreseeErrors';
 import { organization as mockOrganization } from 'utils/testing/mocks/mockOrganization';
 import { ColumnKind, Sheet } from './types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
@@ -35,7 +35,7 @@ const mockCustomFields: ZetkinCustomField[] = [
 
 describe('forseeErrors()', () => {
   describe('when first row is headers', () => {
-    it('identifies if there is insufficient identifying info', () => {
+    it('returns error when columns do not include either ID or name', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
         columns: [{ field: 'phone', kind: ColumnKind.FIELD, selected: true }],
@@ -49,7 +49,33 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
+        configuredSheet,
+        countryCode,
+        mockCustomFields
+      );
+      expect(errors).toEqual(['noIdentifier']);
+    });
+
+    it.only('returns error when external id is empty and first- or last name is missing', () => {
+      const configuredSheet: Sheet = {
+        ...mockSheet,
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
+          { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
+        ],
+        rows: [
+          {
+            data: ['ID', 'First name', 'Last name'],
+          },
+          {
+            data: ['', 'Clara', ''],
+          },
+        ],
+      };
+
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -76,7 +102,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -99,7 +125,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -121,7 +147,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -146,7 +172,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -177,7 +203,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -208,7 +234,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -236,7 +262,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -264,7 +290,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -292,7 +318,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -320,7 +346,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -348,7 +374,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -409,7 +435,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields
@@ -445,7 +471,7 @@ describe('forseeErrors()', () => {
         ],
       };
 
-      const errors = forseeErrors(
+      const errors = foreseeErrors(
         configuredSheet,
         countryCode,
         mockCustomFields

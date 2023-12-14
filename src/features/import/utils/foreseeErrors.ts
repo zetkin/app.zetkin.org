@@ -5,7 +5,7 @@ import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { ColumnKind, IMPORT_ERROR, Sheet } from './types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 
-export default function forseeErrors(
+export default function foreseeErrors(
   configuredSheet: Sheet,
   countryCode: CountryCode,
   customFields: ZetkinCustomField[]
@@ -13,6 +13,7 @@ export default function forseeErrors(
   const errors: IMPORT_ERROR[] = [];
   const zetkinGenders = ['o', 'f', 'm'];
   let hasIDField = false;
+  let externalIdFieldIsEmpty = false;
   let hasFirstName = false;
   let hasLastName = false;
 
@@ -20,14 +21,6 @@ export default function forseeErrors(
     if (column.selected) {
       if (column.kind == ColumnKind.ID_FIELD) {
         hasIDField = true;
-      }
-
-      if (column.kind == ColumnKind.FIELD && column.field == 'first_name') {
-        hasFirstName = true;
-      }
-
-      if (column.kind == ColumnKind.FIELD && column.field == 'last_name') {
-        hasLastName = true;
       }
 
       configuredSheet.rows.forEach((row, rowIdx) => {
@@ -56,6 +49,10 @@ export default function forseeErrors(
             if (value && value.toString().length > 96) {
               errors.push(IMPORT_ERROR.LONG_EXT_ID);
             }
+
+            if (!value) {
+              externalIdFieldIsEmpty = true;
+            }
           }
         }
 
@@ -82,6 +79,14 @@ export default function forseeErrors(
                   errors.push(IMPORT_ERROR.DATE);
                 }
               }
+            }
+
+            if (fieldKey == 'first_name') {
+              hasFirstName = true;
+            }
+
+            if (fieldKey == 'last_name') {
+              hasLastName = true;
             }
 
             //See if parsing phone numbers to international format works
@@ -192,7 +197,10 @@ export default function forseeErrors(
     errors.push(IMPORT_ERROR.ID_MISSING);
   }
 
-  if (!hasIDField && (!hasFirstName || !hasLastName)) {
+  if (
+    (!hasIDField || externalIdFieldIsEmpty) &&
+    (!hasFirstName || !hasLastName)
+  ) {
     errors.push(IMPORT_ERROR.NO_IDENTIFIER);
   }
 
