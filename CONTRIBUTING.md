@@ -15,11 +15,16 @@ You can contribute whenever and however you like (but it helps to follow the gui
 in this file). Some contributors work from home and submit code in their own time, while
 others attend our events and focus their efforts there.
 
+### Join us on Slack
+it's easier to contribute, and more fun, when you're part of the community. Email us at
+[info@zetkin.org](mailto:info@zetkin.org) to be added to our Slack. We post the most
+urgent issues and advertise our events there.
+
 ### Events
 We usually run one-day **hackathons** every other weekend where you can attend in person
 or remotely, and full-weekend **Code Camps** where we assemble a group of volunteers in
-a summer camp type facility in the woods. These events are advertised on our Slack, reach
-out to [info@zetkin.org](mailto:info@zetkin.org) to be added to our Slack.
+a summer camp type facility in the woods. It's a lot of fun to meet other leftist coders
+and a good way to contribute.
 
 ### Contributing in your own time
 If you are unable to attend our events or if you prefer to get started right away you are
