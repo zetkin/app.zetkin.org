@@ -1,7 +1,7 @@
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from './useEventMutations';
 import { eventCreate, eventCreated } from '../store';
-import { useApiClient, useAppDispatch } from 'core/hooks';
+import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
 
 type useCreateEventReturn = {
   createEvent: (eventBody: ZetkinEventPostBody) => Promise<ZetkinEvent>;
@@ -10,6 +10,7 @@ type useCreateEventReturn = {
 export default function useCreateEvent(orgId: number): useCreateEventReturn {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
+  const env = useEnv();
 
   const createEvent = async (eventBody: ZetkinEventPostBody) => {
     dispatch(eventCreate());
@@ -20,6 +21,10 @@ export default function useCreateEvent(orgId: number): useCreateEventReturn {
       eventBody
     );
     dispatch(eventCreated(event));
+    env.router.push(
+      `/organize/${orgId}/projects/${event.campaign?.id}/events/${event.id}`
+    );
+
     return event;
   };
 
