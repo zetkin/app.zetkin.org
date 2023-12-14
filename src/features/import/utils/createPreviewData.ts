@@ -1,3 +1,4 @@
+import getUniqueTags from './getUniqueTags';
 import { ZetkinPersonImportOp } from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
 
@@ -38,12 +39,8 @@ export default function createPreviewData(
             const allTags = personPreviewOp.tags.concat(
               mappedColumn.tags.map((t) => ({ tag_id: t.id }))
             );
-            const stringifiedUniqueTags = [
-              ...new Set(allTags?.map((t) => JSON.stringify(t))),
-            ];
-            const uniqueTags = stringifiedUniqueTags.map((t) => JSON.parse(t));
 
-            personPreviewOp.tags = uniqueTags;
+            personPreviewOp.tags = getUniqueTags(allTags);
           }
         });
       }
