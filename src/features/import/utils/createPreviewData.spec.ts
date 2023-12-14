@@ -76,7 +76,7 @@ describe('createPreviewData()', () => {
         city: 'Malmö',
         id: '123',
       },
-      tags: [{ tag_id: 123 }, { tag_id: 100 }],
+      tags: [{ id: 123 }, { id: 100 }],
     });
   });
   it('converts orgs to preview object', () => {
@@ -194,7 +194,7 @@ describe('createPreviewData()', () => {
         city: 'Malmö',
         id: '123',
       },
-      tags: [{ tag_id: 222 }, { tag_id: 100 }],
+      tags: [{ id: 222 }, { id: 100 }],
     });
   });
 });

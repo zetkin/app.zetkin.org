@@ -37,7 +37,7 @@ export default function createPreviewData(
               personPreviewOp.tags = [];
             }
             const allTags = personPreviewOp.tags.concat(
-              mappedColumn.tags.map((t) => ({ tag_id: t.id }))
+              mappedColumn.tags.map((t) => ({ id: t.id }))
             );
 
             personPreviewOp.tags = getUniqueTags(allTags);

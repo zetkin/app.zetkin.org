@@ -1,6 +1,6 @@
-export default function getUniqueTags(allTags: { tag_id: number }[]) {
+export default function getUniqueTags(allTags: { id: number }[]) {
   const uniqueTagIds = new Set<number>();
   return allTags.filter((tag) =>
-    uniqueTagIds.has(tag.tag_id) ? false : uniqueTagIds.add(tag.tag_id)
+    uniqueTagIds.has(tag.id) ? false : uniqueTagIds.add(tag.id)
   );
 }
