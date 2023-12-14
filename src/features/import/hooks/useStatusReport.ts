@@ -19,6 +19,10 @@ export default function useStatusReport(orgId: number) {
   const tags = useTags(orgId).data ?? [];
   const organizations = useOrganizations().data ?? [];
 
+  if (!importResult) {
+    throw new Error('No import result');
+  }
+
   const summary = importResult.report.person.summary;
   const { tagged, addedToOrg } = summary;
 

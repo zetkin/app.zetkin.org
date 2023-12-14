@@ -8,48 +8,21 @@ import {
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
-  importResult: PersonImport;
+  importResult: PersonImport | null;
   importErrors: IMPORT_ERROR[];
-  preflightSummary: PersonImportSummary;
+  preflightSummary: PersonImportSummary | null;
   pendingFile: ImportedFile;
 }
 
-const emptySummary: PersonImportSummary = {
-  addedToOrg: {
-    byOrg: {},
-    total: 0,
-  },
-  created: {
-    total: 0,
-  },
-  tagged: {
-    byTag: {},
-    total: 0,
-  },
-  updated: {
-    byField: {},
-    total: 0,
-  },
-};
-
 const initialState: ImportStoreSlice = {
   importErrors: [],
-  importResult: {
-    accepted: '',
-    completed: null,
-    report: {
-      person: {
-        summary: emptySummary,
-      },
-    },
-    status: null,
-  },
+  importResult: null,
   pendingFile: {
     selectedSheetIndex: 0,
     sheets: [],
     title: '',
   },
-  preflightSummary: emptySummary,
+  preflightSummary: null,
 };
 
 const importSlice = createSlice({
@@ -72,7 +45,23 @@ const importSlice = createSlice({
       state.preflightSummary = action.payload;
     },
     importPreviewClear: (state) => {
-      state.preflightSummary = emptySummary;
+      state.preflightSummary = {
+        addedToOrg: {
+          byOrg: {},
+          total: 0,
+        },
+        created: {
+          total: 0,
+        },
+        tagged: {
+          byTag: {},
+          total: 0,
+        },
+        updated: {
+          byField: {},
+          total: 0,
+        },
+      };
     },
     importResultAdd: (state, action: PayloadAction<PersonImport>) => {
       state.importResult = action.payload;

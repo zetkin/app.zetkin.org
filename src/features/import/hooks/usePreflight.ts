@@ -55,6 +55,10 @@ export default function usePreflight(orgId: number) {
     return;
   }
 
+  if (!preflightSummary) {
+    throw new Error('No preflight summary');
+  }
+
   const { addedToOrg, tagged } = preflightSummary;
 
   const addedTags = Object.keys(tagged.byTag).reduce((acc: ZetkinTag[], id) => {
