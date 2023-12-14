@@ -30,6 +30,12 @@ const emailsSlice = createSlice({
       state.emailList.isLoading = false;
       state.emailList.items.push(remoteItem(email.id, { data: email }));
     },
+    emailDeleted: (state, action: PayloadAction<number>) => {
+      const emailId = action.payload;
+      state.emailList.items = state.emailList.items.filter(
+        (item) => item.id != emailId
+      );
+    },
     emailLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.emailList.items.find((item) => item.id == id);
@@ -92,6 +98,7 @@ export default emailsSlice;
 export const {
   emailCreate,
   emailCreated,
+  emailDeleted,
   emailLoad,
   emailLoaded,
   emailUpdate,

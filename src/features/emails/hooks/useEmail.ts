@@ -1,29 +1,22 @@
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
-import { emailLoad, emailLoaded, emailUpdate, emailUpdated } from '../store';
+import {
+  emailDeleted,
+  emailLoad,
+  emailLoaded,
+  emailUpdate,
+  emailUpdated,
+} from '../store';
 import { futureToObject, IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 
 interface UseEmailReturn {
   data: ZetkinEmail | null;
+  deleteEmail: () => Promise<void>;
   isTargeted: boolean;
   updateEmail: (data: Partial<ZetkinEmail>) => IFuture<ZetkinEmail>;
   updateTargets: (query: Partial<ZetkinQuery>) => void;
 }
-
-const fakeEmail: ZetkinEmail = {
-  campaign_id: 121,
-  content: 'world',
-  id: 1,
-  organization: { id: 6, title: 'Casework test' },
-  published: '',
-  subject: 'any',
-  target_query: {
-    filter_spec: [],
-    id: 6,
-  },
-  title: 'Hello!',
-};
 
 export default function useEmail(
   orgId: number,
@@ -37,11 +30,14 @@ export default function useEmail(
 
   const emailFuture = loadItemIfNecessary(emailItem, dispatch, {
     actionOnLoad: () => emailLoad(emailId),
-    actionOnSuccess: () => emailLoaded(fakeEmail),
-    // loader: () => apiClient.get(`api/orgs/${orgId}/emails/${emailId}`),
-    //wrong loader, fix it later
-    loader: () => apiClient.get(`/api/orgs/${orgId}`),
+    actionOnSuccess: (email) => emailLoaded(email),
+    loader: () => apiClient.get(`/api/orgs/${orgId}/emails/${emailId}`),
   });
+
+  const deleteEmail = async () => {
+    await apiClient.delete(`/api/orgs/${orgId}/emails/${emailId}`);
+    dispatch(emailDeleted(emailId));
+  };
 
   const isTargeted = !!(
     emailFuture.data && emailFuture.data.target_query?.filter_spec?.length != 0
@@ -81,6 +77,7 @@ export default function useEmail(
 
   return {
     ...futureToObject(emailFuture),
+    deleteEmail,
     isTargeted,
     updateEmail,
     updateTargets,

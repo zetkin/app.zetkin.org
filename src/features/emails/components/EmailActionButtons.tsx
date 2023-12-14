@@ -1,7 +1,6 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { TimeField } from '@mui/x-date-pickers-pro';
-import { useState } from 'react';
 import utc from 'dayjs/plugin/utc';
 import {
   Alert,
@@ -18,11 +17,14 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { ArrowDropDown, ContentCopy } from '@mui/icons-material';
+import { ArrowDropDown, ContentCopy, Delete } from '@mui/icons-material';
+import { useContext, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import useEmail from '../hooks/useEmail';
 import useEmailStats from '../hooks/useEmailStats';
+import { ZetkinEmail } from 'utils/types/zetkin';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUITimezonePicker from 'zui/ZUITimezonePicker';
 import {
@@ -36,11 +38,11 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 dayjs.extend(utc);
 
 interface EmailActionButtonsProp {
+  email: ZetkinEmail;
   orgId: number;
-  emailId: number;
 }
 
-const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
+const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -49,8 +51,8 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const [utcValue, setUtcValue] = useState('');
   const [unlocked, setUnlocked] = useState(true);
 
-  const { data: email } = useEmail(orgId, emailId);
-  const { statsFuture } = useEmailStats(orgId, emailId);
+  const { deleteEmail } = useEmail(orgId, email.id);
+  const { statsFuture } = useEmailStats(orgId, email.id);
 
   const [sendingDate, setSendingDate] = useState(
     email?.published ? email.published.slice(0, 10) : null
@@ -58,6 +60,8 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const [sendingTime, setSendingTime] = useState(
     email?.published ? removeOffset(email.published.slice(11, 16)) : '09:00'
   );
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+
   const targetNum = statsFuture.data?.allTargets || 0;
 
   const naiveSending = `${sendingDate || '0000-00-00'}T${sendingTime}`;
@@ -217,6 +221,17 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
           {
             label: <>{messages.emailActionButtons.duplicate()}</>,
             startIcon: <ContentCopy />,
+          },
+          {
+            label: <>{messages.emailActionButtons.delete()}</>,
+            onSelect: () => {
+              showConfirmDialog({
+                onSubmit: deleteEmail,
+                title: messages.emailActionButtons.delete(),
+                warningText: messages.emailActionButtons.warning(),
+              });
+            },
+            startIcon: <Delete />,
           },
         ]}
       />

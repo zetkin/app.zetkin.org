@@ -25,7 +25,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const EmailPage: PageWithLayout = () => {
   const { orgId, emailId } = useNumericRouteParams();
   const { data: email } = useEmail(orgId, emailId);
-
   const onServer = useServerSide();
 
   if (onServer) {

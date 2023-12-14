@@ -6,6 +6,7 @@ export default makeMessages('feat.emails', {
       'Will schedule email for {numTargets} people'
     ),
     beforeLock: m('Lock targeting to proceed'),
+    delete: m('Delete'),
     delevery: m('Delivery'),
     deliveryDate: m('Delivery date'),
     deliveryTime: m('Delivery time'),
@@ -27,6 +28,9 @@ export default makeMessages('feat.emails', {
     },
     setDate: m('Set delivery date to proceed'),
     timeZone: m('Timezone'),
+    warning: m(
+      'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
+    ),
   },
   state: {
     draft: m('Draft'),
