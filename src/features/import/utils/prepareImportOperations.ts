@@ -5,7 +5,7 @@ export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
   op: 'person.import';
   organizations?: number[];
-  tags?: { tag_id: number }[];
+  tags?: { id: number }[];
 };
 
 export default function prepareImportOperations(
@@ -87,7 +87,7 @@ export default function prepareImportOperations(
                 personImportOps[rowIndex].tags = [];
               }
               const allTags = personImportOps[rowIndex].tags?.concat(
-                mappedColumn.tags.map((t) => ({ tag_id: t.id }))
+                mappedColumn.tags
               );
               const stringifiedUniqueTags = [
                 ...new Set(allTags?.map((t) => JSON.stringify(t))),

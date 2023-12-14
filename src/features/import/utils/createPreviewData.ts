@@ -35,9 +35,7 @@ export default function createPreviewData(
             if (!personPreviewOp.tags) {
               personPreviewOp.tags = [];
             }
-            const allTags = personPreviewOp.tags.concat(
-              mappedColumn.tags.map((t) => ({ tag_id: t.id }))
-            );
+            const allTags = personPreviewOp.tags.concat(mappedColumn.tags);
             const stringifiedUniqueTags = [
               ...new Set(allTags?.map((t) => JSON.stringify(t))),
             ];
