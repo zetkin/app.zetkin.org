@@ -292,7 +292,11 @@ export default function useUIDataColumns(
       }
     };
 
-    const valuesAreValidZetkinIDs = cellValues.every((value) => {
+    const valuesAreValidZetkinIDs = cellValues.every((value, index) => {
+      if (firstRowIsHeaders && index == 0) {
+        return true;
+      }
+
       if (!value) {
         return false;
       }
