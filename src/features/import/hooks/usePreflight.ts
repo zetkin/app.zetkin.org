@@ -1,7 +1,7 @@
 import { CountryCode } from 'libphonenumber-js';
 import { useState } from 'react';
 
-import { ALERT_STATUS } from '../components/ImportDialog/Steps/ImportAlert';
+import { ALERT_STATUS } from '../components/ImportDialog/elements/ImportAlert';
 import { importResultAdd } from '../store';
 import messageIds from '../l10n/messageIds';
 import prepareImportOperations from '../utils/prepareImportOperations';

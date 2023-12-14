@@ -2,9 +2,9 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
-import ImportFooter from '../../ImportFooter';
-import ImportHeader from '../../ImportHeader';
-import { ImportStep } from '../..';
+import ImportFooter from '../elements/ImportFooter';
+import ImportHeader from '../elements/ImportHeader';
+import { ImportStep } from '..';
 import Mapping from './Mapping';
 import messageIds from 'features/import/l10n/messageIds';
 import Preview from './Preview';

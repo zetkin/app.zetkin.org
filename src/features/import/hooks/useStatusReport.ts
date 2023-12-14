@@ -1,4 +1,4 @@
-import { ALERT_STATUS } from '../components/ImportDialog/Steps/ImportAlert';
+import { ALERT_STATUS } from '../components/ImportDialog/elements/ImportAlert';
 import getAddedOrgsSummary from '../utils/getAddedOrgsSummary';
 import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';

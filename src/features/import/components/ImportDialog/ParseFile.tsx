@@ -12,10 +12,10 @@ import {
 } from '@mui/material';
 import { CSSProperties, FC, useCallback, useState } from 'react';
 
-import ImportFooter from '../../ImportFooter';
-import ImportHeader from '../../ImportHeader';
-import messageIds from '../../../../l10n/messageIds';
-import useFileParsing from '../../../../hooks/useFileParsing';
+import ImportFooter from './elements/ImportFooter';
+import ImportHeader from './elements/ImportHeader';
+import messageIds from '../../l10n/messageIds';
+import useFileParsing from '../../hooks/useFileParsing';
 import { useMessages } from 'core/i18n';
 
 const sharedProperties: CSSProperties = {

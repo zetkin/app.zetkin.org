@@ -1,10 +1,10 @@
 import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
-import Configure from './Steps/Configure';
-import ParseFile from './Steps/ParseFile';
-import Preflight from './Steps/Preflight';
-import StatusReport from './Steps/StatusReport';
+import Configure from './Configure';
+import ParseFile from './ParseFile';
+import Preflight from './Preflight';
+import StatusReport from './StatusReport';
 
 export enum ImportStep {
   PARSE = 0,

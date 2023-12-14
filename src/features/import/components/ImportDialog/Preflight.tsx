@@ -7,17 +7,17 @@ import {
   useTheme,
 } from '@mui/material';
 
-import AddedOrgs from '../AddedOrgs';
-import AddedTags from '../AddedTags';
-import ChangedFields from '../ChangedFields';
-import CreatedAndUpdated from '../CreatedAndUpdated';
-import ImportAlert from '../ImportAlert';
-import ImportFooter from '../../ImportFooter';
-import ImportHeader from '../../ImportHeader';
-import { ImportStep } from '../..';
+import AddedOrgs from './elements/AddedOrgs';
+import AddedTags from './elements/AddedTags';
+import ChangedFields from './elements/ChangedFields';
+import CreatedAndUpdated from './elements/CreatedAndUpdated';
+import ImportAlert from './elements/ImportAlert';
+import ImportFooter from './elements/ImportFooter';
+import ImportHeader from './elements/ImportHeader';
+import { ImportStep } from '.';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import usePreflight from '../../../../hooks/usePreflight';
+import usePreflight from '../../hooks/usePreflight';
 import { Msg, useMessages } from 'core/i18n';
 
 interface PreflightProps {

@@ -9,8 +9,8 @@ import {
   Typography,
 } from '@mui/material';
 
-import { ImportStep } from '.';
-import messageIds from '../../l10n/messageIds';
+import { ImportStep } from '..';
+import messageIds from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 interface ImportHeaderProps {

@@ -1,15 +1,15 @@
 import { Box, Stack, Typography } from '@mui/material';
 
-import AddedOrgs from '../AddedOrgs';
-import AddedTags from '../AddedTags';
-import ChangedFields from '../ChangedFields';
-import CreatedAndUpdated from '../CreatedAndUpdated';
-import ImportFooter from '../../ImportFooter';
-import ImportHeader from '../../ImportHeader';
+import AddedOrgs from './elements/AddedOrgs';
+import AddedTags from './elements/AddedTags';
+import ChangedFields from './elements/ChangedFields';
+import CreatedAndUpdated from './elements/CreatedAndUpdated';
+import ImportFooter from './elements/ImportFooter';
+import ImportHeader from './elements/ImportHeader';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useStatusReport from '../../../../hooks/useStatusReport';
-import ImportAlert, { ALERT_STATUS } from '../ImportAlert';
+import useStatusReport from '../../hooks/useStatusReport';
+import ImportAlert, { ALERT_STATUS } from './elements/ImportAlert';
 import { Msg, useMessages } from 'core/i18n';
 
 interface StatusReportProps {
