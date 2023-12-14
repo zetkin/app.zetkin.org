@@ -73,6 +73,9 @@ export default makeMessages('feat.campaigns', {
       error: m('There was an error creating the project'),
       newCampaign: m('My project'),
     },
+    createEmail: {
+      newEmail: m('Untitled email'),
+    },
     createSurvey: {
       newSurvey: m('My survey'),
     },

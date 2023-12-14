@@ -53,7 +53,7 @@ const EmailActionButtons = ({ orgId, emailId }: EmailActionButtonsProp) => {
   const { statsFuture } = useEmailStats(orgId, emailId);
 
   const [sendingDate, setSendingDate] = useState(
-    email?.published.slice(0, 10) ?? null
+    email?.published ? email.published.slice(0, 10) : null
   );
   const [sendingTime, setSendingTime] = useState(
     email?.published ? removeOffset(email.published.slice(11, 16)) : '09:00'

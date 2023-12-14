@@ -8,10 +8,10 @@ import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
 import useEmailState from '../hooks/useEmailState';
-import useEmailStats from '../hooks/useEmailStats';
+// import useEmailStats from '../hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
-import ZUIFuture from 'zui/ZUIFuture';
+// import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
 
 interface EmailLayoutProps {
@@ -22,7 +22,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const { orgId, campId, emailId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const { data: email, updateEmail } = useEmail(orgId, emailId);
-  const { statsFuture } = useEmailStats(orgId, emailId);
+  // const { statsFuture } = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   if (!email) {
     return null;
@@ -39,23 +39,20 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
             <EmailStatusChip state={emailState} />
           </Box>
           <Box display="flex" marginX={1}>
-            <ZUIFuture
+            {/* <ZUIFuture
               future={statsFuture}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
               {(data) => (
-                <>
-                  <People />
-                  <Typography marginLeft={1}>
-                    <Msg
-                      id={messageIds.stats.targets}
-                      values={{ numTargets: data?.allTargets ?? 0 }}
-                    />
-                  </Typography>
-                </>
+                <> */}
+            <People />
+            <Typography marginLeft={1}>
+              <Msg id={messageIds.stats.targets} values={{ numTargets: 0 }} />
+            </Typography>
+            {/* </>
               )}
-            </ZUIFuture>
+            </ZUIFuture> */}
           </Box>
         </Box>
       }

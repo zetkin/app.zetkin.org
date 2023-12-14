@@ -111,7 +111,7 @@ const CampaignActionButtons: React.FunctionComponent<
               label: messages.linkGroup.createEmail(),
               onClick: () =>
                 createEmail({
-                  title: 'Hello',
+                  title: messages.form.createEmail.newEmail(),
                 }),
             },
           ]}
