@@ -83,21 +83,20 @@ describe('forseeErrors()', () => {
       expect(errors).toEqual(['noIdentifier']);
     });
 
-    it('accepts empty external IDs', () => {
+    it('accepts empty external IDs as long as name is defined', () => {
       const configuredSheet: Sheet = {
         ...mockSheet,
         columns: [
           { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
+          { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
         ],
         rows: [
           {
-            data: ['Ext id'],
+            data: ['ID', 'First name', 'Last name'],
           },
           {
-            data: ['123'],
-          },
-          {
-            data: [null],
+            data: ['', 'Clara', 'Zetkin'],
           },
         ],
       };
