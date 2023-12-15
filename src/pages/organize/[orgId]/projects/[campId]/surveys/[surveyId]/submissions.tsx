@@ -74,13 +74,9 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
                   );
                 }
               }
-              return (
-                <>
-                  {(submissions.length !== 0 || !showUnlinkedOnly) && (
-                    <SurveySubmissionsList submissions={submissions} />
-                  )}
-                </>
-              );
+              return submissions.length !== 0 || !showUnlinkedOnly ? (
+                <SurveySubmissionsList submissions={submissions} />
+              ) : null;
             }}
           </ZUIFuture>
         </Grid>

@@ -37,18 +37,16 @@ const FieldGroup: FC<FieldGroupProps> = ({ fields, height }) => {
     (f) => f.presentation === FIELD_PRESENTATION.ICON_ONLY
   );
   return (
-    <>
-      <Box className={classes.fields} height={height}>
-        <Box className={classes.fieldsWithIconOnly}>
-          {fieldsWithIconOnly.map((field, index) => (
-            <Field key={`${field.kind}-${index}`} field={field} />
-          ))}
-        </Box>
-        {fieldsWithLabel.map((field, index) => (
+    <Box className={classes.fields} height={height}>
+      <Box className={classes.fieldsWithIconOnly}>
+        {fieldsWithIconOnly.map((field, index) => (
           <Field key={`${field.kind}-${index}`} field={field} />
         ))}
       </Box>
-    </>
+      {fieldsWithLabel.map((field, index) => (
+        <Field key={`${field.kind}-${index}`} field={field} />
+      ))}
+    </Box>
   );
 };
 

@@ -21,28 +21,24 @@ const EventRelatedCard: FC<EventRelatedCardProps> = ({ data, orgId }) => {
   return (
     <ZUIFuture future={relatedEvents}>
       {(events) => {
-        return (
-          <>
-            {events.length > 0 && (
-              <Box mt={2}>
-                <ZUICard header={messages.eventRelatedCard.header()}>
-                  <Box>
-                    {events.map((event, index) => {
-                      return (
-                        <Box key={event.id}>
-                          {index > 0 && (
-                            <Divider sx={{ marginBottom: 1, marginTop: 1 }} />
-                          )}
-                          <RelatedEvent event={event} />
-                        </Box>
-                      );
-                    })}
-                  </Box>
-                </ZUICard>
+        return events.length > 0 ? (
+          <Box mt={2}>
+            <ZUICard header={messages.eventRelatedCard.header()}>
+              <Box>
+                {events.map((event, index) => {
+                  return (
+                    <Box key={event.id}>
+                      {index > 0 && (
+                        <Divider sx={{ marginBottom: 1, marginTop: 1 }} />
+                      )}
+                      <RelatedEvent event={event} />
+                    </Box>
+                  );
+                })}
               </Box>
-            )}
-          </>
-        );
+            </ZUICard>
+          </Box>
+        ) : null;
       }}
     </ZUIFuture>
   );

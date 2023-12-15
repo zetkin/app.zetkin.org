@@ -67,32 +67,30 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   }
 
   const title = (
-    <>
-      <ZUIFuture future={viewFuture}>
-        {(view) => {
-          return (
-            <Box>
-              <ZUIEditTextinPlace
-                key={view.id}
-                onChange={(newTitle) => {
-                  try {
-                    updateView(viewId, { title: newTitle });
-                    showSnackbar(
-                      'success',
-                      messages.editViewTitleAlert.success()
-                    );
-                  } catch (err) {
-                    showSnackbar('error', messages.editViewTitleAlert.error());
-                  }
-                }}
-                value={view?.title}
-              />
-              <ViewJumpMenu />
-            </Box>
-          );
-        }}
-      </ZUIFuture>
-    </>
+    <ZUIFuture future={viewFuture}>
+      {(view) => {
+        return (
+          <Box>
+            <ZUIEditTextinPlace
+              key={view.id}
+              onChange={(newTitle) => {
+                try {
+                  updateView(viewId, { title: newTitle });
+                  showSnackbar(
+                    'success',
+                    messages.editViewTitleAlert.success()
+                  );
+                } catch (err) {
+                  showSnackbar('error', messages.editViewTitleAlert.error());
+                }
+              }}
+              value={view?.title}
+            />
+            <ViewJumpMenu />
+          </Box>
+        );
+      }}
+    </ZUIFuture>
   );
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];

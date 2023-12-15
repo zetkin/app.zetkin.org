@@ -437,9 +437,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     value={link}
                   />
                 )}
-                renderPreview={() => {
-                  if (data.url && data.url !== '') {
-                    return (
+                {...(data.url &&
+                  data.url !== '' && {
+                    renderPreview: () => (
                       <Box marginLeft={4}>
                         <Typography
                           color={theme.palette.text.secondary}
@@ -455,18 +455,19 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           variant="body1"
                         >
                           {data.url}
-                          <Link href={getWorkingUrl(data.url)} target="_blank">
+                          <Link
+                            //TS won't infer type here for some reason
+                            href={getWorkingUrl(data.url as string)}
+                            target="_blank"
+                          >
                             <Box marginLeft={1}>
                               <OpenInNewIcon color="primary" />
                             </Box>
                           </Link>
                         </Typography>
                       </Box>
-                    );
-                  } else {
-                    return <></>;
-                  }
-                }}
+                    ),
+                  })}
                 value={link || ''}
               />
             </Box>
@@ -485,23 +486,19 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                   value={infoText}
                 />
               )}
-              renderPreview={() => {
-                if (data.info_text !== '') {
-                  return (
-                    <Box>
-                      <Typography
-                        color={theme.palette.text.secondary}
-                        variant="subtitle1"
-                      >
-                        {messages.eventOverviewCard.description().toUpperCase()}
-                      </Typography>
-                      <Typography variant="body1">{data.info_text}</Typography>
-                    </Box>
-                  );
-                } else {
-                  return <></>;
-                }
-              }}
+              {...(data.info_text !== '' && {
+                renderPreview: () => (
+                  <Box>
+                    <Typography
+                      color={theme.palette.text.secondary}
+                      variant="subtitle1"
+                    >
+                      {messages.eventOverviewCard.description().toUpperCase()}
+                    </Typography>
+                    <Typography variant="body1">{data.info_text}</Typography>
+                  </Box>
+                ),
+              })}
               value={infoText}
             />
           </Box>
