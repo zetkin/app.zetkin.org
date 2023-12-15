@@ -155,5 +155,9 @@ export default makeMessages('zui', {
       'Today, {start} - {end}'
     ),
   },
-  timezone: m('Timezone'),
+  timezonePicker: {
+    gmt: m('GMT'),
+    placeholder: m('Type to search location'),
+    timezone: m('Timezone'),
+  },
 });

@@ -1,40 +1,94 @@
+import { Box } from '@mui/system';
 import timezones from 'timezones-list';
 import { useState } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, Typography } from '@mui/material';
 
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
-type TimezoneType = {
-  label: string;
-  name: string;
-  tzCode: string;
-  utc: string;
-};
 interface ZUITimezonePickerProps {
-  onChange: (value: TimezoneType) => void;
+  onChange: (value: string) => void;
 }
 
 const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
   const messages = useMessages(messageIds);
-  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const [value, setValue] = useState(
-    timezones.find((timezone) => timezone.tzCode === currentTimezone)
+  const currentTzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const currentTimezone = timezones.find(
+    (timezone) => timezone.tzCode === currentTzCode
+  )!;
+  const [value, setValue] = useState({
+    cities: [currentTimezone.tzCode],
+    utcValue: `${currentTimezone.utc} ${messages.timezonePicker.gmt()}`,
+  });
+
+  const tzOptions = timezones.reduce(
+    (acc: { cities: string[]; utcValue: string }[], timezone, index) => {
+      const utcValue = `${timezone.utc} ${messages.timezonePicker.gmt()}`;
+      const tzGroupIndex = acc.findIndex((item) => item.utcValue === utcValue);
+
+      const city = timezone.tzCode
+        .substring(timezone.tzCode.indexOf('/') + 1)
+        .replaceAll('_', ' ');
+      const hasTimezone = acc.some((item) => item.utcValue === utcValue);
+
+      if (index === 0 || !hasTimezone) {
+        acc.push({
+          cities: [city],
+          utcValue: utcValue,
+        });
+      } else {
+        acc[tzGroupIndex].cities.push(city);
+      }
+      return acc;
+    },
+    []
   );
+
   return (
     <Autocomplete
       fullWidth
-      onChange={(_, value) => {
-        if (value !== null) {
-          setValue(value);
-          onChange(value);
+      getOptionLabel={(option) => option.utcValue}
+      isOptionEqualToValue={(option, value) =>
+        option.utcValue === value.utcValue
+      }
+      onChange={(_, tzGroup) => {
+        if (tzGroup !== null) {
+          setValue(tzGroup);
+          onChange(tzGroup.utcValue);
         }
       }}
-      options={timezones}
+      options={tzOptions}
+      placeholder={messages.timezonePicker.placeholder()}
       renderInput={(params) => (
-        <TextField {...params} label={messages.timezone()} />
+        <TextField {...params} label={messages.timezonePicker.timezone()} />
       )}
-      value={value}
+      renderOption={(props, option) => {
+        const cities = option.cities.toString();
+        return (
+          <li {...props}>
+            <Box
+              key={`timezone-${option.utcValue}`}
+              display="flex"
+              flexDirection="column"
+              sx={{
+                overflow: 'hidden',
+              }}
+            >
+              <Typography fontWeight="bold">{option.utcValue}</Typography>
+              <Typography
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {cities}
+              </Typography>
+            </Box>
+          </li>
+        );
+      }}
+      value={{ cities: value.cities, utcValue: value.utcValue }}
     />
   );
 };
