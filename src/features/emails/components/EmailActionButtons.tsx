@@ -177,6 +177,7 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
                 </Typography>
               ) : (
                 <>
+                  {''}
                   {unlocked ? (
                     <Typography
                       sx={{ color: theme.palette.statusColors.orange, mr: 1 }}
@@ -201,7 +202,7 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
                 onClick={() => {
                   setAnchorEl(null);
                   // setUtcTime(currentTimezone);
-                  console.log({ date: `${naiveSending}:00${utcValue}` });
+                  // console.log({ date: `${naiveSending}:00${utcValue}` });
                   // save: () => {
                   // updateEmail({
                   //   date:`${naiveSending}:00`

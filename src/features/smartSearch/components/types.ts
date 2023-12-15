@@ -279,7 +279,6 @@ export type SelectedSmartSearchFilter<C = AnyFilterConfig> =
   | null; // When no filter selected
 
 export enum QUERY_TYPE {
-  EMAIL_TARGET = 'email_target',
   STANDALONE = 'standalone',
   PURPOSE = 'callassignment_goal',
   TARGET = 'callassignment_target',
