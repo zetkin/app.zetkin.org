@@ -2,26 +2,34 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.import', {
-  back: m('Back'),
-  close: m('Close'),
+  actionButtons: {
+    back: m('Back'),
+    close: m('Close'),
+    configure: m('Configure'),
+    done: m('Done'),
+    import: m('Import'),
+    restart: m('Restart'),
+    validate: m('Validate'),
+  },
   configuration: {
     configure: {
       ids: {
         configExplanation: m(
-          'If the file you are importing is from another system than Zetkin, we can save your IDs to each person. Or, if your file is based on a sheet you exported from Zetkin, we can use the Zetkin IDs to match each row with a person in Zetkin.'
+          'Importing with IDs allows Zetkin (now or in the future) to update existing people in the database instead of creating duplicates.'
         ),
         externalID: m('External ID'),
         externalIDExplanation: m(
-          'The values in this column are IDs, but they do not come from Zetkin.'
+          'The values in this column are IDs from our main member system (not Zetkin).'
         ),
-        externalIDFile: m('File is from another system.'),
         header: m('Configure IDs'),
+        showOrganizationSelectButton: m('Map to...'),
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
         ),
         zetkinID: m('Zetkin ID'),
-        zetkinIDExplanation: m('The values in this column are Zetkin IDs.'),
-        zetkinIDFile: m('File is from a Zetkin export.'),
+        zetkinIDExplanation: m(
+          'The values in this column are based on an export from Zetkin.'
+        ),
       },
       orgs: {
         header: m('Map values to organizations'),
@@ -151,8 +159,6 @@ export default makeMessages('feat.import', {
     },
     title: m('Import people'),
   },
-  done: m('Done'),
-  import: m('Import'),
   importStatus: {
     completed: {
       desc: m('Your data has been imported to Zetkin'),
@@ -163,6 +169,7 @@ export default makeMessages('feat.import', {
       desc: m('No data was imported to Zetkin'),
       title: m('Import failed'),
     },
+    loadingState: m('Importing'),
     scheduled: {
       desc: m(
         'You can safely close this dialog and we will send you an email when the import is done.'
@@ -172,7 +179,6 @@ export default makeMessages('feat.import', {
       ),
     },
   },
-  restart: m('Restart'),
   steps: {
     configure: m('Configure'),
     import: m('Import'),
@@ -189,18 +195,121 @@ export default makeMessages('feat.import', {
     release: m('Release the file here'),
     selectClick: m('Click to upload'),
     types: m('CSV, XLS or XLSX'),
-    unsupportedFile: m('Unsupported file.'),
+    unsupportedFile: m('Unsupported file format.'),
   },
-  validate: m('Validate'),
   validation: {
     alerts: {
       back: m('Go back'),
       checkbox: m('I understand'),
-      error: {
-        desc: m(
-          'Nothing will be imported. Please go back and check that the configurations you made are correct or select a new file to upload.'
-        ),
-        title: m('Something went wrong and the import was interrupted.'),
+      errors: {
+        altPhone: {
+          description: m(
+            'Some of the values in the alternate phone number column are not valid phone numbers.'
+          ),
+          title: m('Invalid alternate phone number formats'),
+        },
+        date: {
+          description: m(
+            'Some of the values in a date column are not valid dates.'
+          ),
+          title: m('Invalid date formats'),
+        },
+        email: {
+          description: m(
+            'Some of the values in your email column are not valid email addresses.'
+          ),
+          title: m('Invalid email address formats'),
+        },
+        empty: {
+          description: m(
+            'This import would not update or import anything so you can not proceed. Please go back and check that the configurations you made are correct or select a new file to upload.'
+          ),
+          title: m('This import would not change anything'),
+        },
+        gender: {
+          description: m(
+            'Some of the values in the gender column are incompatible with Zetkin gender formats. The values need to be either one of the letters f, m or o, or an empty cell.'
+          ),
+          title: m('Invalid gender formats'),
+        },
+        id: {
+          description: m(
+            'Some of the values in the Zetkin ID column are not numbers. Zetkin IDs are always only numbers.'
+          ),
+          title: m('Zetkin IDs are not in correct format'),
+        },
+        idValueMissing: {
+          description: m(
+            'Some of the values in the Zetkin ID column are empty.'
+          ),
+          title: m('Missing Zetkin IDs'),
+        },
+        longCoAddress: {
+          description: m(
+            'Some values in the C/O Address column are too long, please check that they are no longer than 200 characters.'
+          ),
+          title: m('Too long values in C/O Address column'),
+        },
+        longCountry: {
+          description: m(
+            'Some values in the Country column are too long, please check that they are no longer than 60 characters.'
+          ),
+          title: m('Too long values in Country column'),
+        },
+        longExtId: {
+          description: m(
+            'Some values in the external ID column are too long, please check that they are no longer than 96 characters.'
+          ),
+          title: m('Too long values in external ID column'),
+        },
+        longFirstName: {
+          description: m(
+            'Some values in the First Name column are too long, please check that they are no longer than 50 characters.'
+          ),
+          title: m('Too long values in First Name column'),
+        },
+        longLastName: {
+          description: m(
+            'Some values in the Last Name column are too long, please check that they are no longer than 50 characters.'
+          ),
+          title: m('Too long values in Last Name column'),
+        },
+        longStreetAddress: {
+          description: m(
+            'Some values in the Street Address column are too long, please check that they are no longer than 200 characters.'
+          ),
+          title: m('Too long values in Street Address column'),
+        },
+        noIdentifier: {
+          description: m(
+            'To make it possible to import you need to select either both first and last name columns, or an ID column'
+          ),
+          title: m('There is nothing to identify the data you want to import'),
+        },
+        notSelectedIdType: {
+          description: m(
+            'You need to select if your ID column is Zetkin IDs or external IDs.'
+          ),
+          title: m('Unfinished ID configuration'),
+        },
+        phone: {
+          description: m(
+            'Some of the values in the phone number column are not valid phone numbers.'
+          ),
+          title: m('Invalid phone number formats'),
+        },
+        postCode: {
+          description: m(
+            'Some of the values in the post code column are not valid post codes.'
+          ),
+          title: m('Invalid post code formats'),
+        },
+        url: {
+          description: m(
+            'Some of the values in the URL column are not valid URLS'
+          ),
+          title: m('Invalid URL formats'),
+        },
       },
       info: {
         desc: m('The data you want to upload looks good!'),
@@ -209,7 +318,7 @@ export default makeMessages('feat.import', {
       warning: {
         manyChanges: {
           desc: m(
-            'Sometimes this is a result of a misconfiguration of the import.'
+            'If this is not intentional you should go back and check the configuration.'
           ),
           title: m<{ fieldName: string }>(
             "This import will change a lot of people's {fieldName}"
@@ -217,7 +326,7 @@ export default makeMessages('feat.import', {
         },
         unselectedId: {
           desc: m(
-            'This can make updating people in Zetkin difficult and is not recommended.'
+            'This will create new records for every person, even if that results in duplicates, and can make updating people in Zetkin difficult. This is not recommended.'
           ),
           title: m('You have not chosen an ID column'),
         },
@@ -225,6 +334,21 @@ export default makeMessages('feat.import', {
     },
     messages: m('Messages'),
     pendingChanges: m('Pending changes'),
+    people: m<{ numPeople: number }>(
+      '{numPeople, plural, =1 {person} other {people}}'
+    ),
+    statusMessages: {
+      create: m<{ numCreated: number }>(
+        'This import will create {numCreated, plural, =1 {1 person} other {# people}}.'
+      ),
+      createAndUpdate: m<{ numCreated: number; numUpdated: number }>(
+        'This import will create {numCreated, plural, =1 {1 person} other {# people}} and update {numUpdated, plural, =1 {1 person} other {# people}}.'
+      ),
+      error: m('This import will error.'),
+      update: m<{ numUpdated: number }>(
+        'This import will update {numUpdated, plural, =1 {1 person} other {# people}}.'
+      ),
+    },
     updateOverview: {
       created: m<{ numPeople: number; number: ReactElement }>(
         '{number} new {numPeople, plural, =1 {person} other {people}} will be created'

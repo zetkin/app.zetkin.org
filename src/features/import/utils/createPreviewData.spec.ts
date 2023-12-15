@@ -47,8 +47,8 @@ describe('createPreviewData()', () => {
         {
           kind: ColumnKind.TAG,
           mapping: [
-            { tagIds: [123, 100], value: 'Frontend' },
-            { tagIds: [124, 100], value: 'Backend' },
+            { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+            { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
           ],
           selected: true,
         },
@@ -76,7 +76,7 @@ describe('createPreviewData()', () => {
         city: 'Malmö',
         id: '123',
       },
-      tags: [123, 100],
+      tags: [{ id: 123 }, { id: 100 }],
     });
   });
   it('converts orgs to preview object', () => {
@@ -155,7 +155,7 @@ describe('createPreviewData()', () => {
     const result = createPreviewData(configData, 0);
     expect(result).toEqual({});
   });
-  it('returns tagIds for empty value', () => {
+  it('returns tags for empty value', () => {
     const configData: Sheet = {
       columns: [
         { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -167,9 +167,9 @@ describe('createPreviewData()', () => {
         {
           kind: ColumnKind.TAG,
           mapping: [
-            { tagIds: [123, 100], value: 'Frontend' },
-            { tagIds: [124, 100], value: 'Backend' },
-            { tagIds: [222, 100], value: null },
+            { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+            { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
+            { tags: [{ id: 222 }, { id: 100 }], value: null },
           ],
           selected: true,
         },
@@ -194,7 +194,7 @@ describe('createPreviewData()', () => {
         city: 'Malmö',
         id: '123',
       },
-      tags: [222, 100],
+      tags: [{ id: 222 }, { id: 100 }],
     });
   });
 });

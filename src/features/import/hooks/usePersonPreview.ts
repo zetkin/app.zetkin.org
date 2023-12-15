@@ -16,8 +16,8 @@ export default function usePersonPreview(
 
   const fields = previewRow?.data;
   const tags =
-    previewRow?.tags?.reduce((acc: ZetkinTag[], tagId) => {
-      const tag = allTags.find((tag) => tag.id === tagId);
+    previewRow?.tags?.reduce((acc: ZetkinTag[], mappedTag) => {
+      const tag = allTags.find((t) => t.id === mappedTag.id);
       if (tag) {
         return acc.concat(tag);
       }

@@ -1,6 +1,11 @@
+import { CountryCode } from 'libphonenumber-js/types.cjs';
+import { describe, it } from '@jest/globals';
+
+import { organization as mockOrganization } from 'utils/testing/mocks/mockOrganization';
 import prepareImportOperations from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
-import { describe, it } from '@jest/globals';
+
+const countryCode = mockOrganization.country as CountryCode;
 
 describe('prepareImportOperations()', () => {
   describe('when first row is header', () => {
@@ -21,17 +26,17 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
-            id: '123',
+            id: 123,
           },
           op: 'person.import',
         },
         {
           data: {
-            id: '124',
+            id: 124,
           },
           op: 'person.import',
         },
@@ -61,7 +66,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -109,7 +114,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -136,8 +141,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -157,15 +162,15 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           op: 'person.import',
-          tags: [123, 100],
+          tags: [{ id: 123 }, { id: 100 }],
         },
         {
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
       ]);
     });
@@ -199,7 +204,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -236,8 +241,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -264,7 +269,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -274,7 +279,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ id: 123 }, { id: 100 }],
         },
         {
           data: {
@@ -284,7 +289,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
       ]);
     });
@@ -305,8 +310,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -325,7 +330,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -334,7 +339,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [123, 100],
+          tags: [{ id: 123 }, { id: 100 }],
         },
         {
           data: {
@@ -343,7 +348,7 @@ describe('prepareImportOperations()', () => {
             last_name: 'Doe',
           },
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
       ]);
     });
@@ -364,8 +369,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -392,7 +397,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -401,7 +406,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ id: 123 }, { id: 100 }],
         },
         {
           data: {
@@ -410,7 +415,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
       ]);
     });
@@ -434,8 +439,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -459,7 +464,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -469,7 +474,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ id: 123 }, { id: 100 }],
         },
         {
           data: {
@@ -479,7 +484,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
       ]);
     });
@@ -498,8 +503,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -526,12 +531,12 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ id: 123 }, { id: 100 }],
         },
         {
           data: {
@@ -539,7 +544,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [273],
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
       ]);
     });
@@ -556,8 +561,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -581,7 +586,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -598,7 +603,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
         {
           data: {
@@ -623,8 +628,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -651,7 +656,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -660,7 +665,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100],
+          tags: [{ id: 123 }, { id: 100 }],
         },
         {
           data: {
@@ -668,7 +673,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '124',
           },
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
         {
           data: {
@@ -676,7 +681,7 @@ describe('prepareImportOperations()', () => {
             ext_id: '125',
           },
           op: 'person.import',
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
       ]);
     });
@@ -701,8 +706,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
             selected: true,
           },
@@ -721,7 +726,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -734,7 +739,7 @@ describe('prepareImportOperations()', () => {
         {
           op: 'person.import',
           organizations: [273],
-          tags: [124, 100],
+          tags: [{ id: 124 }, { id: 100 }],
         },
         {
           data: {
@@ -767,8 +772,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
 
             selected: true,
@@ -776,8 +781,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [111, 222], value: 'Cat' },
-              { tagIds: [333, 444], value: 'Dog' },
+              { tags: [{ id: 111 }, { id: 222 }], value: 'Cat' },
+              { tags: [{ id: 333 }, { id: 444 }], value: 'Dog' },
             ],
 
             selected: true,
@@ -794,7 +799,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -803,7 +808,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [272],
-          tags: [123, 100, 111, 222],
+          tags: [{ id: 123 }, { id: 100 }, { id: 111 }, { id: 222 }],
         },
         {
           data: {
@@ -812,7 +817,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [273],
-          tags: [124, 100, 333, 444],
+          tags: [{ id: 124 }, { id: 100 }, { id: 333 }, { id: 444 }],
         },
       ]);
     });
@@ -837,8 +842,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [123, 100], value: 'Frontend' },
-              { tagIds: [124, 100], value: 'Backend' },
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
             ],
 
             selected: true,
@@ -846,8 +851,8 @@ describe('prepareImportOperations()', () => {
           {
             kind: ColumnKind.TAG,
             mapping: [
-              { tagIds: [100, 222], value: 'Cat' },
-              { tagIds: [333, 444], value: 'Dog' },
+              { tags: [{ id: 100 }, { id: 222 }], value: 'Cat' },
+              { tags: [{ id: 333 }, { id: 444 }], value: 'Dog' },
             ],
 
             selected: true,
@@ -864,7 +869,7 @@ describe('prepareImportOperations()', () => {
         ],
         title: 'My sheet',
       };
-      const result = prepareImportOperations(configData);
+      const result = prepareImportOperations(configData, countryCode);
       expect(result).toEqual([
         {
           data: {
@@ -873,7 +878,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [111],
-          tags: [123, 100, 222],
+          tags: [{ id: 123 }, { id: 100 }, { id: 222 }],
         },
         {
           data: {
@@ -882,7 +887,7 @@ describe('prepareImportOperations()', () => {
           },
           op: 'person.import',
           organizations: [333],
-          tags: [124, 100, 333, 444],
+          tags: [{ id: 124 }, { id: 100 }, { id: 333 }, { id: 444 }],
         },
       ]);
     });

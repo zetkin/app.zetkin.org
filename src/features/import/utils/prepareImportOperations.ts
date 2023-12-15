@@ -1,14 +1,17 @@
+import getUniqueTags from './getUniqueTags';
 import { CellData, ColumnKind, Sheet } from './types';
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
   op: 'person.import';
   organizations?: number[];
-  tags?: number[];
+  tags?: { id: number }[];
 };
 
 export default function prepareImportOperations(
-  configuredSheet: Sheet
+  configuredSheet: Sheet,
+  countryCode: CountryCode
 ): ZetkinPersonImportOp[] {
   const personImportOps: ZetkinPersonImportOp[] = [];
 
@@ -29,18 +32,50 @@ export default function prepareImportOperations(
           });
         }
 
-        //ID column and fields
-        if (
-          column.kind === ColumnKind.ID_FIELD ||
-          column.kind === ColumnKind.FIELD
-        ) {
-          const fieldKey =
-            column.kind === ColumnKind.ID_FIELD ? column.idField : column.field;
+        //ID column
+        if (column.kind === ColumnKind.ID_FIELD) {
+          const fieldKey = column.idField;
+          let value = row.data[colIdx];
 
-          if (row.data[colIdx]) {
+          if (value) {
+            if (fieldKey == 'ext_id') {
+              value = value.toString();
+            }
+
+            if (fieldKey == 'id') {
+              value = parseInt(value.toString());
+            }
+
             personImportOps[rowIndex].data = {
               ...personImportOps[rowIndex].data,
-              [`${fieldKey}`]: row.data[colIdx],
+              [`${fieldKey}`]: value,
+            };
+          }
+        }
+
+        //Fields
+        if (column.kind === ColumnKind.FIELD) {
+          const fieldKey = column.field;
+          let value = row.data[colIdx];
+
+          if (value) {
+            //Parse phone numbers to international format
+            if (fieldKey == 'phone' || fieldKey == 'alt_phone') {
+              const parsedPhoneNumber = parsePhoneNumber(
+                typeof value == 'string' ? value : value.toString(),
+                countryCode
+              );
+              value = parsedPhoneNumber.formatInternational();
+            }
+
+            //If they have uppecase letters we parse to lower
+            if (fieldKey == 'gender') {
+              value = value.toString().toLowerCase();
+            }
+
+            personImportOps[rowIndex].data = {
+              ...personImportOps[rowIndex].data,
+              [`${fieldKey}`]: value,
             };
           }
         }
@@ -52,11 +87,12 @@ export default function prepareImportOperations(
               if (!personImportOps[rowIndex].tags) {
                 personImportOps[rowIndex].tags = [];
               }
-              personImportOps[rowIndex].tags = [
-                ...new Set(
-                  personImportOps[rowIndex].tags?.concat(mappedColumn.tagIds)
-                ),
-              ];
+              const allTags =
+                personImportOps[rowIndex].tags?.concat(
+                  mappedColumn.tags.map((t) => ({ id: t.id }))
+                ) ?? [];
+
+              personImportOps[rowIndex].tags = getUniqueTags(allTags);
             }
           });
         }
@@ -64,10 +100,8 @@ export default function prepareImportOperations(
         //orgs
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
-            if (mappedColumn.value === row.data[colIdx]) {
-              personImportOps[rowIndex].organizations = [
-                mappedColumn.orgId as number,
-              ];
+            if (mappedColumn.value === row.data[colIdx] && mappedColumn.orgId) {
+              personImportOps[rowIndex].organizations = [mappedColumn.orgId];
             }
           });
         }
