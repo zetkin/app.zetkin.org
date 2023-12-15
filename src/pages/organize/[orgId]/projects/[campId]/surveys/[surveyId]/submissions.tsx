@@ -15,12 +15,11 @@ import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId, campId, surveyId } = ctx.params!;
+    const { orgId, surveyId } = ctx.params!;
     const filter = ctx.query.filter ? true : false;
 
     return {
       props: {
-        campId,
         orgId,
         showUnlinkedOnly: filter,
         surveyId,
@@ -101,11 +100,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
 
 SubmissionsPage.getLayout = function getLayout(page, props) {
   return (
-    <SurveyLayout
-      campaignId={props.campId}
-      orgId={props.orgId}
-      surveyId={props.surveyId}
-    >
+    <SurveyLayout orgId={props.orgId} surveyId={props.surveyId}>
       {page}
     </SurveyLayout>
   );

@@ -51,7 +51,7 @@ feat:
       withSignups: '{numWithSignups} mit Anmeldungen'
       withoutContact: '{numWithoutContact} keine Kontaktperson'
     eventFilter:
-      collapse: ausblenden
+      collapse: Ausblenden
       expand: '{numOfOptions, plural, one {+ 1 Aktionstyp} other {+ # Aktionstypen}}'
       filter: Filtern
       filterOptions:
@@ -635,8 +635,8 @@ feat:
             wurden für die Aufgabe "langjährige Mitglieder aktivieren".
         inputString: '{addRemoveSelect} Personen, die {callSelect} mindestens {minTimesInput}
           {minTimes} in {assignmentSelect} {timeFrame}.'
-        minTimes: '{minTimesInput} {minTimes, plural, one {Zeit} other {Zeiten}}'
-        minTimesInput: '{input} {minTimes, plural, one {Zeit} other {Zeiten}}'
+        minTimes: '{minTimesInput} {minTimes, plural, one {mal} other {mal}}'
+        minTimesInput: '{input} {minTimes, plural, one {mal} other {mal}}'
       campaignParticipation:
         activitySelect:
           activity: Typ "{activity}"
@@ -753,6 +753,7 @@ feat:
       random:
         addLimitRemoveSelect:
           add: hinzufügen
+          limit: Nur
           sub: entfernen
         addRemoveSelect:
           add: hinzufügen
@@ -917,8 +918,8 @@ feat:
     misc:
       noOptions: Keine übereinstimmenden Stichworte
     operators:
-      add: Hinzufügen
-      sub: Entfernen
+      add: Füge hinzu
+      sub: Entferne
     quantity:
       preview:
         integer: '{people} {people, plural, one {Person} other {Personen}}'

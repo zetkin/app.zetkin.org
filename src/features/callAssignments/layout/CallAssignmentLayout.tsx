@@ -2,6 +2,7 @@ import { Box, Button, Typography } from '@mui/material';
 import { Headset, People } from '@mui/icons-material';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
+import getCallAssignmentUrl from '../utils/getCallAssignmentUrl';
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useCallAssignment from '../hooks/useCallAssignment';
@@ -24,7 +25,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   children,
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId, campId, callAssId } = useNumericRouteParams();
+  const { orgId, callAssId } = useNumericRouteParams();
 
   const {
     data: callAssignment,
@@ -54,7 +55,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Button>
         )
       }
-      baseHref={`/organize/${orgId}/projects/${campId}/callassignments/${callAssId}`}
+      baseHref={getCallAssignmentUrl(callAssignment)}
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={callAssignment.end_date || null}

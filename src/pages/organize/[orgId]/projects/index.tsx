@@ -53,6 +53,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const { data: campaigns } = useCampaigns(orgId);
+  campaigns?.reverse();
 
   const onServer = useServerSide();
 

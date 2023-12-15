@@ -46,12 +46,14 @@ const PersonFieldConfig = ({
 
   const fields: Field[] = [];
 
-  customFields.map((field) =>
-    fields.push({
-      slug: field.slug,
-      title: field.title,
-    })
-  );
+  customFields.forEach((field) => {
+    if (field.type !== 'json') {
+      fields.push({
+        slug: field.slug,
+        title: field.title,
+      });
+    }
+  });
 
   Object.values(NATIVE_PERSON_FIELDS).map((fieldSlug) =>
     fields.push({
