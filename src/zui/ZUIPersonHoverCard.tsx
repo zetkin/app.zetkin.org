@@ -75,7 +75,7 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
           },
         ]}
         open={open}
-        style={{ zIndex: 9999 }}
+        style={{ zIndex: 1300 }}
         {...popperProps}
       >
         {person && (

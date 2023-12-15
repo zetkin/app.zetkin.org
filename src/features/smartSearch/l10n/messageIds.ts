@@ -313,6 +313,9 @@ export default makeMessages('feat.smartSearch', {
         in: m('match'),
         notin: m('do not match'),
       },
+      noSmartSearches: m(
+        'There are no Smart Searches in this organisation yet.'
+      ),
       query: {
         edit: {
           callassignment_goal: m<{

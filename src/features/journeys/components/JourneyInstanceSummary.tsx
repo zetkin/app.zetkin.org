@@ -88,35 +88,31 @@ const JourneyInstanceSummary = ({
             submitDisabled={isLoading}
           />
         </form>
+      ) : // Not editing
+      journeyInstance.summary.length > 0 ? (
+        <ZUICollapse collapsedSize={90}>
+          <ZUIMarkdown
+            BoxProps={{
+              fontSize: '1rem',
+              style: {
+                overflowWrap: 'anywhere',
+              },
+            }}
+            markdown={journeyInstance.summary}
+          />
+        </ZUICollapse>
       ) : (
-        // Not editing
-        <>
-          {journeyInstance.summary.length > 0 ? (
-            <ZUICollapse collapsedSize={90}>
-              <ZUIMarkdown
-                BoxProps={{
-                  fontSize: '1rem',
-                  style: {
-                    overflowWrap: 'anywhere',
-                  },
-                }}
-                markdown={journeyInstance.summary}
-              />
-            </ZUICollapse>
-          ) : (
-            <Typography
-              color="secondary"
-              onClick={() => setEditingSummary(true)}
-              style={{
-                cursor: 'pointer',
-                padding: '1rem 0 1rem 0',
-              }}
-              variant="body1"
-            >
-              {summaryPlaceholder}
-            </Typography>
-          )}
-        </>
+        <Typography
+          color="secondary"
+          onClick={() => setEditingSummary(true)}
+          style={{
+            cursor: 'pointer',
+            padding: '1rem 0 1rem 0',
+          }}
+          variant="body1"
+        >
+          {summaryPlaceholder}
+        </Typography>
       )}
     </ZUISection>
   );

@@ -9,7 +9,7 @@ import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIFuturesProps<G extends Record<string, unknown>> {
   children?:
-    | React.ReactNode
+    | JSX.Element
     | (({
         data,
       }: {
@@ -65,11 +65,9 @@ function ZUIFutures<G extends Record<string, unknown>>({
   });
 
   // Render children if query resolves successfully
-  return typeof children === 'function' ? (
-    children({ data: dataObjects as { [I in keyof G]: G[I] } }) // Expose the successfully resolved query if children is a function
-  ) : (
-    <>{children || null}</>
-  ); // Otherwise render children
+  return typeof children === 'function'
+    ? children({ data: dataObjects as { [I in keyof G]: G[I] } }) // Expose the successfully resolved query if children is a function
+    : children || null; // Otherwise render children
 }
 
 export default ZUIFutures;

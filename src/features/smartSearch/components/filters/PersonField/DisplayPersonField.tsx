@@ -20,7 +20,7 @@ interface DisplayPersonFieldProps {
 
 const DisplayPersonField = ({
   filter,
-}: DisplayPersonFieldProps): JSX.Element => {
+}: DisplayPersonFieldProps): JSX.Element | null => {
   const { orgId } = useNumericRouteParams();
   const fields = useCustomFields(orgId).data ?? [];
   const { config } = filter;
@@ -37,7 +37,7 @@ const DisplayPersonField = ({
   const fieldType = field?.type || '';
   if (fieldType != 'date' && fieldType != 'text' && fieldType != 'url') {
     // TODO:
-    return <></>;
+    return null;
   }
 
   return (

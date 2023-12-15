@@ -102,7 +102,7 @@ const Cell: FC<{
   const [isRestricted] = useAccessLevel();
 
   if (cell?.value_type != null) {
-    return <>{cell.value}</>;
+    return <span>{cell.value}</span>;
   } else if (cell) {
     return (
       <TagChip
