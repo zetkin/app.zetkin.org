@@ -15,7 +15,7 @@ interface UseEmailReturn {
   deleteEmail: () => Promise<void>;
   isTargeted: boolean;
   updateEmail: (data: Partial<ZetkinEmail>) => IFuture<ZetkinEmail>;
-  updateTargets: (query: Partial<ZetkinQuery>) => void;
+  updateTargets: (query: Partial<ZetkinQuery>) => Promise<void>;
 }
 
 export default function useEmail(
@@ -27,6 +27,7 @@ export default function useEmail(
 
   const emailItems = useAppSelector((state) => state.emails.emailList.items);
   const emailItem = emailItems.find((item) => item.id == emailId);
+  const email = emailItem?.data;
 
   const emailFuture = loadItemIfNecessary(emailItem, dispatch, {
     actionOnLoad: () => emailLoad(emailId),
@@ -56,18 +57,19 @@ export default function useEmail(
     return new PromiseFuture(promise);
   };
 
-  const updateTargets = (query: Partial<ZetkinQuery>): void => {
-    if (emailItem?.data) {
+  const updateTargets = async (query: Partial<ZetkinQuery>) => {
+    if (email) {
       //need to fix when there is API for it
       dispatch(emailUpdate([emailId, ['target']]));
+      const target = await apiClient.patch<ZetkinQuery>(
+        `/api/orgs/${orgId}/people/queries/${email.target.id}`,
+        query
+      );
       dispatch(
         emailUpdated([
           {
-            ...emailItem?.data,
-            target: {
-              filter_spec: query.filter_spec!,
-              id: 6,
-            },
+            ...email,
+            target: target,
           },
           ['target'],
         ])

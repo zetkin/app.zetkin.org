@@ -201,7 +201,7 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
                 onClick={() => {
                   setAnchorEl(null);
                   // setUtcTime(currentTimezone);
-                  console.log({ date: `${naiveSending}:00Z${utcValue}` });
+                  console.log({ date: `${naiveSending}:00${utcValue}` });
                   // save: () => {
                   // updateEmail({
                   //   date:`${naiveSending}:00`

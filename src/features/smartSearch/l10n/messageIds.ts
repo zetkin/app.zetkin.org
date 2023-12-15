@@ -323,6 +323,10 @@ export default makeMessages('feat.smartSearch', {
             querySelect: ReactElement;
             titleSelect: ReactElement;
           }>('{querySelect} of call assignment "{titleSelect}"'),
+          email_target: m<{
+            querySelect: ReactElement;
+            titleSelect: ReactElement;
+          }>('{querySelect} of email "{titleSelect}"'),
           none: m<{ querySelect: ReactElement; titleSelect: ReactElement }>(
             '{querySelect}'
           ),
@@ -338,6 +342,9 @@ export default makeMessages('feat.smartSearch', {
           callassignment_target: m<{ queryTitle: ReactElement | string }>(
             'the target group of call assignment "{queryTitle}"'
           ),
+          email_target: m<{ queryTitle: ReactElement | string }>(
+            'the target group of email "{queryTitle}"'
+          ),
           none: m<{ queryTitle: ReactElement | string }>('{queryTitle}'),
           standalone: m<{ queryTitle: ReactElement | string }>(
             'Smart Search query "{queryTitle}"'
@@ -346,12 +353,14 @@ export default makeMessages('feat.smartSearch', {
         selectLabel: {
           callassignment_goal: m('the purpose group'),
           callassignment_target: m('the target group'),
+          email_target: m('the target group'),
           none: m('a Smart Search query'),
           standalone: m('Smart Search query'),
         },
         selectOptions: {
           callassignment_goal: m('the purpose group of a call assignment'),
           callassignment_target: m('the target group of a call assignment'),
+          email_target: m('the target group of an email'),
           none: m(
             "This organization doesn't have any call assignments or Smart Search queries yet."
           ),
