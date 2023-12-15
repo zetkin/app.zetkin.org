@@ -1,0 +1,31 @@
+{
+  "article_id": 472,
+  "title": "Welcome to Easy-email",
+  "summary": "Nice to meet you!",
+  "picture": "https://assets.maocanhua.cn/5b9d0408-0e14-4c9f-979e-f526187bd0ca-",
+  "category_id": 90,
+  "origin_source": "",
+  "readcount": 897,
+  "user_id": 77,
+  "secret": 0,
+  "level": 10,
+  "created_at": 1621128824,
+  "updated_at": 1637740265,
+  "deleted_at": 0,
+  "content": {
+    "article_id": 472,
+    "content": "{\"type\":\"page\",\"data\":{\"value\":{\"breakpoint\":\"480px\",\"headAttributes\":\"\",\"font-size\":\"14px\",\"line-height\":\"1.7\",\"headStyles\":[],\"fonts\":[],\"responsive\":true,\"font-family\":\"lucida Grande,Verdana,Microsoft YaHei\",\"text-color\":\"#000000\"}},\"attributes\":{\"background-color\":\"#F4F4F4\",\"width\":\"600px\",\"css-class\":\"mjml-body\"},\"children\":[{\"type\":\"section\",\"data\":{\"value\":{\"noWrap\":false}},\"attributes\":{\"padding\":\"30px 0px 0px 0px\",\"border\":\"none\",\"direction\":\"ltr\",\"text-align\":\"center\",\"background-repeat\":\"repeat\",\"background-size\":\"auto\",\"background-position\":\"top center\",\"background-color\":\"#ffffff\"}"
+  },
+  "tags": [
+    {
+      "tag_id": 74,
+      "name": "券包",
+      "picture": "http://assets.maocanhua.cn/Fqpjw0PHvSPy4sh0giFmkpuxgKhU",
+      "desc": "券包",
+      "created_at": 1576227276,
+      "user_id": 77,
+      "updated_at": 0,
+      "deleted_at": 0
+    }
+  ]
+}

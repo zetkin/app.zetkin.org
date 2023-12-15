@@ -6,6 +6,8 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import UserOrganizations from 'features/organizations/components/OrganizationsList';
+import EasyEmail from 'features/testEmail/easyEmail';
+import { useEffect } from 'react';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -20,6 +22,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 
 const OrganizePage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('window.innerHeight', window);
+    }
+  }, []);
   return (
     <>
       <Head>
