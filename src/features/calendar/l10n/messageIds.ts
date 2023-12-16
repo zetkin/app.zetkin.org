@@ -71,8 +71,8 @@ export default makeMessages('feat.calendar', {
   ranges: {
     day: m('Day'),
     month: m('Month'),
+    shortWeek: m('w'),
     week: m('Week'),
-    shortWeek: m('w')
   },
   selectionBar: {
     deselect: m('Deselect'),
