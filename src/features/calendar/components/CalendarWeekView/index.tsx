@@ -27,6 +27,9 @@ import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/hooks/useEventMutations';
 import { useAppDispatch, useEnv, useNumericRouteParams } from 'core/hooks';
+import WeekNumber from '../CalendarMonthView/WeekNumber';
+import { getWeekNumber } from '../CalendarMonthView/utils';
+import HeaderWeekNumber from './HeaderWeekNumber';
 
 dayjs.extend(isoWeek);
 
@@ -81,7 +84,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         gridTemplateRows={'1fr'}
       >
         {/* Empty */}
-        <Box />
+        <HeaderWeekNumber
+                  weekNr={dayjs(dayDates[0]).isoWeek()}
+                />
         {dayDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <DayHeader
