@@ -14,12 +14,17 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   DataGridPro,
   GridCellParams,
+  GridComparatorFn,
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
 import { FC, useEffect, useMemo } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
+
+const alphabeticalComparator: GridComparatorFn<string> = (v1, v2) =>
+  //compares strings alphabetically, locale aware
+  v1.localeCompare(v2);
 
 const SurveySubmissionsList = ({
   submissions,
@@ -68,7 +73,17 @@ const SurveySubmissionsList = ({
           </Box>
         );
       },
+      sortComparator: alphabeticalComparator,
       sortable: true,
+      valueGetter: (
+        params: GridRenderCellParams<ZetkinSurveySubmission, string>
+      ) => {
+        if (params.row.respondent !== null) {
+          return params.row.respondent[field];
+        } else {
+          return 'anonymous';
+        }
+      },
     };
   };
 
