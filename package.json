@@ -59,7 +59,7 @@
     "marked": "^4.0.16",
     "mui-rff": "^6.1.2",
     "negotiator": "^0.6.2",
-    "next": "12",
+    "next": "13.5.6",
     "next-session": "^3.4.0",
     "node-xlsx": "^0.21.0",
     "nprogress": "^0.2.0",
