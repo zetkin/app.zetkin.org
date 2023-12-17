@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import SurveySubheading from './SurveySubheading';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import { FormControl, FormLabel, TextField } from '@mui/material';
 
@@ -13,17 +14,8 @@ const SurveyOptionsQuestion: FC<SurveyOptionsQuestionProps> = ({
 }) => {
   return (
     <FormControl sx={{ width: '100%' }}>
-      <FormLabel
-        htmlFor={`input-${element.id}`}
-        style={{
-          color: 'black',
-          fontSize: '1.5em',
-          fontWeight: '500',
-          marginBottom: '0.5em',
-          marginTop: '0.5em',
-        }}
-      >
-        {element.question.question}
+      <FormLabel htmlFor={`input-${element.id}`}>
+        <SurveySubheading>{element.question.question}</SurveySubheading>
       </FormLabel>
       <TextField
         defaultValue={
