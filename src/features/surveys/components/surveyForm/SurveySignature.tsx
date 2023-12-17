@@ -1,6 +1,7 @@
 import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SurveyOption from './SurveyOption';
+import SurveySubheading from './SurveySubheading';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import {
   Box,
@@ -49,17 +50,9 @@ const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
         }
       >
         <FormLabel id="survey-signature">
-          <Typography
-            style={{
-              color: 'black',
-              fontSize: '1.5em',
-              fontWeight: '500',
-              marginBottom: '0.5em',
-              marginTop: '0.5em',
-            }}
-          >
+          <SurveySubheading>
             <Msg id={messageIds.surveySignature.title} />
-          </Typography>
+          </SurveySubheading>
         </FormLabel>
 
         <Box display="flex" flexDirection="column" rowGap={1}>

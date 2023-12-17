@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import SurveyOption from './SurveyOption';
+import SurveySubheading from './SurveySubheading';
 import {
   Box,
   Checkbox,
@@ -35,17 +36,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
     <FormControl>
       {element.question.response_config.widget_type === 'checkbox' && (
         <FormGroup aria-labelledby={`label-${element.id}`}>
-          <FormLabel
-            id={`label-${element.id}`}
-            style={{
-              color: 'black',
-              fontSize: '1.5em',
-              fontWeight: '500',
-              marginBottom: '0.5em',
-              marginTop: '0.5em',
-            }}
-          >
-            {element.question.question}
+          <FormLabel id={`label-${element.id}`}>
+            <SurveySubheading>{element.question.question}</SurveySubheading>
           </FormLabel>
           <Box display="flex" flexDirection="column" rowGap={1}>
             {element.question.options!.map((option: ZetkinSurveyOption) => (
@@ -70,17 +62,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
           defaultValue={selectedOptions[0] ?? undefined}
           name={`${element.id}.options`}
         >
-          <FormLabel
-            id={`label-${element.id}`}
-            style={{
-              color: 'black',
-              fontSize: '1.5em',
-              fontWeight: '500',
-              marginBottom: '0.5em',
-              marginTop: '0.5em',
-            }}
-          >
-            {element.question.question}
+          <FormLabel id={`label-${element.id}`}>
+            <SurveySubheading>{element.question.question}</SurveySubheading>
           </FormLabel>
           <Box display="flex" flexDirection="column" rowGap={1}>
             {element.question.options!.map((option: ZetkinSurveyOption) => (
