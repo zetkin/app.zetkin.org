@@ -1,8 +1,9 @@
 import { FC } from 'react';
+import SurveyOption from './SurveyOption';
 import {
+  Box,
   Checkbox,
   FormControl,
-  FormControlLabel,
   FormGroup,
   FormLabel,
   MenuItem,
@@ -46,19 +47,21 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
           >
             {element.question.question}
           </FormLabel>
-          {element.question.options!.map((option: ZetkinSurveyOption) => (
-            <FormControlLabel
-              key={option.id}
-              control={
-                <Checkbox
-                  defaultChecked={selectedOptions.includes(`${option.id}`)}
-                  name={`${element.id}.options`}
-                />
-              }
-              label={option.text}
-              value={option.id}
-            />
-          ))}
+          <Box display="flex" flexDirection="column" rowGap={1}>
+            {element.question.options!.map((option: ZetkinSurveyOption) => (
+              <SurveyOption
+                key={option.id}
+                control={
+                  <Checkbox
+                    defaultChecked={selectedOptions.includes(`${option.id}`)}
+                    name={`${element.id}.options`}
+                  />
+                }
+                label={option.text}
+                value={option.id}
+              />
+            ))}
+          </Box>
         </FormGroup>
       )}
       {element.question.response_config.widget_type === 'radio' && (
@@ -79,14 +82,16 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
           >
             {element.question.question}
           </FormLabel>
-          {element.question.options!.map((option: ZetkinSurveyOption) => (
-            <FormControlLabel
-              key={option.id}
-              control={<Radio />}
-              label={option.text}
-              value={option.id}
-            />
-          ))}
+          <Box display="flex" flexDirection="column" rowGap={1}>
+            {element.question.options!.map((option: ZetkinSurveyOption) => (
+              <SurveyOption
+                key={option.id}
+                control={<Radio />}
+                label={option.text}
+                value={option.id}
+              />
+            ))}
+          </Box>
         </RadioGroup>
       )}
       {element.question.response_config.widget_type === 'select' && (
