@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import messageIds from 'features/surveys/l10n/messageIds';
+import SurveyOption from './SurveyOption';
+import SurveySubheading from './SurveySubheading';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import {
   Checkbox,
   FormControl,
-  FormControlLabel,
   FormGroup,
   FormLabel,
   Link,
@@ -25,19 +26,12 @@ const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({
   return (
     <FormControl>
       <FormGroup aria-labelledby="privacy-policy-label">
-        <FormLabel
-          id="privacy-policy-label"
-          style={{
-            color: 'black',
-            fontSize: '1.5em',
-            fontWeight: '500',
-            marginBottom: '0.5em',
-            marginTop: '0.5em',
-          }}
-        >
-          <Msg id={messageIds.surveyForm.terms.title} />
+        <FormLabel id="privacy-policy-label">
+          <SurveySubheading>
+            <Msg id={messageIds.surveyForm.terms.title} />
+          </SurveySubheading>
         </FormLabel>
-        <FormControlLabel
+        <SurveyOption
           control={
             <Checkbox
               defaultChecked={formData['privacy.approval'] === 'on'}
