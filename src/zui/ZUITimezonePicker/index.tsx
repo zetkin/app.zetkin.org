@@ -46,6 +46,13 @@ const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
 
   return (
     <Autocomplete
+      disableClearable
+      filterOptions={(options, { inputValue }) => {
+        const filtered = options.filter((item) =>
+          item.cities.toString().toLocaleLowerCase().includes(inputValue)
+        );
+        return filtered || options;
+      }}
       fullWidth
       getOptionLabel={(option) => option.utcValue}
       isOptionEqualToValue={(option, value) =>
@@ -62,8 +69,19 @@ const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
       renderInput={(params) => (
         <TextField {...params} label={messages.timezonePicker.timezone()} />
       )}
-      renderOption={(props, option) => {
-        const cities = option.cities.toString();
+      renderOption={(props, option, state) => {
+        let filteredCities: string[] = [];
+        const cityIdx = option.cities.findIndex((item) => {
+          if (state.inputValue !== '') {
+            return item.toLocaleLowerCase().includes(state.inputValue);
+          }
+        });
+
+        if (cityIdx > -1) {
+          filteredCities = option.cities.slice(cityIdx);
+        }
+        const restCities = filteredCities.slice(1).toString();
+
         return (
           <li {...props}>
             <Box
@@ -75,15 +93,25 @@ const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
               }}
             >
               <Typography fontWeight="bold">{option.utcValue}</Typography>
-              <Typography
+              <Box
                 sx={{
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
               >
-                {cities}
-              </Typography>
+                {filteredCities.length > 0 ? (
+                  <Box display="flex">
+                    <Typography>...</Typography>
+                    <Typography fontWeight="bold">{`${filteredCities[0]}`}</Typography>
+                    {restCities !== '' && (
+                      <Typography>{`,${restCities}`}</Typography>
+                    )}
+                  </Box>
+                ) : (
+                  option.cities.toString()
+                )}
+              </Box>
             </Box>
           </li>
         );
