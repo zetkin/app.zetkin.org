@@ -26,7 +26,6 @@ import useEmailStats from '../hooks/useEmailStats';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import ZUITimezonePicker from 'zui/ZUITimezonePicker';
 import {
   makeNaiveDateString,
   makeNaiveTimeString,
@@ -34,6 +33,7 @@ import {
 } from 'utils/dateUtils';
 import { Msg, useMessages } from 'core/i18n';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import ZUITimezonePicker, { findTimezone } from 'zui/ZUITimezonePicker';
 
 dayjs.extend(utc);
 
@@ -47,12 +47,15 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [tab, setTab] = useState<'now' | 'later'>('later');
-  // const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const [utcValue, setUtcValue] = useState('');
+  const [utcValue, setUtcValue] = useState(findTimezone().utc);
+
+  // fake data
   const [unlocked, setUnlocked] = useState(true);
 
-  const { deleteEmail } = useEmail(orgId, email.id);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
   const { statsFuture } = useEmailStats(orgId, email.id);
+  const targetNum = statsFuture.data?.allTargets || 0;
 
   const [sendingDate, setSendingDate] = useState(
     email?.published ? email.published.slice(0, 10) : null
@@ -60,12 +63,8 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
   const [sendingTime, setSendingTime] = useState(
     email?.published ? removeOffset(email.published.slice(11, 16)) : '09:00'
   );
-  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-
-  const targetNum = statsFuture.data?.allTargets || 0;
 
   const naiveSending = `${sendingDate || '0000-00-00'}T${sendingTime}`;
-
   return (
     <Box display="flex">
       <Button
@@ -81,7 +80,7 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
           mouseEvent="onMouseUp"
           onClickAway={() => {
             setAnchorEl(null);
-            // setUtcTime(currentTimezone);
+            setUtcValue(findTimezone().utc);
           }}
         >
           <Paper sx={{ p: 2, width: '550px' }}>
@@ -131,9 +130,7 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
                       value={dayjs(naiveSending)}
                     />
                     <ZUITimezonePicker
-                      onChange={(value) => {
-                        setUtcValue(value.utc);
-                      }}
+                      onChange={(value) => setUtcValue(value)}
                     />
                   </Stack>
                 </Box>
@@ -200,14 +197,11 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
               <Button
                 disabled={sendingDate == '' || unlocked}
                 onClick={() => {
+                  updateEmail({
+                    published: `${naiveSending}:00${utcValue}`,
+                  });
                   setAnchorEl(null);
-                  // setUtcTime(currentTimezone);
-                  // console.log({ date: `${naiveSending}:00${utcValue}` });
-                  // save: () => {
-                  // updateEmail({
-                  //   date:`${naiveSending}:00`
-                  // });
-                  // },
+                  setUtcValue(findTimezone().utc);
                 }}
                 variant="contained"
               >

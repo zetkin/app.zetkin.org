@@ -8,14 +8,19 @@ import { useMessages } from 'core/i18n';
 
 interface ZUITimezonePickerProps {
   onChange: (value: string) => void;
+  tzCode?: string;
 }
 
-const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
-  const messages = useMessages(messageIds);
-  const currentTzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const currentTimezone = timezones.find(
-    (timezone) => timezone.tzCode === currentTzCode
+export const findTimezone = (currentTzCode?: string) => {
+  const tzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return timezones.find(
+    (timezone) => timezone.tzCode === (currentTzCode || tzCode)
   )!;
+};
+
+const ZUITimezonePicker = ({ onChange, tzCode }: ZUITimezonePickerProps) => {
+  const messages = useMessages(messageIds);
+  const currentTimezone = findTimezone(tzCode);
   const [value, setValue] = useState({
     cities: [currentTimezone.tzCode],
     utcValue: `${currentTimezone.utc} ${messages.timezonePicker.gmt()}`,
@@ -61,7 +66,7 @@ const ZUITimezonePicker = ({ onChange }: ZUITimezonePickerProps) => {
       onChange={(_, tzGroup) => {
         if (tzGroup !== null) {
           setValue(tzGroup);
-          onChange(tzGroup.utcValue);
+          onChange(tzGroup.utcValue.split(' ')[0]);
         }
       }}
       options={tzOptions}
