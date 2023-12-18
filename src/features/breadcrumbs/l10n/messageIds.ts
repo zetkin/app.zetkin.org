@@ -12,6 +12,7 @@ export default makeMessages('feat.breadcrumbs', {
     campaigns: m('Projects'),
     closed: m('Closed'),
     conversation: m('Conversation'),
+    emails: m('Emails'),
     events: m('Events'),
     folders: m('Lists'),
     insights: m('Insights'),

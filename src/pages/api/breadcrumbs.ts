@@ -39,7 +39,6 @@ const breadcrumbs = async (
       if (field.startsWith('[') && field.endsWith(']')) {
         const fieldName = field.slice(1, -1);
         const fieldValue = query[fieldName];
-
         const elements = await fetchElements(
           '/' + curPath.join('/'),
           fieldName,
@@ -203,6 +202,16 @@ async function fetchElements(
       apiFetch
     );
     return folderElements;
+  } else if (fieldName == 'emailId') {
+    const email = await apiFetch(`/orgs/${orgId}/emails/${fieldValue}`).then(
+      (res) => res.json()
+    );
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: email.data.title,
+      },
+    ];
   }
 
   return [];
