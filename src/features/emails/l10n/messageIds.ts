@@ -54,4 +54,5 @@ export default makeMessages('feat.emails', {
     title: m('Targets'),
     viewButton: m('View target group'),
   },
+  wasSent: m<{ time: string }>('Was sent at {time}'),
 });
