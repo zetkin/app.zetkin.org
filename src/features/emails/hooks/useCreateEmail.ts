@@ -1,11 +1,9 @@
-import { ZetkinEmail } from 'utils/types/zetkin';
 import { emailCreate, emailCreated } from '../store';
-// import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch } from 'core/hooks';
+import { ZetkinEmail, ZetkinEmailPostBody } from 'utils/types/zetkin';
 
 interface UseCreateEmailReturn {
-  // createEmail: (body: Partial<ZetkinEmail>) => ZetkinEmail;
-  createEmail: (body: Partial<ZetkinEmail>) => Promise<ZetkinEmail>;
+  createEmail: (body: ZetkinEmailPostBody) => Promise<ZetkinEmail>;
 }
 
 export default function useCreateEmail(
@@ -15,14 +13,11 @@ export default function useCreateEmail(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const createEmail = async (body: Partial<ZetkinEmail>) => {
+  const createEmail = async (body: ZetkinEmailPostBody) => {
     dispatch(emailCreate);
-    const email = await apiClient.post<ZetkinEmail, Partial<ZetkinEmail>>(
+    const email = await apiClient.post<ZetkinEmail, ZetkinEmailPostBody>(
       `/api/orgs/${orgId}/emails`,
-      {
-        campaign_id: campId,
-        title: body.title,
-      }
+      body
     );
     dispatch(emailCreated([email, campId]));
     return email;

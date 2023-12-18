@@ -28,6 +28,7 @@ import { useContext, useState } from 'react';
 
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
+import useDuplicateEmail from '../hooks/useDuplicateEmail';
 import useEmail from '../hooks/useEmail';
 import useEmailStats from '../hooks/useEmailStats';
 import { ZetkinEmail } from 'utils/types/zetkin';
@@ -67,6 +68,11 @@ const EmailActionButtons = ({
 
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
+  const { duplicateEmail } = useDuplicateEmail(
+    orgId,
+    email.campaign.id,
+    email.id
+  );
   const { statsFuture } = useEmailStats(orgId, email.id);
   const targetNum = statsFuture.data?.allTargets || 0;
 
@@ -243,6 +249,7 @@ const EmailActionButtons = ({
           items={[
             {
               label: <>{messages.emailActionButtons.duplicate()}</>,
+              onSelect: () => duplicateEmail(),
               startIcon: <ContentCopy />,
             },
             {

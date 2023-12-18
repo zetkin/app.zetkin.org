@@ -498,7 +498,7 @@ export type {
 };
 //fix ZetkinEmail related types later
 export interface ZetkinEmail {
-  campaign_id: number;
+  campaign: { id: number; title: string };
   id: number;
   published: string;
   subject: string;
@@ -507,3 +507,8 @@ export interface ZetkinEmail {
   title: string;
   target: ZetkinQuery;
 }
+export type ZetkinEmailPostBody = Partial<
+  Omit<ZetkinEmail, 'id' | 'published' | 'organization' | 'target'>
+> & {
+  campaign_id: number;
+};
