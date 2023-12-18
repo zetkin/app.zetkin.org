@@ -1,7 +1,7 @@
-import { Box } from '@mui/system';
 import timezones from 'timezones-list';
 import { useState } from 'react';
 import { Autocomplete, TextField, Typography } from '@mui/material';
+import { Box, useTheme } from '@mui/system';
 
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -20,6 +20,7 @@ export const findTimezone = (currentTzCode?: string) => {
 
 const ZUITimezonePicker = ({ onChange, tzCode }: ZUITimezonePickerProps) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
   const currentTimezone = findTimezone(tzCode);
   const [value, setValue] = useState({
     cities: [currentTimezone.tzCode],
@@ -107,14 +108,19 @@ const ZUITimezonePicker = ({ onChange, tzCode }: ZUITimezonePickerProps) => {
               >
                 {filteredCities.length > 0 ? (
                   <Box display="flex">
-                    <Typography>...</Typography>
-                    <Typography fontWeight="bold">{`${filteredCities[0]}`}</Typography>
+                    <Typography sx={{ color: theme.palette.grey['800'] }}>
+                      {`...${filteredCities[0]}`}
+                    </Typography>
                     {restCities !== '' && (
-                      <Typography>{`,${restCities}`}</Typography>
+                      <Typography sx={{ color: theme.palette.grey['500'] }}>
+                        {`,${restCities}`}
+                      </Typography>
                     )}
                   </Box>
                 ) : (
-                  option.cities.toString()
+                  <Typography sx={{ color: theme.palette.grey['800'] }}>
+                    {option.cities.toString()}
+                  </Typography>
                 )}
               </Box>
             </Box>
