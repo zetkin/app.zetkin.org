@@ -16,6 +16,7 @@ export default makeMessages('feat.emails', {
     ),
     lockTarget: m('Lock targeting'),
     schedule: m('Schedule'),
+    sendAway: m('Send away'),
     sendLater: m('Send later'),
     sendNow: {
       alert: {
@@ -55,4 +56,5 @@ export default makeMessages('feat.emails', {
     viewButton: m('View target group'),
   },
   wasSent: m<{ time: string }>('Was sent at {time}'),
+  willSend: m<{ time: string }>('Will send at {time}'),
 });

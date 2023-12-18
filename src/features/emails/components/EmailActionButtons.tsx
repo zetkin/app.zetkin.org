@@ -17,7 +17,13 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { ArrowDropDown, ContentCopy, Delete, Send } from '@mui/icons-material';
+import {
+  AccessTime,
+  ArrowDropDown,
+  ContentCopy,
+  Delete,
+  Send,
+} from '@mui/icons-material';
 import { useContext, useState } from 'react';
 
 import { EmailState } from '../hooks/useEmailState';
@@ -26,6 +32,7 @@ import useEmail from '../hooks/useEmail';
 import useEmailStats from '../hooks/useEmailStats';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ZUIDateSpan from 'zui/ZUIDateSpan';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import {
   makeNaiveDateString,
@@ -35,7 +42,6 @@ import {
 import { Msg, useMessages } from 'core/i18n';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ZUITimezonePicker, { findTimezone } from 'zui/ZUITimezonePicker';
-import ZUIDateSpan from 'zui/ZUIDateSpan';
 
 dayjs.extend(utc);
 
@@ -225,7 +231,9 @@ const EmailActionButtons = ({
                   }}
                   variant="contained"
                 >
-                  {messages.emailActionButtons.schedule()}
+                  {tab === 'later'
+                    ? messages.emailActionButtons.schedule()
+                    : messages.emailActionButtons.sendAway()}
                 </Button>
               </Box>
             </Paper>
@@ -255,6 +263,17 @@ const EmailActionButtons = ({
         <Box alignItems="center" display="flex">
           <Send sx={{ mr: 1 }} />
           <Msg id={messageIds.wasSent} values={{ time: sendingTime }} />
+          {', '}
+          <ZUIDateSpan
+            end={new Date(email.published)}
+            start={new Date(email.published)}
+          />
+        </Box>
+      )}
+      {emailState === EmailState.SCHEDULED && (
+        <Box alignItems="center" display="flex">
+          <AccessTime sx={{ mr: 1 }} />
+          <Msg id={messageIds.willSend} values={{ time: sendingTime }} />
           {', '}
           <ZUIDateSpan
             end={new Date(email.published)}
