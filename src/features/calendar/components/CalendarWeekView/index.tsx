@@ -23,6 +23,7 @@ import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import theme from 'theme';
+import { useRouter } from 'next/router';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/hooks/useEventMutations';
@@ -288,6 +289,7 @@ export default CalendarWeekView;
 
 function useCreateEvent() {
   const env = useEnv();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { campId, orgId } = useNumericRouteParams();
 
@@ -308,7 +310,7 @@ function useCreateEvent() {
 
     const campaignId = event.campaign?.id ?? 'standalone';
     const url = `/organize/${orgId}/projects/${campaignId}/events/${event.id}`;
-    env.router.push(url);
+    router.push(url);
   }
 
   return createAndNavigate;
