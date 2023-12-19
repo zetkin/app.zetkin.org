@@ -226,10 +226,13 @@ const EmailActionButtons = ({
                     (tab === 'later' && sendingDate == null) || unlocked
                   }
                   onClick={() => {
+                    console.log(`${naiveSending}:00${utcValue}`);
                     updateEmail({
                       published:
                         tab === 'now'
-                          ? `${new Date().toISOString().split('.')[0]}+00:00`
+                          ? `${
+                              new Date().toISOString().split('.')[0]
+                            }+${utcValue}`
                           : `${naiveSending}:00${utcValue}`,
                     });
                     setAnchorEl(null);
