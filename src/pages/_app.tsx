@@ -12,8 +12,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import { Provider as ReduxProvider } from 'react-redux';
+import Router from 'next/router';
 import { useEffect } from 'react';
-import Router, { useRouter } from 'next/router';
 import {
   StyledEngineProvider,
   Theme,
@@ -64,7 +64,6 @@ declare global {
 const store = createStore();
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  const router = useRouter();
   const { lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
   const getLayout = c.getLayout || ((page) => page);
@@ -73,7 +72,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     window.__reactRendered = true;
   }
 
-  const env = new Environment(store, new BrowserApiClient(), router);
+  const env = new Environment(store, new BrowserApiClient());
 
   useEffect(() => {
     // Remove the server-side injected CSS.
