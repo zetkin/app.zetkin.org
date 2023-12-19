@@ -25,15 +25,14 @@ export interface AddedOrgsSummary {
   orgs: string[];
 }
 
-export default function getAddedOrgsSummary(membershipsAdded: {
-  byOrg: { [key: number]: number };
-  total: number;
-}): AddedOrgsSummary {
+export default function getAddedOrgsSummary(
+  addedToOrg: PersonImportSummary['addedToOrg']
+): AddedOrgsSummary {
   const orgs: string[] = [];
 
-  if (!checkEmptyObj(membershipsAdded.byOrg)) {
-    orgs.push(...Object.keys(membershipsAdded.byOrg));
+  if (!checkEmptyObj(addedToOrg.byOrg)) {
+    orgs.push(...Object.keys(addedToOrg.byOrg));
   }
 
-  return { numCreated: membershipsAdded.total, orgs };
+  return { numCreated: addedToOrg.total, orgs };
 }
