@@ -1,34 +1,19 @@
 import '../styles.css';
 
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { AppProps } from 'next/app';
 import createStore from 'core/store';
 import CssBaseline from '@mui/material/CssBaseline';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
-import { Provider as ReduxProvider } from 'react-redux';
+import { Theme } from '@mui/material/styles';
 import { useEffect } from 'react';
 import Router, { useRouter } from 'next/router';
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from '@mui/material/styles';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
-import { EnvProvider } from 'core/env/EnvContext';
-import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
 import { PageWithLayout } from '../utils/types';
-import { themeWithLocale } from '../theme';
-import { UserContext } from 'utils/hooks/useFocusDate';
-import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
-import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
+import Providers from 'core/Providers';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -84,36 +69,16 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   }, []);
 
   return (
-    <ReduxProvider store={store}>
-      <EnvProvider env={env}>
-        <UserContext.Provider value={pageProps.user}>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={themeWithLocale(lang)}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <IntlProvider
-                  defaultLocale="en"
-                  locale={lang}
-                  messages={messages}
-                >
-                  <ZUISnackbarProvider>
-                    <ZUIConfirmDialogProvider>
-                      <EventPopperProvider>
-                        <DndProvider backend={HTML5Backend}>
-                          <CssBaseline />
-                          <NoSsr>
-                            {getLayout(<Component {...restProps} />, restProps)}
-                          </NoSsr>
-                        </DndProvider>
-                      </EventPopperProvider>
-                    </ZUIConfirmDialogProvider>
-                  </ZUISnackbarProvider>
-                </IntlProvider>
-              </LocalizationProvider>
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </UserContext.Provider>
-      </EnvProvider>
-    </ReduxProvider>
+    <Providers
+      env={env}
+      lang={lang}
+      messages={messages}
+      store={store}
+      user={pageProps.user}
+    >
+      <CssBaseline />
+      <NoSsr>{getLayout(<Component {...restProps} />, restProps)}</NoSsr>
+    </Providers>
   );
 }
 
