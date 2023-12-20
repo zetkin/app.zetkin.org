@@ -1,5 +1,10 @@
 import LibraryImage from './tools/LibraryImage';
-import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
+import { useNumericRouteParams } from 'core/hooks';
+import EditorJS, {
+  EditorConfig,
+  OutputData,
+  ToolConstructable,
+} from '@editorjs/editorjs';
 import { FC, useEffect, useRef } from 'react';
 
 export type EditorProps = {
@@ -7,6 +12,7 @@ export type EditorProps = {
 };
 
 const EmailEditorFrontend: FC<EditorProps> = ({ onSave }) => {
+  const { orgId } = useNumericRouteParams();
   const editorInstance = useRef<EditorJS | null>(null);
 
   const saved = async () => {
@@ -29,7 +35,12 @@ const EmailEditorFrontend: FC<EditorProps> = ({ onSave }) => {
         saved();
       },
       tools: {
-        image: LibraryImage,
+        libraryImage: {
+          class: LibraryImage as unknown as ToolConstructable,
+          config: {
+            orgId,
+          },
+        },
       },
     };
 

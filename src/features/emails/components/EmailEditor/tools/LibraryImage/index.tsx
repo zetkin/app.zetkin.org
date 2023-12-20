@@ -1,12 +1,22 @@
 import { BlockToolConstructorOptions } from '@editorjs/editorjs';
 import { createRoot } from 'react-dom/client';
-import { LibraryImageData } from './types';
 import LibraryImageEditableBlock from './LibraryImageEditableBlock';
+import Providers from 'core/Providers';
+import { LibraryImageConfig, LibraryImageData } from './types';
 
 export default class LibraryImage {
+  private _config: LibraryImageConfig;
   private _data: LibraryImageData;
 
-  constructor({ data }: BlockToolConstructorOptions<LibraryImageData>) {
+  constructor({
+    config,
+    data,
+  }: BlockToolConstructorOptions<LibraryImageData, LibraryImageConfig>) {
+    if (!config) {
+      throw new Error('Config must be defined');
+    }
+
+    this._config = config;
     this._data = data;
   }
 
@@ -17,7 +27,17 @@ export default class LibraryImage {
   render() {
     const container = document.createElement('div');
     const root = createRoot(container);
-    root.render(<LibraryImageEditableBlock data={this._data} />);
+    root.render(
+      <Providers {...window.providerData}>
+        <LibraryImageEditableBlock
+          data={this._data}
+          onChange={(newData) => {
+            this._data = { ...newData };
+          }}
+          orgId={this._config.orgId}
+        />
+      </Providers>
+    );
 
     return container;
   }
