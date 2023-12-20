@@ -12,8 +12,13 @@ import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
+    const { emailId, orgId } = ctx.params!;
+
     return {
-      props: {},
+      props: {
+        emailId,
+        orgId,
+      },
     };
   },
   {
