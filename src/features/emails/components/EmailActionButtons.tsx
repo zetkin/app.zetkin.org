@@ -128,7 +128,7 @@ const EmailActionButtons = ({
                           }
                         }}
                         sx={{ marginBottom: 2 }}
-                        value={sendingDate != '' ? dayjs(sendingDate) : null}
+                        value={sendingDate ? dayjs(sendingDate) : null}
                       />
                     </Box>
                     <Stack direction="row" spacing={2}>

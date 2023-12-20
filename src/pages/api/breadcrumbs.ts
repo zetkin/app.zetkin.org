@@ -39,6 +39,7 @@ const breadcrumbs = async (
       if (field.startsWith('[') && field.endsWith(']')) {
         const fieldName = field.slice(1, -1);
         const fieldValue = query[fieldName];
+
         const elements = await fetchElements(
           '/' + curPath.join('/'),
           fieldName,
