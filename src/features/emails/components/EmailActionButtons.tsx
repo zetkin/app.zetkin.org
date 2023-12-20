@@ -3,13 +3,6 @@ import dayjs from 'dayjs';
 import { TimeField } from '@mui/x-date-pickers-pro';
 import utc from 'dayjs/plugin/utc';
 import {
-  AccessTime,
-  ArrowDropDown,
-  ContentCopy,
-  Delete,
-  Send,
-} from '@mui/icons-material';
-import {
   Alert,
   AlertTitle,
   Box,
@@ -24,8 +17,10 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { ArrowDropDown, ContentCopy, Delete } from '@mui/icons-material';
 import { useContext, useState } from 'react';
 
+import DeliveryStatusSpan from './DeliveryStatusSpan';
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
 import useDuplicateEmail from '../hooks/useDuplicateEmail';
@@ -33,7 +28,6 @@ import useEmail from '../hooks/useEmail';
 import useEmailStats from '../hooks/useEmailStats';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import ZUIDateSpan from 'zui/ZUIDateSpan';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import {
   getOffset,
@@ -64,11 +58,6 @@ const EmailActionButtons = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [tab, setTab] = useState<'now' | 'later'>('later');
 
-  //change time string to 'email.published' when API is fixed
-  const scheduledTime = getOffset('2023-12-25T12:25:00+09:00');
-  const currentTzValue = findCurrentTZ().utc;
-  const [tzValue, setTzValue] = useState(scheduledTime || currentTzValue);
-
   // fake data
   const [unlocked, setUnlocked] = useState(true);
 
@@ -84,8 +73,12 @@ const EmailActionButtons = ({
   const [sendingTime, setSendingTime] = useState(
     email?.published ? removeOffset(email.published.slice(11, 16)) : '09:00'
   );
-
   const naiveSending = `${sendingDate}T${sendingTime}`;
+
+  //change time string to 'email.published' when API is fixed
+  const scheduledTime = getOffset('2023-12-25T12:25:00+09:00');
+  const currentTzValue = findCurrentTZ().utc;
+  const [tzValue, setTzValue] = useState(scheduledTime || currentTzValue);
 
   return (
     <Box alignItems="flex-end" display="flex" flexDirection="column" gap={1}>
@@ -271,28 +264,11 @@ const EmailActionButtons = ({
           ]}
         />
       </Box>
-      {emailState === EmailState.SENT && (
-        <Box alignItems="center" display="flex">
-          <Send sx={{ mr: 1 }} />
-          <Msg id={messageIds.wasSent} values={{ time: sendingTime }} />
-          {', '}
-          <ZUIDateSpan
-            end={new Date(email.published)}
-            start={new Date(email.published)}
-          />
-        </Box>
-      )}
-      {emailState === EmailState.SCHEDULED && (
-        <Box alignItems="center" display="flex">
-          <AccessTime sx={{ mr: 1 }} />
-          <Msg id={messageIds.willSend} values={{ time: sendingTime }} />
-          {', '}
-          <ZUIDateSpan
-            end={new Date(email.published)}
-            start={new Date(email.published)}
-          />
-        </Box>
-      )}
+      <DeliveryStatusSpan
+        emailState={emailState}
+        published={email.published}
+        sendingTime={sendingTime}
+      />
     </Box>
   );
 };
