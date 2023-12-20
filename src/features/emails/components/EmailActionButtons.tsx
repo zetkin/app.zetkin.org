@@ -64,11 +64,10 @@ const EmailActionButtons = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [tab, setTab] = useState<'now' | 'later'>('later');
 
-  //change time string to email.published when API is fixed
+  //change time string to 'email.published' when API is fixed
   const scheduledTime = getOffset('2023-12-25T12:25:00+09:00');
-  const [utcValue, setUtcValue] = useState(
-    scheduledTime || findCurrentTZ().utc
-  );
+  const currentTzValue = findCurrentTZ().utc;
+  const [tzValue, setTzValue] = useState(scheduledTime || currentTzValue);
 
   // fake data
   const [unlocked, setUnlocked] = useState(true);
@@ -106,7 +105,7 @@ const EmailActionButtons = ({
             mouseEvent="onMouseUp"
             onClickAway={() => {
               setAnchorEl(null);
-              setUtcValue(scheduledTime || findCurrentTZ().utc);
+              setTzValue(scheduledTime || currentTzValue);
             }}
           >
             <Paper sx={{ p: 2, width: '550px' }}>
@@ -156,7 +155,7 @@ const EmailActionButtons = ({
                         value={dayjs(`0000-00-00T${sendingTime}`)}
                       />
                       <ZUITimezonePicker
-                        onChange={(value) => setUtcValue(value)}
+                        onChange={(value) => setTzValue(value)}
                         scheduledTime={scheduledTime}
                       />
                     </Stack>
@@ -235,11 +234,11 @@ const EmailActionButtons = ({
                         tab === 'now'
                           ? `${
                               new Date().toISOString().split('.')[0]
-                            }+${utcValue}`
-                          : `${naiveSending}:00${utcValue}`,
+                            }${currentTzValue}`
+                          : `${naiveSending}:00${tzValue}`,
                     });
                     setAnchorEl(null);
-                    setUtcValue(scheduledTime || findCurrentTZ().utc);
+                    setTzValue(scheduledTime || currentTzValue);
                   }}
                   variant="contained"
                 >

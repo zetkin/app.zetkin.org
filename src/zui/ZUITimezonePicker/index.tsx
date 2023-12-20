@@ -25,25 +25,25 @@ const ZUITimezonePicker = ({
   const currentTimezone = findCurrentTZ();
   const [value, setValue] = useState({
     cities: [currentTimezone.tzCode],
-    utcValue: `${
+    tzValue: `${
       scheduledTime || currentTimezone.utc
     } ${messages.timezonePicker.gmt()}`,
   });
 
   const tzOptions = timezones.reduce(
-    (acc: { cities: string[]; utcValue: string }[], timezone, index) => {
-      const utcValue = `${timezone.utc} ${messages.timezonePicker.gmt()}`;
-      const tzGroupIndex = acc.findIndex((item) => item.utcValue === utcValue);
+    (acc: { cities: string[]; tzValue: string }[], timezone, index) => {
+      const tzValue = `${timezone.utc} ${messages.timezonePicker.gmt()}`;
+      const tzGroupIndex = acc.findIndex((item) => item.tzValue === tzValue);
 
       const city = timezone.tzCode
         .substring(timezone.tzCode.indexOf('/') + 1)
         .replaceAll('_', ' ');
-      const hasTimezone = acc.some((item) => item.utcValue === utcValue);
+      const hasTimezone = acc.some((item) => item.tzValue === tzValue);
 
       if (index === 0 || !hasTimezone) {
         acc.push({
           cities: [city],
-          utcValue: utcValue,
+          tzValue: tzValue,
         });
       } else {
         acc[tzGroupIndex].cities.push(city);
@@ -63,14 +63,12 @@ const ZUITimezonePicker = ({
         return filtered || options;
       }}
       fullWidth
-      getOptionLabel={(option) => option.utcValue}
-      isOptionEqualToValue={(option, value) =>
-        option.utcValue === value.utcValue
-      }
+      getOptionLabel={(option) => option.tzValue}
+      isOptionEqualToValue={(option, value) => option.tzValue === value.tzValue}
       onChange={(_, tzGroup) => {
         if (tzGroup !== null) {
           setValue(tzGroup);
-          onChange(tzGroup.utcValue.split(' ')[0]);
+          onChange(tzGroup.tzValue.split(' ')[0]);
         }
       }}
       options={tzOptions}
@@ -94,14 +92,14 @@ const ZUITimezonePicker = ({
         return (
           <li {...props}>
             <Box
-              key={`timezone-${option.utcValue}`}
+              key={`timezone-${option.tzValue}`}
               display="flex"
               flexDirection="column"
               sx={{
                 overflow: 'hidden',
               }}
             >
-              <Typography fontWeight="bold">{option.utcValue}</Typography>
+              <Typography fontWeight="bold">{option.tzValue}</Typography>
               <Box
                 sx={{
                   overflow: 'hidden',
@@ -130,7 +128,7 @@ const ZUITimezonePicker = ({
           </li>
         );
       }}
-      value={{ cities: value.cities, utcValue: value.utcValue }}
+      value={{ cities: value.cities, tzValue: value.tzValue }}
     />
   );
 };
