@@ -72,9 +72,12 @@ const ZUITimezonePicker = ({
         }
       }}
       options={tzOptions}
-      placeholder={messages.timezonePicker.placeholder()}
       renderInput={(params) => (
-        <TextField {...params} label={messages.timezonePicker.timezone()} />
+        <TextField
+          {...params}
+          label={messages.timezonePicker.timezone()}
+          placeholder={messages.timezonePicker.placeholder()}
+        />
       )}
       renderOption={(props, option, state) => {
         let filteredCities: string[] = [];
