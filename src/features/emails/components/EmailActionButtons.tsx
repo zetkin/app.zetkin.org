@@ -36,13 +36,14 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDateSpan from 'zui/ZUIDateSpan';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import {
+  getOffset,
   makeNaiveDateString,
   makeNaiveTimeString,
   removeOffset,
 } from 'utils/dateUtils';
 import { Msg, useMessages } from 'core/i18n';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import ZUITimezonePicker, { findTimezone } from 'zui/ZUITimezonePicker';
+import ZUITimezonePicker, { findCurrentTZ } from 'zui/ZUITimezonePicker';
 
 dayjs.extend(utc);
 
@@ -59,9 +60,15 @@ const EmailActionButtons = ({
 }: EmailActionButtonsProp) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [tab, setTab] = useState<'now' | 'later'>('later');
-  const [utcValue, setUtcValue] = useState(findTimezone().utc);
+
+  //change time string to email.published when API is fixed
+  const scheduledTime = getOffset('2023-12-25T12:25:00+09:00');
+  const [utcValue, setUtcValue] = useState(
+    scheduledTime || findCurrentTZ().utc
+  );
 
   // fake data
   const [unlocked, setUnlocked] = useState(true);
@@ -99,7 +106,7 @@ const EmailActionButtons = ({
             mouseEvent="onMouseUp"
             onClickAway={() => {
               setAnchorEl(null);
-              setUtcValue(findTimezone().utc);
+              setUtcValue(scheduledTime || findCurrentTZ().utc);
             }}
           >
             <Paper sx={{ p: 2, width: '550px' }}>
@@ -150,6 +157,7 @@ const EmailActionButtons = ({
                       />
                       <ZUITimezonePicker
                         onChange={(value) => setUtcValue(value)}
+                        scheduledTime={scheduledTime}
                       />
                     </Stack>
                   </Box>
@@ -197,14 +205,14 @@ const EmailActionButtons = ({
                   </Typography>
                 ) : (
                   <>
-                    {''}
-                    {unlocked ? (
+                    {unlocked && (
                       <Typography
                         sx={{ color: theme.palette.statusColors.orange, mr: 1 }}
                       >
                         <Msg id={messageIds.emailActionButtons.beforeLock} />
                       </Typography>
-                    ) : (
+                    )}
+                    {!unlocked && (
                       <Typography
                         sx={{ color: theme.palette.grey['500'], mr: 2 }}
                         variant="body1"
@@ -231,7 +239,7 @@ const EmailActionButtons = ({
                           : `${naiveSending}:00${utcValue}`,
                     });
                     setAnchorEl(null);
-                    setUtcValue(findTimezone().utc);
+                    setUtcValue(scheduledTime || findCurrentTZ().utc);
                   }}
                   variant="contained"
                 >

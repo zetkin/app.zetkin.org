@@ -8,23 +8,26 @@ import { useMessages } from 'core/i18n';
 
 interface ZUITimezonePickerProps {
   onChange: (value: string) => void;
-  tzCode?: string;
+  scheduledTime?: string | null;
 }
 
-export const findTimezone = (currentTzCode?: string) => {
+export const findCurrentTZ = () => {
   const tzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return timezones.find(
-    (timezone) => timezone.tzCode === (currentTzCode || tzCode)
-  )!;
+  return timezones.find((timezone) => timezone.tzCode === tzCode)!;
 };
 
-const ZUITimezonePicker = ({ onChange, tzCode }: ZUITimezonePickerProps) => {
+const ZUITimezonePicker = ({
+  onChange,
+  scheduledTime,
+}: ZUITimezonePickerProps) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const currentTimezone = findTimezone(tzCode);
+  const currentTimezone = findCurrentTZ();
   const [value, setValue] = useState({
     cities: [currentTimezone.tzCode],
-    utcValue: `${currentTimezone.utc} ${messages.timezonePicker.gmt()}`,
+    utcValue: `${
+      scheduledTime || currentTimezone.utc
+    } ${messages.timezonePicker.gmt()}`,
   });
 
   const tzOptions = timezones.reduce(
