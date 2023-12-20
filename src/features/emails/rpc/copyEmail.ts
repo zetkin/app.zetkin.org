@@ -2,7 +2,11 @@ import { z } from 'zod';
 
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
-import { ZetkinEmail } from 'utils/types/zetkin';
+import {
+  ZetkinEmail,
+  ZetkinEmailPostBody,
+  ZetkinQuery,
+} from 'utils/types/zetkin';
 
 const paramsSchema = z.object({
   emailId: z.number(),
@@ -22,13 +26,27 @@ export default makeRPCDef<Params, Result>(copyEmailDef.name);
 async function handle(params: Params, apiClient: IApiClient) {
   const { emailId, orgId } = params;
 
-  const email = await apiClient.get(`/api/orgs/${orgId}/emails/${emailId}`);
-  console.log(email, ' anjei');
-  // const updatedEvent = await apiClient.post<ZetkinEvent>(
-  //   `/api/orgs/${orgId}/${
-  //     campaign_id ? `campaigns/${campaign_id}/` : ''
-  //   }actions`,
-  //   data
-  // );
-  return 1;
+  const email = await apiClient.get<ZetkinEmail>(
+    `/api/orgs/${orgId}/emails/${emailId}`
+  );
+
+  const createdEmail = await apiClient.post<ZetkinEmail, ZetkinEmailPostBody>(
+    `/api/orgs/${orgId}/emails`,
+    {
+      campaign_id: email.campaign.id,
+      content: email.content,
+      subject: email.subject,
+      title: email.title,
+    }
+  );
+  await apiClient.patch<ZetkinQuery, Partial<ZetkinQuery>>(
+    `/api/orgs/${orgId}/people/queries/${createdEmail.target.id}`,
+    { filter_spec: email.target.filter_spec }
+  );
+
+  const copiedEmail = await apiClient.get<ZetkinEmail>(
+    `/api/orgs/${orgId}/emails/${createdEmail.id}`
+  );
+
+  return copiedEmail;
 }

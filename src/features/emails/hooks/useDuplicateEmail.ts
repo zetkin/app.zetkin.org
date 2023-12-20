@@ -1,7 +1,6 @@
 import copyEmail from '../rpc/copyEmail';
-import { useApiClient } from 'core/hooks';
-import useCreateEmail from './useCreateEmail';
-import useEmail from './useEmail';
+import { emailCreate, emailCreated, emailUpdate, emailUpdated } from '../store';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 
 type useDuplicateEmailReturn = {
   duplicateEmail: () => void;
@@ -9,30 +8,28 @@ type useDuplicateEmailReturn = {
 
 export default function useDuplicateEmail(
   orgId: number,
-  campId: number,
   emailId: number
 ): useDuplicateEmailReturn {
-  const { data: email } = useEmail(orgId, emailId);
-  const { createEmail } = useCreateEmail(orgId, campId);
   const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
 
   const duplicateEmail = async () => {
-    console.log('hello');
-    await apiClient.rpc(copyEmail, {
+    dispatch(emailCreate);
+    const duplicatedEmail = await apiClient.rpc(copyEmail, {
       emailId: emailId,
       orgId: orgId,
     });
-    // dispatch(eventsCreated(duplicatedEvents));
-    // if (email) {
-    //   const duplicateEmailPostBody: ZetkinEmailPostBody = {
-    //     campaign_id: email.campaign.id,
-    //     content: email.content,
-    //     subject: email.subject,
-    //     title: email.title,
-    //   };
-
-    //   return createEmail(duplicateEmailPostBody);
-    // }
+    dispatch(emailUpdate([duplicatedEmail.id, ['target']]));
+    dispatch(emailCreated([duplicatedEmail, duplicatedEmail.campaign.id]));
+    dispatch(
+      emailUpdated([
+        {
+          ...duplicatedEmail,
+          target: duplicatedEmail.target,
+        },
+        ['target'],
+      ])
+    );
   };
 
   return { duplicateEmail };

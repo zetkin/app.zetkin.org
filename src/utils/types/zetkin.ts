@@ -496,7 +496,7 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
-//fix ZetkinEmail related types later
+
 export interface ZetkinEmail {
   campaign: { id: number; title: string };
   id: number;

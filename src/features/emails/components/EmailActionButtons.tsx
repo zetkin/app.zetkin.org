@@ -68,11 +68,7 @@ const EmailActionButtons = ({
 
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
-  const { duplicateEmail } = useDuplicateEmail(
-    orgId,
-    email.campaign.id,
-    email.id
-  );
+  const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
   const { statsFuture } = useEmailStats(orgId, email.id);
   const targetNum = statsFuture.data?.allTargets || 0;
 
@@ -226,7 +222,6 @@ const EmailActionButtons = ({
                     (tab === 'later' && sendingDate == null) || unlocked
                   }
                   onClick={() => {
-                    console.log(`${naiveSending}:00${utcValue}`);
                     updateEmail({
                       published:
                         tab === 'now'
