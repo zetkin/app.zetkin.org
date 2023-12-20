@@ -1,6 +1,6 @@
 import timezones from 'timezones-list';
 import { useState } from 'react';
-import { Autocomplete, TextField, Typography } from '@mui/material';
+import { Autocomplete, Divider, TextField, Typography } from '@mui/material';
 import { Box, useTheme } from '@mui/system';
 
 import messageIds from 'zui/l10n/messageIds';
@@ -90,45 +90,61 @@ const ZUITimezonePicker = ({
         if (cityIdx > -1) {
           filteredCities = option.cities.slice(cityIdx);
         }
-        const restCities = filteredCities.slice(1).toString();
+        const restCities = filteredCities.slice(1).join(', ');
 
         return (
-          <li {...props}>
-            <Box
-              key={`timezone-${option.tzValue}`}
-              display="flex"
-              flexDirection="column"
-              sx={{
-                overflow: 'hidden',
-              }}
-            >
-              <Typography fontWeight="bold">{option.tzValue}</Typography>
+          <Box key={`timezone-${option.tzValue}`}>
+            <li {...props}>
               <Box
+                display="flex"
+                flexDirection="column"
                 sx={{
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
                 }}
               >
-                {filteredCities.length > 0 ? (
-                  <Box display="flex">
-                    <Typography sx={{ color: theme.palette.grey['800'] }}>
-                      {`...${filteredCities[0]}`}
-                    </Typography>
-                    {restCities !== '' && (
-                      <Typography sx={{ color: theme.palette.grey['500'] }}>
-                        {`,${restCities}`}
+                <Typography>{option.tzValue}</Typography>
+                <Box
+                  sx={{
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {filteredCities.length > 0 ? (
+                    <Box display="flex">
+                      <Typography
+                        sx={{ color: theme.palette.grey['800'] }}
+                        variant="body2"
+                      >
+                        {`...${filteredCities[0]}${
+                          restCities.length > 0 && ','
+                        }`}
                       </Typography>
-                    )}
-                  </Box>
-                ) : (
-                  <Typography sx={{ color: theme.palette.grey['800'] }}>
-                    {option.cities.toString()}
-                  </Typography>
-                )}
+                      {restCities !== '' && (
+                        <Typography
+                          sx={{ color: theme.palette.grey['500'], ml: 0.2 }}
+                          variant="body2"
+                        >
+                          {`${restCities}`}
+                        </Typography>
+                      )}
+                    </Box>
+                  ) : (
+                    <Typography
+                      sx={{
+                        color: theme.palette.grey['800'],
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                      variant="body2"
+                    >
+                      {option.cities.join(', ')}
+                    </Typography>
+                  )}
+                </Box>
               </Box>
-            </Box>
-          </li>
+            </li>
+            <Divider />
+          </Box>
         );
       }}
       value={{ cities: value.cities, tzValue: value.tzValue }}
