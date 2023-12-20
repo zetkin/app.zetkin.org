@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { Accept, DropzoneState, useDropzone } from 'react-dropzone';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -35,11 +34,13 @@ interface UseFileUploads {
   reset: () => void;
 }
 
-export default function useFileUploads(props?: {
-  accept?: Accept;
-  multiple?: boolean;
-}): UseFileUploads {
-  const { orgId } = useRouter().query;
+export default function useFileUploads(
+  orgId: number,
+  props?: {
+    accept?: Accept;
+    multiple?: boolean;
+  }
+): UseFileUploads {
   const [fileUploads, setFileUploads] = useState<FileUpload[]>([]);
 
   const fileKeyRef = useRef<number>(1);
