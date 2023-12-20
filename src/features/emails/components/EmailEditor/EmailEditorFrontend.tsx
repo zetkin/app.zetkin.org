@@ -1,3 +1,4 @@
+import LibraryImage from './tools/LibraryImage';
 import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef } from 'react';
 
@@ -27,7 +28,9 @@ const EmailEditorFrontend: FC<EditorProps> = ({ onSave }) => {
       onChange: () => {
         saved();
       },
-      tools: {},
+      tools: {
+        image: LibraryImage,
+      },
     };
 
     // Create the EditorJS instance
