@@ -28,7 +28,9 @@ const FileLibraryDialog: FC<Props> = ({
   const [selectedFile, setSelectedFile] = useState<ZetkinFile | null>(null);
   const messages = useMessages(messageIds);
 
-  const { getDropZoneProps } = useFileUploads(orgId, { multiple: false });
+  const { getDropZoneProps, openFilePicker } = useFileUploads(orgId, {
+    multiple: false,
+  });
 
   return (
     <ZUIDialog
@@ -47,6 +49,7 @@ const FileLibraryDialog: FC<Props> = ({
         )}
         {!selectedFile && (
           <FileLibraryBrowser
+            onFileBrowserOpen={() => openFilePicker()}
             onSelectFile={(file) => {
               setSelectedFile(file);
             }}

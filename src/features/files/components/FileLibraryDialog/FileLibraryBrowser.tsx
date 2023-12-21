@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
+import FileUploadCard from '../FileUploadCard';
 import LibraryImageCard from '../LibraryImageCard';
 import messageIds from 'features/files/l10n/messageIds';
 import useFiles from 'features/files/hooks/useFiles';
@@ -18,12 +19,18 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { TYPE_OPTIONS, TypeOption } from 'features/files/types';
 
 type Props = {
+  onFileBrowserOpen: () => void;
   onSelectFile: (file: ZetkinFile) => void;
   orgId: number;
   type?: TypeOption;
 };
 
-const FileLibraryBrowser: FC<Props> = ({ onSelectFile, orgId, type }) => {
+const FileLibraryBrowser: FC<Props> = ({
+  onFileBrowserOpen,
+  onSelectFile,
+  orgId,
+  type,
+}) => {
   const [sorting, setSorting] = useState('date');
   const [filterText, setFilterText] = useState('');
   const [filterType, setFilterType] = useState<TypeOption | 'any'>(
@@ -112,6 +119,9 @@ const FileLibraryBrowser: FC<Props> = ({ onSelectFile, orgId, type }) => {
 
             return (
               <Grid container>
+                <Grid md={3} p={1} pb={5} xs={12}>
+                  <FileUploadCard onFileBrowserOpen={onFileBrowserOpen} />
+                </Grid>
                 {sortedFiles.map((file) => (
                   <Grid key={file.id} md={3} p={1} xs={12}>
                     <LibraryImageCard

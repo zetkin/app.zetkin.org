@@ -31,7 +31,6 @@ const FileUploadCard: FC<FileUploadCardProps> = ({ onFileBrowserOpen }) => {
       }}
     >
       <IconButton
-        onClick={onFileBrowserOpen}
         sx={{
           backgroundColor: theme.palette.grey[300],
           borderRadius: 100,
@@ -46,7 +45,6 @@ const FileUploadCard: FC<FileUploadCardProps> = ({ onFileBrowserOpen }) => {
         />
       </IconButton>
       <Link
-        onClick={onFileBrowserOpen}
         sx={{
           color: theme.palette.primary.main,
           cursor: 'pointer',
