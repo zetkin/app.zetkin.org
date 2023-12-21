@@ -5,11 +5,11 @@ import { Box, IconButton, Link, Typography, useTheme } from '@mui/material';
 import messageIds from 'features/files/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
-interface ImageUploadCardProps {
+interface FileUploadCardProps {
   onFileBrowserOpen: () => void;
 }
 
-const ImageUploadCard: FC<ImageUploadCardProps> = ({ onFileBrowserOpen }) => {
+const FileUploadCard: FC<FileUploadCardProps> = ({ onFileBrowserOpen }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
 
@@ -63,4 +63,4 @@ const ImageUploadCard: FC<ImageUploadCardProps> = ({ onFileBrowserOpen }) => {
   );
 };
 
-export default ImageUploadCard;
+export default FileUploadCard;
