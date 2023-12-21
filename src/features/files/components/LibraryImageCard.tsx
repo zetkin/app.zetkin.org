@@ -22,7 +22,7 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
       sx={{ cursor: 'pointer' }}
     >
       <LibraryImage imageFile={imageFile} />
-      <Typography alignSelf="center">
+      <Typography alignSelf="center" color="secondary" paddingTop={1}>
         {truncateOnMiddle(imageFile.original_name, 30)}
       </Typography>
     </Box>
