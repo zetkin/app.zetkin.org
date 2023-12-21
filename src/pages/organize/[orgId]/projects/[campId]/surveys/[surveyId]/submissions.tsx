@@ -50,7 +50,8 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   const surveyFuture = useSurvey(parsedOrg, parseInt(surveyId));
   const submissionsFuture = useSurveySubmissions(parsedOrg, parseInt(surveyId));
 
-  const campaignId = getSurveyCampId(surveyFuture?.data) || 'standalone';
+  const campaignId =
+    getSurveyCampId(surveyFuture?.data, parsedOrg) || 'standalone';
 
   const router = useRouter();
 
