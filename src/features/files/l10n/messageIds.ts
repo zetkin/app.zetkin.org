@@ -1,6 +1,10 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.files', {
+  fileUpload: {
+    instructions: m(' or drag and drop'),
+    selectClick: m('Click to upload'),
+  },
   libraryDialog: {
     title: m('Library'),
   },
