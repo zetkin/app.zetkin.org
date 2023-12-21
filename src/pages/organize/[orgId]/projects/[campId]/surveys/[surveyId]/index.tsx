@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       const data = await client.get<ZetkinSurvey>(
         `/api/orgs/${orgId}/surveys/${surveyId}`
       );
-      const actualCampaign = getSurveyCampId(data);
+      const actualCampaign = getSurveyCampId(data).toString();
 
       if (actualCampaign !== campId) {
         return { notFound: true };
