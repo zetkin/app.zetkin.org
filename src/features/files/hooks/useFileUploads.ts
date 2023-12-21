@@ -1,6 +1,8 @@
 import { Accept, DropzoneState, useDropzone } from 'react-dropzone';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { fileUploaded } from '../store';
+import { useAppDispatch } from 'core/hooks';
 import { ZetkinFile } from 'utils/types/zetkin';
 
 export enum FileUploadState {
@@ -42,6 +44,7 @@ export default function useFileUploads(
   }
 ): UseFileUploads {
   const [fileUploads, setFileUploads] = useState<FileUpload[]>([]);
+  const dispatch = useAppDispatch();
 
   const fileKeyRef = useRef<number>(1);
   const filesRef = useRef(fileUploads);
@@ -88,11 +91,14 @@ export default function useFileUploads(
         method: 'POST',
       });
 
-      const data = await res.json();
+      const payload = await res.json();
+
+      dispatch(fileUploaded(payload.data));
+
       setFileUploads(
         filesRef.current.map((file) =>
           file.key == upload.key
-            ? { ...file, apiData: data.data, state: FileUploadState.SUCCESS }
+            ? { ...file, apiData: payload.data, state: FileUploadState.SUCCESS }
             : file
         )
       );

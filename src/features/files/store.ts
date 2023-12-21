@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ZetkinFile } from 'utils/types/zetkin';
-import { remoteList, RemoteList } from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface FilesStoreSlice {
   fileList: RemoteList<ZetkinFile>;
@@ -15,6 +15,12 @@ const filesSlice = createSlice({
   initialState: initialState,
   name: 'tags',
   reducers: {
+    fileUploaded: (state, action: PayloadAction<ZetkinFile>) => {
+      const file = action.payload;
+      state.fileList.items = state.fileList.items.concat([
+        remoteItem(file.id, { data: file, loaded: new Date().toISOString() }),
+      ]);
+    },
     filesLoad: (state) => {
       state.fileList.isLoading = true;
     },
@@ -26,4 +32,4 @@ const filesSlice = createSlice({
 });
 
 export default filesSlice;
-export const { filesLoad, filesLoaded } = filesSlice.actions;
+export const { fileUploaded, filesLoad, filesLoaded } = filesSlice.actions;
