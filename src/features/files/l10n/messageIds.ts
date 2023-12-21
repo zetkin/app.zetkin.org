@@ -14,4 +14,11 @@ export default makeMessages('feat.files', {
       originalName: m('Original filename'),
     },
   },
+  typeFilter: {
+    anyOption: m('Any type'),
+    label: m('Type'),
+    options: {
+      image: m('Images'),
+    },
+  },
 });

@@ -22,6 +22,12 @@ type Props = {
   orgId: number;
 };
 
+type TypeOption = keyof typeof messageIds.typeFilter.options;
+
+const TYPE_OPTIONS: Record<TypeOption, string[]> = {
+  image: ['image/png', 'image/jpeg'],
+};
+
 const FileLibraryDialog: FC<Props> = ({
   onClose,
   onSelectFile,
@@ -30,6 +36,7 @@ const FileLibraryDialog: FC<Props> = ({
 }) => {
   const [sorting, setSorting] = useState('date');
   const [filterText, setFilterText] = useState('');
+  const [filterType, setFilterType] = useState<TypeOption | 'any'>('any');
   const filesFuture = useFiles(orgId);
   const messages = useMessages(messageIds);
 
@@ -59,15 +66,51 @@ const FileLibraryDialog: FC<Props> = ({
             </MenuItem>
           </Select>
         </FormControl>
+        <FormControl fullWidth>
+          <InputLabel>{messages.typeFilter.label()}</InputLabel>
+          <Select
+            label={messages.typeFilter.label()}
+            onChange={(ev) =>
+              setFilterType(
+                ev.target.value == 'any'
+                  ? 'any'
+                  : (ev.target.value as TypeOption)
+              )
+            }
+            value={filterType}
+          >
+            <MenuItem value="any">{messages.typeFilter.anyOption()}</MenuItem>
+            {Object.keys(TYPE_OPTIONS).map((typeStr) => {
+              if (!(typeStr in TYPE_OPTIONS)) {
+                throw new Error('Unknown format');
+              }
+
+              // This cast is safe because the error above would have been
+              // thrown if typeStr is not one of the allowed strings.
+              const typeKey = typeStr as TypeOption;
+
+              return (
+                <MenuItem key={typeKey} value={typeKey}>
+                  {messages.typeFilter.options[typeKey]()}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
       </Box>
       <Box>
         <ZUIFuture future={filesFuture}>
           {(allFiles) => {
             const filteredFiles = allFiles.filter((file) => {
-              return (
+              const matchesText =
                 !filterText ||
-                file.original_name.toLowerCase().includes(filterText)
-              );
+                file.original_name.toLowerCase().includes(filterText);
+
+              const matchesType =
+                filterType == 'any' ||
+                TYPE_OPTIONS[filterType].includes(file.mime_type);
+
+              return matchesText && matchesType;
             });
             const sortedFiles = filteredFiles.sort((f0, f1) => {
               if (sorting == 'originalName') {
