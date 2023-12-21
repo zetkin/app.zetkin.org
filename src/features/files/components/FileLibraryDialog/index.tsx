@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import LibraryImageCard from '../LibraryImageCard';
+import LibraryImageCard from './LibraryImageCard';
 import messageIds from 'features/files/l10n/messageIds';
 import useFiles from 'features/files/hooks/useFiles';
 import { useMessages } from 'core/i18n';
