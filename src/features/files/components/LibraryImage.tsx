@@ -5,14 +5,22 @@ import { FC, useState } from 'react';
 import { ZetkinFile } from 'utils/types/zetkin';
 
 interface LibraryImageProps {
+  highGridIntensity?: number;
   imageFile: ZetkinFile;
+  interactive?: boolean;
+  lowGridIntensity?: number;
 }
 
-const DEFAULT_GRID_INTENSITY = 0.02;
-
-const LibraryImage: FC<LibraryImageProps> = ({ imageFile }) => {
+const LibraryImage: FC<LibraryImageProps> = ({
+  lowGridIntensity: defaultGridIntensity = 0.02,
+  highGridIntensity: hoverGridIntensity = 0.15,
+  imageFile,
+  interactive = true,
+}) => {
   const theme = useTheme();
-  const [gridIntensity, setGridIntensity] = useState(DEFAULT_GRID_INTENSITY);
+  const [gridIntensity, setGridIntensity] = useState(
+    interactive ? defaultGridIntensity : hoverGridIntensity
+  );
 
   return (
     <Box
@@ -20,10 +28,12 @@ const LibraryImage: FC<LibraryImageProps> = ({ imageFile }) => {
       borderColor={theme.palette.grey[400]}
       borderRadius={1}
       onMouseEnter={() => {
-        setGridIntensity(0.15);
+        setGridIntensity(hoverGridIntensity);
       }}
       onMouseLeave={() => {
-        setGridIntensity(DEFAULT_GRID_INTENSITY);
+        if (interactive) {
+          setGridIntensity(defaultGridIntensity);
+        }
       }}
       sx={{
         backgroundColor: '#eee',
