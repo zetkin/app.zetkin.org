@@ -20,6 +20,7 @@ type Props = {
   onSelectFile: (file: ZetkinFile) => void;
   open: boolean;
   orgId: number;
+  type?: TypeOption;
 };
 
 type TypeOption = keyof typeof messageIds.typeFilter.options;
@@ -33,10 +34,13 @@ const FileLibraryDialog: FC<Props> = ({
   onSelectFile,
   open,
   orgId,
+  type,
 }) => {
   const [sorting, setSorting] = useState('date');
   const [filterText, setFilterText] = useState('');
-  const [filterType, setFilterType] = useState<TypeOption | 'any'>('any');
+  const [filterType, setFilterType] = useState<TypeOption | 'any'>(
+    type || 'any'
+  );
   const filesFuture = useFiles(orgId);
   const messages = useMessages(messageIds);
 
@@ -66,7 +70,7 @@ const FileLibraryDialog: FC<Props> = ({
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl fullWidth>
+        <FormControl disabled={!!type} fullWidth>
           <InputLabel>{messages.typeFilter.label()}</InputLabel>
           <Select
             label={messages.typeFilter.label()}

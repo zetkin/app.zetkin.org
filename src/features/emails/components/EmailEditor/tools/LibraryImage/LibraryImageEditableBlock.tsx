@@ -46,6 +46,7 @@ const LibraryImageEditableBlock: FC<Props> = ({
         }}
         open={selecting}
         orgId={orgId}
+        type="image"
       />
     </>
   );
