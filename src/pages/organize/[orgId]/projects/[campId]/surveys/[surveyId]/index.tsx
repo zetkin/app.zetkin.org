@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { Box, Grid } from '@mui/material';
 
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
+import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
@@ -26,7 +27,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       const data = await client.get<ZetkinSurvey>(
         `/api/orgs/${orgId}/surveys/${surveyId}`
       );
-      const actualCampaign = data.campaign?.id.toString() ?? 'standalone';
+      const actualCampaign = getSurveyCampId(data);
+
       if (actualCampaign !== campId) {
         return { notFound: true };
       }
@@ -36,6 +38,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
     return {
       props: {
+        campId,
         orgId,
         surveyId,
       },
@@ -65,7 +68,6 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
     parseInt(orgId),
     parseInt(surveyId)
   );
-  const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   if (onServer) {
     return null;
@@ -100,7 +102,11 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
                 surveyId={surveyId}
               />
               <SurveyUnlinkedCard
-                campId={campaignId}
+                campId={
+                  campId !== 'inherited' && campId !== 'standalone'
+                    ? parseInt(campId)
+                    : campId
+                }
                 orgId={parseInt(orgId)}
                 surveyId={parseInt(surveyId)}
               />

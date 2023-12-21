@@ -6,7 +6,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { Alert, AlertTitle, Box, Link } from '@mui/material';
 
 type SubmissionWarningAlertProps = {
-  campId: number | 'standalone';
+  campId: number | 'standalone' | 'inherited';
   orgId: number;
   showUnlinkedOnly: boolean;
   surveyId: number;

@@ -8,7 +8,7 @@ import ZUINumberChip from 'zui/ZUINumberChip';
 import { Box, Link, useTheme } from '@mui/material';
 
 type SurveyUnlinkedCardProps = {
-  campId: number | 'standalone';
+  campId: number | 'standalone' | 'inherited';
   orgId: number;
   surveyId: number;
 };

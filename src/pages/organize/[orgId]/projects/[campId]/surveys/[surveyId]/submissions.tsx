@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
+import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionWarningAlert from 'features/surveys/components/SubmissionWarningAlert';
@@ -45,13 +46,12 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   orgId,
   surveyId,
 }) => {
-  const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
-  const submissionsFuture = useSurveySubmissions(
-    parseInt(orgId),
-    parseInt(surveyId)
-  );
+  const parsedOrg = parseInt(orgId);
+  const surveyFuture = useSurvey(parsedOrg, parseInt(surveyId));
+  const submissionsFuture = useSurveySubmissions(parsedOrg, parseInt(surveyId));
 
-  const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
+  const campaignId = getSurveyCampId(surveyFuture?.data) || 'standalone';
+
   const router = useRouter();
 
   return (
