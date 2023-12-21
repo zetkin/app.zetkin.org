@@ -1,7 +1,8 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import FileLibraryBrowser from './FileLibraryBrowser';
+import FilePreview from './FilePreview';
 import messageIds from 'features/files/l10n/messageIds';
 import { TypeOption } from 'features/files/types';
 import useFileUploads from 'features/files/hooks/useFileUploads';
@@ -24,6 +25,7 @@ const FileLibraryDialog: FC<Props> = ({
   orgId,
   type,
 }) => {
+  const [selectedFile, setSelectedFile] = useState<ZetkinFile | null>(null);
   const messages = useMessages(messageIds);
 
   const { getDropZoneProps } = useFileUploads(orgId, { multiple: false });
@@ -36,11 +38,22 @@ const FileLibraryDialog: FC<Props> = ({
       title={messages.libraryDialog.title()}
     >
       <Box {...getDropZoneProps()}>
-        <FileLibraryBrowser
-          onSelectFile={onSelectFile}
-          orgId={orgId}
-          type={type}
-        />
+        {selectedFile && (
+          <FilePreview
+            file={selectedFile}
+            onBack={() => setSelectedFile(null)}
+            onSelect={() => onSelectFile && onSelectFile(selectedFile)}
+          />
+        )}
+        {!selectedFile && (
+          <FileLibraryBrowser
+            onSelectFile={(file) => {
+              setSelectedFile(file);
+            }}
+            orgId={orgId}
+            type={type}
+          />
+        )}
       </Box>
     </ZUIDialog>
   );
