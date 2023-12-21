@@ -1,6 +1,7 @@
 import {
   Box,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -8,6 +9,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
+import LibraryImageCard from '../LibraryImageCard';
 import messageIds from 'features/files/l10n/messageIds';
 import useFiles from 'features/files/hooks/useFiles';
 import { useMessages } from 'core/i18n';
@@ -46,6 +48,7 @@ const FileLibraryDialog: FC<Props> = ({
 
   return (
     <ZUIDialog
+      maxWidth="lg"
       onClose={onClose}
       open={open}
       title={messages.libraryDialog.title()}
@@ -127,13 +130,16 @@ const FileLibraryDialog: FC<Props> = ({
             });
 
             return (
-              <>
+              <Grid container>
                 {sortedFiles.map((file) => (
-                  <Box key={file.id} onClick={() => onSelectFile(file)}>
-                    {file.original_name}
-                  </Box>
+                  <Grid key={file.id} md={3} p={1} xs={12}>
+                    <LibraryImageCard
+                      imageFile={file}
+                      onSelectImage={() => onSelectFile(file)}
+                    />
+                  </Grid>
                 ))}
-              </>
+              </Grid>
             );
           }}
         </ZUIFuture>
