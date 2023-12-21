@@ -4,6 +4,9 @@ export default makeMessages('feat.files', {
   libraryDialog: {
     title: m('Library'),
   },
+  searching: {
+    label: m('Search'),
+  },
   sorting: {
     label: m('Sort by'),
     options: {

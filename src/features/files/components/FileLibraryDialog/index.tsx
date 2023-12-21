@@ -1,4 +1,11 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/files/l10n/messageIds';
@@ -22,6 +29,7 @@ const FileLibraryDialog: FC<Props> = ({
   orgId,
 }) => {
   const [sorting, setSorting] = useState('date');
+  const [filterText, setFilterText] = useState('');
   const filesFuture = useFiles(orgId);
   const messages = useMessages(messageIds);
 
@@ -31,7 +39,13 @@ const FileLibraryDialog: FC<Props> = ({
       open={open}
       title={messages.libraryDialog.title()}
     >
-      <Box display="flex" mt={1}>
+      <Box display="flex" gap={1} mt={1}>
+        <TextField
+          fullWidth
+          label={messages.searching.label()}
+          onChange={(ev) => setFilterText(ev.currentTarget.value)}
+          value={filterText}
+        />
         <FormControl fullWidth>
           <InputLabel>{messages.sorting.label()}</InputLabel>
           <Select
@@ -49,7 +63,13 @@ const FileLibraryDialog: FC<Props> = ({
       <Box>
         <ZUIFuture future={filesFuture}>
           {(allFiles) => {
-            const sortedFiles = allFiles.sort((f0, f1) => {
+            const filteredFiles = allFiles.filter((file) => {
+              return (
+                !filterText ||
+                file.original_name.toLowerCase().includes(filterText)
+              );
+            });
+            const sortedFiles = filteredFiles.sort((f0, f1) => {
               if (sorting == 'originalName') {
                 return f0.original_name.localeCompare(f1.original_name);
               } else {
