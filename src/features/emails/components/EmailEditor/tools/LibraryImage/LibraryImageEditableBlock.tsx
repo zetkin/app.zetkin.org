@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 
+import FileLibraryDialog from 'features/files/components/FileLibraryDialog';
 import { LibraryImageData } from './types';
-import ZUIImageSelectDialog from 'zui/ZUIImageSelectDialog';
 
 type Props = {
   data: LibraryImageData;
@@ -30,7 +30,7 @@ const LibraryImageEditableBlock: FC<Props> = ({
           }}
         />
       )}
-      <ZUIImageSelectDialog
+      <FileLibraryDialog
         onClose={() => setSelecting(false)}
         onSelectFile={(file) => {
           setData({
