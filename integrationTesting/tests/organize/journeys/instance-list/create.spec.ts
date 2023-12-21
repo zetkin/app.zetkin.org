@@ -29,15 +29,15 @@ test.describe('Creating a journey instance from journey instance page', () => {
       page.locator('data-testid=JourneyInstanceOverviewPage-addFab').click(),
     ]);
 
-    expect(await page.locator('data-testid=page-title').textContent()).toEqual(
-      'New Marxist training'
-    );
-
     expect(
       await page
         .locator('data-testid=SubmitCancelButtons-submitButton')
         .textContent()
     ).toEqual('Create new Marxist training');
+
+    expect(await page.locator('data-testid=page-title').textContent()).toEqual(
+      'New Marxist training'
+    );
   });
 
   test('creates instance without subjects, assignees, or tags', async ({
