@@ -31,7 +31,9 @@ export interface FileUpload {
 interface UseFileUploads {
   cancelFileUpload: (file: FileUpload) => void;
   fileUploads: FileUpload[];
+  getInputProps: DropzoneState['getInputProps'];
   getDropZoneProps: DropzoneState['getRootProps'];
+  isDraggingOver: boolean;
   openFilePicker: () => void;
   reset: () => void;
 }
@@ -122,7 +124,7 @@ export default function useFileUploads(
     addFiles(acceptedFiles);
   }, []);
 
-  const { getRootProps } = useDropzone({
+  const { getInputProps, getRootProps, isDragActive } = useDropzone({
     accept: props?.accept,
     multiple: props?.multiple,
     noClick: true,
@@ -137,6 +139,8 @@ export default function useFileUploads(
     },
     fileUploads,
     getDropZoneProps: getRootProps,
+    getInputProps,
+    isDraggingOver: isDragActive,
     openFilePicker: () => {
       fileInput.current?.click();
     },

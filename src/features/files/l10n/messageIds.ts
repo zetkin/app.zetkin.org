@@ -2,6 +2,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.files', {
   fileUpload: {
+    dropToUpload: m('Drop file here to upload it'),
     instructions: m(' or drag and drop'),
     selectClick: m('Click to upload'),
   },
