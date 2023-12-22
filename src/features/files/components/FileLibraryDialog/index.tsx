@@ -34,6 +34,7 @@ const FileLibraryDialog: FC<Props> = ({
 
   return (
     <ZUIDialog
+      contentHeight="80vh"
       maxWidth="lg"
       onClose={onClose}
       open={open}
