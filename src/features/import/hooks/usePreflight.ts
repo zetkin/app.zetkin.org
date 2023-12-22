@@ -198,13 +198,13 @@ export default function usePreflight(orgId: number) {
     });
   }
 
-  const importOperations = prepareImportOperations(
-    sheet,
-    organization.country as CountryCode
-  );
-
   const importPeople = async () => {
     setLoading(true);
+
+    const importOperations = prepareImportOperations(
+      sheet,
+      organization.country as CountryCode
+    );
 
     const importResult = await apiClient.post<
       PersonImport,

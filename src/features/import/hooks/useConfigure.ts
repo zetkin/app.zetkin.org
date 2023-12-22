@@ -9,11 +9,7 @@ import {
   ImportPreview,
   ZetkinPersonImportPostBody,
 } from '../utils/types';
-import {
-  importErrorsAdd,
-  importPreviewAdd,
-  importPreviewClear,
-} from '../store';
+import { importErrorsAdd, importPreviewAdd } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useConfigure(orgId: number) {
@@ -32,7 +28,25 @@ export default function useConfigure(orgId: number) {
     const errors = foreseeErrors(configuredSheet, countryCode, customFields);
 
     if (errors.length > 0 && !errors.includes(IMPORT_ERROR.ID_MISSING)) {
-      dispatch(importPreviewClear());
+      dispatch(
+        importPreviewAdd({
+          addedToOrg: {
+            byOrg: {},
+            total: 0,
+          },
+          created: {
+            total: 0,
+          },
+          tagged: {
+            byTag: {},
+            total: 0,
+          },
+          updated: {
+            byField: {},
+            total: 0,
+          },
+        })
+      );
       dispatch(importErrorsAdd(errors));
     }
 

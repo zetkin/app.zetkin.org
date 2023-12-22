@@ -44,9 +44,6 @@ const importSlice = createSlice({
     importPreviewAdd: (state, action: PayloadAction<PersonImportSummary>) => {
       state.preflightSummary = action.payload;
     },
-    importPreviewClear: (state) => {
-      state.preflightSummary = null;
-    },
     importResultAdd: (state, action: PayloadAction<PersonImport>) => {
       state.importResult = action.payload;
     },
@@ -66,7 +63,6 @@ export const {
   columnUpdate,
   importErrorsAdd,
   importPreviewAdd,
-  importPreviewClear,
   importResultAdd,
   setFirstRowIsHeaders,
   setSelectedSheetIndex,
