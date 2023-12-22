@@ -40,8 +40,8 @@ const FileLibraryBrowser: FC<Props> = ({
   const messages = useMessages(messageIds);
 
   return (
-    <Box>
-      <Box display="flex" gap={1} mt={1}>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Box display="flex" gap={1} py={1}>
         <TextField
           fullWidth
           label={messages.searching.label()}
@@ -93,7 +93,7 @@ const FileLibraryBrowser: FC<Props> = ({
           </Select>
         </FormControl>
       </Box>
-      <Box>
+      <Box overflow="auto">
         <ZUIFuture future={filesFuture}>
           {(allFiles) => {
             const filteredFiles = allFiles.filter((file) => {
