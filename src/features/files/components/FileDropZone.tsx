@@ -5,14 +5,16 @@ import DropZoneContainer from './DropZoneContainer';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { UploadFileOutlined } from '@mui/icons-material';
+import { ZetkinFile } from 'utils/types/zetkin';
 import useFileUploads, { FileUploadState } from '../hooks/useFileUploads';
 
 type Props = {
   children: (props: { openFilePicker: () => void }) => ReactNode;
+  onUploadComplete?: (file: ZetkinFile) => void;
   orgId: number;
 };
 
-const FileDropZone: FC<Props> = ({ children, orgId }) => {
+const FileDropZone: FC<Props> = ({ children, onUploadComplete, orgId }) => {
   const {
     fileUploads,
     getDropZoneProps,
@@ -21,6 +23,7 @@ const FileDropZone: FC<Props> = ({ children, orgId }) => {
     openFilePicker,
   } = useFileUploads(orgId, {
     multiple: false,
+    onUploadComplete: onUploadComplete,
   });
 
   const activeFileUploads = fileUploads.filter(

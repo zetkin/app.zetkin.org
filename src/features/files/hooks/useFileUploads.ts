@@ -43,6 +43,7 @@ export default function useFileUploads(
   props?: {
     accept?: Accept;
     multiple?: boolean;
+    onUploadComplete?: (file: ZetkinFile) => void;
   }
 ): UseFileUploads {
   const [fileUploads, setFileUploads] = useState<FileUpload[]>([]);
@@ -104,6 +105,10 @@ export default function useFileUploads(
             : file
         )
       );
+
+      if (props?.onUploadComplete) {
+        props.onUploadComplete(payload.data);
+      }
     } catch (err) {
       // TODO: Handle error more gracefully
       setFileUploads(

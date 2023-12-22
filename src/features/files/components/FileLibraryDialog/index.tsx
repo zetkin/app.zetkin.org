@@ -45,7 +45,10 @@ const FileLibraryDialog: FC<Props> = ({
           />
         )}
         {!selectedFile && (
-          <FileDropZone orgId={orgId}>
+          <FileDropZone
+            onUploadComplete={(file) => setSelectedFile(file)}
+            orgId={orgId}
+          >
             {({ openFilePicker }) => (
               <FileLibraryBrowser
                 onFileBrowserOpen={() => openFilePicker()}
