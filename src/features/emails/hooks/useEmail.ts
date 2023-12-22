@@ -59,7 +59,6 @@ export default function useEmail(
 
   const updateTargets = async (query: Partial<ZetkinQuery>) => {
     if (email) {
-      //need to fix when there is API for it
       dispatch(emailUpdate([emailId, ['target']]));
       const target = await apiClient.patch<ZetkinQuery>(
         `/api/orgs/${orgId}/people/queries/${email.target.id}`,

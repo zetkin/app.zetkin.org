@@ -37,7 +37,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
     isTargeted,
     updateTargets: setTargets,
   } = useEmail(orgId, emailId);
-  const { statsFuture } = useEmailStats(orgId, emailId);
+  const statsFuture = useEmailStats(orgId, emailId);
 
   //hard coded variables
   const isLocked = false;

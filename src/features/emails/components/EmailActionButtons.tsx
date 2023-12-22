@@ -64,7 +64,7 @@ const EmailActionButtons = ({
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
-  const { statsFuture } = useEmailStats(orgId, email.id);
+  const statsFuture = useEmailStats(orgId, email.id);
   const targetNum = statsFuture.data?.allTargets || 0;
 
   const [sendingDate, setSendingDate] = useState(
