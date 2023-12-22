@@ -1,13 +1,9 @@
 import { BlockToolConstructorOptions } from '@editorjs/editorjs';
-import { Button } from '@mui/material';
 import { createRoot } from 'react-dom/client';
 
+import { ActionButtonData } from './types';
+import ActionButtonEditableBlock from './ActionButtonEditableBlock';
 import Providers from 'core/Providers';
-
-interface ActionButtonData {
-  buttonText: string;
-  url: string;
-}
 
 export default class ActionButton {
   private _data: ActionButtonData;
@@ -25,7 +21,7 @@ export default class ActionButton {
     const root = createRoot(container);
     root.render(
       <Providers {...window.providerData}>
-        <Button variant="contained">Click!</Button>
+        <ActionButtonEditableBlock data={this._data} />
       </Providers>
     );
 
