@@ -1,10 +1,10 @@
 import { Edit } from '@mui/icons-material';
+import Link from 'next/link';
 import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 
 import { ActionButtonData } from './types';
 import formatUrl from './utils/formatUrl';
-import Link from 'next/link';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -65,7 +65,9 @@ const ActionButtonEditableBlock: FC<ActionButtonEditableBlockProps> = ({
       {displayState == 'preview' && (
         <Box display="flex" justifyContent="center" padding={2}>
           <Link href={formatUrl(url)} passHref>
-            <Button variant="contained">{buttonText}</Button>
+            <Button style={{ textDecoration: 'none' }} variant="contained">
+              {buttonText}
+            </Button>
           </Link>
           <IconButton onClick={() => setDisplayState('edit')}>
             <Edit />
