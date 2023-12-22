@@ -106,7 +106,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
               />
               <SurveyUnlinkedCard
                 campId={
-                  campId !== 'inherited' && campId !== 'standalone'
+                  campId !== 'shared' && campId !== 'standalone'
                     ? parseInt(campId)
                     : campId
                 }

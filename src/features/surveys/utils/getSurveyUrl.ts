@@ -14,11 +14,10 @@ export default function getSurveyUrl(
 
 export function getSurveyCampId(survey: ZetkinSurvey | null, orgId: number) {
   if (survey) {
-    return survey.organization.id !== orgId
-      ? 'inherited'
-      : survey.campaign
-      ? survey.campaign.id
-      : 'standalone';
+    if (survey.organization.id !== orgId) {
+      return 'shared';
+    }
+    return survey.campaign?.id ?? 'standalone';
   } else {
     return '';
   }
