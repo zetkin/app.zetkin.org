@@ -1,3 +1,4 @@
+import ActionButton from './tools/ActionButton';
 import LibraryImage from './tools/LibraryImage';
 import { useNumericRouteParams } from 'core/hooks';
 import EditorJS, {
@@ -35,6 +36,12 @@ const EmailEditorFrontend: FC<EditorProps> = ({ onSave }) => {
         saved();
       },
       tools: {
+        actionButton: {
+          class: ActionButton as unknown as ToolConstructable,
+          config: {
+            orgId,
+          },
+        },
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
           config: {
