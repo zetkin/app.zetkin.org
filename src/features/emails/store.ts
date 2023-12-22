@@ -76,7 +76,7 @@ const emailsSlice = createSlice({
       const id = action.payload;
       const statsItem = state.statsById[id];
       state.statsById[id] = remoteItem<EmailStats>(id, {
-        data: statsItem?.data || { allTargets: 0, id: id },
+        data: statsItem?.data,
         isLoading: true,
       });
     },
