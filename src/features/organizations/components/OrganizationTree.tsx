@@ -16,11 +16,11 @@ interface OrganizationTreeProps {
 
 function renderTree(props: OrganizationTreeProps): React.ReactNode {
   const { treeItemData, orgId, onSwitchOrg } = props;
-  const sortedTreeItem = [...treeItemData].sort((a, b) =>
+  const sortedTreeItems = [...treeItemData].sort((a, b) =>
     a.title.localeCompare(b.title)
   );
 
-  return sortedTreeItem.map((item) => (
+  return sortedTreeItems.map((item) => (
     <TreeItem
       key={item.id}
       label={
