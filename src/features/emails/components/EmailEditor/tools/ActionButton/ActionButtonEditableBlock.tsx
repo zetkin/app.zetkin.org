@@ -9,15 +9,19 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface ActionButtonEditableBlockProps {
   data: ActionButtonData;
+  onChange: (data: ActionButtonData) => void;
 }
 
 const ActionButtonEditableBlock: FC<ActionButtonEditableBlockProps> = ({
   data,
+  onChange,
 }) => {
   const messages = useMessages(messageIds);
   const [displayState, setDisplayState] = useState<'edit' | 'preview'>('edit');
   const [buttonText, setButtonText] = useState<string>(data.buttonText || '');
   const [url, setUrl] = useState<string>(data.url || '');
+
+  const hasTextAndUrl = !!buttonText && !!url;
 
   return (
     <>
@@ -36,7 +40,13 @@ const ActionButtonEditableBlock: FC<ActionButtonEditableBlockProps> = ({
             onChange={(event) => setUrl(event.target.value)}
             variant="outlined"
           />
-          <Button onClick={() => setDisplayState('preview')}>
+          <Button
+            disabled={!hasTextAndUrl}
+            onClick={() => {
+              onChange({ buttonText, url });
+              setDisplayState('preview');
+            }}
+          >
             <Msg id={messageIds.buttonTool.finishedEditingButton} />
           </Button>
         </Box>

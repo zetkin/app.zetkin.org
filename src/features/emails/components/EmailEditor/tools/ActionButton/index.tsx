@@ -21,7 +21,12 @@ export default class ActionButton {
     const root = createRoot(container);
     root.render(
       <Providers {...window.providerData}>
-        <ActionButtonEditableBlock data={this._data} />
+        <ActionButtonEditableBlock
+          data={this._data}
+          onChange={(newData) => {
+            this._data = { ...newData };
+          }}
+        />
       </Providers>
     );
 
