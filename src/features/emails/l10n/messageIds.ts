@@ -16,7 +16,7 @@ export default makeMessages('feat.emails', {
     ),
     lockTarget: m('Lock targeting'),
     schedule: m('Schedule'),
-    sendAway: m('Send away'),
+    sendAnyway: m('Send anyway'),
     sendLater: m('Send later'),
     sendNow: {
       alert: {

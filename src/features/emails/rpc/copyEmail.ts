@@ -39,14 +39,16 @@ async function handle(params: Params, apiClient: IApiClient) {
       title: email.title,
     }
   );
-  await apiClient.patch<ZetkinQuery, Partial<ZetkinQuery>>(
+  const copiedEmail = await apiClient.patch<ZetkinQuery, Partial<ZetkinQuery>>(
     `/api/orgs/${orgId}/people/queries/${createdEmail.target.id}`,
     { filter_spec: email.target.filter_spec }
   );
 
-  const copiedEmail = await apiClient.get<ZetkinEmail>(
-    `/api/orgs/${orgId}/emails/${createdEmail.id}`
-  );
-
-  return copiedEmail;
+  return {
+    ...createdEmail,
+    target: {
+      ...copiedEmail,
+      filter_spec: email.target.filter_spec,
+    },
+  };
 }
