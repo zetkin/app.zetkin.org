@@ -14,8 +14,8 @@ type Props = {
 
 const FilePreview: FC<Props> = ({ file, onBack, onSelect }) => {
   return (
-    <Box>
-      <Box my={2}>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Box my={2} overflow="auto">
         <LibraryImage imageFile={file} interactive={false} />
         <Typography color="secondary" mt={1} textAlign="center" variant="body2">
           {file.original_name}
