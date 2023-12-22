@@ -9,6 +9,8 @@ interface LibraryImageProps {
   imageFile: ZetkinFile;
   interactive?: boolean;
   lowGridIntensity?: number;
+  onLoad?: () => void;
+  onLoadingComplete?: () => void;
 }
 
 const LibraryImage: FC<LibraryImageProps> = ({
@@ -16,6 +18,8 @@ const LibraryImage: FC<LibraryImageProps> = ({
   highGridIntensity: hoverGridIntensity = 0.15,
   imageFile,
   interactive = true,
+  onLoad,
+  onLoadingComplete,
 }) => {
   const theme = useTheme();
   const [gridIntensity, setGridIntensity] = useState(
@@ -48,6 +52,8 @@ const LibraryImage: FC<LibraryImageProps> = ({
         height="100%"
         layout="responsive"
         objectFit="contain"
+        onLoad={() => onLoad && onLoad()}
+        onLoadingComplete={() => onLoadingComplete && onLoadingComplete()}
         src={imageFile.url}
         width="100%"
       />
