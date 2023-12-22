@@ -5,6 +5,7 @@ export default makeMessages('feat.emails', {
     buttonTextInputLabel: m('Text'),
     editTitle: m('Edit your button!'),
     finishedEditingButton: m('Done'),
+    invalidUrl: m('Invalid url'),
     urlInputLabel: m('Url'),
   },
   emailActionButtons: {
