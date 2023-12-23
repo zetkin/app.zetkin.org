@@ -29,18 +29,19 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   orgId,
   surveyId,
 }) => {
+  const parsedOrg = parseInt(orgId);
   const messages = useMessages(messageIds);
-  const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
-  const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const statsFuture = useSurveyStats(parsedOrg, parseInt(surveyId));
+  const surveyFuture = useSurvey(parsedOrg, parseInt(surveyId));
   const { publish, unpublish, updateSurvey } = useSurveyMutations(
-    parseInt(orgId),
+    parsedOrg,
     parseInt(surveyId)
   );
   const { surveyIsEmpty, ...elementsFuture } = useSurveyElements(
-    parseInt(orgId),
+    parsedOrg,
     parseInt(surveyId)
   );
-  const state = useSurveyState(parseInt(orgId), parseInt(surveyId));
+  const state = useSurveyState(parsedOrg, parseInt(surveyId));
 
   return (
     <TabbedLayout
@@ -59,7 +60,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         )
       }
-      baseHref={getSurveyUrl(surveyFuture.data)}
+      baseHref={getSurveyUrl(surveyFuture.data, parsedOrg)}
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={surveyFuture.data?.expires || null}

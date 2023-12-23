@@ -95,7 +95,7 @@ async function fetchElements(
       },
     ];
   } else if (fieldName === 'campId') {
-    if (fieldValue !== 'standalone') {
+    if (typeof fieldValue == 'number') {
       const campaign = await apiFetch(
         `/orgs/${orgId}/campaigns/${fieldValue}`
       ).then((res) => res.json());

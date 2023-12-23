@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 
+import getSurveyUrl from 'features/surveys/utils/getSurveyUrl';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinSurvey } from 'utils/types/zetkin';
 
@@ -15,13 +16,7 @@ const SurveyListItem: React.FunctionComponent<{
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
   return (
-    <Link
-      key={survey.id}
-      href={`/organize/${orgId}/projects/${
-        survey.campaign?.id ?? 'standalone'
-      }/surveys/${survey.id}`}
-      passHref
-    >
+    <Link key={survey.id} href={getSurveyUrl(survey, parseInt(orgId))} passHref>
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
         <ListItemAvatar>
           <Avatar>

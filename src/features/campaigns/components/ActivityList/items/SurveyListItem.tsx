@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
+import getSurveyUrl from 'features/surveys/utils/getSurveyUrl';
 import { STATUS_COLORS } from './ActivityListItem';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
@@ -52,9 +53,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
       color={color}
       endNumber={submissionCount.toString()}
       greenChipValue={linkedSubmissionCount}
-      href={`/organize/${orgId}/projects/${
-        data.campaign?.id ?? 'standalone'
-      }/surveys/${surveyId}`}
+      href={getSurveyUrl(data, orgId)}
       orangeChipValue={unlinkedSubmissionCount}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
