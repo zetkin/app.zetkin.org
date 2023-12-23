@@ -1,7 +1,8 @@
-import { useRouter } from 'next/router';
 import { Accept, DropzoneState, useDropzone } from 'react-dropzone';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { fileUploaded } from '../store';
+import { useAppDispatch } from 'core/hooks';
 import { ZetkinFile } from 'utils/types/zetkin';
 
 export enum FileUploadState {
@@ -30,17 +31,23 @@ export interface FileUpload {
 interface UseFileUploads {
   cancelFileUpload: (file: FileUpload) => void;
   fileUploads: FileUpload[];
+  getInputProps: DropzoneState['getInputProps'];
   getDropZoneProps: DropzoneState['getRootProps'];
+  isDraggingOver: boolean;
   openFilePicker: () => void;
   reset: () => void;
 }
 
-export default function useFileUploads(props?: {
-  accept?: Accept;
-  multiple?: boolean;
-}): UseFileUploads {
-  const { orgId } = useRouter().query;
+export default function useFileUploads(
+  orgId: number,
+  props?: {
+    accept?: Accept;
+    multiple?: boolean;
+    onUploadComplete?: (file: ZetkinFile) => void;
+  }
+): UseFileUploads {
   const [fileUploads, setFileUploads] = useState<FileUpload[]>([]);
+  const dispatch = useAppDispatch();
 
   const fileKeyRef = useRef<number>(1);
   const filesRef = useRef(fileUploads);
@@ -87,14 +94,21 @@ export default function useFileUploads(props?: {
         method: 'POST',
       });
 
-      const data = await res.json();
+      const payload = await res.json();
+
+      dispatch(fileUploaded(payload.data));
+
       setFileUploads(
         filesRef.current.map((file) =>
           file.key == upload.key
-            ? { ...file, apiData: data.data, state: FileUploadState.SUCCESS }
+            ? { ...file, apiData: payload.data, state: FileUploadState.SUCCESS }
             : file
         )
       );
+
+      if (props?.onUploadComplete) {
+        props.onUploadComplete(payload.data);
+      }
     } catch (err) {
       // TODO: Handle error more gracefully
       setFileUploads(
@@ -115,7 +129,7 @@ export default function useFileUploads(props?: {
     addFiles(acceptedFiles);
   }, []);
 
-  const { getRootProps } = useDropzone({
+  const { getInputProps, getRootProps, isDragActive } = useDropzone({
     accept: props?.accept,
     multiple: props?.multiple,
     noClick: true,
@@ -130,6 +144,8 @@ export default function useFileUploads(props?: {
     },
     fileUploads,
     getDropZoneProps: getRootProps,
+    getInputProps,
+    isDraggingOver: isDragActive,
     openFilePicker: () => {
       fileInput.current?.click();
     },
