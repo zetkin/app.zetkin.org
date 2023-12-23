@@ -80,6 +80,7 @@
     "slate-history": "^0.66.0",
     "slate-react": "^0.98.3",
     "slugify": "^1.6.5",
+    "timezones-list": "^3.0.2",
     "tsconfig-paths": "^4.1.2",
     "unified": "^10.1.2",
     "validator": "^13.6.0",

@@ -17,6 +17,10 @@ import campaignsSlice, {
   campaignDeleted,
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
+import emailsSlice, {
+  emailCreated,
+  EmailStoreSlice,
+} from 'features/emails/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import filesSlice, { FilesStoreSlice } from 'features/files/store';
 import journeysSlice, {
@@ -44,6 +48,7 @@ export interface RootState {
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
+  emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
   journeys: JourneysStoreSlice;
@@ -62,6 +67,7 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   files: filesSlice.reducer,
   journeys: journeysSlice.reducer,
@@ -92,6 +98,16 @@ listenerMiddleware.startListening({
     const campaign = action.payload;
     Router.push(
       `/organize/${campaign.organization?.id}/projects/${campaign.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: emailCreated,
+  effect: (action) => {
+    const [email, campId] = action.payload;
+    Router.push(
+      `/organize/${email.organization?.id}/projects/${campId}/emails/${email.id}`
     );
   },
 });

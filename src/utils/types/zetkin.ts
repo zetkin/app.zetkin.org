@@ -496,3 +496,19 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
+
+export interface ZetkinEmail {
+  campaign: { id: number; title: string };
+  id: number;
+  published: string;
+  subject: string;
+  organization: { id: number; title: string };
+  content: string;
+  title: string;
+  target: ZetkinQuery;
+}
+export type ZetkinEmailPostBody = Partial<
+  Omit<ZetkinEmail, 'id' | 'published' | 'organization' | 'target'>
+> & {
+  campaign_id: number;
+};

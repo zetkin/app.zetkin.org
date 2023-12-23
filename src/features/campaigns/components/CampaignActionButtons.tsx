@@ -4,6 +4,7 @@ import {
   AssignmentOutlined,
   CheckBoxOutlined,
   Delete,
+  EmailOutlined,
   Event,
   HeadsetMic,
   OpenInNew,
@@ -16,6 +17,7 @@ import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actio
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
+import useCreateEmail from 'features/emails/hooks/useCreateEmail';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCampaign } from 'utils/types/zetkin';
@@ -52,6 +54,7 @@ const CampaignActionButtons: React.FunctionComponent<
     campId
   );
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
+  const { createEmail } = useCreateEmail(orgId, campId);
 
   const handleCreateEvent = () => {
     const defaultStart = new Date();
@@ -102,6 +105,15 @@ const CampaignActionButtons: React.FunctionComponent<
               icon: <CheckBoxOutlined />,
               label: messages.linkGroup.createTask(),
               onClick: () => setCreateTaskDialogOpen(true),
+            },
+            {
+              icon: <EmailOutlined />,
+              label: messages.linkGroup.createEmail(),
+              onClick: () =>
+                createEmail({
+                  campaign_id: campId,
+                  title: messages.form.createEmail.newEmail(),
+                }),
             },
           ]}
           label={messages.linkGroup.createActivity()}
