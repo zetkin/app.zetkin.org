@@ -8,10 +8,11 @@ import EditorJS, {
 import { FC, useEffect, useRef } from 'react';
 
 export type EditorProps = {
+  initialContent: OutputData;
   onSave?: (data: OutputData) => void;
 };
 
-const EmailEditorFrontend: FC<EditorProps> = ({ onSave }) => {
+const EmailEditorFrontend: FC<EditorProps> = ({ initialContent, onSave }) => {
   const { orgId } = useNumericRouteParams();
   const editorInstance = useRef<EditorJS | null>(null);
 
@@ -28,6 +29,7 @@ const EmailEditorFrontend: FC<EditorProps> = ({ onSave }) => {
 
   useEffect(() => {
     const editorConfig: EditorConfig = {
+      data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
       inlineToolbar: ['bold', 'link', 'italic'],

@@ -6,8 +6,10 @@ const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
   ssr: false,
 });
 
-const EmailEditor: FC<EditorProps> = ({ onSave }) => {
-  return <EmailEditorFrontend onSave={onSave} />;
+const EmailEditor: FC<EditorProps> = ({ initialContent, onSave }) => {
+  return (
+    <EmailEditorFrontend initialContent={initialContent} onSave={onSave} />
+  );
 };
 
 export default EmailEditor;
