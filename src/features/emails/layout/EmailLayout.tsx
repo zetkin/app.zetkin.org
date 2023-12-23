@@ -13,13 +13,11 @@ interface EmailLayoutProps {
 
 const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const messages = useMessages(messageIds);
-  //   const emailFuture = useEmail()
 
   return (
     <TabbedLayout
       actionButtons={<EmailActionButtons />}
-      baseHref={`/}`}
-      //   belowActionButtons={}
+      baseHref={`/`}
       defaultTab="/"
       subtitle={<Box alignItems="center" display="flex" />}
       tabs={[
@@ -34,7 +32,9 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
       ]}
       title={
         <ZUIEditTextinPlace
-          onChange={() => console.log('hey')}
+          onChange={() => {
+            // Do nothing for now
+          }}
           value={'default'}
         />
       }

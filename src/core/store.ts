@@ -18,6 +18,7 @@ import campaignsSlice, {
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
+import filesSlice, { FilesStoreSlice } from 'features/files/store';
 import journeysSlice, {
   journeyInstanceCreated,
   JourneysStoreSlice,
@@ -44,6 +45,7 @@ export interface RootState {
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
   events: EventsStoreSlice;
+  files: FilesStoreSlice;
   journeys: JourneysStoreSlice;
   organizations: OrganizationsStoreSlice;
   profiles: ProfilesStoreSlice;
@@ -61,6 +63,7 @@ const reducer = {
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
   events: eventsSlice.reducer,
+  files: filesSlice.reducer,
   journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
   profiles: profilesSlice.reducer,
