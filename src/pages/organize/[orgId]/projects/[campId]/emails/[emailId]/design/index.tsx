@@ -4,6 +4,7 @@ import EmailLayout from 'features/emails/layout/EmailLayout';
 import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useEmail from 'features/emails/hooks/useEmail';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -24,15 +25,32 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-const EmailPage: PageWithLayout = () => {
+type Props = {
+  campId: string;
+  emailId: string;
+  orgId: string;
+};
+
+const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
+  const { data, updateEmail } = useEmail(parseInt(orgId), parseInt(emailId));
   const onServer = useServerSide();
+
   if (onServer) {
+    return null;
+  }
+
+  if (!data) {
     return null;
   }
 
   return (
     <Box>
-      <EmailEditor />
+      <EmailEditor
+        initialContent={JSON.parse(data.content)}
+        onSave={(data) => {
+          updateEmail({ content: JSON.stringify(data) });
+        }}
+      />
     </Box>
   );
 };
