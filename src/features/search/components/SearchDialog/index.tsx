@@ -28,7 +28,7 @@ const SearchDialog: React.FunctionComponent<{
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
 
-  const { error, results, isLoading, setQuery } = useSearch(orgId);
+  const { error, results, isLoading, setQuery, queryString } = useSearch(orgId);
 
   const handleRouteChange = () => {
     // Close dialog when clicking an item
@@ -84,7 +84,7 @@ const SearchDialog: React.FunctionComponent<{
               }
             }}
           />
-          {results && (
+          {results.length > 0 && queryString.length > 2 && (
             <ResultsList results={results.map((item) => item.result)} />
           )}
         </Box>
