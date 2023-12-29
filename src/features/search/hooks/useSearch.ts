@@ -13,7 +13,8 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 type UseSearchReturn = {
   error: unknown;
   isLoading: boolean;
-  results: SearchResultItem[];
+  queryString: string;
+  results: SearchResultItem[] | null;
   setQuery: (q: string) => void;
 };
 
@@ -57,14 +58,16 @@ export default function useSearch(orgId: number): UseSearchReturn {
     return {
       error: future.error,
       isLoading: future.isLoading,
-      results: future.data || [],
+      queryString,
+      results: future.data,
       setQuery,
     };
   } else {
     return {
       error: null,
       isLoading: false,
-      results: [],
+      queryString,
+      results: null,
       setQuery,
     };
   }
