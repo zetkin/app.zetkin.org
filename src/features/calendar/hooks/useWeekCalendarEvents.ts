@@ -1,4 +1,4 @@
-import { isSameDate } from 'utils/dateUtils';
+import { getActivitiesByDay } from '../components/utils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import clusterEventsForWeekCalender, {
@@ -25,12 +25,13 @@ export default function useWeekCalendarEvents({
   );
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
-  return dates.map((date) => {
-    const relevantActivities = filteredActivities.filter((activity) =>
-      isSameDate(new Date(activity.data.start_time), date)
-    );
+  const datesWithActivities = getActivitiesByDay(filteredActivities);
 
-    const lanes = clusterEventsForWeekCalender(relevantActivities);
+  return dates.map((date) => {
+    const activitiesToday =
+      datesWithActivities[date.toISOString().slice(0, 10)]?.events || [];
+
+    const lanes = clusterEventsForWeekCalender(activitiesToday);
 
     return {
       date,
