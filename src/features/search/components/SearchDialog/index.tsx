@@ -84,12 +84,8 @@ const SearchDialog: React.FunctionComponent<{
               }
             }}
           />
-          {results && (
-            <ResultsList
-              isLoading={isLoading}
-              queryString={queryString}
-              results={results.map((item) => item.result)}
-            />
+          {results && queryString.length > 2 && !isLoading && (
+            <ResultsList results={results.map((item) => item.result)} />
           )}
         </Box>
       </Dialog>
