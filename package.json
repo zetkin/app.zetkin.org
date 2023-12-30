@@ -27,8 +27,8 @@
   "dependencies": {
     "@date-io/date-fns": "1.x",
     "@date-io/dayjs": "1.x",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@messageformat/parser": "^5.1.0",
     "@mui/base": "^5.0.0-alpha.99",
     "@mui/icons-material": "^5.10.6",
