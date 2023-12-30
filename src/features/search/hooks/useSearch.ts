@@ -14,7 +14,7 @@ type UseSearchReturn = {
   error: unknown;
   isLoading: boolean;
   queryString: string;
-  results: SearchResultItem[];
+  results: SearchResultItem[] | null;
   setQuery: (q: string) => void;
 };
 
@@ -59,7 +59,7 @@ export default function useSearch(orgId: number): UseSearchReturn {
       error: future.error,
       isLoading: future.isLoading,
       queryString,
-      results: future.data || [],
+      results: future.data,
       setQuery,
     };
   } else {
@@ -67,7 +67,7 @@ export default function useSearch(orgId: number): UseSearchReturn {
       error: null,
       isLoading: false,
       queryString,
-      results: [],
+      results: null,
       setQuery,
     };
   }
