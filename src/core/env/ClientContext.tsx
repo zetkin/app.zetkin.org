@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { IntlProvider } from 'react-intl';
+import { MessageList } from 'utils/locale';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from 'core/store';
 import { themeWithLocale } from '../../theme';
@@ -23,11 +24,15 @@ declare module '@mui/styles/defaultTheme' {
 export type ClientContextProps = {
   children: ReactNode;
   lang: string;
+  messages: MessageList;
 };
 
-const ClientContext: FC<ClientContextProps> = ({ children, lang }) => {
+const ClientContext: FC<ClientContextProps> = ({
+  children,
+  lang,
+  messages,
+}) => {
   const env = new Environment(store, new BrowserApiClient());
-  const messages = {};
   return (
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>
