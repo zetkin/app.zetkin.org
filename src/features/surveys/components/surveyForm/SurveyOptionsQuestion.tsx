@@ -18,19 +18,9 @@ import {
 
 export type OptionsQuestionProps = {
   element: ZetkinSurveyOptionsQuestionElement;
-  formData: NodeJS.Dict<string | string[]>;
 };
 
-const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
-  const formOptions = formData[`${element.id}.options`];
-  const selectedOptions = formOptions
-    ? Array.isArray(formOptions)
-      ? formOptions
-      : typeof formOptions === 'string'
-      ? [formOptions]
-      : []
-    : [];
-
+const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
   return (
     <FormControl>
       {element.question.response_config.widget_type === 'checkbox' && (
@@ -51,12 +41,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
             {element.question.options!.map((option: ZetkinSurveyOption) => (
               <SurveyOption
                 key={option.id}
-                control={
-                  <Checkbox
-                    defaultChecked={selectedOptions.includes(`${option.id}`)}
-                    name={`${element.id}.options`}
-                  />
-                }
+                control={<Checkbox name={`${element.id}.options`} />}
                 label={option.text}
                 value={option.id}
               />
@@ -67,7 +52,6 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
       {element.question.response_config.widget_type === 'radio' && (
         <RadioGroup
           aria-labelledby={`label-${element.id}`}
-          defaultValue={selectedOptions[0] ?? undefined}
           name={`${element.id}.options`}
         >
           <FormLabel
@@ -97,7 +81,6 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element, formData }) => {
       {element.question.response_config.widget_type === 'select' && (
         <Select
           aria-labelledby={`label-${element.id}`}
-          defaultValue={selectedOptions[0] ?? undefined}
           name={`${element.id}.options`}
         >
           {element.question.options!.map((option: ZetkinSurveyOption) => (

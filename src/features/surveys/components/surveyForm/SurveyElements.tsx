@@ -8,18 +8,15 @@ import {
 } from 'utils/types/zetkin';
 
 export type SurveyElementsProps = {
-  formData: NodeJS.Dict<string | string[]>;
   survey: ZetkinSurveyExtended;
 };
 
-const SurveyElements: FC<SurveyElementsProps> = ({ formData, survey }) => {
+const SurveyElements: FC<SurveyElementsProps> = ({ survey }) => {
   return (
     <>
       {survey.elements.map((element) => (
         <Box key={element.id}>
-          {element.type === 'question' && (
-            <SurveyQuestion element={element} formData={formData} />
-          )}
+          {element.type === 'question' && <SurveyQuestion element={element} />}
           {element.type === 'text' && (
             <SurveyTextBlock element={element as ZetkinSurveyTextElement} />
           )}

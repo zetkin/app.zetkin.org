@@ -4,13 +4,9 @@ import { FormControl, FormLabel, TextField } from '@mui/material';
 
 export type SurveyOptionsQuestionProps = {
   element: ZetkinSurveyTextQuestionElement;
-  formData: NodeJS.Dict<string | string[]>;
 };
 
-const SurveyOptionsQuestion: FC<SurveyOptionsQuestionProps> = ({
-  element,
-  formData,
-}) => {
+const SurveyOptionsQuestion: FC<SurveyOptionsQuestionProps> = ({ element }) => {
   return (
     <FormControl sx={{ width: '100%' }}>
       <FormLabel
@@ -26,11 +22,6 @@ const SurveyOptionsQuestion: FC<SurveyOptionsQuestionProps> = ({
         {element.question.question}
       </FormLabel>
       <TextField
-        defaultValue={
-          typeof formData[`${element.id}.text`] === 'string'
-            ? (formData[`${element.id}.text`] as string)
-            : undefined
-        }
         fullWidth
         id={`input-${element.id}`}
         name={`${element.id}.text`}

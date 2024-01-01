@@ -13,6 +13,7 @@ const SurveyErrorMessage: FC = () => {
       mx={4}
       my={4}
       p={2}
+      role="alert"
       sx={{ borderRadius: '5px' }}
     >
       <Msg id={messageIds.surveyForm.error} />
