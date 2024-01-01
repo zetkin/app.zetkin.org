@@ -21,17 +21,16 @@ import {
 } from 'utils/types/zetkin';
 
 export type SurveySignatureProps = {
-  formData: NodeJS.Dict<string | string[]>;
   survey: ZetkinSurveyExtended;
 };
 
-const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
+const SurveySignature: FC<SurveySignatureProps> = ({ survey }) => {
   // const currentUser = useCurrentUser();
   const theme = useTheme();
 
   const [signatureType, setSignatureType] = useState<
     ZetkinSurveySignatureType | undefined
-  >(formData['sig'] as ZetkinSurveySignatureType | undefined);
+  >(undefined);
 
   const handleRadioChange = useCallback(
     (value: ZetkinSurveySignatureType) => {
@@ -44,7 +43,6 @@ const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
     <FormControl>
       <RadioGroup
         aria-labelledby="survey-signature"
-        defaultValue={formData['sig'] as ZetkinSurveySignatureType | undefined}
         name="sig"
         onChange={(e) =>
           handleRadioChange(e.target.value as ZetkinSurveySignatureType)
@@ -91,19 +89,16 @@ const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
               style={{ rowGap: theme.spacing(1) }}
             >
               <TextField
-                defaultValue={formData['sig.first_name']}
                 label={<Msg id={messageIds.surveySignature.email.firstName} />}
                 name="sig.first_name"
                 required
               />
               <TextField
-                defaultValue={formData['sig.last_name']}
                 label={<Msg id={messageIds.surveySignature.email.lastName} />}
                 name="sig.last_name"
                 required
               />
               <TextField
-                defaultValue={formData['sig.email']}
                 label={<Msg id={messageIds.surveySignature.email.email} />}
                 name="sig.email"
                 required

@@ -14,14 +14,10 @@ import {
 import { Msg, useMessages } from 'core/i18n';
 
 export type SurveyPrivacyPolicyProps = {
-  formData: NodeJS.Dict<string | string[]>;
   survey: ZetkinSurveyExtended;
 };
 
-const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({
-  formData,
-  survey,
-}) => {
+const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({ survey }) => {
   const messages = useMessages(messageIds);
   return (
     <FormControl>
@@ -32,12 +28,7 @@ const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({
           </SurveySubheading>
         </FormLabel>
         <SurveyOption
-          control={
-            <Checkbox
-              defaultChecked={formData['privacy.approval'] === 'on'}
-              required
-            />
-          }
+          control={<Checkbox required />}
           data-testid="Survey-acceptTerms"
           label={<Msg id={messageIds.surveyForm.accept} />}
           name="privacy.approval"
