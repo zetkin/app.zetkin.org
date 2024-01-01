@@ -22,11 +22,11 @@ declare module '@mui/styles/defaultTheme' {
 
 export type ClientContextProps = {
   children: ReactNode;
+  lang: string;
 };
 
-const ClientContext: FC<ClientContextProps> = ({ children }) => {
+const ClientContext: FC<ClientContextProps> = ({ children, lang }) => {
   const env = new Environment(store, new BrowserApiClient());
-  const lang = 'sv';
   const messages = {};
   return (
     <ReduxProvider store={store}>
