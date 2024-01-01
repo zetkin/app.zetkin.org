@@ -1,12 +1,12 @@
 'use client';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
-import createStore from 'core/store';
 import CssBaseline from '@mui/material/CssBaseline';
 import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
+import { store } from 'core/store';
 import { themeWithLocale } from '../../theme';
 import { FC, ReactNode } from 'react';
 import {
@@ -25,7 +25,6 @@ export type ClientContextProps = {
 };
 
 const ClientContext: FC<ClientContextProps> = ({ children }) => {
-  const store = createStore();
   const env = new Environment(store, new BrowserApiClient());
   const lang = 'sv';
   const messages = {};
