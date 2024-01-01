@@ -141,3 +141,4 @@ export default function createStore(
 
 export type Store = ReturnType<typeof createStore>;
 export type AppDispatch = Store['dispatch'];
+export const store = createStore();
