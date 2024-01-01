@@ -2,7 +2,8 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SurveyOption from './SurveyOption';
 import SurveySubheading from './SurveySubheading';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
+// import useCurrentUser from 'features/user/hooks/useCurrentUser';
+
 import {
   Box,
   FormControl,
@@ -25,7 +26,7 @@ export type SurveySignatureProps = {
 };
 
 const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
-  const currentUser = useCurrentUser();
+  // const currentUser = useCurrentUser();
   const theme = useTheme();
 
   const [signatureType, setSignatureType] = useState<
@@ -56,7 +57,7 @@ const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
         </FormLabel>
 
         <Box display="flex" flexDirection="column" rowGap={1}>
-          <SurveyOption
+          {/* <SurveyOption
             control={<Radio required />}
             label={
               <Typography>
@@ -70,7 +71,7 @@ const SurveySignature: FC<SurveySignatureProps> = ({ formData, survey }) => {
               </Typography>
             }
             value="user"
-          />
+          /> */}
 
           <SurveyOption
             control={<Radio required />}
