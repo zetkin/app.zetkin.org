@@ -5,7 +5,7 @@ import {
 } from 'utils/types/zetkin';
 
 export default function prepareSurveyApiSubmission(
-  formData: NodeJS.Dict<string | string[]>,
+  formData: Record<string, unknown>,
   isLoggedIn?: boolean
 ): ZetkinSurveyApiSubmission {
   const responses: ZetkinSurveyQuestionResponse[] = [];

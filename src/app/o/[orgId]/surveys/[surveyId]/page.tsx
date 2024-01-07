@@ -1,15 +1,11 @@
-'use client';
-
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { Container } from '@mui/material';
+import { FC } from 'react';
+import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import SurveyForm from 'features/surveys/components/surveyForm/SurveyForm';
-import SurveyHeading from 'features/surveys/components/surveyForm/SurveyHeading';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import useSurvey from 'features/surveys/hooks/useSurvey';
-import { FC, FormEvent, useCallback, useState } from 'react';
-import {
-  ZetkinSurveyExtended,
-  ZetkinSurveyFormStatus,
-} from 'utils/types/zetkin';
+import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 
 type PageProps = {
   params: {
@@ -19,38 +15,24 @@ type PageProps = {
 };
 
 const Page: FC<PageProps> = ({ params }) => {
-  const router = useRouter();
+  // const router = useRouter();
 
   const { data: survey } = useSurvey(
     parseInt(params.orgId, 10),
     parseInt(params.surveyId, 10)
   );
 
-  const [status, setStatus] = useState<ZetkinSurveyFormStatus>('editing');
-
-  const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const entries = [...formData.entries()];
-    const data = Object.fromEntries(entries);
-    try {
-      await fetch(
-        `/api/orgs/${params.orgId}/surveys/${params.surveyId}/submissions`,
-        {
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        }
-      );
-    } catch (e) {
-      setStatus('error');
-      window.scrollTo(0, 0);
-      return;
-    }
-    router.push(`/o/${params.orgId}/surveys/${params.surveyId}/submitted`);
-  }, []);
+  const submit = async (formData: FormData): Promise<void> => {
+    const submission = prepareSurveyApiSubmission(
+      Object.fromEntries([...formData.entries()]),
+      false
+    );
+    const apiClient = new BackendApiClient({});
+    await apiClient.post(
+      `/api/orgs/${params.orgId}/surveys/${params.surveyId}/submissions`,
+      submission
+    );
+  };
 
   if (!survey) {
     return null;
@@ -58,8 +40,7 @@ const Page: FC<PageProps> = ({ params }) => {
 
   return (
     <Container style={{ height: '100vh' }}>
-      <SurveyHeading status={status} survey={survey as ZetkinSurveyExtended} />
-      <SurveyForm onSubmit={onSubmit} survey={survey as ZetkinSurveyExtended} />
+      <SurveyForm action={submit} survey={survey as ZetkinSurveyExtended} />
     </Container>
   );
 };
