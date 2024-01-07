@@ -1,25 +1,34 @@
 'use client';
 
+import { FC } from 'react';
 import SurveyElements from './SurveyElements';
+import SurveyHeading from './SurveyHeading';
 import SurveyPrivacyPolicy from './SurveyPrivacyPolicy';
 import SurveySignature from './SurveySignature';
 import SurveySubmitButton from './SurveySubmitButton';
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
-import { FC, FormEvent } from 'react';
+import {
+  ZetkinSurveyExtended,
+  ZetkinSurveyFormStatus,
+} from 'utils/types/zetkin';
 
 export type SurveyFormProps = {
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  action: (formData: FormData) => Promise<void>;
   survey: ZetkinSurveyExtended;
 };
 
-const SurveyForm: FC<SurveyFormProps> = ({ onSubmit, survey }) => {
+const SurveyForm: FC<SurveyFormProps> = ({ action, survey }) => {
+  const status = 'editing' as ZetkinSurveyFormStatus;
+
   return (
-    <form method="post" onSubmit={onSubmit}>
-      <SurveyElements survey={survey} />
-      <SurveySignature survey={survey} />
-      <SurveyPrivacyPolicy survey={survey} />
-      <SurveySubmitButton />
-    </form>
+    <>
+      <SurveyHeading status={status} survey={survey as ZetkinSurveyExtended} />
+      <form action={action as unknown as string}>
+        <SurveyElements survey={survey} />
+        <SurveySignature survey={survey} />
+        <SurveyPrivacyPolicy survey={survey} />
+        <SurveySubmitButton />
+      </form>
+    </>
   );
 };
 
