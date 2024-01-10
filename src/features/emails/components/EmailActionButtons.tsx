@@ -9,7 +9,7 @@ import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import useDuplicateEmail from '../hooks/useDuplicateEmail';
 import useEmail from '../hooks/useEmail';
-import useEmailStats from '../hooks/useEmailStats';
+import useEmailTargets from '../hooks/useEmailTargets';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -34,14 +34,13 @@ const EmailActionButtons = ({
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteEmail } = useEmail(orgId, email.id);
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
-  const statsFuture = useEmailStats(orgId, email.id);
-  const targetNum = statsFuture.data?.allTargets || 0;
+  const { data: targets } = useEmailTargets(orgId, email.id);
 
   return (
     <Box alignItems="flex-end" display="flex" flexDirection="column" gap={1}>
       <Box display="flex">
         <Button
-          disabled={targetNum === 0 || emailState === EmailState.SENT}
+          disabled={targets?.allTargets === 0 || emailState === EmailState.SENT}
           endIcon={<ArrowDropDown />}
           onClick={(event) =>
             setAnchorEl(anchorEl ? null : event.currentTarget)
@@ -55,7 +54,7 @@ const EmailActionButtons = ({
             email={email}
             onClose={() => setAnchorEl(null)}
             orgId={orgId}
-            targetNum={targetNum}
+            targetNum={targets?.allTargets || 0}
           />
         </Popper>
         <ZUIEllipsisMenu

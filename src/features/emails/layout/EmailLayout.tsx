@@ -8,7 +8,7 @@ import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
 import useEmailState from '../hooks/useEmailState';
-import useEmailStats from '../hooks/useEmailStats';
+import useEmailTargets from '../hooks/useEmailTargets';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -22,7 +22,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const { orgId, campId, emailId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const { data: email, updateEmail } = useEmail(orgId, emailId);
-  const statsFuture = useEmailStats(orgId, emailId);
+  const targetsFuture = useEmailTargets(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   if (!email) {
     return null;
@@ -46,7 +46,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
-              future={statsFuture}
+              future={targetsFuture}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >

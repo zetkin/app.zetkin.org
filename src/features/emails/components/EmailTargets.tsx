@@ -7,7 +7,7 @@ import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import useEmail from '../hooks/useEmail';
-import useEmailStats from '../hooks/useEmailStats';
+import useEmailTargets from '../hooks/useEmailTargets';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +37,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
     isTargeted,
     updateTargets: setTargets,
   } = useEmail(orgId, emailId);
-  const statsFuture = useEmailStats(orgId, emailId);
+  const { data: targets } = useEmailTargets(orgId, emailId);
 
   //hard coded variables
   const isLocked = false;
@@ -49,7 +49,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
+          <ZUIAnimatedNumber value={targets?.allTargets || 0}>
             {(animatedValue) => (
               <Box className={classes.chip}>{animatedValue}</Box>
             )}
