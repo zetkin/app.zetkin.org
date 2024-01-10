@@ -30,21 +30,28 @@ export default function useConfigure(orgId: number) {
     if (errors.length > 0 && !errors.includes(IMPORT_ERROR.ID_MISSING)) {
       dispatch(
         importPreviewAdd({
-          addedToOrg: {
-            byOrg: {},
-            total: 0,
-          },
-          created: {
-            total: 0,
-          },
-          tagged: {
-            byTag: {},
-            total: 0,
-          },
-          updated: {
-            byChangedField: {},
-            byInitializedField: {},
-            total: 0,
+          problems: [],
+          stats: {
+            person: {
+              summary: {
+                addedToOrg: {
+                  byOrg: {},
+                  total: 0,
+                },
+                created: {
+                  total: 0,
+                },
+                tagged: {
+                  byTag: {},
+                  total: 0,
+                },
+                updated: {
+                  byChangedField: {},
+                  byInitializedField: {},
+                  total: 0,
+                },
+              },
+            },
           },
         })
       );
@@ -69,7 +76,7 @@ export default function useConfigure(orgId: number) {
         ops: importOperations,
       });
 
-      dispatch(importPreviewAdd(previewRes.stats.person.summary));
+      dispatch(importPreviewAdd(previewRes));
     }
   };
 }

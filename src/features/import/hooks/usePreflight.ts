@@ -39,9 +39,10 @@ export default function usePreflight(orgId: number) {
   const sheet = useAppSelector(
     (state) => state.import.pendingFile.sheets[selectedSheetIndex]
   );
-  const preflightSummary = useAppSelector(
-    (state) => state.import.preflightSummary
-  );
+  const previewData = useAppSelector((state) => state.import.preflightSummary);
+
+  const preflightSummary = previewData?.stats.person.summary;
+
   const [approvedWarningAlerts, setApprovedWarningAlerts] = useState<number[]>(
     []
   );
