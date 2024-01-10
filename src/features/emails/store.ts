@@ -25,8 +25,8 @@ const emailsSlice = createSlice({
     emailCreate: (state) => {
       state.emailList.isLoading = true;
     },
-    emailCreated: (state, action: PayloadAction<[ZetkinEmail, number]>) => {
-      const [email] = action.payload;
+    emailCreated: (state, action: PayloadAction<ZetkinEmail>) => {
+      const email = action.payload;
       state.emailList.isLoading = false;
       state.emailList.items.push(remoteItem(email.id, { data: email }));
     },
@@ -85,6 +85,16 @@ const emailsSlice = createSlice({
         .filter((mail) => mail.id != email.id)
         .concat([remoteItem(email.id, { data: email })]);
     },
+    emailsLoad: (state) => {
+      state.emailList.isLoading = true;
+    },
+    emailsLoaded: (state, action: PayloadAction<ZetkinEmail[]>) => {
+      const emails = action.payload;
+      const timestamp = new Date().toISOString();
+      state.emailList = remoteList(emails);
+      state.emailList.loaded = timestamp;
+      state.emailList.items.forEach((item) => (item.loaded = timestamp));
+    },
     targetsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const statsItem = state.targetsById[id];
@@ -116,6 +126,8 @@ export const {
   emailLoaded,
   emailUpdate,
   emailUpdated,
+  emailsLoad,
+  emailsLoaded,
   targetsLoad,
   targetsLoaded,
 } = emailsSlice.actions;

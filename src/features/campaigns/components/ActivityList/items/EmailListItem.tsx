@@ -42,7 +42,9 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
       color={color}
       endNumber={targets?.allTargets || 0}
       greenChipValue={greenChipValue}
-      href={`/organize/${orgId}/projects/${email.campaign.id}/emails/${emailId}`}
+      href={`/organize/${orgId}/projects/${
+        email.campaign?.id ?? 'standalone'
+      }/emails/${emailId}`}
       orangeChipValue={orangeChipValue}
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
