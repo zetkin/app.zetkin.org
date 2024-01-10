@@ -125,6 +125,23 @@ export type PersonImport = {
   status: ImportStatus | null;
 };
 
+export enum ImportPreviewProblemCode {
+  INVALID_FORMAT = 'INVALID_FORMAT',
+  MISSING_ID_AND_NAME = 'MISSING_ID_AND_NAME',
+  UNKNOWN = 'UNKNOWN',
+  UNKNOWN_ORG = 'UNKNOWN_ORG',
+  UNKNOWN_OBJECT = 'UNKNOWN_OBJECT',
+  UNKNOWN_FIELD = 'UNKNOWN_FIELD',
+}
+
+type ImportPreviewProblem = {
+  code: ImportPreviewProblemCode;
+  field: string;
+  index: number;
+  level: 'error' | 'warning';
+};
+
 export type ImportPreview = {
+  problems: ImportPreviewProblem[];
   stats: PersonImport['report'];
 };
