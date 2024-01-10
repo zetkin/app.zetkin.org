@@ -5,27 +5,37 @@ import { Typography, useTheme } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useFieldTitle from 'utils/hooks/useFieldTitle';
-import {
-  ZetkinCustomField,
-  ZetkinPersonNativeFields,
-} from 'utils/types/zetkin';
+import { ZetkinPersonNativeFields } from 'utils/types/zetkin';
 
 interface ChangedFieldsProps {
   changedFields: {
-    [key in
-      | keyof Partial<ZetkinPersonNativeFields>
-      | keyof Partial<ZetkinCustomField>]?: number;
+    [key in keyof Partial<ZetkinPersonNativeFields> | string]?: number;
+  };
+  initializedFields: {
+    [key in keyof Partial<ZetkinPersonNativeFields> | string]?: number;
   };
   orgId: number;
 }
 
-const ChangedFields: FC<ChangedFieldsProps> = ({ changedFields, orgId }) => {
+const ChangedFields: FC<ChangedFieldsProps> = ({
+  changedFields,
+  initializedFields,
+  orgId,
+}) => {
   const theme = useTheme();
   const getFieldTitle = useFieldTitle(orgId);
+
+  const updatedSlugs = new Set([
+    ...Object.keys(changedFields),
+    ...Object.keys(initializedFields),
+  ]);
+
   return (
     <>
-      {Object.entries(changedFields).map((field) => {
-        const [fieldSlug, numChanges] = field;
+      {Array.from(updatedSlugs).map((fieldSlug) => {
+        const numChanges =
+          (changedFields[fieldSlug] || 0) + (initializedFields[fieldSlug] || 0);
+
         return (
           <Box
             key={fieldSlug}

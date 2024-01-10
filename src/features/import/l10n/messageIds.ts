@@ -321,7 +321,7 @@ export default makeMessages('feat.import', {
             'If this is not intentional you should go back and check the configuration.'
           ),
           title: m<{ fieldName: string }>(
-            "This import will change a lot of people's {fieldName}"
+            "This import will overwrite a lot of people's {fieldName}"
           ),
         },
         unselectedId: {

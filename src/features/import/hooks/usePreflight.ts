@@ -76,7 +76,9 @@ export default function usePreflight(orgId: number) {
 
   const alerts: Alert[] = [];
 
-  const fieldsWithManyChanges = Object.entries(preflightSummary.updated.byField)
+  const fieldsWithManyChanges = Object.entries(
+    preflightSummary.updated.byChangedField
+  )
     .filter((item) => {
       const fieldValue = item[1] as number;
       return preflightSummary.updated.total * 0.2 < fieldValue;

@@ -42,7 +42,8 @@ export default function useConfigure(orgId: number) {
             total: 0,
           },
           updated: {
-            byField: {},
+            byChangedField: {},
+            byInitializedField: {},
             total: 0,
           },
         })

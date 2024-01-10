@@ -93,7 +93,8 @@ const Preflight: FC<PreflightProps> = ({
               <CreatedAndUpdated summary={summary} />
               <Stack spacing={2} sx={{ mt: 2 }}>
                 <ChangedFields
-                  changedFields={summary.updated.byField}
+                  changedFields={summary.updated.byChangedField}
+                  initializedFields={summary.updated.byInitializedField}
                   orgId={orgId}
                 />
                 {addedTags.length > 0 && (

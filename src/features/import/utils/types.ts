@@ -106,7 +106,8 @@ export type PersonImportSummary = {
     total: number;
   };
   updated: {
-    byField: { [key: string]: number };
+    byChangedField: { [key: string]: number };
+    byInitializedField: { [key: string]: number };
     total: number;
   };
 };
