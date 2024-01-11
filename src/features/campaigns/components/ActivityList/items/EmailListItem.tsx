@@ -49,7 +49,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
       statsLoading={targetsLoading}
-      title={email.title}
+      title={email.title || ''}
     />
   );
 };

@@ -27,7 +27,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
       startDate={activity.visibleFrom}
-      title={email.title}
+      title={email.title || ''}
     />
   );
 };

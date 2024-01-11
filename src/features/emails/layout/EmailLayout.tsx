@@ -80,7 +80,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
           onChange={(newTitle) => {
             updateEmail({ title: newTitle });
           }}
-          value={email.title}
+          value={email.title || ''}
         />
       }
     >

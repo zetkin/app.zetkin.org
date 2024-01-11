@@ -10,6 +10,15 @@ import {
 } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
+const visibleUntil = (published: string | null): Date | null => {
+  if (!published) {
+    return null;
+  }
+  const visibleUntil = new Date(published);
+  visibleUntil.setDate(visibleUntil.getDate() + 1);
+  return visibleUntil;
+};
+
 export default function useEmailActivities(
   orgId: number,
   campId?: number
@@ -41,26 +50,20 @@ export default function useEmailActivities(
       );
 
       campaignEmails.forEach((email) => {
-        const nextDay = new Date(email.published);
-        nextDay.setDate(nextDay.getDate() + 1);
-
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
           visibleFrom: getUTCDateWithoutTime(email.published || null),
-          visibleUntil: getUTCDateWithoutTime(nextDay.toISOString()),
+          visibleUntil: visibleUntil(email.published),
         });
       });
     } else {
       allEmails.forEach((email) => {
-        const nextDay = new Date(email.published);
-        nextDay.setDate(nextDay.getDate() + 1);
-
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
           visibleFrom: getUTCDateWithoutTime(email.published || null),
-          visibleUntil: getUTCDateWithoutTime(nextDay.toISOString()),
+          visibleUntil: visibleUntil(email.published),
         });
       });
     }

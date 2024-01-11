@@ -46,7 +46,9 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
   return (
     <Box>
       <EmailEditor
-        initialContent={JSON.parse(data.content)}
+        initialContent={
+          data.content ? JSON.parse(data.content) : { blocks: [] }
+        }
         onSave={(data) => {
           updateEmail({ content: JSON.stringify(data) });
         }}
