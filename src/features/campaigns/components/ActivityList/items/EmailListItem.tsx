@@ -12,6 +12,13 @@ interface EmailListItemProps {
   orgId: number;
 }
 
+const statusColors = {
+  [EmailState.UNKNOWN]: STATUS_COLORS.GRAY,
+  [EmailState.DRAFT]: STATUS_COLORS.GRAY,
+  [EmailState.SCHEDULED]: STATUS_COLORS.BLUE,
+  [EmailState.SENT]: STATUS_COLORS.GREEN,
+};
+
 const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   const { data: email } = useEmail(orgId, emailId);
   const state = useEmailState(orgId, emailId);
@@ -19,13 +26,6 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
 
   if (!email) {
     return null;
-  }
-
-  let color = STATUS_COLORS.GRAY;
-  if (state === EmailState.SENT) {
-    color = STATUS_COLORS.GREEN;
-  } else if (state === EmailState.SCHEDULED) {
-    color = STATUS_COLORS.BLUE;
   }
 
   //TODO: use actual values for these:
@@ -39,7 +39,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   return hasBeenSent ? (
     <ActivityListItemWithStats
       blueChipValue={blueChipValue}
-      color={color}
+      color={statusColors[state]}
       endNumber={targets?.allTargets || 0}
       greenChipValue={greenChipValue}
       href={`/organize/${orgId}/projects/${
@@ -54,7 +54,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     />
   ) : (
     <ActivityListItem
-      color={color}
+      color={statusColors[state]}
       endNumber={targets?.allTargets || 0}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
