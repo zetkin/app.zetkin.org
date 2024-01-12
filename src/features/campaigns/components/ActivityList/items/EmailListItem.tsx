@@ -29,13 +29,14 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   }
 
   //TODO: use actual values for these:
-  const blueChipValue = 0;
-  const greenChipValue = 0;
-  const orangeChipValue = 0;
+  const blueChipValue = 34;
+  const greenChipValue = 34;
+  const orangeChipValue = 34;
 
-  const hasStats = !!blueChipValue || !!greenChipValue || !!orangeChipValue;
+  const now = new Date();
+  const hasBeenSent = email.published && new Date(email.published) < now;
 
-  return hasStats ? (
+  return hasBeenSent ? (
     <ActivityListItemWithStats
       blueChipValue={blueChipValue}
       color={color}
