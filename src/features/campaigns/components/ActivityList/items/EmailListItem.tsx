@@ -2,9 +2,9 @@ import { FC } from 'react';
 import { EmailOutlined, Person } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
-import { STATUS_COLORS } from './ActivityListItem';
 import useEmail from 'features/emails/hooks/useEmail';
 import useEmailTargets from 'features/emails/hooks/useEmailTargets';
+import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import useEmailState, { EmailState } from 'features/emails/hooks/useEmailState';
 
 interface EmailListItemProps {
@@ -15,10 +15,7 @@ interface EmailListItemProps {
 const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   const { data: email } = useEmail(orgId, emailId);
   const state = useEmailState(orgId, emailId);
-  const { data: targets, isLoading: targetsLoading } = useEmailTargets(
-    orgId,
-    emailId
-  );
+  const { data: targets } = useEmailTargets(orgId, emailId);
 
   if (!email) {
     return null;
@@ -32,11 +29,13 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   }
 
   //TODO: use actual values for these:
-  const blueChipValue = 34;
-  const greenChipValue = 34;
-  const orangeChipValue = 34;
+  const blueChipValue = 0;
+  const greenChipValue = 0;
+  const orangeChipValue = 0;
 
-  return (
+  const hasStats = !!blueChipValue || !!greenChipValue || !!orangeChipValue;
+
+  return hasStats ? (
     <ActivityListItemWithStats
       blueChipValue={blueChipValue}
       color={color}
@@ -48,7 +47,19 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
       orangeChipValue={orangeChipValue}
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
-      statsLoading={targetsLoading}
+      //TODO: get actual data on if the stats are loading
+      statsLoading={false}
+      title={email.title || ''}
+    />
+  ) : (
+    <ActivityListItem
+      color={color}
+      endNumber={targets?.allTargets || 0}
+      href={`/organize/${orgId}/projects/${
+        email.campaign?.id ?? 'standalone'
+      }/emails/${emailId}`}
+      PrimaryIcon={EmailOutlined}
+      SecondaryIcon={Person}
       title={email.title || ''}
     />
   );
