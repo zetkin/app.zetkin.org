@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
-import { EditorProps } from './EmailEditorFrontend';
 import { FC } from 'react';
+
+import { EditorProps } from './EmailEditorFrontend';
 
 const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
   ssr: false,
