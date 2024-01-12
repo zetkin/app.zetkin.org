@@ -1,31 +1,28 @@
-import { EmailStats } from '../types';
+import { EmailTargets } from '../types';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useEmail from './useEmail';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { IFuture, LoadingFuture } from 'core/caching/futures';
-import { statsLoad, statsLoaded } from '../store';
+import { targetsLoad, targetsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function useEmailStats(
+export default function useEmailTargets(
   orgId: number,
   emailId: number
-): IFuture<EmailStats> {
+): IFuture<EmailTargets> {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
-
-  const emailSlice = useAppSelector((state) => state.emails);
+  const targetsById = useAppSelector((state) => state.emails.targetsById);
+  const targetsItem = targetsById[emailId];
   const { data: email } = useEmail(orgId, emailId);
 
   if (!email?.target.id) {
     return new LoadingFuture();
   }
 
-  const statsById = emailSlice.statsById;
-  const statsItem = statsById[emailId];
-
-  return loadItemIfNecessary(statsItem, dispatch, {
-    actionOnLoad: () => statsLoad(emailId),
-    actionOnSuccess: (data) => statsLoaded(data),
+  return loadItemIfNecessary(targetsItem, dispatch, {
+    actionOnLoad: () => targetsLoad(emailId),
+    actionOnSuccess: (data) => targetsLoaded(data),
     loader: async () => {
       const data = await apiClient.get<
         ZetkinSmartSearchFilterStats[] & { id: number }

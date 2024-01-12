@@ -1,4 +1,4 @@
-export interface EmailStats {
+export interface EmailTargets {
   allTargets: number;
   id: number;
 }

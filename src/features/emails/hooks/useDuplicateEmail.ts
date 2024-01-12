@@ -20,7 +20,7 @@ export default function useDuplicateEmail(
       orgId: orgId,
     });
     dispatch(emailUpdate([duplicatedEmail.id, ['target']]));
-    dispatch(emailCreated([duplicatedEmail, duplicatedEmail.campaign.id]));
+    dispatch(emailCreated(duplicatedEmail));
     dispatch(
       emailUpdated([
         {

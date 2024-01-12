@@ -6,10 +6,7 @@ interface UseCreateEmailReturn {
   createEmail: (body: ZetkinEmailPostBody) => Promise<ZetkinEmail>;
 }
 
-export default function useCreateEmail(
-  orgId: number,
-  campId: number
-): UseCreateEmailReturn {
+export default function useCreateEmail(orgId: number): UseCreateEmailReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
@@ -19,7 +16,7 @@ export default function useCreateEmail(
       `/api/orgs/${orgId}/emails`,
       body
     );
-    dispatch(emailCreated([email, campId]));
+    dispatch(emailCreated(email));
     return email;
   };
 

@@ -39,6 +39,7 @@ export default makeMessages('feat.campaigns', {
     filter: {
       calls: m('Call assignments'),
       canvasses: m('Canvass assignments'),
+      emails: m('Emails'),
       filter: m('Filter results'),
       standalones: m('Standalone events'),
       surveys: m('Surveys'),

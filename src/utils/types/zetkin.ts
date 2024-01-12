@@ -498,17 +498,17 @@ export type {
 };
 
 export interface ZetkinEmail {
-  campaign: { id: number; title: string };
+  campaign: { id: number; title: string } | null;
   id: number;
-  published: string;
-  subject: string;
+  published: string | null;
+  subject: string | null;
   organization: { id: number; title: string };
-  content: string;
-  title: string;
+  content: string | null;
+  title: string | null;
   target: ZetkinQuery;
 }
 export type ZetkinEmailPostBody = Partial<
   Omit<ZetkinEmail, 'id' | 'published' | 'organization' | 'target'>
 > & {
-  campaign_id: number;
+  campaign_id: number | null;
 };

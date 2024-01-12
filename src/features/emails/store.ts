@@ -1,4 +1,4 @@
-import { EmailStats } from './types';
+import { EmailTargets } from './types';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -10,12 +10,12 @@ import {
 
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
-  statsById: Record<number, RemoteItem<EmailStats>>;
+  targetsById: Record<number, RemoteItem<EmailTargets>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
-  statsById: {},
+  targetsById: {},
 };
 
 const emailsSlice = createSlice({
@@ -25,8 +25,8 @@ const emailsSlice = createSlice({
     emailCreate: (state) => {
       state.emailList.isLoading = true;
     },
-    emailCreated: (state, action: PayloadAction<[ZetkinEmail, number]>) => {
-      const [email] = action.payload;
+    emailCreated: (state, action: PayloadAction<ZetkinEmail>) => {
+      const email = action.payload;
       state.emailList.isLoading = false;
       state.emailList.items.push(remoteItem(email.id, { data: email }));
     },
@@ -63,7 +63,7 @@ const emailsSlice = createSlice({
     emailUpdated: (state, action: PayloadAction<[ZetkinEmail, string[]]>) => {
       const [email, mutating] = action.payload;
       const item = state.emailList.items.find((item) => item.id == email.id);
-      const statsItem = state.statsById[email.id];
+      const statsItem = state.targetsById[email.id];
       if (
         statsItem &&
         JSON.stringify(email.target.filter_spec) !=
@@ -85,16 +85,26 @@ const emailsSlice = createSlice({
         .filter((mail) => mail.id != email.id)
         .concat([remoteItem(email.id, { data: email })]);
     },
-    statsLoad: (state, action: PayloadAction<number>) => {
+    emailsLoad: (state) => {
+      state.emailList.isLoading = true;
+    },
+    emailsLoaded: (state, action: PayloadAction<ZetkinEmail[]>) => {
+      const emails = action.payload;
+      const timestamp = new Date().toISOString();
+      state.emailList = remoteList(emails);
+      state.emailList.loaded = timestamp;
+      state.emailList.items.forEach((item) => (item.loaded = timestamp));
+    },
+    targetsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const statsItem = state.statsById[id];
-      state.statsById[id] = remoteItem<EmailStats>(id, {
+      const statsItem = state.targetsById[id];
+      state.targetsById[id] = remoteItem<EmailTargets>(id, {
         data: statsItem?.data,
         isLoading: true,
       });
     },
-    statsLoaded: (state, action: PayloadAction<EmailStats>) => {
-      state.statsById[action.payload.id] = remoteItem<EmailStats>(
+    targetsLoaded: (state, action: PayloadAction<EmailTargets>) => {
+      state.targetsById[action.payload.id] = remoteItem<EmailTargets>(
         action.payload.id,
         {
           data: action.payload,
@@ -116,6 +126,8 @@ export const {
   emailLoaded,
   emailUpdate,
   emailUpdated,
-  statsLoad,
-  statsLoaded,
+  emailsLoad,
+  emailsLoaded,
+  targetsLoad,
+  targetsLoaded,
 } = emailsSlice.actions;

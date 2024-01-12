@@ -54,7 +54,7 @@ const CampaignActionButtons: React.FunctionComponent<
     campId
   );
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
-  const { createEmail } = useCreateEmail(orgId, campId);
+  const { createEmail } = useCreateEmail(orgId);
 
   const handleCreateEvent = () => {
     const defaultStart = new Date();
