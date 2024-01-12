@@ -107,7 +107,7 @@ listenerMiddleware.startListening({
   effect: (action) => {
     const email = action.payload;
     Router.push(
-      `/organize/${email.organization?.id}/projects/${
+      `/organize/${email.organization.id}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${email.id}`
     );
