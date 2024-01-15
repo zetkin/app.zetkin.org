@@ -1,11 +1,13 @@
-import LibraryImage from './tools/LibraryImage';
-import { useNumericRouteParams } from 'core/hooks';
 import EditorJS, {
   EditorConfig,
   OutputData,
   ToolConstructable,
 } from '@editorjs/editorjs';
 import { FC, useEffect, useRef } from 'react';
+
+import Button from './tools/Button';
+import LibraryImage from './tools/LibraryImage';
+import { useNumericRouteParams } from 'core/hooks';
 
 export type EditorProps = {
   initialContent: OutputData;
@@ -37,6 +39,9 @@ const EmailEditorFrontend: FC<EditorProps> = ({ initialContent, onSave }) => {
         saved();
       },
       tools: {
+        button: {
+          class: Button as unknown as ToolConstructable,
+        },
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
           config: {
