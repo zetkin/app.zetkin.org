@@ -136,7 +136,7 @@ export enum ImportPreviewProblemCode {
 
 type ImportPreviewProblem = {
   code: ImportPreviewProblemCode;
-  field: string;
+  field?: string;
   index: number;
   level: 'error' | 'warning';
 };
