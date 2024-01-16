@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { ALERT_STATUS } from '../components/ImportDialog/elements/ImportAlert';
 import { importResultAdd } from '../store';
 import messageIds from '../l10n/messageIds';
+import { predictProblems } from '../utils/problems/predictProblems';
 import prepareImportOperations from '../utils/prepareImportOperations';
+import problemsFromPreview from '../utils/problems/problemsFromPreview';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useFieldTitle from '../../../utils/hooks/useFieldTitle';
 import { useMessages } from 'core/i18n';
 import useOrganization from 'features/organizations/hooks/useOrganization';
@@ -43,21 +46,34 @@ export default function usePreflight(orgId: number) {
 
   const preflightSummary = previewData?.stats.person.summary;
 
-  const [approvedWarningAlerts, setApprovedWarningAlerts] = useState<number[]>(
-    []
-  );
   const [loading, setLoading] = useState(false);
   const tags = useTags(orgId).data ?? [];
   const organizations = useOrganizations().data ?? [];
   const getFieldTitle = useFieldTitle(orgId);
   const organization = useOrganization(orgId).data;
+  const { data: fields } = useCustomFields(orgId);
+  const [allWarningsApproved, setAllWarningsApproved] = useState(false);
 
   if (!organization) {
     return;
   }
 
+  if (!fields) {
+    return;
+  }
+
   if (!preflightSummary) {
     throw new Error('No preflight summary');
+  }
+
+  const problems = predictProblems(
+    sheet,
+    organization.country.toString() as CountryCode,
+    fields
+  );
+
+  if (problems.length == 0) {
+    problems.push(...problemsFromPreview(previewData));
   }
 
   const { addedToOrg, tagged } = preflightSummary;
@@ -148,30 +164,13 @@ export default function usePreflight(orgId: number) {
     });
   }
 
-  const warningAlerts = alerts.filter(
-    (alert) => alert.status == ALERT_STATUS.WARNING
-  );
   const hasError =
     alerts.filter((item) => item.status == ALERT_STATUS.ERROR).length > 0;
-  const allWarningsApproved =
-    warningAlerts.length == approvedWarningAlerts.length;
   const hasSuccessMessage =
     alerts.filter((item) => item.status == ALERT_STATUS.INFO).length > 0;
 
   const importDisabled =
     (!allWarningsApproved || hasError) && !hasSuccessMessage;
-
-  const onCheckAlert = (index: number) => {
-    if (!approvedWarningAlerts.includes(index)) {
-      const updatedAlerts = [...approvedWarningAlerts, index];
-      setApprovedWarningAlerts(updatedAlerts);
-    } else {
-      const filteredAlerts = approvedWarningAlerts.filter(
-        (item) => item !== index
-      );
-      setApprovedWarningAlerts(filteredAlerts);
-    }
-  };
 
   let statusMessage = '';
 
@@ -226,8 +225,11 @@ export default function usePreflight(orgId: number) {
     importDisabled,
     importPeople,
     loading,
-    onCheckAlert,
+    onAllChecked: (allChecked: boolean) => {
+      setAllWarningsApproved(allChecked);
+    },
     orgsWithNewPeople,
+    problems,
     statusMessage,
     summary: preflightSummary,
   };

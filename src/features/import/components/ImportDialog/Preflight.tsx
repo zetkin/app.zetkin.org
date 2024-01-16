@@ -11,9 +11,9 @@ import AddedOrgs from './elements/AddedOrgs';
 import AddedTags from './elements/AddedTags';
 import ChangedFields from './elements/ChangedFields';
 import CreatedAndUpdated from './elements/CreatedAndUpdated';
-import ImportAlert from './elements/ImportAlert';
 import ImportFooter from './elements/ImportFooter';
 import ImportHeader from './elements/ImportHeader';
+import ImportMessageList from './elements/ImportMessageList';
 import { ImportStep } from '.';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
@@ -46,11 +46,11 @@ const Preflight: FC<PreflightProps> = ({
   const {
     orgsWithNewPeople,
     addedTags,
-    alerts,
     importDisabled,
     importPeople,
     loading,
-    onCheckAlert,
+    onAllChecked,
+    problems,
     statusMessage,
     summary,
   } = preflightData;
@@ -116,16 +116,11 @@ const Preflight: FC<PreflightProps> = ({
                 <Msg id={messageIds.validation.messages} />
               </Typography>
               <Box display="flex" flexDirection="column">
-                <Stack spacing={2}>
-                  {alerts.map((alert, index) => (
-                    <ImportAlert
-                      key={`alert-${index}`}
-                      alert={alert}
-                      onCheck={() => onCheckAlert(index)}
-                      onClickBack={onClickBack}
-                    />
-                  ))}
-                </Stack>
+                <ImportMessageList
+                  onAllChecked={onAllChecked}
+                  onClickBack={onClickBack}
+                  problems={problems}
+                />
               </Box>
             </Box>
           </Box>
