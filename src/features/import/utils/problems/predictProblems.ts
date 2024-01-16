@@ -74,7 +74,13 @@ export function predictProblems(
     customFieldsBySlug[field.slug] = field;
   });
 
-  sheet.rows.forEach((row, rowIndex) => {
+  sheet.rows.forEach((row, index) => {
+    const rowIndex = sheet.firstRowIsHeaders ? index - 1 : index;
+    if (rowIndex < 0) {
+      // Skip first row when first row is headers
+      return;
+    }
+
     let rowHasId = false;
     let rowHasFirstName = false;
     let rowHasLastName = false;

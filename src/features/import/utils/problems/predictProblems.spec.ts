@@ -104,6 +104,41 @@ describe('predictProblem()', () => {
     expect(problems).toEqual([]);
   });
 
+  it('ignores first row when header', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'email',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: true,
+      rows: [
+        // First row is headers and would be invalid if validated
+        { data: ['ID', 'EMAIL'] },
+        // Second and third rows are data that should be validated
+        { data: [1, 'clara@example.com'] },
+        { data: [2, 'invalid email'] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        field: 'email',
+        // Index should be 1 (not 2), because first first row is ignored
+        indices: [1],
+        kind: ImportProblemKind.INVALID_FORMAT,
+      },
+    ]);
+  });
+
   it('correctly validates format for email, phone, date and url', () => {
     const sheet = makeFullSheet({
       columns: [
@@ -153,6 +188,10 @@ describe('predictProblem()', () => {
         // Invalid values
         {
           data: [1, 'clara at example.com', '1234', 'abc123', '15/1', 'zetkin'],
+        },
+        // Empty values should be ignored by validation
+        {
+          data: [3, '', '', '', '', ''],
         },
       ],
     });
