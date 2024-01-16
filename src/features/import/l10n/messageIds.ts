@@ -179,6 +179,28 @@ export default makeMessages('feat.import', {
       ),
     },
   },
+  preflight: {
+    messages: {
+      common: {
+        fewRows: m<{ commaRows: string; lastRow: number }>(
+          'This problem exists on rows {commaRows} and {lastRow}'
+        ),
+        manyRows: m<{ additionalRows: number; commaRows: string }>(
+          'This problem exists on rows {commaRows} and {additionalRows} additional rows'
+        ),
+        singleRow: m<{ row: number }>('This problem exists on row {row}'),
+      },
+      invalidFormat: {
+        title: m<{ field: string }>('Wrong format for field: {field}'),
+      },
+      majorChange: {
+        description: m('Make sure you have configured the columns correctly'),
+        title: m<{ field: string }>(
+          "This import will overwrite lots of people's {field}"
+        ),
+      },
+    },
+  },
   steps: {
     configure: m('Configure'),
     import: m('Import'),
