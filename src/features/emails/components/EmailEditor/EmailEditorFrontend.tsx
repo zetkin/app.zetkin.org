@@ -1,20 +1,30 @@
 import EditorJS, {
+  BlockAPI,
   EditorConfig,
   OutputData,
   ToolConstructable,
 } from '@editorjs/editorjs';
-import { FC, useEffect, useRef } from 'react';
+import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
 import LibraryImage from './tools/LibraryImage';
 import { useNumericRouteParams } from 'core/hooks';
 
-export type EditorProps = {
+export type EmailEditorFrontendProps = {
+  apiRef: MutableRefObject<EditorJS | null>;
   initialContent: OutputData;
-  onSave?: (data: OutputData) => void;
+  onChange: () => void;
+  onSave: (data: OutputData) => void;
+  onSelectBlock: (selectedBlock: BlockAPI) => void;
 };
 
-const EmailEditorFrontend: FC<EditorProps> = ({ initialContent, onSave }) => {
+const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
+  apiRef,
+  initialContent,
+  onChange,
+  onSave,
+  onSelectBlock,
+}) => {
   const { orgId } = useNumericRouteParams();
   const editorInstance = useRef<EditorJS | null>(null);
 
@@ -36,6 +46,7 @@ const EmailEditorFrontend: FC<EditorProps> = ({ initialContent, onSave }) => {
       holder: 'ClientOnlyEditor-container',
       inlineToolbar: ['bold', 'link', 'italic'],
       onChange: () => {
+        onChange();
         saved();
       },
       tools: {
@@ -54,11 +65,43 @@ const EmailEditorFrontend: FC<EditorProps> = ({ initialContent, onSave }) => {
     // Create the EditorJS instance
     editorInstance.current = new EditorJS(editorConfig);
 
+    const setEditorJSApiRef = async () => {
+      await editorInstance.current?.isReady;
+      apiRef.current = editorInstance.current;
+    };
+
+    setEditorJSApiRef();
+
     return () => {
       // Cleanup when the component is unmounted
       if (editorInstance.current) {
-        editorInstance.current.destroy();
+        try {
+          editorInstance.current.destroy();
+        } catch (error) {
+          //TODO: handle error
+        }
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      await editorInstance.current?.isReady;
+
+      const currentBlockIndex =
+        editorInstance.current?.blocks.getCurrentBlockIndex();
+
+      if (typeof currentBlockIndex == 'number' && currentBlockIndex >= 0) {
+        const currentBlock =
+          apiRef.current?.blocks.getBlockByIndex(currentBlockIndex);
+
+        if (currentBlock) {
+          onSelectBlock(currentBlock);
+        }
+      }
+    }, 200);
+    return () => {
+      clearInterval(timer);
     };
   }, []);
 
