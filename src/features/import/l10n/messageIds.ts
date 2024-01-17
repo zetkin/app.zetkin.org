@@ -186,6 +186,8 @@ export default makeMessages('feat.import', {
     },
     messages: {
       common: {
+        back: m('Go back'),
+        checkbox: m('I understand and want to proceed anyway'),
         fewRows: m<{ commaRows: string; lastRow: number }>(
           'This problem exists on rows {commaRows} and {lastRow}.'
         ),
@@ -266,140 +268,6 @@ export default makeMessages('feat.import', {
     unsupportedFile: m('Unsupported file format.'),
   },
   validation: {
-    alerts: {
-      back: m('Go back'),
-      checkbox: m('I understand and want to proceed anyway'),
-      errors: {
-        altPhone: {
-          description: m(
-            'Some of the values in the alternate phone number column are not valid phone numbers.'
-          ),
-          title: m('Invalid alternate phone number formats'),
-        },
-        date: {
-          description: m(
-            'Some of the values in a date column are not valid dates.'
-          ),
-          title: m('Invalid date formats'),
-        },
-        email: {
-          description: m(
-            'Some of the values in your email column are not valid email addresses.'
-          ),
-          title: m('Invalid email address formats'),
-        },
-        empty: {
-          description: m(
-            'This import would not update or import anything so you can not proceed. Please go back and check that the configurations you made are correct or select a new file to upload.'
-          ),
-          title: m('This import would not change anything'),
-        },
-        gender: {
-          description: m(
-            'Some of the values in the gender column are incompatible with Zetkin gender formats. The values need to be either one of the letters f, m or o, or an empty cell.'
-          ),
-          title: m('Invalid gender formats'),
-        },
-        id: {
-          description: m(
-            'Some of the values in the Zetkin ID column are not numbers. Zetkin IDs are always only numbers.'
-          ),
-          title: m('Zetkin IDs are not in correct format'),
-        },
-        idValueMissing: {
-          description: m(
-            'Some of the values in the Zetkin ID column are empty.'
-          ),
-          title: m('Missing Zetkin IDs'),
-        },
-        longCoAddress: {
-          description: m(
-            'Some values in the C/O Address column are too long, please check that they are no longer than 200 characters.'
-          ),
-          title: m('Too long values in C/O Address column'),
-        },
-        longCountry: {
-          description: m(
-            'Some values in the Country column are too long, please check that they are no longer than 60 characters.'
-          ),
-          title: m('Too long values in Country column'),
-        },
-        longExtId: {
-          description: m(
-            'Some values in the external ID column are too long, please check that they are no longer than 96 characters.'
-          ),
-          title: m('Too long values in external ID column'),
-        },
-        longFirstName: {
-          description: m(
-            'Some values in the First Name column are too long, please check that they are no longer than 50 characters.'
-          ),
-          title: m('Too long values in First Name column'),
-        },
-        longLastName: {
-          description: m(
-            'Some values in the Last Name column are too long, please check that they are no longer than 50 characters.'
-          ),
-          title: m('Too long values in Last Name column'),
-        },
-        longStreetAddress: {
-          description: m(
-            'Some values in the Street Address column are too long, please check that they are no longer than 200 characters.'
-          ),
-          title: m('Too long values in Street Address column'),
-        },
-        noIdentifier: {
-          description: m(
-            'To make it possible to import you need to select either both first and last name columns, or an ID column'
-          ),
-          title: m('There is nothing to identify the data you want to import'),
-        },
-        notSelectedIdType: {
-          description: m(
-            'You need to select if your ID column is Zetkin IDs or external IDs.'
-          ),
-          title: m('Unfinished ID configuration'),
-        },
-        phone: {
-          description: m(
-            'Some of the values in the phone number column are not valid phone numbers.'
-          ),
-          title: m('Invalid phone number formats'),
-        },
-        postCode: {
-          description: m(
-            'Some of the values in the post code column are not valid post codes.'
-          ),
-          title: m('Invalid post code formats'),
-        },
-        url: {
-          description: m(
-            'Some of the values in the URL column are not valid URLS'
-          ),
-          title: m('Invalid URL formats'),
-        },
-      },
-      info: {
-        desc: m('The data you want to upload looks good!'),
-        title: m('Ready for import'),
-      },
-      warning: {
-        manyChanges: {
-          desc: m(
-            'If this is not intentional you should go back and check the configuration.'
-          ),
-          title: m<{ fieldName: string }>(
-            "This import will overwrite a lot of people's {fieldName}"
-          ),
-        },
-        unselectedId: {
-          desc: m(
-            'This will create new records for every person, even if that results in duplicates, and can make updating people in Zetkin difficult. This is not recommended.'
-          ),
-          title: m('You have not chosen an ID column'),
-        },
-      },
-    },
     messages: m('Messages'),
     pendingChanges: m('Pending changes'),
     people: m<{ numPeople: number }>(

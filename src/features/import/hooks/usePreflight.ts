@@ -1,7 +1,6 @@
 import { CountryCode } from 'libphonenumber-js';
 import { useState } from 'react';
 
-import { ALERT_STATUS } from '../components/ImportDialog/elements/ImportAlert';
 import { importResultAdd } from '../store';
 import { levelForProblem } from '../utils/problems';
 import messageIds from '../l10n/messageIds';
@@ -13,12 +12,6 @@ import { useMessages } from 'core/i18n';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import { PersonImport, ZetkinPersonImportPostBody } from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-
-export interface Alert {
-  msg: string;
-  status: ALERT_STATUS;
-  title: string;
-}
 
 export default function usePreflight(orgId: number) {
   const apiClient = useApiClient();

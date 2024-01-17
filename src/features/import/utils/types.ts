@@ -68,27 +68,6 @@ export type Column =
   | TagColumn
   | OrgColumn;
 
-export const enum IMPORT_ERROR {
-  ALT_PHONE = 'altPhone',
-  DATE = 'date',
-  EMAIL = 'email',
-  GENDER = 'gender',
-  ID_MISSING = 'idMissing',
-  ID = 'id',
-  ID_VALUE_MISSING = 'idValueMissing',
-  LONG_CO_ADDRESS = 'longCoAddress',
-  LONG_COUNTRY = 'longCountry',
-  LONG_EXT_ID = 'longExtId',
-  LONG_FIRST_NAME = 'longFirstName',
-  LONG_LAST_NAME = 'longLastName',
-  LONG_STREET_ADDRESS = 'longStreetAddress',
-  NO_IDENTIFIER = 'noIdentifier',
-  NOT_SELECTED_ID_TYPE = 'notSelectedIdType',
-  PHONE = 'phone',
-  POST_CODE = 'postCode',
-  URL = 'url',
-}
-
 export interface ZetkinPersonImportPostBody {
   ops: ZetkinPersonImportOp[];
 }

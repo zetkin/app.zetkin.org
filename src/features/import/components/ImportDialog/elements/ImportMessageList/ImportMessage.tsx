@@ -45,7 +45,7 @@ const ImportMessage: FC<Props> = ({
             sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}
             variant="text"
           >
-            {messages.validation.alerts.back()}
+            {messages.preflight.messages.common.back()}
           </Button>
         )
       }
@@ -68,7 +68,7 @@ const ImportMessage: FC<Props> = ({
             control={
               <Checkbox onChange={(ev) => onCheck?.(ev.target.checked)} />
             }
-            label={messages.validation.alerts.checkbox()}
+            label={messages.preflight.messages.common.checkbox()}
             sx={{ marginLeft: 0.5, marginTop: 1 }}
           />
         )}
