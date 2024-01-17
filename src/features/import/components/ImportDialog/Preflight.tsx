@@ -117,6 +117,8 @@ const Preflight: FC<PreflightProps> = ({
               </Typography>
               <Box display="flex" flexDirection="column">
                 <ImportMessageList
+                  defaultDescription={messages.preflight.messages.ok.description()}
+                  defaultTitle={messages.preflight.messages.ok.title()}
                   onAllChecked={onAllChecked}
                   onClickBack={onClickBack}
                   problems={problems}

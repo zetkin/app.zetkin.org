@@ -211,6 +211,12 @@ export default makeMessages('feat.import', {
         ),
         title: m('This import would have no effect'),
       },
+      ok: {
+        description: m(
+          'Make sure the summary looks good and click "Import" to perform the import.'
+        ),
+        title: m('No problems found!'),
+      },
       unconfiguredId: {
         description: m(
           'This will result in duplicates in the database. If this is your first import, it is recommended to go back and choose an external ID that you can use going forward.'
