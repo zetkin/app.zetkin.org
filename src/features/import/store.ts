@@ -1,6 +1,5 @@
 import {
   Column,
-  IMPORT_ERROR,
   ImportedFile,
   ImportPreview,
   PersonImport,
@@ -9,13 +8,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
   importResult: PersonImport | null;
-  importErrors: IMPORT_ERROR[];
   preflightSummary: ImportPreview | null;
   pendingFile: ImportedFile;
 }
 
 const initialState: ImportStoreSlice = {
-  importErrors: [],
   importResult: null,
   pendingFile: {
     selectedSheetIndex: 0,
@@ -38,9 +35,6 @@ const importSlice = createSlice({
       const sheetIndex = state.pendingFile.selectedSheetIndex;
       state.pendingFile.sheets[sheetIndex].columns[index] = newColumn;
     },
-    importErrorsAdd: (state, action: PayloadAction<IMPORT_ERROR[]>) => {
-      state.importErrors = action.payload;
-    },
     importPreviewAdd: (state, action: PayloadAction<ImportPreview>) => {
       state.preflightSummary = action.payload;
     },
@@ -61,7 +55,6 @@ export default importSlice;
 export const {
   addFile,
   columnUpdate,
-  importErrorsAdd,
   importPreviewAdd,
   importResultAdd,
   setFirstRowIsHeaders,
