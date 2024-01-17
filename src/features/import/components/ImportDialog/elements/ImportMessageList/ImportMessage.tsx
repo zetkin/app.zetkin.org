@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  Typography,
 } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
@@ -50,8 +51,16 @@ const ImportMessage: FC<Props> = ({
     >
       <AlertTitle>{title}</AlertTitle>
       <Box display="flex" flexDirection="column">
-        {description}
-        {!!rows?.length && <ProblemRowsText rows={rows} />}
+        {!!description && (
+          <Typography mb={1} variant="body2">
+            {description}
+          </Typography>
+        )}
+        {!!rows?.length && (
+          <Typography variant="body2">
+            <ProblemRowsText rows={rows} />
+          </Typography>
+        )}
         {status === 'warning' && (
           <FormControlLabel
             control={

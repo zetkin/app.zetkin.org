@@ -183,12 +183,12 @@ export default makeMessages('feat.import', {
     messages: {
       common: {
         fewRows: m<{ commaRows: string; lastRow: number }>(
-          'This problem exists on rows {commaRows} and {lastRow}'
+          'This problem exists on rows {commaRows} and {lastRow}.'
         ),
         manyRows: m<{ additionalRows: number; commaRows: string }>(
-          'This problem exists on rows {commaRows} and {additionalRows} additional rows'
+          'This problem exists on rows {commaRows} and {additionalRows} additional rows.'
         ),
-        singleRow: m<{ row: number }>('This problem exists on row {row}'),
+        singleRow: m<{ row: number }>('This problem exists on row {row}.'),
       },
       invalidFormat: {
         title: m<{ field: string }>('Wrong format for field: {field}'),
