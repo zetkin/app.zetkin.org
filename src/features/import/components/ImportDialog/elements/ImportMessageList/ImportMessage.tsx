@@ -18,7 +18,7 @@ type Props = {
   onCheck?: (checked: boolean) => void;
   onClickBack?: () => void;
   rowIndices?: number[];
-  status: 'error' | 'info' | 'warning';
+  status: 'error' | 'info' | 'success' | 'warning';
   title: string;
 };
 

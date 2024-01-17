@@ -51,7 +51,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
               <ImportMessage
                 description={messages.importStatus.completed.desc()}
                 onClickBack={onClickBack}
-                status="error"
+                status="success"
                 title={messages.importStatus.completed.title()}
               />
             )}
@@ -59,7 +59,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
               <ImportMessage
                 description={messages.importStatus.scheduled.desc()}
                 onClickBack={onClickBack}
-                status="error"
+                status="info"
                 title={messages.importStatus.scheduled.title()}
               />
             )}
