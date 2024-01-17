@@ -26,7 +26,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
       <ImportMessage
         onCheck={onCheck}
         onClickBack={onClickBack}
-        rows={problem.indices}
+        rowIndices={problem.indices}
         status="error"
         title={messages.preflight.messages.invalidFormat.title({
           field: getFieldTitle(problem.field),

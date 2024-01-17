@@ -17,7 +17,7 @@ type Props = {
   description?: string;
   onCheck?: (checked: boolean) => void;
   onClickBack?: () => void;
-  rows?: number[];
+  rowIndices?: number[];
   status: 'error' | 'warning';
   title: string;
 };
@@ -26,11 +26,13 @@ const ImportMessage: FC<Props> = ({
   description,
   onCheck,
   onClickBack,
-  rows,
+  rowIndices,
   status,
   title,
 }) => {
   const messages = useMessages(messageIds);
+
+  const rowNumbers = rowIndices?.map((rowIndex) => rowIndex + 1);
 
   return (
     <Alert
@@ -56,9 +58,9 @@ const ImportMessage: FC<Props> = ({
             {description}
           </Typography>
         )}
-        {!!rows?.length && (
+        {!!rowNumbers?.length && (
           <Typography variant="body2">
-            <ProblemRowsText rows={rows} />
+            <ProblemRowsText rows={rowNumbers} />
           </Typography>
         )}
         {status === 'warning' && (
