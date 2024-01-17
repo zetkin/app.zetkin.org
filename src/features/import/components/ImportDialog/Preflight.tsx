@@ -90,6 +90,9 @@ const Preflight: FC<PreflightProps> = ({
               sx={{ overflowY: 'auto' }}
               width="50%"
             >
+              <Typography sx={{ mb: 2 }} variant="h5">
+                <Msg id={messageIds.preflight.headers.summary} />
+              </Typography>
               <CreatedAndUpdated summary={summary} />
               <Stack spacing={2} sx={{ mt: 2 }}>
                 <ChangedFields
@@ -113,7 +116,7 @@ const Preflight: FC<PreflightProps> = ({
             </Box>
             <Box ml={2} sx={{ overflowY: 'auto' }} width="50%">
               <Typography sx={{ mb: 2 }} variant="h5">
-                <Msg id={messageIds.validation.messages} />
+                <Msg id={messageIds.preflight.headers.messages} />
               </Typography>
               <Box display="flex" flexDirection="column">
                 <ImportMessageList

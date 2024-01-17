@@ -180,6 +180,10 @@ export default makeMessages('feat.import', {
     },
   },
   preflight: {
+    headers: {
+      messages: m('Messages'),
+      summary: m('Summary'),
+    },
     messages: {
       common: {
         fewRows: m<{ commaRows: string; lastRow: number }>(
