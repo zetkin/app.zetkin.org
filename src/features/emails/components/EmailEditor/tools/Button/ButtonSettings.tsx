@@ -16,11 +16,11 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
   return (
     <Box>
       <TextField
+        defaultValue={url || ''}
         label={messages.tools.button.settings.urlLabel()}
         onChange={(ev) => {
           onChange(ev.target.value);
         }}
-        value={url || ''}
       />
     </Box>
   );

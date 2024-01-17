@@ -41,6 +41,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
         <Typography>Settings</Typography>
         {currentBlock && currentBlock.type === 'button' && (
           <ButtonSettings
+            key={currentBlock.id}
             onChange={(newUrl: ButtonData['url']) => {
               if (currentBlock.id) {
                 apiRef.current?.blocks.update(currentBlock.id, {

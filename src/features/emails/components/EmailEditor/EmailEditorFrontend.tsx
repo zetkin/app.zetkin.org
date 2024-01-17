@@ -26,6 +26,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const editorInstance = useRef<EditorJS | null>(null);
+  const blockIndexRef = useRef<number | null>(null);
 
   const saved = async () => {
     try {
@@ -89,7 +90,12 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
 
       const currentBlockIndex =
         editorInstance.current?.blocks.getCurrentBlockIndex();
-      if (typeof currentBlockIndex == 'number' && currentBlockIndex >= 0) {
+      if (
+        typeof currentBlockIndex == 'number' &&
+        currentBlockIndex >= 0 &&
+        currentBlockIndex !== blockIndexRef.current
+      ) {
+        blockIndexRef.current = currentBlockIndex;
         onSelectBlock(currentBlockIndex);
       }
     }, 200);
