@@ -3,10 +3,8 @@ import { FC, useEffect, useState } from 'react';
 
 import ImportMessage from './ImportMessage';
 import ImportMessageItem from './ImportMessageItem';
-import {
-  ImportProblem,
-  ImportProblemKind,
-} from 'features/import/utils/problems/types';
+import { ImportProblem } from 'features/import/utils/problems/types';
+import { levelForProblem } from 'features/import/utils/problems';
 
 type Props = {
   defaultDescription?: string;
@@ -15,11 +13,6 @@ type Props = {
   onClickBack: () => void;
   problems: ImportProblem[];
 };
-
-const WARNING_KINDS: ImportProblemKind[] = [
-  ImportProblemKind.MAJOR_CHANGE,
-  ImportProblemKind.UNCONFIGURED_ID,
-];
 
 const ImportMessageList: FC<Props> = ({
   defaultDescription,
@@ -31,8 +24,8 @@ const ImportMessageList: FC<Props> = ({
   const [numChecked, setNumChecked] = useState(0);
 
   useEffect(() => {
-    const warningCount = problems.filter((problem) =>
-      WARNING_KINDS.includes(problem.kind)
+    const warningCount = problems.filter(
+      (problem) => levelForProblem(problem) == 'warning'
     ).length;
 
     onAllChecked(numChecked == warningCount);
