@@ -3,11 +3,10 @@ import { Box, Typography } from '@mui/material';
 import ImpactSummary from './elements/ImpactSummary';
 import ImportFooter from './elements/ImportFooter';
 import ImportHeader from './elements/ImportHeader';
+import ImportMessage from './elements/ImportMessageList/ImportMessage';
 import messageIds from 'features/import/l10n/messageIds';
-import { useNumericRouteParams } from 'core/hooks';
-import useStatusReport from '../../hooks/useStatusReport';
-import ImportAlert, { ALERT_STATUS } from './elements/ImportAlert';
 import { Msg, useMessages } from 'core/i18n';
+import { useAppSelector, useNumericRouteParams } from 'core/hooks';
 
 interface StatusReportProps {
   onClickBack: () => void;
@@ -18,14 +17,21 @@ interface StatusReportProps {
 const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { alert, summary } = useStatusReport();
-  const fullHeight = alert.status != ALERT_STATUS.INFO;
+
+  const result = useAppSelector((state) => state.import.importResult);
+  if (!result) {
+    // Should never happen
+    return null;
+  }
+
+  const summary = result.report.person.summary;
+  const isScheduled = result.status == 'pending';
 
   return (
     <Box
       display="flex"
       flexDirection="column"
-      height={fullHeight ? '90vh' : ''}
+      height={isScheduled ? '90vh' : ''}
       justifyContent="space-between"
       overflow="hidden"
     >
@@ -33,9 +39,32 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
         <ImportHeader onClose={onClose} />
         <Box display="flex" flexDirection="column" sx={{ overflowY: 'auto' }}>
           <Box paddingY={2}>
-            <ImportAlert alert={alert} onClickBack={onClickBack} />
+            {result.status == 'error' && (
+              <ImportMessage
+                description={messages.importStatus.error.desc()}
+                onClickBack={onClickBack}
+                status="error"
+                title={messages.importStatus.error.title()}
+              />
+            )}
+            {result.status == 'completed' && (
+              <ImportMessage
+                description={messages.importStatus.completed.desc()}
+                onClickBack={onClickBack}
+                status="error"
+                title={messages.importStatus.completed.title()}
+              />
+            )}
+            {result.status == 'pending' && (
+              <ImportMessage
+                description={messages.importStatus.scheduled.desc()}
+                onClickBack={onClickBack}
+                status="error"
+                title={messages.importStatus.scheduled.title()}
+              />
+            )}
           </Box>
-          {alert.status !== ALERT_STATUS.INFO && (
+          {!isScheduled && (
             <>
               <Typography paddingBottom={2} variant="h5">
                 <Msg id={messageIds.importStatus.completedChanges} />
@@ -50,14 +79,12 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
         onClickSecondary={onClickBack}
         primaryButtonDisabled={false}
         primaryButtonMsg={
-          alert.status == ALERT_STATUS.INFO
+          isScheduled
             ? messages.actionButtons.close()
             : messages.actionButtons.done()
         }
         secondaryButtonMsg={
-          alert.status == ALERT_STATUS.ERROR
-            ? messages.actionButtons.back()
-            : undefined
+          result.status == 'error' ? messages.actionButtons.back() : undefined
         }
       />
     </Box>
