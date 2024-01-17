@@ -1,5 +1,4 @@
 import EditorJS, {
-  BlockAPI,
   EditorConfig,
   OutputData,
   ToolConstructable,
@@ -13,9 +12,9 @@ import { useNumericRouteParams } from 'core/hooks';
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
   initialContent: OutputData;
-  onChange: () => void;
+  onChange: (data: OutputData) => void;
   onSave: (data: OutputData) => void;
-  onSelectBlock: (selectedBlock: BlockAPI) => void;
+  onSelectBlock: (selectedBlockIndex: number) => void;
 };
 
 const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
@@ -32,6 +31,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     try {
       const savedData = await editorInstance.current?.save();
       if (savedData && onSave) {
+        onChange(savedData);
         onSave(savedData);
       }
     } catch (error) {
@@ -46,7 +46,6 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       holder: 'ClientOnlyEditor-container',
       inlineToolbar: ['bold', 'link', 'italic'],
       onChange: () => {
-        onChange();
         saved();
       },
       tools: {
@@ -90,14 +89,8 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
 
       const currentBlockIndex =
         editorInstance.current?.blocks.getCurrentBlockIndex();
-
       if (typeof currentBlockIndex == 'number' && currentBlockIndex >= 0) {
-        const currentBlock =
-          apiRef.current?.blocks.getBlockByIndex(currentBlockIndex);
-
-        if (currentBlock) {
-          onSelectBlock(currentBlock);
-        }
+        onSelectBlock(currentBlockIndex);
       }
     }, 200);
     return () => {

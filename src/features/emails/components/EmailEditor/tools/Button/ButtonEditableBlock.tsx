@@ -1,7 +1,13 @@
 import { FC } from 'react';
 import { Box, useTheme } from '@mui/material';
 
-const ButtonEditableBlock: FC = () => {
+import { ButtonData } from '.';
+
+interface ButtonEditableBlockProps {
+  data: ButtonData;
+}
+
+const ButtonEditableBlock: FC<ButtonEditableBlockProps> = ({ data }) => {
   const theme = useTheme();
   return (
     <Box display="flex" justifyContent="center" padding={2}>
@@ -15,7 +21,7 @@ const ButtonEditableBlock: FC = () => {
         sx={{ cursor: 'pointer' }}
         width="5rem"
       >
-        Button
+        {data.buttonText || 'Button'}
       </Box>
     </Box>
   );

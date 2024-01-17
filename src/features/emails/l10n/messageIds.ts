@@ -55,6 +55,14 @@ export default makeMessages('feat.emails', {
     title: m('Targets'),
     viewButton: m('View target group'),
   },
+  tools: {
+    button: {
+      settings: {
+        buttonTextLabel: m('Button text'),
+        urlLabel: m('Link url'),
+      },
+    },
+  },
   wasSent: m<{ time: string }>('Was sent at {time}'),
   willSend: m<{ time: string }>('Will send at {time}'),
 });

@@ -1,7 +1,10 @@
 import dynamic from 'next/dynamic';
 import { Box, Typography } from '@mui/material';
-import EditorJS, { BlockAPI, OutputData } from '@editorjs/editorjs';
+import EditorJS, { OutputData } from '@editorjs/editorjs';
 import { FC, useRef, useState } from 'react';
+
+import { ButtonData } from './tools/Button';
+import ButtonSettings from './tools/Button/ButtonSettings';
 
 const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
   ssr: false,
@@ -14,7 +17,10 @@ interface EmailEditorProps {
 
 const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
   const apiRef = useRef<EditorJS | null>(null);
-  const [currentBlock, setCurrentBlock] = useState<BlockAPI | null>(null);
+  const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
+  const [content, setContent] = useState<OutputData>(initialContent);
+
+  const currentBlock = content.blocks[selectedBlockIndex];
 
   return (
     <Box display="flex">
@@ -22,20 +28,30 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
         <EmailEditorFrontend
           apiRef={apiRef}
           initialContent={initialContent}
-          onChange={() => {
-            //TODO: logic here
+          onChange={(newContent: OutputData) => {
+            setContent(newContent);
           }}
           onSave={onSave}
-          onSelectBlock={(selectedBlock: BlockAPI) => {
-            if (!currentBlock || currentBlock.id !== selectedBlock.id) {
-              setCurrentBlock(selectedBlock);
-            }
+          onSelectBlock={(selectedBlockIndex: number) => {
+            setSelectedBlockIndex(selectedBlockIndex);
           }}
         />
       </Box>
       <Box padding={2} width="25%">
         <Typography>Settings</Typography>
-        {currentBlock && <Typography>{currentBlock.name}</Typography>}
+        {currentBlock && currentBlock.type === 'button' && (
+          <ButtonSettings
+            onChange={(newUrl: ButtonData['url']) => {
+              if (currentBlock.id) {
+                apiRef.current?.blocks.update(currentBlock.id, {
+                  ...currentBlock.data,
+                  url: newUrl,
+                });
+              }
+            }}
+            url={currentBlock.data.url}
+          />
+        )}
       </Box>
     </Box>
   );
