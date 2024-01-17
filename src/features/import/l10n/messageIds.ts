@@ -199,6 +199,42 @@ export default makeMessages('feat.import', {
           "This import will overwrite lots of people's {field}"
         ),
       },
+      missingIdAndName: {
+        description: m(
+          'Every row needs to contain at least a full name, or an ID of a person that already exists in Zetkin.'
+        ),
+        title: m('Not all rows have identifiers'),
+      },
+      noImpact: {
+        description: m(
+          'This could be because the file contains no new data, or due to an unknown error.'
+        ),
+        title: m('This import would have no effect'),
+      },
+      unconfiguredId: {
+        description: m(
+          'This will result in duplicates in the database. If this is your first import, it is recommended to go back and choose an external ID that you can use going forward.'
+        ),
+        title: m('You have not chosen an ID column'),
+      },
+      unconfiguredIdAndName: {
+        description: m(
+          'Every import must at least include either full names, or IDs of people that already exist in Zetkin.'
+        ),
+        title: m('You have not configured identifying columns'),
+      },
+      unknownError: {
+        description: m(
+          'Contact support if you need help understanding the problem.'
+        ),
+        title: m('An unknown error ocurred'),
+      },
+      unknownPerson: {
+        description: m(
+          `You configured a column as Zetkin IDs, but the column contains IDs that don't exist. Did you mean to use External ID, or could some people have been deleted since the file was created?`
+        ),
+        title: m('Trying to update records that do not exist'),
+      },
     },
   },
   steps: {
@@ -222,7 +258,7 @@ export default makeMessages('feat.import', {
   validation: {
     alerts: {
       back: m('Go back'),
-      checkbox: m('I understand'),
+      checkbox: m('I understand and want to proceed anyway'),
       errors: {
         altPhone: {
           description: m(
@@ -366,7 +402,7 @@ export default makeMessages('feat.import', {
       createAndUpdate: m<{ numCreated: number; numUpdated: number }>(
         'This import will create {numCreated, plural, =1 {1 person} other {# people}} and update {numUpdated, plural, =1 {1 person} other {# people}}.'
       ),
-      error: m('This import will error.'),
+      error: m('You have to fix the errors before you can import'),
       update: m<{ numUpdated: number }>(
         'This import will update {numUpdated, plural, =1 {1 person} other {# people}}.'
       ),

@@ -45,13 +45,76 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         })}
       />
     );
+  } else if (problem.kind == ImportProblemKind.MISSING_ID_AND_NAME) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.missingIdAndName.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        rowIndices={problem.indices}
+        status="error"
+        title={messages.preflight.messages.missingIdAndName.title()}
+      />
+    );
+  } else if (problem.kind == ImportProblemKind.NO_IMPACT) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.noImpact.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        status="error"
+        title={messages.preflight.messages.noImpact.title()}
+      />
+    );
+  } else if (problem.kind == ImportProblemKind.UNCONFIGURED_ID) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.unconfiguredId.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        status="warning"
+        title={messages.preflight.messages.unconfiguredId.title()}
+      />
+    );
+  } else if (problem.kind == ImportProblemKind.UNCONFIGURED_ID_AND_NAME) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.unconfiguredIdAndName.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        status="error"
+        title={messages.preflight.messages.unconfiguredIdAndName.title()}
+      />
+    );
+  } else if (problem.kind == ImportProblemKind.UNKNOWN_PERSON) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.unknownPerson.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        rowIndices={problem.indices}
+        status="error"
+        title={messages.preflight.messages.unknownPerson.title()}
+      />
+    );
+  } else if (problem.kind == ImportProblemKind.UNKNOWN_ERROR) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.unknownError.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        rowIndices={problem.indices}
+        status="error"
+        title={messages.preflight.messages.unknownError.title()}
+      />
+    );
   } else {
-    // TODO: Implement all problems
+    // This should never happen
     return (
       <ImportMessage
         onClickBack={onClickBack}
         status="error"
-        title="Unimplemented problem"
+        title={`Unimplemented problem ${problem.kind}`}
       />
     );
   }
