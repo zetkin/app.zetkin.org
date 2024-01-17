@@ -11,10 +11,7 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useFieldTitle from '../../../utils/hooks/useFieldTitle';
 import { useMessages } from 'core/i18n';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
-import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag } from 'utils/types/zetkin';
-import getAddedOrgsSummary, {
+import {
   checkAllValuesAreZero,
   checkEmptyObj,
 } from '../utils/getAddedOrgsSummary';
@@ -47,8 +44,6 @@ export default function usePreflight(orgId: number) {
   const preflightSummary = previewData?.stats.person.summary;
 
   const [loading, setLoading] = useState(false);
-  const tags = useTags(orgId).data ?? [];
-  const organizations = useOrganizations().data ?? [];
   const getFieldTitle = useFieldTitle(orgId);
   const organization = useOrganization(orgId).data;
   const { data: fields } = useCustomFields(orgId);
@@ -75,21 +70,6 @@ export default function usePreflight(orgId: number) {
   if (problems.length == 0) {
     problems.push(...problemsFromPreview(previewData));
   }
-
-  const { addedToOrg, tagged } = preflightSummary;
-
-  const addedTags = Object.keys(tagged.byTag).reduce((acc: ZetkinTag[], id) => {
-    const tag = tags.find((tag) => tag.id === parseInt(id));
-    if (tag) {
-      return acc.concat(tag);
-    }
-    return acc;
-  }, []);
-
-  const addedOrgsSummary = getAddedOrgsSummary(addedToOrg);
-  const orgsWithNewPeople = organizations.filter((organization) =>
-    addedOrgsSummary.orgs.some((orgId) => orgId == organization.id.toString())
-  );
 
   const alerts: Alert[] = [];
 
@@ -220,7 +200,6 @@ export default function usePreflight(orgId: number) {
   };
 
   return {
-    addedTags,
     alerts,
     importDisabled,
     importPeople,
@@ -228,7 +207,6 @@ export default function usePreflight(orgId: number) {
     onAllChecked: (allChecked: boolean) => {
       setAllWarningsApproved(allChecked);
     },
-    orgsWithNewPeople,
     problems,
     statusMessage,
     summary: preflightSummary,

@@ -1,9 +1,6 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
-import AddedOrgs from './elements/AddedOrgs';
-import AddedTags from './elements/AddedTags';
-import ChangedFields from './elements/ChangedFields';
-import CreatedAndUpdated from './elements/CreatedAndUpdated';
+import ImpactSummary from './elements/ImpactSummary';
 import ImportFooter from './elements/ImportFooter';
 import ImportHeader from './elements/ImportHeader';
 import messageIds from 'features/import/l10n/messageIds';
@@ -21,8 +18,7 @@ interface StatusReportProps {
 const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { addedTags, alert, orgsWithNewPeople, summary } =
-    useStatusReport(orgId);
+  const { alert, summary } = useStatusReport();
   const fullHeight = alert.status != ALERT_STATUS.INFO;
 
   return (
@@ -44,26 +40,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
               <Typography paddingBottom={2} variant="h5">
                 <Msg id={messageIds.importStatus.completedChanges} />
               </Typography>
-              <CreatedAndUpdated summary={summary} />
-              <Stack spacing={2} sx={{ mt: 2 }}>
-                <ChangedFields
-                  changedFields={summary.updated.byChangedField}
-                  initializedFields={summary.updated.byInitializedField}
-                  orgId={orgId}
-                />
-                {addedTags.length > 0 && (
-                  <AddedTags
-                    addedTags={addedTags}
-                    numPeopleWithTagsAdded={summary.tagged.total}
-                  />
-                )}
-                {orgsWithNewPeople.length > 0 && (
-                  <AddedOrgs
-                    numPeopleWithOrgsAdded={summary.addedToOrg.total}
-                    orgsWithNewPeople={orgsWithNewPeople}
-                  />
-                )}
-              </Stack>
+              <ImpactSummary orgId={orgId} summary={summary} />
             </>
           )}
         </Box>
