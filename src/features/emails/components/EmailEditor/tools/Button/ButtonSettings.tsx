@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
-import { OpenInNew } from '@mui/icons-material';
-import { Box, Link, TextField, Typography } from '@mui/material';
+import { Box, IconButton, Link, TextField, Typography } from '@mui/material';
+import { Close, OpenInNew } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import { ButtonData } from '.';
@@ -26,6 +26,20 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
         <Msg id={messageIds.tools.button.settings.linkHeader} />
       </Typography>
       <TextField
+        InputProps={{
+          endAdornment:
+            inputValue.length > 0 ? (
+              <IconButton
+                onClick={() => {
+                  setInputValue('');
+                }}
+              >
+                <Close />
+              </IconButton>
+            ) : (
+              ''
+            ),
+        }}
         label={messages.tools.button.settings.urlLabel()}
         onChange={(ev) => {
           setInputValue(ev.target.value);
