@@ -4,6 +4,8 @@ import { FC, useState } from 'react';
 import { ButtonData } from '.';
 import ContentEditable from 'react-contenteditable';
 import DOMPurify from 'dompurify';
+import messageIds from 'features/emails/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 interface ButtonEditableBlockProps {
   data: ButtonData;
@@ -15,7 +17,10 @@ const ButtonEditableBlock: FC<ButtonEditableBlockProps> = ({
   onChange,
 }) => {
   const theme = useTheme();
-  const [test, setTest] = useState(data.buttonText || 'Add text');
+  const messages = useMessages(messageIds);
+  const [buttonText, setButtonText] = useState(
+    data.buttonText || messages.tools.button.block.noButtonText()
+  );
 
   return (
     <Box display="flex" justifyContent="center" padding={2}>
@@ -28,14 +33,15 @@ const ButtonEditableBlock: FC<ButtonEditableBlockProps> = ({
         padding={2}
       >
         <ContentEditable
-          html={test}
+          html={buttonText}
           onChange={(ev) => {
             const cleanHtml = DOMPurify.sanitize(ev.currentTarget.innerHTML, {
               ALLOWED_TAGS: [],
             });
-            setTest(cleanHtml);
+            setButtonText(cleanHtml);
             onChange(cleanHtml);
           }}
+          style={{ outline: 'none' }}
         />
       </Box>
     </Box>

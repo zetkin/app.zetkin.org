@@ -57,6 +57,9 @@ export default makeMessages('feat.emails', {
   },
   tools: {
     button: {
+      block: {
+        noButtonText: m('Add text'),
+      },
       settings: {
         buttonTextLabel: m('Button text'),
         urlLabel: m('Link url'),
