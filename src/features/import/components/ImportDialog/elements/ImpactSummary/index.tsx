@@ -5,11 +5,9 @@ import AddedOrgs from './AddedOrgs';
 import AddedTags from './AddedTags';
 import ChangedFields from './ChangedFields';
 import CreatedAndUpdated from './CreatedAndUpdated';
-import getAddedOrgsSummary from 'features/import/utils/getAddedOrgsSummary';
 import { PersonImportSummary } from 'features/import/utils/types';
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag } from 'utils/types/zetkin';
 
 type Props = {
   orgId: number;
@@ -22,16 +20,13 @@ const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
   const organizations = useOrganizations().data ?? [];
 
   const { addedToOrg, tagged } = summary;
-  const addedTags = Object.keys(tagged.byTag).reduce((acc: ZetkinTag[], id) => {
-    const tag = tags.find((tag) => tag.id === parseInt(id));
-    if (tag) {
-      return acc.concat(tag);
-    }
-    return acc;
-  }, []);
-  const addedOrgsSummary = getAddedOrgsSummary(addedToOrg);
-  const orgsWithNewPeople = organizations.filter((organization) =>
-    addedOrgsSummary.orgs.some((orgId) => orgId == organization.id.toString())
+
+  const addedTags = tags.filter((tag) =>
+    Object.keys(tagged.byTag).includes(tag.id.toString())
+  );
+
+  const orgsWithNewPeople = organizations.filter((org) =>
+    Object.keys(addedToOrg.byOrg).includes(org.id.toString())
   );
 
   return (
