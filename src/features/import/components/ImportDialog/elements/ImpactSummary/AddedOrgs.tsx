@@ -8,11 +8,13 @@ import { ZetkinOrganization } from 'utils/types/zetkin';
 interface AddedOrgsProps {
   numPeopleWithOrgsAdded: number;
   orgsWithNewPeople: Pick<ZetkinOrganization, 'title' | 'id'>[];
+  tense: 'past' | 'future';
 }
 
 const AddedOrgs: FC<AddedOrgsProps> = ({
   numPeopleWithOrgsAdded,
   orgsWithNewPeople,
+  tense,
 }) => {
   const theme = useTheme();
   return (
@@ -31,7 +33,7 @@ const AddedOrgs: FC<AddedOrgsProps> = ({
         }}
       >
         <Msg
-          id={messageIds.validation.updateOverview.orgs}
+          id={messageIds.impactSummary[tense].orgs}
           values={{
             numPeople: (
               <Typography
@@ -40,7 +42,7 @@ const AddedOrgs: FC<AddedOrgsProps> = ({
                 sx={{ display: 'flex' }}
               >
                 <Msg
-                  id={messageIds.validation.updateOverview.people}
+                  id={messageIds.impactSummary.people}
                   values={{
                     numPeople: numPeopleWithOrgsAdded,
                     number: (
@@ -54,7 +56,7 @@ const AddedOrgs: FC<AddedOrgsProps> = ({
             ),
             org: (
               <Typography fontWeight="bold" sx={{ marginX: 0.5 }}>
-                <Msg id={messageIds.validation.updateOverview.organization} />
+                <Msg id={messageIds.impactSummary[tense].organization} />
               </Typography>
             ),
           }}

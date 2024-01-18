@@ -69,7 +69,11 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
               <Typography paddingBottom={2} variant="h5">
                 <Msg id={messageIds.importStatus.completedChanges} />
               </Typography>
-              <ImpactSummary orgId={orgId} summary={summary} />
+              <ImpactSummary
+                orgId={orgId}
+                summary={summary}
+                tense={isScheduled ? 'future' : 'past'}
+              />
             </>
           )}
         </Box>

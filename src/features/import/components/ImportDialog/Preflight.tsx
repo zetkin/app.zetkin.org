@@ -82,7 +82,7 @@ const Preflight: FC<PreflightProps> = ({
               <Typography sx={{ mb: 2 }} variant="h5">
                 <Msg id={messageIds.preflight.headers.summary} />
               </Typography>
-              <ImpactSummary orgId={orgId} summary={summary} />
+              <ImpactSummary orgId={orgId} summary={summary} tense="future" />
             </Box>
             <Box ml={2} sx={{ overflowY: 'auto' }} width="50%">
               <Typography sx={{ mb: 2 }} variant="h5">

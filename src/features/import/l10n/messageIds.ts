@@ -159,6 +159,49 @@ export default makeMessages('feat.import', {
     },
     title: m('Import people'),
   },
+  impactSummary: {
+    future: {
+      created: m<{ numPeople: number; number: ReactElement }>(
+        '{number} new {numPeople, plural, =1 {person} other {people}} will be created'
+      ),
+      defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
+        '{numPeople} will recieve changes to their {field}'
+      ),
+      organization: m('Organization'),
+      orgs: m<{ numPeople: ReactElement; org: ReactElement }>(
+        '{numPeople} will be added to an {org}'
+      ),
+      tags: m('Tags'),
+      tagsDesc: m<{ numPeople: ReactElement; tags: ReactElement }>(
+        '{numPeople} will have {tags} added'
+      ),
+      updated: m<{ numPeople: number; number: ReactElement }>(
+        '{number} {numPeople, plural, =1 {person} other {people}} will be updated'
+      ),
+    },
+    past: {
+      created: m<{ numPeople: number; number: ReactElement }>(
+        '{number} new {numPeople, plural, =1 {person} other {people}} were created'
+      ),
+      defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
+        '{numPeople} recieved changes to their {field}'
+      ),
+      organization: m('Organization'),
+      orgs: m<{ numPeople: ReactElement; org: ReactElement }>(
+        '{numPeople} were added to an {org}'
+      ),
+      tags: m('Tags'),
+      tagsDesc: m<{ numPeople: ReactElement; tags: ReactElement }>(
+        '{numPeople} had {tags} added'
+      ),
+      updated: m<{ numPeople: number; number: ReactElement }>(
+        '{number} {numPeople, plural, =1 {person} other {people}} were updated'
+      ),
+    },
+    people: m<{ numPeople: number; number: ReactElement }>(
+      '{number} {numPeople, plural, =1 {person} other {people}}'
+    ),
+  },
   importStatus: {
     completed: {
       desc: m('Your data has been imported to Zetkin'),
@@ -283,28 +326,6 @@ export default makeMessages('feat.import', {
       error: m('You have to fix the errors before you can import'),
       update: m<{ numUpdated: number }>(
         'This import will update {numUpdated, plural, =1 {1 person} other {# people}}.'
-      ),
-    },
-    updateOverview: {
-      created: m<{ numPeople: number; number: ReactElement }>(
-        '{number} new {numPeople, plural, =1 {person} other {people}} will be created'
-      ),
-      defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
-        '{numPeople} will recieve changes to their {field}'
-      ),
-      organization: m('Organization'),
-      orgs: m<{ numPeople: ReactElement; org: ReactElement }>(
-        '{numPeople} will be added to an {org}'
-      ),
-      people: m<{ numPeople: number; number: ReactElement }>(
-        '{number} {numPeople, plural, =1 {person} other {people}}'
-      ),
-      tags: m('Tags'),
-      tagsDesc: m<{ numPeople: ReactElement; tags: ReactElement }>(
-        '{numPeople} will have {tags} added'
-      ),
-      updated: m<{ numPeople: number; number: ReactElement }>(
-        '{number} {numPeople, plural, =1 {person} other {people}} will be updated'
       ),
     },
   },

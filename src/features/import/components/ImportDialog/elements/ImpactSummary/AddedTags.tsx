@@ -10,11 +10,13 @@ import { ZetkinTag } from 'utils/types/zetkin';
 interface AddedTagsProps {
   addedTags: ZetkinTag[];
   numPeopleWithTagsAdded: number;
+  tense: 'past' | 'future';
 }
 
 const AddedTags: FC<AddedTagsProps> = ({
   addedTags,
   numPeopleWithTagsAdded,
+  tense,
 }) => {
   const theme = useTheme();
   return (
@@ -36,7 +38,7 @@ const AddedTags: FC<AddedTagsProps> = ({
         }}
       >
         <Msg
-          id={messageIds.validation.updateOverview.tagsDesc}
+          id={messageIds.impactSummary[tense].tagsDesc}
           values={{
             numPeople: (
               <Typography
@@ -45,7 +47,7 @@ const AddedTags: FC<AddedTagsProps> = ({
                 sx={{ display: 'flex' }}
               >
                 <Msg
-                  id={messageIds.validation.updateOverview.people}
+                  id={messageIds.impactSummary.people}
                   values={{
                     numPeople: numPeopleWithTagsAdded,
                     number: (
@@ -59,7 +61,7 @@ const AddedTags: FC<AddedTagsProps> = ({
             ),
             tags: (
               <Typography fontWeight="bold" sx={{ marginX: 0.5 }}>
-                <Msg id={messageIds.validation.updateOverview.tags} />
+                <Msg id={messageIds.impactSummary[tense].tags} />
               </Typography>
             ),
           }}

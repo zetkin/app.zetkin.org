@@ -15,12 +15,14 @@ interface ChangedFieldsProps {
     [key in keyof Partial<ZetkinPersonNativeFields> | string]?: number;
   };
   orgId: number;
+  tense: 'past' | 'future';
 }
 
 const ChangedFields: FC<ChangedFieldsProps> = ({
   changedFields,
   initializedFields,
   orgId,
+  tense,
 }) => {
   const theme = useTheme();
   const getFieldTitle = useFieldTitle(orgId);
@@ -54,7 +56,7 @@ const ChangedFields: FC<ChangedFieldsProps> = ({
               }}
             >
               <Msg
-                id={messageIds.validation.updateOverview.defaultDesc}
+                id={messageIds.impactSummary[tense].defaultDesc}
                 values={{
                   field: (
                     <Typography fontWeight="bold" marginX={0.5}>
@@ -68,7 +70,7 @@ const ChangedFields: FC<ChangedFieldsProps> = ({
                       sx={{ display: 'flex' }}
                     >
                       <Msg
-                        id={messageIds.validation.updateOverview.people}
+                        id={messageIds.impactSummary.people}
                         values={{
                           numPeople: numChanges,
                           number: (

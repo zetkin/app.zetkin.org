@@ -14,9 +14,10 @@ import { ZetkinTag } from 'utils/types/zetkin';
 type Props = {
   orgId: number;
   summary: PersonImportSummary;
+  tense: 'past' | 'future';
 };
 
-const ImpactSummary: FC<Props> = ({ orgId, summary }) => {
+const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
   const tags = useTags(orgId).data ?? [];
   const organizations = useOrganizations().data ?? [];
 
@@ -32,25 +33,29 @@ const ImpactSummary: FC<Props> = ({ orgId, summary }) => {
   const orgsWithNewPeople = organizations.filter((organization) =>
     addedOrgsSummary.orgs.some((orgId) => orgId == organization.id.toString())
   );
+
   return (
     <>
-      <CreatedAndUpdated summary={summary} />
+      <CreatedAndUpdated summary={summary} tense={tense} />
       <Stack spacing={2} sx={{ mt: 2 }}>
         <ChangedFields
           changedFields={summary.updated.byChangedField}
           initializedFields={summary.updated.byInitializedField}
           orgId={orgId}
+          tense={tense}
         />
         {addedTags.length > 0 && (
           <AddedTags
             addedTags={addedTags}
             numPeopleWithTagsAdded={summary.tagged.total}
+            tense={tense}
           />
         )}
         {orgsWithNewPeople.length > 0 && (
           <AddedOrgs
             numPeopleWithOrgsAdded={summary.addedToOrg.total}
             orgsWithNewPeople={orgsWithNewPeople}
+            tense={tense}
           />
         )}
       </Stack>
