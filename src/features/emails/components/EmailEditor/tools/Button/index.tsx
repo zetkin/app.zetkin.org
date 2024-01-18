@@ -25,7 +25,15 @@ export default class Button {
     const root = createRoot(container);
     root.render(
       <Providers {...window.providerData}>
-        <ButtonEditableBlock data={this._data} />
+        <ButtonEditableBlock
+          data={this._data}
+          onChange={(newButtonText: string) => {
+            this._data = {
+              ...this._data,
+              buttonText: newButtonText,
+            };
+          }}
+        />
       </Providers>
     );
 
