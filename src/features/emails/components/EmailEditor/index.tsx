@@ -50,7 +50,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
                 });
               }
             }}
-            url={currentBlock.data.url}
+            url={currentBlock.data.url || ''}
           />
         )}
       </Box>
