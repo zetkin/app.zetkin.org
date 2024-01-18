@@ -58,7 +58,7 @@ export default makeMessages('feat.emails', {
   tools: {
     button: {
       block: {
-        noButtonText: m('Add text'),
+        noButtonText: m('Click to change this text!'),
       },
       settings: {
         invalidUrl: m('This is not a valid url'),
