@@ -1,10 +1,9 @@
+import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
-import { Box, Typography } from '@mui/material';
 import EditorJS, { OutputData } from '@editorjs/editorjs';
 import { FC, useRef, useState } from 'react';
 
-import { ButtonData } from './tools/Button';
-import ButtonSettings from './tools/Button/ButtonSettings';
+import BlockList from './BlockList';
 
 const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
   ssr: false,
@@ -19,8 +18,6 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
   const [content, setContent] = useState<OutputData>(initialContent);
-
-  const currentBlock = content.blocks[selectedBlockIndex];
 
   return (
     <Box display="flex">
@@ -38,21 +35,11 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
         />
       </Box>
       <Box padding={2} width="25%">
-        <Typography>Settings</Typography>
-        {currentBlock && currentBlock.type === 'button' && (
-          <ButtonSettings
-            key={currentBlock.id}
-            onChange={(newUrl: ButtonData['url']) => {
-              if (currentBlock.id) {
-                apiRef.current?.blocks.update(currentBlock.id, {
-                  ...currentBlock.data,
-                  url: newUrl,
-                });
-              }
-            }}
-            url={currentBlock.data.url || ''}
-          />
-        )}
+        <BlockList
+          apiRef={apiRef}
+          blocks={content.blocks}
+          selectedBlockIndex={selectedBlockIndex}
+        />
       </Box>
     </Box>
   );
