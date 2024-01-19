@@ -67,6 +67,11 @@ export default makeMessages('feat.emails', {
         urlLabel: m('Link url'),
       },
     },
+    titles: {
+      button: m('Button'),
+      libraryImage: m('Image'),
+      paragraph: m('Text'),
+    },
   },
   wasSent: m<{ time: string }>('Was sent at {time}'),
   willSend: m<{ time: string }>('Will send at {time}'),
