@@ -34,7 +34,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
           }}
         />
       </Box>
-      <Box padding={2} width="25%">
+      <Box width="25%">
         <BlockList
           apiRef={apiRef}
           blocks={content.blocks}

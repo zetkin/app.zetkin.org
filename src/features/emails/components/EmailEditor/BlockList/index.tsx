@@ -1,7 +1,7 @@
 import EditorJS from '@editorjs/editorjs';
-import { ExpandMore } from '@mui/icons-material';
 import { OutputBlockData } from '@editorjs/editorjs';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { Box, Collapse, Divider } from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { FC, MutableRefObject } from 'react';
 
 import { ButtonData } from '../tools/Button';
@@ -31,28 +31,39 @@ const BlockList: FC<BlockListProps> = ({
   return (
     <>
       {blocks.map((block, index) => {
+        const expandable = block.type !== BLOCK_TYPES.PARAGRAPH;
         const expanded = index === selectedBlockIndex;
         return (
-          <Accordion key={block.id} disableGutters expanded={expanded}>
-            <AccordionSummary expandIcon={<ExpandMore color="secondary" />}>
+          <Box key={block.id}>
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+              padding={1}
+            >
               <Msg id={messageIds.tools.titles[block.type as BLOCK_TYPES]} />
-            </AccordionSummary>
-            <AccordionDetails>
+              {expandable && !expanded && <ExpandMore color="secondary" />}
+              {expandable && expanded && <ExpandLess color="secondary" />}
+            </Box>
+            <Collapse in={expanded}>
               {block.type == BLOCK_TYPES.BUTTON && (
-                <ButtonSettings
-                  onChange={(newUrl: ButtonData['url']) => {
-                    if (currentBlock.id) {
-                      apiRef.current?.blocks.update(currentBlock.id, {
-                        ...currentBlock.data,
-                        url: newUrl,
-                      });
-                    }
-                  }}
-                  url={currentBlock.data.url || ''}
-                />
+                <Box padding={1}>
+                  <ButtonSettings
+                    onChange={(newUrl: ButtonData['url']) => {
+                      if (currentBlock.id) {
+                        apiRef.current?.blocks.update(currentBlock.id, {
+                          ...currentBlock.data,
+                          url: newUrl,
+                        });
+                      }
+                    }}
+                    url={currentBlock.data.url || ''}
+                  />
+                </Box>
               )}
-            </AccordionDetails>
-          </Accordion>
+            </Collapse>
+            <Divider />
+          </Box>
         );
       })}
     </>
