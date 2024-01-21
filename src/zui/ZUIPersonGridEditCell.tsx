@@ -15,7 +15,7 @@ import {
   Typography,
   useAutocomplete,
 } from '@mui/material';
-import { FC, HTMLAttributes, useState } from 'react';
+import { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import { usePersonSelect } from './ZUIPersonSelect';
@@ -47,6 +47,40 @@ const ZUIPersonGridEditCell: FC<{
   const [searching, setSearching] = useState(false);
 
   const orgId = parseInt(query.orgId as string);
+
+  const [activeIndex, setActiveIndex] = useState<number>(Infinity);
+  const scrollableRef = useRef<HTMLUListElement>(null);
+
+  // Scroll (if necessary) when navigating using keyboard
+  useEffect(() => {
+    const scrollableElement = scrollableRef.current;
+    const selectedElement = scrollableElement?.querySelector('.Mui-selected');
+
+    if (selectedElement && scrollableElement) {
+      let selectedBounds = selectedElement.getBoundingClientRect();
+      let scrollableBounds = scrollableElement.getBoundingClientRect();
+
+      console.log(
+        'Selected bottom: ' +
+          selectedBounds.bottom +
+          ', scrollable offset: ' +
+          scrollableElement.scrollTop
+      );
+
+      if (selectedBounds.top < scrollableBounds.top) {
+        selectedElement.scrollIntoView(true);
+      }
+
+      if (
+        selectedBounds.bottom >
+        scrollableBounds.bottom +
+          scrollableElement.offsetHeight -
+          scrollableBounds.top
+      ) {
+        selectedElement.scrollIntoView(false);
+      }
+    }
+  }, [scrollableRef, activeIndex]);
 
   const personSelect = usePersonSelect({
     initialValue: '',
@@ -113,6 +147,33 @@ const ZUIPersonGridEditCell: FC<{
           fullWidth
           inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
+          onKeyDown={(ev) => {
+            if (ev.code == 'ArrowUp') {
+              const nextIndex = activeIndex - 1;
+              setActiveIndex(
+                nextIndex >= 0
+                  ? nextIndex
+                  : searchResults.length + suggestedPeople.length - 1
+              );
+            } else if (ev.code == 'ArrowDown') {
+              const nextIndex = activeIndex + 1;
+              setActiveIndex(
+                nextIndex < searchResults.length + suggestedPeople.length
+                  ? nextIndex
+                  : 0
+              );
+            } else if (ev.code == 'Enter') {
+              if (activeIndex < suggestedPeople.length) {
+                onUpdate(suggestedPeople[activeIndex]);
+              } else {
+                onUpdate(searchResults[activeIndex - suggestedPeople.length]);
+              }
+
+              setActiveIndex(Infinity);
+              setAnchorEl(null);
+              ev.preventDefault(); // Vad betyder detta :O
+            }
+          }}
           placeholder={messages.personSelect.search()}
           sx={{ paddingLeft: '10px' }}
         />
@@ -192,6 +253,7 @@ const ZUIPersonGridEditCell: FC<{
                   )}
                   <List
                     className={styles.searchingList}
+                    ref={scrollableRef}
                     sx={{
                       display:
                         showSuggestedPeople || searching ? 'block' : 'none',
@@ -205,7 +267,7 @@ const ZUIPersonGridEditCell: FC<{
                         >
                           {suggestedPeopleLabel}
                         </ListSubheader>
-                        {filteredSuggestedPeople.map((option) => (
+                        {filteredSuggestedPeople.map((option, index) => (
                           <PersonListItem
                             key={option.id}
                             itemProps={{
@@ -215,6 +277,7 @@ const ZUIPersonGridEditCell: FC<{
                             }}
                             orgId={orgId}
                             person={option}
+                            selected={activeIndex == index}
                           />
                         ))}
                       </>
@@ -255,6 +318,9 @@ const ZUIPersonGridEditCell: FC<{
                               itemProps={optProps}
                               orgId={orgId}
                               person={option}
+                              selected={
+                                index + suggestedPeople.length == activeIndex
+                              }
                             />
                           );
                         })}
@@ -275,11 +341,13 @@ const PersonListItem: FC<{
   itemProps: HTMLAttributes<HTMLLIElement>;
   orgId: number;
   person: ZetkinPerson;
-}> = ({ itemProps, orgId, person }) => {
+  selected: boolean;
+}> = ({ itemProps, orgId, person, selected }) => {
   return (
     <ListItem
       {...itemProps}
       disablePadding
+      selected={selected}
       sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
     >
       <Box
