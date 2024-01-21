@@ -250,8 +250,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       disableColumnMenu: true,
       field: 'cancel',
       flex: 1,
-      headerName: '',
-      hideSortIcons: true,
+      headerName: messages.eventParticipantsList.attendance(),
       minWidth: 300,
       renderCell: (params) => {
         if (type == 'signups') {
@@ -365,7 +364,16 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         }
       },
       resizable: false,
-      sortable: false,
+      sortingOrder: ['asc', 'desc', null],
+      valueGetter: (params) => {
+        if (params.row.attended) {
+          return 1;
+        } else if (params.row.noshow) {
+          return 2;
+        } else {
+          return 0;
+        }
+      },
     },
   ];
 
