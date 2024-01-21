@@ -1,4 +1,9 @@
 module.exports = {
+  experimental: {
+    serverActions: {
+      allowedOrigins: [],
+    },
+  },
   images: {
     domains: [
       `files.${process.env.ZETKIN_API_DOMAIN}`,
