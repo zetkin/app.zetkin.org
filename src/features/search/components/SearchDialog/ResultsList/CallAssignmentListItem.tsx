@@ -20,6 +20,7 @@ const CallassigmentListItem: React.FunctionComponent<{
       href={`/organize/${orgId}/projects/${
         callAssignment.campaign?.id ?? 'standalone'
       }/callassignments/${callAssignment.id}`}
+      legacyBehavior
       passHref
     >
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">

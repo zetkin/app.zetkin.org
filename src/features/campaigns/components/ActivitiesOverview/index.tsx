@@ -43,6 +43,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
             href={`/organize/${orgId}/projects${
               campaignId ? `/${campaignId}` : ''
             }/activities`}
+            legacyBehavior
             passHref
           >
             <Button variant="text">

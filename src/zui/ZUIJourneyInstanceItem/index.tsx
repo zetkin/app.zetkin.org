@@ -23,6 +23,7 @@ const ZUIJourneyInstanceItem: React.FC<ZUIJourneyInstanceItemProps> = ({
   return (
     <NextLink
       href={`/organize/${orgId}/journeys/${instance.journey.id}/${instance.id}`}
+      legacyBehavior
     >
       <Grid container direction="column" style={{ cursor: 'pointer' }}>
         <Grid item>

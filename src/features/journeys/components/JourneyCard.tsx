@@ -17,7 +17,11 @@ const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
 
   return (
     <Card data-testid="journey-card">
-      <NextLink href={`/organize/${orgId}/journeys/${id}`} passHref>
+      <NextLink
+        href={`/organize/${orgId}/journeys/${id}`}
+        legacyBehavior
+        passHref
+      >
         <CardActionArea>
           <Box p={1.5}>
             <Typography gutterBottom variant="h5">
