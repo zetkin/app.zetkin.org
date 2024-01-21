@@ -24,6 +24,7 @@ const JourneyInstanceTitle: React.FC<JourneyInstanceTitleProps> = ({
     return (
       <NextLink
         href={`/organize/${instance.organization.id}/journeys/${instance.journey.id}/${instance.id}`}
+        legacyBehavior
         passHref
       >
         <Link color="inherit" underline="hover">

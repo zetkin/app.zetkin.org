@@ -279,6 +279,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                   <NextLink
                     key={name}
                     href={`/organize/${orgId}/${name}`}
+                    legacyBehavior
                     passHref
                   >
                     <Tooltip

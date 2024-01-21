@@ -21,7 +21,11 @@ const PersonLink: React.FunctionComponent<{
 }> = ({ children, link, id, orgId }) => {
   if (link) {
     return (
-      <NextLink href={`/organize/${orgId}/people/${id}`} passHref>
+      <NextLink
+        href={`/organize/${orgId}/people/${id}`}
+        legacyBehavior
+        passHref
+      >
         <Link style={{ cursor: 'pointer' }} underline="hover">
           {children}
         </Link>
