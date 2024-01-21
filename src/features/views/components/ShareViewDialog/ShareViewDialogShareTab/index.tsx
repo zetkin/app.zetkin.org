@@ -118,6 +118,7 @@ const ShareViewDialogShareTab = () => {
                     >
                       <NextLink
                         href={`/organize/${orgId}/people/lists/${viewId}/shared`}
+                        legacyBehavior
                         passHref
                       >
                         <Link>

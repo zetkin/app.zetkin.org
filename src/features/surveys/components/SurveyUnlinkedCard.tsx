@@ -41,6 +41,7 @@ const SurveyUnlinkedCard = ({
             >
               <NextLink
                 href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?filter=linked`}
+                legacyBehavior
                 passHref
               >
                 <Link>

@@ -128,7 +128,12 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
               </Grid>
               <Grid item>
                 {values.map((value) => (
-                  <Link key={value} href={`mailto:${value}`} passHref>
+                  <Link
+                    key={value}
+                    href={`mailto:${value}`}
+                    legacyBehavior
+                    passHref
+                  >
                     <Chip
                       component="a"
                       label={value}

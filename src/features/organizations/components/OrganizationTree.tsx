@@ -24,7 +24,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
     <TreeItem
       key={item.id}
       label={
-        <NextLink href={`/organize/${item.id}`}>
+        <NextLink href={`/organize/${item.id}`} legacyBehavior>
           <Box
             m={1}
             onClick={(e) => e.stopPropagation()}
