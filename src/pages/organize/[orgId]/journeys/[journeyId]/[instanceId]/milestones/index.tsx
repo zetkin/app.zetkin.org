@@ -10,6 +10,7 @@ import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useJourneyInstance from 'features/journeys/hooks/useJourneyInstance';
+import useJourneyInstanceMilestones from 'features/journeys/hooks/useJourneyInstanceMilestones';
 import { useNumericRouteParams } from 'core/hooks';
 import { getJourneyInstanceScaffoldProps, scaffoldOptions } from '../index';
 
@@ -21,16 +22,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const JourneyMilestonesPage: PageWithLayout = () => {
   const { orgId, instanceId } = useNumericRouteParams();
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
+  const milestonesFuture = useJourneyInstanceMilestones(orgId, instanceId);
   const journeyInstance = journeyInstanceFuture.data;
+  const milestones = milestonesFuture.data || [];
 
   if (!journeyInstance) {
     return null;
   }
 
-  const percentComplete = getCompletionPercentage(
-    journeyInstance.milestones || []
-  );
-
+  const percentComplete = getCompletionPercentage(milestones);
   return (
     <>
       <Head>
@@ -42,7 +42,11 @@ const JourneyMilestonesPage: PageWithLayout = () => {
       </Head>
       <Grid container justifyContent="space-between" spacing={2}>
         <Grid item lg={8} md={10} xl={6} xs={12}>
-          {journeyInstance.milestones ? (
+          {milestones.length === 0 ? (
+            <Typography data-testid="JourneyMilestoneCard-noMilestones">
+              <Msg id={messageIds.instance.noMilestones} />
+            </Typography>
+          ) : (
             <>
               <Typography
                 style={{
@@ -56,17 +60,13 @@ const JourneyMilestonesPage: PageWithLayout = () => {
                 />
               </Typography>
               <LinearProgress value={percentComplete} variant="determinate" />
-              {journeyInstance.milestones.map((milestone) => (
+              {milestones.map((milestone) => (
                 <JourneyMilestoneCard
                   key={milestone.id}
                   milestone={milestone}
                 />
               ))}
             </>
-          ) : (
-            <Typography data-testid="JourneyMilestoneCard-noMilestones">
-              <Msg id={messageIds.instance.noMilestones} />
-            </Typography>
           )}
         </Grid>
       </Grid>

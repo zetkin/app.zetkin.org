@@ -2,7 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
+import {
+  ZetkinJourney,
+  ZetkinJourneyInstance,
+  ZetkinJourneyMilestoneStatus,
+} from 'utils/types/zetkin';
 
 export interface JourneysStoreSlice {
   journeyInstanceList: RemoteList<ZetkinJourneyInstance>;
@@ -11,6 +15,10 @@ export interface JourneysStoreSlice {
     RemoteList<ZetkinJourneyInstance>
   >;
   journeyList: RemoteList<ZetkinJourney>;
+  milestonesByInstanceId: Record<
+    number,
+    RemoteList<ZetkinJourneyMilestoneStatus>
+  >;
   timelineUpdatesByInstanceId: Record<number, RemoteList<ZetkinUpdate>>;
 }
 
@@ -18,6 +26,7 @@ const initialJourneysState: JourneysStoreSlice = {
   journeyInstanceList: remoteList(),
   journeyInstancesBySubjectId: {},
   journeyList: remoteList(),
+  milestonesByInstanceId: {},
   timelineUpdatesByInstanceId: {},
 };
 
@@ -171,6 +180,22 @@ const journeysSlice = createSlice({
       state.journeyList.loaded = timestamp;
       state.journeyList.items.forEach((item) => (item.loaded = timestamp));
     },
+    milestonesLoad: (state, action: PayloadAction<number>) => {
+      const instanceId = action.payload;
+      if (!state.milestonesByInstanceId[instanceId]) {
+        state.milestonesByInstanceId[instanceId] = remoteList();
+      }
+      state.milestonesByInstanceId[instanceId].isLoading = true;
+    },
+    milestonesLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinJourneyMilestoneStatus[]]>
+    ) => {
+      const [instanceId, milestones] = action.payload;
+      const timestamp = new Date().toISOString();
+      state.milestonesByInstanceId[instanceId] = remoteList(milestones);
+      state.milestonesByInstanceId[instanceId].loaded = timestamp;
+    },
     personJourneyInstancesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
       state.journeyInstancesBySubjectId[personId] = remoteList();
@@ -221,6 +246,8 @@ export const {
   journeyLoaded,
   journeysLoad,
   journeysLoaded,
+  milestonesLoad,
+  milestonesLoaded,
   personJourneyInstancesLoad,
   personJourneyInstancesLoaded,
   timelineUpdatesLoad,
