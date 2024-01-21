@@ -60,13 +60,6 @@ const ZUIPersonGridEditCell: FC<{
       let selectedBounds = selectedElement.getBoundingClientRect();
       let scrollableBounds = scrollableElement.getBoundingClientRect();
 
-      console.log(
-        'Selected bottom: ' +
-          selectedBounds.bottom +
-          ', scrollable offset: ' +
-          scrollableElement.scrollTop
-      );
-
       if (selectedBounds.top < scrollableBounds.top) {
         selectedElement.scrollIntoView(true);
       }
