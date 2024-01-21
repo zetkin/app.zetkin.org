@@ -6,6 +6,7 @@ import SurveyHeading from './SurveyHeading';
 import SurveyPrivacyPolicy from './SurveyPrivacyPolicy';
 import SurveySignature from './SurveySignature';
 import SurveySubmitButton from './SurveySubmitButton';
+import useSurvey from 'features/surveys/hooks/useSurvey';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyFormStatus,
@@ -13,19 +14,31 @@ import {
 
 export type SurveyFormProps = {
   action: (formData: FormData) => Promise<void>;
-  survey: ZetkinSurveyExtended;
+  orgId: string;
+  surveyId: string;
 };
 
-const SurveyForm: FC<SurveyFormProps> = ({ action, survey }) => {
+const SurveyForm: FC<SurveyFormProps> = ({ action, orgId, surveyId }) => {
   const status = 'editing' as ZetkinSurveyFormStatus;
+
+  const { data: survey } = useSurvey(
+    parseInt(orgId, 10),
+    parseInt(surveyId, 10)
+  );
+
+  if (!survey) {
+    return null;
+  }
 
   return (
     <>
       <SurveyHeading status={status} survey={survey as ZetkinSurveyExtended} />
       <form action={action as unknown as string}>
-        <SurveyElements survey={survey} />
-        <SurveySignature survey={survey} />
-        <SurveyPrivacyPolicy survey={survey} />
+        <input name="orgId" type="hidden" value={orgId} />
+        <input name="surveyId" type="hidden" value={surveyId} />
+        <SurveyElements survey={survey as ZetkinSurveyExtended} />
+        <SurveySignature survey={survey as ZetkinSurveyExtended} />
+        <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
         <SurveySubmitButton />
       </form>
     </>
