@@ -42,7 +42,7 @@ const JourneyMilestonesPage: PageWithLayout = () => {
       </Head>
       <Grid container justifyContent="space-between" spacing={2}>
         <Grid item lg={8} md={10} xl={6} xs={12}>
-          {milestones.length === 0  ? (
+          {milestones.length === 0 ? (
             <Typography data-testid="JourneyMilestoneCard-noMilestones">
               <Msg id={messageIds.instance.noMilestones} />
             </Typography>
