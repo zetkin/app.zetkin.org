@@ -9,7 +9,7 @@ import messageIds from 'features/emails/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ButtonSettingsProps {
-  url: ButtonData['url'];
+  url: ButtonData['url']; //ta hela datan ist
   onChange: (newUrl: ButtonData['url']) => void;
 }
 

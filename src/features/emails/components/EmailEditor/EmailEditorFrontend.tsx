@@ -32,8 +32,17 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     try {
       const savedData = await editorInstance.current?.save();
       if (savedData && onSave) {
-        onChange(savedData);
-        onSave(savedData);
+        const filteredSavedData = {
+          ...savedData,
+          blocks: savedData.blocks.filter((block) => {
+            if (block.type === 'libraryImage' && !block.data.fileId) {
+              return false;
+            }
+            return true;
+          }),
+        };
+        onChange(filteredSavedData);
+        onSave(filteredSavedData);
       }
     } catch (error) {
       //TODO: handle error
