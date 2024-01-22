@@ -1,6 +1,6 @@
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
-import { Box, Collapse, Divider } from '@mui/material';
+import { Box, Collapse, Divider, Typography } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { FC, MutableRefObject } from 'react';
 
@@ -39,11 +39,15 @@ const BlockListItem: FC<BlockListItemProps> = ({
       <Box
         alignItems="center"
         display="flex"
-        fontWeight={selected ? 'bold' : 'normal'}
         justifyContent="space-between"
         padding={1}
       >
-        <Msg id={messageIds.tools.titles[block.type as BLOCK_TYPES]} />
+        <Typography
+          fontWeight={selected ? 'bold' : 'normal'}
+          sx={{ cursor: 'default' }}
+        >
+          <Msg id={messageIds.tools.titles[block.type as BLOCK_TYPES]} />
+        </Typography>
         {expandable && !expanded && (
           <ExpandMore
             color="secondary"
