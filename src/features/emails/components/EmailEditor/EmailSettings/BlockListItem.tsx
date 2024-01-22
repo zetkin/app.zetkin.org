@@ -6,8 +6,11 @@ import { FC, MutableRefObject } from 'react';
 
 import { ButtonData } from '../tools/Button';
 import ButtonSettings from '../tools/Button/ButtonSettings';
+import { LibraryImageData } from '../tools/LibraryImage/types';
+import LibraryImageSettings from '../tools/LibraryImage/LibraryImageSettings';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 
 enum BLOCK_TYPES {
   BUTTON = 'button',
@@ -32,6 +35,8 @@ const BlockListItem: FC<BlockListItemProps> = ({
   onExpand,
   selected,
 }) => {
+  //Getting the orgId from the route is potentially a bad idea.
+  const { orgId } = useNumericRouteParams();
   const expandable = block.type !== BLOCK_TYPES.PARAGRAPH;
 
   return (
@@ -78,6 +83,17 @@ const BlockListItem: FC<BlockListItemProps> = ({
               url={block.data.url || ''}
             />
           </Box>
+        )}
+        {block.type == BLOCK_TYPES.LIBRARY_IMAGE && (
+          <LibraryImageSettings
+            data={block.data}
+            onChange={(newData: LibraryImageData) => {
+              if (block.id) {
+                apiRef.current?.blocks.update(block.id, newData);
+              }
+            }}
+            orgId={orgId}
+          />
         )}
       </Collapse>
       <Divider />
