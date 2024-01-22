@@ -1,6 +1,13 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
+  editor: {
+    settings: {
+      tabs: {
+        content: m('Content'),
+      },
+    },
+  },
   emailActionButtons: {
     afterLock: m<{ numTargets: number }>(
       'Will schedule email for {numTargets} people'

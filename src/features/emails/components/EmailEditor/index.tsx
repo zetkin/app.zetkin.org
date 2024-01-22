@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import EditorJS, { OutputData } from '@editorjs/editorjs';
 import { FC, useRef, useState } from 'react';
 
-import BlockList from './BlockList';
+import EmailSettings from './EmailSettings';
 
 const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
   ssr: false,
@@ -35,7 +35,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
         />
       </Box>
       <Box width="25%">
-        <BlockList
+        <EmailSettings
           apiRef={apiRef}
           blocks={content.blocks}
           selectedBlockIndex={selectedBlockIndex}

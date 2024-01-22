@@ -1,0 +1,57 @@
+import { Edit } from '@mui/icons-material';
+import EditorJS from '@editorjs/editorjs';
+import { OutputBlockData } from '@editorjs/editorjs';
+import { Box, Tab } from '@mui/material';
+import { FC, MutableRefObject, useState } from 'react';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+
+import BlockListItem from './BlockListItem';
+import messageIds from 'features/emails/l10n/messageIds';
+import { Msg } from 'core/i18n';
+
+interface EmailSettingsProps {
+  apiRef: MutableRefObject<EditorJS | null>;
+  blocks: OutputBlockData[];
+  selectedBlockIndex: number;
+}
+
+const EmailSettings: FC<EmailSettingsProps> = ({
+  apiRef,
+  blocks,
+  selectedBlockIndex,
+}) => {
+  const [activeTab, setActiveTab] = useState<'Content'>('Content');
+  const [indexesOfExpanded, setIndexesOfExpanded] = useState<number[]>([]);
+  return (
+    <TabContext value={activeTab}>
+      <TabList onChange={(ev, newValue) => setActiveTab(newValue)}>
+        <Tab
+          label={
+            <Box alignItems="center" display="flex">
+              <Edit fontSize="small" sx={{ marginRight: 1 }} />
+              <Msg id={messageIds.editor.settings.tabs.content} />
+            </Box>
+          }
+          value="Content"
+        />
+      </TabList>
+      <TabPanel sx={{ padding: 0 }} value="Content">
+        {blocks.map((block, index) => (
+          <BlockListItem
+            key={block.id}
+            apiRef={apiRef}
+            block={block}
+            expanded={indexesOfExpanded.includes(index)}
+            onCollapse={() =>
+              setIndexesOfExpanded(indexesOfExpanded.filter((i) => i !== index))
+            }
+            onExpand={() => setIndexesOfExpanded([...indexesOfExpanded, index])}
+            selected={index === selectedBlockIndex}
+          />
+        ))}
+      </TabPanel>
+    </TabContext>
+  );
+};
+
+export default EmailSettings;
