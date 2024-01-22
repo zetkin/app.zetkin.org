@@ -46,7 +46,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
           fontWeight={selected ? 'bold' : 'normal'}
           sx={{ cursor: 'default' }}
         >
-          <Msg id={messageIds.tools.titles[block.type as BLOCK_TYPES]} />
+          <Msg id={messageIds.editor.tools.titles[block.type as BLOCK_TYPES]} />
         </Typography>
         {expandable && !expanded && (
           <ExpandMore

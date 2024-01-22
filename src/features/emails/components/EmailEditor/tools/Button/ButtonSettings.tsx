@@ -23,7 +23,7 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography textTransform="uppercase" variant="body2">
-        <Msg id={messageIds.tools.button.settings.linkHeader} />
+        <Msg id={messageIds.editor.tools.button.settings.linkHeader} />
       </Typography>
       <TextField
         InputProps={{
@@ -40,7 +40,7 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
               ''
             ),
         }}
-        label={messages.tools.button.settings.urlLabel()}
+        label={messages.editor.tools.button.settings.urlLabel()}
         onChange={(ev) => {
           setInputValue(ev.target.value);
           if (!error) {
@@ -51,7 +51,7 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
       />
       {error && (
         <Typography color="error" variant="body2">
-          <Msg id={messageIds.tools.button.settings.invalidUrl} />
+          <Msg id={messageIds.editor.tools.button.settings.invalidUrl} />
         </Typography>
       )}
       {inputValue.length > 0 && !error && (
@@ -63,7 +63,7 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
               sx={{ marginRight: 1 }}
             />
             <Typography variant="body2">
-              <Msg id={messageIds.tools.button.settings.testLink} />
+              <Msg id={messageIds.editor.tools.button.settings.testLink} />
             </Typography>
           </Link>
         </NextLink>

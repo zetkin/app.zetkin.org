@@ -19,7 +19,7 @@ const ButtonEditableBlock: FC<ButtonEditableBlockProps> = ({
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const [buttonText, setButtonText] = useState(
-    data.buttonText || messages.tools.button.block.noButtonText()
+    data.buttonText || messages.editor.tools.button.block.noButtonText()
   );
 
   return (
