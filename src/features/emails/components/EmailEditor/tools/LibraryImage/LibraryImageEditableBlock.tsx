@@ -35,11 +35,13 @@ const LibraryImageEditableBlock: FC<Props> = ({
         onSelectFile={(file) => {
           setData({
             fileId: file.id,
+            fileName: file.original_name,
             url: file.url,
           });
 
           onChange({
             fileId: file.id,
+            fileName: file.original_name,
             url: file.url,
           });
           setSelecting(false);

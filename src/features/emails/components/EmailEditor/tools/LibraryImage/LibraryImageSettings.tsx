@@ -1,11 +1,10 @@
-import { Box, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 
 import FileLibraryDialog from 'features/files/components/FileLibraryDialog';
 import { LibraryImageData } from './types';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { PhotoOutlined } from '@mui/icons-material';
 
 interface LibraryImageSettingsProps {
   data: LibraryImageData;
@@ -20,51 +19,46 @@ const LibraryImageSettings: FC<LibraryImageSettingsProps> = ({
 }) => {
   const [selecting, setSelecting] = useState(false);
   const [data, setData] = useState(initialData);
-  const theme = useTheme();
 
   return (
     <>
-      <Box
-        alignItems="center"
-        display="flex"
-        height={200}
-        justifyContent="center"
-        onClick={() => setSelecting(true)}
-        position="relative"
-        sx={{ cursor: 'pointer' }}
-      >
-        <img
-          alt=""
-          src={data.url}
-          style={{
-            maxHeight: '100%',
-            maxWidth: '100%',
-          }}
-        />
+      <Box display="flex">
         <Box
-          height="100%"
-          position="absolute"
-          sx={{
-            background:
-              'linear-gradient(180deg, transparent, rgba(1,1,1) 100%)',
-          }}
-          width="100%"
-        />
-        <Box
-          alignItems="center"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          sx={{ bottom: '10%', position: 'absolute' }}
+          height="80px"
+          onClick={() => setSelecting(true)}
+          sx={{ cursor: 'pointer' }}
+          width="80px"
         >
-          <Box bgcolor={theme.palette.primary.main} borderRadius="100%">
-            <IconButton onClick={() => setSelecting(true)}>
-              <PhotoOutlined color="primary" />
-            </IconButton>
-          </Box>
-          <Typography color="primary" sx={{ textDecoration: 'underline' }}>
-            <Msg id={messageIds.editor.tools.libraryImage.changeImage} />
+          <img
+            alt=""
+            src={data.url}
+            style={{
+              height: '100%',
+              objectFit: 'cover',
+              width: '100%',
+            }}
+          />
+        </Box>
+        <Box
+          alignItems="flex-start"
+          display="flex"
+          flex={1}
+          flexDirection="column"
+          justifyContent="space-between"
+          overflow="hidden"
+          paddingLeft={1}
+        >
+          <Typography
+            maxWidth="80%"
+            noWrap
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
+            {data.fileName}
           </Typography>
+          <Button onClick={() => setSelecting(true)} variant="outlined">
+            <Msg id={messageIds.editor.tools.libraryImage.changeImage} />
+          </Button>
         </Box>
       </Box>
       <FileLibraryDialog
@@ -72,10 +66,12 @@ const LibraryImageSettings: FC<LibraryImageSettingsProps> = ({
         onSelectFile={(file) => {
           setData({
             fileId: file.id,
+            fileName: file.original_name,
             url: file.url,
           });
           onChange({
             fileId: file.id,
+            fileName: file.original_name,
             url: file.url,
           });
           setSelecting(false);

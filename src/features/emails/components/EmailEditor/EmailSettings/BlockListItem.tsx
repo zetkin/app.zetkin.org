@@ -75,15 +75,17 @@ const BlockListItem: FC<BlockListItemProps> = ({
           </Box>
         )}
         {block.type == BLOCK_TYPES.LIBRARY_IMAGE && (
-          <LibraryImageSettings
-            data={block.data}
-            onChange={(newData: LibraryImageData) => {
-              if (block.id) {
-                apiRef.current?.blocks.update(block.id, newData);
-              }
-            }}
-            orgId={orgId}
-          />
+          <Box paddingBottom={2} paddingX={1}>
+            <LibraryImageSettings
+              data={block.data}
+              onChange={(newData: LibraryImageData) => {
+                if (block.id) {
+                  apiRef.current?.blocks.update(block.id, newData);
+                }
+              }}
+              orgId={orgId}
+            />
+          </Box>
         )}
       </Collapse>
       <Divider />
