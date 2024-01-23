@@ -70,7 +70,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
       </Box>
       <Collapse in={expanded}>
         {block.type == BLOCK_TYPES.BUTTON && (
-          <Box padding={1}>
+          <Box paddingBottom={1} paddingX={1}>
             <ButtonSettings
               onChange={(newUrl: ButtonData['url']) => {
                 if (block.id) {

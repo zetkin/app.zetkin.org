@@ -21,53 +21,63 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
   const error = inputValue.length > 0 && formattedUrl.length == 0;
 
   return (
-    <Box display="flex" flexDirection="column" gap={1}>
+    <Box display="flex" flexDirection="column">
       <Typography textTransform="uppercase" variant="body2">
         <Msg id={messageIds.editor.tools.button.settings.linkHeader} />
       </Typography>
-      <TextField
-        InputProps={{
-          endAdornment:
-            inputValue.length > 0 ? (
-              <IconButton
-                onClick={() => {
-                  setInputValue('');
-                }}
-              >
-                <Close />
-              </IconButton>
-            ) : (
-              ''
-            ),
-        }}
-        label={messages.editor.tools.button.settings.urlLabel()}
-        onChange={(ev) => {
-          setInputValue(ev.target.value);
-          if (!error) {
-            onChange(formatUrl(ev.target.value));
-          }
-        }}
-        value={inputValue}
-      />
-      {error && (
-        <Typography color="error" variant="body2">
-          <Msg id={messageIds.editor.tools.button.settings.invalidUrl} />
-        </Typography>
-      )}
-      {inputValue.length > 0 && !error && (
-        <NextLink href={formattedUrl} passHref rel="">
-          <Link display="flex" rel="noopener" target="_blank" underline="none">
-            <OpenInNew
-              color="secondary"
-              fontSize="small"
-              sx={{ marginRight: 1 }}
-            />
-            <Typography variant="body2">
-              <Msg id={messageIds.editor.tools.button.settings.testLink} />
-            </Typography>
-          </Link>
-        </NextLink>
-      )}
+      <Box paddingBottom={1} paddingTop={2}>
+        <TextField
+          fullWidth
+          InputProps={{
+            endAdornment:
+              inputValue.length > 0 ? (
+                <IconButton
+                  onClick={() => {
+                    setInputValue('');
+                  }}
+                >
+                  <Close />
+                </IconButton>
+              ) : (
+                ''
+              ),
+          }}
+          label={messages.editor.tools.button.settings.urlLabel()}
+          onChange={(ev) => {
+            setInputValue(ev.target.value);
+            if (!error) {
+              onChange(formatUrl(ev.target.value));
+            }
+          }}
+          value={inputValue}
+        />
+      </Box>
+      <Box height="1.25em">
+        {error && (
+          <Typography color="error" variant="body2">
+            <Msg id={messageIds.editor.tools.button.settings.invalidUrl} />
+          </Typography>
+        )}
+        {inputValue.length > 0 && !error && (
+          <NextLink href={formattedUrl} passHref rel="">
+            <Link
+              display="flex"
+              rel="noopener"
+              target="_blank"
+              underline="none"
+            >
+              <OpenInNew
+                color="secondary"
+                fontSize="small"
+                sx={{ marginRight: 1 }}
+              />
+              <Typography variant="body2">
+                <Msg id={messageIds.editor.tools.button.settings.testLink} />
+              </Typography>
+            </Link>
+          </NextLink>
+        )}
+      </Box>
     </Box>
   );
 };
