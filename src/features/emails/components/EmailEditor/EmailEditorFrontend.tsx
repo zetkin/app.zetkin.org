@@ -114,10 +114,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   }, []);
 
   return (
-    <div
-      id="ClientOnlyEditor-container"
-      style={{ backgroundColor: 'white', border: '1px solid black' }}
-    />
+    <div id="ClientOnlyEditor-container" style={{ backgroundColor: 'white' }} />
   );
 };
 
