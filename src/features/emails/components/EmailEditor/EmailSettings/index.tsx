@@ -2,7 +2,7 @@ import { Edit } from '@mui/icons-material';
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
 import { Box, Tab } from '@mui/material';
-import { FC, MutableRefObject, useState } from 'react';
+import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import BlockListItem from './BlockListItem';
@@ -22,6 +22,14 @@ const EmailSettings: FC<EmailSettingsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'Content'>('Content');
   const [indexesOfExpanded, setIndexesOfExpanded] = useState<number[]>([]);
+  const boxRef = useRef<HTMLElement>();
+
+  useEffect(() => {
+    boxRef.current?.children[selectedBlockIndex]?.scrollIntoView({
+      behavior: 'smooth',
+    });
+  }, [selectedBlockIndex]);
+
   return (
     <TabContext value={activeTab}>
       <TabList onChange={(ev, newValue) => setActiveTab(newValue)}>
@@ -36,19 +44,25 @@ const EmailSettings: FC<EmailSettingsProps> = ({
         />
       </TabList>
       <TabPanel sx={{ padding: 0 }} value="Content">
-        {blocks.map((block, index) => (
-          <BlockListItem
-            key={block.id}
-            apiRef={apiRef}
-            block={block}
-            expanded={indexesOfExpanded.includes(index)}
-            onCollapse={() =>
-              setIndexesOfExpanded(indexesOfExpanded.filter((i) => i !== index))
-            }
-            onExpand={() => setIndexesOfExpanded([...indexesOfExpanded, index])}
-            selected={index === selectedBlockIndex}
-          />
-        ))}
+        <Box ref={boxRef}>
+          {blocks.map((block, index) => (
+            <BlockListItem
+              key={block.id}
+              apiRef={apiRef}
+              block={block}
+              expanded={indexesOfExpanded.includes(index)}
+              onCollapse={() =>
+                setIndexesOfExpanded(
+                  indexesOfExpanded.filter((i) => i !== index)
+                )
+              }
+              onExpand={() =>
+                setIndexesOfExpanded([...indexesOfExpanded, index])
+              }
+              selected={index === selectedBlockIndex}
+            />
+          ))}
+        </Box>
       </TabPanel>
     </TabContext>
   );
