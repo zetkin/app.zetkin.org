@@ -45,7 +45,9 @@ const BlockListItem: FC<BlockListItemProps> = ({
         alignItems="center"
         display="flex"
         justifyContent="space-between"
+        onClick={expandable && expanded ? onCollapse : onExpand}
         padding={1}
+        sx={{ cursor: expandable ? 'pointer' : 'default' }}
       >
         <Typography
           fontWeight={selected ? 'bold' : 'normal'}
@@ -53,20 +55,8 @@ const BlockListItem: FC<BlockListItemProps> = ({
         >
           <Msg id={messageIds.editor.tools.titles[block.type as BLOCK_TYPES]} />
         </Typography>
-        {expandable && !expanded && (
-          <ExpandMore
-            color="secondary"
-            onClick={onExpand}
-            sx={{ cursor: 'pointer' }}
-          />
-        )}
-        {expandable && expanded && (
-          <ExpandLess
-            color="secondary"
-            onClick={onCollapse}
-            sx={{ cursor: 'pointer' }}
-          />
-        )}
+        {expandable && !expanded && <ExpandMore color="secondary" />}
+        {expandable && expanded && <ExpandLess color="secondary" />}
       </Box>
       <Collapse in={expanded}>
         {block.type == BLOCK_TYPES.BUTTON && (
