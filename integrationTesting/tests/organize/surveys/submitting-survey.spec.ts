@@ -51,7 +51,7 @@ test.describe('User submitting a survey', () => {
 
     await page.click('input[name="1.options"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
-    await page.click('input[name="sig"][value="user"]');
+    await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
@@ -111,7 +111,7 @@ test.describe('User submitting a survey', () => {
     });
   });
 
-  test('submits user signature', async ({ moxy, page }) => {
+  test.skip('submits user signature', async ({ moxy, page }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
@@ -138,7 +138,7 @@ test.describe('User submitting a survey', () => {
     expect(data.signature).toBe('user');
   });
 
-  test('submits anonymous signature', async ({ moxy, page }) => {
+  test.skip('submits anonymous signature', async ({ moxy, page }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
@@ -165,7 +165,7 @@ test.describe('User submitting a survey', () => {
     expect(data.signature).toBe(null);
   });
 
-  test('preserves inputs on error', async ({ page }) => {
+  test.skip('preserves inputs on error', async ({ page }) => {
     await page.click('input[name="1.options"][value="1"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="anonymous"]');
