@@ -20,8 +20,8 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
   const [content, setContent] = useState<OutputData>(initialContent);
 
   return (
-    <Box display="flex">
-      <Box flex={1}>
+    <Box display="flex" height="100%">
+      <Box flex={1} sx={{ overflowY: 'auto' }}>
         <EmailEditorFrontend
           apiRef={apiRef}
           initialContent={initialContent}
@@ -34,7 +34,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
           }}
         />
       </Box>
-      <Box width="25%">
+      <Box sx={{ overflowY: 'auto' }} width="25%">
         <EmailSettings
           apiRef={apiRef}
           blocks={content.blocks}
