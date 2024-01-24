@@ -45,9 +45,7 @@ const ButtonSettings: FC<ButtonSettingsProps> = ({ url, onChange }) => {
           label={messages.editor.tools.button.settings.urlLabel()}
           onChange={(ev) => {
             setInputValue(ev.target.value);
-            if (!error) {
-              onChange(formatUrl(ev.target.value));
-            }
+            onChange(formatUrl(ev.target.value));
           }}
           value={inputValue}
         />

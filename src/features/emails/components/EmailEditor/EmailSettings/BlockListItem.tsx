@@ -1,12 +1,13 @@
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
 import { Box, Collapse, Divider, Typography } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, Warning } from '@mui/icons-material';
 import { FC, MutableRefObject } from 'react';
 
 import { BLOCK_TYPES } from 'features/emails/types';
 import { ButtonData } from '../tools/Button';
 import ButtonSettings from '../tools/Button/ButtonSettings';
+import checkBlockErrors from './utils/checkBlockErrors';
 import { LibraryImageData } from '../tools/LibraryImage/types';
 import LibraryImageSettings from '../tools/LibraryImage/LibraryImageSettings';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -34,6 +35,8 @@ const BlockListItem: FC<BlockListItemProps> = ({
   const { orgId } = useNumericRouteParams();
   const expandable = block.type !== BLOCK_TYPES.PARAGRAPH;
 
+  const hasErrors = checkBlockErrors(block);
+
   return (
     <>
       <Box
@@ -44,12 +47,17 @@ const BlockListItem: FC<BlockListItemProps> = ({
         padding={1}
         sx={{ cursor: expandable ? 'pointer' : 'default' }}
       >
-        <Typography
-          fontWeight={selected ? 'bold' : 'normal'}
-          sx={{ cursor: 'default' }}
-        >
-          <Msg id={messageIds.editor.tools.titles[block.type as BLOCK_TYPES]} />
-        </Typography>
+        <Box alignItems="center" display="flex">
+          <Typography
+            fontWeight={selected ? 'bold' : 'normal'}
+            sx={{ cursor: 'default', paddingRight: 1 }}
+          >
+            <Msg
+              id={messageIds.editor.tools.titles[block.type as BLOCK_TYPES]}
+            />
+          </Typography>
+          {hasErrors && <Warning color="warning" fontSize="small" />}
+        </Box>
         {expandable && !expanded && <ExpandMore color="secondary" />}
         {expandable && expanded && <ExpandLess color="secondary" />}
       </Box>
