@@ -1,3 +1,5 @@
+'use client';
+
 import { FC } from 'react';
 import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg } from 'core/i18n';

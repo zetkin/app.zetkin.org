@@ -138,7 +138,7 @@ test.describe('User submitting a survey', () => {
     expect(data.signature).toBe('user');
   });
 
-  test.skip('submits anonymous signature', async ({ moxy, page }) => {
+  test('submits anonymous signature', async ({ moxy, page }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
