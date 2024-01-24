@@ -21,7 +21,6 @@ const EmailSettings: FC<EmailSettingsProps> = ({
   selectedBlockIndex,
 }) => {
   const [activeTab, setActiveTab] = useState<'Content'>('Content');
-  const [indexesOfExpanded, setIndexesOfExpanded] = useState<number[]>([]);
   const boxRef = useRef<HTMLElement>();
 
   useEffect(() => {
@@ -50,15 +49,6 @@ const EmailSettings: FC<EmailSettingsProps> = ({
               key={block.id}
               apiRef={apiRef}
               block={block}
-              expanded={indexesOfExpanded.includes(index)}
-              onCollapse={() =>
-                setIndexesOfExpanded(
-                  indexesOfExpanded.filter((i) => i !== index)
-                )
-              }
-              onExpand={() =>
-                setIndexesOfExpanded([...indexesOfExpanded, index])
-              }
               selected={index === selectedBlockIndex}
             />
           ))}

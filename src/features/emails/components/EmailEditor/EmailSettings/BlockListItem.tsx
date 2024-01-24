@@ -2,7 +2,7 @@ import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
 import { Box, Collapse, Divider, Typography } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { FC, MutableRefObject } from 'react';
+import { FC, MutableRefObject, useState } from 'react';
 
 import { BLOCK_TYPES } from 'features/emails/types';
 import { ButtonData } from '../tools/Button';
@@ -16,22 +16,13 @@ import { useNumericRouteParams } from 'core/hooks';
 interface BlockListItemProps {
   apiRef: MutableRefObject<EditorJS | null>;
   block: OutputBlockData;
-  expanded: boolean;
-  onCollapse: () => void;
-  onExpand: () => void;
   selected: boolean;
 }
 
-const BlockListItem: FC<BlockListItemProps> = ({
-  apiRef,
-  block,
-  expanded,
-  onCollapse,
-  onExpand,
-  selected,
-}) => {
+const BlockListItem: FC<BlockListItemProps> = ({ apiRef, block, selected }) => {
   //Getting the orgId from the route is potentially a bad idea.
   const { orgId } = useNumericRouteParams();
+  const [expanded, setExpanded] = useState(true);
   const expandable = block.type !== BLOCK_TYPES.PARAGRAPH;
 
   return (
@@ -40,7 +31,11 @@ const BlockListItem: FC<BlockListItemProps> = ({
         alignItems="center"
         display="flex"
         justifyContent="space-between"
-        onClick={expandable && expanded ? onCollapse : onExpand}
+        onClick={
+          expandable && expanded
+            ? () => setExpanded(false)
+            : () => setExpanded(true)
+        }
         padding={1}
         sx={{ cursor: expandable ? 'pointer' : 'default' }}
       >
