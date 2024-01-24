@@ -4,6 +4,7 @@ import { Box, Collapse, Divider, Typography } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { FC, MutableRefObject } from 'react';
 
+import { BLOCK_TYPES } from 'features/emails/types';
 import { ButtonData } from '../tools/Button';
 import ButtonSettings from '../tools/Button/ButtonSettings';
 import { LibraryImageData } from '../tools/LibraryImage/types';
@@ -11,12 +12,6 @@ import LibraryImageSettings from '../tools/LibraryImage/LibraryImageSettings';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-
-enum BLOCK_TYPES {
-  BUTTON = 'button',
-  LIBRARY_IMAGE = 'libraryImage',
-  PARAGRAPH = 'paragraph',
-}
 
 interface BlockListItemProps {
   apiRef: MutableRefObject<EditorJS | null>;
