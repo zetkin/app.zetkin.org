@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+//@ts-ignore
+import Paragraph from '@editorjs/paragraph';
 import EditorJS, {
   EditorConfig,
   OutputData,
@@ -66,6 +69,12 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           class: LibraryImage as unknown as ToolConstructable,
           config: {
             orgId,
+          },
+        },
+        paragraph: {
+          class: Paragraph,
+          config: {
+            preserveBlank: true,
           },
         },
       },
