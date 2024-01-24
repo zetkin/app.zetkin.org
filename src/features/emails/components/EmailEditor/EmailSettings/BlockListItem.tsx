@@ -1,13 +1,12 @@
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
 import { Box, Collapse, Divider, Typography } from '@mui/material';
-import { ExpandLess, ExpandMore, Warning } from '@mui/icons-material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { FC, MutableRefObject } from 'react';
 
 import { BLOCK_TYPES } from 'features/emails/types';
 import { ButtonData } from '../tools/Button';
 import ButtonSettings from '../tools/Button/ButtonSettings';
-import checkBlockErrors from './utils/checkBlockErrors';
 import { LibraryImageData } from '../tools/LibraryImage/types';
 import LibraryImageSettings from '../tools/LibraryImage/LibraryImageSettings';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -35,8 +34,6 @@ const BlockListItem: FC<BlockListItemProps> = ({
   const { orgId } = useNumericRouteParams();
   const expandable = block.type !== BLOCK_TYPES.PARAGRAPH;
 
-  const hasErrors = checkBlockErrors(block);
-
   return (
     <>
       <Box
@@ -56,10 +53,28 @@ const BlockListItem: FC<BlockListItemProps> = ({
               id={messageIds.editor.tools.titles[block.type as BLOCK_TYPES]}
             />
           </Typography>
-          {hasErrors && <Warning color="warning" fontSize="small" />}
         </Box>
-        {expandable && !expanded && <ExpandMore color="secondary" />}
-        {expandable && expanded && <ExpandLess color="secondary" />}
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          width="75%"
+        >
+          <Typography
+            color="secondary"
+            maxWidth="80%"
+            noWrap
+            overflow="hidden"
+            textOverflow="ellipsis"
+            variant="body2"
+          >
+            {block.type === BLOCK_TYPES.LIBRARY_IMAGE && block.data.fileName}
+            {block.type === BLOCK_TYPES.BUTTON && block.data.buttonText}
+            {block.type === BLOCK_TYPES.PARAGRAPH && block.data.text}
+          </Typography>
+          {expandable && !expanded && <ExpandMore color="secondary" />}
+          {expandable && expanded && <ExpandLess color="secondary" />}
+        </Box>
       </Box>
       <Collapse in={expanded}>
         {block.type == BLOCK_TYPES.BUTTON && (
@@ -77,7 +92,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
             />
           </Box>
         )}
-        {block.type == BLOCK_TYPES.LIBRARY_IMAGE && (
+        {block.type === BLOCK_TYPES.LIBRARY_IMAGE && (
           <Box paddingBottom={2} paddingX={1}>
             <LibraryImageSettings
               data={block.data}
