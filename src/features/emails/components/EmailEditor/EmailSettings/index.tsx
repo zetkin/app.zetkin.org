@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material';
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
-import { Box, Divider, Tab } from '@mui/material';
+import { Box, Divider, Stack, Tab } from '@mui/material';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
@@ -43,19 +43,20 @@ const EmailSettings: FC<EmailSettingsProps> = ({
         />
       </TabList>
       <TabPanel sx={{ padding: 0 }} value="Content">
-        {/* <Box ref={boxRef}> //stack?  */}
-        <Box ref={boxRef}>
+        <Stack ref={boxRef} divider={<Divider />}>
           {blocks.map((block, index) => (
-            <Box key={block.id}>
-              <BlockListItem
-                apiRef={apiRef}
-                block={block}
-                selected={index === selectedBlockIndex}
-              />
-              <Divider />
-            </Box>
+            <BlockListItem
+              key={block.id}
+              block={block}
+              onChange={(newData: OutputBlockData['data']) => {
+                if (block.id) {
+                  apiRef.current?.blocks.update(block.id, newData);
+                }
+              }}
+              selected={index === selectedBlockIndex}
+            />
           ))}
-        </Box>
+        </Stack>
       </TabPanel>
     </TabContext>
   );

@@ -1,24 +1,25 @@
-import EditorJS from '@editorjs/editorjs';
+import { FC } from 'react';
 import { OutputBlockData } from '@editorjs/editorjs';
-import { FC, MutableRefObject } from 'react';
 
 import { BLOCK_TYPES } from 'features/emails/types';
 import BlockListItemBase from './BlockListItemBase';
 import ButtonBlockListItem from './ButtonBlockListItem';
-import { ButtonData } from '../tools/Button';
 import checkBlockErrors from './utils/checkBlockErrors';
 import ImageBlockListItem from './ImageBlockListItem';
-import { LibraryImageData } from '../tools/LibraryImage/types';
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 interface BlockListItemProps {
-  apiRef: MutableRefObject<EditorJS | null>;
   block: OutputBlockData;
+  onChange: (newData: OutputBlockData['data']) => void;
   selected: boolean;
 }
 
-const BlockListItem: FC<BlockListItemProps> = ({ apiRef, block, selected }) => {
+const BlockListItem: FC<BlockListItemProps> = ({
+  block,
+  onChange,
+  selected,
+}) => {
   const messages = useMessages(messageIds);
   const hasErrors = checkBlockErrors(block);
 
@@ -36,11 +37,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ apiRef, block, selected }) => {
       <ButtonBlockListItem
         data={block.data}
         hasErrors={hasErrors}
-        onChange={(newData: ButtonData) => {
-          if (block.id) {
-            apiRef.current?.blocks.update(block.id, newData);
-          }
-        }}
+        onChange={onChange}
         selected={selected}
       />
     );
@@ -49,11 +46,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ apiRef, block, selected }) => {
       <ImageBlockListItem
         data={block.data}
         hasErrors={hasErrors}
-        onChange={(newData: LibraryImageData) => {
-          if (block.id) {
-            apiRef.current?.blocks.update(block.id, newData);
-          }
-        }}
+        onChange={onChange}
         selected={selected}
       />
     );
