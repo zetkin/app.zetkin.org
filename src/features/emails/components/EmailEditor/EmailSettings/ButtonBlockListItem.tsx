@@ -5,7 +5,7 @@ import { FC, useState } from 'react';
 
 import BlockListItemBase from './BlockListItemBase';
 import { ButtonData } from '../tools/Button';
-import formatUrl from '../tools/Button/utils/formatUrl';
+import formatUrl from './utils/formatUrl';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
