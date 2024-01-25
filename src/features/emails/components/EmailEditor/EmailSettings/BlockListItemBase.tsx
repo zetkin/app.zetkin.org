@@ -67,7 +67,7 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
       </Box>
       {expandable && (
         <Collapse in={expanded}>
-          <Box paddingBottom={2} paddingX={1}>
+          <Box paddingBottom={2} paddingX={2}>
             {children}
           </Box>
         </Collapse>

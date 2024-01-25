@@ -56,19 +56,25 @@ const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
           display="flex"
           flex={1}
           flexDirection="column"
-          justifyContent="space-between"
+          justifyContent="flex-end"
           overflow="hidden"
-          paddingLeft={1}
+          paddingLeft={2}
         >
           <Typography
+            color="secondary"
             maxWidth="80%"
             noWrap
             overflow="hidden"
             textOverflow="ellipsis"
+            variant="body2"
           >
             {data.fileName}
           </Typography>
-          <Button onClick={() => setSelecting(true)} variant="outlined">
+          <Button
+            onClick={() => setSelecting(true)}
+            sx={{ marginTop: 1 }}
+            variant="outlined"
+          >
             <Msg id={messageIds.editor.tools.libraryImage.changeImage} />
           </Button>
         </Box>
