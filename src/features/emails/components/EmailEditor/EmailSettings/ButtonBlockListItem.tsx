@@ -35,9 +35,6 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
       title={messages.editor.tools.titles.button()}
     >
       <Box display="flex" flexDirection="column">
-        <Typography textTransform="uppercase" variant="body2">
-          <Msg id={messageIds.editor.tools.button.settings.linkHeader} />
-        </Typography>
         <Box paddingBottom={1} paddingTop={2}>
           <TextField
             fullWidth
@@ -72,6 +69,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
           {inputValue.length > 0 && !error && (
             <NextLink href={formattedUrl} passHref rel="">
               <Link
+                color="inherit"
                 display="flex"
                 rel="noopener"
                 target="_blank"

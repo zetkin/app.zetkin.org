@@ -14,7 +14,6 @@ export default makeMessages('feat.emails', {
         },
         settings: {
           invalidUrl: m('This is not a valid url'),
-          linkHeader: m('Button link'),
           testLink: m('Click to test link'),
           urlLabel: m('Link url'),
         },
