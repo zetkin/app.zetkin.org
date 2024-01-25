@@ -1,10 +1,11 @@
 import { Box, Collapse, Typography } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, Warning } from '@mui/icons-material';
 import { FC, ReactNode, useState } from 'react';
 
 interface BlockListItemBaseProps {
   children?: ReactNode;
   excerpt: string;
+  hasErrors: boolean;
   selected: boolean;
   title: string;
 }
@@ -12,6 +13,7 @@ interface BlockListItemBaseProps {
 const BlockListItemBase: FC<BlockListItemBaseProps> = ({
   children,
   excerpt,
+  hasErrors,
   selected,
   title,
 }) => {
@@ -32,6 +34,7 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
         padding={1}
         sx={{ cursor: expandable ? 'pointer' : 'default' }}
       >
+        {hasErrors && <Warning color="warning" fontSize="small" />}
         <Box alignItems="center" display="flex">
           <Typography
             fontWeight={selected ? 'bold' : 'normal'}
@@ -61,9 +64,11 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
         </Box>
       </Box>
       {expandable && (
-        <Box paddingBottom={2} paddingX={1}>
-          <Collapse in={expanded}>{children}</Collapse>
-        </Box>
+        <Collapse in={expanded}>
+          <Box paddingBottom={2} paddingX={1}>
+            {children}
+          </Box>
+        </Collapse>
       )}
     </>
   );

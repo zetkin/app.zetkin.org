@@ -10,12 +10,14 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface ImageBlockListItemProps {
   data: LibraryImageData;
+  hasErrors: boolean;
   onChange: (newData: LibraryImageData) => void;
   selected: boolean;
 }
 
 const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
   data: initialData,
+  hasErrors,
   onChange,
   selected,
 }) => {
@@ -28,6 +30,7 @@ const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
   return (
     <BlockListItemBase
       excerpt={data.fileName}
+      hasErrors={hasErrors}
       selected={selected}
       title={messages.editor.tools.titles.libraryImage()}
     >

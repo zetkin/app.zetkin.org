@@ -11,12 +11,14 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface ButtonBlockLIstItemProps {
   data: ButtonData;
+  hasErrors: boolean;
   onChange: (data: ButtonData) => void;
   selected: boolean;
 }
 
 const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
   data,
+  hasErrors,
   onChange,
   selected,
 }) => {
@@ -28,6 +30,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
   return (
     <BlockListItemBase
       excerpt={data.buttonText}
+      hasErrors={hasErrors}
       selected={selected}
       title={messages.editor.tools.titles.button()}
     >

@@ -6,6 +6,7 @@ import { BLOCK_TYPES } from 'features/emails/types';
 import BlockListItemBase from './BlockListItemBase';
 import ButtonBlockListItem from './ButtonBlockListItem';
 import { ButtonData } from '../tools/Button';
+import checkBlockErrors from './utils/checkBlockErrors';
 import ImageBlockListItem from './ImageBlockListItem';
 import { LibraryImageData } from '../tools/LibraryImage/types';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -19,11 +20,13 @@ interface BlockListItemProps {
 
 const BlockListItem: FC<BlockListItemProps> = ({ apiRef, block, selected }) => {
   const messages = useMessages(messageIds);
+  const hasErrors = checkBlockErrors(block);
 
   if (block.type === BLOCK_TYPES.PARAGRAPH) {
     return (
       <BlockListItemBase
         excerpt={block.data.text}
+        hasErrors={hasErrors}
         selected={selected}
         title={messages.editor.tools.titles.paragraph()}
       />
@@ -32,6 +35,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ apiRef, block, selected }) => {
     return (
       <ButtonBlockListItem
         data={block.data}
+        hasErrors={hasErrors}
         onChange={(newData: ButtonData) => {
           if (block.id) {
             apiRef.current?.blocks.update(block.id, newData);
@@ -44,6 +48,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ apiRef, block, selected }) => {
     return (
       <ImageBlockListItem
         data={block.data}
+        hasErrors={hasErrors}
         onChange={(newData: LibraryImageData) => {
           if (block.id) {
             apiRef.current?.blocks.update(block.id, newData);
