@@ -1,27 +1,36 @@
 import { Box, Button, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 
+import BlockListItemBase from './BlockListItemBase';
 import FileLibraryDialog from 'features/files/components/FileLibraryDialog';
-import { LibraryImageData } from './types';
+import { LibraryImageData } from '../tools/LibraryImage/types';
 import messageIds from 'features/emails/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import { Msg, useMessages } from 'core/i18n';
 
-interface LibraryImageSettingsProps {
+interface ImageBlockListItemProps {
   data: LibraryImageData;
   onChange: (newData: LibraryImageData) => void;
-  orgId: number;
+  selected: boolean;
 }
 
-const LibraryImageSettings: FC<LibraryImageSettingsProps> = ({
+const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
   data: initialData,
   onChange,
-  orgId,
+  selected,
 }) => {
+  const { orgId } = useNumericRouteParams();
+  const messages = useMessages(messageIds);
+
   const [selecting, setSelecting] = useState(false);
   const [data, setData] = useState(initialData);
 
   return (
-    <>
+    <BlockListItemBase
+      excerpt={data.fileName}
+      selected={selected}
+      title={messages.editor.tools.titles.libraryImage()}
+    >
       <Box display="flex">
         <Box
           height="80px"
@@ -80,8 +89,8 @@ const LibraryImageSettings: FC<LibraryImageSettingsProps> = ({
         orgId={orgId}
         type="image"
       />
-    </>
+    </BlockListItemBase>
   );
 };
 
-export default LibraryImageSettings;
+export default ImageBlockListItem;
