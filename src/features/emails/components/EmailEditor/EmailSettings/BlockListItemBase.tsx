@@ -31,11 +31,14 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
             ? () => setExpanded(false)
             : () => setExpanded(true)
         }
-        padding={1}
+        paddingX={2}
+        paddingY={1.5}
         sx={{ cursor: expandable ? 'pointer' : 'default' }}
       >
-        {hasErrors && <Warning color="warning" fontSize="small" />}
-        <Box alignItems="center" display="flex">
+        <Box alignItems="center" display="flex" justifyContent="flex-start">
+          {hasErrors && (
+            <Warning color="warning" fontSize="small" sx={{ marginRight: 1 }} />
+          )}
           <Typography
             fontWeight={selected ? 'bold' : 'normal'}
             sx={{ cursor: 'default', paddingRight: 1 }}
@@ -47,7 +50,7 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
           alignItems="center"
           display="flex"
           justifyContent="space-between"
-          width="75%"
+          width="60%"
         >
           <Typography
             color="secondary"
@@ -55,7 +58,6 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
             noWrap
             overflow="hidden"
             textOverflow="ellipsis"
-            variant="body2"
           >
             {excerpt}
           </Typography>

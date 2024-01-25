@@ -31,7 +31,10 @@ const EmailSettings: FC<EmailSettingsProps> = ({
 
   return (
     <TabContext value={activeTab}>
-      <TabList onChange={(ev, newValue) => setActiveTab(newValue)}>
+      <TabList
+        onChange={(ev, newValue) => setActiveTab(newValue)}
+        sx={{ border: 'none' }}
+      >
         <Tab
           label={
             <Box alignItems="center" display="flex">
@@ -43,7 +46,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
         />
       </TabList>
       <TabPanel sx={{ padding: 0 }} value="Content">
-        <Stack ref={boxRef} divider={<Divider />}>
+        <Stack ref={boxRef} divider={<Divider />} sx={{ paddingTop: 1 }}>
           {blocks.map((block, index) => (
             <BlockListItem
               key={block.id}
