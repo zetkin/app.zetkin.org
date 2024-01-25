@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
+import { Box, useTheme } from '@mui/material';
 import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
@@ -15,6 +15,7 @@ interface EmailEditorProps {
 }
 
 const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
+  const theme = useTheme();
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
   const [content, setContent] = useState<OutputData>(initialContent);
@@ -52,7 +53,13 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
           }}
         />
       </Box>
-      <Box sx={{ overflowY: 'auto' }} width="25%">
+      <Box
+        sx={{
+          borderLeft: `1px solid ${theme.palette.grey[300]}`,
+          overflowY: 'auto',
+        }}
+        width="25%"
+      >
         <EmailSettings
           apiRef={apiRef}
           blocks={content.blocks}
