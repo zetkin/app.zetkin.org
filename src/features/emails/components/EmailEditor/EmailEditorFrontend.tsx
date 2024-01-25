@@ -15,7 +15,6 @@ import { useNumericRouteParams } from 'core/hooks';
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
   initialContent: OutputData;
-  onChange: (data: OutputData) => void;
   onSave: (data: OutputData) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
 };
@@ -23,7 +22,6 @@ export type EmailEditorFrontendProps = {
 const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   apiRef,
   initialContent,
-  onChange,
   onSave,
   onSelectBlock,
 }) => {
@@ -31,7 +29,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   const editorInstance = useRef<EditorJS | null>(null);
   const blockIndexRef = useRef<number | null>(null);
 
-  const saved = async () => {
+  const saveData = async () => {
     try {
       const savedData = await editorInstance.current?.save();
       if (savedData && onSave) {
@@ -44,7 +42,6 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
             return true;
           }),
         };
-        onChange(filteredSavedData);
         onSave(filteredSavedData);
       }
     } catch (error) {
@@ -58,9 +55,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
       inlineToolbar: ['bold', 'link', 'italic'],
-      onChange: () => {
-        saved();
-      },
+      onChange: () => saveData(),
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,

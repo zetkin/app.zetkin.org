@@ -44,10 +44,10 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
         <EmailEditorFrontend
           apiRef={apiRef}
           initialContent={initialContent}
-          onChange={(newContent: OutputData) => {
+          onSave={(newContent: OutputData) => {
             setContent(newContent);
+            onSave(newContent);
           }}
-          onSave={onSave}
           onSelectBlock={(selectedBlockIndex: number) => {
             setSelectedBlockIndex(selectedBlockIndex);
           }}
