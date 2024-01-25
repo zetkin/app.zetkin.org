@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import { Box, Collapse, Typography } from '@mui/material';
 import { ExpandLess, ExpandMore, Warning } from '@mui/icons-material';
 import { FC, ReactNode, useState } from 'react';
@@ -19,6 +20,14 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
 }) => {
   const expandable = !!children;
   const [expanded, setExpanded] = useState(true);
+
+  const excerptWithoutHtml = DOMPurify.sanitize(excerpt, {
+    ALLOWED_TAGS: [],
+  });
+  const excerptWithoutHtmlEntities = excerptWithoutHtml.replace(
+    /&[#a-zA-Z0-9]+;/g,
+    ''
+  );
 
   return (
     <>
@@ -59,7 +68,7 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
             overflow="hidden"
             textOverflow="ellipsis"
           >
-            {excerpt}
+            {excerptWithoutHtmlEntities}
           </Typography>
           {expandable && !expanded && <ExpandMore color="secondary" />}
           {expandable && expanded && <ExpandLess color="secondary" />}
