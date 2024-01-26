@@ -44,6 +44,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
                   <IconButton
                     onClick={() => {
                       setInputValue('');
+                      onChange({ ...data, url: '' });
                     }}
                   >
                     <Close />
