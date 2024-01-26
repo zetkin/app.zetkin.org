@@ -1,7 +1,6 @@
 'use server';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { submit } from 'features/surveys/actions/submit';
 import SurveyForm from 'features/surveys/components/surveyForm/SurveyForm';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import { FC, ReactElement } from 'react';
@@ -13,7 +12,7 @@ type PageProps = {
   };
 };
 
-/* @ts-expect-error Server Component */
+// @ts-expect-error Async support missing
 const Page: FC<PageProps> = async ({ params }): Promise<ReactElement> => {
   const { orgId, surveyId } = params;
   const apiClient = new BackendApiClient({});
@@ -21,7 +20,7 @@ const Page: FC<PageProps> = async ({ params }): Promise<ReactElement> => {
     `/api/orgs/${orgId}/surveys/${surveyId}`
   );
 
-  return <SurveyForm action={submit} survey={survey} />;
+  return <SurveyForm survey={survey} />;
 };
 
 export default Page;

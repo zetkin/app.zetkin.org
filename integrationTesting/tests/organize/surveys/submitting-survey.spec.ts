@@ -165,7 +165,7 @@ test.describe('User submitting a survey', () => {
     expect(data.signature).toBe(null);
   });
 
-  test.skip('preserves inputs on error', async ({ page }) => {
+  test('preserves inputs on error', async ({ page }) => {
     await page.click('input[name="1.options"][value="1"]');
     await page.fill('input[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="anonymous"]');
