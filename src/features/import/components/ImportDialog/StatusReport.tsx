@@ -24,14 +24,13 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
     return null;
   }
 
-  const summary = result.report.person.summary;
   const isScheduled = result.status == 'pending';
 
   return (
     <Box
       display="flex"
       flexDirection="column"
-      height={isScheduled ? '90vh' : ''}
+      height={isScheduled ? '' : '90vh'}
       justifyContent="space-between"
       overflow="hidden"
     >
@@ -64,14 +63,14 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
               />
             )}
           </Box>
-          {!isScheduled && (
+          {result.report && (
             <>
               <Typography paddingBottom={2} variant="h5">
                 <Msg id={messageIds.importStatus.completedChanges} />
               </Typography>
               <ImpactSummary
                 orgId={orgId}
-                summary={summary}
+                summary={result.report.person.summary}
                 tense={isScheduled ? 'future' : 'past'}
               />
             </>

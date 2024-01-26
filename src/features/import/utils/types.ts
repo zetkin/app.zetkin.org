@@ -91,18 +91,45 @@ export type PersonImportSummary = {
   };
 };
 
-type ImportStatus = 'completed' | 'error' | 'pending' | 'in_progress';
-
-export type PersonImport = {
-  accepted: string;
-  completed: string | null;
-  report: {
-    person: {
-      summary: PersonImportSummary;
-    };
+type BulkReport = {
+  person: {
+    summary: PersonImportSummary;
   };
-  status: ImportStatus | null;
 };
+
+type CompletedLogItem = {
+  accepted: string;
+  completed: string;
+  report: BulkReport;
+  status: 'completed';
+};
+
+type ErrorBulkLogItem = {
+  accepted: string;
+  completed: string;
+  report: BulkReport;
+  status: 'error';
+};
+
+type InProgressLogItem = {
+  accepted: string;
+  completed: null;
+  report: null;
+  status: 'in_progress';
+};
+
+type PendingBulkLogItem = {
+  accepted: string;
+  completed: null;
+  report: null;
+  status: 'pending';
+};
+
+export type PersonImport =
+  | CompletedLogItem
+  | ErrorBulkLogItem
+  | InProgressLogItem
+  | PendingBulkLogItem;
 
 export enum ImportPreviewProblemCode {
   INVALID_FORMAT = 'INVALID_FORMAT',
@@ -122,5 +149,5 @@ type ImportPreviewProblem = {
 
 export type ImportPreview = {
   problems: ImportPreviewProblem[];
-  stats: PersonImport['report'];
+  stats: BulkReport;
 };
