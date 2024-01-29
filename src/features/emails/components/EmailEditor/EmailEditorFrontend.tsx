@@ -6,6 +6,7 @@ import EditorJS, {
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
+import InlineLink from './tools/InlineLink';
 import LibraryImage from './tools/LibraryImage';
 import { useNumericRouteParams } from 'core/hooks';
 
@@ -45,13 +46,16 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
-      inlineToolbar: ['bold', 'link', 'italic'],
+      inlineToolbar: ['bold', 'italic', 'inlineLink'],
       onChange: () => {
         saved();
       },
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,
+        },
+        inlineLink: {
+          class: InlineLink as unknown as ToolConstructable,
         },
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
