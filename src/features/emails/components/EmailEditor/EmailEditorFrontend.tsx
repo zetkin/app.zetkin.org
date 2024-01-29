@@ -46,7 +46,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
-      inlineToolbar: ['bold', 'italic', 'inlineLink'],
+      inlineToolbar: ['bold', 'italic', 'link'],
       onChange: () => {
         saved();
       },
@@ -54,14 +54,14 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         button: {
           class: Button as unknown as ToolConstructable,
         },
-        inlineLink: {
-          class: InlineLink as unknown as ToolConstructable,
-        },
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
           config: {
             orgId,
           },
+        },
+        link: {
+          class: InlineLink as unknown as ToolConstructable,
         },
       },
     };
