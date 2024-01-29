@@ -3,6 +3,7 @@ import { API, InlineToolConstructorOptions } from '@editorjs/editorjs';
 export default class LinkTool {
   private _api: API;
   private _button: HTMLButtonElement | null;
+  private _input: HTMLInputElement | null;
   private _isLink: boolean;
 
   addLink(range: Range) {
@@ -20,12 +21,25 @@ export default class LinkTool {
     const anchor = this._api.selection.findParentTag('A');
 
     this._isLink = !!anchor;
+
+    if (this._isLink) {
+      this.showInput();
+    } else {
+      this.hideInput();
+    }
   }
 
   constructor({ api }: InlineToolConstructorOptions) {
     this._api = api;
     this._button = null;
+    this._input = null;
     this._isLink = false;
+  }
+
+  hideInput() {
+    if (this._input) {
+      this._input.hidden = true;
+    }
   }
 
   static get isInline() {
@@ -48,6 +62,20 @@ export default class LinkTool {
     this._button.classList.add(this._api.styles.inlineToolButton);
 
     return this._button;
+  }
+
+  renderActions() {
+    this._input = document.createElement('input');
+    this._input.style.margin = '10px';
+    this._input.hidden = true;
+
+    return this._input;
+  }
+
+  showInput() {
+    if (this._input) {
+      this._input.hidden = false;
+    }
   }
 
   get state() {
