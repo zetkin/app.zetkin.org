@@ -1,13 +1,12 @@
-import { Edit } from '@mui/icons-material';
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
-import { Box, Divider, Stack, Tab } from '@mui/material';
+import { Divider, Stack, Tab } from '@mui/material';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import BlockListItem from './BlockListItem';
 import messageIds from 'features/emails/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 
 interface EmailSettingsProps {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -20,6 +19,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
   blocks,
   selectedBlockIndex,
 }) => {
+  const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<'Content'>('Content');
   const boxRef = useRef<HTMLElement>();
 
@@ -35,15 +35,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
         onChange={(ev, newValue) => setActiveTab(newValue)}
         sx={{ border: 'none' }}
       >
-        <Tab
-          label={
-            <Box alignItems="center" display="flex">
-              <Edit fontSize="small" sx={{ marginRight: 1 }} />
-              <Msg id={messageIds.editor.settings.tabs.content} />
-            </Box>
-          }
-          value="Content"
-        />
+        <Tab label={messages.editor.settings.tabs.content()} value="Content" />
       </TabList>
       <TabPanel sx={{ padding: 0 }} value="Content">
         <Stack ref={boxRef} divider={<Divider />} sx={{ paddingTop: 1 }}>
