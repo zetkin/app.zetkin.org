@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-import { Box, Collapse, Typography } from '@mui/material';
+import { Box, Collapse, Typography, useTheme } from '@mui/material';
 import { ExpandLess, ExpandMore, Warning } from '@mui/icons-material';
 import { FC, ReactNode, useState } from 'react';
 
@@ -18,6 +18,7 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
   selected,
   title,
 }) => {
+  const theme = useTheme();
   const expandable = !!children;
   const [expanded, setExpanded] = useState(true);
 
@@ -40,18 +41,20 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
             ? () => setExpanded(false)
             : () => setExpanded(true)
         }
-        paddingX={2}
+        paddingX={1.5}
         paddingY={1.5}
-        sx={{ cursor: expandable ? 'pointer' : 'default' }}
+        sx={{
+          borderLeft: selected
+            ? `4px solid ${theme.palette.primary.main}`
+            : '4px solid transparent',
+          cursor: expandable ? 'pointer' : 'default',
+        }}
       >
         <Box alignItems="center" display="flex" justifyContent="flex-start">
           {hasErrors && (
             <Warning color="warning" fontSize="small" sx={{ marginRight: 1 }} />
           )}
-          <Typography
-            fontWeight={selected ? 'bold' : 'normal'}
-            sx={{ cursor: 'default', paddingRight: 1 }}
-          >
+          <Typography sx={{ cursor: 'default', paddingRight: 1 }}>
             {title}
           </Typography>
         </Box>
@@ -76,7 +79,15 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
       </Box>
       {expandable && (
         <Collapse in={expanded}>
-          <Box paddingBottom={2} paddingX={2}>
+          <Box
+            paddingBottom={2}
+            paddingX={2}
+            sx={{
+              borderLeft: selected
+                ? `4px solid ${theme.palette.primary.main}`
+                : '4px solid transparent',
+            }}
+          >
             {children}
           </Box>
         </Collapse>
