@@ -55,6 +55,19 @@ export default makeMessages('feat.emails', {
     title: m('Targets'),
     viewButton: m('View target group'),
   },
+  tools: {
+    button: {
+      block: {
+        noButtonText: m('Click to change this text!'),
+      },
+      settings: {
+        invalidUrl: m('This is not a valid url'),
+        linkHeader: m('Button link'),
+        testLink: m('Click to test link'),
+        urlLabel: m('Link url'),
+      },
+    },
+  },
   wasSent: m<{ time: string }>('Was sent at {time}'),
   willSend: m<{ time: string }>('Will send at {time}'),
 });

@@ -1,7 +1,8 @@
 import { Box } from '@mui/material';
+import { GetServerSideProps } from 'next';
+
 import EmailEditor from 'features/emails/components/EmailEditor';
 import EmailLayout from 'features/emails/layout/EmailLayout';
-import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useEmail from 'features/emails/hooks/useEmail';
