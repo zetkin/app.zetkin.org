@@ -1,3 +1,4 @@
+import getAnchorTag from './utils/getAnchorTag';
 import { API, InlineToolConstructorOptions } from '@editorjs/editorjs';
 
 export default class LinkTool {
@@ -18,7 +19,10 @@ export default class LinkTool {
   }
 
   checkState() {
-    const anchor = this._api.selection.findParentTag('A');
+    const anchor = getAnchorTag(
+      window.getSelection(),
+      this._api.selection.findParentTag
+    );
 
     this._isLink = !!anchor;
 
@@ -46,13 +50,13 @@ export default class LinkTool {
     return true;
   }
 
-  removeLink(range: Range) {
-    const anchor = this._api.selection.findParentTag('A');
-    const text = range.extractContents();
+  removeLink() {
+    const anchor = getAnchorTag(
+      window.getSelection(),
+      this._api.selection.findParentTag
+    );
 
-    anchor?.remove();
-
-    range.insertNode(text);
+    anchor?.replaceWith(...Array.from(anchor.childNodes));
   }
 
   render() {
@@ -70,6 +74,14 @@ export default class LinkTool {
     this._input.hidden = true;
 
     return this._input;
+  }
+
+  static get sanitize() {
+    return {
+      a: {
+        class: 'inlineLink',
+      },
+    };
   }
 
   showInput() {
@@ -93,11 +105,10 @@ export default class LinkTool {
 
   surround(range: Range) {
     if (this._isLink) {
-      this.removeLink(range);
-      return;
+      this.removeLink();
+    } else {
+      this.addLink(range);
     }
-
-    this.addLink(range);
   }
 
   static toolbox() {
