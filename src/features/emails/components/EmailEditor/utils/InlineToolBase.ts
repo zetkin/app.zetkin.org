@@ -22,7 +22,10 @@ export default class InlineToolBase {
 
   render() {
     const handleSelectionChange = () => {
-      this.update();
+      const range = window.getSelection()?.getRangeAt(0);
+      if (range) {
+        this.update(range);
+      }
     };
 
     this._handleSelectionChangeBound = handleSelectionChange.bind(this);
@@ -38,7 +41,7 @@ export default class InlineToolBase {
     throw new Error('Method must be overridden');
   }
 
-  protected update(): void {
-    throw new Error('Method must be overridden');
+  protected update(range: Range): void {
+    throw new Error('Method must be overridden' + range.toString());
   }
 }

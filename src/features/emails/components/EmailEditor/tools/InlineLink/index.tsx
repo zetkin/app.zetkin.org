@@ -18,21 +18,9 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     this._input = null;
   }
 
-  removeLink(range: Range) {
-    const anchors = getAnchorTags(range, this._api);
-
-    anchors.forEach((anchor) => {
-      anchor.childNodes.forEach((child) =>
-        anchor.parentNode?.appendChild(child)
-      );
-      anchor.parentNode?.removeChild(anchor);
-    });
-  }
-
   renderActions() {
     this._input = document.createElement('input');
     this._input.style.margin = '10px';
-    this._input.hidden = true;
 
     return this._input;
   }
@@ -53,11 +41,39 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     };
   }
 
-  surround() {
-    // TODO: Either remove link(s) or add link, depending on selection
+  surround(range: Range) {
+    const anchors = getAnchorTags(range);
+    if (anchors.length) {
+      anchors.forEach((anchor) => {
+        anchor.childNodes.forEach((child) => {
+          anchor.parentNode?.appendChild(child);
+          anchor.parentNode?.insertBefore(child, anchor);
+        });
+        anchor.parentNode?.removeChild(anchor);
+      });
+    } else {
+      const anchor = document.createElement('A');
+      anchor.classList.add('inlineLink');
+
+      const content = range.extractContents();
+      anchor.append(content);
+
+      range.insertNode(anchor);
+      this._api.selection.expandToTag(anchor);
+    }
+
+    const newRange =
+      window.getSelection()?.getRangeAt(0) || document.createRange();
+    this.update(newRange);
   }
 
-  update() {
-    // TODO: Toggle button and actions
+  update(range: Range) {
+    if (this._input && this._button) {
+      const anchors = getAnchorTags(range);
+
+      this._input.style.display = anchors.length == 1 ? 'block' : 'none';
+
+      this._button.textContent = anchors.length == 0 ? 'Link' : 'Unlink';
+    }
   }
 }
