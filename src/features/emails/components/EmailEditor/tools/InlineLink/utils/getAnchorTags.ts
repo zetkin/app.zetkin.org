@@ -1,23 +1,26 @@
-import { API } from '@editorjs/editorjs';
+export default function getAnchorTags(range: Range): HTMLAnchorElement[] {
+  const anchors: HTMLAnchorElement[] = [];
 
-export default function getAnchorTags(range: Range, api: API): Node[] {
-  let node: Node | null = range.startContainer;
-  const endNode = range.endContainer;
-  const anchors: Node[] = [];
-
-  const parentA = api.selection.findParentTag('A');
-
-  if (parentA) {
-    anchors.push(parentA);
-  }
-
-  while (node && node !== endNode) {
-    if (node.nodeName == 'A') {
-      anchors.push(node);
+  const ancestor = range.commonAncestorContainer;
+  if (ancestor.nodeType == Node.TEXT_NODE) {
+    if (ancestor.parentElement?.tagName == 'A') {
+      return [ancestor.parentElement as HTMLAnchorElement];
     }
 
-    node = node.nextSibling;
+    return [];
   }
+
+  const container = ancestor as HTMLElement;
+  if (container.tagName == 'A') {
+    return [container as HTMLAnchorElement];
+  }
+
+  // Container is not text or A, so look for A decendents
+  container.querySelectorAll('a').forEach((anchor) => {
+    if (range.intersectsNode(anchor)) {
+      anchors.push(anchor);
+    }
+  });
 
   return anchors;
 }
