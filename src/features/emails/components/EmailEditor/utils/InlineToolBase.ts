@@ -22,9 +22,12 @@ export default class InlineToolBase {
 
   render() {
     const handleSelectionChange = () => {
-      const range = window.getSelection()?.getRangeAt(0);
-      if (range) {
-        this.update(range);
+      const selection = window.getSelection();
+      if (selection?.rangeCount) {
+        const range = window.getSelection()?.getRangeAt(0);
+        if (range) {
+          this.update(range);
+        }
       }
     };
 
