@@ -1,0 +1,45 @@
+/* Variables */
+:root {
+  --color-primary: #ed1c55;
+}
+
+/* Overrides */
+body {
+  margin: 0;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: azo-sans-web, sans-serif;
+}
+
+blockquote {
+  border-left: 2px solid #ddd;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 10px;
+  color: #aaa;
+  font-style: italic;
+}
+
+/**
+* NProgress bar styles
+* 
+* Copied from `nprogress/nprogress.css` and modified.
+*/
+#nprogress .bar {
+  background: var(--color-primary);
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 3px;
+}
+
+#nprogress #nprogress .bar {
+  position: absolute;
+}

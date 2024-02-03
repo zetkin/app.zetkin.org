@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    uses: ./.github/workflows/reusable-base.yml
+    with:
+      yarn-test-script: lint
+
+  check-types:
+    uses: ./.github/workflows/reusable-base.yml
+    with:
+      yarn-test-script: check-types
+
+  playwright-test:
+    uses: ./.github/workflows/reusable-base.yml
+    with:
+      validation-script: exit `grep -ER "(test|describe)\.only" integrationTesting | wc -l`
+      build-script: npx playwright install chromium
+      yarn-test-script: playwright:ci
+      upload-path: playwright-report/
+
+  unit-test:
+    uses: ./.github/workflows/reusable-base.yml
+    with:
+      validation-script: exit `grep -ER "(test|describe|it)\.only" src | wc -l`
+      yarn-test-script: test

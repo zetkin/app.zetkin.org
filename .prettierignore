@@ -1,0 +1,19 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# auto-generated localizations
+src/locale/**/*.yml
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+.nyc_output
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
