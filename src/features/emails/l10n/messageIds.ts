@@ -67,6 +67,10 @@ export default makeMessages('feat.emails', {
         urlLabel: m('Link url'),
       },
     },
+    link: {
+      invalidUrl: m('This is not a valid url'),
+      title: m('Link'),
+    },
   },
   wasSent: m<{ time: string }>('Was sent at {time}'),
   willSend: m<{ time: string }>('Will send at {time}'),

@@ -7,9 +7,16 @@ import {
   InlineToolConstructorOptions,
 } from '@editorjs/editorjs';
 
+interface LinkToolConfig {
+  messages: {
+    invalidUrl: string;
+  };
+}
+
 export default class LinkTool extends InlineToolBase implements InlineTool {
   private _api: API;
   private _button: HTMLButtonElement | null;
+  private _config: LinkToolConfig;
   private _container: HTMLDivElement | null;
   private _errorMessage: HTMLDivElement | null;
   private _focused: boolean;
@@ -17,10 +24,11 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
   private _input: HTMLInputElement | null;
   private _selectedAnchor: HTMLAnchorElement | null;
 
-  constructor({ api }: InlineToolConstructorOptions) {
+  constructor({ api, config }: InlineToolConstructorOptions) {
     super();
     this._api = api;
     this._button = null;
+    this._config = config;
     this._container = null;
     this._errorMessage = null;
     this._formattedUrl = '';
@@ -56,7 +64,7 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     };
 
     this._errorMessage = document.createElement('div');
-    this._errorMessage.textContent = 'This is not a valid url';
+    this._errorMessage.textContent = this._config.messages.invalidUrl;
 
     this._container.appendChild(this._input);
     this._container.appendChild(this._errorMessage);

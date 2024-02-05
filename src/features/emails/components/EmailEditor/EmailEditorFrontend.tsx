@@ -8,6 +8,8 @@ import { FC, MutableRefObject, useEffect, useRef } from 'react';
 import Button from './tools/Button';
 import InlineLink from './tools/InlineLink';
 import LibraryImage from './tools/LibraryImage';
+import messageIds from 'features/emails/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 
 export type EmailEditorFrontendProps = {
@@ -25,6 +27,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   onSave,
   onSelectBlock,
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const editorInstance = useRef<EditorJS | null>(null);
   const blockIndexRef = useRef<number | null>(null);
@@ -46,7 +49,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
-      inlineToolbar: ['bold', 'italic', 'link'],
+      inlineToolbar: ['bold', 'italic', messages.tools.link.title()],
       onChange: () => {
         saved();
       },
@@ -60,8 +63,13 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
             orgId,
           },
         },
-        link: {
+        [messages.tools.link.title()]: {
           class: InlineLink as unknown as ToolConstructable,
+          config: {
+            messages: {
+              invalidUrl: messages.tools.link.invalidUrl(),
+            },
+          },
         },
       },
     };
