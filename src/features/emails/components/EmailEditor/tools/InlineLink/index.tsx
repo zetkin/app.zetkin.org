@@ -9,6 +9,7 @@ import {
 
 interface LinkToolConfig {
   messages: {
+    addUrl: string;
     invalidUrl: string;
   };
 }
@@ -18,10 +19,10 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
   private _button: HTMLButtonElement | null;
   private _config: LinkToolConfig;
   private _container: HTMLDivElement | null;
-  private _errorMessage: HTMLDivElement | null;
   private _focused: boolean;
   private _formattedUrl: string;
   private _input: HTMLInputElement | null;
+  private _inputStatusMessage: HTMLDivElement | null;
   private _selectedAnchor: HTMLAnchorElement | null;
 
   constructor({ api, config }: InlineToolConstructorOptions) {
@@ -30,7 +31,7 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     this._button = null;
     this._config = config;
     this._container = null;
-    this._errorMessage = null;
+    this._inputStatusMessage = null;
     this._formattedUrl = '';
     this._input = null;
     this._selectedAnchor = null;
@@ -63,11 +64,11 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
       }
     };
 
-    this._errorMessage = document.createElement('div');
-    this._errorMessage.textContent = this._config.messages.invalidUrl;
+    this._inputStatusMessage = document.createElement('div');
+    this._inputStatusMessage.textContent = this._config.messages.addUrl;
 
     this._container.appendChild(this._input);
-    this._container.appendChild(this._errorMessage);
+    this._container.appendChild(this._inputStatusMessage);
 
     return this._container;
   }
@@ -83,6 +84,8 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     return {
       a: {
         class: 'inlineLink',
+        href: true,
+        target: '_blank',
       },
     };
   }
@@ -110,21 +113,40 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
   }
 
   update(range: Range) {
-    if (this._container && this._input && this._button && this._errorMessage) {
+    if (
+      this._container &&
+      this._input &&
+      this._button &&
+      this._inputStatusMessage
+    ) {
       const anchors = getAnchorTags(range);
-      const error =
-        this._input.value.length > 0 && this._formattedUrl.length == 0;
 
       if (anchors.length == 1) {
         this._selectedAnchor = anchors[0];
         this._container.style.display = 'block';
         this._input.value = this._selectedAnchor.href;
+        this._formattedUrl = formatUrl(this._input.value);
       } else if (!this._focused) {
         this._container.style.display = 'none';
         this._selectedAnchor = null;
       }
+      const noUrl = this._input.value.length === 0;
+      const error =
+        this._input.value.length > 0 && this._formattedUrl.length == 0;
 
-      this._errorMessage.style.color = error ? 'red' : 'transparent';
+      if (noUrl) {
+        this._inputStatusMessage.style.color = 'orange';
+        this._inputStatusMessage.textContent = this._config.messages.addUrl;
+      }
+
+      if (error) {
+        this._inputStatusMessage.style.color = 'red';
+        this._inputStatusMessage.textContent = this._config.messages.invalidUrl;
+      }
+
+      if (!error && !noUrl) {
+        this._inputStatusMessage.style.color = 'transparent';
+      }
 
       //switch between icons for adding and removing link
       this._button.innerHTML =

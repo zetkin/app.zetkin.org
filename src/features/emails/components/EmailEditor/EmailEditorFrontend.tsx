@@ -49,7 +49,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
-      inlineToolbar: ['bold', 'italic', messages.tools.link.title()],
+      inlineToolbar: ['bold', 'italic', 'link'],
       onChange: () => {
         saved();
       },
@@ -63,10 +63,11 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
             orgId,
           },
         },
-        [messages.tools.link.title()]: {
+        link: {
           class: InlineLink as unknown as ToolConstructable,
           config: {
             messages: {
+              addUrl: messages.tools.link.addUrl(),
               invalidUrl: messages.tools.link.invalidUrl(),
             },
           },

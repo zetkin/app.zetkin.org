@@ -68,6 +68,7 @@ export default makeMessages('feat.emails', {
       },
     },
     link: {
+      addUrl: m('Add a url'),
       invalidUrl: m('This is not a valid url'),
       title: m('Link'),
     },
