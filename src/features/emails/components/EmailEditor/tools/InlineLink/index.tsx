@@ -112,6 +112,7 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     } else {
       const anchor = document.createElement('a');
       anchor.classList.add('inlineLink');
+      anchor.style.cursor = 'text';
 
       const content = range.extractContents();
       anchor.append(content);
