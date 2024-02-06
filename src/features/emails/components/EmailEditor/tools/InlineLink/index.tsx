@@ -99,6 +99,10 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     };
   }
 
+  get shortcut() {
+    return 'CMD+Q';
+  }
+
   surround(range: Range) {
     const anchors = getAnchorTags(range);
     if (anchors.length) {
