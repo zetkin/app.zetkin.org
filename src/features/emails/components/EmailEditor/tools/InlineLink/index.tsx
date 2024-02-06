@@ -39,8 +39,6 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
   }
 
   renderActions() {
-    this._container = document.createElement('div');
-
     this._input = document.createElement('input');
     this._input.style.margin = '10px';
     this._input.oninput = () => {
@@ -54,6 +52,16 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     };
     this._input.onblur = () => {
       this._focused = false;
+
+      //If the input is empty, remove anchor tag
+      if (this._input && this._input.value.length === 0) {
+        if (this._selectedAnchor) {
+          this._selectedAnchor.replaceWith(
+            ...Array.from(this._selectedAnchor.childNodes)
+          );
+        }
+      }
+
       this.clear();
     };
     this._input.onkeyup = (ev) => {
@@ -64,6 +72,7 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
       }
     };
 
+    this._container = document.createElement('div');
     this._inputStatusMessage = document.createElement('div');
     this._inputStatusMessage.textContent = this._config.messages.addUrl;
 
@@ -130,6 +139,7 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
         this._container.style.display = 'none';
         this._selectedAnchor = null;
       }
+
       const noUrl = this._input.value.length === 0;
       const error =
         this._input.value.length > 0 && this._formattedUrl.length == 0;
