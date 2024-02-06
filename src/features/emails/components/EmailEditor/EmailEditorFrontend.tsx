@@ -69,6 +69,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
             messages: {
               addUrl: messages.tools.link.addUrl(),
               invalidUrl: messages.tools.link.invalidUrl(),
+              testLink: messages.tools.link.testLink(),
             },
           },
         },

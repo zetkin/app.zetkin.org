@@ -11,6 +11,7 @@ interface LinkToolConfig {
   messages: {
     addUrl: string;
     invalidUrl: string;
+    testLink: string;
   };
 }
 
@@ -22,8 +23,10 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
   private _focused: boolean;
   private _formattedUrl: string;
   private _input: HTMLInputElement | null;
-  private _inputStatusMessage: HTMLDivElement | null;
+  private _inputStatusContainer: HTMLDivElement | null;
+  private _inputStatusMessage: HTMLParagraphElement | null;
   private _selectedAnchor: HTMLAnchorElement | null;
+  private _visitLink: HTMLAnchorElement | null;
 
   constructor({ api, config }: InlineToolConstructorOptions) {
     super();
@@ -31,25 +34,30 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     this._button = null;
     this._config = config;
     this._container = null;
-    this._inputStatusMessage = null;
     this._formattedUrl = '';
     this._input = null;
+    this._inputStatusContainer = null;
+    this._inputStatusMessage = null;
     this._selectedAnchor = null;
     this._focused = false;
+    this._visitLink = null;
   }
 
   renderActions() {
     this._input = document.createElement('input');
     this._input.style.margin = '10px';
+
     this._input.oninput = () => {
       if (this._selectedAnchor && this._input) {
         this._formattedUrl = formatUrl(this._input.value);
         this._selectedAnchor.href = this._formattedUrl;
       }
     };
+
     this._input.onfocus = () => {
       this._focused = true;
     };
+
     this._input.onblur = () => {
       this._focused = false;
 
@@ -64,6 +72,7 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
 
       this.clear();
     };
+
     this._input.onkeyup = (ev) => {
       if (ev.code == 'Enter' || ev.code == 'NumpadEnter') {
         this._focused = false;
@@ -72,12 +81,22 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
       }
     };
 
-    this._container = document.createElement('div');
-    this._inputStatusMessage = document.createElement('div');
+    this._inputStatusMessage = document.createElement('p');
     this._inputStatusMessage.textContent = this._config.messages.addUrl;
+    this._inputStatusMessage.style.display = 'none';
 
+    this._visitLink = document.createElement('a');
+    this._visitLink.textContent = this._config.messages.testLink;
+    this._visitLink.target = '_blank';
+    this._visitLink.style.display = 'none';
+
+    this._inputStatusContainer = document.createElement('div');
+    this._inputStatusContainer.appendChild(this._visitLink);
+    this._inputStatusContainer.appendChild(this._inputStatusMessage);
+
+    this._container = document.createElement('div');
     this._container.appendChild(this._input);
-    this._container.appendChild(this._inputStatusMessage);
+    this._container.appendChild(this._inputStatusContainer);
 
     return this._container;
   }
@@ -131,7 +150,8 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
       this._container &&
       this._input &&
       this._button &&
-      this._inputStatusMessage
+      this._inputStatusMessage &&
+      this._visitLink
     ) {
       const anchors = getAnchorTags(range);
 
@@ -149,18 +169,19 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
       const error =
         this._input.value.length > 0 && this._formattedUrl.length == 0;
 
-      if (noUrl) {
-        this._inputStatusMessage.style.color = 'orange';
-        this._inputStatusMessage.textContent = this._config.messages.addUrl;
-      }
+      //show either status message or link
+      if (noUrl || error) {
+        this._visitLink.style.display = 'none';
+        this._inputStatusMessage.style.display = 'block';
 
-      if (error) {
-        this._inputStatusMessage.style.color = 'red';
-        this._inputStatusMessage.textContent = this._config.messages.invalidUrl;
-      }
-
-      if (!error && !noUrl) {
-        this._inputStatusMessage.style.color = 'transparent';
+        this._inputStatusMessage.style.color = noUrl ? 'orange' : 'red';
+        this._inputStatusMessage.textContent = noUrl
+          ? this._config.messages.addUrl
+          : this._config.messages.invalidUrl;
+      } else {
+        this._inputStatusMessage.style.display = 'none';
+        this._visitLink.href = this._formattedUrl;
+        this._visitLink.style.display = 'block';
       }
 
       //switch between icons for adding and removing link
