@@ -32,7 +32,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
       excerpt={data.buttonText}
       hasErrors={hasErrors}
       selected={selected}
-      title={messages.editor.tools.titles.button()}
+      title={messages.editor.tools.button.title()}
     >
       <Box display="flex" flexDirection="column">
         <Box paddingBottom={1} paddingTop={2}>

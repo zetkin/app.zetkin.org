@@ -17,14 +17,14 @@ export default makeMessages('feat.emails', {
           testLink: m('Click to test link'),
           urlLabel: m('Link url'),
         },
+        title: m('Button'),
       },
       libraryImage: {
         changeImage: m('Change image'),
+        title: m('Image'),
       },
-      titles: {
-        button: m('Button'),
-        libraryImage: m('Image'),
-        paragraph: m('Text'),
+      paragraph: {
+        title: m('Text'),
       },
     },
   },

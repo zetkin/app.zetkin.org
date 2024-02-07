@@ -32,7 +32,7 @@ const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
       excerpt={data.fileName}
       hasErrors={hasErrors}
       selected={selected}
-      title={messages.editor.tools.titles.libraryImage()}
+      title={messages.editor.tools.libraryImage.title()}
     >
       <Box display="flex">
         <Box

@@ -29,7 +29,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
         excerpt={block.data.text}
         hasErrors={hasErrors}
         selected={selected}
-        title={messages.editor.tools.titles.paragraph()}
+        title={messages.editor.tools.paragraph.title()}
       />
     );
   } else if (block.type === BLOCK_TYPES.BUTTON) {
