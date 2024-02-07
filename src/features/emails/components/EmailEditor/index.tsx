@@ -1,10 +1,9 @@
 import dynamic from 'next/dynamic';
-import { Box, Typography } from '@mui/material';
-import EditorJS, { OutputData } from '@editorjs/editorjs';
-import { FC, useRef, useState } from 'react';
+import { Box, useTheme } from '@mui/material';
+import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
+import { FC, useEffect, useRef, useState } from 'react';
 
-import { ButtonData } from './tools/Button';
-import ButtonSettings from './tools/Button/ButtonSettings';
+import EmailSettings from './EmailSettings';
 
 const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
   ssr: false,
@@ -16,43 +15,56 @@ interface EmailEditorProps {
 }
 
 const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
+  const theme = useTheme();
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
   const [content, setContent] = useState<OutputData>(initialContent);
 
-  const currentBlock = content.blocks[selectedBlockIndex];
+  const blocksRef = useRef<OutputBlockData[]>();
+
+  useEffect(() => {
+    if (
+      blocksRef.current !== undefined &&
+      blocksRef.current.length < content.blocks.length
+    ) {
+      for (let i = 0; i < blocksRef.current.length; i++) {
+        const block = blocksRef.current[i];
+        if (block.id != content.blocks[i].id) {
+          setSelectedBlockIndex(i);
+          break;
+        }
+      }
+    }
+    blocksRef.current = content.blocks;
+  }, [content.blocks.length]);
 
   return (
-    <Box display="flex">
-      <Box flex={1}>
+    <Box display="flex" height="100%">
+      <Box flex={1} sx={{ overflowY: 'auto' }}>
         <EmailEditorFrontend
           apiRef={apiRef}
           initialContent={initialContent}
-          onChange={(newContent: OutputData) => {
+          onSave={(newContent: OutputData) => {
             setContent(newContent);
+            onSave(newContent);
           }}
-          onSave={onSave}
           onSelectBlock={(selectedBlockIndex: number) => {
             setSelectedBlockIndex(selectedBlockIndex);
           }}
         />
       </Box>
-      <Box padding={2} width="25%">
-        <Typography>Settings</Typography>
-        {currentBlock && currentBlock.type === 'button' && (
-          <ButtonSettings
-            key={currentBlock.id}
-            onChange={(newUrl: ButtonData['url']) => {
-              if (currentBlock.id) {
-                apiRef.current?.blocks.update(currentBlock.id, {
-                  ...currentBlock.data,
-                  url: newUrl,
-                });
-              }
-            }}
-            url={currentBlock.data.url || ''}
-          />
-        )}
+      <Box
+        sx={{
+          borderLeft: `1px solid ${theme.palette.grey[300]}`,
+          overflowY: 'auto',
+        }}
+        width="25%"
+      >
+        <EmailSettings
+          apiRef={apiRef}
+          blocks={content.blocks}
+          selectedBlockIndex={selectedBlockIndex}
+        />
       </Box>
     </Box>
   );

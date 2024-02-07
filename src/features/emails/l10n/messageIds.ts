@@ -1,6 +1,33 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
+  editor: {
+    settings: {
+      tabs: {
+        content: m('Content'),
+      },
+    },
+    tools: {
+      button: {
+        block: {
+          noButtonText: m('Click to change this text!'),
+        },
+        settings: {
+          invalidUrl: m('This is not a valid url'),
+          testLink: m('Click to test link'),
+          urlLabel: m('Link url'),
+        },
+        title: m('Button'),
+      },
+      libraryImage: {
+        changeImage: m('Change image'),
+        title: m('Image'),
+      },
+      paragraph: {
+        title: m('Text'),
+      },
+    },
+  },
   emailActionButtons: {
     afterLock: m<{ numTargets: number }>(
       'Will schedule email for {numTargets} people'
@@ -54,19 +81,6 @@ export default makeMessages('feat.emails', {
     subtitle: m('Use smart search to define the recipients of this mail.'),
     title: m('Targets'),
     viewButton: m('View target group'),
-  },
-  tools: {
-    button: {
-      block: {
-        noButtonText: m('Click to change this text!'),
-      },
-      settings: {
-        invalidUrl: m('This is not a valid url'),
-        linkHeader: m('Button link'),
-        testLink: m('Click to test link'),
-        urlLabel: m('Link url'),
-      },
-    },
   },
   wasSent: m<{ time: string }>('Was sent at {time}'),
   willSend: m<{ time: string }>('Will send at {time}'),

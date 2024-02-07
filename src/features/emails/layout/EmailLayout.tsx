@@ -39,6 +39,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
       }
       baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
       defaultTab="/"
+      fixedHeight
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
