@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+//@ts-ignore
+import Paragraph from '@editorjs/paragraph';
 import EditorJS, {
   EditorConfig,
   OutputData,
@@ -15,7 +18,6 @@ import { useNumericRouteParams } from 'core/hooks';
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
   initialContent: OutputData;
-  onChange: (data: OutputData) => void;
   onSave: (data: OutputData) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
 };
@@ -23,7 +25,6 @@ export type EmailEditorFrontendProps = {
 const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   apiRef,
   initialContent,
-  onChange,
   onSave,
   onSelectBlock,
 }) => {
@@ -32,12 +33,20 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   const editorInstance = useRef<EditorJS | null>(null);
   const blockIndexRef = useRef<number | null>(null);
 
-  const saved = async () => {
+  const saveData = async () => {
     try {
       const savedData = await editorInstance.current?.save();
       if (savedData && onSave) {
-        onChange(savedData);
-        onSave(savedData);
+        const filteredSavedData = {
+          ...savedData,
+          blocks: savedData.blocks.filter((block) => {
+            if (block.type === 'libraryImage' && !block.data.fileId) {
+              return false;
+            }
+            return true;
+          }),
+        };
+        onSave(filteredSavedData);
       }
     } catch (error) {
       //TODO: handle error
@@ -49,10 +58,8 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
-      inlineToolbar: ['bold', 'italic', 'link'],
-      onChange: () => {
-        saved();
-      },
+      inlineToolbar: ['bold', 'link', 'italic'],
+      onChange: () => saveData(),
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,
@@ -67,10 +74,16 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           class: InlineLink as unknown as ToolConstructable,
           config: {
             messages: {
-              addUrl: messages.tools.link.addUrl(),
-              invalidUrl: messages.tools.link.invalidUrl(),
-              testLink: messages.tools.link.testLink(),
+              addUrl: messages.editor.tools.link.addUrl(),
+              invalidUrl: messages.editor.tools.link.invalidUrl(),
+              testLink: messages.editor.tools.link.testLink(),
             },
+          },
+        },
+        paragraph: {
+          class: Paragraph,
+          config: {
+            preserveBlank: true,
           },
         },
       },
@@ -119,10 +132,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   }, []);
 
   return (
-    <div
-      id="ClientOnlyEditor-container"
-      style={{ backgroundColor: 'white', border: '1px solid black' }}
-    />
+    <div id="ClientOnlyEditor-container" style={{ backgroundColor: 'white' }} />
   );
 };
 

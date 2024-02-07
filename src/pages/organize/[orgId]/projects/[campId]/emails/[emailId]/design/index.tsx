@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
 import EmailEditor from 'features/emails/components/EmailEditor';
@@ -45,16 +44,12 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
   }
 
   return (
-    <Box>
-      <EmailEditor
-        initialContent={
-          data.content ? JSON.parse(data.content) : { blocks: [] }
-        }
-        onSave={(data) => {
-          updateEmail({ content: JSON.stringify(data) });
-        }}
-      />
-    </Box>
+    <EmailEditor
+      initialContent={data.content ? JSON.parse(data.content) : { blocks: [] }}
+      onSave={(data) => {
+        updateEmail({ content: JSON.stringify(data) });
+      }}
+    />
   );
 };
 

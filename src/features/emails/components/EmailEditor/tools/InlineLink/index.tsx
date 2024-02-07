@@ -1,11 +1,12 @@
-import formatUrl from '../Button/utils/formatUrl';
-import getAnchorTags from './utils/getAnchorTags';
-import InlineToolBase from '../../utils/InlineToolBase';
 import {
   API,
   InlineTool,
   InlineToolConstructorOptions,
 } from '@editorjs/editorjs';
+
+import formatUrl from '../../EmailSettings/utils/formatUrl';
+import getAnchorTags from './utils/getAnchorTags';
+import InlineToolBase from '../../utils/InlineToolBase';
 
 interface LinkToolConfig {
   messages: {
