@@ -2,9 +2,9 @@ import { FC } from 'react';
 import { OutputBlockData } from '@editorjs/editorjs';
 
 import { BLOCK_TYPES } from 'features/emails/types';
+import blockHasErrors from './utils/blockHasErrors';
 import BlockListItemBase from './BlockListItemBase';
 import ButtonBlockListItem from './ButtonBlockListItem';
-import checkBlockErrors from './utils/checkBlockErrors';
 import ImageBlockListItem from './ImageBlockListItem';
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -21,7 +21,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
   selected,
 }) => {
   const messages = useMessages(messageIds);
-  const hasErrors = checkBlockErrors(block);
+  const hasErrors = blockHasErrors(block);
 
   if (block.type === BLOCK_TYPES.PARAGRAPH) {
     return (
