@@ -17,10 +17,7 @@ export default function blockHasErrors(block: OutputBlockData) {
     container.innerHTML = block.data.text;
     const anchors = [...container.querySelectorAll('a')];
 
-    return anchors.some(
-      (anchor) =>
-        !isURL(anchor.getAttribute('href') || '', { require_protocol: true })
-    );
+    return anchors.some((anchor) => anchor.classList.contains('hasInvalidUrl'));
   }
 
   return false;

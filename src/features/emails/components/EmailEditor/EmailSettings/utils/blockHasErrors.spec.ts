@@ -78,7 +78,7 @@ describe('blockHasErrors()', () => {
       expect(hasErrors).toEqual(false);
     });
 
-    it('returns false if text contains an anchor with a correct href', () => {
+    it('returns false if text contains an anchor with no classes', () => {
       const hasErrors = blockHasErrors(
         mockTextData({
           text: 'Hello <a href="http://www.clara.com">Clara</a>"',
@@ -88,37 +88,21 @@ describe('blockHasErrors()', () => {
       expect(hasErrors).toEqual(false);
     });
 
-    it('returns true if text contains an anchor with an href without "http://"', () => {
+    it('returns false if text contains an anchor with unrelated classes', () => {
       const hasErrors = blockHasErrors(
         mockTextData({
-          text: 'Hello <a href="www.clara.com">Clara</a>"',
+          text: 'Hello <a class="unrelatedClass andAnother" href="http://www.clara.com">Clara</a>"',
         })
       );
 
-      expect(hasErrors).toEqual(true);
+      expect(hasErrors).toEqual(false);
     });
 
-    it('returns true if text contains an anchor with an href that is notthing like an url', () => {
+    it('returns true if text contains an anchor with the class hasInvalidUrl', () => {
       const hasErrors = blockHasErrors(
         mockTextData({
-          text: 'Hello <a href="clara">Clara</a>"',
+          text: 'Hello <a class="hasInvalidUrl" href="http://www.clara.com">Clara</a>"',
         })
-      );
-
-      expect(hasErrors).toEqual(true);
-    });
-
-    it('returns true if text contains an anchor with an empty href', () => {
-      const hasErrors = blockHasErrors(
-        mockTextData({ text: 'Hello <a href="">Clara</a>' })
-      );
-
-      expect(hasErrors).toEqual(true);
-    });
-
-    it('returns true if text contains an anchor without an href attribute', () => {
-      const hasErrors = blockHasErrors(
-        mockTextData({ text: 'Hello <a>Clara</a>' })
       );
 
       expect(hasErrors).toEqual(true);

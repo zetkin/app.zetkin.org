@@ -68,7 +68,15 @@ export function linkToolFactory(title: string) {
 
       this._input.oninput = () => {
         if (this._selectedAnchor && this._input) {
-          this._selectedAnchor.href = formatUrl(this._input.value) || '';
+          this._selectedAnchor.href = this._input.value;
+
+          const formattedUrl = formatUrl(this._input.value);
+          if (!formattedUrl) {
+            this._selectedAnchor.classList.add('hasInvalidUrl');
+          } else {
+            this._selectedAnchor.classList.remove('hasInvalidUrl');
+            this._selectedAnchor.href = formattedUrl;
+          }
         }
       };
 
@@ -157,7 +165,7 @@ export function linkToolFactory(title: string) {
     static get sanitize() {
       return {
         a: {
-          class: 'inlineLink',
+          class: true,
           href: true,
           target: '_blank',
         },
@@ -208,7 +216,8 @@ export function linkToolFactory(title: string) {
         if (anchors.length == 1) {
           this._selectedAnchor = anchors[0];
           this._container.style.display = 'block';
-          this._input.value = this._selectedAnchor.href;
+          this._input.value = this._selectedAnchor.getAttribute('href') || '';
+
           if (this._input.value.length === 0) {
             this._input.focus();
           }
