@@ -22,7 +22,6 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
   private _config: LinkToolConfig;
   private _container: HTMLDivElement | null;
   private _focused: boolean;
-  private _formattedUrl: string;
   private _input: HTMLInputElement | null;
   private _inputStatusContainer: HTMLDivElement | null;
   private _inputStatusMessage: HTMLParagraphElement | null;
@@ -35,7 +34,6 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
     this._button = null;
     this._config = config;
     this._container = null;
-    this._formattedUrl = '';
     this._input = null;
     this._inputStatusContainer = null;
     this._inputStatusMessage = null;
@@ -50,8 +48,7 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
 
     this._input.oninput = () => {
       if (this._selectedAnchor && this._input) {
-        this._formattedUrl = formatUrl(this._input.value);
-        this._selectedAnchor.href = this._formattedUrl;
+        this._selectedAnchor.href = formatUrl(this._input.value) || '';
       }
     };
 
@@ -160,15 +157,15 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
         this._selectedAnchor = anchors[0];
         this._container.style.display = 'block';
         this._input.value = this._selectedAnchor.href;
-        this._formattedUrl = formatUrl(this._input.value);
       } else if (!this._focused) {
         this._container.style.display = 'none';
         this._selectedAnchor = null;
       }
 
+      const formattedUrl = formatUrl(this._input.value);
+
       const noUrl = this._input.value.length === 0;
-      const error =
-        this._input.value.length > 0 && this._formattedUrl.length == 0;
+      const error = this._input.value.length > 0 && !formattedUrl;
 
       //show either status message or link
       if (noUrl || error) {
@@ -180,8 +177,10 @@ export default class LinkTool extends InlineToolBase implements InlineTool {
           ? this._config.messages.addUrl
           : this._config.messages.invalidUrl;
       } else {
+        if (formattedUrl) {
+          this._visitLink.href = formattedUrl;
+        }
         this._inputStatusMessage.style.display = 'none';
-        this._visitLink.href = this._formattedUrl;
         this._visitLink.style.display = 'block';
       }
 

@@ -11,5 +11,17 @@ export default function blockHasErrors(block: OutputBlockData) {
 
     return !isURL(block.data.url, { require_protocol: true });
   }
+
+  if (block.type === BLOCK_TYPES.PARAGRAPH) {
+    const container = document.createElement('div');
+    container.innerHTML = block.data.text;
+    const anchors = [...container.querySelectorAll('a')];
+
+    return anchors.some(
+      (anchor) =>
+        !isURL(anchor.getAttribute('href') || '', { require_protocol: true })
+    );
+  }
+
   return false;
 }
