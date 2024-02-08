@@ -25,12 +25,13 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
   }
 
   const isScheduled = result.status == 'pending';
+  const isComplete = result.status == 'completed';
 
   return (
     <Box
       display="flex"
       flexDirection="column"
-      height={isScheduled ? '' : '90vh'}
+      height={isComplete ? '90vh' : ''}
       justifyContent="space-between"
       overflow="hidden"
     >
