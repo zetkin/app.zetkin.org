@@ -209,6 +209,9 @@ export function linkToolFactory(title: string) {
           this._selectedAnchor = anchors[0];
           this._container.style.display = 'block';
           this._input.value = this._selectedAnchor.href;
+          if (this._input.value.length === 0) {
+            this._input.focus();
+          }
         } else if (!this._focused) {
           this._container.style.display = 'none';
           this._selectedAnchor = null;
