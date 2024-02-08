@@ -49,6 +49,17 @@ export function linkToolFactory(title: string) {
       this._focused = false;
     }
 
+    onToolClose(): void {
+      //If the input is empty, remove anchor tag
+      if (this._input && this._input.value.length === 0) {
+        if (this._selectedAnchor) {
+          this._selectedAnchor.replaceWith(
+            ...Array.from(this._selectedAnchor.childNodes)
+          );
+        }
+      }
+    }
+
     renderActions() {
       this._input = document.createElement('input');
       this._input.style.padding = '8px';
@@ -67,16 +78,6 @@ export function linkToolFactory(title: string) {
 
       this._input.onblur = () => {
         this._focused = false;
-
-        //If the input is empty, remove anchor tag
-        if (this._input && this._input.value.length === 0) {
-          if (this._selectedAnchor) {
-            this._selectedAnchor.replaceWith(
-              ...Array.from(this._selectedAnchor.childNodes)
-            );
-          }
-        }
-
         this.clear();
       };
 

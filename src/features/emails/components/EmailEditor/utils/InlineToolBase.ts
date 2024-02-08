@@ -6,6 +6,7 @@ export default class InlineToolBase {
   }
 
   clear() {
+    this.onToolClose();
     this.destroy();
   }
 
@@ -18,6 +19,10 @@ export default class InlineToolBase {
 
   static get isInline() {
     return true;
+  }
+
+  onToolClose() {
+    //Overridden in tool
   }
 
   render() {
