@@ -31,7 +31,7 @@ export default makeMessages('feat.emails', {
       },
       paragraph: {
         invalidUrls: m(
-          'There are one or more empty or invalid URLs in this text block.'
+          'There are one or more invalid URLs in this text block.'
         ),
         title: m('Text'),
       },
