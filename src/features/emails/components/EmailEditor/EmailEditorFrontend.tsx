@@ -9,8 +9,8 @@ import EditorJS, {
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
-import InlineLink from './tools/InlineLink';
 import LibraryImage from './tools/LibraryImage';
+import { linkToolFactory } from './tools/InlineLink';
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
@@ -73,7 +73,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           },
         },
         link: {
-          class: InlineLink as unknown as ToolConstructable,
+          class: linkToolFactory(messages.editor.tools.link.title()),
           config: {
             messages: {
               addUrl: messages.editor.tools.link.addUrl(),
