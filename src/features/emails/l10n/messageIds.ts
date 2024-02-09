@@ -19,6 +19,9 @@ export default makeMessages('feat.emails', {
         },
         title: m('Button'),
       },
+      header: {
+        title: m('Header'),
+      },
       libraryImage: {
         changeImage: m('Change image'),
         title: m('Image'),
