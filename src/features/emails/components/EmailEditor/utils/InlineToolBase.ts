@@ -49,7 +49,8 @@ export default class InlineToolBase {
     throw new Error('Method must be overridden');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected update(range: Range): void {
-    throw new Error('Method must be overridden' + range.toString());
+    // Does nothing by default
   }
 }
