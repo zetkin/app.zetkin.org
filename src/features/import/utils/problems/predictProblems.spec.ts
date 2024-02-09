@@ -237,6 +237,60 @@ describe('predictProblem()', () => {
     ]);
   });
 
+  it('finds no problems for correct gender formats', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'gender',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+      ],
+      rows: [
+        { data: [1, 'f'] },
+        { data: [2, 'm'] },
+        { data: [3, 'o'] },
+        { data: [3, ''] },
+        { data: [4, null] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toHaveLength(0);
+  });
+
+  it('finds problem with incorrect gender formats', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'gender',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+      ],
+      rows: [{ data: [1, 'F'] }, { data: [2, 'K'] }, { data: [3, 'whatever'] }],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        field: 'gender',
+        indices: [0, 1, 2],
+        kind: ImportProblemKind.INVALID_FORMAT,
+      },
+    ]);
+  });
+
   it('aggregates related problems', () => {
     const sheet = makeFullSheet({
       columns: [

@@ -110,6 +110,10 @@ export function predictProblems(
               if (!isValidPhoneNumber(value.toString(), country)) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
+            } else if (column.field == 'gender') {
+              if (!['m', 'f', 'o', ''].includes(value.toString())) {
+                accumulateFieldProblem(column.field, rowIndex);
+              }
             }
           }
           hadImpact = true;
