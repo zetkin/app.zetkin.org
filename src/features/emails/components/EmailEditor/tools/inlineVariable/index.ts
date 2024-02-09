@@ -111,6 +111,7 @@ export default function variableToolFactory(title: string) {
     static get sanitize() {
       return {
         span: {
+          contenteditable: true,
           'data-slug': true,
           style: true,
         },
