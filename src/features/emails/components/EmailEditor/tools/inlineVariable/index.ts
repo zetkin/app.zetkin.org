@@ -65,6 +65,9 @@ export default function variableToolFactory(title: string) {
       range.deleteContents();
       range.insertNode(elem);
 
+      // Store slug in dataset
+      elem.dataset.slug = slug;
+
       // Reset editor
       this._api.toolbar.close();
       window.getSelection()?.empty();
@@ -76,6 +79,15 @@ export default function variableToolFactory(title: string) {
 
     protected renderButton() {
       return this._button;
+    }
+
+    static get sanitize() {
+      return {
+        span: {
+          'data-slug': true,
+          style: true,
+        },
+      };
     }
 
     surround(range: Range): void {
