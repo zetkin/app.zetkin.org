@@ -81,6 +81,10 @@ export default function variableToolFactory(title: string) {
       });
     }
 
+    deactivate(): void {
+      this._list.style.display = 'none';
+    }
+
     insertVariable(range: Range, slug: string): void {
       const elem = document.createElement('span');
       elem.contentEditable = 'false';
@@ -119,6 +123,7 @@ export default function variableToolFactory(title: string) {
     }
 
     surround(range: Range): void {
+      this.activate();
       this._pendingRange = range;
       this._list.style.display = 'block';
     }
