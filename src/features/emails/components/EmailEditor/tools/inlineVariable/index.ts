@@ -33,10 +33,22 @@ export default function variableToolFactory(title: string) {
       this._list = document.createElement('ul');
       this._list.style.display = 'none';
       this._list.style.listStyleType = 'none';
+      this._list.style.minWidth = '150px';
       this._list.style.padding = '0px';
+      this._list.style.margin = '0px';
 
       Object.entries(this._availableVars).forEach(([slug, title]) => {
         const item = document.createElement('li');
+        item.style.cursor = 'pointer';
+        item.style.padding = '8px';
+        item.style.borderTop = '1px solid rgba(0,0,0,0.1)';
+        item.addEventListener('mouseenter', () => {
+          item.style.backgroundColor = 'rgba(0,0,0,0.05)';
+        });
+        item.addEventListener('mouseleave', () => {
+          item.style.backgroundColor = 'transparent';
+        });
+
         item.dataset.slug = slug;
         item.innerText = title;
         item.addEventListener(
