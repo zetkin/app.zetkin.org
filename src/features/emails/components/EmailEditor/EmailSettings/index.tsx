@@ -6,6 +6,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import BlockListItem from './BlockListItem';
 import messageIds from 'features/emails/l10n/messageIds';
+import PreviewTab from './PreviewTab';
 import { useMessages } from 'core/i18n';
 
 interface EmailSettingsProps {
@@ -54,7 +55,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
             value="settings"
           />
           <Tab
-            label={messages.editor.settings.tabs.preview()}
+            label={messages.editor.settings.tabs.preview.title()}
             value="preview"
           />
         </TabList>
@@ -85,7 +86,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
           Foo
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="preview">
-          Bar
+          <PreviewTab />
         </TabPanel>
       </TabContext>
     </Box>

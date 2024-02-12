@@ -5,7 +5,16 @@ export default makeMessages('feat.emails', {
     settings: {
       tabs: {
         content: m('Content'),
-        preview: m('Preview'),
+        preview: {
+          emailInputError: m('This is not a valid email'),
+          emailLabel: m('Input your own email'),
+          instructions: m(
+            'Here you can this email to yourself to preview what it will look like for the recipients. '
+          ),
+          sendButton: m('Send'),
+          sendTo: m('The email will be sent to this address:'),
+          title: m('Preview'),
+        },
         settings: m('Settings'),
       },
     },
