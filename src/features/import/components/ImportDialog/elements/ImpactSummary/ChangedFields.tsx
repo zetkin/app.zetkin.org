@@ -5,27 +5,39 @@ import { Typography, useTheme } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useFieldTitle from 'utils/hooks/useFieldTitle';
-import {
-  ZetkinCustomField,
-  ZetkinPersonNativeFields,
-} from 'utils/types/zetkin';
+import { ZetkinPersonNativeFields } from 'utils/types/zetkin';
 
 interface ChangedFieldsProps {
   changedFields: {
-    [key in
-      | keyof Partial<ZetkinPersonNativeFields>
-      | keyof Partial<ZetkinCustomField>]?: number;
+    [key in keyof Partial<ZetkinPersonNativeFields> | string]?: number;
+  };
+  initializedFields: {
+    [key in keyof Partial<ZetkinPersonNativeFields> | string]?: number;
   };
   orgId: number;
+  tense: 'past' | 'future';
 }
 
-const ChangedFields: FC<ChangedFieldsProps> = ({ changedFields, orgId }) => {
+const ChangedFields: FC<ChangedFieldsProps> = ({
+  changedFields,
+  initializedFields,
+  orgId,
+  tense,
+}) => {
   const theme = useTheme();
   const getFieldTitle = useFieldTitle(orgId);
+
+  const updatedSlugs = new Set([
+    ...Object.keys(changedFields),
+    ...Object.keys(initializedFields),
+  ]);
+
   return (
     <>
-      {Object.entries(changedFields).map((field) => {
-        const [fieldSlug, numChanges] = field;
+      {Array.from(updatedSlugs).map((fieldSlug) => {
+        const numChanges =
+          (changedFields[fieldSlug] || 0) + (initializedFields[fieldSlug] || 0);
+
         return (
           <Box
             key={fieldSlug}
@@ -44,7 +56,7 @@ const ChangedFields: FC<ChangedFieldsProps> = ({ changedFields, orgId }) => {
               }}
             >
               <Msg
-                id={messageIds.validation.updateOverview.defaultDesc}
+                id={messageIds.impactSummary[tense].defaultDesc}
                 values={{
                   field: (
                     <Typography fontWeight="bold" marginX={0.5}>
@@ -58,7 +70,7 @@ const ChangedFields: FC<ChangedFieldsProps> = ({ changedFields, orgId }) => {
                       sx={{ display: 'flex' }}
                     >
                       <Msg
-                        id={messageIds.validation.updateOverview.people}
+                        id={messageIds.impactSummary.people}
                         values={{
                           numPeople: numChanges,
                           number: (

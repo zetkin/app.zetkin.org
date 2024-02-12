@@ -68,27 +68,6 @@ export type Column =
   | TagColumn
   | OrgColumn;
 
-export const enum IMPORT_ERROR {
-  ALT_PHONE = 'altPhone',
-  DATE = 'date',
-  EMAIL = 'email',
-  GENDER = 'gender',
-  ID_MISSING = 'idMissing',
-  ID = 'id',
-  ID_VALUE_MISSING = 'idValueMissing',
-  LONG_CO_ADDRESS = 'longCoAddress',
-  LONG_COUNTRY = 'longCountry',
-  LONG_EXT_ID = 'longExtId',
-  LONG_FIRST_NAME = 'longFirstName',
-  LONG_LAST_NAME = 'longLastName',
-  LONG_STREET_ADDRESS = 'longStreetAddress',
-  NO_IDENTIFIER = 'noIdentifier',
-  NOT_SELECTED_ID_TYPE = 'notSelectedIdType',
-  PHONE = 'phone',
-  POST_CODE = 'postCode',
-  URL = 'url',
-}
-
 export interface ZetkinPersonImportPostBody {
   ops: ZetkinPersonImportOp[];
 }
@@ -106,24 +85,69 @@ export type PersonImportSummary = {
     total: number;
   };
   updated: {
-    byField: { [key: string]: number };
+    byChangedField: { [key: string]: number };
+    byInitializedField: { [key: string]: number };
     total: number;
   };
 };
 
-type ImportStatus = 'completed' | 'error' | 'pending' | 'in_progress';
-
-export type PersonImport = {
-  accepted: string;
-  completed: string | null;
-  report: {
-    person: {
-      summary: PersonImportSummary;
-    };
+type BulkReport = {
+  person: {
+    summary: PersonImportSummary;
   };
-  status: ImportStatus | null;
+};
+
+type CompletedLogItem = {
+  accepted: string;
+  completed: string;
+  report: BulkReport;
+  status: 'completed';
+};
+
+type ErrorBulkLogItem = {
+  accepted: string;
+  completed: string;
+  report: BulkReport;
+  status: 'error';
+};
+
+type InProgressLogItem = {
+  accepted: string;
+  completed: null;
+  report: null;
+  status: 'in_progress';
+};
+
+type PendingBulkLogItem = {
+  accepted: string;
+  completed: null;
+  report: null;
+  status: 'pending';
+};
+
+export type PersonImport =
+  | CompletedLogItem
+  | ErrorBulkLogItem
+  | InProgressLogItem
+  | PendingBulkLogItem;
+
+export enum ImportPreviewProblemCode {
+  INVALID_FORMAT = 'INVALID_FORMAT',
+  MISSING_ID_AND_NAME = 'MISSING_ID_AND_NAME',
+  UNKNOWN = 'UNKNOWN',
+  UNKNOWN_ORG = 'UNKNOWN_ORG',
+  UNKNOWN_OBJECT = 'UNKNOWN_OBJECT',
+  UNKNOWN_FIELD = 'UNKNOWN_FIELD',
+}
+
+type ImportPreviewProblem = {
+  code: ImportPreviewProblemCode;
+  field?: string;
+  index: number;
+  level: 'error' | 'warning';
 };
 
 export type ImportPreview = {
-  stats: PersonImport['report'];
+  problems: ImportPreviewProblem[];
+  stats: BulkReport;
 };

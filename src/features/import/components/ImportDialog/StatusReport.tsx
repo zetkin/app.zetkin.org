@@ -1,16 +1,12 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
-import AddedOrgs from './elements/AddedOrgs';
-import AddedTags from './elements/AddedTags';
-import ChangedFields from './elements/ChangedFields';
-import CreatedAndUpdated from './elements/CreatedAndUpdated';
+import ImpactSummary from './elements/ImpactSummary';
 import ImportFooter from './elements/ImportFooter';
 import ImportHeader from './elements/ImportHeader';
+import ImportMessage from './elements/ImportMessageList/ImportMessage';
 import messageIds from 'features/import/l10n/messageIds';
-import { useNumericRouteParams } from 'core/hooks';
-import useStatusReport from '../../hooks/useStatusReport';
-import ImportAlert, { ALERT_STATUS } from './elements/ImportAlert';
 import { Msg, useMessages } from 'core/i18n';
+import { useAppSelector, useNumericRouteParams } from 'core/hooks';
 
 interface StatusReportProps {
   onClickBack: () => void;
@@ -21,15 +17,21 @@ interface StatusReportProps {
 const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { addedTags, alert, orgsWithNewPeople, summary } =
-    useStatusReport(orgId);
-  const fullHeight = alert.status != ALERT_STATUS.INFO;
+
+  const result = useAppSelector((state) => state.import.importResult);
+  if (!result) {
+    // Should never happen
+    return null;
+  }
+
+  const isScheduled = result.status == 'pending';
+  const isComplete = result.status == 'completed';
 
   return (
     <Box
       display="flex"
       flexDirection="column"
-      height={fullHeight ? '90vh' : ''}
+      height={isComplete ? '90vh' : ''}
       justifyContent="space-between"
       overflow="hidden"
     >
@@ -37,32 +39,41 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
         <ImportHeader onClose={onClose} />
         <Box display="flex" flexDirection="column" sx={{ overflowY: 'auto' }}>
           <Box paddingY={2}>
-            <ImportAlert alert={alert} onClickBack={onClickBack} />
+            {result.status == 'error' && (
+              <ImportMessage
+                description={messages.importStatus.error.desc()}
+                onClickBack={onClickBack}
+                status="error"
+                title={messages.importStatus.error.title()}
+              />
+            )}
+            {result.status == 'completed' && (
+              <ImportMessage
+                description={messages.importStatus.completed.desc()}
+                onClickBack={onClickBack}
+                status="success"
+                title={messages.importStatus.completed.title()}
+              />
+            )}
+            {result.status == 'pending' && (
+              <ImportMessage
+                description={messages.importStatus.scheduled.desc()}
+                onClickBack={onClickBack}
+                status="info"
+                title={messages.importStatus.scheduled.title()}
+              />
+            )}
           </Box>
-          {alert.status !== ALERT_STATUS.INFO && (
+          {result.report && (
             <>
               <Typography paddingBottom={2} variant="h5">
                 <Msg id={messageIds.importStatus.completedChanges} />
               </Typography>
-              <CreatedAndUpdated summary={summary} />
-              <Stack spacing={2} sx={{ mt: 2 }}>
-                <ChangedFields
-                  changedFields={summary.updated.byField}
-                  orgId={orgId}
-                />
-                {addedTags.length > 0 && (
-                  <AddedTags
-                    addedTags={addedTags}
-                    numPeopleWithTagsAdded={summary.tagged.total}
-                  />
-                )}
-                {orgsWithNewPeople.length > 0 && (
-                  <AddedOrgs
-                    numPeopleWithOrgsAdded={summary.addedToOrg.total}
-                    orgsWithNewPeople={orgsWithNewPeople}
-                  />
-                )}
-              </Stack>
+              <ImpactSummary
+                orgId={orgId}
+                summary={result.report.person.summary}
+                tense={isScheduled ? 'future' : 'past'}
+              />
             </>
           )}
         </Box>
@@ -72,14 +83,12 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
         onClickSecondary={onClickBack}
         primaryButtonDisabled={false}
         primaryButtonMsg={
-          alert.status == ALERT_STATUS.INFO
+          isScheduled
             ? messages.actionButtons.close()
             : messages.actionButtons.done()
         }
         secondaryButtonMsg={
-          alert.status == ALERT_STATUS.ERROR
-            ? messages.actionButtons.back()
-            : undefined
+          result.status == 'error' ? messages.actionButtons.back() : undefined
         }
       />
     </Box>

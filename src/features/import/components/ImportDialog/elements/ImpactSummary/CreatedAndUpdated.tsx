@@ -1,15 +1,16 @@
 import { FC } from 'react';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 
-import messageIds from '../../../l10n/messageIds';
+import messageIds from '../../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { PersonImportSummary } from '../../../utils/types';
+import { PersonImportSummary } from '../../../../utils/types';
 
 interface CreatedAndUpdatedProps {
   summary: PersonImportSummary;
+  tense: 'past' | 'future';
 }
 
-const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
+const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary, tense }) => {
   const theme = useTheme();
   return (
     <Stack direction="row" gap={2}>
@@ -21,7 +22,7 @@ const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
         width="100%"
       >
         <Msg
-          id={messageIds.validation.updateOverview.created}
+          id={messageIds.impactSummary[tense].created}
           values={{
             numPeople: summary.created.total,
             number: (
@@ -45,7 +46,7 @@ const CreatedAndUpdated: FC<CreatedAndUpdatedProps> = ({ summary }) => {
         width="100%"
       >
         <Msg
-          id={messageIds.validation.updateOverview.updated}
+          id={messageIds.impactSummary[tense].updated}
           values={{
             numPeople: summary.updated.total,
             number: (

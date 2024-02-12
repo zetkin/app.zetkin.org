@@ -1,20 +1,20 @@
-import { Box } from '@mui/system';
 import { FC } from 'react';
-import { Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import TagChip from 'features/tags/components/TagManager/components/TagChip';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 
-interface AddedTagsProps {
-  addedTags: ZetkinTag[];
-  numPeopleWithTagsAdded: number;
+interface AddedOrgsProps {
+  numPeopleWithOrgsAdded: number;
+  orgsWithNewPeople: Pick<ZetkinOrganization, 'title' | 'id'>[];
+  tense: 'past' | 'future';
 }
 
-const AddedTags: FC<AddedTagsProps> = ({
-  addedTags,
-  numPeopleWithTagsAdded,
+const AddedOrgs: FC<AddedOrgsProps> = ({
+  numPeopleWithOrgsAdded,
+  orgsWithNewPeople,
+  tense,
 }) => {
   const theme = useTheme();
   return (
@@ -22,9 +22,6 @@ const AddedTags: FC<AddedTagsProps> = ({
       border={1}
       borderColor={theme.palette.grey[300]}
       borderRadius={1}
-      display="flex"
-      flexDirection="column"
-      mb={1}
       padding={2}
     >
       <Typography
@@ -36,7 +33,7 @@ const AddedTags: FC<AddedTagsProps> = ({
         }}
       >
         <Msg
-          id={messageIds.validation.updateOverview.tagsDesc}
+          id={messageIds.impactSummary[tense].orgs}
           values={{
             numPeople: (
               <Typography
@@ -45,32 +42,39 @@ const AddedTags: FC<AddedTagsProps> = ({
                 sx={{ display: 'flex' }}
               >
                 <Msg
-                  id={messageIds.validation.updateOverview.people}
+                  id={messageIds.impactSummary.people}
                   values={{
-                    numPeople: numPeopleWithTagsAdded,
+                    numPeople: numPeopleWithOrgsAdded,
                     number: (
                       <Typography fontWeight="bold" sx={{ marginRight: 0.5 }}>
-                        {numPeopleWithTagsAdded}
+                        {numPeopleWithOrgsAdded}
                       </Typography>
                     ),
                   }}
                 />
               </Typography>
             ),
-            tags: (
+            org: (
               <Typography fontWeight="bold" sx={{ marginX: 0.5 }}>
-                <Msg id={messageIds.validation.updateOverview.tags} />
+                <Msg id={messageIds.impactSummary[tense].organization} />
               </Typography>
             ),
           }}
         />
       </Typography>
-      <Box display="flex" flexWrap="wrap" gap={1} paddingTop={1}>
-        {addedTags.map((tag) => (
-          <TagChip key={tag.id} tag={tag} />
+      <Box display="flex" flexWrap="wrap" gap={0.5}>
+        {orgsWithNewPeople.map((org, index) => (
+          <Typography key={org.id} color="secondary">
+            {org.title}
+            {orgsWithNewPeople.length === 1 ||
+            orgsWithNewPeople.length - 1 === index
+              ? ''
+              : ','}
+          </Typography>
         ))}
       </Box>
     </Box>
   );
 };
-export default AddedTags;
+
+export default AddedOrgs;

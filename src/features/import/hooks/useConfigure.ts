@@ -1,15 +1,12 @@
 import { CountryCode } from 'libphonenumber-js';
 
-import foreseeErrors from '../utils/foreseeErrors';
+import { importPreviewAdd } from '../store';
+import { levelForProblem } from '../utils/problems';
+import { predictProblems } from '../utils/problems/predictProblems';
 import prepareImportOperations from '../utils/prepareImportOperations';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import {
-  IMPORT_ERROR,
-  ImportPreview,
-  ZetkinPersonImportPostBody,
-} from '../utils/types';
-import { importErrorsAdd, importPreviewAdd } from '../store';
+import { ImportPreview, ZetkinPersonImportPostBody } from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useConfigure(orgId: number) {
@@ -25,37 +22,45 @@ export default function useConfigure(orgId: number) {
   const countryCode = organization.country as CountryCode;
 
   return async () => {
-    const errors = foreseeErrors(configuredSheet, countryCode, customFields);
+    const problems = predictProblems(
+      configuredSheet,
+      countryCode,
+      customFields
+    );
 
-    if (errors.length > 0 && !errors.includes(IMPORT_ERROR.ID_MISSING)) {
+    const hasErrors = problems.some(
+      (problem) => levelForProblem(problem) == 'error'
+    );
+
+    if (hasErrors) {
       dispatch(
         importPreviewAdd({
-          addedToOrg: {
-            byOrg: {},
-            total: 0,
-          },
-          created: {
-            total: 0,
-          },
-          tagged: {
-            byTag: {},
-            total: 0,
-          },
-          updated: {
-            byField: {},
-            total: 0,
+          problems: [],
+          stats: {
+            person: {
+              summary: {
+                addedToOrg: {
+                  byOrg: {},
+                  total: 0,
+                },
+                created: {
+                  total: 0,
+                },
+                tagged: {
+                  byTag: {},
+                  total: 0,
+                },
+                updated: {
+                  byChangedField: {},
+                  byInitializedField: {},
+                  total: 0,
+                },
+              },
+            },
           },
         })
       );
-      dispatch(importErrorsAdd(errors));
-    }
-
-    if (
-      !errors.length ||
-      (errors.length == 1 && errors.includes(IMPORT_ERROR.ID_MISSING))
-    ) {
-      dispatch(importErrorsAdd(errors));
-
+    } else {
       const importOperations = prepareImportOperations(
         configuredSheet,
         countryCode
@@ -68,7 +73,7 @@ export default function useConfigure(orgId: number) {
         ops: importOperations,
       });
 
-      dispatch(importPreviewAdd(previewRes.stats.person.summary));
+      dispatch(importPreviewAdd(previewRes));
     }
   };
 }

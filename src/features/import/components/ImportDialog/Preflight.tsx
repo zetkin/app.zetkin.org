@@ -1,19 +1,10 @@
 import { FC } from 'react';
-import {
-  Box,
-  CircularProgress,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
 
-import AddedOrgs from './elements/AddedOrgs';
-import AddedTags from './elements/AddedTags';
-import ChangedFields from './elements/ChangedFields';
-import CreatedAndUpdated from './elements/CreatedAndUpdated';
-import ImportAlert from './elements/ImportAlert';
+import ImpactSummary from './elements/ImpactSummary';
 import ImportFooter from './elements/ImportFooter';
 import ImportHeader from './elements/ImportHeader';
+import ImportMessageList from './elements/ImportMessageList';
 import { ImportStep } from '.';
 import messageIds from 'features/import/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
@@ -44,13 +35,11 @@ const Preflight: FC<PreflightProps> = ({
   }
 
   const {
-    orgsWithNewPeople,
-    addedTags,
-    alerts,
     importDisabled,
     importPeople,
     loading,
-    onCheckAlert,
+    onAllChecked,
+    problems,
     statusMessage,
     summary,
   } = preflightData;
@@ -90,41 +79,23 @@ const Preflight: FC<PreflightProps> = ({
               sx={{ overflowY: 'auto' }}
               width="50%"
             >
-              <CreatedAndUpdated summary={summary} />
-              <Stack spacing={2} sx={{ mt: 2 }}>
-                <ChangedFields
-                  changedFields={summary.updated.byField}
-                  orgId={orgId}
-                />
-                {addedTags.length > 0 && (
-                  <AddedTags
-                    addedTags={addedTags}
-                    numPeopleWithTagsAdded={summary.tagged.total}
-                  />
-                )}
-                {orgsWithNewPeople.length > 0 && (
-                  <AddedOrgs
-                    numPeopleWithOrgsAdded={summary.addedToOrg.total}
-                    orgsWithNewPeople={orgsWithNewPeople}
-                  />
-                )}
-              </Stack>
+              <Typography sx={{ mb: 2 }} variant="h5">
+                <Msg id={messageIds.preflight.headers.summary} />
+              </Typography>
+              <ImpactSummary orgId={orgId} summary={summary} tense="future" />
             </Box>
             <Box ml={2} sx={{ overflowY: 'auto' }} width="50%">
               <Typography sx={{ mb: 2 }} variant="h5">
-                <Msg id={messageIds.validation.messages} />
+                <Msg id={messageIds.preflight.headers.messages} />
               </Typography>
               <Box display="flex" flexDirection="column">
-                <Stack spacing={2}>
-                  {alerts.map((alert, index) => (
-                    <ImportAlert
-                      key={`alert-${index}`}
-                      alert={alert}
-                      onCheck={() => onCheckAlert(index)}
-                      onClickBack={onClickBack}
-                    />
-                  ))}
-                </Stack>
+                <ImportMessageList
+                  defaultDescription={messages.preflight.messages.ok.description()}
+                  defaultTitle={messages.preflight.messages.ok.title()}
+                  onAllChecked={onAllChecked}
+                  onClickBack={onClickBack}
+                  problems={problems}
+                />
               </Box>
             </Box>
           </Box>
