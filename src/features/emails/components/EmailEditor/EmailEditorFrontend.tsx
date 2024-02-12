@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-ignore
+import Header from '@editorjs/header';
+//@ts-ignore
 import Paragraph from '@editorjs/paragraph';
+
 import EditorJS, {
   EditorConfig,
   OutputData,
@@ -66,6 +69,14 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,
+        },
+        header: {
+          class: Header,
+          config: {
+            defaultLevel: 1,
+            levels: [1, 2, 3],
+          },
+          inlineToolbar: ['variable'],
         },
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,

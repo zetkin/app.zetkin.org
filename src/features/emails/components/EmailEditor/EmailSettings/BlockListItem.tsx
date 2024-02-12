@@ -4,6 +4,7 @@ import { OutputBlockData } from '@editorjs/editorjs';
 import { BLOCK_TYPES } from 'features/emails/types';
 import blockHasErrors from './utils/blockHasErrors';
 import ButtonBlockListItem from './ButtonBlockListItem';
+import HeaderBlockListItem from './HeaderBlockListItem';
 import ImageBlockListItem from './ImageBlockListItem';
 import TextBlockListItem from './TextBlockListItem';
 
@@ -28,6 +29,8 @@ const BlockListItem: FC<BlockListItemProps> = ({
         selected={selected}
       />
     );
+  } else if (block.type === BLOCK_TYPES.HEADER) {
+    return <HeaderBlockListItem data={block.data} selected={selected} />;
   } else if (block.type === BLOCK_TYPES.BUTTON) {
     return (
       <ButtonBlockListItem
