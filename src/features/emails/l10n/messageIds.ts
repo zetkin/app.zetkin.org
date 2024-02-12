@@ -5,6 +5,8 @@ export default makeMessages('feat.emails', {
     settings: {
       tabs: {
         content: m('Content'),
+        preview: m('Preview'),
+        settings: m('Settings'),
       },
     },
     tools: {

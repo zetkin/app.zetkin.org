@@ -49,6 +49,14 @@ const EmailSettings: FC<EmailSettingsProps> = ({
             label={messages.editor.settings.tabs.content()}
             value="content"
           />
+          <Tab
+            label={messages.editor.settings.tabs.settings()}
+            value="settings"
+          />
+          <Tab
+            label={messages.editor.settings.tabs.preview()}
+            value="preview"
+          />
         </TabList>
         <TabPanel
           sx={{
@@ -72,6 +80,12 @@ const EmailSettings: FC<EmailSettingsProps> = ({
               />
             ))}
           </Stack>
+        </TabPanel>
+        <TabPanel sx={{ padding: 0 }} value="settings">
+          Foo
+        </TabPanel>
+        <TabPanel sx={{ padding: 0 }} value="preview">
+          Bar
         </TabPanel>
       </TabContext>
     </Box>
