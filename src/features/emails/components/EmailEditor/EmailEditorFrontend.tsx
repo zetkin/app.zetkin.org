@@ -15,6 +15,7 @@ import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { useTheme } from '@mui/material';
+import variableToolFactory from './tools/inlineVariable';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -60,7 +61,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
-      inlineToolbar: ['bold', 'italic', 'link'],
+      inlineToolbar: ['bold', 'italic', 'link', 'variable'],
       onChange: () => saveData(),
       tools: {
         button: {
@@ -93,6 +94,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           config: {
             preserveBlank: true,
           },
+        },
+        variable: {
+          class: variableToolFactory(messages.editor.tools.variable.title()),
         },
       },
     };

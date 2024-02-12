@@ -1,5 +1,14 @@
 export default class InlineToolBase {
+  private static _activeInstance: InlineToolBase | null = null;
+
   private _handleSelectionChangeBound: () => void = () => undefined;
+
+  activate() {
+    if (InlineToolBase._activeInstance) {
+      InlineToolBase._activeInstance.deactivate();
+    }
+    InlineToolBase._activeInstance = this;
+  }
 
   checkState() {
     return true;
@@ -8,6 +17,10 @@ export default class InlineToolBase {
   clear() {
     this.onToolClose();
     this.destroy();
+  }
+
+  deactivate() {
+    // Called by activate()
   }
 
   destroy() {
@@ -49,7 +62,8 @@ export default class InlineToolBase {
     throw new Error('Method must be overridden');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected update(range: Range): void {
-    throw new Error('Method must be overridden' + range.toString());
+    // Does nothing by default
   }
 }
