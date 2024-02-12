@@ -1,9 +1,10 @@
 import { FC } from 'react';
+import Image from 'next/image';
 import { Box, Button, Typography } from '@mui/material';
 
-import LibraryImage from '../LibraryImage';
 import messageIds from 'features/files/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import TransparentGridBackground from '../TransparentGridBackground';
 import { ZetkinFile } from 'utils/types/zetkin';
 
 type Props = {
@@ -15,8 +16,21 @@ type Props = {
 const FilePreview: FC<Props> = ({ file, onBack, onSelect }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box my={2} overflow="auto">
-        <LibraryImage imageFile={file} interactive={false} />
+      <Box height="100%" my={2} overflow="auto">
+        <TransparentGridBackground
+          interactive={false}
+          sx={{
+            height: 'calc(100% - 2em)',
+            position: 'relative',
+          }}
+        >
+          <Image
+            alt={file.original_name}
+            layout="fill"
+            objectFit="contain"
+            src={file.url}
+          />
+        </TransparentGridBackground>
         <Typography color="secondary" mt={1} textAlign="center" variant="body2">
           {file.original_name}
         </Typography>

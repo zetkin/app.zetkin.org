@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import FileDropZone from '../FileDropZone';
 import FileLibraryBrowser from './FileLibraryBrowser';
@@ -27,6 +27,10 @@ const FileLibraryDialog: FC<Props> = ({
 }) => {
   const [selectedFile, setSelectedFile] = useState<ZetkinFile | null>(null);
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    setSelectedFile(null);
+  }, [open]);
 
   return (
     <ZUIDialog
