@@ -1,6 +1,6 @@
 import isURL from 'validator/lib/isURL';
 
-export default function formatUrl(url: string) {
+export default function formatUrl(url: string): string | null {
   if (isURL(url, { require_protocol: true })) {
     return url;
   }
@@ -11,5 +11,5 @@ export default function formatUrl(url: string) {
     return withHttp;
   }
 
-  return '';
+  return null;
 }

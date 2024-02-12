@@ -25,8 +25,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
   const messages = useMessages(messageIds);
   const [inputValue, setInputValue] = useState(data.url || '');
 
-  const formattedUrl = formatUrl(inputValue);
-  const error = inputValue.length > 0 && formattedUrl.length == 0;
+  const error = inputValue.length > 0 && !formatUrl(inputValue);
   return (
     <BlockListItemBase
       excerpt={data.buttonText}
@@ -56,7 +55,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
             label={messages.editor.tools.button.settings.urlLabel()}
             onChange={(ev) => {
               setInputValue(ev.target.value);
-              onChange({ ...data, url: formatUrl(ev.target.value) });
+              onChange({ ...data, url: formatUrl(ev.target.value) || '' });
             }}
             value={inputValue}
           />
@@ -68,7 +67,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
             </Typography>
           )}
           {inputValue.length > 0 && !error && (
-            <NextLink href={formattedUrl} passHref rel="">
+            <NextLink href={formatUrl(inputValue) || ''} passHref rel="">
               <Link
                 color="inherit"
                 display="flex"

@@ -23,7 +23,16 @@ export default makeMessages('feat.emails', {
         changeImage: m('Change image'),
         title: m('Image'),
       },
+      link: {
+        addUrl: m('Add a url'),
+        invalidUrl: m('This is not a valid url'),
+        testLink: m('Click to test link'),
+        title: m('Link'),
+      },
       paragraph: {
+        invalidUrls: m(
+          'There are one or more invalid URLs in this text block.'
+        ),
         title: m('Text'),
       },
     },

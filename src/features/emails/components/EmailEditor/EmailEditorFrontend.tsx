@@ -10,7 +10,11 @@ import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
 import LibraryImage from './tools/LibraryImage';
+import { linkToolFactory } from './tools/InlineLink';
+import messageIds from 'features/emails/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import { useTheme } from '@mui/material';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -25,6 +29,8 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   onSave,
   onSelectBlock,
 }) => {
+  const theme = useTheme();
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const editorInstance = useRef<EditorJS | null>(null);
   const blockIndexRef = useRef<number | null>(null);
@@ -54,7 +60,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       data: initialContent,
       // TODO: Find way to make unique IDs
       holder: 'ClientOnlyEditor-container',
-      inlineToolbar: ['bold', 'link', 'italic'],
+      inlineToolbar: ['bold', 'italic', 'link'],
       onChange: () => saveData(),
       tools: {
         button: {
@@ -64,6 +70,22 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           class: LibraryImage as unknown as ToolConstructable,
           config: {
             orgId,
+          },
+        },
+        link: {
+          class: linkToolFactory(messages.editor.tools.link.title()),
+          config: {
+            messages: {
+              addUrl: messages.editor.tools.link.addUrl(),
+              invalidUrl: messages.editor.tools.link.invalidUrl(),
+              testLink: messages.editor.tools.link.testLink(),
+            },
+            theme: {
+              body2FontSize: theme.typography.body2.fontSize,
+              mediumGray: theme.palette.grey[600],
+              primaryColor: theme.palette.primary.main,
+              warningColor: theme.palette.warning.main,
+            },
           },
         },
         paragraph: {

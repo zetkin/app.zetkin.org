@@ -3,11 +3,9 @@ import { OutputBlockData } from '@editorjs/editorjs';
 
 import { BLOCK_TYPES } from 'features/emails/types';
 import blockHasErrors from './utils/blockHasErrors';
-import BlockListItemBase from './BlockListItemBase';
 import ButtonBlockListItem from './ButtonBlockListItem';
 import ImageBlockListItem from './ImageBlockListItem';
-import messageIds from 'features/emails/l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import TextBlockListItem from './TextBlockListItem';
 
 interface BlockListItemProps {
   block: OutputBlockData;
@@ -20,16 +18,14 @@ const BlockListItem: FC<BlockListItemProps> = ({
   onChange,
   selected,
 }) => {
-  const messages = useMessages(messageIds);
   const hasErrors = blockHasErrors(block);
 
   if (block.type === BLOCK_TYPES.PARAGRAPH) {
     return (
-      <BlockListItemBase
-        excerpt={block.data.text}
+      <TextBlockListItem
+        data={block.data}
         hasErrors={hasErrors}
         selected={selected}
-        title={messages.editor.tools.paragraph.title()}
       />
     );
   } else if (block.type === BLOCK_TYPES.BUTTON) {
