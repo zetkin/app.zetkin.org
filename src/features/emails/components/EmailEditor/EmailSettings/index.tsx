@@ -21,7 +21,9 @@ const EmailSettings: FC<EmailSettingsProps> = ({
   selectedBlockIndex,
 }) => {
   const messages = useMessages(messageIds);
-  const [activeTab, setActiveTab] = useState<'Content'>('Content');
+  const [activeTab, setActiveTab] = useState<
+    'content' | 'preview' | 'settings'
+  >('content');
   const boxRef = useRef<HTMLElement>();
   const theme = useTheme();
 
