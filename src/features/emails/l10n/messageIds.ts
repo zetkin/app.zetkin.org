@@ -35,6 +35,9 @@ export default makeMessages('feat.emails', {
         ),
         title: m('Text'),
       },
+      variable: {
+        title: m('Variable'),
+      },
     },
   },
   emailActionButtons: {
