@@ -59,7 +59,7 @@ feat:
           missing: Mangler kontaktperson
           overbooked: For mange registrerte
           pending: Påmeldinger
-          title: Handling påkrevd
+          title: Handling kreves
           underbooked: For få registrerte
           unsent: Usendte varsler
         eventTypes:
@@ -70,7 +70,7 @@ feat:
           published: Publisert
           scheduled: Planlagt
           title: Publiseringsstatus
-      reset: Fjern filtre
+      reset: Fjern filter
       toggle:
         all: Alle
         none: Ingen
@@ -290,7 +290,7 @@ feat:
       requestError: Noe gikk galt, forsøk gjerne igjen.
       required: Påkrevd
       status:
-        draft: Skisse
+        draft: Utkast
         heading: Status
         published: Publisert
       visibility:
@@ -715,6 +715,15 @@ feat:
   organizations:
     page:
       title: Velg organisasjon
+    sidebar:
+      allOrganizations: Alle organisasjoner
+      filter:
+        noResults: Ingen organisasjoner passer med filteret
+        topLevel: Hovedorganisasjon
+      filtered: Filtrert
+      recent:
+        clear: Fjern nylige
+        title: Nylige organisasjoner
   profile:
     delete:
       button: Fjern person
@@ -750,6 +759,7 @@ feat:
       campaign: Kampanje
       people: Folk
       person: Person
+      project: Prosjekt
       survey: Spørreundersøkelse
       task: Innhold
       view: Liste
@@ -926,6 +936,7 @@ feat:
       random:
         addLimitRemoveSelect:
           add: Legg til
+          limit: begrens til
           sub: Fjern
         addRemoveSelect:
           add: legg til
@@ -945,6 +956,8 @@ feat:
         matchSelect:
           in: er i
           notin: ikke er i
+        noSmartSearches: Det finnes ingen frittstående smartsøk i denne organisasjonen
+          ennå.
         query:
           edit:
             callassignment_goal: '{querySelect} for ringeoppdraget "{titleSelect}"'
@@ -1085,6 +1098,7 @@ feat:
       noOptions: Ingen like tags
     operators:
       add: Legg til
+      limit: Begrens til
       sub: Fjern
     quantity:
       preview:
@@ -1480,6 +1494,7 @@ feat:
           title: Slett list
           warning: Er du sikker på at du vil slette lista? Dette kan ikke angres.
       menu:
+        delete: Slett
         rename: Gi nytt navn
       moveToFolder: Flytt til {folder}
       moveToRoot: Flytt til forsiden for lister
@@ -1818,6 +1833,9 @@ zui:
     indefinite: Fra {start, date, medium} og fremover
     invisible: Ikke synlig eller planlagt
     start: Start
+  dateSpan:
+    multiDayToday: I dag - {endDate}
+    singleDayToday: I dag
   editTextInPlace:
     tooltip:
       edit: Klikk for å redigere
@@ -1835,9 +1853,11 @@ zui:
   organizeSidebar:
     allOrganizations: Alle organisasjonsledd
     areas: Steder
+    filter: Skriv for å filtrere
     home: Hjem
     people: Folk
     projects: Prosjekter
+    search: Søk
     signOut: Logg ut
     userSettings: Innstillinger
   personGridEditCell:

@@ -496,7 +496,7 @@ feat:
       noshow: ({noshows, plural, =1 {1 person dök ej upp} other {# personer dök ej
         upp}})
       pending: Anmälningar väntar
-      recordButton: Rekordstor närvaro
+      recordButton: Notera närvaro
       remindButton: Påminn alla
       remindButtondisabledTooltip: Du behöver utse en kontaktperson innan du skickar
         ut påminnelser
@@ -731,7 +731,7 @@ feat:
           outcomeTagsLabel: Etiketter för resultat
         error: Det uppstod ett fel när {singularLabel} skulle stängas
         label: Stäng
-      collapseButton: Kollapsa
+      collapseButton: Dölj
       created: Skapad {relative}
       deadlineLabel: (Was due {datum})
       dueDateInputClear: Rensa
@@ -841,6 +841,9 @@ feat:
         noResults: Inga organisationer matchar det här filtret
         topLevel: Högsta organisation
       filtered: Filtrerad
+      recent:
+        clear: Rensa
+        title: Senaste organisationerna
   profile:
     delete:
       button: Ta bort person
@@ -879,6 +882,7 @@ feat:
       campaign: Kampanj
       people: Människor
       person: Person
+      project: Projekt
       survey: Enkät
       task: Uppgifter
       view: Lista
@@ -1064,15 +1068,16 @@ feat:
           none: Organisationen har inte några listor ännu
       random:
         addLimitRemoveSelect:
-          add: lägg till
-          sub: ta bort
+          add: Lägg slumpvis till
+          limit: Begränsa slumpvist till
+          sub: Ta slumpvis bort
         addRemoveSelect:
           add: lägg till
           sub: ta bort
         examples:
-          one: Lägg slumpmässigt till 20 personer i organisationen.
-          two: Ta slumpmässigt bort 15% av personerna i organisationen.
-        inputString: Slumpvis {addRemoveSelect} {quantity} i organisationen.
+          one: Lägg slumpvis till 20 personer i organisationen.
+          two: Ta slumpvis bort 15% av personerna i organisationen.
+        inputString: '{addRemoveSelect} {quantity} ur organisationen.'
       subQuery:
         addRemoveSelect:
           add: Lägg till
@@ -1086,6 +1091,7 @@ feat:
         matchSelect:
           in: matchar
           notin: inte matchar
+        noSmartSearches: Den här organisationen har inga Smarta sökningar
         query:
           edit:
             callassignment_goal: '{querySelect} i ringuppdraget "{titleSelect}"'
@@ -1232,6 +1238,7 @@ feat:
       noOptions: inga matchande etiketter
     operators:
       add: Lägg till
+      limit: Begränsa till
       sub: Ta bort
     quantity:
       edit:
@@ -1642,6 +1649,7 @@ feat:
           warning: Att radera den listan är en permanent handling som inte går att
             ändra. Är du säker på att fortsätta?
       menu:
+        delete: Radera
         rename: Döp om
       moveToFolder: Flytta till {folder}
       moveToRoot: Flytta till alla listor
@@ -1952,7 +1960,7 @@ zui:
     added: Tillagd av {sharer} {updated}
     removeAccess: Ta bort behörighet
   collapse:
-    collapse: Kollapsa
+    collapse: Dölj
     expand: Expandera
   confirmDialog:
     button: Bekräfta
@@ -1989,7 +1997,7 @@ zui:
     errorLoading: Något gick fel när datan laddades upp.
   header:
     collapseButton:
-      collapse: Kollapsa
+      collapse: Dölj
       expand: Expandera
   imageSelectDialog:
     instructions: Dra och släpp en bildfil, eller klicka för att välja
