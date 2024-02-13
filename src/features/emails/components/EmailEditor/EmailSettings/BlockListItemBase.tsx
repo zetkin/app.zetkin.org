@@ -45,8 +45,8 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
         paddingY={1.5}
         sx={{
           borderLeft: selected
-            ? `4px solid ${theme.palette.primary.main}`
-            : '4px solid transparent',
+            ? `3px solid ${theme.palette.primary.main}`
+            : '3px solid transparent',
           cursor: expandable ? 'pointer' : 'default',
         }}
       >
@@ -84,8 +84,8 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
             paddingX={2}
             sx={{
               borderLeft: selected
-                ? `4px solid ${theme.palette.primary.main}`
-                : '4px solid transparent',
+                ? `3px solid ${theme.palette.primary.main}`
+                : '3px solid transparent',
             }}
           >
             {children}

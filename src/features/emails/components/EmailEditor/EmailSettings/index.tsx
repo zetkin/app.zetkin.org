@@ -44,12 +44,10 @@ const EmailSettings: FC<EmailSettingsProps> = ({
       }}
     >
       <TabContext value={activeTab}>
-        <TabList
-          onChange={(ev, newValue) => setActiveTab(newValue)}
-          sx={{ border: 'none' }}
-        >
+        <TabList onChange={(ev, newValue) => setActiveTab(newValue)}>
           <Tab
             label={messages.editor.settings.tabs.content()}
+            sx={{ marginLeft: 2 }}
             value="content"
           />
           <Tab
