@@ -69,7 +69,7 @@ export default function usePreflight(orgId: number) {
     preflightSummary.created.total > 0
   ) {
     statusMessage = messages.validation.statusMessages.createAndUpdate({
-      numCreated: preflightSummary.updated.total,
+      numCreated: preflightSummary.created.total,
       numUpdated: preflightSummary.updated.total,
     });
   } else if (
