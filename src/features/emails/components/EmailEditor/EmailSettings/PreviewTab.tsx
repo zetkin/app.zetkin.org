@@ -1,12 +1,14 @@
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import useSendTestEmail from 'features/emails/hooks/useSendTestEmail';
 
 const PreviewTab: FC = () => {
   const user = useCurrentUser();
+  const { isLoading, sendTestEmail } = useSendTestEmail();
 
   if (!user) {
     return null;
@@ -22,12 +24,16 @@ const PreviewTab: FC = () => {
       </Typography>
       <Typography>{user.email}</Typography>
       <Button
-        onClick={() => {
-          //send email
+        onClick={async () => {
+          await sendTestEmail();
         }}
         variant="contained"
       >
-        <Msg id={messageIds.editor.settings.tabs.preview.sendButton} />
+        {isLoading ? (
+          <CircularProgress color="inherit" size="1.5rem" />
+        ) : (
+          <Msg id={messageIds.editor.settings.tabs.preview.sendButton} />
+        )}
       </Button>
     </Box>
   );
