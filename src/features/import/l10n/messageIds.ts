@@ -312,7 +312,6 @@ export default makeMessages('feat.import', {
   },
   validation: {
     messages: m('Messages'),
-    pendingChanges: m('Pending changes'),
     people: m<{ numPeople: number }>(
       '{numPeople, plural, =1 {person} other {people}}'
     ),
