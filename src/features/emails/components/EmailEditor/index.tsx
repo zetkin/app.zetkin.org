@@ -4,20 +4,25 @@ import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import EmailSettings from './EmailSettings';
+import { ZetkinEmail } from 'utils/types/zetkin';
 
 const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
   ssr: false,
 });
 
 interface EmailEditorProps {
-  initialContent: OutputData;
-  onSave: (data: OutputData) => void;
+  email: ZetkinEmail;
+  onSave: (email: Partial<ZetkinEmail>) => void;
 }
 
-const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
+const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   const theme = useTheme();
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
+
+  const initialContent = email.content
+    ? JSON.parse(email.content)
+    : { blocks: [] };
   const [content, setContent] = useState<OutputData>(initialContent);
 
   const blocksRef = useRef<OutputBlockData[]>();
@@ -46,7 +51,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
           initialContent={initialContent}
           onSave={(newContent: OutputData) => {
             setContent(newContent);
-            onSave(newContent);
+            onSave({ content: JSON.stringify(newContent) });
           }}
           onSelectBlock={(selectedBlockIndex: number) => {
             setSelectedBlockIndex(selectedBlockIndex);
@@ -63,7 +68,9 @@ const EmailEditor: FC<EmailEditorProps> = ({ initialContent, onSave }) => {
         <EmailSettings
           apiRef={apiRef}
           blocks={content.blocks}
+          onSave={onSave}
           selectedBlockIndex={selectedBlockIndex}
+          subject={email.subject || ''}
         />
       </Box>
     </Box>

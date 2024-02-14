@@ -15,7 +15,12 @@ export default makeMessages('feat.emails', {
           sendTo: m('The email will be sent to this address:'),
           title: m('Preview'),
         },
-        settings: m('Settings'),
+        settings: {
+          senderAddressInputLabel: m('Sender address'),
+          senderNameInputLabel: m('Sender name'),
+          subjectInputLabel: m('Subject'),
+          title: m('Settings'),
+        },
       },
     },
     tools: {
