@@ -41,10 +41,8 @@ const EmailPage: PageWithLayout = () => {
       <Head>
         <title>{email?.title}</title>
       </Head>
-      <Box>
-        <Box mb={2}>
-          <EmailTargets emailId={emailId} orgId={orgId} />
-        </Box>
+      <Box mb={2}>
+        <EmailTargets emailId={emailId} orgId={orgId} />
       </Box>
     </>
   );

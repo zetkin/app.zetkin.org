@@ -75,6 +75,12 @@ export default makeMessages('feat.emails', {
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
   },
+  orgHasNoEmail: {
+    errorMessage: m(
+      'Your organization can not use the email feature since it does not have a registered email address.'
+    ),
+    goBackButton: m('Go back'),
+  },
   state: {
     draft: m('Draft'),
     scheduled: m('Scheduled'),
