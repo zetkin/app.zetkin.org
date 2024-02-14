@@ -180,7 +180,7 @@ export function linkToolFactory(title: string) {
     }
 
     get shortcut() {
-      return 'CMD+Q';
+      return 'CMD+K';
     }
 
     surround(range: Range) {
