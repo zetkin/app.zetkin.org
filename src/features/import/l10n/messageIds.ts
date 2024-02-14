@@ -165,7 +165,7 @@ export default makeMessages('feat.import', {
         '{number} new {numPeople, plural, =1 {person} other {people}} will be created'
       ),
       defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
-        '{numPeople} will recieve changes to their {field}'
+        '{numPeople} will receive changes to their {field}'
       ),
       organization: m('Organization'),
       orgs: m<{ numPeople: ReactElement; org: ReactElement }>(
@@ -312,7 +312,6 @@ export default makeMessages('feat.import', {
   },
   validation: {
     messages: m('Messages'),
-    pendingChanges: m('Pending changes'),
     people: m<{ numPeople: number }>(
       '{numPeople, plural, =1 {person} other {people}}'
     ),

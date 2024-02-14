@@ -29,12 +29,7 @@ const ImportHeader: FC<ImportHeaderProps> = ({ activeStep, onClose }) => {
       <Typography variant="h4">
         <Msg id={messageIds.configuration.title} />
       </Typography>
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="flex-end"
-        width="50%"
-      >
+      <Box alignItems="center" display="flex" justifyContent="flex-end">
         {activeStep && (
           <Stepper activeStep={activeStep} sx={{ flexGrow: 1 }}>
             <Step>
