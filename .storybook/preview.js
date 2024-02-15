@@ -6,13 +6,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { muiTheme } from 'storybook-addon-material-ui5';
 import { RouterContext } from 'next/dist/shared/lib/router-context'; // next 11.1
 import withMock from 'storybook-addon-mock';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import theme from '../src/theme';
 import '../src/styles.css';
 import mockPerson from '../src/utils/testing/mocks/mockPerson';
-
-const queryClient = new QueryClient();
+import createStore from '../src/core/store';
 
 dayjs.extend(isoWeek);
 
@@ -28,9 +27,7 @@ const I18nProvider = (props) => {
 
 export const decorators = [
   muiTheme([theme]),
-  (story) => (
-    <QueryClientProvider client={queryClient}>{story()}</QueryClientProvider>
-  ),
+  (story) => <ReduxProvider store={createStore()}>{story()}</ReduxProvider>,
   (story) => <I18nProvider>{story()}</I18nProvider>,
   withMock,
 ];
