@@ -1,6 +1,5 @@
 import { Msg } from 'core/i18n';
-import theme from 'theme';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 
 import messageIds from '../../l10n/messageIds';
 
@@ -9,16 +8,11 @@ type CalendarWeekNumberProps = {
 };
 
 const HeaderWeekNumber = ({ weekNr }: CalendarWeekNumberProps) => {
+  const theme = useTheme();
   return (
     <Box alignItems="center" display="flex" marginTop="2px">
-      <Typography
-        color={theme.palette.secondary.light}
-        fontStyle="bold"
-        sx={{ fontWeight: 800 }}
-        variant="subtitle2"
-      >
-        <Msg id={messageIds.ranges.shortWeek} />
-        {weekNr}
+      <Typography color={theme.palette.secondary.light} variant="subtitle2">
+        <Msg id={messageIds.shortWeek} values={{ weekNumber: weekNr }} />
       </Typography>
     </Box>
   );

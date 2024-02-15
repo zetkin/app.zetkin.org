@@ -71,7 +71,6 @@ export default makeMessages('feat.calendar', {
   ranges: {
     day: m('Day'),
     month: m('Month'),
-    shortWeek: m('w'),
     week: m('Week'),
   },
   selectionBar: {
@@ -107,6 +106,7 @@ export default makeMessages('feat.calendar', {
       nextWeek: m<{ dates: ReactElement }>('Next week {dates}'),
     },
   },
+  shortWeek: m<{ weekNumber: number }>('w {weekNumber}'),
   showMore: m('Show'),
   today: m('Today'),
 });
