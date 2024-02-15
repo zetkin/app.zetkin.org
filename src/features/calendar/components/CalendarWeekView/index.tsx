@@ -17,6 +17,7 @@ import EventCluster from '../EventCluster';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
+import HeaderWeekNumber from './HeaderWeekNumber';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -81,7 +82,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         gridTemplateRows={'1fr'}
       >
         {/* Empty */}
-        <Box />
+        <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
         {dayDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <DayHeader
