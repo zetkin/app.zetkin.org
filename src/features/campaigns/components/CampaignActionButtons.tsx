@@ -20,6 +20,7 @@ import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
 import useCreateEmail from 'features/emails/hooks/useCreateEmail';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -42,6 +43,7 @@ const CampaignActionButtons: React.FunctionComponent<
 > = ({ campaign }) => {
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
+  const organization = useOrganization(orgId).data;
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -55,6 +57,10 @@ const CampaignActionButtons: React.FunctionComponent<
   );
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
   const { createEmail } = useCreateEmail(orgId);
+
+  if (!organization) {
+    return null;
+  }
 
   const handleCreateEvent = () => {
     const defaultStart = new Date();
@@ -107,6 +113,7 @@ const CampaignActionButtons: React.FunctionComponent<
               onClick: () => setCreateTaskDialogOpen(true),
             },
             {
+              disabled: !organization.email,
               icon: <EmailOutlined />,
               label: messages.linkGroup.createEmail(),
               onClick: () =>

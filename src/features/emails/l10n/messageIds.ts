@@ -27,7 +27,7 @@ export default makeMessages('feat.emails', {
           noButtonText: m('Click to change this text!'),
         },
         settings: {
-          invalidUrl: m('This is not a valid url'),
+          invalidUrl: m('This is not a valid link'),
           testLink: m('Click to test link'),
           urlLabel: m('Link url'),
         },
@@ -41,16 +41,19 @@ export default makeMessages('feat.emails', {
         title: m('Image'),
       },
       link: {
-        addUrl: m('Add a url'),
-        invalidUrl: m('This is not a valid url'),
+        addUrl: m('Add a link'),
+        invalidUrl: m('This is not a valid link'),
         testLink: m('Click to test link'),
         title: m('Link'),
       },
       paragraph: {
         invalidUrls: m(
-          'There are one or more invalid URLs in this text block.'
+          'There are one or more invalid link in this text block.'
         ),
         title: m('Text'),
+      },
+      variable: {
+        title: m('Variable'),
       },
     },
   },
@@ -85,6 +88,12 @@ export default makeMessages('feat.emails', {
     warning: m(
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
+  },
+  orgHasNoEmail: {
+    errorMessage: m(
+      'Your organization can not use the email feature since it does not have a registered email address.'
+    ),
+    goBackButton: m('Go back'),
   },
   state: {
     draft: m('Draft'),

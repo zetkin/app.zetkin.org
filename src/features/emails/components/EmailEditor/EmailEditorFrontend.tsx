@@ -107,7 +107,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           },
         },
         variable: {
-          class: variableToolFactory('Variable'),
+          class: variableToolFactory(messages.editor.tools.variable.title()),
         },
       },
     };
