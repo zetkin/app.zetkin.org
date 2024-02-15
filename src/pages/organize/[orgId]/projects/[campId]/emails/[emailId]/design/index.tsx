@@ -32,25 +32,21 @@ type Props = {
 };
 
 const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
-  const { data, updateEmail } = useEmail(parseInt(orgId), parseInt(emailId));
+  const { data: email, updateEmail } = useEmail(
+    parseInt(orgId),
+    parseInt(emailId)
+  );
   const onServer = useServerSide();
 
   if (onServer) {
     return null;
   }
 
-  if (!data) {
+  if (!email) {
     return null;
   }
 
-  return (
-    <EmailEditor
-      initialContent={data.content ? JSON.parse(data.content) : { blocks: [] }}
-      onSave={(data) => {
-        updateEmail({ content: JSON.stringify(data) });
-      }}
-    />
-  );
+  return <EmailEditor email={email} onSave={(email) => updateEmail(email)} />;
 };
 
 EmailPage.getLayout = function getLayout(page) {

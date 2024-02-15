@@ -5,6 +5,20 @@ export default makeMessages('feat.emails', {
     settings: {
       tabs: {
         content: m('Content'),
+        preview: {
+          instructions: m(
+            'Here you can send this email to yourself to preview what it will look like for the recipients. '
+          ),
+          sendButton: m('Send'),
+          sendTo: m('The email will be sent to this address:'),
+          title: m('Preview'),
+        },
+        settings: {
+          senderAddressInputLabel: m('Sender address'),
+          senderNameInputLabel: m('Sender name'),
+          subjectInputLabel: m('Subject'),
+          title: m('Settings'),
+        },
       },
     },
     tools: {
