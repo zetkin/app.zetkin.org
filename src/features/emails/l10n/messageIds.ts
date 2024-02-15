@@ -6,8 +6,6 @@ export default makeMessages('feat.emails', {
       tabs: {
         content: m('Content'),
         preview: {
-          emailInputError: m('This is not a valid email'),
-          emailLabel: m('Input your own email'),
           instructions: m(
             'Here you can send this email to yourself to preview what it will look like for the recipients. '
           ),
