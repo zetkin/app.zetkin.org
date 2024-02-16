@@ -2,7 +2,7 @@ import { ArrowDropDown, ContentCopy, Delete } from '@mui/icons-material';
 import { Box, Button, Popper } from '@mui/material';
 import { useContext, useState } from 'react';
 
-import DeliveryStatusSpan from './DeliveryStatusSpan';
+import DeliveryStatusMessage from './DeliveryStatusMessage';
 import EmailDelivery from './EmailDelivery';
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
@@ -83,7 +83,7 @@ const EmailActionButtons = ({
         />
       </Box>
       {email.published && (
-        <DeliveryStatusSpan
+        <DeliveryStatusMessage
           emailState={emailState}
           published={email.published}
           sendingTime={removeOffset(email.published.slice(11, 16))}

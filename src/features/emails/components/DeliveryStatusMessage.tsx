@@ -6,16 +6,16 @@ import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import ZUIDateSpan from 'zui/ZUIDateSpan';
 
-interface DeliveryStatusSpan {
+interface DeliveryStatusMessageProps {
   emailState: EmailState;
   published: string;
   sendingTime: string;
 }
-const DeliveryStatusSpan = ({
+const DeliveryStatusMessage = ({
   emailState,
   published,
   sendingTime,
-}: DeliveryStatusSpan) => {
+}: DeliveryStatusMessageProps) => {
   return (
     <>
       {''}
@@ -43,4 +43,4 @@ const DeliveryStatusSpan = ({
   );
 };
 
-export default DeliveryStatusSpan;
+export default DeliveryStatusMessage;
