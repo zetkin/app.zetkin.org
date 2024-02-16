@@ -26,7 +26,10 @@ feat:
       events: Arrangementer
       folders: Lister
       insights: Analyse
+      instances: Forekomster
+      journeys: Planer
       manage: Behandle
+      milestones: Oppfølging
       new: Ny
       organize: Organiser
       participants: Deltakere
@@ -712,6 +715,121 @@ feat:
         error: Du må rette opp i feilene før du kan importere
         update: Denne importen vil oppdatere {numUpdated, plural, =1 {en person} other
           {# folk}}.
+  journeys:
+    instance:
+      addAssigneeButton: Legg til kontaktperson
+      addSubjectButton: Legg til person
+      addSubjectLabel: Legg til person
+      assignPersonLabel: Finn kontaktperson
+      closeButton:
+        dialog:
+          outcomeFieldPlaceholder: Beskriv resultatet av {singularLabel}
+          outcomeLabel: Resultat
+          outcomeTagsDescription: Legg til etiketter som beskriver resultatet
+          outcomeTagsLabel: Etiketter for resultat
+        error: Kunne ikke lukke {singularLabel}
+        label: Lukk {singularLabel}
+      collapseButton: Skjul
+      created: Opprettet {relative}
+      deadlineLabel: (Frist var {date})
+      dueDateInputClear: Fjern
+      dueDateInputLabel: Frist
+      editButton: Rediger
+      ellipsisMenu:
+        convert: Konverter til...
+      expandButton: Utvid
+      markedCompleteLabel: Fullført {relativeTime}
+      newInstance:
+        draft: Utkast
+        openingNote: Åpningsnotat
+        submitLabel: Opprett ny {journey}
+        title: Ny {journey}
+      noMilestones: Det er ingen oppfølginger.
+      noOutcomeDetails: Ingen detaljer om resultater.
+      percentComplete: '{percentComplete}% fullført'
+      reopenButton:
+        error: Kunne ikke åpne {singularLabel}
+        label: Åpne {singularLabel} på nytt
+      sections:
+        assigned: Tildelt
+        members: Medlemmer
+        milestones: Oppfølginger
+        outcome: Denne {journeyTitle} er lukket.
+        summary: Oppsummering
+        timeline: Notater
+      summaryPlaceholder: Legg inn en kort beskrivelse av {journeyTitle}
+      updated: siste aktivitet {relative}
+    instances:
+      columns:
+        assignees: Tildelt
+        created: Opprettet
+        id: ID
+        nextMilestoneDeadline: Neste oppfølgingsfrist
+        nextMilestoneTitle: Neste oppfølging
+        outcome: Notater om resultat
+        subjects: Folk
+        summary: Oppsummering
+        tagsFree: Etiketter
+        title: Tittel
+        updated: Sist oppdatert
+      export:
+        headers:
+          assignees: Kontaktpersoner
+          closed: Lukket
+          created: Opprettet
+          id: ID
+          journey: Plan
+          nextMilestone: Neste oppfølging
+          nextMilestoneDeadline: Neste oppfølgingsfrist
+          outcome: Resultat
+          subjects: Medlemmer
+          summary: Oppsummering
+          title: Tittel
+          unsortedTags: Ugrupperte etiketter
+          updated: Oppdatert
+      filters:
+        doesNotHaveOperator: har ikke
+        doesNotIncludeOperator: inneholder ikke
+        hasOperator: har
+        includesOperator: inneholder
+        isEmptyOperator: er tomt
+        isNotOperator: er ikke
+        isOperator: er
+        milestoneLabel: Oppfølging
+        personLabel: Person
+        tagLabel: Etikett
+      menu:
+        downloadCsv: Last ned {pluralLabel} som CSV
+        downloadXlsx: Last ned {pluralLabel} som Excel
+    journeys:
+      buttonClose: Lukk
+      buttonOpen: Åpne
+      cardCTA: Se alle
+      closedCount: '{numberClosed} lukkede'
+      conversionSnackbar:
+        error: Noe gikk galt med å konvertere planen.
+        success: Velykket konvertering!
+      editJourneyTitleAlert:
+        error: Feil. Tittelen ble ikke oppdatert.
+        success: Tittel oppdatert!
+      lastActivity: Siste aktivitet
+      menu:
+        downloadCsv: Last ned alle som CSV
+        downloadXlsx: Last ned alle som Excel
+      nextMilestone: Neste oppfølging
+      openCount: '{numberOpen} åpne'
+      overview:
+        overviewTitle: Alle planer
+      statusClosed: Lukket
+      statusOpen: Åpen
+      tabs:
+        closed: Lukket
+        manage: Administrer
+        milestones: Oppfølginger
+        open: Åpne
+        overview: Oversikt
+        timeline: Tidslinje
+      title: Planer
   organizations:
     page:
       title: Velg organisasjon
@@ -740,6 +858,9 @@ feat:
       m: Mann
       o: Annet
       unknown: Ukjent
+    journeys:
+      addButton: Start ny plan
+      title: Planer
     organizations:
       add: Legg til underorganisasjon
       addError: Organisasjonen kunne ikke legges til
@@ -870,7 +991,7 @@ feat:
         examples:
           one: Legg til folk med fornavn 'Clara' og etternavn 'Zetkin'.
           two: Fjern folk med poststed Oslo.
-        fieldMatches: '{field}{value}'
+        fieldMatches: '{field} {value}'
         fieldSelect:
           alt_phone: alternativt telefonnummer
           city: poststed
@@ -1671,6 +1792,7 @@ feat:
       modify_column: Kunne ikke redigere kolonnen
       remove_rows: Kunne ikke fjerne rader
     defaultColumnTitles:
+      journey_assignee: Tildelte planer
       local_bool: Sjekkliste
       local_person: Personreferanse
       organizer_action: Flaggede telefonsamtaler
@@ -1834,6 +1956,7 @@ zui:
     invisible: Ikke synlig eller planlagt
     start: Start
   dateSpan:
+    multiDayEndsToday: '{startDate} - i dag'
     multiDayToday: I dag - {endDate}
     singleDayToday: I dag
   editTextInPlace:
@@ -1855,6 +1978,7 @@ zui:
     areas: Steder
     filter: Skriv for å filtrere
     home: Hjem
+    journeys: Planer
     people: Folk
     projects: Prosjekter
     search: Søk
@@ -1901,6 +2025,8 @@ zui:
       byType:
         all: Alle
         files: Filer
+        journey: Plan
+        milestones: Oppfølginger
         notes: Notater
         people: Folk
         tags: Etiketter
@@ -1914,6 +2040,21 @@ zui:
         addassignee: '{actor} tildelte kontaktperson {assignee}'
         addnote: '{actor} la til et notat'
         addsubject: '{actor} la til {subject}'
+        close:
+          header: '{actor} lukket planen'
         convert: '{actor} konverterte fra {oldLabel} til {newLabel}'
+        create:
+          header: '{actor} startet en ny plan'
+        open: '{actor} åpnet planen på nytt'
+        removeassignee: '{actor} fjernet {assignee}'
+        removesubject: '{actor} fjernet {subject}'
         update:
           readMore: Les mer
+          summary: '{actor} redigerte oppsummeringen'
+          title: '{actor} redigerte tittelen'
+        updatemilestone:
+          complete: '{actor} fullførte oppfølging'
+          deadline: '{actor} oppdaterte en oppfølgingsfrist'
+          deadlineRemove: frist ble fjernet
+          deadlineUpdate: 'Frist: {datetime}'
+          incomplete: '{actor} merket en oppfølging som ikke fullført'
