@@ -3,7 +3,7 @@ import { Box, Button, Popper } from '@mui/material';
 import { useContext, useState } from 'react';
 
 import DeliveryStatusSpan from './DeliveryStatusSpan';
-import EmailDeliveryPanel from './EmailDeliveryPanel';
+import EmailDelivery from './EmailDelivery';
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
@@ -50,11 +50,10 @@ const EmailActionButtons = ({
           {messages.emailActionButtons.delevery()}
         </Button>
         <Popper anchorEl={anchorEl} open={!!anchorEl} placement="bottom-end">
-          <EmailDeliveryPanel
+          <EmailDelivery
             email={email}
             onClose={() => setAnchorEl(null)}
             orgId={orgId}
-            targetNum={targets?.allTargets || 0}
           />
         </Popper>
         <ZUIEllipsisMenu
