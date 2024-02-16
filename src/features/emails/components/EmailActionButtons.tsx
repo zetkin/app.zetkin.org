@@ -36,11 +36,16 @@ const EmailActionButtons = ({
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
   const { data: targets } = useEmailTargets(orgId, email.id);
 
+  const deliveryDisabled =
+    targets?.allTargets === 0 ||
+    emailState === EmailState.SENT ||
+    !email.locked;
+
   return (
     <Box alignItems="flex-end" display="flex" flexDirection="column" gap={1}>
       <Box display="flex">
         <Button
-          disabled={targets?.allTargets === 0 || emailState === EmailState.SENT}
+          disabled={deliveryDisabled}
           endIcon={<ArrowDropDown />}
           onClick={(event) =>
             setAnchorEl(anchorEl ? null : event.currentTarget)

@@ -500,6 +500,7 @@ export type {
 export interface ZetkinEmail {
   campaign: { id: number; title: string } | null;
   id: number;
+  locked: string | null;
   published: string | null;
   subject: string | null;
   organization: { id: number; title: string };
@@ -507,6 +508,7 @@ export interface ZetkinEmail {
   title: string | null;
   target: ZetkinQuery;
 }
+
 export type ZetkinEmailPostBody = Partial<
   Omit<ZetkinEmail, 'id' | 'published' | 'organization' | 'target'>
 > & {
