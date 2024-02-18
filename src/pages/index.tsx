@@ -1,7 +1,6 @@
 import { applySession } from 'next-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { stringToBool } from '../utils/stringUtils';
 import { Button, ButtonGroup, Container, Typography } from '@mui/material';
 
 import { AppSession } from '../utils/types';
@@ -26,9 +25,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     const code = query?.code;
 
     if (code) {
-      const protocol = stringToBool(process.env.ZETKIN_USE_TLS)
-        ? 'https'
-        : 'http';
+      const protocol = process.env.ZETKIN_APP_PROTOCOL;
       const host = process.env.ZETKIN_APP_HOST;
 
       let destination = '/';
