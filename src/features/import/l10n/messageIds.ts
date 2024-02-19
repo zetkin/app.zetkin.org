@@ -128,6 +128,11 @@ export default makeMessages('feat.import', {
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
       tags: m('Tags'),
+      zetkinFieldGroups: {
+        fields: m('Fields'),
+        id: m('ID'),
+        other: m('Other'),
+      },
       zetkinHeader: m('Zetkin'),
     },
     preview: {
