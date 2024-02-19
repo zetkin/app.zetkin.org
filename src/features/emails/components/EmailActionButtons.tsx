@@ -6,7 +6,6 @@ import DeliveryStatusMessage from './DeliveryStatusMessage';
 import EmailDelivery from './EmailDelivery';
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
-import { removeOffset } from 'utils/dateUtils';
 import useDuplicateEmail from '../hooks/useDuplicateEmail';
 import useEmail from '../hooks/useEmail';
 import useEmailTargets from '../hooks/useEmailTargets';
@@ -52,7 +51,7 @@ const EmailActionButtons = ({
           }
           variant="contained"
         >
-          {messages.emailActionButtons.delevery()}
+          {messages.emailActionButtons.delivery()}
         </Button>
         <Popper anchorEl={anchorEl} open={!!anchorEl} placement="bottom-end">
           <EmailDelivery
@@ -82,13 +81,7 @@ const EmailActionButtons = ({
           ]}
         />
       </Box>
-      {email.published && (
-        <DeliveryStatusMessage
-          emailState={emailState}
-          published={email.published}
-          sendingTime={removeOffset(email.published.slice(11, 16))}
-        />
-      )}
+      <DeliveryStatusMessage email={email} />
     </Box>
   );
 };

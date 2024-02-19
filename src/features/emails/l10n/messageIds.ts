@@ -1,20 +1,18 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
+  deliveryStatus: {
+    notLocked: m('Not locked, not scheduled'),
+    notScheduled: m('Not scheduled'),
+    wasSent: m<{ time: string }>('Was sent at {time}'),
+    willSend: m<{ time: string }>('Will send at {time}'),
+  },
   emailActionButtons: {
-    afterLock: m<{ numTargets: number }>(
-      'Will schedule email for {numTargets} people'
-    ),
-    beforeLock: m('Lock targeting to proceed'),
     delete: m('Delete'),
-    delevery: m('Delivery'),
+    delivery: m('Delivery'),
     deliveryDate: m('Delivery date'),
     deliveryTime: m('Delivery time'),
     duplicate: m('Duplicate'),
-    lockDesc: m(
-      'Make sure the current exact targeting will be used during delivery'
-    ),
-    lockTarget: m('Lock targeting'),
     schedule: m('Schedule'),
     sendAnyway: m('Send anyway'),
     sendLater: m('Send later'),
@@ -55,6 +53,4 @@ export default makeMessages('feat.emails', {
     title: m('Targets'),
     viewButton: m('View target group'),
   },
-  wasSent: m<{ time: string }>('Was sent at {time}'),
-  willSend: m<{ time: string }>('Will send at {time}'),
 });
