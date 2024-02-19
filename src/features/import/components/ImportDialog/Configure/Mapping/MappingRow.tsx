@@ -22,7 +22,7 @@ import { Msg, useMessages } from 'core/i18n';
 interface MappingRowProps {
   clearConfiguration: () => void;
   column: UIDataColumn<Column>;
-  columnOptions: Option[];
+  columnOptions: Option[][];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
