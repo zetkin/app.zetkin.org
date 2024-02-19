@@ -1,12 +1,12 @@
-import { applySession } from 'next-session';
+import { getIronSession } from 'iron-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { stringToBool } from '../utils/stringUtils';
 import { Button, ButtonGroup, Container, Typography } from '@mui/material';
 
 import { AppSession } from '../utils/types';
 import getUserMemberships from 'utils/getUserMemberships';
 import { Msg } from 'core/i18n';
+import requiredEnvVar from 'utils/requiredEnvVar';
 import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../utils/types/zetkin';
 
@@ -35,9 +35,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
       try {
         await context.z.authenticate(`${protocol}://${host}/?code=${code}`);
-        await applySession(req, res);
-
-        const reqWithSession = req as { session?: AppSession };
+        const session = await getIronSession<AppSession>(req, res, {
+          cookieName: 'zsid',
+          password: requiredEnvVar('SESSION_PASSWORD'),
+        });
 
         try {
           const userRes = await context.z.resource('users', 'me').get();
@@ -46,24 +47,24 @@ export const getServerSideProps: GetServerSideProps = scaffold(
           context.user = null;
         }
 
-        if (reqWithSession.session) {
-          reqWithSession.session.tokenData = context.z.getTokenData();
+        if (session) {
+          session.tokenData = context.z.getTokenData();
           if (context.user) {
             try {
-              reqWithSession.session.memberships = await getUserMemberships(
-                context
-              );
+              session.memberships = await getUserMemberships(context);
             } catch (error) {
-              reqWithSession.session.memberships = null;
+              session.memberships = null;
             }
           }
 
-          if (reqWithSession.session.redirAfterLogin) {
+          if (session.redirAfterLogin) {
             // User logged in after trying to access some URL, and
             // should be redirected to that URL once authenticated.
-            destination = reqWithSession.session.redirAfterLogin;
-            reqWithSession.session.redirAfterLogin = null;
+            destination = session.redirAfterLogin;
+            session.redirAfterLogin = null;
           }
+
+          await session.save();
         }
       } catch (err) {
         // If this failed, we'll just continue anonymously
