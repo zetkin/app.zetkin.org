@@ -91,9 +91,11 @@ export default function useColumn(orgId: number) {
   });
 
   const labelSort = (a: Option, b: Option) => (a.label > b.label ? 1 : 0);
-  const columnOptions: Option[] = columnOptionsIDPartition
-    .concat(columnOptionsFieldsPartition.sort(labelSort))
-    .concat(columnOptionsOtherPartition.sort(labelSort));
+  const columnOptions: Option[][] = [
+    columnOptionsIDPartition,
+    columnOptionsFieldsPartition.sort(labelSort),
+    columnOptionsOtherPartition.sort(labelSort),
+  ];
 
   return { columnOptions, optionAlreadySelected, updateColumn };
 }

@@ -6,6 +6,7 @@ import {
   Checkbox,
   FormControl,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Select,
   Typography,
@@ -141,12 +142,54 @@ const MappingRow: FC<MappingRowProps> = ({
               sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
               value={getValue()}
             >
-              {columnOptions.map((option) => {
+              <ListSubheader>
+                <Msg
+                  id={messageIds.configuration.mapping.zetkinFieldGroups.id}
+                />
+              </ListSubheader>
+              {columnOptions[0].map((option) => {
                 const alreadySelected = optionAlreadySelected(option.value);
                 return (
                   <MenuItem
                     key={option.value}
                     disabled={alreadySelected}
+                    sx={{ paddingLeft: 4 }}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </MenuItem>
+                );
+              })}
+              <ListSubheader>
+                <Msg
+                  id={messageIds.configuration.mapping.zetkinFieldGroups.fields}
+                />
+              </ListSubheader>
+              {columnOptions[1].map((option) => {
+                const alreadySelected = optionAlreadySelected(option.value);
+                return (
+                  <MenuItem
+                    key={option.value}
+                    disabled={alreadySelected}
+                    sx={{ paddingLeft: 4 }}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </MenuItem>
+                );
+              })}
+              <ListSubheader>
+                <Msg
+                  id={messageIds.configuration.mapping.zetkinFieldGroups.other}
+                />
+              </ListSubheader>
+              {columnOptions[2].map((option) => {
+                const alreadySelected = optionAlreadySelected(option.value);
+                return (
+                  <MenuItem
+                    key={option.value}
+                    disabled={alreadySelected}
+                    sx={{ paddingLeft: 4 }}
                     value={option.value}
                   >
                     {option.label}
