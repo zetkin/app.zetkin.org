@@ -65,10 +65,12 @@ export default async function handle(
         : undefined;
       res.writeHead(result.status, headers);
 
-      return res.end();
+      res.end();
     } catch (err) {
-      return res.status(500).json(err);
+      res.status(500).json(err);
     }
+
+    return;
   }
 
   const z = Z.construct({
@@ -107,7 +109,12 @@ export default async function handle(
     session.tokenData = z.getTokenData();
     await session.save();
 
-    res.status(result.httpStatus).json(result.data);
+    res.status(result.httpStatus);
+    if (result.httpStatus == 204) {
+      res.end();
+    } else {
+      res.json(result.data);
+    }
   } catch (err) {
     if (err && typeof err === 'object' && 'httpStatus' in err) {
       const errRes = err as ZetkinZResult;
