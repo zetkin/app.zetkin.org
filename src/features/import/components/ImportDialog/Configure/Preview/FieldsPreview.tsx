@@ -29,7 +29,7 @@ const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
   }
 
   let fieldColumnHeader = '';
-  columnOptions.forEach((columnOp) => {
+  columnOptions.flat().forEach((columnOp) => {
     if (columnOp.value === `field:${fieldKey}`) {
       fieldColumnHeader = columnOp.label;
     }
