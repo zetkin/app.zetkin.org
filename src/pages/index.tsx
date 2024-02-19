@@ -26,10 +26,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     const code = query?.code;
 
     if (code) {
-      const protocol = stringToBool(process.env.ZETKIN_USE_TLS)
-        ? 'https'
-        : 'http';
-      const host = process.env.ZETKIN_APP_HOST;
+      const protocol = process.env.ZETKIN_APP_PROTOCOL || 'http';
+      const host =
+        req.headers.host || process.env.ZETKIN_APP_HOST || 'localhost:3000';
 
       let destination = '/';
 
