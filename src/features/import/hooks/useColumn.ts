@@ -56,16 +56,18 @@ export default function useColumn(orgId: number) {
     return !!exists;
   };
 
-  const columnOptions: Option[] = [];
+  const columnOptionsIDPartition: Option[] = [];
+  const columnOptionsFieldsPartition: Option[] = [];
+  const columnOptionsOtherPartition: Option[] = [];
 
-  columnOptions.push({
+  columnOptionsIDPartition.push({
     label: messages.configuration.mapping.id(),
     value: 'id',
   });
 
   Object.values(NATIVE_PERSON_FIELDS).forEach((fieldSlug) => {
     if (fieldSlug != 'id' && fieldSlug != 'ext_id') {
-      columnOptions.push({
+      columnOptionsFieldsPartition.push({
         label: globalMessages.personFields[fieldSlug](),
         value: `field:${fieldSlug}`,
       });
@@ -73,20 +75,25 @@ export default function useColumn(orgId: number) {
   });
 
   customFields.forEach((field) =>
-    columnOptions.push({
+    columnOptionsFieldsPartition.push({
       label: field.title,
       value: `field:${field.slug}`,
     })
   );
 
-  columnOptions.push({
+  columnOptionsOtherPartition.push({
     label: messages.configuration.mapping.tags(),
     value: 'tag',
   });
-  columnOptions.push({
+  columnOptionsOtherPartition.push({
     label: messages.configuration.mapping.organization(),
     value: 'org',
   });
+
+  const labelSort = (a: Option, b: Option) => (a.label > b.label ? 1 : 0);
+  const columnOptions: Option[] = columnOptionsIDPartition
+    .concat(columnOptionsFieldsPartition.sort(labelSort))
+    .concat(columnOptionsOtherPartition.sort(labelSort));
 
   return { columnOptions, optionAlreadySelected, updateColumn };
 }
