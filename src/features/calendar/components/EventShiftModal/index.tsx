@@ -476,7 +476,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             value={eventParticipants === null ? '' : eventParticipants}
           />
         </Box>
-        <Box flex={1} margin={1}>
+        <Box bgcolor="background.secondary" flex={1} height="100%" margin={1}>
           <Typography color="secondary" margin={1} variant="subtitle2">
             {messages.eventShiftModal.event().toUpperCase()}
           </Typography>
@@ -587,7 +587,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                   sx={{ margin: 1 }}
                   variant="outlined"
                 >
-                  {messages.eventShiftModal.clear().toUpperCase()}
+                  {messages.eventShiftModal.reset().toUpperCase()}
                 </Button>
               )}
             </Box>

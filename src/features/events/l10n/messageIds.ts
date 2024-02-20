@@ -131,7 +131,6 @@ export default makeMessages('feat.events', {
   },
   eventShiftModal: {
     addShift: m('Add shift'),
-    clear: m('Clear'),
     customTitle: m('Custom title'),
     date: m('Date'),
     description: m('Description'),
@@ -154,6 +153,7 @@ export default makeMessages('feat.events', {
     participation: m('Participation'),
     participationDescription: m('Targeted number of participants per shift'),
     publish: m('Publish'),
+    reset: m('Reset'),
     shiftDuration: m('Shift duration'),
     shiftStart: m<{ no: number }>('Start shift {no}'),
     shifts: m<{ no: number }>('{no, plural, one {1 shift} other {# shifts}}'),
