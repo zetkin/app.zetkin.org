@@ -16,8 +16,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useState } from 'react';
 
 import { eventCreated } from 'features/events/store';
+import EventModalTypeAutocomplete from '../EventShiftModal/EventModalTypeAutocomplete';
 import { EventsModel } from 'features/events/models/EventsModel';
-import EventTypeAutocomplete from 'features/events/components/EventTypeAutocomplete';
 import EventTypesModel from 'features/events/models/EventTypesModel';
 import LocationModal from 'features/events/components/LocationModal';
 import LocationsModel from 'features/events/models/LocationsModel';
@@ -46,7 +46,6 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const env = useEnv();
   const store = useStore();
 
-  const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
   const eventsModel = useModel((env) => new EventsModel(env, orgId));
   const typesModel = useModel((env) => new EventTypesModel(env, orgId));
   const locationsModel = useModel((env) => new LocationsModel(env, orgId));
@@ -236,7 +235,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         ? `/api/orgs/${orgId}/campaigns/${campId}/actions`
         : `/api/orgs/${orgId}/actions`,
       {
-        activity_id: typeId,
+        activity_id: typeId >= 0 ? typeId : null,
         end_time: endDate.toISOString(),
         info_text: eventDescription,
         location_id: locationId,
@@ -283,20 +282,18 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             >
               {({ data: { types } }) => {
                 return (
-                  <EventTypeAutocomplete
-                    inEventCreationModal={true}
+                  <EventModalTypeAutocomplete
                     label={messages.eventShiftModal.type()}
-                    onBlur={() => setEditingTypeOrTitle(false)}
                     onChange={(newValue) => {
                       if (newValue) {
                         setTypeId(newValue.id);
                         setTypeTitle(newValue.title);
+                      } else {
+                        setTypeId(-1);
+                        setTypeTitle(messages.type.uncategorized());
                       }
-                      setEditingTypeOrTitle(false);
                     }}
                     onChangeNewOption={(newValueId) => setTypeId(newValueId)}
-                    onFocus={() => setEditingTypeOrTitle(true)}
-                    showBorder={editingTypeOrTitle}
                     types={types}
                     typesModel={typesModel}
                     value={{ id: typeId, title: typeTitle }}
