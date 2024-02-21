@@ -13,14 +13,13 @@ import { Lock, LockOpen } from '@mui/icons-material';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
-import ZUINumberChip from 'zui/ZUINumberChip';
 
 interface EmailTargetsReadyProps {
   isLocked: boolean;
   isLoading: boolean;
   isTargeted: boolean;
   onToggleLocked: () => void;
-  readyTargets: number | null;
+  readyTargets: number;
 }
 
 const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
@@ -59,17 +58,25 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
               </Typography>
             </Box>
           )}
-          {readyTargets != null && (
-            <ZUIAnimatedNumber value={readyTargets}>
-              {(animatedValue) => (
-                <ZUINumberChip
-                  color={theme.palette.statusColors.green}
-                  size="lg"
-                  value={animatedValue}
-                />
-              )}
-            </ZUIAnimatedNumber>
-          )}
+          <ZUIAnimatedNumber value={readyTargets}>
+            {(animatedValue) => (
+              <Box
+                sx={{
+                  backgroundColor: theme.palette.statusColors.green,
+                  borderRadius: '1em',
+                  display: 'flex',
+                  flexShrink: 0,
+                  fontSize: '1.8em',
+                  lineHeight: 'normal',
+                  marginRight: '0.1em',
+                  overflow: 'hidden',
+                  padding: parseInt(animatedValue) === 0 ? '' : '0.2em 0.7em',
+                }}
+              >
+                {parseInt(animatedValue) > 0 ? animatedValue : ''}
+              </Box>
+            )}
+          </ZUIAnimatedNumber>
         </Box>
       </Box>
       {isTargeted && (

@@ -3,7 +3,7 @@ import { EmailOutlined, Person } from '@mui/icons-material';
 
 import ActivityListItemWithStats from './ActivityListItemWithStats';
 import useEmail from 'features/emails/hooks/useEmail';
-import useEmailTargets from 'features/emails/hooks/useEmailTargets';
+import useEmailStats from 'features/emails/hooks/useEmailStats';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import useEmailState, { EmailState } from 'features/emails/hooks/useEmailState';
 
@@ -22,7 +22,7 @@ const statusColors = {
 const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   const { data: email } = useEmail(orgId, emailId);
   const state = useEmailState(orgId, emailId);
-  const { data: targets } = useEmailTargets(orgId, emailId);
+  const { data: emailStats } = useEmailStats(orgId, emailId);
 
   if (!email) {
     return null;
@@ -40,7 +40,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     <ActivityListItemWithStats
       blueChipValue={blueChipValue}
       color={statusColors[state]}
-      endNumber={targets?.allTargets || 0}
+      endNumber={emailStats?.num_target_matches || 0}
       greenChipValue={greenChipValue}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
@@ -55,7 +55,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   ) : (
     <ActivityListItem
       color={statusColors[state]}
-      endNumber={targets?.allTargets || 0}
+      endNumber={emailStats?.num_target_matches || 0}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}

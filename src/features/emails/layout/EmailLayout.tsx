@@ -9,7 +9,7 @@ import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
 import useEmailState from '../hooks/useEmailState';
-import useEmailTargets from '../hooks/useEmailTargets';
+import useEmailStats from '../hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -23,7 +23,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const { orgId, campId, emailId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const { data: email, updateEmail } = useEmail(orgId, emailId);
-  const targetsFuture = useEmailTargets(orgId, emailId);
+  const emailStatsFuture = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   if (!email) {
     return null;
@@ -48,17 +48,17 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
-              future={targetsFuture}
+              future={emailStatsFuture}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
-              {(data) => (
+              {(emailStats) => (
                 <>
                   <People />
                   <Typography marginLeft={1}>
                     <Msg
                       id={messageIds.stats.targets}
-                      values={{ numTargets: data.allTargets }}
+                      values={{ numTargets: emailStats.num_target_matches }}
                     />
                   </Typography>
                 </>

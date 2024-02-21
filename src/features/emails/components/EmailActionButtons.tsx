@@ -7,12 +7,11 @@ import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
 import useDuplicateEmail from '../hooks/useDuplicateEmail';
 import useEmail from '../hooks/useEmail';
-import useEmailTargets from '../hooks/useEmailTargets';
+import useEmailStats from '../hooks/useEmailStats';
+import { useMessages } from 'core/i18n';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-
-import { useMessages } from 'core/i18n';
 
 interface EmailActionButtonsProp {
   email: ZetkinEmail;
@@ -32,10 +31,10 @@ const EmailActionButtons = ({
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteEmail } = useEmail(orgId, email.id);
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
-  const { data: targets } = useEmailTargets(orgId, email.id);
+  const { data: emailStats } = useEmailStats(orgId, email.id);
 
   const deliveryDisabled =
-    targets?.allTargets === 0 ||
+    emailStats?.num_target_matches === 0 ||
     emailState === EmailState.SENT ||
     !email.locked;
 

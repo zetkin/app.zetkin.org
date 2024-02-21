@@ -3,7 +3,6 @@ import { Add, Edit, Visibility } from '@mui/icons-material';
 import { Box, Button, Card, Typography, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
-import { EmailTargets } from '../types';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
@@ -28,7 +27,7 @@ interface EmailTargetsProps {
   email: ZetkinEmail;
   isTargeted: boolean;
   isLocked: boolean;
-  targets: EmailTargets | null;
+  targets: number;
   updateTargets: (filter_spec: Pick<ZetkinQuery, 'filter_spec'>) => void;
 }
 
@@ -50,7 +49,7 @@ const EmailTargets: FC<EmailTargetsProps> = ({
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          <ZUIAnimatedNumber value={targets?.allTargets || 0}>
+          <ZUIAnimatedNumber value={targets}>
             {(animatedValue) => (
               <Box className={classes.chip}>{animatedValue}</Box>
             )}

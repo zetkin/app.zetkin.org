@@ -3,15 +3,15 @@ import Head from 'next/head';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import EmailTargets from 'features/emails/components/EmailTargets';
+import EmailTargetsBlocked from 'features/emails/components/EmailTargetsBlocked';
 import EmailTargetsReady from 'features/emails/components/EmailTargetsReady';
 import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useEmail from 'features/emails/hooks/useEmail';
-import useEmailTargets from 'features/emails/hooks/useEmailTargets';
+import useEmailStats from 'features/emails/hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
-import EmailTargetsBlocked from 'features/emails/components/EmailTargetsBlocked';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -34,7 +34,7 @@ const EmailPage: PageWithLayout = () => {
     updateEmail,
     updateTargets,
   } = useEmail(orgId, emailId);
-  const { data: targets } = useEmailTargets(orgId, emailId);
+  const { data: emailStats } = useEmailStats(orgId, emailId);
 
   const onServer = useServerSide();
 
@@ -44,12 +44,9 @@ const EmailPage: PageWithLayout = () => {
 
   const isLocked = !!email.locked;
 
-  //TODO: Get real stats from API
-  const readyTargets = 230;
-  const blockedTargets = 35;
-  const blacklisted = 1;
-  const missingEmail = 20;
-  const unsubscribed = 14;
+  const allTargets = emailStats?.num_target_matches ?? 0;
+  const allBlocked = emailStats?.num_blocked.any ?? 0;
+  const readyTargets = allTargets - allBlocked;
 
   return (
     <>
@@ -62,16 +59,16 @@ const EmailPage: PageWithLayout = () => {
             email={email}
             isLocked={isLocked}
             isTargeted={isTargeted}
-            targets={targets}
+            targets={allTargets}
             updateTargets={updateTargets}
           />
           <Box display="flex" gap={2} paddingTop={2}>
             <Box flex={1}>
               <EmailTargetsBlocked
-                blacklisted={blacklisted}
-                missingEmail={missingEmail}
-                total={blockedTargets}
-                unsubscribed={unsubscribed}
+                blacklisted={emailStats?.num_blocked?.blacklisted || 0}
+                missingEmail={emailStats?.num_blocked?.no_email || 0}
+                total={allBlocked}
+                unsubscribed={emailStats?.num_blocked?.unsubscribed || 0}
               />
             </Box>
             <Box flex={1}>
