@@ -16,7 +16,12 @@ const SurveyListItem: React.FunctionComponent<{
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
   return (
-    <Link key={survey.id} href={getSurveyUrl(survey, parseInt(orgId))} passHref>
+    <Link
+      key={survey.id}
+      href={getSurveyUrl(survey, parseInt(orgId))}
+      legacyBehavior
+      passHref
+    >
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
         <ListItemAvatar>
           <Avatar>

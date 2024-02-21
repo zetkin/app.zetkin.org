@@ -48,7 +48,7 @@ const ZUIFileChip: React.FC<ZUIFileChipProps> = ({
 
   if (url) {
     output = (
-      <Link href={url} passHref>
+      <Link href={url} legacyBehavior passHref>
         {output}
       </Link>
     );

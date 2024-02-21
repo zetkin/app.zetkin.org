@@ -80,7 +80,7 @@ const ZUIOrganizeSidebarNoMenu = (): JSX.Element => {
       <List disablePadding>
         <Box display="flex" flexDirection="column">
           <ListItem disableGutters>
-            <NextLink href="/organize" passHref>
+            <NextLink href="/organize" legacyBehavior passHref>
               <IconButton
                 aria-label="Home"
                 className={classes.roundButton}

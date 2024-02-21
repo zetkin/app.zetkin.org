@@ -82,7 +82,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
         const subPath = item.folderId ? 'folders/' + item.folderId : '';
         if (item.type == 'back') {
           return (
-            <NextLink href={`${basePath}/${subPath}`} passHref>
+            <NextLink href={`${basePath}/${subPath}`} legacyBehavior passHref>
               <Link color="inherit">
                 <BrowserItemIcon item={params.row} />
               </Link>
@@ -90,7 +90,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
           );
         } else {
           return (
-            <NextLink href={`${basePath}/${item.id}`} passHref>
+            <NextLink href={`${basePath}/${item.id}`} legacyBehavior passHref>
               <Link color="inherit">
                 <BrowserDraggableItem item={params.row}>
                   <BrowserItemIcon item={params.row} />

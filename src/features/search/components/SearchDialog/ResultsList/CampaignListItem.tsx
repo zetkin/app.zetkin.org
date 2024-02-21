@@ -18,6 +18,7 @@ const CampaignListItem: React.FunctionComponent<{
     <Link
       key={campaign.id}
       href={`/organize/${orgId}/projects/${campaign.id}`}
+      legacyBehavior
       passHref
     >
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">

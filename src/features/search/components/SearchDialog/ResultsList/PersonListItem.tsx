@@ -17,6 +17,7 @@ const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
     <Link
       key={person.id}
       href={`/organize/${orgId}/people/${person.id}`}
+      legacyBehavior
       passHref
     >
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">

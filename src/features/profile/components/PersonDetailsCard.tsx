@@ -16,7 +16,7 @@ const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
   href: string;
 }> = ({ children, href }) => (
-  <NextLink href={href} passHref>
+  <NextLink href={href} legacyBehavior passHref>
     <Link underline="hover">{children}</Link>
   </NextLink>
 );

@@ -156,6 +156,7 @@ const ViewJumpMenu: FunctionComponent = () => {
                     href={{
                       pathname: `/organize/${orgId}/people/lists/${view.id}`,
                     }}
+                    legacyBehavior
                     passHref
                   >
                     <ListItem

@@ -18,7 +18,11 @@ const JourneyInstanceCreateFab: React.FunctionComponent = () => {
   const { orgId, journeyId } = useRouter().query;
 
   return (
-    <Link href={`/organize/${orgId}/journeys/${journeyId}/new`} passHref>
+    <Link
+      href={`/organize/${orgId}/journeys/${journeyId}/new`}
+      legacyBehavior
+      passHref
+    >
       <Fab
         className={classes.fab}
         color="primary"

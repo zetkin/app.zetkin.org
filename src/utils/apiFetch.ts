@@ -1,17 +1,17 @@
 import { IncomingHttpHeaders } from 'node:http';
-import { stringToBool } from './stringUtils';
 
 export type ApiFetch = (path: string, init?: RequestInit) => Promise<Response>;
 
 export const createApiFetch = (
   headers: IncomingHttpHeaders,
-  prefix = 'api'
+  prefix = '/api'
 ): ApiFetch => {
   return (path, init) => {
-    const protocol = stringToBool(process.env.ZETKIN_USE_TLS)
-      ? 'https'
-      : 'http';
-    const apiUrl = `${protocol}://${process.env.ZETKIN_APP_HOST}/${prefix}${path}`;
+    const protocol = process.env.ZETKIN_APP_PROTOCOL || 'http';
+    const host =
+      headers.host || process.env.ZETKIN_APP_HOST || 'localhost:3000';
+    const apiUrl = `${protocol}://${host}${prefix}${path}`;
+
     return fetch(apiUrl, {
       ...init,
       headers: {

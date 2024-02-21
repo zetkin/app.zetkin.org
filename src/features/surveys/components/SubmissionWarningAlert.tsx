@@ -46,6 +46,7 @@ const SubmissionWarningAlert = ({
                 href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions${
                   showUnlinkedOnly ? '' : '?filter=linked'
                 }`}
+                legacyBehavior
                 passHref
               >
                 <Link>
