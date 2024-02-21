@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
+import DeliveryStatusMessage from '../components/DeliveryStatusMessage';
 import EmailActionButtons from '../components/EmailActionButtons';
 import EmailStatusChip from '../components/EmailStatusChip';
 import messageIds from '../l10n/messageIds';
@@ -38,6 +39,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
         />
       }
       baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
+      belowActionButtons={<DeliveryStatusMessage email={email} />}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">

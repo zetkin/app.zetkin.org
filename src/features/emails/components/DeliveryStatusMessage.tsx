@@ -16,54 +16,41 @@ const DeliveryStatusMessage = ({ email }: DeliveryStatusMessageProps) => {
     const sendTime = new Date(email.published);
     const now = new Date();
 
-    if (sendTime <= now) {
-      return (
-        <Box alignItems="center" display="flex">
+    return (
+      <Box alignItems="center" display="flex">
+        {sendTime <= now ? (
           <AccessTime sx={{ mr: 1 }} />
-          <Msg
-            id={messageIds.deliveryStatus.wasSent}
-            values={{ time: removeOffset(email.published.slice(11, 16)) }}
-          />
-          {', '}
-          <ZUIDateSpan
-            end={new Date(email.published)}
-            start={new Date(email.published)}
-          />
-        </Box>
-      );
-    }
-
-    if (sendTime > now) {
-      return (
-        <Box alignItems="center" display="flex">
+        ) : (
           <Send sx={{ mr: 1 }} />
-          <Msg
-            id={messageIds.deliveryStatus.willSend}
-            values={{ time: removeOffset(email.published.slice(11, 16)) }}
-          />
-          {', '}
-          <ZUIDateSpan
-            end={new Date(email.published)}
-            start={new Date(email.published)}
-          />
-        </Box>
-      );
-    }
+        )}
+        <Msg
+          id={
+            sendTime <= now
+              ? messageIds.deliveryStatus.wasSent
+              : messageIds.deliveryStatus.willSend
+          }
+          values={{ time: removeOffset(email.published.slice(11, 16)) }}
+        />
+        {', '}
+        <ZUIDateSpan
+          end={new Date(email.published)}
+          start={new Date(email.published)}
+        />
+      </Box>
+    );
   }
 
-  if (email.locked) {
-    return (
-      <Typography>
-        <Msg id={messageIds.deliveryStatus.notScheduled} />
-      </Typography>
-    );
-  } else {
-    return (
-      <Typography>
-        <Msg id={messageIds.deliveryStatus.notLocked} />
-      </Typography>
-    );
-  }
+  return (
+    <Typography color="secondary">
+      <Msg
+        id={
+          email.locked
+            ? messageIds.deliveryStatus.notScheduled
+            : messageIds.deliveryStatus.notLocked
+        }
+      />
+    </Typography>
+  );
 };
 
 export default DeliveryStatusMessage;

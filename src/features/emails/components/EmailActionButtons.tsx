@@ -2,7 +2,6 @@ import { ArrowDropDown, ContentCopy, Delete } from '@mui/icons-material';
 import { Box, Button, Popper } from '@mui/material';
 import { useContext, useState } from 'react';
 
-import DeliveryStatusMessage from './DeliveryStatusMessage';
 import EmailDelivery from './EmailDelivery';
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
@@ -41,47 +40,42 @@ const EmailActionButtons = ({
     !email.locked;
 
   return (
-    <Box alignItems="flex-end" display="flex" flexDirection="column" gap={1}>
-      <Box display="flex">
-        <Button
-          disabled={deliveryDisabled}
-          endIcon={<ArrowDropDown />}
-          onClick={(event) =>
-            setAnchorEl(anchorEl ? null : event.currentTarget)
-          }
-          variant="contained"
-        >
-          {messages.emailActionButtons.delivery()}
-        </Button>
-        <Popper anchorEl={anchorEl} open={!!anchorEl} placement="bottom-end">
-          <EmailDelivery
-            email={email}
-            onClose={() => setAnchorEl(null)}
-            orgId={orgId}
-          />
-        </Popper>
-        <ZUIEllipsisMenu
-          items={[
-            {
-              label: <>{messages.emailActionButtons.duplicate()}</>,
-              onSelect: () => duplicateEmail(),
-              startIcon: <ContentCopy />,
-            },
-            {
-              label: <>{messages.emailActionButtons.delete()}</>,
-              onSelect: () => {
-                showConfirmDialog({
-                  onSubmit: deleteEmail,
-                  title: messages.emailActionButtons.delete(),
-                  warningText: messages.emailActionButtons.warning(),
-                });
-              },
-              startIcon: <Delete />,
-            },
-          ]}
+    <Box display="flex">
+      <Button
+        disabled={deliveryDisabled}
+        endIcon={<ArrowDropDown />}
+        onClick={(event) => setAnchorEl(anchorEl ? null : event.currentTarget)}
+        variant="contained"
+      >
+        {messages.emailActionButtons.delivery()}
+      </Button>
+      <Popper anchorEl={anchorEl} open={!!anchorEl} placement="bottom-end">
+        <EmailDelivery
+          email={email}
+          onClose={() => setAnchorEl(null)}
+          orgId={orgId}
         />
-      </Box>
-      <DeliveryStatusMessage email={email} />
+      </Popper>
+      <ZUIEllipsisMenu
+        items={[
+          {
+            label: <>{messages.emailActionButtons.duplicate()}</>,
+            onSelect: () => duplicateEmail(),
+            startIcon: <ContentCopy />,
+          },
+          {
+            label: <>{messages.emailActionButtons.delete()}</>,
+            onSelect: () => {
+              showConfirmDialog({
+                onSubmit: deleteEmail,
+                title: messages.emailActionButtons.delete(),
+                warningText: messages.emailActionButtons.warning(),
+              });
+            },
+            startIcon: <Delete />,
+          },
+        ]}
+      />
     </Box>
   );
 };
