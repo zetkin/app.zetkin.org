@@ -11,6 +11,7 @@ import useEmail from 'features/emails/hooks/useEmail';
 import useEmailTargets from 'features/emails/hooks/useEmailTargets';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import EmailTargetsBlocked from 'features/emails/components/EmailTargetsBlocked';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -45,6 +46,10 @@ const EmailPage: PageWithLayout = () => {
 
   //TODO: Get real stats from API
   const readyTargets = 230;
+  const blockedTargets = 35;
+  const blacklisted = 1;
+  const missingEmail = 20;
+  const unsubscribed = 14;
 
   return (
     <>
@@ -61,13 +66,23 @@ const EmailPage: PageWithLayout = () => {
             updateTargets={updateTargets}
           />
           <Box display="flex" gap={2} paddingTop={2}>
-            <EmailTargetsReady
-              isLoading={mutating.includes('lock')}
-              isLocked={isLocked}
-              isTargeted={isTargeted}
-              onToggleLocked={() => updateEmail({ lock: !email.locked })}
-              readyTargets={readyTargets}
-            />
+            <Box flex={1}>
+              <EmailTargetsBlocked
+                blacklisted={blacklisted}
+                missingEmail={missingEmail}
+                total={blockedTargets}
+                unsubscribed={unsubscribed}
+              />
+            </Box>
+            <Box flex={1}>
+              <EmailTargetsReady
+                isLoading={mutating.includes('lock')}
+                isLocked={isLocked}
+                isTargeted={isTargeted}
+                onToggleLocked={() => updateEmail({ lock: !email.locked })}
+                readyTargets={readyTargets}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -1,6 +1,13 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
+  blocked: {
+    blacklisted: m('Blacklisted'),
+    missingEmail: m('Missing email'),
+    subtitle: m('Targets not available for email'),
+    title: m('Blocked'),
+    unsubscribed: m('Unsubscribed'),
+  },
   deliveryStatus: {
     notLocked: m('Not locked, not scheduled'),
     notScheduled: m('Not scheduled'),
