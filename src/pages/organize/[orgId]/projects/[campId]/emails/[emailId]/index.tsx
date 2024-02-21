@@ -43,6 +43,9 @@ const EmailPage: PageWithLayout = () => {
 
   const isLocked = !!email.locked;
 
+  //TODO: Get real stats from API
+  const readyTargets = 230;
+
   return (
     <>
       <Head>
@@ -63,6 +66,7 @@ const EmailPage: PageWithLayout = () => {
               isLocked={isLocked}
               isTargeted={isTargeted}
               onToggleLocked={() => updateEmail({ lock: !email.locked })}
+              readyTargets={readyTargets}
             />
           </Box>
         </Box>

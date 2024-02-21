@@ -35,9 +35,13 @@ export default makeMessages('feat.emails', {
     loading: m('Loading...'),
     lockButton: m('Lock for delivery'),
     lockDescription: m('Lock to enable email delivery'),
+    locked: m('Locked'),
     subtitle: m('Targets currently available for delivery'),
     title: m('Ready'),
     unlockButton: m('Unlock'),
+    unlockDescription: m(
+      'Proceed to delivery or unlock recipients to edit targeting. Unlocking may add or remove some targets depending on what results the smart search will produce.'
+    ),
   },
   state: {
     draft: m('Draft'),
