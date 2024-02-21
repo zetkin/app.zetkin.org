@@ -1,14 +1,14 @@
 import { makeStyles } from '@mui/styles';
-import { useState } from 'react';
 import { Add, Edit, Visibility } from '@mui/icons-material';
 import { Box, Button, Card, Typography, useTheme } from '@mui/material';
+import { FC, useState } from 'react';
 
+import { EmailTargets } from '../types';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
-import useEmail from '../hooks/useEmail';
-import useEmailTargets from '../hooks/useEmailTargets';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
+import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -25,22 +25,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface EmailTargetsProps {
-  emailId: number;
-  orgId: number;
+  email: ZetkinEmail;
+  isTargeted: boolean;
+  isLocked: boolean;
+  targets: EmailTargets | null;
+  updateTargets: (filter_spec: Pick<ZetkinQuery, 'filter_spec'>) => void;
 }
-const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
+
+const EmailTargets: FC<EmailTargetsProps> = ({
+  email,
+  isTargeted,
+  isLocked,
+  targets,
+  updateTargets,
+}) => {
   const theme = useTheme();
   const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
-  const {
-    data: email,
-    isTargeted,
-    updateTargets: setTargets,
-  } = useEmail(orgId, emailId);
-  const { data: targets } = useEmailTargets(orgId, emailId);
-
-  //hard coded variables
-  const isLocked = false;
 
   return (
     <>
@@ -101,7 +102,7 @@ const EmailTargets = ({ orgId, emailId }: EmailTargetsProps) => {
         <SmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}
           onSave={(query) => {
-            setTargets(query);
+            updateTargets(query);
             setQueryDialogOpen(false);
           }}
           query={email?.target}

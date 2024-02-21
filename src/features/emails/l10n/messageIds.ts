@@ -31,6 +31,14 @@ export default makeMessages('feat.emails', {
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
   },
+  ready: {
+    loading: m('Loading...'),
+    lockButton: m('Lock for delivery'),
+    lockDescription: m('Lock to enable email delivery'),
+    subtitle: m('Targets currently available for delivery'),
+    title: m('Ready'),
+    unlockButton: m('Unlock'),
+  },
   state: {
     draft: m('Draft'),
     scheduled: m('Scheduled'),

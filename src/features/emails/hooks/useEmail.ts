@@ -13,7 +13,9 @@ import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 interface UseEmailReturn {
   data: ZetkinEmail | null;
   deleteEmail: () => Promise<void>;
+  isLoading: boolean;
   isTargeted: boolean;
+  mutating: string[];
   updateEmail: (data: Partial<ZetkinEmail>) => IFuture<ZetkinEmail>;
   updateTargets: (query: Partial<ZetkinQuery>) => Promise<void>;
 }
@@ -80,6 +82,7 @@ export default function useEmail(
     ...futureToObject(emailFuture),
     deleteEmail,
     isTargeted,
+    mutating: emailItem?.mutating || [],
     updateEmail,
     updateTargets,
   };
