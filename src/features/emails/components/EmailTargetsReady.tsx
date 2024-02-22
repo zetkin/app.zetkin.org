@@ -114,7 +114,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
               <Button
                 onClick={onToggleLocked}
                 startIcon={isLocked ? <LockOpen /> : <Lock />}
-                variant="contained"
+                variant={isLocked ? 'outlined' : 'contained'}
               >
                 <Msg
                   id={
