@@ -4,11 +4,15 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useEmail from './useEmail';
+import { statsLoad, statsLoaded } from '../store';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-interface EmailStats {
+export interface EmailStats {
+  id: number;
   num_target_matches: number;
-  num_target_locked: number | null;
+  num_locked_targets: number | null;
   num_blocked: {
     any: number;
     blacklisted: number;
@@ -22,35 +26,34 @@ export default function useEmailStats(
   emailId: number
 ): IFuture<EmailStats> {
   const { isTargeted } = useEmail(orgId, emailId);
+  const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
+  const statsItem = useAppSelector((state) => state.emails.statsById[emailId]);
 
-  //TODO: Get real stats from API
-  const statsFuture = {
-    data: {
-      num_blocked: {
-        any: 70,
-        blacklisted: 10,
-        no_email: 40,
-        unsubscribed: 20,
-      },
-      num_target_locked: null,
-      num_target_matches: 230,
+  const statsFuture = loadItemIfNecessary(statsItem, dispatch, {
+    actionOnLoad: () => statsLoad(emailId),
+    actionOnSuccess: (data) => statsLoaded(data),
+    loader: async () => {
+      const data = await apiClient.get<EmailStats & { id: number }>(
+        `/api/orgs/${orgId}/emails/${emailId}/stats`
+      );
+      return { ...data, id: emailId };
     },
-    error: false,
-    isLoading: false,
-  };
+  });
 
   if (!isTargeted) {
     return new ResolvedFuture(null);
   }
   if (statsFuture.isLoading && !statsFuture.data) {
     return new PlaceholderFuture({
+      id: emailId,
       num_blocked: {
         any: 0,
         blacklisted: 0,
         no_email: 0,
         unsubscribed: 0,
       },
-      num_target_locked: 0,
+      num_locked_targets: 0,
       num_target_matches: 0,
     });
   } else {

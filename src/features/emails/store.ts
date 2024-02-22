@@ -1,4 +1,4 @@
-import { EmailTargets } from './types';
+import { EmailStats } from './hooks/useEmailStats';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -10,12 +10,12 @@ import {
 
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
-  targetsById: Record<number, RemoteItem<EmailTargets>>;
+  statsById: Record<number, RemoteItem<EmailStats>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
-  targetsById: {},
+  statsById: {},
 };
 
 const emailsSlice = createSlice({
@@ -63,7 +63,7 @@ const emailsSlice = createSlice({
     emailUpdated: (state, action: PayloadAction<[ZetkinEmail, string[]]>) => {
       const [email, mutating] = action.payload;
       const item = state.emailList.items.find((item) => item.id == email.id);
-      const statsItem = state.targetsById[email.id];
+      const statsItem = state.statsById[email.id];
       if (
         statsItem &&
         JSON.stringify(email.target.filter_spec) !=
@@ -95,16 +95,29 @@ const emailsSlice = createSlice({
       state.emailList.loaded = timestamp;
       state.emailList.items.forEach((item) => (item.loaded = timestamp));
     },
-    targetsLoad: (state, action: PayloadAction<number>) => {
+    statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const statsItem = state.targetsById[id];
-      state.targetsById[id] = remoteItem<EmailTargets>(id, {
-        data: statsItem?.data,
+      const statsItem = state.statsById[id];
+      state.statsById[id] = remoteItem<EmailStats>(id, {
+        data: statsItem?.data || {
+          id,
+          num_blocked: {
+            any: 0,
+            blacklisted: 0,
+            no_email: 0,
+            unsubscribed: 0,
+          },
+          num_locked_targets: 0,
+          num_target_matches: 0,
+        },
         isLoading: true,
       });
     },
-    targetsLoaded: (state, action: PayloadAction<EmailTargets>) => {
-      state.targetsById[action.payload.id] = remoteItem<EmailTargets>(
+    statsLoaded: (
+      state,
+      action: PayloadAction<EmailStats & { id: number }>
+    ) => {
+      state.statsById[action.payload.id] = remoteItem<EmailStats>(
         action.payload.id,
         {
           data: action.payload,
@@ -128,6 +141,6 @@ export const {
   emailUpdated,
   emailsLoad,
   emailsLoaded,
-  targetsLoad,
-  targetsLoaded,
+  statsLoad,
+  statsLoaded,
 } = emailsSlice.actions;
