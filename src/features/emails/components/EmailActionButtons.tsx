@@ -34,6 +34,7 @@ const EmailActionButtons = ({
   const { data: emailStats } = useEmailStats(orgId, email.id);
 
   const deliveryDisabled =
+    !email.subject ||
     emailStats?.num_target_matches === 0 ||
     emailState === EmailState.SENT ||
     !email.locked;
