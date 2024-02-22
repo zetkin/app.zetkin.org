@@ -18,6 +18,7 @@ interface EmailTargetsReadyProps {
   isLocked: boolean;
   isLoading: boolean;
   isTargeted: boolean;
+  lockedTargets: number | null;
   onToggleLocked: () => void;
   readyTargets: number;
 }
@@ -26,6 +27,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
   isLocked,
   isLoading,
   isTargeted,
+  lockedTargets,
   onToggleLocked,
   readyTargets,
 }) => {
@@ -58,7 +60,9 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
               </Typography>
             </Box>
           )}
-          <ZUIAnimatedNumber value={readyTargets}>
+          <ZUIAnimatedNumber
+            value={lockedTargets === null ? readyTargets : lockedTargets}
+          >
             {(animatedValue) => (
               <Box
                 sx={{

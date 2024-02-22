@@ -76,6 +76,7 @@ const EmailPage: PageWithLayout = () => {
                 isLoading={mutating.includes('lock')}
                 isLocked={isLocked}
                 isTargeted={isTargeted}
+                lockedTargets={emailStats?.num_locked_targets || null}
                 onToggleLocked={() => updateEmail({ lock: !email.locked })}
                 readyTargets={readyTargets}
               />
