@@ -129,6 +129,7 @@ export interface ZetkinOrganizerAction {
 }
 
 export interface ZetkinUser {
+  email: string;
   first_name: string;
   id: number;
   is_superuser?: boolean;
