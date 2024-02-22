@@ -8,14 +8,10 @@ import {
   AlertTitle,
   Box,
   Button,
-  Checkbox,
   ClickAwayListener,
-  FormControlLabel,
   Paper,
   Stack,
   Tab,
-  Typography,
-  useTheme,
 } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
@@ -31,22 +27,15 @@ import { Msg, useMessages } from 'core/i18n';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ZUITimezonePicker, { findCurrentTZ } from 'zui/ZUITimezonePicker';
 
-interface EmailDeliveryPanelProps {
+interface EmailDeliveryProps {
   email: ZetkinEmail;
   onClose: () => void;
   orgId: number;
-  targetNum: number;
 }
 
 dayjs.extend(utc);
 
-const EmailDeliveryPanel = ({
-  email,
-  onClose,
-  orgId,
-  targetNum,
-}: EmailDeliveryPanelProps) => {
-  const theme = useTheme();
+const EmailDelivery = ({ email, onClose, orgId }: EmailDeliveryProps) => {
   const messages = useMessages(messageIds);
   const { updateEmail } = useEmail(orgId, email.id);
 
@@ -62,9 +51,6 @@ const EmailDeliveryPanel = ({
   const scheduledTime = getOffset('2023-12-25T12:25:00+09:00');
   const currentTzValue = findCurrentTZ().utc;
   const [tzValue, setTzValue] = useState(scheduledTime || currentTzValue);
-
-  // fake data
-  const [unlocked, setUnlocked] = useState(true);
 
   const [tab, setTab] = useState<'now' | 'later'>('later');
 
@@ -138,18 +124,6 @@ const EmailDeliveryPanel = ({
             </Alert>
           </TabPanel>
         </TabContext>
-        <Box display="flex" flexDirection="column">
-          <FormControlLabel
-            control={
-              <Checkbox onChange={(e) => setUnlocked(!e.target.checked)} />
-            }
-            label={messages.emailActionButtons.lockTarget()}
-            sx={{ margin: '10px 10px 0 10px', width: 'fit-content' }}
-          />
-          <Typography color="secondary" variant="body2">
-            <Msg id={messageIds.emailActionButtons.lockDesc} />
-          </Typography>
-        </Box>
         <Box
           sx={{
             alignItems: 'center',
@@ -158,36 +132,8 @@ const EmailDeliveryPanel = ({
             mt: 2,
           }}
         >
-          {sendingDate == '' ? (
-            <Typography
-              sx={{ color: theme.palette.statusColors.orange, mr: 1 }}
-            >
-              <Msg id={messageIds.emailActionButtons.setDate} />
-            </Typography>
-          ) : (
-            <>
-              {unlocked && (
-                <Typography
-                  sx={{ color: theme.palette.statusColors.orange, mr: 1 }}
-                >
-                  <Msg id={messageIds.emailActionButtons.beforeLock} />
-                </Typography>
-              )}
-              {!unlocked && (
-                <Typography
-                  sx={{ color: theme.palette.grey['500'], mr: 2 }}
-                  variant="body1"
-                >
-                  <Msg
-                    id={messageIds.emailActionButtons.afterLock}
-                    values={{ numTargets: targetNum }}
-                  />
-                </Typography>
-              )}
-            </>
-          )}
           <Button
-            disabled={(tab === 'later' && sendingDate == null) || unlocked}
+            disabled={tab === 'later' && sendingDate == null}
             onClick={() => {
               updateEmail({
                 published:
@@ -212,4 +158,4 @@ const EmailDeliveryPanel = ({
   );
 };
 
-export default EmailDeliveryPanel;
+export default EmailDelivery;

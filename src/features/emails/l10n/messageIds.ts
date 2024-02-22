@@ -1,6 +1,19 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
+  blocked: {
+    blacklisted: m('Blacklisted'),
+    missingEmail: m('Missing email'),
+    subtitle: m('Unavaliable targets.'),
+    title: m('Blocked'),
+    unsubscribed: m('Unsubscribed'),
+  },
+  deliveryStatus: {
+    notLocked: m('Not locked, not scheduled'),
+    notScheduled: m('Not scheduled'),
+    wasSent: m<{ time: string }>('Was sent at {time}'),
+    willSend: m<{ time: string }>('Will send at {time}'),
+  },
   editor: {
     settings: {
       tabs: {
@@ -58,19 +71,11 @@ export default makeMessages('feat.emails', {
     },
   },
   emailActionButtons: {
-    afterLock: m<{ numTargets: number }>(
-      'Will schedule email for {numTargets} people'
-    ),
-    beforeLock: m('Lock targeting to proceed'),
     delete: m('Delete'),
-    delevery: m('Delivery'),
+    delivery: m('Delivery'),
     deliveryDate: m('Delivery date'),
     deliveryTime: m('Delivery time'),
     duplicate: m('Duplicate'),
-    lockDesc: m(
-      'Make sure the current exact targeting will be used during delivery'
-    ),
-    lockTarget: m('Lock targeting'),
     schedule: m('Schedule'),
     sendAnyway: m('Send anyway'),
     sendLater: m('Send later'),
@@ -95,12 +100,27 @@ export default makeMessages('feat.emails', {
     ),
     goBackButton: m('Go back'),
   },
+  ready: {
+    loading: m('Loading...'),
+    lockButton: m('Lock for delivery'),
+    lockDescription: m('Lock to enable email delivery'),
+    locked: m('Locked'),
+    subtitle: m('Targets currently available for delivery'),
+    title: m('Ready'),
+    unlockButton: m('Unlock'),
+    unlockDescription: m(
+      'Proceed to delivery or unlock recipients to edit targeting. Unlocking may add or remove some targets depending on what results the Smart Search will produce.'
+    ),
+  },
   state: {
     draft: m('Draft'),
     scheduled: m('Scheduled'),
     sent: m('Sent'),
   },
   stats: {
+    lockedTargets: m<{ numLocked: number }>(
+      '{numLocked, plural, =0 {No locked targets} one {1 locked target} other {# locked targets}}'
+    ),
     targets: m<{ numTargets: number }>(
       '{numTargets, plural, =0 {No targets} one {1 target} other {# targets}}'
     ),
@@ -113,10 +133,8 @@ export default makeMessages('feat.emails', {
     defineButton: m('Define target group'),
     editButton: m('Edit target group'),
     locked: m('Targets are locked for delivery'),
-    subtitle: m('Use smart search to define the recipients of this mail.'),
+    subtitle: m('Use Smart Search to define the recipients of this mail.'),
     title: m('Targets'),
     viewButton: m('View target group'),
   },
-  wasSent: m<{ time: string }>('Was sent at {time}'),
-  willSend: m<{ time: string }>('Will send at {time}'),
 });

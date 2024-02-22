@@ -3,22 +3,20 @@ import Head from 'next/head';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import EmailTargets from 'features/emails/components/EmailTargets';
+import EmailTargetsBlocked from 'features/emails/components/EmailTargetsBlocked';
+import EmailTargetsReady from 'features/emails/components/EmailTargetsReady';
 import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useEmail from 'features/emails/hooks/useEmail';
+import useEmailStats from 'features/emails/hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
-  async (ctx) => {
-    const { emailId, orgId } = ctx.params!;
-
+  async () => {
     return {
-      props: {
-        emailId,
-        orgId,
-      },
+      props: {},
     };
   },
   {
@@ -29,20 +27,64 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 const EmailPage: PageWithLayout = () => {
   const { orgId, emailId } = useNumericRouteParams();
-  const { data: email } = useEmail(orgId, emailId);
+  const {
+    data: email,
+    isTargeted,
+    mutating,
+    updateEmail,
+    updateTargets,
+  } = useEmail(orgId, emailId);
+  const { data: emailStats } = useEmailStats(orgId, emailId);
+
   const onServer = useServerSide();
 
-  if (onServer) {
+  if (onServer || !email) {
     return null;
   }
+
+  const isLocked = !!email.locked;
+
+  const allTargets = emailStats?.num_target_matches ?? 0;
+  const allBlocked = emailStats?.num_blocked.any ?? 0;
+  const allLocked = emailStats?.num_locked_targets ?? null;
+  const readyTargets = allTargets - allBlocked;
+  const lockedTargets = allLocked === null ? allLocked : allLocked - allBlocked;
 
   return (
     <>
       <Head>
-        <title>{email?.title}</title>
+        <title>{email.title}</title>
       </Head>
-      <Box mb={2}>
-        <EmailTargets emailId={emailId} orgId={orgId} />
+      <Box>
+        <Box display="flex" flexDirection="column">
+          <EmailTargets
+            email={email}
+            isLocked={isLocked}
+            isTargeted={isTargeted}
+            targets={allTargets}
+            updateTargets={updateTargets}
+          />
+          <Box display="flex" gap={2} paddingTop={2}>
+            <Box flex={1}>
+              <EmailTargetsBlocked
+                blacklisted={emailStats?.num_blocked?.blacklisted || 0}
+                missingEmail={emailStats?.num_blocked?.no_email || 0}
+                total={allBlocked}
+                unsubscribed={emailStats?.num_blocked?.unsubscribed || 0}
+              />
+            </Box>
+            <Box flex={1}>
+              <EmailTargetsReady
+                isLoading={mutating.includes('lock')}
+                isLocked={isLocked}
+                isTargeted={isTargeted}
+                lockedTargets={lockedTargets}
+                onToggleLocked={() => updateEmail({ lock: !email.locked })}
+                readyTargets={readyTargets}
+              />
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </>
   );

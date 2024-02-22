@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, Dialog, Typography } from '@mui/material';
 
+import DeliveryStatusMessage from '../components/DeliveryStatusMessage';
 import EmailActionButtons from '../components/EmailActionButtons';
 import EmailStatusChip from '../components/EmailStatusChip';
 import messageIds from '../l10n/messageIds';
@@ -9,7 +10,7 @@ import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
 import useEmailState from '../hooks/useEmailState';
-import useEmailTargets from '../hooks/useEmailTargets';
+import useEmailStats from '../hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -25,7 +26,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   const router = useRouter();
   const messages = useMessages(messageIds);
   const { data: email, updateEmail } = useEmail(orgId, emailId);
-  const targetsFuture = useEmailTargets(orgId, emailId);
+  const emailStatsFuture = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   const organization = useOrganization(orgId).data;
 
@@ -44,8 +45,8 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
           />
         }
         baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
+        belowActionButtons={<DeliveryStatusMessage email={email} />}
         defaultTab="/"
-        fixedHeight
         subtitle={
           <Box alignItems="center" display="flex">
             <Box marginRight={1}>
@@ -53,18 +54,29 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
             </Box>
             <Box display="flex" marginX={1}>
               <ZUIFuture
-                future={targetsFuture}
+                future={emailStatsFuture}
                 ignoreDataWhileLoading
                 skeletonWidth={100}
               >
-                {(data) => (
+                {(emailStats) => (
                   <>
                     <People />
                     <Typography marginLeft={1}>
-                      <Msg
-                        id={messageIds.stats.targets}
-                        values={{ numTargets: data.allTargets }}
-                      />
+                      {emailStats.num_locked_targets === null ? (
+                        <Msg
+                          id={messageIds.stats.targets}
+                          values={{ numTargets: emailStats.num_target_matches }}
+                        />
+                      ) : (
+                        <Msg
+                          id={messageIds.stats.lockedTargets}
+                          values={{
+                            numLocked:
+                              emailStats.num_locked_targets -
+                              emailStats.num_blocked.any,
+                          }}
+                        />
+                      )}
                     </Typography>
                   </>
                 )}

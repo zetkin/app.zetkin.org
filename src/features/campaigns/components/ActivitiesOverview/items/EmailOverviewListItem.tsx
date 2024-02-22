@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { EmailActivity } from 'features/campaigns/types';
 import OverviewListItem from './OverviewListItem';
-import useEmailTargets from 'features/emails/hooks/useEmailTargets';
+import useEmailStats from 'features/emails/hooks/useEmailStats';
 import { EmailOutlined, Person } from '@mui/icons-material';
 
 interface EmailOverviewListItemProps {
@@ -15,11 +15,11 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
   focusDate,
 }) => {
   const email = activity.data;
-  const { data: targets } = useEmailTargets(email.organization.id, email.id);
+  const { data: emailStats } = useEmailStats(email.organization.id, email.id);
   return (
     <OverviewListItem
       endDate={activity.visibleUntil}
-      endNumber={targets?.allTargets || 0}
+      endNumber={emailStats?.num_target_matches || 0}
       focusDate={focusDate}
       href={`/organize/${email.organization.id}/projects/${
         email.campaign?.id ?? 'standalone'
