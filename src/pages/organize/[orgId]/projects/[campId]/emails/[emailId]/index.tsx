@@ -46,7 +46,9 @@ const EmailPage: PageWithLayout = () => {
 
   const allTargets = emailStats?.num_target_matches ?? 0;
   const allBlocked = emailStats?.num_blocked.any ?? 0;
+  const allLocked = emailStats?.num_locked_targets ?? null;
   const readyTargets = allTargets - allBlocked;
+  const lockedTargets = allLocked === null ? allLocked : allLocked - allBlocked;
 
   return (
     <>
@@ -76,7 +78,7 @@ const EmailPage: PageWithLayout = () => {
                 isLoading={mutating.includes('lock')}
                 isLocked={isLocked}
                 isTargeted={isTargeted}
-                lockedTargets={emailStats?.num_locked_targets || null}
+                lockedTargets={lockedTargets}
                 onToggleLocked={() => updateEmail({ lock: !email.locked })}
                 readyTargets={readyTargets}
               />

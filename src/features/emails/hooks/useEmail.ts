@@ -10,13 +10,15 @@ import { futureToObject, IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 
+type ZetkinEmailPatchBody = Partial<ZetkinEmail> & { lock?: boolean };
+
 interface UseEmailReturn {
   data: ZetkinEmail | null;
   deleteEmail: () => Promise<void>;
   isLoading: boolean;
   isTargeted: boolean;
   mutating: string[];
-  updateEmail: (data: Partial<ZetkinEmail>) => IFuture<ZetkinEmail>;
+  updateEmail: (data: ZetkinEmailPatchBody) => IFuture<ZetkinEmail>;
   updateTargets: (query: Partial<ZetkinQuery>) => Promise<void>;
 }
 
@@ -46,10 +48,9 @@ export default function useEmail(
     emailFuture.data && emailFuture.data.target?.filter_spec?.length != 0
   );
 
-  const updateEmail = (data: Partial<ZetkinEmail>) => {
+  const updateEmail = (data: ZetkinEmailPatchBody) => {
     const mutating = Object.keys(data);
     dispatch(emailUpdate([emailId, mutating]));
-
     const promise = apiClient
       .patch<ZetkinEmail>(`/api/orgs/${orgId}/emails/${emailId}`, data)
       .then((email: ZetkinEmail) => {
