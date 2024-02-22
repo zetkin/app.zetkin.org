@@ -56,10 +56,21 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
                 <>
                   <People />
                   <Typography marginLeft={1}>
-                    <Msg
-                      id={messageIds.stats.targets}
-                      values={{ numTargets: emailStats.num_target_matches }}
-                    />
+                    {emailStats.num_locked_targets === null ? (
+                      <Msg
+                        id={messageIds.stats.targets}
+                        values={{ numTargets: emailStats.num_target_matches }}
+                      />
+                    ) : (
+                      <Msg
+                        id={messageIds.stats.lockedTargets}
+                        values={{
+                          numLocked:
+                            emailStats.num_locked_targets -
+                            emailStats.num_blocked.any,
+                        }}
+                      />
+                    )}
                   </Typography>
                 </>
               )}

@@ -64,8 +64,10 @@ const emailsSlice = createSlice({
       const [email, mutating] = action.payload;
       const item = state.emailList.items.find((item) => item.id == email.id);
       const statsItem = state.statsById[email.id];
+
+      //Only set stats as stale if query or locked state has updated
       if (
-        statsItem &&
+        (statsItem && email.locked != item?.data?.locked) ||
         JSON.stringify(email.target.filter_spec) !=
           JSON.stringify(item?.data?.target.filter_spec)
       ) {

@@ -4,7 +4,7 @@ export default makeMessages('feat.emails', {
   blocked: {
     blacklisted: m('Blacklisted'),
     missingEmail: m('Missing email'),
-    subtitle: m('Targets not available for email'),
+    subtitle: m('Unavaliable targets.'),
     title: m('Blocked'),
     unsubscribed: m('Unsubscribed'),
   },
@@ -47,7 +47,7 @@ export default makeMessages('feat.emails', {
     title: m('Ready'),
     unlockButton: m('Unlock'),
     unlockDescription: m(
-      'Proceed to delivery or unlock recipients to edit targeting. Unlocking may add or remove some targets depending on what results the smart search will produce.'
+      'Proceed to delivery or unlock recipients to edit targeting. Unlocking may add or remove some targets depending on what results the Smart Search will produce.'
     ),
   },
   state: {
@@ -56,6 +56,9 @@ export default makeMessages('feat.emails', {
     sent: m('Sent'),
   },
   stats: {
+    lockedTargets: m<{ numLocked: number }>(
+      '{numLocked, plural, =0 {No locked targets} one {1 locked target} other {# locked targets}}'
+    ),
     targets: m<{ numTargets: number }>(
       '{numTargets, plural, =0 {No targets} one {1 target} other {# targets}}'
     ),
@@ -68,7 +71,7 @@ export default makeMessages('feat.emails', {
     defineButton: m('Define target group'),
     editButton: m('Edit target group'),
     locked: m('Targets are locked for delivery'),
-    subtitle: m('Use smart search to define the recipients of this mail.'),
+    subtitle: m('Use Smart Search to define the recipients of this mail.'),
     title: m('Targets'),
     viewButton: m('View target group'),
   },
