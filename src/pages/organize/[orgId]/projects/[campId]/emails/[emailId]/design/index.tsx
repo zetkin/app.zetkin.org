@@ -1,7 +1,7 @@
-import { Box } from '@mui/material';
+import { GetServerSideProps } from 'next';
+
 import EmailEditor from 'features/emails/components/EmailEditor';
 import EmailLayout from 'features/emails/layout/EmailLayout';
-import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useEmail from 'features/emails/hooks/useEmail';
@@ -32,29 +32,21 @@ type Props = {
 };
 
 const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
-  const { data, updateEmail } = useEmail(parseInt(orgId), parseInt(emailId));
+  const { data: email, updateEmail } = useEmail(
+    parseInt(orgId),
+    parseInt(emailId)
+  );
   const onServer = useServerSide();
 
   if (onServer) {
     return null;
   }
 
-  if (!data) {
+  if (!email) {
     return null;
   }
 
-  return (
-    <Box>
-      <EmailEditor
-        initialContent={
-          data.content ? JSON.parse(data.content) : { blocks: [] }
-        }
-        onSave={(data) => {
-          updateEmail({ content: JSON.stringify(data) });
-        }}
-      />
-    </Box>
-  );
+  return <EmailEditor email={email} onSave={(email) => updateEmail(email)} />;
 };
 
 EmailPage.getLayout = function getLayout(page) {

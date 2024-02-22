@@ -1,6 +1,62 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
+  editor: {
+    settings: {
+      tabs: {
+        content: m('Content'),
+        preview: {
+          instructions: m(
+            'Here you can send this email to yourself to preview what it will look like for the recipients. '
+          ),
+          sendButton: m('Send'),
+          sendTo: m('The email will be sent to this address:'),
+          title: m('Preview'),
+        },
+        settings: {
+          senderAddressInputLabel: m('Sender address'),
+          senderNameInputLabel: m('Sender name'),
+          subjectInputLabel: m('Subject'),
+          title: m('Settings'),
+        },
+      },
+    },
+    tools: {
+      button: {
+        block: {
+          noButtonText: m('Click to change this text!'),
+        },
+        settings: {
+          invalidUrl: m('This is not a valid link'),
+          testLink: m('Click to test link'),
+          urlLabel: m('Link url'),
+        },
+        title: m('Button'),
+      },
+      header: {
+        title: m('Header'),
+      },
+      libraryImage: {
+        changeImage: m('Change image'),
+        title: m('Image'),
+      },
+      link: {
+        addUrl: m('Add a link'),
+        invalidUrl: m('This is not a valid link'),
+        testLink: m('Click to test link'),
+        title: m('Link'),
+      },
+      paragraph: {
+        invalidUrls: m(
+          'There are one or more invalid link in this text block.'
+        ),
+        title: m('Text'),
+      },
+      variable: {
+        title: m('Variable'),
+      },
+    },
+  },
   emailActionButtons: {
     afterLock: m<{ numTargets: number }>(
       'Will schedule email for {numTargets} people'
@@ -32,6 +88,12 @@ export default makeMessages('feat.emails', {
     warning: m(
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
+  },
+  orgHasNoEmail: {
+    errorMessage: m(
+      'Your organization can not use the email feature since it does not have a registered email address.'
+    ),
+    goBackButton: m('Go back'),
   },
   state: {
     draft: m('Draft'),
