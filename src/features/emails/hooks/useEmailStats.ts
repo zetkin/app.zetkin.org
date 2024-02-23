@@ -19,6 +19,9 @@ export interface EmailStats {
     no_email: number;
     unsubscribed: number;
   };
+  num_sent: number;
+  num_opened: number;
+  num_clicked: number;
 }
 
 export default function useEmailStats(
@@ -53,7 +56,10 @@ export default function useEmailStats(
         no_email: 0,
         unsubscribed: 0,
       },
+      num_clicked: 0,
       num_locked_targets: 0,
+      num_opened: 0,
+      num_sent: 0,
       num_target_matches: 0,
     });
   } else {
