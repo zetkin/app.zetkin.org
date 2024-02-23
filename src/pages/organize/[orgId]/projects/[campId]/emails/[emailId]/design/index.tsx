@@ -50,7 +50,7 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
 };
 
 EmailPage.getLayout = function getLayout(page) {
-  return <EmailLayout>{page}</EmailLayout>;
+  return <EmailLayout fixedHeight>{page}</EmailLayout>;
 };
 
 export default EmailPage;
