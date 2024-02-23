@@ -22,12 +22,14 @@ const FileUploadCard: FC<FileUploadCardProps> = ({ onFileBrowserOpen }) => {
       borderRadius={1}
       display="flex"
       flexDirection="column"
-      height="100%"
       justifyContent="center"
       onClick={onFileBrowserOpen}
       sx={{
+        aspectRatio: '1 / 1',
         borderStyle: 'dashed',
+        boxSizing: 'border-box',
         cursor: 'pointer',
+        width: '100%',
       }}
     >
       <IconButton
