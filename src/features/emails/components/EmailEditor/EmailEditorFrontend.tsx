@@ -25,6 +25,7 @@ export type EmailEditorFrontendProps = {
   initialContent: OutputData;
   onSave: (data: OutputData) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
+  readOnly: boolean;
 };
 
 const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
@@ -32,6 +33,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   initialContent,
   onSave,
   onSelectBlock,
+  readOnly,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -66,6 +68,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       holder: 'ClientOnlyEditor-container',
       inlineToolbar: ['bold', 'italic', 'link', 'variable'],
       onChange: () => saveData(),
+      readOnly: readOnly,
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,

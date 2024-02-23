@@ -56,6 +56,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
           onSelectBlock={(selectedBlockIndex: number) => {
             setSelectedBlockIndex(selectedBlockIndex);
           }}
+          readOnly={!!email.published}
         />
       </Box>
       <Box
@@ -69,6 +70,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
           apiRef={apiRef}
           blocks={content.blocks}
           onSave={onSave}
+          readOnly={!!email.published}
           selectedBlockIndex={selectedBlockIndex}
           subject={email.subject || ''}
         />
