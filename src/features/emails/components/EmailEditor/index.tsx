@@ -6,7 +6,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import EmailSettings from './EmailSettings';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
-const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
+const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
   ssr: false,
 });
 

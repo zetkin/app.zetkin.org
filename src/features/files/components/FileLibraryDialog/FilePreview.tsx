@@ -26,9 +26,14 @@ const FilePreview: FC<Props> = ({ file, onBack, onSelect }) => {
         >
           <Image
             alt={file.original_name}
-            layout="fill"
-            objectFit="contain"
+            height="800"
             src={file.url}
+            style={{
+              height: '100%',
+              objectFit: 'contain',
+              width: '100%',
+            }}
+            width="800"
           />
         </TransparentGridBackground>
         <Typography color="secondary" mt={1} textAlign="center" variant="body2">

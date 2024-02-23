@@ -19,11 +19,18 @@ const LibraryImage: FC<LibraryImageProps> = ({
     <TransparentGridBackground>
       <Image
         alt={imageFile.original_name}
-        layout="responsive"
-        objectFit="contain"
+        height="400"
         onLoad={() => onLoad && onLoad()}
         onLoadingComplete={() => onLoadingComplete && onLoadingComplete()}
         src={imageFile.url}
+        style={{
+          aspectRatio: '1 / 1',
+          display: 'block',
+          height: 'auto',
+          objectFit: 'contain',
+          width: '100%',
+        }}
+        width="400"
       />
     </TransparentGridBackground>
   );
