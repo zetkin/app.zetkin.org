@@ -19,9 +19,13 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface EmailLayoutProps {
   children: React.ReactNode;
+  fixedHeight?: boolean;
 }
 
-const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
+const EmailLayout: FC<EmailLayoutProps> = ({
+  children,
+  fixedHeight = false,
+}) => {
   const { orgId, campId, emailId } = useNumericRouteParams();
   const router = useRouter();
   const messages = useMessages(messageIds);
@@ -47,6 +51,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
         baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
         belowActionButtons={<DeliveryStatusMessage email={email} />}
         defaultTab="/"
+        fixedHeight={fixedHeight}
         subtitle={
           <Box alignItems="center" display="flex">
             <Box marginRight={1}>
