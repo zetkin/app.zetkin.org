@@ -17,7 +17,7 @@ export default class Button {
   }
 
   static get isReadOnlySupported() {
-    return false;
+    return true;
   }
 
   render() {

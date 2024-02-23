@@ -21,7 +21,7 @@ export default class LibraryImage {
   }
 
   static get isReadOnlySupported() {
-    return false;
+    return true;
   }
 
   render() {
