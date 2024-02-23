@@ -11,12 +11,14 @@ import TextBlockListItem from './TextBlockListItem';
 interface BlockListItemProps {
   block: OutputBlockData;
   onChange: (newData: OutputBlockData['data']) => void;
+  readOnly: boolean;
   selected: boolean;
 }
 
 const BlockListItem: FC<BlockListItemProps> = ({
   block,
   onChange,
+  readOnly,
   selected,
 }) => {
   const hasErrors = blockHasErrors(block);
@@ -26,6 +28,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
       <TextBlockListItem
         data={block.data}
         hasErrors={hasErrors}
+        readOnly={readOnly}
         selected={selected}
       />
     );
@@ -37,6 +40,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
         data={block.data}
         hasErrors={hasErrors}
         onChange={onChange}
+        readOnly={readOnly}
         selected={selected}
       />
     );
@@ -46,6 +50,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
         data={block.data}
         hasErrors={hasErrors}
         onChange={onChange}
+        readOnly={readOnly}
         selected={selected}
       />
     );

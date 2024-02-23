@@ -15,6 +15,7 @@ interface EmailSettingsProps {
   apiRef: MutableRefObject<EditorJS | null>;
   blocks: OutputBlockData[];
   onSave: (email: Partial<ZetkinEmail>) => void;
+  readOnly: boolean;
   selectedBlockIndex: number;
   subject: string;
 }
@@ -23,6 +24,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
   apiRef,
   blocks,
   onSave,
+  readOnly,
   selectedBlockIndex,
   subject,
 }) => {
@@ -83,16 +85,21 @@ const EmailSettings: FC<EmailSettingsProps> = ({
                     apiRef.current?.blocks.update(block.id, newData);
                   }
                 }}
+                readOnly={readOnly}
                 selected={index === selectedBlockIndex}
               />
             ))}
           </Stack>
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="settings">
-          <SettingsTab onChange={onSave} subject={subject} />
+          <SettingsTab
+            onChange={onSave}
+            readOnly={readOnly}
+            subject={subject}
+          />
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="preview">
-          <PreviewTab />
+          <PreviewTab readOnly={readOnly} />
         </TabPanel>
       </TabContext>
     </Box>
