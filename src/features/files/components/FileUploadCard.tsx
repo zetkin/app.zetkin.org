@@ -27,7 +27,6 @@ const FileUploadCard: FC<FileUploadCardProps> = ({ onFileBrowserOpen }) => {
       sx={{
         aspectRatio: '1 / 1',
         borderStyle: 'dashed',
-        boxSizing: 'border-box',
         cursor: 'pointer',
         width: '100%',
       }}
