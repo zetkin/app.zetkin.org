@@ -22,10 +22,11 @@ const statusColors = {
 const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   const { data: email } = useEmail(orgId, emailId);
   const state = useEmailState(orgId, emailId);
-  const { data: emailStats, isLoading: statsLoading } = useEmailStats(
-    orgId,
-    emailId
-  );
+  const {
+    data: emailStats,
+    lockedTargets,
+    isLoading: statsLoading,
+  } = useEmailStats(orgId, emailId);
 
   if (!email) {
     return null;
@@ -33,12 +34,6 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
 
   const now = new Date();
   const hasBeenSent = email.published && new Date(email.published) < now;
-
-  const allTargetMatches = emailStats?.num_target_matches ?? 0;
-  const allLocked = emailStats?.num_locked_targets ?? 0;
-  const allBlocked = emailStats?.num_blocked.any ?? 0;
-  const lockedTargets = allLocked - allBlocked;
-  const targetMatches = allTargetMatches - allBlocked;
 
   return hasBeenSent ? (
     <ActivityListItemWithStats
@@ -58,7 +53,9 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   ) : (
     <ActivityListItem
       color={statusColors[state]}
-      endNumber={email.locked ? lockedTargets : targetMatches}
+      endNumber={
+        email.locked ? lockedTargets : emailStats?.num_target_matches || 0
+      }
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}

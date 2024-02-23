@@ -1,9 +1,6 @@
-import {
-  IFuture,
-  PlaceholderFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
+import { PlaceholderFuture, ResolvedFuture } from 'core/caching/futures';
 
+import { futureToObject } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useEmail from './useEmail';
 import { statsLoad, statsLoaded } from '../store';
@@ -24,16 +21,24 @@ export interface EmailStats {
   num_clicked: number;
 }
 
+interface UseEmailStatsReturn {
+  data: EmailStats | null;
+  error: unknown | null;
+  isLoading: boolean;
+  lockedTargets: number;
+  readyTargets: number;
+}
+
 export default function useEmailStats(
   orgId: number,
   emailId: number
-): IFuture<EmailStats> {
+): UseEmailStatsReturn {
   const { isTargeted } = useEmail(orgId, emailId);
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const statsItem = useAppSelector((state) => state.emails.statsById[emailId]);
 
-  const statsFuture = loadItemIfNecessary(statsItem, dispatch, {
+  let statsFuture = loadItemIfNecessary(statsItem, dispatch, {
     actionOnLoad: () => statsLoad(emailId),
     actionOnSuccess: (data) => statsLoaded(data),
     loader: async () => {
@@ -45,10 +50,11 @@ export default function useEmailStats(
   });
 
   if (!isTargeted) {
-    return new ResolvedFuture(null);
+    statsFuture = new ResolvedFuture(null);
   }
+
   if (statsFuture.isLoading && !statsFuture.data) {
-    return new PlaceholderFuture({
+    statsFuture = new PlaceholderFuture({
       id: emailId,
       num_blocked: {
         any: 0,
@@ -62,7 +68,17 @@ export default function useEmailStats(
       num_sent: 0,
       num_target_matches: 0,
     });
-  } else {
-    return statsFuture;
   }
+
+  const allTargetMatches = statsFuture.data?.num_target_matches ?? 0;
+  const allLocked = statsFuture.data?.num_locked_targets ?? 0;
+  const allBlocked = statsFuture.data?.num_blocked.any ?? 0;
+  const lockedTargets = allLocked - allBlocked;
+  const readyTargets = allTargetMatches - allBlocked;
+
+  return {
+    ...futureToObject(statsFuture),
+    lockedTargets,
+    readyTargets,
+  };
 }
