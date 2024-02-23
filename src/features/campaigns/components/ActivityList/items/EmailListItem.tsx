@@ -34,11 +34,17 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   const now = new Date();
   const hasBeenSent = email.published && new Date(email.published) < now;
 
+  const allTargetMatches = emailStats?.num_target_matches ?? 0;
+  const allLocked = emailStats?.num_locked_targets ?? 0;
+  const allBlocked = emailStats?.num_blocked.any ?? 0;
+  const lockedTargets = allLocked - allBlocked;
+  const targetMatches = allTargetMatches - allBlocked;
+
   return hasBeenSent ? (
     <ActivityListItemWithStats
       blueChipValue={emailStats?.num_opened || 0}
       color={statusColors[state]}
-      endNumber={emailStats?.num_target_matches || 0}
+      endNumber={lockedTargets}
       greenChipValue={emailStats?.num_clicked || 0}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
@@ -52,7 +58,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   ) : (
     <ActivityListItem
       color={statusColors[state]}
-      endNumber={emailStats?.num_target_matches || 0}
+      endNumber={email.locked ? lockedTargets : targetMatches}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}
