@@ -64,7 +64,11 @@ const SearchResults = ({
               <Ancestors ancestors={findAncestors(results[0])} />
             </Box>
             {results.map((result) => (
-              <NextLink key={result.id} href={`/organize/${result.id}`}>
+              <NextLink
+                key={result.id}
+                href={`/organize/${result.id}`}
+                legacyBehavior
+              >
                 <Box
                   display="flex"
                   flexDirection="column"

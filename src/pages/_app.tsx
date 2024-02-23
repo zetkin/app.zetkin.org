@@ -6,9 +6,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
+import Router from 'next/router';
 import { Theme } from '@mui/material/styles';
 import { useEffect } from 'react';
-import Router, { useRouter } from 'next/router';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
@@ -49,7 +49,6 @@ declare global {
 const store = createStore();
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  const router = useRouter();
   const { lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
   const getLayout = c.getLayout || ((page) => page);
@@ -58,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     window.__reactRendered = true;
   }
 
-  const env = new Environment(store, new BrowserApiClient(), router);
+  const env = new Environment(store, new BrowserApiClient());
 
   useEffect(() => {
     // Remove the server-side injected CSS.

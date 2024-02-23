@@ -71,7 +71,7 @@ const SubQuery = ({
   const [operator, setOperator] = useState<IN_OPERATOR>(IN_OPERATOR.IN);
 
   useEffect(() => {
-    if (queries.length) {
+    if (!selectedQuery && queries.length) {
       setSelectedQuery(
         queries.find((q) => q.id === filter.config.query_id) || queries[0]
       );

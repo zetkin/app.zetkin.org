@@ -8,7 +8,7 @@ export default function useBreadcrumbElements() {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const path = router.pathname;
+  const { pathname, asPath: path } = router;
   const crumbsItem = useAppSelector(
     (state) => state.breadcrumbs.crumbsByPath[path]
   );
@@ -20,7 +20,7 @@ export default function useBreadcrumbElements() {
     actionOnSuccess: (item) => crumbsLoaded([path, item]),
     loader: async () => {
       const elements = await apiClient.get<BreadcrumbElement[]>(
-        `/api/breadcrumbs?pathname=${path}&${query}`
+        `/api/breadcrumbs?pathname=${pathname}&${query}`
       );
 
       return { elements, id: path };

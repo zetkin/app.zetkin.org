@@ -23,6 +23,7 @@ import emailsSlice, {
 } from 'features/emails/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import filesSlice, { FilesStoreSlice } from 'features/files/store';
+import importSlice, { ImportStoreSlice } from 'features/import/store';
 import journeysSlice, {
   journeyInstanceCreated,
   JourneysStoreSlice,
@@ -51,6 +52,7 @@ export interface RootState {
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
+  import: ImportStoreSlice;
   journeys: JourneysStoreSlice;
   organizations: OrganizationsStoreSlice;
   profiles: ProfilesStoreSlice;
@@ -70,6 +72,7 @@ const reducer = {
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   files: filesSlice.reducer,
+  import: importSlice.reducer,
   journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
   profiles: profilesSlice.reducer,

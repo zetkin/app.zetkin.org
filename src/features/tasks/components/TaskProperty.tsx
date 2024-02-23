@@ -19,7 +19,7 @@ const TaskProperty: React.FunctionComponent<TaskPropertyProps> = ({
   const displayValue = !value ? (
     <Msg id={messageIds.common.notSet} />
   ) : url ? (
-    <NextLink href={value as string} passHref>
+    <NextLink href={value as string} legacyBehavior passHref>
       <Link underline="hover">{value}</Link>
     </NextLink>
   ) : (

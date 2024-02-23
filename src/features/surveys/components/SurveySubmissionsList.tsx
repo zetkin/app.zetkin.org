@@ -68,7 +68,17 @@ const SurveySubmissionsList = ({
           </Box>
         );
       },
+      sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
       sortable: true,
+      valueGetter: (
+        params: GridRenderCellParams<ZetkinSurveySubmission, string>
+      ) => {
+        if (params.row.respondent !== null) {
+          return params.row.respondent[field] || '';
+        } else {
+          return messages.submissions.anonymous();
+        }
+      },
     };
   };
 

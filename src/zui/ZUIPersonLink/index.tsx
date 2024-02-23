@@ -16,7 +16,11 @@ const ZUIPersonLink: React.FC<ZUIPersonLinkProps> = ({ person }) => {
       BoxProps={{ style: { display: 'inline-flex' } }}
       personId={Number(person.id)}
     >
-      <NextLink href={`/organize/${orgId}/people/${person.id}`} passHref>
+      <NextLink
+        href={`/organize/${orgId}/people/${person.id}`}
+        legacyBehavior
+        passHref
+      >
         <Link
           color="textPrimary"
           style={{ fontWeight: 'bold' }}

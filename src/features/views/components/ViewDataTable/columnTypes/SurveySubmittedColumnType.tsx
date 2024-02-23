@@ -1,7 +1,11 @@
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { GridColDef } from '@mui/x-data-grid-pro';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
@@ -25,8 +29,17 @@ export default class SurveySubmittedColumnType
   }
   getColDef(): Omit<GridColDef<NonNullable<SurveySubmittedViewCell>>, 'field'> {
     return {
-      renderCell: (params) => {
-        return <Cell cell={params.value} />;
+      renderCell: (params: GridRenderCellParams) => {
+        return <Cell cell={params.row[params.field]} />;
+      },
+      type: 'date',
+      valueGetter: (params: GridValueGetterParams) => {
+        const submissions: SurveySubmittedViewCell = params.row[params.field];
+        if (submissions?.length) {
+          const lastSub = submissions[submissions.length - 1];
+          return new Date(lastSub.submitted);
+        }
+        return null;
       },
       width: 250,
     };

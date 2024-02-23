@@ -39,7 +39,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
   }
 
   return (
-    <NextLink href={getEventUrl(event)} passHref>
+    <NextLink href={getEventUrl(event)} legacyBehavior passHref>
       <Link color="inherit" underline="none">
         <Box
           display="flex"

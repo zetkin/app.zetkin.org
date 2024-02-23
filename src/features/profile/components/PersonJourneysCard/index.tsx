@@ -62,6 +62,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
                         <Link
                           key={journey.id}
                           href={`/organize/${journey.organization.id}/journeys/${journey.id}/new?subject=${personId}`}
+                          legacyBehavior
                           passHref
                         >
                           <MenuItem

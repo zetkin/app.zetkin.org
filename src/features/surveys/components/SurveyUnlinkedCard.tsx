@@ -8,7 +8,7 @@ import ZUINumberChip from 'zui/ZUINumberChip';
 import { Box, Link, useTheme } from '@mui/material';
 
 type SurveyUnlinkedCardProps = {
-  campId: number | 'standalone';
+  campId: number | 'standalone' | 'shared';
   orgId: number;
   surveyId: number;
 };
@@ -41,6 +41,7 @@ const SurveyUnlinkedCard = ({
             >
               <NextLink
                 href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?filter=linked`}
+                legacyBehavior
                 passHref
               >
                 <Link>

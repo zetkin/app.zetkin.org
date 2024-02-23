@@ -140,7 +140,7 @@ export interface ZetkinUser {
 
 export interface ZetkinOrganization {
   avatar_file: ZetkinFile | null;
-  country: string | null;
+  country: string;
   email: string | null;
   is_active: boolean;
   is_open: boolean;
@@ -152,6 +152,10 @@ export interface ZetkinOrganization {
   id: number;
   title: string;
 }
+
+export type ZetkinSubOrganization = ZetkinOrganization & {
+  sub_orgs: ZetkinSubOrganization[];
+};
 
 export interface ZetkinPersonNativeFields {
   alt_phone: string | null;

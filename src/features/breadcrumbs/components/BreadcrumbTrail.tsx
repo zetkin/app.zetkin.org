@@ -79,7 +79,12 @@ const BreadcrumbTrail = ({
         {breadcrumbs.map((crumb, index) => {
           if (index < breadcrumbs.length - 1) {
             return (
-              <NextLink key={crumb.href} href={crumb.href} passHref>
+              <NextLink
+                key={crumb.href}
+                href={crumb.href}
+                legacyBehavior
+                passHref
+              >
                 <Link
                   className={classes.breadcrumb}
                   color="inherit"

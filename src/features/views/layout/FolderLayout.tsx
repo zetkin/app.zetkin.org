@@ -1,9 +1,9 @@
+import PeopleActionButton from '../components/PeopleActionButton';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useFolder from '../hooks/useFolder';
 import useItemSummary from '../hooks/useItemSummary';
 import { useNumericRouteParams } from 'core/hooks';
 import useViewBrowserMutations from '../hooks/useViewBrowserMutations';
-import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -27,7 +27,9 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
     <ZUIFuture future={folderFuture}>
       {(data) => (
         <SimpleLayout
-          actionButtons={<ViewFolderActionButtons folderId={folderId} />}
+          actionButtons={
+            <PeopleActionButton folderId={folderId} orgId={orgId} />
+          }
           noPad
           subtitle={
             <ZUIFuture future={itemSummaryFuture}>

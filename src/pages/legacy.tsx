@@ -44,8 +44,8 @@ const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
         <style
           dangerouslySetInnerHTML={{
             __html: `
-          html, body, body > div { height: 100%; padding: 0; margin: 0; }
-          `,
+        html, body, body > div { height: 100%; padding: 0; margin: 0; }
+        `,
           }}
         />
       </Head>
@@ -75,7 +75,7 @@ const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
           >
             <Msg id={messageIds.legacy.info} />
           </Typography>
-          <NextLink href={destination} passHref>
+          <NextLink href={destination} legacyBehavior passHref>
             <Button color="primary" component="a" variant="contained">
               <Msg id={messageIds.legacy.continueButton} />
             </Button>
@@ -85,7 +85,7 @@ const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
             style={{ marginTop: 4 }}
             variant="body2"
           >
-            <NextLink href="/" passHref>
+            <NextLink href="/" legacyBehavior passHref>
               <Link
                 onClick={(ev) => {
                   ev.preventDefault();

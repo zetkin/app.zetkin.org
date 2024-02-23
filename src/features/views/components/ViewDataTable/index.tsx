@@ -296,7 +296,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       return (
         // eslint-disable-next-line @next/next/no-img-element
         <ZUIPersonHoverCard personId={params.value as number}>
-          <NextLink href={`/organize/${orgId}/people/${params.value}`} passHref>
+          <NextLink
+            href={`/organize/${orgId}/people/${params.value}`}
+            legacyBehavior
+            passHref
+          >
             <Link
               alt="Avatar"
               component="img"

@@ -1,3 +1,5 @@
+import getEventUrl from '../utils/getEventUrl';
+import { useRouter } from 'next/router';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from './useEventMutations';
 import { eventCreate, eventCreated } from '../store';
@@ -10,6 +12,7 @@ type useCreateEventReturn = {
 export default function useCreateEvent(orgId: number): useCreateEventReturn {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
+  const router = useRouter();
 
   const createEvent = async (eventBody: ZetkinEventPostBody) => {
     dispatch(eventCreate());
@@ -20,6 +23,8 @@ export default function useCreateEvent(orgId: number): useCreateEventReturn {
       eventBody
     );
     dispatch(eventCreated(event));
+    router.push(getEventUrl(event));
+
     return event;
   };
 

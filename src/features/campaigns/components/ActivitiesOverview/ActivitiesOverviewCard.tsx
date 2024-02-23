@@ -113,6 +113,7 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
           href={`/organize/${orgId}/projects${
             campId ? `/${campId}` : ''
           }/calendar?focusDate=${focusedDate}&timeScale=${timeScale}`}
+          legacyBehavior
           passHref
         >
           <Link underline="none" variant="button">

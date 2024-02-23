@@ -50,8 +50,13 @@ const breadcrumbs = async (
         elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
       } else {
-        if (field == 'lists' || field == 'folders') {
-          // Ignore "views" and "folders", which are only there
+        if (
+          field == 'callassignments' ||
+          field == 'folders' ||
+          field == 'lists' ||
+          field == 'surveys'
+        ) {
+          // Ignore "views" and "folders" which are only there
           // for technical reasons, but do not represent any page
           // and shouldn't link to anything.
           continue;
@@ -95,7 +100,7 @@ async function fetchElements(
       },
     ];
   } else if (fieldName === 'campId') {
-    if (fieldValue !== 'standalone') {
+    if (typeof fieldValue == 'number') {
       const campaign = await apiFetch(
         `/orgs/${orgId}/campaigns/${fieldValue}`
       ).then((res) => res.json());

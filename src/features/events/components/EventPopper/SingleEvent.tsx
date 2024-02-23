@@ -260,7 +260,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         justifyContent="flex-end"
         marginBottom={2}
       >
-        <NextLink href={getEventUrl(event)} passHref>
+        <NextLink href={getEventUrl(event)} legacyBehavior passHref>
           <Link underline="none">
             <Button
               endIcon={<ArrowForward />}

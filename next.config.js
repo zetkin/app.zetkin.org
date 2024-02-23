@@ -32,7 +32,7 @@ module.exports = {
       // redirects to Gen2 for MVP August 2021
       {
         source: '/organize/:orgId/people/:personId/edit',
-        destination: `https://organize.${process.env.ZETKIN_API_DOMAIN}/people/person%3A:personId/?org=:orgId`,
+        destination: `http://organize.${process.env.ZETKIN_API_DOMAIN}/people/person%3A:personId/?org=:orgId`,
         permanent: false,
       },
       {
@@ -60,7 +60,7 @@ module.exports = {
       // all paths with /o redirected to Gen2
       {
         source: '/o/:path*',
-        destination: 'https://zetk.in/o/:path*',
+        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:path*`,
         permanent: false,
       },
       {
@@ -72,7 +72,7 @@ module.exports = {
         source: '/organize/:orgId/people/views/:path*',
         destination: '/organize/:orgId/people/lists/:path*',
         permanent: false,
-      }
+      },
     ];
   },
 };
