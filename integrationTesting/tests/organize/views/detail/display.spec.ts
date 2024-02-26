@@ -29,11 +29,23 @@ test.describe('View detail page', () => {
     page,
     appUri,
   }) => {
-    await page.goto(appUri + '/organize/1/people/lists/1');
-    expect(
-      await page.locator('text=All KPD members >> visible=true').count()
-    ).toEqual(1);
-    expect(await page.locator('main >> text=Clara').count()).toEqual(1);
-    expect(await page.locator('main >> text=Rosa').count()).toEqual(1);
+    const members = page.locator('text=All KPD members >> visible=true');
+    const clara = page.locator('main >> text=Clara');
+    const rosa = page.locator('main >> text=Rosa');
+
+    await Promise.all([
+      page.goto(appUri + '/organize/1/people/lists/1'),
+      members.first().waitFor({ state: 'visible' }),
+      clara.first().waitFor({ state: 'visible' }),
+      rosa.first().waitFor({ state: 'visible' }),
+    ]);
+
+    const numMembers = await members.count();
+    const numClara = await clara.count();
+    const numRosa = await rosa.count();
+
+    expect(numMembers).toEqual(1);
+    expect(numClara).toEqual(1);
+    expect(numRosa).toEqual(1);
   });
 });
