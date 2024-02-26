@@ -99,7 +99,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
           />
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="preview">
-          <PreviewTab readOnly={readOnly} />
+          <PreviewTab />
         </TabPanel>
       </TabContext>
     </Box>

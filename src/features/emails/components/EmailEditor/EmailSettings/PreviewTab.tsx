@@ -6,11 +6,7 @@ import { Msg } from 'core/i18n';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useSendTestEmail from 'features/emails/hooks/useSendTestEmail';
 
-interface PreviewTabProps {
-  readOnly: boolean;
-}
-
-const PreviewTab: FC<PreviewTabProps> = ({ readOnly }) => {
+const PreviewTab: FC = () => {
   const user = useCurrentUser();
   const { isLoading, sendTestEmail } = useSendTestEmail();
 
@@ -28,7 +24,6 @@ const PreviewTab: FC<PreviewTabProps> = ({ readOnly }) => {
       </Typography>
       <Typography>{user.email}</Typography>
       <Button
-        disabled={readOnly}
         onClick={async () => {
           await sendTestEmail();
         }}
