@@ -17,6 +17,7 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 interface EmailTargetsReadyProps {
   isLocked: boolean;
   isLoading: boolean;
+  isScheduled: boolean;
   isTargeted: boolean;
   lockedTargets: number | null;
   onToggleLocked: () => void;
@@ -26,6 +27,7 @@ interface EmailTargetsReadyProps {
 const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
   isLocked,
   isLoading,
+  isScheduled,
   isTargeted,
   lockedTargets,
   onToggleLocked,
@@ -94,13 +96,17 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             padding={2}
           >
             <Typography>
-              <Msg
-                id={
-                  isLocked
-                    ? messageIds.ready.unlockDescription
-                    : messageIds.ready.lockDescription
-                }
-              />
+              {isScheduled ? (
+                <Msg id={messageIds.ready.scheduledDescription} />
+              ) : (
+                <Msg
+                  id={
+                    isLocked
+                      ? messageIds.ready.unlockDescription
+                      : messageIds.ready.lockDescription
+                  }
+                />
+              )}
             </Typography>
             {isLoading && (
               <Button
@@ -112,6 +118,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             )}
             {!isLoading && (
               <Button
+                disabled={isScheduled}
                 onClick={onToggleLocked}
                 startIcon={isLocked ? <LockOpen /> : <Lock />}
                 variant={isLocked ? 'outlined' : 'contained'}

@@ -109,6 +109,9 @@ export default makeMessages('feat.emails', {
     lockButton: m('Lock for delivery'),
     lockDescription: m('Lock to enable email delivery'),
     locked: m('Locked'),
+    scheduledDescription: m(
+      'This email is scheduled for delivery. If you want to unlock the targets, cancel the delivery first.'
+    ),
     subtitle: m('Targets currently available for delivery'),
     title: m('Ready'),
     unlockButton: m('Unlock'),
