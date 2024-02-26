@@ -41,7 +41,9 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
           </Box>
         </FormGroup>
       )}
-      {element.question.response_config.widget_type === 'radio' && (
+      {(element.question.response_config.widget_type === 'radio' ||
+        typeof element.question.response_config.widget_type ===
+          'undefined') && (
         <RadioGroup
           aria-labelledby={`label-${element.id}`}
           name={`${element.id}.options`}
