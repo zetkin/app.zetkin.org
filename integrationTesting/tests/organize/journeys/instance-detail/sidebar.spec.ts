@@ -30,15 +30,16 @@ test.describe('Journey instance detail page sidebar', () => {
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/1');
+    const assignees = page.locator(
+      `[data-testid=ZetkinSection-assignees] [data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}]`
+    );
+    await Promise.all([
+      page.goto(appUri + '/organize/1/journeys/1/1'),
+      assignees.first().waitFor({ state: 'visible' }),
+    ]);
 
-    expect(
-      await page
-        .locator(
-          `[data-testid=ZetkinSection-assignees] [data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}]`
-        )
-        .count()
-    ).toEqual(1);
+    const numAssignees = await assignees.count();
+    expect(numAssignees).toEqual(1);
   });
 
   test('lets user assign new person to the journey instance', async ({

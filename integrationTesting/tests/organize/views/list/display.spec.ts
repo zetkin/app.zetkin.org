@@ -46,7 +46,14 @@ test.describe('Views list page', () => {
       },
     ]);
 
-    await page.goto(appUri + '/organize/1/people');
-    expect(await page.locator('.MuiDataGrid-row').count()).toEqual(2);
+    const rows = page.locator('.MuiDataGrid-row');
+
+    await Promise.all([
+      page.goto(appUri + '/organize/1/people'),
+      rows.first().waitFor({ state: 'visible' }),
+    ]);
+
+    const numRows = await rows.count();
+    expect(numRows).toEqual(2);
   });
 });
