@@ -86,7 +86,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
                   }
                 }}
                 readOnly={readOnly}
-                selected={index === selectedBlockIndex}
+                selected={!readOnly && index === selectedBlockIndex}
               />
             ))}
           </Stack>
