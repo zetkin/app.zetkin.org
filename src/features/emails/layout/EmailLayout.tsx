@@ -37,13 +37,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({ children }) => {
   return (
     <>
       <TabbedLayout
-        actionButtons={
-          <EmailActionButtons
-            email={email}
-            emailState={emailState}
-            orgId={orgId}
-          />
-        }
+        actionButtons={<EmailActionButtons email={email} orgId={orgId} />}
         baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
         belowActionButtons={<DeliveryStatusMessage email={email} />}
         defaultTab="/"
