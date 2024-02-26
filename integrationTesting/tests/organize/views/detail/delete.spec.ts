@@ -1,5 +1,5 @@
+import test from '../../../../fixtures/next';
 import { expect, Page } from '@playwright/test';
-import test, { NextWorkerFixtures } from '../../../../fixtures/next';
 
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
@@ -28,24 +28,6 @@ const deleteView = async (page: Page) => {
   ]);
 
   await confirmButton.click();
-};
-
-const expectDeleteViewError = async (page: Page) => {
-  const snackbarError = page.locator('data-testid=Snackbar-error');
-  await snackbarError.waitFor({ state: 'visible' });
-  const canSeeErrorSnackbar = await snackbarError.isVisible();
-  expect(canSeeErrorSnackbar).toBeTruthy();
-};
-
-const expectDeleteViewSuccess = (moxy: NextWorkerFixtures['moxy']) => {
-  const deleteViewRequest = moxy
-    .log()
-    .find(
-      (mock) =>
-        mock.method === 'DELETE' &&
-        mock.path === `/v1/orgs/1/people/views/${AllMembers.id}`
-    );
-  expect(deleteViewRequest).toBeTruthy();
 };
 
 test.describe('View detail page', () => {
@@ -83,7 +65,15 @@ test.describe('View detail page', () => {
               .url()
               .includes(`/orgs/1/people/views/${AllMembers.id}`)
         );
-        expectDeleteViewSuccess(moxy);
+
+        const deleteViewRequest = moxy
+          .log()
+          .find(
+            (mock) =>
+              mock.method === 'DELETE' &&
+              mock.path === `/v1/orgs/1/people/views/${AllMembers.id}`
+          );
+        expect(deleteViewRequest).toBeTruthy();
       })(),
       page.waitForNavigation(),
       deleteView(page),
@@ -98,6 +88,7 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
     moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
@@ -110,6 +101,10 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/lists/1');
 
     await deleteView(page);
-    await expectDeleteViewError(page);
+
+    const snackbarError = page.locator('data-testid=Snackbar-error');
+    await snackbarError.waitFor({ state: 'visible' });
+    const canSeeErrorSnackbar = await snackbarError.isVisible();
+    expect(canSeeErrorSnackbar).toBeTruthy();
   });
 });
