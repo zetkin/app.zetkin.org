@@ -37,12 +37,22 @@ test.describe('Tags manager', () => {
       'delete'
     );
 
-    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    const tagToDelete = page.locator(`text="${ActivistTag.title}"`);
+    const deleteButton = page.locator('[data-testid=TagChip-deleteButton]');
 
-    await page.locator(`text="${ActivistTag.title}"`).hover();
+    await Promise.all([
+      page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`),
+      tagToDelete.waitFor({ state: 'visible' }),
+    ]);
+
+    await Promise.all([
+      tagToDelete.hover(),
+      deleteButton.waitFor({ state: 'visible' }),
+    ]);
+
     await Promise.all([
       page.waitForRequest((req) => req.method() == 'DELETE'),
-      page.locator('[data-testid=TagChip-deleteButton]').click(),
+      deleteButton.click(),
     ]);
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
