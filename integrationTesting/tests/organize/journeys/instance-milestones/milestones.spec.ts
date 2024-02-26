@@ -92,15 +92,17 @@ test.describe('Journey instance page Milestones tab', () => {
       { ...AttendMeeting, deadline: newDeadline }
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
+    const datePicker = page.locator(
+      '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
+    );
+
+    await Promise.all([
+      page.goto(appUri + '/organize/1/journeys/1/1/milestones'),
+      datePicker.first().waitFor({ state: 'visible' }),
+    ]);
 
     //Click datepicker in first JourneyMilestoneCard
-    await page
-      .locator(
-        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
-      )
-      .first()
-      .click();
+    await datePicker.first().click();
 
     await Promise.all([
       page.waitForResponse(
