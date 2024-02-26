@@ -33,21 +33,33 @@ test.describe('Tag manager', () => {
       'get',
       []
     );
+
     const { log: putTagLog } = moxy.setZetkinApiMock(
       `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
       'put'
     );
 
-    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    const addTagButton = page.locator('text=Add tag');
+    const activist = page.locator('text=Activist');
+
+    await Promise.all([
+      page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`),
+      addTagButton.first().waitFor({ state: 'visible' }),
+    ]);
 
     await page.locator('text=Add tag').click();
+
+    await activist.first().waitFor({ state: 'visible' });
+
+    // Select tag
+    await activist.first().click();
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
       ActivistTag,
     ]);
 
-    // Select tag
-    await page.click('text=Activist');
+    // Wait for the tag to appear on the page
+    await activist.nth(1).waitFor({ state: 'visible' });
 
     // Expect to have made request to put tag
     expect(putTagLog().length).toEqual(1);
