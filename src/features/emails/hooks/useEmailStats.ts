@@ -25,18 +25,18 @@ interface UseEmailStatsReturn {
   data: EmailStats | null;
   error: unknown | null;
   isLoading: boolean;
-  lockedTargets: number;
-  num_target_matches: number;
-  num_locked_targets: number | null;
-  num_blocked: {
+  lockedReadyTargets: number;
+  numTargetMatches: number;
+  numLockedTargets: number | null;
+  numBlocked: {
     any: number;
     blacklisted: number;
-    no_email: number;
+    noEmail: number;
     unsubscribed: number;
   };
-  num_sent: number;
-  num_opened: number;
-  num_clicked: number;
+  numSent: number;
+  numOpened: number;
+  numClicked: number;
   readyTargets: number;
 }
 
@@ -84,23 +84,23 @@ export default function useEmailStats(
   const allTargetMatches = statsFuture.data?.num_target_matches ?? 0;
   const allLocked = statsFuture.data?.num_locked_targets ?? 0;
   const allBlocked = statsFuture.data?.num_blocked.any ?? 0;
-  const lockedTargets = allLocked - allBlocked;
+  const lockedReadyTargets = allLocked - allBlocked;
   const readyTargets = allTargetMatches - allBlocked;
 
   return {
     ...futureToObject(statsFuture),
-    lockedTargets,
-    num_blocked: {
+    lockedReadyTargets,
+    numBlocked: {
       any: statsFuture.data?.num_blocked.any ?? 0,
       blacklisted: statsFuture.data?.num_blocked.blacklisted ?? 0,
-      no_email: statsFuture.data?.num_blocked.no_email ?? 0,
+      noEmail: statsFuture.data?.num_blocked.no_email ?? 0,
       unsubscribed: statsFuture.data?.num_blocked.unsubscribed ?? 0,
     },
-    num_clicked: statsFuture.data?.num_clicked ?? 0,
-    num_locked_targets: statsFuture.data?.num_locked_targets ?? 0,
-    num_opened: statsFuture.data?.num_opened ?? 0,
-    num_sent: statsFuture.data?.num_sent ?? 0,
-    num_target_matches: statsFuture.data?.num_target_matches ?? 0,
+    numClicked: statsFuture.data?.num_clicked ?? 0,
+    numLockedTargets: statsFuture.data?.num_locked_targets ?? 0,
+    numOpened: statsFuture.data?.num_opened ?? 0,
+    numSent: statsFuture.data?.num_sent ?? 0,
+    numTargetMatches: statsFuture.data?.num_target_matches ?? 0,
     readyTargets,
   };
 }

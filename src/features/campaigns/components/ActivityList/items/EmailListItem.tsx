@@ -23,11 +23,11 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   const { data: email } = useEmail(orgId, emailId);
   const state = useEmailState(orgId, emailId);
   const {
-    num_clicked,
-    num_target_matches,
-    num_opened,
-    num_sent,
-    lockedTargets,
+    numClicked,
+    numTargetMatches,
+    numOpened,
+    numSent,
+    lockedReadyTargets,
     isLoading: statsLoading,
   } = useEmailStats(orgId, emailId);
 
@@ -40,14 +40,14 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
 
   return hasBeenSent ? (
     <ActivityListItemWithStats
-      blueChipValue={num_opened}
+      blueChipValue={numOpened}
       color={statusColors[state]}
-      endNumber={lockedTargets}
-      greenChipValue={num_clicked}
+      endNumber={lockedReadyTargets}
+      greenChipValue={numClicked}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}
-      orangeChipValue={num_sent}
+      orangeChipValue={numSent}
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
       statsLoading={statsLoading}
@@ -56,7 +56,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   ) : (
     <ActivityListItem
       color={statusColors[state]}
-      endNumber={email.locked ? lockedTargets : num_target_matches}
+      endNumber={email.locked ? lockedReadyTargets : numTargetMatches}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}
