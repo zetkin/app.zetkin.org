@@ -72,6 +72,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,
+          config: {
+            readOnly: readOnly,
+          },
         },
         header: {
           class: Header,

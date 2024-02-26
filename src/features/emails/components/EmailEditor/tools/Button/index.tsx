@@ -10,9 +10,11 @@ export interface ButtonData {
 }
 
 export default class Button {
+  private _config: { readOnly: boolean };
   private _data: ButtonData;
 
-  constructor({ data }: BlockToolConstructorOptions<ButtonData>) {
+  constructor({ config, data }: BlockToolConstructorOptions<ButtonData>) {
+    this._config = config;
     this._data = data;
   }
 
@@ -33,6 +35,7 @@ export default class Button {
               buttonText: newButtonText,
             };
           }}
+          readOnly={this._config.readOnly}
         />
       </Providers>
     );

@@ -10,11 +10,13 @@ import { useMessages } from 'core/i18n';
 interface ButtonEditableBlockProps {
   data: ButtonData;
   onChange: (newButtonText: string) => void;
+  readOnly: boolean;
 }
 
 const ButtonEditableBlock: FC<ButtonEditableBlockProps> = ({
   data,
   onChange,
+  readOnly,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -32,17 +34,21 @@ const ButtonEditableBlock: FC<ButtonEditableBlockProps> = ({
         justifyContent="center"
         padding={2}
       >
-        <ContentEditable
-          html={buttonText}
-          onChange={(ev) => {
-            const cleanHtml = DOMPurify.sanitize(ev.currentTarget.innerHTML, {
-              ALLOWED_TAGS: [],
-            });
-            setButtonText(cleanHtml);
-            onChange(cleanHtml);
-          }}
-          style={{ outline: 'none' }}
-        />
+        {readOnly ? (
+          buttonText
+        ) : (
+          <ContentEditable
+            html={buttonText}
+            onChange={(ev) => {
+              const cleanHtml = DOMPurify.sanitize(ev.currentTarget.innerHTML, {
+                ALLOWED_TAGS: [],
+              });
+              setButtonText(cleanHtml);
+              onChange(cleanHtml);
+            }}
+            style={{ outline: 'none' }}
+          />
+        )}
       </Box>
     </Box>
   );

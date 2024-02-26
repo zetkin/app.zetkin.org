@@ -29,7 +29,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
 
   const blocksRef = useRef<OutputBlockData[]>();
 
-  const readOnly = true;
+  const readOnly = !!email.published;
 
   useEffect(() => {
     if (
