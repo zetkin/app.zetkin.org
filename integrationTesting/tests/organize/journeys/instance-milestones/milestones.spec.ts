@@ -29,14 +29,16 @@ test.describe('Journey instance page Milestones tab', () => {
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
-
-    const journeyMilestoneCards = await page.$$eval(
-      'data-testid=JourneyMilestoneCard',
-      (items) => items.length
+    const journeyMilestoneCards = page.locator(
+      'data-testid=JourneyMilestoneCard'
     );
+    await Promise.all([
+      page.goto(appUri + '/organize/1/journeys/1/1/milestones'),
+      journeyMilestoneCards.first().waitFor({ state: 'visible' }),
+    ]);
 
-    expect(journeyMilestoneCards).toEqual(3);
+    const numCards = await journeyMilestoneCards.count();
+    expect(numCards).toEqual(3);
   });
 
   test('displays message if there are no milestones.', async ({
