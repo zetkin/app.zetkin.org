@@ -22,7 +22,7 @@ test.describe('Tags manager', () => {
     moxy.teardown();
   });
 
-  test.only('lets user remove a tag', async ({ page, appUri, moxy }) => {
+  test('lets user remove a tag', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
       ActivistTag,
       CodingSkillsTag,

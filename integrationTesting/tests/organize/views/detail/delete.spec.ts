@@ -7,16 +7,33 @@ import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMember
 import KPD from '../../../../mockData/orgs/KPD';
 
 const deleteView = async (page: Page) => {
-  await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
-  await page.click(`data-testid=ZUIEllipsisMenu-item-delete-view`);
-  await page.click('button:text("Confirm")');
+  const menuButton = page.locator(
+    'header [data-testid=ZUIEllipsisMenu-menuActivator]'
+  );
+  const deleteButton = page.locator(
+    'data-testid=ZUIEllipsisMenu-item-delete-view'
+  );
+  const confirmButton = page.locator('button:text("Confirm")');
+
+  await menuButton.waitFor({ state: 'visible' });
+
+  await Promise.all([
+    menuButton.click(),
+    deleteButton.waitFor({ state: 'visible' }),
+  ]);
+
+  await Promise.all([
+    deleteButton.click(),
+    confirmButton.waitFor({ state: 'visible' }),
+  ]);
+
+  await confirmButton.click();
 };
 
 const expectDeleteViewError = async (page: Page) => {
-  await page.locator('data-testid=Snackbar-error').waitFor();
-  const canSeeErrorSnackbar = await page
-    .locator('data-testid=Snackbar-error')
-    .isVisible();
+  const snackbarError = page.locator('data-testid=Snackbar-error');
+  await snackbarError.waitFor({ state: 'visible' });
+  const canSeeErrorSnackbar = await snackbarError.isVisible();
   expect(canSeeErrorSnackbar).toBeTruthy();
 };
 
