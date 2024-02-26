@@ -95,6 +95,7 @@ test.describe('Journey instance page Milestones tab', () => {
     const datePicker = page.locator(
       '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
     );
+    const june24 = page.locator('button:has-text("24")');
 
     await Promise.all([
       page.goto(appUri + '/organize/1/journeys/1/1/milestones'),
@@ -102,14 +103,17 @@ test.describe('Journey instance page Milestones tab', () => {
     ]);
 
     //Click datepicker in first JourneyMilestoneCard
-    await datePicker.first().click();
+    await Promise.all([
+      datePicker.first().click(),
+      june24.waitFor({ state: 'visible' }),
+    ]);
 
     await Promise.all([
       page.waitForResponse(
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
       //Click June 24 to trigger setting new deadline
-      await page.locator('button:has-text("24")').click(),
+      await june24.click(),
     ]);
 
     //Expect the deadline to be the newly set deadline
