@@ -37,13 +37,21 @@ test.describe('Search', async () => {
       SpeakToFriendAboutReferendum,
     ]);
 
-    await page.goto(appUri + '/organize/1/projects/1');
-    await page.keyboard.press('/');
+    const searchButton = page.locator('data-testid=SearchDialog-activator');
+    const searchField = page.locator('#SearchDialog-inputField');
 
-    // Check dialog open
-    expect(
-      await page.locator('#SearchDialog-inputField').isVisible()
-    ).toBeTruthy();
+    await Promise.all([
+      page.goto(appUri + '/organize/1/projects/1'),
+      searchButton.waitFor({ state: 'visible' }),
+    ]);
+
+    await Promise.all([
+      page.keyboard.press('/'),
+      searchField.waitFor({ state: 'visible' }),
+    ]);
+
+    const isVisible = await searchField.isVisible();
+    expect(isVisible).toBeTruthy();
   });
 
   test('shows error indicator if error fetching results', async ({
