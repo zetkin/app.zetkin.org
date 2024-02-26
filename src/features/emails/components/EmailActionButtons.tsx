@@ -29,7 +29,7 @@ const EmailActionButtons = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { deleteEmail } = useEmail(orgId, email.id);
+  const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
   const { data: emailStats } = useEmailStats(orgId, email.id);
 
@@ -43,11 +43,19 @@ const EmailActionButtons = ({
     <Box display="flex">
       <Button
         disabled={deliveryDisabled}
-        endIcon={<ArrowDropDown />}
-        onClick={(event) => setAnchorEl(anchorEl ? null : event.currentTarget)}
-        variant="contained"
+        endIcon={email.published ? '' : <ArrowDropDown />}
+        onClick={(event) => {
+          if (email.published) {
+            updateEmail({ published: null });
+          } else {
+            setAnchorEl(anchorEl ? null : event.currentTarget);
+          }
+        }}
+        variant={email.published ? 'outlined' : 'contained'}
       >
-        {messages.emailActionButtons.delivery()}
+        {email.published
+          ? messages.emailActionButtons.cancel()
+          : messages.emailActionButtons.delivery()}
       </Button>
       <Popper anchorEl={anchorEl} open={!!anchorEl} placement="bottom-end">
         <EmailDelivery

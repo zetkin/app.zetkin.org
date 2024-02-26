@@ -74,6 +74,7 @@ export default makeMessages('feat.emails', {
     },
   },
   emailActionButtons: {
+    cancel: m('Cancel'),
     delete: m('Delete'),
     delivery: m('Delivery'),
     deliveryDate: m('Delivery date'),
