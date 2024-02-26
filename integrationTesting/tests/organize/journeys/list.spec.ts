@@ -21,13 +21,13 @@ test.describe('Journeys list page', () => {
       MarxistTraining,
     ]);
 
-    await page.goto(appUri + '/organize/1/journeys');
+    const journeyCards = page.locator('data-testid=journey-card');
+    await Promise.all([
+      page.goto(appUri + '/organize/1/journeys'),
+      journeyCards.first().waitFor({ state: 'visible' }),
+    ]);
 
-    const numJourneysCards = await page.$$eval(
-      'data-testid=journey-card',
-      (items) => items.length
-    );
-
+    const numJourneysCards = await journeyCards.count();
     expect(numJourneysCards).toEqual(2);
   });
 });
