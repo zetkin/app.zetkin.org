@@ -196,15 +196,16 @@ test.describe('Journey instance detail page sidebar', () => {
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/1');
+    const subjects = page.locator(
+      `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
+    );
+    await Promise.all([
+      page.goto(appUri + '/organize/1/journeys/1/1'),
+      subjects.first().waitFor({ state: 'visible' }),
+    ]);
 
-    expect(
-      await page
-        .locator(
-          `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
-        )
-        .count()
-    ).toEqual(1);
+    const numSubjects = await subjects.count();
+    expect(numSubjects).toEqual(1);
   });
 
   //put request works
