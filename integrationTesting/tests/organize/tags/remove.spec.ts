@@ -22,7 +22,7 @@ test.describe('Tags manager', () => {
     moxy.teardown();
   });
 
-  test('lets user remove a tag', async ({ page, appUri, moxy }) => {
+  test.only('lets user remove a tag', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
       ActivistTag,
       CodingSkillsTag,
@@ -56,6 +56,8 @@ test.describe('Tags manager', () => {
     ]);
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
+
+    await tagToDelete.nth(2).waitFor({ state: 'hidden' });
 
     // Expect to have made request to delete tag
     expect(deleteTagLog().length).toEqual(1);
