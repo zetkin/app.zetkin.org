@@ -15,6 +15,9 @@ export default makeMessages('feat.emails', {
     willSend: m<{ time: string }>('Will send at {time}'),
   },
   editor: {
+    readOnlyModeInfo: m(
+      'This email is in read-only mode since it is scheduled for delivery. If you want to edit the content you need to unschedule it first.'
+    ),
     settings: {
       tabs: {
         content: m('Content'),

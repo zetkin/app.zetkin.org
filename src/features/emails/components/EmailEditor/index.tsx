@@ -1,9 +1,11 @@
 import dynamic from 'next/dynamic';
-import { Box, useTheme } from '@mui/material';
+import { Alert, Box, useTheme } from '@mui/material';
 import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import EmailSettings from './EmailSettings';
+import messageIds from 'features/emails/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 const EmailEditorFrontend = dynamic(import('./EmailEditorFrontend'), {
@@ -27,6 +29,8 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
 
   const blocksRef = useRef<OutputBlockData[]>();
 
+  const readOnly = true; //!!email.published;
+
   useEffect(() => {
     if (
       blocksRef.current !== undefined &&
@@ -46,6 +50,11 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   return (
     <Box display="flex" height="100%">
       <Box flex={1} sx={{ overflowY: 'auto' }}>
+        {readOnly && (
+          <Alert severity="info" sx={{ marginBottom: 2 }}>
+            <Msg id={messageIds.editor.readOnlyModeInfo} />
+          </Alert>
+        )}
         <EmailEditorFrontend
           apiRef={apiRef}
           initialContent={initialContent}
@@ -56,7 +65,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
           onSelectBlock={(selectedBlockIndex: number) => {
             setSelectedBlockIndex(selectedBlockIndex);
           }}
-          readOnly={!!email.published}
+          readOnly={readOnly}
         />
       </Box>
       <Box
@@ -70,7 +79,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
           apiRef={apiRef}
           blocks={content.blocks}
           onSave={onSave}
-          readOnly={!!email.published}
+          readOnly={readOnly}
           selectedBlockIndex={selectedBlockIndex}
           subject={email.subject || ''}
         />
