@@ -15,7 +15,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
   focusDate,
 }) => {
   const email = activity.data;
-  const { data: emailStats, lockedTargets } = useEmailStats(
+  const { num_target_matches, lockedTargets } = useEmailStats(
     email.organization.id,
     email.id
   );
@@ -23,9 +23,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
   return (
     <OverviewListItem
       endDate={activity.visibleUntil}
-      endNumber={
-        email.locked ? lockedTargets : emailStats?.num_target_matches || 0
-      }
+      endNumber={email.locked ? lockedTargets : num_target_matches}
       focusDate={focusDate}
       href={`/organize/${email.organization.id}/projects/${
         email.campaign?.id ?? 'standalone'

@@ -34,11 +34,8 @@ const EmailPage: PageWithLayout = () => {
     updateEmail,
     updateTargets,
   } = useEmail(orgId, emailId);
-  const {
-    data: emailStats,
-    readyTargets,
-    lockedTargets,
-  } = useEmailStats(orgId, emailId);
+  const { num_blocked, num_target_matches, readyTargets, lockedTargets } =
+    useEmailStats(orgId, emailId);
 
   const onServer = useServerSide();
 
@@ -59,16 +56,16 @@ const EmailPage: PageWithLayout = () => {
             email={email}
             isLocked={isLocked}
             isTargeted={isTargeted}
-            targets={emailStats?.num_target_matches ?? 0}
+            targets={num_target_matches}
             updateTargets={updateTargets}
           />
           <Box display="flex" gap={2} paddingTop={2}>
             <Box flex={1}>
               <EmailTargetsBlocked
-                blacklisted={emailStats?.num_blocked?.blacklisted || 0}
-                missingEmail={emailStats?.num_blocked?.no_email || 0}
-                total={emailStats?.num_blocked.any ?? 0}
-                unsubscribed={emailStats?.num_blocked?.unsubscribed || 0}
+                blacklisted={num_blocked.blacklisted}
+                missingEmail={num_blocked.no_email}
+                total={num_blocked.any}
+                unsubscribed={num_blocked.unsubscribed}
               />
             </Box>
             <Box flex={1}>
