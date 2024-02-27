@@ -48,41 +48,43 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   }, [content.blocks.length]);
 
   return (
-    <Box display="flex" height="100%">
-      <Box flex={1} sx={{ overflowY: 'auto' }}>
-        {readOnly && (
-          <Alert severity="info" sx={{ marginBottom: 2 }}>
-            <Msg id={messageIds.editor.readOnlyModeInfo} />
-          </Alert>
-        )}
-        <EmailEditorFrontend
-          apiRef={apiRef}
-          initialContent={initialContent}
-          onSave={(newContent: OutputData) => {
-            setContent(newContent);
-            onSave({ content: JSON.stringify(newContent) });
+    <Box display="flex" flexDirection="column">
+      {readOnly && (
+        <Alert severity="info" sx={{ marginBottom: 2 }}>
+          <Msg id={messageIds.editor.readOnlyModeInfo} />
+        </Alert>
+      )}
+      <Box display="flex" height="100%">
+        <Box flex={1} sx={{ overflowY: 'auto' }}>
+          <EmailEditorFrontend
+            apiRef={apiRef}
+            initialContent={initialContent}
+            onSave={(newContent: OutputData) => {
+              setContent(newContent);
+              onSave({ content: JSON.stringify(newContent) });
+            }}
+            onSelectBlock={(selectedBlockIndex: number) => {
+              setSelectedBlockIndex(selectedBlockIndex);
+            }}
+            readOnly={readOnly}
+          />
+        </Box>
+        <Box
+          sx={{
+            borderLeft: `1px solid ${theme.palette.grey[300]}`,
+            overflowY: 'auto',
           }}
-          onSelectBlock={(selectedBlockIndex: number) => {
-            setSelectedBlockIndex(selectedBlockIndex);
-          }}
-          readOnly={readOnly}
-        />
-      </Box>
-      <Box
-        sx={{
-          borderLeft: `1px solid ${theme.palette.grey[300]}`,
-          overflowY: 'auto',
-        }}
-        width="25%"
-      >
-        <EmailSettings
-          apiRef={apiRef}
-          blocks={content.blocks}
-          onSave={onSave}
-          readOnly={readOnly}
-          selectedBlockIndex={selectedBlockIndex}
-          subject={email.subject || ''}
-        />
+          width="25%"
+        >
+          <EmailSettings
+            apiRef={apiRef}
+            blocks={content.blocks}
+            onSave={onSave}
+            readOnly={readOnly}
+            selectedBlockIndex={selectedBlockIndex}
+            subject={email.subject || ''}
+          />
+        </Box>
       </Box>
     </Box>
   );
