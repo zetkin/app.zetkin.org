@@ -22,7 +22,7 @@ export default makeMessages('feat.emails', {
       'Your email has no subject line. Go to Settings in the Compose tab to add one.'
     ),
     TARGETS_NOT_LOCKED: m(
-      'The targets are not locked. Go to the Ready section un the Overview tab to do this.'
+      'The targets are not locked. Go to the Ready section in the Overview tab to do this.'
     ),
   },
   deliveryStatus: {
