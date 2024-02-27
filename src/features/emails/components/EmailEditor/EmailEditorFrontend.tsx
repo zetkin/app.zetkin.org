@@ -108,9 +108,6 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         },
         paragraph: {
           class: Paragraph,
-          config: {
-            preserveBlank: true,
-          },
         },
         variable: {
           class: variableToolFactory(messages.editor.tools.variable.title()),

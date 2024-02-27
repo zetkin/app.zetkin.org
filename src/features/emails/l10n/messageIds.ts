@@ -8,6 +8,21 @@ export default makeMessages('feat.emails', {
     title: m('Blocked'),
     unsubscribed: m('Unsubscribed'),
   },
+  deliveryProblems: {
+    CONTENT_ERROR: m(
+      'There are problems in the content of your email. Go to the editor in the Compose tab and correct them.'
+    ),
+    EMPTY: m('Your email is empty. Go to the Compose tab to add some content.'),
+    NOT_TARGETED: m(
+      'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
+    ),
+    NO_SUBJECT: m(
+      'Your email has no subject line. Go to Settings in the Compose tab to add one.'
+    ),
+    TARGETS_NOT_LOCKED: m(
+      'The targets are not locked. Go to the Ready section un the Overview tab to do this.'
+    ),
+  },
   deliveryStatus: {
     notLocked: m('Not locked, not scheduled'),
     notScheduled: m('Not scheduled'),

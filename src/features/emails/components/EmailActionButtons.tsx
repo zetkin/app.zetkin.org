@@ -40,7 +40,12 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
           ? messages.emailActionButtons.cancel()
           : messages.emailActionButtons.delivery()}
       </Button>
-      <Popper anchorEl={anchorEl} open={!!anchorEl} placement="bottom-end">
+      <Popper
+        anchorEl={anchorEl}
+        open={!!anchorEl}
+        placement="bottom-end"
+        sx={{ zIndex: 10 }}
+      >
         <EmailDelivery
           email={email}
           onClose={() => setAnchorEl(null)}
