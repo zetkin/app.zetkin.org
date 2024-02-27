@@ -1,6 +1,6 @@
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
-import { Box, Divider, Stack, Tab, useTheme } from '@mui/material';
+import { Box, Divider, Stack, Tab } from '@mui/material';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
@@ -33,7 +33,6 @@ const EmailSettings: FC<EmailSettingsProps> = ({
     'content' | 'preview' | 'settings'
   >('content');
   const boxRef = useRef<HTMLElement>();
-  const theme = useTheme();
 
   useEffect(() => {
     boxRef.current?.children[selectedBlockIndex]?.scrollIntoView({
@@ -44,7 +43,6 @@ const EmailSettings: FC<EmailSettingsProps> = ({
   return (
     <Box
       sx={{
-        borderLeft: `1px solid ${theme.palette.grey[300]}`,
         display: 'flex',
         flexDirection: 'column',
         maxHeight: '100%',
