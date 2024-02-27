@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { OutputBlockData } from '@editorjs/editorjs';
 
 import { BLOCK_TYPES } from 'features/emails/types';
-import blockHasErrors from './utils/blockHasErrors';
+import blockProblems from './utils/blockProblems';
 import ButtonBlockListItem from './ButtonBlockListItem';
 import HeaderBlockListItem from './HeaderBlockListItem';
 import ImageBlockListItem from './ImageBlockListItem';
@@ -21,13 +21,13 @@ const BlockListItem: FC<BlockListItemProps> = ({
   readOnly,
   selected,
 }) => {
-  const hasErrors = blockHasErrors(block);
+  const problems = blockProblems(block);
 
   if (block.type === BLOCK_TYPES.PARAGRAPH) {
     return (
       <TextBlockListItem
         data={block.data}
-        hasErrors={hasErrors}
+        hasErrors={!!problems.length}
         readOnly={readOnly}
         selected={selected}
       />
@@ -38,7 +38,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
     return (
       <ButtonBlockListItem
         data={block.data}
-        hasErrors={hasErrors}
+        hasErrors={!!problems.length}
         onChange={onChange}
         readOnly={readOnly}
         selected={selected}
@@ -48,7 +48,7 @@ const BlockListItem: FC<BlockListItemProps> = ({
     return (
       <ImageBlockListItem
         data={block.data}
-        hasErrors={hasErrors}
+        hasErrors={!!problems.length}
         onChange={onChange}
         readOnly={readOnly}
         selected={selected}
