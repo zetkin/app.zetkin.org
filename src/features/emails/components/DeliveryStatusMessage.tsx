@@ -19,23 +19,28 @@ const DeliveryStatusMessage = ({ email }: DeliveryStatusMessageProps) => {
     return (
       <Box alignItems="center" display="flex">
         {sendTime <= now ? (
-          <AccessTime sx={{ mr: 1 }} />
+          <AccessTime color="secondary" sx={{ mr: 1 }} />
         ) : (
-          <Send sx={{ mr: 1 }} />
+          <Send color="secondary" sx={{ mr: 1 }} />
         )}
-        <Msg
-          id={
-            sendTime <= now
-              ? messageIds.deliveryStatus.wasSent
-              : messageIds.deliveryStatus.willSend
-          }
-          values={{ time: removeOffset(email.published.slice(11, 16)) }}
-        />
-        {', '}
-        <ZUIDateSpan
-          end={new Date(email.published)}
-          start={new Date(email.published)}
-        />
+        <Typography color="secondary">
+          <Msg
+            id={
+              sendTime <= now
+                ? messageIds.deliveryStatus.wasSent
+                : messageIds.deliveryStatus.willSend
+            }
+            values={{
+              date: (
+                <ZUIDateSpan
+                  end={new Date(email.published)}
+                  start={new Date(email.published)}
+                />
+              ),
+              time: removeOffset(email.published.slice(11, 16)),
+            }}
+          />
+        </Typography>
       </Box>
     );
   }

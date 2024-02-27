@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
@@ -26,8 +28,12 @@ export default makeMessages('feat.emails', {
   deliveryStatus: {
     notLocked: m('Not locked, not scheduled'),
     notScheduled: m('Not scheduled'),
-    wasSent: m<{ time: string }>('Was sent at {time}'),
-    willSend: m<{ time: string }>('Will send at {time}'),
+    wasSent: m<{ date: ReactElement; time: string }>(
+      'Was sent at {time}, {date}'
+    ),
+    willSend: m<{ date: ReactElement; time: string }>(
+      'Will send at {time}, {date}'
+    ),
   },
   editor: {
     readOnlyModeInfo: m(
