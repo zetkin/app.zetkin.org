@@ -37,7 +37,7 @@ export default makeMessages('feat.emails', {
   },
   editor: {
     readOnlyModeInfo: m(
-      'This email is in read-only mode since it is scheduled for delivery. If you want to edit the content you need to unschedule it first.'
+      'This email is in read-only mode since it is scheduled for delivery. If you want to edit the content you need to cancel the delivery first.'
     ),
     settings: {
       tabs: {
