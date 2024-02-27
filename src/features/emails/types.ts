@@ -6,15 +6,15 @@ export enum BLOCK_TYPES {
 }
 
 export enum BlockProblem {
-  INVALID_BUTTON_URL = 'INVALID_BUTTON_URL',
-  DEFAULT_BUTTON_TEXT = 'DEFAULT_BUTTON_TEXT',
-  INVALID_LINK_URL = 'INVALID_LINK_URL',
+  INVALID_BUTTON_URL = 'invalidButtonURL',
+  DEFAULT_BUTTON_TEXT = 'defaultButtonText',
+  INVALID_LINK_URL = 'invalidLinkURL',
 }
 
 export enum DeliveryProblem {
-  EMPTY = 'EMPTY',
-  CONTENT_ERROR = 'CONTENT_ERROR',
-  NO_SUBJECT = 'NO_SUBJECT',
-  NOT_TARGETED = 'NOT_TARGETED',
-  TARGETS_NOT_LOCKED = 'TARGETS_NOT_LOCKED',
+  EMPTY = 'empty',
+  CONTENT_ERROR = 'contentError',
+  NO_SUBJECT = 'noSubject',
+  NOT_TARGETED = 'notTargeted',
+  TARGETS_NOT_LOCKED = 'targetsNotLocked',
 }

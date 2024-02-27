@@ -11,17 +11,17 @@ export default makeMessages('feat.emails', {
     unsubscribed: m('Unsubscribed'),
   },
   deliveryProblems: {
-    CONTENT_ERROR: m(
+    contentError: m(
       'There are problems in the content of your email. Go to the editor in the Compose tab and correct them.'
     ),
-    EMPTY: m('Your email is empty. Go to the Compose tab to add some content.'),
-    NOT_TARGETED: m(
-      'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
-    ),
-    NO_SUBJECT: m(
+    empty: m('Your email is empty. Go to the Compose tab to add some content.'),
+    noSubject: m(
       'Your email has no subject line. Go to Settings in the Compose tab to add one.'
     ),
-    TARGETS_NOT_LOCKED: m(
+    notTargeted: m(
+      'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
+    ),
+    targetsNotLocked: m(
       'The targets are not locked. Go to the Ready section in the Overview tab to do this.'
     ),
   },
