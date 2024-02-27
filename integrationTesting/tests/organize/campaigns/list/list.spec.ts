@@ -23,10 +23,9 @@ test.describe('Campaigns list page ', () => {
     ]);
 
     const campaignCards = page.locator('data-testid=campaign-card');
-    await Promise.all([
-      page.goto(appUri + '/organize/1/projects'),
-      campaignCards.first().waitFor({ state: 'visible' }),
-    ]);
+
+    await page.goto(appUri + '/organize/1/projects');
+    await campaignCards.first().waitFor({ state: 'visible' });
 
     const numCampaignCards = await campaignCards.count();
     expect(numCampaignCards).toEqual(2);

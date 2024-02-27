@@ -33,10 +33,9 @@ test.describe('Journey instance detail page sidebar', () => {
     const assignees = page.locator(
       `[data-testid=ZetkinSection-assignees] [data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}]`
     );
-    await Promise.all([
-      page.goto(appUri + '/organize/1/journeys/1/1'),
-      assignees.first().waitFor({ state: 'visible' }),
-    ]);
+
+    await page.goto(appUri + '/organize/1/journeys/1/1');
+    await assignees.first().waitFor({ state: 'visible' });
 
     const numAssignees = await assignees.count();
     expect(numAssignees).toEqual(1);
@@ -200,10 +199,9 @@ test.describe('Journey instance detail page sidebar', () => {
     const subjects = page.locator(
       `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
     );
-    await Promise.all([
-      page.goto(appUri + '/organize/1/journeys/1/1'),
-      subjects.first().waitFor({ state: 'visible' }),
-    ]);
+
+    await page.goto(appUri + '/organize/1/journeys/1/1');
+    await subjects.first().waitFor({ state: 'visible' });
 
     const numSubjects = await subjects.count();
     expect(numSubjects).toEqual(1);

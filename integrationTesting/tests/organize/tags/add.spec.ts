@@ -42,10 +42,8 @@ test.describe('Tag manager', () => {
     const addTagButton = page.locator('text=Add tag');
     const activist = page.locator('text=Activist');
 
-    await Promise.all([
-      page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`),
-      addTagButton.first().waitFor({ state: 'visible' }),
-    ]);
+    page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    addTagButton.first().waitFor({ state: 'visible' });
 
     await page.locator('text=Add tag').click();
 

@@ -33,12 +33,10 @@ test.describe('View detail page', () => {
     const clara = page.locator('main >> text=Clara');
     const rosa = page.locator('main >> text=Rosa');
 
-    await Promise.all([
-      page.goto(appUri + '/organize/1/people/lists/1'),
-      members.first().waitFor({ state: 'visible' }),
-      clara.first().waitFor({ state: 'visible' }),
-      rosa.first().waitFor({ state: 'visible' }),
-    ]);
+    await page.goto(appUri + '/organize/1/people/lists/1');
+    await members.first().waitFor({ state: 'visible' });
+    await clara.first().waitFor({ state: 'visible' });
+    await rosa.first().waitFor({ state: 'visible' });
 
     const numMembers = await members.count();
     const numClara = await clara.count();

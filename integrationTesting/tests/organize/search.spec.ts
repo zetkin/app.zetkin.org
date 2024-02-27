@@ -40,15 +40,11 @@ test.describe('Search', async () => {
     const searchButton = page.locator('data-testid=SearchDialog-activator');
     const searchField = page.locator('#SearchDialog-inputField');
 
-    await Promise.all([
-      page.goto(appUri + '/organize/1/projects/1'),
-      searchButton.waitFor({ state: 'visible' }),
-    ]);
+    await page.goto(appUri + '/organize/1/projects/1');
+    await searchButton.waitFor({ state: 'visible' });
 
-    await Promise.all([
-      page.keyboard.press('/'),
-      searchField.waitFor({ state: 'visible' }),
-    ]);
+    await page.keyboard.press('/');
+    await searchField.waitFor({ state: 'visible' });
 
     const isVisible = await searchField.isVisible();
     expect(isVisible).toBeTruthy();

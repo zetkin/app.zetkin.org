@@ -52,8 +52,9 @@ test.describe('Journey instance details page', () => {
         ),
         // Click close instance button
         reopenButton.click(),
-        openStatus.waitFor({ state: 'visible' }),
       ]);
+
+      await openStatus.waitFor({ state: 'visible' });
 
       // Check patch request has correct data
       expect(

@@ -22,10 +22,9 @@ test.describe('Journeys list page', () => {
     ]);
 
     const journeyCards = page.locator('data-testid=journey-card');
-    await Promise.all([
-      page.goto(appUri + '/organize/1/journeys'),
-      journeyCards.first().waitFor({ state: 'visible' }),
-    ]);
+
+    await page.goto(appUri + '/organize/1/journeys');
+    await journeyCards.first().waitFor({ state: 'visible' });
 
     const numJourneysCards = await journeyCards.count();
     expect(numJourneysCards).toEqual(2);

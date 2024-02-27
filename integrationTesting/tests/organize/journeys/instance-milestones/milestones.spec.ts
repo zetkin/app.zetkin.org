@@ -32,10 +32,9 @@ test.describe('Journey instance page Milestones tab', () => {
     const journeyMilestoneCards = page.locator(
       'data-testid=JourneyMilestoneCard'
     );
-    await Promise.all([
-      page.goto(appUri + '/organize/1/journeys/1/1/milestones'),
-      journeyMilestoneCards.first().waitFor({ state: 'visible' }),
-    ]);
+
+    await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
+    await journeyMilestoneCards.first().waitFor({ state: 'visible' });
 
     const numCards = await journeyMilestoneCards.count();
     expect(numCards).toEqual(3);
@@ -97,16 +96,12 @@ test.describe('Journey instance page Milestones tab', () => {
     );
     const june24 = page.locator('button:has-text("24")');
 
-    await Promise.all([
-      page.goto(appUri + '/organize/1/journeys/1/1/milestones'),
-      datePicker.first().waitFor({ state: 'visible' }),
-    ]);
+    await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
+    await datePicker.first().waitFor({ state: 'visible' });
 
     //Click datepicker in first JourneyMilestoneCard
-    await Promise.all([
-      datePicker.first().click(),
-      june24.waitFor({ state: 'visible' }),
-    ]);
+    await datePicker.first().click();
+    await june24.waitFor({ state: 'visible' });
 
     await Promise.all([
       page.waitForResponse(

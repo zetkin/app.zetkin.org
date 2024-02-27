@@ -34,11 +34,9 @@ test.describe('Journey instance detail page', () => {
       `[aria-label=breadcrumb]:has-text("${ClarasOnboarding.title}")`
     );
 
-    await Promise.all([
-      page.goto(appUri + '/organize/1/journeys/1/1'),
-      title.waitFor({ state: 'visible' }),
-      breadcrumbTitle.waitFor({ state: 'visible' }),
-    ]);
+    await page.goto(appUri + '/organize/1/journeys/1/1');
+    await title.waitFor({ state: 'visible' });
+    await breadcrumbTitle.waitFor({ state: 'visible' });
 
     const numTitles = await title.count();
     const numBreadcrumbTitles = await breadcrumbTitle.count();

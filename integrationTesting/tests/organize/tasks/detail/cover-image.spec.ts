@@ -119,10 +119,9 @@ test.describe('Task detail page', () => {
     );
 
     const image = page.locator('data-testid=TaskPreviewSection-section >> img');
-    await Promise.all([
-      page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1'),
-      image.waitFor({ state: 'visible' }),
-    ]);
+
+    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
+    await image.waitFor({ state: 'visible' });
 
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'PATCH'),

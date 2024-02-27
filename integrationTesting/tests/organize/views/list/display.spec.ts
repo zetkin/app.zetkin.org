@@ -48,10 +48,8 @@ test.describe('Views list page', () => {
 
     const rows = page.locator('.MuiDataGrid-row');
 
-    await Promise.all([
-      page.goto(appUri + '/organize/1/people'),
-      rows.first().waitFor({ state: 'visible' }),
-    ]);
+    await page.goto(appUri + '/organize/1/people');
+    await rows.first().waitFor({ state: 'visible' });
 
     const numRows = await rows.count();
     expect(numRows).toEqual(2);
