@@ -80,4 +80,31 @@ describe('htmlToZetkinFormat()', () => {
       },
     ]);
   });
+
+  it('returns an array with StringNodes and a LinkNode when passed a html string with text and an <a> tag.', () => {
+    const nodes = htmlToInlineNodes(
+      'This is our whole email. <a href="http://zetkin.org/">It</a> is very short.'
+    );
+
+    expect(nodes).toEqual([
+      {
+        kind: InlineNodeKind.STRING,
+        value: 'This is our whole email. ',
+      },
+      {
+        content: [
+          {
+            kind: InlineNodeKind.STRING,
+            value: 'It',
+          },
+        ],
+        href: 'http://zetkin.org/',
+        kind: InlineNodeKind.LINK,
+      },
+      {
+        kind: InlineNodeKind.STRING,
+        value: ' is very short.',
+      },
+    ]);
+  });
 });

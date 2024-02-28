@@ -34,6 +34,15 @@ export default function htmlToInlineNodes(html: string) {
         kind: InlineNodeKind.BOLD,
       });
     }
+
+    if (node.nodeName === 'A') {
+      const anchor = node as HTMLAnchorElement;
+      inlineNodes.push({
+        content: htmlToInlineNodes(node.textContent || ''),
+        href: anchor.href,
+        kind: InlineNodeKind.LINK,
+      });
+    }
   });
 
   return inlineNodes;
