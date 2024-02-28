@@ -20,6 +20,13 @@ export default function htmlToInlineNodes(html: string) {
         kind: InlineNodeKind.LINE_BREAK,
       });
     }
+
+    if (node.nodeName === 'I') {
+      inlineNodes.push({
+        content: htmlToInlineNodes(node.textContent || ''),
+        kind: InlineNodeKind.ITALIC,
+      });
+    }
   });
 
   return inlineNodes;

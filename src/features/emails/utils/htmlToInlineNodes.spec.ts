@@ -33,4 +33,25 @@ describe('htmlToZetkinFormat()', () => {
       value: 'It is very short.',
     });
   });
+
+  it('returns an array with StringNodes and ItalicNodes when passed a html string with text and <i> tags', () => {
+    const nodes = htmlToInlineNodes(
+      'This is our whole email. It is <i>very short.</i>'
+    );
+
+    expect(nodes.length).toEqual(2);
+    expect(nodes[0]).toEqual({
+      kind: InlineNodeKind.STRING,
+      value: 'This is our whole email. It is ',
+    });
+    expect(nodes[1]).toEqual({
+      content: [
+        {
+          kind: InlineNodeKind.STRING,
+          value: 'very short.',
+        },
+      ],
+      kind: InlineNodeKind.ITALIC,
+    });
+  });
 });
