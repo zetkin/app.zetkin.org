@@ -1,50 +1,36 @@
 import { EmailContentInlineNode, InlineNodeKind } from '../types';
 
-export default function htmlToInlineNodes(html: string) {
+function childNodesToInlineNodes(childNodes: ChildNode[]) {
   const inlineNodes: EmailContentInlineNode[] = [];
 
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  const childNodeArray = Array.from(div.childNodes);
-
-  childNodeArray.forEach((node) => {
+  childNodes.forEach((node) => {
     if (node.nodeName === '#text') {
       inlineNodes.push({
         kind: InlineNodeKind.STRING,
         value: node.nodeValue || '',
       });
-    }
-
-    if (node.nodeName === 'BR') {
+    } else if (node.nodeName === 'BR') {
       inlineNodes.push({
         kind: InlineNodeKind.LINE_BREAK,
       });
-    }
-
-    if (node.nodeName === 'I') {
+    } else if (node.nodeName === 'I') {
       inlineNodes.push({
-        content: htmlToInlineNodes(node.textContent || ''),
+        content: childNodesToInlineNodes(Array.from(node.childNodes)),
         kind: InlineNodeKind.ITALIC,
       });
-    }
-
-    if (node.nodeName === 'B') {
+    } else if (node.nodeName === 'B') {
       inlineNodes.push({
-        content: htmlToInlineNodes(node.textContent || ''),
+        content: childNodesToInlineNodes(Array.from(node.childNodes)),
         kind: InlineNodeKind.BOLD,
       });
-    }
-
-    if (node.nodeName === 'A') {
+    } else if (node.nodeName === 'A') {
       const anchor = node as HTMLAnchorElement;
       inlineNodes.push({
-        content: htmlToInlineNodes(node.textContent || ''),
+        content: childNodesToInlineNodes(Array.from(node.childNodes)),
         href: anchor.href,
         kind: InlineNodeKind.LINK,
       });
-    }
-
-    if (node.nodeName === 'SPAN') {
+    } else if (node.nodeName === 'SPAN') {
       const span = node as HTMLSpanElement;
       inlineNodes.push({
         kind: InlineNodeKind.VARIABLE,
@@ -54,4 +40,12 @@ export default function htmlToInlineNodes(html: string) {
   });
 
   return inlineNodes;
+}
+
+export default function htmlToInlineNodes(html: string) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  const childNodeArray = Array.from(div.childNodes);
+
+  return childNodesToInlineNodes(childNodeArray);
 }
