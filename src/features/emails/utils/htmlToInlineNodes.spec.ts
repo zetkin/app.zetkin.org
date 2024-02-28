@@ -34,7 +34,7 @@ describe('htmlToZetkinFormat()', () => {
     });
   });
 
-  it('returns an array with StringNodes and ItalicNodes when passed a html string with text and <i> tags', () => {
+  it('returns an array with StringNodes and an ItalicNode when passed a html string with text and an <i> tag', () => {
     const nodes = htmlToInlineNodes(
       'This is our whole email. It is <i>very short.</i>'
     );
@@ -53,5 +53,31 @@ describe('htmlToZetkinFormat()', () => {
       ],
       kind: InlineNodeKind.ITALIC,
     });
+  });
+
+  it('returns an array with StringNodes and a BoldNode when passed a html string with text and <b> tag', () => {
+    const nodes = htmlToInlineNodes(
+      'This is our <b>whole email</b>. It is very short.'
+    );
+
+    expect(nodes).toEqual([
+      {
+        kind: InlineNodeKind.STRING,
+        value: 'This is our ',
+      },
+      {
+        content: [
+          {
+            kind: InlineNodeKind.STRING,
+            value: 'whole email',
+          },
+        ],
+        kind: InlineNodeKind.BOLD,
+      },
+      {
+        kind: InlineNodeKind.STRING,
+        value: '. It is very short.',
+      },
+    ]);
   });
 });

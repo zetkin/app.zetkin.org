@@ -27,6 +27,13 @@ export default function htmlToInlineNodes(html: string) {
         kind: InlineNodeKind.ITALIC,
       });
     }
+
+    if (node.nodeName === 'B') {
+      inlineNodes.push({
+        content: htmlToInlineNodes(node.textContent || ''),
+        kind: InlineNodeKind.BOLD,
+      });
+    }
   });
 
   return inlineNodes;
