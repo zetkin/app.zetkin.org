@@ -107,4 +107,25 @@ describe('htmlToZetkinFormat()', () => {
       },
     ]);
   });
+
+  it('returns an array with StringNodes and a VariableNode when passed a html string with text and a <span> tag that represents a variable', () => {
+    const nodes = htmlToInlineNodes(
+      'This is our whole email, <span contenteditable="false" style="background-color: rgba(0, 0, 0, 0.1); padding: 0.1em 0.5em; border-radius: 1em; display: inline-block;" data-slug="first_name">First name</span>. It is very short.'
+    );
+
+    expect(nodes).toEqual([
+      {
+        kind: InlineNodeKind.STRING,
+        value: 'This is our whole email, ',
+      },
+      {
+        kind: InlineNodeKind.VARIABLE,
+        name: 'first_name',
+      },
+      {
+        kind: InlineNodeKind.STRING,
+        value: '. It is very short.',
+      },
+    ]);
+  });
 });

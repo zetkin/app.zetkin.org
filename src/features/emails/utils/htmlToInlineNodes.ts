@@ -43,6 +43,14 @@ export default function htmlToInlineNodes(html: string) {
         kind: InlineNodeKind.LINK,
       });
     }
+
+    if (node.nodeName === 'SPAN') {
+      const span = node as HTMLSpanElement;
+      inlineNodes.push({
+        kind: InlineNodeKind.VARIABLE,
+        name: span.getAttribute('data-slug') || '',
+      });
+    }
   });
 
   return inlineNodes;
