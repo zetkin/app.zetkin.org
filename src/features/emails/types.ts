@@ -8,6 +8,7 @@ export enum BLOCK_TYPES {
 export enum InlineNodeKind {
   BOLD = 'bold',
   ITALIC = 'italic',
+  LINE_BREAK = 'lineBreak',
   LINK = 'link',
   STRING = 'string',
   VARIABLE = 'variable',
@@ -39,7 +40,12 @@ export type ItalicNode = {
   kind: InlineNodeKind.ITALIC;
 };
 
+export type LineBreakNode = {
+  kind: InlineNodeKind.LINE_BREAK;
+};
+
 export type EmailContentInlineNode =
+  | LineBreakNode
   | ItalicNode
   | BoldNode
   | LinkNode

@@ -14,6 +14,12 @@ export default function htmlToInlineNodes(html: string) {
         value: node.nodeValue || '',
       });
     }
+
+    if (node.nodeName === 'BR') {
+      inlineNodes.push({
+        kind: InlineNodeKind.LINE_BREAK,
+      });
+    }
   });
 
   return inlineNodes;
