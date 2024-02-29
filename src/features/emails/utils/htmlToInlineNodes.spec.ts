@@ -110,7 +110,7 @@ describe('htmlToZetkinFormat()', () => {
 
   it('converts a html string with text and a <span> tag that represents a variable', () => {
     const nodes = htmlToInlineNodes(
-      'This is our whole email, <span contenteditable="false" style="background-color: rgba(0, 0, 0, 0.1); padding: 0.1em 0.5em; border-radius: 1em; display: inline-block;" data-slug="first_name">First name</span>. It is very short.'
+      'This is our whole email, <span contenteditable="false" style="background-color: rgba(0, 0, 0, 0.1); padding: 0.1em 0.5em; border-radius: 1em; display: inline-block;" data-slug="target.first_name">First name</span>. It is very short.'
     );
 
     expect(nodes).toEqual([
@@ -120,7 +120,7 @@ describe('htmlToZetkinFormat()', () => {
       },
       {
         kind: InlineNodeKind.VARIABLE,
-        name: 'first_name',
+        name: 'target.first_name',
       },
       {
         kind: InlineNodeKind.STRING,

@@ -20,9 +20,9 @@ export default function variableToolFactory(title: string) {
       this._api = api;
 
       this._availableVars = {
-        first_name: 'First name',
-        full_name: 'Full name',
-        last_name: 'Last name',
+        'target.first_name': 'First name',
+        'target.full_name': 'Full name',
+        'target.last_name': 'Last name',
       };
 
       this._button = document.createElement('button');
