@@ -83,7 +83,7 @@ describe('htmlToZetkinFormat()', () => {
 
   it('converts a html string with text and an <a> tag.', () => {
     const nodes = htmlToInlineNodes(
-      'This is our whole email. <a href="http://zetkin.org/">It</a> is very short.'
+      'This is our whole email. <a href="http://zetkin.org/" data-tag="24712a5c">It</a> is very short.'
     );
 
     expect(nodes).toEqual([
@@ -100,6 +100,7 @@ describe('htmlToZetkinFormat()', () => {
         ],
         href: 'http://zetkin.org/',
         kind: InlineNodeKind.LINK,
+        tag: '24712a5c',
       },
       {
         kind: InlineNodeKind.STRING,
@@ -131,7 +132,7 @@ describe('htmlToZetkinFormat()', () => {
 
   it('converts a html string with intersecting <b>, <a> and <i> tags.', () => {
     const nodes = htmlToInlineNodes(
-      'Th<i>is is our </i><a class="inlineLink" href="http://zetkin.org"><i>w<b>h</b></i>ole email.<b> It is very</b></a><b> shor</b>t.'
+      'Th<i>is is our </i><a class="inlineLink" href="http://zetkin.org" data-tag="3849acf1"><i>w<b>h</b></i>ole email.<b> It is very</b></a><b> shor</b>t.'
     );
 
     expect(nodes).toEqual([
@@ -184,6 +185,7 @@ describe('htmlToZetkinFormat()', () => {
         ],
         href: 'http://zetkin.org/',
         kind: InlineNodeKind.LINK,
+        tag: '3849acf1',
       },
       {
         content: [

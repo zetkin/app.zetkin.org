@@ -28,6 +28,7 @@ export type LinkNode = {
   content: EmailContentInlineNode[];
   href: string;
   kind: InlineNodeKind.LINK;
+  tag: string;
 };
 
 export type BoldNode = {

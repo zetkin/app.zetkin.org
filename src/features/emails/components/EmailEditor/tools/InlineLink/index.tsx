@@ -173,6 +173,7 @@ export function linkToolFactory(title: string) {
       return {
         a: {
           class: true,
+          'data-tag': true,
           href: true,
           target: '_blank',
         },
@@ -193,6 +194,7 @@ export function linkToolFactory(title: string) {
       } else {
         const anchor = document.createElement('a');
         anchor.classList.add('inlineLink');
+        anchor.dataset.tag = crypto.randomUUID().slice(0, 8);
         anchor.style.cursor = 'text';
 
         const content = range.extractContents();
