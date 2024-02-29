@@ -14,6 +14,13 @@ export enum InlineNodeKind {
   VARIABLE = 'variable',
 }
 
+export enum BlockKind {
+  BUTTON = 'button',
+  HEADER = 'header',
+  IMAGE = 'image',
+  PARAGRAPH = 'paragraph',
+}
+
 export type StringNode = {
   kind: InlineNodeKind.STRING;
   value: string;
@@ -52,3 +59,45 @@ export type EmailContentInlineNode =
   | LinkNode
   | StringNode
   | VariableNode;
+
+export type ButtonBlock = {
+  data: {
+    href: string;
+    tag: string;
+    text: string;
+  };
+  kind: BlockKind.BUTTON;
+};
+
+export type HeaderBlock = {
+  data: {
+    content: EmailContentInlineNode[];
+    level: 1 | 2 | 3 | 4;
+  };
+  kind: BlockKind.HEADER;
+};
+
+export type ImageBlock = {
+  data: {
+    alt: string;
+    src: string;
+  };
+  kind: BlockKind.IMAGE;
+};
+
+export type ParagraphBlock = {
+  data: {
+    content: EmailContentInlineNode[];
+  };
+  kind: BlockKind.PARAGRAPH;
+};
+
+export type EmailContentBlock =
+  | ButtonBlock
+  | HeaderBlock
+  | ImageBlock
+  | ParagraphBlock;
+
+export type EmailContent = {
+  blocks: EmailContentBlock[];
+};

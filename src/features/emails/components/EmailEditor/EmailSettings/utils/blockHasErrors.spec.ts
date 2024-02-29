@@ -12,6 +12,7 @@ describe('blockHasErrors()', () => {
       return {
         data: {
           buttonText: 'Click me!',
+          tag: 'abcdefgh',
           url: 'http://www.clara.com',
           ...overrides,
         },

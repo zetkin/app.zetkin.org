@@ -7,13 +7,18 @@ import Providers from 'core/Providers';
 export interface ButtonData {
   url: string;
   buttonText: string;
+  tag: string;
 }
 
 export default class Button {
   private _data: ButtonData;
 
   constructor({ data }: BlockToolConstructorOptions<ButtonData>) {
-    this._data = data;
+    this._data = {
+      buttonText: data.buttonText,
+      tag: data.tag ? data.tag : crypto.randomUUID().slice(0, 8),
+      url: data.url,
+    };
   }
 
   static get isReadOnlySupported() {
