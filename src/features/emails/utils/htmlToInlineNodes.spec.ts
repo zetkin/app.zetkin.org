@@ -132,7 +132,7 @@ describe('htmlToZetkinFormat()', () => {
 
   it('converts a html string with intersecting <b>, <a> and <i> tags.', () => {
     const nodes = htmlToInlineNodes(
-      'Th<i>is is our </i><a class="inlineLink" href="http://zetkin.org" data-tag="3849acf1"><i>w<b>h</b></i>ole email.<b> It is very</b></a><b> shor</b>t.'
+      'Th<i>is is our </i><a class="inlineLink" href="http://zetkin.org/" data-tag="3849acf1"><i>w<b>h</b></i>ole email.<b> It is very</b></a><b> shor</b>t.'
     );
 
     expect(nodes).toEqual([
