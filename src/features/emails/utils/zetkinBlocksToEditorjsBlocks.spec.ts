@@ -20,6 +20,8 @@ describe('zetkinBlocksToEditorjsBlocks()', () => {
       },
     ]);
 
+    editorjsBlocks.forEach((block) => (block.id = 'abcdefgh'));
+
     expect(editorjsBlocks).toEqual([
       {
         data: {
@@ -27,6 +29,7 @@ describe('zetkinBlocksToEditorjsBlocks()', () => {
           tag: 'abcdefgh',
           url: 'http://www.zetkin.org/',
         },
+        id: 'abcdefgh',
         type: BLOCK_TYPES.BUTTON,
       },
     ]);
@@ -48,12 +51,15 @@ describe('zetkinBlocksToEditorjsBlocks()', () => {
       },
     ]);
 
+    editorjsBlocks.forEach((block) => (block.id = 'abcdefgh'));
+
     expect(editorjsBlocks).toEqual([
       {
         data: {
           level: 1,
           text: 'Hello!',
         },
+        id: 'abcdefgh',
         type: BLOCK_TYPES.HEADER,
       },
     ]);
@@ -64,18 +70,23 @@ describe('zetkinBlocksToEditorjsBlocks()', () => {
       {
         data: {
           alt: 'clara.jpg',
+          fileId: 18,
           src: 'http://files.zetkin.org/1/clara.jpg',
         },
         kind: BlockKind.IMAGE,
       },
     ]);
 
+    editorjsBlocks.forEach((block) => (block.id = 'abcdefgh'));
+
     expect(editorjsBlocks).toEqual([
       {
         data: {
+          fileId: 18,
           fileName: 'clara.jpg',
           url: 'http://files.zetkin.org/1/clara.jpg',
         },
+        id: 'abcdefgh',
         type: BLOCK_TYPES.LIBRARY_IMAGE,
       },
     ]);
@@ -105,11 +116,14 @@ describe('zetkinBlocksToEditorjsBlocks()', () => {
       },
     ]);
 
+    editorjsBlocks.forEach((block) => (block.id = 'abcdefgh'));
+
     expect(editorjsBlocks).toEqual([
       {
         data: {
           text: 'Welcome to our cool <b>party!</b>',
         },
+        id: 'abcdefgh',
         type: BLOCK_TYPES.PARAGRAPH,
       },
     ]);
