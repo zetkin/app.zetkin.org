@@ -16,7 +16,7 @@ export default class Button {
   constructor({ data }: BlockToolConstructorOptions<ButtonData>) {
     this._data = {
       buttonText: data.buttonText,
-      tag: data.tag ? data.tag : crypto.randomUUID().slice(0, 8),
+      tag: data.tag ? data.tag : Math.random().toString(36).substring(2, 10),
       url: data.url,
     };
   }
