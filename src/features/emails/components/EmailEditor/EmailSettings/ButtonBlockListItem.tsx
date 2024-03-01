@@ -32,68 +32,65 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
     <BlockListItemBase
       excerpt={data.buttonText}
       hasErrors={hasErrors}
+      readOnly={readOnly}
       selected={selected}
       title={messages.editor.tools.button.title()}
     >
-      {!readOnly && (
-        <Box display="flex" flexDirection="column">
-          <Box paddingBottom={1} paddingTop={2}>
-            <TextField
-              fullWidth
-              InputProps={{
-                endAdornment:
-                  inputValue.length > 0 ? (
-                    <IconButton
-                      onClick={() => {
-                        setInputValue('');
-                        onChange({ ...data, url: '' });
-                      }}
-                    >
-                      <Close />
-                    </IconButton>
-                  ) : (
-                    ''
-                  ),
-              }}
-              label={messages.editor.tools.button.settings.urlLabel()}
-              onChange={(ev) => {
-                setInputValue(ev.target.value);
-                onChange({ ...data, url: formatUrl(ev.target.value) || '' });
-              }}
-              value={inputValue}
-            />
-          </Box>
-          <Box height="1.25em">
-            {error && (
-              <Typography color="error" variant="body2">
-                <Msg id={messageIds.editor.tools.button.settings.invalidUrl} />
-              </Typography>
-            )}
-            {inputValue.length > 0 && !error && (
-              <NextLink href={formatUrl(inputValue) || ''} passHref rel="">
-                <Link
-                  color="inherit"
-                  display="flex"
-                  rel="noopener"
-                  target="_blank"
-                  underline="none"
-                >
-                  <OpenInNew
-                    color="secondary"
-                    fontSize="small"
-                    sx={{ marginRight: 1 }}
-                  />
-                  <Typography variant="body2">
-                    <Msg
-                      id={messageIds.editor.tools.button.settings.testLink}
-                    />
-                  </Typography>
-                </Link>
-              </NextLink>
-            )}
-          </Box>
+      <Box display="flex" flexDirection="column">
+        <Box paddingBottom={1} paddingTop={2}>
+          <TextField
+            fullWidth
+            InputProps={{
+              endAdornment:
+                inputValue.length > 0 ? (
+                  <IconButton
+                    onClick={() => {
+                      setInputValue('');
+                      onChange({ ...data, url: '' });
+                    }}
+                  >
+                    <Close />
+                  </IconButton>
+                ) : (
+                  ''
+                ),
+            }}
+            label={messages.editor.tools.button.settings.urlLabel()}
+            onChange={(ev) => {
+              setInputValue(ev.target.value);
+              onChange({ ...data, url: formatUrl(ev.target.value) || '' });
+            }}
+            value={inputValue}
+          />
         </Box>
-      )}
+        <Box height="1.25em">
+          {error && (
+            <Typography color="error" variant="body2">
+              <Msg id={messageIds.editor.tools.button.settings.invalidUrl} />
+            </Typography>
+          )}
+          {inputValue.length > 0 && !error && (
+            <NextLink href={formatUrl(inputValue) || ''} passHref rel="">
+              <Link
+                color="inherit"
+                display="flex"
+                rel="noopener"
+                target="_blank"
+                underline="none"
+              >
+                <OpenInNew
+                  color="secondary"
+                  fontSize="small"
+                  sx={{ marginRight: 1 }}
+                />
+                <Typography variant="body2">
+                  <Msg id={messageIds.editor.tools.button.settings.testLink} />
+                </Typography>
+              </Link>
+            </NextLink>
+          )}
+        </Box>
+      </Box>
     </BlockListItemBase>
   );
 };

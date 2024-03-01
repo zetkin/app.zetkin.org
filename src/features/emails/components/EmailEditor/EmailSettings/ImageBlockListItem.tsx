@@ -33,78 +33,74 @@ const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
     <BlockListItemBase
       excerpt={data.fileName}
       hasErrors={hasErrors}
+      readOnly={readOnly}
       selected={selected}
       title={messages.editor.tools.libraryImage.title()}
     >
-      {!readOnly && (
-        <>
-          {' '}
-          <Box display="flex">
-            <Box
-              height="80px"
-              onClick={() => setSelecting(true)}
-              sx={{ cursor: 'pointer' }}
-              width="80px"
-            >
-              <img
-                alt=""
-                src={data.url}
-                style={{
-                  height: '100%',
-                  objectFit: 'cover',
-                  width: '100%',
-                }}
-              />
-            </Box>
-            <Box
-              alignItems="flex-start"
-              display="flex"
-              flex={1}
-              flexDirection="column"
-              justifyContent="flex-end"
-              overflow="hidden"
-              paddingLeft={2}
-            >
-              <Typography
-                color="secondary"
-                maxWidth="80%"
-                noWrap
-                overflow="hidden"
-                textOverflow="ellipsis"
-                variant="body2"
-              >
-                {data.fileName}
-              </Typography>
-              <Button
-                onClick={() => setSelecting(true)}
-                sx={{ marginTop: 1 }}
-                variant="outlined"
-              >
-                <Msg id={messageIds.editor.tools.libraryImage.changeImage} />
-              </Button>
-            </Box>
-          </Box>
-          <FileLibraryDialog
-            onClose={() => setSelecting(false)}
-            onSelectFile={(file) => {
-              setData({
-                fileId: file.id,
-                fileName: file.original_name,
-                url: file.url,
-              });
-              onChange({
-                fileId: file.id,
-                fileName: file.original_name,
-                url: file.url,
-              });
-              setSelecting(false);
+      <Box display="flex">
+        <Box
+          height="80px"
+          onClick={() => setSelecting(true)}
+          sx={{ cursor: 'pointer' }}
+          width="80px"
+        >
+          <img
+            alt=""
+            src={data.url}
+            style={{
+              height: '100%',
+              objectFit: 'cover',
+              width: '100%',
             }}
-            open={selecting}
-            orgId={orgId}
-            type="image"
           />
-        </>
-      )}
+        </Box>
+        <Box
+          alignItems="flex-start"
+          display="flex"
+          flex={1}
+          flexDirection="column"
+          justifyContent="flex-end"
+          overflow="hidden"
+          paddingLeft={2}
+        >
+          <Typography
+            color="secondary"
+            maxWidth="80%"
+            noWrap
+            overflow="hidden"
+            textOverflow="ellipsis"
+            variant="body2"
+          >
+            {data.fileName}
+          </Typography>
+          <Button
+            onClick={() => setSelecting(true)}
+            sx={{ marginTop: 1 }}
+            variant="outlined"
+          >
+            <Msg id={messageIds.editor.tools.libraryImage.changeImage} />
+          </Button>
+        </Box>
+      </Box>
+      <FileLibraryDialog
+        onClose={() => setSelecting(false)}
+        onSelectFile={(file) => {
+          setData({
+            fileId: file.id,
+            fileName: file.original_name,
+            url: file.url,
+          });
+          onChange({
+            fileId: file.id,
+            fileName: file.original_name,
+            url: file.url,
+          });
+          setSelecting(false);
+        }}
+        open={selecting}
+        orgId={orgId}
+        type="image"
+      />
     </BlockListItemBase>
   );
 };
