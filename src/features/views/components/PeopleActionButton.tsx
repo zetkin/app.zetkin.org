@@ -3,6 +3,7 @@ import { FC, useState } from 'react';
 import {
   FolderOutlined,
   InsertDriveFileOutlined,
+  PersonAdd,
   UploadFileOutlined,
 } from '@mui/icons-material';
 
@@ -49,6 +50,13 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
           {
             icon: <UploadFileOutlined />,
             label: messages.actions.importPeople(),
+            onClick: () => {
+              setImportDialogOpen(true);
+            },
+          },
+          {
+            icon: <PersonAdd />,
+            label: messages.actions.createPerson(),
             onClick: () => {
               setImportDialogOpen(true);
             },
