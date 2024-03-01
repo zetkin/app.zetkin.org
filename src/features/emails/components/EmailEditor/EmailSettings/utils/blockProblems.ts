@@ -14,9 +14,7 @@ export default function blockProblems(block: OutputBlockData): BlockProblem[] {
     if (!block.data.buttonText) {
       blockProblems.push(BlockProblem.DEFAULT_BUTTON_TEXT);
     }
-  }
-
-  if (block.type === BLOCK_TYPES.PARAGRAPH) {
+  } else if (block.type === BLOCK_TYPES.PARAGRAPH) {
     const container = document.createElement('div');
     container.innerHTML = block.data.text;
     const anchors = [...container.querySelectorAll('a')];
