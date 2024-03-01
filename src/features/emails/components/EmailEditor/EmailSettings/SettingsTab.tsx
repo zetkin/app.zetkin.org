@@ -9,11 +9,13 @@ import { ZetkinEmail } from 'utils/types/zetkin';
 interface SettingsTabProps {
   subject: string;
   onChange: (email: Partial<ZetkinEmail>) => void;
+  readOnly: boolean;
 }
 
 const SettingsTab: FC<SettingsTabProps> = ({
   subject: initialSubject,
   onChange,
+  readOnly,
 }) => {
   const messages = useMessages(messageIds);
   const { subject, emailAddress, setSubject, orgTitle } =
@@ -38,6 +40,7 @@ const SettingsTab: FC<SettingsTabProps> = ({
         />
       </FormControl>
       <TextField
+        disabled={readOnly}
         fullWidth
         label={messages.editor.settings.tabs.settings.subjectInputLabel()}
         onChange={(event) => {

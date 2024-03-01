@@ -12,6 +12,7 @@ interface ImageBlockListItemProps {
   data: LibraryImageData;
   hasErrors: boolean;
   onChange: (newData: LibraryImageData) => void;
+  readOnly: boolean;
   selected: boolean;
 }
 
@@ -19,6 +20,7 @@ const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
   data: initialData,
   hasErrors,
   onChange,
+  readOnly,
   selected,
 }) => {
   const { orgId } = useNumericRouteParams();
@@ -31,6 +33,7 @@ const ImageBlockListItem: FC<ImageBlockListItemProps> = ({
     <BlockListItemBase
       excerpt={data.fileName}
       hasErrors={hasErrors}
+      readOnly={readOnly}
       selected={selected}
       title={messages.editor.tools.libraryImage.title()}
     >

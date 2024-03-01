@@ -12,8 +12,10 @@ export interface ButtonData {
 
 export default class Button {
   private _data: ButtonData;
+  private _readOnly: boolean;
 
-  constructor({ data }: BlockToolConstructorOptions<ButtonData>) {
+  constructor({ data, readOnly }: BlockToolConstructorOptions<ButtonData>) {
+    this._readOnly = readOnly;
     this._data = {
       buttonText: data.buttonText,
       tag: data.tag ? data.tag : Math.random().toString(36).substring(2, 10),
@@ -22,7 +24,7 @@ export default class Button {
   }
 
   static get isReadOnlySupported() {
-    return false;
+    return true;
   }
 
   render() {
@@ -38,6 +40,7 @@ export default class Button {
               buttonText: newButtonText,
             };
           }}
+          readOnly={this._readOnly}
         />
       </Providers>
     );

@@ -13,6 +13,7 @@ interface ButtonBlockLIstItemProps {
   data: ButtonData;
   hasErrors: boolean;
   onChange: (data: ButtonData) => void;
+  readOnly: boolean;
   selected: boolean;
 }
 
@@ -20,6 +21,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
   data,
   hasErrors,
   onChange,
+  readOnly,
   selected,
 }) => {
   const messages = useMessages(messageIds);
@@ -30,6 +32,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
     <BlockListItemBase
       excerpt={data.buttonText}
       hasErrors={hasErrors}
+      readOnly={readOnly}
       selected={selected}
       title={messages.editor.tools.button.title()}
     >
