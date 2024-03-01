@@ -80,6 +80,7 @@ export type HeaderBlock = {
 export type ImageBlock = {
   data: {
     alt: string;
+    fileId: number;
     src: string;
   };
   kind: BlockKind.IMAGE;

@@ -30,6 +30,7 @@ export default function editorjsBlocksToZetkinBlocks(
       zetkinBlocks.push({
         data: {
           alt: editorjsBlock.data.fileName,
+          fileId: editorjsBlock.data.fileId,
           src: editorjsBlock.data.url,
         },
         kind: BlockKind.IMAGE,

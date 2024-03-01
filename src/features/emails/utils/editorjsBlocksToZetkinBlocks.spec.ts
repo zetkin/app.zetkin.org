@@ -63,6 +63,7 @@ describe('editorjsBlocksToZetkinBlocks()', () => {
     const zetkinBlocks = editorjsBlocksToZetkinBlocks([
       {
         data: {
+          fileId: 2,
           fileName: 'clara.jpg',
           url: 'http://files.zetkin.org/1/clara.jpg',
         },
@@ -74,6 +75,7 @@ describe('editorjsBlocksToZetkinBlocks()', () => {
       {
         data: {
           alt: 'clara.jpg',
+          fileId: 2,
           src: 'http://files.zetkin.org/1/clara.jpg',
         },
         kind: BlockKind.IMAGE,
