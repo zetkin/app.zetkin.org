@@ -34,7 +34,12 @@ const EmailPage: PageWithLayout = () => {
     updateEmail,
     updateTargets,
   } = useEmail(orgId, emailId);
-  const { data: emailStats } = useEmailStats(orgId, emailId);
+  const {
+    numBlocked,
+    numTargetMatches,
+    readyTargets,
+    lockedReadyTargets: lockedTargets,
+  } = useEmailStats(orgId, emailId);
 
   const onServer = useServerSide();
 
@@ -43,12 +48,6 @@ const EmailPage: PageWithLayout = () => {
   }
 
   const isLocked = !!email.locked;
-
-  const allTargets = emailStats?.num_target_matches ?? 0;
-  const allBlocked = emailStats?.num_blocked.any ?? 0;
-  const allLocked = emailStats?.num_locked_targets ?? null;
-  const readyTargets = allTargets - allBlocked;
-  const lockedTargets = allLocked === null ? allLocked : allLocked - allBlocked;
 
   return (
     <>
@@ -61,16 +60,16 @@ const EmailPage: PageWithLayout = () => {
             email={email}
             isLocked={isLocked}
             isTargeted={isTargeted}
-            targets={allTargets}
+            targets={numTargetMatches}
             updateTargets={updateTargets}
           />
           <Box display="flex" gap={2} paddingTop={2}>
             <Box flex={1}>
               <EmailTargetsBlocked
-                blacklisted={emailStats?.num_blocked?.blacklisted || 0}
-                missingEmail={emailStats?.num_blocked?.no_email || 0}
-                total={allBlocked}
-                unsubscribed={emailStats?.num_blocked?.unsubscribed || 0}
+                blacklisted={numBlocked.blacklisted}
+                missingEmail={numBlocked.noEmail}
+                total={numBlocked.any}
+                unsubscribed={numBlocked.unsubscribed}
               />
             </Box>
             <Box flex={1}>

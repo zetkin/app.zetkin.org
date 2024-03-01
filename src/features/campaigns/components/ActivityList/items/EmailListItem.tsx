@@ -22,40 +22,41 @@ const statusColors = {
 const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   const { data: email } = useEmail(orgId, emailId);
   const state = useEmailState(orgId, emailId);
-  const { data: emailStats } = useEmailStats(orgId, emailId);
+  const {
+    numClicked,
+    numTargetMatches,
+    numOpened,
+    numSent,
+    lockedReadyTargets,
+    isLoading: statsLoading,
+  } = useEmailStats(orgId, emailId);
 
   if (!email) {
     return null;
   }
-
-  //TODO: use actual values for these:
-  const blueChipValue = 34;
-  const greenChipValue = 34;
-  const orangeChipValue = 34;
 
   const now = new Date();
   const hasBeenSent = email.published && new Date(email.published) < now;
 
   return hasBeenSent ? (
     <ActivityListItemWithStats
-      blueChipValue={blueChipValue}
+      blueChipValue={numOpened}
       color={statusColors[state]}
-      endNumber={emailStats?.num_target_matches || 0}
-      greenChipValue={greenChipValue}
+      endNumber={lockedReadyTargets}
+      greenChipValue={numClicked}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}
-      orangeChipValue={orangeChipValue}
+      orangeChipValue={numSent}
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
-      //TODO: get actual data on if the stats are loading
-      statsLoading={false}
+      statsLoading={statsLoading}
       title={email.title || ''}
     />
   ) : (
     <ActivityListItem
       color={statusColors[state]}
-      endNumber={emailStats?.num_target_matches || 0}
+      endNumber={email.locked ? lockedReadyTargets : numTargetMatches}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}
