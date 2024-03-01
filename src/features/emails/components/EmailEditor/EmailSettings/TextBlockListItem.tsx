@@ -11,12 +11,14 @@ export interface TextBlockData {
 interface TextBlockListItemProps {
   data: TextBlockData;
   hasErrors: boolean;
+  readOnly: boolean;
   selected: boolean;
 }
 
 const TextBlockListItem: FC<TextBlockListItemProps> = ({
   data,
   hasErrors,
+  readOnly,
   selected,
 }) => {
   const messages = useMessages(messageIds);
@@ -28,7 +30,9 @@ const TextBlockListItem: FC<TextBlockListItemProps> = ({
       selected={selected}
       title={messages.editor.tools.paragraph.title()}
     >
-      {hasErrors && <Msg id={messageIds.editor.tools.paragraph.invalidUrls} />}
+      {!readOnly && hasErrors && (
+        <Msg id={messageIds.editor.tools.paragraph.invalidUrls} />
+      )}
     </BlockListItemBase>
   );
 };

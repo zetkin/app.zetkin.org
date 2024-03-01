@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.emails', {
@@ -8,13 +10,35 @@ export default makeMessages('feat.emails', {
     title: m('Blocked'),
     unsubscribed: m('Unsubscribed'),
   },
+  deliveryProblems: {
+    contentError: m(
+      'There are problems in the content of your email. Go to the editor in the Compose tab and correct them.'
+    ),
+    empty: m('Your email is empty. Go to the Compose tab to add some content.'),
+    noSubject: m(
+      'Your email has no subject line. Go to Settings in the Compose tab to add one.'
+    ),
+    notTargeted: m(
+      'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
+    ),
+    targetsNotLocked: m(
+      'The targets are not locked. Go to the Ready section in the Overview tab to do this.'
+    ),
+  },
   deliveryStatus: {
     notLocked: m('Not locked, not scheduled'),
     notScheduled: m('Not scheduled'),
-    wasSent: m<{ time: string }>('Was sent at {time}'),
-    willSend: m<{ time: string }>('Will send at {time}'),
+    wasSent: m<{ date: ReactElement; time: string }>(
+      'Was sent at {time}, {date}'
+    ),
+    willSend: m<{ date: ReactElement; time: string }>(
+      'Will send at {time}, {date}'
+    ),
   },
   editor: {
+    readOnlyModeInfo: m(
+      'This email is in read-only mode since it is scheduled for delivery. If you want to edit the content you need to cancel the delivery first.'
+    ),
     settings: {
       tabs: {
         content: m('Content'),
@@ -71,6 +95,7 @@ export default makeMessages('feat.emails', {
     },
   },
   emailActionButtons: {
+    cancel: m('Cancel'),
     delete: m('Delete'),
     delivery: m('Delivery'),
     deliveryDate: m('Delivery date'),
@@ -105,6 +130,9 @@ export default makeMessages('feat.emails', {
     lockButton: m('Lock for delivery'),
     lockDescription: m('Lock to enable email delivery'),
     locked: m('Locked'),
+    scheduledDescription: m(
+      'This email is scheduled for delivery. If you want to unlock the targets, cancel the delivery first.'
+    ),
     subtitle: m('Targets currently available for delivery'),
     title: m('Ready'),
     unlockButton: m('Unlock'),

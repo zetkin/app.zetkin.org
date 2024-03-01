@@ -1,9 +1,11 @@
 import dynamic from 'next/dynamic';
-import { Box, useTheme } from '@mui/material';
+import { Alert, Box, useTheme } from '@mui/material';
 import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import EmailSettings from './EmailSettings';
+import messageIds from 'features/emails/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
@@ -27,6 +29,8 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
 
   const blocksRef = useRef<OutputBlockData[]>();
 
+  const readOnly = !!email.published;
+
   useEffect(() => {
     if (
       blocksRef.current !== undefined &&
@@ -44,34 +48,43 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   }, [content.blocks.length]);
 
   return (
-    <Box display="flex" height="100%">
-      <Box flex={1} sx={{ overflowY: 'auto' }}>
-        <EmailEditorFrontend
-          apiRef={apiRef}
-          initialContent={initialContent}
-          onSave={(newContent: OutputData) => {
-            setContent(newContent);
-            onSave({ content: JSON.stringify(newContent) });
+    <Box display="flex" flexDirection="column">
+      {readOnly && (
+        <Alert severity="info" sx={{ marginBottom: 2 }}>
+          <Msg id={messageIds.editor.readOnlyModeInfo} />
+        </Alert>
+      )}
+      <Box display="flex" height="100%">
+        <Box flex={1} sx={{ overflowY: 'auto' }}>
+          <EmailEditorFrontend
+            apiRef={apiRef}
+            initialContent={initialContent}
+            onSave={(newContent: OutputData) => {
+              setContent(newContent);
+              onSave({ content: JSON.stringify(newContent) });
+            }}
+            onSelectBlock={(selectedBlockIndex: number) => {
+              setSelectedBlockIndex(selectedBlockIndex);
+            }}
+            readOnly={readOnly}
+          />
+        </Box>
+        <Box
+          sx={{
+            borderLeft: `1px solid ${theme.palette.grey[300]}`,
+            overflowY: 'auto',
           }}
-          onSelectBlock={(selectedBlockIndex: number) => {
-            setSelectedBlockIndex(selectedBlockIndex);
-          }}
-        />
-      </Box>
-      <Box
-        sx={{
-          borderLeft: `1px solid ${theme.palette.grey[300]}`,
-          overflowY: 'auto',
-        }}
-        width="25%"
-      >
-        <EmailSettings
-          apiRef={apiRef}
-          blocks={content.blocks}
-          onSave={onSave}
-          selectedBlockIndex={selectedBlockIndex}
-          subject={email.subject || ''}
-        />
+          width="25%"
+        >
+          <EmailSettings
+            apiRef={apiRef}
+            blocks={content.blocks}
+            onSave={onSave}
+            readOnly={readOnly}
+            selectedBlockIndex={selectedBlockIndex}
+            subject={email.subject || ''}
+          />
+        </Box>
       </Box>
     </Box>
   );

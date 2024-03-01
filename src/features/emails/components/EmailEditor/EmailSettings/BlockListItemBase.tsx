@@ -7,6 +7,7 @@ interface BlockListItemBaseProps {
   children?: ReactNode;
   excerpt: string;
   hasErrors: boolean;
+  readOnly?: boolean;
   selected: boolean;
   title: string;
 }
@@ -15,6 +16,7 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
   children,
   excerpt,
   hasErrors,
+  readOnly = false,
   selected,
   title,
 }) => {
@@ -29,6 +31,10 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
     /&[#a-zA-Z0-9]+;/g,
     ''
   );
+
+  const showExpandMore = expandable && !expanded && !readOnly;
+  const showExpandLess = expandable && expanded && !readOnly;
+  const showChildren = expandable && !readOnly;
 
   return (
     <>
@@ -73,11 +79,11 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
           >
             {excerptWithoutHtmlEntities}
           </Typography>
-          {expandable && !expanded && <ExpandMore color="secondary" />}
-          {expandable && expanded && <ExpandLess color="secondary" />}
+          {showExpandMore && <ExpandMore color="secondary" />}
+          {showExpandLess && <ExpandLess color="secondary" />}
         </Box>
       </Box>
-      {expandable && (
+      {showChildren && (
         <Collapse in={expanded}>
           <Box
             paddingBottom={2}
