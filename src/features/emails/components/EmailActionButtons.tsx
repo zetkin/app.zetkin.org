@@ -1,8 +1,9 @@
-import { ArrowDropDown, ContentCopy, Delete } from '@mui/icons-material';
-import { Box, Button, Popper } from '@mui/material';
-import { useContext, useState } from 'react';
+import { Box } from '@mui/material';
+import { useContext } from 'react';
+import { ContentCopy, Delete } from '@mui/icons-material';
 
-import EmailDelivery from './EmailDelivery';
+import CancelButton from './CancelButton';
+import DeliveryButton from './DeliveryButton';
 import messageIds from '../l10n/messageIds';
 import useDuplicateEmail from '../hooks/useDuplicateEmail';
 import useEmail from '../hooks/useEmail';
@@ -18,40 +19,17 @@ interface EmailActionButtonsProp {
 
 const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
   const messages = useMessages(messageIds);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
 
   return (
     <Box display="flex">
-      <Button
-        endIcon={email.published ? '' : <ArrowDropDown />}
-        onClick={(event) => {
-          if (email.published) {
-            updateEmail({ published: null });
-          } else {
-            setAnchorEl(anchorEl ? null : event.currentTarget);
-          }
-        }}
-        variant={email.published ? 'outlined' : 'contained'}
-      >
-        {email.published
-          ? messages.emailActionButtons.cancel()
-          : messages.emailActionButtons.delivery()}
-      </Button>
-      <Popper
-        anchorEl={anchorEl}
-        open={!!anchorEl}
-        placement="bottom-end"
-        sx={{ zIndex: 10 }}
-      >
-        <EmailDelivery
-          email={email}
-          onClose={() => setAnchorEl(null)}
-          orgId={orgId}
-        />
-      </Popper>
+      {email.published ? (
+        <CancelButton onClick={() => updateEmail({ published: null })} />
+      ) : (
+        <DeliveryButton email={email} />
+      )}
       <ZUIEllipsisMenu
         items={[
           {
