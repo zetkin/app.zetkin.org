@@ -154,9 +154,11 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     };
   }, []);
 
-  return (
-    <div id="ClientOnlyEditor-container" style={{ backgroundColor: 'white' }} />
-  );
+  const frameHtml =
+    '<header>This is the header</header><div id="ClientOnlyEditor-container"></div><footer>This is the footer</footer>';
+
+  /*eslint-disable-next-line react/no-danger*/
+  return <div dangerouslySetInnerHTML={{ __html: frameHtml }} />;
 };
 
 export default EmailEditorFrontend;
