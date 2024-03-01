@@ -13,6 +13,7 @@ import useCreateView from '../hooks/useCreateView';
 import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
+import ZUICreatePerson from 'zui/ZUICreatePerson';
 
 interface PeopleActionButtonProps {
   folderId: number | null;
@@ -25,6 +26,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
   const createView = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
@@ -58,7 +60,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             icon: <PersonAdd />,
             label: messages.actions.createPerson(),
             onClick: () => {
-              setImportDialogOpen(true);
+              setCreatePersonOpen(true);
             },
           },
         ]}
@@ -67,6 +69,11 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
       <ImportDialog
         onClose={() => setImportDialogOpen(false)}
         open={importDialogOpen}
+      />
+      <ZUICreatePerson
+        onClose={() => setCreatePersonOpen(false)}
+        open={createPersonOpen}
+        orgId={orgId}
       />
     </Box>
   );

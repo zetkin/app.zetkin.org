@@ -24,6 +24,17 @@ export default makeMessages('zui', {
     copiedValue: m<{ value: string }>('Copied "{value}"'),
     copy: m('Copy'),
   },
+  createPerson: {
+    allFields: m('Show all fields'),
+    genders: {
+      f: m('Female'),
+      m: m('Male'),
+      o: m('Other'),
+      unknown: m('Unknown'),
+    },
+    lessFields: m('Show less fields'),
+    title: m('Create person'),
+  },
   dataTableSearch: {
     button: m('Search'),
     helpText: m<{ minSearchLength: number }>(
