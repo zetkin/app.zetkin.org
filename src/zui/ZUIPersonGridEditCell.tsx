@@ -150,7 +150,7 @@ const ZUIPersonGridEditCell: FC<{
 
               setActiveIndex(Infinity);
               setAnchorEl(null);
-              ev.preventDefault(); // Vad betyder detta :O
+              ev.preventDefault();
             }
           }}
           placeholder={messages.personSelect.search()}
