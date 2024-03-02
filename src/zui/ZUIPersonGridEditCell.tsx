@@ -51,27 +51,13 @@ const ZUIPersonGridEditCell: FC<{
   const [activeIndex, setActiveIndex] = useState<number>(Infinity);
   const scrollableRef = useRef<HTMLUListElement>(null);
 
-  // Scroll (if necessary) when navigating using keyboard
+  // Scroll when navigating using keyboard
   useEffect(() => {
     const scrollableElement = scrollableRef.current;
     const selectedElement = scrollableElement?.querySelector('.Mui-selected');
 
-    if (selectedElement && scrollableElement) {
-      let selectedBounds = selectedElement.getBoundingClientRect();
-      let scrollableBounds = scrollableElement.getBoundingClientRect();
-
-      if (selectedBounds.top < scrollableBounds.top) {
-        selectedElement.scrollIntoView(true);
-      }
-
-      if (
-        selectedBounds.bottom >
-        scrollableBounds.bottom +
-          scrollableElement.offsetHeight -
-          scrollableBounds.top
-      ) {
-        selectedElement.scrollIntoView(false);
-      }
+    if (selectedElement) {
+      selectedElement.scrollIntoView();
     }
   }, [scrollableRef, activeIndex]);
 
@@ -245,8 +231,8 @@ const ZUIPersonGridEditCell: FC<{
                     </Box>
                   )}
                   <List
-                    className={styles.searchingList}
                     ref={scrollableRef}
+                    className={styles.searchingList}
                     sx={{
                       display:
                         showSuggestedPeople || searching ? 'block' : 'none',
