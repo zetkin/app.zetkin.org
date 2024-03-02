@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid-pro';
+
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
@@ -10,6 +10,12 @@ import { SurveyResponseViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
+
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from '@mui/x-data-grid-pro';
 
 export type SurveyResponseViewCell = {
   submission_id: number;
@@ -26,29 +32,13 @@ export default class SurveyResponseColumnType
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
-      filterable: false,
-      renderCell: (params) => {
-        return <Cell cell={params.value} />;
+      filterable: true,
+      renderCell: (params: GridRenderCellParams) => {
+        return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (
-        v1: SurveyResponseViewCell,
-        v2: SurveyResponseViewCell
-      ) => {
-        const getConcatenatedText = (arr: SurveyResponseViewCell) => {
-          if (!arr || arr.length === 0) {
-            return '';
-          }
-
-          return arr
-            .filter((obj) => obj && obj.text) // Filter out null or undefined elements
-            .map((obj) => obj.text)
-            .join('');
-        };
-
-        const text1 = getConcatenatedText(v1);
-        const text2 = getConcatenatedText(v2);
-
-        return text1.localeCompare(text2);
+      valueGetter: (params: GridValueGetterParams) => {
+        const cell: SurveyResponseViewCell = params.row[params.field];
+        return this.cellToString(cell);
       },
       width: 250,
     };
