@@ -1,5 +1,6 @@
 import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
+import { sweden } from 'verifiera';
 import { ColumnKind, Sheet } from '../types';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
@@ -12,6 +13,11 @@ import {
 
 const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   date: (value) => {
+    //checks if field is a valid Swedish 'personnummer', the same library could be used to do checks for other countries, check documentation
+    const ssn = sweden(value, false);
+    if (ssn.validate()) {
+      return true;
+    }
     try {
       return new Date(value).toISOString().slice(0, 10) == value;
     } catch (err) {
