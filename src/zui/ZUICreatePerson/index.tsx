@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Dialog,
+  Divider,
   FormControl,
   InputLabel,
   MenuItem,
@@ -17,7 +18,9 @@ import { FC, useState } from 'react';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
+import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
+import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ZUICreatePersonProps {
@@ -42,14 +45,12 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   ) as GenderKeyType[];
 
   const [showAll, setShowAll] = useState(false);
+  // const [personInfo, setPersonInfo] = useState<{ first_name: string }>({
+  //   first_name: '',
+  // });
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      fullWidth
-      onClose={() => onClose()}
-      open={open}
-    >
+    <Dialog fullScreen={fullScreen} fullWidth onClose={onClose} open={open}>
       <Box padding={5}>
         <Typography mb={2} variant="h5">
           <Msg id={messageIds.createPerson.title} />
@@ -59,13 +60,19 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
           flex={1}
           flexDirection="column"
           gap={2}
-          sx={{ height: '800px', overflowY: 'auto' }}
+          sx={{ height: showAll ? '600px' : '', overflowY: 'auto' }}
         >
-          <Box display="flex">
+          <Box display="flex" mt={1}>
             <Box mr={2} width="50%">
               <TextField
                 fullWidth
                 label={globalMessages.personFields.first_name()}
+                onChange={(e) =>
+                  setPersonInfo((prev) => ({
+                    ...prev,
+                    first_name: e.target.value,
+                  }))
+                }
                 required
                 variant="outlined"
               />
@@ -138,6 +145,38 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                     : messageIds.createPerson.allFields
                 }
               />
+            </Button>
+          </Box>
+        </Box>
+        <TagManagerSection
+          assignedTags={[] as ZetkinTag[]}
+          onAssignTag={(tag) => {}}
+          onUnassignTag={(tag) => {}}
+        />
+        <Divider />
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          mt={2}
+        >
+          <Box display="flex" flexDirection="column">
+            <Typography>Message:</Typography>
+            <Typography>Blah blah</Typography>
+          </Box>
+          <Box>
+            <Button
+              onClick={() => {
+                onClose();
+                setShowAll(false);
+              }}
+              sx={{ mr: 2 }}
+              variant="text"
+            >
+              <Msg id={messageIds.createPerson.cancel} />
+            </Button>
+            <Button variant="contained">
+              <Msg id={messageIds.createPerson.createBtn} />
             </Button>
           </Box>
         </Box>

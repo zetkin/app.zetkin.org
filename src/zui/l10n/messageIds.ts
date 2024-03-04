@@ -26,6 +26,8 @@ export default makeMessages('zui', {
   },
   createPerson: {
     allFields: m('Show all fields'),
+    cancel: m('Cancel'),
+    createBtn: m('Create person'),
     genders: {
       f: m('Female'),
       m: m('Male'),
