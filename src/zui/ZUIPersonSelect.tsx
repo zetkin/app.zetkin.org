@@ -1,4 +1,4 @@
-import { Autocomplete as MUIAutocomplete } from '@mui/material';
+import { Autocomplete as MUIAutocomplete, Button, Paper } from '@mui/material';
 import { Box, TextField } from '@mui/material';
 import React, {
   FunctionComponent,
@@ -9,13 +9,14 @@ import React, {
   useState,
 } from 'react';
 
-import { useMessages } from 'core/i18n';
+import messageIds from './l10n/messageIds';
+import { PersonAdd } from '@mui/icons-material';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonSearch from 'features/profile/hooks/usePersonSearch';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUICreatePerson from './ZUICreatePerson';
 import ZUIPerson from 'zui/ZUIPerson';
-
-import messageIds from './l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 interface UsePersonSelectProps {
   getOptionDisabled?: (option: ZetkinPerson) => boolean;
@@ -181,25 +182,59 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
     autoCompleteProps;
   delete restProps.getOptionValue;
 
+  const [createPersonOpen, setCreatePersonOpen] = useState(false);
+
   return (
-    <MUIAutocomplete
-      {...restProps}
-      handleHomeEndKeys={!shiftHeld}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          inputProps={{
-            ...params.inputProps,
-          }}
-          inputRef={inputRef}
-          label={label}
-          name={name}
-          placeholder={placeholder}
-          size={size}
-          variant={variant}
-        />
-      )}
-    />
+    <>
+      <MUIAutocomplete
+        {...restProps}
+        handleHomeEndKeys={!shiftHeld}
+        PaperComponent={({ children }) => {
+          return (
+            <>
+              <Paper
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {children}
+                <Button
+                  color="primary"
+                  onClick={(e) => setCreatePersonOpen(true)}
+                  sx={{
+                    justifyContent: 'flex-start',
+                    m: 2,
+                  }}
+                  variant="outlined"
+                  startIcon={<PersonAdd />}
+                >
+                  <Msg id={messageIds.createPerson.createBtn} />
+                </Button>
+              </Paper>
+            </>
+          );
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            inputProps={{
+              ...params.inputProps,
+            }}
+            inputRef={inputRef}
+            label={label}
+            name={name}
+            placeholder={placeholder}
+            size={size}
+            variant={variant}
+          />
+        )}
+      />
+      <ZUICreatePerson
+        open={createPersonOpen}
+        onClose={() => setCreatePersonOpen(false)}
+      />
+    </>
   );
 };
 
