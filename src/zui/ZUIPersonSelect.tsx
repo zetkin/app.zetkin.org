@@ -1,4 +1,9 @@
-import { Autocomplete as MUIAutocomplete, Button, Paper } from '@mui/material';
+import {
+  Autocomplete as MUIAutocomplete,
+  Button,
+  Divider,
+  Paper,
+} from '@mui/material';
 import { Box, TextField } from '@mui/material';
 import React, {
   FunctionComponent,
@@ -199,6 +204,7 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
                 }}
               >
                 {children}
+                <Divider sx={{ mt: 1 }} />
                 <Button
                   color="primary"
                   onClick={(e) => setCreatePersonOpen(true)}
