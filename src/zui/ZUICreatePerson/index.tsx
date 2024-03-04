@@ -20,22 +20,19 @@ import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
   open: boolean;
-  orgId: number;
 }
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
-const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
-  open,
-  onClose,
-  orgId,
-}) => {
+const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const theme = useTheme();
+  const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
@@ -45,9 +42,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   ) as GenderKeyType[];
 
   const [showAll, setShowAll] = useState(false);
-  // const [personInfo, setPersonInfo] = useState<{ first_name: string }>({
-  //   first_name: '',
-  // });
+  const [personInfo, setPersonInfo] = useState<{ first_name: string }>({
+    first_name: '',
+  });
 
   return (
     <Dialog fullScreen={fullScreen} fullWidth onClose={onClose} open={open}>

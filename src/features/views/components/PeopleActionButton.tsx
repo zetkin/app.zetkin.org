@@ -73,7 +73,6 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
       <ZUICreatePerson
         onClose={() => setCreatePersonOpen(false)}
         open={createPersonOpen}
-        orgId={orgId}
       />
     </Box>
   );

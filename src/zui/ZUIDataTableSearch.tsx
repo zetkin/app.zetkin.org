@@ -8,7 +8,7 @@ import {
   Popover,
   TextField,
 } from '@mui/material';
-import { Close, Search } from '@mui/icons-material';
+import { Close, PersonAdd, Search } from '@mui/icons-material';
 import {
   ReactEventHandler,
   SyntheticEvent,
@@ -19,6 +19,7 @@ import {
 
 import messageIds from './l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
+import ZUICreatePerson from './ZUICreatePerson';
 import { Msg, useMessages } from 'core/i18n';
 
 export const ID_SEARCH_CHAR = '#';
@@ -53,6 +54,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
   const isActive = searchString.length >= minSearchLength || isIdSearch;
   const textFieldInputRef = useRef<HTMLInputElement>();
   const [isTyping, setIsTyping] = useState(false);
+  const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
   const debouncedFinishedTyping = useDebounce(async () => {
     setIsTyping(false);
@@ -162,6 +164,18 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
             variant="outlined"
           />
         </Box>
+        <Button
+          onClick={() => setCreatePersonOpen(true)}
+          startIcon={<PersonAdd />}
+          variant="outlined"
+          sx={{ mt: 2 }}
+        >
+          <Msg id={messageIds.createPerson.createBtn} />
+        </Button>
+        <ZUICreatePerson
+          open={createPersonOpen}
+          onClose={() => setCreatePersonOpen(false)}
+        />
       </Popover>
     </>
   );
