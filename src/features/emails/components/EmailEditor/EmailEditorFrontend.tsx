@@ -154,11 +154,24 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     };
   }, []);
 
+  const css = 'img { border: 1px solid black } h1 { color: #549873 }';
+  const styleSheet = new CSSStyleSheet();
+
+  styleSheet.replaceSync(css);
+  const newRules = Array.from(styleSheet.cssRules)
+    .map((rule) => `#ClientOnlyEditor-container ${rule.cssText}`)
+    .join('\n');
+
   const frameHtml =
     '<header>This is the header</header><div id="ClientOnlyEditor-container"></div><footer>This is the footer</footer>';
 
-  /*eslint-disable-next-line react/no-danger*/
-  return <div dangerouslySetInnerHTML={{ __html: frameHtml }} />;
+  /*eslint-disable react/no-danger*/
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: newRules }} />
+      <div dangerouslySetInnerHTML={{ __html: frameHtml }} />
+    </>
+  );
 };
 
 export default EmailEditorFrontend;
