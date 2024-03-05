@@ -36,6 +36,7 @@ export default makeMessages('zui', {
     },
     lessFields: m('Show less fields'),
     title: m('Create person'),
+    validationWarning: m<{ field: string }>('Please add a valid {field}'),
   },
   dataTableSearch: {
     button: m('Search'),

@@ -1,10 +1,10 @@
+import { Box, TextField } from '@mui/material';
 import {
-  Autocomplete as MUIAutocomplete,
   Button,
   Divider,
+  Autocomplete as MUIAutocomplete,
   Paper,
 } from '@mui/material';
-import { Box, TextField } from '@mui/material';
 import React, {
   FunctionComponent,
   HTMLAttributes,
@@ -196,29 +196,27 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
         handleHomeEndKeys={!shiftHeld}
         PaperComponent={({ children }) => {
           return (
-            <>
-              <Paper
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
+            <Paper
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              {children}
+              <Divider sx={{ mt: 1 }} />
+              <Button
+                color="primary"
+                onClick={() => setCreatePersonOpen(true)}
+                startIcon={<PersonAdd />}
+                sx={{
+                  justifyContent: 'flex-start',
+                  m: 2,
                 }}
+                variant="outlined"
               >
-                {children}
-                <Divider sx={{ mt: 1 }} />
-                <Button
-                  color="primary"
-                  onClick={(e) => setCreatePersonOpen(true)}
-                  sx={{
-                    justifyContent: 'flex-start',
-                    m: 2,
-                  }}
-                  variant="outlined"
-                  startIcon={<PersonAdd />}
-                >
-                  <Msg id={messageIds.createPerson.createBtn} />
-                </Button>
-              </Paper>
-            </>
+                <Msg id={messageIds.createPerson.createBtn} />
+              </Button>
+            </Paper>
           );
         }}
         renderInput={(params) => (
@@ -237,8 +235,8 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
         )}
       />
       <ZUICreatePerson
-        open={createPersonOpen}
         onClose={() => setCreatePersonOpen(false)}
+        open={createPersonOpen}
       />
     </>
   );
