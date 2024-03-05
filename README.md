@@ -49,6 +49,23 @@ $ yarn devserver
 You should now be able to access the app on http://localhost:3000. It will
 communicate with the Zetkin API running on our public development server.
 
+### Docker
+
+As an alternative, you can also run the provided Docker Compose setup.
+
+* Requires Docker Compose v2+
+* Backend development: Run local production (after building, it starts very fast)
+
+  ```
+  $ docker compose -f dev.yml --profile static up
+  ```
+
+* Frontend development: Similar to the normal yarn setup documented here.
+
+  ```
+  $ docker compose -f dev.yml --profile dev up
+  ```
+
 ## Development server login credentials
 
 You can log in using the dummy user accounts to access dummy data from the
