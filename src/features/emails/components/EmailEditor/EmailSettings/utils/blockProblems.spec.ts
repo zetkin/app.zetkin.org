@@ -11,6 +11,7 @@ describe('blockProblems()', () => {
     ): OutputBlockData<BLOCK_TYPES.BUTTON, ButtonData> {
       return {
         data: {
+          attributes: {},
           buttonText: 'Click me!',
           url: 'http://www.clara.com',
           ...overrides,

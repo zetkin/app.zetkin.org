@@ -58,6 +58,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
         <Box flex={1} sx={{ overflowY: 'auto' }}>
           <EmailEditorFrontend
             apiRef={apiRef}
+            frame={email.frame}
             initialContent={initialContent}
             onSave={(newContent: OutputData) => {
               setContent(newContent);

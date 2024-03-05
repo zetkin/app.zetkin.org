@@ -30,6 +30,7 @@ export default class LibraryImage {
     root.render(
       <Providers {...window.providerData}>
         <LibraryImageEditableBlock
+          attributes={this._config.attributes}
           data={this._data}
           onChange={(newData) => {
             this._data = { ...newData };

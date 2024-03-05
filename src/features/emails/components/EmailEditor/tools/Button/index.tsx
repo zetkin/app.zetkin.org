@@ -2,20 +2,28 @@ import { BlockToolConstructorOptions } from '@editorjs/editorjs';
 import { createRoot } from 'react-dom/client';
 
 import ButtonEditableBlock from './ButtonEditableBlock';
+import { EmailFrame } from 'features/emails/types';
 import Providers from 'core/Providers';
 
 export interface ButtonData {
   url: string;
   buttonText: string;
+  attributes: EmailFrame['blockAttributes']['button'];
 }
 
 export default class Button {
+  private _config: { attributes: EmailFrame['blockAttributes']['button'] };
   private _data: ButtonData;
   private _readOnly: boolean;
 
-  constructor({ data, readOnly }: BlockToolConstructorOptions<ButtonData>) {
+  constructor({
+    config,
+    data,
+    readOnly,
+  }: BlockToolConstructorOptions<ButtonData>) {
     this._readOnly = readOnly;
     this._data = data;
+    this._config = config;
   }
 
   static get isReadOnlySupported() {
@@ -28,6 +36,7 @@ export default class Button {
     root.render(
       <Providers {...window.providerData}>
         <ButtonEditableBlock
+          attributes={this._config.attributes}
           data={this._data}
           onChange={(newButtonText: string) => {
             this._data = {

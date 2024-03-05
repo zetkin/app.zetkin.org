@@ -12,6 +12,7 @@ import EditorJS, {
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
+import { EmailFrame } from 'features/emails/types';
 import LibraryImage from './tools/LibraryImage';
 import { linkToolFactory } from './tools/InlineLink';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -22,6 +23,7 @@ import variableToolFactory from './tools/inlineVariable';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
+  frame: EmailFrame;
   initialContent: OutputData;
   onSave: (data: OutputData) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
@@ -30,6 +32,7 @@ export type EmailEditorFrontendProps = {
 
 const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   apiRef,
+  frame,
   initialContent,
   onSave,
   onSelectBlock,
@@ -72,6 +75,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,
+          config: {
+            attributes: frame.blockAttributes['button'],
+          },
         },
         header: {
           class: Header,
@@ -84,6 +90,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
           config: {
+            attributes: frame.blockAttributes['image'],
             orgId,
           },
         },
@@ -154,10 +161,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     };
   }, []);
 
-  const css = 'img { border: 1px solid black } h1 { color: #549873 }';
   const styleSheet = new CSSStyleSheet();
 
-  styleSheet.replaceSync(css);
+  styleSheet.replaceSync(frame.css);
   const newRules = Array.from(styleSheet.cssRules)
     .map((rule) => `#ClientOnlyEditor-container ${rule.cssText}`)
     .join('\n');
