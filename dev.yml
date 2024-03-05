@@ -37,25 +37,9 @@ services:
     volumes:
       - ./:/repo
 
-  # WIP: This service will lint your code
-  prettier:
-    build:
-      context: .
-      dockerfile_inline: |
-        FROM node:lts-alpine3.19
-        USER node
-        WORKDIR /repo
-        RUN yarn install
-        # RUN npm install --local --save-dev --save-exact prettier
-        CMD npx prettier
-    profiles: ["prettier"]
-    user: node
-    tty: true
-    working_dir: /repo
-    volumes:
-      - ./:/repo
-
   # WIP: It's possible to run the precommit hook from within a container
+  # docker compose -f dev.yml run lint
+  # docker compose -f dev.yml run lint npx prettier . --check
   lint:
     build:
       context: .

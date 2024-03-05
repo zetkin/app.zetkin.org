@@ -66,6 +66,17 @@ As an alternative, you can also run the provided Docker Compose setup.
   $ docker compose -f dev.yml --profile dev up
   ```
 
+* Linting: You can run lint commands from within a container, too:
+
+  ```
+  $ # Default: Run .githooks/precommit
+  $ docker compose -f dev.yml run lint
+  $ # Run prettier, checking for errors
+  $ docker compose -f dev.yml run lint npx prettier . --check
+  $ # Run prettier in write-mode
+  $ docker compose -f dev.yml run lint npx prettier . --write
+  ```
+
 ## Development server login credentials
 
 You can log in using the dummy user accounts to access dummy data from the
