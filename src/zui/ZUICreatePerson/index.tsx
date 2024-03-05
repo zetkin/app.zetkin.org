@@ -42,12 +42,23 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   ) as GenderKeyType[];
 
   const [showAll, setShowAll] = useState(false);
+  const [showAllWithEnter, setShowAllWithEnter] = useState(false);
+
   const [personInfo, setPersonInfo] = useState<{ first_name: string }>({
     first_name: '',
   });
 
   return (
-    <Dialog fullScreen={fullScreen} fullWidth onClose={onClose} open={open}>
+    <Dialog
+      fullScreen={fullScreen}
+      fullWidth
+      onClose={() => {
+        onClose();
+        setShowAll(false);
+        setShowAllWithEnter(false);
+      }}
+      open={open}
+    >
       <Box padding={5}>
         <Typography mb={2} variant="h5">
           <Msg id={messageIds.createPerson.title} />
@@ -86,7 +97,10 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
           <TextField label={globalMessages.personFields.phone()} />
           {showAll && (
             <Box display="flex" flexDirection="column" gap={2}>
-              <TextField label={globalMessages.personFields.alt_phone()} />
+              <TextField
+                autoFocus={showAllWithEnter}
+                label={globalMessages.personFields.alt_phone()}
+              />
               <FormControl fullWidth>
                 <InputLabel>
                   <Msg id={globalMessageIds.personFields.gender} />
@@ -132,7 +146,17 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
             })}
           <Box display="flex" justifyContent="flex-end">
             <Button
-              onClick={() => setShowAll(!showAll)}
+              onClick={(e) => {
+                if (showAll) {
+                  setShowAllWithEnter(false);
+                }
+                setShowAll(!showAll);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setShowAllWithEnter(true);
+                }
+              }}
               startIcon={showAll ? <ExpandLess /> : <ExpandMore />}
             >
               <Msg
@@ -163,9 +187,10 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
           </Box>
           <Box>
             <Button
-              onClick={() => {
+              onClick={(e) => {
                 onClose();
                 setShowAll(false);
+                setShowAllWithEnter(false);
               }}
               sx={{ mr: 2 }}
               variant="text"
