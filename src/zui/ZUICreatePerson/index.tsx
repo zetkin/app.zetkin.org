@@ -1,4 +1,5 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { ExpandMore } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -13,8 +14,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import isEmail from 'validator/lib/isEmail';
@@ -58,14 +58,15 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     messageIds.createPerson.genders
   ) as GenderKeyType[];
 
-  const [showAll, setShowAll] = useState(false);
-  // const [showAllWithEnter, setShowAllWithEnter] = useState(false);
+  const [showAllFields, setShowAllFields] = useState(false);
+  const [showAllWithEnter, setShowAllWithEnter] = useState(false);
+  const inputRef = useRef<HTMLInputElement>();
 
   const initialValue = {
     alt_phone: null,
     city: null,
-    country: null,
     co_address: null,
+    country: null,
     email: null,
     ext_id: null,
     first_name: '',
@@ -88,20 +89,26 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     },
     300
   );
-  console.log(personalInfo, ' ??');
+
+  useEffect(() => {
+    if (showAllFields && showAllWithEnter) {
+      inputRef.current?.focus();
+    }
+  }, [showAllWithEnter, showAllFields]);
+
   return (
     <Dialog
       fullScreen={fullScreen}
       fullWidth
       onClose={() => {
         onClose();
-        setShowAll(false);
-        // setShowAllWithEnter(false);
+        setShowAllFields(false);
+        setShowAllWithEnter(false);
         setPersonalInfo(initialValue);
       }}
       open={open}
     >
-      <Box padding={5}>
+      <Box sx={{ padding: '40px 0 40px 40px' }}>
         <Typography mb={2} variant="h5">
           <Msg id={messageIds.createPerson.title} />
         </Typography>
@@ -110,7 +117,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
           flex={1}
           flexDirection="column"
           gap={2}
-          sx={{ height: showAll ? '600px' : '', overflowY: 'auto' }}
+          sx={{
+            height: showAllFields ? '600px' : '',
+            overflowY: 'auto',
+            p: '0 40px 20px 0',
+          }}
         >
           <Box display="flex" mt={1}>
             <Box mr={2} width="50%">
@@ -136,10 +147,10 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
             </Box>
           </Box>
           <TextField
-            error={invalidEmail && personalInfo.email !== ''}
+            error={invalidEmail && personalInfo.email !== null}
             helperText={
               invalidEmail &&
-              personalInfo.email !== '' && (
+              personalInfo.email !== null && (
                 <Msg
                   id={messageIds.createPerson.validationWarning}
                   values={{ field: globalMessages.personFields.email() }}
@@ -147,16 +158,21 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               )
             }
             label={globalMessages.personFields.email()}
+            onBlur={() => {
+              if (personalInfo.email === '') {
+                debouncedFinishedTyping('email', null);
+              }
+            }}
             onChange={(e) => debouncedFinishedTyping('email', e.target.value)}
           />
           <TextField
             label={globalMessages.personFields.phone()}
             onChange={(e) => debouncedFinishedTyping('phone', e.target.value)}
           />
-          {showAll && (
+          {showAllFields && (
             <Box display="flex" flexDirection="column" gap={2}>
               <TextField
-                // autoFocus={showAllWithEnter} ??
+                inputRef={inputRef}
                 label={globalMessages.personFields.alt_phone()}
                 onChange={(e) =>
                   debouncedFinishedTyping('alt_phone', e.target.value)
@@ -226,7 +242,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               />
             </Box>
           )}
-          {showAll &&
+          {showAllFields &&
             customFields.map((field) => {
               if (field.type === 'date') {
                 return (
@@ -241,65 +257,60 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               }
             })}
           <Box display="flex" justifyContent="flex-end">
-            <Button
-              onClick={() => {
-                // if (showAll) {
-                // setShowAllWithEnter(false);
-                // }
-                setShowAll(!showAll);
-              }}
-              // onKeyDown={(e) => {
-              // if (e.key === 'Enter') {
-              //   setShowAllWithEnter(true);
-              // }
-              // }}
-              startIcon={showAll ? <ExpandLess /> : <ExpandMore />}
-            >
-              <Msg
-                id={
-                  showAll
-                    ? messageIds.createPerson.lessFields
-                    : messageIds.createPerson.allFields
-                }
-              />
-            </Button>
+            {!showAllFields && (
+              <Button
+                onClick={() => {
+                  setShowAllFields(true);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setShowAllWithEnter(true);
+                  }
+                }}
+                startIcon={<ExpandMore />}
+              >
+                <Msg id={messageIds.createPerson.allFields} />
+              </Button>
+            )}
           </Box>
         </Box>
-        <TagManagerSection
-          assignedTags={[] as ZetkinTag[]}
-          onAssignTag={(tag) => {}}
-          onUnassignTag={(tag) => {}}
-        />
-        <Divider />
-        <Box
-          alignItems="center"
-          display="flex"
-          justifyContent="space-between"
-          mt={2}
-        >
-          <Box display="flex" flexDirection="column">
-            <Typography>Message:</Typography>
-            <Typography>Blah blah</Typography>
-          </Box>
-          <Box>
-            <Button
-              onClick={() => {
-                onClose();
-                setShowAll(false);
-                // setShowAllWithEnter(false);
-                setPersonalInfo(initialValue);
-              }}
-              sx={{ mr: 2 }}
-              variant="text"
-            >
-              <Msg id={messageIds.createPerson.cancel} />
-            </Button>
-            <Button
-              disabled={!personalInfo.first_name || !personalInfo.last_name}
-              variant="contained"
-            >
-              <Msg id={messageIds.createPerson.createBtn} />
-            </Button>
+        <Box pr={5}>
+          <TagManagerSection
+            assignedTags={[] as ZetkinTag[]}
+            onAssignTag={(tag) => {}}
+            onUnassignTag={(tag) => {}}
+          />
+          <Divider />
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            mt={2}
+          >
+            <Box display="flex" flexDirection="column">
+              <Typography>Message:</Typography>
+              <Typography>Blah blah</Typography>
+            </Box>
+            <Box>
+              <Button
+                onClick={() => {
+                  onClose();
+                  setShowAllFields(false);
+                  setShowAllWithEnter(false);
+                  setPersonalInfo(initialValue);
+                }}
+                sx={{ mr: 2 }}
+                variant="text"
+              >
+                <Msg id={messageIds.createPerson.cancel} />
+              </Button>
+              <Button
+                disabled={!personalInfo.first_name || !personalInfo.last_name}
+                variant="contained"
+              >
+                <Msg id={messageIds.createPerson.createBtn} />
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Box>
