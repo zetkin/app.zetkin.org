@@ -58,10 +58,6 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     messageIds.createPerson.genders
   ) as GenderKeyType[];
 
-  const [showAllFields, setShowAllFields] = useState(false);
-  const [showAllWithEnter, setShowAllWithEnter] = useState(false);
-  const inputRef = useRef<HTMLInputElement>();
-
   const initialValue = {
     alt_phone: null,
     city: null,
@@ -76,9 +72,15 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     street_address: null,
     zip_code: null,
   };
+
+  const [showAllFields, setShowAllFields] = useState(false);
+  const [showAllWithEnter, setShowAllWithEnter] = useState(false);
   const [personalInfo, setPersonalInfo] =
     useState<ZetkinCreatePerson>(initialValue);
-  const invalidEmail = !isEmail(personalInfo.email || '');
+  const inputRef = useRef<HTMLInputElement>();
+
+  const invalidEmailError =
+    !isEmail(personalInfo.email || '') && personalInfo.email !== null;
 
   const debouncedFinishedTyping = useDebounce(
     async (key: string, value: string | null) => {
@@ -147,10 +149,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
             </Box>
           </Box>
           <TextField
-            error={invalidEmail && personalInfo.email !== null}
+            error={invalidEmailError}
             helperText={
-              invalidEmail &&
-              personalInfo.email !== null && (
+              invalidEmailError && (
                 <Msg
                   id={messageIds.createPerson.validationWarning}
                   values={{ field: globalMessages.personFields.email() }}
@@ -273,13 +274,13 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               </Button>
             )}
           </Box>
-        </Box>
-        <Box pr={5}>
           <TagManagerSection
             assignedTags={[] as ZetkinTag[]}
             onAssignTag={(tag) => {}}
             onUnassignTag={(tag) => {}}
           />
+        </Box>
+        <Box sx={{ pr: `${showAllFields ? '60px' : '40px'}` }}>
           <Divider />
           <Box
             alignItems="center"
