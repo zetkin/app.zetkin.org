@@ -70,6 +70,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     overflow: 'hidden',
     padding: '0.2em 0.4em 0.2em 1em',
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   value: {
     backgroundColor: ({ tag }) => lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
@@ -100,6 +101,7 @@ const TagToolTip: React.FunctionComponent<{
 
 const TagChip: React.FunctionComponent<{
   disabled?: boolean;
+  noWrappedLabel?: boolean;
   onClick?: (tag: ZetkinTag) => void;
   onDelete?: (tag: ZetkinTag) => void;
   size?: TagChipSize;

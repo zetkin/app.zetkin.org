@@ -170,6 +170,7 @@ export const getStaticColumns = (
         return (
           <NextLink
             href={`/organize/${row.organization.id}/journeys/${row.journey.id}/${row.id}`}
+            legacyBehavior
             passHref
           >
             <Link color="inherit" underline="hover">

@@ -1,7 +1,7 @@
+import PeopleActionButton from '../components/PeopleActionButton';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
-import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -27,7 +27,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
 
   return (
     <SimpleLayout
-      actionButtons={<ViewFolderActionButtons folderId={null} />}
+      actionButtons={<PeopleActionButton folderId={null} orgId={orgId} />}
       noPad
       subtitle={
         <ZUIFuture future={itemSummaryFuture}>

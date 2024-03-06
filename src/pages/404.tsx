@@ -15,7 +15,7 @@ export default function Custom404(): JSX.Element {
       </Head>
       <AppBar color="transparent" elevation={0} position="static">
         <Toolbar>
-          <Link href="/">
+          <Link href="/" passHref>
             <a>
               <ZUILogo htmlColor="#EE323E" />
             </a>
@@ -32,8 +32,8 @@ export default function Custom404(): JSX.Element {
           </Typography>
           <Box mt={2}>
             <Typography align="center" variant="h6">
-              <Link href="/">
-                <a data-testid="back-home-link">
+              <Link data-testid="back-home-link" href="/" passHref>
+                <a>
                   <Msg id={messageIds.err404.backToHomePage} />
                 </a>
               </Link>

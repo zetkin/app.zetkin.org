@@ -1,9 +1,8 @@
 import { NextPage } from 'next/types';
-import { Session } from 'next-session/dist/types';
 
 import { ZetkinTokenData } from './sdk';
 
-export type AppSession = Session & {
+export type AppSession = {
   memberships?: number[] | null;
   redirAfterLogin: string | null;
   tokenData?: ZetkinTokenData | null;

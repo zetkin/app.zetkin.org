@@ -17,12 +17,14 @@ import EventCluster from '../EventCluster';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
+import HeaderWeekNumber from './HeaderWeekNumber';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import theme from 'theme';
+import { useRouter } from 'next/router';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/hooks/useEventMutations';
@@ -81,7 +83,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         gridTemplateRows={'1fr'}
       >
         {/* Empty */}
-        <Box />
+        <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
         {dayDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <DayHeader
@@ -288,6 +290,7 @@ export default CalendarWeekView;
 
 function useCreateEvent() {
   const env = useEnv();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { campId, orgId } = useNumericRouteParams();
 
@@ -308,7 +311,7 @@ function useCreateEvent() {
 
     const campaignId = event.campaign?.id ?? 'standalone';
     const url = `/organize/${orgId}/projects/${campaignId}/events/${event.id}`;
-    env.router.push(url);
+    router.push(url);
   }
 
   return createAndNavigate;

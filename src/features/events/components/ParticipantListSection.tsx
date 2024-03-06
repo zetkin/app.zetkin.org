@@ -145,7 +145,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       field: 'name',
       flex: 1,
       headerName: messages.eventParticipantsList.columnName(),
-      hideSortIcons: true,
       minWidth: 250,
       renderCell: (params) => {
         if (params.row.person) {
@@ -182,16 +181,18 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         }
       },
       resizable: false,
-      sortable: false,
+      sortingOrder: ['asc', 'desc', null],
+      valueGetter: (params) => {
+        return `${params.row.first_name || ''} ${params.row.last_name || ''}`;
+      },
     },
     {
       disableColumnMenu: true,
       field: 'phone',
       flex: 1,
       headerName: messages.eventParticipantsList.columnPhone(),
-      hideSortIcons: true,
       resizable: false,
-      sortable: false,
+      sortingOrder: ['asc', 'desc', null],
       valueGetter: (params) => {
         if (params.row.person) {
           return params.row.person.phone;
@@ -205,9 +206,8 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       field: 'email',
       flex: 1,
       headerName: messages.eventParticipantsList.columnEmail(),
-      hideSortIcons: true,
       resizable: false,
-      sortable: false,
+      sortingOrder: ['asc', 'desc', null],
       valueGetter: (params) => {
         if (params.row.person) {
           return params.row.person.email;
@@ -221,7 +221,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       field: 'notified',
       flex: 1,
       headerName: messages.eventParticipantsList.columnNotified(),
-      hideSortIcons: true,
       renderCell: (params) => {
         if (params.row.person) {
           return <ZUIRelativeTime datetime={params.row.response_date} />;
@@ -230,15 +229,22 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         }
       },
       resizable: false,
-      sortable: false,
+      sortingOrder: ['asc', 'desc', null],
+      type: 'date',
+      valueGetter: (params) => {
+        if (params.row.person) {
+          return new Date(params.row.response_date);
+        } else {
+          return new Date(params.row.reminder_sent);
+        }
+      },
     },
     {
       align: 'right',
       disableColumnMenu: true,
       field: 'cancel',
       flex: 1,
-      headerName: '',
-      hideSortIcons: true,
+      headerName: messages.eventParticipantsList.attendance(),
       minWidth: 300,
       renderCell: (params) => {
         if (type == 'signups') {
@@ -352,7 +358,16 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         }
       },
       resizable: false,
-      sortable: false,
+      sortingOrder: ['asc', 'desc', null],
+      valueGetter: (params) => {
+        if (params.row.attended) {
+          return 1;
+        } else if (params.row.noshow) {
+          return 2;
+        } else {
+          return 0;
+        }
+      },
     },
   ];
 

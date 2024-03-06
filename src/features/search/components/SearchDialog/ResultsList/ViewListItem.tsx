@@ -23,7 +23,11 @@ const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
   elements.push(messages.results.view());
 
   return (
-    <Link href={`/organize/${orgId}/people/views/${view.id}`} passHref>
+    <Link
+      href={`/organize/${orgId}/people/views/${view.id}`}
+      legacyBehavior
+      passHref
+    >
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
         <ListItemAvatar>
           <Avatar>

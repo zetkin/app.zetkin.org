@@ -496,7 +496,7 @@ feat:
       noshow: ({noshows, plural, =1 {1 person dök ej upp} other {# personer dök ej
         upp}})
       pending: Anmälningar väntar
-      recordButton: Rekordstor närvaro
+      recordButton: Notera närvaro
       remindButton: Påminn alla
       remindButtondisabledTooltip: Du behöver utse en kontaktperson innan du skickar
         ut påminnelser
@@ -519,6 +519,204 @@ feat:
       createType: Skapa "{type}"
       tooltip: Klicka här för att byta typ
       uncategorized: Okategoriserade
+  import:
+    actionButtons:
+      back: Tillbaka
+      close: Avsluta
+      configure: Konfigurera
+      done: Klar
+      import: Importera
+      restart: Börja om
+      validate: Kontrollera
+    configuration:
+      configure:
+        ids:
+          configExplanation: När du importerar med ID (nu och framöver) kan Zetkin
+            uppdatera existerande personer istället för att skapa dubbletter.
+          externalID: Externt ID
+          externalIDExplanation: Den här kolumnen innehåller ID från vårt vanliga
+            register (inte Zetkin)
+          header: Konfigurera ID
+          showOrganizationSelectButton: Välj organisation…
+          wrongIDFormatWarning: Den här kolumnen verkar inte innehålla Zetkin-ID.
+            Ett Zetkin-ID består bara av siffror. Om vissa celler är tomma eller innehåller
+            andra tecken kan de inte användas som Zetkin-ID.
+          zetkinID: Zetkin-ID
+          zetkinIDExplanation: Den här kolumnen innehåller ID från en export ur Zetkin.
+        orgs:
+          header: Välj en organisation per värde
+          organizations: Organisation
+          status: Status
+        tags:
+          empty: Tom
+          header: Välj etiketter per värde
+          numberOfRows: '{numRows, plural, =1 {1 rad} other {# rader}}'
+          tagsHeader: Etiketter
+      hide: Dölj
+      mapping:
+        configButton: Konfigurera
+        defaultColumnHeader: Kolumn {columnIndex}
+        emptyStateMessage: Börja med att välja vad kolumnerna innehåller
+        fileHeader: Fil
+        finishedMappingIds: Översätter {numValues, plural, =1 {ett värde} other {#
+          värden}} till {idField, select, id {Zetkin-ID} other {external ID}}
+        finishedMappingOrganizations: '{numPeople, plural, =1 {en person} other {#
+          personer}} läggs till i {numMappedTo, plural, =1 {en organisation} other
+          {# organisationer}}'
+        finishedMappingTags: Översätter {numRows, plural, =1 {en rad} other {# rader}}
+          till {numMappedTo, plural, =1 {en etikett} other {# etiketter}}
+        header: Kolumninnehåll
+        id: ID
+        mapValuesButton: Välj
+        messages:
+          manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
+            plural, =1 {ett till värde} other {# andra värden}} och {numEmpty, plural,
+            =1 {en tom rad} other {# tomma rader}}.'
+          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} och {numMoreValues,
+            plural, =1 {ett till värde} other {# andra värden}}.'
+          oneValueAndEmpty: '{firstValue} och {numEmpty, plural, =1 {en tom rad} other
+            {# tomma rader}}.'
+          oneValueNoEmpty: '{firstValue}.'
+          onlyEmpty: '{numEmpty, plural, =1 {en tom rad} other {# tomma rader}}.'
+          threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} och {numEmpty,
+            plural, =1 {en tom rad} other {# tomma rader}}.'
+          threeValuesNoEmpty: '{firstValue}, {secondValue} och {thirdValue}.'
+          twoValuesAndEmpty: '{firstValue}, {secondValue} och {numEmpty, plural, =1
+            {en tom rad} other {# tomma rader}}.'
+          twoValuesNoEmpty: '{firstValue} och {secondValue}.'
+        needsConfig: Du behöver göra inställningar
+        needsMapping: Du behöver välja värden
+        organization: Organisation
+        selectZetkinField: Importera som…
+        tags: Etiketter
+        zetkinHeader: Zetkin
+      preview:
+        columnHeader:
+          org: Organisation
+          tags: Etiketter
+        next: Nästa
+        noOrg: Ingen organisation
+        noTags: Inga etiketter
+        noValue: Inget värde
+        previous: Föregående
+        title: Förhandsgranska
+      settings:
+        firstRowIsHeaders: Första raden är rubriker
+        header: Inställningar
+        sheetSelectHelpText: Din fil innehåller flera blad. Välj vilket du vill använda.
+        sheetSelectLabel: Blad
+      show: Visa
+      statusMessage:
+        done: Förbereder import av {numConfiguredPeople, plural, =1 {en person} other
+          {# personer}}
+        notDone: Du har inte slutfört dina inställningar
+      title: Importera personer
+    impactSummary:
+      future:
+        created: '{number} {numPeople, plural, =1 {ny person} other {nya personer}}
+          kommer att skapas'
+        defaultDesc: '{field} kommer att ändras för {numPeople}'
+        organization: organisation
+        orgs: '{numPeople} läggs till i en {org}'
+        tags: etiketter
+        tagsDesc: '{numPeople} får {tags}'
+        updated: '{number} {numPeople, plural, =1 {person} other {personer}} uppdateras'
+      past:
+        created: '{number} {numPeople, plural, =1 {ny person} other {nya personer}}
+          skapades'
+        defaultDesc: '{field} ändrades för {numPeople}'
+        organization: organisation
+        orgs: '{numPeople} lades till i en {org}'
+        tags: etiketter
+        tagsDesc: '{numPeople} fick {tags}'
+        updated: '{number} {numPeople, plural, =1 {person} other {personer}} uppdaterades'
+      people: '{number} {numPeople, plural, =1 {person} other {personer}}'
+    importStatus:
+      completed:
+        desc: Din fil har importerats i Zetkin
+        title: Importen är klar
+      completedChanges: Genomförda ändringar
+      error:
+        desc: Inget importerades i Zetkin
+        title: Importen misslyckades
+      loadingState: Importerar
+      scheduled:
+        desc: Du kan stänga den här rutan. Vi skickar ett mail när importen är klar.
+        title: Det här är en stor import som kommer att ta ett tag
+    preflight:
+      headers:
+        messages: Meddelanden
+        summary: Sammanställning
+      messages:
+        common:
+          back: Gå tillbaka
+          checkbox: Jag förstår och vill fortsätta ändå
+          fewRows: Problemet finns på raderna {commaRows} och {lastRow}.
+          manyRows: Problemet finns på raderna {commaRows} och {additionalRows} ytterligare
+            rader.
+          singleRow: Problemet finns på rad {row}.
+        invalidFormat:
+          title: '{field} har fel format'
+        majorChange:
+          description: Kontrollera att du konfigurerat kolumnerna på rätt sätt
+          title: Importen kommer skriva över många personers {field}
+        missingIdAndName:
+          description: Varje rad måste innehålla ett fullständigt namn eller ett ID
+            för en person som redan finns i Zetkin.
+          title: Vissa rader saknar namn eller ID
+        noImpact:
+          description: Det kan beror på att filen inte innehåller någon ny data eller
+            att något gått fel.
+          title: Importen skulle inte få någon effekt
+        ok:
+          description: Kontrollera att sammanställningen ser bra ut och klicka på
+            "Importera" för att genomföra importen.
+          title: Allt ser bra ut!
+        unconfiguredId:
+          description: Den här importen kommer leda till dubbletter. Om detta är din
+            första import och du vill undvika dubbletter i framtiden, gå tillbaka
+            och välj ett externt ID som du kan använda framöver.
+          title: Du har inte valt något ID
+        unconfiguredIdAndName:
+          description: Varje import måste innehålla fullständiga namn eller ID för
+            personer som redan finns i Zetkin.
+          title: Det saknas nödvändiga kolumner
+        unknownError:
+          description: Kontakta support om du behöver hjälp med att förstå problemet.
+          title: Ett okänt fel har uppstått
+        unknownPerson:
+          description: Du har valt att en kolumn innehåller Zetkin-ID:n men kolumnen
+            innehåller värden som inte motsvaras av en person i Zetkin. Ville du egentligen
+            använda externt ID eller kan vissa personer ha raderats ur Zetkin sedan
+            filen skapades?
+          title: ID:n saknas i Zetkin
+    steps:
+      configure: Konfigurera
+      import: Importera
+      upload: Välj fil
+      validate: Kontrollera
+    uploadDialog:
+      dialogButtons:
+        configure: Konfigurera
+        restart: Börja om
+      instructions: '{link} eller dra och släpp fil'
+      loading: Läser fil…
+      release: Släpp filen här
+      selectClick: Klicka för att välja
+      types: CSV, XLS eller XLSX
+      unsupportedFile: Filformatet stöds ej
+    validation:
+      messages: Meddelanden
+      people: '{numPeople, plural, =1 {person} other {personer}}'
+      statusMessages:
+        create: Den här importen kommer skapa {numCreated, plural, =1 {en person}
+          other {# personer}}.
+        createAndUpdate: Den här importen kommer skapa {numCreated, plural, =1 {en
+          person} other {# personer}} och uppdatera {numUpdated, plural, =1 {en person}
+          other {# personer}}.
+        error: Du måste lösa problemen innan du kan gå vidare
+        update: Den här importen kommer uppdatera {numUpdated, plural, =1 {en person}
+          other {# personer}}
   journeys:
     instance:
       addAssigneeButton: Lägg till ansvarig
@@ -533,7 +731,7 @@ feat:
           outcomeTagsLabel: Etiketter för resultat
         error: Det uppstod ett fel när {singularLabel} skulle stängas
         label: Stäng
-      collapseButton: Kollapsa
+      collapseButton: Dölj
       created: Skapad {relative}
       deadlineLabel: (Was due {datum})
       dueDateInputClear: Rensa
@@ -643,6 +841,9 @@ feat:
         noResults: Inga organisationer matchar det här filtret
         topLevel: Högsta organisation
       filtered: Filtrerad
+      recent:
+        clear: Rensa
+        title: Senaste organisationerna
   profile:
     delete:
       button: Ta bort person
@@ -681,6 +882,7 @@ feat:
       campaign: Kampanj
       people: Människor
       person: Person
+      project: Projekt
       survey: Enkät
       task: Uppgifter
       view: Lista
@@ -866,15 +1068,16 @@ feat:
           none: Organisationen har inte några listor ännu
       random:
         addLimitRemoveSelect:
-          add: lägg till
-          sub: ta bort
+          add: Lägg slumpvis till
+          limit: Begränsa slumpvist till
+          sub: Ta slumpvis bort
         addRemoveSelect:
           add: lägg till
           sub: ta bort
         examples:
-          one: Lägg slumpmässigt till 20 personer i organisationen.
-          two: Ta slumpmässigt bort 15% av personerna i organisationen.
-        inputString: Slumpvis {addRemoveSelect} {quantity} i organisationen.
+          one: Lägg slumpvis till 20 personer i organisationen.
+          two: Ta slumpvis bort 15% av personerna i organisationen.
+        inputString: '{addRemoveSelect} {quantity} ur organisationen.'
       subQuery:
         addRemoveSelect:
           add: Lägg till
@@ -888,6 +1091,7 @@ feat:
         matchSelect:
           in: matchar
           notin: inte matchar
+        noSmartSearches: Den här organisationen har inga Smarta sökningar
         query:
           edit:
             callassignment_goal: '{querySelect} i ringuppdraget "{titleSelect}"'
@@ -1034,6 +1238,7 @@ feat:
       noOptions: inga matchande etiketter
     operators:
       add: Lägg till
+      limit: Begränsa till
       sub: Ta bort
     quantity:
       edit:
@@ -1427,8 +1632,10 @@ feat:
       watch_video: Kolla film
   views:
     actions:
+      create: Skapa
       createFolder: Skapa mapp
       createView: Skapa lista
+      importPeople: Importera personer
     browser:
       backToFolder: Tillbaka till {folder}
       backToRoot: Tillbaka till alla listor
@@ -1442,6 +1649,7 @@ feat:
           warning: Att radera den listan är en permanent handling som inte går att
             ändra. Är du säker på att fortsätta?
       menu:
+        delete: Radera
         rename: Döp om
       moveToFolder: Flytta till {folder}
       moveToRoot: Flytta till alla listor
@@ -1752,7 +1960,7 @@ zui:
     added: Tillagd av {sharer} {updated}
     removeAccess: Ta bort behörighet
   collapse:
-    collapse: Kollapsa
+    collapse: Dölj
     expand: Expandera
   confirmDialog:
     button: Bekräfta
@@ -1789,7 +1997,7 @@ zui:
     errorLoading: Något gick fel när datan laddades upp.
   header:
     collapseButton:
-      collapse: Kollapsa
+      collapse: Dölj
       expand: Expandera
   imageSelectDialog:
     instructions: Dra och släpp en bildfil, eller klicka för att välja

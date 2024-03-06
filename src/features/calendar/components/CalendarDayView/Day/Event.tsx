@@ -23,7 +23,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
     event.num_participants_required > event.num_participants_available;
 
   return (
-    <NextLink href={getEventUrl(event)} passHref>
+    <NextLink href={getEventUrl(event)} legacyBehavior passHref>
       <Link color="inherit" underline="none">
         <Box
           display="flex"

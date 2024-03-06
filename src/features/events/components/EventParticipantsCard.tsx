@@ -186,7 +186,11 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
         </Box>
         <Divider />
         <Box display="flex" justifyContent="center" marginTop={2}>
-          <NextLink href={`${getEventUrl(eventData)}/participants`} passHref>
+          <NextLink
+            href={`${getEventUrl(eventData)}/participants`}
+            legacyBehavior
+            passHref
+          >
             <Link underline="none">
               <Typography
                 color={theme.palette.info.main}

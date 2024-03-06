@@ -4,8 +4,10 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.views', {
   actions: {
+    create: m('Create'),
     createFolder: m('Create folder'),
     createView: m('Create list'),
+    importPeople: m('Import people'),
   },
   browser: {
     backToFolder: m<{ folder: ReactElement }>('Back to {folder}'),
