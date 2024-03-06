@@ -25,7 +25,6 @@ export default makeMessages('zui', {
     copy: m('Copy'),
   },
   createPerson: {
-    allFields: m('Show all fields'),
     cancel: m('Cancel'),
     createBtn: m('Create person'),
     genders: {
@@ -34,8 +33,9 @@ export default makeMessages('zui', {
       o: m('Other'),
       unknown: m('Unknown'),
     },
-    lessFields: m('Show less fields'),
+    showAllFields: m('Show all fields'),
     title: m('Create person'),
+    url: m('URL'),
     validationWarning: m<{ field: string }>('Please add a valid {field}'),
   },
   dataTableSearch: {

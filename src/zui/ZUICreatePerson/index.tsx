@@ -18,13 +18,15 @@ import { FC, useEffect, useRef, useState } from 'react';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import isEmail from 'validator/lib/isEmail';
+import isURL from 'validator/lib/isURL';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useDebounce from 'utils/hooks/useDebounce';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
+import { ZetkinCustomField, ZetkinTag } from 'utils/types/zetkin';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
@@ -32,20 +34,22 @@ interface ZUICreatePersonProps {
 }
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
-interface ZetkinCreatePerson {
-  alt_phone: string | null;
-  zip_code: string | null;
-  last_name: string;
-  city: string | null;
-  first_name: string;
-  gender: 'f' | 'm' | 'o' | null;
-  street_address: string | null;
-  co_address: string | null;
-  ext_id: string | null;
-  email: string | null;
-  country: string | null;
-  phone: string | null;
-}
+type ZetkinCreatePerson =
+  | {
+      alt_phone: string | null;
+      city: string | null;
+      co_address: string | null;
+      country: string | null;
+      email: string | null;
+      ext_id: string | null;
+      first_name: string;
+      gender: 'f' | 'm' | 'o' | null;
+      last_name: string;
+      phone: string | null;
+      street_address: string | null;
+      zip_code: string | null;
+    }
+  | { [key: string]: string | null };
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const theme = useTheme();
@@ -58,29 +62,47 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     messageIds.createPerson.genders
   ) as GenderKeyType[];
 
+  const customFieldsKeys = customFields.reduce(
+    (acc: { [key: string]: null }, cur: ZetkinCustomField) => {
+      acc[cur.slug] = null;
+      return acc;
+    },
+    {}
+  );
+
   const initialValue = {
-    alt_phone: null,
-    city: null,
-    co_address: null,
-    country: null,
-    email: null,
-    ext_id: null,
-    first_name: '',
-    gender: null,
-    last_name: '',
-    phone: null,
-    street_address: null,
-    zip_code: null,
+    ...{
+      alt_phone: null,
+      city: null,
+      co_address: null,
+      country: null,
+      email: null,
+      ext_id: null,
+      first_name: '',
+      gender: null,
+      last_name: '',
+      phone: null,
+      street_address: null,
+      zip_code: null,
+    },
+    ...customFieldsKeys,
   };
 
   const [showAllFields, setShowAllFields] = useState(false);
   const [showAllWithEnter, setShowAllWithEnter] = useState(false);
   const [personalInfo, setPersonalInfo] =
     useState<ZetkinCreatePerson>(initialValue);
+
   const inputRef = useRef<HTMLInputElement>();
 
-  const invalidEmailError =
+  const invalidEmail =
     !isEmail(personalInfo.email || '') && personalInfo.email !== null;
+  const invalidPhoneNum =
+    !isValidPhoneNumber(personalInfo.phone || '') &&
+    personalInfo.phone !== null;
+  const invalidAltPhoneNum =
+    !isValidPhoneNumber(personalInfo.alt_phone || '') &&
+    personalInfo.alt_phone !== null;
 
   const debouncedFinishedTyping = useDebounce(
     async (key: string, value: string | null) => {
@@ -91,6 +113,66 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     },
     300
   );
+
+  const renderTextField = (
+    field: keyof ZetkinCreatePerson,
+    label = '',
+    style = {},
+    fullWidth = false,
+    required = false
+  ) => {
+    return (
+      <TextField
+        fullWidth={fullWidth}
+        label={label ? label : globalMessages.personFields[field]()}
+        onChange={(e) => debouncedFinishedTyping(field, e.target.value)}
+        required={required}
+        sx={style}
+      />
+    );
+  };
+
+  const renderTextfieldWithHelperOnError = (
+    field: keyof ZetkinCreatePerson,
+    label = ''
+  ) => {
+    return (
+      <TextField
+        error={
+          field === 'email'
+            ? invalidEmail
+            : field === 'phone'
+            ? invalidPhoneNum
+            : !isURL(personalInfo[field] || '') && personalInfo[field] !== null
+        }
+        helperText={
+          (field === 'email'
+            ? invalidEmail
+            : field === 'phone'
+            ? invalidPhoneNum
+            : !isURL(personalInfo[field] || '') &&
+              personalInfo[field] !== null) && (
+            <Msg
+              id={messageIds.createPerson.validationWarning}
+              values={{
+                field:
+                  field === 'email' || field === 'phone'
+                    ? globalMessages.personFields[field]()
+                    : messages.createPerson.url(),
+              }}
+            />
+          )
+        }
+        label={label || globalMessages.personFields[field]()}
+        onBlur={() => {
+          if (personalInfo[field] === '') {
+            debouncedFinishedTyping(field, null);
+          }
+        }}
+        onChange={(e) => debouncedFinishedTyping(field, e.target.value)}
+      />
+    );
+  };
 
   useEffect(() => {
     if (showAllFields && showAllWithEnter) {
@@ -127,54 +209,35 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
         >
           <Box display="flex" mt={1}>
             <Box mr={2} width="50%">
-              <TextField
-                fullWidth
-                label={globalMessages.personFields.first_name()}
-                onChange={(e) =>
-                  debouncedFinishedTyping('first_name', e.target.value)
-                }
-                required
-                variant="outlined"
-              />
+              {renderTextField('first_name', '', {}, true, true)}
             </Box>
             <Box width="50%">
-              <TextField
-                fullWidth
-                label={globalMessages.personFields.last_name()}
-                onChange={(e) =>
-                  debouncedFinishedTyping('last_name', e.target.value)
-                }
-                required
-              />
+              {renderTextField('last_name', '', {}, true, true)}
             </Box>
           </Box>
-          <TextField
-            error={invalidEmailError}
-            helperText={
-              invalidEmailError && (
-                <Msg
-                  id={messageIds.createPerson.validationWarning}
-                  values={{ field: globalMessages.personFields.email() }}
-                />
-              )
-            }
-            label={globalMessages.personFields.email()}
-            onBlur={() => {
-              if (personalInfo.email === '') {
-                debouncedFinishedTyping('email', null);
-              }
-            }}
-            onChange={(e) => debouncedFinishedTyping('email', e.target.value)}
-          />
-          <TextField
-            label={globalMessages.personFields.phone()}
-            onChange={(e) => debouncedFinishedTyping('phone', e.target.value)}
-          />
+          {renderTextfieldWithHelperOnError('email')}
+          {renderTextfieldWithHelperOnError('phone')}
           {showAllFields && (
             <Box display="flex" flexDirection="column" gap={2}>
               <TextField
+                error={invalidAltPhoneNum}
+                helperText={
+                  invalidAltPhoneNum && (
+                    <Msg
+                      id={messageIds.createPerson.validationWarning}
+                      values={{
+                        field: globalMessages.personFields.alt_phone(),
+                      }}
+                    />
+                  )
+                }
                 inputRef={inputRef}
                 label={globalMessages.personFields.alt_phone()}
+                onBlur={() => {
+                  if (personalInfo.alt_phone === '') {
+                    debouncedFinishedTyping('alt_phone', null);
+                  }
+                }}
                 onChange={(e) =>
                   debouncedFinishedTyping('alt_phone', e.target.value)
                 }
@@ -200,61 +263,33 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                   ))}
                 </Select>
               </FormControl>
-              <TextField
-                label={globalMessages.personFields.street_address()}
-                onChange={(e) =>
-                  debouncedFinishedTyping('street_address', e.target.value)
-                }
-              />
-              <TextField
-                label={globalMessages.personFields.co_address()}
-                onChange={(e) =>
-                  debouncedFinishedTyping('co_address', e.target.value)
-                }
-              />
+              {renderTextField('street_address')}
+              {renderTextField('co_address')}
               <Box>
-                <TextField
-                  label={globalMessages.personFields.zip_code()}
-                  onChange={(e) =>
-                    debouncedFinishedTyping('zip_code', e.target.value)
-                  }
-                  sx={{ pr: 2, width: '30%' }}
-                />
-
-                <TextField
-                  label={globalMessages.personFields.city()}
-                  onChange={(e) =>
-                    debouncedFinishedTyping('city', e.target.value)
-                  }
-                  sx={{ width: '70%' }}
-                />
+                {renderTextField('zip_code', undefined, {
+                  pr: 2,
+                  width: '30%',
+                })}
+                {renderTextField('city', undefined, { width: '70%' })}
               </Box>
-              <TextField
-                label={globalMessages.personFields.country()}
-                onChange={(e) =>
-                  debouncedFinishedTyping('country', e.target.value)
-                }
-              />
-              <TextField
-                label={globalMessages.personFields.ext_id()}
-                onChange={(e) =>
-                  debouncedFinishedTyping('ext_id', e.target.value)
-                }
-              />
+              {renderTextField('country')}
+              {renderTextField('ext_id')}
             </Box>
           )}
           {showAllFields &&
             customFields.map((field) => {
               if (field.type === 'date') {
-                return (
-                  <DatePicker
-                    format="DD-MM-YYYY"
-                    label={field.title}
-                    sx={{ marginBottom: 2 }}
-                  />
+                return <DatePicker format="DD-MM-YYYY" label={field.title} />;
+              } else if (field.type === 'url') {
+                return renderTextfieldWithHelperOnError(
+                  field.slug as keyof ZetkinCreatePerson,
+                  field.title
                 );
               } else {
-                return <TextField label={field.title} />;
+                return renderTextField(
+                  field.slug as keyof ZetkinCreatePerson,
+                  field.title
+                );
               }
             })}
           <Box display="flex" justifyContent="flex-end">
@@ -270,7 +305,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                 }}
                 startIcon={<ExpandMore />}
               >
-                <Msg id={messageIds.createPerson.allFields} />
+                <Msg id={messageIds.createPerson.showAllFields} />
               </Button>
             )}
           </Box>
