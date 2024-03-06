@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { getIronSession } from 'iron-session';
 import { ParsedUrlQuery } from 'querystring';
 import {
@@ -97,15 +98,21 @@ export const scaffold =
       zetkinDomain: process.env.ZETKIN_API_DOMAIN,
     });
 
+    console.log('a');
+
     const { req, res } = contextFromNext;
     const session = await getIronSession<AppSession>(req, res, {
       cookieName: 'zsid',
       password: requiredEnvVar('SESSION_PASSWORD'),
     });
 
+    console.log('b', session.tokenData);
+
     if (session.tokenData) {
       ctx.z.setTokenData(session.tokenData);
     }
+
+    console.log('c');
 
     try {
       const userRes = await ctx.z.resource('users', 'me').get();
@@ -113,6 +120,8 @@ export const scaffold =
     } catch (error) {
       ctx.user = null;
     }
+
+    console.log('d', ctx.user);
 
     if (options?.authLevelRequired) {
       let authLevel;
@@ -141,6 +150,8 @@ export const scaffold =
         };
       }
     }
+
+    console.log('e');
 
     const orgId = ctx.query.orgId as string;
 
@@ -171,10 +182,14 @@ export const scaffold =
       }
     }
 
+    console.log('f');
+
     // Update token data in session, in case it was refreshed
     session.tokenData = ctx.z.getTokenData();
 
     await session.save();
+
+    console.log('g');
 
     const result = (await wrapped(ctx)) || {};
 
