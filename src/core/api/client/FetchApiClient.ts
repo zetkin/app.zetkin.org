@@ -4,6 +4,8 @@ import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
 
 function assertOk(res: Response) {
   if (!res.ok) {
+    // eslint-disable-next-line no-console
+    console.log(`Error during request: ${res.status}, ${res.url}`);
     throw new Error(`Error during request: ${res.status}, ${res.url}`);
   }
 }
