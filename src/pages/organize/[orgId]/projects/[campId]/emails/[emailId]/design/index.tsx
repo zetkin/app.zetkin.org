@@ -46,7 +46,17 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
     return null;
   }
 
-  return <EmailEditor email={email} onSave={(email) => updateEmail(email)} />;
+  return (
+    <EmailEditor
+      email={email}
+      onSave={(email) => {
+        updateEmail({
+          ...email,
+          locked: undefined,
+        });
+      }}
+    />
+  );
 };
 
 EmailPage.getLayout = function getLayout(page) {

@@ -10,7 +10,9 @@ import { futureToObject, IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 
-type ZetkinEmailPatchBody = Partial<ZetkinEmail> & { lock?: boolean };
+type ZetkinEmailPatchBody = Partial<Omit<ZetkinEmail, 'locked'>> & {
+  locked?: boolean;
+};
 
 interface UseEmailReturn {
   data: ZetkinEmail | null;
@@ -52,7 +54,10 @@ export default function useEmail(
     const mutating = Object.keys(data);
     dispatch(emailUpdate([emailId, mutating]));
     const promise = apiClient
-      .patch<ZetkinEmail>(`/api/orgs/${orgId}/emails/${emailId}`, data)
+      .patch<ZetkinEmail, ZetkinEmailPatchBody>(
+        `/api/orgs/${orgId}/emails/${emailId}`,
+        data
+      )
       .then((email: ZetkinEmail) => {
         dispatch(emailUpdated([email, mutating]));
         return email;
