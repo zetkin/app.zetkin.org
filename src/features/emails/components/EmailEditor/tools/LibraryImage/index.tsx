@@ -2,7 +2,10 @@ import { BlockToolConstructorOptions } from '@editorjs/editorjs';
 import { createRoot } from 'react-dom/client';
 import LibraryImageEditableBlock from './LibraryImageEditableBlock';
 import Providers from 'core/Providers';
-import { LibraryImageConfig, LibraryImageData } from './types';
+import {
+  LibraryImageConfig,
+  LibraryImageData,
+} from './LibraryImageEditableBlock';
 
 export default class LibraryImage {
   private _config: LibraryImageConfig;

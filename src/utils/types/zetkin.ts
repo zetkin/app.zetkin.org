@@ -1,4 +1,3 @@
-import { EmailFrame } from 'features/emails/types';
 import {
   ZetkinAssignedTask,
   ZetkinTask,
@@ -503,11 +502,11 @@ export type {
   ZetkinViewRow,
 };
 
-//lägg till emailframe på denna typ
-
 export interface ZetkinEmail {
   campaign: { id: number; title: string } | null;
-  frame: EmailFrame;
+  frame: {
+    id: number;
+  } | null;
   id: number;
   locked: string | null;
   published: string | null;

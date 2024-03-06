@@ -4,21 +4,21 @@ import ContentEditable from 'react-contenteditable';
 import DOMPurify from 'dompurify';
 import { FC, useState } from 'react';
 
+import { BlockAttributes } from 'features/emails/types';
 import { ButtonData } from '.';
 import { defaultButtonAttributes } from '../../utils/defaultBlockAttributes';
-import { EmailFrame } from 'features/emails/types';
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 interface ButtonEditableBlockProps {
-  attributes: EmailFrame['blockAttributes']['button'];
+  attributes?: BlockAttributes['button'];
   data: ButtonData;
   onChange: (newButtonText: string) => void;
   readOnly: boolean;
 }
 
 const ButtonEditableBlock: FC<ButtonEditableBlockProps> = ({
-  attributes,
+  attributes = {},
   data,
   onChange,
   readOnly,

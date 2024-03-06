@@ -5,6 +5,8 @@ import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useEmail from 'features/emails/hooks/useEmail';
+import useEmailWithFrame from 'features/emails/hooks/useEmailWithFrame';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -31,22 +33,26 @@ type Props = {
   orgId: string;
 };
 
-const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
-  const { data: email, updateEmail } = useEmail(
-    parseInt(orgId),
-    parseInt(emailId)
-  );
+const EmailPage: PageWithLayout<Props> = () => {
+  const { orgId, emailId } = useNumericRouteParams();
+  const { updateEmail } = useEmail(orgId, emailId);
+  const { data: emailWithFrame } = useEmailWithFrame(orgId, emailId);
   const onServer = useServerSide();
 
   if (onServer) {
     return null;
   }
 
-  if (!email) {
+  if (!emailWithFrame) {
     return null;
   }
 
-  return <EmailEditor email={email} onSave={(email) => updateEmail(email)} />;
+  return (
+    <EmailEditor
+      email={emailWithFrame}
+      onSave={(email) => updateEmail(email)}
+    />
+  );
 };
 
 EmailPage.getLayout = function getLayout(page) {

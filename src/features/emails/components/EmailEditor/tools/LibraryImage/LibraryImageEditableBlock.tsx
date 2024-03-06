@@ -3,20 +3,30 @@
 
 import { FC, useState } from 'react';
 
+import { BlockAttributes } from 'features/emails/types';
 import { defaultImageAttributes } from '../../utils/defaultBlockAttributes';
-import { EmailFrame } from 'features/emails/types';
 import FileLibraryDialog from 'features/files/components/FileLibraryDialog';
-import { LibraryImageData } from './types';
+
+export type LibraryImageConfig = {
+  attributes: BlockAttributes['image'];
+  orgId: number;
+};
+
+export type LibraryImageData = {
+  fileId: number;
+  fileName: string;
+  url: string;
+};
 
 type Props = {
-  attributes: EmailFrame['blockAttributes']['image'];
+  attributes?: BlockAttributes['image'];
   data: LibraryImageData;
   onChange: (data: LibraryImageData) => void;
   orgId: number;
 };
 
 const LibraryImageEditableBlock: FC<Props> = ({
-  attributes,
+  attributes = {},
   data: initialData,
   onChange,
   orgId,

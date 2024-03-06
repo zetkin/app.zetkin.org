@@ -1,18 +1,18 @@
 import { BlockToolConstructorOptions } from '@editorjs/editorjs';
 import { createRoot } from 'react-dom/client';
 
+import { BlockAttributes } from 'features/emails/types';
 import ButtonEditableBlock from './ButtonEditableBlock';
-import { EmailFrame } from 'features/emails/types';
 import Providers from 'core/Providers';
 
 export interface ButtonData {
   url: string;
   buttonText: string;
-  attributes: EmailFrame['blockAttributes']['button'];
+  attributes: BlockAttributes['button'];
 }
 
 export default class Button {
-  private _config: { attributes: EmailFrame['blockAttributes']['button'] };
+  private _config: { attributes: BlockAttributes['button'] };
   private _data: ButtonData;
   private _readOnly: boolean;
 

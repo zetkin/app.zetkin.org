@@ -6,6 +6,7 @@ import { copyEventsDef } from 'features/events/rpc/copyEvents';
 import { createNewViewRouteDef } from 'features/views/rpc/createNew/server';
 import { deleteEventsDef } from 'features/events/rpc/deleteEvents';
 import { deleteFolderRouteDef } from 'features/views/rpc/deleteFolder';
+import { getEmailRouteDef } from 'features/emails/rpc/getFrame/server';
 import { getEventStatsDef } from 'features/events/rpc/getEventStats';
 import { getNextEventDayDef } from 'features/events/rpc/getNextEventDay';
 import { getOrganizerActionViewRouteDef } from 'features/views/rpc/getOrganizerActionView/server';
@@ -32,6 +33,7 @@ export function createRPCRouter() {
   rpcRouter.register(copyEventsDef);
   rpcRouter.register(getUserOrgTreeDef);
   rpcRouter.register(deleteEventsDef);
+  rpcRouter.register(getEmailRouteDef);
 
   return rpcRouter;
 }

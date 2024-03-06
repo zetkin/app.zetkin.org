@@ -81,36 +81,9 @@ export default function useEmail(
     }
   };
 
-  const futureObject = futureToObject(emailFuture);
-  const emailData = futureObject.data;
-
   return {
-    data: emailData
-      ? {
-          campaign: emailData.campaign,
-          content: emailData.content,
-          frame: {
-            blockAttributes: {
-              button: {
-                'background-color': 'green',
-              },
-              image: {
-                border: '2px solid green',
-              },
-            },
-            css: 'h1 { color: #549873 }',
-          },
-          id: emailData.id,
-          locked: emailData.locked,
-          organization: emailData.organization,
-          published: emailData.published,
-          subject: emailData.subject,
-          target: emailData.target,
-          title: emailData.title,
-        }
-      : null,
+    ...futureToObject(emailFuture),
     deleteEmail,
-    isLoading: futureObject.isLoading,
     isTargeted,
     mutating: emailItem?.mutating || [],
     updateEmail,

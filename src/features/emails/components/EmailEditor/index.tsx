@@ -4,6 +4,7 @@ import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import EmailSettings from './EmailSettings';
+import { EmailWithHtmlFrame } from 'features/emails/types';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { ZetkinEmail } from 'utils/types/zetkin';
@@ -13,7 +14,7 @@ const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
 });
 
 interface EmailEditorProps {
-  email: ZetkinEmail;
+  email: EmailWithHtmlFrame;
   onSave: (email: Partial<ZetkinEmail>) => void;
 }
 

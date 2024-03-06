@@ -12,7 +12,7 @@ import EditorJS, {
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
-import { EmailFrame } from 'features/emails/types';
+import { EmailWithHtmlFrame } from 'features/emails/types';
 import LibraryImage from './tools/LibraryImage';
 import { linkToolFactory } from './tools/InlineLink';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -23,7 +23,7 @@ import variableToolFactory from './tools/inlineVariable';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
-  frame: EmailFrame;
+  frame: EmailWithHtmlFrame['frame'];
   initialContent: OutputData;
   onSave: (data: OutputData) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
@@ -119,6 +119,8 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       },
     };
 
+    return;
+
     // Create the EditorJS instance
     editorInstance.current = new EditorJS(editorConfig);
 
@@ -168,14 +170,18 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     .map((rule) => `#ClientOnlyEditor-container ${rule.cssText}`)
     .join('\n');
 
-  const frameHtml =
-    '<header>This is the header</header><div id="ClientOnlyEditor-container"></div><footer>This is the footer</footer>';
-
   /*eslint-disable react/no-danger*/
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: newRules }} />
-      <div dangerouslySetInnerHTML={{ __html: frameHtml }} />
+      <iframe
+        srcDoc={frame.frameHtml}
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
+        title="Email editor"
+      />
     </>
   );
 };

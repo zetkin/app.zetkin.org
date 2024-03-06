@@ -1,4 +1,5 @@
 import { EmailStats } from './hooks/useEmailStats';
+import { HtmlFrame } from './types';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -10,11 +11,13 @@ import {
 
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
+  frameList: RemoteList<HtmlFrame>;
   statsById: Record<number, RemoteItem<EmailStats>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
+  frameList: remoteList(),
   statsById: {},
 };
 
@@ -97,6 +100,26 @@ const emailsSlice = createSlice({
       state.emailList.loaded = timestamp;
       state.emailList.items.forEach((item) => (item.loaded = timestamp));
     },
+    frameLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.frameList.items.find((item) => item.id == id);
+      state.frameList.items = state.frameList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    frameLoaded: (state, action: PayloadAction<HtmlFrame>) => {
+      const id = action.payload.id;
+      const item = state.frameList.items.find((item) => item.id == id);
+      if (item) {
+        item.data = action.payload;
+        item.loaded = new Date().toISOString();
+        item.isLoading = false;
+        item.isStale = false;
+      } else {
+        console.log(state.frameList);
+        throw new Error('loaded something that never started loading');
+      }
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const statsItem = state.statsById[id];
@@ -146,6 +169,8 @@ export const {
   emailUpdated,
   emailsLoad,
   emailsLoaded,
+  frameLoad,
+  frameLoaded,
   statsLoad,
   statsLoaded,
 } = emailsSlice.actions;
