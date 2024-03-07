@@ -19,14 +19,21 @@ import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinCreatePerson } from './index';
-import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
+import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
 
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
+type ZetkinCreatePersonFields = keyof Omit<
+  ZetkinCreatePerson,
+  'tags' | 'customFields'
+>;
 
 interface PersonalInfoFormProps {
-  debounced: (field: keyof ZetkinCreatePerson, value: string | null) => void;
+  debounced: (
+    field: keyof ZetkinCreatePerson,
+    value: string | null,
+    custom: boolean
+  ) => void;
   personalInfo: ZetkinCreatePerson;
   onClickShowAll: () => void;
   showAllFields: boolean;
@@ -65,18 +72,20 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     !isValidPhoneNumber(personalInfo.alt_phone || '') &&
     personalInfo.alt_phone !== null;
 
+  console.log(personalInfo, ' ??');
+
   const renderTextField = (
-    field: keyof ZetkinCreatePerson,
+    field: ZetkinCreatePersonFields,
     label = '',
     style = {},
-    fullWidth = false,
+    custom = false,
     required = false
   ) => {
     return (
       <TextField
-        fullWidth={fullWidth}
+        fullWidth
         label={label ? label : globalMessages.personFields[field]()}
-        onChange={(e) => debounced(field, e.target.value)}
+        onChange={(e) => debounced(field, e.target.value, custom)}
         required={required}
         sx={style}
       />
@@ -84,8 +93,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   };
 
   const renderTextfieldWithHelperOnError = (
-    field: keyof ZetkinCreatePerson,
-    label = ''
+    field: ZetkinCreatePersonFields,
+    label = '',
+    custom = false
   ) => {
     return (
       <TextField
@@ -94,15 +104,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             ? invalidEmail
             : field === 'phone'
             ? invalidPhoneNum
-            : !isURL(personalInfo[field] || '') && personalInfo[field] !== null
+            : !isURL(personalInfo.customFields[field] || '') &&
+              personalInfo.customFields[field] !== null
         }
         helperText={
           (field === 'email'
             ? invalidEmail
             : field === 'phone'
             ? invalidPhoneNum
-            : !isURL(personalInfo[field] || '') &&
-              personalInfo[field] !== null) && (
+            : !isURL(personalInfo.customFields[field] || '') &&
+              personalInfo.customFields[field] !== null) && (
             <Msg
               id={messageIds.createPerson.validationWarning}
               values={{
@@ -117,10 +128,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         label={label || globalMessages.personFields[field]()}
         onBlur={() => {
           if (personalInfo[field] === '') {
-            debounced(field, null);
+            debounced(field, null, custom);
           }
         }}
-        onChange={(e) => debounced(field, e.target.value)}
+        onChange={(e) => debounced(field, e.target.value, custom)}
       />
     );
   };
@@ -139,10 +150,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          {renderTextField('first_name', '', {}, true, true)}
+          {renderTextField('first_name', '', {}, false, true)}
         </Box>
         <Box width="50%">
-          {renderTextField('last_name', '', {}, true, true)}
+          {renderTextField('last_name', '', {}, false, true)}
         </Box>
       </Box>
       {renderTextfieldWithHelperOnError('email')}
@@ -165,10 +176,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             label={globalMessages.personFields.alt_phone()}
             onBlur={() => {
               if (personalInfo.alt_phone === '') {
-                debounced('alt_phone', null);
+                debounced('alt_phone', null, false);
               }
             }}
-            onChange={(e) => debounced('alt_phone', e.target.value)}
+            onChange={(e) => debounced('alt_phone', e.target.value, false)}
           />
           <FormControl fullWidth>
             <InputLabel>
@@ -180,7 +191,8 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               onChange={(e) =>
                 debounced(
                   'gender',
-                  e.target.value === 'unknown' ? null : e.target.value
+                  e.target.value === 'unknown' ? null : e.target.value,
+                  false
                 )
               }
             >
@@ -210,13 +222,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             return <DatePicker format="DD-MM-YYYY" label={field.title} />;
           } else if (field.type === 'url') {
             return renderTextfieldWithHelperOnError(
-              field.slug as keyof ZetkinCreatePerson,
-              field.title
+              field.slug as ZetkinCreatePersonFields,
+              field.title,
+              true
             );
           } else {
             return renderTextField(
-              field.slug as keyof ZetkinCreatePerson,
-              field.title
+              field.slug as ZetkinCreatePersonFields,
+              field.title,
+              {},
+              true
             );
           }
         })}
@@ -237,7 +252,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       </Box>
       <TagManagerSection
         assignedTags={[] as ZetkinTag[]}
-        onAssignTag={(tag) => {}}
+        disableEditTags
+        disableValueTags
+        onAssignTag={(tag) => {
+          debounced('tags', tag.id.toString(), false);
+        }}
         onUnassignTag={(tag) => {}}
       />
     </Box>

@@ -500,3 +500,20 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
+
+export type ZetkinCreatePerson = {
+  alt_phone: string | null;
+  city: string | null;
+  co_address: string | null;
+  country: string | null;
+  customFields: { [key: string]: string | null };
+  email: string | null;
+  ext_id: string | null;
+  first_name: string;
+  gender: 'f' | 'm' | 'o' | null;
+  last_name: string;
+  phone: string | null;
+  street_address: string | null;
+  tags: string[];
+  zip_code: string | null;
+};

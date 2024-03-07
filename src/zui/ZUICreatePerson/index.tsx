@@ -15,29 +15,12 @@ import PersonalInfoForm from './PersonalInfoForm';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useDebounce from 'utils/hooks/useDebounce';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinCustomField } from 'utils/types/zetkin';
+import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
   open: boolean;
 }
-
-export type ZetkinCreatePerson =
-  | {
-      alt_phone: string | null;
-      city: string | null;
-      co_address: string | null;
-      country: string | null;
-      email: string | null;
-      ext_id: string | null;
-      first_name: string;
-      gender: 'f' | 'm' | 'o' | null;
-      last_name: string;
-      phone: string | null;
-      street_address: string | null;
-      zip_code: string | null;
-    }
-  | { [key: string]: string | null };
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const theme = useTheme();
@@ -52,22 +35,23 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     },
     {}
   );
-  const initialValue = {
+  const initialValue: ZetkinCreatePerson = {
     ...{
       alt_phone: null,
       city: null,
       co_address: null,
       country: null,
+      customFields: { ...customFieldsKeys },
       email: null,
       ext_id: null,
       first_name: '',
       gender: null,
       last_name: '',
       phone: null,
+      tags: [],
       street_address: null,
       zip_code: null,
     },
-    ...customFieldsKeys,
   };
   const [personalInfo, setPersonalInfo] =
     useState<ZetkinCreatePerson>(initialValue);
@@ -80,11 +64,25 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const [showAllWithEnter, setShowAllWithEnter] = useState(false);
 
   const debouncedFinishedTyping = useDebounce(
-    async (key: string, value: string | null) => {
-      setPersonalInfo((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
+    async (key: string, value: string | null, customFields = false) => {
+      setPersonalInfo((prev) => {
+        if (customFields) {
+          return {
+            ...prev,
+            customFields: { ...prev.customFields, [key]: value },
+          };
+        } else if (key === 'tags') {
+          return {
+            ...prev,
+            tags: [...prev.tags, value as string],
+          };
+        } else {
+          return {
+            ...prev,
+            [key]: value,
+          };
+        }
+      });
     },
     300
   );
@@ -107,8 +105,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
         </Typography>
 
         <PersonalInfoForm
-          debounced={(slug, value) => {
-            debouncedFinishedTyping(slug, value);
+          debounced={(slug, value, custom) => {
+            debouncedFinishedTyping(slug, value, custom);
           }}
           onClickShowAll={() => setShowAllFields(true)}
           onClickShowAllWithEnter={() => setShowAllWithEnter(true)}
