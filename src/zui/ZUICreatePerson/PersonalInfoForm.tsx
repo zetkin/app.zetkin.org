@@ -19,6 +19,7 @@ import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
+import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import { checkInvalidFields, ShowAllTriggeredType } from '.';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
@@ -51,6 +52,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
+  const allTags = useTags(orgId).data ?? [];
+  const tags =
+    personalInfo.tags.reduce((acc: ZetkinTag[], item) => {
+      const tag = allTags.find((t) => t.id.toString() === item);
+      if (tag) {
+        return acc.concat(tag);
+      }
+      return acc;
+    }, []) ?? [];
+
   const customFields = useCustomFields(orgId).data ?? [];
   const genderKeys = Object.keys(
     messageIds.createPerson.genders
@@ -248,13 +259,15 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         )}
       </Box>
       <TagManagerSection
-        assignedTags={[] as ZetkinTag[]}
+        assignedTags={tags}
         disableEditTags
         disableValueTags
         onAssignTag={(tag) => {
           debounced('tags', tag.id.toString(), false);
         }}
-        onUnassignTag={(tag) => {}}
+        onUnassignTag={(tag) => {
+          debounced('tags', tag.id.toString(), false);
+        }}
       />
     </Box>
   );

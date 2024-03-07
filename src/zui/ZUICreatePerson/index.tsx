@@ -62,7 +62,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
 
   useEffect(() => {
     setPersonalInfo(initialValue);
-  }, [customFieldsKeys.length]);
+  }, [Object.keys(customFieldsKeys).length]);
 
   const [showAllClickedType, setShowAllClickedType] =
     useState<ShowAllTriggeredType>('none');
@@ -76,9 +76,12 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
             customFields: { ...prev.customFields, [key]: value },
           };
         } else if (key === 'tags') {
+          const tagValues = prev.tags.includes(value!)
+            ? prev.tags.filter((item) => item !== value)
+            : [...prev.tags, value!];
           return {
             ...prev,
-            tags: [...prev.tags, value as string],
+            tags: tagValues,
           };
         } else {
           return {
