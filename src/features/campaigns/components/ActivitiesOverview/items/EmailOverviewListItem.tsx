@@ -23,7 +23,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
   return (
     <OverviewListItem
       endDate={activity.visibleUntil}
-      endNumber={email.locked ? lockedReadyTargets : numTargetMatches}
+      endNumber={email.locked ? lockedReadyTargets ?? 0 : numTargetMatches}
       focusDate={focusDate}
       href={`/organize/${email.organization.id}/projects/${
         email.campaign?.id ?? 'standalone'

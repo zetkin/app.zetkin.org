@@ -38,7 +38,9 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
 
   const blocksRef = useRef<OutputBlockData[]>();
 
-  const readOnly = !!email.published;
+  const now = new Date();
+  const readOnly =
+    !!email.published || (!!email.published && new Date(email.published) > now);
 
   useEffect(() => {
     if (

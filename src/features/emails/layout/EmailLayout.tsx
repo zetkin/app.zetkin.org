@@ -9,13 +9,13 @@ import messageIds from '../l10n/messageIds';
 import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
-import useEmailState from '../hooks/useEmailState';
 import useEmailStats from '../hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
+import useEmailState, { EmailState } from '../hooks/useEmailState';
 
 interface EmailLayoutProps {
   children: React.ReactNode;
@@ -41,9 +41,15 @@ const EmailLayout: FC<EmailLayoutProps> = ({
   return (
     <>
       <TabbedLayout
-        actionButtons={<EmailActionButtons email={email} orgId={orgId} />}
+        actionButtons={
+          <EmailActionButtons email={email} orgId={orgId} state={emailState} />
+        }
         baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
-        belowActionButtons={<DeliveryStatusMessage email={email} />}
+        belowActionButtons={
+          emailState !== EmailState.SENT ? (
+            <DeliveryStatusMessage email={email} />
+          ) : undefined
+        }
         defaultTab="/"
         fixedHeight={fixedHeight}
         subtitle={

@@ -42,7 +42,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     <ActivityListItemWithStats
       blueChipValue={numOpened}
       color={statusColors[state]}
-      endNumber={lockedReadyTargets}
+      endNumber={lockedReadyTargets ?? 0}
       greenChipValue={numClicked}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
@@ -56,7 +56,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
   ) : (
     <ActivityListItem
       color={statusColors[state]}
-      endNumber={email.locked ? lockedReadyTargets : numTargetMatches}
+      endNumber={email.locked ? lockedReadyTargets ?? 0 : numTargetMatches}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'
       }/emails/${emailId}`}

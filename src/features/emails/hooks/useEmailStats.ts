@@ -25,7 +25,7 @@ interface UseEmailStatsReturn {
   data: EmailStats | null;
   error: unknown | null;
   isLoading: boolean;
-  lockedReadyTargets: number;
+  lockedReadyTargets: number | null;
   numTargetMatches: number;
   numLockedTargets: number | null;
   numBlocked: {
@@ -82,9 +82,9 @@ export default function useEmailStats(
   }
 
   const allTargetMatches = statsFuture.data?.num_target_matches ?? 0;
-  const allLocked = statsFuture.data?.num_locked_targets ?? 0;
+  const allLocked = statsFuture.data?.num_locked_targets ?? null;
   const allBlocked = statsFuture.data?.num_blocked.any ?? 0;
-  const lockedReadyTargets = allLocked - allBlocked;
+  const lockedReadyTargets = allLocked === null ? null : allLocked - allBlocked;
   const readyTargets = allTargetMatches - allBlocked;
 
   return {
