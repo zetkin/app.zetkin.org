@@ -1,8 +1,5 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ExpandMore } from '@mui/icons-material';
-import isEmail from 'validator/lib/isEmail';
-import isURL from 'validator/lib/isURL';
-import { isValidPhoneNumber } from 'libphonenumber-js';
 import {
   Box,
   Button,
@@ -14,6 +11,7 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useRef } from 'react';
 
+import { checkInvalidFields } from '.';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
@@ -63,16 +61,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     }
   }, [showAllWithEnter, showAllFields]);
 
-  const invalidEmail =
-    !isEmail(personalInfo.email || '') && personalInfo.email !== null;
-  const invalidPhoneNum =
-    !isValidPhoneNumber(personalInfo.phone || '') &&
-    personalInfo.phone !== null;
-  const invalidAltPhoneNum =
-    !isValidPhoneNumber(personalInfo.alt_phone || '') &&
-    personalInfo.alt_phone !== null;
-
-  console.log(personalInfo, ' ??');
+  const invalidField = checkInvalidFields(customFields, personalInfo);
 
   const renderTextField = (
     field: ZetkinCreatePersonFields,
@@ -99,21 +88,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   ) => {
     return (
       <TextField
-        error={
-          field === 'email'
-            ? invalidEmail
-            : field === 'phone'
-            ? invalidPhoneNum
-            : !isURL(personalInfo.customFields[field] || '') &&
-              personalInfo.customFields[field] !== null
-        }
+        error={invalidField.includes(field)}
         helperText={
-          (field === 'email'
-            ? invalidEmail
-            : field === 'phone'
-            ? invalidPhoneNum
-            : !isURL(personalInfo.customFields[field] || '') &&
-              personalInfo.customFields[field] !== null) && (
+          invalidField.includes(field) && (
             <Msg
               id={messageIds.createPerson.validationWarning}
               values={{
@@ -127,7 +104,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         }
         label={label || globalMessages.personFields[field]()}
         onBlur={() => {
-          if (personalInfo[field] === '') {
+          if (
+            personalInfo[field] === '' ||
+            personalInfo.customFields[field] === ''
+          ) {
             debounced(field, null, custom);
           }
         }}
@@ -161,9 +141,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       {showAllFields && (
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
-            error={invalidAltPhoneNum}
+            error={invalidField.includes('alt_phone')}
             helperText={
-              invalidAltPhoneNum && (
+              invalidField.includes('alt_phone') && (
                 <Msg
                   id={messageIds.createPerson.validationWarning}
                   values={{

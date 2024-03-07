@@ -1,3 +1,6 @@
+import isEmail from 'validator/lib/isEmail';
+import isURL from 'validator/lib/isURL';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import {
   Box,
   Button,
@@ -140,7 +143,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                 <Msg id={messageIds.createPerson.cancel} />
               </Button>
               <Button
-                disabled={!personalInfo.first_name || !personalInfo.last_name}
+                disabled={
+                  !personalInfo.first_name ||
+                  !personalInfo.last_name ||
+                  checkInvalidFields(customFields, personalInfo).length !== 0
+                }
                 variant="contained"
               >
                 <Msg id={messageIds.createPerson.createBtn} />
@@ -154,3 +161,53 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
 };
 
 export default ZUICreatePerson;
+
+export const checkInvalidFields = (
+  customFields: ZetkinCustomField[],
+  personalInfo: ZetkinCreatePerson
+) => {
+  let invalidFields: string[] = [];
+
+  const customFieldURLSlug = customFields
+    .filter((item) => item.type === 'url')
+    .map((item) => item.slug);
+
+  //email
+  if (!isEmail(personalInfo.email || '') && personalInfo.email !== null) {
+    invalidFields.push('email');
+  } else {
+    invalidFields = invalidFields.filter((item) => item !== 'email');
+  }
+
+  //phones
+  if (
+    !isValidPhoneNumber(personalInfo.phone || '') &&
+    personalInfo.phone !== null
+  ) {
+    invalidFields.push('phone');
+  } else {
+    invalidFields = invalidFields.filter((item) => item !== 'phone');
+  }
+  if (
+    !isValidPhoneNumber(personalInfo.alt_phone || '') &&
+    personalInfo.alt_phone !== null
+  ) {
+    invalidFields.push('alt_phone');
+  } else {
+    invalidFields = invalidFields.filter((item) => item !== 'alt_phone');
+  }
+
+  //urls
+  customFieldURLSlug.forEach((customField) => {
+    if (
+      !isURL(personalInfo.customFields[customField] || '') &&
+      personalInfo.customFields[customField] !== null
+    ) {
+      invalidFields.push(customField);
+    } else {
+      invalidFields = invalidFields.filter((item) => item !== customField);
+    }
+  });
+
+  return invalidFields;
+};
