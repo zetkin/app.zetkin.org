@@ -20,8 +20,8 @@ import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
-import { Msg, useMessages } from 'core/i18n';
 import { checkInvalidFields, ShowAllTriggeredType } from '.';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
 
 dayjs.extend(utc);
@@ -52,6 +52,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
+
   const allTags = useTags(orgId).data ?? [];
   const tags =
     personalInfo.tags.reduce((acc: ZetkinTag[], item) => {
@@ -61,7 +62,6 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       }
       return acc;
     }, []) ?? [];
-
   const customFields = useCustomFields(orgId).data ?? [];
   const genderKeys = Object.keys(
     messageIds.createPerson.genders
@@ -73,7 +73,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     }
   }, [showAllClickedType]);
 
-  const invalidField = checkInvalidFields(customFields, personalInfo);
+  const invalidFields = checkInvalidFields(customFields, personalInfo);
 
   const renderTextField = (
     field: ZetkinCreatePersonFields,
@@ -100,9 +100,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   ) => {
     return (
       <TextField
-        error={invalidField.includes(field)}
+        error={invalidFields.includes(field)}
         helperText={
-          invalidField.includes(field) && (
+          invalidFields.includes(field) && (
             <Msg
               id={messageIds.createPerson.validationWarning}
               values={{
@@ -153,9 +153,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       {showAllClickedType !== 'none' && (
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
-            error={invalidField.includes('alt_phone')}
+            error={invalidFields.includes('alt_phone')}
             helperText={
-              invalidField.includes('alt_phone') && (
+              invalidFields.includes('alt_phone') && (
                 <Msg
                   id={messageIds.createPerson.validationWarning}
                   values={{
@@ -220,7 +220,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                     const dateStr = makeNaiveDateString(date.utc().toDate());
                     debounced(
                       field.slug as ZetkinCreatePersonFields,
-                      dateStr,
+                      `${dateStr}T00:00:00`,
                       true
                     );
                   }

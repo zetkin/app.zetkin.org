@@ -52,8 +52,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
       gender: null,
       last_name: '',
       phone: null,
-      tags: [],
       street_address: null,
+      tags: [],
       zip_code: null,
     },
   };
@@ -168,7 +168,7 @@ export const checkInvalidFields = (
 ) => {
   let invalidFields: string[] = [];
 
-  const customFieldURLSlug = customFields
+  const customFieldURLSlugs = customFields
     .filter((item) => item.type === 'url')
     .map((item) => item.slug);
 
@@ -198,14 +198,14 @@ export const checkInvalidFields = (
   }
 
   //urls
-  customFieldURLSlug.forEach((customField) => {
+  customFieldURLSlugs.forEach((slug) => {
     if (
-      !isURL(personalInfo.customFields[customField] || '') &&
-      personalInfo.customFields[customField] !== null
+      !isURL(personalInfo.customFields[slug] || '') &&
+      personalInfo.customFields[slug] !== null
     ) {
-      invalidFields.push(customField);
+      invalidFields.push(slug);
     } else {
-      invalidFields = invalidFields.filter((item) => item !== customField);
+      invalidFields = invalidFields.filter((item) => item !== slug);
     }
   });
 
