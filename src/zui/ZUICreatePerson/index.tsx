@@ -24,6 +24,7 @@ interface ZUICreatePersonProps {
   onClose: () => void;
   open: boolean;
 }
+export type ShowAllTriggeredType = 'enter' | 'mouse' | 'none';
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const theme = useTheme();
@@ -63,8 +64,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     setPersonalInfo(initialValue);
   }, [customFieldsKeys.length]);
 
-  const [showAllFields, setShowAllFields] = useState(false);
-  const [showAllWithEnter, setShowAllWithEnter] = useState(false);
+  const [showAllClickedType, setShowAllClickedType] =
+    useState<ShowAllTriggeredType>('none');
 
   const debouncedFinishedTyping = useDebounce(
     async (key: string, value: string | null, customFields = false) => {
@@ -96,8 +97,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
       fullWidth
       onClose={() => {
         onClose();
-        setShowAllFields(false);
-        setShowAllWithEnter(false);
+        setShowAllClickedType('none');
         setPersonalInfo(initialValue);
       }}
       open={open}
@@ -111,13 +111,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
           debounced={(slug, value, custom) => {
             debouncedFinishedTyping(slug, value, custom);
           }}
-          onClickShowAll={() => setShowAllFields(true)}
-          onClickShowAllWithEnter={() => setShowAllWithEnter(true)}
+          onClickShowAll={(value) => setShowAllClickedType(value)}
           personalInfo={personalInfo}
-          showAllFields={showAllFields}
-          showAllWithEnter={showAllWithEnter}
+          showAllClickedType={showAllClickedType}
         />
-        <Box sx={{ pr: `${showAllFields ? '60px' : '40px'}` }}>
+        <Box sx={{ pr: `${showAllClickedType === 'none' ? '40px' : '60px'}` }}>
           <Divider />
           <Box
             alignItems="center"
@@ -133,8 +131,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               <Button
                 onClick={() => {
                   onClose();
-                  setShowAllFields(false);
-                  setShowAllWithEnter(false);
+                  setShowAllClickedType('none');
                   setPersonalInfo(initialValue);
                 }}
                 sx={{ mr: 2 }}

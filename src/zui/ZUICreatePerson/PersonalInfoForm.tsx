@@ -11,12 +11,12 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useRef } from 'react';
 
-import { checkInvalidFields } from '.';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
+import { checkInvalidFields, ShowAllTriggeredType } from '.';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
 
@@ -33,18 +33,14 @@ interface PersonalInfoFormProps {
     custom: boolean
   ) => void;
   personalInfo: ZetkinCreatePerson;
-  onClickShowAll: () => void;
-  showAllFields: boolean;
-  showAllWithEnter: boolean;
-  onClickShowAllWithEnter: () => void;
+  onClickShowAll: (value: ShowAllTriggeredType) => void;
+  showAllClickedType: ShowAllTriggeredType;
 }
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   debounced,
   onClickShowAll,
   personalInfo,
-  showAllFields,
-  showAllWithEnter,
-  onClickShowAllWithEnter,
+  showAllClickedType,
 }) => {
   const { orgId } = useNumericRouteParams();
   const globalMessages = useMessages(globalMessageIds);
@@ -56,10 +52,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   ) as GenderKeyType[];
 
   useEffect(() => {
-    if (showAllFields && showAllWithEnter) {
+    if (showAllClickedType === 'enter') {
       inputRef.current?.focus();
     }
-  }, [showAllWithEnter, showAllFields]);
+  }, [showAllClickedType]);
 
   const invalidField = checkInvalidFields(customFields, personalInfo);
 
@@ -123,7 +119,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       flexDirection="column"
       gap={2}
       sx={{
-        height: showAllFields ? '600px' : '',
+        height: showAllClickedType === 'none' ? '' : '600px',
         overflowY: 'auto',
         p: '0 40px 20px 0',
       }}
@@ -138,7 +134,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       </Box>
       {renderTextfieldWithHelperOnError('email')}
       {renderTextfieldWithHelperOnError('phone')}
-      {showAllFields && (
+      {showAllClickedType !== 'none' && (
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
             error={invalidField.includes('alt_phone')}
@@ -196,7 +192,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           {renderTextField('ext_id')}
         </Box>
       )}
-      {showAllFields &&
+      {showAllClickedType !== 'none' &&
         customFields.map((field) => {
           if (field.type === 'date') {
             return <DatePicker format="DD-MM-YYYY" label={field.title} />;
@@ -216,12 +212,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           }
         })}
       <Box display="flex" justifyContent="flex-end">
-        {!showAllFields && (
+        {showAllClickedType === 'none' && (
           <Button
-            onClick={onClickShowAll}
+            onClick={() => onClickShowAll('mouse')}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                onClickShowAllWithEnter();
+                onClickShowAll('enter');
               }
             }}
             startIcon={<ExpandMore />}
