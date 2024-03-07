@@ -23,13 +23,16 @@ const EmailActionButtons = ({ email, orgId }: EmailActionButtonsProp) => {
   const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
 
+  const now = new Date();
+  const showCancelButton = email.published && new Date(email.published) > now;
+  const showDeliveryButton = !email.published;
+
   return (
     <Box display="flex">
-      {email.published ? (
+      {showCancelButton && (
         <CancelButton onClick={() => updateEmail({ published: null })} />
-      ) : (
-        <DeliveryButton email={email} />
       )}
+      {showDeliveryButton && <DeliveryButton email={email} />}
       <ZUIEllipsisMenu
         items={[
           {
