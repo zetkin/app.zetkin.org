@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -52,7 +52,6 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     },
     {}
   );
-
   const initialValue = {
     ...{
       alt_phone: null,
@@ -70,11 +69,15 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     },
     ...customFieldsKeys,
   };
+  const [personalInfo, setPersonalInfo] =
+    useState<ZetkinCreatePerson>(initialValue);
+
+  useEffect(() => {
+    setPersonalInfo(initialValue);
+  }, [customFieldsKeys.length]);
 
   const [showAllFields, setShowAllFields] = useState(false);
   const [showAllWithEnter, setShowAllWithEnter] = useState(false);
-  const [personalInfo, setPersonalInfo] =
-    useState<ZetkinCreatePerson>(initialValue);
 
   const debouncedFinishedTyping = useDebounce(
     async (key: string, value: string | null) => {
@@ -104,8 +107,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
         </Typography>
 
         <PersonalInfoForm
-          debounced={(key, value) => {
-            debouncedFinishedTyping(key, value);
+          debounced={(slug, value) => {
+            debouncedFinishedTyping(slug, value);
           }}
           onClickShowAll={() => setShowAllFields(true)}
           onClickShowAllWithEnter={() => setShowAllWithEnter(true)}
