@@ -48,8 +48,7 @@ const EmailDelivery = ({ email, onClose, orgId }: EmailDeliveryProps) => {
   );
   const naiveSending = `${sendingDate}T${sendingTime}`;
 
-  //change time string to 'email.published' when API is fixed
-  const scheduledTime = getOffset('2023-12-25T12:25:00+09:00');
+  const scheduledTime = email.published ? getOffset(email.published) : null;
   const currentTzValue = findCurrentTZ().utc;
   const [tzValue, setTzValue] = useState(scheduledTime || currentTzValue);
 

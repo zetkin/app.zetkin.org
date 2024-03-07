@@ -79,7 +79,7 @@ const EmailPage: PageWithLayout = () => {
                 isScheduled={!!email.published}
                 isTargeted={isTargeted}
                 lockedTargets={lockedTargets}
-                onToggleLocked={() => updateEmail({ lock: !email.locked })}
+                onToggleLocked={() => updateEmail({ locked: !email.locked })}
                 readyTargets={readyTargets}
               />
             </Box>
