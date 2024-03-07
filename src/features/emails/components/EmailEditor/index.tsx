@@ -3,9 +3,11 @@ import { Alert, Box, useTheme } from '@mui/material';
 import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
+import editorjsBlocksToZetkinBlocks from 'features/emails/utils/editorjsBlocksToZetkinBlocks';
 import EmailSettings from './EmailSettings';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import zetkinBlocksToEditorjsBlocks from 'features/emails/utils/zetkinBlocksToEditorjsBlocks';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
@@ -22,10 +24,17 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
 
-  const initialContent = email.content
+  const zetkinInitialContent = email.content
     ? JSON.parse(email.content)
     : { blocks: [] };
-  const [content, setContent] = useState<OutputData>(initialContent);
+
+  const initialContent = zetkinBlocksToEditorjsBlocks(
+    zetkinInitialContent.blocks
+  );
+
+  const [content, setContent] = useState<OutputData>({
+    blocks: initialContent,
+  });
 
   const blocksRef = useRef<OutputBlockData[]>();
 
@@ -58,10 +67,14 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
         <Box flex={1} sx={{ overflowY: 'auto' }}>
           <EmailEditorFrontend
             apiRef={apiRef}
-            initialContent={initialContent}
+            initialContent={{ blocks: initialContent }}
             onSave={(newContent: OutputData) => {
               setContent(newContent);
-              onSave({ content: JSON.stringify(newContent) });
+              onSave({
+                content: JSON.stringify({
+                  blocks: editorjsBlocksToZetkinBlocks(newContent.blocks),
+                }),
+              });
             }}
             onSelectBlock={(selectedBlockIndex: number) => {
               setSelectedBlockIndex(selectedBlockIndex);

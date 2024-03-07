@@ -5,11 +5,11 @@ import {
 } from '@editorjs/editorjs';
 
 import InlineToolBase from '../../utils/InlineToolBase';
+import { inlineVars } from 'features/emails/utils/inlineVars';
 
 export default function variableToolFactory(title: string) {
   class VariableTool extends InlineToolBase implements InlineTool {
     private _api: API;
-    private _availableVars: { [slug: string]: string };
     private _button: HTMLButtonElement;
     private _list: HTMLUListElement;
     private _pendingRange: Range | null = null;
@@ -18,12 +18,6 @@ export default function variableToolFactory(title: string) {
       super();
 
       this._api = api;
-
-      this._availableVars = {
-        first_name: 'First name',
-        full_name: 'Full name',
-        last_name: 'Last name',
-      };
 
       this._button = document.createElement('button');
       this._button.type = 'button';
@@ -52,7 +46,7 @@ export default function variableToolFactory(title: string) {
       this._list.style.padding = '0px';
       this._list.style.margin = '0px';
 
-      Object.entries(this._availableVars).forEach(([slug, title]) => {
+      Object.entries(inlineVars).forEach(([slug, title]) => {
         const item = document.createElement('li');
         item.style.cursor = 'pointer';
         item.style.padding = '8px';
@@ -92,7 +86,7 @@ export default function variableToolFactory(title: string) {
       elem.style.padding = '0.1em 0.5em';
       elem.style.borderRadius = '1em';
       elem.style.display = 'inline-block';
-      elem.textContent = this._availableVars[slug];
+      elem.textContent = inlineVars[slug];
       range.deleteContents();
       range.insertNode(elem);
 

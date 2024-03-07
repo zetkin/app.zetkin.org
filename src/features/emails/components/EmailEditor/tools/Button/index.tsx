@@ -7,6 +7,7 @@ import Providers from 'core/Providers';
 export interface ButtonData {
   url: string;
   buttonText: string;
+  tag: string;
 }
 
 export default class Button {
@@ -15,7 +16,11 @@ export default class Button {
 
   constructor({ data, readOnly }: BlockToolConstructorOptions<ButtonData>) {
     this._readOnly = readOnly;
-    this._data = data;
+    this._data = {
+      buttonText: data.buttonText,
+      tag: data.tag ? data.tag : Math.random().toString(36).substring(2, 10),
+      url: data.url,
+    };
   }
 
   static get isReadOnlySupported() {
