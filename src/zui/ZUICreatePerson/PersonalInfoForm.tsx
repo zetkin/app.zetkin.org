@@ -1,5 +1,6 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ExpandMore } from '@mui/icons-material';
+import utc from 'dayjs/plugin/utc';
 import {
   Box,
   Button,
@@ -9,16 +10,20 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useRef } from 'react';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
+import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
-import { checkInvalidFields, ShowAllTriggeredType } from '.';
 import { Msg, useMessages } from 'core/i18n';
+import { checkInvalidFields, ShowAllTriggeredType } from '.';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
+
+dayjs.extend(utc);
 
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 type ZetkinCreatePersonFields = keyof Omit<
@@ -195,7 +200,23 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       {showAllClickedType !== 'none' &&
         customFields.map((field) => {
           if (field.type === 'date') {
-            return <DatePicker format="DD-MM-YYYY" label={field.title} />;
+            return (
+              <DatePicker
+                format="DD-MM-YYYY"
+                label={field.title}
+                onChange={(date: Dayjs | null) => {
+                  if (date) {
+                    const dateStr = makeNaiveDateString(date.utc().toDate());
+                    debounced(
+                      field.slug as ZetkinCreatePersonFields,
+                      dateStr,
+                      true
+                    );
+                  }
+                }}
+                value={null}
+              />
+            );
           } else if (field.type === 'url') {
             return renderTextfieldWithHelperOnError(
               field.slug as ZetkinCreatePersonFields,
