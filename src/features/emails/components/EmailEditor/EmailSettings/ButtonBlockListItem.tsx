@@ -72,7 +72,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
           {inputValue.length > 0 && !error && (
             <NextLink href={formatUrl(inputValue) || ''} passHref rel="">
               <Link
-                color="inherit"
+                color="secondary"
                 display="flex"
                 rel="noopener"
                 target="_blank"
