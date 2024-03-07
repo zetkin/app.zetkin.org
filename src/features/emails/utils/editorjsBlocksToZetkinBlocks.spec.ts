@@ -13,6 +13,7 @@ describe('editorjsBlocksToZetkinBlocks()', () => {
       {
         data: {
           buttonText: 'Click me!',
+          id: 'aä09ssldk',
           tag: 'abcdefgh',
           url: 'http://www.zetkin.org',
         },
