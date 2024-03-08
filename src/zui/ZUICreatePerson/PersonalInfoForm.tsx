@@ -11,8 +11,9 @@ import {
   TextField,
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
+import { checkInvalidFields } from '.';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
@@ -20,12 +21,12 @@ import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
-import { checkInvalidFields, ShowAllTriggeredType } from '.';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
 
 dayjs.extend(utc);
 
+type ShowAllTriggeredType = 'enter' | 'mouse' | 'none';
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 type ZetkinCreatePersonFields = keyof Omit<
   ZetkinCreatePerson,
@@ -39,19 +40,17 @@ interface PersonalInfoFormProps {
     custom: boolean
   ) => void;
   personalInfo: ZetkinCreatePerson;
-  onClickShowAll: (value: ShowAllTriggeredType) => void;
-  showAllClickedType: ShowAllTriggeredType;
 }
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   debounced,
-  onClickShowAll,
   personalInfo,
-  showAllClickedType,
 }) => {
   const { orgId } = useNumericRouteParams();
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
+  const [showAllClickedType, setShowAllClickedType] =
+    useState<ShowAllTriggeredType>('none');
 
   const allTags = useTags(orgId).data ?? [];
   const tags =
@@ -248,10 +247,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       <Box display="flex" justifyContent="flex-end">
         {showAllClickedType === 'none' && (
           <Button
-            onClick={() => onClickShowAll('mouse')}
+            onClick={() => setShowAllClickedType('mouse')}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                onClickShowAll('enter');
+                // onClickShowAll('enter');
+                setShowAllClickedType('enter');
               }
             }}
             startIcon={<ExpandMore />}

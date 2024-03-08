@@ -19,18 +19,20 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useDebounce from 'utils/hooks/useDebounce';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
+import useCreatePerson from 'features/profile/hooks/useCreatePerson';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
   open: boolean;
 }
-export type ShowAllTriggeredType = 'enter' | 'mouse' | 'none';
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data ?? [];
+  const createPerson = useCreatePerson(orgId);
+  let obejct = {};
 
   const customFieldsKeys = customFields.reduce(
     (acc: { [key: string]: null }, cur: ZetkinCustomField) => {
@@ -42,22 +44,20 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     {}
   );
   const initialValue: ZetkinCreatePerson = {
-    ...{
-      alt_phone: null,
-      city: null,
-      co_address: null,
-      country: null,
-      customFields: { ...customFieldsKeys },
-      email: null,
-      ext_id: null,
-      first_name: '',
-      gender: null,
-      last_name: '',
-      phone: null,
-      street_address: null,
-      tags: [],
-      zip_code: null,
-    },
+    alt_phone: null,
+    city: null,
+    co_address: null,
+    country: null,
+    customFields: { ...customFieldsKeys },
+    email: null,
+    ext_id: null,
+    first_name: '',
+    gender: null,
+    last_name: '',
+    phone: null,
+    street_address: null,
+    tags: [],
+    zip_code: null,
   };
   const [personalInfo, setPersonalInfo] =
     useState<ZetkinCreatePerson>(initialValue);
@@ -65,9 +65,6 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   useEffect(() => {
     setPersonalInfo(initialValue);
   }, [Object.keys(customFieldsKeys).length]);
-
-  const [showAllClickedType, setShowAllClickedType] =
-    useState<ShowAllTriggeredType>('none');
 
   const debouncedFinishedTyping = useDebounce(
     async (key: string, value: string | null, customFields = false) => {
@@ -102,7 +99,6 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
       fullWidth
       onClose={() => {
         onClose();
-        setShowAllClickedType('none');
         setPersonalInfo(initialValue);
       }}
       open={open}
@@ -116,11 +112,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
           debounced={(slug, value, custom) => {
             debouncedFinishedTyping(slug, value, custom);
           }}
-          onClickShowAll={(value) => setShowAllClickedType(value)}
           personalInfo={personalInfo}
-          showAllClickedType={showAllClickedType}
         />
-        <Box sx={{ pr: `${showAllClickedType === 'none' ? '40px' : '60px'}` }}>
+        <Box>
           <Divider />
           <Box
             alignItems="center"
@@ -136,7 +130,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               <Button
                 onClick={() => {
                   onClose();
-                  setShowAllClickedType('none');
+                  // setShowAllClickedType('none');
                   setPersonalInfo(initialValue);
                 }}
                 sx={{ mr: 2 }}
@@ -150,6 +144,14 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                   !personalInfo.last_name ||
                   checkInvalidFields(customFields, personalInfo).length !== 0
                 }
+                onClick={() => {
+                  // let { customFields: _, ...rest } = personalInfo;
+                  const clone = (({ customFields, ...hello }) => hello)(
+                    personalInfo
+                  );
+                  console.log(clone, ' ??');
+                  // createPerson();
+                }}
                 variant="contained"
               >
                 <Msg id={messageIds.createPerson.createBtn} />

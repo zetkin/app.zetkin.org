@@ -39,6 +39,8 @@ const profilesSlice = createSlice({
       state.fieldsList = remoteList(action.payload);
       state.fieldsList.loaded = new Date().toISOString();
     },
+    personCreate: () => {},
+    personCreated: () => {},
     personLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.personById[id] = remoteItem(id, {
@@ -85,6 +87,8 @@ export default profilesSlice;
 export const {
   fieldsLoad,
   fieldsLoaded,
+  personCreate,
+  personCreated,
   personLoad,
   personLoaded,
   personOrgsLoad,

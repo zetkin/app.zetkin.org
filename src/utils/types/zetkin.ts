@@ -501,7 +501,7 @@ export type {
   ZetkinViewRow,
 };
 
-export type ZetkinCreatePerson = {
+export interface ZetkinCreatePerson {
   alt_phone: string | null;
   city: string | null;
   co_address: string | null;
@@ -516,4 +516,8 @@ export type ZetkinCreatePerson = {
   street_address: string | null;
   tags: string[];
   zip_code: string | null;
+}
+
+export type ZetkinPersonPostBody = Omit<ZetkinCreatePerson, 'customFields'> & {
+  [key in keyof ZetkinCreatePerson['customFields']]?: ZetkinCreatePerson['customFields'][key];
 };
