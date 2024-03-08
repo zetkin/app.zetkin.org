@@ -1,6 +1,6 @@
 import { personCreate, personCreated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinPerson, ZetkinPersonPostBody } from 'utils/types/zetkin';
+// import { ZetkinPerson, ZetkinPersonPostBody } from 'utils/types/zetkin';
 
 export default function useCreatePerson(orgId: number) {
   const apiClient = useApiClient();

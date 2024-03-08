@@ -4,6 +4,7 @@ import { isValidPhoneNumber } from 'libphonenumber-js';
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   Divider,
   Typography,
@@ -16,7 +17,6 @@ import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import PersonalInfoForm from './PersonalInfoForm';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
-import useDebounce from 'utils/hooks/useDebounce';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
 import useCreatePerson from 'features/profile/hooks/useCreatePerson';
@@ -32,66 +32,37 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data ?? [];
   const createPerson = useCreatePerson(orgId);
-  let obejct = {};
+  const [fieldsLoaded, setFieldsLoaded] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
 
-  const customFieldsKeys = customFields.reduce(
-    (acc: { [key: string]: null }, cur: ZetkinCustomField) => {
+  const initialValue = customFields.reduce(
+    (acc: ZetkinCreatePerson, cur: ZetkinCustomField) => {
       if (cur.type !== 'json') {
         acc[cur.slug] = null;
       }
       return acc;
     },
-    {}
+    {
+      alt_phone: null,
+      city: null,
+      co_address: null,
+      country: null,
+      email: null,
+      ext_id: null,
+      first_name: '',
+      gender: null,
+      last_name: '',
+      phone: null,
+      street_address: null,
+      zip_code: null,
+    }
   );
-  const initialValue: ZetkinCreatePerson = {
-    alt_phone: null,
-    city: null,
-    co_address: null,
-    country: null,
-    customFields: { ...customFieldsKeys },
-    email: null,
-    ext_id: null,
-    first_name: '',
-    gender: null,
-    last_name: '',
-    phone: null,
-    street_address: null,
-    tags: [],
-    zip_code: null,
-  };
-  const [personalInfo, setPersonalInfo] =
-    useState<ZetkinCreatePerson>(initialValue);
+
+  const [personalInfo, setPersoanInfo] = useState(initialValue);
 
   useEffect(() => {
-    setPersonalInfo(initialValue);
-  }, [Object.keys(customFieldsKeys).length]);
-
-  const debouncedFinishedTyping = useDebounce(
-    async (key: string, value: string | null, customFields = false) => {
-      setPersonalInfo((prev) => {
-        if (customFields) {
-          return {
-            ...prev,
-            customFields: { ...prev.customFields, [key]: value },
-          };
-        } else if (key === 'tags') {
-          const tagValues = prev.tags.includes(value!)
-            ? prev.tags.filter((item) => item !== value)
-            : [...prev.tags, value!];
-          return {
-            ...prev,
-            tags: tagValues,
-          };
-        } else {
-          return {
-            ...prev,
-            [key]: value,
-          };
-        }
-      });
-    },
-    300
-  );
+    setFieldsLoaded(true);
+  }, [Object.keys(initialValue).length]);
 
   return (
     <Dialog
@@ -99,7 +70,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
       fullWidth
       onClose={() => {
         onClose();
-        setPersonalInfo(initialValue);
+        setPersoanInfo(initialValue);
       }}
       open={open}
     >
@@ -107,14 +78,29 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
         <Typography mb={2} variant="h5">
           <Msg id={messageIds.createPerson.title} />
         </Typography>
-
-        <PersonalInfoForm
-          debounced={(slug, value, custom) => {
-            debouncedFinishedTyping(slug, value, custom);
-          }}
-          personalInfo={personalInfo}
-        />
-        <Box>
+        {!fieldsLoaded && (
+          <Box
+            sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        {fieldsLoaded && (
+          <PersonalInfoForm
+            onChange={(slug, value) => {
+              if (slug === 'tags') {
+                setTags((prev) => [...prev, value!]);
+              } else {
+                setPersoanInfo((prev) => {
+                  return { ...prev, [slug]: value };
+                });
+              }
+            }}
+            tags={tags}
+            personalInfo={personalInfo}
+          />
+        )}
+        <Box sx={{ pr: '40px' }}>
           <Divider />
           <Box
             alignItems="center"
@@ -130,8 +116,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               <Button
                 onClick={() => {
                   onClose();
-                  // setShowAllClickedType('none');
-                  setPersonalInfo(initialValue);
+                  setPersoanInfo(initialValue);
                 }}
                 sx={{ mr: 2 }}
                 variant="text"
@@ -145,11 +130,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                   checkInvalidFields(customFields, personalInfo).length !== 0
                 }
                 onClick={() => {
-                  // let { customFields: _, ...rest } = personalInfo;
-                  const clone = (({ customFields, ...hello }) => hello)(
-                    personalInfo
-                  );
-                  console.log(clone, ' ??');
+                  console.log(tags, 'tags');
+
                   // createPerson();
                 }}
                 variant="contained"
@@ -201,12 +183,9 @@ export const checkInvalidFields = (
     invalidFields = invalidFields.filter((item) => item !== 'alt_phone');
   }
 
-  //urls
+  //urls;
   customFieldURLSlugs.forEach((slug) => {
-    if (
-      !isURL(personalInfo.customFields[slug] || '') &&
-      personalInfo.customFields[slug] !== null
-    ) {
+    if (!isURL(personalInfo[slug] || '') && personalInfo[slug] !== null) {
       invalidFields.push(slug);
     } else {
       invalidFields = invalidFields.filter((item) => item !== slug);

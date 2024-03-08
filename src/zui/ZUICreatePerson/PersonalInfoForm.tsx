@@ -22,28 +22,26 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
+import {
+  ZetkinCreatePerson,
+  ZetkinPersonNativeFields,
+  ZetkinTag,
+} from 'utils/types/zetkin';
 
 dayjs.extend(utc);
 
 type ShowAllTriggeredType = 'enter' | 'mouse' | 'none';
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
-type ZetkinCreatePersonFields = keyof Omit<
-  ZetkinCreatePerson,
-  'tags' | 'customFields'
->;
 
 interface PersonalInfoFormProps {
-  debounced: (
-    field: keyof ZetkinCreatePerson,
-    value: string | null,
-    custom: boolean
-  ) => void;
+  onChange: (field: string, value: string | null) => void;
   personalInfo: ZetkinCreatePerson;
+  tags: string[];
 }
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
-  debounced,
+  onChange,
   personalInfo,
+  tags,
 }) => {
   const { orgId } = useNumericRouteParams();
   const globalMessages = useMessages(globalMessageIds);
@@ -53,8 +51,8 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     useState<ShowAllTriggeredType>('none');
 
   const allTags = useTags(orgId).data ?? [];
-  const tags =
-    personalInfo.tags.reduce((acc: ZetkinTag[], item) => {
+  const selectedTags =
+    tags.reduce((acc: ZetkinTag[], item) => {
       const tag = allTags.find((t) => t.id.toString() === item);
       if (tag) {
         return acc.concat(tag);
@@ -75,27 +73,30 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const invalidFields = checkInvalidFields(customFields, personalInfo);
 
   const renderTextField = (
-    field: ZetkinCreatePersonFields,
+    field: keyof ZetkinCreatePerson,
     label = '',
     style = {},
-    custom = false,
     required = false
   ) => {
     return (
       <TextField
         fullWidth
-        label={label ? label : globalMessages.personFields[field]()}
-        onChange={(e) => debounced(field, e.target.value, custom)}
+        label={
+          label
+            ? label
+            : globalMessages.personFields[
+                field as keyof ZetkinPersonNativeFields
+              ]()
+        }
+        onChange={(e) => onChange(field, e.target.value)}
         required={required}
         sx={style}
       />
     );
   };
-
   const renderTextfieldWithHelperOnError = (
-    field: ZetkinCreatePersonFields,
-    label = '',
-    custom = false
+    field: keyof ZetkinCreatePerson,
+    label = ''
   ) => {
     return (
       <TextField
@@ -105,24 +106,21 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             <Msg
               id={messageIds.createPerson.validationWarning}
               values={{
-                field:
-                  field === 'email' || field === 'phone'
-                    ? globalMessages.personFields[field]()
-                    : messages.createPerson.url(),
+                field: messages.createPerson.url(),
               }}
             />
           )
         }
-        label={label || globalMessages.personFields[field]()}
+        label={
+          label ||
+          globalMessages.personFields[field as keyof ZetkinPersonNativeFields]()
+        }
         onBlur={() => {
-          if (
-            personalInfo[field] === '' ||
-            personalInfo.customFields[field] === ''
-          ) {
-            debounced(field, null, custom);
+          if (personalInfo[field] === '') {
+            onChange(field, null);
           }
         }}
-        onChange={(e) => debounced(field, e.target.value, custom)}
+        onChange={(e) => onChange(field, e.target.value)}
       />
     );
   };
@@ -141,11 +139,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          {renderTextField('first_name', '', {}, false, true)}
+          {renderTextField('first_name', '', {}, false)}
         </Box>
-        <Box width="50%">
-          {renderTextField('last_name', '', {}, false, true)}
-        </Box>
+        <Box width="50%">{renderTextField('last_name', '', {}, false)}</Box>
       </Box>
       {renderTextfieldWithHelperOnError('email')}
       {renderTextfieldWithHelperOnError('phone')}
@@ -167,10 +163,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             label={globalMessages.personFields.alt_phone()}
             onBlur={() => {
               if (personalInfo.alt_phone === '') {
-                debounced('alt_phone', null, false);
+                onChange('alt_phone', null);
               }
             }}
-            onChange={(e) => debounced('alt_phone', e.target.value, false)}
+            onChange={(e) => onChange('alt_phone', e.target.value)}
           />
           <FormControl fullWidth>
             <InputLabel>
@@ -180,10 +176,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               defaultValue=""
               label={globalMessages.personFields.gender()}
               onChange={(e) =>
-                debounced(
+                onChange(
                   'gender',
-                  e.target.value === 'unknown' ? null : e.target.value,
-                  false
+                  e.target.value === 'unknown' ? null : e.target.value
                 )
               }
             >
@@ -219,29 +214,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 onChange={(date: Dayjs | null) => {
                   if (date) {
                     const dateStr = makeNaiveDateString(date.utc().toDate());
-                    debounced(
-                      field.slug as ZetkinCreatePersonFields,
-                      dateStr,
-                      true
-                    );
+                    onChange(field.slug, dateStr);
                   }
                 }}
                 value={null}
               />
             );
           } else if (field.type === 'url') {
-            return renderTextfieldWithHelperOnError(
-              field.slug as ZetkinCreatePersonFields,
-              field.title,
-              true
-            );
+            return renderTextfieldWithHelperOnError(field.slug, field.title);
           } else {
-            return renderTextField(
-              field.slug as ZetkinCreatePersonFields,
-              field.title,
-              {},
-              true
-            );
+            return renderTextField(field.slug, field.title, {});
           }
         })}
       <Box display="flex" justifyContent="flex-end">
@@ -261,14 +243,14 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         )}
       </Box>
       <TagManagerSection
-        assignedTags={tags}
+        assignedTags={selectedTags}
         disableEditTags
         disableValueTags
         onAssignTag={(tag) => {
-          debounced('tags', tag.id.toString(), false);
+          onChange('tags', tag.id.toString());
         }}
         onUnassignTag={(tag) => {
-          debounced('tags', tag.id.toString(), false);
+          onChange('tags', tag.id.toString());
         }}
       />
     </Box>
