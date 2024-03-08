@@ -8,7 +8,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
@@ -22,11 +21,8 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
-import {
-  ZetkinCreatePerson,
-  ZetkinPersonNativeFields,
-  ZetkinTag,
-} from 'utils/types/zetkin';
+import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
+import CreatePersonTextField from './CreatePersonTextField';
 
 dayjs.extend(utc);
 
@@ -72,57 +68,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
 
   const invalidFields = checkInvalidFields(customFields, personalInfo);
 
-  const renderTextField = (
-    field: keyof ZetkinCreatePerson,
-    label = '',
-    style = {},
-    required = false
-  ) => {
-    return (
-      <TextField
-        fullWidth
-        label={
-          label
-            ? label
-            : globalMessages.personFields[
-                field as keyof ZetkinPersonNativeFields
-              ]()
-        }
-        onChange={(e) => onChange(field, e.target.value)}
-        required={required}
-        sx={style}
-      />
-    );
-  };
-  const renderTextfieldWithHelperOnError = (
-    field: keyof ZetkinCreatePerson,
-    label = ''
-  ) => {
-    return (
-      <TextField
-        error={invalidFields.includes(field)}
-        helperText={
-          invalidFields.includes(field) && (
-            <Msg
-              id={messageIds.createPerson.validationWarning}
-              values={{
-                field: messages.createPerson.url(),
-              }}
-            />
-          )
-        }
-        label={
-          label ||
-          globalMessages.personFields[field as keyof ZetkinPersonNativeFields]()
-        }
-        onBlur={() => {
-          if (personalInfo[field] === '') {
-            onChange(field, null);
-          }
-        }}
-        onChange={(e) => onChange(field, e.target.value)}
-      />
-    );
+  const handleOnBlur = (field: string) => {
+    if (personalInfo[field] === '') {
+      onChange(field, null);
+    }
   };
 
   return (
@@ -139,34 +88,40 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          {renderTextField('first_name', '', {}, false)}
+          <CreatePersonTextField
+            field={'first_name'}
+            onChange={(field, value) => onChange(field, value)}
+            required
+          />
         </Box>
-        <Box width="50%">{renderTextField('last_name', '', {}, false)}</Box>
+        <Box width="50%">
+          <CreatePersonTextField
+            field={'last_name'}
+            onChange={(field, value) => onChange(field, value)}
+            required
+          />
+        </Box>
       </Box>
-      {renderTextfieldWithHelperOnError('email')}
-      {renderTextfieldWithHelperOnError('phone')}
+      <CreatePersonTextField
+        error={invalidFields.includes('email')}
+        field={'email'}
+        onBlur={(field) => handleOnBlur(field)}
+        onChange={(field, value) => onChange(field, value)}
+      />
+      <CreatePersonTextField
+        error={invalidFields.includes('phone')}
+        field={'phone'}
+        onBlur={(field) => handleOnBlur(field)}
+        onChange={(field, value) => onChange(field, value)}
+      />
       {showAllClickedType !== 'none' && (
         <Box display="flex" flexDirection="column" gap={2}>
-          <TextField
+          <CreatePersonTextField
             error={invalidFields.includes('alt_phone')}
-            helperText={
-              invalidFields.includes('alt_phone') && (
-                <Msg
-                  id={messageIds.createPerson.validationWarning}
-                  values={{
-                    field: globalMessages.personFields.alt_phone(),
-                  }}
-                />
-              )
-            }
+            field={'alt_phone'}
             inputRef={inputRef}
-            label={globalMessages.personFields.alt_phone()}
-            onBlur={() => {
-              if (personalInfo.alt_phone === '') {
-                onChange('alt_phone', null);
-              }
-            }}
-            onChange={(e) => onChange('alt_phone', e.target.value)}
+            onBlur={(field) => handleOnBlur(field)}
+            onChange={(field, value) => onChange(field, value)}
           />
           <FormControl fullWidth>
             <InputLabel>
@@ -189,17 +144,39 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               ))}
             </Select>
           </FormControl>
-          {renderTextField('street_address')}
-          {renderTextField('co_address')}
+          <CreatePersonTextField
+            field={'street_address'}
+            onChange={(field, value) => onChange(field, value)}
+          />
+          <CreatePersonTextField
+            field={'co_address'}
+            onChange={(field, value) => onChange(field, value)}
+          />
           <Box>
-            {renderTextField('zip_code', undefined, {
-              pr: 2,
-              width: '30%',
-            })}
-            {renderTextField('city', undefined, { width: '70%' })}
+            <CreatePersonTextField
+              field={'zip_code'}
+              onChange={(field, value) => onChange(field, value)}
+              style={{
+                pr: 2,
+                width: '30%',
+              }}
+            />
+            <CreatePersonTextField
+              field={'city'}
+              onChange={(field, value) => onChange(field, value)}
+              style={{
+                width: '70%',
+              }}
+            />
           </Box>
-          {renderTextField('country')}
-          {renderTextField('ext_id')}
+          <CreatePersonTextField
+            field={'country'}
+            onChange={(field, value) => onChange(field, value)}
+          />
+          <CreatePersonTextField
+            field={'ext_id'}
+            onChange={(field, value) => onChange(field, value)}
+          />
         </Box>
       )}
       {showAllClickedType !== 'none' &&
@@ -221,9 +198,24 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               />
             );
           } else if (field.type === 'url') {
-            return renderTextfieldWithHelperOnError(field.slug, field.title);
+            return (
+              <CreatePersonTextField
+                error={invalidFields.includes(field.slug)}
+                label={field.title}
+                field={field.slug}
+                isURLField
+                onBlur={(field) => handleOnBlur(field)}
+                onChange={(field, value) => onChange(field, value)}
+              />
+            );
           } else {
-            return renderTextField(field.slug, field.title, {});
+            return (
+              <CreatePersonTextField
+                label={field.title}
+                field={field.slug}
+                onChange={(field, value) => onChange(field, value)}
+              />
+            );
           }
         })}
       <Box display="flex" justifyContent="flex-end">

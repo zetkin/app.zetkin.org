@@ -59,7 +59,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   );
 
   const [personalInfo, setPersoanInfo] = useState(initialValue);
-
+  console.log(personalInfo, ' hello');
   useEffect(() => {
     setFieldsLoaded(true);
   }, [Object.keys(initialValue).length]);

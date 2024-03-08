@@ -35,8 +35,11 @@ export default makeMessages('zui', {
     },
     showAllFields: m('Show all fields'),
     title: m('Create person'),
-    url: m('URL'),
-    validationWarning: m<{ field: string }>('Please add a valid {field}'),
+    validationWarning: {
+      phone: m('Please add a valid phone number'),
+      email: m('Please add a valid E-mail'),
+      url: m('Please add a valid URL'),
+    },
   },
   dataTableSearch: {
     button: m('Search'),
