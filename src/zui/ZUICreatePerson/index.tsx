@@ -34,7 +34,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
 
   const customFieldsKeys = customFields.reduce(
     (acc: { [key: string]: null }, cur: ZetkinCustomField) => {
-      acc[cur.slug] = null;
+      if (cur.type !== 'json') {
+        acc[cur.slug] = null;
+      }
       return acc;
     },
     {}

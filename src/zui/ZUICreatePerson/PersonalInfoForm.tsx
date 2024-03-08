@@ -210,7 +210,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       )}
       {showAllClickedType !== 'none' &&
         customFields.map((field) => {
-          if (field.type === 'date') {
+          if (field.type === 'json') {
+            return;
+          } else if (field.type === 'date') {
             return (
               <DatePicker
                 format="DD-MM-YYYY"
@@ -220,7 +222,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                     const dateStr = makeNaiveDateString(date.utc().toDate());
                     debounced(
                       field.slug as ZetkinCreatePersonFields,
-                      `${dateStr}T00:00:00`,
+                      dateStr,
                       true
                     );
                   }
