@@ -95,7 +95,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
             label: messages.tabs.overview(),
           },
           {
-            href: '/design',
+            href: '/compose',
             label: messages.tabs.compose(),
           },
         ]}
