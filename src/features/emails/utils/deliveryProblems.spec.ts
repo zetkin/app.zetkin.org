@@ -20,6 +20,7 @@ const mockEmail = (emailOverrides?: Partial<ZetkinEmail>): ZetkinEmail => {
   return {
     campaign: { id: 1, title: 'First project' },
     content: mockEmailContent,
+    frame: { id: 1 },
     id: 1,
     locked: '2024-02-26T12:27:32.237413',
     organization: { id: 1, title: 'My Organization' },

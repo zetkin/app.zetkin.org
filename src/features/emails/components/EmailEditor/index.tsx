@@ -58,6 +58,10 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
     blocksRef.current = content.blocks;
   }, [content.blocks.length]);
 
+  if (!email.frame) {
+    return null;
+  }
+
   return (
     <Box display="flex" flexDirection="column" height="100%">
       {readOnly && (
@@ -69,6 +73,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
         <Box flex={1} sx={{ overflowY: 'auto' }}>
           <EmailEditorFrontend
             apiRef={apiRef}
+            frame={email.frame}
             initialContent={{ blocks: initialContent }}
             onSave={(newContent: OutputData) => {
               setContent(newContent);

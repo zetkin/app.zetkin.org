@@ -1,9 +1,10 @@
+/* eslint-disable @next/next/no-img-element*/
 import { Box, Button, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 
 import BlockListItemBase from './BlockListItemBase';
 import FileLibraryDialog from 'features/files/components/FileLibraryDialog';
-import { LibraryImageData } from '../tools/LibraryImage/types';
+import { LibraryImageData } from '../tools/LibraryImage/LibraryImageEditableBlock';
 import messageIds from 'features/emails/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
