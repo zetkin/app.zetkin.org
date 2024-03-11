@@ -35,34 +35,41 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const [fieldsLoaded, setFieldsLoaded] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
 
-  const initialValue = customFields.reduce(
-    (acc: ZetkinCreatePerson, cur: ZetkinCustomField) => {
+  const initialValue = {
+    alt_phone: null,
+    city: null,
+    co_address: null,
+    country: null,
+    email: null,
+    ext_id: null,
+    first_name: '',
+    gender: null,
+    last_name: '',
+    phone: null,
+    street_address: null,
+    zip_code: null,
+  };
+
+  const customFieldKeys = customFields.reduce(
+    (acc: { [key: string]: null }, cur: ZetkinCustomField) => {
       if (cur.type !== 'json') {
         acc[cur.slug] = null;
       }
       return acc;
     },
-    {
-      alt_phone: null,
-      city: null,
-      co_address: null,
-      country: null,
-      email: null,
-      ext_id: null,
-      first_name: '',
-      gender: null,
-      last_name: '',
-      phone: null,
-      street_address: null,
-      zip_code: null,
-    }
+    {}
   );
 
-  const [personalInfo, setPersoanInfo] = useState(initialValue);
-  console.log(personalInfo, ' hello');
+  const [personalInfo, setPersoanInfo] =
+    useState<ZetkinCreatePerson>(initialValue);
+
   useEffect(() => {
+    setPersoanInfo({
+      ...initialValue,
+      ...customFieldKeys,
+    });
     setFieldsLoaded(true);
-  }, [Object.keys(initialValue).length]);
+  }, [Object.keys(customFieldKeys).length]);
 
   return (
     <Dialog
@@ -70,7 +77,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
       fullWidth
       onClose={() => {
         onClose();
-        setPersoanInfo(initialValue);
+        setPersoanInfo({ ...initialValue, ...customFieldKeys });
       }}
       open={open}
     >
@@ -116,7 +123,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               <Button
                 onClick={() => {
                   onClose();
-                  setPersoanInfo(initialValue);
+                  setPersoanInfo({ ...initialValue, ...customFieldKeys });
                 }}
                 sx={{ mr: 2 }}
                 variant="text"
@@ -130,9 +137,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                   checkInvalidFields(customFields, personalInfo).length !== 0
                 }
                 onClick={() => {
-                  console.log(tags, 'tags');
-
-                  // createPerson();
+                  createPerson(personalInfo, tags);
                 }}
                 variant="contained"
               >

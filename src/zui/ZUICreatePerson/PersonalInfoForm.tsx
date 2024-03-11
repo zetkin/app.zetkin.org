@@ -224,7 +224,6 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             onClick={() => setShowAllClickedType('mouse')}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                // onClickShowAll('enter');
                 setShowAllClickedType('enter');
               }
             }}
