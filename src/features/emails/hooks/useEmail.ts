@@ -1,3 +1,5 @@
+import Router from 'next/router';
+
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import {
   emailDeleted,
@@ -43,6 +45,14 @@ export default function useEmail(
 
   const deleteEmail = async () => {
     await apiClient.delete(`/api/orgs/${orgId}/emails/${emailId}`);
+
+    if (email?.campaign) {
+      Router.push(
+        `/organize/${orgId}/projects/${email.campaign.id}/activities`
+      );
+    } else {
+      Router.push(`/organize/${orgId}/projects`);
+    }
     dispatch(emailDeleted(emailId));
   };
 

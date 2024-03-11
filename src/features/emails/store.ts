@@ -32,9 +32,11 @@ const emailsSlice = createSlice({
     },
     emailDeleted: (state, action: PayloadAction<number>) => {
       const emailId = action.payload;
-      state.emailList.items = state.emailList.items.filter(
-        (item) => item.id != emailId
-      );
+      const item = state.emailList.items.find((item) => item.id === emailId);
+      if (item) {
+        item.deleted = true;
+        state.emailList.isStale = true;
+      }
     },
     emailLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
