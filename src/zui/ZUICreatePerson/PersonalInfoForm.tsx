@@ -195,7 +195,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 label={field.title}
                 field={field.slug}
                 isURLField
-                onChange={(field, value) => onChange(field, value)}
+                onChange={(field, value) =>
+                  onChange(
+                    field,
+                    value.match('^https?://') ? value : `https://${value}`
+                  )
+                }
               />
             );
           } else {

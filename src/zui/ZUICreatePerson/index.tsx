@@ -36,7 +36,6 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
 
-  console.log(personalInfo, ' ???');
   return (
     <Dialog
       fullScreen={fullScreen}

@@ -12,16 +12,8 @@ export default function useCreatePerson(orgId: number) {
   ): Promise<ZetkinPerson> => {
     dispatch(personCreate());
 
-    console.log(body, 'post body');
-    // console.log(body, ' body');
-    // console.log(tags, ' tags');
-
     const personFuture = await apiClient
-      .post<ZetkinPerson, ZetkinCreatePerson>(`/api/orgs/${orgId}/people`, {
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'example@email.com',
-      })
+      .post<ZetkinPerson, ZetkinCreatePerson>(`/api/orgs/${orgId}/people`, body)
       .then((data: ZetkinPerson) => {
         dispatch(personCreated());
         console.log(data.id, ' id');
