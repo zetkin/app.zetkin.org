@@ -94,7 +94,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
             borderLeft: `1px solid ${theme.palette.grey[300]}`,
             overflowY: 'auto',
           }}
-          width="25%"
+          width="33%"
         >
           <EmailSettings
             apiRef={apiRef}
