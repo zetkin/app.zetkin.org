@@ -10,6 +10,10 @@ import {
 
 export interface JourneysStoreSlice {
   journeyInstanceList: RemoteList<ZetkinJourneyInstance>;
+  journeyInstancesByJourneyId: Record<
+    number,
+    RemoteList<ZetkinJourneyInstance>
+  >;
   journeyInstancesBySubjectId: Record<
     number,
     RemoteList<ZetkinJourneyInstance>
@@ -24,6 +28,7 @@ export interface JourneysStoreSlice {
 
 const initialJourneysState: JourneysStoreSlice = {
   journeyInstanceList: remoteList(),
+  journeyInstancesByJourneyId: {},
   journeyInstancesBySubjectId: {},
   journeyList: remoteList(),
   milestonesByInstanceId: {},
@@ -68,6 +73,10 @@ const journeysSlice = createSlice({
       state.journeyInstanceList.items.push(
         remoteItem(journeyInstance.id, { data: journeyInstance })
       );
+
+      state.journeyInstancesByJourneyId[journeyInstance.journey.id].items.push(
+        remoteItem(journeyInstance.id, { data: journeyInstance })
+      );
     },
     journeyInstanceLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -97,6 +106,14 @@ const journeysSlice = createSlice({
       item.loaded = new Date().toISOString();
       item.isLoading = false;
       item.isStale = false;
+
+      const journeyId = action.payload.journey.id;
+      if (state.journeyInstancesByJourneyId[journeyId]) {
+        state.journeyInstancesByJourneyId[journeyId].items =
+          state.journeyInstancesByJourneyId[journeyId].items
+            .filter((item) => item.id != id)
+            .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+      }
     },
     journeyInstanceUpdate: (
       state,
@@ -127,19 +144,23 @@ const journeysSlice = createSlice({
         instanceItem.mutating = [];
       }
     },
-    journeyInstancesLoad: (state) => {
+    journeyInstancesLoad: (state, action: PayloadAction<number>) => {
+      const journeyId = action.payload;
       state.journeyInstanceList.isLoading = true;
+      state.journeyInstancesByJourneyId[journeyId] = remoteList();
+      state.journeyInstancesByJourneyId[journeyId].isLoading = true;
     },
     journeyInstancesLoaded: (
       state,
-      action: PayloadAction<ZetkinJourneyInstance[]>
+      action: PayloadAction<[number, ZetkinJourneyInstance[]]>
     ) => {
-      const journeyInstances = action.payload;
+      const [journeyId, journeyInstances] = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.journeyInstanceList = remoteList(journeyInstances);
-      state.journeyInstanceList.loaded = timestamp;
-      state.journeyInstanceList.items.forEach(
+      state.journeyInstancesByJourneyId[journeyId] =
+        remoteList(journeyInstances);
+      state.journeyInstancesByJourneyId[journeyId].loaded = timestamp;
+      state.journeyInstancesByJourneyId[journeyId].items.forEach(
         (item) => (item.loaded = timestamp)
       );
     },
