@@ -27,7 +27,6 @@ const CreatePersonTextField: FC<CreatePersonTextFieldProps> = ({
   style,
   inputRef,
   isURLField,
-  onBlur,
   error,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
@@ -60,7 +59,6 @@ const CreatePersonTextField: FC<CreatePersonTextFieldProps> = ({
       required={required}
       sx={style}
       inputRef={inputRef}
-      onBlur={onBlur && (() => onBlur(field))}
     />
   );
 };

@@ -1,7 +1,6 @@
 import { personCreate, personCreated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
-// import { ZetkinPerson, ZetkinPersonPostBody } from 'utils/types/zetkin';
 
 export default function useCreatePerson(orgId: number) {
   const apiClient = useApiClient();
@@ -12,9 +11,7 @@ export default function useCreatePerson(orgId: number) {
     tags: string[]
   ): Promise<ZetkinPerson> => {
     dispatch(personCreate());
-    // const yeah = body.reduce((acc, cur) => {}, {
 
-    // });
     console.log(body, 'post body');
     // console.log(body, ' body');
     // console.log(tags, ' tags');

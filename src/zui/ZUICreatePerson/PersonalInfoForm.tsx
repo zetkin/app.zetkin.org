@@ -68,12 +68,6 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
 
   const invalidFields = checkInvalidFields(customFields, personalInfo);
 
-  const handleOnBlur = (field: string) => {
-    if (personalInfo[field] === '') {
-      onChange(field, null);
-    }
-  };
-
   return (
     <Box
       display="flex"
@@ -105,13 +99,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       <CreatePersonTextField
         error={invalidFields.includes('email')}
         field={'email'}
-        onBlur={(field) => handleOnBlur(field)}
         onChange={(field, value) => onChange(field, value)}
       />
       <CreatePersonTextField
         error={invalidFields.includes('phone')}
         field={'phone'}
-        onBlur={(field) => handleOnBlur(field)}
         onChange={(field, value) => onChange(field, value)}
       />
       {showAllClickedType !== 'none' && (
@@ -120,7 +112,6 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             error={invalidFields.includes('alt_phone')}
             field={'alt_phone'}
             inputRef={inputRef}
-            onBlur={(field) => handleOnBlur(field)}
             onChange={(field, value) => onChange(field, value)}
           />
           <FormControl fullWidth>
@@ -133,7 +124,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               onChange={(e) =>
                 onChange(
                   'gender',
-                  e.target.value === 'unknown' ? null : e.target.value
+                  e.target.value === 'unknown' ? '' : e.target.value
                 )
               }
             >
@@ -204,7 +195,6 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 label={field.title}
                 field={field.slug}
                 isURLField
-                onBlur={(field) => handleOnBlur(field)}
                 onChange={(field, value) => onChange(field, value)}
               />
             );

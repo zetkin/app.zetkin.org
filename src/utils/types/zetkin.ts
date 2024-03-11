@@ -501,8 +501,7 @@ export type {
   ZetkinViewRow,
 };
 
-export type ZetkinCreatePerson = Omit<
-  ZetkinPersonNativeFields,
-  'id' | 'is_user'
+export type ZetkinCreatePerson = Partial<
+  Omit<ZetkinPersonNativeFields, 'id' | 'is_user'>
 > &
   Record<string, string | null>;

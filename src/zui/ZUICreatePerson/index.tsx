@@ -11,7 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -32,52 +32,18 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data ?? [];
   const createPerson = useCreatePerson(orgId);
-  const [fieldsLoaded, setFieldsLoaded] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
 
-  const initialValue = {
-    alt_phone: null,
-    city: null,
-    co_address: null,
-    country: null,
-    email: null,
-    ext_id: null,
-    first_name: '',
-    gender: null,
-    last_name: '',
-    phone: null,
-    street_address: null,
-    zip_code: null,
-  };
+  const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
 
-  const customFieldKeys = customFields.reduce(
-    (acc: { [key: string]: null }, cur: ZetkinCustomField) => {
-      if (cur.type !== 'json') {
-        acc[cur.slug] = null;
-      }
-      return acc;
-    },
-    {}
-  );
-
-  const [personalInfo, setPersoanInfo] =
-    useState<ZetkinCreatePerson>(initialValue);
-
-  useEffect(() => {
-    setPersoanInfo({
-      ...initialValue,
-      ...customFieldKeys,
-    });
-    setFieldsLoaded(true);
-  }, [Object.keys(customFieldKeys).length]);
-
+  console.log(personalInfo, ' ???');
   return (
     <Dialog
       fullScreen={fullScreen}
       fullWidth
       onClose={() => {
         onClose();
-        setPersoanInfo({ ...initialValue, ...customFieldKeys });
+        setPersonalInfo({});
       }}
       open={open}
     >
@@ -85,22 +51,28 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
         <Typography mb={2} variant="h5">
           <Msg id={messageIds.createPerson.title} />
         </Typography>
-        {!fieldsLoaded && (
+        {customFields.length === 0 && (
           <Box
             sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
           >
             <CircularProgress />
           </Box>
         )}
-        {fieldsLoaded && (
+        {customFields.length > 0 && (
           <PersonalInfoForm
-            onChange={(slug, value) => {
-              if (slug === 'tags') {
-                setTags((prev) => [...prev, value!]);
+            onChange={(field, value) => {
+              if (value === '') {
+                const copied = { ...personalInfo };
+                delete copied[field];
+                setPersonalInfo(copied);
               } else {
-                setPersoanInfo((prev) => {
-                  return { ...prev, [slug]: value };
-                });
+                if (field === 'tags') {
+                  setTags((prev) => [...prev, value!]);
+                } else {
+                  setPersonalInfo((prev) => {
+                    return { ...prev, [field]: value };
+                  });
+                }
               }
             }}
             tags={tags}
@@ -123,7 +95,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               <Button
                 onClick={() => {
                   onClose();
-                  setPersoanInfo({ ...initialValue, ...customFieldKeys });
+                  setPersonalInfo({});
                 }}
                 sx={{ mr: 2 }}
                 variant="text"
@@ -132,8 +104,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
               </Button>
               <Button
                 disabled={
-                  !personalInfo.first_name ||
-                  !personalInfo.last_name ||
+                  personalInfo.first_name === undefined ||
+                  personalInfo.last_name === undefined ||
                   checkInvalidFields(customFields, personalInfo).length !== 0
                 }
                 onClick={() => {
@@ -164,7 +136,7 @@ export const checkInvalidFields = (
     .map((item) => item.slug);
 
   //email
-  if (!isEmail(personalInfo.email || '') && personalInfo.email !== null) {
+  if (!isEmail(personalInfo.email || '') && personalInfo.email !== undefined) {
     invalidFields.push('email');
   } else {
     invalidFields = invalidFields.filter((item) => item !== 'email');
@@ -173,7 +145,7 @@ export const checkInvalidFields = (
   //phones
   if (
     !isValidPhoneNumber(personalInfo.phone || '') &&
-    personalInfo.phone !== null
+    personalInfo.phone !== undefined
   ) {
     invalidFields.push('phone');
   } else {
@@ -181,7 +153,7 @@ export const checkInvalidFields = (
   }
   if (
     !isValidPhoneNumber(personalInfo.alt_phone || '') &&
-    personalInfo.alt_phone !== null
+    personalInfo.alt_phone !== undefined
   ) {
     invalidFields.push('alt_phone');
   } else {
@@ -190,12 +162,13 @@ export const checkInvalidFields = (
 
   //urls;
   customFieldURLSlugs.forEach((slug) => {
-    if (!isURL(personalInfo[slug] || '') && personalInfo[slug] !== null) {
+    if (!isURL(personalInfo[slug] || '') && personalInfo[slug] !== undefined) {
       invalidFields.push(slug);
     } else {
       invalidFields = invalidFields.filter((item) => item !== slug);
     }
   });
+  console.log(invalidFields, ' invalid');
 
   return invalidFields;
 };
