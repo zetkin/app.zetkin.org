@@ -30,9 +30,9 @@ type ShowAllTriggeredType = 'enter' | 'mouse' | 'none';
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null) => void;
+  onChange: (field: string, value: string | null | number) => void;
   personalInfo: ZetkinCreatePerson;
-  tags: string[];
+  tags: number[];
 }
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   onChange,
@@ -49,7 +49,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
     tags.reduce((acc: ZetkinTag[], item) => {
-      const tag = allTags.find((t) => t.id.toString() === item);
+      const tag = allTags.find((t) => t.id === item);
       if (tag) {
         return acc.concat(tag);
       }
@@ -233,10 +233,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         disableEditTags
         disableValueTags
         onAssignTag={(tag) => {
-          onChange('tags', tag.id.toString());
+          onChange('tags', tag.id);
         }}
         onUnassignTag={(tag) => {
-          onChange('tags', tag.id.toString());
+          onChange('tags', tag.id);
         }}
       />
     </Box>

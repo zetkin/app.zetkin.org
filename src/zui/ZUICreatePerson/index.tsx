@@ -32,7 +32,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data ?? [];
   const createPerson = useCreatePerson(orgId);
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<number[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
 
@@ -43,6 +43,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
       onClose={() => {
         onClose();
         setPersonalInfo({});
+        setTags([]);
       }}
       open={open}
     >
@@ -66,10 +67,14 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                 setPersonalInfo(copied);
               } else {
                 if (field === 'tags') {
-                  setTags((prev) => [...prev, value!]);
+                  setTags((prev) =>
+                    tags.includes(value! as number)
+                      ? tags.filter((item) => item !== value)
+                      : [...prev, value! as number]
+                  );
                 } else {
                   setPersonalInfo((prev) => {
-                    return { ...prev, [field]: value };
+                    return { ...prev, [field]: value as string };
                   });
                 }
               }
@@ -95,6 +100,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                 onClick={() => {
                   onClose();
                   setPersonalInfo({});
+                  setTags([]);
                 }}
                 sx={{ mr: 2 }}
                 variant="text"
