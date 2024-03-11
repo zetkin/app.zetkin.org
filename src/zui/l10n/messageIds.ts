@@ -26,6 +26,10 @@ export default makeMessages('zui', {
   },
   createPerson: {
     cancel: m('Cancel'),
+    personWillBe: m<{ addedToOrg: ReactElement; orgName: string }>(
+      'The person will be {addedToOrg} {orgName}'
+    ),
+    addedToOrg: m('added to the organization'),
     createBtn: m('Create person'),
     genders: {
       f: m('Female'),
@@ -37,7 +41,7 @@ export default makeMessages('zui', {
     title: m('Create person'),
     validationWarning: {
       phone: m('Please add a valid phone number'),
-      email: m('Please add a valid E-mail'),
+      email: m('Please add a valid Email'),
       url: m('Please add a valid URL'),
     },
   },

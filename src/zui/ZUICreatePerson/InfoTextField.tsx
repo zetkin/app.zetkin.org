@@ -19,7 +19,7 @@ interface CreatePersonTextFieldProps {
   onBlur?: (field: string) => void;
   error?: boolean;
 }
-const CreatePersonTextField: FC<CreatePersonTextFieldProps> = ({
+const InfoTextField: FC<CreatePersonTextFieldProps> = ({
   field,
   label,
   onChange,
@@ -62,4 +62,4 @@ const CreatePersonTextField: FC<CreatePersonTextFieldProps> = ({
     />
   );
 };
-export default CreatePersonTextField;
+export default InfoTextField;

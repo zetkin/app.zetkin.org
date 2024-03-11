@@ -20,6 +20,7 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
 import useCreatePerson from 'features/profile/hooks/useCreatePerson';
+import CreatingSummary from './CreatingSummary';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
@@ -32,6 +33,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data ?? [];
   const createPerson = useCreatePerson(orgId);
+
   const [tags, setTags] = useState<number[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
@@ -91,10 +93,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
             justifyContent="space-between"
             mt={2}
           >
-            <Box display="flex" flexDirection="column">
-              <Typography>Message:</Typography>
-              <Typography>Blah blah</Typography>
-            </Box>
+            <CreatingSummary orgId={orgId} />
             <Box>
               <Button
                 onClick={() => {
@@ -115,6 +114,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                 }
                 onClick={() => {
                   createPerson(personalInfo, tags);
+                  onClose();
+                  setPersonalInfo({});
+                  setTags([]);
                 }}
                 variant="contained"
               >
@@ -173,7 +175,6 @@ export const checkInvalidFields = (
       invalidFields = invalidFields.filter((item) => item !== slug);
     }
   });
-  console.log(invalidFields, ' invalid');
 
   return invalidFields;
 };

@@ -32,7 +32,6 @@ export default function useCreatePerson(orgId: number) {
     tags.map((tagId) => {
       assignToPerson(person.id, tagId);
     });
-
     return person;
   };
   return createPerson;

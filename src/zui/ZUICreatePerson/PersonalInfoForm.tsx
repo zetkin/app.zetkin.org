@@ -22,7 +22,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
-import CreatePersonTextField from './CreatePersonTextField';
+import InfoTextField from './InfoTextField';
 
 dayjs.extend(utc);
 
@@ -82,33 +82,33 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          <CreatePersonTextField
+          <InfoTextField
             field={'first_name'}
             onChange={(field, value) => onChange(field, value)}
             required
           />
         </Box>
         <Box width="50%">
-          <CreatePersonTextField
+          <InfoTextField
             field={'last_name'}
             onChange={(field, value) => onChange(field, value)}
             required
           />
         </Box>
       </Box>
-      <CreatePersonTextField
+      <InfoTextField
         error={invalidFields.includes('email')}
         field={'email'}
         onChange={(field, value) => onChange(field, value)}
       />
-      <CreatePersonTextField
+      <InfoTextField
         error={invalidFields.includes('phone')}
         field={'phone'}
         onChange={(field, value) => onChange(field, value)}
       />
       {showAllClickedType !== 'none' && (
         <Box display="flex" flexDirection="column" gap={2}>
-          <CreatePersonTextField
+          <InfoTextField
             error={invalidFields.includes('alt_phone')}
             field={'alt_phone'}
             inputRef={inputRef}
@@ -135,16 +135,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               ))}
             </Select>
           </FormControl>
-          <CreatePersonTextField
+          <InfoTextField
             field={'street_address'}
             onChange={(field, value) => onChange(field, value)}
           />
-          <CreatePersonTextField
+          <InfoTextField
             field={'co_address'}
             onChange={(field, value) => onChange(field, value)}
           />
           <Box>
-            <CreatePersonTextField
+            <InfoTextField
               field={'zip_code'}
               onChange={(field, value) => onChange(field, value)}
               style={{
@@ -152,7 +152,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 width: '30%',
               }}
             />
-            <CreatePersonTextField
+            <InfoTextField
               field={'city'}
               onChange={(field, value) => onChange(field, value)}
               style={{
@@ -160,11 +160,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               }}
             />
           </Box>
-          <CreatePersonTextField
+          <InfoTextField
             field={'country'}
             onChange={(field, value) => onChange(field, value)}
           />
-          <CreatePersonTextField
+          <InfoTextField
             field={'ext_id'}
             onChange={(field, value) => onChange(field, value)}
           />
@@ -190,7 +190,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else if (field.type === 'url') {
             return (
-              <CreatePersonTextField
+              <InfoTextField
                 error={invalidFields.includes(field.slug)}
                 label={field.title}
                 field={field.slug}
@@ -205,7 +205,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else {
             return (
-              <CreatePersonTextField
+              <InfoTextField
                 label={field.title}
                 field={field.slug}
                 onChange={(field, value) => onChange(field, value)}
