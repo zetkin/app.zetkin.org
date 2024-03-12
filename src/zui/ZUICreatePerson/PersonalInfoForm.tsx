@@ -23,6 +23,7 @@ import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
 import InfoTextField from './InfoTextField';
+import formatUrl from 'utils/formatUrl';
 
 dayjs.extend(utc);
 
@@ -195,12 +196,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 label={field.title}
                 field={field.slug}
                 isURLField
-                onChange={(field, value) =>
-                  onChange(
-                    field,
-                    value.match('^https?://') ? value : `https://${value}`
-                  )
-                }
+                onChange={(field, value) => onChange(field, formatUrl(value))}
               />
             );
           } else {
