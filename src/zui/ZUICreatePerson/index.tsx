@@ -20,7 +20,6 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
 import useCreatePerson from 'features/profile/hooks/useCreatePerson';
-import CreatingSummary from './CreatingSummary';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
@@ -57,9 +56,14 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
       open={open}
     >
       <Box sx={{ padding: '40px 0 40px 40px' }}>
-        <Typography mb={2} variant="h5">
-          <Msg id={messageIds.createPerson.title.default} />
-        </Typography>
+        <Box display="flex">
+          <Typography mb={2} variant="h5">
+            <Msg id={messageIds.createPerson.title.default} />
+          </Typography>
+          <Typography sx={{ ml: 0.5 }} variant="h5">
+            {title}
+          </Typography>
+        </Box>
         {customFields.length === 0 && (
           <Box
             sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
@@ -97,10 +101,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
           <Box
             alignItems="center"
             display="flex"
-            justifyContent="space-between"
+            justifyContent="flex-end"
             mt={2}
           >
-            <CreatingSummary orgId={orgId} />
             <Box>
               <Button
                 onClick={() => {
@@ -127,7 +130,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 }}
                 variant="contained"
               >
-                <Msg id={messageIds.createPerson.submitLabel.default} />
+                {submitLabel ?? (
+                  <Msg id={messageIds.createPerson.submitLabel.default} />
+                )}
               </Button>
             </Box>
           </Box>

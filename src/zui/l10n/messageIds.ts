@@ -28,7 +28,7 @@ export default makeMessages('zui', {
     cancel: m('Cancel'),
     createBtn: m('Create'),
     title: {
-      addTo: m<{ value: string }>('and add to "{value}"'),
+      addTo: m<{ value: string }>('and add to {value}'),
       assignTo: m<{ value: string }>('and assign to "{value}"'),
       caller: m('and add caller'),
       contract: m('and assign as contract'),
