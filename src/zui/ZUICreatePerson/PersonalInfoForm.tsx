@@ -196,7 +196,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 label={field.title}
                 field={field.slug}
                 isURLField
-                onChange={(field, value) => onChange(field, formatUrl(value))}
+                onChange={(field, value) =>
+                  onChange(field, value ?? formatUrl(value))
+                }
               />
             );
           } else {

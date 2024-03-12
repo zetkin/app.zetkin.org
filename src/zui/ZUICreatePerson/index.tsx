@@ -173,7 +173,6 @@ export const checkInvalidFields = (
   } else {
     invalidFields = invalidFields.filter((item) => item !== 'alt_phone');
   }
-
   //urls;
   customFieldURLSlugs.forEach((slug) => {
     if (!isURL(personalInfo[slug] || '') && personalInfo[slug] !== undefined) {
