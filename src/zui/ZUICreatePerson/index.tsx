@@ -25,9 +25,16 @@ import CreatingSummary from './CreatingSummary';
 interface ZUICreatePersonProps {
   onClose: () => void;
   open: boolean;
+  title?: string;
+  submitLabel?: string;
 }
 
-const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
+const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
+  open,
+  onClose,
+  title,
+  submitLabel,
+}) => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -51,7 +58,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
     >
       <Box sx={{ padding: '40px 0 40px 40px' }}>
         <Typography mb={2} variant="h5">
-          <Msg id={messageIds.createPerson.title} />
+          <Msg id={messageIds.createPerson.title.default} />
         </Typography>
         {customFields.length === 0 && (
           <Box
@@ -68,11 +75,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                 delete copied[field];
                 setPersonalInfo(copied);
               } else {
-                if (field === 'tags') {
+                if (field === 'tags' && value) {
                   setTags((prev) =>
-                    tags.includes(value! as number)
+                    tags.includes(value as number)
                       ? tags.filter((item) => item !== value)
-                      : [...prev, value! as number]
+                      : [...prev, value as number]
                   );
                 } else {
                   setPersonalInfo((prev) => {
@@ -120,7 +127,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({ open, onClose }) => {
                 }}
                 variant="contained"
               >
-                <Msg id={messageIds.createPerson.createBtn} />
+                <Msg id={messageIds.createPerson.submitLabel.default} />
               </Button>
             </Box>
           </Box>

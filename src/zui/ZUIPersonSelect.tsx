@@ -69,6 +69,8 @@ type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 type ZUIPersonSelectProps = UsePersonSelectProps & {
   size?: 'small' | 'medium';
   variant?: 'filled' | 'outlined' | 'standard';
+  submitLabel?: string;
+  title?: string;
 };
 
 export const usePersonSelect: UsePersonSelect = ({
@@ -180,7 +182,8 @@ export const usePersonSelect: UsePersonSelect = ({
 const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   props
 ) => {
-  const { label, size, variant, ...restComponentProps } = props;
+  const { label, size, variant, submitLabel, title, ...restComponentProps } =
+    props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
 
   const { name, placeholder, inputRef, shiftHeld, ...restProps } =
@@ -237,6 +240,8 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
       <ZUICreatePerson
         onClose={() => setCreatePersonOpen(false)}
         open={createPersonOpen}
+        submitLabel={submitLabel}
+        title={title}
       />
     </>
   );

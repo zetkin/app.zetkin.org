@@ -26,11 +26,25 @@ export default makeMessages('zui', {
   },
   createPerson: {
     cancel: m('Cancel'),
+    createBtn: m('Create'),
+    title: {
+      addTo: m<{ value: string }>('and add to "{value}"'),
+      assignTo: m<{ value: string }>('and assign to "{value}"'),
+      caller: m('and add caller'),
+      contract: m('and assign as contract'),
+      default: m('Create person'),
+      participant: m('and add as participant'),
+    },
+    submitLabel: {
+      default: m('Create'),
+      add: m('Create & add'),
+      assign: m('Create & assign'),
+    },
+    defaultitle: m('Create person'),
     personWillBe: m<{ addedToOrg: ReactElement; orgName: string }>(
       'The person will be {addedToOrg} {orgName}'
     ),
     addedToOrg: m('added to the organization'),
-    createBtn: m('Create person'),
     genders: {
       f: m('Female'),
       m: m('Male'),
@@ -38,7 +52,6 @@ export default makeMessages('zui', {
       unknown: m('Unknown'),
     },
     showAllFields: m('Show all fields'),
-    title: m('Create person'),
     validationWarning: {
       phone: m('Please add a valid phone number'),
       email: m('Please add a valid Email'),
