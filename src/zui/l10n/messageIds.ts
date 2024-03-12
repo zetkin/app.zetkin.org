@@ -27,34 +27,33 @@ export default makeMessages('zui', {
   createPerson: {
     cancel: m('Cancel'),
     createBtn: m('Create'),
-    title: {
-      addTo: m<{ value: string }>('and add to {value}'),
-      assignTo: m<{ value: string }>('and assign to "{value}"'),
-      caller: m('and add caller'),
-      contract: m('and assign as contract'),
-      default: m('Create person'),
-      participant: m('and add as participant'),
-    },
-    submitLabel: {
-      default: m('Create'),
-      add: m('Create & add'),
-      assign: m('Create & assign'),
-    },
     defaultitle: m('Create person'),
-    personWillBe: m<{ addedToOrg: ReactElement; orgName: string }>(
-      'The person will be {addedToOrg} {orgName}'
-    ),
-    addedToOrg: m('added to the organization'),
     genders: {
       f: m('Female'),
       m: m('Male'),
       o: m('Other'),
       unknown: m('Unknown'),
     },
+    personWillBe: m<{ addedToOrg: ReactElement; orgName: string }>(
+      'The person will be {addedToOrg} {orgName}'
+    ),
     showAllFields: m('Show all fields'),
+    submitLabel: {
+      add: m('Create & add'),
+      assign: m('Create & assign'),
+      default: m('Create'),
+    },
+    title: {
+      addTo: m<{ value: string }>('and add to {value}'),
+      assignTo: m<{ value: string }>('and assign to "{value}"'),
+      caller: m('and add caller'),
+      contact: m('and assign as contact'),
+      default: m('Create person'),
+      participant: m('and add as participant'),
+    },
     validationWarning: {
-      phone: m('Please add a valid phone number'),
       email: m('Please add a valid Email'),
+      phone: m('Please add a valid phone number'),
       url: m('Please add a valid URL'),
     },
   },

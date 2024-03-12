@@ -68,9 +68,9 @@ type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
 type ZUIPersonSelectProps = UsePersonSelectProps & {
   size?: 'small' | 'medium';
-  variant?: 'filled' | 'outlined' | 'standard';
   submitLabel?: string;
   title?: string;
+  variant?: 'filled' | 'outlined' | 'standard';
 };
 
 export const usePersonSelect: UsePersonSelect = ({
@@ -197,6 +197,7 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
       <MUIAutocomplete
         {...restProps}
         handleHomeEndKeys={!shiftHeld}
+        onChange={onChange}
         PaperComponent={({ children }) => {
           return (
             <Paper
@@ -239,10 +240,10 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
       />
       <ZUICreatePerson
         onClose={() => setCreatePersonOpen(false)}
+        onSubmit={(e, person) => onChange(e, person)}
         open={createPersonOpen}
         submitLabel={submitLabel}
         title={title}
-        onSubmit={(e, person) => onChange(e, person)}
       />
     </>
   );

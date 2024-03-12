@@ -98,8 +98,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 }
               }
             }}
-            tags={tags}
             personalInfo={personalInfo}
+            tags={tags}
           />
         )}
         <Box sx={{ pr: '40px' }}>

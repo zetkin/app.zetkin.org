@@ -13,7 +13,9 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { checkInvalidFields } from '.';
+import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/globalMessageIds';
+import InfoTextField from './InfoTextField';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
@@ -22,8 +24,6 @@ import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
-import InfoTextField from './InfoTextField';
-import formatUrl from 'utils/formatUrl';
 
 dayjs.extend(utc);
 
@@ -193,9 +193,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             return (
               <InfoTextField
                 error={invalidFields.includes(field.slug)}
-                label={field.title}
                 field={field.slug}
                 isURLField
+                label={field.title}
                 onChange={(field, value) =>
                   onChange(field, value ?? formatUrl(value))
                 }
@@ -204,8 +204,8 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           } else {
             return (
               <InfoTextField
-                label={field.title}
                 field={field.slug}
+                label={field.title}
                 onChange={(field, value) => onChange(field, value)}
               />
             );

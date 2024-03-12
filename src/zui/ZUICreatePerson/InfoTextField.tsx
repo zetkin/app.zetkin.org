@@ -1,12 +1,12 @@
-import { FC, MutableRefObject } from 'react';
 import globalMessageIds from 'core/i18n/globalMessageIds';
+import messageIds from 'zui/l10n/messageIds';
 import { TextField } from '@mui/material';
+import { FC, MutableRefObject } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinCreatePerson,
   ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
-import messageIds from 'zui/l10n/messageIds';
 
 interface CreatePersonTextFieldProps {
   field: keyof ZetkinCreatePerson;
@@ -15,8 +15,7 @@ interface CreatePersonTextFieldProps {
   required?: boolean;
   isURLField?: boolean;
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
-  style?: {};
-  onBlur?: (field: string) => void;
+  style?: Record<string, unknown>;
   error?: boolean;
 }
 const InfoTextField: FC<CreatePersonTextFieldProps> = ({
@@ -34,6 +33,7 @@ const InfoTextField: FC<CreatePersonTextFieldProps> = ({
   return (
     <TextField
       error={error}
+      fullWidth
       helperText={
         error && (
           <Msg
@@ -47,7 +47,7 @@ const InfoTextField: FC<CreatePersonTextFieldProps> = ({
           />
         )
       }
-      fullWidth
+      inputRef={inputRef}
       label={
         label
           ? label
@@ -58,7 +58,6 @@ const InfoTextField: FC<CreatePersonTextFieldProps> = ({
       onChange={(e) => onChange(field, e.target.value)}
       required={required}
       sx={style}
-      inputRef={inputRef}
     />
   );
 };
