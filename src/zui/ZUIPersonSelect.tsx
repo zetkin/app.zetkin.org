@@ -186,7 +186,7 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
     props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
 
-  const { name, placeholder, inputRef, shiftHeld, ...restProps } =
+  const { name, placeholder, inputRef, shiftHeld, onChange, ...restProps } =
     autoCompleteProps;
   delete restProps.getOptionValue;
 
@@ -242,6 +242,7 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
         open={createPersonOpen}
         submitLabel={submitLabel}
         title={title}
+        onSubmit={(e, person) => onChange(e, person)}
       />
     </>
   );

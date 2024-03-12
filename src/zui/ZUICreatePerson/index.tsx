@@ -11,18 +11,23 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 
 import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import PersonalInfoForm from './PersonalInfoForm';
+import useCreatePerson from 'features/profile/hooks/useCreatePerson';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
-import useCreatePerson from 'features/profile/hooks/useCreatePerson';
+import {
+  ZetkinCreatePerson,
+  ZetkinCustomField,
+  ZetkinPerson,
+} from 'utils/types/zetkin';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
+  onSubmit?: (e: MouseEvent<HTMLButtonElement>, person: ZetkinPerson) => void;
   open: boolean;
   title?: string;
   submitLabel?: string;
@@ -31,6 +36,7 @@ interface ZUICreatePersonProps {
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   open,
   onClose,
+  onSubmit,
   title,
   submitLabel,
 }) => {
@@ -122,8 +128,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                   personalInfo.last_name === undefined ||
                   checkInvalidFields(customFields, personalInfo).length !== 0
                 }
-                onClick={() => {
-                  createPerson(personalInfo, tags);
+                onClick={async (e) => {
+                  const person = await createPerson(personalInfo, tags);
+                  if (onSubmit) {
+                    onSubmit(e, person);
+                  }
                   onClose();
                   setPersonalInfo({});
                   setTags([]);
