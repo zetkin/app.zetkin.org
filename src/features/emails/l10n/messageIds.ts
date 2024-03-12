@@ -119,9 +119,9 @@ export default makeMessages('feat.emails', {
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
   },
-  orgHasNoEmail: {
+  emailFeatureIsBlocked: {
     errorMessage: m(
-      'Your organization can not use the email feature since it does not have a registered email address.'
+      'Your organization does not have access to the email feature at the moment.'
     ),
     goBackButton: m('Go back'),
   },

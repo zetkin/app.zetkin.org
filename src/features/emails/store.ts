@@ -1,3 +1,4 @@
+import { EmailFrame } from './types';
 import { EmailStats } from './hooks/useEmailStats';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -10,11 +11,13 @@ import {
 
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
+  frameList: RemoteList<EmailFrame>;
   statsById: Record<number, RemoteItem<EmailStats>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
+  frameList: remoteList(),
   statsById: {},
 };
 
@@ -99,6 +102,16 @@ const emailsSlice = createSlice({
       state.emailList.loaded = timestamp;
       state.emailList.items.forEach((item) => (item.loaded = timestamp));
     },
+    framesLoad: (state) => {
+      state.frameList.isLoading = true;
+    },
+    framesLoaded: (state, action: PayloadAction<EmailFrame[]>) => {
+      const frames = action.payload;
+      const timestamp = new Date().toISOString();
+      state.frameList = remoteList(frames);
+      state.frameList.loaded = timestamp;
+      state.frameList.items.forEach((item) => (item.loaded = timestamp));
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const statsItem = state.statsById[id];
@@ -148,6 +161,8 @@ export const {
   emailUpdated,
   emailsLoad,
   emailsLoaded,
+  framesLoad,
+  framesLoaded,
   statsLoad,
   statsLoaded,
 } = emailsSlice.actions;

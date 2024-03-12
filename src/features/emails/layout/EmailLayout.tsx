@@ -9,6 +9,7 @@ import messageIds from '../l10n/messageIds';
 import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
+import useEmailFrames from '../hooks/useEmailFrames';
 import useEmailStats from '../hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganization from 'features/organizations/hooks/useOrganization';
@@ -33,6 +34,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
   const emailStatsFuture = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   const organization = useOrganization(orgId).data;
+  const frames = useEmailFrames(orgId).data || [];
 
   if (!email || !organization) {
     return null;
@@ -110,7 +112,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
       >
         {children}
       </TabbedLayout>
-      <Dialog open={!organization.email}>
+      <Dialog open={!organization.email || frames.length == 0}>
         <Box
           alignItems="center"
           display="flex"
@@ -120,7 +122,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
           padding={2}
         >
           <Typography>
-            <Msg id={messageIds.orgHasNoEmail.errorMessage} />
+            <Msg id={messageIds.emailFeatureIsBlocked.errorMessage} />
           </Typography>
           <Button
             onClick={() => {
@@ -128,7 +130,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
             }}
             variant="contained"
           >
-            <Msg id={messageIds.orgHasNoEmail.goBackButton} />
+            <Msg id={messageIds.emailFeatureIsBlocked.goBackButton} />
           </Button>
         </Box>
       </Dialog>
