@@ -178,6 +178,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           } else if (field.type === 'date') {
             return (
               <DatePicker
+                key={field.slug}
                 format="DD-MM-YYYY"
                 label={field.title}
                 onChange={(date: Dayjs | null) => {
@@ -192,6 +193,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           } else if (field.type === 'url') {
             return (
               <InfoTextField
+                key={field.slug}
                 error={invalidFields.includes(field.slug)}
                 field={field.slug}
                 isURLField
@@ -204,6 +206,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           } else {
             return (
               <InfoTextField
+                key={field.slug}
                 field={field.slug}
                 label={field.title}
                 onChange={(field, value) => onChange(field, value)}

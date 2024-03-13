@@ -150,6 +150,10 @@ const JourneyInstanceSidebar = ({
                   }}
                   selectedPerson={null}
                   size="small"
+                  submitLabel={zuiMessages.createPerson.submitLabel.add()}
+                  title={zuiMessages.createPerson.title.addTo({
+                    value: journeyInstance.journey.singular_label,
+                  })}
                 />
               </div>
             </ClickAwayListener>
