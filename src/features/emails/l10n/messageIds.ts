@@ -28,12 +28,8 @@ export default makeMessages('feat.emails', {
   deliveryStatus: {
     notLocked: m('Not locked, not scheduled'),
     notScheduled: m('Not scheduled'),
-    wasSent: m<{ date: ReactElement; time: string }>(
-      'Was sent at {time}, {date}'
-    ),
-    willSend: m<{ date: ReactElement; time: string }>(
-      'Will send at {time}, {date}'
-    ),
+    wasSent: m<{ datetime: ReactElement }>('Was sent at {datetime}'),
+    willSend: m<{ datetime: ReactElement }>('Will send at {datetime}'),
   },
   editor: {
     readOnlyModeInfo: m(

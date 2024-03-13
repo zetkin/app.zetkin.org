@@ -3,10 +3,9 @@ import { AccessTime, Send } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { removeOffset } from 'utils/dateUtils';
 import { Typography } from '@mui/material';
 import { ZetkinEmail } from 'utils/types/zetkin';
-import ZUIDateSpan from 'zui/ZUIDateSpan';
+import ZUIDateTime from 'zui/ZUIDateTime';
 
 interface DeliveryStatusMessageProps {
   email: ZetkinEmail;
@@ -31,13 +30,9 @@ const DeliveryStatusMessage = ({ email }: DeliveryStatusMessageProps) => {
                 : messageIds.deliveryStatus.willSend
             }
             values={{
-              date: (
-                <ZUIDateSpan
-                  end={new Date(email.published)}
-                  start={new Date(email.published)}
-                />
+              datetime: (
+                <ZUIDateTime convertToLocal datetime={email.published} />
               ),
-              time: removeOffset(email.published.slice(11, 16)),
             }}
           />
         </Typography>

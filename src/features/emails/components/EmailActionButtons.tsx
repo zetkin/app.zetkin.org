@@ -6,12 +6,11 @@ import CancelButton from './CancelButton';
 import DeliveryButton from './DeliveryButton';
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
-import { removeOffset } from 'utils/dateUtils';
 import useDuplicateEmail from '../hooks/useDuplicateEmail';
 import useEmail from '../hooks/useEmail';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import ZUIDateSpan from 'zui/ZUIDateSpan';
+import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -44,13 +43,9 @@ const EmailActionButtons = ({
             <Msg
               id={messageIds.deliveryStatus.wasSent}
               values={{
-                date: (
-                  <ZUIDateSpan
-                    end={new Date(email.published)}
-                    start={new Date(email.published)}
-                  />
+                datetime: (
+                  <ZUIDateTime convertToLocal datetime={email.published} />
                 ),
-                time: removeOffset(email.published.slice(11, 16)),
               }}
             />
           </Typography>
