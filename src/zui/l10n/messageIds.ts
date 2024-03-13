@@ -45,7 +45,7 @@ export default makeMessages('zui', {
     },
     title: {
       addTo: m<{ value: string }>('and add to {value}'),
-      assignTo: m<{ value: string }>('and assign to "{value}"'),
+      assignTo: m<{ value: string }>('and assign to {value}'),
       caller: m('and add caller'),
       contact: m('and assign as contact'),
       default: m('Create person'),
