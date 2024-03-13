@@ -58,10 +58,9 @@ const EmailDelivery = ({ email, onClose, orgId }: EmailDeliveryProps) => {
 
   return (
     <ClickAwayListener
-      mouseEvent="onMouseUp"
-      onClickAway={() => {
+      onClickAway={(event) => {
+        event.stopPropagation();
         onClose();
-        setTzValue(scheduledTime || currentTzValue);
       }}
     >
       <Paper sx={{ p: 2, width: '550px' }}>
