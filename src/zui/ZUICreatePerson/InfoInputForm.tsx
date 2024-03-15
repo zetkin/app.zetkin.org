@@ -8,7 +8,7 @@ import {
   ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
 
-interface CreatePersonTextFieldProps {
+interface InfoInputFormProps {
   field: keyof ZetkinCreatePerson;
   label?: string;
   onChange: (field: string, value: string) => void;
@@ -18,7 +18,7 @@ interface CreatePersonTextFieldProps {
   style?: Record<string, unknown>;
   error?: boolean;
 }
-const InfoTextField: FC<CreatePersonTextFieldProps> = ({
+const InfoInputForm: FC<InfoInputFormProps> = ({
   field,
   label,
   onChange,
@@ -61,4 +61,4 @@ const InfoTextField: FC<CreatePersonTextFieldProps> = ({
     />
   );
 };
-export default InfoTextField;
+export default InfoInputForm;

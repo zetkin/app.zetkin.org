@@ -15,7 +15,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { checkInvalidFields } from '.';
 import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/globalMessageIds';
-import InfoTextField from './InfoTextField';
+import InfoInputForm from './InfoInputForm';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import { TagManagerSection } from 'features/tags/components/TagManager';
@@ -83,33 +83,33 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          <InfoTextField
+          <InfoInputForm
             field={'first_name'}
             onChange={(field, value) => onChange(field, value)}
             required
           />
         </Box>
         <Box width="50%">
-          <InfoTextField
+          <InfoInputForm
             field={'last_name'}
             onChange={(field, value) => onChange(field, value)}
             required
           />
         </Box>
       </Box>
-      <InfoTextField
+      <InfoInputForm
         error={invalidFields.includes('email')}
         field={'email'}
         onChange={(field, value) => onChange(field, value)}
       />
-      <InfoTextField
+      <InfoInputForm
         error={invalidFields.includes('phone')}
         field={'phone'}
         onChange={(field, value) => onChange(field, value)}
       />
       {showAllClickedType !== 'none' && (
         <Box display="flex" flexDirection="column" gap={2}>
-          <InfoTextField
+          <InfoInputForm
             error={invalidFields.includes('alt_phone')}
             field={'alt_phone'}
             inputRef={inputRef}
@@ -136,16 +136,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               ))}
             </Select>
           </FormControl>
-          <InfoTextField
+          <InfoInputForm
             field={'street_address'}
             onChange={(field, value) => onChange(field, value)}
           />
-          <InfoTextField
+          <InfoInputForm
             field={'co_address'}
             onChange={(field, value) => onChange(field, value)}
           />
           <Box>
-            <InfoTextField
+            <InfoInputForm
               field={'zip_code'}
               onChange={(field, value) => onChange(field, value)}
               style={{
@@ -153,7 +153,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 width: '30%',
               }}
             />
-            <InfoTextField
+            <InfoInputForm
               field={'city'}
               onChange={(field, value) => onChange(field, value)}
               style={{
@@ -161,11 +161,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               }}
             />
           </Box>
-          <InfoTextField
+          <InfoInputForm
             field={'country'}
             onChange={(field, value) => onChange(field, value)}
           />
-          <InfoTextField
+          <InfoInputForm
             field={'ext_id'}
             onChange={(field, value) => onChange(field, value)}
           />
@@ -192,7 +192,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else if (field.type === 'url') {
             return (
-              <InfoTextField
+              <InfoInputForm
                 key={field.slug}
                 error={invalidFields.includes(field.slug)}
                 field={field.slug}
@@ -205,7 +205,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else {
             return (
-              <InfoTextField
+              <InfoInputForm
                 key={field.slug}
                 field={field.slug}
                 label={field.title}
