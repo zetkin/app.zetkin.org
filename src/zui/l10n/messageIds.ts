@@ -34,9 +34,6 @@ export default makeMessages('zui', {
       o: m('Other'),
       unknown: m('Unknown'),
     },
-    personWillBe: m<{ addedToOrg: ReactElement; orgName: string }>(
-      'The person will be {addedToOrg} {orgName}'
-    ),
     showAllFields: m('Show all fields'),
     submitLabel: {
       add: m('Create & add'),
