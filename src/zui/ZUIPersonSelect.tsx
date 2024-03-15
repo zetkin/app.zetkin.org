@@ -67,6 +67,7 @@ interface UsePersonSelectReturn {
 type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
 type ZUIPersonSelectProps = UsePersonSelectProps & {
+  disabled?: boolean;
   size?: 'small' | 'medium';
   submitLabel?: string;
   title?: string;
@@ -182,8 +183,15 @@ export const usePersonSelect: UsePersonSelect = ({
 const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   props
 ) => {
-  const { label, size, variant, submitLabel, title, ...restComponentProps } =
-    props;
+  const {
+    disabled,
+    label,
+    size,
+    variant,
+    submitLabel,
+    title,
+    ...restComponentProps
+  } = props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
 
   const { name, placeholder, inputRef, shiftHeld, onChange, ...restProps } =
@@ -207,19 +215,23 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
               }}
             >
               {children}
-              <Divider sx={{ mt: 1 }} />
-              <Button
-                color="primary"
-                onClick={() => setCreatePersonOpen(true)}
-                startIcon={<PersonAdd />}
-                sx={{
-                  justifyContent: 'flex-start',
-                  m: 2,
-                }}
-                variant="outlined"
-              >
-                <Msg id={messageIds.createPerson.createBtn} />
-              </Button>
+              {!disabled && (
+                <>
+                  <Divider sx={{ mt: 1 }} />
+                  <Button
+                    color="primary"
+                    onClick={() => setCreatePersonOpen(true)}
+                    startIcon={<PersonAdd />}
+                    sx={{
+                      justifyContent: 'flex-start',
+                      m: 2,
+                    }}
+                    variant="outlined"
+                  >
+                    <Msg id={messageIds.createPerson.createBtn} />
+                  </Button>
+                </>
+              )}
             </Paper>
           );
         }}

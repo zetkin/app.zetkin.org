@@ -73,6 +73,7 @@ const ShareViewDialogShareTab = () => {
             </ZUIScrollingContainer>
             <Box marginTop={1}>
               <MUIOnlyPersonSelect
+                disabled
                 getOptionDisabled={(person) =>
                   accessList.some((item) => item.person.id == person.id) ||
                   officials.some((item) => item.id == person.id)
