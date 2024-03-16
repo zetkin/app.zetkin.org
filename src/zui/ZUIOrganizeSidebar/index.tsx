@@ -171,6 +171,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                         sx={{
                           alignItems: 'center',
                           display: 'flex',
+                          overflow: 'hidden',
                         }}
                       >
                         {!showOrgSwitcher && (
@@ -193,7 +194,15 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                                 />
                               )}
                             </Box>
-                            <Typography variant="h6">{data.title}</Typography>
+                            <Typography
+                              sx={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                              }}
+                              variant="h6"
+                            >
+                              {data.title}
+                            </Typography>
                           </>
                         )}
 
