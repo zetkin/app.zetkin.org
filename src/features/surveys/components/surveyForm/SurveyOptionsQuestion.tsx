@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import SurveyContainer from './SurveyContainer';
 import SurveyOption from './SurveyOption';
 import SurveyQuestionDescription from './SurveyQuestionDescription';
@@ -13,7 +12,9 @@ import {
   Radio,
   RadioGroup,
   Select,
+  SelectChangeEvent,
 } from '@mui/material';
+import { FC, useCallback, useState } from 'react';
 import {
   ZetkinSurveyOption,
   ZetkinSurveyOptionsQuestionElement,
@@ -24,6 +25,11 @@ export type OptionsQuestionProps = {
 };
 
 const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
+  const [dropdownValue, setDropdownValue] = useState('');
+  const handleDropdownChange = useCallback((event: SelectChangeEvent) => {
+    setDropdownValue(event.target.value);
+  }, []);
+
   return (
     <FormControl fullWidth>
       <SurveyContainer>
@@ -129,6 +135,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
               <Select
                 aria-labelledby={`label-${element.id}`}
                 name={`${element.id}.options`}
+                onChange={handleDropdownChange}
+                value={dropdownValue}
               >
                 {element.question.options!.map((option: ZetkinSurveyOption) => (
                   <MenuItem key={option.id} value={option.id}>
