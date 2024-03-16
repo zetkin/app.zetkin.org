@@ -1,6 +1,7 @@
 import { FC } from 'react';
+import SurveyContainer from './SurveyContainer';
+import { Typography } from '@mui/material';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
-import { Box, Typography } from '@mui/material';
 
 export type SurveyTextBlockProps = {
   element: ZetkinSurveyTextElement;
@@ -8,10 +9,10 @@ export type SurveyTextBlockProps = {
 
 const SurveyTextBlock: FC<SurveyTextBlockProps> = ({ element }) => {
   return (
-    <Box>
+    <SurveyContainer>
       <Typography>{element.text_block.header}</Typography>
       <Typography>{element.text_block.content}</Typography>
-    </Box>
+    </SurveyContainer>
   );
 };
 
