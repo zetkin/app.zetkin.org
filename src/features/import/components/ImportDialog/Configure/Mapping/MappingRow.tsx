@@ -118,6 +118,7 @@ const MappingRow: FC<MappingRowProps> = ({
                     kind: ColumnKind.ID_FIELD,
                     selected: true,
                   });
+                  onConfigureStart();
                 } else if (event.target.value == 'org') {
                   onChange({
                     kind: ColumnKind.ORGANIZATION,
