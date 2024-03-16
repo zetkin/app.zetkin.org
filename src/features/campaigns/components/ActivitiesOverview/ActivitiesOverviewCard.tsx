@@ -42,6 +42,8 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
 
   const focusedDate = focusDate?.toISOString().split('T')[0];
 
+  console.log(activities);
+
   return (
     <ZUICard header={header}>
       {clustered.length === 0 && (

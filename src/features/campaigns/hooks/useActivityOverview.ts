@@ -10,6 +10,7 @@ import {
   LoadingFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
+import { getActivitiesByDay } from 'features/calendar/components/utils';
 
 export default function useActivitiyOverview(
   orgId: number,
@@ -49,6 +50,8 @@ export default function useActivitiyOverview(
     ...(callAssignmentActivitiesFuture.data || [])
   );
 
+  const activitiesByDay = getActivitiesByDay(activities);
+
   const sortedAcitvities = activities.sort((first, second) => {
     if (first.visibleFrom === null) {
       return -1;
@@ -69,46 +72,59 @@ export default function useActivitiyOverview(
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
-  overview.today = sortedAcitvities.filter((activity) => {
-    if (activity.kind == ACTIVITIES.EVENT) {
-      const startDate = new Date(activity.data.start_time);
-      return isSameDate(startDate, todayDate);
-    } else {
-      return (
-        (activity.visibleFrom && isSameDate(activity.visibleFrom, todayDate)) ||
-        (activity.visibleUntil && isSameDate(activity.visibleUntil, todayDate))
-      );
-    }
-  });
+  const activitiesToday =
+    activitiesByDay[todayDate.toISOString().slice(0, 10)]?.events;
 
-  overview.tomorrow = sortedAcitvities.filter((activity) => {
-    if (activity.kind == ACTIVITIES.EVENT) {
-      const startDate = new Date(activity.data.start_time);
-      return isSameDate(startDate, tomorrowDate);
-    } else {
-      return (
-        (activity.visibleFrom &&
-          isSameDate(activity.visibleFrom, tomorrowDate)) ||
-        (activity.visibleUntil &&
-          isSameDate(activity.visibleUntil, tomorrowDate))
-      );
-    }
-  });
+  const activitiesTomorrow =
+    activitiesByDay[todayDate.toISOString().slice(0, 10)]?.events;
 
-  overview.alsoThisWeek = sortedAcitvities.filter((activity) => {
-    if (
-      overview.today.includes(activity) ||
-      overview.tomorrow.includes(activity)
-    ) {
-      return false;
-    }
+  // Current: If an activity begins on today
+  // TODO: If an activity has any point in time today
+  overview.today = activitiesToday;
 
-    return (
-      activity.visibleFrom &&
-      activity.visibleFrom < weekFromNow &&
-      (!activity.visibleUntil || activity.visibleUntil >= startOfToday)
-    );
-  });
+  // overview.today = sortedAcitvities.filter((activity) => {
+  //   if (activity.kind == ACTIVITIES.EVENT) {
+  //     const startDate = new Date(activity.data.start_time);
+  //     return isSameDate(startDate, todayDate);
+  //   } else {
+  //     return (
+  //       (activity.visibleFrom && isSameDate(activity.visibleFrom, todayDate)) ||
+  //       (activity.visibleUntil && isSameDate(activity.visibleUntil, todayDate))
+  //     );
+  //   }
+  // });
+
+  // If an activity has any point in time tomorrow
+  overview.tomorrow = activitiesTomorrow;
+  // overview.tomorrow = sortedAcitvities.filter((activity) => {
+  //   if (activity.kind == ACTIVITIES.EVENT) {
+  //     const startDate = new Date(activity.data.start_time);
+  //     return isSameDate(startDate, tomorrowDate);
+  //   } else {
+  //     return (
+  //       (activity.visibleFrom &&
+  //         isSameDate(activity.visibleFrom, tomorrowDate)) ||
+  //       (activity.visibleUntil &&
+  //         isSameDate(activity.visibleUntil, tomorrowDate))
+  //     );
+  //   }
+  // });
+
+  // If an activity includes any other time this week
+  // overview.alsoThisWeek = sortedAcitvities.filter((activity) => {
+  //   if (
+  //     overview.today.includes(activity) ||
+  //     overview.tomorrow.includes(activity)
+  //   ) {
+  //     return false;
+  //   }
+
+  //   return (
+  //     activity.visibleFrom &&
+  //     activity.visibleFrom < weekFromNow &&
+  //     (!activity.visibleUntil || activity.visibleUntil >= startOfToday)
+  //   );
+  // });
 
   return new ResolvedFuture(overview);
 }
