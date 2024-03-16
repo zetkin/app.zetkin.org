@@ -229,6 +229,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             }}
                             onChange={(e) => setSearchString(e.target.value)}
                             placeholder={messages.organizeSidebar.filter()}
+                            size="small"
                             value={searchString}
                           />
                         )}
