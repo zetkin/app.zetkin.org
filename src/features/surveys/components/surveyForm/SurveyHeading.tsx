@@ -1,7 +1,7 @@
-import { Box } from '@mui/material';
 import { FC } from 'react';
 import SurveyErrorMessage from './SurveyErrorMessage';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import { Box, Typography } from '@mui/material';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyFormStatus,
@@ -15,7 +15,13 @@ export type SurveyHeadingProps = {
 const SurveyHeading: FC<SurveyHeadingProps> = ({ status, survey }) => {
   return (
     <Box>
-      <Box alignItems="center" columnGap={1} display="flex" flexDirection="row">
+      <Box
+        alignItems="center"
+        columnGap={1}
+        display="flex"
+        flexDirection="row"
+        padding={1}
+      >
         <ZUIAvatar
           size="md"
           url={`/api/orgs/${survey.organization.id}/avatar`}
@@ -25,9 +31,16 @@ const SurveyHeading: FC<SurveyHeadingProps> = ({ status, survey }) => {
 
       {status === 'error' && <SurveyErrorMessage />}
 
-      <h1>{survey.title}</h1>
-
-      {survey.info_text && <p>{survey.info_text}</p>}
+      <Box bgcolor="background.default" padding={2}>
+        <Typography component="h1" fontSize="2rem">
+          {survey.title}
+        </Typography>
+        {survey.info_text && (
+          <Typography color="grey.600" component="p">
+            {survey.info_text}
+          </Typography>
+        )}
+      </Box>
     </Box>
   );
 };

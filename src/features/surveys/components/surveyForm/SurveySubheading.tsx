@@ -8,15 +8,10 @@ export type SurveySubheadingProps = {
 const SurveySubheading: FC<SurveySubheadingProps> = ({ children }) => {
   return (
     <Typography
+      color="text.primary"
       component="span"
-      style={{
-        color: 'black',
-        display: 'block',
-        fontSize: '1.5em',
-        fontWeight: '500',
-        marginBottom: '0.5em',
-        marginTop: '0.5em',
-      }}
+      fontSize="1.3rem"
+      fontWeight="bold"
     >
       {children}
     </Typography>

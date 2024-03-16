@@ -1,5 +1,6 @@
 'use client';
 
+import { Box } from '@mui/material';
 import { FC } from 'react';
 import { submit } from 'features/surveys/actions/submit';
 import SurveyElements from './SurveyElements';
@@ -32,7 +33,12 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey }) => {
   }
 
   return (
-    <>
+    <Box
+      bgcolor="background.paper"
+      display="flex"
+      flexDirection="column"
+      gap={4}
+    >
       {(status === 'editing' || status === 'error') && (
         <>
           <SurveyHeading
@@ -42,15 +48,17 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey }) => {
           <form action={action as unknown as string}>
             <input name="orgId" type="hidden" value={survey.organization.id} />
             <input name="surveyId" type="hidden" value={survey.id} />
-            <SurveyElements survey={survey as ZetkinSurveyExtended} />
-            <SurveySignature survey={survey as ZetkinSurveyExtended} />
-            <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
-            <SurveySubmitButton />
+            <Box display="flex" flexDirection="column" gap={4}>
+              <SurveyElements survey={survey as ZetkinSurveyExtended} />
+              <SurveySignature survey={survey as ZetkinSurveyExtended} />
+              <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
+              <SurveySubmitButton />
+            </Box>
           </form>
         </>
       )}
       {status === 'submitted' && <SurveySuccess survey={survey} />}
-    </>
+    </Box>
   );
 };
 

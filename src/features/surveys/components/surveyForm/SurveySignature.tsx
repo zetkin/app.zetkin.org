@@ -40,7 +40,7 @@ const SurveySignature: FC<SurveySignatureProps> = ({ survey }) => {
   );
 
   return (
-    <FormControl>
+    <FormControl fullWidth>
       <RadioGroup
         aria-labelledby="survey-signature"
         name="sig"
@@ -48,14 +48,15 @@ const SurveySignature: FC<SurveySignatureProps> = ({ survey }) => {
           handleRadioChange(e.target.value as ZetkinSurveySignatureType)
         }
       >
-        <FormLabel id="survey-signature">
-          <SurveySubheading>
-            <Msg id={messageIds.surveySignature.title} />
-          </SurveySubheading>
-        </FormLabel>
+        <Box display="flex" flexDirection="column" gap={1} paddingX={2}>
+          <FormLabel id="survey-signature">
+            <SurveySubheading>
+              <Msg id={messageIds.surveySignature.title} />
+            </SurveySubheading>
+          </FormLabel>
 
-        <Box display="flex" flexDirection="column" rowGap={1}>
-          {/* <SurveyOption
+          <Box display="flex" flexDirection="column" rowGap={1}>
+            {/* <SurveyOption
             control={<Radio required />}
             label={
               <Typography>
@@ -71,52 +72,55 @@ const SurveySignature: FC<SurveySignatureProps> = ({ survey }) => {
             value="user"
           /> */}
 
-          <SurveyOption
-            control={<Radio required />}
-            label={
-              <Typography>
-                <Msg id={messageIds.surveySignature.type.email} />
-              </Typography>
-            }
-            value="email"
-          />
-
-          {signatureType === 'email' && (
-            <Box
-              display="flex"
-              flexDirection="column"
-              pt={1}
-              style={{ rowGap: theme.spacing(1) }}
-            >
-              <TextField
-                label={<Msg id={messageIds.surveySignature.email.firstName} />}
-                name="sig.first_name"
-                required
-              />
-              <TextField
-                label={<Msg id={messageIds.surveySignature.email.lastName} />}
-                name="sig.last_name"
-                required
-              />
-              <TextField
-                label={<Msg id={messageIds.surveySignature.email.email} />}
-                name="sig.email"
-                required
-              />
-            </Box>
-          )}
-
-          {survey.signature === 'allow_anonymous' && (
             <SurveyOption
               control={<Radio required />}
               label={
                 <Typography>
-                  <Msg id={messageIds.surveySignature.type.anonymous} />
+                  <Msg id={messageIds.surveySignature.type.email} />
                 </Typography>
               }
-              value="anonymous"
+              value="email"
             />
-          )}
+
+            {signatureType === 'email' && (
+              <Box
+                display="flex"
+                flexDirection="column"
+                pt={1}
+                style={{ rowGap: theme.spacing(1) }}
+              >
+                <TextField
+                  label={
+                    <Msg id={messageIds.surveySignature.email.firstName} />
+                  }
+                  name="sig.first_name"
+                  required
+                />
+                <TextField
+                  label={<Msg id={messageIds.surveySignature.email.lastName} />}
+                  name="sig.last_name"
+                  required
+                />
+                <TextField
+                  label={<Msg id={messageIds.surveySignature.email.email} />}
+                  name="sig.email"
+                  required
+                />
+              </Box>
+            )}
+
+            {survey.signature === 'allow_anonymous' && (
+              <SurveyOption
+                control={<Radio required />}
+                label={
+                  <Typography>
+                    <Msg id={messageIds.surveySignature.type.anonymous} />
+                  </Typography>
+                }
+                value="anonymous"
+              />
+            )}
+          </Box>
         </Box>
       </RadioGroup>
     </FormControl>

@@ -23,7 +23,7 @@ export type OptionsQuestionProps = {
 
 const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
   return (
-    <FormControl>
+    <FormControl fullWidth>
       {element.question.response_config.widget_type === 'checkbox' && (
         <FormGroup aria-labelledby={`label-${element.id}`}>
           <FormLabel id={`label-${element.id}`}>
@@ -48,18 +48,20 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
           aria-labelledby={`label-${element.id}`}
           name={`${element.id}.options`}
         >
-          <FormLabel id={`label-${element.id}`}>
-            <SurveySubheading>{element.question.question}</SurveySubheading>
-          </FormLabel>
           <Box display="flex" flexDirection="column" rowGap={1}>
-            {element.question.options!.map((option: ZetkinSurveyOption) => (
-              <SurveyOption
-                key={option.id}
-                control={<Radio />}
-                label={option.text}
-                value={option.id}
-              />
-            ))}
+            <FormLabel id={`label-${element.id}`}>
+              <SurveySubheading>{element.question.question}</SurveySubheading>
+            </FormLabel>
+            <Box display="flex" flexDirection="column" rowGap={1}>
+              {element.question.options!.map((option: ZetkinSurveyOption) => (
+                <SurveyOption
+                  key={option.id}
+                  control={<Radio />}
+                  label={option.text}
+                  value={option.id}
+                />
+              ))}
+            </Box>
           </Box>
         </RadioGroup>
       )}
