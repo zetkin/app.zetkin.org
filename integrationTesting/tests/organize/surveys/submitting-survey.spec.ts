@@ -50,7 +50,7 @@ test.describe('User submitting a survey', () => {
     );
 
     await page.click('input[name="1.options"]');
-    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
@@ -87,7 +87,7 @@ test.describe('User submitting a survey', () => {
     );
 
     await page.click('input[name="1.options"]');
-    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="email"]');
     await page.fill('input[name="sig.email"]', 'testuser@example.org');
     await page.fill('input[name="sig.first_name"]', 'Test');
@@ -121,7 +121,7 @@ test.describe('User submitting a survey', () => {
     );
 
     await page.click('input[name="1.options"][value="1"]');
-    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="user"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
@@ -148,7 +148,7 @@ test.describe('User submitting a survey', () => {
     );
 
     await page.click('input[name="1.options"][value="1"]');
-    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
@@ -167,7 +167,7 @@ test.describe('User submitting a survey', () => {
 
   test('preserves inputs on error', async ({ page }) => {
     await page.click('input[name="1.options"][value="1"]');
-    await page.fill('input[name="2.text"]', 'Topple capitalism');
+    await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
 
@@ -180,7 +180,7 @@ test.describe('User submitting a survey', () => {
     await expect(
       page.locator('input[name="1.options"][value="1"]')
     ).toBeChecked();
-    await expect(page.locator('input[name="2.text"]')).toHaveValue(
+    await expect(page.locator('[name="2.text"]')).toHaveValue(
       'Topple capitalism'
     );
     await expect(
