@@ -16,9 +16,10 @@ interface OrgConfigProps {
 const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const subOrgs = useSubOrganizations(orgId);
+  const subOrgs = useSubOrganizations(orgId).data || [];
+  const activeOrgs = subOrgs.filter((subOrg) => subOrg.is_active);
 
-  if (!subOrgs.data) {
+  if (!subOrgs) {
     return null;
   }
 
@@ -54,7 +55,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectOrg={() => uiDataColumn.deselectOrg(uniqueValue)}
             onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, uniqueValue)}
-            orgs={subOrgs.data || []}
+            orgs={activeOrgs}
             selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
             title={uniqueValue.toString()}
           />
@@ -68,7 +69,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             numRows={uiDataColumn.numberOfEmptyRows}
             onDeselectOrg={() => uiDataColumn.deselectOrg(null)}
             onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, null)}
-            orgs={subOrgs.data || []}
+            orgs={activeOrgs}
             selectedOrgId={uiDataColumn.getSelectedOrgId(null)}
             title={messages.configuration.configure.tags.empty()}
           />
