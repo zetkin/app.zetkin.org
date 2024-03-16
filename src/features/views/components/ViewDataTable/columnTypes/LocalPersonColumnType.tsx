@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
-import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
+import { GridCellParams, GridColDef, GridFilterOperator, GridRenderCellParams, GridRenderEditCellParams, GridValueGetterParams, useGridApiContext, } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import { IFuture } from 'core/caching/futures';
@@ -20,6 +20,21 @@ import { useMessages } from 'core/i18n';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
+function makeEmptyFilterOperator(
+/*   messages: UseMessagesMap<typeof messageIds>
+ */): GridFilterOperator {
+  return {
+    getApplyFilterFn: () => {
+      return (params: GridCellParams) => {
+        const people = params.value as ZetkinPerson[];
+        return people.length === 0;
+      };
+    },
+    label: "Is empty",
+    value: 'isEmpty',
+  };
+}
+
 export default class LocalPersonColumnType
   implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
 {
@@ -32,19 +47,26 @@ export default class LocalPersonColumnType
     return {
       align: 'center',
       editable: true,
-      filterable: false,
+      filterOperators: [
+        makeEmptyFilterOperator(
+
+
+        )
+      ],
+      filterable: true,
       headerAlign: 'center',
 
-      renderCell: (params) => {
-        return <ZUIPersonGridCell person={params.value} />;
+      renderCell: (params:GridRenderCellParams) => {
+        return <ZUIPersonGridCell person={params.row[params.field]} />;
       },
-      renderEditCell: (params) => {
-        return <EditCell cell={params.value} column={col} row={params.row} />;
+      renderEditCell: (params:GridRenderEditCellParams) => {
+        return <EditCell cell={params.row[params.field]} column={col} row={params.row} />;
       },
-      sortComparator: (
+       /* sortComparator: (
         val0: LocalPersonViewCell,
         val1: LocalPersonViewCell
       ) => {
+
         if (!val0 && !val1) {
           return 0;
         }
@@ -55,10 +77,15 @@ export default class LocalPersonColumnType
           return -1;
         }
 
-        const name0 = val0.first_name + val1.last_name;
-        const name1 = val1.first_name + val1.last_name;
+        const name0 = `${val0.first_name}  ${val0.last_name}`;
+        const name1 = `${val1.first_name}  ${val1.last_name}`;
         return name0.localeCompare(name1);
-      },
+      },  */
+
+      valueGetter: (params: GridValueGetterParams) => {
+        const cell = params.row[params.field];
+        return this.cellToString(cell);
+      }
     };
   }
   getSearchableStrings(cell: LocalPersonViewCell): string[] {
