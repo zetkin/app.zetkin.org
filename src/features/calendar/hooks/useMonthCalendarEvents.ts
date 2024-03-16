@@ -1,5 +1,5 @@
 import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
-import { isSameDate } from 'utils/dateUtils';
+import { getActivitiesByDay } from '../components/utils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import {
@@ -30,19 +30,18 @@ export default function useMonthCalendarEvents({
   // Filter events based on user filters
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
+  // Hashmap where the key is a date and the value is all the activities on that day
+  const datesWithActivities = getActivitiesByDay(filteredActivities);
+
   const dates: UseMonthCalendarEventsReturn = [];
 
   const curDate = new Date(startDate);
   while (curDate.getTime() <= endDate.getTime()) {
-    const relevantActivities = filteredActivities.filter((activity) => {
-      const startTime = new Date(activity.data.start_time);
-      const endTime = new Date(activity.data.end_time);
-
-      return isSameDate(startTime, curDate) && isSameDate(endTime, curDate);
-    });
+    const activitiesOnCurrentDay =
+      datesWithActivities[curDate.toISOString().slice(0, 10)]?.events || [];
 
     const clusters: AnyClusteredEvent[] = [
-      ...clusterEvents(relevantActivities),
+      ...clusterEvents(activitiesOnCurrentDay),
     ];
 
     // If the number of clusters N is bigger than the maximum number M

@@ -7,6 +7,7 @@ import EventSelectionCheckBox from 'features/events/components/EventSelectionChe
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import getEventState from 'features/events/utils/getEventState';
 import getEventUrl from 'features/events/utils/getEventUrl';
+import { isAllDay } from '../../utils';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from 'features/events/components/EventPopper/StatusDot';
@@ -20,23 +21,6 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
 
   const needsParticipants =
     event.num_participants_required > event.num_participants_available;
-
-  function isAllDay(event: ZetkinEvent): boolean {
-    const startDate = new Date(removeOffset(event.start_time));
-    const endDate = new Date(removeOffset(event.end_time));
-
-    // Check if the start and end dates are not on the same day
-    if (startDate.toDateString() !== endDate.toDateString()) {
-      // If start time and end time are 00:00:00 return true
-      if (
-        startDate.toString().split(' ')[4] == '00:00:00' &&
-        endDate.toString().split(' ')[4] == '00:00:00'
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   return (
     <NextLink href={getEventUrl(event)} legacyBehavior passHref>
@@ -73,12 +57,11 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             <Typography color={theme.palette.secondary.main} component={'div'}>
               <Box alignItems="center" display="flex" gap={0.5}>
                 <Schedule />
-                {isAllDay(event) && (
+                {isAllDay(event.start_time, event.end_time) ? (
                   <Typography key={event.id}>
                     {messages.common.allDay()}
                   </Typography>
-                )}
-                {!isAllDay(event) && (
+                ) : (
                   <>
                     <FormattedTime
                       hour="numeric"

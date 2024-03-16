@@ -3,11 +3,29 @@ import dayjs from 'dayjs';
 
 import { NonEventActivity } from 'features/campaigns/hooks/useClusteredActivities';
 import range from 'utils/range';
+import { removeOffset } from 'utils/dateUtils';
 import {
   ACTIVITIES,
   CampaignActivity,
   EventActivity,
 } from 'features/campaigns/types';
+
+export function isAllDay(start: string, end: string): boolean {
+  const startDate = new Date(removeOffset(start));
+  const endDate = new Date(removeOffset(end));
+
+  // Check if the start and end dates are not on the same day
+  if (startDate.toDateString() !== endDate.toDateString()) {
+    // If start time and end time are 00:00:00 return true
+    if (
+      startDate.toString().split(' ')[4] == '00:00:00' &&
+      endDate.toString().split(' ')[4] == '00:00:00'
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
 
 const makeIsoDateString = (date: Date): string | null => {
   try {
