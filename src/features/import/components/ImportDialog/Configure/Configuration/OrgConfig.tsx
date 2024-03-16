@@ -44,8 +44,8 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             });
 
             // Loop through each title
-            const matchedRows = uiDataColumn.uniqueValues
-              .map((orgTitleInCsv) => {
+            const matchedRows = uiDataColumn.uniqueValues.map(
+              (orgTitleInCsv) => {
                 if (typeof orgTitleInCsv === 'number') {
                   return;
                 }
@@ -62,9 +62,11 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
                     value: orgTitleInCsv,
                   };
                 }
-              })
-              .filter((value) => value !== undefined);
-            uiDataColumn.selectOrgs(matchedRows);
+              }
+            );
+            uiDataColumn.selectOrgs(
+              matchedRows.filter((value) => value !== undefined)
+            );
           }}
         >
           Guess organizations
