@@ -57,10 +57,24 @@ module.exports = {
         destination: '/legacy?path=/campaign/action%3A:eventId&orgId=:orgId',
         permanent: false,
       },
-      // all paths with /o redirected to Gen2
       {
-        source: '/o/(!.+\\/surveys):path*',
-        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:path*`,
+        source: '/o/:orgId',
+        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId`,
+        permanent: false,
+      },
+      {
+        source: '/o/:orgId/events/:eventId',
+        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId`,
+        permanent: false,
+      },
+      {
+        source: '/o/:orgId/map',
+        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId/map`,
+        permanent: false,
+      },
+      {
+        source: '/o/:orgId/projects/:campId',
+        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId/projects/:campId`,
         permanent: false,
       },
       {
