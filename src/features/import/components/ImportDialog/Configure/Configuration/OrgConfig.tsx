@@ -19,7 +19,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const subOrgs = useSubOrganizations(orgId).data || [];
   const activeOrgs = subOrgs.filter((subOrg) => subOrg.is_active);
 
-  if (!subOrgs.length) {
+  if (!activeOrgs.length) {
     return null;
   }
 
