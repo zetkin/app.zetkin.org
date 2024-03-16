@@ -125,12 +125,14 @@ const MappingRow: FC<MappingRowProps> = ({
                     mapping: [],
                     selected: true,
                   });
+                  onConfigureStart();
                 } else if (event.target.value == 'tag') {
                   onChange({
                     kind: ColumnKind.TAG,
                     mapping: [],
                     selected: true,
                   });
+                  onConfigureStart();
                 } else if (event.target.value.startsWith('field')) {
                   onChange({
                     field: event.target.value.slice(6),
