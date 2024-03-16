@@ -39,23 +39,18 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey }) => {
       flexDirection="column"
       gap={4}
     >
+      <SurveyHeading status={status} survey={survey as ZetkinSurveyExtended} />
       {(status === 'editing' || status === 'error') && (
-        <>
-          <SurveyHeading
-            status={status}
-            survey={survey as ZetkinSurveyExtended}
-          />
-          <form action={action as unknown as string}>
-            <input name="orgId" type="hidden" value={survey.organization.id} />
-            <input name="surveyId" type="hidden" value={survey.id} />
-            <Box display="flex" flexDirection="column" gap={4}>
-              <SurveyElements survey={survey as ZetkinSurveyExtended} />
-              <SurveySignature survey={survey as ZetkinSurveyExtended} />
-              <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
-              <SurveySubmitButton />
-            </Box>
-          </form>
-        </>
+        <form action={action as unknown as string}>
+          <input name="orgId" type="hidden" value={survey.organization.id} />
+          <input name="surveyId" type="hidden" value={survey.id} />
+          <Box display="flex" flexDirection="column" gap={4}>
+            <SurveyElements survey={survey as ZetkinSurveyExtended} />
+            <SurveySignature survey={survey as ZetkinSurveyExtended} />
+            <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
+            <SurveySubmitButton />
+          </Box>
+        </form>
       )}
       {status === 'submitted' && <SurveySuccess survey={survey} />}
     </Box>

@@ -3,8 +3,9 @@
 import { FC } from 'react';
 import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import SurveyContainer from './SurveyContainer';
+import { Typography } from '@mui/material';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
-import { Box, Typography } from '@mui/material';
 
 export type SurveySuccessProps = {
   survey: ZetkinSurveyExtended;
@@ -12,8 +13,8 @@ export type SurveySuccessProps = {
 
 const SurveySuccess: FC<SurveySuccessProps> = ({ survey }) => {
   return (
-    <Box>
-      <Typography variant="h1">
+    <SurveyContainer minHeight="60vh" paddingX={2}>
+      <Typography component="h2" fontSize="1.5rem" fontWeight="bold">
         <Msg id={messageIds.surveyFormSubmitted.title} />
       </Typography>
       <Typography>
@@ -22,7 +23,7 @@ const SurveySuccess: FC<SurveySuccessProps> = ({ survey }) => {
           values={{ title: survey.title }}
         />
       </Typography>
-    </Box>
+    </SurveyContainer>
   );
 };
 
