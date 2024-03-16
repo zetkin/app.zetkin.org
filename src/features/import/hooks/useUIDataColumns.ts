@@ -18,6 +18,7 @@ export type UIDataColumn<CType extends Column> = {
   numberOfEmptyRows: number;
   originalColumn: CType;
   selectOrg: (orgId: number, value: CellData) => void;
+  selectOrgs: (mapping: { orgId: number; value: CellData }[]) => void;
   showColumnValuesMessage: boolean;
   showMappingResultMessage: boolean;
   showNeedsConfigMessage: boolean;
@@ -381,6 +382,20 @@ export default function useUIDataColumns(
       }
     };
 
+    const selectOrgs = (mapping: { orgId: number; value: CellData }[]) => {
+      if (originalColumn.kind == ColumnKind.ORGANIZATION) {
+        dispatch(
+          columnUpdate([
+            index,
+            {
+              ...originalColumn,
+              mapping,
+            },
+          ])
+        );
+      }
+    };
+
     const deselectOrg = (value: CellData) => {
       if (originalColumn.kind == ColumnKind.ORGANIZATION) {
         const map = originalColumn.mapping.find((map) => map.value == value);
@@ -413,6 +428,7 @@ export default function useUIDataColumns(
       numberOfEmptyRows,
       originalColumn,
       selectOrg,
+      selectOrgs,
       showColumnValuesMessage,
       showMappingResultMessage,
       showNeedsConfigMessage,

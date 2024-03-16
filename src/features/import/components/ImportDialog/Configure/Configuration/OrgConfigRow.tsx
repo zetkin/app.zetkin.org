@@ -1,4 +1,3 @@
-import Fuse from 'fuse.js';
 import { ArrowForward, Delete } from '@mui/icons-material';
 import {
   Box,
@@ -62,41 +61,14 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
           width="50%"
         >
           {!showSelect && (
-            <>
-              <Button onClick={() => setMapping(true)}>
-                <Msg
-                  id={
-                    messageIds.configuration.configure.ids
-                      .showOrganizationSelectButton
-                  }
-                />
-              </Button>
-              {title && (
-                <Button
-                  onClick={() => {
-                    // Find org with most similar name
-                    const fuse = new Fuse(orgs, {
-                      includeScore: true,
-                      keys: ['title'],
-                    });
-
-                    const results = fuse.search(title);
-
-                    // Filter out items with a bad match
-                    const goodResults = results.filter(
-                      (result) => result.score && result.score < 0.5
-                    );
-
-                    // If there is a match, guess it
-                    if (goodResults && goodResults.length > 0) {
-                      onSelectOrg(goodResults[0].item.id);
-                    }
-                  }}
-                >
-                  Guess
-                </Button>
-              )}
-            </>
+            <Button onClick={() => setMapping(true)}>
+              <Msg
+                id={
+                  messageIds.configuration.configure.ids
+                    .showOrganizationSelectButton
+                }
+              />
+            </Button>
           )}
           {showSelect && (
             <>

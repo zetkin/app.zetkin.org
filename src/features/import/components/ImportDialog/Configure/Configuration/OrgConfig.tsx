@@ -1,5 +1,7 @@
+import Fuse from 'fuse.js';
+
 import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { OrgColumn } from 'features/import/utils/types';
@@ -30,9 +32,45 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
       padding={2}
       sx={{ overflowY: 'auto' }}
     >
-      <Typography sx={{ paddingBottom: 2 }} variant="h5">
-        <Msg id={messageIds.configuration.configure.orgs.header} />
-      </Typography>
+      <Box alignItems="center" display="flex" justifyContent="space-between">
+        <Typography sx={{ paddingBottom: 2 }} variant="h5">
+          <Msg id={messageIds.configuration.configure.orgs.header} />
+        </Typography>
+        <Button
+          onClick={() => {
+            const fuse = new Fuse(subOrgs.data || [], {
+              includeScore: true,
+              keys: ['title'],
+            });
+
+            // Loop through each title
+            const matchedRows = uiDataColumn.uniqueValues
+              .map((orgTitleInCsv) => {
+                if (typeof orgTitleInCsv === 'number') {
+                  return;
+                }
+                // Find orgs with most similar name
+                const results = fuse.search(orgTitleInCsv);
+                // Filter out items with a bad match
+                const goodResults = results.filter(
+                  (result) => result.score && result.score < 0.5
+                );
+                // If there is a match, guess it
+                if (goodResults && goodResults.length > 0) {
+                  return {
+                    orgId: goodResults[0].item.id,
+                    value: orgTitleInCsv,
+                  };
+                }
+              })
+              .filter((value) => value !== undefined);
+            uiDataColumn.selectOrgs(matchedRows);
+          }}
+        >
+          Guess organizations
+        </Button>
+      </Box>
+
       <Box alignItems="center" display="flex" paddingY={2}>
         <Box width="50%">
           <Typography variant="body2">
