@@ -32,7 +32,14 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
             aria-describedby={`description-${element.id}`}
             aria-labelledby={`label-${element.id}`}
           >
-            <Box display="flex" flexDirection="column" rowGap={2}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              maxWidth={{ sm: 'sm' }}
+              overflow={'hidden'}
+              rowGap={2}
+              width="100%"
+            >
               <Box>
                 <FormLabel id={`label-${element.id}`}>
                   <SurveySubheading>
@@ -66,7 +73,14 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
             aria-labelledby={`label-${element.id}`}
             name={`${element.id}.options`}
           >
-            <Box display="flex" flexDirection="column" rowGap={2}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              maxWidth={{ sm: 'sm' }}
+              overflow={'hidden'}
+              rowGap={2}
+              width="100%"
+            >
               <Box display="flex" flexDirection="column">
                 <Box>
                   <FormLabel id={`label-${element.id}`}>
