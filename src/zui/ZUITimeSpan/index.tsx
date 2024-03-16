@@ -18,7 +18,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
   const startTime = <FormattedTime value={start} />;
   const endTime = <FormattedTime value={end} />;
 
-  if (isAllDay(start.toISOString(), end.toDateString())) {
+  if (isToday && isAllDay(start.toISOString(), end.toDateString())) {
     return <Msg id={messageIds.timeSpan.singleDayAllDay} />;
   }
 
