@@ -1,25 +1,27 @@
 import { Typography } from '@mui/material';
 import { ElementType, FC, ReactElement } from 'react';
 
-export type SurveySubheadingProps = {
+export type SurveyQuestionDescriptionProps = {
   children: ReactElement | string;
   component?: ElementType;
+  id?: string;
 };
 
-const SurveySubheading: FC<SurveySubheadingProps> = ({
+const SurveyQuestionDescription: FC<SurveyQuestionDescriptionProps> = ({
   children,
-  component = 'span',
+  component = 'p',
+  id,
 }) => {
   return (
     <Typography
-      color="text.primary"
+      color="grey.700"
       component={component}
-      fontSize="1.3rem"
-      fontWeight="bold"
+      fontSize="1.1rem"
+      id={id}
     >
       {children}
     </Typography>
   );
 };
 
-export default SurveySubheading;
+export default SurveyQuestionDescription;
