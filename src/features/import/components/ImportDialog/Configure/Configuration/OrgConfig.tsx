@@ -1,5 +1,3 @@
-import Fuse from 'fuse.js';
-
 import { FC } from 'react';
 import { Box, Button, Divider, Typography } from '@mui/material';
 
@@ -7,6 +5,7 @@ import messageIds from 'features/import/l10n/messageIds';
 import { OrgColumn } from 'features/import/utils/types';
 import OrgConfigRow from './OrgConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useGuessOrganisaion from 'features/import/hooks/useGuessOrganisation';
 import { useNumericRouteParams } from 'core/hooks';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import { Msg, useMessages } from 'core/i18n';
@@ -19,6 +18,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const subOrgs = useSubOrganizations(orgId);
+  const guessOrgs = useGuessOrganisaion(orgId, uiDataColumn);
 
   if (!subOrgs.data) {
     return null;
@@ -38,35 +38,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
         </Typography>
         <Button
           onClick={() => {
-            const fuse = new Fuse(subOrgs.data || [], {
-              includeScore: true,
-              keys: ['title'],
-            });
-
-            // Loop through each title
-            const matchedRows = uiDataColumn.uniqueValues.map(
-              (orgTitleInCsv) => {
-                if (typeof orgTitleInCsv === 'number') {
-                  return;
-                }
-                // Find orgs with most similar name
-                const results = fuse.search(orgTitleInCsv);
-                // Filter out items with a bad match
-                const goodResults = results.filter(
-                  (result) => result.score && result.score < 0.5
-                );
-                // If there is a match, guess it
-                if (goodResults && goodResults.length > 0) {
-                  return {
-                    orgId: goodResults[0].item.id,
-                    value: orgTitleInCsv,
-                  };
-                }
-              }
-            );
-            uiDataColumn.selectOrgs(
-              matchedRows.filter((value) => value !== undefined)
-            );
+            guessOrgs();
           }}
         >
           Guess organizations
