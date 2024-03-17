@@ -18,6 +18,7 @@ export type UIDataColumn<CType extends Column> = {
   numberOfEmptyRows: number;
   originalColumn: CType;
   selectOrg: (orgId: number, value: CellData) => void;
+  selectOrgs: (mapping: { orgId: number; value: CellData }[]) => void;
   showColumnValuesMessage: boolean;
   showMappingResultMessage: boolean;
   showNeedsConfigMessage: boolean;
@@ -350,10 +351,13 @@ export default function useUIDataColumns(
 
     const selectOrg = (orgId: number, value: CellData) => {
       if (originalColumn.kind == ColumnKind.ORGANIZATION) {
+        // Check if there is already a map for this row value to an org ID
         const map = originalColumn.mapping.find((map) => map.value == value);
+        // If no map for that value
         if (!map) {
           const newMap = { orgId: orgId, value: value };
           dispatch(
+            // Add value to mapping for the column
             columnUpdate([
               index,
               {
@@ -363,9 +367,12 @@ export default function useUIDataColumns(
             ])
           );
         } else {
+          // If there is already a map, replace it
+          // Find mappings that are not for this row value
           const filteredMapping = originalColumn.mapping.filter(
             (m) => m.value != value
           );
+          // New orgId for that row value
           const updatedMap = { ...map, orgId: orgId };
 
           dispatch(
@@ -373,11 +380,25 @@ export default function useUIDataColumns(
               index,
               {
                 ...originalColumn,
-                mapping: filteredMapping.concat(updatedMap),
+                mapping: filteredMapping.concat(updatedMap), // Add the new mapping along side existing ones
               },
             ])
           );
         }
+      }
+    };
+
+    const selectOrgs = (mapping: { orgId: number; value: CellData }[]) => {
+      if (originalColumn.kind == ColumnKind.ORGANIZATION) {
+        dispatch(
+          columnUpdate([
+            index,
+            {
+              ...originalColumn,
+              mapping,
+            },
+          ])
+        );
       }
     };
 
@@ -413,6 +434,7 @@ export default function useUIDataColumns(
       numberOfEmptyRows,
       originalColumn,
       selectOrg,
+      selectOrgs,
       showColumnValuesMessage,
       showMappingResultMessage,
       showNeedsConfigMessage,

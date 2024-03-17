@@ -32,6 +32,7 @@ export default makeMessages('feat.import', {
         ),
       },
       orgs: {
+        guess: m('Guess organisations'),
         header: m('Map values to organizations'),
         organizations: m('Organization'),
         status: m('Status'),
