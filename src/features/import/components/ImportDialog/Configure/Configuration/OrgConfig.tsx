@@ -5,7 +5,7 @@ import messageIds from 'features/import/l10n/messageIds';
 import { OrgColumn } from 'features/import/utils/types';
 import OrgConfigRow from './OrgConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import useGuessOrganisaion from 'features/import/hooks/useGuessOrganisation';
+import useGuessOrganization from 'features/import/hooks/useGuessOrganization';
 import { useNumericRouteParams } from 'core/hooks';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import { Msg, useMessages } from 'core/i18n';
@@ -19,7 +19,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const messages = useMessages(messageIds);
   const subOrgs = useSubOrganizations(orgId).data || [];
   const activeOrgs = subOrgs.filter((subOrg) => subOrg.is_active);
-  const guessOrgs = useGuessOrganisaion(activeOrgs, uiDataColumn);
+  const guessOrgs = useGuessOrganization(activeOrgs, uiDataColumn);
 
   if (!activeOrgs.length) {
     return null;
@@ -42,7 +42,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             guessOrgs();
           }}
         >
-          {messages.configuration.configure.orgs.guess().toLocaleUpperCase()}
+          {messages.configuration.configure.orgs.guess()}
         </Button>
       </Box>
 

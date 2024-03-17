@@ -6,7 +6,7 @@ import { CellData, OrgColumn } from '../utils/types';
 
 type OrgMap = { orgId: number; value: CellData };
 
-const useGuessOrganisaion = (
+const useGuessOrganization = (
   orgs: ZetkinSubOrganization[],
   uiDataColumn: UIDataColumn<OrgColumn>
 ) => {
@@ -15,7 +15,7 @@ const useGuessOrganisaion = (
     keys: ['title'],
   });
 
-  const guessOrg = () => {
+  const guessOrgs = () => {
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
       (acc: OrgMap[], orgTitle: string | number) => {
@@ -45,7 +45,7 @@ const useGuessOrganisaion = (
     uiDataColumn.selectOrgs(matchedRows);
   };
 
-  return guessOrg;
+  return guessOrgs;
 };
 
-export default useGuessOrganisaion;
+export default useGuessOrganization;
