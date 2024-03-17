@@ -27,10 +27,15 @@ const JourneyStatusChip: React.FC<JourneyStatusChipProps> = ({ instance }) => {
   const messages = useMessages(messageIds);
   const classes = useStyles();
   return !instance.closed ? (
-    <Chip className={classes.openChip} label={messages.journeys.statusOpen()} />
+    <Chip
+      className={classes.openChip}
+      data-testid="journey-status"
+      label={messages.journeys.statusOpen()}
+    />
   ) : (
     <Chip
       className={classes.closedChip}
+      data-testid="journey-status"
       label={messages.journeys.statusClosed()}
     />
   );

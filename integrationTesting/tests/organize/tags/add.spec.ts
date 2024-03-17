@@ -1,11 +1,11 @@
 import { expect } from '@playwright/test';
 import test from '../../../fixtures/next';
 
-import ActivistTag from '../../../mockData/orgs/KPD/tags/Activist';
 import ClaraZetkin from '../../../mockData/orgs/KPD/people/ClaraZetkin';
 import CodingSkillsTag from '../../../mockData/orgs/KPD/tags/Coding';
 import KPD from '../../../mockData/orgs/KPD';
 import OccupationTag from '../../../mockData/orgs/KPD/tags/Occupation';
+import PlaysGuitarTag from '../../../mockData/orgs/KPD/tags/PlaysGuitar';
 
 test.describe('Tag manager', () => {
   test.beforeEach(({ moxy, login }) => {
@@ -25,7 +25,7 @@ test.describe('Tag manager', () => {
 
   test('lets user add tag', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
-      ActivistTag,
+      PlaysGuitarTag,
       CodingSkillsTag,
     ]);
     moxy.setZetkinApiMock(
@@ -33,21 +33,31 @@ test.describe('Tag manager', () => {
       'get',
       []
     );
+
     const { log: putTagLog } = moxy.setZetkinApiMock(
-      `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+      `/orgs/1/people/${ClaraZetkin.id}/tags/${PlaysGuitarTag.id}`,
       'put'
     );
 
-    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    const addTagButton = page.locator('text=Add tag');
+    const playsGuitar = page.locator('text=Plays Guitar');
+
+    page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    addTagButton.waitFor({ state: 'visible' });
 
     await page.locator('text=Add tag').click();
 
-    moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
-      ActivistTag,
-    ]);
+    await playsGuitar.waitFor({ state: 'visible' });
 
     // Select tag
-    await page.click('text=Activist');
+    await playsGuitar.click();
+
+    moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
+      PlaysGuitarTag,
+    ]);
+
+    // Wait for the tag to appear on the page
+    await playsGuitar.waitFor({ state: 'visible' });
 
     // Expect to have made request to put tag
     expect(putTagLog().length).toEqual(1);
@@ -55,7 +65,7 @@ test.describe('Tag manager', () => {
 
   test('lets user add value tag', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
-      ActivistTag,
+      PlaysGuitarTag,
       CodingSkillsTag,
       OccupationTag,
     ]);
@@ -65,7 +75,7 @@ test.describe('Tag manager', () => {
       []
     );
     const { log: putTagLog } = moxy.setZetkinApiMock(
-      `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+      `/orgs/1/people/${ClaraZetkin.id}/tags/${OccupationTag.id}`,
       'put'
     );
 
@@ -97,7 +107,7 @@ test.describe('Tag manager', () => {
     appUri,
   }) => {
     moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
-      ActivistTag,
+      PlaysGuitarTag,
       CodingSkillsTag,
     ]);
     moxy.setZetkinApiMock(
@@ -106,7 +116,7 @@ test.describe('Tag manager', () => {
       []
     );
     moxy.setZetkinApiMock(
-      `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+      `/orgs/1/people/${ClaraZetkin.id}/tags/${PlaysGuitarTag.id}`,
       'put',
       undefined,
       401
@@ -117,7 +127,7 @@ test.describe('Tag manager', () => {
     await page.locator('text=Add tag').click();
 
     // Select tag
-    await page.click('text=Activist');
+    await page.click('text=Plays Guitar');
 
     // Show error
     await page.locator('data-testid=Snackbar-error').waitFor();
