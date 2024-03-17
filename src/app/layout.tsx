@@ -1,3 +1,4 @@
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
 import { headers } from 'next/headers';
@@ -27,9 +28,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClientContext lang={lang} messages={messages} user={user}>
-          {children}
-        </ClientContext>
+        <AppRouterCacheProvider>
+          <ClientContext lang={lang} messages={messages} user={user}>
+            {children}
+          </ClientContext>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
