@@ -151,6 +151,7 @@ export default makeMessages('zui', {
       end: ReactElement;
       start: ReactElement;
     }>('{date}, {start} - {end}'),
+    singleDayAllDay: m('All day today'),
     singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
       'Today, {start} - {end}'
     ),

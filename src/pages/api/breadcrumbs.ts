@@ -1,6 +1,7 @@
 import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { isInteger } from 'utils/stringUtils';
 import { ZetkinViewFolder } from 'features/views/components/types';
 
 interface LabeledBreadcrumbElement {
@@ -100,7 +101,8 @@ async function fetchElements(
       },
     ];
   } else if (fieldName === 'campId') {
-    if (typeof fieldValue == 'number') {
+    // check if the value is a numeric ID, as `fieldValue` could also be passed as 'standalone' or 'shared'
+    if (isInteger(fieldValue)) {
       const campaign = await apiFetch(
         `/orgs/${orgId}/campaigns/${fieldValue}`
       ).then((res) => res.json());

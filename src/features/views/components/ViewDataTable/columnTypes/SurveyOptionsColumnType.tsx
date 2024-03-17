@@ -1,4 +1,3 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
 import { IColumnType } from '.';
 import { makeStyles } from '@mui/styles';
 import { usePanes } from 'utils/panes';
@@ -7,6 +6,11 @@ import { ZetkinSurveyOption } from 'utils/types/zetkin';
 import { ZetkinViewColumn } from '../../types';
 import { Box, Chip } from '@mui/material';
 import { FC, useState } from 'react';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from '@mui/x-data-grid-pro';
 
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
@@ -28,26 +32,13 @@ export default class SurveyOptionsColumnType
 
   getColDef(): Omit<GridColDef, 'field'> {
     return {
-      filterable: false,
-      renderCell: (params) => {
-        return <Cell cell={params.value} />;
+      filterable: true,
+      renderCell: (params: GridRenderCellParams) => {
+        return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (
-        val0: SurveyOptionsViewCell | undefined,
-        val1: SurveyOptionsViewCell | undefined
-      ) => {
-        if (!val0 && !val1) {
-          return 0;
-        } else if (!val0) {
-          return -1;
-        } else if (!val1) {
-          return 1;
-        }
-
-        // Sort total number of options selected
-        const count0 = val0.reduce((sum, sub) => sum + sub.selected.length, 0);
-        const count1 = val1.reduce((sum, sub) => sum + sub.selected.length, 0);
-        return count0 - count1;
+      valueGetter: (params: GridValueGetterParams) => {
+        const cell: SurveyOptionsViewCell = params.row[params.field];
+        return this.cellToString(cell);
       },
     };
   }

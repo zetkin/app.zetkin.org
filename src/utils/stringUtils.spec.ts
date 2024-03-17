@@ -1,5 +1,4 @@
-import { stringToBool } from './stringUtils';
-import { truncateOnMiddle } from './stringUtils';
+import { isInteger, stringToBool, truncateOnMiddle } from './stringUtils';
 
 describe('stringToBool()', () => {
   // Returns false
@@ -54,5 +53,26 @@ describe('truncateOnMiddle()', () => {
     expect(truncateOnMiddle('Supercalifragilisticexpialidocious', 20)).toEqual(
       'Supercal...idocious'
     );
+  });
+});
+
+describe('isInteger()', () => {
+  it.each(['0', '2', '20000', '  0', '1  '])(
+    'should return true for integer string %p',
+    (numberString) => {
+      expect(isInteger(numberString)).toBe(true);
+    }
+  );
+  it.each([
+    '',
+    '    ',
+    '3.14',
+    'other',
+
+    // TypeScript should catch these, but test that we do not throw in case TS does not
+    null as unknown as string,
+    undefined as unknown as string,
+  ])('should return false for non-integer string %p', (numberString) => {
+    expect(isInteger(numberString)).toBe(false);
   });
 });
