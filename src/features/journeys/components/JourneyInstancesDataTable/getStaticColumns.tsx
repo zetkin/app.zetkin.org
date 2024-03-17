@@ -100,16 +100,15 @@ function makeEmptyFilterOperator(
   };
 }
 
-const sortByName = (value0: ZetkinPersonType[], value1: ZetkinPersonType[]) => {
-  const names0 = value0.sort((p0, p1) =>
-    fullName(p0).localeCompare(fullName(p1))
-  );
-  const names1 = value1.sort((p0, p1) =>
-    fullName(p0).localeCompare(fullName(p1))
-  );
+const sortByName = (
+  value0: readonly ZetkinPersonType[],
+  value1: readonly ZetkinPersonType[]
+) => {
+  const names0 = value0.map(fullName).sort((p0, p1) => p0.localeCompare(p1));
+  const names1 = value1.map(fullName).sort((p0, p1) => p0.localeCompare(p1));
 
-  const name0 = names0[0] ? fullName(names0[0]) : '';
-  const name1 = names1[0] ? fullName(names1[0]) : '';
+  const name0 = names0[0] ?? '';
+  const name1 = names1[0] ?? '';
 
   if (!name0 && !name1) {
     return 0;
