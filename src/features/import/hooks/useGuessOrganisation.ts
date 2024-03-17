@@ -1,18 +1,16 @@
 import Fuse from 'fuse.js';
 
 import { UIDataColumn } from './useUIDataColumns';
-import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
+import { ZetkinSubOrganization } from 'utils/types/zetkin';
 import { CellData, OrgColumn } from '../utils/types';
 
 type OrgMap = { orgId: number; value: CellData };
 
 const useGuessOrganisaion = (
-  orgId: number,
+  orgs: ZetkinSubOrganization[],
   uiDataColumn: UIDataColumn<OrgColumn>
 ) => {
-  const subOrgs = useSubOrganizations(orgId);
-
-  const fuse = new Fuse(subOrgs.data || [], {
+  const fuse = new Fuse(orgs, {
     includeScore: true,
     keys: ['title'],
   });

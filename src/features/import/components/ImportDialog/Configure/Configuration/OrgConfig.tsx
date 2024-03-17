@@ -17,9 +17,9 @@ interface OrgConfigProps {
 const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const guessOrgs = useGuessOrganisaion(orgId, uiDataColumn);
   const subOrgs = useSubOrganizations(orgId).data || [];
   const activeOrgs = subOrgs.filter((subOrg) => subOrg.is_active);
+  const guessOrgs = useGuessOrganisaion(activeOrgs, uiDataColumn);
 
   if (!activeOrgs.length) {
     return null;
