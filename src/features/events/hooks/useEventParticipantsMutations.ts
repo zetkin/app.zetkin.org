@@ -16,7 +16,7 @@ export enum participantStatus {
 
 type useEventParticipantsMutationsMutationsReturn = {
   addParticipant: (personId: number) => void;
-  sendReminders: (eventId: number, participantIds: number[]) => void;
+  sendReminders: (eventId: number) => void;
   setParticipantStatus: (
     personId: number,
     status: participantStatus | null

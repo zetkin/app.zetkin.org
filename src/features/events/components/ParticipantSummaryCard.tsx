@@ -203,12 +203,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                         numRemindedParticipants >= numAvailParticipants
                       }
                       onClick={() => {
-                        sendReminders(
-                          eventId,
-                          bookedParticipants.map(
-                            (participant) => participant.id
-                          )
-                        );
+                        sendReminders(eventId);
                       }}
                       size="small"
                       startIcon={
