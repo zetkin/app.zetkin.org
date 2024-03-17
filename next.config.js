@@ -68,11 +68,6 @@ module.exports = {
         permanent: false,
       },
       {
-        source: '/o/:orgId/map',
-        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId/map`,
-        permanent: false,
-      },
-      {
         source: '/o/:orgId/projects/:campId',
         destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId/campaigns/:campId`,
         permanent: false,
