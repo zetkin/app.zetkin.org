@@ -60,10 +60,10 @@ export default function useEventParticipantsMutations(
       });
   };
 
-  const sendReminders = async (eventId: number, participantIds: number[]) => {
-    dispatch(participantsRemind(participantIds));
+  const sendReminders = async (eventId: number) => {
+    dispatch(participantsRemind(eventId));
     await apiClient.post(`/api/orgs/${orgId}/actions/${eventId}/reminders`, {});
-    dispatch(participantsReminded([eventId, participantIds]));
+    dispatch(participantsReminded(eventId));
   };
 
   const setReqParticipants = (reqParticipants: number) => {

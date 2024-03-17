@@ -68,7 +68,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   >(null);
 
   const participantsReminding = useAppSelector(
-    (state) => state.events.remindingByParticipantId
+    (state) => state.events.remindingByEventId
   );
 
   const isRemindingParticipants = Object.values(participantsReminding).some(
