@@ -25,7 +25,7 @@ const useGuessOrganisaion = (
       const results = fuse.search(orgTitle);
       // Filter out items with a bad match
       const goodResults = results.filter(
-        (result) => result.score && result.score < 0.5
+        (result) => result.score && result.score < 0.25
       );
       // If there is a match, guess it
       if (goodResults && goodResults.length > 0) {

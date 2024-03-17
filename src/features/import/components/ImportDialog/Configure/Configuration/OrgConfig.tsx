@@ -32,7 +32,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
       padding={2}
       sx={{ overflowY: 'auto' }}
     >
-      <Box alignItems="center" display="flex" justifyContent="space-between">
+      <Box alignItems="baseline" display="flex" justifyContent="space-between">
         <Typography sx={{ paddingBottom: 2 }} variant="h5">
           <Msg id={messageIds.configuration.configure.orgs.header} />
         </Typography>
@@ -41,7 +41,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             guessOrgs();
           }}
         >
-          Guess organizations
+          {messages.configuration.configure.orgs.guess().toLocaleUpperCase()}
         </Button>
       </Box>
 
