@@ -22,7 +22,7 @@ test.describe('Tags manager', () => {
     moxy.teardown();
   });
 
-  test.only('lets user remove a tag', async ({ page, appUri, moxy }) => {
+  test('lets user remove a tag', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
       PlaysGuitarTag,
       CodingSkillsTag,
@@ -37,7 +37,9 @@ test.describe('Tags manager', () => {
       'delete'
     );
 
-    const tagToDelete = page.locator(`text="${PlaysGuitarTag.title}"`);
+    const tagToDelete = page.locator(
+      `data-testid=TagManager-groupedTags-ungrouped >> text="${PlaysGuitarTag.title}"`
+    );
     const deleteButton = page.locator('[data-testid=TagChip-deleteButton]');
 
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);

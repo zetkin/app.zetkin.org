@@ -39,25 +39,25 @@ test.describe('Tag manager', () => {
       'put'
     );
 
-    moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
-      PlaysGuitarTag,
-    ]);
-
     const addTagButton = page.locator('text=Add tag');
     const playsGuitar = page.locator('text=Plays Guitar');
 
     page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
-    addTagButton.first().waitFor({ state: 'visible' });
+    addTagButton.waitFor({ state: 'visible' });
 
     await page.locator('text=Add tag').click();
 
-    await playsGuitar.first().waitFor({ state: 'visible' });
+    await playsGuitar.waitFor({ state: 'visible' });
 
     // Select tag
-    await playsGuitar.first().click();
+    await playsGuitar.click();
+
+    moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
+      PlaysGuitarTag,
+    ]);
 
     // Wait for the tag to appear on the page
-    await playsGuitar.first().waitFor({ state: 'visible' });
+    await playsGuitar.waitFor({ state: 'visible' });
 
     // Expect to have made request to put tag
     expect(putTagLog().length).toEqual(1);
