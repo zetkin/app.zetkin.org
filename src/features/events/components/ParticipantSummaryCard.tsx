@@ -9,11 +9,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Check, PriorityHighRounded, Settings } from '@mui/icons-material';
+import { Check, PriorityHigh, Settings } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
+import { useAppSelector } from 'core/hooks';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
@@ -21,7 +22,6 @@ import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
-import { useAppSelector } from 'core/hooks';
 
 type ParticipantSummaryCardProps = {
   eventId: number;
@@ -67,10 +67,6 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     null | (EventTarget & SVGSVGElement)
   >(null);
 
-  if (!eventData) {
-    return null;
-  }
-
   const participantsReminding = useAppSelector(
     (state) => state.events.remindingByParticipantId
   );
@@ -78,6 +74,10 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   const isRemindingParticipants = Object.values(participantsReminding).some(
     (participant) => participant
   );
+
+  if (!eventData) {
+    return null;
+  }
 
   return (
     <Box>
@@ -203,6 +203,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                     <Button
                       disabled={
                         contactPerson == null ||
+                        isRemindingParticipants ||
                         numRemindedParticipants >= numAvailParticipants
                       }
                       onClick={() => {
@@ -222,7 +223,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                             <Check />
                           )
                         ) : (
-                          <PriorityHighRounded />
+                          <PriorityHigh />
                         )
                       }
                       sx={{
