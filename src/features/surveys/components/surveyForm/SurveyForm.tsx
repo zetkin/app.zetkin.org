@@ -12,6 +12,7 @@ import SurveySuccess from './SurveySuccess';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyFormStatus,
+  ZetkinUser,
 } from 'utils/types/zetkin';
 
 // Type definitions for the new experimental stuff like useFormState in
@@ -24,9 +25,10 @@ import { useFormState } from 'react-dom';
 
 export type SurveyFormProps = {
   survey: ZetkinSurveyExtended;
+  user: ZetkinUser | null;
 };
 
-const SurveyForm: FC<SurveyFormProps> = ({ survey }) => {
+const SurveyForm: FC<SurveyFormProps> = ({ survey, user }) => {
   const [status, action] = useFormState<ZetkinSurveyFormStatus>(
     submit,
     'editing'
@@ -50,7 +52,10 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey }) => {
           <input name="surveyId" type="hidden" value={survey.id} />
           <Box display="flex" flexDirection="column" gap={4}>
             <SurveyElements survey={survey as ZetkinSurveyExtended} />
-            <SurveySignature survey={survey as ZetkinSurveyExtended} />
+            <SurveySignature
+              survey={survey as ZetkinSurveyExtended}
+              user={user}
+            />
             <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
             <SurveySubmitButton />
           </Box>

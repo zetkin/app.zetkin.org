@@ -9,7 +9,7 @@ describe('prepareSurveyApiSubmission()', () => {
 
   it('formats a text response', () => {
     formData['123.text'] = 'Lorem ipsum dolor sit amet';
-    const submission = prepareSurveyApiSubmission(formData);
+    const submission = prepareSurveyApiSubmission(formData, null);
     expect(submission.responses).toMatchObject([
       {
         question_id: 123,
@@ -20,7 +20,7 @@ describe('prepareSurveyApiSubmission()', () => {
 
   it('formats a radio button response', () => {
     formData['123.options'] = '456';
-    const submission = prepareSurveyApiSubmission(formData);
+    const submission = prepareSurveyApiSubmission(formData, null);
     expect(submission.responses).toMatchObject([
       {
         options: [456],
@@ -31,7 +31,7 @@ describe('prepareSurveyApiSubmission()', () => {
 
   it('formats a checkbox response', () => {
     formData['123.options'] = ['456', '789'];
-    const submission = prepareSurveyApiSubmission(formData);
+    const submission = prepareSurveyApiSubmission(formData, null);
     expect(submission.responses).toMatchObject([
       {
         options: [456, 789],
@@ -42,8 +42,19 @@ describe('prepareSurveyApiSubmission()', () => {
 
   it('signs as the logged-in account when a logged-in user requests to sign as themself', () => {
     formData['sig'] = 'user';
-    const submission = prepareSurveyApiSubmission(formData, true);
-    expect(submission.signature).toEqual('user');
+    const submission = prepareSurveyApiSubmission(formData, {
+      email: 'testadmin@example.com',
+      first_name: 'Angela',
+      id: 2,
+      lang: null,
+      last_name: 'Davis',
+      username: 'test',
+    });
+    expect(submission.signature).toEqual({
+      email: 'testadmin@example.com',
+      first_name: 'Angela',
+      last_name: 'Davis',
+    });
   });
 
   it('signs with custom contact details when a name and email are given', () => {
@@ -51,7 +62,7 @@ describe('prepareSurveyApiSubmission()', () => {
     formData['sig.email'] = 'testuser@example.org';
     formData['sig.first_name'] = 'test';
     formData['sig.last_name'] = 'user';
-    const submission = prepareSurveyApiSubmission(formData);
+    const submission = prepareSurveyApiSubmission(formData, null);
     expect(submission.signature).toMatchObject({
       email: 'testuser@example.org',
       first_name: 'test',

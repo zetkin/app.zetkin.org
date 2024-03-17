@@ -2,11 +2,12 @@ import {
   ZetkinSurveyApiSubmission,
   ZetkinSurveyQuestionResponse,
   ZetkinSurveySignaturePayload,
+  ZetkinUser,
 } from 'utils/types/zetkin';
 
 export default function prepareSurveyApiSubmission(
   formData: Record<string, unknown>,
-  isLoggedIn?: boolean
+  user: ZetkinUser | null
 ): ZetkinSurveyApiSubmission {
   const responses: ZetkinSurveyQuestionResponse[] = [];
   const responseEntries = Object.fromEntries(
@@ -44,8 +45,12 @@ export default function prepareSurveyApiSubmission(
 
   let signature: ZetkinSurveySignaturePayload = null;
 
-  if (formData.sig === 'user' && isLoggedIn) {
-    signature = 'user';
+  if (formData.sig === 'user' && user) {
+    signature = {
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
   }
 
   if (formData.sig == 'email') {
