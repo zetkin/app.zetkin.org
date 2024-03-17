@@ -67,12 +67,8 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     null | (EventTarget & SVGSVGElement)
   >(null);
 
-  const participantsReminding = useAppSelector(
-    (state) => state.events.remindingByEventId
-  );
-
-  const isRemindingParticipants = Object.values(participantsReminding).some(
-    (participant) => participant
+  const isRemindingParticipants = useAppSelector(
+    (state) => state.events.remindingByEventId[eventId]
   );
 
   if (!eventData) {
