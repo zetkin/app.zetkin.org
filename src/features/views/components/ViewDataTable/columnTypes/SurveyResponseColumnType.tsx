@@ -27,7 +27,7 @@ export default class SurveyResponseColumnType
   implements IColumnType<SurveyResponseViewColumn, SurveyResponseViewCell>
 {
   cellToString(cell: SurveyResponseViewCell): string {
-    return cell.length ? cell[0].text : '';
+    return cell?.length ? cell[0].text : '';
   }
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
