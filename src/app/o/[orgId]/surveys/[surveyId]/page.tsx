@@ -31,7 +31,7 @@ export async function generateMetadata({
   };
 }
 
-// @ts-expect-error Async support missing
+// @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
 const Page: FC<PageProps> = async ({ params }): Promise<ReactElement> => {
   const { orgId, surveyId } = params;
   const apiClient = new BackendApiClient({});

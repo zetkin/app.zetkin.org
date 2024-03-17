@@ -21,7 +21,7 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
-export type ClientContextProps = {
+type ClientContextProps = {
   children: ReactNode;
   lang: string;
   messages: MessageList;

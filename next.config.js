@@ -74,7 +74,7 @@ module.exports = {
       },
       {
         source: '/o/:orgId/projects/:campId',
-        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId/projects/:campId`,
+        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId/campaigns/:campId`,
         permanent: false,
       },
       {
