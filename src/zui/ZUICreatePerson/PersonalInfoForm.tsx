@@ -197,9 +197,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 field={field.slug}
                 isURLField
                 label={field.title}
-                onChange={(field, value) =>
-                  onChange(field, value ?? formatUrl(value))
-                }
+                onChange={(field, value) => {
+                  const formattedUrl = formatUrl(value as string);
+                  onChange(field, formattedUrl ?? value);
+                }}
               />
             );
           } else {
@@ -218,7 +219,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           <Button
             onClick={() => setShowAllClickedType('mouse')}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === 'Enter' || e.key === ' ') {
                 setShowAllClickedType('keyboard');
               }
             }}
