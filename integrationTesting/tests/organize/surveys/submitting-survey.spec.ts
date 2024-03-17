@@ -111,7 +111,7 @@ test.describe('User submitting a survey', () => {
     });
   });
 
-  test.skip('submits user signature', async ({ moxy, page }) => {
+  test('submits user signature', async ({ moxy, page }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',

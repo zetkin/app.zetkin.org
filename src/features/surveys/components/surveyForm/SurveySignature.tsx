@@ -19,13 +19,15 @@ import { FC, useCallback, useState } from 'react';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveySignatureType,
+  ZetkinUser,
 } from 'utils/types/zetkin';
 
 export type SurveySignatureProps = {
   survey: ZetkinSurveyExtended;
+  user: ZetkinUser | null;
 };
 
-const SurveySignature: FC<SurveySignatureProps> = ({ survey }) => {
+const SurveySignature: FC<SurveySignatureProps> = ({ survey, user }) => {
   // const currentUser = useCurrentUser();
   const theme = useTheme();
 
@@ -58,21 +60,23 @@ const SurveySignature: FC<SurveySignatureProps> = ({ survey }) => {
             </FormLabel>
 
             <Box display="flex" flexDirection="column" rowGap={1}>
-              {/* <SurveyOption
-            control={<Radio required />}
-            label={
-              <Typography>
-                <Msg
-                  id={messageIds.surveySignature.type.user}
-                  values={{
-                    email: currentUser?.email ?? '',
-                    person: currentUser?.first_name ?? '',
-                  }}
+              {user && (
+                <SurveyOption
+                  control={<Radio required />}
+                  label={
+                    <Typography>
+                      <Msg
+                        id={messageIds.surveySignature.type.user}
+                        values={{
+                          email: user.email,
+                          person: user.first_name,
+                        }}
+                      />
+                    </Typography>
+                  }
+                  value="user"
                 />
-              </Typography>
-            }
-            value="user"
-          /> */}
+              )}
 
               <SurveyOption
                 control={<Radio required />}
