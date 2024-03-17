@@ -100,8 +100,8 @@ const JourneyInstanceSidebar = ({
                   selectedPerson={null}
                   size="small"
                   submitLabel={zuiMessages.createPerson.submitLabel.assign()}
-                  title={zuiMessages.createPerson.title.assignTo({
-                    value: journeyInstance.journey.singular_label,
+                  title={zuiMessages.createPerson.title.assignToJourney({
+                    journey: journeyInstance.journey.singular_label,
                   })}
                 />
               </div>
@@ -151,8 +151,8 @@ const JourneyInstanceSidebar = ({
                   selectedPerson={null}
                   size="small"
                   submitLabel={zuiMessages.createPerson.submitLabel.add()}
-                  title={zuiMessages.createPerson.title.addTo({
-                    value: journeyInstance.journey.singular_label,
+                  title={zuiMessages.createPerson.title.addToJourney({
+                    journey: journeyInstance.journey.singular_label,
                   })}
                 />
               </div>

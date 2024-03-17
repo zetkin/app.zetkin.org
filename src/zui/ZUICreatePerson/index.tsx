@@ -1,6 +1,3 @@
-import isEmail from 'validator/lib/isEmail';
-import isURL from 'validator/lib/isURL';
-import { isValidPhoneNumber } from 'libphonenumber-js';
 import {
   Box,
   Button,
@@ -13,24 +10,21 @@ import {
 } from '@mui/material';
 import { FC, MouseEvent, useState } from 'react';
 
+import checkInvalidFields from './checkInvalidFields';
 import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import PersonalInfoForm from './PersonalInfoForm';
 import useCreatePerson from 'features/profile/hooks/useCreatePerson';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
-import {
-  ZetkinCreatePerson,
-  ZetkinCustomField,
-  ZetkinPerson,
-} from 'utils/types/zetkin';
+import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
   onSubmit?: (e: MouseEvent<HTMLButtonElement>, person: ZetkinPerson) => void;
   open: boolean;
-  title?: string;
-  submitLabel?: string;
+  title: string;
+  submitLabel: string;
 }
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
@@ -63,9 +57,6 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
     >
       <Box sx={{ padding: '40px 0 40px 40px' }}>
         <Box display="flex">
-          <Typography mb={2} variant="h5">
-            <Msg id={messageIds.createPerson.title.default} />
-          </Typography>
           <Typography sx={{ ml: 0.5 }} variant="h5">
             {title}
           </Typography>
@@ -102,7 +93,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
             tags={tags}
           />
         )}
-        <Box sx={{ pr: '40px' }}>
+        <Box sx={{ pr: 5 }}>
           <Divider />
           <Box
             alignItems="center"
@@ -152,49 +143,3 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
 };
 
 export default ZUICreatePerson;
-
-export const checkInvalidFields = (
-  customFields: ZetkinCustomField[],
-  personalInfo: ZetkinCreatePerson
-) => {
-  let invalidFields: string[] = [];
-
-  const customFieldURLSlugs = customFields
-    .filter((item) => item.type === 'url')
-    .map((item) => item.slug);
-
-  //email
-  if (!isEmail(personalInfo.email || '') && personalInfo.email !== undefined) {
-    invalidFields.push('email');
-  } else {
-    invalidFields = invalidFields.filter((item) => item !== 'email');
-  }
-
-  //phones
-  if (
-    !isValidPhoneNumber(personalInfo.phone || '') &&
-    personalInfo.phone !== undefined
-  ) {
-    invalidFields.push('phone');
-  } else {
-    invalidFields = invalidFields.filter((item) => item !== 'phone');
-  }
-  if (
-    !isValidPhoneNumber(personalInfo.alt_phone || '') &&
-    personalInfo.alt_phone !== undefined
-  ) {
-    invalidFields.push('alt_phone');
-  } else {
-    invalidFields = invalidFields.filter((item) => item !== 'alt_phone');
-  }
-  //urls;
-  customFieldURLSlugs.forEach((slug) => {
-    if (!isURL(personalInfo[slug] || '') && personalInfo[slug] !== undefined) {
-      invalidFields.push(slug);
-    } else {
-      invalidFields = invalidFields.filter((item) => item !== slug);
-    }
-  });
-
-  return invalidFields;
-};

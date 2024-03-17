@@ -69,8 +69,8 @@ type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 type ZUIPersonSelectProps = UsePersonSelectProps & {
   disabled?: boolean;
   size?: 'small' | 'medium';
-  submitLabel?: string;
-  title?: string;
+  submitLabel: string;
+  title: string;
   variant?: 'filled' | 'outlined' | 'standard';
 };
 

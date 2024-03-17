@@ -50,8 +50,8 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
         placeholder={messages.footer.addPlaceholder()}
         selectedPerson={null}
         submitLabel={zuiMessages.createPerson.submitLabel.add()}
-        title={zuiMessages.createPerson.title.addTo({
-          value: viewTitle,
+        title={zuiMessages.createPerson.title.addToList({
+          list: viewTitle,
         })}
         variant="outlined"
       />

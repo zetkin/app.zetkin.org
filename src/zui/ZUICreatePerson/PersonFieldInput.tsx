@@ -1,14 +1,14 @@
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
 import { TextField } from '@mui/material';
-import { FC, MutableRefObject } from 'react';
+import { FC, MutableRefObject, useState } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinCreatePerson,
   ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
 
-interface InfoInputFormProps {
+interface PersonFieldInputProps {
   field: keyof ZetkinCreatePerson;
   label?: string;
   onChange: (field: string, value: string) => void;
@@ -18,7 +18,7 @@ interface InfoInputFormProps {
   style?: Record<string, unknown>;
   error?: boolean;
 }
-const InfoInputForm: FC<InfoInputFormProps> = ({
+const PersonFieldInput: FC<PersonFieldInputProps> = ({
   field,
   label,
   onChange,
@@ -29,13 +29,15 @@ const InfoInputForm: FC<InfoInputFormProps> = ({
   error,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
+  const [blurred, setBlurred] = useState(false);
 
   return (
     <TextField
       error={error}
       fullWidth
       helperText={
-        error && (
+        error &&
+        blurred && (
           <Msg
             id={
               isURLField
@@ -55,10 +57,12 @@ const InfoInputForm: FC<InfoInputFormProps> = ({
               field as keyof ZetkinPersonNativeFields
             ]()
       }
+      onBlur={() => setBlurred(true)}
       onChange={(e) => onChange(field, e.target.value)}
+      onFocus={() => setBlurred(false)}
       required={required}
       sx={style}
     />
   );
 };
-export default InfoInputForm;
+export default PersonFieldInput;

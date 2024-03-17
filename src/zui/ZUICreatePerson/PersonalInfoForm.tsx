@@ -12,12 +12,12 @@ import {
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { checkInvalidFields } from '.';
+import checkInvalidFields from './checkInvalidFields';
 import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/globalMessageIds';
-import InfoInputForm from './InfoInputForm';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
+import PersonFieldInput from './PersonFieldInput';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
@@ -27,7 +27,7 @@ import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
 
 dayjs.extend(utc);
 
-type ShowAllTriggeredType = 'enter' | 'mouse' | 'none';
+type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
 interface PersonalInfoFormProps {
@@ -45,7 +45,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
   const [showAllClickedType, setShowAllClickedType] =
-    useState<ShowAllTriggeredType>('none');
+    useState<ShowAllTriggeredType>(null);
 
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
@@ -62,11 +62,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   ) as GenderKeyType[];
 
   useEffect(() => {
-    if (showAllClickedType === 'enter') {
+    if (showAllClickedType === 'keyboard') {
       inputRef.current?.focus();
     }
   }, [showAllClickedType]);
-
   const invalidFields = checkInvalidFields(customFields, personalInfo);
 
   return (
@@ -76,40 +75,40 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       flexDirection="column"
       gap={2}
       sx={{
-        height: showAllClickedType === 'none' ? '' : '600px',
+        height: !showAllClickedType ? '' : '600px',
         overflowY: 'auto',
         p: '0 40px 20px 0',
       }}
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          <InfoInputForm
+          <PersonFieldInput
             field={'first_name'}
             onChange={(field, value) => onChange(field, value)}
             required
           />
         </Box>
         <Box width="50%">
-          <InfoInputForm
+          <PersonFieldInput
             field={'last_name'}
             onChange={(field, value) => onChange(field, value)}
             required
           />
         </Box>
       </Box>
-      <InfoInputForm
+      <PersonFieldInput
         error={invalidFields.includes('email')}
         field={'email'}
         onChange={(field, value) => onChange(field, value)}
       />
-      <InfoInputForm
+      <PersonFieldInput
         error={invalidFields.includes('phone')}
         field={'phone'}
         onChange={(field, value) => onChange(field, value)}
       />
-      {showAllClickedType !== 'none' && (
+      {!!showAllClickedType && (
         <Box display="flex" flexDirection="column" gap={2}>
-          <InfoInputForm
+          <PersonFieldInput
             error={invalidFields.includes('alt_phone')}
             field={'alt_phone'}
             inputRef={inputRef}
@@ -136,16 +135,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               ))}
             </Select>
           </FormControl>
-          <InfoInputForm
+          <PersonFieldInput
             field={'street_address'}
             onChange={(field, value) => onChange(field, value)}
           />
-          <InfoInputForm
+          <PersonFieldInput
             field={'co_address'}
             onChange={(field, value) => onChange(field, value)}
           />
           <Box>
-            <InfoInputForm
+            <PersonFieldInput
               field={'zip_code'}
               onChange={(field, value) => onChange(field, value)}
               style={{
@@ -153,7 +152,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 width: '30%',
               }}
             />
-            <InfoInputForm
+            <PersonFieldInput
               field={'city'}
               onChange={(field, value) => onChange(field, value)}
               style={{
@@ -161,17 +160,17 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               }}
             />
           </Box>
-          <InfoInputForm
+          <PersonFieldInput
             field={'country'}
             onChange={(field, value) => onChange(field, value)}
           />
-          <InfoInputForm
+          <PersonFieldInput
             field={'ext_id'}
             onChange={(field, value) => onChange(field, value)}
           />
         </Box>
       )}
-      {showAllClickedType !== 'none' &&
+      {!!showAllClickedType &&
         customFields.map((field) => {
           if (field.type === 'json') {
             return;
@@ -192,7 +191,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else if (field.type === 'url') {
             return (
-              <InfoInputForm
+              <PersonFieldInput
                 key={field.slug}
                 error={invalidFields.includes(field.slug)}
                 field={field.slug}
@@ -205,7 +204,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else {
             return (
-              <InfoInputForm
+              <PersonFieldInput
                 key={field.slug}
                 field={field.slug}
                 label={field.title}
@@ -215,12 +214,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           }
         })}
       <Box display="flex" justifyContent="flex-end">
-        {showAllClickedType === 'none' && (
+        {!showAllClickedType && (
           <Button
             onClick={() => setShowAllClickedType('mouse')}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                setShowAllClickedType('enter');
+                setShowAllClickedType('keyboard');
               }
             }}
             startIcon={<ExpandMore />}

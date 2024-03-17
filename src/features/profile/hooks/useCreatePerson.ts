@@ -1,12 +1,7 @@
 import { personLoaded } from '../store';
 import useTagging from 'features/tags/hooks/useTagging';
-import { personTagsLoad, personTagsLoaded } from 'features/tags/store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import {
-  ZetkinCreatePerson,
-  ZetkinPerson,
-  ZetkinTag,
-} from 'utils/types/zetkin';
+import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
 
 export default function useCreatePerson(orgId: number) {
   const apiClient = useApiClient();
@@ -22,13 +17,6 @@ export default function useCreatePerson(orgId: number) {
       body
     );
     dispatch(personLoaded([person.id, person]));
-    dispatch(personTagsLoad(person.id));
-
-    const personTags = await apiClient.get<ZetkinTag[]>(
-      `/api/orgs/${orgId}/people/${person.id}/tags`
-    );
-    personTagsLoaded([person.id, personTags]);
-
     tags.map((tagId) => {
       assignToPerson(person.id, tagId);
     });

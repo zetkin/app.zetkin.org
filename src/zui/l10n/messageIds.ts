@@ -41,15 +41,20 @@ export default makeMessages('zui', {
       default: m('Create'),
     },
     title: {
-      addTo: m<{ value: string }>('and add to {value}'),
-      assignTo: m<{ value: string }>('and assign to {value}'),
-      caller: m('and add caller'),
-      contact: m('and assign as contact'),
+      addToJourney: m<{ journey: string }>(
+        'Create person and add to {journey}'
+      ),
+      addToList: m<{ list: string }>('Create person and add to {list}'),
+      assignToJourney: m<{ journey: string }>(
+        'Create person and assign to {journey}'
+      ),
+      caller: m('Create person and add as caller'),
+      contact: m('Create person and assign as contact'),
       default: m('Create person'),
-      participant: m('and add as participant'),
+      participant: m('Create person and add as participant'),
     },
     validationWarning: {
-      email: m('Please add a valid Email'),
+      email: m('Please add a valid email address'),
       phone: m('Please add a valid phone number'),
       url: m('Please add a valid URL'),
     },
