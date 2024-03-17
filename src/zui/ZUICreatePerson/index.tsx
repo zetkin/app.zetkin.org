@@ -23,8 +23,8 @@ interface ZUICreatePersonProps {
   onClose: () => void;
   onSubmit?: (e: MouseEvent<HTMLButtonElement>, person: ZetkinPerson) => void;
   open: boolean;
-  title: string;
-  submitLabel: string;
+  title?: string;
+  submitLabel?: string;
 }
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
