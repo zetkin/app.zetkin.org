@@ -2,6 +2,7 @@ import useEventMutations from './useEventMutations';
 import { ZetkinEventParticipant } from 'utils/types/zetkin';
 import {
   participantAdded,
+  participantsRemind,
   participantsReminded,
   participantUpdated,
 } from '../store';
@@ -15,7 +16,7 @@ export enum participantStatus {
 
 type useEventParticipantsMutationsMutationsReturn = {
   addParticipant: (personId: number) => void;
-  sendReminders: (eventId: number) => void;
+  sendReminders: (eventId: number, participantIds: number[]) => void;
   setParticipantStatus: (
     personId: number,
     status: participantStatus | null
@@ -59,9 +60,10 @@ export default function useEventParticipantsMutations(
       });
   };
 
-  const sendReminders = async (eventId: number) => {
+  const sendReminders = async (eventId: number, participantIds: number[]) => {
+    dispatch(participantsRemind(participantIds));
     await apiClient.post(`/api/orgs/${orgId}/actions/${eventId}/reminders`, {});
-    dispatch(participantsReminded(eventId));
+    dispatch(participantsReminded([eventId, participantIds]));
   };
 
   const setReqParticipants = (reqParticipants: number) => {

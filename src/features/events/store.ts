@@ -60,6 +60,7 @@ export interface EventsStoreSlice {
   };
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
+  remindingByParticipantId: Record<number, boolean>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
@@ -78,6 +79,7 @@ const initialState: EventsStoreSlice = {
   },
   locationList: remoteList(),
   participantsByEventId: {},
+  remindingByParticipantId: {},
   respondentsByEventId: {},
   selectedEventIds: [],
   statsByEventId: {},
@@ -488,8 +490,20 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId] = remoteList(participants);
       state.participantsByEventId[eventId].loaded = new Date().toISOString();
     },
-    participantsReminded: (state, action: PayloadAction<number>) => {
-      const eventId = action.payload;
+    participantsRemind: (state, action: PayloadAction<number[]>) => {
+      const participantIds = action.payload;
+      participantIds.forEach((participantId) => {
+        state.remindingByParticipantId[participantId] = true;
+      });
+    },
+    participantsReminded: (
+      state,
+      action: PayloadAction<[number, number[]]>
+    ) => {
+      const [eventId, participantIds] = action.payload;
+      participantIds.forEach((participantId) => {
+        state.remindingByParticipantId[participantId] = false;
+      });
       state.participantsByEventId[eventId].items.map((item) => {
         if (item.data && item.data?.reminder_sent == null) {
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
@@ -605,6 +619,7 @@ export const {
   participantUpdated,
   participantsLoad,
   participantsLoaded,
+  participantsRemind,
   participantsReminded,
   resetSelection,
   respondentsLoad,

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   ClickAwayListener,
   Paper,
   Popper,
@@ -8,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Check, Settings } from '@mui/icons-material';
+import { Check, PriorityHighRounded, Settings } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
@@ -20,6 +21,7 @@ import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
+import { useAppSelector } from 'core/hooks';
 
 type ParticipantSummaryCardProps = {
   eventId: number;
@@ -68,6 +70,14 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   if (!eventData) {
     return null;
   }
+
+  const participantsReminding = useAppSelector(
+    (state) => state.events.remindingByParticipantId
+  );
+
+  const isRemindingParticipants = Object.values(participantsReminding).some(
+    (participant) => participant
+  );
 
   return (
     <Box>
@@ -180,36 +190,52 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               </Typography>
               <Box alignItems="center" display="flex">
                 <Typography variant="h4">{`${numRemindedParticipants}/${numAvailParticipants}`}</Typography>
-                {numRemindedParticipants < numAvailParticipants && (
-                  <Tooltip
-                    arrow
-                    placement="top-start"
-                    title={
-                      contactPerson == null
-                        ? messages.participantSummaryCard.remindButtondisabledTooltip()
-                        : ''
-                    }
-                  >
-                    <Box>
-                      <Button
-                        disabled={contactPerson == null}
-                        onClick={() => {
-                          sendReminders(eventId);
-                        }}
-                        size="small"
-                        startIcon={<Check />}
-                        sx={{
-                          marginLeft: 2,
-                        }}
-                        variant="outlined"
-                      >
-                        <Msg
-                          id={messageIds.participantSummaryCard.remindButton}
-                        />
-                      </Button>
-                    </Box>
-                  </Tooltip>
-                )}
+                <Tooltip
+                  arrow
+                  placement="top-start"
+                  title={
+                    contactPerson == null
+                      ? messages.participantSummaryCard.remindButtondisabledTooltip()
+                      : ''
+                  }
+                >
+                  <Box>
+                    <Button
+                      disabled={
+                        contactPerson == null ||
+                        numRemindedParticipants >= numAvailParticipants
+                      }
+                      onClick={() => {
+                        sendReminders(
+                          eventId,
+                          bookedParticipants.map(
+                            (participant) => participant.id
+                          )
+                        );
+                      }}
+                      size="small"
+                      startIcon={
+                        contactPerson ? (
+                          isRemindingParticipants ? (
+                            <CircularProgress size={20} />
+                          ) : (
+                            <Check />
+                          )
+                        ) : (
+                          <PriorityHighRounded />
+                        )
+                      }
+                      sx={{
+                        marginLeft: 2,
+                      }}
+                      variant="outlined"
+                    >
+                      <Msg
+                        id={messageIds.participantSummaryCard.remindButton}
+                      />
+                    </Button>
+                  </Box>
+                </Tooltip>
               </Box>
             </Box>
           ) : (
