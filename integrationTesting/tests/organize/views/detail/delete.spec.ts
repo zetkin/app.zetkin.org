@@ -17,15 +17,11 @@ const deleteView = async (page: Page) => {
 
   await menuButton.waitFor({ state: 'visible' });
 
-  await Promise.all([
-    menuButton.click(),
-    deleteButton.waitFor({ state: 'visible' }),
-  ]);
+  await menuButton.click();
+  await deleteButton.waitFor({ state: 'visible' });
 
-  await Promise.all([
-    deleteButton.click(),
-    confirmButton.waitFor({ state: 'visible' }),
-  ]);
+  await deleteButton.click();
+  await confirmButton.waitFor({ state: 'visible' });
 
   await confirmButton.click();
 };
