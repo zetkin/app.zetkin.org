@@ -36,6 +36,13 @@ test.describe('Journey instance details page', () => {
         ClarasOnboarding
       );
 
+      const openStatus = page.locator(
+        'data-testid=journey-status >> text=Open'
+      );
+      const reopenButton = page.locator(
+        'data-testid=JourneyInstanceReopenButton'
+      );
+
       await page.goto(appUri + '/organize/1/journeys/1/1');
 
       await Promise.all([
@@ -44,8 +51,10 @@ test.describe('Journey instance details page', () => {
           `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
         ),
         // Click close instance button
-        page.locator('data-testid=JourneyInstanceReopenButton').click(),
+        reopenButton.click(),
       ]);
+
+      await openStatus.waitFor({ state: 'visible' });
 
       // Check patch request has correct data
       expect(

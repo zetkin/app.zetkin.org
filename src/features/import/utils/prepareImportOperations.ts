@@ -65,7 +65,7 @@ export default function prepareImportOperations(
                 typeof value == 'string' ? value : value.toString(),
                 countryCode
               );
-              value = parsedPhoneNumber.formatInternational();
+              value = parsedPhoneNumber.format('E.164');
             }
 
             //If they have uppecase letters we parse to lower

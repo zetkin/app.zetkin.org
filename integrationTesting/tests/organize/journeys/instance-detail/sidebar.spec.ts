@@ -30,15 +30,15 @@ test.describe('Journey instance detail page sidebar', () => {
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/1');
+    const assignees = page.locator(
+      `[data-testid=ZetkinSection-assignees] [data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}]`
+    );
 
-    expect(
-      await page
-        .locator(
-          `[data-testid=ZetkinSection-assignees] [data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}]`
-        )
-        .count()
-    ).toEqual(1);
+    await page.goto(appUri + '/organize/1/journeys/1/1');
+    await assignees.first().waitFor({ state: 'visible' });
+
+    const numAssignees = await assignees.count();
+    expect(numAssignees).toEqual(1);
   });
 
   test('lets user assign new person to the journey instance', async ({
@@ -196,15 +196,15 @@ test.describe('Journey instance detail page sidebar', () => {
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/1');
+    const subjects = page.locator(
+      `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
+    );
 
-    expect(
-      await page
-        .locator(
-          `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
-        )
-        .count()
-    ).toEqual(1);
+    await page.goto(appUri + '/organize/1/journeys/1/1');
+    await subjects.first().waitFor({ state: 'visible' });
+
+    const numSubjects = await subjects.count();
+    expect(numSubjects).toEqual(1);
   });
 
   //put request works

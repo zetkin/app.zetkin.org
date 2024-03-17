@@ -22,12 +22,12 @@ test.describe('Campaigns list page ', () => {
       WelcomeNewMembers,
     ]);
 
-    await page.goto(appUri + '/organize/1/projects');
+    const campaignCards = page.locator('data-testid=campaign-card');
 
-    const numCampaignCards = await page.$$eval(
-      'data-testid=campaign-card',
-      (items) => items.length
-    );
+    await page.goto(appUri + '/organize/1/projects');
+    await campaignCards.first().waitFor({ state: 'visible' });
+
+    const numCampaignCards = await campaignCards.count();
     expect(numCampaignCards).toEqual(2);
   });
 });

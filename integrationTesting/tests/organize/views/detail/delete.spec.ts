@@ -1,5 +1,5 @@
+import test from '../../../../fixtures/next';
 import { expect, Page } from '@playwright/test';
-import test, { NextWorkerFixtures } from '../../../../fixtures/next';
 
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
@@ -7,28 +7,23 @@ import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMember
 import KPD from '../../../../mockData/orgs/KPD';
 
 const deleteView = async (page: Page) => {
-  await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
-  await page.click(`data-testid=ZUIEllipsisMenu-item-delete-view`);
-  await page.click('button:text("Confirm")');
-};
+  const menuButton = page.locator(
+    'header [data-testid=ZUIEllipsisMenu-menuActivator]'
+  );
+  const deleteButton = page.locator(
+    'data-testid=ZUIEllipsisMenu-item-delete-view'
+  );
+  const confirmButton = page.locator('button:text("Confirm")');
 
-const expectDeleteViewError = async (page: Page) => {
-  await page.locator('data-testid=Snackbar-error').waitFor();
-  const canSeeErrorSnackbar = await page
-    .locator('data-testid=Snackbar-error')
-    .isVisible();
-  expect(canSeeErrorSnackbar).toBeTruthy();
-};
+  await menuButton.waitFor({ state: 'visible' });
 
-const expectDeleteViewSuccess = (moxy: NextWorkerFixtures['moxy']) => {
-  const deleteViewRequest = moxy
-    .log()
-    .find(
-      (mock) =>
-        mock.method === 'DELETE' &&
-        mock.path === `/v1/orgs/1/people/views/${AllMembers.id}`
-    );
-  expect(deleteViewRequest).toBeTruthy();
+  await menuButton.click();
+  await deleteButton.waitFor({ state: 'visible' });
+
+  await deleteButton.click();
+  await confirmButton.waitFor({ state: 'visible' });
+
+  await confirmButton.click();
 };
 
 test.describe('View detail page', () => {
@@ -66,7 +61,15 @@ test.describe('View detail page', () => {
               .url()
               .includes(`/orgs/1/people/views/${AllMembers.id}`)
         );
-        expectDeleteViewSuccess(moxy);
+
+        const deleteViewRequest = moxy
+          .log()
+          .find(
+            (mock) =>
+              mock.method === 'DELETE' &&
+              mock.path === `/v1/orgs/1/people/views/${AllMembers.id}`
+          );
+        expect(deleteViewRequest).toBeTruthy();
       })(),
       page.waitForNavigation(),
       deleteView(page),
@@ -81,6 +84,7 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
     moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
@@ -93,6 +97,10 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/lists/1');
 
     await deleteView(page);
-    await expectDeleteViewError(page);
+
+    const snackbarError = page.locator('data-testid=Snackbar-error');
+    await snackbarError.waitFor({ state: 'visible' });
+    const canSeeErrorSnackbar = await snackbarError.isVisible();
+    expect(canSeeErrorSnackbar).toBeTruthy();
   });
 });
