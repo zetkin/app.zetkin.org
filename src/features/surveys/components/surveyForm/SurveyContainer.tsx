@@ -1,16 +1,17 @@
 import { Box, BoxProps } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { forwardRef, ForwardRefRenderFunction, ReactNode } from 'react';
 
 export type SurveyContainerProps = BoxProps & {
   children: ReactNode;
 };
 
-const SurveyContainer: FC<SurveyContainerProps> = ({
-  children,
-  ...boxProps
-}) => {
+const SurveyContainer: ForwardRefRenderFunction<
+  unknown,
+  SurveyContainerProps
+> = ({ children, ...boxProps }, ref) => {
   return (
     <Box
+      ref={ref}
       alignItems="center"
       display="flex"
       flexDirection="column"
@@ -23,4 +24,4 @@ const SurveyContainer: FC<SurveyContainerProps> = ({
   );
 };
 
-export default SurveyContainer;
+export default forwardRef(SurveyContainer);
