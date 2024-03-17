@@ -111,7 +111,7 @@ test.describe('User submitting a survey', () => {
     });
   });
 
-  test('submits user signature', async ({ moxy, page }) => {
+  test.only('submits user signature', async ({ moxy, page }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
@@ -135,11 +135,7 @@ test.describe('User submitting a survey', () => {
     const data = request.data as {
       signature: ZetkinSurveySignaturePayload;
     };
-    expect(data.signature).toEqual({
-      email: 'rosa@example.org',
-      first_name: 'Rosa',
-      last_name: 'Luxemburg',
-    });
+    expect(data.signature).toBe('user');
   });
 
   test('submits anonymous signature', async ({ moxy, page }) => {

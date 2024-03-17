@@ -22,7 +22,7 @@ export async function submit(
   }
 
   const data = Object.fromEntries([...formData.entries()]);
-  const submission = prepareSurveyApiSubmission(data, user);
+  const submission = prepareSurveyApiSubmission(data, !!user);
   try {
     await apiClient.post(
       `/api/orgs/${data.orgId}/surveys/${data.surveyId}/submissions`,
