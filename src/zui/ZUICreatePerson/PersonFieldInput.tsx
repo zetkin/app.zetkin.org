@@ -58,7 +58,7 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
             ]()
       }
       onBlur={() => setBlurred(true)}
-      onChange={(e) => onChange(field, e.target.value)}
+      onChange={(e) => onChange(field, e.target.value.trim())}
       onFocus={() => setBlurred(false)}
       required={required}
       sx={style}

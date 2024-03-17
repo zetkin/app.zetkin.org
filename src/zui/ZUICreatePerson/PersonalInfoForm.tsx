@@ -112,7 +112,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             error={invalidFields.includes('alt_phone')}
             field={'alt_phone'}
             inputRef={inputRef}
-            onChange={(field, value) => onChange(field, value)}
+            onChange={(field, value) =>
+              onChange(field, value === ' ' ? '' : value)
+            }
           />
           <FormControl fullWidth>
             <InputLabel>
