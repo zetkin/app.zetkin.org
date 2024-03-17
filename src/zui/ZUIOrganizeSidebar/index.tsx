@@ -179,6 +179,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             <Box
                               sx={{
                                 display: 'flex',
+                                flexShrink: 0,
                                 justifyContent: 'center',
                                 width: '48px',
                               }}
