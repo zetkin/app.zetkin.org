@@ -25,7 +25,7 @@ const Mapping: FC<MappingProps> = ({
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const { columnOptions, optionAlreadySelected, updateColumn } =
+  const { fieldOptions, optionAlreadySelected, updateColumn } =
     useColumn(orgId);
 
   return (
@@ -64,7 +64,7 @@ const Mapping: FC<MappingProps> = ({
               <MappingRow
                 clearConfiguration={clearConfiguration}
                 column={column}
-                columnOptions={columnOptions}
+                fieldOptions={fieldOptions}
                 isBeingConfigured={columnIndexBeingConfigured == index}
                 onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}

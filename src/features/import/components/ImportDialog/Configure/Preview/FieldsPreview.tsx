@@ -13,7 +13,7 @@ interface FieldsPreviewProps {
 }
 const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
   const { orgId } = useNumericRouteParams();
-  const { columnOptions } = useColumn(orgId);
+  const { fieldOptions: columnOptions } = useColumn(orgId);
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
 

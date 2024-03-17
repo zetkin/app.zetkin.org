@@ -1,6 +1,5 @@
 import { columnUpdate } from '../store';
 import globalMessageIds from 'core/i18n/globalMessageIds';
-import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useMessages } from 'core/i18n';
@@ -17,7 +16,6 @@ export default function useColumn(orgId: number) {
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
   const columns = pendingFile.sheets[pendingFile.selectedSheetIndex].columns;
   const globalMessages = useMessages(globalMessageIds);
-  const messages = useMessages(messageIds);
   const customFields = useCustomFields(orgId).data ?? [];
 
   const updateColumn = (index: number, column: Column) => {
@@ -56,46 +54,20 @@ export default function useColumn(orgId: number) {
     return !!exists;
   };
 
-  const columnOptionsIDPartition: Option[] = [];
-  const columnOptionsFieldsPartition: Option[] = [];
-  const columnOptionsOtherPartition: Option[] = [];
+  const nativeFieldsOptions: Option[] = Object.values(NATIVE_PERSON_FIELDS)
+    .filter((fieldSlug) => fieldSlug != 'id' && fieldSlug != 'ext_id')
+    .map((fieldSlug) => ({
+      label: globalMessages.personFields[fieldSlug](),
+      value: `field:${fieldSlug}`,
+    }));
+  const customFieldsOptions: Option[] = customFields.map((field) => ({
+    label: field.title,
+    value: `field:${field.slug}`,
+  }));
 
-  columnOptionsIDPartition.push({
-    label: messages.configuration.mapping.id(),
-    value: 'id',
-  });
-
-  Object.values(NATIVE_PERSON_FIELDS).forEach((fieldSlug) => {
-    if (fieldSlug != 'id' && fieldSlug != 'ext_id') {
-      columnOptionsFieldsPartition.push({
-        label: globalMessages.personFields[fieldSlug](),
-        value: `field:${fieldSlug}`,
-      });
-    }
-  });
-
-  customFields.forEach((field) =>
-    columnOptionsFieldsPartition.push({
-      label: field.title,
-      value: `field:${field.slug}`,
-    })
-  );
-
-  columnOptionsOtherPartition.push({
-    label: messages.configuration.mapping.tags(),
-    value: 'tag',
-  });
-  columnOptionsOtherPartition.push({
-    label: messages.configuration.mapping.organization(),
-    value: 'org',
-  });
-
-  const labelSort = (a: Option, b: Option) => (a.label > b.label ? 1 : 0);
-  const columnOptions: Option[][] = [
-    columnOptionsIDPartition,
-    columnOptionsFieldsPartition.sort(labelSort),
-    columnOptionsOtherPartition.sort(labelSort),
-  ];
-
-  return { columnOptions, optionAlreadySelected, updateColumn };
+  const fieldOptions: Option[] = [
+    ...nativeFieldsOptions,
+    ...customFieldsOptions,
+  ].sort((a, b) => a.label.localeCompare(b.label));
+  return { fieldOptions, optionAlreadySelected, updateColumn };
 }

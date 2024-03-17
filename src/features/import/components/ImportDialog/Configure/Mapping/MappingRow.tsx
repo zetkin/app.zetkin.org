@@ -22,7 +22,7 @@ import { Msg, useMessages } from 'core/i18n';
 interface MappingRowProps {
   clearConfiguration: () => void;
   column: UIDataColumn<Column>;
-  columnOptions: Option[][];
+  fieldOptions: Option[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
@@ -32,7 +32,7 @@ interface MappingRowProps {
 const MappingRow: FC<MappingRowProps> = ({
   clearConfiguration,
   column,
-  columnOptions,
+  fieldOptions,
   isBeingConfigured,
   onChange,
   onConfigureStart,
@@ -52,6 +52,22 @@ const MappingRow: FC<MappingRowProps> = ({
 
     //Column kind is UNKNOWN, so we want no selected value
     return '';
+  };
+
+  // This has to be a function, not a component with PascalCase. If it is used
+  // as a component, the `Select` below won't recognise it as a valid option.
+  const listOption = ({ value, label, key }: Option & { key?: string }) => {
+    const alreadySelected = optionAlreadySelected(value);
+    return (
+      <MenuItem
+        key={key}
+        disabled={alreadySelected}
+        sx={{ paddingLeft: 4 }}
+        value={value}
+      >
+        {label}
+      </MenuItem>
+    );
   };
 
   return (
@@ -147,54 +163,34 @@ const MappingRow: FC<MappingRowProps> = ({
                   id={messageIds.configuration.mapping.zetkinFieldGroups.id}
                 />
               </ListSubheader>
-              {columnOptions[0].map((option) => {
-                const alreadySelected = optionAlreadySelected(option.value);
-                return (
-                  <MenuItem
-                    key={option.value}
-                    disabled={alreadySelected}
-                    sx={{ paddingLeft: 4 }}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </MenuItem>
-                );
+              {listOption({
+                label: messages.configuration.mapping.id(),
+                value: 'id',
               })}
-              <ListSubheader>
-                <Msg
-                  id={messageIds.configuration.mapping.zetkinFieldGroups.fields}
-                />
-              </ListSubheader>
-              {columnOptions[1].map((option) => {
-                const alreadySelected = optionAlreadySelected(option.value);
-                return (
-                  <MenuItem
-                    key={option.value}
-                    disabled={alreadySelected}
-                    sx={{ paddingLeft: 4 }}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </MenuItem>
-                );
-              })}
+
+              {fieldOptions.length > 0 && (
+                <ListSubheader>
+                  <Msg
+                    id={
+                      messageIds.configuration.mapping.zetkinFieldGroups.fields
+                    }
+                  />
+                </ListSubheader>
+              )}
+              {fieldOptions.map((option) => listOption(option))}
+
               <ListSubheader>
                 <Msg
                   id={messageIds.configuration.mapping.zetkinFieldGroups.other}
                 />
               </ListSubheader>
-              {columnOptions[2].map((option) => {
-                const alreadySelected = optionAlreadySelected(option.value);
-                return (
-                  <MenuItem
-                    key={option.value}
-                    disabled={alreadySelected}
-                    sx={{ paddingLeft: 4 }}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </MenuItem>
-                );
+              {listOption({
+                label: messages.configuration.mapping.organization(),
+                value: 'org',
+              })}
+              {listOption({
+                label: messages.configuration.mapping.tags(),
+                value: 'tag',
               })}
             </Select>
           </FormControl>
