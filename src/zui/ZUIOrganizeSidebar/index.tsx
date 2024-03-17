@@ -164,6 +164,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                         sx={{
                           alignItems: 'center',
                           display: 'flex',
+                          overflow: 'hidden',
                         }}
                       >
                         {!showOrgSwitcher && (
@@ -171,6 +172,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             <Box
                               sx={{
                                 display: 'flex',
+                                flexShrink: 0,
                                 justifyContent: 'center',
                                 width: '48px',
                               }}
@@ -186,7 +188,15 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                                 />
                               )}
                             </Box>
-                            <Typography variant="h6">{data.title}</Typography>
+                            <Typography
+                              sx={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                              }}
+                              variant="h6"
+                            >
+                              {data.title}
+                            </Typography>
                           </>
                         )}
 
@@ -213,6 +223,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             }}
                             onChange={(e) => setSearchString(e.target.value)}
                             placeholder={messages.organizeSidebar.filter()}
+                            size="small"
                             value={searchString}
                           />
                         )}
