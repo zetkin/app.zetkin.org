@@ -33,6 +33,9 @@ const tagsSlice = createSlice({
     },
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       const [personId, tag] = action.payload;
+      if (!state.tagsByPersonId[personId]) {
+        state.tagsByPersonId[personId] = remoteList();
+      }
       state.tagsByPersonId[personId].items.push(
         remoteItem(personId, { data: tag })
       );
