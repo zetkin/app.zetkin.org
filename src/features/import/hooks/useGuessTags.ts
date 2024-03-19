@@ -4,7 +4,10 @@ import { UIDataColumn } from './useUIDataColumns';
 import useTags from 'features/tags/hooks/useTags';
 import { CellData, TagColumn } from '../utils/types';
 
-type TagMap = { id: number; value: CellData };
+type TagMap = {
+  tags: { id: number }[];
+  value: CellData;
+};
 
 const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const tags = useTags(orgId);
@@ -16,9 +19,9 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const guessTags = () => {
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
-      (acc: TagMap[], cellValue: string | number) => {
+      (acc: TagMap[], cellValue: CellData) => {
         if (typeof cellValue === 'string') {
-          // Find orgs with most similar name
+          // Find tags with most similar name
           const results = fuse.search(cellValue);
           // Filter out items with a bad match
           const goodResults = results.filter(
@@ -29,7 +32,7 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
             return [
               ...acc,
               {
-                id: goodResults[0].item.id,
+                tags: [{ id: goodResults[0].item.id }],
                 value: cellValue,
               },
             ];
@@ -40,9 +43,7 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
       []
     );
 
-    console.log(matchedRows);
-
-    // uiDataColumn.selectOrgs(matchedRows);
+    uiDataColumn.assignTags(matchedRows);
   };
 
   return guessTags;

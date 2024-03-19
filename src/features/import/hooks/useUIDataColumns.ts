@@ -9,6 +9,12 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn<CType extends Column> = {
   assignTag: (tag: { id: number }, value: CellData) => void;
+  assignTags: (
+    mapping: {
+      tags: { id: number }[];
+      value: CellData;
+    }[]
+  ) => void;
   columnValuesMessage: string;
   deselectOrg: (value: CellData) => void;
   getAssignedTags: (value: CellData) => ZetkinTag[];
@@ -238,6 +244,23 @@ export default function useUIDataColumns(
       }
     };
 
+    const assignTags = (
+      mapping: {
+        tags: { id: number }[];
+        value: CellData;
+      }[]
+    ) => {
+      if (originalColumn.kind == ColumnKind.TAG) {
+        columnUpdate([
+          index,
+          {
+            ...originalColumn,
+            mapping,
+          },
+        ]);
+      }
+    };
+
     const unAssignTag = (tagId: number, value: CellData) => {
       if (originalColumn.kind == ColumnKind.TAG) {
         const map = originalColumn.mapping.find((map) => map.value == value);
@@ -425,6 +448,7 @@ export default function useUIDataColumns(
 
     return {
       assignTag,
+      assignTags,
       columnValuesMessage,
       deselectOrg,
       getAssignedTags,
