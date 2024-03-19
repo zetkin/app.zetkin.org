@@ -4,6 +4,7 @@ import Header from '@editorjs/header';
 //@ts-ignore
 import Paragraph from '@editorjs/paragraph';
 
+import { Box, useTheme } from '@mui/material';
 import EditorJS, {
   EditorConfig,
   OutputData,
@@ -18,7 +19,6 @@ import { linkToolFactory } from './tools/InlineLink';
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import { useTheme } from '@mui/material';
 import variableToolFactory from './tools/inlineVariable';
 
 export type EmailEditorFrontendProps = {
@@ -164,16 +164,62 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   const styleSheet: CSSStyleSheet = new CSSStyleSheet();
   styleSheet.deleteRule;
 
+  function prefixRule(rule: CSSRule): string {
+    if (rule instanceof CSSStyleRule) {
+      let text = '';
+      if (rule.selectorText.startsWith('body')) {
+        // Remove "body" so that body styling affects editor container instead
+        text = `#ClientOnlyEditor-container ${rule.cssText.slice(4)}`;
+      } else if (rule.selectorText.startsWith('.wrapper')) {
+        text = `#ClientOnlyEditor-container .ce-block__content ${rule.cssText.slice(
+          8
+        )}`;
+      } else {
+        text = `#ClientOnlyEditor-container ${rule.cssText}`;
+      }
+
+      text = text.replace(/(?<=\W)p(?=\W)/, '.ce-paragraph');
+
+      return text;
+    } else {
+      return rule.cssText;
+    }
+  }
+
   styleSheet.replaceSync(frame?.css || '');
   const frameStyles = Array.from(styleSheet.cssRules)
-    .map((rule) => `#ClientOnlyEditor-container ${rule.cssText}`)
+    .map((rule) => {
+      if (rule instanceof CSSMediaRule) {
+        if (rule.conditionText.includes('dark')) {
+          // Let's ignore dark mode for now
+          return '';
+        }
+
+        return [
+          // TODO: Uncomment this to enable light/dark mode
+          //`@media ${rule.conditionText} {`,
+          ...Array.from(rule.cssRules).map((rule) => '  ' + prefixRule(rule)),
+          //'}',
+        ].join('\n');
+      } else {
+        return prefixRule(rule);
+      }
+    })
     .join('\n');
 
   /*eslint-disable react/no-danger*/
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: frameStyles }} />
-      <div id="ClientOnlyEditor-container" />
+      <Box
+        id="ClientOnlyEditor-container"
+        sx={{
+          '& .ce-block__content': {
+            px: 2,
+          },
+          minHeight: '100%',
+        }}
+      />
     </>
   );
 };
