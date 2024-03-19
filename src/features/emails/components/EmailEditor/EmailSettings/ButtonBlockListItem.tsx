@@ -70,9 +70,12 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
             </Typography>
           )}
           {inputValue.length > 0 && !error && (
-            <NextLink href={formatUrl(inputValue) || ''} passHref rel="">
+            <NextLink
+              href={formatUrl(inputValue) || ''}
+              passHref
+              style={{ textDecoration: 'none' }}
+            >
               <Link
-                color="inherit"
                 display="flex"
                 rel="noopener"
                 target="_blank"
@@ -83,7 +86,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
                   fontSize="small"
                   sx={{ marginRight: 1 }}
                 />
-                <Typography variant="body2">
+                <Typography color="secondary" variant="body2">
                   <Msg id={messageIds.editor.tools.button.settings.testLink} />
                 </Typography>
               </Link>

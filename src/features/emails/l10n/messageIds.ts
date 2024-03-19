@@ -28,16 +28,12 @@ export default makeMessages('feat.emails', {
   deliveryStatus: {
     notLocked: m('Not locked, not scheduled'),
     notScheduled: m('Not scheduled'),
-    wasSent: m<{ date: ReactElement; time: string }>(
-      'Was sent at {time}, {date}'
-    ),
-    willSend: m<{ date: ReactElement; time: string }>(
-      'Will send at {time}, {date}'
-    ),
+    wasSent: m<{ datetime: ReactElement }>('Was sent at {datetime}'),
+    willSend: m<{ datetime: ReactElement }>('Will send at {datetime}'),
   },
   editor: {
     readOnlyModeInfo: m(
-      'This email is in read-only mode since it is scheduled for delivery. If you want to edit the content you need to cancel the delivery first.'
+      'This email is in read-only mode because it is scheduled for delivery, or has already been sent. If it is scheduled for delivery and you want to make changes, you need to cancel the delivery first.'
     ),
     settings: {
       tabs: {
@@ -119,9 +115,9 @@ export default makeMessages('feat.emails', {
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
   },
-  orgHasNoEmail: {
+  emailFeatureIsBlocked: {
     errorMessage: m(
-      'Your organization can not use the email feature since it does not have a registered email address.'
+      'Your organization does not have access to the email feature at the moment.'
     ),
     goBackButton: m('Go back'),
   },
@@ -133,6 +129,7 @@ export default makeMessages('feat.emails', {
     scheduledDescription: m(
       'This email is scheduled for delivery. If you want to unlock the targets, cancel the delivery first.'
     ),
+    sentSubtitle: m('Targets that were available for delivery'),
     subtitle: m('Targets currently available for delivery'),
     title: m('Ready'),
     unlockButton: m('Unlock'),
@@ -161,7 +158,10 @@ export default makeMessages('feat.emails', {
     defineButton: m('Define target group'),
     editButton: m('Edit target group'),
     locked: m('Targets are locked for delivery'),
-    subtitle: m('Use Smart Search to define the recipients of this mail.'),
+    sentSubtitle: m(
+      'You can look at the Smart Search that was used to define the recipients of this email'
+    ),
+    subtitle: m('Use Smart Search to define the recipients of this email.'),
     title: m('Targets'),
     viewButton: m('View target group'),
   },

@@ -9,6 +9,7 @@ import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useEmail from 'features/emails/hooks/useEmail';
+import useEmailState from 'features/emails/hooks/useEmailState';
 import useEmailStats from 'features/emails/hooks/useEmailStats';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
@@ -34,19 +35,15 @@ const EmailPage: PageWithLayout = () => {
     updateEmail,
     updateTargets,
   } = useEmail(orgId, emailId);
-  const {
-    numBlocked,
-    numTargetMatches,
-    readyTargets,
-    lockedReadyTargets: lockedTargets,
-  } = useEmailStats(orgId, emailId);
+  const { numBlocked, numTargetMatches, readyTargets, lockedReadyTargets } =
+    useEmailStats(orgId, emailId);
+  const emailState = useEmailState(orgId, emailId);
 
   const onServer = useServerSide();
 
   if (onServer || !email) {
     return null;
   }
-
   const isLocked = !!email.locked;
 
   return (
@@ -60,6 +57,7 @@ const EmailPage: PageWithLayout = () => {
             email={email}
             isLocked={isLocked}
             isTargeted={isTargeted}
+            state={emailState}
             targets={numTargetMatches}
             updateTargets={updateTargets}
           />
@@ -76,11 +74,11 @@ const EmailPage: PageWithLayout = () => {
               <EmailTargetsReady
                 isLoading={mutating.includes('lock')}
                 isLocked={isLocked}
-                isScheduled={!!email.published}
                 isTargeted={isTargeted}
-                lockedTargets={lockedTargets}
+                lockedReadyTargets={lockedReadyTargets}
                 onToggleLocked={() => updateEmail({ locked: !email.locked })}
                 readyTargets={readyTargets}
+                state={emailState}
               />
             </Box>
           </Box>

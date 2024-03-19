@@ -19,6 +19,7 @@ import useCampaign from '../hooks/useCampaign';
 import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
 import useCreateEmail from 'features/emails/hooks/useCreateEmail';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import useEmailFrames from 'features/emails/hooks/useEmailFrames';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinCampaign } from 'utils/types/zetkin';
@@ -57,6 +58,7 @@ const CampaignActionButtons: React.FunctionComponent<
   );
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
   const { createEmail } = useCreateEmail(orgId);
+  const frames = useEmailFrames(orgId).data || [];
 
   if (!organization) {
     return null;
@@ -80,49 +82,53 @@ const CampaignActionButtons: React.FunctionComponent<
     });
   };
 
+  const menuItems = [
+    {
+      icon: <Event />,
+      label: messages.linkGroup.createEvent(),
+      onClick: handleCreateEvent,
+    },
+    {
+      icon: <HeadsetMic />,
+      label: messages.linkGroup.createCallAssignment(),
+      onClick: () =>
+        createCallAssignment({
+          title: messages.form.createCallAssignment.newCallAssignment(),
+        }),
+    },
+    {
+      icon: <AssignmentOutlined />,
+      label: messages.linkGroup.createSurvey(),
+      onClick: () =>
+        createSurvey({
+          signature: 'require_signature',
+          title: messages.form.createSurvey.newSurvey(),
+        }),
+    },
+    {
+      icon: <CheckBoxOutlined />,
+      label: messages.linkGroup.createTask(),
+      onClick: () => setCreateTaskDialogOpen(true),
+    },
+  ];
+
+  if (organization.email && frames.length > 0) {
+    menuItems.push({
+      icon: <EmailOutlined />,
+      label: messages.linkGroup.createEmail(),
+      onClick: () =>
+        createEmail({
+          campaign_id: campId,
+          title: messages.form.createEmail.newEmail(),
+        }),
+    });
+  }
+
   return (
     <Box display="flex" gap={1}>
       <Box>
         <ZUIButtonMenu
-          items={[
-            {
-              icon: <Event />,
-              label: messages.linkGroup.createEvent(),
-              onClick: handleCreateEvent,
-            },
-            {
-              icon: <HeadsetMic />,
-              label: messages.linkGroup.createCallAssignment(),
-              onClick: () =>
-                createCallAssignment({
-                  title: messages.form.createCallAssignment.newCallAssignment(),
-                }),
-            },
-            {
-              icon: <AssignmentOutlined />,
-              label: messages.linkGroup.createSurvey(),
-              onClick: () =>
-                createSurvey({
-                  signature: 'require_signature',
-                  title: messages.form.createSurvey.newSurvey(),
-                }),
-            },
-            {
-              icon: <CheckBoxOutlined />,
-              label: messages.linkGroup.createTask(),
-              onClick: () => setCreateTaskDialogOpen(true),
-            },
-            {
-              disabled: !organization.email,
-              icon: <EmailOutlined />,
-              label: messages.linkGroup.createEmail(),
-              onClick: () =>
-                createEmail({
-                  campaign_id: campId,
-                  title: messages.form.createEmail.newEmail(),
-                }),
-            },
-          ]}
+          items={menuItems}
           label={messages.linkGroup.createActivity()}
         />
       </Box>

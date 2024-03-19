@@ -168,10 +168,14 @@ const viewsSlice = createSlice({
     columnDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [viewId, columnId] = action.payload;
       const colList = state.columnsByViewId[viewId];
-      if (colList) {
-        colList.items = colList.items.filter((item) => item.id != columnId);
-        const rowList = state.rowsByViewId[viewId];
 
+      if (colList) {
+        const colItem = colList.items.find((item) => item.id === columnId);
+        if (colItem) {
+          colItem.deleted = true;
+        }
+
+        const rowList = state.rowsByViewId[viewId];
         if (rowList) {
           // Empty the view to force a reload
           rowList.items = [];
@@ -286,12 +290,19 @@ const viewsSlice = createSlice({
     },
     folderDeleted: (state, action: PayloadAction<DeleteFolderReport>) => {
       const { foldersDeleted, viewsDeleted } = action.payload;
-      state.folderList.items = state.folderList.items.filter(
-        (item) => !foldersDeleted.includes(item.id)
-      );
-      state.viewList.items = state.viewList.items.filter(
-        (item) => !viewsDeleted.includes(item.id)
-      );
+      const deletedFolderItems =
+        state.folderList.items.filter((item) =>
+          foldersDeleted.includes(item.id)
+        ) || [];
+      deletedFolderItems.forEach((item) => item.deleted);
+      state.folderList.isStale = true;
+
+      const deletedViewItems =
+        state.viewList.items.filter((item) => viewsDeleted.includes(item.id)) ||
+        [];
+
+      deletedViewItems.forEach((item) => (item.deleted = true));
+      state.viewList.isStale = true;
     },
     folderUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -371,9 +382,13 @@ const viewsSlice = createSlice({
     },
     viewDeleted: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
-      state.viewList.items = state.viewList.items.filter(
-        (item) => item.id != viewId
-      );
+      const viewItem = state.viewList.items.find((item) => item.id === viewId);
+
+      if (viewItem) {
+        viewItem.deleted = true;
+      }
+
+      state.viewList.isStale = true;
     },
     viewLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;

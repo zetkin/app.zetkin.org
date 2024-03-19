@@ -41,6 +41,7 @@ const EmailTargetsBlocked: FC<EmailTargetsBlockedProps> = ({
               sx={{
                 backgroundColor: theme.palette.statusColors.orange,
                 borderRadius: '1em',
+                color: 'white',
                 display: 'flex',
                 flexShrink: 0,
                 fontSize: '1.8em',

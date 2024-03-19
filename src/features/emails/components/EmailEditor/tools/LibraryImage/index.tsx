@@ -1,8 +1,16 @@
 import { BlockToolConstructorOptions } from '@editorjs/editorjs';
 import { createRoot } from 'react-dom/client';
-import LibraryImageEditableBlock from './LibraryImageEditableBlock';
+
+import { BlockAttributes } from 'features/emails/types';
 import Providers from 'core/Providers';
-import { LibraryImageConfig, LibraryImageData } from './types';
+import LibraryImageEditableBlock, {
+  LibraryImageData,
+} from './LibraryImageEditableBlock';
+
+export type LibraryImageConfig = {
+  attributes: BlockAttributes['image'];
+  orgId: number;
+};
 
 export default class LibraryImage {
   private _config: LibraryImageConfig;
@@ -30,6 +38,7 @@ export default class LibraryImage {
     root.render(
       <Providers {...window.providerData}>
         <LibraryImageEditableBlock
+          attributes={this._config.attributes}
           data={this._data}
           onChange={(newData) => {
             this._data = { ...newData };

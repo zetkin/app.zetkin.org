@@ -38,7 +38,9 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
 
   const blocksRef = useRef<OutputBlockData[]>();
 
-  const readOnly = !!email.published;
+  const now = new Date();
+  const readOnly =
+    !!email.published || (!!email.published && new Date(email.published) > now);
 
   useEffect(() => {
     if (
@@ -56,8 +58,12 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
     blocksRef.current = content.blocks;
   }, [content.blocks.length]);
 
+  if (!email.frame) {
+    return null;
+  }
+
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" height="100%">
       {readOnly && (
         <Alert severity="info" sx={{ marginBottom: 2 }}>
           <Msg id={messageIds.editor.readOnlyModeInfo} />
@@ -67,6 +73,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
         <Box flex={1} sx={{ overflowY: 'auto' }}>
           <EmailEditorFrontend
             apiRef={apiRef}
+            frame={email.frame}
             initialContent={{ blocks: initialContent }}
             onSave={(newContent: OutputData) => {
               setContent(newContent);
@@ -87,7 +94,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
             borderLeft: `1px solid ${theme.palette.grey[300]}`,
             overflowY: 'auto',
           }}
-          width="25%"
+          width="33%"
         >
           <EmailSettings
             apiRef={apiRef}

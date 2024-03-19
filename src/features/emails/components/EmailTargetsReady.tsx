@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { Lock, LockOpen } from '@mui/icons-material';
 
+import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
@@ -17,23 +18,25 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 interface EmailTargetsReadyProps {
   isLocked: boolean;
   isLoading: boolean;
-  isScheduled: boolean;
   isTargeted: boolean;
-  lockedTargets: number | null;
+  lockedReadyTargets: number | null;
   onToggleLocked: () => void;
   readyTargets: number;
+  state: EmailState;
 }
 
 const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
   isLocked,
   isLoading,
-  isScheduled,
   isTargeted,
-  lockedTargets,
+  lockedReadyTargets,
   onToggleLocked,
   readyTargets,
+  state,
 }) => {
   const theme = useTheme();
+  const showUnlockInfo = isTargeted && state != EmailState.SENT;
+
   return (
     <Card>
       <Box
@@ -47,7 +50,13 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             <Msg id={messageIds.ready.title} />
           </Typography>
           <Typography color="secondary">
-            <Msg id={messageIds.ready.subtitle} />
+            <Msg
+              id={
+                state === EmailState.SENT
+                  ? messageIds.ready.sentSubtitle
+                  : messageIds.ready.subtitle
+              }
+            />
           </Typography>
         </Box>
         <Box alignItems="center" display="flex" gap={2}>
@@ -63,13 +72,16 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             </Box>
           )}
           <ZUIAnimatedNumber
-            value={lockedTargets === null ? readyTargets : lockedTargets}
+            value={
+              lockedReadyTargets === null ? readyTargets : lockedReadyTargets
+            }
           >
             {(animatedValue) => (
               <Box
                 sx={{
                   backgroundColor: theme.palette.statusColors.green,
                   borderRadius: '1em',
+                  color: 'white',
                   display: 'flex',
                   flexShrink: 0,
                   fontSize: '1.8em',
@@ -85,7 +97,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
           </ZUIAnimatedNumber>
         </Box>
       </Box>
-      {isTargeted && (
+      {showUnlockInfo && (
         <>
           <Divider />
           <Box
@@ -96,7 +108,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             padding={2}
           >
             <Typography>
-              {isScheduled ? (
+              {state === EmailState.SCHEDULED ? (
                 <Msg id={messageIds.ready.scheduledDescription} />
               ) : (
                 <Msg
@@ -118,7 +130,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             )}
             {!isLoading && (
               <Button
-                disabled={isScheduled}
+                disabled={state === EmailState.SCHEDULED}
                 onClick={onToggleLocked}
                 startIcon={isLocked ? <LockOpen /> : <Lock />}
                 variant={isLocked ? 'outlined' : 'contained'}
