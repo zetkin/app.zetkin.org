@@ -5,6 +5,8 @@ import messageIds from 'features/import/l10n/messageIds';
 import { TagColumn } from 'features/import/utils/types';
 import TagConfigRow from './TagConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useGuessTags from 'features/import/hooks/useGuessTags';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -13,7 +15,9 @@ interface TagConfigProps {
 }
 
 const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
+  const guessTags = useGuessTags(orgId, uiDataColumn);
   return (
     <Box
       display="flex"
@@ -28,7 +32,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
         </Typography>
         <Button
           onClick={() => {
-            console.log('hi');
+            guessTags();
           }}
         >
           {messages.configuration.configure.tags.guess()}
