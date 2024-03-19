@@ -166,6 +166,26 @@ const eventsSlice = createSlice({
       item.data = event;
       item.isLoading = false;
       item.loaded = new Date().toISOString();
+
+      if (event.campaign) {
+        if (!state.eventsByCampaignId[event.campaign.id]) {
+          state.eventsByCampaignId[event.campaign.id] =
+            remoteList<ZetkinEvent>();
+          state.eventsByCampaignId[event.campaign.id].items.push(
+            remoteItem(event.id, { data: event })
+          );
+        }
+
+        const eventItem = state.eventsByCampaignId[
+          event.campaign.id
+        ].items.find((item) => item.id == event.id);
+        if (eventItem) {
+          eventItem.data = { ...eventItem.data, ...event };
+          eventItem.mutating = [];
+        }
+        state.eventsByCampaignId[event.campaign!.id].loaded =
+          new Date().toISOString();
+      }
     },
     eventRangeLoad: (state, action: PayloadAction<string[]>) => {
       const isoDateRange = action.payload;

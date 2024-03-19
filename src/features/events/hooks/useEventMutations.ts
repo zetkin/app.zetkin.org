@@ -1,5 +1,5 @@
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { eventDeleted, eventUpdate, eventUpdated } from '../store';
+import { eventDeleted, eventLoaded, eventUpdate, eventUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 export type ZetkinEventPatchBody = Partial<
@@ -83,6 +83,7 @@ export default function useEventMutations(
     apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
       .then((event) => {
+        dispatch(eventLoaded(event));
         dispatch(eventUpdated(event));
       });
   };
