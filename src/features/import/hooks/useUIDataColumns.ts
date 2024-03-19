@@ -241,13 +241,15 @@ export default function useUIDataColumns(
 
     const assignTags = (mapping: TagColumn['mapping']) => {
       if (originalColumn.kind == ColumnKind.TAG) {
-        columnUpdate([
-          index,
-          {
-            ...originalColumn,
-            mapping,
-          },
-        ]);
+        dispatch(
+          columnUpdate([
+            index,
+            {
+              ...originalColumn,
+              mapping,
+            },
+          ])
+        );
       }
     };
 
