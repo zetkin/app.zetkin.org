@@ -4,11 +4,6 @@ import { UIDataColumn } from './useUIDataColumns';
 import useTags from 'features/tags/hooks/useTags';
 import { CellData, TagColumn } from '../utils/types';
 
-type TagMap = {
-  tags: { id: number }[];
-  value: CellData;
-};
-
 const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const tags = useTags(orgId);
   const fuse = new Fuse(tags.data || [], {
@@ -19,7 +14,7 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const guessTags = () => {
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
-      (acc: TagMap[], cellValue: CellData) => {
+      (acc: TagColumn['mapping'], cellValue: CellData) => {
         if (typeof cellValue === 'string') {
           // Find tags with most similar name
           const results = fuse.search(cellValue);
