@@ -39,6 +39,7 @@ export default makeMessages('feat.import', {
       },
       tags: {
         empty: m('Empty'),
+        guess: m('Guess tags'),
         header: m('Map values to tags'),
         numberOfRows: m<{ numRows: number }>(
           '{numRows, plural, =1 {1 row} other {# rows}}'

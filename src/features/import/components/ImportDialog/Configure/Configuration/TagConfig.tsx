@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { TagColumn } from 'features/import/utils/types';
@@ -22,9 +22,18 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
       padding={2}
       sx={{ overflowY: 'auto' }}
     >
-      <Typography sx={{ paddingBottom: 2 }} variant="h5">
-        <Msg id={messageIds.configuration.configure.tags.header} />
-      </Typography>
+      <Box alignItems="baseline" display="flex" justifyContent="space-between">
+        <Typography sx={{ paddingBottom: 2 }} variant="h5">
+          <Msg id={messageIds.configuration.configure.tags.header} />
+        </Typography>
+        <Button
+          onClick={() => {
+            console.log('hi');
+          }}
+        >
+          {messages.configuration.configure.tags.guess()}
+        </Button>
+      </Box>
       <Box alignItems="center" display="flex" paddingY={2}>
         <Box width="50%">
           <Typography variant="body2">
