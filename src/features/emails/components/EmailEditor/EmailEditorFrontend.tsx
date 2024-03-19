@@ -23,7 +23,7 @@ import variableToolFactory from './tools/inlineVariable';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
-  frame: EmailFrame;
+  frame: EmailFrame | null;
   initialContent: OutputData;
   onSave: (data: OutputData) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
@@ -75,7 +75,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,
-          config: frame.blockAttributes ? frame.blockAttributes['button'] : {},
+          config: {
+            attributes: frame?.block_attributes?.['button'] ?? {},
+          },
         },
         header: {
           class: Header,
@@ -88,9 +90,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
           config: {
-            attributes: frame.blockAttributes
-              ? frame.blockAttributes['image']
-              : {},
+            attributes: frame?.block_attributes?.['image'] ?? {},
             orgId,
           },
         },
@@ -164,7 +164,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   const styleSheet: CSSStyleSheet = new CSSStyleSheet();
   styleSheet.deleteRule;
 
-  styleSheet.replaceSync(frame.css || '');
+  styleSheet.replaceSync(frame?.css || '');
   const frameStyles = Array.from(styleSheet.cssRules)
     .map((rule) => `#ClientOnlyEditor-container ${rule.cssText}`)
     .join('\n');
