@@ -3,9 +3,9 @@ import {
   Add,
   AssignmentOutlined,
   BallotOutlined,
+  Block,
   Call,
   CheckBoxOutlined,
-  DoNotDisturbOnOutlined,
   Event,
   FilterAlt,
   LocalOfferOutlined,
@@ -92,9 +92,7 @@ export default function getFilterComponents(
         filter={filter as SmartSearchFilterWithId<EmailBlacklistFilterConfig>}
       />
     );
-    filterTypeIcon = (
-      <DoNotDisturbOnOutlined color="secondary" fontSize="small" />
-    );
+    filterTypeIcon = <Block color="secondary" fontSize="small" />;
   } else if (filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION) {
     displayFilter = (
       <DisplayCampaignParticipation

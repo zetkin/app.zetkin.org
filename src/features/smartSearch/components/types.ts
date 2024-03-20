@@ -118,6 +118,14 @@ export interface CallHistoryFilterConfig {
 export interface EmailBlacklistFilterConfig {
   reason: 'unsub_org' | 'any';
 }
+export interface EmailClickFilterConfig {
+  after?: string;
+  before?: string;
+  campaign?: number;
+  email?: number;
+  operator: 'clicked' | 'not_clicked';
+  link?: number[];
+}
 export interface MostActiveFilterConfig {
   after?: string;
   before?: string;

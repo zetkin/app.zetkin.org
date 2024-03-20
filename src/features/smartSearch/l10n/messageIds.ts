@@ -152,6 +152,11 @@ export default makeMessages('feat.smartSearch', {
         unsubOrg: m('they have unsubscribed'),
       },
     },
+    emailClick: {
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+      }>('{addRemoveSelect} people who have'),
+    },
     mostActive: {
       examples: {
         one: m(
