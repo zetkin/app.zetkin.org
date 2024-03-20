@@ -6,7 +6,7 @@ import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
-  CallBlockedFilterConfig,
+  EmailBlacklistFilterConfig,
   NewSmartSearchFilter,
   OPERATION,
   SmartSearchFilterWithId,
@@ -14,39 +14,34 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
-import { useNumericRouteParams } from 'core/hooks';
-const localMessageIds = messageIds.filters.callBlocked;
+const localMessageIds = messageIds.filters.emailBlacklist;
 
-interface CallBlockedProps {
+enum EMAIL_UNSUB_REASON {
+  UNSUB_ORG = 'unsub_org',
+  ANY = 'any',
+}
+
+interface EmailBlockedProps {
   filter:
-    | SmartSearchFilterWithId<CallBlockedFilterConfig>
+    | SmartSearchFilterWithId<EmailBlacklistFilterConfig>
     | NewSmartSearchFilter;
   onSubmit: (
     filter:
-      | SmartSearchFilterWithId<CallBlockedFilterConfig>
-      | ZetkinSmartSearchFilter<CallBlockedFilterConfig>
+      | SmartSearchFilterWithId<EmailBlacklistFilterConfig>
+      | ZetkinSmartSearchFilter<EmailBlacklistFilterConfig>
   ) => void;
   onCancel: () => void;
 }
 
-const CallBlocked = ({
-  onSubmit,
-  onCancel,
+const EmailBlacklist = ({
   filter: initialFilter,
-}: CallBlockedProps): JSX.Element => {
-  const { orgId } = useNumericRouteParams();
-  const assignmentsFuture = useCallAssignments(orgId);
-  const { filter, setOp } = useSmartSearchFilter<CallBlockedFilterConfig>(
-    initialFilter,
-    {
-      reason: 'any',
-    }
-  );
-  console.log(initialFilter, ' initial');
-
-  // only submit if assignments exist
-  const submittable = !!assignmentsFuture.data?.length;
+  onCancel,
+  onSubmit,
+}: EmailBlockedProps): JSX.Element => {
+  const { filter, setConfig, setOp } =
+    useSmartSearchFilter<EmailBlacklistFilterConfig>(initialFilter, {
+      reason: 'unsub_org',
+    });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -55,7 +50,6 @@ const CallBlocked = ({
 
   return (
     <FilterForm
-      disableSubmit={!submittable}
       onCancel={onCancel}
       onSubmit={(e) => handleSubmit(e)}
       renderSentence={() => (
@@ -74,6 +68,25 @@ const CallBlocked = ({
                 ))}
               </StyledSelect>
             ),
+            reasonSelect: (
+              <StyledSelect
+                onChange={(e) =>
+                  setConfig({
+                    ...filter.config,
+                    reason: e.target.value as EMAIL_UNSUB_REASON,
+                  })
+                }
+                value={filter.config.reason || EMAIL_UNSUB_REASON.ANY}
+              >
+                <MenuItem value={EMAIL_UNSUB_REASON.UNSUB_ORG}>
+                  <Msg id={localMessageIds.reasonSelect.unsubOrg} />
+                </MenuItem>
+
+                <MenuItem value={EMAIL_UNSUB_REASON.ANY}>
+                  <Msg id={localMessageIds.reasonSelect.any} />
+                </MenuItem>
+              </StyledSelect>
+            ),
           }}
         />
       )}
@@ -81,4 +94,4 @@ const CallBlocked = ({
   );
 };
 
-export default CallBlocked;
+export default EmailBlacklist;

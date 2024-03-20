@@ -115,7 +115,9 @@ export interface CallHistoryFilterConfig {
   before?: string;
   after?: string;
 }
-
+export interface EmailBlacklistFilterConfig {
+  reason: 'unsub_org' | 'any';
+}
 export interface MostActiveFilterConfig {
   after?: string;
   before?: string;
@@ -246,6 +248,7 @@ export type AnyFilterConfig =
   | CallHistoryFilterConfig
   | CampaignParticipationConfig
   | DefaultFilterConfig
+  | EmailBlacklistFilterConfig
   | MostActiveFilterConfig
   | PersonDataFilterConfig
   | PersonFieldFilterConfig

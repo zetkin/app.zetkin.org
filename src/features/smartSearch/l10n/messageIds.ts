@@ -24,9 +24,7 @@ export default makeMessages('feat.smartSearch', {
     call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
     campaign_participation: m('Based on their event participation'),
-    email_blacklist: m(
-      "People who have unsubscribed from the organization's emails"
-    ),
+    email_blacklist: m('People who are blocked from emails'),
     email_click: m('People who have clicked the specified email link'),
     email_history: m('People who have sent the specified email'),
     most_active: m('The most active people'),
@@ -140,6 +138,18 @@ export default makeMessages('feat.smartSearch', {
         location: m<{ location: ReactElement | string }>(
           'location "{location}"'
         ),
+      },
+    },
+    emailBlacklist: {
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        reasonSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who will not receive email because {reasonSelect}'
+      ),
+      reasonSelect: {
+        any: m('of any reason'),
+        unsubOrg: m('they have unsubscribed'),
       },
     },
     mostActive: {

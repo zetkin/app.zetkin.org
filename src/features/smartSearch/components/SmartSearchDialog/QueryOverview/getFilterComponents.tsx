@@ -5,6 +5,7 @@ import {
   BallotOutlined,
   Call,
   CheckBoxOutlined,
+  DoNotDisturbOnOutlined,
   Event,
   FilterAlt,
   LocalOfferOutlined,
@@ -21,6 +22,7 @@ import {
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../../filters/CampaignParticipation/DisplayCampaignParticipation';
+import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
 import DisplayMostActive from '../../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../../filters/PersonData/DisplayPersonData';
 import DisplayPersonField from '../../filters/PersonField/DisplayPersonField';
@@ -38,6 +40,7 @@ import {
   CallBlockedFilterConfig,
   CallHistoryFilterConfig,
   CampaignParticipationConfig,
+  EmailBlacklistFilterConfig,
   FILTER_TYPE,
   MostActiveFilterConfig,
   OPERATION,
@@ -83,6 +86,15 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <Call color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.EMAIL_BLACKLIST) {
+    displayFilter = (
+      <DisplayEmailBlacklist
+        filter={filter as SmartSearchFilterWithId<EmailBlacklistFilterConfig>}
+      />
+    );
+    filterTypeIcon = (
+      <DoNotDisturbOnOutlined color="secondary" fontSize="small" />
+    );
   } else if (filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION) {
     displayFilter = (
       <DisplayCampaignParticipation
