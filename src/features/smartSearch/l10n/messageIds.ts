@@ -13,6 +13,7 @@ export default makeMessages('feat.smartSearch', {
   },
   filterCategories: {
     campaignActivity: m('Project activity'),
+    email: m('Email'),
     misc: m('Misc'),
     peopleDatabase: m('People'),
     phoneBanking: m('Phone banking'),
@@ -23,6 +24,11 @@ export default makeMessages('feat.smartSearch', {
     call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
     campaign_participation: m('Based on their event participation'),
+    email_blacklist: m(
+      "People who have unsubscribed from the organization's emails"
+    ),
+    email_click: m('People who have clicked the specified email link'),
+    email_history: m('People who have sent the specified email'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
