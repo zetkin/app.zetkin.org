@@ -1,6 +1,9 @@
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
+import EmailBlocked from '../filters/EmailBlocked';
+import EmailClicked from '../filters/EmailClicked';
+import EmailHistory from '../filters/EmailHistory';
 import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
 import PersonField from '../filters/PersonField';
@@ -57,6 +60,9 @@ const FilterEditor = ({
           onSubmit={onSubmitFilter}
         />
       )}
+      {filter.type === FILTER_TYPE.EMAIL_BLACKLIST && <EmailBlocked />}
+      {filter.type === FILTER_TYPE.EMAIL_CLICK && <EmailClicked />}
+      {filter.type === FILTER_TYPE.EMAIL_HISTORY && <EmailHistory />}
       {filter.type === FILTER_TYPE.MOST_ACTIVE && (
         <MostActive
           filter={filter}
