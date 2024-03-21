@@ -4,11 +4,12 @@ import notEmpty from 'utils/notEmpty';
 import { useMessages } from 'core/i18n';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { CellData, Column, ColumnKind } from '../utils/types';
+import { CellData, Column, ColumnKind, TagColumn } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn<CType extends Column> = {
   assignTag: (tag: { id: number }, value: CellData) => void;
+  assignTags: (mapping: TagColumn['mapping']) => void;
   columnValuesMessage: string;
   deselectOrg: (value: CellData) => void;
   getAssignedTags: (value: CellData) => ZetkinTag[];
@@ -238,6 +239,20 @@ export default function useUIDataColumns(
       }
     };
 
+    const assignTags = (mapping: TagColumn['mapping']) => {
+      if (originalColumn.kind == ColumnKind.TAG) {
+        dispatch(
+          columnUpdate([
+            index,
+            {
+              ...originalColumn,
+              mapping,
+            },
+          ])
+        );
+      }
+    };
+
     const unAssignTag = (tagId: number, value: CellData) => {
       if (originalColumn.kind == ColumnKind.TAG) {
         const map = originalColumn.mapping.find((map) => map.value == value);
@@ -425,6 +440,7 @@ export default function useUIDataColumns(
 
     return {
       assignTag,
+      assignTags,
       columnValuesMessage,
       deselectOrg,
       getAssignedTags,
