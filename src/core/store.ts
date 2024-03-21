@@ -17,6 +17,7 @@ import campaignsSlice, {
   campaignDeleted,
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
+import emailsSlice, { EmailsStoreSlice } from 'features/emails/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import journeysSlice, {
   journeyInstanceCreated,
@@ -43,6 +44,7 @@ export interface RootState {
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
+  emails: EmailsStoreSlice;
   events: EventsStoreSlice;
   journeys: JourneysStoreSlice;
   organizations: OrganizationsStoreSlice;
@@ -60,6 +62,7 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,

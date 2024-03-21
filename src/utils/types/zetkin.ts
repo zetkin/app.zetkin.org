@@ -487,6 +487,18 @@ export interface ZetkinNoteBody {
   file_ids?: number[];
 }
 
+export interface ZetkinEmail {
+  campaign: { id: number; title: string } | null;
+  content?: string;
+  id: number;
+  locked?: string;
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
+  published?: string;
+  subject?: string;
+  target: ZetkinQuery;
+  title: string;
+}
+
 export type {
   ZetkinTask,
   ZetkinAssignedTask,
