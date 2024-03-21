@@ -5,6 +5,8 @@ import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
+import useEmails from 'features/emails/hooks/useEmails';
+import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   EmailClickFilterConfig,
@@ -24,7 +26,7 @@ enum LINK_SELECT {
   ANY_LINK = 'anyLink',
   FOLLOWING_LINKS = 'anyFollowingLinks',
 }
-enum EMAIL_SELECT {
+enum LIST_SELECT {
   ANY = 'any',
   FROM_PROJECT = 'fromProject',
   SPECIFIC_EMAIL = 'specificEmail',
@@ -47,17 +49,21 @@ const EmailClick = ({
   onCancel,
   onSubmit,
 }: EmailClickProps): JSX.Element => {
+  const { orgId } = useNumericRouteParams();
+  const emailsFuture = useEmails(orgId);
+
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
       operator: 'clicked',
     });
-  const [emailSelect, setEmailSelect] = useState<EMAIL_SELECT>(
+  const [listSelectType, setListSelectType] = useState<LIST_SELECT>(
     filter.config.campaign
-      ? EMAIL_SELECT.FROM_PROJECT
+      ? LIST_SELECT.FROM_PROJECT
       : filter.config.email
-      ? EMAIL_SELECT.SPECIFIC_EMAIL
-      : EMAIL_SELECT.ANY
+      ? LIST_SELECT.SPECIFIC_EMAIL
+      : LIST_SELECT.ANY
   );
+  console.log(filter, 'filter');
 
   return (
     <FilterForm
@@ -98,13 +104,36 @@ const EmailClick = ({
               </StyledSelect>
             ),
             emailSelect: (
+              <>
+                {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
+                  <StyledSelect
+                    onChange={(e) =>
+                      setConfig({
+                        ...filter.config,
+                        email: parseInt(e.target.value),
+                      })
+                    }
+                    value={filter.config.email || ''}
+                  >
+                    {emailsFuture.data?.map((email) => (
+                      <MenuItem key={`email-${email.id}`} value={email.id}>
+                        {email.title}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
+                )}
+              </>
+            ),
+            listSelect: (
               <StyledSelect
-                onChange={(e) => setEmailSelect(e.target.value as EMAIL_SELECT)}
-                value={emailSelect}
+                onChange={(e) =>
+                  setListSelectType(e.target.value as LIST_SELECT)
+                }
+                value={listSelectType}
               >
-                {Object.values(EMAIL_SELECT).map((item) => {
+                {Object.values(LIST_SELECT).map((item) => {
                   if (
-                    item !== EMAIL_SELECT.SPECIFIC_EMAIL &&
+                    item !== LIST_SELECT.SPECIFIC_EMAIL &&
                     filter.config.email !== undefined
                   ) {
                     return null;
@@ -126,7 +155,7 @@ const EmailClick = ({
                       ...filter.config,
                       email: 0,
                     });
-                    setEmailSelect(EMAIL_SELECT.SPECIFIC_EMAIL);
+                    setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
                   } else {
                     setConfig({
                       ...filter.config,

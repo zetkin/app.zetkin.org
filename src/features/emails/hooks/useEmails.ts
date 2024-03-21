@@ -4,7 +4,7 @@ import { ZetkinEmail } from 'utils/types/zetkin';
 import { emailsLoad, emailsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function useEmail(orgId: number): IFuture<ZetkinEmail[]> {
+export default function useEmails(orgId: number): IFuture<ZetkinEmail[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const emailList = useAppSelector((state) => state.emails.emailList);
