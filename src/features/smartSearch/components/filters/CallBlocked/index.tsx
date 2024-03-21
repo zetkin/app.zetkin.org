@@ -43,7 +43,6 @@ const CallBlocked = ({
       reason: 'any',
     }
   );
-  console.log(initialFilter, ' initial');
 
   // only submit if assignments exist
   const submittable = !!assignmentsFuture.data?.length;

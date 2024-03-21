@@ -26,7 +26,7 @@ export default makeMessages('feat.smartSearch', {
     campaign_participation: m('Based on their event participation'),
     email_blacklist: m('People who are blocked from emails'),
     email_click: m('People who have clicked the specified email link'),
-    email_history: m('People who have sent the specified email'),
+    email_history: m('People who have been sent the specified email'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
@@ -153,9 +153,27 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     emailClick: {
+      clickSelect: {
+        clicked: m('clicked'),
+        notClicked: m('not clicked'),
+      },
+      emailSelect: {
+        any: m('any email'),
+        fromProject: m('any email from project'),
+        specificEmail: m('the specific email'),
+      },
       inputString: m<{
         addRemoveSelect: ReactElement;
-      }>('{addRemoveSelect} people who have'),
+        clickSelect: ReactElement;
+        emailSelect: ReactElement;
+        linkSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have {clickSelect} {linkSelect} in {emailSelect}'
+      ),
+      linkSelect: {
+        anyFollowingLinks: m('any of the following links'),
+        anyLink: m('any link'),
+      },
     },
     mostActive: {
       examples: {
