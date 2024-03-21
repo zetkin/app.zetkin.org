@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEmail } from 'utils/types/zetkin';
+import { remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface EmailsStoreSlice {
   emailList: RemoteList<ZetkinEmail>;

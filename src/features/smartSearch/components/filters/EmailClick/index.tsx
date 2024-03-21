@@ -5,6 +5,7 @@ import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
+import TimeFrame from '../TimeFrame';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -65,12 +66,34 @@ const EmailClick = ({
       ? LIST_SELECT.SPECIFIC_EMAIL
       : LIST_SELECT.ANY
   );
+
+  const handleTimeFrameChange = (range: {
+    after?: string;
+    before?: string;
+  }) => {
+    const { after, before, ...rest } = filter.config;
+
+    setConfig({
+      ...rest,
+      ...(range.after && { after: range.after }),
+      ...(range.before && { before: range.before }),
+    });
+  };
+
+  const removeKey = (deleteKeys: (keyof EmailClickFilterConfig)[]) => {
+    const copied = { ...filter.config };
+    deleteKeys.forEach((key) => delete copied[key]);
+    setConfig({
+      ...copied,
+    });
+  };
+
   console.log(filter, 'filter');
 
   return (
     <FilterForm
       onCancel={onCancel}
-      onSubmit={(e) => console.log('hello')}
+      onSubmit={() => console.log('hello')}
       renderSentence={() => (
         <Msg
           id={localMessageIds.inputString}
@@ -107,6 +130,7 @@ const EmailClick = ({
             ),
             emailSelect: (
               <>
+                {''}
                 {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
                   <StyledSelect
                     onChange={(e) =>
@@ -126,12 +150,37 @@ const EmailClick = ({
                 )}
               </>
             ),
+            linkSelect: (
+              <StyledSelect
+                onChange={(e) => {
+                  if (e.target.value === LINK_SELECT.FOLLOWING_LINKS) {
+                    removeKey(['campaign', 'link']);
+                    setConfig({
+                      ...filter.config,
+                      email: 0,
+                    });
+                    setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
+                  } else {
+                    removeKey(['email', 'campaign', 'link']);
+                  }
+                }}
+                value={
+                  filter.config.email === undefined
+                    ? LINK_SELECT.ANY_LINK
+                    : LINK_SELECT.FOLLOWING_LINKS
+                }
+              >
+                {Object.values(LINK_SELECT).map((item) => (
+                  <MenuItem key={item} value={item}>
+                    <Msg id={localMessageIds.linkSelect[item]} />
+                  </MenuItem>
+                ))}
+              </StyledSelect>
+            ),
             listSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  setConfig({
-                    operator: filter.config.operator,
-                  });
+                  removeKey(['email', 'campaign', 'link']);
                   setListSelectType(e.target.value as LIST_SELECT);
                 }}
                 value={listSelectType}
@@ -152,36 +201,9 @@ const EmailClick = ({
                 })}
               </StyledSelect>
             ),
-            linkSelect: (
-              <StyledSelect
-                onChange={(e) => {
-                  if (e.target.value === LINK_SELECT.FOLLOWING_LINKS) {
-                    setConfig({
-                      operator: filter.config.operator,
-                      email: 0,
-                    });
-                    setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
-                  } else {
-                    setConfig({
-                      operator: filter.config.operator,
-                    });
-                  }
-                }}
-                value={
-                  filter.config.email === undefined
-                    ? LINK_SELECT.ANY_LINK
-                    : LINK_SELECT.FOLLOWING_LINKS
-                }
-              >
-                {Object.values(LINK_SELECT).map((item) => (
-                  <MenuItem key={item} value={item}>
-                    <Msg id={localMessageIds.linkSelect[item]} />
-                  </MenuItem>
-                ))}
-              </StyledSelect>
-            ),
             projectSelect: (
               <>
+                {''}
                 {listSelectType === LIST_SELECT.FROM_PROJECT && (
                   <StyledSelect
                     onChange={(e) =>
@@ -203,6 +225,15 @@ const EmailClick = ({
                   </StyledSelect>
                 )}
               </>
+            ),
+            timeFrame: (
+              <TimeFrame
+                filterConfig={{
+                  after: filter.config.after,
+                  before: filter.config.before,
+                }}
+                onChange={handleTimeFrameChange}
+              />
             ),
           }}
         />
