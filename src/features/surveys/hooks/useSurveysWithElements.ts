@@ -18,7 +18,9 @@ export default function useSurveysWithElements(
     (state) => state.surveys.surveysWithElementsList
   );
 
-  if (surveys.length === 0) {
+  const surveysData = surveys.data;
+
+  if (surveys.isLoading || !surveysData) {
     return new LoadingFuture();
   }
 
@@ -28,7 +30,7 @@ export default function useSurveysWithElements(
       surveysWithElementsLoaded(surveysAndElements),
     loader: () => {
       return Promise.all(
-        surveys.map((survey) =>
+        surveysData.map((survey) =>
           apiClient.get<ZetkinSurveyExtended>(
             `/api/orgs/${orgId}/surveys/${survey.id}`
           )

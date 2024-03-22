@@ -583,6 +583,10 @@ feat:
         organization: Organization
         selectZetkinField: Import as...
         tags: Tags
+        zetkinFieldGroups:
+          fields: Fields
+          id: ID
+          other: Other
         zetkinHeader: Zetkin
       preview:
         columnHeader:

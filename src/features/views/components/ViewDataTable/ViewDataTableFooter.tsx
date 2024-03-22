@@ -2,12 +2,14 @@ import { Box } from '@mui/material';
 import { FunctionComponent, useRef } from 'react';
 
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
 import messageIds from 'features/views/l10n/messageIds';
-import { useNumericRouteParams } from 'core/hooks';
+import zuiMessageIds from 'zui/l10n/messageIds';
 
 export interface ViewDataTableFooterProps {
   onRowAdd: (person: ZetkinPerson) => void;
@@ -17,11 +19,14 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
   onRowAdd,
 }) => {
   const messages = useMessages(messageIds);
+  const zuiMessages = useMessages(zuiMessageIds);
+
   const selectInputRef = useRef<HTMLInputElement>();
 
   const { orgId, viewId } = useNumericRouteParams();
   const { rowsFuture } = useViewGrid(orgId, viewId);
   const rows = rowsFuture.data || [];
+  const viewTitle = useView(orgId, viewId).data?.title || '';
 
   return (
     <Box p={1}>
@@ -44,6 +49,10 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
         }}
         placeholder={messages.footer.addPlaceholder()}
         selectedPerson={null}
+        submitLabel={zuiMessages.createPerson.submitLabel.add()}
+        title={zuiMessages.createPerson.title.addToList({
+          list: viewTitle,
+        })}
         variant="outlined"
       />
     </Box>

@@ -23,6 +23,7 @@ import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment'
 import useCallers from 'features/callAssignments/hooks/useCallers';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import zuiMessageIds from 'zui/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -50,6 +51,7 @@ const CallersPage: PageWithLayout = () => {
   const { orgId, callAssId } = useNumericRouteParams();
   const onServer = useServerSide();
   const messages = useMessages(messageIds);
+  const zuiMessages = useMessages(zuiMessageIds);
   const { data: callAssignment } = useCallAssignment(orgId, callAssId);
   const {
     addCaller,
@@ -122,6 +124,8 @@ const CallersPage: PageWithLayout = () => {
             }}
             placeholder={messages.callers.add.placeholder()}
             selectedPerson={null}
+            submitLabel={zuiMessages.createPerson.submitLabel.add()}
+            title={zuiMessages.createPerson.title.caller()}
           />
         </Box>
         <CallerConfigDialog

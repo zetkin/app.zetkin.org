@@ -25,15 +25,15 @@ export default function useJourneyInstances(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const journeyInstanceList = useAppSelector(
-    (state) => state.journeys.journeyInstanceList
+    (state) => state.journeys.journeyInstancesByJourneyId[journeyId]
   );
 
   const journeyInstancesFuture = loadListIfNecessary(
     journeyInstanceList,
     dispatch,
     {
-      actionOnLoad: () => journeyInstancesLoad(),
-      actionOnSuccess: (data) => journeyInstancesLoaded(data),
+      actionOnLoad: () => journeyInstancesLoad(journeyId),
+      actionOnSuccess: (data) => journeyInstancesLoaded([journeyId, data]),
       loader: () =>
         apiClient.get<ZetkinJourneyInstance[]>(
           `/api/orgs/${orgId}/journeys/${journeyId}/instances`

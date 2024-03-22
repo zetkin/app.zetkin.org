@@ -6,6 +6,7 @@ import {
   Checkbox,
   FormControl,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Select,
   Typography,
@@ -21,7 +22,7 @@ import { Msg, useMessages } from 'core/i18n';
 interface MappingRowProps {
   clearConfiguration: () => void;
   column: UIDataColumn<Column>;
-  columnOptions: Option[];
+  fieldOptions: Option[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
   onConfigureStart: () => void;
@@ -31,7 +32,7 @@ interface MappingRowProps {
 const MappingRow: FC<MappingRowProps> = ({
   clearConfiguration,
   column,
-  columnOptions,
+  fieldOptions,
   isBeingConfigured,
   onChange,
   onConfigureStart,
@@ -51,6 +52,22 @@ const MappingRow: FC<MappingRowProps> = ({
 
     //Column kind is UNKNOWN, so we want no selected value
     return '';
+  };
+
+  // This has to be a function, not a component with PascalCase. If it is used
+  // as a component, the `Select` below won't recognise it as a valid option.
+  const listOption = ({ value, label, key }: Option & { key?: string }) => {
+    const alreadySelected = optionAlreadySelected(value);
+    return (
+      <MenuItem
+        key={key}
+        disabled={alreadySelected}
+        sx={{ paddingLeft: 4 }}
+        value={value}
+      >
+        {label}
+      </MenuItem>
+    );
   };
 
   return (
@@ -118,18 +135,21 @@ const MappingRow: FC<MappingRowProps> = ({
                     kind: ColumnKind.ID_FIELD,
                     selected: true,
                   });
+                  onConfigureStart();
                 } else if (event.target.value == 'org') {
                   onChange({
                     kind: ColumnKind.ORGANIZATION,
                     mapping: [],
                     selected: true,
                   });
+                  onConfigureStart();
                 } else if (event.target.value == 'tag') {
                   onChange({
                     kind: ColumnKind.TAG,
                     mapping: [],
                     selected: true,
                   });
+                  onConfigureStart();
                 } else if (event.target.value.startsWith('field')) {
                   onChange({
                     field: event.target.value.slice(6),
@@ -141,17 +161,39 @@ const MappingRow: FC<MappingRowProps> = ({
               sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
               value={getValue()}
             >
-              {columnOptions.map((option) => {
-                const alreadySelected = optionAlreadySelected(option.value);
-                return (
-                  <MenuItem
-                    key={option.value}
-                    disabled={alreadySelected}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </MenuItem>
-                );
+              <ListSubheader>
+                <Msg
+                  id={messageIds.configuration.mapping.zetkinFieldGroups.id}
+                />
+              </ListSubheader>
+              {listOption({
+                label: messages.configuration.mapping.id(),
+                value: 'id',
+              })}
+
+              {fieldOptions.length > 0 && (
+                <ListSubheader>
+                  <Msg
+                    id={
+                      messageIds.configuration.mapping.zetkinFieldGroups.fields
+                    }
+                  />
+                </ListSubheader>
+              )}
+              {fieldOptions.map((option) => listOption(option))}
+
+              <ListSubheader>
+                <Msg
+                  id={messageIds.configuration.mapping.zetkinFieldGroups.other}
+                />
+              </ListSubheader>
+              {listOption({
+                label: messages.configuration.mapping.organization(),
+                value: 'org',
+              })}
+              {listOption({
+                label: messages.configuration.mapping.tags(),
+                value: 'tag',
               })}
             </Select>
           </FormControl>

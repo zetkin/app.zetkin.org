@@ -1,6 +1,12 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
-import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridRenderEditCellParams,
+  GridValueGetterParams,
+  useGridApiContext,
+} from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import { IFuture } from 'core/caching/futures';
@@ -32,32 +38,24 @@ export default class LocalPersonColumnType
     return {
       align: 'center',
       editable: true,
-      filterable: false,
+      filterable: true,
       headerAlign: 'center',
 
-      renderCell: (params) => {
-        return <ZUIPersonGridCell person={params.value} />;
+      renderCell: (params: GridRenderCellParams) => {
+        return <ZUIPersonGridCell person={params.row[params.field]} />;
       },
-      renderEditCell: (params) => {
-        return <EditCell cell={params.value} column={col} row={params.row} />;
+      renderEditCell: (params: GridRenderEditCellParams) => {
+        return (
+          <EditCell
+            cell={params.row[params.field]}
+            column={col}
+            row={params.row}
+          />
+        );
       },
-      sortComparator: (
-        val0: LocalPersonViewCell,
-        val1: LocalPersonViewCell
-      ) => {
-        if (!val0 && !val1) {
-          return 0;
-        }
-        if (!val0) {
-          return 1;
-        }
-        if (!val1) {
-          return -1;
-        }
-
-        const name0 = val0.first_name + val1.last_name;
-        const name1 = val1.first_name + val1.last_name;
-        return name0.localeCompare(name1);
+      valueGetter: (params: GridValueGetterParams) => {
+        const cell = params.row[params.field];
+        return this.cellToString(cell);
       },
     };
   }

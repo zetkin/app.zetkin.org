@@ -1,10 +1,11 @@
 import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { OrgColumn } from 'features/import/utils/types';
 import OrgConfigRow from './OrgConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useGuessOrganization from 'features/import/hooks/useGuessOrganization';
 import { useNumericRouteParams } from 'core/hooks';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import { Msg, useMessages } from 'core/i18n';
@@ -16,9 +17,11 @@ interface OrgConfigProps {
 const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const subOrgs = useSubOrganizations(orgId);
+  const subOrgs = useSubOrganizations(orgId).data || [];
+  const activeOrgs = subOrgs.filter((subOrg) => subOrg.is_active);
+  const guessOrgs = useGuessOrganization(activeOrgs, uiDataColumn);
 
-  if (!subOrgs.data) {
+  if (!activeOrgs.length) {
     return null;
   }
 
@@ -30,9 +33,19 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
       padding={2}
       sx={{ overflowY: 'auto' }}
     >
-      <Typography sx={{ paddingBottom: 2 }} variant="h5">
-        <Msg id={messageIds.configuration.configure.orgs.header} />
-      </Typography>
+      <Box alignItems="baseline" display="flex" justifyContent="space-between">
+        <Typography sx={{ paddingBottom: 2 }} variant="h5">
+          <Msg id={messageIds.configuration.configure.orgs.header} />
+        </Typography>
+        <Button
+          onClick={() => {
+            guessOrgs();
+          }}
+        >
+          {messages.configuration.configure.orgs.guess()}
+        </Button>
+      </Box>
+
       <Box alignItems="center" display="flex" paddingY={2}>
         <Box width="50%">
           <Typography variant="body2">
@@ -54,7 +67,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectOrg={() => uiDataColumn.deselectOrg(uniqueValue)}
             onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, uniqueValue)}
-            orgs={subOrgs.data || []}
+            orgs={activeOrgs}
             selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
             title={uniqueValue.toString()}
           />
@@ -68,7 +81,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             numRows={uiDataColumn.numberOfEmptyRows}
             onDeselectOrg={() => uiDataColumn.deselectOrg(null)}
             onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, null)}
-            orgs={subOrgs.data || []}
+            orgs={activeOrgs}
             selectedOrgId={uiDataColumn.getSelectedOrgId(null)}
             title={messages.configuration.configure.tags.empty()}
           />

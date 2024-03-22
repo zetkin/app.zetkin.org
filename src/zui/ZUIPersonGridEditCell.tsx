@@ -15,7 +15,7 @@ import {
   Typography,
   useAutocomplete,
 } from '@mui/material';
-import { FC, HTMLAttributes, useState } from 'react';
+import { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import { usePersonSelect } from './ZUIPersonSelect';
@@ -47,6 +47,19 @@ const ZUIPersonGridEditCell: FC<{
   const [searching, setSearching] = useState(false);
 
   const orgId = parseInt(query.orgId as string);
+
+  const [activeIndex, setActiveIndex] = useState<number>(Infinity);
+  const scrollableRef = useRef<HTMLUListElement>(null);
+
+  // Scroll when navigating using keyboard
+  useEffect(() => {
+    const scrollableElement = scrollableRef.current;
+    const selectedElement = scrollableElement?.querySelector('.Mui-selected');
+
+    if (selectedElement) {
+      selectedElement.scrollIntoView();
+    }
+  }, [scrollableRef, activeIndex]);
 
   const personSelect = usePersonSelect({
     initialValue: '',
@@ -113,6 +126,33 @@ const ZUIPersonGridEditCell: FC<{
           fullWidth
           inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
+          onKeyDown={(ev) => {
+            if (ev.code == 'ArrowUp') {
+              const nextIndex = activeIndex - 1;
+              setActiveIndex(
+                nextIndex >= 0
+                  ? nextIndex
+                  : searchResults.length + suggestedPeople.length - 1
+              );
+            } else if (ev.code == 'ArrowDown') {
+              const nextIndex = activeIndex + 1;
+              setActiveIndex(
+                nextIndex < searchResults.length + suggestedPeople.length
+                  ? nextIndex
+                  : 0
+              );
+            } else if (ev.code == 'Enter') {
+              if (activeIndex < suggestedPeople.length) {
+                onUpdate(suggestedPeople[activeIndex]);
+              } else {
+                onUpdate(searchResults[activeIndex - suggestedPeople.length]);
+              }
+
+              setActiveIndex(Infinity);
+              setAnchorEl(null);
+              ev.preventDefault();
+            }
+          }}
           placeholder={messages.personSelect.search()}
           sx={{ paddingLeft: '10px' }}
         />
@@ -191,6 +231,7 @@ const ZUIPersonGridEditCell: FC<{
                     </Box>
                   )}
                   <List
+                    ref={scrollableRef}
                     className={styles.searchingList}
                     sx={{
                       display:
@@ -205,7 +246,7 @@ const ZUIPersonGridEditCell: FC<{
                         >
                           {suggestedPeopleLabel}
                         </ListSubheader>
-                        {filteredSuggestedPeople.map((option) => (
+                        {filteredSuggestedPeople.map((option, index) => (
                           <PersonListItem
                             key={option.id}
                             itemProps={{
@@ -215,6 +256,7 @@ const ZUIPersonGridEditCell: FC<{
                             }}
                             orgId={orgId}
                             person={option}
+                            selected={activeIndex == index}
                           />
                         ))}
                       </>
@@ -255,6 +297,9 @@ const ZUIPersonGridEditCell: FC<{
                               itemProps={optProps}
                               orgId={orgId}
                               person={option}
+                              selected={
+                                index + suggestedPeople.length == activeIndex
+                              }
                             />
                           );
                         })}
@@ -275,11 +320,13 @@ const PersonListItem: FC<{
   itemProps: HTMLAttributes<HTMLLIElement>;
   orgId: number;
   person: ZetkinPerson;
-}> = ({ itemProps, orgId, person }) => {
+  selected: boolean;
+}> = ({ itemProps, orgId, person, selected }) => {
   return (
     <ListItem
       {...itemProps}
       disablePadding
+      selected={selected}
       sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
     >
       <Box

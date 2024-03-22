@@ -13,6 +13,7 @@ import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUICard from 'zui/ZUICard';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import zuiMessageIds from 'zui/l10n/messageIds';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
@@ -79,6 +80,8 @@ const ContactDetails: FC<ContactDetailsProps> = ({
 
 const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
   const messages = useMessages(messageIds);
+  const zuiMessages = useMessages(zuiMessageIds);
+
   const { setContact } = useEventContact(orgId, eventId);
   const handleSelectedPerson = (personId: number) => {
     setContact(personId);
@@ -87,11 +90,11 @@ const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
   return (
     <Box m={1} mb={5} mt={3}>
       <ZUIPersonSelect
-        onChange={(person) => {
-          handleSelectedPerson(person.id);
-        }}
+        onChange={(person) => handleSelectedPerson(person.id)}
         placeholder={messages.eventContactCard.selectPlaceholder()}
         selectedPerson={null}
+        submitLabel={zuiMessages.createPerson.submitLabel.assign()}
+        title={zuiMessages.createPerson.title.contact()}
         variant="outlined"
       />
     </Box>

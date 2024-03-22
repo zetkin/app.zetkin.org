@@ -21,13 +21,12 @@ test.describe('Journeys list page', () => {
       MarxistTraining,
     ]);
 
+    const journeyCards = page.locator('data-testid=journey-card');
+
     await page.goto(appUri + '/organize/1/journeys');
+    await journeyCards.first().waitFor({ state: 'visible' });
 
-    const numJourneysCards = await page.$$eval(
-      'data-testid=journey-card',
-      (items) => items.length
-    );
-
+    const numJourneysCards = await journeyCards.count();
     expect(numJourneysCards).toEqual(2);
   });
 });

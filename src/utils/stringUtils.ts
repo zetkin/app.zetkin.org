@@ -43,4 +43,7 @@ const truncateOnMiddle = (str: string, maxLength: number) => {
   return `${firstPart}...${lastPart}`;
 };
 
+export const isInteger = (str: string): boolean =>
+  Number.isInteger(parseFloat(str));
+
 export { getEllipsedString, stringToBool, truncateOnMiddle };

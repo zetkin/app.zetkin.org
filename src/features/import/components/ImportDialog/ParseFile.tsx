@@ -106,6 +106,10 @@ const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
     onError: () => {
       setError(true);
     },
+    // We do not want to use the FS Access API as it is bad UX where a user has
+    // to manually change what file type they want to upload.
+    // See discussion here: https://github.com/react-dropzone/react-dropzone/issues/1191
+    useFsAccessApi: false,
   });
 
   return (

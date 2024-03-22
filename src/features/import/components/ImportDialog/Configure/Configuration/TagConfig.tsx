@@ -1,10 +1,12 @@
 import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { TagColumn } from 'features/import/utils/types';
 import TagConfigRow from './TagConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useGuessTags from 'features/import/hooks/useGuessTags';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -13,7 +15,9 @@ interface TagConfigProps {
 }
 
 const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
+  const guessTags = useGuessTags(orgId, uiDataColumn);
   return (
     <Box
       display="flex"
@@ -22,9 +26,18 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
       padding={2}
       sx={{ overflowY: 'auto' }}
     >
-      <Typography sx={{ paddingBottom: 2 }} variant="h5">
-        <Msg id={messageIds.configuration.configure.tags.header} />
-      </Typography>
+      <Box alignItems="baseline" display="flex" justifyContent="space-between">
+        <Typography sx={{ paddingBottom: 2 }} variant="h5">
+          <Msg id={messageIds.configuration.configure.tags.header} />
+        </Typography>
+        <Button
+          onClick={() => {
+            guessTags();
+          }}
+        >
+          {messages.configuration.configure.tags.guess()}
+        </Button>
+      </Box>
       <Box alignItems="center" display="flex" paddingY={2}>
         <Box width="50%">
           <Typography variant="body2">

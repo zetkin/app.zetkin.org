@@ -521,3 +521,8 @@ export type ZetkinEmailPostBody = Partial<
 > & {
   campaign_id: number | null;
 };
+
+export type ZetkinCreatePerson = Partial<
+  Omit<ZetkinPersonNativeFields, 'id' | 'is_user'>
+> &
+  Record<string, string | null>;

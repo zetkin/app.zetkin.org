@@ -1,5 +1,10 @@
-import { Autocomplete as MUIAutocomplete } from '@mui/material';
 import { Box, TextField } from '@mui/material';
+import {
+  Button,
+  Divider,
+  Autocomplete as MUIAutocomplete,
+  Paper,
+} from '@mui/material';
 import React, {
   FunctionComponent,
   HTMLAttributes,
@@ -9,13 +14,14 @@ import React, {
   useState,
 } from 'react';
 
-import { useMessages } from 'core/i18n';
+import messageIds from './l10n/messageIds';
+import { PersonAdd } from '@mui/icons-material';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonSearch from 'features/profile/hooks/usePersonSearch';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUICreatePerson from './ZUICreatePerson';
 import ZUIPerson from 'zui/ZUIPerson';
-
-import messageIds from './l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 interface UsePersonSelectProps {
   getOptionDisabled?: (option: ZetkinPerson) => boolean;
@@ -61,7 +67,10 @@ interface UsePersonSelectReturn {
 type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
 type ZUIPersonSelectProps = UsePersonSelectProps & {
+  disabled?: boolean;
   size?: 'small' | 'medium';
+  submitLabel?: string;
+  title?: string;
   variant?: 'filled' | 'outlined' | 'standard';
 };
 
@@ -174,32 +183,81 @@ export const usePersonSelect: UsePersonSelect = ({
 const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   props
 ) => {
-  const { label, size, variant, ...restComponentProps } = props;
+  const {
+    disabled,
+    label,
+    size,
+    variant,
+    submitLabel,
+    title,
+    ...restComponentProps
+  } = props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
 
-  const { name, placeholder, inputRef, shiftHeld, ...restProps } =
+  const { name, placeholder, inputRef, shiftHeld, onChange, ...restProps } =
     autoCompleteProps;
   delete restProps.getOptionValue;
 
+  const [createPersonOpen, setCreatePersonOpen] = useState(false);
+
   return (
-    <MUIAutocomplete
-      {...restProps}
-      handleHomeEndKeys={!shiftHeld}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          inputProps={{
-            ...params.inputProps,
-          }}
-          inputRef={inputRef}
-          label={label}
-          name={name}
-          placeholder={placeholder}
-          size={size}
-          variant={variant}
-        />
-      )}
-    />
+    <>
+      <MUIAutocomplete
+        {...restProps}
+        handleHomeEndKeys={!shiftHeld}
+        onChange={onChange}
+        PaperComponent={({ children }) => {
+          return (
+            <Paper
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              {children}
+              {!disabled && (
+                <>
+                  <Divider sx={{ mt: 1 }} />
+                  <Button
+                    color="primary"
+                    onClick={() => setCreatePersonOpen(true)}
+                    startIcon={<PersonAdd />}
+                    sx={{
+                      justifyContent: 'flex-start',
+                      m: 2,
+                    }}
+                    variant="outlined"
+                  >
+                    <Msg id={messageIds.createPerson.createBtn} />
+                  </Button>
+                </>
+              )}
+            </Paper>
+          );
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            inputProps={{
+              ...params.inputProps,
+            }}
+            inputRef={inputRef}
+            label={label}
+            name={name}
+            placeholder={placeholder}
+            size={size}
+            variant={variant}
+          />
+        )}
+      />
+      <ZUICreatePerson
+        onClose={() => setCreatePersonOpen(false)}
+        onSubmit={(e, person) => onChange(e, person)}
+        open={createPersonOpen}
+        submitLabel={submitLabel}
+        title={title}
+      />
+    </>
   );
 };
 
