@@ -151,18 +151,22 @@ const EmailClick = ({
               <>
                 {''}
                 {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
-                  <StyledSelect
-                    onChange={(e) =>
-                      setValueToKey('email', parseInt(e.target.value))
-                    }
-                    value={filter.config.email || ''}
-                  >
-                    {emailsFuture?.map((email) => (
-                      <MenuItem key={`email-${email.id}`} value={email.id}>
-                        {email.title}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
+                  <>
+                    "
+                    <StyledSelect
+                      onChange={(e) =>
+                        setValueToKey('email', parseInt(e.target.value))
+                      }
+                      value={filter.config.email || ''}
+                    >
+                      {emailsFuture?.map((email) => (
+                        <MenuItem key={`email-${email.id}`} value={email.id}>
+                          {email.title}
+                        </MenuItem>
+                      ))}
+                    </StyledSelect>
+                    "
+                  </>
                 )}
               </>
             ),
@@ -232,21 +236,25 @@ const EmailClick = ({
               <>
                 {''}
                 {listSelectType === LIST_SELECT.FROM_PROJECT && (
-                  <StyledSelect
-                    onChange={(e) =>
-                      setValueToKey('campaign', parseInt(e.target.value))
-                    }
-                    value={filter.config.campaign || ''}
-                  >
-                    {projectsFuture?.map((project) => (
-                      <MenuItem
-                        key={`proejct-${project.id}`}
-                        value={project.id}
-                      >
-                        {project.title}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
+                  <>
+                    "
+                    <StyledSelect
+                      onChange={(e) =>
+                        setValueToKey('campaign', parseInt(e.target.value))
+                      }
+                      value={filter.config.campaign || ''}
+                    >
+                      {projectsFuture?.map((project) => (
+                        <MenuItem
+                          key={`proejct-${project.id}`}
+                          value={project.id}
+                        >
+                          {project.title}
+                        </MenuItem>
+                      ))}
+                    </StyledSelect>
+                    "
+                  </>
                 )}
               </>
             ),

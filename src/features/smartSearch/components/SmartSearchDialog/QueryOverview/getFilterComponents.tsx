@@ -23,6 +23,7 @@ import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../../filters/CampaignParticipation/DisplayCampaignParticipation';
 import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
+import DisplayEmailClick from '../../filters/EmailClick/DisplayEmailClick';
 import DisplayMostActive from '../../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../../filters/PersonData/DisplayPersonData';
 import DisplayPersonField from '../../filters/PersonField/DisplayPersonField';
@@ -41,6 +42,7 @@ import {
   CallHistoryFilterConfig,
   CampaignParticipationConfig,
   EmailBlacklistFilterConfig,
+  EmailClickFilterConfig,
   FILTER_TYPE,
   MostActiveFilterConfig,
   OPERATION,
@@ -90,6 +92,13 @@ export default function getFilterComponents(
     displayFilter = (
       <DisplayEmailBlacklist
         filter={filter as SmartSearchFilterWithId<EmailBlacklistFilterConfig>}
+      />
+    );
+    filterTypeIcon = <Block color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.EMAIL_CLICK) {
+    displayFilter = (
+      <DisplayEmailClick
+        filter={filter as SmartSearchFilterWithId<EmailClickFilterConfig>}
       />
     );
     filterTypeIcon = <Block color="secondary" fontSize="small" />;
