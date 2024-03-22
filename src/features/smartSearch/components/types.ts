@@ -126,6 +126,13 @@ export interface EmailClickFilterConfig {
   operator: 'clicked' | 'not_clicked';
   link?: number[];
 }
+export interface EmailHistoryFilterConfig {
+  after?: string;
+  before?: string;
+  campaign?: number;
+  email?: number;
+  operator: 'sent' | 'not_sent' | 'opened' | 'not_opened';
+}
 export interface MostActiveFilterConfig {
   after?: string;
   before?: string;

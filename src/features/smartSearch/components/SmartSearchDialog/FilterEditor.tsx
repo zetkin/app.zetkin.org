@@ -74,7 +74,13 @@ const FilterEditor = ({
           onSubmit={onSubmitFilter}
         />
       )}
-      {filter.type === FILTER_TYPE.EMAIL_HISTORY && <EmailHistory />}
+      {filter.type === FILTER_TYPE.EMAIL_HISTORY && (
+        <EmailHistory
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
       {filter.type === FILTER_TYPE.MOST_ACTIVE && (
         <MostActive
           filter={filter}

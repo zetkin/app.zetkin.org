@@ -179,6 +179,18 @@ export default makeMessages('feat.smartSearch', {
         specificEmail: m('the specific email'),
       },
     },
+    emailHistory: {
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        statusSelect: ReactElement;
+      }>('{addRemoveSelect} people who have {statusSelect}'),
+      statusSelect: {
+        opened: m('opened'),
+        notOpened: m('not opened'),
+        notSent: m('not sent'),
+        sent: m('sent'),
+      },
+    },
     mostActive: {
       examples: {
         one: m(
