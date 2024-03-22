@@ -84,7 +84,7 @@ const EmailClick = ({
 
   const setValueToKey = (
     key: keyof EmailClickFilterConfig,
-    value: string | number
+    value: string | number | number[]
   ) => {
     setConfig({
       ...filter.config,
@@ -100,11 +100,11 @@ const EmailClick = ({
   };
   const handleLinkSelect = (value: string) => {
     if (value === LINK_SELECT.FOLLOWING_LINKS) {
-      removeKey(['campaign', 'link']);
-      setValueToKey('email', 0);
+      removeKey(['campaign']);
+      setValueToKey('link', []);
       setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
     } else {
-      removeKey(['email', 'campaign', 'link']);
+      removeKey(['campaign', 'link']);
     }
   };
 
@@ -166,9 +166,9 @@ const EmailClick = ({
               <StyledSelect
                 onChange={(e) => handleLinkSelect(e.target.value)}
                 value={
-                  filter.config.email === undefined
-                    ? LINK_SELECT.ANY_LINK
-                    : LINK_SELECT.FOLLOWING_LINKS
+                  filter.config.link
+                    ? LINK_SELECT.FOLLOWING_LINKS
+                    : LINK_SELECT.ANY_LINK
                 }
               >
                 {Object.values(LINK_SELECT).map((item) => (
@@ -188,8 +188,10 @@ const EmailClick = ({
               >
                 {Object.values(LIST_SELECT).map((item) => {
                   if (
+                    //when user choose 'any of the following links' in 'the specific email'
+                    //some options should not be visible
                     item !== LIST_SELECT.SPECIFIC_EMAIL &&
-                    filter.config.email !== undefined
+                    filter.config.link
                   ) {
                     return null;
                   } else {
