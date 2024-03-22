@@ -24,11 +24,11 @@ enum EMAIL_CLICK_OP {
   CLICKED = 'clicked',
   NOT_CLICKED = 'not_clicked',
 }
-enum LINK_TYPE_SELECT {
+export enum LINK_TYPE_SELECT {
   ANY_LINK = 'anyLink',
   FOLLOWING_LINKS = 'anyFollowingLinks',
 }
-enum LIST_SELECT {
+export enum LIST_SELECT {
   ANY = 'any',
   FROM_PROJECT = 'fromProject',
   SPECIFIC_EMAIL = 'specificEmail',
@@ -117,7 +117,10 @@ const EmailClick = ({
   return (
     <FilterForm
       onCancel={onCancel}
-      onSubmit={() => console.log('hello')}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(filter);
+      }}
       renderSentence={() => (
         <Msg
           id={localMessageIds.inputString}
@@ -151,22 +154,18 @@ const EmailClick = ({
               <>
                 {''}
                 {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
-                  <>
-                    "
-                    <StyledSelect
-                      onChange={(e) =>
-                        setValueToKey('email', parseInt(e.target.value))
-                      }
-                      value={filter.config.email || ''}
-                    >
-                      {emailsFuture?.map((email) => (
-                        <MenuItem key={`email-${email.id}`} value={email.id}>
-                          {email.title}
-                        </MenuItem>
-                      ))}
-                    </StyledSelect>
-                    "
-                  </>
+                  <StyledSelect
+                    onChange={(e) =>
+                      setValueToKey('email', parseInt(e.target.value))
+                    }
+                    value={filter.config.email || ''}
+                  >
+                    {emailsFuture?.map((email) => (
+                      <MenuItem key={`email-${email.id}`} value={email.id}>
+                        {`"${email.title}"`}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
                 )}
               </>
             ),
@@ -225,7 +224,7 @@ const EmailClick = ({
                   } else {
                     return (
                       <MenuItem key={item} value={item}>
-                        <Msg id={localMessageIds.emailSelect[item]} />
+                        <Msg id={localMessageIds.listSelect[item]} />
                       </MenuItem>
                     );
                   }
@@ -236,25 +235,21 @@ const EmailClick = ({
               <>
                 {''}
                 {listSelectType === LIST_SELECT.FROM_PROJECT && (
-                  <>
-                    "
-                    <StyledSelect
-                      onChange={(e) =>
-                        setValueToKey('campaign', parseInt(e.target.value))
-                      }
-                      value={filter.config.campaign || ''}
-                    >
-                      {projectsFuture?.map((project) => (
-                        <MenuItem
-                          key={`proejct-${project.id}`}
-                          value={project.id}
-                        >
-                          {project.title}
-                        </MenuItem>
-                      ))}
-                    </StyledSelect>
-                    "
-                  </>
+                  <StyledSelect
+                    onChange={(e) =>
+                      setValueToKey('campaign', parseInt(e.target.value))
+                    }
+                    value={filter.config.campaign || ''}
+                  >
+                    {projectsFuture?.map((project) => (
+                      <MenuItem
+                        key={`proejct-${project.id}`}
+                        value={project.id}
+                      >
+                        {`"${project.title}"`}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
                 )}
               </>
             ),

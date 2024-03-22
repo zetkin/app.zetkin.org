@@ -157,11 +157,6 @@ export default makeMessages('feat.smartSearch', {
         clicked: m('clicked'),
         notClicked: m('not clicked'),
       },
-      emailSelect: {
-        any: m('any email'),
-        fromProject: m('any email from project'),
-        specificEmail: m('the specific email'),
-      },
       inputString: m<{
         addRemoveSelect: ReactElement;
         clickSelect: ReactElement;
@@ -177,6 +172,11 @@ export default makeMessages('feat.smartSearch', {
       linkSelect: {
         anyFollowingLinks: m('any of the following links'),
         anyLink: m('any link'),
+      },
+      listSelect: {
+        any: m('any email'),
+        fromProject: m('any email from project'),
+        specificEmail: m('the specific email'),
       },
     },
     mostActive: {

@@ -9,6 +9,7 @@ import {
   Event,
   FilterAlt,
   LocalOfferOutlined,
+  MarkEmailReadOutlined,
   PersonAddAlt,
   PersonOutlined,
   PhoneDisabled,
@@ -101,7 +102,9 @@ export default function getFilterComponents(
         filter={filter as SmartSearchFilterWithId<EmailClickFilterConfig>}
       />
     );
-    filterTypeIcon = <Block color="secondary" fontSize="small" />;
+    filterTypeIcon = (
+      <MarkEmailReadOutlined color="secondary" fontSize="small" />
+    );
   } else if (filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION) {
     displayFilter = (
       <DisplayCampaignParticipation
