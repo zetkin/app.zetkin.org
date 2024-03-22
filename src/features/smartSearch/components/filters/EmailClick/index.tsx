@@ -24,7 +24,7 @@ enum EMAIL_CLICK_OP {
   CLICKED = 'clicked',
   NOT_CLICKED = 'not_clicked',
 }
-enum LINK_SELECT {
+enum LINK_TYPE_SELECT {
   ANY_LINK = 'anyLink',
   FOLLOWING_LINKS = 'anyFollowingLinks',
 }
@@ -99,7 +99,7 @@ const EmailClick = ({
     });
   };
   const handleLinkSelect = (value: string) => {
-    if (value === LINK_SELECT.FOLLOWING_LINKS) {
+    if (value === LINK_TYPE_SELECT.FOLLOWING_LINKS) {
       removeKey(['campaign']);
       setValueToKey('link', []);
       setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
@@ -162,16 +162,16 @@ const EmailClick = ({
                 )}
               </>
             ),
-            linkSelect: (
+            linkTypeSelect: (
               <StyledSelect
                 onChange={(e) => handleLinkSelect(e.target.value)}
                 value={
                   filter.config.link
-                    ? LINK_SELECT.FOLLOWING_LINKS
-                    : LINK_SELECT.ANY_LINK
+                    ? LINK_TYPE_SELECT.FOLLOWING_LINKS
+                    : LINK_TYPE_SELECT.ANY_LINK
                 }
               >
-                {Object.values(LINK_SELECT).map((item) => (
+                {Object.values(LINK_TYPE_SELECT).map((item) => (
                   <MenuItem key={item} value={item}>
                     <Msg id={localMessageIds.linkSelect[item]} />
                   </MenuItem>
