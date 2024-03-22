@@ -116,6 +116,11 @@ const EmailClick = ({
 
   return (
     <FilterForm
+      disableSubmit={
+        (listSelectType === LIST_SELECT.FROM_PROJECT &&
+          !filter.config.campaign) ||
+        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL && !filter.config.email)
+      }
       onCancel={onCancel}
       onSubmit={(e) => {
         e.preventDefault();
