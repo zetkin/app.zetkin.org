@@ -166,12 +166,13 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         clickSelect: ReactElement;
         emailSelect: ReactElement;
+        linkSelect: ReactElement;
         linkTypeSelect: ReactElement;
         listSelect: ReactElement;
         projectSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who have {clickSelect} {linkTypeSelect} in {listSelect} {emailSelect} {projectSelect} {timeFrame}'
+        '{addRemoveSelect} people who have {clickSelect} {linkTypeSelect} in {listSelect} {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
       ),
       linkSelect: {
         anyFollowingLinks: m('any of the following links'),

@@ -108,6 +108,10 @@ const EmailClick = ({
     }
   };
 
+  const fakeLinkList = [
+    { id: 1, link: 'www.hello.com' },
+    { id: 2, link: 'www.world.com' },
+  ];
   console.log(filter, 'filter');
 
   return (
@@ -156,6 +160,26 @@ const EmailClick = ({
                     {emailsFuture?.map((email) => (
                       <MenuItem key={`email-${email.id}`} value={email.id}>
                         {email.title}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
+                )}
+              </>
+            ),
+            linkSelect: (
+              <>
+                {filter.config.link ? ':' : ''}
+                {filter.config.link && (
+                  <StyledSelect
+                    onChange={(e) =>
+                      setValueToKey('link', [parseInt(e.target.value)])
+                    }
+                    sx={{ ml: 0.5 }}
+                    value={filter.config.email || ''}
+                  >
+                    {fakeLinkList?.map((item) => (
+                      <MenuItem key={`link-${item.id}`} value={item.id}>
+                        {item.link}
                       </MenuItem>
                     ))}
                   </StyledSelect>
