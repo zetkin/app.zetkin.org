@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { Box, Card, Divider, Typography } from '@mui/material';
 
 import CallAssignmentListItem from './items/CallAssignmentListItem';
+import EmailListItem from './items/EmailListItem';
 import EventClusterListItem from './items/EventClusterListItem';
 import EventListItem from './items/EventListItem';
 import isEventCluster from 'features/campaigns/utils/isEventCluster';
@@ -57,6 +58,13 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
             <Box key={`task-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <TaskListItem orgId={orgId} taskId={activity.data.id} />
+            </Box>
+          );
+        } else if (activity.kind === ACTIVITIES.EMAIL) {
+          return (
+            <Box key={`email-${activity.data.id}`}>
+              {index > 0 && <Divider />}
+              <EmailListItem emailId={activity.data.id} orgId={orgId} />
             </Box>
           );
         }

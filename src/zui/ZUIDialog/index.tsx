@@ -10,6 +10,7 @@ import {
 
 interface ZUIDialogProps {
   children: React.ReactNode;
+  contentHeight?: number | string;
   open: boolean;
   onClose: () => void;
   title?: string;
@@ -18,6 +19,7 @@ interface ZUIDialogProps {
 
 const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
   children,
+  contentHeight,
   maxWidth,
   open,
   onClose,
@@ -36,7 +38,7 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
     >
       <Box p={2}>
         {title && <DialogTitle>{title}</DialogTitle>}
-        <DialogContent>{children}</DialogContent>
+        <DialogContent sx={{ height: contentHeight }}>{children}</DialogContent>
       </Box>
     </Dialog>
   );

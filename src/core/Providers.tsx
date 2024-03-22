@@ -1,0 +1,90 @@
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { IntlProvider } from 'react-intl';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { Provider as ReduxProvider } from 'react-redux';
+import { FC, ReactNode } from 'react';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+
+import Environment from './env/Environment';
+import { EnvProvider } from 'core/env/EnvContext';
+import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
+import { MessageList } from 'utils/locale';
+import { Store } from './store';
+import { themeWithLocale } from '../theme';
+import { UserContext } from 'utils/hooks/useFocusDate';
+import { ZetkinUser } from 'utils/types/zetkin';
+import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
+import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
+
+type ProviderData = {
+  env: Environment;
+  lang: string;
+  messages: MessageList;
+  store: Store;
+  user: ZetkinUser;
+};
+
+type ProvidersProps = ProviderData & {
+  children: ReactNode;
+};
+
+declare global {
+  interface Window {
+    providerData: ProviderData;
+  }
+}
+
+const Providers: FC<ProvidersProps> = ({
+  children,
+  env,
+  lang,
+  messages,
+  store,
+  user,
+}) => {
+  if (typeof window !== 'undefined' && !window.providerData) {
+    // Store provider data on window so that it can be picked
+    // up by the block renderers in editor.js (see EmailEditor)
+    window.providerData = {
+      env,
+      lang,
+      messages,
+      store,
+      user,
+    };
+  }
+
+  return (
+    <ReduxProvider store={store}>
+      <EnvProvider env={env}>
+        <UserContext.Provider value={user}>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={themeWithLocale(lang)}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <IntlProvider
+                  defaultLocale="en"
+                  locale={lang}
+                  messages={messages}
+                >
+                  <ZUISnackbarProvider>
+                    <ZUIConfirmDialogProvider>
+                      <EventPopperProvider>
+                        <DndProvider backend={HTML5Backend}>
+                          {children}
+                        </DndProvider>
+                      </EventPopperProvider>
+                    </ZUIConfirmDialogProvider>
+                  </ZUISnackbarProvider>
+                </IntlProvider>
+              </LocalizationProvider>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </UserContext.Provider>
+      </EnvProvider>
+    </ReduxProvider>
+  );
+};
+
+export default Providers;

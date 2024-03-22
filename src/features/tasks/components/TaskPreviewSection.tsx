@@ -11,12 +11,14 @@ import ZUISection from 'zui/ZUISection';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface TaskPreviewSectionProps {
   task: ZetkinTask;
 }
 
 const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const [selecting, setSelecting] = useState(false);
 
@@ -84,6 +86,7 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
           });
         }}
         open={selecting}
+        orgId={orgId}
       />
     </ZUISection>
   );

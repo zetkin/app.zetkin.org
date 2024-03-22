@@ -73,9 +73,13 @@ const surveysSlice = createSlice({
     elementDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [surveyId, elemId] = action.payload;
       const curItems = state.elementsBySurveyId[surveyId]?.items || [];
-      state.elementsBySurveyId[surveyId].items = curItems.filter(
-        (elem) => elem.id != elemId
-      );
+
+      const elementItem = curItems.find((elem) => elem.id === elemId);
+
+      if (elementItem) {
+        elementItem.deleted = true;
+        state.elementsBySurveyId[surveyId].isStale = true;
+      }
     },
     elementOptionAdded: (
       state,

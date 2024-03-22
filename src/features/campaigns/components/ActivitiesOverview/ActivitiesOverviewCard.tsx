@@ -4,6 +4,7 @@ import NextLink from 'next/link';
 import { Box, Divider, Link } from '@mui/material';
 
 import CallAssignmentOverviewListItem from './items/CallAssignmentOverviewListItem';
+import EmailOverviewListItem from './items/EmailOverviewListItem';
 import EventClusterOverviewListItem from './items/EventClusterOverviewListItem';
 import EventOverviewListItem from './items/EventOverviewListItem';
 import isEventCluster from 'features/campaigns/utils/isEventCluster';
@@ -93,6 +94,16 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
             <Box key={`task-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <TaskOverviewListItem activity={activity} focusDate={focusDate} />
+            </Box>
+          );
+        } else if (activity.kind === ACTIVITIES.EMAIL) {
+          return (
+            <Box key={`email-${activity.data.id}`}>
+              {index > 0 && <Divider />}
+              <EmailOverviewListItem
+                activity={activity}
+                focusDate={focusDate}
+              />
             </Box>
           );
         }

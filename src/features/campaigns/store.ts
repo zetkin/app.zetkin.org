@@ -34,9 +34,14 @@ const campaignsSlice = createSlice({
       action: PayloadAction<[orgId: number, campaignId: number]>
     ) => {
       const campaignId = action.payload[1];
-      state.campaignList.items = state.campaignList.items.filter(
-        (item) => item.id != campaignId
+      const campaignItem = state.campaignList.items.find(
+        (item) => item.id === campaignId
       );
+
+      if (campaignItem) {
+        campaignItem.deleted = true;
+        state.campaignList.isStale = true;
+      }
     },
     campaignLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;

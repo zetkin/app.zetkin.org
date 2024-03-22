@@ -10,6 +10,7 @@ export interface RemoteItem<DataType> {
   loaded: string | null;
   mutating: string[];
   data: DataType | null;
+  deleted: boolean;
 }
 
 export interface RemoteList<DataType> {
@@ -26,6 +27,7 @@ export function remoteItem<DataType extends RemoteData>(
 ): RemoteItem<DataType> {
   return {
     data: item?.data || null,
+    deleted: item?.deleted || false,
     error: item?.error || null,
     id: id,
     isLoading: item?.isLoading || false,

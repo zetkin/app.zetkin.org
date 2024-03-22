@@ -17,14 +17,16 @@ interface ZUIImageSelectDialogProps {
   onClose: () => void;
   onSelectFile: (file: ZetkinFile) => void;
   open: boolean;
+  orgId: number;
 }
 const ZUIImageSelectDialog: React.FC<ZUIImageSelectDialogProps> = ({
   onClose,
   onSelectFile,
   open,
+  orgId,
 }) => {
   const { fileUploads, getDropZoneProps, openFilePicker, reset } =
-    useFileUploads({ accept: FILECAT_IMAGES, multiple: false });
+    useFileUploads(orgId, { accept: FILECAT_IMAGES, multiple: false });
 
   const selectedFileData = fileUploads[0]?.apiData ?? null;
 

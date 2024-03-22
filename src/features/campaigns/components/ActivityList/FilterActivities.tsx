@@ -89,6 +89,17 @@ const FilterActivities = ({
           <FormControlLabel
             control={
               <Checkbox
+                checked={filters.includes(ACTIVITIES.EMAIL)}
+                disabled={!filterTypes.includes(ACTIVITIES.EMAIL)}
+                onChange={onFiltersChange}
+                value={ACTIVITIES.EMAIL}
+              />
+            }
+            label={messages.all.filter.emails()}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
                 checked={filters.includes(ACTIVITIES.EVENT)}
                 disabled={!filterTypes.includes(ACTIVITIES.EVENT)}
                 onChange={onFiltersChange}

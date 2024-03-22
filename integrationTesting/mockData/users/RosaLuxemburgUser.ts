@@ -1,6 +1,7 @@
 import { ZetkinUser } from 'utils/types/zetkin';
 
 const RosaLuxemburgUser: ZetkinUser = {
+  email: 'rosa@zetkin.org',
   first_name: 'Rosa',
   id: 1,
   lang: null,
