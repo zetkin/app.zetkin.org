@@ -164,7 +164,7 @@ export type BlockAttributes = {
 };
 
 export type EmailFrame = {
-  blockAttributes?: BlockAttributes;
+  block_attributes?: BlockAttributes;
   css?: string;
   id: number;
 };

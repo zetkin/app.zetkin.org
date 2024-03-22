@@ -1,5 +1,11 @@
 import { FC } from 'react';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
 
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -8,7 +14,7 @@ import useSendTestEmail from 'features/emails/hooks/useSendTestEmail';
 
 const PreviewTab: FC = () => {
   const user = useCurrentUser();
-  const { isLoading, sendTestEmail } = useSendTestEmail();
+  const { isLoading, isPostSend, reset, sendTestEmail } = useSendTestEmail();
 
   if (!user) {
     return null;
@@ -23,18 +29,35 @@ const PreviewTab: FC = () => {
         <Msg id={messageIds.editor.settings.tabs.preview.sendTo} />
       </Typography>
       <Typography>{user.email}</Typography>
-      <Button
-        onClick={async () => {
-          await sendTestEmail();
-        }}
-        variant="contained"
-      >
-        {isLoading ? (
-          <CircularProgress color="inherit" size="1.5rem" />
-        ) : (
-          <Msg id={messageIds.editor.settings.tabs.preview.sendButton} />
-        )}
-      </Button>
+      {isPostSend && (
+        <Alert color="success">
+          <Typography mb={2}>
+            <Msg id={messageIds.editor.settings.tabs.preview.confirmation} />
+          </Typography>
+          <Button
+            color="success"
+            onClick={() => reset()}
+            size="small"
+            variant="outlined"
+          >
+            <Msg id={messageIds.editor.settings.tabs.preview.okButton} />
+          </Button>
+        </Alert>
+      )}
+      {!isPostSend && (
+        <Button
+          onClick={() => {
+            sendTestEmail();
+          }}
+          variant="contained"
+        >
+          {isLoading ? (
+            <CircularProgress color="inherit" size="1.5rem" />
+          ) : (
+            <Msg id={messageIds.editor.settings.tabs.preview.sendButton} />
+          )}
+        </Button>
+      )}
     </Box>
   );
 };

@@ -58,10 +58,6 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
     blocksRef.current = content.blocks;
   }, [content.blocks.length]);
 
-  if (!email.frame) {
-    return null;
-  }
-
   return (
     <Box display="flex" flexDirection="column" height="100%">
       {readOnly && (
