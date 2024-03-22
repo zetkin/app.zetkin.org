@@ -59,6 +59,7 @@ const EmailClick = ({
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
       operator: 'clicked',
     });
+
   const [listSelectType, setListSelectType] = useState<LIST_SELECT>(
     filter.config.campaign
       ? LIST_SELECT.FROM_PROJECT
@@ -71,6 +72,7 @@ const EmailClick = ({
     after?: string;
     before?: string;
   }) => {
+    /* eslint-disable-next-line */
     const { after, before, ...rest } = filter.config;
 
     setConfig({
@@ -80,12 +82,30 @@ const EmailClick = ({
     });
   };
 
+  const setValueToKey = (
+    key: keyof EmailClickFilterConfig,
+    value: string | number
+  ) => {
+    setConfig({
+      ...filter.config,
+      [key]: value,
+    });
+  };
   const removeKey = (deleteKeys: (keyof EmailClickFilterConfig)[]) => {
     const copied = { ...filter.config };
     deleteKeys.forEach((key) => delete copied[key]);
     setConfig({
       ...copied,
     });
+  };
+  const handleLinkSelect = (value: string) => {
+    if (value === LINK_SELECT.FOLLOWING_LINKS) {
+      removeKey(['campaign', 'link']);
+      setValueToKey('email', 0);
+      setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
+    } else {
+      removeKey(['email', 'campaign', 'link']);
+    }
   };
 
   console.log(filter, 'filter');
@@ -112,12 +132,7 @@ const EmailClick = ({
             ),
             clickSelect: (
               <StyledSelect
-                onChange={(e) =>
-                  setConfig({
-                    ...filter.config,
-                    operator: e.target.value as EMAIL_CLICK_OP,
-                  })
-                }
+                onChange={(e) => setValueToKey('operator', e.target.value)}
                 value={filter.config.operator}
               >
                 <MenuItem value={EMAIL_CLICK_OP.CLICKED}>
@@ -134,10 +149,7 @@ const EmailClick = ({
                 {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
                   <StyledSelect
                     onChange={(e) =>
-                      setConfig({
-                        ...filter.config,
-                        email: parseInt(e.target.value),
-                      })
+                      setValueToKey('email', parseInt(e.target.value))
                     }
                     value={filter.config.email || ''}
                   >
@@ -152,18 +164,7 @@ const EmailClick = ({
             ),
             linkSelect: (
               <StyledSelect
-                onChange={(e) => {
-                  if (e.target.value === LINK_SELECT.FOLLOWING_LINKS) {
-                    removeKey(['campaign', 'link']);
-                    setConfig({
-                      ...filter.config,
-                      email: 0,
-                    });
-                    setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
-                  } else {
-                    removeKey(['email', 'campaign', 'link']);
-                  }
-                }}
+                onChange={(e) => handleLinkSelect(e.target.value)}
                 value={
                   filter.config.email === undefined
                     ? LINK_SELECT.ANY_LINK
@@ -207,10 +208,7 @@ const EmailClick = ({
                 {listSelectType === LIST_SELECT.FROM_PROJECT && (
                   <StyledSelect
                     onChange={(e) =>
-                      setConfig({
-                        ...filter.config,
-                        campaign: parseInt(e.target.value),
-                      })
+                      setValueToKey('campaign', parseInt(e.target.value))
                     }
                     value={filter.config.campaign || ''}
                   >
