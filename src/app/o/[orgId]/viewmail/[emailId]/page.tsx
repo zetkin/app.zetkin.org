@@ -1,5 +1,8 @@
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
+
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import renderEmailHtml from 'features/emails/utils/rendering/renderEmailHtml';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 type PageProps = {
@@ -17,9 +20,25 @@ export default async function Page({ params }: PageProps) {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const email = await apiClient.get<ZetkinEmail>(
-    `/api/orgs/${orgId}/emails/${emailId}`
-  );
+  try {
+    const email = await apiClient.get<ZetkinEmail>(
+      `/api/orgs/${orgId}/emails/${emailId}`
+    );
 
-  return <h1>{email.title}</h1>;
+    const emailHtml = renderEmailHtml(email);
+
+    return (
+      <iframe
+        srcDoc={emailHtml}
+        style={{
+          borderWidth: 0,
+          height: '100vh',
+          width: '100vw',
+        }}
+        title={email.subject || ''}
+      />
+    );
+  } catch (err) {
+    return notFound();
+  }
 }
