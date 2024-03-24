@@ -1,3 +1,5 @@
+import { MJMLJsonObject } from 'mjml-core';
+
 export enum BLOCK_TYPES {
   BUTTON = 'button',
   HEADER = 'header',
@@ -166,5 +168,6 @@ export type BlockAttributes = {
 export type EmailFrame = {
   block_attributes?: BlockAttributes;
   css?: string;
+  frame_mjml: MJMLJsonObject | null;
   id: number;
 };
