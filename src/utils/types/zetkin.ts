@@ -517,9 +517,10 @@ export interface ZetkinEmail {
 }
 
 export type ZetkinEmailPostBody = Partial<
-  Omit<ZetkinEmail, 'id' | 'published' | 'organization' | 'target'>
+  Omit<ZetkinEmail, 'id' | 'frame' | 'published' | 'organization' | 'target'>
 > & {
   campaign_id: number | null;
+  frame_id: number | null;
 };
 
 export type ZetkinCreatePerson = Partial<
