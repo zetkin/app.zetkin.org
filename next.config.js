@@ -1,4 +1,7 @@
 module.exports = {
+  experimental: {
+    serverComponentsExternalPackages: ["mjml"],
+  },
   images: {
     domains: [
       `files.${process.env.ZETKIN_API_DOMAIN}`,
