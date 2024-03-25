@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import PublicEmailPage from 'features/emails/pages/PublicEmailPage';
 import renderEmailHtml from 'features/emails/utils/rendering/renderEmailHtml';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
@@ -27,17 +28,7 @@ export default async function Page({ params }: PageProps) {
 
     const emailHtml = renderEmailHtml(email);
 
-    return (
-      <iframe
-        srcDoc={emailHtml}
-        style={{
-          borderWidth: 0,
-          height: '100vh',
-          width: '100vw',
-        }}
-        title={email.subject || ''}
-      />
-    );
+    return <PublicEmailPage email={email} emailHtml={emailHtml} />;
   } catch (err) {
     return notFound();
   }
