@@ -181,7 +181,7 @@ export interface RandomFilterConfig {
 export interface SurveyOptionFilterConfig {
   survey: number;
   question: number;
-  options: number[];
+  options: number[] | string[];
   operator: CONDITION_OPERATOR;
 }
 

@@ -25,7 +25,11 @@ const OrganizationsList = () => {
                       src={`/api/orgs/${org.id}/avatar`}
                       style={{ margin: '15px' }}
                     />
-                    <NextLink href={`/organize/${org.id}`} passHref>
+                    <NextLink
+                      href={`/organize/${org.id}`}
+                      legacyBehavior
+                      passHref
+                    >
                       <Link underline="hover">{org.title}</Link>
                     </NextLink>
                   </ListItem>

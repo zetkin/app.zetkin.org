@@ -27,24 +27,21 @@ test.describe('Journey instance detail page', () => {
       ClarasOnboarding
     );
 
+    const title = page.locator(
+      `[data-testid=page-title]:has-text("${ClarasOnboarding.title}")`
+    );
+    const breadcrumbTitle = page.locator(
+      `[aria-label=breadcrumb]:has-text("${ClarasOnboarding.title}")`
+    );
+
     await page.goto(appUri + '/organize/1/journeys/1/1');
+    await title.waitFor({ state: 'visible' });
+    await breadcrumbTitle.waitFor({ state: 'visible' });
 
-    // Check that the title is visible in the right place
-    expect(
-      await page
-        .locator(
-          `[data-testid=page-title]:has-text("${ClarasOnboarding.title}")`
-        )
-        .count()
-    ).toEqual(1);
+    const numTitles = await title.count();
+    const numBreadcrumbTitles = await breadcrumbTitle.count();
 
-    // Check that the title is also in the breadcrumbs
-    expect(
-      await page
-        .locator(
-          `[aria-label=breadcrumb]:has-text("${ClarasOnboarding.title}")`
-        )
-        .count()
-    ).toEqual(1);
+    expect(numTitles).toEqual(1);
+    expect(numBreadcrumbTitles).toEqual(1);
   });
 });

@@ -2,8 +2,11 @@
 /* eslint-disable no-console */
 
 import { copyFile } from 'fs/promises';
-import { nextBuild } from 'next/dist/cli/next-build';
+import { exec } from 'child_process';
 import path from 'path';
+import util from 'util';
+
+const execPromisified = util.promisify(exec);
 
 async function globalSetup() {
   process.env.PLAYWRIGHT = '1';
@@ -18,7 +21,12 @@ async function globalSetup() {
   if (process.env.SKIP_BUILD === '1') {
     console.log('skipping build: SKIP_BUILD is set');
   } else {
-    await nextBuild([path.join(__dirname, '..')]);
+    const { stderr } = await execPromisified('next build', {
+      cwd: path.join(__dirname, '..'),
+    });
+    if (stderr) {
+      console.error(`exec error: ${stderr}`);
+    }
   }
 }
 

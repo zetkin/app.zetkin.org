@@ -9,13 +9,14 @@ import {
 } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
-import { Msg } from 'core/i18n';
 import { MUIOnlyPersonSelect as PersonSelect } from 'zui/ZUIPersonSelect';
+import UseViewDataTableMutations from '../hooks/useViewDataTableMutations';
 import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinView } from 'features/views/components/types';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import UseViewDataTableMutations from '../hooks/useViewDataTableMutations';
+import zuiMessageIds from 'zui/l10n/messageIds';
 
 export interface EmptyViewProps {
   orgId: number;
@@ -24,6 +25,7 @@ export interface EmptyViewProps {
 
 const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
+  const messages = useMessages(zuiMessageIds);
 
   const { addPerson, deleteContentQuery } = UseViewDataTableMutations(
     orgId,
@@ -50,6 +52,10 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                     await addPerson(person.id);
                   }}
                   selectedPerson={null}
+                  submitLabel={messages.createPerson.submitLabel.add()}
+                  title={messages.createPerson.title.addToList({
+                    list: view.title,
+                  })}
                   variant="outlined"
                 />
               </Box>

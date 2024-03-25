@@ -6,7 +6,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { Alert, AlertTitle, Box, Link } from '@mui/material';
 
 type SubmissionWarningAlertProps = {
-  campId: number | 'standalone';
+  campId: number | 'standalone' | 'shared';
   orgId: number;
   showUnlinkedOnly: boolean;
   surveyId: number;
@@ -46,6 +46,7 @@ const SubmissionWarningAlert = ({
                 href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions${
                   showUnlinkedOnly ? '' : '?filter=linked'
                 }`}
+                legacyBehavior
                 passHref
               >
                 <Link>

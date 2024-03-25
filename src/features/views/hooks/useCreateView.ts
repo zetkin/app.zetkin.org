@@ -1,13 +1,14 @@
 import createNew from '../rpc/createNew/client';
+import { useRouter } from 'next/router';
 import { ZetkinView } from '../components/types';
-import { useApiClient, useAppDispatch, useEnv } from 'core/hooks';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 import { viewCreate, viewCreated } from '../store';
 
 export default function useCreateView(
   orgId: number
 ): (folderId?: number, rows?: number[]) => void {
   const apiClient = useApiClient();
-  const env = useEnv();
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const createView = async (
@@ -21,9 +22,7 @@ export default function useCreateView(
       rows,
     });
     dispatch(viewCreated(view));
-    env.router.push(
-      `/organize/${view.organization.id}/people/lists/${view.id}`
-    );
+    router.push(`/organize/${view.organization.id}/people/lists/${view.id}`);
     return view;
   };
 

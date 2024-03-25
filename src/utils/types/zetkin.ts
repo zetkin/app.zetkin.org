@@ -1,3 +1,4 @@
+import { EmailFrame } from 'features/emails/types';
 import {
   ZetkinAssignedTask,
   ZetkinTask,
@@ -129,6 +130,7 @@ export interface ZetkinOrganizerAction {
 }
 
 export interface ZetkinUser {
+  email: string;
   first_name: string;
   id: number;
   is_superuser?: boolean;
@@ -139,7 +141,7 @@ export interface ZetkinUser {
 
 export interface ZetkinOrganization {
   avatar_file: ZetkinFile | null;
-  country: string | null;
+  country: string;
   email: string | null;
   is_active: boolean;
   is_open: boolean;
@@ -151,6 +153,10 @@ export interface ZetkinOrganization {
   id: number;
   title: string;
 }
+
+export type ZetkinSubOrganization = ZetkinOrganization & {
+  sub_orgs: ZetkinSubOrganization[];
+};
 
 export interface ZetkinPersonNativeFields {
   alt_phone: string | null;
@@ -487,25 +493,6 @@ export interface ZetkinNoteBody {
   file_ids?: number[];
 }
 
-export interface ZetkinEmail {
-  campaign: { id: number; title: string } | null;
-  content?: string;
-  id: number;
-  locked?: string;
-  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
-  published?: string;
-  subject?: string;
-  target: ZetkinQuery;
-  title: string;
-}
-
-export interface ZetkinLink {
-  email: { id: number; title: string };
-  id: number;
-  url: string;
-  tag: string;
-}
-
 export type {
   ZetkinTask,
   ZetkinAssignedTask,
@@ -515,3 +502,34 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
+
+export interface ZetkinEmail {
+  campaign: { id: number; title: string } | null;
+  frame: EmailFrame | null;
+  id: number;
+  locked: string | null;
+  published: string | null;
+  subject: string | null;
+  organization: { id: number; title: string };
+  content: string | null;
+  title: string | null;
+  target: ZetkinQuery;
+}
+
+export interface ZetkinLink {
+  email: { id: number; title: string };
+  id: number;
+  url: string;
+  tag: string;
+}
+
+export type ZetkinEmailPostBody = Partial<
+  Omit<ZetkinEmail, 'id' | 'published' | 'organization' | 'target'>
+> & {
+  campaign_id: number | null;
+};
+
+export type ZetkinCreatePerson = Partial<
+  Omit<ZetkinPersonNativeFields, 'id' | 'is_user'>
+> &
+  Record<string, string | null>;

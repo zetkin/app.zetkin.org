@@ -49,7 +49,7 @@ const DisplaySurveyOption = ({
   const options =
     question && question.response_type == RESPONSE_TYPE.OPTIONS
       ? (optionIds.map((oId) =>
-          question.options?.find((option) => option.id === oId)
+          question.options?.find((option) => option.id == oId)
         ) as ZetkinSurveyOption[])
       : [];
 

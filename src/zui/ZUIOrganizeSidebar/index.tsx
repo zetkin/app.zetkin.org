@@ -6,6 +6,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import {
   Architecture,
@@ -32,7 +33,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
@@ -88,19 +88,13 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
 
   const [checked, setChecked] = useState(false);
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(lastOpen);
   const [searchString, setSearchString] = useState('');
   const organizationFuture = useOrganization(orgId);
 
   const handleExpansion = () => {
     setChecked(!checked);
   };
-
-  useEffect(() => {
-    if (lastOpen != open) {
-      setOpen(lastOpen);
-    }
-  }, []);
 
   const handleClick = () => {
     //remove checked state if menu is collapsed
@@ -141,7 +135,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         onMouseOver={() => {
           setHover(true);
         }}
-        open={open}
         variant="permanent"
       >
         <Box display="flex" flexDirection="column" height="100%">
@@ -171,6 +164,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                         sx={{
                           alignItems: 'center',
                           display: 'flex',
+                          overflow: 'hidden',
                         }}
                       >
                         {!showOrgSwitcher && (
@@ -178,6 +172,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             <Box
                               sx={{
                                 display: 'flex',
+                                flexShrink: 0,
                                 justifyContent: 'center',
                                 width: '48px',
                               }}
@@ -193,7 +188,15 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                                 />
                               )}
                             </Box>
-                            <Typography variant="h6">{data.title}</Typography>
+                            <Typography
+                              sx={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                              }}
+                              variant="h6"
+                            >
+                              {data.title}
+                            </Typography>
                           </>
                         )}
 
@@ -220,6 +223,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                             }}
                             onChange={(e) => setSearchString(e.target.value)}
                             placeholder={messages.organizeSidebar.filter()}
+                            size="small"
                             value={searchString}
                           />
                         )}
@@ -279,6 +283,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                   <NextLink
                     key={name}
                     href={`/organize/${orgId}/${name}`}
+                    legacyBehavior
                     passHref
                   >
                     <Tooltip

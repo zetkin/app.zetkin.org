@@ -37,7 +37,7 @@ const ZUIEmptyState: FC<ZUIEmptyStateProps> = ({
       {renderIcon ? renderIcon(iconProps) : <InfoOutlined {...iconProps} />}
       <Typography color="secondary">{message}</Typography>
       {href && (
-        <NextLink href={href} passHref>
+        <NextLink href={href} legacyBehavior passHref>
           <Link underline="none">
             <Typography color="secondary">{linkMessage}</Typography>
           </Link>

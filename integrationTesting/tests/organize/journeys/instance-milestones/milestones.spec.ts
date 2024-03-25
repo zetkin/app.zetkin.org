@@ -29,14 +29,15 @@ test.describe('Journey instance page Milestones tab', () => {
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
-
-    const journeyMilestoneCards = await page.$$eval(
-      'data-testid=JourneyMilestoneCard',
-      (items) => items.length
+    const journeyMilestoneCards = page.locator(
+      'data-testid=JourneyMilestoneCard'
     );
 
-    expect(journeyMilestoneCards).toEqual(3);
+    await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
+    await journeyMilestoneCards.first().waitFor({ state: 'visible' });
+
+    const numCards = await journeyMilestoneCards.count();
+    expect(numCards).toEqual(3);
   });
 
   test('displays message if there are no milestones.', async ({
@@ -90,22 +91,24 @@ test.describe('Journey instance page Milestones tab', () => {
       { ...AttendMeeting, deadline: newDeadline }
     );
 
+    const datePicker = page.locator(
+      '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
+    );
+    const june24 = page.locator('button:has-text("24")');
+
     await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
+    await datePicker.first().waitFor({ state: 'visible' });
 
     //Click datepicker in first JourneyMilestoneCard
-    await page
-      .locator(
-        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
-      )
-      .first()
-      .click();
+    await datePicker.first().click();
+    await june24.waitFor({ state: 'visible' });
 
     await Promise.all([
       page.waitForResponse(
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
       //Click June 24 to trigger setting new deadline
-      await page.locator('button:has-text("24")').click(),
+      await june24.click(),
     ]);
 
     //Expect the deadline to be the newly set deadline

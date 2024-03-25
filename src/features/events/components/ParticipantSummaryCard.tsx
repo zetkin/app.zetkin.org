@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   ClickAwayListener,
   Paper,
   Popper,
@@ -8,11 +9,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Check, Settings } from '@mui/icons-material';
+import { Check, PriorityHigh, Settings } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
+import { useAppSelector } from 'core/hooks';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
@@ -64,6 +66,10 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
   >(null);
+
+  const isRemindingParticipants = useAppSelector(
+    (state) => state.events.remindingByEventId[eventId]
+  );
 
   if (!eventData) {
     return null;
@@ -180,36 +186,48 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               </Typography>
               <Box alignItems="center" display="flex">
                 <Typography variant="h4">{`${numRemindedParticipants}/${numAvailParticipants}`}</Typography>
-                {numRemindedParticipants < numAvailParticipants && (
-                  <Tooltip
-                    arrow
-                    placement="top-start"
-                    title={
-                      contactPerson == null
-                        ? messages.participantSummaryCard.remindButtondisabledTooltip()
-                        : ''
-                    }
-                  >
-                    <Box>
-                      <Button
-                        disabled={contactPerson == null}
-                        onClick={() => {
-                          sendReminders(eventId);
-                        }}
-                        size="small"
-                        startIcon={<Check />}
-                        sx={{
-                          marginLeft: 2,
-                        }}
-                        variant="outlined"
-                      >
-                        <Msg
-                          id={messageIds.participantSummaryCard.remindButton}
-                        />
-                      </Button>
-                    </Box>
-                  </Tooltip>
-                )}
+                <Tooltip
+                  arrow
+                  placement="top-start"
+                  title={
+                    contactPerson == null
+                      ? messages.participantSummaryCard.remindButtondisabledTooltip()
+                      : ''
+                  }
+                >
+                  <Box>
+                    <Button
+                      disabled={
+                        contactPerson == null ||
+                        isRemindingParticipants ||
+                        numRemindedParticipants >= numAvailParticipants
+                      }
+                      onClick={() => {
+                        sendReminders(eventId);
+                      }}
+                      size="small"
+                      startIcon={
+                        contactPerson ? (
+                          isRemindingParticipants ? (
+                            <CircularProgress size={20} />
+                          ) : (
+                            <Check />
+                          )
+                        ) : (
+                          <PriorityHigh />
+                        )
+                      }
+                      sx={{
+                        marginLeft: 2,
+                      }}
+                      variant="outlined"
+                    >
+                      <Msg
+                        id={messageIds.participantSummaryCard.remindButton}
+                      />
+                    </Button>
+                  </Box>
+                </Tooltip>
               </Box>
             </Box>
           ) : (

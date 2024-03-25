@@ -4,6 +4,7 @@ import NextLink from 'next/link';
 import { Box, Divider, Link } from '@mui/material';
 
 import CallAssignmentOverviewListItem from './items/CallAssignmentOverviewListItem';
+import EmailOverviewListItem from './items/EmailOverviewListItem';
 import EventClusterOverviewListItem from './items/EventClusterOverviewListItem';
 import EventOverviewListItem from './items/EventOverviewListItem';
 import isEventCluster from 'features/campaigns/utils/isEventCluster';
@@ -95,6 +96,16 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
               <TaskOverviewListItem activity={activity} focusDate={focusDate} />
             </Box>
           );
+        } else if (activity.kind === ACTIVITIES.EMAIL) {
+          return (
+            <Box key={`email-${activity.data.id}`}>
+              {index > 0 && <Divider />}
+              <EmailOverviewListItem
+                activity={activity}
+                focusDate={focusDate}
+              />
+            </Box>
+          );
         }
       })}
       {numExtra > 0 && (
@@ -102,6 +113,7 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
           href={`/organize/${orgId}/projects${
             campId ? `/${campId}` : ''
           }/calendar?focusDate=${focusedDate}&timeScale=${timeScale}`}
+          legacyBehavior
           passHref
         >
           <Link underline="none" variant="button">

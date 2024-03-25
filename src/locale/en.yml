@@ -511,6 +511,212 @@ feat:
       createType: Create "{type}"
       tooltip: Click to change type
       uncategorized: Uncategorized
+  import:
+    actionButtons:
+      back: Back
+      close: Close
+      configure: Configure
+      done: Done
+      import: Import
+      restart: Restart
+      validate: Validate
+    configuration:
+      configure:
+        ids:
+          configExplanation: Importing with IDs allows Zetkin (now or in the future) to
+            update existing people in the database instead of creating
+            duplicates.
+          externalID: External ID
+          externalIDExplanation: The values in this column are IDs from our main member
+            system (not Zetkin).
+          header: Configure IDs
+          showOrganizationSelectButton: Map to...
+          wrongIDFormatWarning: The values in this column does not look like Zetkin IDs. A
+            Zetkin ID only contains numbers. If some cells are empty or contain
+            f.x. letters, it can not be used as Zetkin IDs.
+          zetkinID: Zetkin ID
+          zetkinIDExplanation: The values in this column are based on an export from Zetkin.
+        orgs:
+          header: Map values to organizations
+          organizations: Organization
+          status: Status
+        tags:
+          empty: Empty
+          header: Map values to tags
+          numberOfRows: "{numRows, plural, =1 {1 row} other {# rows}}"
+          tagsHeader: Tags
+      hide: Hide
+      mapping:
+        configButton: Configure
+        defaultColumnHeader: Column {columnIndex}
+        emptyStateMessage: Start by mapping file columns.
+        fileHeader: File
+        finishedMappingIds: Mapping {numValues, plural, =1 {1 value} other {# values}}
+          to {idField, select, id {Zetkin ID} other {external ID}}
+        finishedMappingOrganizations: "{numPeople, plural, =1 {1 person} other {#
+          people}} mapped to {numMappedTo, plural, =1 {1 organization} other {#
+          organizations}}"
+        finishedMappingTags: Mapping {numRows, plural, =1 {1 row} other {# rows}} to
+          {numMappedTo, plural, =1 {1 tag} other {# tags}}
+        header: Mapping
+        id: ID
+        mapValuesButton: Map values
+        messages:
+          manyValuesAndEmpty: "{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
+            plural, =1 {one other value} other {# other values}} and {numEmpty,
+            plural, =1 {one empty row} other {# empty rows}}."
+          manyValuesNoEmpty: "{firstValue}, {secondValue}, {thirdValue} and
+            {numMoreValues, plural, =1 {one other value} other {# other
+            values}}."
+          oneValueAndEmpty: "{firstValue} and {numEmpty, plural, =1 {one empty row} other
+            {# empty rows}}."
+          oneValueNoEmpty: "{firstValue}."
+          onlyEmpty: "{numEmpty, plural, =1 {one empty row} other {# empty rows}}."
+          threeValuesAndEmpty: "{firstValue}, {secondValue}, {thirdValue} and {numEmpty,
+            plural, =1 {one empty row} other {# empty rows}}."
+          threeValuesNoEmpty: "{firstValue}, {secondValue} and {thirdValue}."
+          twoValuesAndEmpty: "{firstValue}, {secondValue} and {numEmpty, plural, =1 {one
+            empty row} other {# empty rows}}."
+          twoValuesNoEmpty: "{firstValue} and {secondValue}."
+        needsConfig: You need to configure the IDs
+        needsMapping: You need to map values
+        organization: Organization
+        selectZetkinField: Import as...
+        tags: Tags
+        zetkinFieldGroups:
+          fields: Fields
+          id: ID
+          other: Other
+        zetkinHeader: Zetkin
+      preview:
+        columnHeader:
+          org: Organization
+          tags: Tags
+        next: Next
+        noOrg: No organization
+        noTags: No tags
+        noValue: No value
+        previous: Previous
+        title: Mapping preview
+      settings:
+        firstRowIsHeaders: First row is headers
+        header: Settings
+        sheetSelectHelpText: Your file has multiple sheets, select which one to use.
+        sheetSelectLabel: Sheet
+      show: Show
+      statusMessage:
+        done: Configures import of {numConfiguredPeople, plural, =1 {1 person} other {#
+          people}}
+        notDone: Your configuration is incomplete
+      title: Import people
+    impactSummary:
+      future:
+        created: "{number} new {numPeople, plural, =1 {person} other {people}} will be
+          created"
+        defaultDesc: "{numPeople} will recieve changes to their {field}"
+        organization: Organization
+        orgs: "{numPeople} will be added to an {org}"
+        tags: Tags
+        tagsDesc: "{numPeople} will have {tags} added"
+        updated: "{number} {numPeople, plural, =1 {person} other {people}} will be
+          updated"
+      past:
+        created: "{number} new {numPeople, plural, =1 {person} other {people}} were
+          created"
+        defaultDesc: "{numPeople} recieved changes to their {field}"
+        organization: Organization
+        orgs: "{numPeople} were added to an {org}"
+        tags: Tags
+        tagsDesc: "{numPeople} had {tags} added"
+        updated: "{number} {numPeople, plural, =1 {person} other {people}} were updated"
+      people: "{number} {numPeople, plural, =1 {person} other {people}}"
+    importStatus:
+      completed:
+        desc: Your data has been imported to Zetkin
+        title: Import completed
+      completedChanges: Completed changes
+      error:
+        desc: No data was imported to Zetkin
+        title: Import failed
+      loadingState: Importing
+      scheduled:
+        desc: You can safely close this dialog and we will send you an email when the
+          import is done.
+        title: This is a big import that will take a while to get into Zetkin!
+    preflight:
+      headers:
+        messages: Messages
+        summary: Summary
+      messages:
+        common:
+          back: Go back
+          checkbox: I understand and want to proceed anyway
+          fewRows: This problem exists on rows {commaRows} and {lastRow}.
+          manyRows: This problem exists on rows {commaRows} and {additionalRows}
+            additional rows.
+          singleRow: This problem exists on row {row}.
+        invalidFormat:
+          title: "Wrong format for field: {field}"
+        majorChange:
+          description: Make sure you have configured the columns correctly
+          title: This import will overwrite lots of people's {field}
+        missingIdAndName:
+          description: Every row needs to contain at least a full name, or an ID of a
+            person that already exists in Zetkin.
+          title: Not all rows have identifiers
+        noImpact:
+          description: This could be because the file contains no new data, or due to an
+            unknown error.
+          title: This import would have no effect
+        ok:
+          description: Make sure the summary looks good and click "Import" to perform the
+            import.
+          title: No problems found!
+        unconfiguredId:
+          description: This will result in duplicates in the database. If this is your
+            first import, it is recommended to go back and choose an external ID
+            that you can use going forward.
+          title: You have not chosen an ID column
+        unconfiguredIdAndName:
+          description: Every import must at least include either full names, or IDs of
+            people that already exist in Zetkin.
+          title: You have not configured identifying columns
+        unknownError:
+          description: Contact support if you need help understanding the problem.
+          title: An unknown error ocurred
+        unknownPerson:
+          description: You configured a column as Zetkin IDs, but the column contains IDs
+            that don't exist. Did you mean to use External ID, or could some
+            people have been deleted since the file was created?
+          title: Trying to update records that do not exist
+    steps:
+      configure: Configure
+      import: Import
+      upload: Upload
+      validate: Validate
+    uploadDialog:
+      dialogButtons:
+        configure: Configure
+        restart: Restart
+      instructions: "{link} or drag and drop"
+      loading: Loading file...
+      release: Release the file here
+      selectClick: Click to upload
+      types: CSV, XLS or XLSX
+      unsupportedFile: Unsupported file format.
+    validation:
+      messages: Messages
+      pendingChanges: Pending changes
+      people: "{numPeople, plural, =1 {person} other {people}}"
+      statusMessages:
+        create: This import will create {numCreated, plural, =1 {1 person} other {#
+          people}}.
+        createAndUpdate: This import will create {numCreated, plural, =1 {1 person}
+          other {# people}} and update {numUpdated, plural, =1 {1 person} other
+          {# people}}.
+        error: You have to fix the errors before you can import
+        update: This import will update {numUpdated, plural, =1 {1 person} other {#
+          people}}.
   journeys:
     instance:
       addAssigneeButton: Add assignee
@@ -850,6 +1056,7 @@ feat:
         matchSelect:
           in: match
           notin: do not match
+        noSmartSearches: There are no Smart Searches in this organisation yet.
         query:
           edit:
             callassignment_goal: '{querySelect} of call assignment "{titleSelect}"'
@@ -1378,8 +1585,10 @@ feat:
       watch_video: Watch Video
   views:
     actions:
+      create: Create
       createFolder: Create folder
       createView: Create list
+      importPeople: Import people
     browser:
       backToFolder: Back to {folder}
       backToRoot: Back to all lists

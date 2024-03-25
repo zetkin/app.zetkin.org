@@ -17,7 +17,6 @@ import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import theme from 'theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
-import { useRouter } from 'next/router';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -29,9 +28,8 @@ interface ZetkinAppProvidersProps {
 }
 
 const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
-  const router = useRouter();
   const store = createStore();
-  const env = new Environment(store, new BrowserApiClient(), router);
+  const env = new Environment(store, new BrowserApiClient());
 
   return (
     <UserContext.Provider value={null}>

@@ -2,22 +2,36 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
+import {
+  ZetkinJourney,
+  ZetkinJourneyInstance,
+  ZetkinJourneyMilestoneStatus,
+} from 'utils/types/zetkin';
 
 export interface JourneysStoreSlice {
   journeyInstanceList: RemoteList<ZetkinJourneyInstance>;
+  journeyInstancesByJourneyId: Record<
+    number,
+    RemoteList<ZetkinJourneyInstance>
+  >;
   journeyInstancesBySubjectId: Record<
     number,
     RemoteList<ZetkinJourneyInstance>
   >;
   journeyList: RemoteList<ZetkinJourney>;
+  milestonesByInstanceId: Record<
+    number,
+    RemoteList<ZetkinJourneyMilestoneStatus>
+  >;
   timelineUpdatesByInstanceId: Record<number, RemoteList<ZetkinUpdate>>;
 }
 
 const initialJourneysState: JourneysStoreSlice = {
   journeyInstanceList: remoteList(),
+  journeyInstancesByJourneyId: {},
   journeyInstancesBySubjectId: {},
   journeyList: remoteList(),
+  milestonesByInstanceId: {},
   timelineUpdatesByInstanceId: {},
 };
 
@@ -59,6 +73,10 @@ const journeysSlice = createSlice({
       state.journeyInstanceList.items.push(
         remoteItem(journeyInstance.id, { data: journeyInstance })
       );
+
+      state.journeyInstancesByJourneyId[journeyInstance.journey.id].items.push(
+        remoteItem(journeyInstance.id, { data: journeyInstance })
+      );
     },
     journeyInstanceLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -88,6 +106,14 @@ const journeysSlice = createSlice({
       item.loaded = new Date().toISOString();
       item.isLoading = false;
       item.isStale = false;
+
+      const journeyId = action.payload.journey.id;
+      if (state.journeyInstancesByJourneyId[journeyId]) {
+        state.journeyInstancesByJourneyId[journeyId].items =
+          state.journeyInstancesByJourneyId[journeyId].items
+            .filter((item) => item.id != id)
+            .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+      }
     },
     journeyInstanceUpdate: (
       state,
@@ -118,19 +144,23 @@ const journeysSlice = createSlice({
         instanceItem.mutating = [];
       }
     },
-    journeyInstancesLoad: (state) => {
+    journeyInstancesLoad: (state, action: PayloadAction<number>) => {
+      const journeyId = action.payload;
       state.journeyInstanceList.isLoading = true;
+      state.journeyInstancesByJourneyId[journeyId] = remoteList();
+      state.journeyInstancesByJourneyId[journeyId].isLoading = true;
     },
     journeyInstancesLoaded: (
       state,
-      action: PayloadAction<ZetkinJourneyInstance[]>
+      action: PayloadAction<[number, ZetkinJourneyInstance[]]>
     ) => {
-      const journeyInstances = action.payload;
+      const [journeyId, journeyInstances] = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.journeyInstanceList = remoteList(journeyInstances);
-      state.journeyInstanceList.loaded = timestamp;
-      state.journeyInstanceList.items.forEach(
+      state.journeyInstancesByJourneyId[journeyId] =
+        remoteList(journeyInstances);
+      state.journeyInstancesByJourneyId[journeyId].loaded = timestamp;
+      state.journeyInstancesByJourneyId[journeyId].items.forEach(
         (item) => (item.loaded = timestamp)
       );
     },
@@ -170,6 +200,22 @@ const journeysSlice = createSlice({
       state.journeyList = remoteList(journeys);
       state.journeyList.loaded = timestamp;
       state.journeyList.items.forEach((item) => (item.loaded = timestamp));
+    },
+    milestonesLoad: (state, action: PayloadAction<number>) => {
+      const instanceId = action.payload;
+      if (!state.milestonesByInstanceId[instanceId]) {
+        state.milestonesByInstanceId[instanceId] = remoteList();
+      }
+      state.milestonesByInstanceId[instanceId].isLoading = true;
+    },
+    milestonesLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinJourneyMilestoneStatus[]]>
+    ) => {
+      const [instanceId, milestones] = action.payload;
+      const timestamp = new Date().toISOString();
+      state.milestonesByInstanceId[instanceId] = remoteList(milestones);
+      state.milestonesByInstanceId[instanceId].loaded = timestamp;
     },
     personJourneyInstancesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
@@ -221,6 +267,8 @@ export const {
   journeyLoaded,
   journeysLoad,
   journeysLoaded,
+  milestonesLoad,
+  milestonesLoaded,
   personJourneyInstancesLoad,
   personJourneyInstancesLoaded,
   timelineUpdatesLoad,

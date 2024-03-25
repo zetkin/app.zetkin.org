@@ -26,6 +26,7 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
     <Link
       key={task.id}
       href={`/organize/${orgId}/projects/${task.campaign.id}/calendar/tasks/${task.id}`}
+      legacyBehavior
       passHref
     >
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">

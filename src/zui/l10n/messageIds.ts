@@ -24,6 +24,41 @@ export default makeMessages('zui', {
     copiedValue: m<{ value: string }>('Copied "{value}"'),
     copy: m('Copy'),
   },
+  createPerson: {
+    cancel: m('Cancel'),
+    createBtn: m('Create'),
+    defaultitle: m('Create person'),
+    genders: {
+      f: m('Female'),
+      m: m('Male'),
+      o: m('Other'),
+      unknown: m('Unknown'),
+    },
+    showAllFields: m('Show all fields'),
+    submitLabel: {
+      add: m('Create & add'),
+      assign: m('Create & assign'),
+      default: m('Create'),
+    },
+    title: {
+      addToJourney: m<{ journey: string }>(
+        'Create person and add to {journey}'
+      ),
+      addToList: m<{ list: string }>('Create person and add to {list}'),
+      assignToJourney: m<{ journey: string }>(
+        'Create person and assign to {journey}'
+      ),
+      caller: m('Create person and add as caller'),
+      contact: m('Create person and assign as contact'),
+      default: m('Create person'),
+      participant: m('Create person and add as participant'),
+    },
+    validationWarning: {
+      email: m('Please add a valid email address'),
+      phone: m('Please add a valid phone number'),
+      url: m('Please add a valid URL'),
+    },
+  },
   dataTableSearch: {
     button: m('Search'),
     helpText: m<{ minSearchLength: number }>(
@@ -151,8 +186,14 @@ export default makeMessages('zui', {
       end: ReactElement;
       start: ReactElement;
     }>('{date}, {start} - {end}'),
+    singleDayAllDay: m('All day today'),
     singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
       'Today, {start} - {end}'
     ),
+  },
+  timezonePicker: {
+    gmt: m('GMT'),
+    placeholder: m('Type to search location'),
+    timezone: m('Timezone'),
   },
 });

@@ -15,6 +15,7 @@ import {
 } from 'utils/types/zetkin';
 
 import messageIds from '../l10n/messageIds';
+import zuiMessageIds from 'zui/l10n/messageIds';
 
 const GridDivider = () => (
   <Grid item xs={12}>
@@ -34,7 +35,12 @@ const JourneyInstanceSidebar = ({
 }: {
   journeyInstance: Pick<
     ZetkinJourneyInstance,
-    'assignees' | 'milestones' | 'next_milestone' | 'subjects' | 'tags'
+    | 'assignees'
+    | 'journey'
+    | 'milestones'
+    | 'next_milestone'
+    | 'subjects'
+    | 'tags'
   > & { id?: number };
   onAddAssignee: (person: ZetkinPersonType) => void;
   onAddSubject: (person: ZetkinPersonType) => void;
@@ -45,6 +51,7 @@ const JourneyInstanceSidebar = ({
   onUnassignTag: (tag: ZetkinTag) => void;
 }): JSX.Element => {
   const messages = useMessages(messageIds);
+  const zuiMessages = useMessages(zuiMessageIds);
 
   const [addingAssignee, setAddingAssignee] = useState<boolean>(false);
   const [addingSubject, setAddingSubject] = useState<boolean>(false);
@@ -92,6 +99,10 @@ const JourneyInstanceSidebar = ({
                   }}
                   selectedPerson={null}
                   size="small"
+                  submitLabel={zuiMessages.createPerson.submitLabel.assign()}
+                  title={zuiMessages.createPerson.title.assignToJourney({
+                    journey: journeyInstance.journey.singular_label,
+                  })}
                 />
               </div>
             </ClickAwayListener>
@@ -139,6 +150,10 @@ const JourneyInstanceSidebar = ({
                   }}
                   selectedPerson={null}
                   size="small"
+                  submitLabel={zuiMessages.createPerson.submitLabel.add()}
+                  title={zuiMessages.createPerson.title.addToJourney({
+                    journey: journeyInstance.journey.singular_label,
+                  })}
                 />
               </div>
             </ClickAwayListener>

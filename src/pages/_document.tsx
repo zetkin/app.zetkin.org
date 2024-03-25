@@ -13,8 +13,7 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta content={theme.palette.primary.main} name="theme-color" />
-          <script src="https://use.typekit.net/tqq3ylv.js" />
-          <script>{'try{Typekit.load({ async: true })}catch(e){}'}</script>
+          <link href="https://use.typekit.net/tqq3ylv.css" rel="stylesheet" />
           <link href="/logo-zetkin.png" rel="shortcut icon" />
         </Head>
         <body style={{ overscrollBehaviorX: 'none' }}>

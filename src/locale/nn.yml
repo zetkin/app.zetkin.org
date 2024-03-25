@@ -26,7 +26,10 @@ feat:
       events: Arrangementer
       folders: Lister
       insights: Analyse
+      instances: Forekomster
+      journeys: Planer
       manage: Behandle
+      milestones: Oppfølging
       new: Ny
       organize: Organiser
       participants: Deltakere
@@ -59,7 +62,7 @@ feat:
           missing: Mangler kontaktperson
           overbooked: For mange registrerte
           pending: Påmeldinger
-          title: Handling påkrevd
+          title: Handling kreves
           underbooked: For få registrerte
           unsent: Usendte varsler
         eventTypes:
@@ -70,7 +73,7 @@ feat:
           published: Publisert
           scheduled: Planlagt
           title: Publiseringsstatus
-      reset: Fjern filtre
+      reset: Fjern filter
       toggle:
         all: Alle
         none: Ingen
@@ -290,7 +293,7 @@ feat:
       requestError: Noe gikk galt, forsøk gjerne igjen.
       required: Påkrevd
       status:
-        draft: Skisse
+        draft: Utkast
         heading: Status
         published: Publisert
       visibility:
@@ -511,9 +514,334 @@ feat:
       createType: Ny "{type}"
       tooltip: Klikk for å endre type
       uncategorized: Ukategorisert
+  import:
+    actionButtons:
+      back: Tilbake
+      close: Lukk
+      configure: Sett opp
+      done: Ferdig
+      import: Importer
+      restart: Start på nytt
+      validate: Kontroller
+    configuration:
+      configure:
+        ids:
+          configExplanation: Import med medlemsnummer gjør at Zetkin kan oppdatere
+            eksisterende folk (nå og senere), heller enn å lage duplikater.
+          externalID: Medlemsnummer
+          externalIDExplanation: Tallene i denne kolonnen er medlemsnummer fra Hypersys
+            (ikke Zetkin).
+          header: Sett opp ID/Medlemsnummer
+          showOrganizationSelectButton: Legg til i...
+          wrongIDFormatWarning: Verdiene i denne kolonnen ser ikke ut som Zetkin IDer.
+            En Zetkin ID består kun av tall, hvis noen av radene er tomme eller inneholder
+            andre tegn enn tall, kan ikke kolonnen brukes som Zetkin ID.
+          zetkinID: Zetkin ID
+          zetkinIDExplanation: Tallene i denne kolonnen er basert på en eksport fra
+            Zetkin.
+        orgs:
+          header: Velg organisasjoner
+          organizations: Organisasjon
+          status: Status
+        tags:
+          empty: Tomt
+          header: Sett opp etiketter
+          numberOfRows: '{numRows, plural, =1 {En rad} other {# rader}}'
+          tagsHeader: Etiketter
+      hide: Skjul
+      mapping:
+        configButton: Sett opp
+        defaultColumnHeader: Kolonne {coloumnIndex}
+        emptyStateMessage: Begynn med å sette opp kolonnene i filen.
+        fileHeader: Fil
+        finishedMappingIds: Setter opp {numValues, plural, =1 {ett nummer} other {#
+          numre}} som {idField, select, id {Zetkin ID} other {external ID}}
+        finishedMappingOrganizations: '{numPeople, plural, =1 {en person} other {#
+          folk}} legges til i {numMappedTo, plural, =1 {En organisasjon} other {#
+          organisasjoner}}'
+        finishedMappingTags: Tildeler {numRows, plural, =1 {en rad} other {# rader}}
+          to {numMappedTo, plural, =1 {en etikett} other {# etiketter}}
+        header: Oppsett
+        id: ID
+        mapValuesButton: Sett opp verdier
+        messages:
+          manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
+            plural, =1 {en verdi til} other {# fler verdier}} og {numEmpty, plural,
+            =1 {en tom rad} other {# tomme rader}}.'
+          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} og {numMoreValues,
+            plural, =1 {en verdi til} other {# andre verdier}}.'
+          oneValueAndEmpty: '{firstValue} og {numEmpty, plural, =1 {en tom rad} other
+            {# tomme rader}}.'
+          oneValueNoEmpty: '{firstValue}.'
+          onlyEmpty: '{numEmpty, plural, =1 {en tom rad} other {# tomme rader}}.'
+          threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} og {numEmpty,
+            plural, =1 {en tom rad} other {# tomme rader}}.'
+          threeValuesNoEmpty: '{firstValue}, {secondValue} og {thirdValue}.'
+          twoValuesAndEmpty: '{firstValue}, {secondValue} og {numEmpty, plural, =1
+            {en tom rad} other {# tomme rader}}.'
+          twoValuesNoEmpty: '{firstValue} og {secondValue}.'
+        needsConfig: Du må sette opp IDer
+        needsMapping: Du må sette opp verdier
+        organization: Organisasjon
+        selectZetkinField: Importer som...
+        tags: Etiketter
+        zetkinHeader: Zetkin
+      preview:
+        columnHeader:
+          org: Organisasjon
+          tags: Etiketter
+        next: Neste
+        noOrg: Ingen organisasjon
+        noTags: Ingen etiketter
+        noValue: Ingen verdi
+        previous: Forrige
+        title: Forhåndsvisning av oppsett
+      settings:
+        firstRowIsHeaders: Første rad er overskrifter
+        header: Innstillinger
+        sheetSelectHelpText: Filen inneholder flere regneark, velg hvilket du vil
+          bruke.
+        sheetSelectLabel: Ark
+      show: Vis
+      statusMessage:
+        done: Setter opp import av {numConfiguredPeople, plural, =1 {en person} other
+          {# folk}}
+        notDone: Oppsettet ditt er ikke fullstendig
+      title: Importer folk
+    impactSummary:
+      future:
+        created: '{number}{numPeople, plural, =1 {person} other {folk}} vil bli opprettet'
+        defaultDesc: '{numPeople} vil få endret {field}'
+        organization: Organisasjon
+        orgs: '{numPeople}blir lagt til i en {org}'
+        tags: Etiketter
+        tagsDesc: '{numPeople} Får {tags} tildelt'
+        updated: '{number} {numPeople, plural, =1 {person} other {folk}} vil bli oppdatert'
+      past:
+        created: '{number}{numPeople, plural, =1 {person} other {folk}} ble opprettet'
+        defaultDesc: '{numPeople} fikk endret {field}'
+        organization: Organisasjon
+        orgs: '{numPeople} ble lagt til i en {org}'
+        tags: Etiketter
+        tagsDesc: '{numPeople} fikk {tags} tildelt'
+        updated: '{number} {numPeople, plural, =1 {person} other {folk}} ble oppdatert'
+      people: '{number} {numPeople, plural, =1 {person} other {folk}}'
+    importStatus:
+      completed:
+        desc: Dine data har blitt importert til Zetkin
+        title: Importen er fullført
+      completedChanges: Gjennomførte endringer
+      error:
+        desc: Ingen informasjon ble importert til Zetkin
+        title: Importen mislyktes
+      loadingState: Importerer
+      scheduled:
+        desc: Du kan trygt lukke denne dialogboksen, vi sender en e-post når importen
+          er fullført.
+        title: Dette er en diger import! Det kommer til å ta litt tid å gjennomføre
+          den.
+    preflight:
+      headers:
+        messages: Meldinger
+        summary: Oppsummering
+      messages:
+        common:
+          back: Gå tilbake
+          checkbox: Jeg forstår og vil fortsette likevel
+          fewRows: Dette problemet finnes på radene {commaRows} og {lastRow}.
+          manyRows: Dette problemet finnes på radene {commaRows} og {additionalRows}
+            rader til.
+          singleRow: Problemet finnes på rad {row}.
+        invalidFormat:
+          title: 'Feil format for feltet: {field}'
+        majorChange:
+          description: Forsikre deg om at du har satt opp radene riktig
+          title: Denne importen kommer til å overskrive mange folks {field}
+        missingIdAndName:
+          description: Hver rad må inneholde minst fornavn og etternavn, eller en
+            ID til en person som eksisterer i Zetkin fra før.
+          title: Noen rader mangler navn eller ID.
+        noImpact:
+          description: Dette kan skyldes av fila ikke inneholder ny informasjon, eller
+            en ukjent feil.
+          title: Denne importen vil ikke ha noen virkning
+        ok:
+          description: Forsikre deg om at oppsummeringen stemmer og trykk på "Import"
+            for å gjennomføre importen.
+          title: Ingen problemer oppdaget!
+        unconfiguredId:
+          description: Dette kommer til å lage duplikater i databasen. Hvis det er
+            første gangen du importerer bør du gå tilbake og sette opp medlemsnummer
+            i importen.
+          title: Du har ikke valgt en kolonne for ID
+        unconfiguredIdAndName:
+          description: Alle importer må enten inkludere fornavn og etternavn, eller
+            IDer for folk som finnes i Zetkin fra før.
+          title: Du har ikke satt opp noen kolonner som identifiserer folkene i importen.
+        unknownError:
+          description: Kontakt brukerstøtte (it@sv.no) hvis du trenger hjelp med å
+            forstå problemet.
+          title: Det oppsto en ukjent feil
+        unknownPerson:
+          description: Du satte opp en kolonne som Zetkin ID, men kolonnen inneholder
+            IDer som ikke eksisterer. Skulle du bruke medlemsnummer, eller kan noen
+            folk ha blitt slettet fra Zetkin etter filen ble oppretta?
+          title: Forsøker å oppdatere oppføringer som ikke eksisterer
+    steps:
+      configure: Sett opp
+      import: Importer
+      upload: Last opp
+      validate: Kontroller
+    uploadDialog:
+      dialogButtons:
+        configure: Sett opp
+        restart: Start på nytt
+      instructions: '{link} eller trekk og slipp'
+      loading: Laster fil...
+      release: Slipp fila her
+      selectClick: Klikk for å laste opp
+      types: CSV, XLS eller XLSX
+      unsupportedFile: Filformatet støttes ikke.
+    validation:
+      messages: Meldinger
+      pendingChanges: Venter på endringer
+      people: '{numPeople, plural, =1 {person} other {folk}}'
+      statusMessages:
+        create: Denne importen vil opprette {numCreated, plural, =1 {en person} other
+          {# folk}}.
+        createAndUpdate: Denne importen vil opprette {numCreated, plural, =1 {en person}
+          other {# folk}} og oppdatere {numUpdated, plural, =1 {en person} other {#
+          folk}}.
+        error: Du må rette opp i feilene før du kan importere
+        update: Denne importen vil oppdatere {numUpdated, plural, =1 {en person} other
+          {# folk}}.
+  journeys:
+    instance:
+      addAssigneeButton: Legg til kontaktperson
+      addSubjectButton: Legg til person
+      addSubjectLabel: Legg til person
+      assignPersonLabel: Finn kontaktperson
+      closeButton:
+        dialog:
+          outcomeFieldPlaceholder: Beskriv resultatet av {singularLabel}
+          outcomeLabel: Resultat
+          outcomeTagsDescription: Legg til etiketter som beskriver resultatet
+          outcomeTagsLabel: Etiketter for resultat
+        error: Kunne ikke lukke {singularLabel}
+        label: Lukk {singularLabel}
+      collapseButton: Skjul
+      created: Opprettet {relative}
+      deadlineLabel: (Frist var {date})
+      dueDateInputClear: Fjern
+      dueDateInputLabel: Frist
+      editButton: Rediger
+      ellipsisMenu:
+        convert: Konverter til...
+      expandButton: Utvid
+      markedCompleteLabel: Fullført {relativeTime}
+      newInstance:
+        draft: Utkast
+        openingNote: Åpningsnotat
+        submitLabel: Opprett ny {journey}
+        title: Ny {journey}
+      noMilestones: Det er ingen oppfølginger.
+      noOutcomeDetails: Ingen detaljer om resultater.
+      percentComplete: '{percentComplete}% fullført'
+      reopenButton:
+        error: Kunne ikke åpne {singularLabel}
+        label: Åpne {singularLabel} på nytt
+      sections:
+        assigned: Tildelt
+        members: Medlemmer
+        milestones: Oppfølginger
+        outcome: Denne {journeyTitle} er lukket.
+        summary: Oppsummering
+        timeline: Notater
+      summaryPlaceholder: Legg inn en kort beskrivelse av {journeyTitle}
+      updated: siste aktivitet {relative}
+    instances:
+      columns:
+        assignees: Tildelt
+        created: Opprettet
+        id: ID
+        nextMilestoneDeadline: Neste oppfølgingsfrist
+        nextMilestoneTitle: Neste oppfølging
+        outcome: Notater om resultat
+        subjects: Folk
+        summary: Oppsummering
+        tagsFree: Etiketter
+        title: Tittel
+        updated: Sist oppdatert
+      export:
+        headers:
+          assignees: Kontaktpersoner
+          closed: Lukket
+          created: Opprettet
+          id: ID
+          journey: Plan
+          nextMilestone: Neste oppfølging
+          nextMilestoneDeadline: Neste oppfølgingsfrist
+          outcome: Resultat
+          subjects: Medlemmer
+          summary: Oppsummering
+          title: Tittel
+          unsortedTags: Ugrupperte etiketter
+          updated: Oppdatert
+      filters:
+        doesNotHaveOperator: har ikke
+        doesNotIncludeOperator: inneholder ikke
+        hasOperator: har
+        includesOperator: inneholder
+        isEmptyOperator: er tomt
+        isNotOperator: er ikke
+        isOperator: er
+        milestoneLabel: Oppfølging
+        personLabel: Person
+        tagLabel: Etikett
+      menu:
+        downloadCsv: Last ned {pluralLabel} som CSV
+        downloadXlsx: Last ned {pluralLabel} som Excel
+    journeys:
+      buttonClose: Lukk
+      buttonOpen: Åpne
+      cardCTA: Se alle
+      closedCount: '{numberClosed} lukkede'
+      conversionSnackbar:
+        error: Noe gikk galt med å konvertere planen.
+        success: Velykket konvertering!
+      editJourneyTitleAlert:
+        error: Feil. Tittelen ble ikke oppdatert.
+        success: Tittel oppdatert!
+      lastActivity: Siste aktivitet
+      menu:
+        downloadCsv: Last ned alle som CSV
+        downloadXlsx: Last ned alle som Excel
+      nextMilestone: Neste oppfølging
+      openCount: '{numberOpen} åpne'
+      overview:
+        overviewTitle: Alle planer
+      statusClosed: Lukket
+      statusOpen: Åpen
+      tabs:
+        closed: Lukket
+        manage: Administrer
+        milestones: Oppfølginger
+        open: Åpne
+        overview: Oversikt
+        timeline: Tidslinje
+      title: Planer
   organizations:
     page:
       title: Velg organisasjon
+    sidebar:
+      allOrganizations: Alle organisasjoner
+      filter:
+        noResults: Ingen organisasjoner passer med filteret
+        topLevel: Hovedorganisasjon
+      filtered: Filtrert
+      recent:
+        clear: Fjern nylige
+        title: Nylige organisasjoner
   profile:
     delete:
       button: Fjern person
@@ -530,6 +858,9 @@ feat:
       m: Mann
       o: Annet
       unknown: Ukjent
+    journeys:
+      addButton: Start ny plan
+      title: Planer
     organizations:
       add: Legg til underorganisasjon
       addError: Organisasjonen kunne ikke legges til
@@ -549,6 +880,7 @@ feat:
       campaign: Kampanje
       people: Folk
       person: Person
+      project: Prosjekt
       survey: Spørreundersøkelse
       task: Innhold
       view: Liste
@@ -659,7 +991,7 @@ feat:
         examples:
           one: Legg til folk med fornavn 'Clara' og etternavn 'Zetkin'.
           two: Fjern folk med poststed Oslo.
-        fieldMatches: '{field}{value}'
+        fieldMatches: '{field} {value}'
         fieldSelect:
           alt_phone: alternativt telefonnummer
           city: poststed
@@ -725,6 +1057,7 @@ feat:
       random:
         addLimitRemoveSelect:
           add: Legg til
+          limit: begrens til
           sub: Fjern
         addRemoveSelect:
           add: legg til
@@ -744,6 +1077,8 @@ feat:
         matchSelect:
           in: er i
           notin: ikke er i
+        noSmartSearches: Det finnes ingen frittstående smartsøk i denne organisasjonen
+          ennå.
         query:
           edit:
             callassignment_goal: '{querySelect} for ringeoppdraget "{titleSelect}"'
@@ -884,6 +1219,7 @@ feat:
       noOptions: Ingen like tags
     operators:
       add: Legg til
+      limit: Begrens til
       sub: Fjern
     quantity:
       preview:
@@ -1264,8 +1600,10 @@ feat:
       watch_video: Se video
   views:
     actions:
+      create: Opprett
       createFolder: Ny mappe
       createView: Ny liste
+      importPeople: Importer folk
     browser:
       backToFolder: Tilbake til {folder}
       backToRoot: Tilbake til forsiden for lister
@@ -1277,6 +1615,7 @@ feat:
           title: Slett list
           warning: Er du sikker på at du vil slette lista? Dette kan ikke angres.
       menu:
+        delete: Slett
         rename: Gi nytt navn
       moveToFolder: Flytt til {folder}
       moveToRoot: Flytt til forsiden for lister
@@ -1453,6 +1792,7 @@ feat:
       modify_column: Kunne ikke redigere kolonnen
       remove_rows: Kunne ikke fjerne rader
     defaultColumnTitles:
+      journey_assignee: Tildelte planer
       local_bool: Sjekkliste
       local_person: Personreferanse
       organizer_action: Flaggede telefonsamtaler
@@ -1615,6 +1955,10 @@ zui:
     indefinite: Fra {start, date, medium} og fremover
     invisible: Ikke synlig eller planlagt
     start: Start
+  dateSpan:
+    multiDayEndsToday: '{startDate} - i dag'
+    multiDayToday: I dag - {endDate}
+    singleDayToday: I dag
   editTextInPlace:
     tooltip:
       edit: Klikk for å redigere
@@ -1632,9 +1976,12 @@ zui:
   organizeSidebar:
     allOrganizations: Alle organisasjonsledd
     areas: Steder
+    filter: Skriv for å filtrere
     home: Hjem
+    journeys: Planer
     people: Folk
     projects: Prosjekter
+    search: Søk
     signOut: Logg ut
     userSettings: Innstillinger
   personGridEditCell:
@@ -1678,6 +2025,8 @@ zui:
       byType:
         all: Alle
         files: Filer
+        journey: Plan
+        milestones: Oppfølginger
         notes: Notater
         people: Folk
         tags: Etiketter
@@ -1691,6 +2040,21 @@ zui:
         addassignee: '{actor} tildelte kontaktperson {assignee}'
         addnote: '{actor} la til et notat'
         addsubject: '{actor} la til {subject}'
+        close:
+          header: '{actor} lukket planen'
         convert: '{actor} konverterte fra {oldLabel} til {newLabel}'
+        create:
+          header: '{actor} startet en ny plan'
+        open: '{actor} åpnet planen på nytt'
+        removeassignee: '{actor} fjernet {assignee}'
+        removesubject: '{actor} fjernet {subject}'
         update:
           readMore: Les mer
+          summary: '{actor} redigerte oppsummeringen'
+          title: '{actor} redigerte tittelen'
+        updatemilestone:
+          complete: '{actor} fullførte oppfølging'
+          deadline: '{actor} oppdaterte en oppfølgingsfrist'
+          deadlineRemove: frist ble fjernet
+          deadlineUpdate: 'Frist: {datetime}'
+          incomplete: '{actor} merket en oppfølging som ikke fullført'

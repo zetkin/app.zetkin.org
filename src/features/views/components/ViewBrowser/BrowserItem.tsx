@@ -39,7 +39,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
 
     return (
-      <NextLink href={`${basePath}/${subPath}`} passHref>
+      <NextLink href={`${basePath}/${subPath}`} legacyBehavior passHref>
         <Link className={styles.itemLink}>
           {item.title ? (
             <Msg
@@ -65,7 +65,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
   } else {
     return (
       <BrowserDraggableItem item={item}>
-        <NextLink href={`${basePath}/${item.id}`} passHref>
+        <NextLink href={`${basePath}/${item.id}`} legacyBehavior passHref>
           <Link className={styles.itemLink}>{item.title}</Link>
         </NextLink>
         {itemIsRenaming(item.type, item.data.id) && (

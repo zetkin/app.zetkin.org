@@ -73,6 +73,7 @@ const ShareViewDialogShareTab = () => {
             </ZUIScrollingContainer>
             <Box marginTop={1}>
               <MUIOnlyPersonSelect
+                disabled
                 getOptionDisabled={(person) =>
                   accessList.some((item) => item.person.id == person.id) ||
                   officials.some((item) => item.id == person.id)
@@ -118,6 +119,7 @@ const ShareViewDialogShareTab = () => {
                     >
                       <NextLink
                         href={`/organize/${orgId}/people/lists/${viewId}/shared`}
+                        legacyBehavior
                         passHref
                       >
                         <Link>

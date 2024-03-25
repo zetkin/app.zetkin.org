@@ -1,5 +1,6 @@
 import {
   ZetkinCallAssignment,
+  ZetkinEmail,
   ZetkinEvent,
   ZetkinSurvey,
   ZetkinTask,
@@ -7,6 +8,7 @@ import {
 
 export enum ACTIVITIES {
   CALL_ASSIGNMENT = 'callAssignment',
+  EMAIL = 'email',
   EVENT = 'event',
   SURVEY = 'survey',
   TASK = 'task',
@@ -37,8 +39,14 @@ export type EventActivity = CampaignActivityBase & {
   kind: ACTIVITIES.EVENT;
 };
 
+export type EmailActivity = CampaignActivityBase & {
+  data: ZetkinEmail;
+  kind: ACTIVITIES.EMAIL;
+};
+
 export type CampaignActivity =
   | CallAssignmentActivity
+  | EmailActivity
   | EventActivity
   | SurveyActivity
   | TaskActivity;

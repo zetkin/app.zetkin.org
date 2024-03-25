@@ -62,7 +62,7 @@ const TimeFrame = ({
   const afterDateSelect = (
     <StyledDatePicker
       onChange={(date) => {
-        if (date) {
+        if (date && !isNaN(date.day())) {
           setAfter(date.toDate());
         }
       }}
@@ -72,7 +72,7 @@ const TimeFrame = ({
   const beforeDateSelect = (
     <StyledDatePicker
       onChange={(date) => {
-        if (date) {
+        if (date && !isNaN(date.day())) {
           setBefore(date.toDate());
         }
       }}

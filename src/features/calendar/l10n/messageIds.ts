@@ -106,6 +106,7 @@ export default makeMessages('feat.calendar', {
       nextWeek: m<{ dates: ReactElement }>('Next week {dates}'),
     },
   },
+  shortWeek: m<{ weekNumber: number }>('w {weekNumber}'),
   showMore: m('Show'),
   today: m('Today'),
 });

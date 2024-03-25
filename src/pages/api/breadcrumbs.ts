@@ -1,6 +1,7 @@
 import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { isInteger } from 'utils/stringUtils';
 import { ZetkinViewFolder } from 'features/views/components/types';
 
 interface LabeledBreadcrumbElement {
@@ -50,8 +51,13 @@ const breadcrumbs = async (
         elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
       } else {
-        if (field == 'lists' || field == 'folders') {
-          // Ignore "views" and "folders", which are only there
+        if (
+          field == 'callassignments' ||
+          field == 'folders' ||
+          field == 'lists' ||
+          field == 'surveys'
+        ) {
+          // Ignore "views" and "folders" which are only there
           // for technical reasons, but do not represent any page
           // and shouldn't link to anything.
           continue;
@@ -95,7 +101,8 @@ async function fetchElements(
       },
     ];
   } else if (fieldName === 'campId') {
-    if (fieldValue !== 'standalone') {
+    // check if the value is a numeric ID, as `fieldValue` could also be passed as 'standalone' or 'shared'
+    if (isInteger(fieldValue)) {
       const campaign = await apiFetch(
         `/orgs/${orgId}/campaigns/${fieldValue}`
       ).then((res) => res.json());
@@ -203,6 +210,16 @@ async function fetchElements(
       apiFetch
     );
     return folderElements;
+  } else if (fieldName == 'emailId') {
+    const email = await apiFetch(`/orgs/${orgId}/emails/${fieldValue}`).then(
+      (res) => res.json()
+    );
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: email.data.title,
+      },
+    ];
   }
 
   return [];

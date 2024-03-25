@@ -79,7 +79,7 @@ const SurveyOption = ({
         survey: filter.config.survey || surveys[0].id,
       });
     }
-  }, [surveys]);
+  }, [surveys.length]);
 
   // check if there are questions with response type of 'text'
   const validQuestions: ZetkinSurveyQuestionElement[] =

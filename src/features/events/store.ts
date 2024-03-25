@@ -60,6 +60,7 @@ export interface EventsStoreSlice {
   };
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
+  remindingByEventId: Record<number, boolean>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
@@ -78,6 +79,7 @@ const initialState: EventsStoreSlice = {
   },
   locationList: remoteList(),
   participantsByEventId: {},
+  remindingByEventId: {},
   respondentsByEventId: {},
   selectedEventIds: [],
   statsByEventId: {},
@@ -130,20 +132,35 @@ const eventsSlice = createSlice({
     },
     eventDeleted: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
-      state.eventList.items = state.eventList.items.filter(
-        (item) => item.id != eventId
+      const eventListItem = state.eventList.items.find(
+        (item) => item.id === eventId
       );
 
+      if (eventListItem) {
+        eventListItem.deleted = true;
+        state.eventList.isStale = true;
+      }
+
       for (const date in state.eventsByDate) {
-        state.eventsByDate[date].items = state.eventsByDate[date].items.filter(
-          (item) => item.id != eventId
+        const item = state.eventsByDate[date].items.find(
+          (item) => item.id === eventId
         );
+
+        if (item) {
+          item.deleted = true;
+          state.eventsByDate[date].isStale = true;
+        }
       }
 
       for (const campaignId in state.eventsByCampaignId) {
-        state.eventsByCampaignId[campaignId].items = state.eventsByCampaignId[
-          campaignId
-        ].items.filter((item) => item.id != eventId);
+        const item = state.eventsByCampaignId[campaignId].items.find(
+          (item) => item.id === eventId
+        );
+
+        if (item) {
+          item.deleted = true;
+          state.eventsByCampaignId[campaignId].isStale = true;
+        }
       }
     },
     eventLoad: (state, action: PayloadAction<number>) => {
@@ -488,8 +505,13 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId] = remoteList(participants);
       state.participantsByEventId[eventId].loaded = new Date().toISOString();
     },
+    participantsRemind: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.remindingByEventId[eventId] = true;
+    },
     participantsReminded: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
+      state.remindingByEventId[eventId] = false;
       state.participantsByEventId[eventId].items.map((item) => {
         if (item.data && item.data?.reminder_sent == null) {
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
@@ -605,6 +627,7 @@ export const {
   participantUpdated,
   participantsLoad,
   participantsLoaded,
+  participantsRemind,
   participantsReminded,
   resetSelection,
   respondentsLoad,
