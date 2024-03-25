@@ -500,8 +500,8 @@ export interface ZetkinEmail {
 }
 
 export interface ZetkinLink {
+  email: { id: number; title: string };
   id: number;
-  email_id: number;
   url: string;
   tag: string;
 }

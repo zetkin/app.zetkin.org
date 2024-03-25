@@ -1,9 +1,10 @@
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 import { useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
@@ -111,9 +112,11 @@ const EmailClick = ({
   };
 
   const fakeLinkList = [
-    { id: 1, link: 'www.hello.com' },
-    { id: 2, link: 'www.world.com' },
+    { id: 1, url: 'www.hello.com' },
+    { id: 2, url: 'www.world.com' },
   ];
+
+  console.log(filter, ' filter');
 
   return (
     <FilterForm
@@ -175,23 +178,59 @@ const EmailClick = ({
                 )}
               </>
             ),
+            // linkSelect: (
+            //   <>
+            //     {filter.config.link ? ':' : ''}
+            //     {filter.config.link && (
+            //       <StyledSelect
+            //         onChange={(e) =>
+            //           setValueToKey('link', [parseInt(e.target.value)])
+            //         }
+            //         sx={{ ml: 0.5 }}
+            //         value={filter.config.email || ''}
+            //       >
+            //         {fakeLinkList?.map((item) => (
+            //           <MenuItem key={`link-${item.id}`} value={item.id}>
+            //             {item.link}
+            //           </MenuItem>
+            //         ))}
+            //       </StyledSelect>
+            //     )}
+            //   </>
+            // ),
             linkSelect: (
               <>
-                {filter.config.link ? ':' : ''}
+                {''}
                 {filter.config.link && (
-                  <StyledSelect
-                    onChange={(e) =>
-                      setValueToKey('link', [parseInt(e.target.value)])
-                    }
-                    sx={{ ml: 0.5 }}
-                    value={filter.config.email || ''}
+                  <Box
+                    alignItems="center"
+                    display="inline-flex"
+                    style={{ verticalAlign: 'middle' }}
                   >
-                    {fakeLinkList?.map((item) => (
-                      <MenuItem key={`link-${item.id}`} value={item.id}>
-                        {item.link}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
+                    :
+                    <StyledItemSelect
+                      getOptionDisabled={(t) =>
+                        filter.config.link?.includes(t.id) || false
+                      }
+                      onChange={(_, value) =>
+                        setValueToKey(
+                          'link',
+                          value.map((link) => link.id)
+                        )
+                      }
+                      options={fakeLinkList.map((link) => ({
+                        id: link.id,
+                        title: link.url,
+                      }))}
+                      value={fakeLinkList
+                        .filter(
+                          (t) => filter.config.link?.includes(t.id) || false
+                        )
+                        .map((item) => {
+                          return { id: item.id, title: item.url };
+                        })}
+                    />
+                  </Box>
                 )}
               </>
             ),
