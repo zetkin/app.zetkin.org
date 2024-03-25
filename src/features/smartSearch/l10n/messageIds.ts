@@ -186,9 +186,9 @@ export default makeMessages('feat.smartSearch', {
         '{addRemoveSelect} people who have {statusSelect} {listSelect} {emailSelect} {projectSelect} {timeFrame}'
       ),
       statusSelect: {
-        opened: m('opened'),
         notOpened: m('not opened'),
         notSent: m('not been sent'),
+        opened: m('opened'),
         sent: m('been sent'),
       },
     },

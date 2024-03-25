@@ -112,7 +112,6 @@ const EmailClick = ({
     { id: 1, link: 'www.hello.com' },
     { id: 2, link: 'www.world.com' },
   ];
-  console.log(filter, 'filter');
 
   return (
     <FilterForm

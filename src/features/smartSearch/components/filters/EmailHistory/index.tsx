@@ -96,10 +96,13 @@ const EmailHistory = ({
     return value.replace(/_(.)/, (_, char) => char.toUpperCase());
   };
 
-  console.log(filter, 'filter');
-
   return (
     <FilterForm
+      disableSubmit={
+        (listSelectType === LIST_SELECT.FROM_PROJECT &&
+          !filter.config.campaign) ||
+        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL && !filter.config.email)
+      }
       onCancel={onCancel}
       onSubmit={(e) => {
         e.preventDefault();

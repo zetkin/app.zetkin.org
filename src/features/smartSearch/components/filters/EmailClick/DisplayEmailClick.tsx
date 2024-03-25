@@ -77,7 +77,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
         listSelect: (
           <UnderlinedMsg
             id={
-              localMessageIds.listSelect[
+              messageIds.filters.emailListSelect[
                 filter.config.campaign
                   ? LIST_SELECT.FROM_PROJECT
                   : filter.config.email
