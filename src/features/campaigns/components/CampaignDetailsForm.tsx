@@ -1,15 +1,13 @@
 import { Form } from 'react-final-form';
+import { MenuItem } from '@mui/material';
 import { TextField } from 'mui-rff';
 import { useState } from 'react';
-import { Link, MenuItem } from '@mui/material';
 
 import ZUISubmitCancelButtons from '../../../zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCampaign, ZetkinPerson } from 'utils/types/zetkin';
 
 import messageIds from '../l10n/messageIds';
-import useMemberships from '../hooks/useMemberships';
-import { useNumericRouteParams } from 'core/hooks';
 
 interface CampaignDetailsFormProps {
   campaign?: ZetkinCampaign;
@@ -22,16 +20,9 @@ const CampaignDetailsForm = ({
   onCancel,
   campaign,
 }: CampaignDetailsFormProps): JSX.Element => {
-  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
 
-  const membershipsFuture = useMemberships();
-  const activeMembership = membershipsFuture.data?.find(
-    (m) => m.organization.id == orgId
-  );
-  const userProfile = activeMembership?.profile;
-
-  const [selectedManager, setSelectedManager] = useState<ZetkinPerson | null>(
+  const [selectedManager] = useState<ZetkinPerson | null>(
     campaign?.manager
       ? ({
           first_name: campaign.manager.name.split(' ')[0],
@@ -92,39 +83,6 @@ const CampaignDetailsForm = ({
             rows={5}
             variant="outlined"
           />
-
-          {/* This is broken due to MUIv5 migration, but will be replaced by new UI
-          <ZUIPersonSelect
-            label={intl.formatMessage({
-              id: 'misc.formDialog.campaign.manager.label',
-            })}
-            name="manager_id"
-            onChange={(person) => {
-              setSelectedManager(person);
-            }}
-            selectedPerson={selectedManager}
-          />
-          */}
-
-          {userProfile && userProfile.id != selectedManager?.id && (
-            <Link
-              color="textPrimary"
-              component="button"
-              onClick={() => {
-                // Select profile beloning to current user. We only need the ID
-                // to be correct, and the name to be reflected by first_name+last_name,
-                // so for simplicity we pass the entire name as first name.
-                setSelectedManager({
-                  first_name: userProfile.name,
-                  id: userProfile.id,
-                  last_name: '',
-                } as ZetkinPerson);
-              }}
-              underline="hover"
-            >
-              <Msg id={messageIds.form.manager.selectSelf} />
-            </Link>
-          )}
 
           <TextField
             fullWidth
