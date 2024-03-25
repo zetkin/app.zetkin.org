@@ -173,4 +173,7 @@ export default makeMessages('feat.emails', {
     ),
     unsubButton: m('Unsubscribe me'),
   },
+  varDefaults: {
+    target: m('reader'),
+  },
 });
