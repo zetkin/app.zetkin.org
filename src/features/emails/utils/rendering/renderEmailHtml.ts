@@ -5,7 +5,10 @@ import EmailMJMLConverter from './EmailMJMLConverter';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { EmailContent, InlineNodeKind } from 'features/emails/types';
 
-export default function renderEmailHtml(email: ZetkinEmail): string {
+export default function renderEmailHtml(
+  email: ZetkinEmail,
+  variableValues: Record<string, string>
+): string {
   const { frame, content } = email;
 
   if (!content) {
@@ -20,7 +23,7 @@ export default function renderEmailHtml(email: ZetkinEmail): string {
       if (node.kind == InlineNodeKind.VARIABLE) {
         return {
           kind: InlineNodeKind.STRING,
-          value: 'friend', // TODO: Don't hardcode this
+          value: variableValues[node.name] || '',
         };
       } else {
         return node;

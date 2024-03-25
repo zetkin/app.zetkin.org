@@ -89,7 +89,9 @@ describe('renderEmailHtml', () => {
       }),
     });
 
-    const output = renderEmailHtml(email);
+    const output = renderEmailHtml(email, {
+      'target.first_name': 'friend',
+    });
 
     // The expected output is HTML as returned by MJML
     const expected = mjml2html({
@@ -229,7 +231,7 @@ describe('renderEmailHtml', () => {
       }),
     });
 
-    const output = renderEmailHtml(email);
+    const output = renderEmailHtml(email, {});
 
     // The expected output is HTML as returned by MJML
     const expected = mjml2html({
