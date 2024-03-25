@@ -191,11 +191,16 @@ export const scaffold =
     const localeScope: string[] = [];
     let messages: MessageList = {};
     if (process.env.LYRA_URL) {
-      const lyraRes = await fetch(
-        `${process.env.LYRA_URL}/api/translations/${lang}`
-      );
-      const lyraPayload = await lyraRes.json();
-      messages = lyraPayload.translations;
+      try {
+        const lyraRes = await fetch(
+          `${process.env.LYRA_URL}/api/translations/${lang}`
+        );
+        const lyraPayload = await lyraRes.json();
+        messages = lyraPayload.translations;
+      } catch (e: unknown) {
+        // Fall back to stored messages when Lyra is not accessible
+        messages = await getMessages(lang, localeScope);
+      }
     } else {
       messages = await getMessages(lang, localeScope);
     }
