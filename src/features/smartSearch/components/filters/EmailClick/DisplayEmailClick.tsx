@@ -60,7 +60,11 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
         linkSelect: (
           <>
             {''}
-            {link && <UnderlinedText text={'www.hello.com'} />}
+            {link && (
+              <>
+                : <UnderlinedText text={'www.hello.com'} />
+              </>
+            )}
           </>
         ),
         linkTypeSelect: (
