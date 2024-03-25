@@ -116,6 +116,7 @@ export interface CallHistoryFilterConfig {
   after?: string;
 }
 export interface EmailBlacklistFilterConfig {
+  operator: 'blacklisted';
   reason: 'unsub_org' | 'any';
 }
 export interface EmailClickFilterConfig {

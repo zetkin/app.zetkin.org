@@ -40,6 +40,7 @@ const EmailBlacklist = ({
 }: EmailBlockedProps): JSX.Element => {
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailBlacklistFilterConfig>(initialFilter, {
+      operator: 'blacklisted',
       reason: 'unsub_org',
     });
 
