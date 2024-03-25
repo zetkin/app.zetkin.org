@@ -8,6 +8,7 @@ import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
+import useLinks from 'features/emails/hooks/useLinks';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -59,6 +60,7 @@ const EmailClick = ({
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
       operator: 'clicked',
     });
+  const linksFuture = useLinks(orgId, filter.config?.email).data;
 
   const [listSelectType, setListSelectType] = useState<LIST_SELECT>(
     filter.config.campaign

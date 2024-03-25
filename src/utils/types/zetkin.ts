@@ -499,6 +499,13 @@ export interface ZetkinEmail {
   title: string;
 }
 
+export interface ZetkinLink {
+  id: number;
+  email_id: number;
+  url: string;
+  tag: string;
+}
+
 export type {
   ZetkinTask,
   ZetkinAssignedTask,

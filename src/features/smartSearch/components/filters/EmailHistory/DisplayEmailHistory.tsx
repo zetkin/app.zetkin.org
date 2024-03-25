@@ -45,19 +45,6 @@ const DisplayEmailHistory = ({
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        statusSelect: (
-          <UnderlinedMsg
-            id={
-              localMessageIds.statusSelect[
-                convertToMessageKey(operator) as
-                  | 'notSent'
-                  | 'opened'
-                  | 'sent'
-                  | 'notSent'
-              ]
-            }
-          />
-        ),
         emailSelect: (
           <>
             {''}
@@ -82,6 +69,19 @@ const DisplayEmailHistory = ({
             {''}
             {projectId && <UnderlinedText text={`"${projectTitle}"`} />}
           </>
+        ),
+        statusSelect: (
+          <UnderlinedMsg
+            id={
+              localMessageIds.statusSelect[
+                convertToMessageKey(operator) as
+                  | 'notSent'
+                  | 'opened'
+                  | 'sent'
+                  | 'notSent'
+              ]
+            }
+          />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
