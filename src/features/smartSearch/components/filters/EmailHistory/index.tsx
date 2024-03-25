@@ -1,6 +1,7 @@
 import { MenuItem } from '@mui/material';
 import { useState } from 'react';
 
+import convertToMessageKey from './convertToMessageKey';
 import FilterForm from '../../FilterForm';
 import { LIST_SELECT } from '../EmailClick';
 import messageIds from 'features/smartSearch/l10n/messageIds';
@@ -90,10 +91,6 @@ const EmailHistory = ({
       ...(range.after && { after: range.after }),
       ...(range.before && { before: range.before }),
     });
-  };
-
-  const convertToMessageKey = (value: string) => {
-    return value.replace(/_(.)/, (_, char) => char.toUpperCase());
   };
 
   return (
