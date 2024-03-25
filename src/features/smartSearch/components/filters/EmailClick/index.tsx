@@ -112,8 +112,8 @@ const EmailClick = ({
   };
 
   const fakeLinkList = [
-    { id: 1, url: 'http://www.hellomyexample/veryLong/long/long/long/url.com' },
-    { id: 2, url: 'http://www.world.com' },
+    { id: 1, url: 'http://www.hellomyexample.com/veryLong/long/long/long/url' },
+    { id: 2, url: 'http://world.com' },
   ];
 
   console.log(filter, ' filter');

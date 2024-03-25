@@ -1,3 +1,5 @@
+import { Box, Chip, Tooltip } from '@mui/material';
+
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
 import messageIds from 'features/smartSearch/l10n/messageIds';
@@ -37,6 +39,11 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
     before: config.before,
   });
 
+  const fakeLinkList = [
+    { id: 1, url: 'http://www.hellomyexample.com/veryLong/long/long/long/url' },
+    { id: 2, url: 'http://world.com' },
+  ];
+
   return (
     <Msg
       id={localMessageIds.inputString}
@@ -61,9 +68,28 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
           <>
             {''}
             {links && (
-              <>
-                : <UnderlinedText text={'www.hello.com'} />
-              </>
+              <Box alignItems="start" display="inline-flex">
+                :{' '}
+                {fakeLinkList
+                  .filter((item) => filter.config.links?.includes(item.id))
+                  .map((link) => {
+                    return (
+                      <Tooltip title={link.url}>
+                        <Chip
+                          key={link.id}
+                          label={link.url.split('://')[1]}
+                          size="small"
+                          sx={{
+                            margin: '3px',
+                            maxWidth: '200px',
+                            textOverflow: 'ellipsis',
+                          }}
+                          variant="outlined"
+                        />
+                      </Tooltip>
+                    );
+                  })}
+              </Box>
             )}
           </>
         ),
