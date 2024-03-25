@@ -123,7 +123,10 @@ const EmailClick = ({
       disableSubmit={
         (listSelectType === LIST_SELECT.FROM_PROJECT &&
           !filter.config.campaign) ||
-        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL && !filter.config.email)
+        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL &&
+          !filter.config.email) ||
+        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL &&
+          filter.config.links?.length === 0)
       }
       onCancel={onCancel}
       onSubmit={(e) => {
