@@ -1,4 +1,4 @@
-import { Box, MenuItem } from '@mui/material';
+import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 import { useState } from 'react';
 
 import FilterForm from '../../FilterForm';
@@ -112,8 +112,8 @@ const EmailClick = ({
   };
 
   const fakeLinkList = [
-    { id: 1, url: 'www.hello.com' },
-    { id: 2, url: 'www.world.com' },
+    { id: 1, url: 'http://www.hellomyexample/veryLong/long/long/long/url.com' },
+    { id: 2, url: 'http://www.world.com' },
   ];
 
   console.log(filter, ' filter');
@@ -188,6 +188,32 @@ const EmailClick = ({
                     style={{ verticalAlign: 'middle' }}
                   >
                     :
+                    {fakeLinkList
+                      .filter((item) => filter.config.links?.includes(item.id))
+                      .map((link) => {
+                        return (
+                          <Tooltip title={link.url}>
+                            <Chip
+                              key={link.id}
+                              label={link.url.split('://')[1]}
+                              onDelete={() =>
+                                setValueToKey(
+                                  'links',
+                                  filter.config.links!.filter(
+                                    (linkId) => linkId !== link.id
+                                  )
+                                )
+                              }
+                              sx={{
+                                margin: '3px',
+                                maxWidth: '200px',
+                                textOverflow: 'ellipsis',
+                              }}
+                              variant="outlined"
+                            />
+                          </Tooltip>
+                        );
+                      })}
                     <StyledItemSelect
                       getOptionDisabled={(t) =>
                         filter.config.links?.includes(t.id) || false
@@ -200,7 +226,7 @@ const EmailClick = ({
                       }
                       options={fakeLinkList.map((link) => ({
                         id: link.id,
-                        title: link.url,
+                        title: link.url.split('://')[1],
                       }))}
                       value={fakeLinkList
                         .filter(
