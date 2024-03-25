@@ -104,10 +104,10 @@ const EmailClick = ({
   const handleLinkSelect = (value: string) => {
     if (value === LINK_TYPE_SELECT.FOLLOWING_LINKS) {
       removeKey(['campaign']);
-      setValueToKey('link', []);
+      setValueToKey('links', []);
       setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
     } else {
-      removeKey(['campaign', 'link']);
+      removeKey(['campaign', 'links']);
     }
   };
 
@@ -178,30 +178,10 @@ const EmailClick = ({
                 )}
               </>
             ),
-            // linkSelect: (
-            //   <>
-            //     {filter.config.link ? ':' : ''}
-            //     {filter.config.link && (
-            //       <StyledSelect
-            //         onChange={(e) =>
-            //           setValueToKey('link', [parseInt(e.target.value)])
-            //         }
-            //         sx={{ ml: 0.5 }}
-            //         value={filter.config.email || ''}
-            //       >
-            //         {fakeLinkList?.map((item) => (
-            //           <MenuItem key={`link-${item.id}`} value={item.id}>
-            //             {item.link}
-            //           </MenuItem>
-            //         ))}
-            //       </StyledSelect>
-            //     )}
-            //   </>
-            // ),
             linkSelect: (
               <>
                 {''}
-                {filter.config.link && (
+                {filter.config.links && (
                   <Box
                     alignItems="center"
                     display="inline-flex"
@@ -210,11 +190,11 @@ const EmailClick = ({
                     :
                     <StyledItemSelect
                       getOptionDisabled={(t) =>
-                        filter.config.link?.includes(t.id) || false
+                        filter.config.links?.includes(t.id) || false
                       }
                       onChange={(_, value) =>
                         setValueToKey(
-                          'link',
+                          'links',
                           value.map((link) => link.id)
                         )
                       }
@@ -224,7 +204,7 @@ const EmailClick = ({
                       }))}
                       value={fakeLinkList
                         .filter(
-                          (t) => filter.config.link?.includes(t.id) || false
+                          (t) => filter.config.links?.includes(t.id) || false
                         )
                         .map((item) => {
                           return { id: item.id, title: item.url };
@@ -238,7 +218,7 @@ const EmailClick = ({
               <StyledSelect
                 onChange={(e) => handleLinkSelect(e.target.value)}
                 value={
-                  filter.config.link
+                  filter.config.links
                     ? LINK_TYPE_SELECT.FOLLOWING_LINKS
                     : LINK_TYPE_SELECT.ANY_LINK
                 }
@@ -253,7 +233,7 @@ const EmailClick = ({
             listSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  removeKey(['email', 'campaign', 'link']);
+                  removeKey(['email', 'campaign', 'links']);
                   setListSelectType(e.target.value as LIST_SELECT);
                 }}
                 value={listSelectType}
@@ -263,7 +243,7 @@ const EmailClick = ({
                     //when user choose 'any of the following links' in 'the specific email'
                     //some options should not be visible
                     item !== LIST_SELECT.SPECIFIC_EMAIL &&
-                    filter.config.link
+                    filter.config.links
                   ) {
                     return null;
                   } else {

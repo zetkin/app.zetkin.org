@@ -26,7 +26,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
   const projects = useCampaigns(orgId).data || [];
 
   const { config } = filter;
-  const { operator, campaign: projectId, email: emailId, link } = config;
+  const { operator, campaign: projectId, email: emailId, links } = config;
 
   const op = filter.op || OPERATION.ADD;
   const emailTitle = emails?.find((item) => item.id === emailId)?.title;
@@ -60,7 +60,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
         linkSelect: (
           <>
             {''}
-            {link && (
+            {links && (
               <>
                 : <UnderlinedText text={'www.hello.com'} />
               </>
@@ -71,7 +71,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
           <UnderlinedMsg
             id={
               localMessageIds.linkSelect[
-                filter.config.link
+                filter.config.links
                   ? LINK_TYPE_SELECT.FOLLOWING_LINKS
                   : LINK_TYPE_SELECT.ANY_LINK
               ]

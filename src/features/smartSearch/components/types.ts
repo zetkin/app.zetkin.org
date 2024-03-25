@@ -125,7 +125,7 @@ export interface EmailClickFilterConfig {
   campaign?: number;
   email?: number;
   operator: 'clicked' | 'not_clicked';
-  link?: number[];
+  links?: number[];
 }
 export interface EmailHistoryFilterConfig {
   after?: string;
