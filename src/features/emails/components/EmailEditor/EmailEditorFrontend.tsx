@@ -75,7 +75,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       tools: {
         button: {
           class: Button as unknown as ToolConstructable,
-          config: frame.blockAttributes ? frame.blockAttributes['button'] : {},
+          config: frame.block_attributes
+            ? frame.block_attributes['button']
+            : {},
         },
         header: {
           class: Header,
@@ -88,8 +90,8 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
           config: {
-            attributes: frame.blockAttributes
-              ? frame.blockAttributes['image']
+            attributes: frame.block_attributes
+              ? frame.block_attributes['image']
               : {},
             orgId,
           },

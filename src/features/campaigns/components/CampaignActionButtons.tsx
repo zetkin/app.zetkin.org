@@ -119,6 +119,7 @@ const CampaignActionButtons: React.FunctionComponent<
       onClick: () =>
         createEmail({
           campaign_id: campId,
+          frame_id: frames[0].id,
           title: messages.form.createEmail.newEmail(),
         }),
     });
