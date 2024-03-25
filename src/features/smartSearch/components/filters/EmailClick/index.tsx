@@ -229,7 +229,7 @@ const EmailClick = ({
                   } else {
                     return (
                       <MenuItem key={item} value={item}>
-                        <Msg id={localMessageIds.listSelect[item]} />
+                        <Msg id={messageIds.filters.emailListSelect[item]} />
                       </MenuItem>
                     );
                   }

@@ -173,23 +173,29 @@ export default makeMessages('feat.smartSearch', {
         anyFollowingLinks: m('any of the following links'),
         anyLink: m('any link'),
       },
-      listSelect: {
-        any: m('any email'),
-        fromProject: m('any email from project'),
-        specificEmail: m('the specific email'),
-      },
     },
     emailHistory: {
       inputString: m<{
         addRemoveSelect: ReactElement;
+        emailSelect: ReactElement;
+        listSelect: ReactElement;
+        projectSelect: ReactElement;
         statusSelect: ReactElement;
-      }>('{addRemoveSelect} people who have {statusSelect}'),
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have {statusSelect} {listSelect} {emailSelect} {projectSelect} {timeFrame}'
+      ),
       statusSelect: {
         opened: m('opened'),
         notOpened: m('not opened'),
-        notSent: m('not sent'),
-        sent: m('sent'),
+        notSent: m('not been sent'),
+        sent: m('been sent'),
       },
+    },
+    emailListSelect: {
+      any: m('any email'),
+      fromProject: m('any email from project'),
+      specificEmail: m('the specific email'),
     },
     mostActive: {
       examples: {

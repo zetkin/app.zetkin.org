@@ -2,6 +2,7 @@ import { MenuItem } from '@mui/material';
 import { useState } from 'react';
 
 import FilterForm from '../../FilterForm';
+import { LIST_SELECT } from '../EmailClick';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -38,11 +39,6 @@ interface EmailHistoryProps {
   ) => void;
   onCancel: () => void;
 }
-const convertToMessageKey = (value: string) => {
-  return value.replace(/_(.)/, (_, char) => char.toUpperCase());
-};
-console.log(convertToMessageKey(EMAIL_STATUS_OP.NOT_SENT));
-console.log(convertToMessageKey(EMAIL_STATUS_OP.NOT_OPENED));
 
 const EmailHistory = ({
   filter: initialFilter,
@@ -57,6 +53,13 @@ const EmailHistory = ({
     useSmartSearchFilter<EmailHistoryFilterConfig>(initialFilter, {
       operator: 'sent',
     });
+  const [listSelectType, setListSelectType] = useState<LIST_SELECT>(
+    filter.config.campaign
+      ? LIST_SELECT.FROM_PROJECT
+      : filter.config.email
+      ? LIST_SELECT.SPECIFIC_EMAIL
+      : LIST_SELECT.ANY
+  );
 
   const setValueToKey = (
     key: keyof EmailHistoryFilterConfig,
@@ -65,6 +68,13 @@ const EmailHistory = ({
     setConfig({
       ...filter.config,
       [key]: value,
+    });
+  };
+  const removeKey = (deleteKeys: (keyof EmailHistoryFilterConfig)[]) => {
+    const copied = { ...filter.config };
+    deleteKeys.forEach((key) => delete copied[key]);
+    setConfig({
+      ...copied,
     });
   };
 
@@ -80,6 +90,10 @@ const EmailHistory = ({
       ...(range.after && { after: range.after }),
       ...(range.before && { before: range.before }),
     });
+  };
+
+  const convertToMessageKey = (value: string) => {
+    return value.replace(/_(.)/, (_, char) => char.toUpperCase());
   };
 
   console.log(filter, 'filter');
@@ -107,25 +121,66 @@ const EmailHistory = ({
                 ))}
               </StyledSelect>
             ),
+            emailSelect: (
+              <>
+                {''}
+                {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
+                  <StyledSelect
+                    onChange={(e) =>
+                      setValueToKey('email', parseInt(e.target.value))
+                    }
+                    value={filter.config.email || ''}
+                  >
+                    {emailsFuture?.map((email) => (
+                      <MenuItem key={`email-${email.id}`} value={email.id}>
+                        {`"${email.title}"`}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
+                )}
+              </>
+            ),
+            listSelect: (
+              <StyledSelect
+                onChange={(e) => {
+                  removeKey(['email', 'campaign']);
+                  setListSelectType(e.target.value as LIST_SELECT);
+                }}
+                value={listSelectType}
+              >
+                {Object.values(LIST_SELECT).map((item) => (
+                  <MenuItem key={item} value={item}>
+                    <Msg id={messageIds.filters.emailListSelect[item]} />
+                  </MenuItem>
+                ))}
+              </StyledSelect>
+            ),
+            projectSelect: (
+              <>
+                {''}
+                {listSelectType === LIST_SELECT.FROM_PROJECT && (
+                  <StyledSelect
+                    onChange={(e) =>
+                      setValueToKey('campaign', parseInt(e.target.value))
+                    }
+                    value={filter.config.campaign || ''}
+                  >
+                    {projectsFuture?.map((project) => (
+                      <MenuItem
+                        key={`proejct-${project.id}`}
+                        value={project.id}
+                      >
+                        {`"${project.title}"`}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
+                )}
+              </>
+            ),
             statusSelect: (
               <StyledSelect
-                onChange={(e) =>
-                  setValueToKey(
-                    'operator',
-                    e.target.value === EMAIL_STATUS_OP.NOT_OPENED
-                      ? 'not_opened'
-                      : e.target.value === EMAIL_STATUS_OP.NOT_SENT
-                      ? 'not_sent'
-                      : e.target.value
-                  )
-                }
-                value={
-                  filter.config.operator === 'not_opened'
-                    ? EMAIL_STATUS_OP.NOT_OPENED
-                    : filter.config.operator === 'not_sent'
-                    ? EMAIL_STATUS_OP.NOT_SENT
-                    : filter.config.operator
-                }
+                onChange={(e) => setValueToKey('operator', e.target.value)}
+                value={filter.config.operator}
               >
                 {Object.values(EMAIL_STATUS_OP).map((status) => (
                   <MenuItem key={status} value={status}>
@@ -144,15 +199,15 @@ const EmailHistory = ({
                 ))}
               </StyledSelect>
             ),
-            // timeFrame: (
-            //   <TimeFrame
-            //     filterConfig={{
-            //       after: 'e',
-            //       before: 'e',
-            //     }}
-            //     onChange={() => console.log('e')}
-            //   />
-            // ),
+            timeFrame: (
+              <TimeFrame
+                filterConfig={{
+                  after: filter.config.after,
+                  before: filter.config.before,
+                }}
+                onChange={handleTimeFrameChange}
+              />
+            ),
           }}
         />
       )}
