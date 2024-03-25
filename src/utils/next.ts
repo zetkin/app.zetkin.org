@@ -7,13 +7,13 @@ import {
 } from 'next';
 
 import { AppSession } from './types';
-import { getBrowserLanguage } from './locale';
 import { getMessages } from './locale';
 import getUserMemberships from './getUserMemberships';
 import requiredEnvVar from './requiredEnvVar';
 import { stringToBool } from './stringUtils';
 import { ZetkinZ } from './types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
+import { getBrowserLanguage, MessageList } from './locale';
 import { ZetkinSession, ZetkinUser } from './types/zetkin';
 
 //TODO: Create module definition and revert to import.
@@ -184,7 +184,21 @@ export const scaffold =
     // TODO: Respect scope from options again
     //const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
     const localeScope: string[] = [];
-    const messages = await getMessages(lang, localeScope);
+    let messages: MessageList = {};
+    if (process.env.LYRA_URL) {
+      try {
+        const lyraRes = await fetch(
+          `${process.env.LYRA_URL}/api/translations/${lang}`
+        );
+        const lyraPayload = await lyraRes.json();
+        messages = lyraPayload.translations;
+      } catch (e: unknown) {
+        // Fall back to stored messages when Lyra is not accessible
+        messages = await getMessages(lang, localeScope);
+      }
+    } else {
+      messages = await getMessages(lang, localeScope);
+    }
 
     if (hasProps(result)) {
       result.props = {
