@@ -8,6 +8,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
+import useLinks from 'features/emails/hooks/useLinks';
 import { useNumericRouteParams } from 'core/hooks';
 import {
   EmailClickFilterConfig,
@@ -29,6 +30,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
 
   const { config } = filter;
   const { operator, campaign: projectId, email: emailId, links } = config;
+  const linksFuture = useLinks(orgId, filter.config?.email).data;
 
   const op = filter.op || OPERATION.ADD;
   const emailTitle = emails?.find((item) => item.id === emailId)?.title;
@@ -38,11 +40,6 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
     after: config.after,
     before: config.before,
   });
-
-  const fakeLinkList = [
-    { id: 1, url: 'http://www.hellomyexample.com/veryLong/long/long/long/url' },
-    { id: 2, url: 'http://world.com' },
-  ];
 
   return (
     <Msg
@@ -70,13 +67,12 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
             {links && (
               <Box alignItems="start" display="inline-flex">
                 :{' '}
-                {fakeLinkList
-                  .filter((item) => filter.config.links?.includes(item.id))
+                {linksFuture
+                  ?.filter((item) => filter.config.links?.includes(item.id))
                   .map((link) => {
                     return (
-                      <Tooltip title={link.url}>
+                      <Tooltip key={`link-${link.id}`} title={link.url}>
                         <Chip
-                          key={link.id}
                           label={link.url.split('://')[1]}
                           size="small"
                           sx={{

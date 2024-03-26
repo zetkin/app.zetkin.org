@@ -630,6 +630,7 @@ export default makeMessages('feat.smartSearch', {
   },
   misc: {
     noOptions: m('No matching tags'),
+    noOptionsLinks: m('No matching links'),
   },
   operators: {
     add: m('Add'),

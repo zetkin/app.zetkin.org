@@ -1,5 +1,5 @@
-import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 import { useState } from 'react';
+import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
@@ -111,13 +111,6 @@ const EmailClick = ({
     }
   };
 
-  const fakeLinkList = [
-    { id: 1, url: 'http://www.hellomyexample.com/veryLong/long/long/long/url' },
-    { id: 2, url: 'http://world.com' },
-  ];
-
-  console.log(filter, ' filter');
-
   return (
     <FilterForm
       disableSubmit={
@@ -184,20 +177,19 @@ const EmailClick = ({
             linkSelect: (
               <>
                 {''}
-                {filter.config.links && (
+                {filter.config.links && linksFuture && (
                   <Box
                     alignItems="center"
                     display="inline-flex"
                     style={{ verticalAlign: 'middle' }}
                   >
                     :
-                    {fakeLinkList
+                    {linksFuture
                       .filter((item) => filter.config.links?.includes(item.id))
                       .map((link) => {
                         return (
-                          <Tooltip title={link.url}>
+                          <Tooltip key={`link-${link.id}`} title={link.url}>
                             <Chip
-                              key={link.id}
                               label={link.url.split('://')[1]}
                               onDelete={() =>
                                 setValueToKey(
@@ -221,17 +213,20 @@ const EmailClick = ({
                       getOptionDisabled={(t) =>
                         filter.config.links?.includes(t.id) || false
                       }
+                      noOptionsText={
+                        <Msg id={messageIds.misc.noOptionsLinks} />
+                      }
                       onChange={(_, value) =>
                         setValueToKey(
                           'links',
                           value.map((link) => link.id)
                         )
                       }
-                      options={fakeLinkList.map((link) => ({
+                      options={linksFuture.map((link) => ({
                         id: link.id,
                         title: link.url.split('://')[1],
                       }))}
-                      value={fakeLinkList
+                      value={linksFuture
                         .filter(
                           (t) => filter.config.links?.includes(t.id) || false
                         )

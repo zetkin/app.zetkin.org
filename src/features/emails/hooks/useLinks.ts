@@ -22,9 +22,9 @@ export default function useLinks(
     });
   } else {
     return {
+      data: [],
       error: null,
       isLoading: false,
-      data: [],
     };
   }
 }

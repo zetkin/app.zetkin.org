@@ -1,13 +1,14 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { EmailFrame } from './types';
 import { EmailStats } from './hooks/useEmailStats';
-import { ZetkinEmail, ZetkinLink } from 'utils/types/zetkin';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
   remoteItem,
   RemoteList,
   remoteList,
 } from 'utils/storeUtils';
+import { ZetkinEmail, ZetkinLink } from 'utils/types/zetkin';
 
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
