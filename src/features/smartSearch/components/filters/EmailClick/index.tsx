@@ -210,8 +210,8 @@ const EmailClick = ({
                         );
                       })}
                     <StyledItemSelect
-                      getOptionDisabled={(t) =>
-                        filter.config.links?.includes(t.id) || false
+                      getOptionDisabled={(link) =>
+                        filter.config.links?.includes(link.id) || false
                       }
                       noOptionsText={
                         <Msg id={messageIds.misc.noOptionsLinks} />
@@ -228,7 +228,8 @@ const EmailClick = ({
                       }))}
                       value={linksFuture
                         .filter(
-                          (t) => filter.config.links?.includes(t.id) || false
+                          (link) =>
+                            filter.config.links?.includes(link.id) || false
                         )
                         .map((item) => {
                           return { id: item.id, title: item.url };
