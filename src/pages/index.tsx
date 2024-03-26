@@ -95,7 +95,8 @@ export default function Home(): JSX.Element {
           <Msg id={messageIds.home.welcome} />
         </Typography>
         {/* TODO: remove stuff below */}
-        {(process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_APP_ENV === 'development') && (
+        {(process.env.NODE_ENV === 'development' ||
+          process.env.NEXT_PUBLIC_APP_ENV === 'development') && (
           <div>
             <Typography variant="body1">This page is for devs only!</Typography>
             <ButtonGroup
