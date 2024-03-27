@@ -40,6 +40,28 @@ describe('prepareSurveyApiSubmission()', () => {
     ]);
   });
 
+  it('formats a select widget response', () => {
+    formData['123.options'] = '234';
+    const submission = prepareSurveyApiSubmission(formData);
+    expect(submission.responses).toMatchObject([
+      {
+        options: [234],
+        question_id: 123,
+      },
+    ]);
+  });
+
+  it('formats empty select response', () => {
+    formData['123.options'] = '';
+    const submission = prepareSurveyApiSubmission(formData);
+    expect(submission.responses).toMatchObject([
+      {
+        options: [],
+        question_id: 123,
+      },
+    ]);
+  });
+
   it('signs as the logged-in account when a logged-in user requests to sign as themself', () => {
     formData['sig'] = 'user';
     const submission = prepareSurveyApiSubmission(formData, true);
