@@ -29,7 +29,7 @@ export default function prepareSurveyApiSubmission(
 
     if (type === 'options' && typeof value === 'string') {
       responses.push({
-        options: [parseInt(value, 10)],
+        options: value == '' ? [] : [parseInt(value, 10)],
         question_id: parseInt(id, 10),
       });
     }

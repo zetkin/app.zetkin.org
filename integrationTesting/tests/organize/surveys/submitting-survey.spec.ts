@@ -6,6 +6,9 @@ import RosaLuxemburg from '../../../mockData/orgs/KPD/people/RosaLuxemburg';
 import RosaLuxemburgUser from '../../../mockData/users/RosaLuxemburgUser';
 import test from '../../../fixtures/next';
 import {
+  ELEMENT_TYPE,
+  RESPONSE_TYPE,
+  ZetkinSurveyApiSubmission,
   ZetkinSurveyQuestionResponse,
   ZetkinSurveySignaturePayload,
 } from 'utils/types/zetkin';
@@ -175,6 +178,86 @@ test.describe('User submitting a survey', () => {
       signature: ZetkinSurveySignaturePayload;
     };
     expect(data.signature).toBe(null);
+  });
+
+  test('submits untouched "select" widget as []', async ({
+    appUri,
+    moxy,
+    page,
+  }) => {
+    // Include a select-widget element in the survey
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`,
+      'get',
+      {
+        ...KPDMembershipSurvey,
+        elements: [
+          ...KPDMembershipSurvey.elements,
+          {
+            hidden: false,
+            id: 3,
+            question: {
+              description: '',
+              options: [
+                {
+                  id: 1,
+                  text: 'Yes',
+                },
+                {
+                  id: 2,
+                  text: 'No',
+                },
+              ],
+              question: 'Is this a select box?',
+              required: false,
+              response_config: {
+                widget_type: 'select',
+              },
+              response_type: RESPONSE_TYPE.OPTIONS,
+            },
+            type: ELEMENT_TYPE.QUESTION,
+          },
+        ],
+      }
+    );
+
+    // Respond when survey is submitted
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
+      'post',
+      {
+        timestamp: '1857-05-07T13:37:00.000Z',
+      }
+    );
+
+    // Navigate to survey and submit without touching the select widget (or any)
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+    await page.click('input[name="sig"][value="anonymous"]');
+    await page.click('data-testid=Survey-acceptTerms');
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'POST'),
+      await page.click('data-testid=Survey-submit'),
+    ]);
+
+    const log = moxy.log(`/v1${apiPostPath}`);
+    expect(log.length).toBe(1);
+
+    const data = log[0].data as ZetkinSurveyApiSubmission;
+    expect(data).toEqual({
+      responses: [
+        {
+          question_id: 2,
+          response: '',
+        },
+        {
+          options: [],
+          question_id: 3,
+        },
+      ],
+      signature: null,
+    });
   });
 
   test('preserves inputs on error', async ({ appUri, page }) => {
