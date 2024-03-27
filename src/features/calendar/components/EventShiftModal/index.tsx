@@ -426,7 +426,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             value={eventDescription}
           />
 
-          <Typography margin={1} variant="subtitle2">
+          <Typography margin={1} variant="body2">
             {messages.eventShiftModal.participation().toUpperCase()}
           </Typography>
 
@@ -451,7 +451,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
           />
         </Box>
         <Box bgcolor="background.secondary" flex={1} height="100%" margin={1}>
-          <Typography color="secondary" margin={1} variant="subtitle2">
+          <Typography color="secondary" margin={1} variant="body2">
             {messages.eventShiftModal.event().toUpperCase()}
           </Typography>
           <Box display="flex" flex="space-between">
@@ -486,7 +486,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               />
             </Box>
             <Box flex={1} margin={1}>
-              <Typography color="secondary" variant="subtitle2">
+              <Typography color="secondary" variant="body2">
                 {messages.eventShiftModal.eventDuration().toUpperCase()}
               </Typography>
               <Box>{durationHoursMins(eventStartTime, eventEndTime)}</Box>
@@ -496,7 +496,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             color="secondary"
             marginLeft={1}
             marginTop={1}
-            variant="subtitle2"
+            variant="body2"
           >
             {messages.eventShiftModal.shiftsHeader().toUpperCase()}
           </Typography>
@@ -558,7 +558,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                   />
                 </Box>
                 <Box flex={2} margin={1} marginLeft={2}>
-                  <Typography color="secondary" variant="subtitle2">
+                  <Typography color="secondary" variant="body2">
                     {messages.eventShiftModal.shiftDuration().toUpperCase()}
                   </Typography>
                   {durationHoursMins(
