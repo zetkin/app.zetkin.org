@@ -13,7 +13,7 @@ import {
 test.describe('User submitting a survey', () => {
   const apiPostPath = `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`;
 
-  test.beforeEach(async ({ appUri, login, moxy, page }) => {
+  test.beforeEach(async ({ login, moxy }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`,
       'get',
@@ -30,17 +30,17 @@ test.describe('User submitting a survey', () => {
         role: null,
       },
     ]);
-
-    await page.goto(
-      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
   });
 
   test.afterEach(({ moxy }) => {
     moxy.teardown();
   });
 
-  test('submits responses', async ({ moxy, page }) => {
+  test('submits responses', async ({ appUri, moxy, page }) => {
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
@@ -77,7 +77,11 @@ test.describe('User submitting a survey', () => {
     ]);
   });
 
-  test('submits email signature', async ({ moxy, page }) => {
+  test('submits email signature', async ({ appUri, moxy, page }) => {
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
@@ -111,7 +115,11 @@ test.describe('User submitting a survey', () => {
     });
   });
 
-  test('submits user signature', async ({ moxy, page }) => {
+  test('submits user signature', async ({ appUri, moxy, page }) => {
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
@@ -138,7 +146,11 @@ test.describe('User submitting a survey', () => {
     expect(data.signature).toBe('user');
   });
 
-  test('submits anonymous signature', async ({ moxy, page }) => {
+  test('submits anonymous signature', async ({ appUri, moxy, page }) => {
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
       'post',
@@ -165,7 +177,11 @@ test.describe('User submitting a survey', () => {
     expect(data.signature).toBe(null);
   });
 
-  test('preserves inputs on error', async ({ page }) => {
+  test('preserves inputs on error', async ({ appUri, page }) => {
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
     await page.click('input[name="1.options"][value="1"]');
     await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.click('input[name="sig"][value="anonymous"]');
