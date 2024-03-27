@@ -51,10 +51,12 @@ communicate with the Zetkin API running on our public development server.
 
 ### Docker
 
-As an alternative, you can also run the provided Docker Compose setup.
+As **an alternative to the normal development setup**,
+you can also run the provided Docker Compose setup.
 
 * Requires Docker Compose v2+
 * Backend development: Run local production (after building, it starts very fast)
+  and access the organizations directly on http://localhost:3000/organizations/.
 
   ```
   $ docker compose -f dev.yml --profile static up
