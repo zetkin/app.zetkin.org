@@ -2,7 +2,6 @@ import '../styles.css';
 
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { AppProps } from 'next/app';
-import createStore from 'core/store';
 import CssBaseline from '@mui/material/CssBaseline';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -13,6 +12,7 @@ import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import { Provider as ReduxProvider } from 'react-redux';
 import Router from 'next/router';
+import { store } from 'core/store';
 import { useEffect } from 'react';
 import {
   StyledEngineProvider,
@@ -60,8 +60,6 @@ declare global {
     __reactRendered: boolean;
   }
 }
-
-const store = createStore();
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const { lang, messages, ...restProps } = pageProps;

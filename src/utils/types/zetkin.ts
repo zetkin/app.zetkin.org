@@ -135,6 +135,7 @@ export interface ZetkinUser {
   lang: string | null;
   last_name: string;
   username: string;
+  email: string;
 }
 
 export interface ZetkinOrganization {
@@ -281,6 +282,17 @@ export type ZetkinSurveyElement =
   | ZetkinSurveyTextElement
   | ZetkinSurveyQuestionElement;
 
+export type ZetkinSurveyFormStatus =
+  | 'editing'
+  | 'invalid'
+  | 'error'
+  | 'submitted';
+
+export type ZetkinSurveyApiSubmission = {
+  responses: ZetkinSurveyQuestionResponse[];
+  signature: ZetkinSurveySignaturePayload;
+};
+
 export enum RESPONSE_TYPE {
   OPTIONS = 'options',
   TEXT = 'text',
@@ -321,7 +333,7 @@ export interface ZetkinSurveyOption {
   text: string;
 }
 
-type ZetkinSurveyQuestionResponse =
+export type ZetkinSurveyQuestionResponse =
   | {
       question_id: number;
       response: string;
@@ -329,6 +341,17 @@ type ZetkinSurveyQuestionResponse =
   | {
       options: number[];
       question_id: number;
+    };
+
+export type ZetkinSurveySignatureType = 'email' | 'user' | 'anonymous';
+
+export type ZetkinSurveySignaturePayload =
+  | null
+  | 'user'
+  | {
+      email: string;
+      first_name: string;
+      last_name: string;
     };
 
 export interface ZetkinSurveySubmission {
