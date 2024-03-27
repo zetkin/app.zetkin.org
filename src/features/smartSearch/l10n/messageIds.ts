@@ -25,8 +25,8 @@ export default makeMessages('feat.smartSearch', {
     call_history: m('Based on their call history'),
     campaign_participation: m('Based on their event participation'),
     email_blacklist: m('People who are blocked from emails'),
-    email_click: m('People who have clicked the specified email link'),
-    email_history: m('People who have been sent the specified email'),
+    email_click: m('Based on their interaction with links in email'),
+    email_history: m('Based on their email history'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
@@ -153,46 +153,46 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     emailClick: {
-      clickSelect: {
-        clicked: m('clicked'),
-        notClicked: m('not clicked'),
-      },
       inputString: m<{
         addRemoveSelect: ReactElement;
-        clickSelect: ReactElement;
-        emailSelect: ReactElement;
-        linkSelect: ReactElement;
-        linkTypeSelect: ReactElement;
-        listSelect: ReactElement;
-        projectSelect: ReactElement;
+        emailScopeSelect: ReactElement;
+        emailSelect: ReactElement | null;
+        linkScopeSelect: ReactElement;
+        linkSelect: ReactElement | null;
+        operatorSelect: ReactElement;
+        projectSelect: ReactElement | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who have {clickSelect} {linkTypeSelect} in {listSelect} {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
+        '{addRemoveSelect} people who have {operatorSelect} {linkScopeSelect} in {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
       ),
-      linkSelect: {
+      linkScopeSelect: {
         anyFollowingLinks: m('any of the following links'),
         anyLink: m('any link'),
+      },
+      operatorSelect: {
+        clicked: m('clicked'),
+        notClicked: m('not clicked'),
       },
     },
     emailHistory: {
       inputString: m<{
         addRemoveSelect: ReactElement;
-        emailSelect: ReactElement;
-        listSelect: ReactElement;
-        projectSelect: ReactElement;
-        statusSelect: ReactElement;
+        emailScopeSelect: ReactElement;
+        emailSelect: ReactElement | null;
+        operatorSelect: ReactElement;
+        projectSelect: ReactElement | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who have {statusSelect} {listSelect} {emailSelect} {projectSelect} {timeFrame}'
+        '{addRemoveSelect} people who have {operatorSelect} {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame}'
       ),
-      statusSelect: {
+      operatorSelect: {
         notOpened: m('not opened'),
         notSent: m('not been sent'),
         opened: m('opened'),
         sent: m('been sent'),
       },
     },
-    emailListSelect: {
+    emailScopeSelect: {
       any: m('any email'),
       fromProject: m('any email from project'),
       specificEmail: m('the specific email'),

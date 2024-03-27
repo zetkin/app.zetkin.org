@@ -2,8 +2,8 @@ import { MenuItem } from '@mui/material';
 import { useState } from 'react';
 
 import convertToMessageKey from './convertToMessageKey';
+import { EMAIL_SELECT_SCOPE } from '../EmailClick';
 import FilterForm from '../../FilterForm';
-import { LIST_SELECT } from '../EmailClick';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -22,7 +22,7 @@ import {
 
 const localMessageIds = messageIds.filters.emailHistory;
 
-enum EMAIL_STATUS_OP {
+enum EMAIL_HISTORY_OP {
   OPENED = 'opened',
   NOT_OPENED = 'not_opened',
   NOT_SENT = 'not_sent',
@@ -54,12 +54,12 @@ const EmailHistory = ({
     useSmartSearchFilter<EmailHistoryFilterConfig>(initialFilter, {
       operator: 'sent',
     });
-  const [listSelectType, setListSelectType] = useState<LIST_SELECT>(
+  const [emailSelectScope, setEmailSelectScope] = useState<EMAIL_SELECT_SCOPE>(
     filter.config.campaign
-      ? LIST_SELECT.FROM_PROJECT
+      ? EMAIL_SELECT_SCOPE.FROM_PROJECT
       : filter.config.email
-      ? LIST_SELECT.SPECIFIC_EMAIL
-      : LIST_SELECT.ANY
+      ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
+      : EMAIL_SELECT_SCOPE.ANY
   );
 
   const setValueToKey = (
@@ -96,9 +96,10 @@ const EmailHistory = ({
   return (
     <FilterForm
       disableSubmit={
-        (listSelectType === LIST_SELECT.FROM_PROJECT &&
+        (emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT &&
           !filter.config.campaign) ||
-        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL && !filter.config.email)
+        (emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
+          !filter.config.email)
       }
       onCancel={onCancel}
       onSubmit={(e) => {
@@ -121,72 +122,46 @@ const EmailHistory = ({
                 ))}
               </StyledSelect>
             ),
-            emailSelect: (
-              <>
-                {''}
-                {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
-                  <StyledSelect
-                    onChange={(e) =>
-                      setValueToKey('email', parseInt(e.target.value))
-                    }
-                    value={filter.config.email || ''}
-                  >
-                    {emailsFuture?.map((email) => (
-                      <MenuItem key={`email-${email.id}`} value={email.id}>
-                        {`"${email.title}"`}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
-                )}
-              </>
-            ),
-            listSelect: (
+            emailScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
                   removeKey(['email', 'campaign']);
-                  setListSelectType(e.target.value as LIST_SELECT);
+                  setEmailSelectScope(e.target.value as EMAIL_SELECT_SCOPE);
                 }}
-                value={listSelectType}
+                value={emailSelectScope}
               >
-                {Object.values(LIST_SELECT).map((item) => (
+                {Object.values(EMAIL_SELECT_SCOPE).map((item) => (
                   <MenuItem key={item} value={item}>
-                    <Msg id={messageIds.filters.emailListSelect[item]} />
+                    <Msg id={messageIds.filters.emailScopeSelect[item]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
-            projectSelect: (
-              <>
-                {''}
-                {listSelectType === LIST_SELECT.FROM_PROJECT && (
-                  <StyledSelect
-                    onChange={(e) =>
-                      setValueToKey('campaign', parseInt(e.target.value))
-                    }
-                    value={filter.config.campaign || ''}
-                  >
-                    {projectsFuture?.map((project) => (
-                      <MenuItem
-                        key={`proejct-${project.id}`}
-                        value={project.id}
-                      >
-                        {`"${project.title}"`}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
-                )}
-              </>
-            ),
-            statusSelect: (
+            emailSelect:
+              emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL ? (
+                <StyledSelect
+                  onChange={(e) =>
+                    setValueToKey('email', parseInt(e.target.value))
+                  }
+                  value={filter.config.email || ''}
+                >
+                  {emailsFuture?.map((email) => (
+                    <MenuItem key={`email-${email.id}`} value={email.id}>
+                      {`"${email.title}"`}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : null,
+            operatorSelect: (
               <StyledSelect
                 onChange={(e) => setValueToKey('operator', e.target.value)}
                 value={filter.config.operator}
               >
-                {Object.values(EMAIL_STATUS_OP).map((status) => (
+                {Object.values(EMAIL_HISTORY_OP).map((status) => (
                   <MenuItem key={status} value={status}>
                     <Msg
                       id={
-                        localMessageIds.statusSelect[
+                        localMessageIds.operatorSelect[
                           convertToMessageKey(status) as
                             | 'notSent'
                             | 'opened'
@@ -199,6 +174,21 @@ const EmailHistory = ({
                 ))}
               </StyledSelect>
             ),
+            projectSelect:
+              emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT ? (
+                <StyledSelect
+                  onChange={(e) =>
+                    setValueToKey('campaign', parseInt(e.target.value))
+                  }
+                  value={filter.config.campaign || ''}
+                >
+                  {projectsFuture?.map((project) => (
+                    <MenuItem key={`proejct-${project.id}`} value={project.id}>
+                      {`"${project.title}"`}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : null,
             timeFrame: (
               <TimeFrame
                 filterConfig={{

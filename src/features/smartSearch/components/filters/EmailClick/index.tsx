@@ -26,11 +26,11 @@ enum EMAIL_CLICK_OP {
   CLICKED = 'clicked',
   NOT_CLICKED = 'not_clicked',
 }
-export enum LINK_TYPE_SELECT {
+export enum LINK_SELECT_SCOPE {
   ANY_LINK = 'anyLink',
   FOLLOWING_LINKS = 'anyFollowingLinks',
 }
-export enum LIST_SELECT {
+export enum EMAIL_SELECT_SCOPE {
   ANY = 'any',
   FROM_PROJECT = 'fromProject',
   SPECIFIC_EMAIL = 'specificEmail',
@@ -63,12 +63,12 @@ const EmailClick = ({
     });
   const linksFuture = useLinks(orgId, filter.config?.email).data;
 
-  const [listSelectType, setListSelectType] = useState<LIST_SELECT>(
+  const [emailSelectScope, setEmailSelectScope] = useState<EMAIL_SELECT_SCOPE>(
     filter.config.campaign
-      ? LIST_SELECT.FROM_PROJECT
+      ? EMAIL_SELECT_SCOPE.FROM_PROJECT
       : filter.config.email
-      ? LIST_SELECT.SPECIFIC_EMAIL
-      : LIST_SELECT.ANY
+      ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
+      : EMAIL_SELECT_SCOPE.ANY
   );
 
   const handleTimeFrameChange = (range: {
@@ -101,11 +101,11 @@ const EmailClick = ({
       ...copied,
     });
   };
-  const handleLinkSelect = (value: string) => {
-    if (value === LINK_TYPE_SELECT.FOLLOWING_LINKS) {
+  const handleLinkScopeSelect = (value: string) => {
+    if (value === LINK_SELECT_SCOPE.FOLLOWING_LINKS) {
       removeKey(['campaign']);
       setValueToKey('links', []);
-      setListSelectType(LIST_SELECT.SPECIFIC_EMAIL);
+      setEmailSelectScope(EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL);
     } else {
       removeKey(['campaign', 'links']);
     }
@@ -114,11 +114,11 @@ const EmailClick = ({
   return (
     <FilterForm
       disableSubmit={
-        (listSelectType === LIST_SELECT.FROM_PROJECT &&
+        (emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT &&
           !filter.config.campaign) ||
-        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL &&
+        (emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
           !filter.config.email) ||
-        (listSelectType === LIST_SELECT.SPECIFIC_EMAIL &&
+        (emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
           filter.config.links?.length === 0)
       }
       onCancel={onCancel}
@@ -142,167 +142,150 @@ const EmailClick = ({
                 ))}
               </StyledSelect>
             ),
-            clickSelect: (
-              <StyledSelect
-                onChange={(e) => setValueToKey('operator', e.target.value)}
-                value={filter.config.operator}
-              >
-                <MenuItem value={EMAIL_CLICK_OP.CLICKED}>
-                  <Msg id={localMessageIds.clickSelect.clicked} />
-                </MenuItem>
-                <MenuItem value={EMAIL_CLICK_OP.NOT_CLICKED}>
-                  <Msg id={localMessageIds.clickSelect.notClicked} />
-                </MenuItem>
-              </StyledSelect>
-            ),
-            emailSelect: (
-              <>
-                {''}
-                {listSelectType === LIST_SELECT.SPECIFIC_EMAIL && (
-                  <StyledSelect
-                    onChange={(e) =>
-                      setValueToKey('email', parseInt(e.target.value))
-                    }
-                    value={filter.config.email || ''}
-                  >
-                    {emailsFuture?.map((email) => (
-                      <MenuItem key={`email-${email.id}`} value={email.id}>
-                        {`"${email.title}"`}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
-                )}
-              </>
-            ),
-            linkSelect: (
-              <>
-                {''}
-                {filter.config.links && linksFuture && (
-                  <Box
-                    alignItems="center"
-                    display="inline-flex"
-                    style={{ verticalAlign: 'middle' }}
-                  >
-                    :
-                    {linksFuture
-                      .filter((item) => filter.config.links?.includes(item.id))
-                      .map((link) => {
-                        return (
-                          <Tooltip key={`link-${link.id}`} title={link.url}>
-                            <Chip
-                              label={link.url.split('://')[1]}
-                              onDelete={() =>
-                                setValueToKey(
-                                  'links',
-                                  filter.config.links!.filter(
-                                    (linkId) => linkId !== link.id
-                                  )
-                                )
-                              }
-                              sx={{
-                                margin: '3px',
-                                maxWidth: '200px',
-                                textOverflow: 'ellipsis',
-                              }}
-                              variant="outlined"
-                            />
-                          </Tooltip>
-                        );
-                      })}
-                    <StyledItemSelect
-                      getOptionDisabled={(link) =>
-                        filter.config.links?.includes(link.id) || false
-                      }
-                      noOptionsText={
-                        <Msg id={messageIds.misc.noOptionsLinks} />
-                      }
-                      onChange={(_, value) =>
-                        setValueToKey(
-                          'links',
-                          value.map((link) => link.id)
-                        )
-                      }
-                      options={linksFuture.map((link) => ({
-                        id: link.id,
-                        title: link.url.split('://')[1],
-                      }))}
-                      value={linksFuture
-                        .filter(
-                          (link) =>
-                            filter.config.links?.includes(link.id) || false
-                        )
-                        .map((item) => {
-                          return { id: item.id, title: item.url };
-                        })}
-                    />
-                  </Box>
-                )}
-              </>
-            ),
-            linkTypeSelect: (
-              <StyledSelect
-                onChange={(e) => handleLinkSelect(e.target.value)}
-                value={
-                  filter.config.links
-                    ? LINK_TYPE_SELECT.FOLLOWING_LINKS
-                    : LINK_TYPE_SELECT.ANY_LINK
-                }
-              >
-                {Object.values(LINK_TYPE_SELECT).map((item) => (
-                  <MenuItem key={item} value={item}>
-                    <Msg id={localMessageIds.linkSelect[item]} />
-                  </MenuItem>
-                ))}
-              </StyledSelect>
-            ),
-            listSelect: (
+            emailScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
                   removeKey(['email', 'campaign', 'links']);
-                  setListSelectType(e.target.value as LIST_SELECT);
+                  setEmailSelectScope(e.target.value as EMAIL_SELECT_SCOPE);
                 }}
-                value={listSelectType}
+                value={emailSelectScope}
               >
-                {Object.values(LIST_SELECT).map((item) => {
+                {Object.values(EMAIL_SELECT_SCOPE).map((item) => {
                   if (
                     //when user choose 'any of the following links' in 'the specific email'
                     //some options should not be visible
-                    item !== LIST_SELECT.SPECIFIC_EMAIL &&
+                    item !== EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
                     filter.config.links
                   ) {
                     return null;
                   } else {
                     return (
                       <MenuItem key={item} value={item}>
-                        <Msg id={messageIds.filters.emailListSelect[item]} />
+                        <Msg id={messageIds.filters.emailScopeSelect[item]} />
                       </MenuItem>
                     );
                   }
                 })}
               </StyledSelect>
             ),
-            projectSelect: (
-              <>
-                {''}
-                {listSelectType === LIST_SELECT.FROM_PROJECT && (
-                  <StyledSelect
-                    onChange={(e) =>
-                      setValueToKey('campaign', parseInt(e.target.value))
-                    }
-                    value={filter.config.campaign || ''}
-                  >
-                    {projectsFuture?.map((project) => (
-                      <MenuItem
-                        key={`proejct-${project.id}`}
-                        value={project.id}
-                      >
-                        {`"${project.title}"`}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
-                )}
-              </>
+            emailSelect:
+              emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL ? (
+                <StyledSelect
+                  onChange={(e) =>
+                    setValueToKey('email', parseInt(e.target.value))
+                  }
+                  value={filter.config.email || ''}
+                >
+                  {emailsFuture?.map((email) => (
+                    <MenuItem key={`email-${email.id}`} value={email.id}>
+                      {`"${email.title}"`}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : null,
+            linkScopeSelect: (
+              <StyledSelect
+                onChange={(e) => handleLinkScopeSelect(e.target.value)}
+                value={
+                  filter.config.links
+                    ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
+                    : LINK_SELECT_SCOPE.ANY_LINK
+                }
+              >
+                {Object.values(LINK_SELECT_SCOPE).map((item) => (
+                  <MenuItem key={item} value={item}>
+                    <Msg id={localMessageIds.linkScopeSelect[item]} />
+                  </MenuItem>
+                ))}
+              </StyledSelect>
             ),
+            linkSelect:
+              filter.config.links && linksFuture ? (
+                <Box
+                  alignItems="center"
+                  display="inline-flex"
+                  style={{ verticalAlign: 'middle' }}
+                >
+                  :
+                  {linksFuture
+                    .filter((item) => filter.config.links?.includes(item.id))
+                    .map((link) => {
+                      return (
+                        <Tooltip key={`link-${link.id}`} title={link.url}>
+                          <Chip
+                            label={link.url.split('://')[1]}
+                            onDelete={() =>
+                              setValueToKey(
+                                'links',
+                                filter.config.links!.filter(
+                                  (linkId) => linkId !== link.id
+                                )
+                              )
+                            }
+                            sx={{
+                              margin: '3px',
+                              maxWidth: '200px',
+                              textOverflow: 'ellipsis',
+                            }}
+                            variant="outlined"
+                          />
+                        </Tooltip>
+                      );
+                    })}
+                  <StyledItemSelect
+                    getOptionDisabled={(link) =>
+                      filter.config.links?.includes(link.id) || false
+                    }
+                    noOptionsText={<Msg id={messageIds.misc.noOptionsLinks} />}
+                    onChange={(_, value) =>
+                      setValueToKey(
+                        'links',
+                        value.map((link) => link.id)
+                      )
+                    }
+                    options={linksFuture.map((link) => ({
+                      id: link.id,
+                      title: link.url.split('://')[1],
+                    }))}
+                    value={linksFuture
+                      .filter(
+                        (link) =>
+                          filter.config.links?.includes(link.id) || false
+                      )
+                      .map((item) => {
+                        return { id: item.id, title: item.url };
+                      })}
+                  />
+                </Box>
+              ) : null,
+            operatorSelect: (
+              <StyledSelect
+                onChange={(e) => setValueToKey('operator', e.target.value)}
+                value={filter.config.operator}
+              >
+                <MenuItem value={EMAIL_CLICK_OP.CLICKED}>
+                  <Msg id={localMessageIds.operatorSelect.clicked} />
+                </MenuItem>
+                <MenuItem value={EMAIL_CLICK_OP.NOT_CLICKED}>
+                  <Msg id={localMessageIds.operatorSelect.notClicked} />
+                </MenuItem>
+              </StyledSelect>
+            ),
+            projectSelect:
+              emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT ? (
+                <StyledSelect
+                  onChange={(e) =>
+                    setValueToKey('campaign', parseInt(e.target.value))
+                  }
+                  value={filter.config.campaign || ''}
+                >
+                  {projectsFuture?.map((project) => (
+                    <MenuItem key={`proejct-${project.id}`} value={project.id}>
+                      {`"${project.title}"`}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : null,
             timeFrame: (
               <TimeFrame
                 filterConfig={{

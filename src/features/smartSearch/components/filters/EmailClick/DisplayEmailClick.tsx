@@ -10,12 +10,12 @@ import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
 import useLinks from 'features/emails/hooks/useLinks';
 import { useNumericRouteParams } from 'core/hooks';
+import { EMAIL_SELECT_SCOPE, LINK_SELECT_SCOPE } from '.';
 import {
   EmailClickFilterConfig,
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-import { LINK_TYPE_SELECT, LIST_SELECT } from '.';
 
 const localMessageIds = messageIds.filters.emailClick;
 
@@ -46,79 +46,68 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        clickSelect: (
+        emailScopeSelect: (
           <UnderlinedMsg
             id={
-              localMessageIds.clickSelect[
+              messageIds.filters.emailScopeSelect[
+                filter.config.campaign
+                  ? EMAIL_SELECT_SCOPE.FROM_PROJECT
+                  : filter.config.email
+                  ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
+                  : EMAIL_SELECT_SCOPE.ANY
+              ]
+            }
+          />
+        ),
+        emailSelect: emailId ? (
+          <UnderlinedText text={`"${emailTitle}"`} />
+        ) : null,
+        linkScopeSelect: (
+          <UnderlinedMsg
+            id={
+              localMessageIds.linkScopeSelect[
+                filter.config.links
+                  ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
+                  : LINK_SELECT_SCOPE.ANY_LINK
+              ]
+            }
+          />
+        ),
+        linkSelect: links ? (
+          <Box alignItems="start" display="inline-flex">
+            :{' '}
+            {linksFuture
+              ?.filter((item) => filter.config.links?.includes(item.id))
+              .map((link) => {
+                return (
+                  <Tooltip key={`link-${link.id}`} title={link.url}>
+                    <Chip
+                      label={link.url.split('://')[1]}
+                      size="small"
+                      sx={{
+                        margin: '3px',
+                        maxWidth: '200px',
+                        textOverflow: 'ellipsis',
+                      }}
+                      variant="outlined"
+                    />
+                  </Tooltip>
+                );
+              })}
+          </Box>
+        ) : null,
+        operatorSelect: (
+          <UnderlinedMsg
+            id={
+              localMessageIds.operatorSelect[
                 operator === 'clicked' ? 'clicked' : 'notClicked'
               ]
             }
           />
         ),
-        emailSelect: (
-          <>
-            {''}
-            {emailId && <UnderlinedText text={`"${emailTitle}"`} />}
-          </>
-        ),
-        linkSelect: (
-          <>
-            {''}
-            {links && (
-              <Box alignItems="start" display="inline-flex">
-                :{' '}
-                {linksFuture
-                  ?.filter((item) => filter.config.links?.includes(item.id))
-                  .map((link) => {
-                    return (
-                      <Tooltip key={`link-${link.id}`} title={link.url}>
-                        <Chip
-                          label={link.url.split('://')[1]}
-                          size="small"
-                          sx={{
-                            margin: '3px',
-                            maxWidth: '200px',
-                            textOverflow: 'ellipsis',
-                          }}
-                          variant="outlined"
-                        />
-                      </Tooltip>
-                    );
-                  })}
-              </Box>
-            )}
-          </>
-        ),
-        linkTypeSelect: (
-          <UnderlinedMsg
-            id={
-              localMessageIds.linkSelect[
-                filter.config.links
-                  ? LINK_TYPE_SELECT.FOLLOWING_LINKS
-                  : LINK_TYPE_SELECT.ANY_LINK
-              ]
-            }
-          />
-        ),
-        listSelect: (
-          <UnderlinedMsg
-            id={
-              messageIds.filters.emailListSelect[
-                filter.config.campaign
-                  ? LIST_SELECT.FROM_PROJECT
-                  : filter.config.email
-                  ? LIST_SELECT.SPECIFIC_EMAIL
-                  : LIST_SELECT.ANY
-              ]
-            }
-          />
-        ),
-        projectSelect: (
-          <>
-            {''}
-            {projectId && <UnderlinedText text={`"${projectTitle}"`} />}
-          </>
-        ),
+        projectSelect: projectId ? (
+          <UnderlinedText text={`"${projectTitle}"`} />
+        ) : null,
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />

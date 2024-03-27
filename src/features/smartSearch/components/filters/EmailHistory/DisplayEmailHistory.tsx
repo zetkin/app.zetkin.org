@@ -1,7 +1,7 @@
 import convertToMessageKey from './convertToMessageKey';
 import DisplayTimeFrame from '../DisplayTimeFrame';
+import { EMAIL_SELECT_SCOPE } from '../EmailClick';
 import { getTimeFrameWithConfig } from '../../utils';
-import { LIST_SELECT } from '../EmailClick';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
@@ -45,35 +45,26 @@ const DisplayEmailHistory = ({
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        emailSelect: (
-          <>
-            {''}
-            {emailId && <UnderlinedText text={`"${emailTitle}"`} />}
-          </>
-        ),
-        listSelect: (
+        emailScopeSelect: (
           <UnderlinedMsg
             id={
-              messageIds.filters.emailListSelect[
+              messageIds.filters.emailScopeSelect[
                 filter.config.campaign
-                  ? LIST_SELECT.FROM_PROJECT
+                  ? EMAIL_SELECT_SCOPE.FROM_PROJECT
                   : filter.config.email
-                  ? LIST_SELECT.SPECIFIC_EMAIL
-                  : LIST_SELECT.ANY
+                  ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
+                  : EMAIL_SELECT_SCOPE.ANY
               ]
             }
           />
         ),
-        projectSelect: (
-          <>
-            {''}
-            {projectId && <UnderlinedText text={`"${projectTitle}"`} />}
-          </>
-        ),
-        statusSelect: (
+        emailSelect: emailId ? (
+          <UnderlinedText text={`"${emailTitle}"`} />
+        ) : null,
+        operatorSelect: (
           <UnderlinedMsg
             id={
-              localMessageIds.statusSelect[
+              localMessageIds.operatorSelect[
                 convertToMessageKey(operator) as
                   | 'notSent'
                   | 'opened'
@@ -83,6 +74,9 @@ const DisplayEmailHistory = ({
             }
           />
         ),
+        projectSelect: projectId ? (
+          <UnderlinedText text={`"${projectTitle}"`} />
+        ) : null,
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
