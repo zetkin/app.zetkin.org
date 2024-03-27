@@ -49,6 +49,36 @@ $ yarn devserver
 You should now be able to access the app on http://localhost:3000. It will
 communicate with the Zetkin API running on our public development server.
 
+### Docker
+
+As **an alternative to the normal development setup**,
+you can also run the provided Docker Compose setup.
+
+* Requires Docker Compose v2+
+* Backend development: Run local production (after building, it starts very fast)
+  and access the organizations directly on http://localhost:3000/organizations/.
+
+  ```
+  $ docker compose -f dev.yml --profile static up
+  ```
+
+* Frontend development: Similar to the normal yarn setup documented here.
+
+  ```
+  $ docker compose -f dev.yml --profile dev up
+  ```
+
+* Linting: You can run lint commands from within a container, too:
+
+  ```
+  $ # Default: Run .githooks/precommit
+  $ docker compose -f dev.yml run lint
+  $ # Run prettier, checking for errors
+  $ docker compose -f dev.yml run lint npx prettier . --check
+  $ # Run prettier in write-mode
+  $ docker compose -f dev.yml run lint npx prettier . --write
+  ```
+
 ## Development server login credentials
 
 You can log in using the dummy user accounts to access dummy data from the
