@@ -13,6 +13,7 @@ export default makeMessages('feat.smartSearch', {
   },
   filterCategories: {
     campaignActivity: m('Project activity'),
+    email: m('Email'),
     misc: m('Misc'),
     peopleDatabase: m('People'),
     phoneBanking: m('Phone banking'),
@@ -23,6 +24,9 @@ export default makeMessages('feat.smartSearch', {
     call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
     campaign_participation: m('Based on their event participation'),
+    email_blacklist: m('People who are blocked from emails'),
+    email_click: m('Based on their interaction with links in email'),
+    email_history: m('Based on their email history'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
@@ -135,6 +139,63 @@ export default makeMessages('feat.smartSearch', {
           'location "{location}"'
         ),
       },
+    },
+    emailBlacklist: {
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        reasonSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who will not receive email because {reasonSelect}'
+      ),
+      reasonSelect: {
+        any: m('of any reason'),
+        unsubOrg: m('they have unsubscribed'),
+      },
+    },
+    emailClick: {
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        emailScopeSelect: ReactElement;
+        emailSelect: ReactElement | null;
+        linkScopeSelect: ReactElement;
+        linkSelect: ReactElement | null;
+        operatorSelect: ReactElement;
+        projectSelect: ReactElement | null;
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have {operatorSelect} {linkScopeSelect} in {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
+      ),
+      linkScopeSelect: {
+        anyFollowingLinks: m('any of the following links'),
+        anyLink: m('any link'),
+      },
+      operatorSelect: {
+        clicked: m('clicked'),
+        notClicked: m('not clicked'),
+      },
+    },
+    emailHistory: {
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        emailScopeSelect: ReactElement;
+        emailSelect: ReactElement | null;
+        operatorSelect: ReactElement;
+        projectSelect: ReactElement | null;
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have {operatorSelect} {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame}'
+      ),
+      operatorSelect: {
+        notOpened: m('not opened'),
+        notSent: m('not been sent'),
+        opened: m('opened'),
+        sent: m('been sent'),
+      },
+    },
+    emailScopeSelect: {
+      any: m('any email'),
+      fromProject: m('any email from project'),
+      specificEmail: m('the specific email'),
     },
     mostActive: {
       examples: {
@@ -569,6 +630,7 @@ export default makeMessages('feat.smartSearch', {
   },
   misc: {
     noOptions: m('No matching tags'),
+    noOptionsLinks: m('No matching links'),
   },
   operators: {
     add: m('Add'),
