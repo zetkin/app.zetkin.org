@@ -6,7 +6,7 @@ export default function useCreateType(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const addType = (title: string) => {
+  return (title: string) => {
     dispatch(typeAdd([orgId, { title }]));
     apiClient
       .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, { title })
@@ -14,6 +14,4 @@ export default function useCreateType(orgId: number) {
         dispatch(typeAdded(event));
       });
   };
-
-  return { addType };
 }
