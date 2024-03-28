@@ -15,7 +15,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useState } from 'react';
 
 import EventModalTypeAutocomplete from '../EventShiftModal/EventModalTypeAutocomplete';
-
 import LocationModal from 'features/events/components/LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
@@ -283,8 +282,13 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
                         setTypeTitle(messages.type.uncategorized());
                       }
                     }}
-                    onChangeNewOption={(newValueId) => setTypeId(newValueId)}
-                    onCreateType={(title) => createType(title)}
+                    onChangeNewOption={(newValue) => {
+                      setTypeId(newValue.id);
+                      setTypeTitle(newValue.title);
+                    }}
+                    onCreateType={async (title) => {
+                      await createType(title);
+                    }}
                     types={eventTypes}
                     value={{ id: typeId, title: typeTitle }}
                   />

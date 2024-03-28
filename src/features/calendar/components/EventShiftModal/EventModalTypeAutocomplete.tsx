@@ -4,13 +4,13 @@ import { Autocomplete, Box, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 
 type EventModalTypeAutocompleteProps = {
   label?: string;
   onChange: (newValue: ZetkinEvent['activity'] | null) => void;
-  onChangeNewOption: (newId: number) => void;
+  onChangeNewOption: (newValue: { id: number; title: string }) => void;
   onCreateType: (title: string) => void;
   types: ZetkinActivity[];
   value: ZetkinEvent['activity'] | null;
@@ -38,8 +38,10 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
     //In here, when the length of the type changes,
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
-      const newId = types.find((item) => item.title === createdType)!.id;
-      onChangeNewOption(newId!);
+      const newType = types.find((item) => item.title === createdType);
+      if (newType) {
+        onChangeNewOption(newType);
+      }
     }
   }, [types.length]);
 
@@ -93,12 +95,12 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
         return inputValue ? filteredResult : options;
       }}
       fullWidth
-      getOptionLabel={(option) => option.title!}
+      getOptionLabel={(option) => option.title}
       isOptionEqualToValue={(option, value) => option.title === value.title}
       onChange={(_, value) => {
         if (value.id == 'CREATE') {
-          onCreateType(value.title!);
-          setCreatedType(value.title!);
+          onCreateType(value.title);
+          setCreatedType(value.title);
           return;
         }
         onChange(
@@ -106,7 +108,7 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
             ? null
             : {
                 id: value.id,
-                title: value.title!,
+                title: value.title,
               }
         );
       }}
@@ -136,13 +138,16 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
             {option.id == 'UNCATEGORIZED' && (
               <li {...props}>
                 <Clear />
-                {messages.type.uncategorized()}
+                <Msg id={messageIds.type.uncategorized} />
               </li>
             )}
             {option.id == 'CREATE' && (
               <li {...props}>
                 <Add />
-                {messages.type.createType({ type: option.title! })}
+                <Msg
+                  id={messageIds.type.createType}
+                  values={{ type: option.title }}
+                />
               </li>
             )}
           </Box>

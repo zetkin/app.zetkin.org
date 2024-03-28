@@ -6,12 +6,12 @@ export default function useCreateType(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  return (title: string) => {
+  return async (title: string) => {
     dispatch(typeAdd([orgId, { title }]));
-    apiClient
-      .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, { title })
-      .then((event) => {
-        dispatch(typeAdded(event));
-      });
+    const activity = await apiClient.post<ZetkinActivity>(
+      `/api/orgs/${orgId}/activities`,
+      { title }
+    );
+    dispatch(typeAdded(activity));
   };
 }
