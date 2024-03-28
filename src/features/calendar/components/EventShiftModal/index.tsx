@@ -1,7 +1,6 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MapIcon from '@mui/icons-material/Map';
 import { TimeField } from '@mui/x-date-pickers-pro';
-import { useStore } from 'react-redux';
 import { Add, Close } from '@mui/icons-material';
 import {
   Autocomplete,
@@ -15,22 +14,20 @@ import {
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useState } from 'react';
 
-import { eventCreated } from 'features/events/store';
 import EventModalTypeAutocomplete from '../EventShiftModal/EventModalTypeAutocomplete';
 
 import LocationModal from 'features/events/components/LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import useCreateType from 'features/events/hooks/useCreateType';
-import { useEnv } from 'core/hooks';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
 import { useMessages } from 'core/i18n';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import useParallelEvents from 'features/events/hooks/useParallelEvents';
-import { ZetkinEventPostBody } from 'features/events/hooks/useEventMutations';
+import { ZetkinLocation } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface EventShiftModalProps {
   dates: [Date, Date];
@@ -44,9 +41,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   );
 
   const messages = useMessages(messageIds);
-  const { campId, orgId } = useNumericRouteParams();
-  const env = useEnv();
-  const store = useStore();
+  const { orgId } = useNumericRouteParams();
 
   const locations = useEventLocations(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
@@ -93,6 +88,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   );
   const eventTypesFuture = useEventTypes(orgId);
   const createType = useCreateType(orgId);
+  const createEvent = useCreateEvent(orgId);
 
   const updateShifts = (noShifts: number) => {
     const newShifts: Dayjs[] = [];
@@ -237,10 +233,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
       .set('hour', endTime.hour() + 2)
       .set('minute', endTime.minute());
 
-    const event = await env.apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
-      campId
-        ? `/api/orgs/${orgId}/campaigns/${campId}/actions`
-        : `/api/orgs/${orgId}/actions`,
+    createEvent(
       {
         activity_id: typeId >= 0 ? typeId : null,
         end_time: endDate.toISOString(),
@@ -251,10 +244,9 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         start_time: startDate.toISOString(),
         title: eventTitle,
         url: eventLink,
-      }
+      },
+      false
     );
-
-    store.dispatch(eventCreated(event));
   }
 
   return (

@@ -30,7 +30,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const router = useRouter();
   const { cancelEvent, deleteEvent, restoreEvent, setPublished } =
     useEventMutations(orgId, event.id);
-  const { duplicateEvent } = useDuplicateEvent(orgId, event.id);
+  const duplicateEvent = useDuplicateEvent(orgId, event.id);
 
   const published =
     !!event.published && new Date(event.published) <= new Date();

@@ -46,7 +46,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
-  const { createEvent } = useCreateEvent(orgId);
+  const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
     campId
