@@ -32,7 +32,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 interface EventShiftModalProps {
   dates: [Date, Date];
   open: boolean;
-  close: (eventShiftDate?: Date) => void;
+  close: () => void;
 }
 
 const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
@@ -216,7 +216,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         publish
       );
     });
-    close(eventDate.toDate());
+    close();
   }
 
   async function createShift(

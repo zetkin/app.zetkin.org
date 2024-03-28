@@ -291,13 +291,10 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                       </Menu>
                     )}
                     <EventShiftModal
-                      close={(shiftEventDate?: Date) => {
+                      close={() => {
                         setShiftModalOpen(false);
                         setPendingEvent(null);
                         setCreating(false);
-                        if (shiftEventDate) {
-                          onClickDay(shiftEventDate);
-                        }
                       }}
                       dates={pendingEvent}
                       open={shiftModalOpen}
