@@ -46,7 +46,7 @@ export default function useEventsFromDateRange(
           .slice(0, 10)}`
       )
       .then((events) => {
-        dispatch(eventRangeLoaded([dateRange, events]));
+        dispatch(eventRangeLoaded(events));
       });
 
     // This will suspend React from rendering this branch
