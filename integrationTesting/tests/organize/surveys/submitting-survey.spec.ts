@@ -54,6 +54,8 @@ test.describe('User submitting a survey', () => {
 
     await page.click('input[name="1.options"]');
     await page.fill('[name="2.text"]', 'Topple capitalism');
+    await page.click('input[name="3.options"][value="1"]');
+    await page.click('input[name="3.options"][value="2"]');
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
@@ -67,7 +69,7 @@ test.describe('User submitting a survey', () => {
     const data = request.data as {
       responses: ZetkinSurveyQuestionResponse[];
     };
-    expect(data.responses.length).toBe(2);
+    expect(data.responses.length).toBe(3);
     expect(data.responses).toMatchObject([
       {
         options: [1],
@@ -76,6 +78,10 @@ test.describe('User submitting a survey', () => {
       {
         question_id: KPDMembershipSurvey.elements[1].id,
         response: 'Topple capitalism',
+      },
+      {
+        options: [1, 2],
+        question_id: KPDMembershipSurvey.elements[2].id,
       },
     ]);
   });

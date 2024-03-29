@@ -48,6 +48,30 @@ const KPDMembershipSurvey: ZetkinSurveyExtended = {
       },
       type: ELEMENT_TYPE.QUESTION,
     },
+    {
+      hidden: false,
+      id: 3,
+      question: {
+        description: '',
+        options: [
+          {
+            id: 1,
+            text: 'Flyers',
+          },
+          {
+            id: 2,
+            text: 'Phone banking',
+          },
+        ],
+        question: 'How do you want to help?',
+        required: false,
+        response_config: {
+          widget_type: 'checkbox',
+        },
+        response_type: RESPONSE_TYPE.OPTIONS,
+      },
+      type: ELEMENT_TYPE.QUESTION,
+    },
   ],
   expires: null,
   id: 1,
