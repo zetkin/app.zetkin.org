@@ -21,11 +21,11 @@ export async function submit(
     user = null;
   }
 
-  const data = Object.fromEntries([...formData.entries()]);
-  const submission = prepareSurveyApiSubmission(data, !!user);
+  const { orgId, surveyId } = Object.fromEntries([...formData.entries()]);
+  const submission = prepareSurveyApiSubmission(formData, !!user);
   try {
     await apiClient.post(
-      `/api/orgs/${data.orgId}/surveys/${data.surveyId}/submissions`,
+      `/api/orgs/${orgId}/surveys/${surveyId}/submissions`,
       submission
     );
   } catch (e) {

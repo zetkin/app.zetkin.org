@@ -1,3 +1,4 @@
+import uniq from 'lodash/uniq';
 import {
   ZetkinSurveyApiSubmission,
   ZetkinSurveyQuestionResponse,
@@ -5,25 +6,25 @@ import {
 } from 'utils/types/zetkin';
 
 export default function prepareSurveyApiSubmission(
-  formData: Record<string, unknown>,
+  formData: FormData,
   isLoggedIn?: boolean
 ): ZetkinSurveyApiSubmission {
   const responses: ZetkinSurveyQuestionResponse[] = [];
-  const responseEntries = Object.fromEntries(
-    Object.entries(formData).filter(([name]) =>
-      name.match(/^[0-9]+\.(options|text)$/)
-    )
-  );
+  const keys = uniq([...formData.keys()]);
 
-  for (const name in responseEntries) {
-    const value = responseEntries[name];
+  for (const name of keys) {
+    if (!name.match(/^[0-9]+\.(options|text)$/)) {
+      continue;
+    }
+
+    const value = formData.getAll(name);
     const fields = name.split('.');
     const [id, type] = fields;
 
     if (type == 'text') {
       responses.push({
         question_id: parseInt(id),
-        response: value as string,
+        response: value[0] as string,
       });
     }
 
@@ -36,7 +37,9 @@ export default function prepareSurveyApiSubmission(
 
     if (type === 'options' && Array.isArray(value)) {
       responses.push({
-        options: value.map((o) => parseInt(o, 10)),
+        options: value
+          .filter((o) => o !== '')
+          .map((o) => parseInt(o.toString(), 10)),
         question_id: parseInt(id, 10),
       });
     }
@@ -44,15 +47,16 @@ export default function prepareSurveyApiSubmission(
 
   let signature: ZetkinSurveySignaturePayload = null;
 
-  if (formData.sig === 'user' && isLoggedIn) {
+  const sig = formData.get('sig') as string | null;
+  if (sig === 'user' && isLoggedIn) {
     signature = 'user';
   }
 
-  if (formData.sig == 'email') {
+  if (sig == 'email') {
     signature = {
-      email: formData['sig.email'] as string,
-      first_name: formData['sig.first_name'] as string,
-      last_name: formData['sig.last_name'] as string,
+      email: formData.get('sig.email') as string,
+      first_name: formData.get('sig.first_name') as string,
+      last_name: formData.get('sig.last_name') as string,
     };
   }
 

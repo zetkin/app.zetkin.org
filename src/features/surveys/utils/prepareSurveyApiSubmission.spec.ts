@@ -1,14 +1,14 @@
 import prepareSurveyApiSubmission from './prepareSurveyApiSubmission';
 
 describe('prepareSurveyApiSubmission()', () => {
-  let formData: NodeJS.Dict<string | string[]>;
+  let formData: FormData;
 
   beforeEach(() => {
-    formData = {};
+    formData = new FormData();
   });
 
   it('formats a text response', () => {
-    formData['123.text'] = 'Lorem ipsum dolor sit amet';
+    formData.set('123.text', 'Lorem ipsum dolor sit amet');
     const submission = prepareSurveyApiSubmission(formData);
     expect(submission.responses).toMatchObject([
       {
@@ -19,7 +19,7 @@ describe('prepareSurveyApiSubmission()', () => {
   });
 
   it('formats a radio button response', () => {
-    formData['123.options'] = '456';
+    formData.set('123.options', '456');
     const submission = prepareSurveyApiSubmission(formData);
     expect(submission.responses).toMatchObject([
       {
@@ -30,7 +30,8 @@ describe('prepareSurveyApiSubmission()', () => {
   });
 
   it('formats a checkbox response', () => {
-    formData['123.options'] = ['456', '789'];
+    formData.set('123.options', '456');
+    formData.append('123.options', '789');
     const submission = prepareSurveyApiSubmission(formData);
     expect(submission.responses).toMatchObject([
       {
@@ -41,7 +42,7 @@ describe('prepareSurveyApiSubmission()', () => {
   });
 
   it('formats a select widget response', () => {
-    formData['123.options'] = '234';
+    formData.set('123.options', '234');
     const submission = prepareSurveyApiSubmission(formData);
     expect(submission.responses).toMatchObject([
       {
@@ -52,7 +53,7 @@ describe('prepareSurveyApiSubmission()', () => {
   });
 
   it('formats empty select response', () => {
-    formData['123.options'] = '';
+    formData.set('123.options', '');
     const submission = prepareSurveyApiSubmission(formData);
     expect(submission.responses).toMatchObject([
       {
@@ -63,16 +64,16 @@ describe('prepareSurveyApiSubmission()', () => {
   });
 
   it('signs as the logged-in account when a logged-in user requests to sign as themself', () => {
-    formData['sig'] = 'user';
+    formData.set('sig', 'user');
     const submission = prepareSurveyApiSubmission(formData, true);
     expect(submission.signature).toEqual('user');
   });
 
   it('signs with custom contact details when a name and email are given', () => {
-    formData['sig'] = 'email';
-    formData['sig.email'] = 'testuser@example.org';
-    formData['sig.first_name'] = 'test';
-    formData['sig.last_name'] = 'user';
+    formData.set('sig', 'email');
+    formData.set('sig.email', 'testuser@example.org');
+    formData.set('sig.first_name', 'test');
+    formData.set('sig.last_name', 'user');
     const submission = prepareSurveyApiSubmission(formData);
     expect(submission.signature).toMatchObject({
       email: 'testuser@example.org',
