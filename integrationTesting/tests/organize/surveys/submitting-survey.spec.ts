@@ -9,6 +9,7 @@ import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
   ZetkinSurveyApiSubmission,
+  ZetkinSurveyQuestionElement,
   ZetkinSurveyQuestionResponse,
   ZetkinSurveySignaturePayload,
 } from 'utils/types/zetkin';
@@ -37,6 +38,84 @@ test.describe('User submitting a survey', () => {
 
   test.afterEach(({ moxy }) => {
     moxy.teardown();
+  });
+
+  test('submits text input', async ({ appUri, moxy, page }) => {
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
+    await page.fill('[name="2.text"]', 'Topple capitalism');
+    await page.click('input[name="sig"][value="anonymous"]');
+    await page.click('data-testid=Survey-acceptTerms');
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'POST'),
+      await page.click('data-testid=Survey-submit'),
+    ]);
+
+    const log = moxy.log(`/v1${apiPostPath}`);
+    expect(log.length).toBe(1);
+    const [request] = log;
+    const data = request.data as {
+      responses: ZetkinSurveyQuestionResponse[];
+    };
+    expect(data.responses).toMatchObject([
+      {
+        question_id: KPDMembershipSurvey.elements[1].id,
+        response: 'Topple capitalism',
+      },
+    ]);
+  });
+
+  test('required text input blocks submission when empty', async ({
+    appUri,
+    moxy,
+    page,
+  }) => {
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`,
+      'get',
+      {
+        ...KPDMembershipSurvey,
+        elements: KPDMembershipSurvey.elements.map((element, i) => {
+          if (i === 1) {
+            return {
+              ...element,
+              question: {
+                ...(element as ZetkinSurveyQuestionElement).question,
+                required: true,
+              },
+            };
+          }
+          return element;
+        }),
+      }
+    );
+
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
+    moxy.setZetkinApiMock(
+      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
+      'post',
+      {
+        timestamp: '1857-05-07T13:37:00.000Z',
+      }
+    );
+
+    const requiredTextInput = await page.locator('[name="2.text"][required]');
+    await requiredTextInput.waitFor({ state: 'visible' });
+
+    await page.click('input[name="sig"][value="anonymous"]');
+    await page.click('data-testid=Survey-acceptTerms');
+    await page.click('data-testid=Survey-submit');
+
+    const validationMessage = await requiredTextInput.evaluate((element) => {
+      const input = element as HTMLTextAreaElement;
+      return input.validationMessage;
+    });
+    expect(validationMessage).toBe('Please fill in this field.');
   });
 
   test('submits responses', async ({ appUri, moxy, page }) => {

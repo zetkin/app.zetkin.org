@@ -30,6 +30,7 @@ const SurveyOptionsQuestion: FC<SurveyOptionsQuestionProps> = ({ element }) => {
             inputProps={{ 'aria-describedby': `description-${element.id}` }}
             multiline={element.question.response_config.multiline}
             name={`${element.id}.text`}
+            required={element.question.required}
             rows={element.question.response_config.multiline ? 4 : 1}
             type="text"
           />
