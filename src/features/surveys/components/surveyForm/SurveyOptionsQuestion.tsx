@@ -1,7 +1,9 @@
+import messageIds from 'features/surveys/l10n/messageIds';
 import SurveyContainer from './SurveyContainer';
 import SurveyOption from './SurveyOption';
 import SurveyQuestionDescription from './SurveyQuestionDescription';
 import SurveySubheading from './SurveySubheading';
+import { useMessages } from 'core/i18n';
 import {
   Box,
   Checkbox,
@@ -25,6 +27,7 @@ export type OptionsQuestionProps = {
 };
 
 const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
+  const messages = useMessages(messageIds);
   const [dropdownValue, setDropdownValue] = useState('');
   const handleDropdownChange = useCallback((event: SelectChangeEvent) => {
     setDropdownValue(event.target.value);
@@ -91,7 +94,11 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 <Box>
                   <FormLabel id={`label-${element.id}`}>
                     <SurveySubheading>
-                      {element.question.question}
+                      <>
+                        {element.question.question}
+                        {element.question.required &&
+                          ` (${messages.surveyForm.required()})`}
+                      </>
                     </SurveySubheading>
                   </FormLabel>
                   {element.question.description && (
@@ -105,7 +112,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 {element.question.options!.map((option: ZetkinSurveyOption) => (
                   <SurveyOption
                     key={option.id}
-                    control={<Radio />}
+                    control={<Radio required={element.question.required} />}
                     label={option.text}
                     value={option.id}
                   />
@@ -123,7 +130,11 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
               <Box display="flex" flexDirection="column">
                 <FormLabel id={`label-${element.id}`}>
                   <SurveySubheading>
-                    {element.question.question}
+                    <>
+                      {element.question.question}
+                      {element.question.required &&
+                        ` (${messages.surveyForm.required()})`}
+                    </>
                   </SurveySubheading>
                 </FormLabel>
                 {element.question.description && (
@@ -136,6 +147,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 aria-labelledby={`label-${element.id}`}
                 name={`${element.id}.options`}
                 onChange={handleDropdownChange}
+                required={element.question.required}
                 value={dropdownValue}
               >
                 {element.question.options!.map((option: ZetkinSurveyOption) => (

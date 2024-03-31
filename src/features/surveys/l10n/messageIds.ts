@@ -167,6 +167,7 @@ export default makeMessages('feat.surveys', {
       link: m('https://zetkin.org/privacy'),
       text: m('Click to read the full Zetkin Privacy Policy'),
     },
+    required: m('required'),
     sign: {
       anonymous: m('Sign anonymously'),
       nameAndEmail: m('Sign with name and e-mail'),
