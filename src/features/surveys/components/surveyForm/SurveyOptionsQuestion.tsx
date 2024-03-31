@@ -144,6 +144,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 )}
               </Box>
               <Select
+                aria-describedby={`description-${element.id}`}
                 aria-labelledby={`label-${element.id}`}
                 name={`${element.id}.options`}
                 onChange={handleDropdownChange}
