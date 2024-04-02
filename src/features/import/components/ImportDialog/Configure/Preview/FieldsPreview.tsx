@@ -13,7 +13,7 @@ interface FieldsPreviewProps {
 }
 const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
   const { orgId } = useNumericRouteParams();
-  const { columnOptions } = useColumn(orgId);
+  const { fieldOptions: columnOptions } = useColumn(orgId);
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
 
@@ -29,7 +29,7 @@ const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
   }
 
   let fieldColumnHeader = '';
-  columnOptions.forEach((columnOp) => {
+  columnOptions.flat().forEach((columnOp) => {
     if (columnOp.value === `field:${fieldKey}`) {
       fieldColumnHeader = columnOp.label;
     }

@@ -22,6 +22,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   dot: {
     backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
+    flexShrink: 0,
     height: '10px',
     marginLeft: '0.5em',
     marginRight: '0.5em',

@@ -22,7 +22,7 @@ const SurveySubmitDateConfig = ({
 }: SurveySubmitDateConfigProps) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const surveys = useSurveys(orgId);
+  const surveys = useSurveys(orgId).data || [];
 
   return !surveys || surveys.length > 0 ? (
     <FormControl sx={{ width: 300 }}>

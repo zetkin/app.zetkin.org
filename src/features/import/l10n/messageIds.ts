@@ -32,12 +32,14 @@ export default makeMessages('feat.import', {
         ),
       },
       orgs: {
+        guess: m('Guess organisations'),
         header: m('Map values to organizations'),
         organizations: m('Organization'),
         status: m('Status'),
       },
       tags: {
         empty: m('Empty'),
+        guess: m('Guess tags'),
         header: m('Map values to tags'),
         numberOfRows: m<{ numRows: number }>(
           '{numRows, plural, =1 {1 row} other {# rows}}'
@@ -128,6 +130,11 @@ export default makeMessages('feat.import', {
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
       tags: m('Tags'),
+      zetkinFieldGroups: {
+        fields: m('Fields'),
+        id: m('ID'),
+        other: m('Other'),
+      },
       zetkinHeader: m('Zetkin'),
     },
     preview: {

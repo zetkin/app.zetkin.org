@@ -40,7 +40,7 @@ const SurveySubmission = ({
   filter: initialFilter,
 }: SurveySubmissionProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const surveys = useSurveys(orgId);
+  const surveys = useSurveys(orgId).data || [];
 
   const [submittable, setSubmittable] = useState(false);
 

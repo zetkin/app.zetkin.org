@@ -192,6 +192,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                   <JourneyInstanceSidebar
                     journeyInstance={{
                       assignees,
+                      journey,
                       next_milestone: null,
                       subjects,
                       tags,
