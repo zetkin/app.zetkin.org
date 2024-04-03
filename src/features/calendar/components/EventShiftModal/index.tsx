@@ -40,8 +40,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   );
 
   const messages = useMessages(messageIds);
-  const { orgId } = useNumericRouteParams();
-
+  const { orgId, campId } = useNumericRouteParams();
   const locations = useEventLocations(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
@@ -235,6 +234,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     createEvent(
       {
         activity_id: typeId >= 0 ? typeId : null,
+        campaign_id: campId,
         end_time: endDate.toISOString(),
         info_text: eventDescription,
         location_id: locationId,
