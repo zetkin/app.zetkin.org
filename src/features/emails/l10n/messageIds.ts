@@ -39,9 +39,11 @@ export default makeMessages('feat.emails', {
       tabs: {
         content: m('Content'),
         preview: {
+          confirmation: m('A preview has been sent to your email address.'),
           instructions: m(
             'Here you can send this email to yourself to preview what it will look like for the recipients. '
           ),
+          okButton: m('OK!'),
           sendButton: m('Send'),
           sendTo: m('The email will be sent to this address:'),
           title: m('Preview'),
