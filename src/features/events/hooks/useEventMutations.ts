@@ -83,7 +83,6 @@ export default function useEventMutations(
     apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
       .then((event) => {
-        dispatch(eventLoaded(event));
         dispatch(eventUpdated(event));
       });
   };
