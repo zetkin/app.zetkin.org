@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.emails', {
   blocked: {
@@ -166,5 +166,16 @@ export default makeMessages('feat.emails', {
     subtitle: m('Use Smart Search to define the recipients of this email.'),
     title: m('Targets'),
     viewButton: m('View target group'),
+  },
+  unsubscribePage: {
+    consent: m('I understand'),
+    h: m<{ org: string }>('Unsubscribe from {org}'),
+    info: m(
+      'After you unsubscribe you will no longer receive mass email from this organization. You may still receive reminders and other email sent specifically to you as part of work you do in the organization.'
+    ),
+    unsubButton: m('Unsubscribe me'),
+  },
+  varDefaults: {
+    target: m('reader'),
   },
 });

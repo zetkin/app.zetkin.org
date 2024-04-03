@@ -1,12 +1,12 @@
 import '../styles.css';
 
 import { AppProps } from 'next/app';
-import createStore from 'core/store';
 import CssBaseline from '@mui/material/CssBaseline';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import Router from 'next/router';
+import { store } from 'core/store';
 import { Theme } from '@mui/material/styles';
 import { useEffect } from 'react';
 
@@ -45,8 +45,6 @@ declare global {
     __reactRendered: boolean;
   }
 }
-
-const store = createStore();
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const { lang, messages, ...restProps } = pageProps;
