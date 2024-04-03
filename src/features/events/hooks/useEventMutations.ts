@@ -1,5 +1,5 @@
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { eventDeleted, eventLoaded, eventUpdate, eventUpdated } from '../store';
+import { eventDeleted, eventUpdate, eventUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 export type ZetkinEventPatchBody = Partial<
