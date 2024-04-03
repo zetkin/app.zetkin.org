@@ -6,7 +6,7 @@ import { useApiClient, useNumericRouteParams } from 'core/hooks';
 export default function useSendTestEmail() {
   const apiClient = useApiClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [isPostSend, setIsPostSend] = useState(false);
+  const [emailWasSent, setEmailWasSent] = useState(false);
 
   // TODO: Get these as props instead
   const user = useUser();
@@ -18,10 +18,10 @@ export default function useSendTestEmail() {
   const { emailId, orgId } = useNumericRouteParams();
 
   return {
+    emailWasSent: emailWasSent,
     isLoading,
-    isPostSend,
     reset: () => {
-      setIsPostSend(false);
+      setEmailWasSent(false);
     },
     sendTestEmail: async () => {
       setIsLoading(true);
@@ -36,7 +36,7 @@ export default function useSendTestEmail() {
       });
 
       setIsLoading(false);
-      setIsPostSend(true);
+      setEmailWasSent(true);
     },
   };
 }

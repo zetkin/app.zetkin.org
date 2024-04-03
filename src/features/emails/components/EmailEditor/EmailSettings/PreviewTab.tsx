@@ -14,7 +14,7 @@ import useSendTestEmail from 'features/emails/hooks/useSendTestEmail';
 
 const PreviewTab: FC = () => {
   const user = useCurrentUser();
-  const { isLoading, isPostSend, reset, sendTestEmail } = useSendTestEmail();
+  const { emailWasSent, isLoading, reset, sendTestEmail } = useSendTestEmail();
 
   if (!user) {
     return null;
@@ -29,7 +29,7 @@ const PreviewTab: FC = () => {
         <Msg id={messageIds.editor.settings.tabs.preview.sendTo} />
       </Typography>
       <Typography>{user.email}</Typography>
-      {isPostSend && (
+      {emailWasSent && (
         <Alert color="success">
           <Typography mb={2}>
             <Msg id={messageIds.editor.settings.tabs.preview.confirmation} />
@@ -44,7 +44,7 @@ const PreviewTab: FC = () => {
           </Button>
         </Alert>
       )}
-      {!isPostSend && (
+      {!emailWasSent && (
         <Button
           onClick={() => {
             sendTestEmail();
