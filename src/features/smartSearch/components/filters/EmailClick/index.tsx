@@ -32,11 +32,6 @@ export enum LINK_SELECT_SCOPE {
   LINK_IN_PROJECT = 'linkInEmailFromProject',
   FOLLOWING_LINKS = 'anyFollowingLinks',
 }
-export enum EMAIL_SELECT_SCOPE {
-  ANY = 'any',
-  FROM_PROJECT = 'fromProject',
-  SPECIFIC_EMAIL = 'specificEmail',
-}
 
 interface EmailClickProps {
   filter:

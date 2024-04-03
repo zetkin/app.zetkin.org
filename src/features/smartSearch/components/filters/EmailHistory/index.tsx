@@ -1,7 +1,6 @@
 import { MenuItem } from '@mui/material';
 import { useState } from 'react';
 
-import { EMAIL_SELECT_SCOPE } from '../EmailClick';
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -21,6 +20,11 @@ import {
 
 const localMessageIds = messageIds.filters.emailHistory;
 
+export enum EMAIL_SELECT_SCOPE {
+  ANY = 'any',
+  FROM_PROJECT = 'fromProject',
+  SPECIFIC_EMAIL = 'specificEmail',
+}
 export const MESSAGE_KEY_BY_OP = {
   not_opened: 'notOpened',
   not_sent: 'notSent',
