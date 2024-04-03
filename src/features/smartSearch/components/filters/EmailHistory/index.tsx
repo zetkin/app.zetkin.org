@@ -1,7 +1,6 @@
 import { MenuItem } from '@mui/material';
 import { useState } from 'react';
 
-import convertToMessageKey from './convertToMessageKey';
 import { EMAIL_SELECT_SCOPE } from '../EmailClick';
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
@@ -22,12 +21,12 @@ import {
 
 const localMessageIds = messageIds.filters.emailHistory;
 
-enum EMAIL_HISTORY_OP {
-  OPENED = 'opened',
-  NOT_OPENED = 'not_opened',
-  NOT_SENT = 'not_sent',
-  SENT = 'sent',
-}
+export const MESSAGE_KEY_BY_OP = {
+  not_opened: 'notOpened',
+  not_sent: 'notSent',
+  opened: 'opened',
+  sent: 'sent',
+} as const;
 
 interface EmailHistoryProps {
   filter:
@@ -83,7 +82,8 @@ const EmailHistory = ({
     after?: string;
     before?: string;
   }) => {
-    /* eslint-disable-next-line */
+    //This is for extracting after and before
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { after, before, ...rest } = filter.config;
 
     setConfig({
@@ -132,7 +132,7 @@ const EmailHistory = ({
               >
                 {Object.values(EMAIL_SELECT_SCOPE).map((item) => (
                   <MenuItem key={item} value={item}>
-                    <Msg id={messageIds.filters.emailScopeSelect[item]} />
+                    <Msg id={localMessageIds.emailScopeSelect[item]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -140,6 +140,7 @@ const EmailHistory = ({
             emailSelect:
               emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL ? (
                 <StyledSelect
+                  minWidth="10rem"
                   onChange={(e) =>
                     setValueToKey('email', parseInt(e.target.value))
                   }
@@ -157,19 +158,9 @@ const EmailHistory = ({
                 onChange={(e) => setValueToKey('operator', e.target.value)}
                 value={filter.config.operator}
               >
-                {Object.values(EMAIL_HISTORY_OP).map((status) => (
-                  <MenuItem key={status} value={status}>
-                    <Msg
-                      id={
-                        localMessageIds.operatorSelect[
-                          convertToMessageKey(status) as
-                            | 'notSent'
-                            | 'opened'
-                            | 'sent'
-                            | 'notOpened'
-                        ]
-                      }
-                    />
+                {Object.values(MESSAGE_KEY_BY_OP).map((operator) => (
+                  <MenuItem key={operator} value={operator}>
+                    <Msg id={localMessageIds.operatorSelect[operator]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -177,6 +168,7 @@ const EmailHistory = ({
             projectSelect:
               emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT ? (
                 <StyledSelect
+                  minWidth="10rem"
                   onChange={(e) =>
                     setValueToKey('campaign', parseInt(e.target.value))
                   }

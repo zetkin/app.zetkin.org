@@ -2,15 +2,15 @@ import { Box, Chip, Tooltip } from '@mui/material';
 
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
+import { LINK_SELECT_SCOPE } from '.';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
-import useLinks from 'features/emails/hooks/useLinks';
 import { useNumericRouteParams } from 'core/hooks';
-import { EMAIL_SELECT_SCOPE, LINK_SELECT_SCOPE } from '.';
 import {
   EmailClickFilterConfig,
   OPERATION,
@@ -30,7 +30,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
 
   const { config } = filter;
   const { operator, campaign: projectId, email: emailId, links } = config;
-  const linksFuture = useLinks(orgId, filter.config?.email).data;
+  const linkList = useEmailLinks(orgId, filter.config?.email).data;
 
   const op = filter.op || OPERATION.ADD;
   const emailTitle = emails?.find((item) => item.id === emailId)?.title;
@@ -46,19 +46,6 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        emailScopeSelect: (
-          <UnderlinedMsg
-            id={
-              messageIds.filters.emailScopeSelect[
-                filter.config.campaign
-                  ? EMAIL_SELECT_SCOPE.FROM_PROJECT
-                  : filter.config.email
-                  ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
-                  : EMAIL_SELECT_SCOPE.ANY
-              ]
-            }
-          />
-        ),
         emailSelect: emailId ? (
           <UnderlinedText text={`"${emailTitle}"`} />
         ) : null,
@@ -66,7 +53,11 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
           <UnderlinedMsg
             id={
               localMessageIds.linkScopeSelect[
-                filter.config.links
+                filter.config.campaign
+                  ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
+                  : filter.config.email && !filter.config.links
+                  ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
+                  : filter.config.email && filter.config.links
                   ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
                   : LINK_SELECT_SCOPE.ANY_LINK
               ]
@@ -76,7 +67,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
         linkSelect: links ? (
           <Box alignItems="start" display="inline-flex">
             :{' '}
-            {linksFuture
+            {linkList
               ?.filter((item) => filter.config.links?.includes(item.id))
               .map((link) => {
                 return (

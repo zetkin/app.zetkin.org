@@ -1,7 +1,7 @@
-import convertToMessageKey from './convertToMessageKey';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { EMAIL_SELECT_SCOPE } from '../EmailClick';
 import { getTimeFrameWithConfig } from '../../utils';
+import { MESSAGE_KEY_BY_OP } from '.';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
@@ -48,7 +48,7 @@ const DisplayEmailHistory = ({
         emailScopeSelect: (
           <UnderlinedMsg
             id={
-              messageIds.filters.emailScopeSelect[
+              localMessageIds.emailScopeSelect[
                 filter.config.campaign
                   ? EMAIL_SELECT_SCOPE.FROM_PROJECT
                   : filter.config.email
@@ -63,15 +63,7 @@ const DisplayEmailHistory = ({
         ) : null,
         operatorSelect: (
           <UnderlinedMsg
-            id={
-              localMessageIds.operatorSelect[
-                convertToMessageKey(operator) as
-                  | 'notSent'
-                  | 'opened'
-                  | 'sent'
-                  | 'notSent'
-              ]
-            }
+            id={localMessageIds.operatorSelect[MESSAGE_KEY_BY_OP[operator]]}
           />
         ),
         projectSelect: projectId ? (

@@ -8,8 +8,8 @@ import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
-import useLinks from 'features/emails/hooks/useLinks';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -28,6 +28,8 @@ enum EMAIL_CLICK_OP {
 }
 export enum LINK_SELECT_SCOPE {
   ANY_LINK = 'anyLink',
+  ANY_LINK_IN_EMAIL = 'anyLinkInEmail',
+  LINK_IN_PROJECT = 'linkInEmailFromProject',
   FOLLOWING_LINKS = 'anyFollowingLinks',
 }
 export enum EMAIL_SELECT_SCOPE {
@@ -61,21 +63,24 @@ const EmailClick = ({
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
       operator: 'clicked',
     });
-  const linksFuture = useLinks(orgId, filter.config?.email).data;
+  const linkList = useEmailLinks(orgId, filter.config?.email).data;
 
-  const [emailSelectScope, setEmailSelectScope] = useState<EMAIL_SELECT_SCOPE>(
+  const [linkSelectScope, setLinkSelectScope] = useState<LINK_SELECT_SCOPE>(
     filter.config.campaign
-      ? EMAIL_SELECT_SCOPE.FROM_PROJECT
-      : filter.config.email
-      ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
-      : EMAIL_SELECT_SCOPE.ANY
+      ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
+      : filter.config.email && !filter.config.links
+      ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
+      : filter.config.email && filter.config.links
+      ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
+      : LINK_SELECT_SCOPE.ANY_LINK
   );
 
   const handleTimeFrameChange = (range: {
     after?: string;
     before?: string;
   }) => {
-    /* eslint-disable-next-line */
+    //This is for extracting after and before
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { after, before, ...rest } = filter.config;
 
     setConfig({
@@ -101,25 +106,16 @@ const EmailClick = ({
       ...copied,
     });
   };
-  const handleLinkScopeSelect = (value: string) => {
-    if (value === LINK_SELECT_SCOPE.FOLLOWING_LINKS) {
-      removeKey(['campaign']);
-      setValueToKey('links', []);
-      setEmailSelectScope(EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL);
-    } else {
-      removeKey(['campaign', 'links']);
-    }
-  };
 
   return (
     <FilterForm
       disableSubmit={
-        (emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT &&
+        (linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT &&
           !filter.config.campaign) ||
-        (emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
+        (linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL &&
           !filter.config.email) ||
-        (emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
-          filter.config.links?.length === 0)
+        (linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS &&
+          (!filter.config.email || !filter.config.links?.length))
       }
       onCancel={onCancel}
       onSubmit={(e) => {
@@ -142,35 +138,11 @@ const EmailClick = ({
                 ))}
               </StyledSelect>
             ),
-            emailScopeSelect: (
-              <StyledSelect
-                onChange={(e) => {
-                  removeKey(['email', 'campaign', 'links']);
-                  setEmailSelectScope(e.target.value as EMAIL_SELECT_SCOPE);
-                }}
-                value={emailSelectScope}
-              >
-                {Object.values(EMAIL_SELECT_SCOPE).map((item) => {
-                  if (
-                    //when user choose 'any of the following links' in 'the specific email'
-                    //some options should not be visible
-                    item !== EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
-                    filter.config.links
-                  ) {
-                    return null;
-                  } else {
-                    return (
-                      <MenuItem key={item} value={item}>
-                        <Msg id={messageIds.filters.emailScopeSelect[item]} />
-                      </MenuItem>
-                    );
-                  }
-                })}
-              </StyledSelect>
-            ),
             emailSelect:
-              emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL ? (
+              linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL ||
+              linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS ? (
                 <StyledSelect
+                  minWidth="10rem"
                   onChange={(e) =>
                     setValueToKey('email', parseInt(e.target.value))
                   }
@@ -185,12 +157,11 @@ const EmailClick = ({
               ) : null,
             linkScopeSelect: (
               <StyledSelect
-                onChange={(e) => handleLinkScopeSelect(e.target.value)}
-                value={
-                  filter.config.links
-                    ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
-                    : LINK_SELECT_SCOPE.ANY_LINK
-                }
+                onChange={(e) => {
+                  removeKey(['campaign', 'email', 'links']);
+                  setLinkSelectScope(e.target.value as LINK_SELECT_SCOPE);
+                }}
+                value={linkSelectScope}
               >
                 {Object.values(LINK_SELECT_SCOPE).map((item) => (
                   <MenuItem key={item} value={item}>
@@ -200,14 +171,15 @@ const EmailClick = ({
               </StyledSelect>
             ),
             linkSelect:
-              filter.config.links && linksFuture ? (
+              linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS &&
+              linkList ? (
                 <Box
                   alignItems="center"
                   display="inline-flex"
                   style={{ verticalAlign: 'middle' }}
                 >
                   :
-                  {linksFuture
+                  {linkList
                     .filter((item) => filter.config.links?.includes(item.id))
                     .map((link) => {
                       return (
@@ -243,11 +215,11 @@ const EmailClick = ({
                         value.map((link) => link.id)
                       )
                     }
-                    options={linksFuture.map((link) => ({
+                    options={linkList.map((link) => ({
                       id: link.id,
                       title: link.url.split('://')[1],
                     }))}
-                    value={linksFuture
+                    value={linkList
                       .filter(
                         (link) =>
                           filter.config.links?.includes(link.id) || false
@@ -272,8 +244,9 @@ const EmailClick = ({
               </StyledSelect>
             ),
             projectSelect:
-              emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT ? (
+              linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT ? (
                 <StyledSelect
+                  minWidth="10rem"
                   onChange={(e) =>
                     setValueToKey('campaign', parseInt(e.target.value))
                   }

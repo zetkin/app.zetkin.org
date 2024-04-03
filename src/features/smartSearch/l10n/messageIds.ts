@@ -155,7 +155,6 @@ export default makeMessages('feat.smartSearch', {
     emailClick: {
       inputString: m<{
         addRemoveSelect: ReactElement;
-        emailScopeSelect: ReactElement;
         emailSelect: ReactElement | null;
         linkScopeSelect: ReactElement;
         linkSelect: ReactElement | null;
@@ -163,11 +162,17 @@ export default makeMessages('feat.smartSearch', {
         projectSelect: ReactElement | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who have {operatorSelect} {linkScopeSelect} in {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
+        '{addRemoveSelect} people who have {operatorSelect} {linkScopeSelect} {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
       ),
       linkScopeSelect: {
-        anyFollowingLinks: m('any of the following links'),
-        anyLink: m('any link'),
+        anyFollowingLinks: m(
+          'any of the following links in the specific email'
+        ),
+        anyLink: m('any link in any email'),
+        anyLinkInEmail: m('any link in the specific email'),
+        linkInEmailFromProject: m(
+          'any link in any email from the specific project'
+        ),
       },
       operatorSelect: {
         clicked: m('clicked'),
@@ -175,6 +180,11 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     emailHistory: {
+      emailScopeSelect: {
+        any: m('any email'),
+        fromProject: m('any email from project'),
+        specificEmail: m('the specific email'),
+      },
       inputString: m<{
         addRemoveSelect: ReactElement;
         emailScopeSelect: ReactElement;
@@ -191,11 +201,6 @@ export default makeMessages('feat.smartSearch', {
         opened: m('opened'),
         sent: m('been sent'),
       },
-    },
-    emailScopeSelect: {
-      any: m('any email'),
-      fromProject: m('any email from project'),
-      specificEmail: m('the specific email'),
     },
     mostActive: {
       examples: {

@@ -13,14 +13,14 @@ import { ZetkinEmail, ZetkinLink } from 'utils/types/zetkin';
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
   frameList: RemoteList<EmailFrame>;
-  linkList: RemoteList<ZetkinLink>;
+  linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
   statsById: Record<number, RemoteItem<EmailStats>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
   frameList: remoteList(),
-  linkList: remoteList(),
+  linksByEmailId: {},
   statsById: {},
 };
 
@@ -43,6 +43,21 @@ const emailsSlice = createSlice({
         item.deleted = true;
         state.emailList.isStale = true;
       }
+    },
+    emailLinksLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.linksByEmailId[id] = remoteList<ZetkinLink>();
+      state.linksByEmailId[id].isLoading = true;
+    },
+    emailLinksLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinLink[]]>
+    ) => {
+      const [id, links] = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.linksByEmailId[id] = remoteList<ZetkinLink>(links);
+      state.linksByEmailId[id].loaded = timestamp;
     },
     emailLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -115,17 +130,6 @@ const emailsSlice = createSlice({
       state.frameList.loaded = timestamp;
       state.frameList.items.forEach((item) => (item.loaded = timestamp));
     },
-    linksLoad: (state) => {
-      state.linkList.isLoading = true;
-    },
-    linksLoaded: (state, action: PayloadAction<ZetkinLink[]>) => {
-      const links = action.payload;
-      const timestamp = new Date().toISOString();
-
-      state.linkList = remoteList(links);
-      state.linkList.loaded = timestamp;
-      state.linkList.items.forEach((item) => (item.loaded = timestamp));
-    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const statsItem = state.statsById[id];
@@ -169,6 +173,8 @@ export const {
   emailCreate,
   emailCreated,
   emailDeleted,
+  emailLinksLoad,
+  emailLinksLoaded,
   emailLoad,
   emailLoaded,
   emailUpdate,
@@ -177,8 +183,6 @@ export const {
   emailsLoaded,
   framesLoad,
   framesLoaded,
-  linksLoad,
-  linksLoaded,
   statsLoad,
   statsLoaded,
 } = emailsSlice.actions;
