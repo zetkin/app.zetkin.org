@@ -1,32 +1,14 @@
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import MapIcon from '@mui/icons-material/Map';
 import { TimeField } from '@mui/x-date-pickers-pro';
 import { Add, Close } from '@mui/icons-material';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Dialog,
-  IconButton,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Dialog, IconButton, Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useState } from 'react';
 
-import EventModalTypeAutocomplete from '../EventShiftModal/EventModalTypeAutocomplete';
-import LocationModal from 'features/events/components/LocationModal';
+import EventShiftDetails from './EventShiftDetails';
 import messageIds from 'features/events/l10n/messageIds';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import useCreateType from 'features/events/hooks/useCreateType';
-import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
-import useEventLocations from 'features/events/hooks/useEventLocations';
-import useEventTypes from 'features/events/hooks/useEventTypes';
 import { useMessages } from 'core/i18n';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
-import useParallelEvents from 'features/events/hooks/useParallelEvents';
-import { ZetkinLocation } from 'utils/types/zetkin';
-import ZUIFuture from 'zui/ZUIFuture';
 
 interface EventShiftModalProps {
   dates: [Date, Date];
@@ -41,16 +23,6 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
 
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
-  const locations = useEventLocations(orgId);
-  const { addLocation } = useEventLocationMutations(orgId);
-  const [locationModalOpen, setLocationModalOpen] = useState(false);
-  const options: (
-    | ZetkinLocation
-    | 'CREATE_NEW_LOCATION'
-    | 'NO_PHYSICAL_LOCATION'
-  )[] = locations
-    ? [...locations, 'NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION']
-    : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
   const [typeId, setTypeId] = useState<number>(1);
   const [typeTitle, setTypeTitle] = useState<string>('');
@@ -79,13 +51,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     false,
     false,
   ]);
-  const parallellEvents = useParallelEvents(
-    orgId,
-    eventStartTime.toISOString(),
-    eventEndTime.toISOString()
-  );
-  const eventTypesFuture = useEventTypes(orgId);
-  const createType = useCreateType(orgId);
+
   const createEvent = useCreateEvent(orgId);
 
   const updateShifts = (noShifts: number) => {
@@ -265,187 +231,49 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         />
       </Box>
       <Box display="flex">
-        <Box flex={1} margin={1}>
-          <Box />
-          <Box margin={1}>
-            <ZUIFuture future={eventTypesFuture}>
-              {(eventTypes) => {
-                return (
-                  <EventModalTypeAutocomplete
-                    label={messages.eventShiftModal.type()}
-                    onChange={(newValue) => {
-                      if (newValue) {
-                        setTypeId(newValue.id);
-                        setTypeTitle(newValue.title);
-                      } else {
-                        setTypeId(-1);
-                        setTypeTitle(messages.type.uncategorized());
-                      }
-                    }}
-                    onChangeNewOption={(newValue) => {
-                      setTypeId(newValue.id);
-                      setTypeTitle(newValue.title);
-                    }}
-                    onCreateType={async (title) => {
-                      await createType(title);
-                    }}
-                    types={eventTypes}
-                    value={{ id: typeId, title: typeTitle }}
-                  />
-                );
-              }}
-            </ZUIFuture>
-          </Box>
-          <TextField
-            fullWidth
-            label={messages.eventShiftModal.customTitle()}
-            maxRows={1}
-            onChange={(ev) => setEventTitle(ev.target.value)}
-            sx={{ margin: 1 }}
-            value={eventTitle}
-          />
-          <Box margin={1}>
-            <DatePicker
-              format="DD-MM-YYYY"
-              label={messages.eventOverviewCard.startDate()}
-              onChange={(newValue) => {
-                if (newValue && dayjs(newValue).isValid()) {
-                  setInvalidDate(false);
-                  setEventDate(newValue);
-                } else {
-                  setInvalidDate(true);
-                }
-              }}
-              sx={{ marginBottom: 2 }}
-              value={dayjs(eventDate)}
-            />
-          </Box>
-          <Box alignItems="center" display="flex" margin={1}>
-            <Autocomplete
-              disableClearable
-              fullWidth
-              getOptionLabel={(option) =>
-                option === 'CREATE_NEW_LOCATION'
-                  ? messages.eventOverviewCard.createLocation()
-                  : option === 'NO_PHYSICAL_LOCATION'
-                  ? messages.eventOverviewCard.noLocation()
-                  : option.title
-              }
-              onChange={(ev, option) => {
-                if (option === 'CREATE_NEW_LOCATION') {
-                  setLocationModalOpen(true);
-                  return;
-                }
-                if (option === 'NO_PHYSICAL_LOCATION') {
-                  setLocationId(null);
-                  return;
-                }
-                const location = locations?.find(
-                  (location) => location.id === option.id
-                );
-                if (!location) {
-                  return;
-                }
-                setLocationId(location.id);
-              }}
-              options={options}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={messages.eventOverviewCard.location()}
-                  sx={{
-                    backgroundColor: 'white',
-                    borderRadius: '5px',
-                  }}
-                />
-              )}
-              renderOption={(params, option) =>
-                option === 'CREATE_NEW_LOCATION' ? (
-                  <li {...params}>
-                    <Add sx={{ marginRight: 2 }} />
-                    {messages.eventOverviewCard.createLocation()}
-                  </li>
-                ) : option === 'NO_PHYSICAL_LOCATION' ? (
-                  <li {...params}>{messages.eventOverviewCard.noLocation()}</li>
-                ) : (
-                  <li {...params}>{option.title}</li>
-                )
-              }
-              value={
-                locationId === null
-                  ? 'NO_PHYSICAL_LOCATION'
-                  : options?.find(
-                      (location) =>
-                        location !== 'CREATE_NEW_LOCATION' &&
-                        location !== 'NO_PHYSICAL_LOCATION' &&
-                        location.id === locationId
-                    )
-              }
-            />
-            <MapIcon
-              color="secondary"
-              onClick={() => setLocationModalOpen(true)}
-              sx={{ cursor: 'pointer', marginLeft: 1 }}
-            />
-            <LocationModal
-              events={parallellEvents || []}
-              locationId={locationId}
-              locations={locations || []}
-              onCreateLocation={(newLocation: Partial<ZetkinLocation>) => {
-                addLocation(newLocation);
-              }}
-              onMapClose={() => {
-                setLocationModalOpen(false);
-              }}
-              onSelectLocation={(location: ZetkinLocation) =>
-                setLocationId(location.id)
-              }
-              open={locationModalOpen}
-              orgId={orgId}
-            />
-          </Box>
-          <TextField
-            fullWidth
-            label={messages.eventShiftModal.link()}
-            maxRows={1}
-            onChange={(ev) => setEventLink(ev.target.value)}
-            sx={{ margin: 1 }}
-            value={eventLink}
-          />
-          <TextField
-            fullWidth
-            label={messages.eventShiftModal.description()}
-            maxRows={4}
-            multiline
-            onChange={(ev) => setEventDescription(ev.target.value)}
-            sx={{ margin: 1 }}
-            value={eventDescription}
-          />
-
-          <Typography margin={1} variant="body2">
-            {messages.eventShiftModal.participation().toUpperCase()}
-          </Typography>
-
-          <TextField
-            fullWidth
-            label={messages.eventShiftModal.participationDescription()}
-            onChange={(ev) => {
-              const val = ev.target.value;
-
-              if (val == '') {
-                setEventParticipants(null);
-                return;
-              }
-
-              const intVal = parseInt(val);
-              if (!isNaN(intVal) && intVal.toString() == val) {
-                setEventParticipants(intVal);
-              }
-            }}
-            sx={{ margin: 1 }}
-            value={eventParticipants === null ? '' : eventParticipants}
-          />
-        </Box>
+        <EventShiftDetails
+          eventDate={eventDate}
+          eventDescription={eventDescription}
+          eventEndTime={eventEndTime}
+          eventLink={eventLink}
+          eventParticipants={eventParticipants}
+          eventStartTime={eventStartTime}
+          eventTitle={eventTitle}
+          locationId={locationId}
+          onEventDateChange={(newDate) => {
+            if (newDate && newDate.isValid()) {
+              setInvalidDate(false);
+              setEventDate(newDate);
+            } else {
+              setInvalidDate(true);
+            }
+          }}
+          onEventDescriptionChange={(newDescription) =>
+            setEventDescription(newDescription)
+          }
+          onEventLinkChange={(newLink) => setEventLink(newLink)}
+          onEventParticipantsChange={(newValue) =>
+            setEventParticipants(newValue)
+          }
+          onEventTitleChange={(newTitle) => setEventTitle(newTitle)}
+          onLocationIdChange={(newId) => setLocationId(newId)}
+          onNewType={(newType) => {
+            setTypeId(newType.id);
+            setTypeTitle(newType.title);
+          }}
+          onTypeChange={(newType) => {
+            if (newType) {
+              setTypeId(newType.id);
+              setTypeTitle(newType.title);
+            } else {
+              setTypeId(-1);
+              setTypeTitle(messages.type.uncategorized());
+            }
+          }}
+          orgId={orgId}
+          typeId={typeId}
+          typeTitle={typeTitle}
+        />
         <Box bgcolor="background.secondary" flex={1} height="100%" margin={1}>
           <Typography color="secondary" margin={1} variant="body2">
             {messages.eventShiftModal.event().toUpperCase()}
