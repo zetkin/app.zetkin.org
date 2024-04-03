@@ -1,6 +1,12 @@
 import { DatePicker } from '@mui/x-date-pickers-pro';
 import { Add, Map } from '@mui/icons-material';
-import { Autocomplete, Box, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  TextField,
+  Typography,
+} from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 
@@ -80,6 +86,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
+  const [showExtraSettings, setShowExtraSettings] = useState(false);
 
   return (
     <Box display="flex" flexDirection="column" gap={2} padding={2}>
@@ -190,42 +197,58 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
           orgId={orgId}
         />
       </Box>
-      <TextField
-        fullWidth
-        label={messages.eventShiftModal.link()}
-        maxRows={1}
-        onChange={(ev) => onEventLinkChange(ev.target.value)}
-        value={eventLink}
-      />
-      <TextField
-        fullWidth
-        label={messages.eventShiftModal.description()}
-        maxRows={4}
-        multiline
-        onChange={(ev) => onEventDescriptionChange(ev.target.value)}
-        value={eventDescription}
-      />
-      <Typography color="secondary" textTransform="uppercase" variant="body2">
-        <Msg id={messageIds.eventShiftModal.participation} />
-      </Typography>
-      <TextField
-        fullWidth
-        label={messages.eventShiftModal.participationDescription()}
-        onChange={(ev) => {
-          const val = ev.target.value;
+      {!showExtraSettings && (
+        <Button
+          onClick={() => setShowExtraSettings(true)}
+          sx={{ alignSelf: 'flex-start' }}
+        >
+          <Msg id={messageIds.eventShiftModal.showExtraSettingsButton} />
+        </Button>
+      )}
+      {showExtraSettings && (
+        <>
+          <TextField
+            fullWidth
+            label={messages.eventShiftModal.link()}
+            maxRows={1}
+            onChange={(ev) => onEventLinkChange(ev.target.value)}
+            value={eventLink}
+          />
+          <TextField
+            fullWidth
+            label={messages.eventShiftModal.description()}
+            maxRows={4}
+            multiline
+            onChange={(ev) => onEventDescriptionChange(ev.target.value)}
+            value={eventDescription}
+          />
+          <Typography
+            color="secondary"
+            textTransform="uppercase"
+            variant="body2"
+          >
+            <Msg id={messageIds.eventShiftModal.participation} />
+          </Typography>
+          <TextField
+            fullWidth
+            label={messages.eventShiftModal.participationDescription()}
+            onChange={(ev) => {
+              const val = ev.target.value;
 
-          if (val == '') {
-            onEventParticipantsChange(null);
-            return;
-          }
+              if (val == '') {
+                onEventParticipantsChange(null);
+                return;
+              }
 
-          const intVal = parseInt(val);
-          if (!isNaN(intVal) && intVal.toString() == val) {
-            onEventParticipantsChange(intVal);
-          }
-        }}
-        value={eventParticipants === null ? '' : eventParticipants}
-      />
+              const intVal = parseInt(val);
+              if (!isNaN(intVal) && intVal.toString() == val) {
+                onEventParticipantsChange(intVal);
+              }
+            }}
+            value={eventParticipants === null ? '' : eventParticipants}
+          />
+        </>
+      )}
     </Box>
   );
 };
