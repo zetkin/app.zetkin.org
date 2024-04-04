@@ -1133,11 +1133,11 @@ feat:
         questionSelect:
           any: en fråga
           none: Det finns inga flervalsfrågor i den här enkäten.
-          question: fråga
+          question: fråga "{question}"
         surveySelect:
           any: en enkät
           none: Den här organisationen har inga enkäter ännu
-          survey: enkät
+          survey: enkät "{surveyTitle}"
       surveyResponse:
         addRemoveSelect:
           add: Lägg till
