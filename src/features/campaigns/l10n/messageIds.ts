@@ -96,7 +96,6 @@ export default makeMessages('feat.campaigns', {
     },
     manager: {
       label: m('Project manager'),
-      selectSelf: m('Set yourself as manager'),
     },
     name: m('Name'),
     requestError: m('There was an error. Please try again.'),
