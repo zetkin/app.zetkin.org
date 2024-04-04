@@ -119,10 +119,8 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   const messages = useMessages(messageIds);
   const eventFuture = useEvent(orgId, eventId);
   const { setContact } = useEventContact(orgId, eventId);
-  const { setParticipantStatus } = useEventParticipantsMutations(
-    orgId,
-    eventId
-  );
+  const { deleteParticipant, setParticipantStatus } =
+    useEventParticipantsMutations(orgId, eventId);
 
   const columns: GridColDef[] = [
     {
@@ -345,6 +343,11 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           return (
             <Buttons
               options={[
+                {
+                  callback: () => deleteParticipant(params.row.id),
+                  title: messages.eventParticipantsList.buttonDelete(),
+                  variant: 'text',
+                },
                 {
                   callback: () => {
                     setParticipantStatus(params.row.id, null);

@@ -70,6 +70,7 @@ export default makeMessages('feat.events', {
     buttonBook: m('Book'),
     buttonCancel: m('Cancel'),
     buttonCancelled: m('Cancelled'),
+    buttonDelete: m('Delete'),
     buttonNoshow: m('No-show'),
     cancelledParticipants: m('Cancelled Participants'),
     columnEmail: m('Email'),

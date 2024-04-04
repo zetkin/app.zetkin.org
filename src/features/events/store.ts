@@ -351,6 +351,12 @@ const eventsSlice = createSlice({
         remoteItem(participant.id, { data: participant })
       );
     },
+    participantDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [eventId, participantId] = action.payload;
+      state.participantsByEventId[eventId].items = state.participantsByEventId[
+        eventId
+      ].items.filter((participant) => participant.id !== participantId);
+    },
     participantUpdated: (
       state,
       action: PayloadAction<[number, ZetkinEventParticipant]>
@@ -566,6 +572,7 @@ export const {
   locationsLoad,
   locationsLoaded,
   participantAdded,
+  participantDeleted,
   participantUpdated,
   participantsLoad,
   participantsLoaded,
