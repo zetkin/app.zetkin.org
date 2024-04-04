@@ -22,7 +22,6 @@ const scaffoldOptions = {
     'misc.breadcrumbs',
     'pages.organizeAllCampaigns',
     'misc.formDialog',
-    'misc.speedDial',
   ],
 };
 
