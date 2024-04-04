@@ -89,7 +89,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
   const [showExtraSettings, setShowExtraSettings] = useState(false);
 
   return (
-    <Box display="flex" flexDirection="column" gap={2} padding={2}>
+    <Box display="flex" flexDirection="column" gap={2}>
       <ZUIFuture future={eventTypesFuture}>
         {(eventTypes) => {
           return (
