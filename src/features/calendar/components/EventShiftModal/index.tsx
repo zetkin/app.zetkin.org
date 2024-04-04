@@ -32,9 +32,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const [locationId, setLocationId] = useState<number | null>(null);
   const [eventLink, setEventLink] = useState<string>('');
   const [eventDescription, setEventDescription] = useState<string>('');
-  const [eventParticipants, setEventParticipants] = useState<number | null>(
-    null
-  );
+  const [eventParticipants, setEventParticipants] = useState<number | null>(2);
   const [eventStartTime, setEventStartTime] = useState<Dayjs>(startDate);
   const [invalidStartTime, setInvalidStartTime] = useState(false);
   const [eventEndTime, setEventEndTime] = useState<Dayjs>(endDate);
