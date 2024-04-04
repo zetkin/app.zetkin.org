@@ -48,6 +48,7 @@ const Buttons: FC<{ options: ButtonOption[] }> = ({ options }) => {
         display: 'flex',
         flexDirection: 'row',
         gap: 0.5,
+        justifyContent: 'flex-end',
       }}
     >
       {options.map((option) => (
