@@ -1,5 +1,6 @@
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
+import { MESSAGE_KEY_BY_OP } from '.';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
@@ -7,7 +8,6 @@ import UnderlinedText from '../../UnderlinedText';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
-import { EMAIL_SELECT_SCOPE, MESSAGE_KEY_BY_OP } from '.';
 import {
   EmailHistoryFilterConfig,
   OPERATION,
@@ -47,13 +47,11 @@ const DisplayEmailHistory = ({
         emailScopeSelect: (
           <UnderlinedMsg
             id={
-              localMessageIds.emailScopeSelect[
-                filter.config.campaign
-                  ? EMAIL_SELECT_SCOPE.FROM_PROJECT
-                  : filter.config.email
-                  ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
-                  : EMAIL_SELECT_SCOPE.ANY
-              ]
+              filter.config.campaign
+                ? localMessageIds.emailScopeSelect.project
+                : filter.config.email
+                ? localMessageIds.emailScopeSelect.email
+                : localMessageIds.emailScopeSelect.any
             }
           />
         ),

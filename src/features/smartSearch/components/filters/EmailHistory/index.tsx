@@ -20,17 +20,14 @@ import {
 
 const localMessageIds = messageIds.filters.emailHistory;
 
-export enum EMAIL_SELECT_SCOPE {
-  ANY = 'any',
-  FROM_PROJECT = 'fromProject',
-  SPECIFIC_EMAIL = 'specificEmail',
-}
 export const MESSAGE_KEY_BY_OP = {
   not_opened: 'notOpened',
   not_sent: 'notSent',
   opened: 'opened',
   sent: 'sent',
 } as const;
+
+type EmailSelectScopeType = 'any' | 'email' | 'project';
 
 interface EmailHistoryProps {
   filter:
@@ -57,13 +54,10 @@ const EmailHistory = ({
     useSmartSearchFilter<EmailHistoryFilterConfig>(initialFilter, {
       operator: 'sent',
     });
-  const [emailSelectScope, setEmailSelectScope] = useState<EMAIL_SELECT_SCOPE>(
-    filter.config.campaign
-      ? EMAIL_SELECT_SCOPE.FROM_PROJECT
-      : filter.config.email
-      ? EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL
-      : EMAIL_SELECT_SCOPE.ANY
-  );
+  const [emailSelectScope, setEmailSelectScope] =
+    useState<EmailSelectScopeType>(
+      filter.config.campaign ? 'project' : filter.config.email ? 'email' : 'any'
+    );
 
   const setValueToKey = (
     key: keyof EmailHistoryFilterConfig,
@@ -100,10 +94,8 @@ const EmailHistory = ({
   return (
     <FilterForm
       disableSubmit={
-        (emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT &&
-          !filter.config.campaign) ||
-        (emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL &&
-          !filter.config.email)
+        (emailSelectScope === 'project' && !filter.config.campaign) ||
+        (emailSelectScope === 'email' && !filter.config.email)
       }
       onCancel={onCancel}
       onSubmit={(e) => {
@@ -130,19 +122,25 @@ const EmailHistory = ({
               <StyledSelect
                 onChange={(e) => {
                   removeKey(['email', 'campaign']);
-                  setEmailSelectScope(e.target.value as EMAIL_SELECT_SCOPE);
+                  setEmailSelectScope(e.target.value as EmailSelectScopeType);
                 }}
                 value={emailSelectScope}
               >
-                {Object.values(EMAIL_SELECT_SCOPE).map((item) => (
+                {Object.keys(localMessageIds.emailScopeSelect).map((item) => (
                   <MenuItem key={item} value={item}>
-                    <Msg id={localMessageIds.emailScopeSelect[item]} />
+                    <Msg
+                      id={
+                        localMessageIds.emailScopeSelect[
+                          item as EmailSelectScopeType
+                        ]
+                      }
+                    />
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
             emailSelect:
-              emailSelectScope === EMAIL_SELECT_SCOPE.SPECIFIC_EMAIL ? (
+              emailSelectScope === 'email' ? (
                 <StyledSelect
                   minWidth="10rem"
                   onChange={(e) =>
@@ -170,7 +168,7 @@ const EmailHistory = ({
               </StyledSelect>
             ),
             projectSelect:
-              emailSelectScope === EMAIL_SELECT_SCOPE.FROM_PROJECT ? (
+              emailSelectScope === 'project' ? (
                 <StyledSelect
                   minWidth="10rem"
                   onChange={(e) =>

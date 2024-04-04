@@ -171,7 +171,7 @@ export default makeMessages('feat.smartSearch', {
         anyLink: m('any link in any email'),
         anyLinkInEmail: m('any link in the specific email'),
         linkInEmailFromProject: m(
-          'any link in any email from the specific project'
+          'any link in any email in the specific project'
         ),
       },
       operatorSelect: {
@@ -182,8 +182,8 @@ export default makeMessages('feat.smartSearch', {
     emailHistory: {
       emailScopeSelect: {
         any: m('any email'),
-        fromProject: m('any email from project'),
-        specificEmail: m('the specific email'),
+        email: m('the specific email'),
+        project: m('any email from project'),
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
