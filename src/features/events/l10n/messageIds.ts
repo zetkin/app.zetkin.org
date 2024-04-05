@@ -152,6 +152,7 @@ export default makeMessages('feat.events', {
     ),
     minutesShort: m('min'),
     noEvents: m<{ no: number }>('This will create {no} events'),
+    noTitle: m('Untitled multi-shift event'),
     participation: m('Participation'),
     participationDescription: m('Targeted number of participants per shift'),
     publish: m('Publish'),
