@@ -103,24 +103,39 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
 
   useEffect(() => {
     const index = updatedShift[0];
-    const newShift = dayjs(eventShifts[index]);
-    if (
-      newShift.isAfter(dayjs(eventShifts[index - 1])) &&
-      (eventShifts.length - index > 1
-        ? newShift.isBefore(dayjs(eventShifts[index + 1]))
-        : newShift.isBefore(dayjs(eventEndTime)))
-    ) {
-      onInvalidShiftTimesChange([
-        ...invalidShiftTimes.slice(0, index),
-        false,
-        ...invalidShiftTimes.slice(index + 1),
-      ]);
-    } else {
-      onInvalidShiftTimesChange([
-        ...invalidShiftTimes.slice(0, index),
-        true,
-        ...invalidShiftTimes.slice(index + 1),
-      ]);
+
+    //Only run this if an update has been made, not if we are in initial state
+    if (eventShifts[index - 1]) {
+      const shift = dayjs(eventShifts[index]);
+      const shiftStartsAfterPreviousShift = shift.isAfter(
+        dayjs(eventShifts[index - 1])
+      );
+
+      const isShiftFirstOrInMiddle = eventShifts.length - index > 1;
+      const shiftStartIsBeforeNextShift = shift.isBefore(
+        dayjs(eventShifts[index + 1])
+      );
+      const shiftStartsBeforeEventEnd = shift.isBefore(dayjs(eventEndTime));
+
+      const shiftStartIsValid = isShiftFirstOrInMiddle
+        ? shiftStartIsBeforeNextShift
+        : shiftStartsBeforeEventEnd;
+
+      if (shiftStartsAfterPreviousShift && shiftStartIsValid) {
+        //Shift time is valid, add a "false" in the array
+        onInvalidShiftTimesChange([
+          ...invalidShiftTimes.slice(0, index),
+          false,
+          ...invalidShiftTimes.slice(index + 1),
+        ]);
+      } else {
+        //Shift time is invalid, add a "true" in the array
+        onInvalidShiftTimesChange([
+          ...invalidShiftTimes.slice(0, index),
+          true,
+          ...invalidShiftTimes.slice(index + 1),
+        ]);
+      }
     }
   }, [updatedShift]);
 
