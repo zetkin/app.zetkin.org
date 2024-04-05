@@ -60,14 +60,19 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         index < eventShifts.length - 1
           ? dayjs(eventShifts[index + 1])
           : dayjs(eventEndTime);
+
       let startDate: Dayjs = dayjs(eventDate);
       startDate = startDate
         .set('hour', shift.hour() + 2)
         .set('minute', shift.minute());
+
       let endDate: Dayjs = dayjs(eventDate);
       endDate = endDate
         .set('hour', endTime.hour() + 2)
         .set('minute', endTime.minute());
+
+      const now = dayjs();
+      const published = startDate < now ? startDate : now;
 
       createEvent(
         {
@@ -77,7 +82,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
           info_text: eventDescription,
           location_id: locationId,
           num_participants_required: eventParticipants ? eventParticipants : 0,
-          published: publish ? dayjs().toISOString() : null,
+          published: publish ? published.toISOString() : null,
           start_time: startDate.toISOString(),
           title: eventTitle,
           url: eventLink,
