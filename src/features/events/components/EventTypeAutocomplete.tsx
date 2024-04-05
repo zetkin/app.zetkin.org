@@ -73,7 +73,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   types,
   value,
 }) => {
-  const { addType } = useCreateType(orgId);
+  const createType = useCreateType(orgId);
   const messages = useMessages(messageIds);
   const uncategorizedMsg = messages.type.uncategorized();
   const [createdType, setCreatedType] = useState<string>('');
@@ -182,7 +182,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onChange={(_, value) => {
           setText(value.title);
           if (value.id == 'CREATE') {
-            addType(value.title!);
+            createType(value.title!);
             setCreatedType(value.title!);
             return;
           }

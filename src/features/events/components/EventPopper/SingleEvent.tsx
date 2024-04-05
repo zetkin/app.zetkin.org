@@ -63,7 +63,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     event.organization.id,
     event.id
   );
-  const { duplicateEvent } = useDuplicateEvent(event.organization.id, event.id);
+  const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
 
   const dispatch = useAppDispatch();
   const participants = participantsFuture.data || [];

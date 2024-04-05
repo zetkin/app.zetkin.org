@@ -395,6 +395,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           setLocationId(location.id)
                         }
                         open={locationModalOpen}
+                        orgId={data.organization.id}
                       />
                     </Box>
                   );

@@ -70,6 +70,7 @@ const EventDayLane: FC<EventDayLaneProps> = ({
           [Math.floor(startMinutes / 60), startMinutes % 60],
           [Math.floor(endMinutes / 60), endMinutes % 60]
         );
+        height = 0;
       }
     }
 
