@@ -137,13 +137,13 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
             )}
             {option.id == 'UNCATEGORIZED' && (
               <li {...props}>
-                <Clear />
+                <Clear sx={{ marginRight: 1 }} />
                 <Msg id={messageIds.type.uncategorized} />
               </li>
             )}
             {option.id == 'CREATE' && (
               <li {...props}>
-                <Add />
+                <Add sx={{ marginRight: 1 }} />
                 <Msg
                   id={messageIds.type.createType}
                   values={{ type: option.title }}

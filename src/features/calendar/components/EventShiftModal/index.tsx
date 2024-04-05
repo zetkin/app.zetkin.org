@@ -9,6 +9,7 @@ import messageIds from 'features/events/l10n/messageIds';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useMessages } from 'core/i18n';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 interface EventShiftModalProps {
   dates: [Date, Date];
@@ -24,8 +25,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
 
-  const [typeId, setTypeId] = useState<number>(1);
-  const [typeTitle, setTypeTitle] = useState<string>('');
+  const [type, setType] = useState<ZetkinEvent['activity']>(null);
   const [eventTitle, setEventTitle] = useState<string>('');
   const [eventDate, setEventDate] = useState<Dayjs>(startDate);
   const [invalidDate, setInvalidDate] = useState(false);
@@ -76,7 +76,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
 
       createEvent(
         {
-          activity_id: typeId >= 0 ? typeId : null,
+          activity_id: type ? type.id : null,
           campaign_id: campId,
           end_time: endDate.toISOString(),
           info_text: eventDescription,
@@ -144,22 +144,16 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               }
               onEventTitleChange={(newTitle) => setEventTitle(newTitle)}
               onLocationIdChange={(newId) => setLocationId(newId)}
-              onNewType={(newType) => {
-                setTypeId(newType.id);
-                setTypeTitle(newType.title);
-              }}
+              onNewType={(newType) => setType(newType)}
               onTypeChange={(newType) => {
                 if (newType) {
-                  setTypeId(newType.id);
-                  setTypeTitle(newType.title);
+                  setType(newType);
                 } else {
-                  setTypeId(-1);
-                  setTypeTitle(messages.type.uncategorized());
+                  setType(null);
                 }
               }}
               orgId={orgId}
-              typeId={typeId}
-              typeTitle={typeTitle}
+              type={type}
             />
           </Box>
           <Box flex={1}>

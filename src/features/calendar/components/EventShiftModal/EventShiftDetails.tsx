@@ -18,9 +18,9 @@ import useEventLocationMutations from 'features/events/hooks/useEventLocationMut
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
 import useParallelEvents from 'features/events/hooks/useParallelEvents';
-import { ZetkinLocation } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface EventShiftDetailsProps {
   eventDate: Dayjs;
@@ -37,11 +37,10 @@ interface EventShiftDetailsProps {
   onEventParticipantsChange: (newValue: number | null) => void;
   onEventTitleChange: (newTitle: string) => void;
   onLocationIdChange: (newId: number | null) => void;
-  onNewType: (newType: { id: number; title: string }) => void;
-  onTypeChange: (newType: { id: number; title: string } | null) => void;
+  onNewType: (newType: ZetkinEvent['activity']) => void;
+  onTypeChange: (newType: ZetkinEvent['activity']) => void;
   orgId: number;
-  typeId: number;
-  typeTitle: string;
+  type: ZetkinEvent['activity'];
 }
 
 const EventShiftDetails: FC<EventShiftDetailsProps> = ({
@@ -61,8 +60,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
   onLocationIdChange,
   onNewType,
   onTypeChange,
-  typeId,
-  typeTitle,
+  type,
   orgId,
 }) => {
   const messages = useMessages(messageIds);
@@ -99,7 +97,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
               onChangeNewOption={(newType) => onNewType(newType)}
               onCreateType={createType}
               types={eventTypes}
-              value={{ id: typeId, title: typeTitle }}
+              value={type}
             />
           );
         }}
