@@ -20,7 +20,6 @@ const scaffoldOptions = {
     'misc.breadcrumbs',
     'misc.calendar',
     'misc.formDialog',
-    'misc.speedDial',
     'misc.tasks',
     'pages.organizeCampaigns',
   ],
