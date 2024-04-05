@@ -202,7 +202,11 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
               {messages.eventShiftModal.addShift().toUpperCase()}
             </Button>
             {eventShifts.length > 2 && (
-              <Button onClick={() => updateShifts(2)} variant="outlined">
+              <Button
+                onClick={() => updateShifts(2)}
+                size="small"
+                variant="outlined"
+              >
                 {messages.eventShiftModal.reset().toUpperCase()}
               </Button>
             )}
