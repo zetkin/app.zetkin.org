@@ -86,7 +86,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
-  const [showExtraSettings, setShowExtraSettings] = useState(false);
+  const [showAllSettings, setShowAllSettings] = useState(false);
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
@@ -197,15 +197,15 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
           orgId={orgId}
         />
       </Box>
-      {!showExtraSettings && (
+      {!showAllSettings && (
         <Button
-          onClick={() => setShowExtraSettings(true)}
+          onClick={() => setShowAllSettings(true)}
           sx={{ alignSelf: 'flex-start' }}
         >
-          <Msg id={messageIds.eventShiftModal.showExtraSettingsButton} />
+          <Msg id={messageIds.eventShiftModal.showAllSettingsButton} />
         </Button>
       )}
-      {showExtraSettings && (
+      {showAllSettings && (
         <>
           <TextField
             fullWidth
