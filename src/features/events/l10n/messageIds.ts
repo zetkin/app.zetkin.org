@@ -160,7 +160,7 @@ export default makeMessages('feat.events', {
     shiftStart: m<{ no: number }>('Start shift {no}'),
     shifts: m<{ no: number }>('{no, plural, one {1 shift} other {# shifts}}'),
     shiftsHeader: m('Shifts'),
-    showAllSettingsButton: m('Show all settings'),
+    showMoreSettingsButton: m('More settings'),
     start: m('Start'),
     type: m('Type'),
   },
