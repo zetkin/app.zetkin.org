@@ -516,6 +516,13 @@ export interface ZetkinEmail {
   target: ZetkinQuery;
 }
 
+export interface ZetkinLink {
+  email: { id: number; title: string };
+  id: number;
+  url: string;
+  tag: string;
+}
+
 export type ZetkinEmailPostBody = Partial<
   Omit<ZetkinEmail, 'id' | 'frame' | 'published' | 'organization' | 'target'>
 > & {

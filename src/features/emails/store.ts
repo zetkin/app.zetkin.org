@@ -1,23 +1,26 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { EmailFrame } from './types';
 import { EmailStats } from './hooks/useEmailStats';
-import { ZetkinEmail } from 'utils/types/zetkin';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
   remoteItem,
   RemoteList,
   remoteList,
 } from 'utils/storeUtils';
+import { ZetkinEmail, ZetkinLink } from 'utils/types/zetkin';
 
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
   frameList: RemoteList<EmailFrame>;
+  linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
   statsById: Record<number, RemoteItem<EmailStats>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
   frameList: remoteList(),
+  linksByEmailId: {},
   statsById: {},
 };
 
@@ -40,6 +43,21 @@ const emailsSlice = createSlice({
         item.deleted = true;
         state.emailList.isStale = true;
       }
+    },
+    emailLinksLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.linksByEmailId[id] = remoteList<ZetkinLink>();
+      state.linksByEmailId[id].isLoading = true;
+    },
+    emailLinksLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinLink[]]>
+    ) => {
+      const [id, links] = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.linksByEmailId[id] = remoteList<ZetkinLink>(links);
+      state.linksByEmailId[id].loaded = timestamp;
     },
     emailLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -155,6 +173,8 @@ export const {
   emailCreate,
   emailCreated,
   emailDeleted,
+  emailLinksLoad,
+  emailLinksLoaded,
   emailLoad,
   emailLoaded,
   emailUpdate,
