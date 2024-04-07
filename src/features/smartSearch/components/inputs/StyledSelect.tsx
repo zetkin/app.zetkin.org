@@ -10,6 +10,8 @@ const useStyles = makeStyles((theme) => ({
   MuiSelect: {
     fontSize: theme.typography.h4.fontSize,
     padding: 0,
+    maxWidth: '700px',
+    textOverflow: 'ellipsis'
   },
   MuiTextField: {
     display: 'inline',
