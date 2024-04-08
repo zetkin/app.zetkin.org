@@ -134,6 +134,9 @@ export interface PersonDataFilterConfig {
   };
 }
 
+export type Gender = 'f' | 'm' | 'o' | 'unknown';
+export const genders: Gender[] = ['f', 'm', 'o', 'unknown'];
+
 export interface PersonFieldFilterConfig {
   after?: string;
   before?: string;

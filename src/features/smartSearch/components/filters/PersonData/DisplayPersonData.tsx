@@ -1,10 +1,11 @@
-import { Msg } from 'core/i18n';
 import {
   DATA_FIELD,
+  Gender,
   OPERATION,
   PersonDataFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
@@ -16,6 +17,7 @@ interface DisplayPersonDataProps {
 }
 
 const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
+  const messages = useMessages(localMessageIds);
   const {
     config: { fields },
   } = filter;
@@ -27,12 +29,24 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
     let existing;
     let criteriaString: JSX.Element | null = null;
     criteria.forEach((c) => {
+      let text: string;
+      const field = fields[c];
+
+      if (!field) {
+        text = '';
+      } else if (c !== DATA_FIELD.GENDER) {
+        text = field;
+      } else {
+        const gender = field as Gender;
+        text = messages.genders[gender]();
+      }
+
       existing = (
         <Msg
           id={localMessageIds.fieldMatches}
           values={{
             field: <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />,
-            value: <UnderlinedText text={fields[c] || ''} />,
+            value: <UnderlinedText text={text} />,
           }}
         />
       );

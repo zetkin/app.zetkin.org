@@ -186,6 +186,12 @@ export default makeMessages('feat.smartSearch', {
       fieldTuple: m<{ first: ReactElement; second: ReactElement }>(
         '{first} and {second}'
       ),
+      genders: {
+        f: m('female'),
+        m: m('male'),
+        o: m('other'),
+        unknown: m('unknown'),
+      },
       inputString: m<{
         addRemoveSelect: ReactElement;
         criteria: ReactElement | string | null;
