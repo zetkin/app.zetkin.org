@@ -32,8 +32,13 @@ export type TaskActivity = CampaignActivityBase & {
   kind: ACTIVITIES.TASK;
 };
 
+export type MultiDayEvent = ZetkinEvent & {
+  originalEndTime: string;
+  originalStartTime: string;
+};
+
 export type EventActivity = CampaignActivityBase & {
-  data: ZetkinEvent;
+  data: ZetkinEvent | MultiDayEvent;
   kind: ACTIVITIES.EVENT;
 };
 

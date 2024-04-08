@@ -18,6 +18,7 @@ import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
+import { MultiDayEvent } from 'features/campaigns/types';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
@@ -47,7 +48,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface SingleEventProps {
-  event: ZetkinEvent;
+  event: ZetkinEvent | MultiDayEvent;
   onClickAway: () => void;
 }
 
@@ -197,8 +198,24 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         </Box>
         <Typography color="secondary" variant="body2">
           <ZUITimeSpan
-            end={new Date(removeOffset(event.end_time))}
-            start={new Date(removeOffset(event.start_time))}
+            end={
+              new Date(
+                removeOffset(
+                  'originalEndTime' in event
+                    ? event.originalEndTime
+                    : event.end_time
+                )
+              )
+            }
+            start={
+              new Date(
+                removeOffset(
+                  'originalStartTime' in event
+                    ? event.originalStartTime
+                    : event.start_time
+                )
+              )
+            }
           />
         </Typography>
       </Box>

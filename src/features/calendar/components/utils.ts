@@ -151,6 +151,8 @@ export const getActivitiesByDay = (
                       .second(0)
                       .millisecond(0)
                       .toISOString(),
+                    originalEndTime: event.data.end_time,
+                    originalStartTime: event.data.start_time,
                   },
                 };
 
@@ -171,6 +173,8 @@ export const getActivitiesByDay = (
                       .second(0)
                       .millisecond(0)
                       .toISOString(),
+                    originalEndTime: event.data.end_time,
+                    originalStartTime: event.data.start_time,
                     start_time: dayOfEvent
                       .hour(0)
                       .minute(0)
@@ -191,6 +195,8 @@ export const getActivitiesByDay = (
                   ...event,
                   data: {
                     ...event.data,
+                    originalEndTime: event.data.end_time,
+                    originalStartTime: event.data.start_time,
                     start_time: dayOfEvent
                       .hour(0)
                       .minute(0)

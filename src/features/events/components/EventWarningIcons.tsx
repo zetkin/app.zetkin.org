@@ -73,8 +73,7 @@ const EventWarningIconsSansModel: FC<{
     if (!hasContact) {
       icons[0] = (
         <WarningSlot
-          key="contact"
-          icon={<FaceRetouchingOff color="error" />}
+          icon={<FaceRetouchingOff key="contact" color="error" />}
           tooltip={messages.activityList.eventItem.contact()}
         />
       );
@@ -84,8 +83,7 @@ const EventWarningIconsSansModel: FC<{
     if (numSignups > 0) {
       icons[1] = (
         <WarningSlot
-          key="signups"
-          icon={<EmojiPeople color="error" />}
+          icon={<EmojiPeople key="signups" color="error" />}
           tooltip={messages.activityList.eventItem.signups()}
         />
       );
@@ -94,8 +92,7 @@ const EventWarningIconsSansModel: FC<{
     if (numRemindersSent < numBooked) {
       icons[2] = (
         <WarningSlot
-          key="reminders"
-          icon={<MailOutline color="error" />}
+          icon={<MailOutline key="reminders" color="error" />}
           tooltip={messages.activityList.eventItem.reminders({
             numMissing: numParticipants - numRemindersSent,
           })}
