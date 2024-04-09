@@ -8,7 +8,7 @@ import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
-import { MultiDayEvent } from 'features/campaigns/types';
+import { MultiDayEvent } from 'features/calendar/components/utils';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from '../StatusDot';
 import useEventState from 'features/events/hooks/useEventState';

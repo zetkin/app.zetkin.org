@@ -18,7 +18,7 @@ import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
-import { MultiDayEvent } from 'features/campaigns/types';
+import { MultiDayEvent } from 'features/calendar/components/utils';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';

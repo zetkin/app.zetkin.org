@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { NonEventActivity } from 'features/campaigns/hooks/useClusteredActivities';
 import range from 'utils/range';
 import { removeOffset } from 'utils/dateUtils';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
   CampaignActivity,
@@ -105,9 +106,18 @@ const applyToHashmap = (
     };
   }
 };
+export type MultiDayEvent = ZetkinEvent & {
+  originalEndTime: string;
+  originalStartTime: string;
+};
+
+export type MultiDayEventActivity = {
+  data: MultiDayEvent;
+  kind: ACTIVITIES.EVENT;
+};
 
 export const getActivitiesByDay = (
-  activities: CampaignActivity[]
+  activities: (CampaignActivity | MultiDayEventActivity)[]
 ): Record<string, DaySummary> => {
   const dateHashmap: Record<string, DaySummary> = {};
 
