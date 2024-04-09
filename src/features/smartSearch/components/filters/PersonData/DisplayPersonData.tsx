@@ -1,6 +1,5 @@
 import {
   DATA_FIELD,
-  Gender,
   OPERATION,
   PersonDataFilterConfig,
   SmartSearchFilterWithId,
@@ -23,45 +22,42 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
   } = filter;
   const op = filter.op || OPERATION.ADD;
 
-  const criteria = Object.values(DATA_FIELD).filter((f) => f in fields);
-
   const getCriteriaString = () => {
     let existing;
     let criteriaString: JSX.Element | null = null;
-    criteria.forEach((c) => {
-      let text: string;
+    Object.values(DATA_FIELD).forEach((c) => {
       const field = fields[c];
 
-      if (!field) {
-        text = '';
-      } else if (c !== DATA_FIELD.GENDER) {
-        text = field;
-      } else {
-        const gender = field as Gender;
-        text = messages.genders[gender]();
-      }
-
-      existing = (
-        <Msg
-          id={localMessageIds.fieldMatches}
-          values={{
-            field: <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />,
-            value: <UnderlinedText text={text} />,
-          }}
-        />
-      );
-      if (criteriaString) {
-        criteriaString = (
-          <UnderlinedMsg
-            id={localMessageIds.fieldTuple}
+      if (field) {
+        existing = (
+          <Msg
+            id={localMessageIds.fieldMatches}
             values={{
-              first: criteriaString,
-              second: existing,
+              field: <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />,
+              value: (
+                <UnderlinedText
+                  text={
+                    field === fields.gender ? messages.genders[field]() : field
+                  }
+                />
+              ),
             }}
           />
         );
-      } else {
-        criteriaString = existing;
+
+        if (criteriaString) {
+          criteriaString = (
+            <UnderlinedMsg
+              id={localMessageIds.fieldTuple}
+              values={{
+                first: criteriaString,
+                second: existing,
+              }}
+            />
+          );
+        } else {
+          criteriaString = existing;
+        }
       }
     });
     return criteriaString;

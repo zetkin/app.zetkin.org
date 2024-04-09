@@ -119,6 +119,9 @@ export interface MostActiveFilterConfig {
   size: number;
 }
 
+export type Gender = 'f' | 'm' | 'o' | 'unknown';
+export const genders: Gender[] = ['f', 'm', 'o', 'unknown'];
+
 export interface PersonDataFilterConfig {
   fields: {
     alt_phone?: string;
@@ -126,16 +129,13 @@ export interface PersonDataFilterConfig {
     co_address?: string;
     email?: string;
     first_name?: string;
-    gender?: string;
+    gender?: Gender;
     last_name?: string;
     phone?: string;
     street_address?: string;
     zip_code?: string;
   };
 }
-
-export type Gender = 'f' | 'm' | 'o' | 'unknown';
-export const genders: Gender[] = ['f', 'm', 'o', 'unknown'];
 
 export interface PersonFieldFilterConfig {
   after?: string;
