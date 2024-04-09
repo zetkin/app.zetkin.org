@@ -53,11 +53,11 @@ export default makeMessages('feat.events', {
     url: m('Link'),
   },
   eventParticipantsCard: {
-    booked: m('Notifications'),
     confirmed: m('Confirmed Attendance'),
     contact: m('Contact'),
     header: m('Participants'),
     noContact: m('None assigned'),
+    notifications: m('Notifications'),
     participantList: m('View participants'),
     pending: m('Pending sign-ups'),
     reqParticipantsHelperText: m('The minimum number of participants required'),
