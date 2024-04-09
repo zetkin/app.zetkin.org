@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import {
   Box,
   Button,
@@ -19,7 +20,6 @@ import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
-import useOrganizerActionView from 'features/views/hooks/useOrganizerActionView';
 import { Msg, useMessages } from 'core/i18n';
 
 interface CallAssignmentStatusCardsProps {
@@ -42,7 +42,6 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
     orgId,
     assignmentId
   );
-  const getOrganizerActionView = useOrganizerActionView(orgId);
 
   const cooldownNumber = callAssignment?.cooldown ?? null;
   const stats = statsFuture.data;
@@ -150,13 +149,11 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
             />
             <StatusCardItem
               action={
-                <Button
-                  onClick={() => getOrganizerActionView()}
-                  startIcon={<Visibility />}
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.blocked.viewSheetButton} />
-                </Button>
+                <NextLink href={`/organize/${orgId}/people/lists/blocked`}>
+                  <Button startIcon={<Visibility />} variant="outlined">
+                    <Msg id={messageIds.blocked.viewSheetButton} />
+                  </Button>
+                </NextLink>
               }
               title={messages.blocked.organizerActionNeeded()}
               value={stats?.organizerActionNeeded}

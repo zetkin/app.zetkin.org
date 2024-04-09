@@ -1,9 +1,12 @@
+import { GetServerSideProps } from 'next';
 import { isEqualWith } from 'lodash';
-import { NextApiRequest } from 'next';
+import { scaffold } from 'utils/next';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';
-import IApiClient from 'core/api/client/IApiClient';
+import globalMessageIds from 'core/i18n/globalMessageIds';
+import messageIds from 'features/views/l10n/messageIds';
 import {
   CallBlockedFilterConfig,
   FILTER_TYPE,
@@ -15,26 +18,17 @@ import {
   PendingZetkinViewColumn,
   ZetkinView,
   ZetkinViewColumn,
-} from '../../components/types';
+} from 'features/views/components/types';
 
-import globalMessageIds from 'core/i18n/globalMessageIds';
-import messageIds from 'features/views/l10n/messageIds';
-import { Params, paramsSchema, Result } from './client';
-
-export const getOrganizerActionViewRouteDef = {
-  handler: handle,
-  name: 'getOrganizerActionView',
-  schema: paramsSchema,
+const scaffoldOptions = {
+  authLevelRequired: 2,
 };
 
-async function handle(
-  params: Params,
-  apiClient: IApiClient,
-  req: NextApiRequest
-): Promise<Result> {
-  const { orgId } = params;
+export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
+  const { orgId } = ctx.params!;
+  const apiClient = new BackendApiClient(ctx.req.headers);
 
-  const lang = getBrowserLanguage(req);
+  const lang = getBrowserLanguage(ctx.req);
   const messages = await getServerMessages(lang, messageIds);
   const globalMessages = await getServerMessages(lang, globalMessageIds);
 
@@ -104,9 +98,7 @@ async function handle(
     })
   ).then((result) => result.find((v) => v !== null));
 
-  if (view) {
-    return view;
-  } else {
+  if (!view) {
     view = await apiClient.post<ZetkinView, Partial<ZetkinView>>(
       `/api/orgs/${orgId}/people/views`,
       {
@@ -154,7 +146,22 @@ async function handle(
         type: COLUMN_TYPE.ORGANIZER_ACTION,
       }
     );
-
-    return view;
   }
+
+  if (view) {
+    return {
+      redirect: {
+        destination: `/organize/${view.organization.id}/people/lists/${view.id}`,
+        permanent: false,
+      },
+    };
+  } else {
+    return {
+      notFound: true,
+    };
+  }
+}, scaffoldOptions);
+
+export default function NotUsed(): null {
+  return null;
 }
