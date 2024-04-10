@@ -149,7 +149,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
             />
             <StatusCardItem
               action={
-                <NextLink href={`/organize/${orgId}/people/lists/blocked`}>
+                <NextLink href={`/organize/${orgId}/people/lists/callblocked`}>
                   <Button startIcon={<Visibility />} variant="outlined">
                     <Msg id={messageIds.blocked.viewSheetButton} />
                   </Button>
