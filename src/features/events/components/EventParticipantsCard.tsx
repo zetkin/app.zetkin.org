@@ -47,8 +47,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   const remindedParticipants =
     participants.filter((p) => p.reminder_sent != null && !p.cancelled)
       .length ?? 0;
-  const availParticipants =
-    participants.filter((p) => !p.cancelled).length ?? 0;
+
+  const availParticipants = eventData?.num_participants_available ?? 0;
   const reqParticipants = eventData?.num_participants_required ?? 0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
