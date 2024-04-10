@@ -22,6 +22,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     const { orgId, campId, callAssId } = ctx.params!;
     try {
       const client = new BackendApiClient(ctx.req.headers);
+
+      if (campId) {
+        //We don't want to load the call assignment if its project does not exist
+        //If this GET of the project fails, we end up in the catch block
+        //and return a 404 to the client
+        await client.get(`/api/orgs/${orgId}/campaigns/${campId}`);
+      }
+
       const data = await client.get<ZetkinCallAssignment>(
         `/api/orgs/${orgId}/call_assignments/${callAssId}`
       );

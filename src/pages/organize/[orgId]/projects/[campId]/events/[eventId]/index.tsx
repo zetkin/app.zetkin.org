@@ -16,11 +16,20 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
     const { orgId, campId, eventId } = ctx.params!;
     try {
-      const client = new BackendApiClient(ctx.req.headers);
-      const data = await client.get<ZetkinEvent>(
+      const backendApiClient = new BackendApiClient(ctx.req.headers);
+
+      if (campId) {
+        //We don't want to load the event if its project does not exist
+        //If this GET of the project fails, we end up in the catch block
+        //and return a 404 to the client
+        await backendApiClient.get(`/api/orgs/${orgId}/campaigns/${campId}`);
+      }
+
+      const event = await backendApiClient.get<ZetkinEvent>(
         `/api/orgs/${orgId}/actions/${eventId}`
       );
-      const actualCampaign = data.campaign?.id.toString() ?? 'standalone';
+      const actualCampaign = event.campaign?.id.toString() ?? 'standalone';
+
       if (actualCampaign !== campId) {
         return { notFound: true };
       }
