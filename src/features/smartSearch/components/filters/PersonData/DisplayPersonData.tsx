@@ -37,7 +37,9 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
               value: (
                 <UnderlinedText
                   text={
-                    field === fields.gender ? messages.genders[field]() : field
+                    field === fields.gender
+                      ? messages.genders[field || 'unknown']()
+                      : field
                   }
                 />
               ),

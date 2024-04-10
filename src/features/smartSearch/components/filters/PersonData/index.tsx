@@ -8,7 +8,6 @@ import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilte
 import {
   DATA_FIELD,
   Gender,
-  genders,
   NewSmartSearchFilter,
   OPERATION,
   PersonDataFilterConfig,
@@ -58,7 +57,6 @@ const PersonData = ({
   ).map((f) => ({ field: f, value: filter.config.fields[f] || '' }));
 
   const [criteria, setCriteria] = useState<Criterion[]>(initialCriteria);
-  const [gender, setGender] = useState<Gender>('f');
 
   // check that there are no blank fields before submitting
   const submittable = criteria.every((c) => c.value.length);
@@ -129,6 +127,8 @@ const PersonData = ({
     </StyledSelect>
   );
 
+  const genders: Gender[] = ['f', 'm', 'o'];
+
   const getCriteriaString = () => {
     let existing;
     let criteriaString: JSX.Element | null = null;
@@ -160,10 +160,9 @@ const PersonData = ({
               c.field === DATA_FIELD.GENDER ? (
                 <StyledSelect
                   onChange={(e) => {
-                    setGender(e.target.value as Gender);
                     handleValueChange(e.target.value, c);
                   }}
-                  value={gender}
+                  value={filter.config.fields.gender || 'f'}
                 >
                   {genders.map((gender) => (
                     <MenuItem key={gender} value={gender}>

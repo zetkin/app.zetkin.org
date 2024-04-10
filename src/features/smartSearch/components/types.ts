@@ -119,8 +119,8 @@ export interface MostActiveFilterConfig {
   size: number;
 }
 
-export type Gender = 'f' | 'm' | 'o' | 'unknown';
-export const genders: Gender[] = ['f', 'm', 'o', 'unknown'];
+//TODO: add null to support when gender is unknown.
+export type Gender = 'f' | 'm' | 'o';
 
 export interface PersonDataFilterConfig {
   fields: {
@@ -129,7 +129,7 @@ export interface PersonDataFilterConfig {
     co_address?: string;
     email?: string;
     first_name?: string;
-    gender?: Gender;
+    gender?: Gender | null;
     last_name?: string;
     phone?: string;
     street_address?: string;
