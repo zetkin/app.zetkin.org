@@ -350,6 +350,10 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId].items.push(
         remoteItem(participant.id, { data: participant })
       );
+      const event = state.eventList.items.find((e) => e?.data?.id === eventId);
+      if (event) {
+        updateAvailParticipantToState(state, event);
+      }
     },
     participantDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [eventId, participantId] = action.payload;
@@ -376,10 +380,13 @@ const eventsSlice = createSlice({
       }
 
       if (participant.cancelled) {
-        // If cancelled participant was contact for event, also remove contact
         const event = state.eventList.items.find(
           (e) => e?.data?.id === eventId
         );
+        if (event) {
+          updateAvailParticipantToState(state, event);
+        }
+        // If cancelled participant was contact for event, also remove contact
         if (event?.data && event?.data?.contact?.id == participant.id) {
           event.data.contact = null;
         }
@@ -539,6 +546,41 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
       }
     }
   });
+}
+
+function updateAvailParticipantToState(
+  state: EventsStoreSlice,
+  event: RemoteItem<ZetkinEvent>
+) {
+  const eventId = event.id as number;
+  const numAvailParticipants = state.participantsByEventId[
+    eventId
+  ].items.filter((participant) => !participant.data?.cancelled).length;
+
+  const eventData = event.data;
+
+  if (eventData) {
+    eventData.num_participants_available = numAvailParticipants;
+
+    const dateStr = eventData.start_time.slice(0, 10);
+    const eventByDateItem = state.eventsByDate[dateStr].items.find(
+      (item) => item.id === event.id
+    );
+    if (eventByDateItem?.data) {
+      eventByDateItem.data.num_participants_available = numAvailParticipants;
+    }
+
+    if (eventData.campaign) {
+      const eventByCampIdItem = state.eventsByCampaignId[
+        eventData.campaign.id
+      ].items.find((item) => item.id === event.id);
+
+      if (eventByCampIdItem?.data) {
+        eventByCampIdItem.data.num_participants_available =
+          numAvailParticipants;
+      }
+    }
+  }
 }
 
 export default eventsSlice;
