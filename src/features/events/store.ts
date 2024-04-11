@@ -581,7 +581,9 @@ function updateAvailParticipantToState(
       }
     }
   }
-  state.statsByEventId[eventId].isStale = true;
+  if (state.statsByEventId[eventId]) {
+    state.statsByEventId[eventId].isStale = true;
+  }
 }
 
 export default eventsSlice;
