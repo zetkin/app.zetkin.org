@@ -18,7 +18,7 @@ const ProblemRowsText: FC<Props> = ({ breakpoint = 8, rows }) => {
         values={{ row: rows[0] }}
       />
     );
-  } else if (rows.length < breakpoint) {
+  } else if (rows.length <= breakpoint) {
     const commaStr = rows.slice(0, -1).join(', ');
     const lastRow = rows[rows.length - 1];
     return (
