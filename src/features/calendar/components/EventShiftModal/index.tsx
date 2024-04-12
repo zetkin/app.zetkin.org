@@ -150,8 +150,10 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               onTypeChange={(newType) => {
                 if (newType) {
                   setType(newType);
+                  setEventTitle(newType.title);
                 } else {
                   setType(null);
+                  setEventTitle(messages.eventShiftModal.noTitle());
                 }
               }}
               orgId={orgId}
