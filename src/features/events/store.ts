@@ -350,7 +350,9 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId].items.push(
         remoteItem(participant.id, { data: participant })
       );
-      const event = state.eventList.items.find((e) => e?.data?.id === eventId);
+      const event = state.eventList.items.find(
+        (e) => e?.data?.id === eventId
+      )?.data;
       if (event) {
         updateAvailParticipantToState(state, event);
       }
@@ -382,13 +384,13 @@ const eventsSlice = createSlice({
       if (participant.cancelled) {
         const event = state.eventList.items.find(
           (e) => e?.data?.id === eventId
-        );
+        )?.data;
         if (event) {
           updateAvailParticipantToState(state, event);
-        }
-        // If cancelled participant was contact for event, also remove contact
-        if (event?.data && event?.data?.contact?.id == participant.id) {
-          event.data.contact = null;
+          // If cancelled participant was contact for event, also remove contact
+          if (event.contact?.id == participant.id) {
+            event.contact = null;
+          }
         }
       }
     },
@@ -550,39 +552,33 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
 
 function updateAvailParticipantToState(
   state: EventsStoreSlice,
-  event: RemoteItem<ZetkinEvent>
+  event: ZetkinEvent
 ) {
-  const eventId = event.id as number;
   const numAvailParticipants = state.participantsByEventId[
-    eventId
+    event.id
   ].items.filter((participant) => !participant.data?.cancelled).length;
+  event.num_participants_available = numAvailParticipants;
 
-  const eventData = event.data;
+  const dateStr = event.start_time.slice(0, 10);
+  const eventByDateItem = state.eventsByDate[dateStr].items.find(
+    (item) => item.id === event.id
+  );
+  if (eventByDateItem?.data) {
+    eventByDateItem.data.num_participants_available = numAvailParticipants;
+  }
 
-  if (eventData) {
-    eventData.num_participants_available = numAvailParticipants;
+  if (event.campaign) {
+    const eventByCampIdItem = state.eventsByCampaignId[
+      event.campaign.id
+    ].items.find((item) => item.id === event.id);
 
-    const dateStr = eventData.start_time.slice(0, 10);
-    const eventByDateItem = state.eventsByDate[dateStr].items.find(
-      (item) => item.id === event.id
-    );
-    if (eventByDateItem?.data) {
-      eventByDateItem.data.num_participants_available = numAvailParticipants;
-    }
-
-    if (eventData.campaign) {
-      const eventByCampIdItem = state.eventsByCampaignId[
-        eventData.campaign.id
-      ].items.find((item) => item.id === event.id);
-
-      if (eventByCampIdItem?.data) {
-        eventByCampIdItem.data.num_participants_available =
-          numAvailParticipants;
-      }
+    if (eventByCampIdItem?.data) {
+      eventByCampIdItem.data.num_participants_available = numAvailParticipants;
     }
   }
-  if (state.statsByEventId[eventId]) {
-    state.statsByEventId[eventId].isStale = true;
+
+  if (state.statsByEventId[event.id]) {
+    state.statsByEventId[event.id].isStale = true;
   }
 }
 
