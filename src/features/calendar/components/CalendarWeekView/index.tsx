@@ -111,7 +111,11 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         {/* Hours column */}
         <Box>
           {range(24).map((hour: number) => {
-            const time = dayjs().set('hour', hour).set('minute', 0);
+            const time = dayjs().set('hour', hour).set('minute', 0).toString();
+            const is12HourClock = Intl.DateTimeFormat(navigator.language, {
+              hour: 'numeric',
+            }).resolvedOptions().hour12;
+
             return (
               <Box
                 key={`hour-${hour}`}
@@ -122,9 +126,8 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 <Typography color={theme.palette.grey[500]} variant="caption">
                   <FormattedTime
                     hour="numeric"
-                    hour12={false}
-                    minute="numeric"
-                    value={time.toDate()}
+                    minute={is12HourClock ? undefined : 'numeric'}
+                    value={time}
                   />
                 </Typography>
               </Box>
