@@ -5,13 +5,13 @@ import insertAtPlaceholder from './insertAtPlaceholder';
 import {
   EmailContent,
   EmailContentInlineNode,
-  EmailFrame,
+  EmailTheme,
 } from 'features/emails/types';
 
 export default class EmailMJMLConverter {
   convertContentToMjml(
     content: EmailContent,
-    frame: EmailFrame | null
+    frame: EmailTheme | null
   ): MJMLJsonObject {
     const blockChildren: MJMLJsonObject[] = [];
 

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { EmailFrame } from './types';
 import { EmailStats } from './hooks/useEmailStats';
+import { EmailTheme } from './types';
 import {
   RemoteItem,
   remoteItem,
@@ -12,16 +12,16 @@ import { ZetkinEmail, ZetkinLink } from 'utils/types/zetkin';
 
 export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
-  frameList: RemoteList<EmailFrame>;
+  themeList: RemoteList<EmailTheme>;
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
   statsById: Record<number, RemoteItem<EmailStats>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
-  frameList: remoteList(),
   linksByEmailId: {},
   statsById: {},
+  themeList: remoteList(),
 };
 
 const emailsSlice = createSlice({
@@ -120,16 +120,6 @@ const emailsSlice = createSlice({
       state.emailList.loaded = timestamp;
       state.emailList.items.forEach((item) => (item.loaded = timestamp));
     },
-    framesLoad: (state) => {
-      state.frameList.isLoading = true;
-    },
-    framesLoaded: (state, action: PayloadAction<EmailFrame[]>) => {
-      const frames = action.payload;
-      const timestamp = new Date().toISOString();
-      state.frameList = remoteList(frames);
-      state.frameList.loaded = timestamp;
-      state.frameList.items.forEach((item) => (item.loaded = timestamp));
-    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const statsItem = state.statsById[id];
@@ -165,6 +155,16 @@ const emailsSlice = createSlice({
         }
       );
     },
+    themesLoad: (state) => {
+      state.themeList.isLoading = true;
+    },
+    themesLoaded: (state, action: PayloadAction<EmailTheme[]>) => {
+      const themes = action.payload;
+      const timestamp = new Date().toISOString();
+      state.themeList = remoteList(themes);
+      state.themeList.loaded = timestamp;
+      state.themeList.items.forEach((item) => (item.loaded = timestamp));
+    },
   },
 });
 
@@ -181,8 +181,8 @@ export const {
   emailUpdated,
   emailsLoad,
   emailsLoaded,
-  framesLoad,
-  framesLoaded,
+  themesLoad,
+  themesLoaded,
   statsLoad,
   statsLoaded,
 } = emailsSlice.actions;

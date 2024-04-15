@@ -69,7 +69,6 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
         <Box flex={1} sx={{ overflowY: 'auto' }}>
           <EmailEditorFrontend
             apiRef={apiRef}
-            frame={email.frame}
             initialContent={{ blocks: initialContent }}
             onSave={(newContent: OutputData) => {
               setContent(newContent);
@@ -83,6 +82,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
               setSelectedBlockIndex(selectedBlockIndex);
             }}
             readOnly={readOnly}
+            theme={email.theme}
           />
         </Box>
         <Box
