@@ -350,6 +350,12 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId].items.push(
         remoteItem(participant.id, { data: participant })
       );
+      const event = state.eventList.items.find(
+        (e) => e?.data?.id === eventId
+      )?.data;
+      if (event) {
+        updateAvailParticipantToState(state, event);
+      }
     },
     participantDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [eventId, participantId] = action.payload;
@@ -376,12 +382,15 @@ const eventsSlice = createSlice({
       }
 
       if (participant.cancelled) {
-        // If cancelled participant was contact for event, also remove contact
         const event = state.eventList.items.find(
           (e) => e?.data?.id === eventId
-        );
-        if (event?.data && event?.data?.contact?.id == participant.id) {
-          event.data.contact = null;
+        )?.data;
+        if (event) {
+          updateAvailParticipantToState(state, event);
+          // If cancelled participant was contact for event, also remove contact
+          if (event.contact?.id == participant.id) {
+            event.contact = null;
+          }
         }
       }
     },
@@ -539,6 +548,38 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
       }
     }
   });
+}
+
+function updateAvailParticipantToState(
+  state: EventsStoreSlice,
+  event: ZetkinEvent
+) {
+  const numAvailParticipants = state.participantsByEventId[
+    event.id
+  ].items.filter((participant) => !participant.data?.cancelled).length;
+  event.num_participants_available = numAvailParticipants;
+
+  const dateStr = event.start_time.slice(0, 10);
+  const eventByDateItem = state.eventsByDate[dateStr].items.find(
+    (item) => item.id === event.id
+  );
+  if (eventByDateItem?.data) {
+    eventByDateItem.data.num_participants_available = numAvailParticipants;
+  }
+
+  if (event.campaign) {
+    const eventByCampIdItem = state.eventsByCampaignId[
+      event.campaign.id
+    ].items.find((item) => item.id === event.id);
+
+    if (eventByCampIdItem?.data) {
+      eventByCampIdItem.data.num_participants_available = numAvailParticipants;
+    }
+  }
+
+  if (state.statsByEventId[event.id]) {
+    state.statsByEventId[event.id].isStale = true;
+  }
 }
 
 export default eventsSlice;

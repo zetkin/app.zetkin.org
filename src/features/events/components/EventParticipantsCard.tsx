@@ -35,11 +35,21 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   orgId,
 }) => {
   const eventData = useEvent(orgId, eventId).data;
-  const { pendingSignUps } = useEventParticipants(orgId, eventId);
+  const { pendingSignUps, participantsFuture } = useEventParticipants(
+    orgId,
+    eventId
+  );
+  const participants = participantsFuture.data || [];
+
   const { setReqParticipants } = useEventParticipantsMutations(orgId, eventId);
   const messages = useMessages(messageIds);
-  const reqParticipants = eventData?.num_participants_required ?? 0;
+
+  const remindedParticipants =
+    participants.filter((p) => p.reminder_sent != null && !p.cancelled)
+      .length ?? 0;
+
   const availParticipants = eventData?.num_participants_available ?? 0;
+  const reqParticipants = eventData?.num_participants_required ?? 0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -153,9 +163,9 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             marginBottom={1}
           >
             <Typography color={'secondary'} component="h6" variant="subtitle1">
-              {messages.eventParticipantsCard.booked()}
+              {messages.eventParticipantsCard.notifications()}
             </Typography>
-            <Typography>{`${availParticipants}/${availParticipants}`}</Typography>
+            <Typography>{`${remindedParticipants}/${availParticipants}`}</Typography>
           </Box>
           <Box
             alignItems="center"
