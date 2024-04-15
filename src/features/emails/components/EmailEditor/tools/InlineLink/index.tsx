@@ -155,6 +155,7 @@ export function linkToolFactory(title: string) {
 
       this._container = document.createElement('div');
       this._container.style.padding = '8px';
+      this._container.style.display = 'none';
 
       this._container.appendChild(this._input);
       this._container.appendChild(this._inputStatusContainer);
@@ -166,6 +167,7 @@ export function linkToolFactory(title: string) {
       this._button = document.createElement('button');
       this._button.type = 'button';
       this._button.classList.add(this._api.styles.inlineToolButton);
+      this.updateButton(true);
       return this._button;
     }
 
