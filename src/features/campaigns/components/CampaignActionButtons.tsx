@@ -19,7 +19,7 @@ import useCampaign from '../hooks/useCampaign';
 import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
 import useCreateEmail from 'features/emails/hooks/useCreateEmail';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import useEmailFrames from 'features/emails/hooks/useEmailFrames';
+import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinCampaign } from 'utils/types/zetkin';
@@ -58,7 +58,7 @@ const CampaignActionButtons: React.FunctionComponent<
   );
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
   const { createEmail } = useCreateEmail(orgId);
-  const frames = useEmailFrames(orgId).data || [];
+  const themes = useEmailThemes(orgId).data || [];
 
   if (!organization) {
     return null;
@@ -112,14 +112,14 @@ const CampaignActionButtons: React.FunctionComponent<
     },
   ];
 
-  if (organization.email && frames.length > 0) {
+  if (organization.email && themes.length > 0) {
     menuItems.push({
       icon: <EmailOutlined />,
       label: messages.linkGroup.createEmail(),
       onClick: () =>
         createEmail({
           campaign_id: campId,
-          frame_id: frames[0].id,
+          theme_id: themes[0].id,
           title: messages.form.createEmail.newEmail(),
         }),
     });

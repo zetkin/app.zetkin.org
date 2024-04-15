@@ -165,7 +165,7 @@ export type BlockAttributes = {
   }>;
 };
 
-export type EmailFrame = {
+export type EmailTheme = {
   block_attributes?: BlockAttributes;
   css?: string;
   frame_mjml: MJMLJsonObject | null;

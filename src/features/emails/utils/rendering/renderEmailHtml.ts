@@ -9,7 +9,7 @@ export default function renderEmailHtml(
   email: ZetkinEmail,
   variableValues: Record<string, string>
 ): string {
-  const { frame, content } = email;
+  const { theme, content } = email;
 
   if (!content) {
     return '';
@@ -32,7 +32,7 @@ export default function renderEmailHtml(
   });
 
   const converter = new EmailMJMLConverter();
-  const mjml = converter.convertContentToMjml(expanded, frame);
+  const mjml = converter.convertContentToMjml(expanded, theme);
 
   if (!mjml) {
     return '';

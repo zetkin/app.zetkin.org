@@ -150,7 +150,7 @@ describe('renderEmailHtml', () => {
   it('returns MJML-rendered HTML for email with frame', async () => {
     const email = mockEmail({
       subject: 'Hello',
-      frame: {
+      theme: {
         id: 0,
         block_attributes: {
           button: {
@@ -316,7 +316,7 @@ export default function mockEmail(
     id: 1,
     campaign: null,
     content: '{ blocks: [] }',
-    frame: null,
+    theme: null,
     locked: null,
     organization: {
       id: 1,

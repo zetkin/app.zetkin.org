@@ -13,7 +13,7 @@ import EditorJS, {
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
-import { EmailFrame } from 'features/emails/types';
+import { EmailTheme } from 'features/emails/types';
 import LibraryImage from './tools/LibraryImage';
 import { linkToolFactory } from './tools/InlineLink';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -23,22 +23,22 @@ import variableToolFactory from './tools/inlineVariable';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
-  frame: EmailFrame | null;
   initialContent: OutputData;
   onSave: (data: OutputData) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
   readOnly: boolean;
+  theme: EmailTheme | null;
 };
 
 const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   apiRef,
-  frame,
+  theme: emailTheme,
   initialContent,
   onSave,
   onSelectBlock,
   readOnly,
 }) => {
-  const theme = useTheme();
+  const muiTheme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const editorInstance = useRef<EditorJS | null>(null);
@@ -76,7 +76,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         button: {
           class: Button as unknown as ToolConstructable,
           config: {
-            attributes: frame?.block_attributes?.['button'] ?? {},
+            attributes: emailTheme?.block_attributes?.['button'] ?? {},
           },
         },
         header: {
@@ -90,7 +90,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         libraryImage: {
           class: LibraryImage as unknown as ToolConstructable,
           config: {
-            attributes: frame?.block_attributes?.['image'] ?? {},
+            attributes: emailTheme?.block_attributes?.['image'] ?? {},
             orgId,
           },
         },
@@ -103,10 +103,10 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
               testLink: messages.editor.tools.link.testLink(),
             },
             theme: {
-              body2FontSize: theme.typography.body2.fontSize,
-              mediumGray: theme.palette.grey[600],
-              primaryColor: theme.palette.primary.main,
-              warningColor: theme.palette.warning.main,
+              body2FontSize: muiTheme.typography.body2.fontSize,
+              mediumGray: muiTheme.palette.grey[600],
+              primaryColor: muiTheme.palette.primary.main,
+              warningColor: muiTheme.palette.warning.main,
             },
           },
         },
@@ -186,8 +186,8 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     }
   }
 
-  styleSheet.replaceSync(frame?.css || '');
-  const frameStyles = Array.from(styleSheet.cssRules)
+  styleSheet.replaceSync(emailTheme?.css || '');
+  const themeStyles = Array.from(styleSheet.cssRules)
     .map((rule) => {
       if (rule instanceof CSSMediaRule) {
         if (rule.conditionText.includes('dark')) {
@@ -210,7 +210,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   /*eslint-disable react/no-danger*/
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: frameStyles }} />
+      <style dangerouslySetInnerHTML={{ __html: themeStyles }} />
       <Box
         id="ClientOnlyEditor-container"
         sx={{

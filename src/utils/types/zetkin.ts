@@ -1,4 +1,4 @@
-import { EmailFrame } from 'features/emails/types';
+import { EmailTheme } from 'features/emails/types';
 import {
   ZetkinAssignedTask,
   ZetkinTask,
@@ -505,7 +505,7 @@ export type {
 
 export interface ZetkinEmail {
   campaign: { id: number; title: string } | null;
-  frame: EmailFrame | null;
+  theme: EmailTheme | null;
   id: number;
   locked: string | null;
   published: string | null;
@@ -524,10 +524,10 @@ export interface ZetkinLink {
 }
 
 export type ZetkinEmailPostBody = Partial<
-  Omit<ZetkinEmail, 'id' | 'frame' | 'published' | 'organization' | 'target'>
+  Omit<ZetkinEmail, 'id' | 'theme' | 'published' | 'organization' | 'target'>
 > & {
   campaign_id: number | null;
-  frame_id: number | null;
+  theme_id: number | null;
 };
 
 export type ZetkinCreatePerson = Partial<
