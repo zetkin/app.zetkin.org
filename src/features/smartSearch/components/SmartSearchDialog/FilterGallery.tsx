@@ -2,8 +2,8 @@ import { ChevronLeft } from '@mui/icons-material';
 import {
   Box,
   Button,
-  ButtonBase,
   Card,
+  Grid,
   List,
   ListItem,
   Typography,
@@ -136,14 +136,9 @@ const FilterGallery = ({
           width={isMobile ? '100%' : '80%'}
         >
           {Object.entries(GROUPED_FILTERS).map(([category, filters], index) => (
-            <Box
-              key={`category-${index}`}
-              id={`category-${index}`}
-              margin="auto"
-              width={0.9}
-            >
-              <Box pl={2}>
-                <Typography variant="h6">
+            <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
+              <Box>
+                <Typography variant="h4">
                   <Msg
                     id={
                       messageIds.filterCategories[category as FILTER_CATEGORY]
@@ -151,21 +146,19 @@ const FilterGallery = ({
                   />
                 </Typography>
               </Box>
-              <Box
-                display="flex"
-                flexWrap="wrap"
-                justifyContent={isMobile ? 'center' : 'start'}
-              >
+              <Grid container paddingTop={2} spacing={3}>
                 {filters.map((filter) => (
-                  <ButtonBase
+                  <Grid
                     key={filter}
-                    disableRipple
+                    item
+                    lg={4}
                     onClick={() => onAddNewFilter(filter)}
+                    sm={6}
+                    xs={12}
                   >
                     <Card
                       style={{
                         height: '200px',
-                        margin: '1rem',
                         width: '300px',
                       }}
                     >
@@ -181,9 +174,9 @@ const FilterGallery = ({
                         </Typography>
                       </Box>
                     </Card>
-                  </ButtonBase>
+                  </Grid>
                 ))}
-              </Box>
+              </Grid>
             </Box>
           ))}
         </Box>
