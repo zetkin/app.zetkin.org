@@ -6,6 +6,7 @@ import {
   Call,
   CheckBoxOutlined,
   Event,
+  ExploreOutlined,
   FilterAlt,
   LocalOfferOutlined,
   PersonAddAlt,
@@ -21,6 +22,7 @@ import {
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../../filters/CampaignParticipation/DisplayCampaignParticipation';
+import DisplayJourney from '../../filters/Journey/DisplayJourney';
 import DisplayMostActive from '../../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../../filters/PersonData/DisplayPersonData';
 import DisplayPersonField from '../../filters/PersonField/DisplayPersonField';
@@ -39,6 +41,7 @@ import {
   CallHistoryFilterConfig,
   CampaignParticipationConfig,
   FILTER_TYPE,
+  JourneyFilterConfig,
   MostActiveFilterConfig,
   OPERATION,
   PersonDataFilterConfig,
@@ -90,6 +93,13 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <Event color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.JOURNEY) {
+    displayFilter = (
+      <DisplayJourney
+        filter={filter as SmartSearchFilterWithId<JourneyFilterConfig>}
+      />
+    );
+    filterTypeIcon = <ExploreOutlined color="secondary" fontSize="small" />;
   } else if (filter.type === FILTER_TYPE.MOST_ACTIVE) {
     displayFilter = (
       <DisplayMostActive
