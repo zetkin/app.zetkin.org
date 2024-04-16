@@ -122,6 +122,15 @@ export default makeMessages('zui', {
   lists: {
     showMore: m('Show more...'),
   },
+  orgScopeSelect: {
+    orgPlaceholder: m('Select organizations'),
+    scope: {
+      all: m<{ org: string }>('{org} and all sub-organizations'),
+      specific: m('Choose specific organizations'),
+      suborgs: m('Only sub-organizations'),
+      this: m<{ org: string }>('Only {org}'),
+    },
+  },
   organizeSidebar: {
     areas: m('Areas'),
     filter: m('Type to filter'),
