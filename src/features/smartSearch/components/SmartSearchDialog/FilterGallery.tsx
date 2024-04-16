@@ -4,6 +4,8 @@ import {
   Button,
   ButtonBase,
   Card,
+  List,
+  ListItem,
   Typography,
   useMediaQuery,
   useTheme,
@@ -13,6 +15,7 @@ import { FILTER_TYPE } from 'features/smartSearch/components/types';
 import { Msg } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import { useRef } from 'react';
 
 interface FilterGalleryProps {
   onCancelAddNewFilter: () => void;
@@ -58,8 +61,10 @@ const FilterGallery = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  const choiceContainerRef = useRef<HTMLDivElement>();
+
   return (
-    <Box display="flex" flexDirection="column" pb={2}>
+    <Box display="flex" flexDirection="column" overflow="hidden" pb={2}>
       <Box
         display="flex"
         flexDirection={isMobile ? 'column' : 'row'}
@@ -82,50 +87,107 @@ const FilterGallery = ({
         </Box>
         <Box flex={1} />
       </Box>
-      {Object.entries(GROUPED_FILTERS).map(([category, filters]) => (
-        <Box key={category} margin="auto" width={0.9}>
-          <Box pl={2}>
-            <Typography variant="h6">
-              <Msg
-                id={messageIds.filterCategories[category as FILTER_CATEGORY]}
-              />
-            </Typography>
-          </Box>
-          <Box
-            display="flex"
-            flexWrap="wrap"
-            justifyContent={isMobile ? 'center' : 'start'}
-          >
-            {filters.map((filter) => (
-              <ButtonBase
-                key={filter}
-                disableRipple
-                onClick={() => onAddNewFilter(filter)}
+      <Box
+        display="flex"
+        height="calc(100% - 90px)"
+        justifyContent="space-between"
+        width="100%"
+      >
+        <Box
+          alignItems="center"
+          display={isMobile ? 'none' : 'flex'}
+          flexDirection="column"
+          justifyContent="space-between"
+          sx={{
+            overflowY: 'scroll',
+          }}
+          width="20%"
+        >
+          <List>
+            {Object.entries(GROUPED_FILTERS).map(([category], index) => (
+              <ListItem
+                key={index}
+                onClick={() => {
+                  if (choiceContainerRef.current) {
+                    const element = choiceContainerRef.current.querySelector(
+                      `#category-${index}`
+                    );
+                    element?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                sx={{ cursor: 'pointer', paddingY: 2 }}
               >
-                <Card
-                  style={{
-                    height: '200px',
-                    margin: '1rem',
-                    width: '300px',
-                  }}
-                >
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    height={1}
-                    justifyContent="center"
-                    padding={1}
-                  >
-                    <Typography>
-                      <Msg id={messageIds.filterTitles[filter]} />
-                    </Typography>
-                  </Box>
-                </Card>
-              </ButtonBase>
+                <Typography>
+                  <Msg
+                    id={
+                      messageIds.filterCategories[category as FILTER_CATEGORY]
+                    }
+                  />
+                </Typography>
+              </ListItem>
             ))}
-          </Box>
+          </List>
         </Box>
-      ))}
+        <Box
+          ref={choiceContainerRef}
+          display="flex"
+          flexDirection="column"
+          sx={{ overflowY: 'auto' }}
+          width={isMobile ? '100%' : '80%'}
+        >
+          {Object.entries(GROUPED_FILTERS).map(([category, filters], index) => (
+            <Box
+              key={`category-${index}`}
+              id={`category-${index}`}
+              margin="auto"
+              width={0.9}
+            >
+              <Box pl={2}>
+                <Typography variant="h6">
+                  <Msg
+                    id={
+                      messageIds.filterCategories[category as FILTER_CATEGORY]
+                    }
+                  />
+                </Typography>
+              </Box>
+              <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent={isMobile ? 'center' : 'start'}
+              >
+                {filters.map((filter) => (
+                  <ButtonBase
+                    key={filter}
+                    disableRipple
+                    onClick={() => onAddNewFilter(filter)}
+                  >
+                    <Card
+                      style={{
+                        height: '200px',
+                        margin: '1rem',
+                        width: '300px',
+                      }}
+                    >
+                      <Box
+                        alignItems="center"
+                        display="flex"
+                        height={1}
+                        justifyContent="center"
+                        padding={1}
+                      >
+                        <Typography>
+                          <Msg id={messageIds.filterTitles[filter]} />
+                        </Typography>
+                      </Box>
+                    </Card>
+                  </ButtonBase>
+                ))}
+              </Box>
+            </Box>
+          ))}
+        </Box>
+      </Box>
     </Box>
   );
 };
