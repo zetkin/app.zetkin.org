@@ -1,4 +1,4 @@
-import { Box, Button, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FC, FormEvent } from 'react';
 
 import { FilterConfigOrgOptions } from './types';
@@ -6,11 +6,13 @@ import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
+import ZUIOrgScopeSelect from 'zui/ZUIOrgScopeSelect';
 
 interface FilterFormProps {
   renderSentence: () => JSX.Element;
   renderExamples?: () => JSX.Element;
   disableSubmit?: boolean;
+  enableOrgSelect?: boolean;
   onOrgsChange?: (orgs: FilterConfigOrgOptions) => void;
   onSubmit: (e: FormEvent) => void;
   onCancel: () => void;
@@ -18,6 +20,7 @@ interface FilterFormProps {
 }
 
 const FilterForm: FC<FilterFormProps> = ({
+  enableOrgSelect,
   renderExamples,
   renderSentence,
   onCancel,
@@ -33,30 +36,21 @@ const FilterForm: FC<FilterFormProps> = ({
     return null;
   }
 
-  // TODO: Don't throw here
-  if (typeof selectedOrgs == 'string') {
-    throw new Error('All/Suborgs is not yet supported');
-  }
-
-  const selectedOrgOption = (selectedOrgs as number[])[0];
-
   return (
     <form onSubmit={onSubmit} style={{ height: '100%' }}>
-      <Select
-        onChange={(ev) => {
-          onOrgsChange?.([ev.target.value as number]);
-        }}
-        value={selectedOrgOption}
-      >
-        {orgsFuture.data.map((org) => {
-          return (
-            <MenuItem key={org.id} value={org.id}>
-              {org.title}
-            </MenuItem>
-          );
-        })}
-      </Select>
       <Box display="flex" flexDirection="column" height={1} padding={1}>
+        {enableOrgSelect && (
+          <Box display="flex" justifyContent="flex-end">
+            <ZUIOrgScopeSelect
+              onChange={(value) => {
+                onOrgsChange?.(value);
+              }}
+              organizations={orgsFuture.data}
+              orgId={orgId}
+              value={selectedOrgs || [orgId]}
+            />
+          </Box>
+        )}
         <Box
           alignItems="center"
           display="flex"

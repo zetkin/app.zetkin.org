@@ -123,6 +123,7 @@ const CampaignParticipation = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
       onOrgsChange={(orgs) => {
         setConfig({ ...filter.config, organizations: orgs });
