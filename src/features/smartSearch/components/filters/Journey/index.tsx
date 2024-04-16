@@ -4,6 +4,7 @@ import { MenuItem } from '@mui/material';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
+import TimeFrame from '../TimeFrame';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -12,6 +13,7 @@ import {
   NewSmartSearchFilter,
   OPERATION,
   SmartSearchFilterWithId,
+  TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from '../../types';
 
@@ -44,11 +46,25 @@ const Journey: FC<JourneyProps> = ({
 
   const journeys = useJourneys(orgId)?.data || [];
 
+  const handleTimeFrameChange = (range: {
+    after?: string;
+    before?: string;
+  }) => {
+    setConfig({
+      ...filter.config,
+      after: range.after,
+      before: range.before,
+    });
+  };
+
   return (
     <FilterForm
       //   disableSubmit={!submittable}
       onCancel={onCancel}
-      onSubmit={(e) => console.log(e)}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(filter);
+      }}
       renderSentence={() => (
         <Msg
           id={localMessageIds.inputString}
@@ -68,7 +84,12 @@ const Journey: FC<JourneyProps> = ({
             journeySelect: (
               <StyledSelect
                 minWidth="10rem"
-                onChange={(e) => console.log('hey')}
+                onChange={(e) =>
+                  setConfig({
+                    ...filter.config,
+                    journey: parseInt(e.target.value),
+                  })
+                }
                 value={filter.config.journey || ''}
               >
                 {journeys.map((journey) => (
@@ -95,6 +116,32 @@ const Journey: FC<JourneyProps> = ({
                   <Msg id={localMessageIds.closed} />
                 </MenuItem>
               </StyledSelect>
+            ),
+            statusText: (
+              <Msg
+                id={
+                  filter.config.operator === 'open'
+                    ? localMessageIds.opened
+                    : localMessageIds.finished
+                }
+              />
+            ),
+            timeFrame: (
+              <TimeFrame
+                filterConfig={{
+                  after: filter.config.after,
+                  before: filter.config.before,
+                }}
+                onChange={handleTimeFrameChange}
+                options={[
+                  TIME_FRAME.EVER,
+                  TIME_FRAME.AFTER_DATE,
+                  TIME_FRAME.BEFORE_DATE,
+                  TIME_FRAME.BETWEEN,
+                  TIME_FRAME.LAST_FEW_DAYS,
+                  TIME_FRAME.BEFORE_TODAY,
+                ]}
+              />
             ),
           }}
         />
