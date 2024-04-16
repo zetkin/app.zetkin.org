@@ -146,6 +146,14 @@ const FilterGallery = ({
                     }
                   />
                 </Typography>
+                <Typography variant="h5">
+                  <Msg
+                    id={
+                      messageIds.filterCategories[category as FILTER_CATEGORY]
+                        .description
+                    }
+                  />
+                </Typography>
               </Box>
               <Grid container paddingTop={2} spacing={3}>
                 {filters.map((filter) => (

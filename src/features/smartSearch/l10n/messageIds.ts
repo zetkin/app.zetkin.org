@@ -13,14 +13,33 @@ export default makeMessages('feat.smartSearch', {
   },
   filterCategories: {
     basicInformation: {
+      description: m('Filter on personal information'),
       title: m('Basic information'),
     },
-    crossReferencing: { title: m('Cross referencing') },
-    events: { title: m('Events') },
-    misc: { title: m('Misc') },
-    phoneBanking: { title: m('Phone banking') },
-    surveys: { title: m('Surveys') },
-    tasks: { title: m('Tasks') },
+    crossReferencing: {
+      description: m('Filter based on lists and smart searches'),
+      title: m('Cross referencing'),
+    },
+    events: {
+      description: m('Filter on event data'),
+      title: m('Events'),
+    },
+    misc: {
+      description: m('Miscellaneous filters'),
+      title: m('Misc'),
+    },
+    phoneBanking: {
+      description: m('Filter on call data'),
+      title: m('Phone banking'),
+    },
+    surveys: {
+      description: m('Filter on survey data'),
+      title: m('Surveys'),
+    },
+    tasks: {
+      description: m('Filter on task data'),
+      title: m('Tasks'),
+    },
   },
   filterTitles: {
     all: m('Everyone'),
