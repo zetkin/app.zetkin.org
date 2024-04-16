@@ -124,6 +124,7 @@ export default makeMessages('zui', {
   },
   orgScopeSelect: {
     orgPlaceholder: m('Select organizations'),
+    orgSelectionLabel: m<{ count: number }>('{count} selected'),
     scope: {
       all: m<{ org: string }>('{org} and all sub-organizations'),
       specific: m('Choose specific organizations'),

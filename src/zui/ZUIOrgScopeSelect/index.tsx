@@ -2,6 +2,8 @@ import { FC } from 'react';
 import {
   Autocomplete,
   Box,
+  Checkbox,
+  Chip,
   ListItem,
   ListItemText,
   MenuItem,
@@ -84,11 +86,24 @@ const ZUIOrgScopeSelect: FC<Props> = ({
               />
             );
           }}
-          renderOption={(props, option) => {
+          renderOption={(props, option, { selected }) => {
             return (
               <ListItem {...props} key={option.id} value={option.id}>
+                <Checkbox checked={selected} />
                 <ListItemText primary={option.title} />
               </ListItem>
+            );
+          }}
+          renderTags={(tagValue) => {
+            return (
+              <Chip
+                label={
+                  <Msg
+                    id={messageIds.orgScopeSelect.orgSelectionLabel}
+                    values={{ count: tagValue.length }}
+                  />
+                }
+              />
             );
           }}
           value={orgs.map(
