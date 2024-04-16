@@ -140,7 +140,6 @@ export default makeMessages('feat.smartSearch', {
     },
     journey: {
       closed: m('a closed'),
-      finished: m('that finished'),
       inputString: m<{
         addRemoveSelect: ReactElement;
         journeySelect: ReactElement;
@@ -150,8 +149,9 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame}'
       ),
-      open: m('an open'),
-      opened: m('that opened'),
+      opened: m('an open'),
+      thatFinished: m('that finished'),
+      thatOpened: m('that opened'),
     },
     mostActive: {
       examples: {

@@ -204,7 +204,7 @@ export interface SubQueryFilterConfig {
 }
 
 export interface JourneyFilterConfig {
-  operator: 'open' | 'closed';
+  operator: 'opened' | 'closed';
   journey?: number;
   after?: string;
   before?: string;

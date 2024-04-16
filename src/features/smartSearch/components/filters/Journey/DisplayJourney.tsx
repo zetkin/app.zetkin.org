@@ -36,15 +36,15 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
         journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
         operator: (
           <UnderlinedMsg
-            id={localMessageIds[operator === 'open' ? 'open' : 'closed']}
+            id={localMessageIds[operator === 'opened' ? 'opened' : 'closed']}
           />
         ),
         statusText: (
           <Msg
             id={
-              operator === 'open'
-                ? localMessageIds.opened
-                : localMessageIds.finished
+              operator === 'opened'
+                ? localMessageIds.thatOpened
+                : localMessageIds.thatFinished
             }
           />
         ),

@@ -20,7 +20,7 @@ import {
 const localMessageIds = messageIds.filters.journey;
 
 enum JOURNEY_OP {
-  OPEN = 'open',
+  OPEN = 'opened',
   CLOSE = 'closed',
 }
 interface JourneyProps {
@@ -41,7 +41,7 @@ const Journey: FC<JourneyProps> = ({
   const { orgId } = useNumericRouteParams();
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {
-      operator: 'open',
+      operator: 'opened',
     });
 
   const journeys = useJourneys(orgId).data || [];
@@ -110,7 +110,7 @@ const Journey: FC<JourneyProps> = ({
                 value={filter.config.operator}
               >
                 <MenuItem value={JOURNEY_OP.OPEN}>
-                  <Msg id={localMessageIds.open} />
+                  <Msg id={localMessageIds.opened} />
                 </MenuItem>
                 <MenuItem value={JOURNEY_OP.CLOSE}>
                   <Msg id={localMessageIds.closed} />
@@ -120,9 +120,9 @@ const Journey: FC<JourneyProps> = ({
             statusText: (
               <Msg
                 id={
-                  filter.config.operator === 'open'
-                    ? localMessageIds.opened
-                    : localMessageIds.finished
+                  filter.config.operator === 'opened'
+                    ? localMessageIds.thatOpened
+                    : localMessageIds.thatFinished
                 }
               />
             ),
