@@ -187,9 +187,12 @@ export interface UserFilterConfig {
   is_user: boolean;
 }
 
+export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
+
 export interface CampaignParticipationConfig {
   state: 'booked' | 'signed_up';
   operator: 'in' | 'notin';
+  organizations?: FilterConfigOrgOptions;
   campaign?: number;
   activity?: number;
   location?: number;

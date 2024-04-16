@@ -1,27 +1,61 @@
-import { FormEvent } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, MenuItem, Select, Typography } from '@mui/material';
+import { FC, FormEvent } from 'react';
 
-import { Msg } from 'core/i18n';
-
+import { FilterConfigOrgOptions } from './types';
 import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 
 interface FilterFormProps {
   renderSentence: () => JSX.Element;
   renderExamples?: () => JSX.Element;
   disableSubmit?: boolean;
+  onOrgsChange?: (orgs: FilterConfigOrgOptions) => void;
   onSubmit: (e: FormEvent) => void;
   onCancel: () => void;
+  selectedOrgs?: FilterConfigOrgOptions;
 }
 
-const FilterForm = ({
+const FilterForm: FC<FilterFormProps> = ({
   renderExamples,
   renderSentence,
   onCancel,
+  onOrgsChange,
   disableSubmit,
   onSubmit,
-}: FilterFormProps): JSX.Element => {
+  selectedOrgs,
+}) => {
+  const { orgId } = useNumericRouteParams();
+  const orgsFuture = useSubOrganizations(orgId);
+
+  if (!orgsFuture.data) {
+    return null;
+  }
+
+  // TODO: Don't throw here
+  if (typeof selectedOrgs == 'string') {
+    throw new Error('All/Suborgs is not yet supported');
+  }
+
+  const selectedOrgOption = (selectedOrgs as number[])[0];
+
   return (
     <form onSubmit={onSubmit} style={{ height: '100%' }}>
+      <Select
+        onChange={(ev) => {
+          onOrgsChange?.([ev.target.value as number]);
+        }}
+        value={selectedOrgOption}
+      >
+        {orgsFuture.data.map((org) => {
+          return (
+            <MenuItem key={org.id} value={org.id}>
+              {org.title}
+            </MenuItem>
+          );
+        })}
+      </Select>
       <Box display="flex" flexDirection="column" height={1} padding={1}>
         <Box
           alignItems="center"

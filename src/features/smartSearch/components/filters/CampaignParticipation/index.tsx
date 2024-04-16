@@ -71,6 +71,7 @@ const CampaignParticipation = ({
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CampaignParticipationConfig>(initialFilter, {
       operator: 'in',
+      organizations: [orgId],
       state: 'booked',
     });
 
@@ -83,12 +84,14 @@ const CampaignParticipation = ({
     after?: string;
     before?: string;
   }) => {
-    const { state, operator, campaign, activity, location } = filter.config;
+    const { state, operator, campaign, activity, location, organizations } =
+      filter.config;
     setConfig({
       activity,
       campaign,
       location,
       operator,
+      organizations,
       state,
       ...range,
     });
@@ -121,6 +124,9 @@ const CampaignParticipation = ({
   return (
     <FilterForm
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -289,6 +295,7 @@ const CampaignParticipation = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };
