@@ -22,6 +22,7 @@ interface FilterGalleryProps {
 enum FILTER_CATEGORY {
   PEOPLE = 'peopleDatabase',
   PHONE_BANKING = 'phoneBanking',
+  JOURNEY = 'journey',
   CAMPAIGN_ACTIVITY = 'campaignActivity',
   SURVEYS = 'surveys',
   MISC = 'misc',
@@ -44,6 +45,7 @@ const GROUPED_FILTERS: { [key in FILTER_CATEGORY]: FILTER_TYPE[] } = {
     FILTER_TYPE.SURVEY_RESPONSE,
     FILTER_TYPE.SURVEY_OPTION,
   ],
+  [FILTER_CATEGORY.JOURNEY]: [FILTER_TYPE.JOURNEY],
   [FILTER_CATEGORY.MISC]: [
     FILTER_TYPE.RANDOM,
     FILTER_TYPE.USER,

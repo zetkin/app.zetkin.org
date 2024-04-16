@@ -5,6 +5,7 @@ export enum FILTER_TYPE {
   CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
   CAMPAIGN_PARTICIPATION = 'campaign_participation',
+  JOURNEY = 'journey',
   MOST_ACTIVE = 'most_active',
   PERSON_DATA = 'person_data',
   PERSON_FIELD = 'person_field',
@@ -202,6 +203,13 @@ export interface SubQueryFilterConfig {
   operator?: IN_OPERATOR;
 }
 
+export interface JourneyFilterConfig {
+  operator: 'open' | 'closed';
+  journey_id?: number;
+  after?: string;
+  before?: string;
+}
+
 interface TaskTimeFrameBefore {
   before: string;
 }
@@ -253,6 +261,7 @@ export type AnyFilterConfig =
   | SurveyOptionFilterConfig
   | SurveyResponseFilterConfig
   | SurveySubmissionFilterConfig
+  | JourneyFilterConfig
   | TaskFilterConfig
   | UserFilterConfig; // Add all filter objects here
 

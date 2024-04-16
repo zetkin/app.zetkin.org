@@ -1,6 +1,7 @@
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
+import Journey from '../filters/Journey';
 import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
 import PersonField from '../filters/PersonField';
@@ -136,6 +137,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.USER && (
         <User
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.JOURNEY && (
+        <Journey
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
