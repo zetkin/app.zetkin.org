@@ -12,11 +12,15 @@ export default makeMessages('feat.smartSearch', {
     save: m('Save'),
   },
   filterCategories: {
-    campaignActivity: m('Project activity'),
-    misc: m('Misc'),
-    peopleDatabase: m('People'),
-    phoneBanking: m('Phone banking'),
-    surveys: m('Surveys'),
+    basicInformation: {
+      title: m('Basic information'),
+    },
+    crossReferencing: { title: m('Cross referencing') },
+    events: { title: m('Events') },
+    misc: { title: m('Misc') },
+    phoneBanking: { title: m('Phone banking') },
+    surveys: { title: m('Surveys') },
+    tasks: { title: m('Tasks') },
   },
   filterTitles: {
     all: m('Everyone'),

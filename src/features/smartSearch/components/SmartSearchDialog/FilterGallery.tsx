@@ -23,35 +23,34 @@ interface FilterGalleryProps {
 }
 
 enum FILTER_CATEGORY {
-  PEOPLE = 'peopleDatabase',
-  PHONE_BANKING = 'phoneBanking',
-  CAMPAIGN_ACTIVITY = 'campaignActivity',
-  SURVEYS = 'surveys',
+  BASIC = 'basicInformation',
+  CROSS_REFERENCING = 'crossReferencing',
+  EVENTS = 'events',
   MISC = 'misc',
+  PHONE_BANKING = 'phoneBanking',
+  SURVEYS = 'surveys',
+  TASKS = 'tasks',
 }
 
 const GROUPED_FILTERS: { [key in FILTER_CATEGORY]: FILTER_TYPE[] } = {
-  [FILTER_CATEGORY.PEOPLE]: [
+  [FILTER_CATEGORY.BASIC]: [
     FILTER_TYPE.PERSON_DATA,
     FILTER_TYPE.PERSON_FIELD,
     FILTER_TYPE.PERSON_TAGS,
-    FILTER_TYPE.PERSON_VIEW,
   ],
-  [FILTER_CATEGORY.CAMPAIGN_ACTIVITY]: [
-    FILTER_TYPE.CAMPAIGN_PARTICIPATION,
-    FILTER_TYPE.TASK,
-  ],
+  [FILTER_CATEGORY.EVENTS]: [FILTER_TYPE.CAMPAIGN_PARTICIPATION],
+  [FILTER_CATEGORY.TASKS]: [FILTER_TYPE.TASK],
   [FILTER_CATEGORY.PHONE_BANKING]: [FILTER_TYPE.CALL_HISTORY],
   [FILTER_CATEGORY.SURVEYS]: [
     FILTER_TYPE.SURVEY_SUBMISSION,
     FILTER_TYPE.SURVEY_RESPONSE,
     FILTER_TYPE.SURVEY_OPTION,
   ],
-  [FILTER_CATEGORY.MISC]: [
-    FILTER_TYPE.RANDOM,
-    FILTER_TYPE.USER,
+  [FILTER_CATEGORY.CROSS_REFERENCING]: [
     FILTER_TYPE.SUB_QUERY,
+    FILTER_TYPE.PERSON_VIEW,
   ],
+  [FILTER_CATEGORY.MISC]: [FILTER_TYPE.RANDOM, FILTER_TYPE.USER],
 };
 
 const FilterGallery = ({
@@ -121,6 +120,7 @@ const FilterGallery = ({
                   <Msg
                     id={
                       messageIds.filterCategories[category as FILTER_CATEGORY]
+                        .title
                     }
                   />
                 </Typography>
@@ -142,6 +142,7 @@ const FilterGallery = ({
                   <Msg
                     id={
                       messageIds.filterCategories[category as FILTER_CATEGORY]
+                        .title
                     }
                   />
                 </Typography>
