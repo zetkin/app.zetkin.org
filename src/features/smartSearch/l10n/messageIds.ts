@@ -140,9 +140,11 @@ export default makeMessages('feat.smartSearch', {
     },
     journey: {
       closed: m('a closed'),
-      inputString: m<{ addRemoveSelect: ReactElement; operator: ReactElement }>(
-        '{addRemoveSelect} people who are part of {operator}'
-      ),
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        journeySelect: ReactElement;
+        operator: ReactElement;
+      }>('{addRemoveSelect} people who are part of {operator} {journeySelect}'),
       open: m('an open'),
     },
     mostActive: {
