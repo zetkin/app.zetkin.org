@@ -44,7 +44,7 @@ const Journey: FC<JourneyProps> = ({
       operator: 'open',
     });
 
-  const journeys = useJourneys(orgId)?.data || [];
+  const journeys = useJourneys(orgId).data || [];
 
   const handleTimeFrameChange = (range: {
     after?: string;
