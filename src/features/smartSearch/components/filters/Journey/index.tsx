@@ -59,7 +59,7 @@ const Journey: FC<JourneyProps> = ({
 
   return (
     <FilterForm
-      //   disableSubmit={!submittable}
+      disableSubmit={!filter.config.journey}
       onCancel={onCancel}
       onSubmit={(e) => {
         e.preventDefault();
