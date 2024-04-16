@@ -13,6 +13,12 @@ import {
   ZetkinSmartSearchFilter,
 } from '../../types';
 
+const localMessageIds = messageIds.filters.journey;
+
+enum JOURNEY_OP {
+  OPEN = 'open',
+  CLOSE = 'closed',
+}
 interface JourneyProps {
   filter: SmartSearchFilterWithId<JourneyFilterConfig> | NewSmartSearchFilter;
   onSubmit: (
@@ -22,7 +28,6 @@ interface JourneyProps {
   ) => void;
   onCancel: () => void;
 }
-const localMessageIds = messageIds.filters.journey;
 
 const Journey: FC<JourneyProps> = ({
   filter: initialFilter,
@@ -53,6 +58,24 @@ const Journey: FC<JourneyProps> = ({
                     <Msg id={messageIds.operators[o]} />
                   </MenuItem>
                 ))}
+              </StyledSelect>
+            ),
+            operator: (
+              <StyledSelect
+                onChange={(e) =>
+                  setConfig({
+                    ...filter.config,
+                    operator: e.target.value as JOURNEY_OP,
+                  })
+                }
+                value={filter.config.operator}
+              >
+                <MenuItem value={JOURNEY_OP.OPEN}>
+                  <Msg id={localMessageIds.open} />
+                </MenuItem>
+                <MenuItem value={JOURNEY_OP.CLOSE}>
+                  <Msg id={localMessageIds.closed} />
+                </MenuItem>
               </StyledSelect>
             ),
           }}
