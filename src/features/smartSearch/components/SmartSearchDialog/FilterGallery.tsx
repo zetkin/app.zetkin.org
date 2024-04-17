@@ -2,7 +2,6 @@ import { ChevronLeft } from '@mui/icons-material';
 import {
   Box,
   Button,
-  Card,
   Grid,
   List,
   ListItem,
@@ -12,9 +11,9 @@ import {
 } from '@mui/material';
 
 import { FILTER_TYPE } from 'features/smartSearch/components/types';
-import { Msg } from 'core/i18n';
-
+import FilterGalleryCard from './FilterGalleryCard';
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { useRef } from 'react';
 
 interface FilterGalleryProps {
@@ -32,7 +31,12 @@ enum FILTER_CATEGORY {
   TASKS = 'tasks',
 }
 
-const GROUPED_FILTERS: { [key in FILTER_CATEGORY]: FILTER_TYPE[] } = {
+const GROUPED_FILTERS: {
+  [key in FILTER_CATEGORY]: Exclude<
+    FILTER_TYPE,
+    'all' | 'call_blocked' | 'most_active'
+  >[];
+} = {
   [FILTER_CATEGORY.BASIC]: [
     FILTER_TYPE.PERSON_DATA,
     FILTER_TYPE.PERSON_FIELD,
@@ -138,52 +142,30 @@ const FilterGallery = ({
         >
           {Object.entries(GROUPED_FILTERS).map(([category, filters], index) => (
             <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
-              <Box>
-                <Typography variant="h4">
-                  <Msg
-                    id={
-                      messageIds.filterCategories[category as FILTER_CATEGORY]
-                        .title
-                    }
-                  />
-                </Typography>
-                <Typography variant="h5">
-                  <Msg
-                    id={
-                      messageIds.filterCategories[category as FILTER_CATEGORY]
-                        .description
-                    }
-                  />
-                </Typography>
-              </Box>
+              <Typography variant="h4">
+                <Msg
+                  id={
+                    messageIds.filterCategories[category as FILTER_CATEGORY]
+                      .title
+                  }
+                />
+              </Typography>
+              <Typography variant="h5">
+                <Msg
+                  id={
+                    messageIds.filterCategories[category as FILTER_CATEGORY]
+                      .description
+                  }
+                />
+              </Typography>
+
               <Grid container paddingTop={2} spacing={3}>
                 {filters.map((filter) => (
-                  <Grid
-                    key={filter}
-                    item
-                    lg={4}
-                    onClick={() => onAddNewFilter(filter)}
-                    sm={6}
-                    xs={12}
-                  >
-                    <Card
-                      style={{
-                        height: '200px',
-                        width: '300px',
-                      }}
-                    >
-                      <Box
-                        alignItems="center"
-                        display="flex"
-                        height={1}
-                        justifyContent="center"
-                        padding={1}
-                      >
-                        <Typography>
-                          <Msg id={messageIds.filterTitles[filter]} />
-                        </Typography>
-                      </Box>
-                    </Card>
+                  <Grid key={filter} item lg={4} sm={6} xs={12}>
+                    <FilterGalleryCard
+                      filter={filter}
+                      onAddFilter={() => onAddNewFilter(filter)}
+                    />
                   </Grid>
                 ))}
               </Grid>

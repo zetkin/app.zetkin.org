@@ -41,25 +41,48 @@ export default makeMessages('feat.smartSearch', {
       title: m('Tasks'),
     },
   },
+  filterDescriptions: {
+    call_history: m('Find people who were called, reached or tried.'),
+    campaign_participation: m(
+      "Who signed up? Got booked? Who didn't? Find them!"
+    ),
+    person_data: m('Name, address, email and more'),
+    person_field: m(
+      'Like basic personal info, but search fields that are custom to this organization.'
+    ),
+    person_tags: m('For finding people with or without specific tags'),
+    person_view: m("When you want people who are, or aren't, in a list."),
+    random: m('Randomly add or remove people.'),
+    sub_query: m('Use a saved Smart Search to refine this Smart Search.'),
+    survey_option: m(
+      'Use your survey responses for their glorious purpose: finding the right people!'
+    ),
+    survey_response: m(
+      'Use your survey responses for their glorious purpose: finding the right people!'
+    ),
+    survey_submission: m(
+      'Did they submit a survey? Did they not? Find them here!'
+    ),
+    task: m('Add or remove people based on their participation in tasks'),
+    user: m("Find people who are, or aren't, Zetkin users"),
+  },
   filterTitles: {
     all: m('Everyone'),
     call_blocked: m('Blocked from calling'),
-    call_history: m('Based on their call history'),
-    campaign_participation: m('Based on their event participation'),
+    call_history: m('Call history'),
+    campaign_participation: m('Participation in events'),
     most_active: m('The most active people'),
-    person_data: m('Based on their name, address or other data'),
-    person_field: m('Based on custom fields'),
-    person_tags: m('Based on their tags'),
+    person_data: m('Personal info'),
+    person_field: m('Custom fields'),
+    person_tags: m('Tags'),
     person_view: m('People from a list'),
-    random: m('A random selection of people'),
-    sub_query: m('Based on another Smart Search query'),
-    survey_option: m(
-      'Based on the options they have selected in survey questions'
-    ),
-    survey_response: m('Based on their responses to survey questions'),
-    survey_submission: m('People who have submitted a survey'),
-    task: m('People who have engaged in tasks'),
-    user: m('People who used Zetkin'),
+    random: m('Random selection'),
+    sub_query: m('People who match a saved Smart Search query'),
+    survey_option: m('Responses to checkbox questions'),
+    survey_response: m('Responses to text questions'),
+    survey_submission: m('Submitted survey'),
+    task: m('Tasks'),
+    user: m('Zetkin users'),
   },
   filters: {
     all: {
