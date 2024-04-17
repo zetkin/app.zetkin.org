@@ -12,6 +12,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import {
+  JOURNEY_CONDITION_OP,
   JourneyFilterConfig,
   OPERATION,
   SmartSearchFilterWithId,
@@ -51,6 +52,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
     return acc;
   }, []);
 
+  const notAnyTags = condition !== JOURNEY_CONDITION_OP.TAGS;
   return (
     <Msg
       id={localMessageIds.inputString}
@@ -81,7 +83,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             }
           />
         ),
-        tags: (
+        tags: notAnyTags ? (
           <Box alignItems="start" display="inline-flex">
             {selectedTags.map((t) => (
               <Chip
@@ -93,7 +95,12 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
               />
             ))}
           </Box>
-        ),
+        ) : null,
+        tagsDesc: notAnyTags ? (
+          <>
+            <Msg id={localMessageIds.followingTags} /> :
+          </>
+        ) : null,
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />

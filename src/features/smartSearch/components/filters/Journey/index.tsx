@@ -109,6 +109,7 @@ const Journey: FC<JourneyProps> = ({
   const selected = filter.config.min_matching
     ? MIN_MATCHING
     : filter.config.condition;
+  const notAnyTags = filter.config.condition !== JOURNEY_CONDITION_OP.TAGS;
 
   const conditionSelect = (
     <StyledSelect
@@ -132,7 +133,10 @@ const Journey: FC<JourneyProps> = ({
 
   return (
     <FilterForm
-      disableSubmit={!filter.config.journey || filter.config.tags.length === 0}
+      disableSubmit={
+        !filter.config.journey ||
+        (filter.config.tags.length === 0 && notAnyTags)
+      }
       onCancel={onCancel}
       onSubmit={(e) => {
         e.preventDefault();
@@ -223,7 +227,7 @@ const Journey: FC<JourneyProps> = ({
                 }
               />
             ),
-            tags: (
+            tags: notAnyTags ? (
               <Box
                 alignItems="center"
                 display="inline-flex"
@@ -261,7 +265,12 @@ const Journey: FC<JourneyProps> = ({
                   />
                 )}
               </Box>
-            ),
+            ) : null,
+            tagsDesc: notAnyTags ? (
+              <>
+                <Msg id={localMessageIds.followingTags} /> :
+              </>
+            ) : null,
             timeFrame: (
               <TimeFrame
                 filterConfig={{
