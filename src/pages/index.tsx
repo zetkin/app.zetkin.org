@@ -1,17 +1,17 @@
+import { AppSession } from '../utils/types';
 import { getIronSession } from 'iron-session';
 import { GetServerSideProps } from 'next';
-import Head from 'next/head';
-
-import { AppSession } from '../utils/types';
-import getUserMemberships from 'utils/getUserMemberships';
 import { Msg } from 'core/i18n';
+import { useRouter } from 'next/router';
+import { Container, Typography } from '@mui/material';
+
+import getUserMemberships from 'utils/getUserMemberships';
+import Head from 'next/head';
+import messageIds from 'core/l10n/messageIds';
 import requiredEnvVar from 'utils/requiredEnvVar';
 import { scaffold } from '../utils/next';
-import { useRouter } from 'next/router';
 import { ZetkinUser } from '../utils/types/zetkin';
 
-import messageIds from 'core/l10n/messageIds';
-import { Container, Typography } from '@mui/material';
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
