@@ -1,17 +1,17 @@
 import { getIronSession } from 'iron-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Button, ButtonGroup, Container, Typography } from '@mui/material';
 
 import { AppSession } from '../utils/types';
 import getUserMemberships from 'utils/getUserMemberships';
 import { Msg } from 'core/i18n';
 import requiredEnvVar from 'utils/requiredEnvVar';
 import { scaffold } from '../utils/next';
+import { useRouter } from 'next/router';
 import { ZetkinUser } from '../utils/types/zetkin';
 
 import messageIds from 'core/l10n/messageIds';
-
+import { Container, Typography } from '@mui/material';
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
@@ -85,6 +85,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 export default function Home(): JSX.Element {
+  const router = useRouter();
+  router.push('/organize');
+
   return (
     <>
       <Head>
@@ -92,24 +95,8 @@ export default function Home(): JSX.Element {
       </Head>
       <Container>
         <Typography variant="h4">
-          <Msg id={messageIds.home.welcome} />
+          <Msg id={messageIds.home.redirecting} />
         </Typography>
-        {/* TODO: remove stuff below */}
-        {process.env.NODE_ENV === 'development' && (
-          <div>
-            <Typography variant="body1">This page is for devs only!</Typography>
-            <ButtonGroup
-              aria-label="vertical contained primary button group"
-              color="primary"
-              orientation="vertical"
-              size="large"
-              variant="text"
-            >
-              <Button href="organize/1/people">People</Button>
-              <Button href="organize/1/projects">Projects</Button>
-            </ButtonGroup>
-          </div>
-        )}
       </Container>
     </>
   );

@@ -6,6 +6,7 @@ export default makeMessages('core', {
     pageNotFound: m('Page not found'),
   },
   home: {
+    redirecting: m('Redirecting...'),
     welcome: m('This will become Zetkin'),
   },
   legacy: {
