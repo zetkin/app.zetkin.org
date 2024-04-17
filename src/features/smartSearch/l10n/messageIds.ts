@@ -179,7 +179,7 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} and has {condition} {tagsDesc} {tags}'
       ),
-      ofFollowingTags: m('of the following tags'),
+      of: m('of'),
       opened: m('an open'),
       thatFinished: m('that finished'),
       thatOpened: m('that opened'),

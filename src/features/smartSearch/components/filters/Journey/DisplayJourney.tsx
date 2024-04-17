@@ -1,5 +1,4 @@
 import { Box } from '@mui/system';
-import { Chip } from '@mui/material';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { FC } from 'react';
 import { getTimeFrameWithConfig } from '../../utils';
@@ -11,6 +10,7 @@ import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
+import { Chip, Typography } from '@mui/material';
 import {
   JOURNEY_CONDITION_OP,
   JourneyFilterConfig,
@@ -59,12 +59,17 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         condition: min_matching ? (
-          <UnderlinedMsg
-            id={localMessageIds.condition.preview.minMatching}
-            values={{
-              minMatching: min_matching,
-            }}
-          />
+          <>
+            <UnderlinedMsg
+              id={localMessageIds.condition.preview.minMatching}
+              values={{
+                minMatching: min_matching,
+              }}
+            />
+            <Typography component="span" sx={{ ml: '0.2rem' }}>
+              <Msg id={localMessageIds.of} />
+            </Typography>
+          </>
         ) : (
           <UnderlinedMsg id={localMessageIds.condition.preview[condition]} />
         ),

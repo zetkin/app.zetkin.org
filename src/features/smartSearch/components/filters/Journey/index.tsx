@@ -10,7 +10,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { Box, Chip, MenuItem } from '@mui/material';
+import { Box, Chip, MenuItem, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import {
   JOURNEY_CONDITION_OP,
@@ -160,22 +160,33 @@ const Journey: FC<JourneyProps> = ({
             ),
             condition:
               selected == 'min_matching' ? (
-                <Msg
-                  id={messageIds.filters.personTags.condition.edit.minMatching}
-                  values={{
-                    conditionSelect,
-                    minMatchingInput: (
-                      <StyledNumberInput
-                        inputProps={{
-                          max: filter.config.tags.length,
-                          min: '1',
-                        }}
-                        onChange={(e) => setMinMatching(+e.target.value)}
-                        value={filter.config.min_matching}
-                      />
-                    ),
-                  }}
-                />
+                <>
+                  <Msg
+                    id={
+                      messageIds.filters.personTags.condition.edit.minMatching
+                    }
+                    values={{
+                      conditionSelect,
+                      minMatchingInput: (
+                        <StyledNumberInput
+                          inputProps={{
+                            max: filter.config.tags.length,
+                            min: '1',
+                          }}
+                          onChange={(e) => setMinMatching(+e.target.value)}
+                          value={filter.config.min_matching}
+                        />
+                      ),
+                    }}
+                  />
+                  <Typography
+                    component="span"
+                    sx={{ ml: '0.5rem' }}
+                    variant="h4"
+                  >
+                    <Msg id={localMessageIds.of} />
+                  </Typography>
+                </>
               ) : (
                 <Msg
                   id={localMessageIds.condition.edit[selected]}
