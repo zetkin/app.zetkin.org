@@ -25,6 +25,12 @@ export enum CONDITION_OPERATOR {
   ANY = 'any',
   NONE = 'none',
 }
+export enum JOURNEY_CONDITION_OP {
+  ALL = 'all',
+  ANY = 'any',
+  NONE = 'none',
+  TAGS = 'tags',
+}
 
 export enum IN_OPERATOR {
   IN = 'in',
@@ -206,7 +212,7 @@ export interface SubQueryFilterConfig {
 export interface JourneyFilterConfig {
   after?: string;
   before?: string;
-  condition: CONDITION_OPERATOR;
+  condition: JOURNEY_CONDITION_OP;
   journey?: number;
   min_matching?: number;
   operator: 'opened' | 'closed';

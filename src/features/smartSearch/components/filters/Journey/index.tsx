@@ -11,8 +11,9 @@ import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilte
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Box, Chip, MenuItem } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
 import {
-  CONDITION_OPERATOR,
+  JOURNEY_CONDITION_OP,
   JourneyFilterConfig,
   NewSmartSearchFilter,
   OPERATION,
@@ -20,7 +21,6 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from '../../types';
-import { FC, useEffect, useState } from 'react';
 
 const localMessageIds = messageIds.filters.journey;
 
@@ -28,6 +28,7 @@ enum JOURNEY_OP {
   OPEN = 'opened',
   CLOSE = 'closed',
 }
+
 interface JourneyProps {
   filter: SmartSearchFilterWithId<JourneyFilterConfig> | NewSmartSearchFilter;
   onSubmit: (
@@ -46,7 +47,7 @@ const Journey: FC<JourneyProps> = ({
   const { orgId } = useNumericRouteParams();
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {
-      condition: CONDITION_OPERATOR.ALL,
+      condition: JOURNEY_CONDITION_OP.ALL,
       operator: 'opened',
       tags: [],
     });
@@ -59,7 +60,7 @@ const Journey: FC<JourneyProps> = ({
   const [minMatching, setMinMatching] = useState(filter.config.min_matching);
 
   useEffect(() => {
-    if (filter.config.condition === CONDITION_OPERATOR.ANY) {
+    if (filter.config.condition === JOURNEY_CONDITION_OP.ANY) {
       setConfig({ ...filter.config, min_matching: minMatching });
     }
   }, [minMatching]);
@@ -94,13 +95,13 @@ const Journey: FC<JourneyProps> = ({
     if (conditionValue === MIN_MATCHING) {
       setConfig({
         ...filter.config,
-        condition: CONDITION_OPERATOR.ANY,
+        condition: JOURNEY_CONDITION_OP.ANY,
         min_matching: 1,
       });
     } else {
       setConfig({
         ...filter.config,
-        condition: conditionValue as CONDITION_OPERATOR,
+        condition: conditionValue as JOURNEY_CONDITION_OP,
         min_matching: undefined,
       });
     }
@@ -114,11 +115,9 @@ const Journey: FC<JourneyProps> = ({
       onChange={(e) => handleConditionChange(e.target.value)}
       value={selected}
     >
-      {Object.values(CONDITION_OPERATOR).map((o) => (
+      {Object.values(JOURNEY_CONDITION_OP).map((o) => (
         <MenuItem key={o} value={o}>
-          <Msg
-            id={messageIds.filters.personTags.condition.conditionSelect[o]}
-          />
+          <Msg id={localMessageIds.condition.conditionSelect[o]} />
         </MenuItem>
       ))}
       <MenuItem key={MIN_MATCHING} value={MIN_MATCHING}>
@@ -175,7 +174,7 @@ const Journey: FC<JourneyProps> = ({
                 />
               ) : (
                 <Msg
-                  id={messageIds.filters.personTags.condition.edit[selected]}
+                  id={localMessageIds.condition.edit[selected]}
                   values={{ conditionSelect }}
                 />
               ),

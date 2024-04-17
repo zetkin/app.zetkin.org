@@ -140,6 +140,32 @@ export default makeMessages('feat.smartSearch', {
     },
     journey: {
       closed: m('a closed'),
+      condition: {
+        conditionSelect: {
+          all: m('all'),
+          any: m('any'),
+          minMatching: m('at least'),
+          none: m('none'),
+          tags: m('any tags'),
+        },
+        edit: {
+          all: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          any: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          minMatching: m<{
+            conditionSelect: ReactElement;
+            minMatchingInput: ReactElement;
+          }>('{conditionSelect} {minMatchingInput}'),
+          none: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          tags: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+        },
+        preview: {
+          all: m('all'),
+          any: m('any'),
+          minMatching: m<{ minMatching: number }>('at least {minMatching}'),
+          none: m('none'),
+          tags: m('any tags'),
+        },
+      },
       inputString: m<{
         addRemoveSelect: ReactElement;
         condition: ReactElement;
@@ -149,7 +175,7 @@ export default makeMessages('feat.smartSearch', {
         tags: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} where it has {condition} of the following tags: {tags}'
+        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} and has {condition} of the following tags: {tags}'
       ),
       opened: m('an open'),
       thatFinished: m('that finished'),

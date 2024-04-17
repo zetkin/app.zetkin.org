@@ -58,15 +58,13 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         condition: min_matching ? (
           <UnderlinedMsg
-            id={messageIds.filters.personTags.condition.preview.minMatching}
+            id={localMessageIds.condition.preview.minMatching}
             values={{
               minMatching: min_matching,
             }}
           />
         ) : (
-          <UnderlinedMsg
-            id={messageIds.filters.personTags.condition.preview[condition]}
-          />
+          <UnderlinedMsg id={localMessageIds.condition.preview[condition]} />
         ),
         journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
         operator: (
