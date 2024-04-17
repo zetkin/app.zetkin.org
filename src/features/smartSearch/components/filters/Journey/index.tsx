@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -11,7 +12,6 @@ import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilte
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Box, Chip, MenuItem, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
 import {
   JOURNEY_CONDITION_OP,
   JourneyFilterConfig,
@@ -56,14 +56,6 @@ const Journey: FC<JourneyProps> = ({
   const journeys = useJourneys(orgId).data || [];
 
   const MIN_MATCHING = 'min_matching';
-  //keep minMatching in state so last value is saved even when removed from config
-  const [minMatching, setMinMatching] = useState(filter.config.min_matching);
-
-  useEffect(() => {
-    if (filter.config.condition === JOURNEY_CONDITION_OP.ANY) {
-      setConfig({ ...filter.config, min_matching: minMatching });
-    }
-  }, [minMatching]);
 
   // preserve the order of the tag array
   const selectedTags = filter.config.tags.reduce((acc: ZetkinTag[], id) => {
@@ -97,6 +89,13 @@ const Journey: FC<JourneyProps> = ({
         ...filter.config,
         condition: JOURNEY_CONDITION_OP.ANY,
         min_matching: 1,
+      });
+    } else if (conditionValue === 'tags') {
+      setConfig({
+        ...filter.config,
+        condition: JOURNEY_CONDITION_OP.TAGS,
+        min_matching: undefined,
+        tags: [],
       });
     } else {
       setConfig({
@@ -168,7 +167,12 @@ const Journey: FC<JourneyProps> = ({
                         max: filter.config.tags.length,
                         min: '1',
                       }}
-                      onChange={(e) => setMinMatching(+e.target.value)}
+                      onChange={(e) =>
+                        setConfig({
+                          ...filter.config,
+                          min_matching: +e.target.value,
+                        })
+                      }
                       sx={{ ml: '0.5rem' }}
                       value={filter.config.min_matching}
                     />
