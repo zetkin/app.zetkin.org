@@ -148,16 +148,6 @@ export default makeMessages('feat.smartSearch', {
           none: m('none of'),
           tags: m('any tags'),
         },
-        edit: {
-          all: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-          any: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-          minMatching: m<{
-            conditionSelect: ReactElement;
-            minMatchingInput: ReactElement;
-          }>('{conditionSelect} {minMatchingInput}'),
-          none: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-          tags: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-        },
         preview: {
           all: m('all of'),
           any: m('any of'),
