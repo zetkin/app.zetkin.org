@@ -575,6 +575,15 @@ export default makeMessages('feat.smartSearch', {
     limit: m('Limit to'),
     sub: m('Remove'),
   },
+  orgScope: {
+    all: m('Searching in all organizations'),
+    few: m<{ first: string; last: string }>('Searching in {first} and {last}'),
+    many: m<{ additional: number; first: string }>(
+      'Searching in {first} and {additional} other organizations'
+    ),
+    single: m<{ value: string }>('Searching in {value}'),
+    suborgs: m('Searching in all sub-organizations'),
+  },
   quantity: {
     edit: {
       integer: m<{ numInput: ReactElement; quantitySelect: ReactElement }>(
