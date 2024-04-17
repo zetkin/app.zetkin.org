@@ -88,8 +88,9 @@ const FilterGallery = ({
       </Box>
       <Box
         display="flex"
-        height="calc(100% - 90px)"
+        height="100%"
         justifyContent="space-between"
+        paddingBottom={2}
         width="100%"
       >
         <Box
