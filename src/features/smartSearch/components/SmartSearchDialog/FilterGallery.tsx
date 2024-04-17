@@ -14,6 +14,7 @@ import { FILTER_TYPE } from 'features/smartSearch/components/types';
 import FilterGalleryCard from './FilterGalleryCard';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import theme from 'theme';
 import { useRef } from 'react';
 
 interface FilterGalleryProps {
@@ -31,30 +32,71 @@ enum FILTER_CATEGORY {
   TASKS = 'tasks',
 }
 
+const filterCategoryColors = theme.palette.filterCategoryColors;
+
 const GROUPED_FILTERS: {
-  [key in FILTER_CATEGORY]: Exclude<
-    FILTER_TYPE,
-    'all' | 'call_blocked' | 'most_active'
-  >[];
+  [key in FILTER_CATEGORY]: {
+    colors: { pale: string; strong: string };
+    filters: Exclude<FILTER_TYPE, 'all' | 'call_blocked' | 'most_active'>[];
+  };
 } = {
-  [FILTER_CATEGORY.BASIC]: [
-    FILTER_TYPE.PERSON_DATA,
-    FILTER_TYPE.PERSON_FIELD,
-    FILTER_TYPE.PERSON_TAGS,
-  ],
-  [FILTER_CATEGORY.EVENTS]: [FILTER_TYPE.CAMPAIGN_PARTICIPATION],
-  [FILTER_CATEGORY.TASKS]: [FILTER_TYPE.TASK],
-  [FILTER_CATEGORY.PHONE_BANKING]: [FILTER_TYPE.CALL_HISTORY],
-  [FILTER_CATEGORY.SURVEYS]: [
-    FILTER_TYPE.SURVEY_SUBMISSION,
-    FILTER_TYPE.SURVEY_RESPONSE,
-    FILTER_TYPE.SURVEY_OPTION,
-  ],
-  [FILTER_CATEGORY.CROSS_REFERENCING]: [
-    FILTER_TYPE.SUB_QUERY,
-    FILTER_TYPE.PERSON_VIEW,
-  ],
-  [FILTER_CATEGORY.MISC]: [FILTER_TYPE.RANDOM, FILTER_TYPE.USER],
+  [FILTER_CATEGORY.BASIC]: {
+    colors: {
+      pale: filterCategoryColors.lightBlue.pale,
+      strong: filterCategoryColors.lightBlue.strong,
+    },
+    filters: [
+      FILTER_TYPE.PERSON_DATA,
+      FILTER_TYPE.PERSON_FIELD,
+      FILTER_TYPE.PERSON_TAGS,
+    ],
+  },
+  [FILTER_CATEGORY.EVENTS]: {
+    colors: {
+      pale: filterCategoryColors.green.pale,
+      strong: filterCategoryColors.green.strong,
+    },
+    filters: [FILTER_TYPE.CAMPAIGN_PARTICIPATION],
+  },
+  [FILTER_CATEGORY.TASKS]: {
+    colors: {
+      pale: filterCategoryColors.yellow.pale,
+      strong: filterCategoryColors.yellow.strong,
+    },
+    filters: [FILTER_TYPE.TASK],
+  },
+  [FILTER_CATEGORY.PHONE_BANKING]: {
+    colors: {
+      pale: filterCategoryColors.orange.pale,
+      strong: filterCategoryColors.orange.strong,
+    },
+    filters: [FILTER_TYPE.CALL_HISTORY],
+  },
+  [FILTER_CATEGORY.SURVEYS]: {
+    colors: {
+      pale: filterCategoryColors.darkBlue.pale,
+      strong: filterCategoryColors.darkBlue.strong,
+    },
+    filters: [
+      FILTER_TYPE.SURVEY_SUBMISSION,
+      FILTER_TYPE.SURVEY_RESPONSE,
+      FILTER_TYPE.SURVEY_OPTION,
+    ],
+  },
+  [FILTER_CATEGORY.CROSS_REFERENCING]: {
+    colors: {
+      pale: filterCategoryColors.purple.pale,
+      strong: filterCategoryColors.purple.strong,
+    },
+    filters: [FILTER_TYPE.SUB_QUERY, FILTER_TYPE.PERSON_VIEW],
+  },
+  [FILTER_CATEGORY.MISC]: {
+    colors: {
+      pale: filterCategoryColors.red.pale,
+      strong: filterCategoryColors.red.strong,
+    },
+    filters: [FILTER_TYPE.RANDOM, FILTER_TYPE.USER],
+  },
 };
 
 const FilterGallery = ({
@@ -140,37 +182,43 @@ const FilterGallery = ({
           sx={{ overflowY: 'auto' }}
           width={isMobile ? '100%' : '80%'}
         >
-          {Object.entries(GROUPED_FILTERS).map(([category, filters], index) => (
-            <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
-              <Typography variant="h4">
-                <Msg
-                  id={
-                    messageIds.filterCategories[category as FILTER_CATEGORY]
-                      .title
-                  }
-                />
-              </Typography>
-              <Typography variant="h5">
-                <Msg
-                  id={
-                    messageIds.filterCategories[category as FILTER_CATEGORY]
-                      .description
-                  }
-                />
-              </Typography>
+          {Object.entries(GROUPED_FILTERS).map(
+            ([slug, categoryData], index) => (
+              <Box
+                key={`category-${index}`}
+                id={`category-${index}`}
+                padding={2}
+              >
+                <Typography variant="h4">
+                  <Msg
+                    id={
+                      messageIds.filterCategories[slug as FILTER_CATEGORY].title
+                    }
+                  />
+                </Typography>
+                <Typography variant="h5">
+                  <Msg
+                    id={
+                      messageIds.filterCategories[slug as FILTER_CATEGORY]
+                        .description
+                    }
+                  />
+                </Typography>
 
-              <Grid container paddingTop={2} spacing={3}>
-                {filters.map((filter) => (
-                  <Grid key={filter} item lg={4} sm={6} xs={12}>
-                    <FilterGalleryCard
-                      filter={filter}
-                      onAddFilter={() => onAddNewFilter(filter)}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          ))}
+                <Grid container paddingTop={2} spacing={3}>
+                  {categoryData.filters.map((filter) => (
+                    <Grid key={filter} item lg={4} sm={6} xs={12}>
+                      <FilterGalleryCard
+                        colors={categoryData.colors}
+                        filter={filter}
+                        onAddFilter={() => onAddNewFilter(filter)}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )
+          )}
         </Box>
       </Box>
     </Box>
