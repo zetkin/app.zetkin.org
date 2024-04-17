@@ -11,6 +11,13 @@ describe('useZUIOrgScopeSelect', () => {
     expect(result.current.scope).toEqual('all');
   });
 
+  it('finds scope to be "suborgs" when value is "suborgs"', () => {
+    const { result } = renderHook(() =>
+      useZUIOrgScopeSelect({ currentOrg: 1, value: 'suborgs' })
+    );
+    expect(result.current.scope).toEqual('suborgs');
+  });
+
   it('finds scope to be "specific" when value is a single sub-org', () => {
     const { result } = renderHook(() =>
       useZUIOrgScopeSelect({ currentOrg: 1, value: [2] })

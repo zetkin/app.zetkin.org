@@ -25,7 +25,7 @@ function getScopeFromValue(value: ValueType, currentOrg: number): Scope {
       return 'specific';
     }
   } else {
-    return 'all';
+    return value;
   }
 }
 
