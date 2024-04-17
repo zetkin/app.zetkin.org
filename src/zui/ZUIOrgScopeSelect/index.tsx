@@ -41,10 +41,13 @@ const ZUIOrgScopeSelect: FC<Props> = ({
   const curOrgTitle = organizations.find((org) => org.id == orgId)?.title ?? '';
 
   return (
-    <Box sx={{ width: 300 }}>
+    <Box alignItems="center" display="flex" gap={1}>
       <Select
-        fullWidth
         onChange={(ev) => setScope(ev.target.value as Scope)}
+        size="small"
+        sx={{
+          width: '50%',
+        }}
         value={scope}
       >
         <MenuItem value="all">
@@ -103,8 +106,13 @@ const ZUIOrgScopeSelect: FC<Props> = ({
                     values={{ count: tagValue.length }}
                   />
                 }
+                size="small"
               />
             );
+          }}
+          size="small"
+          sx={{
+            width: '50%',
           }}
           value={orgs.map(
             (orgId) => organizations.find((org) => org.id == orgId)!

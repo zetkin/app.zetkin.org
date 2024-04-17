@@ -38,17 +38,20 @@ const FilterForm: FC<FilterFormProps> = ({
 
   return (
     <form onSubmit={onSubmit} style={{ height: '100%' }}>
-      <Box display="flex" flexDirection="column" height={1} padding={1}>
+      <Box display="flex" flexDirection="column" height={1} py={1}>
         {enableOrgSelect && (
-          <Box display="flex" justifyContent="flex-end">
-            <ZUIOrgScopeSelect
-              onChange={(value) => {
-                onOrgsChange?.(value);
-              }}
-              organizations={orgsFuture.data}
-              orgId={orgId}
-              value={selectedOrgs || [orgId]}
-            />
+          <Box>
+            <Typography sx={{ whiteSpace: 'nowrap' }}>Search in…</Typography>
+            <Box mt={1} width={500}>
+              <ZUIOrgScopeSelect
+                onChange={(value) => {
+                  onOrgsChange?.(value);
+                }}
+                organizations={orgsFuture.data}
+                orgId={orgId}
+                value={selectedOrgs || [orgId]}
+              />
+            </Box>
           </Box>
         )}
         <Box

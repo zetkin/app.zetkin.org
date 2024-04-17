@@ -127,7 +127,7 @@ export default makeMessages('zui', {
     orgSelectionLabel: m<{ count: number }>('{count} selected'),
     scope: {
       all: m<{ org: string }>('{org} and all sub-organizations'),
-      specific: m('Choose specific organizations'),
+      specific: m('Specific organizations'),
       suborgs: m('Only sub-organizations'),
       this: m<{ org: string }>('Only {org}'),
     },
