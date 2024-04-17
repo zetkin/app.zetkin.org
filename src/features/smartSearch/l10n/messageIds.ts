@@ -146,9 +146,10 @@ export default makeMessages('feat.smartSearch', {
         journeySelect: ReactElement;
         operator: ReactElement;
         statusText: ReactElement;
+        tags: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} where it has {condition}'
+        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} where it has {condition} of the following tags: {tags}'
       ),
       opened: m('an open'),
       thatFinished: m('that finished'),

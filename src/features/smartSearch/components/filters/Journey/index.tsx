@@ -1,13 +1,16 @@
 import FilterForm from '../../FilterForm';
-import { MenuItem } from '@mui/material';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
+import useTags from 'features/tags/hooks/useTags';
+import { ZetkinTag } from 'utils/types/zetkin';
+import { Box, Chip, MenuItem } from '@mui/material';
 import {
   CONDITION_OPERATOR,
   JourneyFilterConfig,
@@ -47,7 +50,8 @@ const Journey: FC<JourneyProps> = ({
       operator: 'opened',
       tags: [],
     });
-
+  const { data } = useTags(orgId);
+  const tags = data || [];
   const journeys = useJourneys(orgId).data || [];
 
   const MIN_MATCHING = 'min_matching';
@@ -60,6 +64,15 @@ const Journey: FC<JourneyProps> = ({
     }
   }, [minMatching]);
 
+  // preserve the order of the tag array
+  const selectedTags = filter.config.tags.reduce((acc: ZetkinTag[], id) => {
+    const tag = tags.find((tag) => tag.id === id);
+    if (tag) {
+      return acc.concat(tag);
+    }
+    return acc;
+  }, []);
+
   const handleTimeFrameChange = (range: {
     after?: string;
     before?: string;
@@ -68,6 +81,12 @@ const Journey: FC<JourneyProps> = ({
       ...filter.config,
       after: range.after,
       before: range.before,
+    });
+  };
+  const handleTagDelete = (tag: ZetkinTag) => {
+    setConfig({
+      ...filter.config,
+      tags: filter.config.tags.filter((t) => t !== tag.id),
     });
   };
 
@@ -114,7 +133,7 @@ const Journey: FC<JourneyProps> = ({
 
   return (
     <FilterForm
-      disableSubmit={!filter.config.journey}
+      disableSubmit={!filter.config.journey || filter.config.tags.length === 0}
       onCancel={onCancel}
       onSubmit={(e) => {
         e.preventDefault();
@@ -204,6 +223,45 @@ const Journey: FC<JourneyProps> = ({
                     : localMessageIds.thatFinished
                 }
               />
+            ),
+            tags: (
+              <Box
+                alignItems="center"
+                display="inline-flex"
+                style={{ verticalAlign: 'middle' }}
+              >
+                {selectedTags.map((tag) => {
+                  return (
+                    <Chip
+                      key={tag.id}
+                      label={tag.title}
+                      onDelete={() => handleTagDelete(tag)}
+                      style={{ margin: '3px' }}
+                      variant="outlined"
+                    />
+                  );
+                })}
+                {selectedTags.length < tags.length && (
+                  <StyledItemSelect
+                    getOptionDisabled={(t) =>
+                      selectedTags.some((selected) => selected.id === t.id)
+                    }
+                    onChange={(_, value) =>
+                      setConfig({
+                        ...filter.config,
+                        tags: value.map((t) => t.id),
+                      })
+                    }
+                    options={tags.map((t) => ({
+                      id: t.id,
+                      title: t.title,
+                    }))}
+                    value={tags.filter((t) =>
+                      filter.config.tags.includes(t.id)
+                    )}
+                  />
+                )}
+              </Box>
             ),
             timeFrame: (
               <TimeFrame

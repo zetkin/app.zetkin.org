@@ -1,3 +1,5 @@
+import { Box } from '@mui/system';
+import { Chip } from '@mui/material';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { FC } from 'react';
 import { getTimeFrameWithConfig } from '../../utils';
@@ -7,6 +9,8 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
+import useTags from 'features/tags/hooks/useTags';
+import { ZetkinTag } from 'utils/types/zetkin';
 import {
   JourneyFilterConfig,
   OPERATION,
@@ -27,6 +31,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
     journey: journeyId,
     after,
     before,
+    tags: tagIds,
     min_matching,
   } = filter.config;
   const journeys = useJourneys(orgId).data || [];
@@ -35,6 +40,17 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
     after: after,
     before: before,
   });
+  const { data } = useTags(orgId);
+  const tags = data || [];
+
+  const selectedTags = tagIds.reduce((acc: ZetkinTag[], id) => {
+    const tag = tags.find((tag) => tag.id === id);
+    if (tag) {
+      return acc.concat(tag);
+    }
+    return acc;
+  }, []);
+
   return (
     <Msg
       id={localMessageIds.inputString}
@@ -66,6 +82,19 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
                 : localMessageIds.thatFinished
             }
           />
+        ),
+        tags: (
+          <Box alignItems="start" display="inline-flex">
+            {selectedTags.map((t) => (
+              <Chip
+                key={t.id}
+                label={t.title}
+                size="small"
+                sx={{ borderColor: t.color, margin: '2px' }}
+                variant="outlined"
+              />
+            ))}
+          </Box>
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
