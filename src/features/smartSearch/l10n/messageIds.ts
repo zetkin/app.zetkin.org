@@ -142,12 +142,13 @@ export default makeMessages('feat.smartSearch', {
       closed: m('a closed'),
       inputString: m<{
         addRemoveSelect: ReactElement;
+        condition: ReactElement;
         journeySelect: ReactElement;
         operator: ReactElement;
         statusText: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame}'
+        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} where it has {condition}'
       ),
       opened: m('an open'),
       thatFinished: m('that finished'),

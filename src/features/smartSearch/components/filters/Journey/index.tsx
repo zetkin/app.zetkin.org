@@ -1,14 +1,15 @@
-import { FC } from 'react';
 import FilterForm from '../../FilterForm';
 import { MenuItem } from '@mui/material';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
+  CONDITION_OPERATOR,
   JourneyFilterConfig,
   NewSmartSearchFilter,
   OPERATION,
@@ -16,6 +17,7 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from '../../types';
+import { FC, useEffect, useState } from 'react';
 
 const localMessageIds = messageIds.filters.journey;
 
@@ -41,10 +43,22 @@ const Journey: FC<JourneyProps> = ({
   const { orgId } = useNumericRouteParams();
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {
+      condition: CONDITION_OPERATOR.ALL,
       operator: 'opened',
+      tags: [],
     });
 
   const journeys = useJourneys(orgId).data || [];
+
+  const MIN_MATCHING = 'min_matching';
+  //keep minMatching in state so last value is saved even when removed from config
+  const [minMatching, setMinMatching] = useState(filter.config.min_matching);
+
+  useEffect(() => {
+    if (filter.config.condition === CONDITION_OPERATOR.ANY) {
+      setConfig({ ...filter.config, min_matching: minMatching });
+    }
+  }, [minMatching]);
 
   const handleTimeFrameChange = (range: {
     after?: string;
@@ -56,6 +70,47 @@ const Journey: FC<JourneyProps> = ({
       before: range.before,
     });
   };
+
+  const handleConditionChange = (conditionValue: string) => {
+    if (conditionValue === MIN_MATCHING) {
+      setConfig({
+        ...filter.config,
+        condition: CONDITION_OPERATOR.ANY,
+        min_matching: 1,
+      });
+    } else {
+      setConfig({
+        ...filter.config,
+        condition: conditionValue as CONDITION_OPERATOR,
+        min_matching: undefined,
+      });
+    }
+  };
+  const selected = filter.config.min_matching
+    ? MIN_MATCHING
+    : filter.config.condition;
+
+  const conditionSelect = (
+    <StyledSelect
+      onChange={(e) => handleConditionChange(e.target.value)}
+      value={selected}
+    >
+      {Object.values(CONDITION_OPERATOR).map((o) => (
+        <MenuItem key={o} value={o}>
+          <Msg
+            id={messageIds.filters.personTags.condition.conditionSelect[o]}
+          />
+        </MenuItem>
+      ))}
+      <MenuItem key={MIN_MATCHING} value={MIN_MATCHING}>
+        <Msg
+          id={
+            messageIds.filters.personTags.condition.conditionSelect.minMatching
+          }
+        />
+      </MenuItem>
+    </StyledSelect>
+  );
 
   return (
     <FilterForm
@@ -81,6 +136,30 @@ const Journey: FC<JourneyProps> = ({
                 ))}
               </StyledSelect>
             ),
+            condition:
+              selected == 'min_matching' ? (
+                <Msg
+                  id={messageIds.filters.personTags.condition.edit.minMatching}
+                  values={{
+                    conditionSelect,
+                    minMatchingInput: (
+                      <StyledNumberInput
+                        inputProps={{
+                          max: filter.config.tags.length,
+                          min: '1',
+                        }}
+                        onChange={(e) => setMinMatching(+e.target.value)}
+                        value={filter.config.min_matching}
+                      />
+                    ),
+                  }}
+                />
+              ) : (
+                <Msg
+                  id={messageIds.filters.personTags.condition.edit[selected]}
+                  values={{ conditionSelect }}
+                />
+              ),
             journeySelect: (
               <StyledSelect
                 minWidth="10rem"

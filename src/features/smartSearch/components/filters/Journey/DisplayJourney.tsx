@@ -21,7 +21,14 @@ const localMessageIds = messageIds.filters.journey;
 const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const op = filter.op || OPERATION.ADD;
-  const { operator, journey: journeyId, after, before } = filter.config;
+  const {
+    condition,
+    operator,
+    journey: journeyId,
+    after,
+    before,
+    min_matching,
+  } = filter.config;
   const journeys = useJourneys(orgId).data || [];
   const journeyTitle = journeys?.find((item) => item.id === journeyId)?.title;
   const timeFrame = getTimeFrameWithConfig({
@@ -33,6 +40,18 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
+        condition: min_matching ? (
+          <UnderlinedMsg
+            id={messageIds.filters.personTags.condition.preview.minMatching}
+            values={{
+              minMatching: min_matching,
+            }}
+          />
+        ) : (
+          <UnderlinedMsg
+            id={messageIds.filters.personTags.condition.preview[condition]}
+          />
+        ),
         journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
         operator: (
           <UnderlinedMsg

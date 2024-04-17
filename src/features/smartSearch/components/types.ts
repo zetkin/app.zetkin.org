@@ -204,10 +204,13 @@ export interface SubQueryFilterConfig {
 }
 
 export interface JourneyFilterConfig {
-  operator: 'opened' | 'closed';
-  journey?: number;
   after?: string;
   before?: string;
+  condition: CONDITION_OPERATOR;
+  journey?: number;
+  min_matching?: number;
+  operator: 'opened' | 'closed';
+  tags: number[];
 }
 
 interface TaskTimeFrameBefore {
