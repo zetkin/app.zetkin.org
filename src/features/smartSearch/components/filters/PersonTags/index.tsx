@@ -130,7 +130,11 @@ const PersonTags = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -216,6 +220,7 @@ const PersonTags = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

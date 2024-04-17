@@ -72,7 +72,11 @@ const PersonView = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -135,6 +139,7 @@ const PersonView = ({
           <Msg id={localMessageIds.viewSelect.none} />
         )
       }
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

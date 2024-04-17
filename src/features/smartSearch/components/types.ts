@@ -96,6 +96,7 @@ export enum TASK_STATUS {
 export type DefaultFilterConfig = Record<string, never>; // Default filter config is an empty object
 
 export interface CallBlockedFilterConfig {
+  organizations?: FilterConfigOrgOptions;
   reason:
     | 'allocated'
     | 'organizer_action_needed'
@@ -111,11 +112,13 @@ export interface CallHistoryFilterConfig {
   minTimes?: number;
   before?: string;
   after?: string;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface MostActiveFilterConfig {
   after?: string;
   before?: string;
+  organizations?: FilterConfigOrgOptions;
   size: number;
 }
 
@@ -132,12 +135,14 @@ export interface PersonDataFilterConfig {
     street_address?: string;
     zip_code?: string;
   };
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface PersonFieldFilterConfig {
   after?: string;
   before?: string;
   field: string;
+  organizations?: FilterConfigOrgOptions;
   search?: string;
 }
 
@@ -145,14 +150,17 @@ export interface PersonTagsFilterConfig {
   condition: CONDITION_OPERATOR;
   tags: number[];
   min_matching?: number;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface PersonViewFilterConfig {
   view: number;
   operator: IN_OPERATOR;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface RandomFilterConfig {
+  organizations?: FilterConfigOrgOptions;
   size: number;
   seed: string;
 }
@@ -162,10 +170,12 @@ export interface SurveyOptionFilterConfig {
   question: number;
   options: number[] | string[];
   operator: CONDITION_OPERATOR;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface SurveyResponseBase {
   operator: MATCH_OPERATORS;
+  organizations?: FilterConfigOrgOptions;
   value: string;
 }
 
@@ -180,11 +190,13 @@ export interface SurveySubmissionFilterConfig {
   after?: string;
   before?: string;
   operator: 'submitted';
+  organizations?: FilterConfigOrgOptions;
   survey: number;
 }
 
 export interface UserFilterConfig {
   is_user: boolean;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
@@ -231,6 +243,7 @@ export interface TaskFilterConfig {
   assigned?: TaskTimeFrame;
   completed?: TaskTimeFrame;
   ignored?: TaskTimeFrame;
+  organizations?: FilterConfigOrgOptions;
   time_estimate?: {
     max?: number;
     min?: number;

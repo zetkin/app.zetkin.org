@@ -86,7 +86,11 @@ const SurveySubmission = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -167,6 +171,7 @@ const SurveySubmission = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

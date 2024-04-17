@@ -80,7 +80,11 @@ const CallHistory = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -200,6 +204,7 @@ const CallHistory = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };
