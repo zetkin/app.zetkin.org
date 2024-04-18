@@ -9,8 +9,6 @@ const PATTERN_TEMPLATES = {
   pattern1: {
     background:
       'calc( .9*32px) calc( .9*32px)/calc(2*32px) calc(2*32px) conic-gradient(at 20% 20%,#0000 75%,$paleColor 0), calc(-.1*32px) calc(-.1*32px)/calc(2*32px) calc(2*32px) conic-gradient(at 20% 20%,#0000 75%,$paleColor 0), calc( .7*32px) calc( .7*32px)/calc(2*32px) calc(2*32px) conic-gradient(at 40% 40%,#0000 75%,$strongColor 0), calc(-.3*32px) calc(-.3*32px)/calc(2*32px) calc(2*32px) conic-gradient(at 40% 40%,#0000 75%,$strongColor 0), conic-gradient(from 90deg at 20% 20%,$paleColor 25%,$strongColor 0) 0 0/32px 32px',
-    //'radial-gradient(100% 100% at 100% 100%, #0000 46%,$strongColor 47% 53%,#0000 54%) 32px 32px, radial-gradient(100% 100% at 0 0, #0000 46%,$strongColor 47% 53%,#0000 54%) 32px 32px, radial-gradient(100% 100%, #0000 22%, $strongColor 23% 29%, #0000 30% 34%, $strongColor 35% 41%, #0000 42%) $paleColor',
-    //backgroundSize: '64px 64px',
   },
   pattern10: {
     background:

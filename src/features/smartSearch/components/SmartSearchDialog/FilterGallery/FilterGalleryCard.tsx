@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 
 import { FILTER_TYPE } from '../../types';
-import filterGalleryPattern from './filterGalleryPatterns';
+import filterGalleryPattern from './filterGalleryPattern';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 
