@@ -22,7 +22,7 @@ interface FilterGalleryProps {
 enum FILTER_CATEGORY {
   PEOPLE = 'peopleDatabase',
   PHONE_BANKING = 'phoneBanking',
-  JOURNEY = 'journey',
+  JOURNEY = 'journey_subjects',
   CAMPAIGN_ACTIVITY = 'campaignActivity',
   SURVEYS = 'surveys',
   MISC = 'misc',
