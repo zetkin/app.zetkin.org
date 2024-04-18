@@ -5,7 +5,7 @@ export enum FILTER_TYPE {
   CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
   CAMPAIGN_PARTICIPATION = 'campaign_participation',
-  JOURNEY = 'journey',
+  JOURNEY = 'journey_subjects',
   MOST_ACTIVE = 'most_active',
   PERSON_DATA = 'person_data',
   PERSON_FIELD = 'person_field',
