@@ -1,4 +1,4 @@
-import { FILTER_TYPE } from '../types';
+import { FILTER_TYPE } from '../../types';
 
 const PATTERN_TEMPLATES = {
   pattern0: {

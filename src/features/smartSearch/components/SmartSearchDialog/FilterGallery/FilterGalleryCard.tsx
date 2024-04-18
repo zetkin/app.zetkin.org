@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 
-import { FILTER_TYPE } from '../types';
+import { FILTER_TYPE } from '../../types';
 import filterGalleryPattern from './filterGalleryPatterns';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -33,7 +33,7 @@ const FilterGalleryCard: FC<FilterGalleryCardProps> = ({
         display="flex"
         height="75px"
         justifyContent="center"
-        sx={sx}
+        sx={{ ...sx, opacity: '30%' }}
       />
       <CardContent>
         <Typography variant="h5">

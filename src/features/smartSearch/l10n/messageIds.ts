@@ -13,31 +13,31 @@ export default makeMessages('feat.smartSearch', {
   },
   filterCategories: {
     basicInformation: {
-      description: m('Filter on personal information'),
+      description: m('Select based on personal information'),
       title: m('Basic information'),
     },
     crossReferencing: {
-      description: m('Filter based on lists and smart searches'),
+      description: m('Select based on lists and smart searches'),
       title: m('Cross referencing'),
     },
     events: {
-      description: m('Filter on event data'),
+      description: m('Select based on data from events'),
       title: m('Events'),
     },
     misc: {
-      description: m('Miscellaneous filters'),
+      description: m('Miscellaneous ways of selecting'),
       title: m('Misc'),
     },
     phoneBanking: {
-      description: m('Filter on call data'),
-      title: m('Phone banking'),
+      description: m('Use call data to select'),
+      title: m('Call assignments'),
     },
     surveys: {
-      description: m('Filter on survey data'),
+      description: m('Select based on survey submissions'),
       title: m('Surveys'),
     },
     tasks: {
-      description: m('Filter on task data'),
+      description: m('Select on task data'),
       title: m('Tasks'),
     },
   },

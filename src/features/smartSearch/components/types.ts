@@ -1,5 +1,15 @@
 import { TASK_TYPE } from 'features/tasks/components/types';
 
+export enum FILTER_CATEGORY {
+  BASIC = 'basicInformation',
+  CROSS_REFERENCING = 'crossReferencing',
+  EVENTS = 'events',
+  MISC = 'misc',
+  PHONE_BANKING = 'phoneBanking',
+  SURVEYS = 'surveys',
+  TASKS = 'tasks',
+}
+
 export enum FILTER_TYPE {
   ALL = 'all',
   CALL_BLOCKED = 'call_blocked',
