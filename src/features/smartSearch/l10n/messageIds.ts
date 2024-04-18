@@ -13,7 +13,7 @@ export default makeMessages('feat.smartSearch', {
   },
   filterCategories: {
     campaignActivity: m('Project activity'),
-    journey_subjects: m('Journey'),
+    journeySubjects: m('Journey'),
     misc: m('Misc'),
     peopleDatabase: m('People'),
     phoneBanking: m('Phone banking'),
