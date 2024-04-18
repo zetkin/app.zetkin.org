@@ -17,7 +17,7 @@ const FilterGalleryCard: FC<FilterGalleryCardProps> = ({
   filter,
   onAddFilter,
 }) => {
-  const sx = filterGalleryPattern(filter, colors);
+  const pattern = filterGalleryPattern(filter, colors);
   return (
     <Card
       onClick={onAddFilter}
@@ -33,7 +33,7 @@ const FilterGalleryCard: FC<FilterGalleryCardProps> = ({
         display="flex"
         height="75px"
         justifyContent="center"
-        sx={{ ...sx, opacity: '30%' }}
+        sx={{ ...pattern, opacity: '30%' }}
       />
       <CardContent>
         <Typography variant="h5">
