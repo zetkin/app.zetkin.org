@@ -187,6 +187,7 @@ const Journey: FC<JourneyProps> = ({
                 )}
               </>
             ),
+            has: notAnyTags ? <Msg id={localMessageIds.has} /> : null,
             journeySelect: (
               <StyledSelect
                 minWidth="10rem"

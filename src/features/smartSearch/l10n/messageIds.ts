@@ -146,20 +146,22 @@ export default makeMessages('feat.smartSearch', {
           any: m('any of'),
           minMatching: m('at least'),
           none: m('none of'),
-          tags: m('any tags'),
+          tags: m('regardless of tags'),
         },
         preview: {
           all: m('all of'),
           any: m('any of'),
           minMatching: m<{ minMatching: number }>('at least {minMatching}'),
           none: m('none of'),
-          tags: m('any tags'),
+          tags: m('regardless of tags'),
         },
       },
       followingTags: m('the following tags'),
+      has: m('has'),
       inputString: m<{
         addRemoveSelect: ReactElement;
         condition: ReactElement;
+        has: ReactElement | null;
         journeySelect: ReactElement;
         operator: ReactElement;
         statusText: ReactElement;
@@ -167,7 +169,7 @@ export default makeMessages('feat.smartSearch', {
         tagsDesc: ReactElement | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} and has {condition} {tagsDesc} {tags}'
+        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} and {has} {condition} {tagsDesc} {tags}'
       ),
       of: m('of'),
       opened: m('an open'),
