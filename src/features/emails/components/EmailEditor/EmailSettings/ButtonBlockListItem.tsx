@@ -7,6 +7,7 @@ import BlockListItemBase from './BlockListItemBase';
 import { ButtonData } from '../tools/Button';
 import formatUrl from './utils/formatUrl';
 import messageIds from 'features/emails/l10n/messageIds';
+import useDebounce from 'utils/hooks/useDebounce';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ButtonBlockLIstItemProps {
@@ -27,6 +28,10 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
   const messages = useMessages(messageIds);
   const [inputValue, setInputValue] = useState(data.url || '');
 
+  const debouncedFinishedTyping = useDebounce(async (data: ButtonData) => {
+    onChange(data);
+  }, 400);
+
   const error = inputValue.length > 0 && !formatUrl(inputValue);
   return (
     <BlockListItemBase
@@ -46,7 +51,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
                   <IconButton
                     onClick={() => {
                       setInputValue('');
-                      onChange({ ...data, url: '' });
+                      debouncedFinishedTyping({ ...data, url: '' });
                     }}
                   >
                     <Close />
@@ -58,7 +63,10 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
             label={messages.editor.tools.button.settings.urlLabel()}
             onChange={(ev) => {
               setInputValue(ev.target.value);
-              onChange({ ...data, url: formatUrl(ev.target.value) || '' });
+              debouncedFinishedTyping({
+                ...data,
+                url: formatUrl(ev.target.value) || '',
+              });
             }}
             value={inputValue}
           />
@@ -74,6 +82,7 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
               href={formatUrl(inputValue) || ''}
               passHref
               style={{ textDecoration: 'none' }}
+              target="_blank"
             >
               <Link
                 display="flex"

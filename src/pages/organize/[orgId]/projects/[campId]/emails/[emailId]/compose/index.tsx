@@ -4,8 +4,10 @@ import EmailEditor from 'features/emails/components/EmailEditor';
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import useDebounce from 'utils/hooks/useDebounce';
 import useEmail from 'features/emails/hooks/useEmail';
 import useServerSide from 'core/useServerSide';
+import { ZetkinEmail } from 'utils/types/zetkin';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -38,6 +40,16 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
   );
   const onServer = useServerSide();
 
+  const debouncedUpdateEmail = useDebounce(
+    async (email: Partial<ZetkinEmail>) => {
+      updateEmail({
+        ...email,
+        locked: undefined,
+      });
+    },
+    400
+  );
+
   if (onServer) {
     return null;
   }
@@ -50,10 +62,7 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
     <EmailEditor
       email={email}
       onSave={(email) => {
-        updateEmail({
-          ...email,
-          locked: undefined,
-        });
+        debouncedUpdateEmail(email);
       }}
     />
   );
