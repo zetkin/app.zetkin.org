@@ -106,9 +106,9 @@ const TaskDetailsForm = ({
     const configWithFieldsArray = {
       ...newTaskValues.config,
       ...(newTaskValues?.config &&
-        'fields' in newTaskValues?.config &&
-        newTaskValues?.config.fields && {
-          fields: [newTaskValues?.config?.fields],
+        'fields' in newTaskValues.config &&
+        newTaskValues.config.fields && {
+          fields: [newTaskValues.config.fields],
         }),
     };
     const config = configForTaskType(
@@ -166,9 +166,9 @@ const TaskDetailsForm = ({
           ...task?.config,
           // Set first value from fields array
           ...(task?.config &&
-            'fields' in task?.config &&
-            task?.config.fields && {
-              fields: task?.config?.fields[0],
+            'fields' in task.config &&
+            task.config.fields && {
+              fields: task.config.fields[0],
             }),
         },
         deadline: task?.deadline ? dayjs(task.deadline + '.000Z') : undefined,

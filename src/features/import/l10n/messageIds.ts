@@ -242,7 +242,7 @@ export default makeMessages('feat.import', {
           'This problem exists on rows {commaRows} and {lastRow}.'
         ),
         manyRows: m<{ additionalRows: number; commaRows: string }>(
-          'This problem exists on rows {commaRows} and {additionalRows} additional rows.'
+          'This problem exists on rows {commaRows} and {additionalRows, plural, =1 {1 additional row} other {# additional rows}}.'
         ),
         singleRow: m<{ row: number }>('This problem exists on row {row}.'),
       },

@@ -8,7 +8,6 @@ import { deleteEventsDef } from 'features/events/rpc/deleteEvents';
 import { deleteFolderRouteDef } from 'features/views/rpc/deleteFolder';
 import { getEventStatsDef } from 'features/events/rpc/getEventStats';
 import { getNextEventDayDef } from 'features/events/rpc/getNextEventDay';
-import { getOrganizerActionViewRouteDef } from 'features/views/rpc/getOrganizerActionView/server';
 import { getPrevEventDayDef } from 'features/events/rpc/getPrevEventDay';
 import { getSurveyStatsDef } from 'features/surveys/rpc/getSurveyStats';
 import { getTaskStatsRouteDef } from 'features/tasks/rpc/getTaskStats';
@@ -20,7 +19,6 @@ export function createRPCRouter() {
 
   rpcRouter.register(deleteFolderRouteDef);
   rpcRouter.register(createNewViewRouteDef);
-  rpcRouter.register(getOrganizerActionViewRouteDef);
   rpcRouter.register(getSurveyStatsDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);

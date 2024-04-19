@@ -70,7 +70,7 @@ const Calendar = () => {
       {
         pathname: undefined,
         query: {
-          campId: campId,
+          ...(campId && { campId: campId }),
           focusDate: focusedDate,
           orgId: orgId,
           timeScale: selectedTimeScale,

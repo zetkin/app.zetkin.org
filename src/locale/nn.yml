@@ -520,9 +520,9 @@ feat:
       close: Lukk
       configure: Sett opp
       done: Ferdig
-      import: Importer
+      import: Importér
       restart: Start på nytt
-      validate: Kontroller
+      validate: Kontrollér
     configuration:
       configure:
         ids:
@@ -583,7 +583,7 @@ feat:
         needsConfig: Du må sette opp IDer
         needsMapping: Du må sette opp verdier
         organization: Organisasjon
-        selectZetkinField: Importer som...
+        selectZetkinField: Importér som...
         tags: Etiketter
         zetkinHeader: Zetkin
       preview:
@@ -607,7 +607,7 @@ feat:
         done: Setter opp import av {numConfiguredPeople, plural, =1 {en person} other
           {# folk}}
         notDone: Oppsettet ditt er ikke fullstendig
-      title: Importer folk
+      title: Import
     impactSummary:
       future:
         created: '{number}{numPeople, plural, =1 {person} other {folk}} vil bli opprettet'
@@ -689,9 +689,9 @@ feat:
           title: Forsøker å oppdatere oppføringer som ikke eksisterer
     steps:
       configure: Sett opp
-      import: Importer
+      import: Importér
       upload: Last opp
-      validate: Kontroller
+      validate: Kontrollér
     uploadDialog:
       dialogButtons:
         configure: Sett opp
@@ -1603,7 +1603,7 @@ feat:
       create: Opprett
       createFolder: Ny mappe
       createView: Ny liste
-      importPeople: Importer folk
+      importPeople: Importér folk
     browser:
       backToFolder: Tilbake til {folder}
       backToRoot: Tilbake til forsiden for lister
@@ -2006,7 +2006,7 @@ zui:
     requestError: Noe gikk galt
   submitOrCancel:
     cancel: Avbryt
-    submit: Send inn
+    submit: Lagre
   suffixedNumber:
     thousands: '{num}K'
   timeSpan:

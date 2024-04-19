@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { MenuItem, Typography } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';
@@ -104,7 +104,7 @@ const TimeFrame = ({
   );
 
   return (
-    <Typography display="inline" variant="h4">
+    <Box display="inline">
       {selected == 'afterDate' && (
         <Msg
           id={messageIds.timeFrame.edit.afterDate}
@@ -164,7 +164,7 @@ const TimeFrame = ({
           }}
         />
       )}
-    </Typography>
+    </Box>
   );
 };
 

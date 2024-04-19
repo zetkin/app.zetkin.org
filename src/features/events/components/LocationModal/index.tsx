@@ -40,13 +40,14 @@ export type PendingLocation = {
 };
 
 interface LocationModalProps {
-  currentEvent: ZetkinEvent;
+  currentEvent?: ZetkinEvent;
   events: ZetkinEvent[];
   locations: ZetkinLocation[];
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
   open: boolean;
+  orgId: number;
   locationId?: number | null;
 }
 
@@ -59,14 +60,13 @@ const LocationModal: FC<LocationModalProps> = ({
   onMapClose,
   onSelectLocation,
   open,
+  orgId,
   locationId = null,
 }) => {
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
-  const { setLocationLatLng } = useEventLocationMutations(
-    currentEvent.organization.id
-  );
+  const { setLocationLatLng } = useEventLocationMutations(orgId);
   const [pendingLocation, setPendingLocation] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -92,7 +92,7 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box border={1} padding={2}>
         <Map
-          currentEventId={currentEvent.id}
+          currentEventId={currentEvent?.id || null}
           inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
@@ -160,10 +160,11 @@ const LocationModal: FC<LocationModalProps> = ({
                 onSelectLocation(selectedLocation);
                 onMapClose();
               }}
-              orgId={currentEvent.organization.id}
+              orgId={orgId}
               relatedEvents={events.filter(
                 (event) =>
                   event.location?.id === selectedLocation.id &&
+                  currentEvent &&
                   event.id !== currentEvent.id
               )}
             />
