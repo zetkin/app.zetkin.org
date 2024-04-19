@@ -41,7 +41,9 @@ const TagsList: React.FunctionComponent<{
                   );
                 })}
                 {isCapped ? (
-                  <PseudoTagChip text={`+${tags.length - cappedTags.length}`} />
+                  <PseudoTagChip
+                    text={`+${group.tags.length - cappedTags.length}`}
+                  />
                 ) : null}
               </Box>
             </Box>
