@@ -1,13 +1,29 @@
-import { Box, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Box, Tooltip, Typography } from '@mui/material';
 
 import { ZetkinTag } from 'utils/types/zetkin';
 
 import { groupTags } from '../utils';
-import PseudoTagChip from './PseudoTagChip';
 import TagChip from './TagChip';
 
 import messageIds from '../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
+
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    borderColor: theme.palette.grey[500],
+    borderRadius: '1em',
+    borderWidth: '1px',
+    color: theme.palette.text.secondary,
+    cursor: 'default',
+    display: 'flex',
+    lineHeight: 'normal',
+    marginRight: '0.1em',
+    overflow: 'hidden',
+    padding: '0.2em 0.7em',
+    textOverflow: 'ellipsis',
+  },
+}));
 
 const TagsList: React.FunctionComponent<{
   cap?: number;
@@ -15,7 +31,34 @@ const TagsList: React.FunctionComponent<{
   onUnassignTag?: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
 }> = ({ cap = Infinity, isGrouped, onUnassignTag, tags }) => {
+  const classes = useStyles();
   const messages = useMessages(messageIds);
+
+  const renderCappedTags = (tags: ZetkinTag[]) => {
+    const cappedTags = tags.slice(0, cap);
+    const hiddenTags = tags.slice(cap);
+    const isCapped = tags.length > cappedTags.length;
+    const tooltipTitle =
+      hiddenTags
+        .slice(0, 3)
+        .map((tag) => tag.title)
+        .join(', ') + (hiddenTags.length > 3 ? ', ...' : '');
+
+    return (
+      <>
+        {cappedTags.map((tag) => {
+          return <TagChip key={tag.id} onDelete={onUnassignTag} tag={tag} />;
+        })}
+        {isCapped ? (
+          <Tooltip title={tooltipTitle}>
+            <Box border={2} className={classes.chip}>
+              {`+${hiddenTags.length}`}
+            </Box>
+          </Tooltip>
+        ) : null}
+      </>
+    );
+  };
 
   if (isGrouped) {
     const groupedTags = groupTags(tags, messages.manager.ungroupedHeader());
@@ -23,9 +66,6 @@ const TagsList: React.FunctionComponent<{
     return (
       <>
         {groupedTags.map((group, i) => {
-          const cappedTags = group.tags.slice(0, cap);
-          const isCapped = group.tags.length > cappedTags.length;
-
           return (
             <Box key={i} mb={1}>
               <Typography variant="overline">{group.title}</Typography>
@@ -35,16 +75,7 @@ const TagsList: React.FunctionComponent<{
                 flexWrap="wrap"
                 style={{ gap: 4 }}
               >
-                {cappedTags.map((tag) => {
-                  return (
-                    <TagChip key={tag.id} onDelete={onUnassignTag} tag={tag} />
-                  );
-                })}
-                {isCapped ? (
-                  <PseudoTagChip
-                    text={`+${group.tags.length - cappedTags.length}`}
-                  />
-                ) : null}
+                {renderCappedTags(group.tags)}
               </Box>
             </Box>
           );
@@ -56,19 +87,11 @@ const TagsList: React.FunctionComponent<{
   //   Flat list of tags
   const sortedTags = tags
     .concat()
-    .sort((tag0, tag1) => tag0.title.localeCompare(tag1.title))
-    .slice(0, cap);
-
-  const isCapped = tags.length > sortedTags.length;
+    .sort((tag0, tag1) => tag0.title.localeCompare(tag1.title));
 
   return (
     <Box display="flex" flexWrap="wrap" style={{ gap: 4 }}>
-      {sortedTags.map((tag) => {
-        return <TagChip key={tag.id} onDelete={onUnassignTag} tag={tag} />;
-      })}
-      {isCapped ? (
-        <PseudoTagChip text={`+${tags.length - sortedTags.length}`} />
-      ) : null}
+      {renderCappedTags(sortedTags)}
     </Box>
   );
 };
