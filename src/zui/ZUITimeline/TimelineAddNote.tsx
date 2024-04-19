@@ -10,6 +10,7 @@ import useFileUploads, {
 } from 'features/files/hooks/useFileUploads';
 
 import messageIds from './l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface AddNoteProps {
   disabled?: boolean;
@@ -20,6 +21,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   disabled,
   onSubmit,
 }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const [clear, setClear] = useState<number>(0);
   const [note, setNote] = useState<ZetkinNoteBody | null>(null);
@@ -29,7 +31,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     fileUploads,
     openFilePicker,
     reset: resetFileUploads,
-  } = useFileUploads();
+  } = useFileUploads(orgId);
 
   useEffect(() => {
     if (!disabled) {

@@ -105,9 +105,14 @@ export async function getMessages(
 }
 
 export const getBrowserLanguage = (
-  req: NextApiRequest | IncomingMessage
+  req: NextApiRequest | IncomingMessage | string
 ): SupportedLanguage => {
-  const negotiator = new Negotiator(req);
+  let negotiator: Negotiator;
+  if (typeof req === 'string') {
+    negotiator = new Negotiator({ headers: { 'accept-language': req } });
+  } else {
+    negotiator = new Negotiator(req);
+  }
   const languages = negotiator.languages(['en', 'nn', 'da', 'de', 'sv']);
   return languages.length ? (languages[0] as SupportedLanguage) : 'en';
 };

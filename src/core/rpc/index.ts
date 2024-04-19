@@ -1,6 +1,7 @@
 import { RPCRouter } from './router';
 
 import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
+import { copyEmailDef } from 'features/emails/rpc/copyEmail';
 import { copyEventsDef } from 'features/events/rpc/copyEvents';
 import { createNewViewRouteDef } from 'features/views/rpc/createNew/server';
 import { deleteEventsDef } from 'features/events/rpc/deleteEvents';
@@ -25,6 +26,7 @@ export function createRPCRouter() {
   rpcRouter.register(getPrevEventDayDef);
   rpcRouter.register(getNextEventDayDef);
   rpcRouter.register(updateEventsDef);
+  rpcRouter.register(copyEmailDef);
   rpcRouter.register(copyEventsDef);
   rpcRouter.register(getUserOrgTreeDef);
   rpcRouter.register(deleteEventsDef);

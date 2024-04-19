@@ -17,7 +17,12 @@ import campaignsSlice, {
   campaignDeleted,
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
+import emailsSlice, {
+  emailCreated,
+  EmailStoreSlice,
+} from 'features/emails/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
+import filesSlice, { FilesStoreSlice } from 'features/files/store';
 import importSlice, { ImportStoreSlice } from 'features/import/store';
 import journeysSlice, {
   journeyInstanceCreated,
@@ -44,7 +49,9 @@ export interface RootState {
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
+  emails: EmailStoreSlice;
   events: EventsStoreSlice;
+  files: FilesStoreSlice;
   import: ImportStoreSlice;
   journeys: JourneysStoreSlice;
   organizations: OrganizationsStoreSlice;
@@ -62,7 +69,9 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
+  files: filesSlice.reducer,
   import: importSlice.reducer,
   journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
@@ -92,6 +101,18 @@ listenerMiddleware.startListening({
     const campaign = action.payload;
     Router.push(
       `/organize/${campaign.organization?.id}/projects/${campaign.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: emailCreated,
+  effect: (action) => {
+    const email = action.payload;
+    Router.push(
+      `/organize/${email.organization.id}/projects/${
+        email.campaign?.id ?? 'standalone'
+      }/emails/${email.id}`
     );
   },
 });
@@ -141,3 +162,4 @@ export default function createStore(
 
 export type Store = ReturnType<typeof createStore>;
 export type AppDispatch = Store['dispatch'];
+export const store = createStore();
