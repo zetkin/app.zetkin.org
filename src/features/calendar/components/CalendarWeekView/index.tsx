@@ -34,7 +34,7 @@ import { useAppDispatch, useEnv, useNumericRouteParams } from 'core/hooks';
 dayjs.extend(isoWeek);
 
 const HOUR_HEIGHT = 80;
-const HOUR_COLUMN_WIDTH = '50px';
+const HOUR_COLUMN_WIDTH = '60px';
 
 export interface CalendarWeekViewProps {
   focusDate: Date;
@@ -112,10 +112,6 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         <Box>
           {range(24).map((hour: number) => {
             const time = dayjs().set('hour', hour).set('minute', 0).toString();
-            const is12HourClock = Intl.DateTimeFormat(navigator.language, {
-              hour: 'numeric',
-            }).resolvedOptions().hour12;
-
             return (
               <Box
                 key={`hour-${hour}`}
@@ -124,11 +120,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 justifyContent="flex-end"
               >
                 <Typography color={theme.palette.grey[500]} variant="caption">
-                  <FormattedTime
-                    hour="numeric"
-                    minute={is12HourClock ? undefined : 'numeric'}
-                    value={time}
-                  />
+                  <FormattedTime hour="numeric" minute="numeric" value={time} />
                 </Typography>
               </Box>
             );
