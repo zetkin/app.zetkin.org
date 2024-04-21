@@ -9,6 +9,7 @@ import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrgIdsFromOrgScope from 'features/smartSearch/hooks/useOrgIdsFromOrgScope';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CampaignParticipationConfig,
@@ -63,17 +64,22 @@ const CampaignParticipation = ({
 }: CampaignParticipationProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
 
-  // TODO: Show loading indicator instead of empty arrays?
-  const activities = useEventTypes(orgId).data || [];
-  const campaigns = useCampaigns(orgId).data || [];
-  const locations = useEventLocations(orgId) || [];
-
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CampaignParticipationConfig>(initialFilter, {
       operator: 'in',
       organizations: [orgId],
       state: 'booked',
     });
+
+  const orgIds = useOrgIdsFromOrgScope(
+    orgId,
+    filter.config.organizations || [orgId]
+  );
+
+  // TODO: Show loading indicator instead of empty arrays?
+  const activities = useEventTypes(orgId).data || [];
+  const campaigns = useCampaigns(orgId, orgIds).data || [];
+  const locations = useEventLocations(orgId) || [];
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
