@@ -34,7 +34,10 @@ const breadcrumbsSlice = createSlice({
   reducers: {
     crumbsLoad: (state, action: PayloadAction<string>) => {
       const path = action.payload;
-      state.crumbsByPath[path] = remoteItem(path, { isLoading: true });
+      state.crumbsByPath[path] = remoteItem(path, {
+        data: state.crumbsByPath[path]?.data ?? null,
+        isLoading: true,
+      });
     },
     crumbsLoaded: (state, action: PayloadAction<[string, BreadcrumbItem]>) => {
       const [path, loadedItem] = action.payload;
