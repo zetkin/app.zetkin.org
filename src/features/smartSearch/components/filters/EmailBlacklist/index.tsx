@@ -51,7 +51,11 @@ const EmailBlacklist = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderSentence={() => (
         <Msg
@@ -91,6 +95,7 @@ const EmailBlacklist = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

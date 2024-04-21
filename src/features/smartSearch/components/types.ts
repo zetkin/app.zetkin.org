@@ -119,6 +119,7 @@ export interface CallHistoryFilterConfig {
 }
 export interface EmailBlacklistFilterConfig {
   operator: 'blacklisted';
+  organizations?: FilterConfigOrgOptions;
   reason: 'unsub_org' | 'any';
 }
 export interface EmailClickFilterConfig {
@@ -127,9 +128,11 @@ export interface EmailClickFilterConfig {
   campaign?: number;
   email?: number;
   operator: 'clicked' | 'not_clicked';
+  organizations?: FilterConfigOrgOptions;
   links?: number[];
 }
 export interface EmailHistoryFilterConfig {
+  organizations?: FilterConfigOrgOptions;
   after?: string;
   before?: string;
   campaign?: number;
