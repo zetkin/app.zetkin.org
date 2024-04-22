@@ -117,4 +117,62 @@ describe('shouldLoad()', () => {
       expect(result).toBeFalsy();
     });
   });
+
+  describe('with map of lists', () => {
+    it('returns true when any needs loading', () => {
+      const map = {
+        '1': remoteList([dummyItemData]),
+        '2': remoteList([dummyItemData]),
+      };
+
+      // List for 1 needs loading
+      map[1].isStale = true;
+
+      const result = shouldLoad(map);
+      expect(result).toBeTruthy();
+    });
+
+    it('returns false when none need loading', () => {
+      const map = {
+        '1': remoteList([dummyItemData]),
+        '2': remoteList([dummyItemData]),
+      };
+
+      // Both lists have loaded
+      map[1].loaded = new Date().toISOString();
+      map[2].loaded = new Date().toISOString();
+
+      const result = shouldLoad(map);
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('with map of items', () => {
+    it('returns true when any needs loading', () => {
+      const map = {
+        '1': remoteItem(dummyItemData.id),
+        '2': remoteItem(dummyItemData.id),
+      };
+
+      // List for 1 needs loading
+      map[1].isStale = true;
+
+      const result = shouldLoad(map);
+      expect(result).toBeTruthy();
+    });
+
+    it('returns false when none need loading', () => {
+      const map = {
+        '1': remoteItem(dummyItemData.id),
+        '2': remoteItem(dummyItemData.id),
+      };
+
+      // Both lists have loaded
+      map[1].loaded = new Date().toISOString();
+      map[2].loaded = new Date().toISOString();
+
+      const result = shouldLoad(map);
+      expect(result).toBeFalsy();
+    });
+  });
 });
