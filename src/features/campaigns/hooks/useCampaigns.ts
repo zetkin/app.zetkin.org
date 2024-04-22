@@ -1,13 +1,9 @@
 import { generateRandomColor } from 'utils/colorUtils';
-import { loadList } from 'core/caching/cacheUtils';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import { campaignsLoad, campaignsLoaded } from '../store';
-import {
-  futureToObject,
-  IFuture,
-  RemoteListFuture,
-} from 'core/caching/futures';
+import { futureToObject, IFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useCampaigns(
@@ -25,33 +21,23 @@ export default function useCampaigns(
     fromOrgIds = [mainOrgId];
   }
 
-  const needsToLoad = fromOrgIds.some((orgId) =>
-    shouldLoad(campaignsByOrgId[orgId])
-  );
-
   const needsRecursive = fromOrgIds.length > 1;
 
-  let future: IFuture<ZetkinCampaign[]>;
-  if (needsToLoad) {
-    future = loadList(dispatch, {
-      actionOnLoad: () => campaignsLoad(fromOrgIds),
-      actionOnSuccess: (data) => {
-        const dataWithColor = data.map((campaign) => ({
-          ...campaign,
-          color: generateRandomColor(campaign.id.toString()),
-        }));
-        return campaignsLoaded(dataWithColor);
-      },
-      loader: () =>
-        apiClient.get<ZetkinCampaign[]>(
-          `/api/orgs/${mainOrgId}/campaigns${
-            needsRecursive ? '?recursive' : ''
-          }`
-        ),
-    });
-  } else {
-    future = new RemoteListFuture(campaignsList);
-  }
+  const future = loadListIfNecessary(campaignsList, dispatch, {
+    actionOnLoad: () => campaignsLoad(fromOrgIds),
+    actionOnSuccess: (data) => {
+      const dataWithColor = data.map((campaign) => ({
+        ...campaign,
+        color: generateRandomColor(campaign.id.toString()),
+      }));
+      return campaignsLoaded(dataWithColor);
+    },
+    isNecessary: () => shouldLoad(campaignsByOrgId),
+    loader: () =>
+      apiClient.get<ZetkinCampaign[]>(
+        `/api/orgs/${mainOrgId}/campaigns${needsRecursive ? '?recursive' : ''}`
+      ),
+  });
 
   if (future.data) {
     return {
