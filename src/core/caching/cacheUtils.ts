@@ -20,10 +20,13 @@ export function loadListIfNecessary<
     actionOnError?: (err: unknown) => PayloadAction<unknown>;
     actionOnLoad: () => PayloadAction<OnLoadPayload>;
     actionOnSuccess: (items: DataType[]) => PayloadAction<OnSuccessPayload>;
+    isNecessary?: () => boolean;
     loader: () => Promise<DataType[]>;
   }
 ): IFuture<DataType[]> {
-  if (!remoteList || shouldLoad(remoteList)) {
+  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
+
+  if (!remoteList || loadIsNecessary) {
     return loadList(dispatch, hooks);
   }
 
