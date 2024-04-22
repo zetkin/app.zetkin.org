@@ -41,28 +41,30 @@ const StyledGroupedSelect: FC<Props> = (props) => {
   const groups = new Set(props.items.map((item) => item.group));
 
   const options: ReactElement[] = [];
-  Array.from(groups).map((groupTitle) => {
-    if (groupTitle) {
-      options.push(
-        <ListSubheader key={groupTitle}>{groupTitle}</ListSubheader>
-      );
-    }
-
-    props.items
-      .filter((item) => item.group == groupTitle)
-      .sort((item0, item1) => item0.label.localeCompare(item1.label))
-      .forEach((item) => {
+  Array.from(groups)
+    .sort((group0, group1) => (group0 || '').localeCompare(group1 || ''))
+    .map((groupTitle) => {
+      if (groupTitle) {
         options.push(
-          <MenuItem
-            key={item.id}
-            sx={{ ml: groupTitle ? 2 : 0 }}
-            value={item.id}
-          >
-            {item.label}
-          </MenuItem>
+          <ListSubheader key={groupTitle}>{groupTitle}</ListSubheader>
         );
-      });
-  });
+      }
+
+      props.items
+        .filter((item) => item.group == groupTitle)
+        .sort((item0, item1) => item0.label.localeCompare(item1.label))
+        .forEach((item) => {
+          options.push(
+            <MenuItem
+              key={item.id}
+              sx={{ ml: groupTitle ? 2 : 0 }}
+              value={item.id}
+            >
+              {item.label}
+            </MenuItem>
+          );
+        });
+    });
 
   return (
     <TextField
