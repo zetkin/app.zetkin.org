@@ -19,7 +19,8 @@ services:
     env_file:
       - path: ./.env.development
     ports:
-      - 3000:3000
+      - 3000
+    network_mode: "host"
 
   # With this version of the app, yarn will install dependencies every time you start
   # the container. So it's a bit slower to start, which may be annoying if you're only
@@ -33,9 +34,10 @@ services:
         ENTRYPOINT yarn install && yarn devserver
     profiles: ["dev"]
     ports:
-      - 3000:3000
+      - 3000
     volumes:
       - ./:/repo
+    network_mode: "host"
 
   # WIP: It's possible to run the precommit hook from within a container
   # docker compose -f dev.yml run lint
