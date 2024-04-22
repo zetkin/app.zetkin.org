@@ -2,7 +2,7 @@ import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
-import { Msg } from 'core/i18n';
+import StyledGroupedSelect from '../../inputs/StyledGroupedSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
@@ -18,6 +18,7 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 
@@ -63,6 +64,7 @@ const CampaignParticipation = ({
   filter: initialFilter,
 }: CampaignParticipationProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
+  const messages = useMessages(localMessageIds);
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CampaignParticipationConfig>(initialFilter, {
@@ -211,36 +213,24 @@ const CampaignParticipation = ({
               </StyledSelect>
             ),
             campaignSelect: (
-              <StyledSelect
+              <StyledGroupedSelect
+                items={[
+                  {
+                    group: null,
+                    id: DEFAULT_VALUE,
+                    label: messages.campaignSelect.any(),
+                  },
+                  ...campaigns.map((campaign) => ({
+                    group: campaign.organization.title,
+                    id: campaign.id,
+                    label: campaign.title,
+                  })),
+                ]}
                 onChange={(e) => {
                   handleCampaignSelectChange(e.target.value);
                 }}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.campaignSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.campaignSelect.campaign}
-                        values={{
-                          campaign:
-                            campaigns.find((c) => c.id === value)?.title ?? '',
-                        }}
-                      />
-                    );
-                  },
-                }}
                 value={filter.config.campaign || DEFAULT_VALUE}
-              >
-                <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id={localMessageIds.campaignSelect.any} />
-                </MenuItem>
-                {campaigns.map((c) => (
-                  <MenuItem key={c.id} value={c.id}>
-                    {c.title}
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             haveSelect: (
               <StyledSelect
