@@ -1,4 +1,3 @@
-
 module.exports = {
   experimental: {
     serverComponentsExternalPackages: ["mjml"],

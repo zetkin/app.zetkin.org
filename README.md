@@ -79,6 +79,10 @@ you can also run the provided Docker Compose setup.
   $ docker compose -f dev.yml run lint npx prettier . --write
   ```
 
+Note: If you are running the backend locally and things like `dev.zetkin.org` resolve to `127.0.0.1`,
+then this only works on Linux-based systems, due to the nature of `127.0.0.1` pointing to the host on Linux
+(but not on Windows/Mac, where it points to the container itself).
+
 ## Development server login credentials
 
 You can log in using the dummy user accounts to access dummy data from the
