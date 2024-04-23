@@ -12,7 +12,6 @@ import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Chip, Typography } from '@mui/material';
 import {
-  JOURNEY_CONDITION_OP,
   JourneyFilterConfig,
   OPERATION,
   SmartSearchFilterWithId,
@@ -27,13 +26,11 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const op = filter.op || OPERATION.ADD;
   const {
-    condition,
     operator,
     journey: journeyId,
     after,
     before,
-    tags: tagIds,
-    min_matching,
+    tags: tagsObj,
   } = filter.config;
   const journeys = useJourneys(orgId).data || [];
   const journeyTitle = journeys?.find((item) => item.id === journeyId)?.title;
@@ -44,26 +41,32 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
   const { data } = useTags(orgId);
   const tags = data || [];
 
-  const selectedTags = tagIds.reduce((acc: ZetkinTag[], id) => {
-    const tag = tags.find((tag) => tag.id === id);
-    if (tag) {
-      return acc.concat(tag);
-    }
-    return acc;
-  }, []);
+  const selectedTags =
+    tagsObj?.ids.reduce((acc: ZetkinTag[], id) => {
+      const tag = tags.find((tag) => tag.id === id);
+      if (tag) {
+        return acc.concat(tag);
+      }
+      return acc;
+    }, []) || [];
 
-  const notAnyTags = condition !== JOURNEY_CONDITION_OP.TAGS;
+  const notRegardlessTags = !!filter.config.tags;
+
   return (
     <Msg
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        condition: min_matching ? (
+        condition: !tagsObj ? (
+          <UnderlinedMsg
+            id={localMessageIds.condition.preview.regardlessTags}
+          />
+        ) : tagsObj.min_matching ? (
           <>
             <UnderlinedMsg
               id={localMessageIds.condition.preview.minMatching}
               values={{
-                minMatching: min_matching,
+                minMatching: tagsObj.min_matching,
               }}
             />
             <Typography component="span" sx={{ ml: '0.2rem' }}>
@@ -71,9 +74,11 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             </Typography>
           </>
         ) : (
-          <UnderlinedMsg id={localMessageIds.condition.preview[condition]} />
+          <UnderlinedMsg
+            id={localMessageIds.condition.preview[tagsObj.condition]}
+          />
         ),
-        has: notAnyTags ? <Msg id={localMessageIds.has} /> : null,
+        has: notRegardlessTags ? <Msg id={localMessageIds.has} /> : null,
         journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
         operator: (
           <UnderlinedMsg
@@ -89,7 +94,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             }
           />
         ),
-        tags: notAnyTags ? (
+        tags: notRegardlessTags ? (
           <Box alignItems="start" display="inline-flex">
             {selectedTags.map((t) => (
               <Chip
@@ -102,10 +107,8 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             ))}
           </Box>
         ) : null,
-        tagsDesc: notAnyTags ? (
-          <>
-            <Msg id={localMessageIds.followingTags} /> :
-          </>
+        tagsDesc: notRegardlessTags ? (
+          <Msg id={localMessageIds.followingTags} />
         ) : null,
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}

@@ -13,7 +13,7 @@ import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Box, Chip, MenuItem, Typography } from '@mui/material';
 import {
-  JOURNEY_CONDITION_OP,
+  CONDITION_OPERATOR,
   JourneyFilterConfig,
   NewSmartSearchFilter,
   OPERATION,
@@ -47,24 +47,24 @@ const Journey: FC<JourneyProps> = ({
   const { orgId } = useNumericRouteParams();
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {
-      condition: JOURNEY_CONDITION_OP.ALL,
       operator: 'opened',
-      tags: [],
     });
   const { data } = useTags(orgId);
   const tags = data || [];
   const journeys = useJourneys(orgId).data || [];
 
   const MIN_MATCHING = 'min_matching';
+  const REGARDLESS_TAGS = 'regardlessTags';
 
   // preserve the order of the tag array
-  const selectedTags = filter.config.tags.reduce((acc: ZetkinTag[], id) => {
-    const tag = tags.find((tag) => tag.id === id);
-    if (tag) {
-      return acc.concat(tag);
-    }
-    return acc;
-  }, []);
+  const selectedTags =
+    filter.config.tags?.ids.reduce((acc: ZetkinTag[], id) => {
+      const tag = tags.find((tag) => tag.id === id);
+      if (tag) {
+        return acc.concat(tag);
+      }
+      return acc;
+    }, []) || [];
 
   const handleTimeFrameChange = (range: {
     after?: string;
@@ -77,55 +77,68 @@ const Journey: FC<JourneyProps> = ({
     });
   };
   const handleTagDelete = (tag: ZetkinTag) => {
-    setConfig({
-      ...filter.config,
-      tags: filter.config.tags.filter((t) => t !== tag.id),
-    });
+    const tags = filter.config?.tags;
+    if (tags) {
+      setConfig({
+        ...filter.config,
+        tags: {
+          condition: tags.condition,
+          ids: tags.ids.filter((t) => t !== tag.id),
+          min_matching: tags.min_matching,
+        },
+      });
+    }
   };
 
   const handleConditionChange = (conditionValue: string) => {
     if (conditionValue === MIN_MATCHING) {
       setConfig({
         ...filter.config,
-        condition: JOURNEY_CONDITION_OP.ANY,
-        min_matching: 1,
+        tags: {
+          condition: CONDITION_OPERATOR.ANY,
+          ids: [],
+          min_matching: 1,
+        },
       });
-    } else if (conditionValue === 'tags') {
+    } else if (conditionValue === REGARDLESS_TAGS) {
       setConfig({
         ...filter.config,
-        condition: JOURNEY_CONDITION_OP.TAGS,
-        min_matching: undefined,
-        tags: [],
+        tags: undefined,
       });
     } else {
       setConfig({
         ...filter.config,
-        condition: conditionValue as JOURNEY_CONDITION_OP,
-        min_matching: undefined,
+        tags: {
+          condition: conditionValue as CONDITION_OPERATOR,
+          ids: [],
+          min_matching: undefined,
+        },
       });
     }
   };
-  const selected = filter.config.min_matching
+  const selected = !filter.config.tags
+    ? REGARDLESS_TAGS
+    : filter.config.tags.min_matching
     ? MIN_MATCHING
-    : filter.config.condition;
-  const notAnyTags = filter.config.condition !== JOURNEY_CONDITION_OP.TAGS;
+    : filter.config.tags.condition;
+
+  const notRegardlessTags = !!filter.config.tags;
 
   const conditionSelect = (
     <StyledSelect
       onChange={(e) => handleConditionChange(e.target.value)}
       value={selected}
     >
-      {Object.values(JOURNEY_CONDITION_OP).map((o) => (
+      {Object.values(CONDITION_OPERATOR).map((o) => (
         <MenuItem key={o} value={o}>
           <Msg id={localMessageIds.condition.conditionSelect[o]} />
         </MenuItem>
       ))}
       <MenuItem key={MIN_MATCHING} value={MIN_MATCHING}>
-        <Msg
-          id={
-            messageIds.filters.personTags.condition.conditionSelect.minMatching
-          }
-        />
+        <Msg id={localMessageIds.condition.conditionSelect.minMatching} />
+      </MenuItem>
+      <MenuItem key={REGARDLESS_TAGS} value={REGARDLESS_TAGS}>
+        <Msg id={localMessageIds.condition.conditionSelect.regardlessTags} />
       </MenuItem>
     </StyledSelect>
   );
@@ -134,7 +147,7 @@ const Journey: FC<JourneyProps> = ({
     <FilterForm
       disableSubmit={
         !filter.config.journey ||
-        (filter.config.tags.length === 0 && notAnyTags)
+        (filter.config.tags?.ids.length === 0 && notRegardlessTags)
       }
       onCancel={onCancel}
       onSubmit={(e) => {
@@ -164,17 +177,21 @@ const Journey: FC<JourneyProps> = ({
                   <>
                     <StyledNumberInput
                       inputProps={{
-                        max: filter.config.tags.length,
+                        max: filter.config.tags!.ids.length,
                         min: '1',
                       }}
                       onChange={(e) =>
                         setConfig({
                           ...filter.config,
-                          min_matching: +e.target.value,
+                          tags: {
+                            condition: CONDITION_OPERATOR.ANY,
+                            ids: filter.config.tags!.ids,
+                            min_matching: +e.target.value,
+                          },
                         })
                       }
                       sx={{ ml: '0.5rem' }}
-                      value={filter.config.min_matching}
+                      value={filter.config.tags?.min_matching}
                     />
                     <Typography
                       component="span"
@@ -187,7 +204,7 @@ const Journey: FC<JourneyProps> = ({
                 )}
               </>
             ),
-            has: notAnyTags ? <Msg id={localMessageIds.has} /> : null,
+            has: notRegardlessTags ? <Msg id={localMessageIds.has} /> : null,
             journeySelect: (
               <StyledSelect
                 minWidth="10rem"
@@ -233,7 +250,7 @@ const Journey: FC<JourneyProps> = ({
                 }
               />
             ),
-            tags: notAnyTags ? (
+            tags: notRegardlessTags ? (
               <Box
                 alignItems="center"
                 display="inline-flex"
@@ -258,7 +275,11 @@ const Journey: FC<JourneyProps> = ({
                     onChange={(_, value) =>
                       setConfig({
                         ...filter.config,
-                        tags: value.map((t) => t.id),
+                        tags: {
+                          condition: filter.config.tags!.condition,
+                          ids: value.map((t) => t.id),
+                          min_matching: filter.config.tags!.min_matching,
+                        },
                       })
                     }
                     options={tags.map((t) => ({
@@ -266,13 +287,13 @@ const Journey: FC<JourneyProps> = ({
                       title: t.title,
                     }))}
                     value={tags.filter((t) =>
-                      filter.config.tags.includes(t.id)
+                      filter.config.tags!.ids.includes(t.id)
                     )}
                   />
                 )}
               </Box>
             ) : null,
-            tagsDesc: notAnyTags ? (
+            tagsDesc: notRegardlessTags ? (
               <>
                 <Msg id={localMessageIds.followingTags} /> :
               </>
