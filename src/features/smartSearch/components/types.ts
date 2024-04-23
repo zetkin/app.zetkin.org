@@ -26,6 +26,13 @@ export enum CONDITION_OPERATOR {
   NONE = 'none',
 }
 
+export enum JOURNEY_CONDITION_OP {
+  ALL = 'all',
+  ANY = 'any',
+  NONE = 'none',
+  SOME = 'some',
+}
+
 export enum IN_OPERATOR {
   IN = 'in',
   NOTIN = 'notin',
@@ -209,7 +216,7 @@ export interface JourneyFilterConfig {
   journey?: number;
   operator: 'opened' | 'closed';
   tags?: {
-    condition: CONDITION_OPERATOR;
+    condition: JOURNEY_CONDITION_OP;
     ids: number[];
     min_matching?: number;
   };

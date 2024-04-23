@@ -13,7 +13,7 @@ import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Box, Chip, MenuItem, Typography } from '@mui/material';
 import {
-  CONDITION_OPERATOR,
+  JOURNEY_CONDITION_OP,
   JourneyFilterConfig,
   NewSmartSearchFilter,
   OPERATION,
@@ -53,7 +53,6 @@ const Journey: FC<JourneyProps> = ({
   const tags = data || [];
   const journeys = useJourneys(orgId).data || [];
 
-  const MIN_MATCHING = 'min_matching';
   const REGARDLESS_TAGS = 'regardlessTags';
 
   // preserve the order of the tag array
@@ -91,11 +90,11 @@ const Journey: FC<JourneyProps> = ({
   };
 
   const handleConditionChange = (conditionValue: string) => {
-    if (conditionValue === MIN_MATCHING) {
+    if (conditionValue === JOURNEY_CONDITION_OP.SOME) {
       setConfig({
         ...filter.config,
         tags: {
-          condition: CONDITION_OPERATOR.ANY,
+          condition: JOURNEY_CONDITION_OP.SOME,
           ids: [],
           min_matching: 1,
         },
@@ -109,7 +108,7 @@ const Journey: FC<JourneyProps> = ({
       setConfig({
         ...filter.config,
         tags: {
-          condition: conditionValue as CONDITION_OPERATOR,
+          condition: conditionValue as JOURNEY_CONDITION_OP,
           ids: [],
           min_matching: undefined,
         },
@@ -119,7 +118,7 @@ const Journey: FC<JourneyProps> = ({
   const selected = !filter.config.tags
     ? REGARDLESS_TAGS
     : filter.config.tags.min_matching
-    ? MIN_MATCHING
+    ? JOURNEY_CONDITION_OP.SOME
     : filter.config.tags.condition;
 
   const notRegardlessTags = !!filter.config.tags;
@@ -129,14 +128,11 @@ const Journey: FC<JourneyProps> = ({
       onChange={(e) => handleConditionChange(e.target.value)}
       value={selected}
     >
-      {Object.values(CONDITION_OPERATOR).map((o) => (
+      {Object.values(JOURNEY_CONDITION_OP).map((o) => (
         <MenuItem key={o} value={o}>
           <Msg id={localMessageIds.condition.conditionSelect[o]} />
         </MenuItem>
       ))}
-      <MenuItem key={MIN_MATCHING} value={MIN_MATCHING}>
-        <Msg id={localMessageIds.condition.conditionSelect.minMatching} />
-      </MenuItem>
       <MenuItem key={REGARDLESS_TAGS} value={REGARDLESS_TAGS}>
         <Msg id={localMessageIds.condition.conditionSelect.regardlessTags} />
       </MenuItem>
@@ -173,7 +169,7 @@ const Journey: FC<JourneyProps> = ({
             condition: (
               <>
                 {conditionSelect}
-                {selected === 'min_matching' && (
+                {selected === JOURNEY_CONDITION_OP.SOME && (
                   <>
                     <StyledNumberInput
                       inputProps={{
@@ -184,7 +180,7 @@ const Journey: FC<JourneyProps> = ({
                         setConfig({
                           ...filter.config,
                           tags: {
-                            condition: CONDITION_OPERATOR.ANY,
+                            condition: JOURNEY_CONDITION_OP.SOME,
                             ids: filter.config.tags!.ids,
                             min_matching: +e.target.value,
                           },

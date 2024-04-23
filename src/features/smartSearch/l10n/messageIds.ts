@@ -144,16 +144,16 @@ export default makeMessages('feat.smartSearch', {
         conditionSelect: {
           all: m('all of'),
           any: m('any of'),
-          minMatching: m('at least'),
           none: m('none of'),
           regardlessTags: m('regardless of tags'),
+          some: m('at least'),
         },
         preview: {
           all: m('all of'),
           any: m('any of'),
-          minMatching: m<{ minMatching: number }>('at least {minMatching}'),
           none: m('none of'),
           regardlessTags: m('regardless of tags'),
+          some: m<{ minMatching: number }>('at least {minMatching}'),
         },
       },
       followingTags: m('the following tags'),

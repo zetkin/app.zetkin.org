@@ -61,7 +61,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
         ) : tagsObj.min_matching ? (
           <>
             <UnderlinedMsg
-              id={localMessageIds.condition.preview.minMatching}
+              id={localMessageIds.condition.preview.some}
               values={{
                 minMatching: tagsObj.min_matching,
               }}
@@ -72,7 +72,11 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
           </>
         ) : (
           <UnderlinedMsg
-            id={localMessageIds.condition.preview[tagsObj.condition]}
+            id={
+              localMessageIds.condition.preview[
+                tagsObj.condition as 'all' | 'any' | 'none'
+              ]
+            }
           />
         ),
         has: selectedTags ? <Msg id={localMessageIds.has} /> : null,
