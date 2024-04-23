@@ -13,7 +13,7 @@ export default makeMessages('feat.smartSearch', {
   },
   filterCategories: {
     campaignActivity: m('Project activity'),
-    journey: m('Journey'),
+    journeySubjects: m('Journey'),
     misc: m('Misc'),
     peopleDatabase: m('People'),
     phoneBanking: m('Phone banking'),
@@ -24,7 +24,7 @@ export default makeMessages('feat.smartSearch', {
     call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
     campaign_participation: m('Based on their event participation'),
-    journey: m('Based on journeys'),
+    journey_subjects: m('Based on journeys'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
