@@ -41,16 +41,13 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
   const { data } = useTags(orgId);
   const tags = data || [];
 
-  const selectedTags =
-    tagsObj?.ids.reduce((acc: ZetkinTag[], id) => {
-      const tag = tags.find((tag) => tag.id === id);
-      if (tag) {
-        return acc.concat(tag);
-      }
-      return acc;
-    }, []) || [];
-
-  const notRegardlessTags = !!filter.config.tags;
+  const selectedTags = tagsObj?.ids.reduce((acc: ZetkinTag[], id) => {
+    const tag = tags.find((tag) => tag.id === id);
+    if (tag) {
+      return acc.concat(tag);
+    }
+    return acc;
+  }, []);
 
   return (
     <Msg
@@ -78,7 +75,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             id={localMessageIds.condition.preview[tagsObj.condition]}
           />
         ),
-        has: notRegardlessTags ? <Msg id={localMessageIds.has} /> : null,
+        has: selectedTags ? <Msg id={localMessageIds.has} /> : null,
         journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
         operator: (
           <UnderlinedMsg
@@ -94,7 +91,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             }
           />
         ),
-        tags: notRegardlessTags ? (
+        tags: selectedTags ? (
           <Box alignItems="start" display="inline-flex">
             {selectedTags.map((t) => (
               <Chip
@@ -107,8 +104,10 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             ))}
           </Box>
         ) : null,
-        tagsDesc: notRegardlessTags ? (
-          <Msg id={localMessageIds.followingTags} />
+        tagsDesc: selectedTags ? (
+          <>
+            <Msg id={localMessageIds.followingTags} /> :
+          </>
         ) : null,
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
