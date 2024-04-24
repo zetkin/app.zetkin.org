@@ -13,6 +13,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontSize: theme.typography.h4.fontSize,
     minWidth: ({ minWidth }) => minWidth,
     padding: 0,
+    maxWidth: '700px',
+    textOverflow: 'ellipsis'
   },
   MuiTextField: {
     display: 'inline',
