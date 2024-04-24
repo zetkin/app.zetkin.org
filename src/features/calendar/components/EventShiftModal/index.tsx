@@ -84,7 +84,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
           num_participants_required: eventParticipants ? eventParticipants : 0,
           published: publish ? published.toISOString() : null,
           start_time: startDate.toISOString(),
-          title: eventTitle,
+          title: eventTitle || null,
           url: eventLink,
         },
         false
