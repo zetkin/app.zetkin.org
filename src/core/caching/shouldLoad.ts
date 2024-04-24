@@ -24,13 +24,31 @@ function isItem(
   return 'deleted' in thing;
 }
 
-export default function shouldLoad(item: ObjThatNeedsLoading): boolean {
+export default function shouldLoad(
+  item: RemoteItem<unknown> | RemoteList<unknown> | undefined
+): boolean;
+export default function shouldLoad(
+  item:
+    | Record<number | string, RemoteList<unknown> | RemoteItem<unknown>>
+    | undefined,
+  ids: number[]
+): boolean;
+export default function shouldLoad(
+  item: ObjThatNeedsLoading,
+  idsOrVoid?: number[]
+): boolean {
   if (!item) {
     return true;
   }
 
   if (isMap(item)) {
-    return Object.values(item).some((listOrItem) => shouldLoad(listOrItem));
+    if (!idsOrVoid) {
+      // This should never happen because typescript will not allow it
+      throw new Error(
+        'shouldLoad() requires ids to be specified when used with a map'
+      );
+    }
+    return idsOrVoid.some((id) => shouldLoad(item[id]));
   }
 
   if (isItem(item) && item.deleted) {

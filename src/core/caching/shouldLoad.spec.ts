@@ -128,7 +128,7 @@ describe('shouldLoad()', () => {
       // List for 1 needs loading
       map[1].isStale = true;
 
-      const result = shouldLoad(map);
+      const result = shouldLoad(map, [1, 2]);
       expect(result).toBeTruthy();
     });
 
@@ -142,8 +142,13 @@ describe('shouldLoad()', () => {
       map[1].loaded = new Date().toISOString();
       map[2].loaded = new Date().toISOString();
 
-      const result = shouldLoad(map);
+      const result = shouldLoad(map, [1, 2]);
       expect(result).toBeFalsy();
+    });
+
+    it('returns true when ID is not in map', () => {
+      const result = shouldLoad({}, [1, 2]);
+      expect(result).toBeTruthy();
     });
   });
 
@@ -157,7 +162,7 @@ describe('shouldLoad()', () => {
       // List for 1 needs loading
       map[1].isStale = true;
 
-      const result = shouldLoad(map);
+      const result = shouldLoad(map, [1, 2]);
       expect(result).toBeTruthy();
     });
 
@@ -171,7 +176,7 @@ describe('shouldLoad()', () => {
       map[1].loaded = new Date().toISOString();
       map[2].loaded = new Date().toISOString();
 
-      const result = shouldLoad(map);
+      const result = shouldLoad(map, [1, 2]);
       expect(result).toBeFalsy();
     });
   });
