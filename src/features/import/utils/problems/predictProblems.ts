@@ -10,6 +10,10 @@ import {
   ImportRowProblem,
 } from './types';
 
+const hasUnknownChars = (value: string) => {
+  return [...value].some((char) => char.charCodeAt(0) > 127);
+};
+
 const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   date: (value) => {
     try {
@@ -104,7 +108,10 @@ export function predictProblems(
               rowHasFirstName = true;
             } else if (column.field == 'last_name') {
               rowHasLastName = true;
-            } else if (column.field == 'email' && !isEmail(value.toString())) {
+            } else if (
+              column.field == 'email' &&
+              (hasUnknownChars(value.toString()) || !isEmail(value.toString()))
+            ) {
               accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
               if (!isValidPhoneNumber(value.toString(), country)) {
