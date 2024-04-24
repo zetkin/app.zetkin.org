@@ -32,7 +32,7 @@ export default function useCampaigns(
       }));
       return campaignsLoaded(dataWithColor);
     },
-    isNecessary: () => shouldLoad(campaignsByOrgId),
+    isNecessary: () => shouldLoad(campaignsByOrgId, fromOrgIds),
     loader: () =>
       apiClient.get<ZetkinCampaign[]>(
         `/api/orgs/${mainOrgId}/campaigns${needsRecursive ? '?recursive' : ''}`
