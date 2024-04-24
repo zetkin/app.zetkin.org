@@ -104,9 +104,13 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
       </ZUIFuture>
       <TextField
         fullWidth
+        InputLabelProps={{ shrink: true }}
         label={messages.eventShiftModal.customTitle()}
         maxRows={1}
         onChange={(ev) => onEventTitleChange(ev.target.value)}
+        placeholder={
+          eventTitle || type?.title || messages.eventShiftModal.noTitle()
+        }
         value={eventTitle}
       />
       <DatePicker

@@ -26,9 +26,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   const { orgId, campId } = useNumericRouteParams();
 
   const [type, setType] = useState<ZetkinEvent['activity']>(null);
-  const [eventTitle, setEventTitle] = useState<string>(
-    messages.eventShiftModal.noTitle()
-  );
+  const [eventTitle, setEventTitle] = useState<string>('');
   const [eventDate, setEventDate] = useState<Dayjs>(startDate);
   const [invalidDate, setInvalidDate] = useState(false);
   const [locationId, setLocationId] = useState<number | null>(null);
@@ -150,10 +148,8 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               onTypeChange={(newType) => {
                 if (newType) {
                   setType(newType);
-                  setEventTitle(newType.title);
                 } else {
                   setType(null);
-                  setEventTitle(messages.eventShiftModal.noTitle());
                 }
               }}
               orgId={orgId}
