@@ -4,7 +4,6 @@ import makeStyles from '@mui/styles/makeStyles';
 interface StyleProps {
   minWidth?: string;
 }
-
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   MuiInput: {
     fontSize: theme.typography.h4.fontSize,

@@ -1,6 +1,9 @@
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
+import EmailBlacklist from '../filters/EmailBlacklist';
+import EmailClick from '../filters/EmailClick';
+import EmailHistory from '../filters/EmailHistory';
 import Journey from '../filters/Journey';
 import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
@@ -53,6 +56,27 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && (
         <CampaignParticipation
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.EMAIL_BLACKLIST && (
+        <EmailBlacklist
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.EMAIL_CLICK && (
+        <EmailClick
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.EMAIL_HISTORY && (
+        <EmailHistory
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

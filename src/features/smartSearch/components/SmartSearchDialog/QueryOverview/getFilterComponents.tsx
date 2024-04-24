@@ -3,12 +3,15 @@ import {
   Add,
   AssignmentOutlined,
   BallotOutlined,
+  Block,
   Call,
   CheckBoxOutlined,
+  DraftsOutlined,
   Event,
   ExploreOutlined,
   FilterAlt,
   LocalOfferOutlined,
+  MarkEmailReadOutlined,
   PersonAddAlt,
   PersonOutlined,
   PhoneDisabled,
@@ -22,6 +25,9 @@ import {
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../../filters/CampaignParticipation/DisplayCampaignParticipation';
+import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
+import DisplayEmailClick from '../../filters/EmailClick/DisplayEmailClick';
+import DisplayEmailHistory from '../../filters/EmailHistory/DisplayEmailHistory';
 import DisplayJourney from '../../filters/Journey/DisplayJourney';
 import DisplayMostActive from '../../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../../filters/PersonData/DisplayPersonData';
@@ -40,6 +46,9 @@ import {
   CallBlockedFilterConfig,
   CallHistoryFilterConfig,
   CampaignParticipationConfig,
+  EmailBlacklistFilterConfig,
+  EmailClickFilterConfig,
+  EmailHistoryFilterConfig,
   FILTER_TYPE,
   JourneyFilterConfig,
   MostActiveFilterConfig,
@@ -86,6 +95,29 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <Call color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.EMAIL_BLACKLIST) {
+    displayFilter = (
+      <DisplayEmailBlacklist
+        filter={filter as SmartSearchFilterWithId<EmailBlacklistFilterConfig>}
+      />
+    );
+    filterTypeIcon = <Block color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.EMAIL_CLICK) {
+    displayFilter = (
+      <DisplayEmailClick
+        filter={filter as SmartSearchFilterWithId<EmailClickFilterConfig>}
+      />
+    );
+    filterTypeIcon = (
+      <MarkEmailReadOutlined color="secondary" fontSize="small" />
+    );
+  } else if (filter.type === FILTER_TYPE.EMAIL_HISTORY) {
+    displayFilter = (
+      <DisplayEmailHistory
+        filter={filter as SmartSearchFilterWithId<EmailHistoryFilterConfig>}
+      />
+    );
+    filterTypeIcon = <DraftsOutlined color="secondary" fontSize="small" />;
   } else if (filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION) {
     displayFilter = (
       <DisplayCampaignParticipation

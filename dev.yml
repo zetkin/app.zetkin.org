@@ -1,0 +1,59 @@
+services:
+
+  # This is a static version of the dev environment, in case you're not interested 
+  # in changing the codebase but just running.
+  # Note:
+  # > Next.js will replace process.env.customKey with 'my-value' at build time.
+  # https://nextjs.org/docs/app/api-reference/next-config-js/env
+  app-static:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM node:lts-alpine3.19
+        COPY . /build/src/
+        WORKDIR /build/src
+        RUN yarn install
+        RUN yarn build
+        ENTRYPOINT yarn start -p 3000
+    profiles: ["static"]
+    env_file:
+      - path: ./.env.development
+    ports:
+      - 3000
+    network_mode: "host"
+
+  # With this version of the app, yarn will install dependencies every time you start
+  # the container. So it's a bit slower to start, which may be annoying if you're only
+  # developing the backend (Zetkin Platform)
+  app-dev:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM node:lts-alpine3.19
+        WORKDIR /repo
+        ENTRYPOINT yarn install && yarn devserver
+    profiles: ["dev"]
+    ports:
+      - 3000
+    volumes:
+      - ./:/repo
+    network_mode: "host"
+
+  # WIP: It's possible to run the precommit hook from within a container
+  # docker compose -f dev.yml run lint
+  # docker compose -f dev.yml run lint npx prettier . --check
+  lint:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM node:lts-alpine3.19
+        USER node
+        WORKDIR /repo
+        RUN yarn install
+        CMD ./githooks/pre-commit
+    profiles: ["lint"]
+    user: node
+    tty: true
+    working_dir: /repo
+    volumes:
+      - ./:/repo
