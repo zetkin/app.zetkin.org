@@ -48,6 +48,11 @@ const Journey: FC<JourneyProps> = ({
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {
       operator: 'opened',
+      tags: {
+        condition: JOURNEY_CONDITION_OP.ALL,
+        ids: [],
+        min_matching: undefined,
+      },
     });
   const { data } = useTags(orgId);
   const tags = data || [];
