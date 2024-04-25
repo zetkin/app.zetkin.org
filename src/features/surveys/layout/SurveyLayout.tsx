@@ -44,17 +44,21 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     parseInt(surveyId)
   );
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
-
+  const isReadOnly = campId === 'shared';
   return (
     <TabbedLayout
       actionButtons={
         state == SurveyState.PUBLISHED ? (
-          <Button onClick={() => unpublish()} variant="outlined">
+          <Button
+            disabled={isReadOnly}
+            onClick={() => unpublish()}
+            variant="outlined"
+          >
             <Msg id={messageIds.layout.actions.unpublish} />
           </Button>
         ) : (
           <Button
-            disabled={surveyIsEmpty}
+            disabled={surveyIsEmpty || isReadOnly}
             onClick={() => publish()}
             variant="contained"
           >
@@ -142,7 +146,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           {(data) => {
             return (
               <ZUIEditTextinPlace
-                isReadOnly={campId === 'shared'}
+                isReadOnly={isReadOnly}
                 onChange={(val) => {
                   updateSurvey({ title: val });
                 }}

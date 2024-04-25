@@ -160,6 +160,9 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   };
 
   const tooltipText = () => {
+    if (isReadOnly) {
+      return '';
+    }
     if (text || allowEmpty) {
       if (editing) {
         if (!text && tooltipContent) {
