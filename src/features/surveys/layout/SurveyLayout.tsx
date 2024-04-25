@@ -19,12 +19,14 @@ import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 
 interface SurveyLayoutProps {
+  campId: string;
   children: React.ReactNode;
   orgId: string;
   surveyId: string;
 }
 
 const SurveyLayout: React.FC<SurveyLayoutProps> = ({
+  campId,
   children,
   orgId,
   surveyId,

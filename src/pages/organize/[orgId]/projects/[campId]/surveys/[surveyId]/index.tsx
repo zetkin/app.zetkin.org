@@ -124,7 +124,11 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
 
 SurveyPage.getLayout = function getLayout(page, props) {
   return (
-    <SurveyLayout orgId={props.orgId} surveyId={props.surveyId}>
+    <SurveyLayout
+      campId={props.campId}
+      orgId={props.orgId}
+      surveyId={props.surveyId}
+    >
       {page}
     </SurveyLayout>
   );

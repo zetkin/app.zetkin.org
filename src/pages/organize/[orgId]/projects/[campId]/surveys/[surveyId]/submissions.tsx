@@ -101,7 +101,11 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
 
 SubmissionsPage.getLayout = function getLayout(page, props) {
   return (
-    <SurveyLayout orgId={props.orgId} surveyId={props.surveyId}>
+    <SurveyLayout
+      campId={props.campId}
+      orgId={props.orgId}
+      surveyId={props.surveyId}
+    >
       {page}
     </SurveyLayout>
   );
