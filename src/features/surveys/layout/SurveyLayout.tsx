@@ -70,6 +70,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={surveyFuture.data?.expires || null}
+          isReadOnly={isReadOnly}
           onChange={(startDate, endDate) => {
             updateSurvey({ expires: endDate, published: startDate });
           }}
