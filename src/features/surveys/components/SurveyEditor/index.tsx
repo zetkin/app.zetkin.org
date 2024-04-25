@@ -61,6 +61,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                 items={elements.map((elem) => ({
                   id: elem.id,
                   renderContent: ({ dragging }) => {
+                    if (elem.hidden) {
+                      return null;
+                    }
                     if (elem.type == ELEMENT_TYPE.QUESTION) {
                       if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                         return (
