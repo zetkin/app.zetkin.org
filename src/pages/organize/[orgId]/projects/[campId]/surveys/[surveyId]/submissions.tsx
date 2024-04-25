@@ -16,11 +16,12 @@ import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId, surveyId } = ctx.params!;
+    const { campId, orgId, surveyId } = ctx.params!;
     const filter = ctx.query.filter ? true : false;
 
     return {
       props: {
+        campId,
         orgId,
         showUnlinkedOnly: filter,
         surveyId,

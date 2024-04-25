@@ -51,6 +51,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;
   disabled?: boolean;
+  isReadOnly?: boolean;
   onChange: (newValue: string) => void;
   placeholder?: string;
   value: string;
@@ -63,6 +64,7 @@ export interface ZUIEditTextinPlaceProps {
 const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   allowEmpty = false,
   disabled,
+  isReadOnly,
   onBlur,
   onChange,
   onFocus,
@@ -109,8 +111,10 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   }, [editing]);
 
   const startEditing = () => {
-    setEditing(true);
-    setBorderOnTypeEdit();
+    if (!isReadOnly) {
+      setEditing(true);
+      setBorderOnTypeEdit();
+    }
   };
 
   const cancelEditing = () => {

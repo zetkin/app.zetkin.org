@@ -142,6 +142,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           {(data) => {
             return (
               <ZUIEditTextinPlace
+                isReadOnly={campId === 'shared'}
                 onChange={(val) => {
                   updateSurvey({ title: val });
                 }}
