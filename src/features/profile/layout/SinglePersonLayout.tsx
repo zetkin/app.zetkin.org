@@ -30,6 +30,15 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
       baseHref={`/organize/${orgId}/people/${personId}`}
       defaultTab="/"
       fixedHeight={fixedHeight}
+      subtitle={
+        <Msg
+          id={
+            person?.is_user
+              ? messageIds.user.hasAccount
+              : messageIds.user.noAccount
+          }
+        />
+      }
       tabs={[
         { href: `/`, label: messages.tabs.profile() },
         {
@@ -43,27 +52,14 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
         },
       ]}
       title={
-        <Box display="flex" flexDirection="column" justifyContent="center">
-          <Box>
-            <Typography variant="h3">
-              {`${person?.first_name} ${person?.last_name}`}
-            </Typography>
-            {person?.ext_id && (
-              <Typography
-                color="secondary"
-                variant="h3"
-              >{`\u00A0#${person?.ext_id}`}</Typography>
-            )}
-          </Box>
-          <Typography color="secondary" variant="body2">
-            <Msg
-              id={
-                person?.is_user
-                  ? messageIds.user.hasAccount
-                  : messageIds.user.noAccount
-              }
-            />
-          </Typography>
+        <Box alignContent="center" display="flex">
+          {`${person?.first_name} ${person?.last_name}`}
+          {person?.ext_id && (
+            <Typography
+              color="secondary"
+              variant="h3"
+            >{`\u00A0#${person?.ext_id}`}</Typography>
+          )}
         </Box>
       }
     >
