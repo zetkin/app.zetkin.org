@@ -68,7 +68,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         )
       }
       alertMsg={
-        isShared ? (
+        isShared && surveyFuture.data?.organization.title ? (
           <Msg
             id={messageIds.alertMsg.notEditable}
             values={{ orgTitle: surveyFuture.data!.organization.title }}
