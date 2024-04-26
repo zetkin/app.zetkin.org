@@ -44,13 +44,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     parseInt(surveyId)
   );
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
-  const isReadOnly = campId === 'shared';
+  const isShared = campId === 'shared';
+
   return (
     <TabbedLayout
       actionButtons={
         state == SurveyState.PUBLISHED ? (
           <Button
-            disabled={isReadOnly}
+            disabled={isShared}
             onClick={() => unpublish()}
             variant="outlined"
           >
@@ -58,7 +59,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         ) : (
           <Button
-            disabled={surveyIsEmpty || isReadOnly}
+            disabled={surveyIsEmpty || isShared}
             onClick={() => publish()}
             variant="contained"
           >
@@ -66,11 +67,19 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         )
       }
+      alertMsg={
+        isShared ? (
+          <Msg
+            id={messageIds.alertMsg.notEditable}
+            values={{ orgTitle: surveyFuture.data!.organization.title }}
+          />
+        ) : undefined
+      }
       baseHref={getSurveyUrl(surveyFuture.data, parsedOrg)}
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={surveyFuture.data?.expires || null}
-          isReadOnly={isReadOnly}
+          isReadOnly={isShared}
           onChange={(startDate, endDate) => {
             updateSurvey({ expires: endDate, published: startDate });
           }}
@@ -147,7 +156,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           {(data) => {
             return (
               <ZUIEditTextinPlace
-                isReadOnly={isReadOnly}
+                isReadOnly={isShared}
                 onChange={(val) => {
                   updateSurvey({ title: val });
                 }}

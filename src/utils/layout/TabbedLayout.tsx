@@ -1,6 +1,14 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
-import { Box, Collapse, Tab, TabProps, Tabs, Theme } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Collapse,
+  Tab,
+  TabProps,
+  Tabs,
+  Theme,
+} from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
@@ -21,6 +29,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
+  alertMsg?: React.ReactElement;
   avatar?: string;
   baseHref: string;
   belowActionButtons?: ReactElement;
@@ -36,6 +45,7 @@ interface TabbedLayoutProps {
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   actionButtons,
+  alertMsg,
   avatar,
   baseHref,
   belowActionButtons,
@@ -74,6 +84,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
 
   return (
     <DefaultLayout>
+      {alertMsg && <Alert severity="info">{alertMsg}</Alert>}
       <Box
         display={fixedHeight ? 'flex' : 'block'}
         flexDirection="column"
