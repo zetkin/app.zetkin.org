@@ -64,6 +64,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
             >
               <Grid item md={8} xs={12}>
                 <SurveyEditor
+                  isShared={campId === 'shared'}
                   orgId={parseInt(orgId)}
                   readOnly={
                     (receivingSubmissions && !forceEditable) ||
