@@ -36,4 +36,8 @@ export default makeMessages('feat.profile', {
     profile: m('Profile'),
     timeline: m('Timeline'),
   },
+  user: {
+    hasAccount: m('Has Zetkin account'),
+    noAccount: m('No Zetkin account'),
+  },
 });
