@@ -55,6 +55,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
     getSurveyCampId(surveyFuture?.data, parsedOrg) || 'standalone';
 
   const router = useRouter();
+  const isShared = campaignId === 'shared';
 
   return (
     <>
@@ -62,7 +63,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
         <title>{surveyFuture.data?.title}</title>
       </Head>
       <Grid container spacing={2}>
-        <Grid item md={8} sm={12} xs={12}>
+        <Grid item md={isShared ? 12 : 8} sm={12} xs={12}>
           <ZUIFuture future={submissionsFuture}>
             {(data) => {
               let submissions = data;
@@ -90,10 +91,12 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
             surveyId={parseInt(surveyId)}
           />
 
-          <SurveySuborgsCard
-            orgId={parseInt(orgId)}
-            surveyId={parseInt(surveyId)}
-          />
+          {!isShared && (
+            <SurveySuborgsCard
+              orgId={parseInt(orgId)}
+              surveyId={parseInt(surveyId)}
+            />
+          )}
         </Grid>
       </Grid>
     </>
