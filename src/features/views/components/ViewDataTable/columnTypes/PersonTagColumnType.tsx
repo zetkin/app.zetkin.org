@@ -1,6 +1,6 @@
-import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
+import { Box, Typography } from '@mui/material';
 import { FC, KeyboardEvent } from 'react';
 import {
   GridColDef,
@@ -10,6 +10,8 @@ import {
 
 import compareTags from 'features/tags/utils/compareTags';
 import { IColumnType } from '.';
+import messageIds from 'features/views/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
@@ -34,13 +36,17 @@ export default class PersonTagColumnType implements IColumnType {
       align: 'center',
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<ZetkinViewRow, ZetkinTag>) => {
-        return (
-          <Cell
-            cell={params.value}
-            personId={params.row.id}
-            tagId={column.config.tag_id}
-          />
-        );
+        if (params.value?.value_type !== null) {
+          return <ValueTagCell cell={params.value} />;
+        } else {
+          return (
+            <BasicTagCell
+              cell={params.value}
+              personId={params.row.id}
+              tagId={column.config.tag_id}
+            />
+          );
+        }
       },
       sortComparator: (v1: ZetkinTag, v2: ZetkinTag) => {
         return compareTags(v1, v2);
@@ -86,7 +92,25 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Cell: FC<{
+interface ValueTagCellProps {
+  cell: ZetkinTag | undefined;
+}
+
+const ValueTagCell: FC<ValueTagCellProps> = ({ cell }) => {
+  if (!cell) {
+    return null;
+  } else if (cell.value) {
+    return <span>{cell.value}</span>;
+  } else {
+    return (
+      <Typography color="secondary" component="span" fontStyle="italic">
+        <Msg id={messageIds.cells.personTag.emptyValue} />
+      </Typography>
+    );
+  }
+};
+
+const BasicTagCell: FC<{
   cell: ZetkinTag | undefined;
   personId: number;
   tagId: number;
@@ -101,9 +125,7 @@ const Cell: FC<{
 
   const [isRestricted] = useAccessLevel();
 
-  if (cell?.value_type != null) {
-    return <span>{cell.value}</span>;
-  } else if (cell) {
+  if (cell) {
     return (
       <TagChip
         onDelete={() => {
