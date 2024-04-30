@@ -37,7 +37,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const customFields = useCustomFields(orgId).data ?? [];
+  const customFields = useCustomFields(orgId).data;
   const createPerson = useCreatePerson(orgId);
 
   const [tags, setTags] = useState<number[]>([]);
@@ -61,14 +61,13 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
             {title}
           </Typography>
         </Box>
-        {customFields.length === 0 && (
+        {!customFields ? (
           <Box
             sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
           >
             <CircularProgress />
           </Box>
-        )}
-        {customFields.length > 0 && (
+        ) : (
           <PersonalInfoForm
             onChange={(field, value) => {
               if (value === '') {
@@ -117,7 +116,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 disabled={
                   personalInfo.first_name === undefined ||
                   personalInfo.last_name === undefined ||
-                  checkInvalidFields(customFields, personalInfo).length !== 0
+                  checkInvalidFields(customFields || [], personalInfo)
+                    .length !== 0
                 }
                 onClick={async (e) => {
                   const person = await createPerson(personalInfo, tags);
