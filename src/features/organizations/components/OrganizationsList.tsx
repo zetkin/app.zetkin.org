@@ -1,7 +1,7 @@
 import messageIds from 'features/organizations/l10n/messageIds';
 import NextLink from 'next/link';
+import useMemberships from '../hooks/useMemberships';
 import { useMessages } from 'core/i18n';
-import useOrganizations from '../hooks/useOrganizations';
 import { ZetkinMembership } from 'utils/types/zetkin';
 
 import ZUIFuture from 'zui/ZUIFuture';
@@ -9,7 +9,7 @@ import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
 
 const OrganizationsList = () => {
   const messages = useMessages(messageIds);
-  const organizations = useOrganizations();
+  const organizations = useMemberships(); // rename to usemembership
 
   return (
     <ZUIFuture future={organizations}>

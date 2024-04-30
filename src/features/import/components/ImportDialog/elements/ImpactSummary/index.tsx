@@ -6,7 +6,7 @@ import AddedTags from './AddedTags';
 import ChangedFields from './ChangedFields';
 import CreatedAndUpdated from './CreatedAndUpdated';
 import { PersonImportSummary } from 'features/import/utils/types';
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import useMemberships from 'features/organizations/hooks/useMemberships';
 import useTags from 'features/tags/hooks/useTags';
 
 type Props = {
@@ -17,7 +17,8 @@ type Props = {
 
 const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
   const tags = useTags(orgId).data ?? [];
-  const organizations = useOrganizations().data ?? [];
+  const organizations = useMemberships().data ?? [];
+  //useSuborgs
 
   const { addedToOrg, tagged } = summary;
 

@@ -4,7 +4,7 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { userOrganizationsLoad, userOrganizationsLoaded } from '../store';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
-const useOrganizations = (): IFuture<
+const useMemberships = (): IFuture<
   Pick<ZetkinOrganization, 'title' | 'id'>[] | null
 > => {
   const apiClient = useApiClient();
@@ -30,4 +30,4 @@ const useOrganizations = (): IFuture<
   return organizations;
 };
 
-export default useOrganizations;
+export default useMemberships;

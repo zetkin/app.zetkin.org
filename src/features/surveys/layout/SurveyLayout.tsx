@@ -3,7 +3,7 @@ import getSurveyUrl from '../utils/getSurveyUrl';
 import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import useMemberships from 'features/organizations/hooks/useMemberships';
 import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
@@ -46,7 +46,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   );
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
   const isShared = campId === 'shared';
-  const orgs = useOrganizations().data ?? [];
+  const orgs = useMemberships().data ?? [];
 
   // const role =
   //   orgs.find((item) => item.id === surveyFuture.data?.organization.id)?.role ??
