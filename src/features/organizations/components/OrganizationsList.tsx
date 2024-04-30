@@ -12,6 +12,7 @@ const OrganizationsList = () => {
   // const organizations = useSubOrganizations(orgId).data ?? [];
 
   return (
+    // <ZUIFuture future={organizations}>
     <ZUIFuture future={{ data: [], error: null, isLoading: false }}>
       {(data) => {
         return (

@@ -4,6 +4,7 @@ import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useMemberships from 'features/organizations/hooks/useMemberships';
+import { useRouter } from 'next/router';
 import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
@@ -32,6 +33,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   orgId,
   surveyId,
 }) => {
+  const router = useRouter();
   const parsedOrg = parseInt(orgId);
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(parsedOrg, parseInt(surveyId));
@@ -45,12 +47,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     parseInt(surveyId)
   );
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
+  const originalOrgId = surveyFuture.data?.organization.id;
   const isShared = campId === 'shared';
   const orgs = useMemberships().data ?? [];
 
-  const role = orgs.find(
-    (item) => item.id === surveyFuture.data?.organization.id
-  )?.role;
+  const role = orgs.find((item) => item.id === originalOrgId)?.role;
 
   const getAlertMsg = () => {
     if (!isShared || !surveyFuture.data?.organization.title) {
@@ -105,7 +106,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         />
       }
       defaultTab="/"
-      onClickAlertBtn={() => console.log('click')}
+      onClickAlertBtn={() => {
+        router.push(
+          `/organize/${originalOrgId}/projects/${surveyFuture.data?.campaign?.id}/surveys/${surveyId}`
+        );
+      }}
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
