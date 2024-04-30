@@ -48,10 +48,26 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const isShared = campId === 'shared';
   const orgs = useMemberships().data ?? [];
 
-  // const role =
-  //   orgs.find((item) => item.id === surveyFuture.data?.organization.id)?.role ??
-  //   '';
-  // console.log(role, ' orgs');
+  const role = orgs.find(
+    (item) => item.id === surveyFuture.data?.organization.id
+  )?.role;
+
+  const getAlertMsg = () => {
+    if (!isShared || !surveyFuture.data?.organization.title) {
+      return undefined;
+    }
+    const messageId =
+      role === 'admin'
+        ? messageIds.alert.editable
+        : messageIds.alert.notEditable;
+
+    return (
+      <Msg
+        id={messageId}
+        values={{ orgTitle: surveyFuture.data!.organization.title }}
+      />
+    );
+  };
   return (
     <TabbedLayout
       actionButtons={
@@ -73,14 +89,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         )
       }
-      alertMsg={
-        isShared && surveyFuture.data?.organization.title ? (
-          <Msg
-            id={messageIds.alertMsg.notEditable}
-            values={{ orgTitle: surveyFuture.data!.organization.title }}
-          />
-        ) : undefined
+      alertBtnMsg={
+        isShared && role === 'admin' ? messages.alert.goOriginal() : undefined
       }
+      alertMsg={getAlertMsg()}
       baseHref={getSurveyUrl(surveyFuture.data, parsedOrg)}
       belowActionButtons={
         <ZUIDateRangePicker
@@ -93,6 +105,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         />
       }
       defaultTab="/"
+      onClickAlertBtn={() => console.log('click')}
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>

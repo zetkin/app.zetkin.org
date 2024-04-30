@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import {
   Alert,
   Box,
+  Button,
   Collapse,
   Tab,
   TabProps,
@@ -29,6 +30,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
+  alertBtnMsg?: string;
   alertMsg?: React.ReactElement;
   avatar?: string;
   baseHref: string;
@@ -41,10 +43,12 @@ interface TabbedLayoutProps {
   defaultTab: string;
   noPad?: boolean;
   tabs: { href: string; label: string; tabProps?: TabProps }[];
+  onClickAlertBtn?: () => void;
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   actionButtons,
+  alertBtnMsg,
   alertMsg,
   avatar,
   baseHref,
@@ -54,6 +58,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   ellipsisMenuItems,
   fixedHeight,
   noPad,
+  onClickAlertBtn,
   subtitle,
   tabs,
   title,
@@ -84,7 +89,20 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
 
   return (
     <DefaultLayout>
-      {alertMsg && <Alert severity="info">{alertMsg}</Alert>}
+      {alertMsg && (
+        <Alert
+          action={
+            alertBtnMsg && (
+              <Button color="inherit" onClick={onClickAlertBtn} size="small">
+                {alertBtnMsg}
+              </Button>
+            )
+          }
+          severity="info"
+        >
+          {alertMsg}
+        </Alert>
+      )}
       <Box
         display={fixedHeight ? 'flex' : 'block'}
         flexDirection="column"

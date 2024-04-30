@@ -1,6 +1,6 @@
 import createPreviewData from '../utils/createPreviewData';
 import { Sheet } from '../utils/types';
-import useMemberships from 'features/organizations/hooks/useMemberships';
+import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 
@@ -10,8 +10,7 @@ export default function usePersonPreview(
   orgId: number
 ) {
   const allTags = useTags(orgId).data ?? [];
-  const organizations = useMemberships().data ?? [];
-  //useSuborgs hook instead
+  const organizations = useSubOrganizations(orgId).data ?? [];
   const previewRow = createPreviewData(sheet, personIndex);
 
   const fields = previewRow?.data;

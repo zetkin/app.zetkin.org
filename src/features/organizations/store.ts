@@ -7,7 +7,7 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import {
-  ZetkinMembership,
+  ZetkinMembershipListData,
   ZetkinOrganization,
   ZetkinSubOrganization,
 } from 'utils/types/zetkin';
@@ -16,14 +16,14 @@ export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   treeDataList: RemoteList<TreeItemData>;
-  userMembershipList: RemoteList<ZetkinMembership['organization']>;
+  userMembershipList: RemoteList<ZetkinMembershipListData>;
 }
 
 const initialState: OrganizationsStoreSlice = {
   orgData: remoteItem(0),
   subOrgsByOrgId: {},
   treeDataList: remoteList(),
-  userMembershipList: remoteList(), //userMembershipList
+  userMembershipList: remoteList(),
 };
 
 const OrganizationsSlice = createSlice({
@@ -67,16 +67,15 @@ const OrganizationsSlice = createSlice({
       state.treeDataList.loaded = new Date().toISOString();
       state.treeDataList.isLoading = false;
     },
-    userOrganizationsLoad: (state) => {
+    userMembershipsLoad: (state) => {
       state.userMembershipList.isLoading = true;
     },
-    userOrganizationsLoaded: (
+    userMembershipsLoaded: (
       state,
-      action: PayloadAction<ZetkinMembership['organization'][]>
+      action: PayloadAction<ZetkinMembershipListData[]>
     ) => {
-      const organizationsList = action.payload;
-
-      state.userMembershipList = remoteList(organizationsList);
+      const membershipList = action.payload;
+      state.userMembershipList = remoteList(membershipList!);
       state.userMembershipList.loaded = new Date().toISOString();
       state.userMembershipList.isLoading = false;
     },
@@ -91,6 +90,6 @@ export const {
   treeDataLoaded,
   subOrgsLoad,
   subOrgsLoaded,
-  userOrganizationsLoad,
-  userOrganizationsLoaded,
+  userMembershipsLoad,
+  userMembershipsLoaded,
 } = OrganizationsSlice.actions;
