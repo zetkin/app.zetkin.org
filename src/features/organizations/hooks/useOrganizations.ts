@@ -12,7 +12,7 @@ const useOrganizations = (): IFuture<
   const organizationState = useAppSelector((state) => state.organizations);
 
   const organizations = loadListIfNecessary(
-    organizationState.userOrgList,
+    organizationState.userMembershipList,
     dispatch,
     {
       actionOnLoad: () => userOrganizationsLoad(),
