@@ -1,11 +1,13 @@
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
-import { Box, Typography } from '@mui/material';
-import { FC, KeyboardEvent } from 'react';
+import { Box, TextField, TextFieldProps, Typography } from '@mui/material';
+import { FC, KeyboardEvent, useCallback, useState } from 'react';
 import {
   GridColDef,
   GridRenderCellParams,
+  GridRenderEditCellParams,
   MuiEvent,
+  useGridApiContext,
 } from '@mui/x-data-grid-pro';
 
 import compareTags from 'features/tags/utils/compareTags';
@@ -59,20 +61,24 @@ export default class PersonTagColumnType implements IColumnType {
 
     return {
       align: 'center',
+      editable: !accessLevel && tag?.value_type !== null,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<ZetkinViewRow, ZetkinTag>) => {
-        if (tag?.value_type !== null) {
+        if (!tag) {
+          return null;
+        } else if (tag.value_type !== null) {
           return <ValueTagCell cell={params.value} />;
         } else {
           return (
             <BasicTagCell
               cell={params.value}
               personId={params.row.id}
-              tagId={column.config.tag_id}
+              tagId={tag.id}
             />
           );
         }
       },
+      renderEditCell: (params) => <ValueTagEditCell {...params} />,
       sortComparator: (v1: ZetkinTag, v2: ZetkinTag) => {
         return compareTags(v1, v2);
       },
@@ -100,6 +106,15 @@ export default class PersonTagColumnType implements IColumnType {
       viewGrid.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
     }
+  }
+
+  processRowUpdate(
+    viewGrid: UseViewGridReturn,
+    col: PersonTagViewColumn,
+    personId: number,
+    data: string | undefined
+  ): void {
+    viewGrid.toggleTag(personId, col.config.tag_id, !!data, data);
   }
 }
 
@@ -133,6 +148,61 @@ const ValueTagCell: FC<ValueTagCellProps> = ({ cell }) => {
       </Typography>
     );
   }
+};
+
+const ValueTagEditCell = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
+  const { field, id } = props;
+  const tag: ZetkinTag | null = props.value;
+  const apiRef = useGridApiContext();
+
+  const [valueState, setValueState] = useState(tag?.value || '');
+
+  const handleTextFieldRef = useCallback((el: HTMLTextAreaElement | null) => {
+    if (el) {
+      // When entering edit mode, focus the text area and put
+      // caret at the end of the text
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+      el.scrollTop = el.scrollHeight;
+    }
+  }, []);
+
+  const handleChange = useCallback<NonNullable<TextFieldProps['onChange']>>(
+    (event) => {
+      const newValue = event.target.value;
+      setValueState(newValue);
+      apiRef.current.setEditCellValue(
+        { debounceMs: 200, field, id, value: newValue },
+        event
+      );
+    },
+    [apiRef, field, id]
+  );
+
+  const handleKeyDown = useCallback<NonNullable<TextFieldProps['onKeyDown']>>(
+    (event) => {
+      if (
+        event.key === 'Escape' ||
+        (event.key === 'Enter' &&
+          !event.shiftKey &&
+          !event.ctrlKey &&
+          !event.metaKey)
+      ) {
+        const params = apiRef.current.getCellParams(id, field);
+        apiRef.current.publishEvent('cellKeyDown', params, event);
+      }
+    },
+    [apiRef, id, field]
+  );
+
+  return (
+    <TextField
+      inputRef={handleTextFieldRef}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
+      value={valueState}
+    />
+  );
 };
 
 const BasicTagCell: FC<{

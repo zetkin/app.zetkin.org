@@ -42,7 +42,7 @@ export interface IColumnType<
   ): void;
   processRowUpdate?(
     useViewGrid: UseViewGridReturn,
-    colId: number,
+    column: ColumnType,
     personId: number,
     data: CellType
   ): void;

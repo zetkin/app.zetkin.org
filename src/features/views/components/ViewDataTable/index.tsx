@@ -529,12 +529,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             if (col) {
               const processRowUpdate = columnTypes[col.type].processRowUpdate;
               if (processRowUpdate) {
-                processRowUpdate(
-                  viewGrid,
-                  col.id,
-                  after.id,
-                  after[changedField]
-                );
+                processRowUpdate(viewGrid, col, after.id, after[changedField]);
               }
             }
           }
