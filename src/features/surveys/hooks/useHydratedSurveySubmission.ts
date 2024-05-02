@@ -40,6 +40,7 @@ type HydratedQuestionWithOptions = HydratedQuestionBase & {
 
 type HydratedTextBlock = {
   header: string;
+  hidden: boolean;
   id: number;
   text: string;
   type: ELEM_TYPE.TEXT_BLOCK;
@@ -102,6 +103,7 @@ export default function useHydratedSurveySubmission(
     if (elem.type == ELEMENT_TYPE.TEXT) {
       elements.push({
         header: elem.text_block.header,
+        hidden: elem.hidden,
         id: elem.id,
         text: elem.text_block.content,
         type: ELEM_TYPE.TEXT_BLOCK,

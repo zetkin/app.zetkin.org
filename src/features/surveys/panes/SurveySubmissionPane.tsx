@@ -143,16 +143,20 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({
                   );
                 }
               } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
-                return (
-                  <Box key={elem.id} className={styles.element}>
-                    <Typography className={styles.textHeader}>
-                      {elem.header}
-                    </Typography>
-                    <Typography className={styles.textContent}>
-                      {elem.text}
-                    </Typography>
-                  </Box>
-                );
+                if (elem.hidden && isShared) {
+                  return null;
+                } else {
+                  return (
+                    <Box key={elem.id} className={styles.element}>
+                      <Typography className={styles.textHeader}>
+                        {elem.header}
+                      </Typography>
+                      <Typography className={styles.textContent}>
+                        {elem.text}
+                      </Typography>
+                    </Box>
+                  );
+                }
               }
             })}
           </>
