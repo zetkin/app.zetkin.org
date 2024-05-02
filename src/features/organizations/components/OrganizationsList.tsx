@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
 
 import messageIds from 'features/organizations/l10n/messageIds';
-import useMemberships from 'features/campaigns/hooks/useMemberships';
+import useMemberships from '../hooks/useMemberships';
 import { useMessages } from 'core/i18n';
 import ZUIFuture from 'zui/ZUIFuture';
 
