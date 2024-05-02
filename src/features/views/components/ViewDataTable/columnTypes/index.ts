@@ -1,6 +1,7 @@
 import { KeyboardEvent } from 'react';
 import { GridColDef, MuiEvent } from '@mui/x-data-grid-pro';
 
+import IApiClient from 'core/api/client/IApiClient';
 import LocalBoolColumnType from './LocalBoolColumnType';
 import LocalPersonColumnType from './LocalPersonColumnType';
 import LocalQueryColumnType from './LocalQueryColumnType';
@@ -14,6 +15,7 @@ import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
+import { AppDispatch, RootState } from 'core/store';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
 export interface IColumnType<
@@ -23,7 +25,11 @@ export interface IColumnType<
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(
     column: ColumnType,
-    accessLevel: ZetkinObjectAccess['level'] | null
+    accessLevel: ZetkinObjectAccess['level'] | null,
+    state?: RootState,
+    apiClient?: IApiClient,
+    dispatch?: AppDispatch,
+    orgId?: number
   ): Omit<GridColDef, 'field'>;
   getSearchableStrings(cell: CellType): string[];
   handleKeyDown?(
