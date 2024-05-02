@@ -100,7 +100,7 @@ const Journey: FC<JourneyProps> = ({
         ...filter.config,
         tags: {
           condition: JOURNEY_CONDITION_OP.SOME,
-          ids: [],
+          ids: filter.config.tags?.ids || [],
           min_matching: 1,
         },
       });
@@ -114,7 +114,7 @@ const Journey: FC<JourneyProps> = ({
         ...filter.config,
         tags: {
           condition: conditionValue as JOURNEY_CONDITION_OP,
-          ids: [],
+          ids: filter.config.tags?.ids || [],
           min_matching: undefined,
         },
       });
