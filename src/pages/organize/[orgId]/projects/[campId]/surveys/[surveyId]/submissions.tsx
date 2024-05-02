@@ -78,7 +78,10 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
                 }
               }
               return submissions.length !== 0 || !showUnlinkedOnly ? (
-                <SurveySubmissionsList submissions={submissions} />
+                <SurveySubmissionsList
+                  isShared={isShared}
+                  submissions={submissions}
+                />
               ) : null;
             }}
           </ZUIFuture>

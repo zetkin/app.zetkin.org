@@ -47,6 +47,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   // Figure out whether to display the read-only warning on top
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isShared = campId === 'shared';
 
   return (
     <>
@@ -64,7 +65,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
             >
               <Grid item md={8} xs={12}>
                 <SurveyEditor
-                  isShared={campId === 'shared'}
+                  isShared={isShared}
                   orgId={parseInt(orgId)}
                   readOnly={
                     (receivingSubmissions && !forceEditable) ||
@@ -74,7 +75,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
                 />
               </Grid>
               <Grid item md={4} xs={12}>
-                {receivingSubmissions && (
+                {receivingSubmissions && !isShared && (
                   <EditWarningCard
                     editing={forceEditable}
                     onToggle={(newValue) => setForceEditable(newValue)}

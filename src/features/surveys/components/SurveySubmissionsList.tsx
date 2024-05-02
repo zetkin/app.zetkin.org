@@ -22,8 +22,10 @@ import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 
 const SurveySubmissionsList = ({
+  isShared,
   submissions,
 }: {
+  isShared: boolean;
   submissions: ZetkinSurveySubmission[];
 }) => {
   const messages = useMessages(messageIds);
@@ -233,6 +235,7 @@ const SurveySubmissionsList = ({
                 return (
                   <SurveySubmissionPane
                     id={params.row.id}
+                    isShared={isShared}
                     orgId={parseInt(orgId as string)}
                   />
                 );
