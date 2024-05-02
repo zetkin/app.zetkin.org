@@ -43,11 +43,6 @@ export interface ZetkinMembership {
   inherited?: false;
   role: string | null;
 }
-export interface ZetkinMembershipListData
-  extends Omit<ZetkinMembership, 'organization'> {
-  id: number;
-  title: string;
-}
 
 export interface ZetkinOfficial {
   id: number;

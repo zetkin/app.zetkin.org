@@ -7,7 +7,7 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import {
-  ZetkinMembershipListData,
+  ZetkinMembership,
   ZetkinOrganization,
   ZetkinSubOrganization,
 } from 'utils/types/zetkin';
@@ -16,7 +16,7 @@ export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   treeDataList: RemoteList<TreeItemData>;
-  userMembershipList: RemoteList<ZetkinMembershipListData>;
+  userMembershipList: RemoteList<ZetkinMembership & { id: number }>;
 }
 
 const initialState: OrganizationsStoreSlice = {
@@ -72,10 +72,14 @@ const OrganizationsSlice = createSlice({
     },
     userMembershipsLoaded: (
       state,
-      action: PayloadAction<ZetkinMembershipListData[]>
+      action: PayloadAction<ZetkinMembership[]>
     ) => {
-      const membershipList = action.payload;
-      state.userMembershipList = remoteList(membershipList!);
+      const memberships = action.payload;
+      const membershipsWithIds = memberships.map((membership) => ({
+        ...membership,
+        id: membership.organization.id,
+      }));
+      state.userMembershipList = remoteList(membershipsWithIds);
       state.userMembershipList.loaded = new Date().toISOString();
       state.userMembershipList.isLoading = false;
     },

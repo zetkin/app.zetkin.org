@@ -3,7 +3,7 @@ import getSurveyUrl from '../utils/getSurveyUrl';
 import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
-import useMemberships from 'features/organizations/hooks/useMemberships';
+import useMemberships from 'features/campaigns/hooks/useMemberships';
 import { useRouter } from 'next/router';
 import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
@@ -51,16 +51,18 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const isShared = campId === 'shared';
   const orgs = useMemberships().data ?? [];
 
-  const role = orgs.find((item) => item.id === originalOrgId)?.role;
+  const role = orgs.find(
+    (item) => item.organization.id === originalOrgId
+  )?.role;
 
+  const roleAdmin = role === 'admin';
   const getAlertMsg = () => {
     if (!isShared || !surveyFuture.data?.organization.title) {
       return undefined;
     }
-    const messageId =
-      role === 'admin'
-        ? messageIds.alert.editable
-        : messageIds.alert.notEditable;
+    const messageId = roleAdmin
+      ? messageIds.alert.editable
+      : messageIds.alert.notEditable;
 
     return (
       <Msg
@@ -91,7 +93,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         )
       }
       alertBtnMsg={
-        isShared && role === 'admin' ? messages.alert.goOriginal() : undefined
+        isShared && roleAdmin ? messages.alert.goOriginal() : undefined
       }
       alertMsg={getAlertMsg()}
       baseHref={getSurveyUrl(surveyFuture.data, parsedOrg)}
