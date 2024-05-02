@@ -205,7 +205,6 @@ const Journey: FC<JourneyProps> = ({
                 )}
               </>
             ),
-            has: notRegardlessTags ? <Msg id={localMessageIds.has} /> : null,
             journeySelect: (
               <StyledSelect
                 minWidth="10rem"

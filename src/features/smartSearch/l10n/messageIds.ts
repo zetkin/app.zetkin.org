@@ -208,18 +208,18 @@ export default makeMessages('feat.smartSearch', {
       closed: m('a closed'),
       condition: {
         conditionSelect: {
-          all: m('all of'),
-          any: m('any of'),
-          none: m('none of'),
+          all: m('and has all of'),
+          any: m('and has any of'),
+          none: m('and has none of'),
           regardlessTags: m('regardless of tags'),
-          some: m('at least'),
+          some: m('and has at least'),
         },
         preview: {
-          all: m('all of'),
-          any: m('any of'),
-          none: m('none of'),
+          all: m('and has all of'),
+          any: m('and has any of'),
+          none: m('and has none of'),
           regardlessTags: m('regardless of tags'),
-          some: m<{ minMatching: number }>('at least {minMatching}'),
+          some: m<{ minMatching: number }>('and has at least {minMatching}'),
         },
       },
       followingTags: m('the following tags'),
@@ -227,7 +227,6 @@ export default makeMessages('feat.smartSearch', {
       inputString: m<{
         addRemoveSelect: ReactElement;
         condition: ReactElement;
-        has: ReactElement | null;
         journeySelect: ReactElement;
         operator: ReactElement;
         statusText: ReactElement;
@@ -235,7 +234,7 @@ export default makeMessages('feat.smartSearch', {
         tagsDesc: ReactElement | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} and {has} {condition} {tagsDesc} {tags}'
+        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc} {tags}'
       ),
       of: m('of'),
       opened: m('an open'),

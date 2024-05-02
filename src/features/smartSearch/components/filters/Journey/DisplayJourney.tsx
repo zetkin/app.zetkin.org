@@ -79,7 +79,6 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             }
           />
         ),
-        has: selectedTags ? <Msg id={localMessageIds.has} /> : null,
         journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
         operator: (
           <UnderlinedMsg
