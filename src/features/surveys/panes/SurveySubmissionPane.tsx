@@ -18,7 +18,6 @@ import messageIds from '../l10n/messageIds';
 interface SurveySubmissionPaneProps {
   orgId: number;
   id: number;
-  isShared?: boolean;
 }
 
 const useStyles = makeStyles({
@@ -58,11 +57,7 @@ const useStyles = makeStyles({
   },
 });
 
-const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({
-  orgId,
-  id,
-  isShared,
-}) => {
+const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
   const styles = useStyles();
 
   const subFuture = useHydratedSurveySubmission(orgId, id);
@@ -108,55 +103,43 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({
             />
             {sub.elements.map((elem) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
-                if (elem.hidden && isShared) {
-                  return null;
-                } else {
-                  return (
-                    <Question
-                      key={elem.id}
-                      hidden={elem.hidden}
-                      question={elem.question}
-                    >
-                      <ResponseItem icon={<FormatQuote />}>
-                        {elem.response || '-'}
-                      </ResponseItem>
-                    </Question>
-                  );
-                }
+                return (
+                  <Question
+                    key={elem.id}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
+                    <ResponseItem icon={<FormatQuote />}>
+                      {elem.response || '-'}
+                    </ResponseItem>
+                  </Question>
+                );
               } else if (elem.type == ELEM_TYPE.OPTIONS) {
-                if (elem.hidden && isShared) {
-                  return null;
-                } else {
-                  return (
-                    <Question
-                      key={elem.id}
-                      hidden={elem.hidden}
-                      question={elem.question}
-                    >
-                      {elem.selectedOptions.length == 0 && '-'}
-                      {elem.selectedOptions.map((option) => (
-                        <ResponseItem key={option.id} icon={<Check />}>
-                          {option.text}
-                        </ResponseItem>
-                      ))}
-                    </Question>
-                  );
-                }
+                return (
+                  <Question
+                    key={elem.id}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
+                    {elem.selectedOptions.length == 0 && '-'}
+                    {elem.selectedOptions.map((option) => (
+                      <ResponseItem key={option.id} icon={<Check />}>
+                        {option.text}
+                      </ResponseItem>
+                    ))}
+                  </Question>
+                );
               } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
-                if (elem.hidden && isShared) {
-                  return null;
-                } else {
-                  return (
-                    <Box key={elem.id} className={styles.element}>
-                      <Typography className={styles.textHeader}>
-                        {elem.header}
-                      </Typography>
-                      <Typography className={styles.textContent}>
-                        {elem.text}
-                      </Typography>
-                    </Box>
-                  );
-                }
+                return (
+                  <Box key={elem.id} className={styles.element}>
+                    <Typography className={styles.textHeader}>
+                      {elem.header}
+                    </Typography>
+                    <Typography className={styles.textContent}>
+                      {elem.text}
+                    </Typography>
+                  </Box>
+                );
               }
             })}
           </>

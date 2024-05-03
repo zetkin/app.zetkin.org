@@ -18,18 +18,12 @@ import {
 } from 'utils/types/zetkin';
 
 interface SurveyEditorProps {
-  isShared?: boolean;
   orgId: number;
   surveyId: number;
   readOnly: boolean;
 }
 
-const SurveyEditor: FC<SurveyEditorProps> = ({
-  isShared,
-  orgId,
-  readOnly,
-  surveyId,
-}) => {
+const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
   const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
     number | undefined
   >();
@@ -67,9 +61,6 @@ const SurveyEditor: FC<SurveyEditorProps> = ({
                 items={elements.map((elem) => ({
                   id: elem.id,
                   renderContent: ({ dragging }) => {
-                    if (elem.hidden && isShared) {
-                      return null;
-                    }
                     if (elem.type == ELEMENT_TYPE.QUESTION) {
                       if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                         return (
