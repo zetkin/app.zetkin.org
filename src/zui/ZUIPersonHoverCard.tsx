@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import messageIds from 'features/profile/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import TagsList from 'features/tags/components/TagManager/components/TagsList';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
@@ -92,6 +94,17 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
                     id={person?.id}
                     link
                     name={`${person?.first_name} ${person?.last_name}`}
+                    subtitle={
+                      <Typography color="secondary" variant="body2">
+                        <Msg
+                          id={
+                            person?.is_user
+                              ? messageIds.user.hasAccount
+                              : messageIds.user.noAccount
+                          }
+                        />
+                      </Typography>
+                    }
                     tooltip={false}
                   />
                 </Grid>

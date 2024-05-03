@@ -90,14 +90,21 @@ const tasksSlice = createSlice({
     },
     taskDeleted: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
-      state.tasksList.items = state.tasksList.items.filter(
-        (item) => item.id != taskId
-      );
+      const taskItem = state.tasksList.items.find((item) => item.id === taskId);
+      if (taskItem) {
+        taskItem.deleted = true;
+        state.tasksList.isStale = true;
+      }
 
       for (const campaignId in state.taskIdsByCampaignId) {
-        state.taskIdsByCampaignId[campaignId].items = state.taskIdsByCampaignId[
-          campaignId
-        ].items.filter((item) => item.id != taskId);
+        const item = state.taskIdsByCampaignId[campaignId].items.find(
+          (item) => item.id === taskId
+        );
+
+        if (item) {
+          item.deleted = true;
+          state.taskIdsByCampaignId[campaignId].isStale = true;
+        }
       }
     },
     taskLoad: (state, action: PayloadAction<number>) => {

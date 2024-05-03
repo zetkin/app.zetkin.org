@@ -121,3 +121,9 @@ export function getUTCDateWithoutTime(
 
   return new Date(utcTime);
 }
+
+export function getOffset(dateString: string) {
+  const offsetRegex = /[+-]\d{2}:\d{2}$/;
+  const offset = dateString.match(offsetRegex);
+  return offset ? offset[0] : null;
+}

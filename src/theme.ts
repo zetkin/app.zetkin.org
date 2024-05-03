@@ -27,6 +27,7 @@ declare module '@mui/material/styles/createPalette' {
       orange: FilterCategoryColors;
       purple: FilterCategoryColors;
       red: FilterCategoryColors;
+      teal: FilterCategoryColors;
       yellow: FilterCategoryColors;
     };
     statusColors: {
@@ -65,6 +66,7 @@ const themePalette = {
     orange: { pale: '#FDD497', strong: '#FBA930' },
     purple: { pale: '#E5C0F5', strong: '#C026D3' },
     red: { pale: '#F1A8A8', strong: '#DC2626' },
+    teal: { pale: '#99E9CC ', strong: '#34D399' },
     yellow: { pale: '#EEEA8F', strong: '#DDD520' },
   },
   info: {

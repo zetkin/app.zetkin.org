@@ -24,6 +24,19 @@ const PATTERN_TEMPLATES = {
       'radial-gradient(32px at calc(100% + calc(32px*.866)) 50%,$strongColor 99%, #0000 101%) 0 calc(-5*32px/2), radial-gradient(32px at calc(100% + calc(32px*.866)) 50%,$strongColor 99%, #0000 101%) calc(-2*calc(32px*.866)) calc(32px/2), radial-gradient(32px at 100% 50%,$paleColor 99%, #0000 101%) 0 calc(-2*32px), radial-gradient(32px,$strongColor 99%, #0000 101%) calc(32px*.866) calc(-5*32px/2), radial-gradient(32px,$paleColor 99%, #0000 101%) calc(32px*.866) calc( 5*32px/2), radial-gradient(32px at 100% 100%,$strongColor 99%, #0000 101%) 0 calc(-1*32px), radial-gradient(32px at 0%   50% ,$strongColor 99%, #0000 101%) 0 calc(-4*32px), radial-gradient(32px,$paleColor 99%, #0000 101%) calc(-1*calc(32px*.866)) calc(-7*32px/2), radial-gradient(32px,$strongColor 99%, #0000 101%) calc(-1*calc(32px*.866)) calc(-5*32px/2), radial-gradient(32px at 100% 50%,$paleColor 99%, #0000 101%) calc(-2*calc(32px*.866)) 32px, radial-gradient(32px,$strongColor 99%, #0000 101%) calc(-1*calc(32px*.866)) calc(32px/ 2), radial-gradient(32px,$paleColor 99%, #0000 101%) calc(-1*calc(32px*.866)) calc(32px/-2), radial-gradient(32px,$strongColor 99%, #0000 101%) 0 calc(-1*32px), radial-gradient(32px,$paleColor 99%, #0000 101%) calc(32px*.866) calc(32px/-2), radial-gradient(32px,$strongColor 99%, #0000 101%) calc(32px*.866) calc(32px/ 2) $paleColor',
     backgroundSize: 'calc(4*calc(32px*.866)) calc(6*32px)',
   },
+  pattern13: {
+    background:
+      'radial-gradient(farthest-side at -33.33% 50%,#0000 52%,$strongColor 54% 57%,#0000 59%) 0 calc(120px/2), radial-gradient(farthest-side at 50% 133.33%,#0000 52%,$strongColor 54% 57%,#0000 59%) calc(120px/2) 0, radial-gradient(farthest-side at 133.33% 50%,#0000 52%,$strongColor 54% 57%,#0000 59%), radial-gradient(farthest-side at 50% -33.33%,#0000 52%,$strongColor 54% 57%,#0000 59%), $paleColor',
+    backgroundSize: 'calc(120px/4.667) 120px,120px calc(120px/4.667)',
+  },
+  pattern14: {
+    background:
+      'conic-gradient(#0000 75%,$strongColor 0) calc(3*30px/4) calc(3*30px/4)/30px 30px, linear-gradient( 45deg,#0000 calc(125%/3),$strongColor 0 calc(175%/3),#0000 0) 0 0/calc(2*30px) calc(2*30px), linear-gradient(-45deg,#0000 calc(125%/3),$strongColor 0 calc(175%/3),#0000 0) 0 0/calc(2*30px) calc(2*30px) $paleColor',
+  },
+  pattern15: {
+    background:
+      'conic-gradient(from -45deg,$strongColor 90deg,#0000 0 180deg,$paleColor 0 270deg,#0000 0) 0 calc(30px/2)/30px 30px, conic-gradient(from 135deg at 50% 0,$strongColor 90deg,$paleColor 0) 0 0/calc(2*30px) 30px',
+  },
   pattern2: {
     background:
       'conic-gradient(from 116.56deg at calc(100%/3) 0, #0000 90deg,$paleColor 0), conic-gradient(from -63.44deg at calc(200%/3) 100%, #0000 90deg,$paleColor 0) $strongColor',
@@ -94,8 +107,14 @@ export default function filterGalleryPattern(
     pattern = PATTERN_TEMPLATES.pattern10;
   } else if (slug === FILTER_TYPE.TASK) {
     pattern = PATTERN_TEMPLATES.pattern11;
-  } else {
+  } else if (slug === FILTER_TYPE.USER) {
     pattern = PATTERN_TEMPLATES.pattern12;
+  } else if (slug === FILTER_TYPE.EMAIL_BLACKLIST) {
+    pattern = PATTERN_TEMPLATES.pattern13;
+  } else if (slug === FILTER_TYPE.EMAIL_CLICK) {
+    pattern = PATTERN_TEMPLATES.pattern14;
+  } else {
+    pattern = PATTERN_TEMPLATES.pattern15;
   }
 
   pattern.background = pattern.background.replaceAll(

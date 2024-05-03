@@ -20,6 +20,17 @@ export const GROUPED_FILTERS: {
       FILTER_TYPE.PERSON_TAGS,
     ],
   },
+  [FILTER_CATEGORY.EMAIL]: {
+    colors: {
+      pale: filterCategoryColors.teal.pale,
+      strong: filterCategoryColors.teal.strong,
+    },
+    filters: [
+      FILTER_TYPE.EMAIL_HISTORY,
+      FILTER_TYPE.EMAIL_CLICK,
+      FILTER_TYPE.EMAIL_BLACKLIST,
+    ],
+  },
   [FILTER_CATEGORY.EVENTS]: {
     colors: {
       pale: filterCategoryColors.green.pale,
