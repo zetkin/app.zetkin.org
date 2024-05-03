@@ -66,6 +66,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
       </Box>
       <ZUIFuture future={activityOverview}>
         {(activities) => {
+          //It only filters shared surveys for now, but there will be more shared activities in the future.
           const data: ActivityOverview = isShared
             ? {
                 alsoThisWeek: filterSharedSurveys(activities.alsoThisWeek),

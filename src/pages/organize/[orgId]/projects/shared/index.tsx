@@ -12,7 +12,7 @@ import useServerSide from 'core/useServerSide';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize.shared', 'pages.shared'],
+  localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
