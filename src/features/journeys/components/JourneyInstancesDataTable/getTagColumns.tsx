@@ -154,32 +154,29 @@ const getTagColumns = (
         field: `valueTag${col.tag.id}`,
         headerName: col.tag.title,
         renderCell: (params: GridRenderCellParams<ZetkinJourneyInstance>) => {
-          return params.value ? (
-            <Box
-              sx={{
-                alignItems: 'center',
-                backgroundColor: lighten(
-                  col.tag.color || DEFAULT_TAG_COLOR,
-                  0.7
-                ),
-                borderLeft: `4px solid ${col.tag.color || DEFAULT_TAG_COLOR}`,
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-                width: '100%',
-              }}
-            >
-              <Typography
-                sx={{
-                  maxWidth: '90%',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {params.value}
-              </Typography>
-            </Box>
-          ) : null;
+          const tag = params.row.tags.find((t) => t.id === col.tag.id);
+
+          if (!tag) {
+            return null;
+          } else if (tag.value === null) {
+            return (
+              <ValueTagCell isEmpty={true} tagColor={tag.color}>
+                <Msg id={messageIds.instances.emptyValueTag} />
+              </ValueTagCell>
+            );
+          } else {
+            const valueIsEmptyString = !tag.value?.toString().trim().length;
+
+            return (
+              <ValueTagCell isEmpty={valueIsEmptyString} tagColor={tag.color}>
+                {valueIsEmptyString ? (
+                  <Msg id={messageIds.instances.emptyValueTag} />
+                ) : (
+                  params.value
+                )}
+              </ValueTagCell>
+            );
+          }
         },
         valueGetter: (params) =>
           col.valueGetter(params.row as ZetkinJourneyInstance),
@@ -250,6 +247,42 @@ const getTagColumns = (
   });
 
   return colDefs;
+};
+
+const ValueTagCell = ({
+  children,
+  isEmpty,
+  tagColor,
+}: {
+  children: JSX.Element;
+  isEmpty: boolean;
+  tagColor?: string | null;
+}) => {
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        backgroundColor: lighten(tagColor || DEFAULT_TAG_COLOR, 0.7),
+        borderLeft: `4px solid ${tagColor || DEFAULT_TAG_COLOR}`,
+        display: 'flex',
+        height: '100%',
+        justifyContent: 'center',
+        width: '100%',
+      }}
+    >
+      <Typography
+        color={isEmpty ? 'secondary' : ''}
+        fontStyle={isEmpty ? 'italic' : ''}
+        sx={{
+          maxWidth: '90%',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        {children}
+      </Typography>
+    </Box>
+  );
 };
 
 export default getTagColumns;
