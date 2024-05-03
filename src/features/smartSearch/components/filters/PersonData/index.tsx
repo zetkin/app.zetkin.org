@@ -7,6 +7,7 @@ import StyledTextInput from '../../inputs/StyledTextInput';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   DATA_FIELD,
+  Gender,
   NewSmartSearchFilter,
   OPERATION,
   PersonDataFilterConfig,
@@ -126,6 +127,8 @@ const PersonData = ({
     </StyledSelect>
   );
 
+  const genders: Gender[] = ['f', 'm', 'o'];
+
   const getCriteriaString = () => {
     let existing;
     let criteriaString: JSX.Element | null = null;
@@ -153,13 +156,27 @@ const PersonData = ({
                 ))}
               </StyledSelect>
             ),
-            value: (
-              <StyledTextInput
-                inputString={c.value} // for dynamic width
-                onChange={(e) => handleValueChange(e.target.value, c)}
-                value={c.value}
-              />
-            ),
+            value:
+              c.field === DATA_FIELD.GENDER ? (
+                <StyledSelect
+                  onChange={(e) => {
+                    handleValueChange(e.target.value, c);
+                  }}
+                  value={filter.config.fields.gender || 'f'}
+                >
+                  {genders.map((gender) => (
+                    <MenuItem key={gender} value={gender}>
+                      <Msg id={localMessageIds.genders[gender]} />
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : (
+                <StyledTextInput
+                  inputString={c.value} // for dynamic width
+                  onChange={(e) => handleValueChange(e.target.value, c)}
+                  value={c.value}
+                />
+              ),
           }}
         />
       );
