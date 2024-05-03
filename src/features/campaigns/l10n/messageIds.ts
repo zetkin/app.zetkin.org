@@ -142,6 +142,19 @@ export default makeMessages('feat.campaigns', {
     heading: m('Mobilization and outreach (none configured)'),
   },
   noManager: m('No Project Manager'),
+  shared: {
+    cta: m('Go to project'),
+    title: m('Shared with us'),
+  },
+  sharedLayout: {
+    subtitle: m<{ numOfActivities: number }>('{numOfActivities} activities'),
+    tabs: {
+      activities: m('Activities'),
+      archive: m('Archive'),
+      overview: m('Overview'),
+    },
+    title: m('Shared with us'),
+  },
   singleProject: {
     filterActivities: m('Type to filter'),
     noActivities: m('There are no activities in this project yet.'),

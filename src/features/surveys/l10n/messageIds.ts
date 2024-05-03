@@ -66,10 +66,6 @@ export default makeMessages('feat.surveys', {
       header: m('Title'),
     },
   },
-  card: {
-    cta: m('Go to project'),
-    title: m('Shared'),
-  },
   chart: {
     header: m('Survey Submissions'),
     placeholder: m('Start collecting submissions to see progress here'),

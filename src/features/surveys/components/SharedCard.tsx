@@ -9,16 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinSurvey } from 'utils/types/zetkin';
 
-interface SharedCardProps {
-  survey: ZetkinSurvey[];
-}
-
-const SharedCard = ({ survey }: SharedCardProps): JSX.Element => {
+const SharedCard = (): JSX.Element => {
   const { orgId } = useNumericRouteParams();
 
   return (
@@ -26,9 +21,9 @@ const SharedCard = ({ survey }: SharedCardProps): JSX.Element => {
       <CardContent>
         <Box display="flex" justifyContent="space-between">
           <Typography gutterBottom noWrap variant="h6">
-            <Msg id={messageIds.card.title} />
+            <Msg id={messageIds.shared.title} />
           </Typography>
-          <Box sx={{ display: 'flex', position: 'relative' }}>
+          <Box sx={{ display: 'flex', mr: '5px', position: 'relative' }}>
             <GroupWork
               color="secondary"
               sx={{ backgroundColor: 'white', borderRadius: '50%', zIndex: 1 }}
@@ -41,9 +36,13 @@ const SharedCard = ({ survey }: SharedCardProps): JSX.Element => {
         </Box>
       </CardContent>
       <CardActions sx={{ paddingBottom: 2, paddingLeft: 2 }}>
-        <NextLink href={`/organize/${orgId}/projects`} legacyBehavior passHref>
+        <NextLink
+          href={`/organize/${orgId}/projects/shared`}
+          legacyBehavior
+          passHref
+        >
           <Link underline="hover" variant="button">
-            <Msg id={messageIds.card.cta} />
+            <Msg id={messageIds.shared.cta} />
           </Link>
         </NextLink>
       </CardActions>

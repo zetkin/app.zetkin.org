@@ -83,7 +83,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
         <Grid container spacing={2}>
           {sharedSurveys.length > 0 && (
             <Grid item lg={3} md={4} xs={12}>
-              <SharedCard survey={surveys} />
+              <SharedCard />
             </Grid>
           )}
           {campaigns?.map((campaign) => {
