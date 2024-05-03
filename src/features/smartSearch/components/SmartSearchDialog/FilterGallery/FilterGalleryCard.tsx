@@ -37,10 +37,10 @@ const FilterGalleryCard: FC<FilterGalleryCardProps> = ({
       />
       <CardContent>
         <Typography variant="h5">
-          <Msg id={messageIds.filterTitles[filter]} />
+          <Msg id={messageIds.filterGallery.filters[filter].title} />
         </Typography>
         <Typography sx={{ paddingTop: 1 }} variant="body2">
-          <Msg id={messageIds.filterDescriptions[filter]} />
+          <Msg id={messageIds.filterGallery.filters[filter].description} />
         </Typography>
       </CardContent>
     </Card>

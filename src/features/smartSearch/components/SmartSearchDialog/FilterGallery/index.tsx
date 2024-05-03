@@ -79,8 +79,9 @@ const FilterGallery = ({
                 <Typography>
                   <Msg
                     id={
-                      messageIds.filterCategories[category as FILTER_CATEGORY]
-                        .title
+                      messageIds.filterGallery.categories[
+                        category as FILTER_CATEGORY
+                      ].title
                     }
                   />
                 </Typography>
@@ -105,15 +106,18 @@ const FilterGallery = ({
                 <Typography variant="h4">
                   <Msg
                     id={
-                      messageIds.filterCategories[slug as FILTER_CATEGORY].title
+                      messageIds.filterGallery.categories[
+                        slug as FILTER_CATEGORY
+                      ].title
                     }
                   />
                 </Typography>
                 <Typography variant="h5">
                   <Msg
                     id={
-                      messageIds.filterCategories[slug as FILTER_CATEGORY]
-                        .description
+                      messageIds.filterGallery.categories[
+                        slug as FILTER_CATEGORY
+                      ].description
                     }
                   />
                 </Typography>

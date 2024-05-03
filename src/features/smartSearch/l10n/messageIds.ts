@@ -11,78 +11,105 @@ export default makeMessages('feat.smartSearch', {
     goBack: m('Go back to query'),
     save: m('Save'),
   },
-  filterCategories: {
-    basicInformation: {
-      description: m('Select based on personal information'),
-      title: m('Basic information'),
+  filterGallery: {
+    categories: {
+      basicInformation: {
+        description: m('Select based on personal information'),
+        title: m('Basic information'),
+      },
+      crossReferencing: {
+        description: m('Select based on lists and smart searches'),
+        title: m('Cross referencing'),
+      },
+      events: {
+        description: m('Select based on data from events'),
+        title: m('Events'),
+      },
+      misc: {
+        description: m('Miscellaneous ways of selecting'),
+        title: m('Misc'),
+      },
+      phoneBanking: {
+        description: m('Use call data to select'),
+        title: m('Call assignments'),
+      },
+      surveys: {
+        description: m('Select based on survey submissions'),
+        title: m('Surveys'),
+      },
+      tasks: {
+        description: m('Select on task data'),
+        title: m('Tasks'),
+      },
     },
-    crossReferencing: {
-      description: m('Select based on lists and smart searches'),
-      title: m('Cross referencing'),
+    filters: {
+      call_history: {
+        description: m('Find people who were called, reached or tried.'),
+        title: m('Call history'),
+      },
+      campaign_participation: {
+        description: m("Who signed up? Got booked? Who didn't? Find them!"),
+        title: m('Participation in events'),
+      },
+      person_data: {
+        description: m('Name, address, email and more'),
+        title: m('Personal info'),
+      },
+      person_field: {
+        description: m(
+          'Like basic personal info, but search fields that are custom to this organization.'
+        ),
+        title: m('Custom fields'),
+      },
+      person_tags: {
+        description: m('For finding people with or without specific tags'),
+        title: m('Tags'),
+      },
+      person_view: {
+        description: m("When you want people who are, or aren't, in a list."),
+        title: m('People from a list'),
+      },
+      random: {
+        description: m('Randomly add or remove people.'),
+        title: m('Random selection'),
+      },
+      sub_query: {
+        description: m(
+          'Use a another Smart Search to refine this Smart Search.'
+        ),
+        title: m('People who match a saved Smart Search query'),
+      },
+      survey_option: {
+        description: m(
+          'Use your survey responses for their glorious purpose: finding the right people!'
+        ),
+        title: m('Responses to checkbox questions'),
+      },
+      survey_response: {
+        description: m(
+          'Use your survey responses for their glorious purpose: finding the right people!'
+        ),
+        title: m('Responses to text questions'),
+      },
+      survey_submission: {
+        description: m(
+          'Did they submit a survey? Did they not? Find them here!'
+        ),
+        title: m('Submitted survey'),
+      },
+      task: {
+        description: m(
+          'Add or remove people based on their participation in tasks'
+        ),
+        title: m('Tasks'),
+      },
+      user: {
+        description: m(
+          "Find people who are, or aren't, connected to a Zetkin account"
+        ),
+        title: m('Zetkin users'),
+      },
     },
-    events: {
-      description: m('Select based on data from events'),
-      title: m('Events'),
-    },
-    misc: {
-      description: m('Miscellaneous ways of selecting'),
-      title: m('Misc'),
-    },
-    phoneBanking: {
-      description: m('Use call data to select'),
-      title: m('Call assignments'),
-    },
-    surveys: {
-      description: m('Select based on survey submissions'),
-      title: m('Surveys'),
-    },
-    tasks: {
-      description: m('Select on task data'),
-      title: m('Tasks'),
-    },
-  },
-  filterDescriptions: {
-    call_history: m('Find people who were called, reached or tried.'),
-    campaign_participation: m(
-      "Who signed up? Got booked? Who didn't? Find them!"
-    ),
-    person_data: m('Name, address, email and more'),
-    person_field: m(
-      'Like basic personal info, but search fields that are custom to this organization.'
-    ),
-    person_tags: m('For finding people with or without specific tags'),
-    person_view: m("When you want people who are, or aren't, in a list."),
-    random: m('Randomly add or remove people.'),
-    sub_query: m('Use a saved Smart Search to refine this Smart Search.'),
-    survey_option: m(
-      'Use your survey responses for their glorious purpose: finding the right people!'
-    ),
-    survey_response: m(
-      'Use your survey responses for their glorious purpose: finding the right people!'
-    ),
-    survey_submission: m(
-      'Did they submit a survey? Did they not? Find them here!'
-    ),
-    task: m('Add or remove people based on their participation in tasks'),
-    user: m("Find people who are, or aren't, Zetkin users"),
-  },
-  filterTitles: {
-    all: m('Everyone'),
-    call_blocked: m('Blocked from calling'),
-    call_history: m('Call history'),
-    campaign_participation: m('Participation in events'),
-    most_active: m('The most active people'),
-    person_data: m('Personal info'),
-    person_field: m('Custom fields'),
-    person_tags: m('Tags'),
-    person_view: m('People from a list'),
-    random: m('Random selection'),
-    sub_query: m('People who match a saved Smart Search query'),
-    survey_option: m('Responses to checkbox questions'),
-    survey_response: m('Responses to text questions'),
-    survey_submission: m('Submitted survey'),
-    task: m('Tasks'),
-    user: m('Zetkin users'),
   },
   filters: {
     all: {
