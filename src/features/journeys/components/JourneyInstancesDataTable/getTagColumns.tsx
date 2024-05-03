@@ -1,3 +1,4 @@
+import { Box, lighten, Typography } from '@mui/material';
 import {
   GridCellParams,
   GridColDef,
@@ -6,7 +7,9 @@ import {
   GridValueFormatterParams,
 } from '@mui/x-data-grid-pro';
 
+import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import FilterValueSelect from './FilterValueSelect';
+import messageIds from 'features/journeys/l10n/messageIds';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import {
   JourneyTagColumnData,
@@ -17,8 +20,6 @@ import {
 } from 'features/journeys/utils/journeyInstanceUtils';
 import { Msg, UseMessagesMap } from 'core/i18n';
 import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
-
-import messageIds from 'features/journeys/l10n/messageIds';
 
 const has = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
@@ -152,6 +153,34 @@ const getTagColumns = (
       colDefs.push({
         field: `valueTag${col.tag.id}`,
         headerName: col.tag.title,
+        renderCell: (params: GridRenderCellParams<ZetkinJourneyInstance>) => {
+          return params.value ? (
+            <Box
+              sx={{
+                alignItems: 'center',
+                backgroundColor: lighten(
+                  col.tag.color || DEFAULT_TAG_COLOR,
+                  0.7
+                ),
+                borderLeft: `4px solid ${col.tag.color || DEFAULT_TAG_COLOR}`,
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+            >
+              <Typography
+                sx={{
+                  maxWidth: '90%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {params.value}
+              </Typography>
+            </Box>
+          ) : null;
+        },
         valueGetter: (params) =>
           col.valueGetter(params.row as ZetkinJourneyInstance),
       });
