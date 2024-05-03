@@ -179,7 +179,6 @@ const EmptyValue = ({ tagColor }: { tagColor: string | null }) => {
       <Typography
         className={classes.valueTagCellText}
         color="secondary"
-        component="span"
         fontStyle="italic"
       >
         <Msg id={messageIds.cells.personTag.emptyValue} />
@@ -202,15 +201,13 @@ const ValueTagCell: FC<ValueTagCellProps> = ({ tagColor, tag }) => {
     //The tag value could be an empty string, if so we show "Empty value"
     const valueIsEmptyString = !tag.value.toString().trim().length;
 
-    return (
+    return valueIsEmptyString ? (
+      <EmptyValue tagColor={tagColor} />
+    ) : (
       <Box className={classes.valueTagCell}>
-        {valueIsEmptyString ? (
-          <EmptyValue tagColor={tagColor} />
-        ) : (
-          <Typography className={classes.valueTagCellText}>
-            {tag.value}
-          </Typography>
-        )}
+        <Typography className={classes.valueTagCellText}>
+          {tag.value}
+        </Typography>
       </Box>
     );
   } else {
