@@ -1,6 +1,13 @@
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
-import { Box, TextField, TextFieldProps, Typography } from '@mui/material';
+import {
+  Box,
+  lighten,
+  TextField,
+  TextFieldProps,
+  Theme,
+  Typography,
+} from '@mui/material';
 import { FC, KeyboardEvent, useCallback, useState } from 'react';
 import {
   GridColDef,
@@ -11,6 +18,7 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import compareTags from 'features/tags/utils/compareTags';
+import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import IApiClient from 'core/api/client/IApiClient';
 import { IColumnType } from '.';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
@@ -67,7 +75,7 @@ export default class PersonTagColumnType implements IColumnType {
         if (!tag) {
           return null;
         } else if (tag.value_type !== null) {
-          return <ValueTagCell cell={params.value} />;
+          return <ValueTagCell tag={params.value} tagColor={tag.color} />;
         } else {
           return (
             <BasicTagCell
@@ -78,7 +86,9 @@ export default class PersonTagColumnType implements IColumnType {
           );
         }
       },
-      renderEditCell: (params) => <ValueTagEditCell {...params} />,
+      renderEditCell: (params) => (
+        <ValueTagEditCell tagColor={tag?.color} {...params} />
+      ),
       sortComparator: (v1: ZetkinTag, v2: ZetkinTag) => {
         return compareTags(v1, v2);
       },
@@ -118,7 +128,18 @@ export default class PersonTagColumnType implements IColumnType {
   }
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<Theme, { tagColor?: string | null }>(() => ({
+  emptyValueTagCell: {
+    '&:hover': {
+      opacity: 0.4,
+    },
+    backgroundColor: ({ tagColor }) =>
+      lighten(tagColor || DEFAULT_TAG_COLOR, 0.7),
+    borderLeft: ({ tagColor }) => `4px solid ${tagColor || DEFAULT_TAG_COLOR}`,
+    height: '100%',
+    opacity: 0,
+    width: '100%',
+  },
   ghost: {
     pointerEvents: 'none',
   },
@@ -130,30 +151,62 @@ const useStyles = makeStyles(() => ({
     opacity: 0,
     transition: 'opacity 0.1s',
   },
+  valueTagCell: {
+    alignItems: 'center',
+    backgroundColor: ({ tagColor }) =>
+      lighten(tagColor || DEFAULT_TAG_COLOR, 0.7),
+    borderLeft: ({ tagColor }) => `4px solid ${tagColor || DEFAULT_TAG_COLOR}`,
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  valueTagEditCell: {
+    backgroundColor: ({ tagColor }) =>
+      lighten(tagColor || DEFAULT_TAG_COLOR, 0.7),
+  },
 }));
 
 interface ValueTagCellProps {
-  cell: ZetkinTag | undefined;
+  tagColor: string | null;
+  tag: ZetkinTag | undefined;
 }
 
-const ValueTagCell: FC<ValueTagCellProps> = ({ cell }) => {
-  if (!cell) {
-    return null;
-  } else if (cell.value) {
-    return <span>{cell.value}</span>;
+const ValueTagCell: FC<ValueTagCellProps> = ({ tagColor, tag }) => {
+  const classes = useStyles({ tagColor });
+
+  if (!tag) {
+    return <Box className={classes.emptyValueTagCell} />;
+  } else if (tag.value) {
+    return (
+      <Box className={classes.valueTagCell}>
+        {tag.value.toString().trim().length ? (
+          tag.value
+        ) : (
+          <Typography color="secondary" component="span" fontStyle="italic">
+            <Msg id={messageIds.cells.personTag.emptyValue} />
+          </Typography>
+        )}
+      </Box>
+    );
   } else {
     return (
-      <Typography color="secondary" component="span" fontStyle="italic">
-        <Msg id={messageIds.cells.personTag.emptyValue} />
-      </Typography>
+      <Box className={classes.valueTagCell}>
+        <Typography color="secondary" component="span" fontStyle="italic">
+          <Msg id={messageIds.cells.personTag.emptyValue} />
+        </Typography>
+      </Box>
     );
   }
 };
 
-const ValueTagEditCell = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
-  const { field, id } = props;
+const ValueTagEditCell = (
+  props: GridRenderEditCellParams<ZetkinViewRow> & { tagColor?: string | null }
+) => {
+  const { field, id, tagColor } = props;
   const tag: ZetkinTag | null = props.value;
   const apiRef = useGridApiContext();
+  const classes = useStyles({ tagColor });
 
   const [valueState, setValueState] = useState(tag?.value || '');
 
@@ -197,6 +250,8 @@ const ValueTagEditCell = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
 
   return (
     <TextField
+      className={classes.valueTagEditCell}
+      fullWidth
       inputRef={handleTextFieldRef}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
@@ -216,7 +271,7 @@ const BasicTagCell: FC<{
   const { tagFuture } = useTag(orgId, tagId);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
 
-  const styles = useStyles();
+  const styles = useStyles({});
 
   const [isRestricted] = useAccessLevel();
 
