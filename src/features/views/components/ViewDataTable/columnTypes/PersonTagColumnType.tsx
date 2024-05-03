@@ -161,11 +161,32 @@ const useStyles = makeStyles<Theme, { tagColor?: string | null }>(() => ({
     justifyContent: 'center',
     width: '100%',
   },
+  valueTagCellText: {
+    maxWidth: '90%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
   valueTagEditCell: {
     backgroundColor: ({ tagColor }) =>
       lighten(tagColor || DEFAULT_TAG_COLOR, 0.7),
   },
 }));
+
+const EmptyValue = ({ tagColor }: { tagColor: string | null }) => {
+  const classes = useStyles({ tagColor });
+  return (
+    <Box className={classes.valueTagCell}>
+      <Typography
+        className={classes.valueTagCellText}
+        color="secondary"
+        component="span"
+        fontStyle="italic"
+      >
+        <Msg id={messageIds.cells.personTag.emptyValue} />
+      </Typography>
+    </Box>
+  );
+};
 
 interface ValueTagCellProps {
   tagColor: string | null;
@@ -178,25 +199,22 @@ const ValueTagCell: FC<ValueTagCellProps> = ({ tagColor, tag }) => {
   if (!tag) {
     return <Box className={classes.emptyValueTagCell} />;
   } else if (tag.value) {
+    //The tag value could be an empty string, if so we show "Empty value"
+    const valueIsEmptyString = !tag.value.toString().trim().length;
+
     return (
       <Box className={classes.valueTagCell}>
-        {tag.value.toString().trim().length ? (
-          tag.value
+        {valueIsEmptyString ? (
+          <EmptyValue tagColor={tagColor} />
         ) : (
-          <Typography color="secondary" component="span" fontStyle="italic">
-            <Msg id={messageIds.cells.personTag.emptyValue} />
+          <Typography className={classes.valueTagCellText}>
+            {tag.value}
           </Typography>
         )}
       </Box>
     );
   } else {
-    return (
-      <Box className={classes.valueTagCell}>
-        <Typography color="secondary" component="span" fontStyle="italic">
-          <Msg id={messageIds.cells.personTag.emptyValue} />
-        </Typography>
-      </Box>
-    );
+    return <EmptyValue tagColor={tagColor} />;
   }
 };
 
