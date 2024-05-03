@@ -1,4 +1,3 @@
-import { Box, lighten, Typography } from '@mui/material';
 import {
   GridCellParams,
   GridColDef,
@@ -7,10 +6,10 @@ import {
   GridValueFormatterParams,
 } from '@mui/x-data-grid-pro';
 
-import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import FilterValueSelect from './FilterValueSelect';
 import messageIds from 'features/journeys/l10n/messageIds';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
+import ValueTagCellContent from 'features/views/components/ViewDataTable/columnTypes/PersonTagColumnType/ValueTagCellContent';
 import {
   JourneyTagColumnData,
   JourneyTagColumnType,
@@ -158,24 +157,8 @@ const getTagColumns = (
 
           if (!tag) {
             return null;
-          } else if (tag.value === null) {
-            return (
-              <ValueTagCell isEmpty={true} tagColor={tag.color}>
-                <Msg id={messageIds.instances.emptyValueTag} />
-              </ValueTagCell>
-            );
           } else {
-            const valueIsEmptyString = !tag.value?.toString().trim().length;
-
-            return (
-              <ValueTagCell isEmpty={valueIsEmptyString} tagColor={tag.color}>
-                {valueIsEmptyString ? (
-                  <Msg id={messageIds.instances.emptyValueTag} />
-                ) : (
-                  params.value
-                )}
-              </ValueTagCell>
-            );
+            return <ValueTagCellContent tag={tag} />;
           }
         },
         valueGetter: (params) =>
@@ -247,42 +230,6 @@ const getTagColumns = (
   });
 
   return colDefs;
-};
-
-const ValueTagCell = ({
-  children,
-  isEmpty,
-  tagColor,
-}: {
-  children: JSX.Element;
-  isEmpty: boolean;
-  tagColor?: string | null;
-}) => {
-  return (
-    <Box
-      sx={{
-        alignItems: 'center',
-        backgroundColor: lighten(tagColor || DEFAULT_TAG_COLOR, 0.7),
-        borderLeft: `4px solid ${tagColor || DEFAULT_TAG_COLOR}`,
-        display: 'flex',
-        height: '100%',
-        justifyContent: 'center',
-        width: '100%',
-      }}
-    >
-      <Typography
-        color={isEmpty ? 'secondary' : ''}
-        fontStyle={isEmpty ? 'italic' : ''}
-        sx={{
-          maxWidth: '90%',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {children}
-      </Typography>
-    </Box>
-  );
 };
 
 export default getTagColumns;
