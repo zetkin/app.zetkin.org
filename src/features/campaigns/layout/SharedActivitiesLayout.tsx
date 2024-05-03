@@ -22,7 +22,7 @@ const SharedActivitiesLayout: React.FC<SharedActivitiesLayout> = ({
 
   const sharedSurveys = surveys.filter(
     (survey) =>
-      survey.org_access === 'suborgs' && survey.organization.id !== parsedOrgId
+      survey.org_access === 'suborgs' && survey.organization.id === parsedOrgId
   );
 
   return (

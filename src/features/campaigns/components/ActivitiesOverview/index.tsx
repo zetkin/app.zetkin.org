@@ -7,15 +7,18 @@ import messageIds from 'features/campaigns/l10n/messageIds';
 import useActivitiyOverview from 'features/campaigns/hooks/useActivityOverview';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
+import { ActivityOverview, CampaignActivity } from 'features/campaigns/types';
 import { Msg, useMessages } from 'core/i18n';
 
 type ActivitiesOverviewProps = {
   campaignId?: number;
+  isShared?: boolean;
   orgId: number;
 };
 
 const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
   campaignId,
+  isShared,
   orgId,
 }) => {
   const messages = useMessages(messageIds);
@@ -24,6 +27,15 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
   const todayDate = new Date();
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+  const filterSharedSurveys = (items: CampaignActivity[]) => {
+    return items.filter(
+      (item) =>
+        item.kind === 'survey' &&
+        item.data.org_access === 'suborgs' &&
+        item.data.organization.id === orgId
+    );
+  };
 
   return (
     <>
@@ -53,7 +65,15 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
         </Box>
       </Box>
       <ZUIFuture future={activityOverview}>
-        {(data) => {
+        {(activities) => {
+          const data: ActivityOverview = isShared
+            ? {
+                alsoThisWeek: filterSharedSurveys(activities.alsoThisWeek),
+                today: filterSharedSurveys(activities.today),
+                tomorrow: filterSharedSurveys(activities.tomorrow),
+              }
+            : activities;
+
           const totalLength =
             data.today.length + data.tomorrow.length + data.alsoThisWeek.length;
 

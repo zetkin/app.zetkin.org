@@ -45,7 +45,7 @@ const SharedSummaryPage: PageWithLayout<SharedSummaryPageProps> = ({
         <title>{messages.shared.title()}</title>
       </Head>
       <Suspense>
-        <ActivitiesOverview orgId={parsedOrgId} />
+        <ActivitiesOverview isShared orgId={parsedOrgId} />
       </Suspense>
     </>
   );
