@@ -95,8 +95,8 @@ export default class PersonTagColumnType implements IColumnType {
     };
   }
 
-  getSearchableStrings(): string[] {
-    return [];
+  getSearchableStrings(cell: PersonTagViewCell): string[] {
+    return cell?.value ? [cell.value] : [];
   }
 
   handleKeyDown(
