@@ -20,7 +20,7 @@ import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
 import useTagging from 'features/tags/hooks/useTagging';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
-import ValueTagCellContent from './ValueTagCellContent';
+import ValueTagCell from './ValueTagCell';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -150,7 +150,7 @@ const Cell: FC<CellProps> = ({ cellValue, personId, tag }) => {
         />
       );
     } else {
-      return <ValueTagCellContent tag={cellValue} />;
+      return <ValueTagCell tag={cellValue} />;
     }
   } else {
     return <BasicTagCell cell={cellValue} personId={personId} tagId={tag.id} />;

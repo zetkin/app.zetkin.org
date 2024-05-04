@@ -9,7 +9,7 @@ import {
 import FilterValueSelect from './FilterValueSelect';
 import messageIds from 'features/journeys/l10n/messageIds';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
-import ValueTagCellContent from 'features/views/components/ViewDataTable/columnTypes/PersonTagColumnType/ValueTagCellContent';
+import ValueTagCell from 'features/views/components/ViewDataTable/columnTypes/PersonTagColumnType/ValueTagCell';
 import {
   JourneyTagColumnData,
   JourneyTagColumnType,
@@ -158,7 +158,7 @@ const getTagColumns = (
           if (!tag) {
             return null;
           } else {
-            return <ValueTagCellContent tag={tag} />;
+            return <ValueTagCell tag={tag} />;
           }
         },
         valueGetter: (params) =>

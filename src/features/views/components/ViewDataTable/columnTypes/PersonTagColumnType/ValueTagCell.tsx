@@ -10,7 +10,7 @@ interface CellContentProps {
   tag: ZetkinTag;
 }
 
-const ValueTagCellContent: FC<CellContentProps> = ({ tag }) => {
+const ValueTagCell: FC<CellContentProps> = ({ tag }) => {
   const isEmpty = !tag.value || !tag.value.toString().trim().length;
 
   return (
@@ -44,4 +44,4 @@ const ValueTagCellContent: FC<CellContentProps> = ({ tag }) => {
   );
 };
 
-export default ValueTagCellContent;
+export default ValueTagCell;
