@@ -1,6 +1,8 @@
 import { Box } from '@mui/system';
-import DisplayTimeFrame from '../DisplayTimeFrame';
+import { Chip } from '@mui/material';
 import { FC } from 'react';
+
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -10,7 +12,6 @@ import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { Chip, Typography } from '@mui/material';
 import {
   JourneyFilterConfig,
   OPERATION,
@@ -59,17 +60,12 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             id={localMessageIds.condition.preview.regardlessTags}
           />
         ) : tagsObj.min_matching ? (
-          <>
-            <UnderlinedMsg
-              id={localMessageIds.condition.preview.some}
-              values={{
-                minMatching: tagsObj.min_matching,
-              }}
-            />
-            <Typography component="span" sx={{ ml: '0.2rem' }}>
-              <Msg id={localMessageIds.of} />
-            </Typography>
-          </>
+          <UnderlinedMsg
+            id={localMessageIds.condition.preview.some}
+            values={{
+              minMatching: tagsObj.min_matching,
+            }}
+          />
         ) : (
           <UnderlinedMsg
             id={

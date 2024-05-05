@@ -208,21 +208,21 @@ export default makeMessages('feat.smartSearch', {
       closed: m('a closed'),
       condition: {
         conditionSelect: {
-          all: m('and has all of'),
-          any: m('and has any of'),
-          none: m('and has none of'),
+          all: m('and has all'),
+          any: m('and has any'),
+          none: m('and has none'),
           regardlessTags: m('regardless of tags'),
           some: m('and has at least'),
         },
         preview: {
-          all: m('and has all of'),
-          any: m('and has any of'),
-          none: m('and has none of'),
+          all: m('and has all'),
+          any: m('and has any'),
+          none: m('and has none'),
           regardlessTags: m('regardless of tags'),
           some: m<{ minMatching: number }>('and has at least {minMatching}'),
         },
       },
-      followingTags: m('the following tags'),
+      followingTags: m('of the following tags'),
       has: m('has'),
       inputString: m<{
         addRemoveSelect: ReactElement;
@@ -236,7 +236,6 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc} {tags}'
       ),
-      of: m('of'),
       opened: m('an open'),
       thatFinished: m('that finished'),
       thatOpened: m('that opened'),
