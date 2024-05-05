@@ -223,7 +223,6 @@ export default makeMessages('feat.smartSearch', {
         },
       },
       followingTags: m('of the following tags'),
-      has: m('has'),
       inputString: m<{
         addRemoveSelect: ReactElement;
         condition: ReactElement;
