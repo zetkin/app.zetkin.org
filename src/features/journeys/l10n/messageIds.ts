@@ -79,7 +79,6 @@ export default makeMessages('feat.journeys', {
       title: m('Title'),
       updated: m('Last updated'),
     },
-    emptyValueTag: m('Empty value'),
     export: {
       headers: {
         assignees: m('Assignees'),
