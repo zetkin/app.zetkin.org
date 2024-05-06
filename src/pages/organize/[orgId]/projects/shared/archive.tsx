@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
@@ -14,7 +15,6 @@ import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
-import { ChangeEvent, useState } from 'react';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -79,9 +79,9 @@ const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
           if (data.length === 0) {
             return (
               <ZUIEmptyState
-                href={`/organize/${orgId}/projects/activities`}
+                href={`/organize/${orgId}/projects/shared/activities`}
                 linkMessage={messages.activitiesOverview.goToActivities()}
-                message={messages.allProjects.noActivities()}
+                message={messages.shared.noActivities()}
               />
             );
           }

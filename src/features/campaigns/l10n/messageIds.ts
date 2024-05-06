@@ -144,6 +144,9 @@ export default makeMessages('feat.campaigns', {
   noManager: m('No Project Manager'),
   shared: {
     cta: m('Go to project'),
+    noActivities: m(
+      'All shared activities that have been shared with suborganizations will appear here.'
+    ),
     title: m('Shared with us'),
   },
   sharedLayout: {

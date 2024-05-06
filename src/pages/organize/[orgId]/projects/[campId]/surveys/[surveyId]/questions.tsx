@@ -67,8 +67,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
                 <SurveyEditor
                   orgId={parseInt(orgId)}
                   readOnly={
-                    (receivingSubmissions && !forceEditable) ||
-                    campId === 'shared'
+                    (receivingSubmissions && !forceEditable) || isShared
                   }
                   surveyId={parseInt(surveyId)}
                 />

@@ -51,10 +51,9 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const isShared = campId === 'shared';
   const orgs = useMemberships().data ?? [];
 
-  const role = orgs.find(
-    (item) => item.organization.id === originalOrgId
-  )?.role;
-  const roleAdmin = role === 'admin';
+  const roleAdmin =
+    orgs.find((item) => item.organization.id === originalOrgId)?.role ===
+    'admin';
 
   const getAlertMsg = () => {
     if (!isShared || !surveyFuture.data?.organization.title) {

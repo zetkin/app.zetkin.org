@@ -53,7 +53,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
         <Box>
           <NextLink
             href={`/organize/${orgId}/projects${
-              campaignId ? `/${campaignId}` : ''
+              campaignId ? `/${campaignId}` : isShared ? '/shared' : ''
             }/activities`}
             legacyBehavior
             passHref

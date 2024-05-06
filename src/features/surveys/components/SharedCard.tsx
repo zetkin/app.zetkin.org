@@ -23,7 +23,7 @@ const SharedCard = (): JSX.Element => {
           <Typography gutterBottom noWrap variant="h6">
             <Msg id={messageIds.shared.title} />
           </Typography>
-          <Box sx={{ display: 'flex', mr: '5px', position: 'relative' }}>
+          <Box sx={{ display: 'flex', mr: '0.3rem', position: 'relative' }}>
             <GroupWork
               color="secondary"
               sx={{ backgroundColor: 'white', borderRadius: '50%', zIndex: 1 }}
