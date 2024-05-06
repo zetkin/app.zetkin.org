@@ -1,5 +1,6 @@
 import { AutoAwesomeMotionOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
+import dayjs from 'dayjs';
 
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from 'utils/layout/TabbedLayout';
@@ -22,7 +23,9 @@ const SharedActivitiesLayout: React.FC<SharedActivitiesLayout> = ({
 
   const sharedSurveys = surveys.filter(
     (survey) =>
-      survey.org_access === 'suborgs' && survey.organization.id === parsedOrgId
+      survey.org_access === 'suborgs' &&
+      survey.organization.id === parsedOrgId &&
+      !dayjs(survey.expires).isBefore(dayjs(), 'day')
   );
 
   return (
