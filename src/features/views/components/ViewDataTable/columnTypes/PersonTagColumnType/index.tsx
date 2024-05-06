@@ -57,14 +57,18 @@ export default class PersonTagColumnType implements IColumnType {
         apiClient.get<ZetkinTag>(`/api/orgs/${orgId}/people/tags/${tagId}`),
     });
 
-    const tag = tagFuture.data;
+    const tag = !accessLevel ? tagFuture.data : null;
 
     return {
       align: 'center',
       editable: !accessLevel && tag?.value_type !== null,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<ZetkinViewRow, ZetkinTag>) => (
-        <Cell cellValue={params.value} personId={params.row.id} tag={tag} />
+        <Cell
+          cellValue={params.value}
+          personId={params.row.id}
+          tag={tag || params.value}
+        />
       ),
       renderEditCell: (params) => (
         <ValueTagEditCell tagColor={tag?.color} {...params} />
@@ -126,12 +130,12 @@ const useStyles = makeStyles(() => ({
 interface CellProps {
   cellValue: ZetkinTag | undefined;
   personId: number;
-  tag: ZetkinTag | null;
+  tag?: ZetkinTag | null;
 }
 
 const Cell: FC<CellProps> = ({ cellValue, personId, tag }) => {
   if (!tag) {
-    return null;
+    return <span>{cellValue?.value || ''}</span>;
   } else if (tag.value_type !== null) {
     if (!cellValue) {
       return (
