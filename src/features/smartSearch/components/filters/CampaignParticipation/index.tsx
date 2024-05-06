@@ -5,6 +5,7 @@ import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
@@ -144,8 +145,10 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.activitySelect.activity}
                         values={{
-                          activity:
+                          activity: truncateOnMiddle(
                             activities.find((l) => l.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -210,8 +213,10 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.campaignSelect.campaign}
                         values={{
-                          campaign:
+                          campaign: truncateOnMiddle(
                             campaigns.find((c) => c.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -258,8 +263,10 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.locationSelect.location}
                         values={{
-                          location:
+                          location: truncateOnMiddle(
                             locations.find((l) => l.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );

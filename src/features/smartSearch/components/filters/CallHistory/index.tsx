@@ -6,6 +6,7 @@ import { Msg } from 'core/i18n';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -116,9 +117,11 @@ const CallHistory = ({
                       <Msg
                         id={localMessageIds.assignmentSelect.assignment}
                         values={{
-                          assignmentTitle:
+                          assignmentTitle: truncateOnMiddle(
                             assignmentsFuture.data?.find((a) => a.id === value)
                               ?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
