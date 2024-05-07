@@ -48,6 +48,7 @@ const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
     ACTIVITIES.SURVEY,
     ACTIVITIES.TASK,
     ACTIVITIES.EMAIL,
+    ACTIVITIES.EVENT,
   ]);
 
   const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +82,7 @@ const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
               <ZUIEmptyState
                 href={`/organize/${orgId}/projects/shared/activities`}
                 linkMessage={messages.activitiesOverview.goToActivities()}
-                message={messages.shared.noActivities()}
+                message={messages.shared.noArchives()}
               />
             );
           }

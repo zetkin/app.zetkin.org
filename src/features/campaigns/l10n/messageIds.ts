@@ -144,13 +144,15 @@ export default makeMessages('feat.campaigns', {
   noManager: m('No Project Manager'),
   shared: {
     cta: m('Go to project'),
-    noActivities: m(
-      'All shared activities that have been shared with suborganizations will appear here.'
+    noArchives: m(
+      'All expired activities that have been shared with your organization will appear here.'
     ),
     title: m('Shared with us'),
   },
   sharedLayout: {
-    subtitle: m<{ numOfActivities: number }>('{numOfActivities} activities'),
+    subtitle: m<{ numOfActivities: number }>(
+      '{numOfActivities, plural, =1 {1 activity} other {# activities}}'
+    ),
     tabs: {
       activities: m('Activities'),
       archive: m('Archive'),
