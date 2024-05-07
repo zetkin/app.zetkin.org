@@ -11,7 +11,7 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 
-export default function useAcitvityList(
+export default function useActivityList(
   orgId: number,
   campId?: number
 ): IFuture<CampaignActivity[]> {
