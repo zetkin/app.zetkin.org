@@ -44,7 +44,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
         >
           <CircularProgress sx={{ color: theme.palette.statusColors.blue }} />
           <Typography sx={{ color: theme.palette.text.primary }}>
-            {messages.importStatus.loadingState()}
+            {messages.preflight.messages.validating()}
           </Typography>
         </Box>
       )}
