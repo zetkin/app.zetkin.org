@@ -6,6 +6,7 @@ import Matching from '../Matching';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -185,6 +186,23 @@ const Task = ({
             taskSelect: (
               <StyledSelect
                 onChange={(e) => handleTaskSelectChange(e.target.value)}
+                SelectProps={{
+                  renderValue: function getLabel(value) {
+                    return value === ANY_TASK ? (
+                      <Msg id={localMessageIds.taskSelect.any} />
+                    ) : (
+                      <Msg
+                        id={localMessageIds.taskSelect.task}
+                        values={{
+                          task: truncateOnMiddle(
+                            tasks.find((t) => t.id === value)?.title ?? '',
+                            40
+                          ),
+                        }}
+                      />
+                    );
+                  },
+                }}
                 value={filter.config.task || ANY_TASK}
               >
                 <MenuItem key={ANY_TASK} value={ANY_TASK}>

@@ -213,10 +213,8 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.campaignSelect.campaign}
                         values={{
-                          campaign: truncateOnMiddle(
+                          campaign:
                             campaigns.find((c) => c.id === value)?.title ?? '',
-                            40
-                          ),
                         }}
                       />
                     );

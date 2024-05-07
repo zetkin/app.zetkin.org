@@ -6,6 +6,7 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -146,6 +147,17 @@ const EmailHistory = ({
                   onChange={(e) =>
                     setValueToKey('email', parseInt(e.target.value))
                   }
+                  SelectProps={{
+                    renderValue: function getLabel(value) {
+                      return truncateOnMiddle(
+                        `"${
+                          emailsFuture.find((email) => email.id === value)
+                            ?.title
+                        }"` ?? '',
+                        40
+                      );
+                    },
+                  }}
                   value={filter.config.email || ''}
                 >
                   {emailsFuture?.map((email) => (

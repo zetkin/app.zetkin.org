@@ -6,6 +6,7 @@ import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CONDITION_OPERATOR,
@@ -262,9 +263,11 @@ const SurveyOption = ({
                       <Msg
                         id={localMessageIds.questionSelect.question}
                         values={{
-                          question:
+                          question: truncateOnMiddle(
                             validQuestions.find((q) => q.id === value)?.question
                               .question ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -295,8 +298,10 @@ const SurveyOption = ({
                       <Msg
                         id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle:
+                          surveyTitle: truncateOnMiddle(
                             surveys.find((s) => s.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );

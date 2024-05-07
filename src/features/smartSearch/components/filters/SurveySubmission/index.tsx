@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   NewSmartSearchFilter,
@@ -126,8 +127,10 @@ const SurveySubmission = ({
                       <Msg
                         id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle:
+                          surveyTitle: truncateOnMiddle(
                             surveys.find((s) => s.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
