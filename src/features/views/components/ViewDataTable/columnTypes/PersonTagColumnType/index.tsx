@@ -47,17 +47,21 @@ export default class PersonTagColumnType implements IColumnType {
   ): Omit<GridColDef, 'field'> {
     const tagId = column.config.tag_id;
 
-    const tagList = state.tags.tagList;
-    const tagItem = tagList.items.find((item) => item.id == tagId);
+    let tag: ZetkinTag | null = null;
 
-    const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
-      actionOnLoad: () => tagLoad(tagId),
-      actionOnSuccess: (tag) => tagLoaded(tag),
-      loader: () =>
-        apiClient.get<ZetkinTag>(`/api/orgs/${orgId}/people/tags/${tagId}`),
-    });
+    if (!accessLevel) {
+      const tagList = state.tags.tagList;
+      const tagItem = tagList.items.find((item) => item.id == tagId);
 
-    const tag = !accessLevel ? tagFuture.data : null;
+      const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
+        actionOnLoad: () => tagLoad(tagId),
+        actionOnSuccess: (tag) => tagLoaded(tag),
+        loader: () =>
+          apiClient.get<ZetkinTag>(`/api/orgs/${orgId}/people/tags/${tagId}`),
+      });
+
+      tag = tagFuture.data;
+    }
 
     return {
       align: 'center',
