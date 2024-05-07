@@ -128,13 +128,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface CellProps {
-  cellValue: ZetkinTag | undefined;
+  cellValue: ZetkinTag | string | undefined;
   personId: number;
   tag?: ZetkinTag | null;
 }
 
 const Cell: FC<CellProps> = ({ cellValue, personId, tag }) => {
-  if (!tag) {
+  if (typeof cellValue === 'string') {
+    return null;
+  } else if (!tag) {
     return <span>{cellValue?.value || ''}</span>;
   } else if (tag.value_type !== null) {
     if (!cellValue) {
