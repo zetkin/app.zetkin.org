@@ -104,6 +104,31 @@ describe('predictProblem()', () => {
     expect(problems).toEqual([]);
   });
 
+  it('ignores leading/trailing space in email', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'email',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+      ],
+      rows: [
+        {
+          data: [1, ' clara@example.com '],
+        },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([]);
+  });
+
   it('ignores first row when header', () => {
     const sheet = makeFullSheet({
       columns: [
