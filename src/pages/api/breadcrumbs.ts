@@ -210,6 +210,16 @@ async function fetchElements(
       apiFetch
     );
     return folderElements;
+  } else if (fieldName == 'emailId') {
+    const email = await apiFetch(`/orgs/${orgId}/emails/${fieldValue}`).then(
+      (res) => res.json()
+    );
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: email.data.title,
+      },
+    ];
   }
 
   return [];

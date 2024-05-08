@@ -1,3 +1,4 @@
+import { EmailTheme } from 'features/emails/types';
 import {
   ZetkinAssignedTask,
   ZetkinTask,
@@ -129,6 +130,7 @@ export interface ZetkinOrganizerAction {
 }
 
 export interface ZetkinUser {
+  email: string;
   first_name: string;
   id: number;
   is_superuser?: boolean;
@@ -402,7 +404,7 @@ export interface ZetkinTag {
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   color: string | null;
   group: ZetkinTagGroup | null;
-  value?: string | number;
+  value?: string | number | null;
   value_type: string | null;
 }
 
@@ -499,6 +501,33 @@ export type {
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewRow,
+};
+
+export interface ZetkinEmail {
+  campaign: { id: number; title: string } | null;
+  theme: EmailTheme | null;
+  id: number;
+  locked: string | null;
+  published: string | null;
+  subject: string | null;
+  organization: { id: number; title: string };
+  content: string | null;
+  title: string | null;
+  target: ZetkinQuery;
+}
+
+export interface ZetkinLink {
+  email: { id: number; title: string };
+  id: number;
+  url: string;
+  tag: string;
+}
+
+export type ZetkinEmailPostBody = Partial<
+  Omit<ZetkinEmail, 'id' | 'theme' | 'published' | 'organization' | 'target'>
+> & {
+  campaign_id: number | null;
+  theme_id: number | null;
 };
 
 export type ZetkinCreatePerson = Partial<

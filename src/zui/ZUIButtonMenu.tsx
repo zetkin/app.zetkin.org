@@ -8,6 +8,7 @@ import { FC, MouseEvent, useState } from 'react';
 
 type ZUIButtonMenuProps = {
   items: {
+    disabled?: boolean;
     icon: JSX.Element;
     label: string;
     onClick: () => void;
@@ -67,6 +68,7 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({ items, label }) => {
           return (
             <MenuItem
               key={idx}
+              disabled={item.disabled}
               disableRipple
               onClick={() => {
                 handleClose();

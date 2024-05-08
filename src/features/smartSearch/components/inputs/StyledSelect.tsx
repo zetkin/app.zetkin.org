@@ -1,14 +1,17 @@
-import { TextField, TextFieldProps } from '@mui/material';
+import { TextField, TextFieldProps, Theme } from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
-
-const useStyles = makeStyles((theme) => ({
+interface StyleProps {
+  minWidth?: string;
+}
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   MuiInput: {
     fontSize: theme.typography.h4.fontSize,
     padding: 0,
   },
   MuiSelect: {
     fontSize: theme.typography.h4.fontSize,
+    minWidth: ({ minWidth }) => minWidth,
     padding: 0,
   },
   MuiTextField: {
@@ -17,8 +20,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StyledSelect: React.FC<TextFieldProps> = (props): JSX.Element => {
-  const classes = useStyles();
+const StyledSelect: React.FC<TextFieldProps & { minWidth?: string }> = (
+  props
+): JSX.Element => {
+  const classes = useStyles({ minWidth: props.minWidth });
   return (
     <TextField
       className={classes.MuiTextField}

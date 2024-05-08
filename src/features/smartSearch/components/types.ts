@@ -5,6 +5,9 @@ export enum FILTER_TYPE {
   CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
   CAMPAIGN_PARTICIPATION = 'campaign_participation',
+  EMAIL_BLACKLIST = 'email_blacklist',
+  EMAIL_CLICK = 'email_click',
+  EMAIL_HISTORY = 'email_history',
   MOST_ACTIVE = 'most_active',
   PERSON_DATA = 'person_data',
   PERSON_FIELD = 'person_field',
@@ -112,12 +115,33 @@ export interface CallHistoryFilterConfig {
   before?: string;
   after?: string;
 }
-
+export interface EmailBlacklistFilterConfig {
+  operator: 'blacklisted';
+  reason: 'unsub_org' | 'any';
+}
+export interface EmailClickFilterConfig {
+  after?: string;
+  before?: string;
+  campaign?: number;
+  email?: number;
+  operator: 'clicked' | 'not_clicked';
+  links?: number[];
+}
+export interface EmailHistoryFilterConfig {
+  after?: string;
+  before?: string;
+  campaign?: number;
+  email?: number;
+  operator: 'sent' | 'not_sent' | 'opened' | 'not_opened';
+}
 export interface MostActiveFilterConfig {
   after?: string;
   before?: string;
   size: number;
 }
+
+//TODO: add null to support when gender is unknown.
+export type Gender = 'f' | 'm' | 'o';
 
 export interface PersonDataFilterConfig {
   fields: {
@@ -126,7 +150,7 @@ export interface PersonDataFilterConfig {
     co_address?: string;
     email?: string;
     first_name?: string;
-    gender?: string;
+    gender?: Gender | null;
     last_name?: string;
     phone?: string;
     street_address?: string;
@@ -243,6 +267,7 @@ export type AnyFilterConfig =
   | CallHistoryFilterConfig
   | CampaignParticipationConfig
   | DefaultFilterConfig
+  | EmailBlacklistFilterConfig
   | MostActiveFilterConfig
   | PersonDataFilterConfig
   | PersonFieldFilterConfig

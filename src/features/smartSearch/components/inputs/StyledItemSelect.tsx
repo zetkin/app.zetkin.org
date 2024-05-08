@@ -31,7 +31,7 @@ interface StyledItem {
 type StyledItemSelectProps = Omit<
   AutocompleteProps<StyledItem, true, true, false>,
   'renderInput'
->;
+> & { noOptionsText?: JSX.Element };
 
 const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
   const classes = useStyles();
