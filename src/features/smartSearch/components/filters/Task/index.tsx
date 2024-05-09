@@ -214,12 +214,7 @@ const Task = ({
                       placement="right-start"
                       title={t.title.length >= 40 ? t.title : ''}
                     >
-                      <Box>
-                        <Msg
-                          id={localMessageIds.taskSelect.task}
-                          values={{ task: truncateOnMiddle(t.title, 40) }}
-                        />
-                      </Box>
+                      <Box>{truncateOnMiddle(t.title, 40)}</Box>
                     </Tooltip>
                   </MenuItem>
                 ))}
