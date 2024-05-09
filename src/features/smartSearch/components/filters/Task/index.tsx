@@ -1,5 +1,5 @@
 import { FormEvent } from 'react';
-import { Box, MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
@@ -210,10 +210,17 @@ const Task = ({
                 </MenuItem>
                 {tasks.map((t) => (
                   <MenuItem key={t.id} value={t.id}>
-                    <Msg
-                      id={localMessageIds.taskSelect.task}
-                      values={{ task: t.title }}
-                    />
+                    <Tooltip
+                      placement="right-start"
+                      title={t.title.length >= 40 ? t.title : ''}
+                    >
+                      <Box>
+                        <Msg
+                          id={localMessageIds.taskSelect.task}
+                          values={{ task: truncateOnMiddle(t.title, 40) }}
+                        />
+                      </Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>

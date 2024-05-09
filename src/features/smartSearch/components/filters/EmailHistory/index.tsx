@@ -1,5 +1,5 @@
-import { MenuItem } from '@mui/material';
 import { useState } from 'react';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
@@ -147,22 +147,23 @@ const EmailHistory = ({
                   onChange={(e) =>
                     setValueToKey('email', parseInt(e.target.value))
                   }
-                  SelectProps={{
-                    renderValue: function getLabel(value) {
-                      return truncateOnMiddle(
-                        `"${
-                          emailsFuture.find((email) => email.id === value)
-                            ?.title
-                        }"` ?? '',
-                        40
-                      );
-                    },
-                  }}
                   value={filter.config.email || ''}
                 >
                   {emailsFuture?.map((email) => (
                     <MenuItem key={`email-${email.id}`} value={email.id}>
-                      {`"${email.title}"`}
+                      <Tooltip
+                        placement="right-start"
+                        title={
+                          !email.title || email.title.length < 40
+                            ? ''
+                            : email.title
+                        }
+                      >
+                        <Box>{`"${truncateOnMiddle(
+                          email.title ?? '',
+                          40
+                        )}"`}</Box>
+                      </Tooltip>
                     </MenuItem>
                   ))}
                 </StyledSelect>

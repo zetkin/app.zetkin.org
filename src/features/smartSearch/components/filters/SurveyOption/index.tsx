@@ -282,7 +282,16 @@ const SurveyOption = ({
                 )}
                 {validQuestions.map((q) => (
                   <MenuItem key={q.id} value={q.id}>
-                    {q.question.question}
+                    <Tooltip
+                      placement="right-start"
+                      title={
+                        q.question.question.length >= 40
+                          ? q.question.question
+                          : ''
+                      }
+                    >
+                      <Box>{truncateOnMiddle(q.question.question, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -316,7 +325,12 @@ const SurveyOption = ({
                 )}
                 {surveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {s.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={s.title.length >= 40 ? s.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>

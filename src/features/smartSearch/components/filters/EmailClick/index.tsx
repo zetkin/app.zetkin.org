@@ -52,7 +52,7 @@ const EmailClick = ({
   onSubmit,
 }: EmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const emailsFuture = useEmails(orgId).data || [];
+  const emails = useEmails(orgId).data || [];
   const projectsFuture = useCampaigns(orgId).data || [];
 
   const { filter, setConfig, setOp } =
@@ -142,22 +142,23 @@ const EmailClick = ({
                   onChange={(e) =>
                     setValueToKey('email', parseInt(e.target.value))
                   }
-                  SelectProps={{
-                    renderValue: function getLabel(value) {
-                      return truncateOnMiddle(
-                        `"${
-                          emailsFuture.find((email) => email.id === value)
-                            ?.title
-                        }"` ?? '',
-                        40
-                      );
-                    },
-                  }}
                   value={filter.config.email || ''}
                 >
-                  {emailsFuture?.map((email) => (
-                    <MenuItem key={`email-${email.id}`} value={email.id}>
-                      {`"${email.title}"`}
+                  {emails.map((email) => (
+                    <MenuItem key={email.id} value={email.id}>
+                      <Tooltip
+                        placement="right-start"
+                        title={
+                          !email.title || email.title.length < 40
+                            ? ''
+                            : email.title
+                        }
+                      >
+                        <Box>{`"${truncateOnMiddle(
+                          email.title ?? '',
+                          40
+                        )}"`}</Box>
+                      </Tooltip>
                     </MenuItem>
                   ))}
                 </StyledSelect>

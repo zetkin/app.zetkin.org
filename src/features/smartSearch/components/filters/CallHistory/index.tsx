@@ -1,5 +1,5 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
@@ -141,7 +141,12 @@ const CallHistory = ({
                 )}
                 {assignmentsFuture.data?.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
-                    {a.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={a.title.length >= 40 ? a.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(a.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
