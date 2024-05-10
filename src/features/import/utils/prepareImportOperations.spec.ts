@@ -821,6 +821,45 @@ describe('prepareImportOperations()', () => {
         },
       ]);
     });
+
+    it('removes leading/trailing spaces from email addresses', () => {
+      const configData: Sheet = {
+        columns: [
+          {
+            field: 'email',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: [' clara@example.com '],
+          },
+          {
+            data: ['zetkin@example.com'],
+          },
+        ],
+        title: '',
+      };
+
+      const result = prepareImportOperations(configData, countryCode);
+      expect(result).toEqual([
+        {
+          data: {
+            email: 'clara@example.com',
+          },
+          op: 'person.import',
+        },
+        {
+          data: {
+            email: 'zetkin@example.com',
+          },
+          op: 'person.import',
+        },
+      ]);
+    });
+
     it('remove duplicated tagIds', () => {
       const configData: Sheet = {
         columns: [
