@@ -99,10 +99,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={surveyFuture.data?.expires || null}
-          isReadOnly={isShared}
           onChange={(startDate, endDate) => {
             updateSurvey({ expires: endDate, published: startDate });
           }}
+          readonly={isShared}
           startDate={surveyFuture.data?.published || null}
         />
       }
@@ -181,10 +181,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           {(data) => {
             return (
               <ZUIEditTextinPlace
-                isReadOnly={isShared}
                 onChange={(val) => {
                   updateSurvey({ title: val });
                 }}
+                readonly={isShared}
                 value={data.title}
               />
             );

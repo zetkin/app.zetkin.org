@@ -8,15 +8,15 @@ import { useMessages } from 'core/i18n';
 
 interface StyleProps {
   showBorder: boolean | undefined;
-  isReadOnly: boolean | undefined;
+  readonly: boolean | undefined;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   input: {
     '&:focus, &:hover': {
-      borderColor: ({ isReadOnly }) =>
-        !isReadOnly ? lighten(theme.palette.primary.main, 0.65) : '',
-      paddingLeft: ({ isReadOnly }) => (!isReadOnly ? 10 : 0),
+      borderColor: ({ readonly }) =>
+        !readonly ? lighten(theme.palette.primary.main, 0.65) : '',
+      paddingLeft: ({ readonly }) => (!readonly ? 10 : 0),
       paddingRight: 0,
     },
     border: '2px dotted transparent',
@@ -53,7 +53,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;
   disabled?: boolean;
-  isReadOnly?: boolean;
+  readonly?: boolean;
   onChange: (newValue: string) => void;
   placeholder?: string;
   value: string;
@@ -66,7 +66,7 @@ export interface ZUIEditTextinPlaceProps {
 const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   allowEmpty = false,
   disabled,
-  isReadOnly,
+  readonly,
   onBlur,
   onChange,
   onFocus,
@@ -78,7 +78,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   const [editing, setEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>(value);
 
-  const classes = useStyles({ isReadOnly, showBorder });
+  const classes = useStyles({ readonly, showBorder });
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const messages = useMessages(messageIds);
@@ -113,7 +113,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   }, [editing]);
 
   const startEditing = () => {
-    if (!isReadOnly) {
+    if (!readonly) {
       setEditing(true);
       setBorderOnTypeEdit();
     }
@@ -162,7 +162,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   };
 
   const tooltipText = () => {
-    if (isReadOnly) {
+    if (readonly) {
       return '';
     }
     if (text || allowEmpty) {

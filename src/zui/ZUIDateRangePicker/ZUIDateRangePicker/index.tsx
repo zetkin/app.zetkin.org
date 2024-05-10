@@ -111,34 +111,34 @@ const iconAndMessage = (
 
 interface ZUIDateRangePickerProps {
   endDate: string | null;
-  isReadOnly?: boolean;
+  readonly?: boolean;
   onChange?: (startDate: string | null, endDate: string | null) => void;
   startDate: string | null;
 }
 interface StyleProps {
-  isReadOnly: boolean | undefined;
+  readonly: boolean | undefined;
 }
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   label: {
     '&:hover': {
       borderBottomColor: lighten(theme.palette.primary.main, 0.65),
       borderBottomStyle: 'dotted',
-      borderBottomWidth: ({ isReadOnly }) => (!isReadOnly ? 2 : 0),
+      borderBottomWidth: ({ readonly }) => (!readonly ? 2 : 0),
     },
-    cursor: ({ isReadOnly }) => (!isReadOnly ? 'pointer' : ''),
+    cursor: ({ readonly }) => (!readonly ? 'pointer' : ''),
   },
 }));
 
 const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   endDate,
-  isReadOnly,
+  readonly,
   onChange,
   startDate,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
   const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
 
-  const classes = useStyles({ isReadOnly });
+  const classes = useStyles({ readonly });
   const messages = useMessages(messageIds);
   const intl = useIntl();
 
@@ -166,7 +166,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
           justifyContent="center"
           marginLeft={1}
           onClick={(ev: MouseEvent<HTMLSpanElement>) => {
-            if (!isReadOnly) {
+            if (!readonly) {
               ev.stopPropagation();
               setAnchorEl(ev.currentTarget);
             }
