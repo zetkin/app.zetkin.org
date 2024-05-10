@@ -515,16 +515,12 @@ const eventsSlice = createSlice({
 
 function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
   events.forEach((event) => {
-    const dateStr = event.start_time.slice(0, 10);
-
-    if (!state.eventsByDate[dateStr]) {
-      state.eventsByDate[dateStr] = remoteList();
+    const newDateStr = event.start_time.slice(0, 10);
+    if (!state.eventsByDate[newDateStr]) {
+      state.eventsByDate[newDateStr] = remoteList();
     }
 
     const eventListItem = state.eventList.items.find(
-      (item) => item.id == event.id
-    );
-    const eventByDateItem = state.eventsByDate[dateStr].items.find(
       (item) => item.id == event.id
     );
 
@@ -534,13 +530,35 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
       state.eventList.items.push(remoteItem(event.id, { data: event }));
     }
 
-    if (eventByDateItem) {
-      eventByDateItem.data = { ...eventByDateItem.data, ...event };
-      eventByDateItem.mutating = [];
-    } else {
-      state.eventsByDate[dateStr].items.push(
+    let targetedEventDateToUpdate: string | undefined = undefined;
+    for (const date in state.eventsByDate) {
+      const item = state.eventsByDate[date].items.find(
+        (item) => item.id == event.id
+      );
+      if (item) {
+        targetedEventDateToUpdate = item.data?.start_time.slice(0, 10);
+      }
+    }
+
+    if (targetedEventDateToUpdate) {
+      // When updating an event date, remove the old date's event from state.eventsByDate and push that event to the new date.
+      state.eventsByDate[targetedEventDateToUpdate].items = state.eventsByDate[
+        targetedEventDateToUpdate
+      ].items.filter((item) => item.data?.id !== event.id);
+      state.eventsByDate[newDateStr].items.push(
         remoteItem(event.id, { data: event })
       );
+    } else {
+      //This is to check if the event already exists. In some places, addEventToState might be called more than once.
+      if (
+        !state.eventsByDate[newDateStr].items.some(
+          (item) => item?.data?.id === event.id
+        )
+      ) {
+        state.eventsByDate[newDateStr].items.push(
+          remoteItem(event.id, { data: event })
+        );
+      }
     }
 
     const campaign = event.campaign;
