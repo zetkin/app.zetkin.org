@@ -98,7 +98,7 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
                 {tags && (
                   <Grid item>
                     <TagsList
-                      cap={3}
+                      cap={10}
                       capOverflowHref={`/organize/${orgId}/people/${person?.id}`}
                       isGrouped={false}
                       tags={tags}
