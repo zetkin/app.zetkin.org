@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { Box, Chip, MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
@@ -51,6 +51,10 @@ const PersonTags = ({
       tags: [],
     });
 
+  const [selected, setSelected] = useState<CONDITION_OPERATOR | 'min_matching'>(
+    filter.config.condition
+  );
+
   // preserve the order of the tag array
   const selectedTags = filter.config.tags.reduce((acc: ZetkinTag[], id) => {
     const tag = tags.find((tag) => tag.id === id);
@@ -59,10 +63,6 @@ const PersonTags = ({
     }
     return acc;
   }, []);
-
-  const selected = filter.config.min_matching
-    ? MIN_MATCHING
-    : filter.config.condition;
 
   // only submit if at least one tag has been added
   const submittable = !!filter.config.tags.length;
@@ -80,12 +80,14 @@ const PersonTags = ({
         condition: CONDITION_OPERATOR.ANY,
         min_matching: 1,
       });
+      setSelected(MIN_MATCHING);
     } else {
       setConfig({
         ...filter.config,
         condition: conditionValue as CONDITION_OPERATOR,
         min_matching: undefined,
       });
+      setSelected(conditionValue as CONDITION_OPERATOR);
     }
   };
 
@@ -160,7 +162,7 @@ const PersonTags = ({
                           setConfig({
                             ...filter.config,
                             condition: CONDITION_OPERATOR.ANY,
-                            min_matching: +e.target.value,
+                            min_matching: +e.target.value || undefined,
                           })
                         }
                         value={filter.config.min_matching}
