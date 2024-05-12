@@ -2,18 +2,11 @@ import useCreateEvent from './useCreateEvent';
 import useEvent from './useEvent';
 import { ZetkinEventPostBody } from './useEventMutations';
 
-type useDuplicateEventReturn = {
-  duplicateEvent: () => void;
-};
-
-export default function useDuplicateEvent(
-  orgId: number,
-  eventId: number
-): useDuplicateEventReturn {
-  const { createEvent } = useCreateEvent(orgId);
+export default function useDuplicateEvent(orgId: number, eventId: number) {
+  const createEvent = useCreateEvent(orgId);
   const event = useEvent(orgId, eventId);
 
-  const duplicateEvent = () => {
+  return () => {
     const duplicateEventPostBody: ZetkinEventPostBody = {
       activity_id: event.data?.activity?.id,
       end_time: event.data?.end_time,
@@ -30,6 +23,4 @@ export default function useDuplicateEvent(
     }
     return createEvent(duplicateEventPostBody);
   };
-
-  return { duplicateEvent };
 }

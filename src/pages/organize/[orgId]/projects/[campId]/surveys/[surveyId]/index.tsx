@@ -24,6 +24,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     const { orgId, campId, surveyId } = ctx.params!;
     try {
       const client = new BackendApiClient(ctx.req.headers);
+
       const data = await client.get<ZetkinSurvey>(
         `/api/orgs/${orgId}/surveys/${surveyId}`
       );

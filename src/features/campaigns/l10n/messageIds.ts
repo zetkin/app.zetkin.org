@@ -39,6 +39,7 @@ export default makeMessages('feat.campaigns', {
     filter: {
       calls: m('Call assignments'),
       canvasses: m('Canvass assignments'),
+      emails: m('Emails'),
       filter: m('Filter results'),
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
@@ -73,6 +74,9 @@ export default makeMessages('feat.campaigns', {
       error: m('There was an error creating the project'),
       newCampaign: m('My project'),
     },
+    createEmail: {
+      newEmail: m('Untitled email'),
+    },
     createSurvey: {
       newSurvey: m('My survey'),
     },
@@ -96,7 +100,6 @@ export default makeMessages('feat.campaigns', {
     },
     manager: {
       label: m('Project manager'),
-      selectSelf: m('Set yourself as manager'),
     },
     name: m('Name'),
     requestError: m('There was an error. Please try again.'),
@@ -124,6 +127,7 @@ export default makeMessages('feat.campaigns', {
   linkGroup: {
     createActivity: m('Create activity'),
     createCallAssignment: m('Create call assignment'),
+    createEmail: m('Create email'),
     createEvent: m('Create event'),
     createSurvey: m('Create survey'),
     createTask: m('Create task'),

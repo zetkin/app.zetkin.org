@@ -4,6 +4,7 @@ import {
   AssignmentOutlined,
   CheckBoxOutlined,
   Delete,
+  EmailOutlined,
   Event,
   HeadsetMic,
   OpenInNew,
@@ -16,8 +17,11 @@ import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actio
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
+import useCreateEmail from 'features/emails/hooks/useCreateEmail';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -40,18 +44,25 @@ const CampaignActionButtons: React.FunctionComponent<
 > = ({ campaign }) => {
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
+  const organization = useOrganization(orgId).data;
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
-  const { createEvent } = useCreateEvent(orgId);
+  const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
     campId
   );
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
+  const { createEmail } = useCreateEmail(orgId);
+  const themes = useEmailThemes(orgId).data || [];
+
+  if (!organization) {
+    return null;
+  }
 
   const handleCreateEvent = () => {
     const defaultStart = new Date();
@@ -71,39 +82,54 @@ const CampaignActionButtons: React.FunctionComponent<
     });
   };
 
+  const menuItems = [
+    {
+      icon: <Event />,
+      label: messages.linkGroup.createEvent(),
+      onClick: handleCreateEvent,
+    },
+    {
+      icon: <HeadsetMic />,
+      label: messages.linkGroup.createCallAssignment(),
+      onClick: () =>
+        createCallAssignment({
+          title: messages.form.createCallAssignment.newCallAssignment(),
+        }),
+    },
+    {
+      icon: <AssignmentOutlined />,
+      label: messages.linkGroup.createSurvey(),
+      onClick: () =>
+        createSurvey({
+          signature: 'require_signature',
+          title: messages.form.createSurvey.newSurvey(),
+        }),
+    },
+    {
+      icon: <CheckBoxOutlined />,
+      label: messages.linkGroup.createTask(),
+      onClick: () => setCreateTaskDialogOpen(true),
+    },
+  ];
+
+  if (organization.email && themes.length > 0) {
+    menuItems.push({
+      icon: <EmailOutlined />,
+      label: messages.linkGroup.createEmail(),
+      onClick: () =>
+        createEmail({
+          campaign_id: campId,
+          theme_id: themes[0].id,
+          title: messages.form.createEmail.newEmail(),
+        }),
+    });
+  }
+
   return (
     <Box display="flex" gap={1}>
       <Box>
         <ZUIButtonMenu
-          items={[
-            {
-              icon: <Event />,
-              label: messages.linkGroup.createEvent(),
-              onClick: handleCreateEvent,
-            },
-            {
-              icon: <HeadsetMic />,
-              label: messages.linkGroup.createCallAssignment(),
-              onClick: () =>
-                createCallAssignment({
-                  title: messages.form.createCallAssignment.newCallAssignment(),
-                }),
-            },
-            {
-              icon: <AssignmentOutlined />,
-              label: messages.linkGroup.createSurvey(),
-              onClick: () =>
-                createSurvey({
-                  signature: 'require_signature',
-                  title: messages.form.createSurvey.newSurvey(),
-                }),
-            },
-            {
-              icon: <CheckBoxOutlined />,
-              label: messages.linkGroup.createTask(),
-              onClick: () => setCreateTaskDialogOpen(true),
-            },
-          ]}
+          items={menuItems}
           label={messages.linkGroup.createActivity()}
         />
       </Box>
@@ -144,7 +170,7 @@ const CampaignActionButtons: React.FunctionComponent<
                   <Link
                     color="inherit"
                     display="flex"
-                    href={`/o/${orgId}/campaigns/${campId}`}
+                    href={`/o/${orgId}/projects/${campId}`}
                     sx={{ alignItems: 'center', gap: 1 }}
                     target="_blank"
                     underline="none"

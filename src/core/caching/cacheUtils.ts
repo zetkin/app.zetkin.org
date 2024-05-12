@@ -43,7 +43,10 @@ export function loadListIfNecessary<
     return new PromiseFuture(promise);
   }
 
-  return new RemoteListFuture(remoteList);
+  return new RemoteListFuture({
+    ...remoteList,
+    items: remoteList.items.filter((item) => !item.deleted),
+  });
 }
 
 export function loadItemIfNecessary<

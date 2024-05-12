@@ -1,5 +1,5 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
@@ -155,7 +155,9 @@ const Task = ({
             ),
             campaignSelect: !filter.config.task ? (
               <>
-                <Msg id={localMessageIds.campaignSelect.in} />
+                <Box component="span" paddingX={1}>
+                  <Msg id={localMessageIds.campaignSelect.in} />
+                </Box>
                 <StyledSelect
                   onChange={(e) => handleCampaignSelectChange(e.target.value)}
                   value={filter.config.campaign || ANY_CAMPAIGN}

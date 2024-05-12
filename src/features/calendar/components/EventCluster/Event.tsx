@@ -207,7 +207,7 @@ const Event = ({
       {!collapsed && (
         <Box height="100%">
           <Box className={classes.titleContainer}>
-            <Box alignItems="center" display="flex" sx={{ pl: 1, pt: 0.8 }}>
+            <Box alignItems="center" display="flex" sx={{ pl: 1 }}>
               {(isHovered || selectedEvents.length > 0) && (
                 <EventSelectionCheckBox events={events} />
               )}

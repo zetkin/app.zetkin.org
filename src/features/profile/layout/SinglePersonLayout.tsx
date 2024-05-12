@@ -1,12 +1,11 @@
 import { FunctionComponent } from 'react';
 import { Box, Typography } from '@mui/material';
 
+import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from '../hooks/usePerson';
-
-import messageIds from '../l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 interface SinglePersonLayoutProps {
   children: React.ReactNode;
@@ -31,6 +30,15 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
       baseHref={`/organize/${orgId}/people/${personId}`}
       defaultTab="/"
       fixedHeight={fixedHeight}
+      subtitle={
+        <Msg
+          id={
+            person?.is_user
+              ? messageIds.user.hasAccount
+              : messageIds.user.noAccount
+          }
+        />
+      }
       tabs={[
         { href: `/`, label: messages.tabs.profile() },
         {
@@ -44,12 +52,7 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
         },
       ]}
       title={
-        <Box
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-          }}
-        >
+        <Box alignContent="center" display="flex">
           {`${person?.first_name} ${person?.last_name}`}
           {person?.ext_id && (
             <Typography

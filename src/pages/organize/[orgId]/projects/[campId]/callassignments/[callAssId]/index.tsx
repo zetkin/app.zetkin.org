@@ -22,6 +22,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     const { orgId, campId, callAssId } = ctx.params!;
     try {
       const client = new BackendApiClient(ctx.req.headers);
+
       const data = await client.get<ZetkinCallAssignment>(
         `/api/orgs/${orgId}/call_assignments/${callAssId}`
       );

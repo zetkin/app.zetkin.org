@@ -8,6 +8,7 @@ import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
+import { MultiDayEvent } from 'features/calendar/components/utils';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from '../StatusDot';
 import useEventState from 'features/events/hooks/useEventState';
@@ -17,7 +18,7 @@ import ZUIIconLabel from 'zui/ZUIIconLabel';
 
 interface MultiEventListItemProps {
   clusterType: CLUSTER_TYPE;
-  event: ZetkinEvent;
+  event: ZetkinEvent | MultiDayEvent;
   onEventClick: (id: number) => void;
 }
 
@@ -30,8 +31,14 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   const messages = useMessages(messageIds);
   const state = useEventState(event.organization.id, event.id);
   const timeSpan = `${intl.formatTime(
-    removeOffset(event.start_time)
-  )}-${intl.formatTime(removeOffset(event.end_time))}`;
+    removeOffset(
+      'originalStartTime' in event ? event.originalStartTime : event.start_time
+    )
+  )}-${intl.formatTime(
+    removeOffset(
+      'originalEndTime' in event ? event.originalEndTime : event.end_time
+    )
+  )}`;
 
   return (
     <Box display="flex" flexDirection="column" paddingBottom={1} width="100%">

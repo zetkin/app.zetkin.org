@@ -12,11 +12,11 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 import DayHeader from './DayHeader';
-import { Event } from '@mui/icons-material';
 import EventCluster from '../EventCluster';
 import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
+import EventShiftModal from '../EventShiftModal';
 import HeaderWeekNumber from './HeaderWeekNumber';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
@@ -28,12 +28,13 @@ import { useRouter } from 'next/router';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from 'features/events/hooks/useEventMutations';
+import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import { useAppDispatch, useEnv, useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(isoWeek);
 
 const HOUR_HEIGHT = 80;
-const HOUR_COLUMN_WIDTH = '50px';
+const HOUR_COLUMN_WIDTH = '60px';
 
 export interface CalendarWeekViewProps {
   focusDate: Date;
@@ -41,6 +42,7 @@ export interface CalendarWeekViewProps {
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [creating, setCreating] = useState(false);
+  const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
@@ -109,7 +111,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         {/* Hours column */}
         <Box>
           {range(24).map((hour: number) => {
-            const time = dayjs().set('hour', hour).set('minute', 0);
+            const time = dayjs().set('hour', hour).set('minute', 0).toString();
             return (
               <Box
                 key={`hour-${hour}`}
@@ -118,12 +120,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 justifyContent="flex-end"
               >
                 <Typography color={theme.palette.grey[500]} variant="caption">
-                  <FormattedTime
-                    hour="numeric"
-                    hour12={false}
-                    minute="numeric"
-                    value={time.toDate()}
-                  />
+                  <FormattedTime hour="numeric" minute="numeric" value={time} />
                 </Typography>
               </Box>
             );
@@ -272,8 +269,31 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                             <Msg id={messageIds.createMenu.singleEvent} />
                           </ListItemText>
                         </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setCreating(true);
+                            setGhostAnchorEl(null);
+                            setShiftModalOpen(true);
+                          }}
+                        >
+                          <ListItemIcon>
+                            <SplitscreenOutlined />
+                          </ListItemIcon>
+                          <ListItemText>
+                            <Msg id={messageIds.createMenu.shiftEvent} />
+                          </ListItemText>
+                        </MenuItem>
                       </Menu>
                     )}
+                    <EventShiftModal
+                      close={() => {
+                        setShiftModalOpen(false);
+                        setPendingEvent(null);
+                        setCreating(false);
+                      }}
+                      dates={pendingEvent}
+                      open={shiftModalOpen}
+                    />
                   </>
                 )}
                 {/* TODO: Put events here */}

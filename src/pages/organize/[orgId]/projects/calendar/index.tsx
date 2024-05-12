@@ -17,7 +17,6 @@ const scaffoldOptions = {
     'layout.organize',
     'misc.breadcrumbs',
     'misc.calendar',
-    'misc.speedDial',
     'misc.formDialog',
   ],
 };

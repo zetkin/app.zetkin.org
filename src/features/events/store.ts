@@ -1,4 +1,3 @@
-import { isSameDate } from 'utils/dateUtils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
@@ -101,8 +100,8 @@ const eventsSlice = createSlice({
     ) => {
       const [id, events] = action.payload;
       const timestamp = new Date().toISOString();
-
-      state.eventsByCampaignId[id] = remoteList<ZetkinEvent>(events);
+      addEventToState(state, events);
+      state.eventsByCampaignId[id].isLoading = false;
       state.eventsByCampaignId[id].loaded = timestamp;
     },
     eventCreate: (state) => {
@@ -111,41 +110,39 @@ const eventsSlice = createSlice({
     eventCreated: (state, action: PayloadAction<ZetkinEvent>) => {
       const event = action.payload;
       state.eventList.isLoading = false;
-      state.eventList.items.push(remoteItem(event.id, { data: event }));
-
-      const dateStr = event.start_time.slice(0, 10);
-      if (!state.eventsByDate[dateStr]) {
-        state.eventsByDate[dateStr] = remoteList();
-      }
-      state.eventsByDate[dateStr].items.push(
-        remoteItem(event.id, { data: event })
-      );
-
-      if (event.campaign) {
-        if (!state.eventsByCampaignId[event.campaign.id]) {
-          state.eventsByCampaignId[event.campaign.id] = remoteList();
-        }
-        state.eventsByCampaignId[event.campaign.id].items.push(
-          remoteItem(event.id, { data: event })
-        );
-      }
+      addEventToState(state, [event]);
     },
     eventDeleted: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
-      state.eventList.items = state.eventList.items.filter(
-        (item) => item.id != eventId
+      const eventListItem = state.eventList.items.find(
+        (item) => item.id === eventId
       );
 
+      if (eventListItem) {
+        eventListItem.deleted = true;
+        state.eventList.isStale = true;
+      }
+
       for (const date in state.eventsByDate) {
-        state.eventsByDate[date].items = state.eventsByDate[date].items.filter(
-          (item) => item.id != eventId
+        const item = state.eventsByDate[date].items.find(
+          (item) => item.id === eventId
         );
+
+        if (item) {
+          item.deleted = true;
+          state.eventsByDate[date].isStale = true;
+        }
       }
 
       for (const campaignId in state.eventsByCampaignId) {
-        state.eventsByCampaignId[campaignId].items = state.eventsByCampaignId[
-          campaignId
-        ].items.filter((item) => item.id != eventId);
+        const item = state.eventsByCampaignId[campaignId].items.find(
+          (item) => item.id === eventId
+        );
+
+        if (item) {
+          item.deleted = true;
+          state.eventsByCampaignId[campaignId].isStale = true;
+        }
       }
     },
     eventLoad: (state, action: PayloadAction<number>) => {
@@ -162,8 +159,8 @@ const eventsSlice = createSlice({
       if (!item) {
         throw new Error('Finished loading item that never started loading');
       }
+      addEventToState(state, [event]);
 
-      item.data = event;
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
@@ -177,43 +174,9 @@ const eventsSlice = createSlice({
         state.eventsByDate[dateStr].isLoading = true;
       });
     },
-    eventRangeLoaded: (
-      state,
-      action: PayloadAction<[string[], ZetkinEvent[]]>
-    ) => {
-      const [isoDateRange, events] = action.payload;
-
-      // Add events to per-date map
-      isoDateRange.forEach((isoDate) => {
-        const dateStr = isoDate.slice(0, 10);
-        state.eventsByDate[dateStr] = remoteList(
-          events.filter((event) =>
-            isSameDate(new Date(event.start_time), new Date(isoDate))
-          )
-        );
-        state.eventsByDate[dateStr].loaded = new Date().toISOString();
-      });
-
-      // Add events to big list
-      const loadedIds: (number | string)[] = events.map((event) => event.id);
-      state.eventList.items = state.eventList.items
-        .filter((oldItem) => {
-          if (loadedIds.includes(oldItem.id)) {
-            // This event exists in the freshly loaded list and should be removed
-            // before appending the list so that it does not create duplicates.
-            return false;
-          }
-
-          return true;
-        })
-        .concat(
-          events.map((event) =>
-            remoteItem(event.id, {
-              data: event,
-              loaded: new Date().toISOString(),
-            })
-          )
-        );
+    eventRangeLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      const events = action.payload;
+      addEventToState(state, events);
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
@@ -224,57 +187,14 @@ const eventsSlice = createSlice({
     },
     eventUpdated: (state, action: PayloadAction<ZetkinEvent>) => {
       const event = action.payload;
-      const item = state.eventList.items.find((item) => item.id == event.id);
-      if (item) {
-        item.data = { ...item.data, ...event };
-        item.mutating = [];
-      }
-
-      for (const date in state.eventsByDate) {
-        const item = state.eventsByDate[date].items.find(
-          (item) => item.id == event.id
-        );
-        if (item) {
-          item.data = { ...item.data, ...event };
-          item.mutating = [];
-        }
-      }
-
-      if (event.campaign) {
-        const eventItem = state.eventsByCampaignId[
-          event.campaign.id
-        ].items.find((item) => item.id == event.id);
-        if (eventItem) {
-          eventItem.data = { ...eventItem.data, ...event };
-          eventItem.mutating = [];
-        }
-      }
+      addEventToState(state, [event]);
     },
     eventsCreate: (state) => {
       state.eventList.isLoading = true;
     },
     eventsCreated: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const events = action.payload;
-      events.map((event) => {
-        state.eventList.items.push(remoteItem(event.id, { data: event }));
-
-        const dateStr = event.start_time.slice(0, 10);
-        if (!state.eventsByDate[dateStr]) {
-          state.eventsByDate[dateStr] = remoteList();
-        }
-        state.eventsByDate[dateStr].items.push(
-          remoteItem(event.id, { data: event })
-        );
-
-        if (event.campaign) {
-          if (!state.eventsByCampaignId[event.campaign.id]) {
-            state.eventsByCampaignId[event.campaign.id] = remoteList();
-          }
-          state.eventsByCampaignId[event.campaign.id].items.push(
-            remoteItem(event.id, { data: event })
-          );
-        }
-      });
+      addEventToState(state, events);
       state.eventList.isLoading = false;
     },
     eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
@@ -289,7 +209,7 @@ const eventsSlice = createSlice({
       state.eventList.isLoading = true;
     },
     eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      state.eventList = remoteList(action.payload);
+      addEventToState(state, action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
     eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
@@ -445,6 +365,18 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId].items.push(
         remoteItem(participant.id, { data: participant })
       );
+      const event = state.eventList.items.find(
+        (e) => e?.data?.id === eventId
+      )?.data;
+      if (event) {
+        updateAvailParticipantToState(state, event);
+      }
+    },
+    participantDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [eventId, participantId] = action.payload;
+      state.participantsByEventId[eventId].items = state.participantsByEventId[
+        eventId
+      ].items.filter((participant) => participant.id !== participantId);
     },
     participantUpdated: (
       state,
@@ -465,12 +397,15 @@ const eventsSlice = createSlice({
       }
 
       if (participant.cancelled) {
-        // If cancelled participant was contact for event, also remove contact
         const event = state.eventList.items.find(
           (e) => e?.data?.id === eventId
-        );
-        if (event?.data && event?.data?.contact?.id == participant.id) {
-          event.data.contact = null;
+        )?.data;
+        if (event) {
+          updateAvailParticipantToState(state, event);
+          // If cancelled participant was contact for event, also remove contact
+          if (event.contact?.id == participant.id) {
+            event.contact = null;
+          }
         }
       }
     },
@@ -578,6 +513,90 @@ const eventsSlice = createSlice({
   },
 });
 
+function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
+  events.forEach((event) => {
+    const dateStr = event.start_time.slice(0, 10);
+
+    if (!state.eventsByDate[dateStr]) {
+      state.eventsByDate[dateStr] = remoteList();
+    }
+
+    const eventListItem = state.eventList.items.find(
+      (item) => item.id == event.id
+    );
+    const eventByDateItem = state.eventsByDate[dateStr].items.find(
+      (item) => item.id == event.id
+    );
+
+    if (eventListItem) {
+      eventListItem.data = { ...eventListItem.data, ...event };
+    } else {
+      state.eventList.items.push(remoteItem(event.id, { data: event }));
+    }
+
+    if (eventByDateItem) {
+      eventByDateItem.data = { ...eventByDateItem.data, ...event };
+      eventByDateItem.mutating = [];
+    } else {
+      state.eventsByDate[dateStr].items.push(
+        remoteItem(event.id, { data: event })
+      );
+    }
+
+    const campaign = event.campaign;
+    if (campaign) {
+      if (!state.eventsByCampaignId[campaign.id]) {
+        state.eventsByCampaignId[campaign.id] = remoteList();
+      }
+
+      const eventByCampIdItem = state.eventsByCampaignId[
+        campaign.id
+      ].items.find((item) => item.id == event.id);
+
+      if (eventByCampIdItem) {
+        eventByCampIdItem.data = { ...eventByCampIdItem.data, ...event };
+        eventByCampIdItem.mutating = [];
+      } else {
+        state.eventsByCampaignId[campaign.id].items.push(
+          remoteItem(event.id, { data: event })
+        );
+      }
+    }
+  });
+}
+
+function updateAvailParticipantToState(
+  state: EventsStoreSlice,
+  event: ZetkinEvent
+) {
+  const numAvailParticipants = state.participantsByEventId[
+    event.id
+  ].items.filter((participant) => !participant.data?.cancelled).length;
+  event.num_participants_available = numAvailParticipants;
+
+  const dateStr = event.start_time.slice(0, 10);
+  const eventByDateItem = state.eventsByDate[dateStr].items.find(
+    (item) => item.id === event.id
+  );
+  if (eventByDateItem?.data) {
+    eventByDateItem.data.num_participants_available = numAvailParticipants;
+  }
+
+  if (event.campaign) {
+    const eventByCampIdItem = state.eventsByCampaignId[
+      event.campaign.id
+    ].items.find((item) => item.id === event.id);
+
+    if (eventByCampIdItem?.data) {
+      eventByCampIdItem.data.num_participants_available = numAvailParticipants;
+    }
+  }
+
+  if (state.statsByEventId[event.id]) {
+    state.statsByEventId[event.id].isStale = true;
+  }
+}
+
 export default eventsSlice;
 export const {
   campaignEventsLoad,
@@ -609,6 +628,7 @@ export const {
   locationsLoad,
   locationsLoaded,
   participantAdded,
+  participantDeleted,
   participantUpdated,
   participantsLoad,
   participantsLoaded,

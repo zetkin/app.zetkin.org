@@ -18,7 +18,8 @@ const PersonLink: React.FunctionComponent<{
   id: number;
   link?: boolean;
   orgId: string | number;
-}> = ({ children, link, id, orgId }) => {
+  underline: boolean;
+}> = ({ children, link, id, orgId, underline }) => {
   if (link) {
     return (
       <NextLink
@@ -26,7 +27,10 @@ const PersonLink: React.FunctionComponent<{
         legacyBehavior
         passHref
       >
-        <Link style={{ cursor: 'pointer' }} underline="hover">
+        <Link
+          style={{ cursor: 'pointer' }}
+          underline={underline ? 'hover' : 'none'}
+        >
           {children}
         </Link>
       </NextLink>
@@ -57,7 +61,7 @@ const ZUIPerson: React.FunctionComponent<{
   const { orgId } = useRouter().query as { orgId: string };
 
   return (
-    <PersonLink id={id} link={link} orgId={orgId}>
+    <PersonLink id={id} link={link} orgId={orgId} underline={!showText}>
       <Box display="flex" {...containerProps}>
         <Tooltip title={tooltip ? name : ''}>
           <Avatar

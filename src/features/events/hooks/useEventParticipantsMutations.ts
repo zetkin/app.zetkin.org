@@ -2,6 +2,7 @@ import useEventMutations from './useEventMutations';
 import { ZetkinEventParticipant } from 'utils/types/zetkin';
 import {
   participantAdded,
+  participantDeleted,
   participantsRemind,
   participantsReminded,
   participantUpdated,
@@ -16,6 +17,7 @@ export enum participantStatus {
 
 type useEventParticipantsMutationsMutationsReturn = {
   addParticipant: (personId: number) => void;
+  deleteParticipant: (participantId: number) => void;
   sendReminders: (eventId: number) => void;
   setParticipantStatus: (
     personId: number,
@@ -42,6 +44,13 @@ export default function useEventParticipantsMutations(
       {}
     );
     dispatch(participantAdded([eventId, participant]));
+  };
+
+  const deleteParticipant = async (participantId: number) => {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/actions/${eventId}/participants/${participantId}`
+    );
+    dispatch(participantDeleted([eventId, participantId]));
   };
 
   const updateParticipant = (
@@ -83,6 +92,7 @@ export default function useEventParticipantsMutations(
 
   return {
     addParticipant,
+    deleteParticipant,
     sendReminders,
     setParticipantStatus,
     setReqParticipants,

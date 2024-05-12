@@ -152,11 +152,6 @@ export default makeMessages('zui', {
     success: m('Success!'),
     warning: m('Warning!'),
   },
-  speedDial: {
-    createCampaign: m('Create campaign'),
-    createEvent: m('Create event'),
-    createTask: m('Create task'),
-  },
   submitOrCancel: {
     cancel: m('Cancel'),
     submit: m('Submit'),
@@ -190,5 +185,10 @@ export default makeMessages('zui', {
     singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
       'Today, {start} - {end}'
     ),
+  },
+  timezonePicker: {
+    gmt: m('GMT'),
+    placeholder: m('Type to search location'),
+    timezone: m('Timezone'),
   },
 });

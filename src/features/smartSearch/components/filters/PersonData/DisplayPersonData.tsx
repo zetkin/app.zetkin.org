@@ -1,10 +1,10 @@
-import { Msg } from 'core/i18n';
 import {
   DATA_FIELD,
   OPERATION,
   PersonDataFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
@@ -16,38 +16,50 @@ interface DisplayPersonDataProps {
 }
 
 const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
+  const messages = useMessages(localMessageIds);
   const {
     config: { fields },
   } = filter;
   const op = filter.op || OPERATION.ADD;
 
-  const criteria = Object.values(DATA_FIELD).filter((f) => f in fields);
-
   const getCriteriaString = () => {
     let existing;
     let criteriaString: JSX.Element | null = null;
-    criteria.forEach((c) => {
-      existing = (
-        <Msg
-          id={localMessageIds.fieldMatches}
-          values={{
-            field: <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />,
-            value: <UnderlinedText text={fields[c] || ''} />,
-          }}
-        />
-      );
-      if (criteriaString) {
-        criteriaString = (
-          <UnderlinedMsg
-            id={localMessageIds.fieldTuple}
+    Object.values(DATA_FIELD).forEach((c) => {
+      const field = fields[c];
+
+      if (field) {
+        existing = (
+          <Msg
+            id={localMessageIds.fieldMatches}
             values={{
-              first: criteriaString,
-              second: existing,
+              field: <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />,
+              value: (
+                <UnderlinedText
+                  text={
+                    field === fields.gender
+                      ? messages.genders[field || 'unknown']()
+                      : field
+                  }
+                />
+              ),
             }}
           />
         );
-      } else {
-        criteriaString = existing;
+
+        if (criteriaString) {
+          criteriaString = (
+            <UnderlinedMsg
+              id={localMessageIds.fieldTuple}
+              values={{
+                first: criteriaString,
+                second: existing,
+              }}
+            />
+          );
+        } else {
+          criteriaString = existing;
+        }
       }
     });
     return criteriaString;
