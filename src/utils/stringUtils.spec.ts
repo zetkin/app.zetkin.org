@@ -1,4 +1,9 @@
-import { isInteger, stringToBool, truncateOnMiddle } from './stringUtils';
+import {
+  buildUrl,
+  isInteger,
+  stringToBool,
+  truncateOnMiddle,
+} from './stringUtils';
 
 describe('stringToBool()', () => {
   // Returns false
@@ -74,5 +79,19 @@ describe('isInteger()', () => {
     undefined as unknown as string,
   ])('should return false for non-integer string %p', (numberString) => {
     expect(isInteger(numberString)).toBe(false);
+  });
+});
+
+describe('buildUrl()', () => {
+  it('combines a hostname and path into a URL', () => {
+    expect(buildUrl('https://example.com', '/path/to/resource')).toEqual(
+      'https://example.com/path/to/resource'
+    );
+  });
+
+  it('strips trailing slashes from the hostname', () => {
+    expect(buildUrl('https://example.com/', '/path/to/resource')).toEqual(
+      'https://example.com/path/to/resource'
+    );
   });
 });

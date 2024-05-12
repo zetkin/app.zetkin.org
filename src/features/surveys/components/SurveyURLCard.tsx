@@ -5,6 +5,7 @@ import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Msg, useMessages } from 'core/i18n';
 
+import { buildUrl } from 'utils/stringUtils';
 import messageIds from '../l10n/messageIds';
 
 interface SurveyURLCardProps {
@@ -37,9 +38,15 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
     >
       <Box display="flex" paddingBottom={2}>
         <ZUITextfieldToClipboard
-          copyText={`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
+          copyText={buildUrl(
+            process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN || '',
+            `/o/${orgId}/surveys/${surveyId}`
+          )}
         >
-          {`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
+          {buildUrl(
+            process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN || '',
+            `/o/${orgId}/surveys/${surveyId}`
+          )}
         </ZUITextfieldToClipboard>
       </Box>
       <Link

@@ -46,4 +46,8 @@ const truncateOnMiddle = (str: string, maxLength: number) => {
 export const isInteger = (str: string): boolean =>
   Number.isInteger(parseFloat(str));
 
-export { getEllipsedString, stringToBool, truncateOnMiddle };
+const buildUrl = (hostname: string, path: string): string => {
+  return `${hostname.replace(/\/$/, '')}${path}`;
+};
+
+export { getEllipsedString, stringToBool, truncateOnMiddle, buildUrl };
