@@ -324,6 +324,7 @@ function useCreateEvent() {
         end_time: endDate.toISOString(),
         location_id: null,
         start_time: startDate.toISOString(),
+        title: null,
       }
     );
 
