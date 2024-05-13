@@ -2,18 +2,19 @@ import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import {
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 import DayHeader from './DayHeader';
 import EventCluster from '../EventCluster';
-import { eventCreated } from 'features/events/store';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
 import EventShiftModal from '../EventShiftModal';
@@ -23,13 +24,9 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
-import theme from 'theme';
-import { useRouter } from 'next/router';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import { useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
-import { ZetkinEvent } from 'utils/types/zetkin';
-import { ZetkinEventPostBody } from 'features/events/hooks/useEventMutations';
-import { Event, SplitscreenOutlined } from '@mui/icons-material';
-import { useAppDispatch, useEnv, useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(isoWeek);
 
@@ -41,13 +38,15 @@ export interface CalendarWeekViewProps {
   onClickDay: (date: Date) => void;
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
+  const theme = useTheme();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
   );
-  const createAndNavigate = useCreateEvent();
+  const { orgId, campId } = useNumericRouteParams();
+  const createEvent = useCreateEvent(orgId);
   const focusWeekStartDay =
     dayjs(focusDate).isoWeekday() == 7
       ? dayjs(focusDate).add(-1, 'day')
@@ -57,7 +56,6 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     return focusWeekStartDay.day(weekday + 1).toDate();
   });
 
-  const { orgId, campId } = useNumericRouteParams();
   const eventsByDate = useWeekCalendarEvents({
     campaignId: campId,
     dates: dayDates,
@@ -254,10 +252,13 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                           onClick={async () => {
                             setCreating(true);
                             setGhostAnchorEl(null);
-                            await createAndNavigate(
-                              pendingEvent[0],
-                              pendingEvent[1]
-                            );
+                            await createEvent({
+                              activity_id: null,
+                              end_time: pendingEvent[1].toISOString(),
+                              location_id: null,
+                              start_time: pendingEvent[0].toISOString(),
+                              title: null,
+                            });
                             setPendingEvent(null);
                             setCreating(false);
                           }}
@@ -307,33 +308,3 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
 };
 
 export default CalendarWeekView;
-
-function useCreateEvent() {
-  const env = useEnv();
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { campId, orgId } = useNumericRouteParams();
-
-  async function createAndNavigate(startDate: Date, endDate: Date) {
-    const event = await env.apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
-      campId
-        ? `/api/orgs/${orgId}/campaigns/${campId}/actions`
-        : `/api/orgs/${orgId}/actions`,
-      {
-        activity_id: null,
-        end_time: endDate.toISOString(),
-        location_id: null,
-        start_time: startDate.toISOString(),
-        title: null,
-      }
-    );
-
-    dispatch(eventCreated(event));
-
-    const campaignId = event.campaign?.id ?? 'standalone';
-    const url = `/organize/${orgId}/projects/${campaignId}/events/${event.id}`;
-    router.push(url);
-  }
-
-  return createAndNavigate;
-}
