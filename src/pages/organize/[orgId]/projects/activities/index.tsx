@@ -7,7 +7,7 @@ import FilterActivities from 'features/campaigns/components/ActivityList/FilterA
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useAcitvityList from 'features/campaigns/hooks/useActivityList';
+import useActivityList from 'features/campaigns/hooks/useActivityList';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
@@ -32,7 +32,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const { orgId, campId } = useNumericRouteParams();
-  const activitiesFuture = useAcitvityList(orgId, campId);
+  const activitiesFuture = useActivityList(orgId, campId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
