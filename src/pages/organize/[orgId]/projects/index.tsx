@@ -67,7 +67,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   const sharedSurveys = surveys.filter(
     (survey) =>
       survey.org_access === 'suborgs' &&
-      survey.organization.id === orgId &&
+      survey.organization.id != orgId &&
       !dayjs(survey.expires).isBefore(dayjs(), 'day')
   );
 

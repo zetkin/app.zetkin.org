@@ -24,12 +24,13 @@ const SharedActivitiesLayout: React.FC<SharedActivitiesLayout> = ({
   const sharedSurveys = surveys.filter(
     (survey) =>
       survey.org_access === 'suborgs' &&
-      survey.organization.id === parsedOrgId &&
+      survey.organization.id != parsedOrgId &&
       !dayjs(survey.expires).isBefore(dayjs(), 'day')
   );
 
   return (
     <TabbedLayout
+      alertMsg={<Msg id={messageIds.sharedLayout.alertMsg} />}
       baseHref={`/organize/${orgId}/projects/shared`}
       defaultTab="/"
       subtitle={

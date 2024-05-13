@@ -75,7 +75,7 @@ const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
             (item) =>
               item.kind === 'survey' &&
               item.data.org_access === 'suborgs' &&
-              item.data.organization.id === parsedOrgId
+              item.data.organization.id != parsedOrgId
           );
           if (data.length === 0) {
             return (

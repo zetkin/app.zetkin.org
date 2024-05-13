@@ -33,7 +33,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
       (item) =>
         item.kind === 'survey' &&
         item.data.org_access === 'suborgs' &&
-        item.data.organization.id === orgId
+        item.data.organization.id != orgId
     );
   };
 
