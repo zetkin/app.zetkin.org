@@ -16,19 +16,17 @@ import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 
-const scaffoldOptions = {
-  authLevelRequired: 2,
-  localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
-};
-
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId } = ctx.params!;
-  return {
-    props: {
-      orgId,
-    },
-  };
-}, scaffoldOptions);
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async (ctx) => {
+    const { orgId } = ctx.params!;
+    return {
+      props: {
+        orgId,
+      },
+    };
+  },
+  { authLevelRequired: 2 }
+);
 
 interface SharedActivitiesPageProps {
   orgId: string;

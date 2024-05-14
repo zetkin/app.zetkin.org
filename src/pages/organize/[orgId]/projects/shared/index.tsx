@@ -10,19 +10,19 @@ import SharedActivitiesLayout from 'features/campaigns/layout/SharedActivitiesLa
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 
-const scaffoldOptions = {
-  authLevelRequired: 2,
-  localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
-};
-
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId } = ctx.params!;
-  return {
-    props: {
-      orgId,
-    },
-  };
-}, scaffoldOptions);
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async (ctx) => {
+    const { orgId } = ctx.params!;
+    return {
+      props: {
+        orgId,
+      },
+    };
+  },
+  {
+    authLevelRequired: 2,
+  }
+);
 
 interface SharedSummaryPageProps {
   orgId: string;
