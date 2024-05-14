@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Suspense } from 'react';
@@ -66,9 +65,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   //The shared card is currently only visible when there are shared surveys, but there will be more shared activities in the future.
   const sharedSurveys = surveys.filter(
     (survey) =>
-      survey.org_access === 'suborgs' &&
-      survey.organization.id != orgId &&
-      !dayjs(survey.expires).isBefore(dayjs(), 'day')
+      survey.org_access === 'suborgs' && survey.organization.id != orgId
   );
 
   return (

@@ -77,9 +77,9 @@ const SharedActivitiesPage: PageWithLayout<SharedActivitiesPageProps> = ({
           if (data.length === 0) {
             return (
               <ZUIEmptyState
-                href={`/organize/${orgId}/projects/archive`}
+                href={`/organize/${orgId}/projects/shared/archive`}
                 linkMessage={messages.allProjects.viewArchive()}
-                message={messages.allProjects.noActivities()}
+                message={messages.shared.noActivities()}
               />
             );
           }

@@ -144,6 +144,9 @@ export default makeMessages('feat.campaigns', {
   noManager: m('No Project Manager'),
   shared: {
     cta: m('Go to project'),
+    noActivities: m(
+      'All ongoing activities shared with your organization will appear here.'
+    ),
     noArchives: m(
       'All expired activities that have been shared with your organization will appear here.'
     ),

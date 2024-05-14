@@ -36,19 +36,21 @@ const SharedActivitiesLayout: React.FC<SharedActivitiesLayout> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <Box display="flex" marginX={1}>
-            <ZUIIconLabelRow
-              iconLabels={[
-                {
-                  icon: <AutoAwesomeMotionOutlined />,
-                  label: (
-                    <Msg
-                      id={messageIds.sharedLayout.subtitle}
-                      values={{ numOfActivities: sharedSurveys.length }}
-                    />
-                  ),
-                },
-              ]}
-            />
+            {sharedSurveys.length > 0 && (
+              <ZUIIconLabelRow
+                iconLabels={[
+                  {
+                    icon: <AutoAwesomeMotionOutlined />,
+                    label: (
+                      <Msg
+                        id={messageIds.sharedLayout.subtitle}
+                        values={{ numOfActivities: sharedSurveys.length }}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            )}
           </Box>
         </Box>
       }
