@@ -25,6 +25,29 @@ export default function useConfigure(orgId: number) {
   }
   const countryCode = organization.country as CountryCode;
 
+  const emptyStats = {
+    person: {
+      summary: {
+        addedToOrg: {
+          byOrg: {},
+          total: 0,
+        },
+        created: {
+          total: 0,
+        },
+        tagged: {
+          byTag: {},
+          total: 0,
+        },
+        updated: {
+          byChangedField: {},
+          byInitializedField: {},
+          total: 0,
+        },
+      },
+    },
+  };
+
   return async () => {
     const problems = predictProblems(
       configuredSheet,
@@ -40,28 +63,7 @@ export default function useConfigure(orgId: number) {
       dispatch(
         importPreviewAdd({
           problems: [],
-          stats: {
-            person: {
-              summary: {
-                addedToOrg: {
-                  byOrg: {},
-                  total: 0,
-                },
-                created: {
-                  total: 0,
-                },
-                tagged: {
-                  byTag: {},
-                  total: 0,
-                },
-                updated: {
-                  byChangedField: {},
-                  byInitializedField: {},
-                  total: 0,
-                },
-              },
-            },
-          },
+          stats: emptyStats,
         })
       );
     } else {
@@ -99,28 +101,7 @@ export default function useConfigure(orgId: number) {
             level: 'error',
           },
         ],
-        stats: {
-          person: {
-            summary: {
-              addedToOrg: {
-                byOrg: {},
-                total: 0,
-              },
-              created: {
-                total: 0,
-              },
-              tagged: {
-                byTag: {},
-                total: 0,
-              },
-              updated: {
-                byChangedField: {},
-                byInitializedField: {},
-                total: 0,
-              },
-            },
-          },
-        },
+        stats: emptyStats,
       })
     );
   }
