@@ -86,6 +86,16 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.unconfiguredIdAndName.title()}
       />
     );
+  } else if (problem.kind == ImportProblemKind.UNEXPECTED_ERROR) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.unexpectedError.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        status="error"
+        title={messages.preflight.messages.unexpectedError.title()}
+      />
+    );
   } else if (problem.kind == ImportProblemKind.UNKNOWN_PERSON) {
     return (
       <ImportMessage
