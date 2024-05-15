@@ -13,6 +13,7 @@ import { IDFieldColumn } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useUpdateIdField from 'features/import/hooks/useUpdateIdField';
 
 interface IdConfigProps {
   uiDataColumn: UIDataColumn<IDFieldColumn>;
@@ -20,6 +21,10 @@ interface IdConfigProps {
 
 const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const theme = useTheme();
+  const updateIdField = useUpdateIdField(
+    uiDataColumn.originalColumn,
+    uiDataColumn.columnIndex
+  );
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
@@ -53,7 +58,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                   event.target.value == 'ext_id' ||
                   event.target.value == 'id'
                 ) {
-                  uiDataColumn.updateIdField(event.target.value);
+                  updateIdField(event.target.value);
                 }
               }}
               sx={{ paddingRight: 1 }}
@@ -89,7 +94,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                   event.target.value == 'ext_id' ||
                   (event.target.value == 'id' && !uiDataColumn.wrongIDFormat)
                 ) {
-                  uiDataColumn.updateIdField(event.target.value);
+                  updateIdField(event.target.value);
                 }
               }}
               sx={{ paddingRight: 1 }}

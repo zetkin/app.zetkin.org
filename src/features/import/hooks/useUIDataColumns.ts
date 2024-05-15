@@ -1,8 +1,7 @@
-import { columnUpdate } from '../store';
 import messageIds from '../l10n/messageIds';
+import { useAppSelector } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import { Column, ColumnKind } from '../utils/types';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
@@ -15,7 +14,6 @@ export type UIDataColumn<CType extends Column> = {
   showNeedsConfigMessage: boolean;
   title: string;
   uniqueValues: (string | number)[];
-  updateIdField: (field: 'ext_id' | 'id') => void;
   wrongIDFormat: boolean;
 };
 
@@ -27,7 +25,6 @@ interface UseUIDataColumnsReturn {
 
 export default function useUIDataColumns(): UseUIDataColumnsReturn {
   const messages = useMessages(messageIds);
-  const dispatch = useAppDispatch();
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
 
   const sheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
@@ -120,14 +117,6 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
         });
     }
 
-    const updateIdField = (idField: 'ext_id' | 'id') => {
-      if (originalColumn.kind == ColumnKind.ID_FIELD) {
-        dispatch(
-          columnUpdate([index, { ...originalColumn, idField: idField }])
-        );
-      }
-    };
-
     const valuesAreValidZetkinIDs = cellValues.every((value, index) => {
       if (firstRowIsHeaders && index == 0) {
         return true;
@@ -187,7 +176,6 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
       showNeedsConfigMessage,
       title,
       uniqueValues,
-      updateIdField,
       wrongIDFormat,
     };
   });
