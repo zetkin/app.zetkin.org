@@ -1,9 +1,11 @@
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
+import RolesList from 'features/settings/components/RolesList';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
+import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -19,6 +21,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 const SettingsPage: PageWithLayout = () => {
   const onServer = useServerSide();
+  const { orgId } = useNumericRouteParams();
 
   if (onServer) {
     return null;
@@ -26,7 +29,7 @@ const SettingsPage: PageWithLayout = () => {
 
   return (
     <Box>
-      <h1>Yay!</h1>
+      <RolesList orgId={orgId} />
     </Box>
   );
 };
