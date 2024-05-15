@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
-  columnValuesMessage: string;
   deselectOrg: (value: CellData) => void;
   getSelectedOrgId: (value: CellData) => number | null;
   mappingResultsMessage: string;
@@ -63,70 +62,6 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
     });
 
     const uniqueValues = Array.from(numRowsByUniqueValue.keys());
-
-    let columnValuesMessage = '';
-
-    if (numberOfEmptyRows > 0 && uniqueValues.length == 0) {
-      columnValuesMessage = messages.configuration.mapping.messages.onlyEmpty({
-        numEmpty: numberOfEmptyRows,
-      });
-    } else if (numberOfEmptyRows > 0 && uniqueValues.length == 1) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.oneValueAndEmpty({
-          firstValue: uniqueValues[0],
-          numEmpty: numberOfEmptyRows,
-        });
-    } else if (numberOfEmptyRows > 0 && uniqueValues.length == 2) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.twoValuesAndEmpty({
-          firstValue: uniqueValues[0],
-          numEmpty: numberOfEmptyRows,
-          secondValue: uniqueValues[1],
-        });
-    } else if (numberOfEmptyRows > 0 && uniqueValues.length == 3) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.threeValuesAndEmpty({
-          firstValue: uniqueValues[0],
-          numEmpty: numberOfEmptyRows,
-          secondValue: uniqueValues[1],
-          thirdValue: uniqueValues[2],
-        });
-    } else if (numberOfEmptyRows > 0 && uniqueValues.length > 3) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.manyValuesAndEmpty({
-          firstValue: uniqueValues[0],
-          numEmpty: numberOfEmptyRows,
-          numMoreValues: uniqueValues.length - 3,
-          secondValue: uniqueValues[1],
-          thirdValue: uniqueValues[2],
-        });
-    } else if (numberOfEmptyRows == 0 && uniqueValues.length == 1) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.oneValueNoEmpty({
-          firstValue: uniqueValues[0],
-        });
-    } else if (numberOfEmptyRows == 0 && uniqueValues.length == 2) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.twoValuesNoEmpty({
-          firstValue: uniqueValues[0],
-          secondValue: uniqueValues[1],
-        });
-    } else if (numberOfEmptyRows == 0 && uniqueValues.length == 3) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.threeValuesNoEmpty({
-          firstValue: uniqueValues[0],
-          secondValue: uniqueValues[1],
-          thirdValue: uniqueValues[2],
-        });
-    } else if (numberOfEmptyRows == 0 && uniqueValues.length > 3) {
-      columnValuesMessage =
-        messages.configuration.mapping.messages.manyValuesNoEmpty({
-          firstValue: uniqueValues[0],
-          numMoreValues: uniqueValues.length - 3,
-          secondValue: uniqueValues[1],
-          thirdValue: uniqueValues[2],
-        });
-    }
 
     const valueInFirstRow = cellValues[0];
     const title =
@@ -329,7 +264,6 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
 
     return {
       columnIndex: index,
-      columnValuesMessage,
       deselectOrg,
       getSelectedOrgId,
       mappingResultsMessage,

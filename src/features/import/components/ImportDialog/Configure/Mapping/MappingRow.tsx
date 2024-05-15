@@ -16,6 +16,7 @@ import {
 import messageIds from 'features/import/l10n/messageIds';
 import { Option } from 'features/import/hooks/useColumn';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -40,6 +41,10 @@ const MappingRow: FC<MappingRowProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const columnValuesMessage = useColumnValuesMessage(
+    column.numberOfEmptyRows,
+    column.uniqueValues
+  );
 
   const getValue = () => {
     if (column.originalColumn.kind == ColumnKind.FIELD) {
@@ -209,7 +214,7 @@ const MappingRow: FC<MappingRowProps> = ({
         {column.showColumnValuesMessage && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
             <Typography color="secondary" variant="body2">
-              {column.columnValuesMessage}
+              {columnValuesMessage}
             </Typography>
           </Box>
         )}
