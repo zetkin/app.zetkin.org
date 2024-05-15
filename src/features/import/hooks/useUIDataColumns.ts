@@ -1,18 +1,13 @@
 import { columnUpdate } from '../store';
 import messageIds from '../l10n/messageIds';
-import notEmpty from 'utils/notEmpty';
 import { useMessages } from 'core/i18n';
-import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag } from 'utils/types/zetkin';
-import { CellData, Column, ColumnKind, TagColumn } from '../utils/types';
+import { CellData, Column, ColumnKind } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn<CType extends Column> = {
-  assignTag: (tag: { id: number }, value: CellData) => void;
-  assignTags: (mapping: TagColumn['mapping']) => void;
+  columnIndex: number;
   columnValuesMessage: string;
   deselectOrg: (value: CellData) => void;
-  getAssignedTags: (value: CellData) => ZetkinTag[];
   getSelectedOrgId: (value: CellData) => number | null;
   mappingResultsMessage: string;
   numRowsByUniqueValue: Record<string | number, number>;
@@ -24,7 +19,6 @@ export type UIDataColumn<CType extends Column> = {
   showMappingResultMessage: boolean;
   showNeedsConfigMessage: boolean;
   title: string;
-  unAssignTag: (tagId: number, value: CellData) => void;
   uniqueValues: (string | number)[];
   updateIdField: (field: 'ext_id' | 'id') => void;
   wrongIDFormat: boolean;
@@ -36,13 +30,9 @@ interface UseUIDataColumnsReturn {
   uiDataColumns: UIDataColumn<Column>[];
 }
 
-export default function useUIDataColumns(
-  orgId: number
-): UseUIDataColumnsReturn {
+export default function useUIDataColumns(): UseUIDataColumnsReturn {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
-  const tagsFuture = useTags(orgId);
-  const tags = tagsFuture.data;
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
 
   const sheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
@@ -199,107 +189,6 @@ export default function useUIDataColumns(
         });
     }
 
-    const assignTag = (tag: { id: number }, value: CellData) => {
-      if (originalColumn.kind == ColumnKind.TAG && tags != null) {
-        const map = originalColumn.mapping.find((map) => map.value == value);
-
-        if (!map) {
-          const newMap = {
-            tags: [{ id: tag.id }],
-            value: value,
-          };
-          dispatch(
-            columnUpdate([
-              index,
-              {
-                ...originalColumn,
-                mapping: [...originalColumn.mapping, newMap],
-              },
-            ])
-          );
-        } else {
-          const filteredMapping = originalColumn.mapping.filter(
-            (m) => m.value != value
-          );
-          const updatedTags = map.tags.concat({
-            id: tag.id,
-          });
-          const updatedMap = { ...map, tags: updatedTags };
-
-          dispatch(
-            columnUpdate([
-              index,
-              {
-                ...originalColumn,
-                mapping: filteredMapping.concat(updatedMap),
-              },
-            ])
-          );
-        }
-      }
-    };
-
-    const assignTags = (mapping: TagColumn['mapping']) => {
-      if (originalColumn.kind == ColumnKind.TAG) {
-        dispatch(
-          columnUpdate([
-            index,
-            {
-              ...originalColumn,
-              mapping,
-            },
-          ])
-        );
-      }
-    };
-
-    const unAssignTag = (tagId: number, value: CellData) => {
-      if (originalColumn.kind == ColumnKind.TAG) {
-        const map = originalColumn.mapping.find((map) => map.value == value);
-        if (map) {
-          const filteredMapping = originalColumn.mapping.filter(
-            (m) => m.value != value
-          );
-          const updatedTags = map.tags.filter((t) => t.id != tagId);
-
-          if (updatedTags.length == 0) {
-            dispatch(
-              columnUpdate([
-                index,
-                {
-                  ...originalColumn,
-                  mapping: filteredMapping,
-                },
-              ])
-            );
-          } else {
-            const updatedMap = { ...map, tags: updatedTags };
-
-            dispatch(
-              columnUpdate([
-                index,
-                {
-                  ...originalColumn,
-                  mapping: filteredMapping.concat(updatedMap),
-                },
-              ])
-            );
-          }
-        }
-      }
-    };
-
-    const getAssignedTags = (value: CellData): ZetkinTag[] => {
-      if (originalColumn.kind == ColumnKind.TAG && tags != null) {
-        const map = originalColumn.mapping.find((m) => m.value === value);
-        const assignedTags = map?.tags
-          .map((tag) => tags.find((t) => t.id == tag.id))
-          .filter(notEmpty);
-        return assignedTags || [];
-      }
-      return [];
-    };
-
     const updateIdField = (idField: 'ext_id' | 'id') => {
       if (originalColumn.kind == ColumnKind.ID_FIELD) {
         dispatch(
@@ -439,11 +328,9 @@ export default function useUIDataColumns(
     };
 
     return {
-      assignTag,
-      assignTags,
+      columnIndex: index,
       columnValuesMessage,
       deselectOrg,
-      getAssignedTags,
       getSelectedOrgId,
       mappingResultsMessage,
       numRowsByUniqueValue: Object.fromEntries(numRowsByUniqueValue.entries()),
@@ -455,7 +342,6 @@ export default function useUIDataColumns(
       showMappingResultMessage,
       showNeedsConfigMessage,
       title,
-      unAssignTag,
       uniqueValues,
       updateIdField,
       wrongIDFormat,

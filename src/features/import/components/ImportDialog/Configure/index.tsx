@@ -26,8 +26,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
     number | null
   >(null);
   const { orgId } = useNumericRouteParams();
-  const { forwardMessageDisabled, numRows, uiDataColumns } =
-    useUIDataColumns(orgId);
+  const { forwardMessageDisabled, numRows, uiDataColumns } = useUIDataColumns();
   const getPreflightStats = useConfigure(orgId);
 
   return (

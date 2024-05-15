@@ -6,6 +6,7 @@ import { TagColumn } from 'features/import/utils/types';
 import TagConfigRow from './TagConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import useGuessTags from 'features/import/hooks/useGuessTags';
+import useImportTagging from 'features/import/hooks/useImportTagging';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
@@ -18,6 +19,12 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const guessTags = useGuessTags(orgId, uiDataColumn);
+  const { assignTag, getAssignedTags, unAssignTag } = useImportTagging(
+    orgId,
+    uiDataColumn.originalColumn,
+    uiDataColumn.columnIndex
+  );
+
   return (
     <Box
       display="flex"
@@ -56,14 +63,12 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
         <>
           {index != 0 && <Divider sx={{ marginY: 1 }} />}
           <TagConfigRow
-            assignedTags={uiDataColumn.getAssignedTags(uniqueValue)}
+            assignedTags={getAssignedTags(uniqueValue)}
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onAssignTag={(tag: ZetkinTag) =>
-              uiDataColumn.assignTag({ id: tag.id }, uniqueValue)
+              assignTag({ id: tag.id }, uniqueValue)
             }
-            onUnassignTag={(tag: ZetkinTag) =>
-              uiDataColumn.unAssignTag(tag.id, uniqueValue)
-            }
+            onUnassignTag={(tag: ZetkinTag) => unAssignTag(tag.id, uniqueValue)}
             title={uniqueValue.toString()}
           />
         </>
@@ -72,15 +77,11 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
         <>
           <Divider sx={{ marginY: 1 }} />
           <TagConfigRow
-            assignedTags={uiDataColumn.getAssignedTags(null)}
+            assignedTags={getAssignedTags(null)}
             italic
             numRows={uiDataColumn.numberOfEmptyRows}
-            onAssignTag={(tag: ZetkinTag) =>
-              uiDataColumn.assignTag({ id: tag.id }, null)
-            }
-            onUnassignTag={(tag: ZetkinTag) =>
-              uiDataColumn.unAssignTag(tag.id, null)
-            }
+            onAssignTag={(tag: ZetkinTag) => assignTag({ id: tag.id }, null)}
+            onUnassignTag={(tag: ZetkinTag) => unAssignTag(tag.id, null)}
             title={messages.configuration.configure.tags.empty()}
           />
         </>
