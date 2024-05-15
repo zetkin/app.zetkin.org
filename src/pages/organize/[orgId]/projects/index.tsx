@@ -10,7 +10,7 @@ import CampaignCard from 'features/campaigns/components/CampaignCard';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SharedCard from 'features/surveys/components/SharedCard';
+import SharedCard from 'features/campaigns/components/SharedCard';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
