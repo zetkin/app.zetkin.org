@@ -1,19 +1,15 @@
 import { columnUpdate } from '../store';
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import { CellData, Column, ColumnKind } from '../utils/types';
+import { Column, ColumnKind } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
-  deselectOrg: (value: CellData) => void;
-  getSelectedOrgId: (value: CellData) => number | null;
   mappingResultsMessage: string;
   numRowsByUniqueValue: Record<string | number, number>;
   numberOfEmptyRows: number;
   originalColumn: CType;
-  selectOrg: (orgId: number, value: CellData) => void;
-  selectOrgs: (mapping: { orgId: number; value: CellData }[]) => void;
   showColumnValuesMessage: boolean;
   showMappingResultMessage: boolean;
   showNeedsConfigMessage: boolean;
@@ -180,98 +176,12 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
       wrongIDFormat;
     const showMappingResultMessage = needsConfig && !showNeedsConfigMessage;
 
-    const getSelectedOrgId = (value: CellData) => {
-      if (originalColumn.kind == ColumnKind.ORGANIZATION) {
-        const map = originalColumn.mapping.find((m) => m.value === value);
-        return map?.orgId || null;
-      }
-      return null;
-    };
-
-    const selectOrg = (orgId: number, value: CellData) => {
-      if (originalColumn.kind == ColumnKind.ORGANIZATION) {
-        // Check if there is already a map for this row value to an org ID
-        const map = originalColumn.mapping.find((map) => map.value == value);
-        // If no map for that value
-        if (!map) {
-          const newMap = { orgId: orgId, value: value };
-          dispatch(
-            // Add value to mapping for the column
-            columnUpdate([
-              index,
-              {
-                ...originalColumn,
-                mapping: [...originalColumn.mapping, newMap],
-              },
-            ])
-          );
-        } else {
-          // If there is already a map, replace it
-          // Find mappings that are not for this row value
-          const filteredMapping = originalColumn.mapping.filter(
-            (m) => m.value != value
-          );
-          // New orgId for that row value
-          const updatedMap = { ...map, orgId: orgId };
-
-          dispatch(
-            columnUpdate([
-              index,
-              {
-                ...originalColumn,
-                mapping: filteredMapping.concat(updatedMap), // Add the new mapping along side existing ones
-              },
-            ])
-          );
-        }
-      }
-    };
-
-    const selectOrgs = (mapping: { orgId: number; value: CellData }[]) => {
-      if (originalColumn.kind == ColumnKind.ORGANIZATION) {
-        dispatch(
-          columnUpdate([
-            index,
-            {
-              ...originalColumn,
-              mapping,
-            },
-          ])
-        );
-      }
-    };
-
-    const deselectOrg = (value: CellData) => {
-      if (originalColumn.kind == ColumnKind.ORGANIZATION) {
-        const map = originalColumn.mapping.find((map) => map.value == value);
-        if (map) {
-          const filteredMapping = originalColumn.mapping.filter(
-            (m) => m.value != value
-          );
-
-          dispatch(
-            columnUpdate([
-              index,
-              {
-                ...originalColumn,
-                mapping: filteredMapping,
-              },
-            ])
-          );
-        }
-      }
-    };
-
     return {
       columnIndex: index,
-      deselectOrg,
-      getSelectedOrgId,
       mappingResultsMessage,
       numRowsByUniqueValue: Object.fromEntries(numRowsByUniqueValue.entries()),
       numberOfEmptyRows,
       originalColumn,
-      selectOrg,
-      selectOrgs,
       showColumnValuesMessage,
       showMappingResultMessage,
       showNeedsConfigMessage,

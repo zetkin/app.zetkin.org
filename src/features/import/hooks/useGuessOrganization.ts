@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 
 import { UIDataColumn } from './useUIDataColumns';
+import useOrgMapping from './useOrgMapping';
 import { ZetkinSubOrganization } from 'utils/types/zetkin';
 import { CellData, OrgColumn } from '../utils/types';
 
@@ -10,6 +11,10 @@ const useGuessOrganization = (
   orgs: ZetkinSubOrganization[],
   uiDataColumn: UIDataColumn<OrgColumn>
 ) => {
+  const { selectOrgs } = useOrgMapping(
+    uiDataColumn.originalColumn,
+    uiDataColumn.columnIndex
+  );
   const fuse = new Fuse(orgs, {
     includeScore: true,
     keys: ['title'],
@@ -42,7 +47,7 @@ const useGuessOrganization = (
       []
     );
 
-    uiDataColumn.selectOrgs(matchedRows);
+    selectOrgs(matchedRows);
   };
 
   return guessOrgs;
