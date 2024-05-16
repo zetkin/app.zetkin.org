@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import { Box, Typography } from '@mui/material';
+import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
+import { Box, Button, FormControl, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from 'features/settings/l10n/messageIds';
@@ -7,8 +8,10 @@ import { PageWithLayout } from 'utils/types';
 import RoleAddPersonButton from 'features/settings/components/RoleAddPersonButton';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import useRoles from 'features/settings/hooks/useRoles';
+import useRolesMutations from 'features/settings/hooks/useRolesMutations';
 import useServerSide from 'core/useServerSide';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -30,6 +33,9 @@ const SettingsPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const roles = useRoles(orgId).data || [];
   const messages = useMessages(messageIds);
+  const { demoteAdmin, promoteOrganizer, removeAccess } =
+    useRolesMutations(orgId);
+  const user = useCurrentUser();
 
   if (onServer) {
     return null;
@@ -72,6 +78,68 @@ const SettingsPage: PageWithLayout = () => {
       ),
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
+    },
+    {
+      align: 'right',
+      disableColumnMenu: true,
+      field: 'cancel',
+      flex: 1,
+      headerName: '',
+      minWidth: 300,
+      renderCell: (params) => {
+        if (params.row.id === user?.id) {
+          return <Typography>{messages.you()}</Typography>;
+        } else if (params.row.role === 'admin') {
+          return (
+            <FormControl
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 2,
+                justifyContent: 'flex-end',
+              }}
+            >
+              <Button onClick={() => demoteAdmin(params.row.id)} size="small">
+                <ArrowDownward />
+                {messages.tableButtons.demote()}
+              </Button>
+              <Button
+                onClick={() => removeAccess(params.row.id)}
+                size="small"
+                variant="outlined"
+              >
+                {messages.tableButtons.remove()}
+              </Button>
+            </FormControl>
+          );
+        } else {
+          return (
+            <FormControl
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 2,
+                justifyContent: 'flex-end',
+              }}
+            >
+              <Button
+                onClick={() => promoteOrganizer(params.row.id)}
+                size="small"
+              >
+                <ArrowUpward />
+                {messages.tableButtons.promote()}
+              </Button>
+              <Button
+                onClick={() => removeAccess(params.row.id)}
+                size="small"
+                variant="outlined"
+              >
+                {messages.tableButtons.remove()}
+              </Button>
+            </FormControl>
+          );
+        }
+      },
     },
   ];
 
