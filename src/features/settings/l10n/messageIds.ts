@@ -11,6 +11,16 @@ export default makeMessages('feat.settings', {
     ),
     title: m('Administrators'),
   },
+  organizers: {
+    columns: {
+      inheritance: m('Role inheritance'),
+      name: m('Name'),
+    },
+    description: m(
+      'Organizers have enough privileges to do things like organizing campaigns and managing existing call assignments.'
+    ),
+    title: m('Organizers'),
+  },
   save: m('Save'),
   settingsLayout: {
     access: m('Access'),
