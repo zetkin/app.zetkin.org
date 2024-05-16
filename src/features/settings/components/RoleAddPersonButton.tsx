@@ -4,26 +4,28 @@ import { useState } from 'react';
 import { Box, Button, Popover } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
-import useRoles from '../hooks/useRoles';
+import useRolesMutations from '../hooks/useRolesMutations';
 import { ZetkinOfficial } from 'utils/types/zetkin';
-import zuiMessageIds from 'zui/l10n/messageIds';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';
 
 interface RoleAddPersonButtonProps {
   orgId: number;
   disabledList: ZetkinOfficial[];
+  roleType: 'admin' | 'organizer';
 }
 
 const RoleAddPersonButton = ({
   disabledList,
   orgId,
+  roleType,
 }: RoleAddPersonButtonProps) => {
+  const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-  const zuiMessages = useMessages(zuiMessageIds);
-  const rolesFuture = useRoles(orgId);
+  const addAdmin = roleType === 'admin';
+  const { promoteOrganizer, demoteAdmin } = useRolesMutations(orgId);
   const getOptionExtraLabel = (personId: number) => {
-    if (data.some((participant) => participant.id === personId)) {
+    if (disabledList.some((person) => person.id === personId)) {
       return (
         <Box
           sx={{
@@ -33,24 +35,10 @@ const RoleAddPersonButton = ({
           }}
         >
           <People sx={{ fontSize: '1.3rem', mr: 1 }} />
-          <Msg id={messageIds.addPerson.status.booked} />
+          <Msg id={messageIds.addPerson.alreadyInList} />
         </Box>
       );
     }
-    // if (respondents.some((respondent) => respondent.id === personId)) {
-    //   return (
-    //     <Box
-    //       sx={{
-    //         color: '#A8A8A8',
-    //         display: 'flex',
-    //         fontSize: '0.9rem',
-    //       }}
-    //     >
-    //       <EmojiPeople sx={{ fontSize: '1.3rem', mr: 1 }} />
-    //       <Msg id={messageIds.addPerson.status.signedUp} />
-    //     </Box>
-    //   );
-    // }
     return '';
   };
   return (
@@ -91,6 +79,7 @@ const RoleAddPersonButton = ({
       >
         <Box mt={1} p={2}>
           <ZUIPersonSelect
+            disabled
             getOptionDisabled={(option) =>
               disabledList.some((participant) => participant.id == option.id)
             }
@@ -99,12 +88,14 @@ const RoleAddPersonButton = ({
             }}
             name="person"
             onChange={(person) => {
-              // addParticipant(person.id);
+              addAdmin ? promoteOrganizer(person.id) : demoteAdmin(person.id);
             }}
-            placeholder={'place'}
+            placeholder={messages.addPerson.placeholder({
+              list: addAdmin
+                ? messages.addPerson.administrators()
+                : messages.addPerson.organizers(),
+            })}
             selectedPerson={null}
-            submitLabel={zuiMessages.createPerson.submitLabel.add()}
-            title={zuiMessages.createPerson.title.participant()}
             variant="outlined"
           />
         </Box>

@@ -2,7 +2,11 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.settings', {
   addPerson: {
+    administrators: m('administrators'),
+    alreadyInList: m('Already in list'),
     button: m('Add person'),
+    organizers: m('organizers'),
+    placeholder: m<{ list: string }>('Type to add person to {list}'),
   },
   administrators: {
     columns: {

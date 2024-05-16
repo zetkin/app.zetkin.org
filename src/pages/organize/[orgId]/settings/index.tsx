@@ -157,9 +157,13 @@ const SettingsPage: PageWithLayout = () => {
         <Typography variant="h4">
           <Msg id={messageIds.administrators.title} />
         </Typography>
-        <RoleAddPersonButton disabledList={adminRoles} />
+        <RoleAddPersonButton
+          disabledList={adminRoles}
+          orgId={orgId}
+          roleType="admin"
+        />
       </Box>
-      <Typography mb={2} variant="body1">
+      <Typography mb={2} variant="body2">
         <Msg id={messageIds.administrators.description} />
       </Typography>
       <DataGridPro
@@ -168,22 +172,25 @@ const SettingsPage: PageWithLayout = () => {
         columns={columns}
         rows={adminRoles}
       />
-
       <Box
         alignItems="center"
         display="flex"
         justifyContent="space-between"
         sx={{
           marginBottom: '15px',
-          marginTop: '15px',
+          marginTop: '40px',
         }}
       >
         <Typography variant="h4">
           <Msg id={messageIds.organizers.title} />
         </Typography>
-        <RoleAddPersonButton />
+        <RoleAddPersonButton
+          disabledList={organizersRoles}
+          orgId={orgId}
+          roleType="organizer"
+        />
       </Box>
-      <Typography mb={2} variant="body1">
+      <Typography mb={2} variant="body2">
         <Msg id={messageIds.organizers.description} />
       </Typography>
       <DataGridPro
