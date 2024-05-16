@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
-import RolesList from 'features/settings/components/RolesList';
 import { PageWithLayout } from 'utils/types';
+import RolesList from 'features/settings/components/RolesList';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
