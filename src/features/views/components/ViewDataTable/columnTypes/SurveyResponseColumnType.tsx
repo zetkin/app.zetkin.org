@@ -67,7 +67,7 @@ const useStyles = makeStyles({
 });
 
 const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
-  const { orgId } = useRouter().query;
+  const { orgId, surveyId } = useRouter().query;
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
@@ -99,6 +99,7 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
                   <SurveySubmissionPane
                     id={id}
                     orgId={parseInt(orgId as string)}
+                    surveyId={parseInt(surveyId as string)}
                   />
                 );
               },

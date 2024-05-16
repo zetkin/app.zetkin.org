@@ -18,6 +18,7 @@ import messageIds from '../l10n/messageIds';
 interface SurveySubmissionPaneProps {
   orgId: number;
   id: number;
+  surveyId: number;
 }
 
 const useStyles = makeStyles({
@@ -57,10 +58,14 @@ const useStyles = makeStyles({
   },
 });
 
-const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
+const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({
+  orgId,
+  id,
+  surveyId,
+}) => {
   const styles = useStyles();
 
-  const subFuture = useHydratedSurveySubmission(orgId, id);
+  const subFuture = useHydratedSurveySubmission(orgId, surveyId, id);
 
   return (
     <ZUIFuture future={subFuture}>

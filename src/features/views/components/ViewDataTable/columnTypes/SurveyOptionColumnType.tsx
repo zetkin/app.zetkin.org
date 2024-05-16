@@ -48,7 +48,7 @@ export default class SurveyOptionColumnType
 const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
-  const { orgId } = useRouter().query;
+  const { orgId, surveyId } = useRouter().query;
 
   if (!cell?.length) {
     return null;
@@ -94,6 +94,7 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
                 <SurveySubmissionPane
                   id={id}
                   orgId={parseInt(orgId as string)}
+                  surveyId={parseInt(surveyId as string)}
                 />
               );
             },
