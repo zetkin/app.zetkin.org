@@ -4,6 +4,7 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from 'features/settings/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
+import RoleAddPersonButton from 'features/settings/components/RoleAddPersonButton';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
@@ -77,17 +78,18 @@ const SettingsPage: PageWithLayout = () => {
   return (
     <Box>
       <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
           marginBottom: '15px',
           marginTop: '15px',
         }}
       >
-        <Typography mr={2} variant="h4">
+        <Typography variant="h4">
           <Msg id={messageIds.administrators.title} />
         </Typography>
+        <RoleAddPersonButton />
       </Box>
       <Typography mb={2} variant="body1">
         <Msg id={messageIds.administrators.description} />
@@ -98,18 +100,20 @@ const SettingsPage: PageWithLayout = () => {
         columns={columns}
         rows={adminRoles}
       />
+
       <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
           marginBottom: '15px',
           marginTop: '15px',
         }}
       >
-        <Typography mr={2} variant="h4">
+        <Typography variant="h4">
           <Msg id={messageIds.organizers.title} />
         </Typography>
+        <RoleAddPersonButton />
       </Box>
       <Typography mb={2} variant="body1">
         <Msg id={messageIds.organizers.description} />
