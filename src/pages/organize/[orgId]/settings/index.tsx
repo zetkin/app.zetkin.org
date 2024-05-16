@@ -89,7 +89,7 @@ const SettingsPage: PageWithLayout = () => {
         <Typography variant="h4">
           <Msg id={messageIds.administrators.title} />
         </Typography>
-        <RoleAddPersonButton />
+        <RoleAddPersonButton disabledList={adminRoles} />
       </Box>
       <Typography mb={2} variant="body1">
         <Msg id={messageIds.administrators.description} />

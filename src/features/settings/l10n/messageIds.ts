@@ -1,6 +1,9 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.settings', {
+  addPerson: {
+    button: m('Add person'),
+  },
   administrators: {
     columns: {
       inheritance: m('Role inheritance'),
