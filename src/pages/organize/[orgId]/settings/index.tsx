@@ -108,11 +108,11 @@ const SettingsPage: PageWithLayout = () => {
         }}
       >
         <Typography mr={2} variant="h4">
-          <Msg id={messageIds.administrators.title} />
+          <Msg id={messageIds.organizers.title} />
         </Typography>
       </Box>
       <Typography mb={2} variant="body1">
-        <Msg id={messageIds.administrators.description} />
+        <Msg id={messageIds.organizers.description} />
       </Typography>
       <DataGridPro
         autoHeight
