@@ -15,12 +15,10 @@ type RolesListProps = {
 
 const RolesList: FC<RolesListProps> = ({ orgId }) => {
   const messages = useMessages(messageIds);
-  const roles = useRoles(orgId);
+  const roles = useRoles(orgId).data || [];
 
-  const adminRoles = roles?.data?.filter((user) => user.role === 'admin');
-  const organizersRoles = roles?.data?.filter(
-    (user) => user.role === 'organizer'
-  );
+  const adminRoles = roles.filter((user) => user.role === 'admin');
+  const organizersRoles = roles.filter((user) => user.role === 'organizer');
 
   const columnsAdmin: GridColDef[] = [
     {
