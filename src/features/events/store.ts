@@ -120,7 +120,6 @@ const eventsSlice = createSlice({
 
       if (eventListItem) {
         eventListItem.deleted = true;
-        state.eventList.isStale = true;
       }
 
       for (const date in state.eventsByDate) {
@@ -130,7 +129,6 @@ const eventsSlice = createSlice({
 
         if (item) {
           item.deleted = true;
-          state.eventsByDate[date].isStale = true;
         }
       }
 
@@ -141,7 +139,6 @@ const eventsSlice = createSlice({
 
         if (item) {
           item.deleted = true;
-          state.eventsByCampaignId[campaignId].isStale = true;
         }
       }
     },
