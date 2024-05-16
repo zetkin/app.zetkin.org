@@ -8,7 +8,7 @@ import { ZetkinOfficial } from 'utils/types/zetkin';
 type RolesTableProps = {
   columns: GridColDef[];
   description: string;
-  rows: ZetkinOfficial[] | undefined;
+  rows: ZetkinOfficial[];
   title: string;
 };
 
@@ -22,7 +22,6 @@ const RolesTable: FC<RolesTableProps> = ({
     <>
       <Box
         sx={{
-          '& div': { backgroundColor: 'transparent' },
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'row',
@@ -41,7 +40,7 @@ const RolesTable: FC<RolesTableProps> = ({
         autoHeight
         checkboxSelection={false}
         columns={columns}
-        rows={rows ?? []}
+        rows={rows}
       />
     </>
   );
