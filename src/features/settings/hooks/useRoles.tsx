@@ -10,7 +10,7 @@ export default function useRoles(orgId: number) {
 
   return loadListIfNecessary(rolesList, dispatch, {
     actionOnLoad: () => rolesLoad(),
-    actionOnSuccess: (data) => rolesLoaded(data),
+    actionOnSuccess: (data: ZetkinOfficial[]) => rolesLoaded(data),
     loader: () =>
       apiClient.get<ZetkinOfficial[]>(`/api/orgs/${orgId}/officials`),
   });
