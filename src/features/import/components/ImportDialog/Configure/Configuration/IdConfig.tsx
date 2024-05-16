@@ -12,7 +12,7 @@ import {
 import { IDFieldColumn } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useUpdateIdField from 'features/import/hooks/useUpdateIdField';
 
 interface IdConfigProps {

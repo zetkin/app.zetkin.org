@@ -15,14 +15,14 @@ import {
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Option } from 'features/import/hooks/useColumn';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
+import useUIDataColumn from 'features/import/hooks/useUIDataColumn';
 import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingRowProps {
   clearConfiguration: () => void;
-  column: UIDataColumn<Column>;
+  columnIndex: number;
   fieldOptions: Option[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
@@ -32,7 +32,7 @@ interface MappingRowProps {
 
 const MappingRow: FC<MappingRowProps> = ({
   clearConfiguration,
-  column,
+  columnIndex,
   fieldOptions,
   isBeingConfigured,
   onChange,
@@ -41,6 +41,8 @@ const MappingRow: FC<MappingRowProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const column = useUIDataColumn(columnIndex);
+
   const columnValuesMessage = useColumnValuesMessage(
     column.numberOfEmptyRows,
     column.uniqueValues

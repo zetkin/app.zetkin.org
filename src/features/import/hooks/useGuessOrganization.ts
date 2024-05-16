@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js';
 
-import { UIDataColumn } from './useUIDataColumns';
+import { UIDataColumn } from './useUIDataColumn';
 import useOrgMapping from './useOrgMapping';
 import { ZetkinSubOrganization } from 'utils/types/zetkin';
 import { CellData, OrgColumn } from '../utils/types';

@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { CompareArrows } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
@@ -13,6 +14,7 @@ import useConfigure from 'features/import/hooks/useConfigure';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
 
 interface ConfigureProps {
   onClose: () => void;
@@ -26,7 +28,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
     number | null
   >(null);
   const { orgId } = useNumericRouteParams();
-  const { forwardMessageDisabled, numRows, uiDataColumns } = useUIDataColumns();
+  const { forwardMessageDisabled, numColumns, numRows } = useUIDataColumns();
   const getPreflightStats = useConfigure(orgId);
 
   return (
@@ -45,20 +47,32 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
           <Mapping
             clearConfiguration={() => setColumnIndexBeingConfigured(null)}
             columnIndexBeingConfigured={columnIndexBeingConfigured}
-            columns={uiDataColumns}
+            numberOfColumns={numColumns}
             onConfigureStart={(columnIndex: number) =>
               setColumnIndexBeingConfigured(columnIndex)
             }
           />
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
-          <Configuration
-            uiDataColumn={
-              typeof columnIndexBeingConfigured == 'number'
-                ? uiDataColumns[columnIndexBeingConfigured]
-                : null
-            }
-          />
+          {columnIndexBeingConfigured !== null && (
+            <Configuration
+              columnIndexBeingConfigured={columnIndexBeingConfigured}
+            />
+          )}
+          {columnIndexBeingConfigured === null && (
+            <Box
+              alignItems="center"
+              display="flex"
+              height="100%"
+              justifyContent="center"
+              sx={{ opacity: '50%' }}
+            >
+              <ZUIEmptyState
+                message={messages.configuration.mapping.emptyStateMessage()}
+                renderIcon={(props) => <CompareArrows {...props} />}
+              />
+            </Box>
+          )}
         </Box>
       </Box>
       <Preview />

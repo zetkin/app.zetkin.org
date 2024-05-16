@@ -4,7 +4,7 @@ import { Box, Button, Divider, Typography } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import { TagColumn } from 'features/import/utils/types';
 import TagConfigRow from './TagConfigRow';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useGuessTags from 'features/import/hooks/useGuessTags';
 import useImportTagging from 'features/import/hooks/useImportTagging';
 import { useNumericRouteParams } from 'core/hooks';

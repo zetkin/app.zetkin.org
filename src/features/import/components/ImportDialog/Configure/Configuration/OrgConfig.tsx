@@ -4,7 +4,7 @@ import { Box, Button, Divider, Typography } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import { OrgColumn } from 'features/import/utils/types';
 import OrgConfigRow from './OrgConfigRow';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useGuessOrganization from 'features/import/hooks/useGuessOrganization';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrgMapping from 'features/import/hooks/useOrgMapping';

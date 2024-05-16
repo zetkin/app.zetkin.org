@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js';
 
-import { UIDataColumn } from './useUIDataColumns';
+import { UIDataColumn } from './useUIDataColumn';
 import useImportTagging from './useImportTagging';
 import useTags from 'features/tags/hooks/useTags';
 import { CellData, TagColumn } from '../utils/types';
