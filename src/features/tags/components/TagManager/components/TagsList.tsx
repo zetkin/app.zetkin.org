@@ -1,13 +1,12 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { ZetkinTag } from 'utils/types/zetkin';
 import { Box, Theme, Typography } from '@mui/material';
 
 import { groupTags } from '../utils';
-import TagChip from './TagChip';
-
 import messageIds from '../../../l10n/messageIds';
+import TagChip from './TagChip';
 import { useMessages } from 'core/i18n';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 interface StyleProps {
   clickable: boolean;
