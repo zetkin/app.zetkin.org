@@ -1,6 +1,6 @@
 import { ZetkinOfficial } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteList, RemoteList } from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface RolesStoreSlice {
   rolesList: RemoteList<ZetkinOfficial>;
@@ -14,6 +14,37 @@ const RolesSlice = createSlice({
   initialState,
   name: 'roles',
   reducers: {
+    accessDeleted: (state, action: PayloadAction<number>) => {
+      const officialId = action.payload;
+      state.rolesList.items = state.rolesList.items.filter(
+        (user) => user.id !== officialId
+      );
+    },
+    adminDemoted: (state, action: PayloadAction<[number, ZetkinOfficial]>) => {
+      const [userId, user] = action.payload;
+      const item = state.rolesList.items.find((item) => item.id === userId);
+
+      if (item) {
+        item.data = { ...item.data, ...user };
+        item.mutating = [];
+      } else {
+        state.rolesList.items.push(remoteItem(userId, { data: user }));
+      }
+    },
+    organizerPromoted: (
+      state,
+      action: PayloadAction<[number, ZetkinOfficial]>
+    ) => {
+      const [userId, user] = action.payload;
+      const item = state.rolesList.items.find((item) => item.id === userId);
+
+      if (item) {
+        item.data = { ...item.data, ...user };
+        item.mutating = [];
+      } else {
+        state.rolesList.items.push(remoteItem(userId, { data: user }));
+      }
+    },
     rolesLoad: (state) => {
       state.rolesList.isLoading = true;
     },
@@ -28,4 +59,10 @@ const RolesSlice = createSlice({
 });
 
 export default RolesSlice;
-export const { rolesLoaded, rolesLoad } = RolesSlice.actions;
+export const {
+  accessDeleted,
+  adminDemoted,
+  organizerPromoted,
+  rolesLoaded,
+  rolesLoad,
+} = RolesSlice.actions;

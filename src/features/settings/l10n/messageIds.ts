@@ -26,4 +26,10 @@ export default makeMessages('feat.settings', {
     access: m('Access'),
     title: m('Settings'),
   },
+  tableButtons: {
+    demote: m('Demote'),
+    promote: m('Promote'),
+    remove: m('Remove'),
+  },
+  you: m('You'),
 });
