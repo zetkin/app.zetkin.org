@@ -131,6 +131,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       checkboxSelection={false}
       columns={columns}
       rows={officialList}
+      sx={{ backgroundColor: 'white' }}
     />
   );
 };
