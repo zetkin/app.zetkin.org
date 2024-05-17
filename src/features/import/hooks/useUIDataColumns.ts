@@ -1,9 +1,9 @@
-import { ColumnKind } from '../utils/types';
+import hasUnfinishedMapping from '../utils/hasUnfinishedMapping';
 import hasWrongIDFormat from '../utils/hasWrongIDFormat';
 import { useAppSelector } from 'core/hooks';
 
 interface UseUIDataColumnsReturn {
-  forwardMessageDisabled: boolean;
+  configIsIncomplete: boolean;
   numColumns: number;
   numRows: number;
 }
@@ -27,22 +27,7 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
       firstRowIsHeaders
     );
 
-    const showTagsConfigMessage =
-      originalColumn.kind == ColumnKind.TAG &&
-      originalColumn.mapping.length == 0;
-    const showOrgConfigMessage =
-      originalColumn.kind == ColumnKind.ORGANIZATION &&
-      originalColumn.mapping.length == 0;
-    const showIdConfigMessage =
-      originalColumn.kind == ColumnKind.ID_FIELD &&
-      originalColumn.idField == null;
-
-    if (
-      showTagsConfigMessage ||
-      showOrgConfigMessage ||
-      showIdConfigMessage ||
-      wrongIDFormat
-    ) {
+    if (hasUnfinishedMapping(originalColumn) || wrongIDFormat) {
       unfinishedMapping = true;
     }
   });
@@ -51,13 +36,9 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
     (column) => column.selected == false
   );
 
-  const forwardMessageDisabled = noSelectedColumns || unfinishedMapping;
-
-  const numRows = firstRowIsHeaders ? rows.length - 1 : rows.length;
-
   return {
-    forwardMessageDisabled,
+    configIsIncomplete: noSelectedColumns || unfinishedMapping,
     numColumns: originalColumns.length,
-    numRows,
+    numRows: firstRowIsHeaders ? rows.length - 1 : rows.length,
   };
 }

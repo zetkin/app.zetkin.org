@@ -224,13 +224,13 @@ const MappingRow: FC<MappingRowProps> = ({
           <>
             <Typography
               color={
-                column.configIsIncomplete
+                column.unfinishedMapping
                   ? theme.palette.warning.main
                   : 'secondary'
               }
               variant="body2"
             >
-              {column.configIsIncomplete && (
+              {column.unfinishedMapping && (
                 <Msg
                   id={
                     column.originalColumn.kind == ColumnKind.ID_FIELD
@@ -239,7 +239,7 @@ const MappingRow: FC<MappingRowProps> = ({
                   }
                 />
               )}
-              {!column.configIsIncomplete && column.mappingResultsMessage}
+              {!column.unfinishedMapping && column.mappingResultsMessage}
             </Typography>
             <Button
               endIcon={<ChevronRight />}

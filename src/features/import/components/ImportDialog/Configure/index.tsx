@@ -28,7 +28,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
     number | null
   >(null);
   const { orgId } = useNumericRouteParams();
-  const { forwardMessageDisabled, numColumns, numRows } = useUIDataColumns();
+  const { configIsIncomplete, numColumns, numRows } = useUIDataColumns();
   const getPreflightStats = useConfigure(orgId);
 
   return (
@@ -84,11 +84,11 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
           onValidate();
         }}
         onClickSecondary={onRestart}
-        primaryButtonDisabled={forwardMessageDisabled}
+        primaryButtonDisabled={configIsIncomplete}
         primaryButtonMsg={messages.actionButtons.validate()}
         secondaryButtonMsg={messages.actionButtons.restart()}
         statusMessage={
-          forwardMessageDisabled
+          configIsIncomplete
             ? messages.configuration.statusMessage.notDone()
             : messages.configuration.statusMessage.done({
                 numConfiguredPeople: numRows,

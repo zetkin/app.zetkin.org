@@ -1,3 +1,4 @@
+import hasUnfinishedMapping from '../utils/hasUnfinishedMapping';
 import hasWrongIDFormat from '../utils/hasWrongIDFormat';
 import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';
@@ -6,13 +7,13 @@ import { Column, ColumnKind } from '../utils/types';
 
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
-  configIsIncomplete: boolean;
   mappingResultsMessage: string;
   needsConfig: boolean;
   numRowsByUniqueValue: Record<string | number, number>;
   numberOfEmptyRows: number;
   originalColumn: CType;
   title: string;
+  unfinishedMapping: boolean;
   uniqueValues: (string | number)[];
   wrongIDFormat: boolean;
 };
@@ -102,34 +103,24 @@ export default function useUIDataColumn(
       });
   }
 
-  const wrongIDFormat = hasWrongIDFormat(column, cellValues, firstRowIsHeaders);
-
   const isConfigurable = [
     ColumnKind.ID_FIELD,
     ColumnKind.ORGANIZATION,
     ColumnKind.TAG,
   ].includes(column.kind);
 
-  const unfinishedTagConfig =
-    column.kind == ColumnKind.TAG && column.mapping.length == 0;
-  const unfinishedOrgConfig =
-    column.kind == ColumnKind.ORGANIZATION && column.mapping.length == 0;
-  const unfinishedIdConfig =
-    (column.kind == ColumnKind.ID_FIELD && column.idField == null) ||
-    wrongIDFormat;
-
-  const configIsIncomplete =
-    unfinishedTagConfig || unfinishedOrgConfig || unfinishedIdConfig;
+  const wrongIDFormat = hasWrongIDFormat(column, cellValues, firstRowIsHeaders);
+  const unfinishedMapping = hasUnfinishedMapping(column);
 
   return {
     columnIndex,
-    configIsIncomplete,
     mappingResultsMessage,
     needsConfig: column.selected && isConfigurable,
     numRowsByUniqueValue: Object.fromEntries(numRowsByUniqueValue.entries()),
     numberOfEmptyRows,
     originalColumn: column,
     title,
+    unfinishedMapping,
     uniqueValues: Array.from(numRowsByUniqueValue.keys()),
     wrongIDFormat,
   };
