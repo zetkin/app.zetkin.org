@@ -5,6 +5,7 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from 'features/settings/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
+import RoleAddPersonButton from 'features/settings/components/RoleAddPersonButton';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
@@ -145,19 +146,24 @@ const SettingsPage: PageWithLayout = () => {
   return (
     <Box>
       <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
           marginBottom: '15px',
           marginTop: '15px',
         }}
       >
-        <Typography mr={2} variant="h4">
+        <Typography variant="h4">
           <Msg id={messageIds.administrators.title} />
         </Typography>
+        <RoleAddPersonButton
+          disabledList={adminRoles}
+          orgId={orgId}
+          roleType="admin"
+        />
       </Box>
-      <Typography mb={2} variant="body1">
+      <Typography mb={2} variant="body2">
         <Msg id={messageIds.administrators.description} />
       </Typography>
       <DataGridPro
@@ -167,19 +173,24 @@ const SettingsPage: PageWithLayout = () => {
         rows={adminRoles}
       />
       <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
           marginBottom: '15px',
-          marginTop: '15px',
+          marginTop: '40px',
         }}
       >
-        <Typography mr={2} variant="h4">
+        <Typography variant="h4">
           <Msg id={messageIds.organizers.title} />
         </Typography>
+        <RoleAddPersonButton
+          disabledList={organizersRoles}
+          orgId={orgId}
+          roleType="organizer"
+        />
       </Box>
-      <Typography mb={2} variant="body1">
+      <Typography mb={2} variant="body2">
         <Msg id={messageIds.organizers.description} />
       </Typography>
       <DataGridPro
