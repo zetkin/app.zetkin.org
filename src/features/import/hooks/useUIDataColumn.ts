@@ -5,13 +5,12 @@ import { Column, ColumnKind } from '../utils/types';
 
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
+  configIsIncomplete: boolean;
   mappingResultsMessage: string;
+  needsConfig: boolean;
   numRowsByUniqueValue: Record<string | number, number>;
   numberOfEmptyRows: number;
   originalColumn: CType;
-  showColumnValuesMessage: boolean;
-  showMappingResultMessage: boolean;
-  showNeedsConfigMessage: boolean;
   title: string;
   uniqueValues: (string | number)[];
   wrongIDFormat: boolean;
@@ -48,8 +47,6 @@ export default function useUIDataColumn(
       numberOfEmptyRows++;
     }
   });
-
-  const uniqueValues = Array.from(numRowsByUniqueValue.keys());
 
   const valueInFirstRow = cellValues[0];
   const title =
@@ -104,12 +101,6 @@ export default function useUIDataColumn(
       });
   }
 
-  const isConfigurable = [
-    ColumnKind.ID_FIELD,
-    ColumnKind.ORGANIZATION,
-    ColumnKind.TAG,
-  ].includes(column.kind);
-
   const valuesAreValidZetkinIDs = cellValues.every((value, index) => {
     if (firstRowIsHeaders && index == 0) {
       return true;
@@ -133,34 +124,33 @@ export default function useUIDataColumn(
     column.kind == ColumnKind.ID_FIELD &&
     column.idField == 'id';
 
-  const needsConfig = column.selected && isConfigurable;
-  const showColumnValuesMessage = !needsConfig;
+  const isConfigurable = [
+    ColumnKind.ID_FIELD,
+    ColumnKind.ORGANIZATION,
+    ColumnKind.TAG,
+  ].includes(column.kind);
 
-  const showTagsConfigMessage =
+  const unfinishedTagConfig =
     column.kind == ColumnKind.TAG && column.mapping.length == 0;
-  const showOrgConfigMessage =
+  const unfinishedOrgConfig =
     column.kind == ColumnKind.ORGANIZATION && column.mapping.length == 0;
-  const showIdConfigMessage =
-    column.kind == ColumnKind.ID_FIELD && column.idField == null;
-
-  const showNeedsConfigMessage =
-    showTagsConfigMessage ||
-    showOrgConfigMessage ||
-    showIdConfigMessage ||
+  const unfinishedIdConfig =
+    (column.kind == ColumnKind.ID_FIELD && column.idField == null) ||
     wrongIDFormat;
-  const showMappingResultMessage = needsConfig && !showNeedsConfigMessage;
+
+  const configIsIncomplete =
+    unfinishedTagConfig || unfinishedOrgConfig || unfinishedIdConfig;
 
   return {
     columnIndex,
+    configIsIncomplete,
     mappingResultsMessage,
+    needsConfig: column.selected && isConfigurable,
     numRowsByUniqueValue: Object.fromEntries(numRowsByUniqueValue.entries()),
     numberOfEmptyRows,
     originalColumn: column,
-    showColumnValuesMessage,
-    showMappingResultMessage,
-    showNeedsConfigMessage,
     title,
-    uniqueValues,
+    uniqueValues: Array.from(numRowsByUniqueValue.keys()),
     wrongIDFormat,
   };
 }

@@ -213,49 +213,48 @@ const MappingRow: FC<MappingRowProps> = ({
         marginLeft={5.5}
         minHeight="40px"
       >
-        {column.showColumnValuesMessage && (
+        {!column.needsConfig && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
             <Typography color="secondary" variant="body2">
               {columnValuesMessage}
             </Typography>
           </Box>
         )}
-        <Typography
-          color={
-            column.showNeedsConfigMessage
-              ? theme.palette.warning.main
-              : 'secondary'
-          }
-          variant="body2"
-        >
-          {column.showNeedsConfigMessage &&
-            !column.showMappingResultMessage && (
+        {column.needsConfig && (
+          <>
+            <Typography
+              color={
+                column.configIsIncomplete
+                  ? theme.palette.warning.main
+                  : 'secondary'
+              }
+              variant="body2"
+            >
+              {column.configIsIncomplete && (
+                <Msg
+                  id={
+                    column.originalColumn.kind == ColumnKind.ID_FIELD
+                      ? messageIds.configuration.mapping.needsConfig
+                      : messageIds.configuration.mapping.needsMapping
+                  }
+                />
+              )}
+              {!column.configIsIncomplete && column.mappingResultsMessage}
+            </Typography>
+            <Button
+              endIcon={<ChevronRight />}
+              onClick={() => onConfigureStart()}
+              variant="text"
+            >
               <Msg
                 id={
                   column.originalColumn.kind == ColumnKind.ID_FIELD
-                    ? messageIds.configuration.mapping.needsConfig
-                    : messageIds.configuration.mapping.needsMapping
+                    ? messageIds.configuration.mapping.configButton
+                    : messageIds.configuration.mapping.mapValuesButton
                 }
               />
-            )}
-          {column.showMappingResultMessage &&
-            !column.showNeedsConfigMessage &&
-            column.mappingResultsMessage}
-        </Typography>
-        {(column.showNeedsConfigMessage || column.showMappingResultMessage) && (
-          <Button
-            endIcon={<ChevronRight />}
-            onClick={() => onConfigureStart()}
-            variant="text"
-          >
-            <Msg
-              id={
-                column.originalColumn.kind == ColumnKind.ID_FIELD
-                  ? messageIds.configuration.mapping.configButton
-                  : messageIds.configuration.mapping.mapValuesButton
-              }
-            />
-          </Button>
+            </Button>
+          </>
         )}
       </Box>
     </Box>
