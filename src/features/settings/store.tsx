@@ -20,7 +20,7 @@ const RolesSlice = createSlice({
         (user) => user.id !== officialId
       );
     },
-    adminDemoted: (state, action: PayloadAction<[number, ZetkinOfficial]>) => {
+    adminAdded: (state, action: PayloadAction<[number, ZetkinOfficial]>) => {
       const [userId, user] = action.payload;
       const item = state.rolesList.items.find((item) => item.id === userId);
 
@@ -31,7 +31,7 @@ const RolesSlice = createSlice({
         state.rolesList.items.push(remoteItem(userId, { data: user }));
       }
     },
-    organizerPromoted: (
+    organizerAdded: (
       state,
       action: PayloadAction<[number, ZetkinOfficial]>
     ) => {
@@ -61,8 +61,8 @@ const RolesSlice = createSlice({
 export default RolesSlice;
 export const {
   accessDeleted,
-  adminDemoted,
-  organizerPromoted,
+  adminAdded,
+  organizerAdded,
   rolesLoaded,
   rolesLoad,
 } = RolesSlice.actions;
