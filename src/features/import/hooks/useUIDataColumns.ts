@@ -1,4 +1,5 @@
 import { ColumnKind } from '../utils/types';
+import hasWrongIDFormat from '../utils/hasWrongIDFormat';
 import { useAppSelector } from 'core/hooks';
 
 interface UseUIDataColumnsReturn {
@@ -20,29 +21,12 @@ export default function useUIDataColumns(): UseUIDataColumnsReturn {
 
   originalColumns.forEach((originalColumn, index) => {
     const cellValues = rows.map((row) => row.data[index]);
+    const wrongIDFormat = hasWrongIDFormat(
+      originalColumn,
+      cellValues,
+      firstRowIsHeaders
+    );
 
-    const valuesAreValidZetkinIDs = cellValues.every((value, index) => {
-      if (firstRowIsHeaders && index == 0) {
-        return true;
-      }
-
-      if (!value) {
-        return false;
-      }
-      const stringValue = value.toString();
-      const parsedToNumber = Number(stringValue);
-
-      if (isNaN(parsedToNumber)) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-
-    const wrongIDFormat =
-      !valuesAreValidZetkinIDs &&
-      originalColumn.kind == ColumnKind.ID_FIELD &&
-      originalColumn.idField == 'id';
     const showTagsConfigMessage =
       originalColumn.kind == ColumnKind.TAG &&
       originalColumn.mapping.length == 0;

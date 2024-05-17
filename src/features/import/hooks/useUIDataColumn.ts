@@ -1,3 +1,4 @@
+import hasWrongIDFormat from '../utils/hasWrongIDFormat';
 import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';
 import { useMessages } from 'core/i18n';
@@ -101,28 +102,7 @@ export default function useUIDataColumn(
       });
   }
 
-  const valuesAreValidZetkinIDs = cellValues.every((value, index) => {
-    if (firstRowIsHeaders && index == 0) {
-      return true;
-    }
-
-    if (!value) {
-      return false;
-    }
-    const stringValue = value.toString();
-    const parsedToNumber = Number(stringValue);
-
-    if (isNaN(parsedToNumber)) {
-      return false;
-    } else {
-      return true;
-    }
-  });
-
-  const wrongIDFormat =
-    !valuesAreValidZetkinIDs &&
-    column.kind == ColumnKind.ID_FIELD &&
-    column.idField == 'id';
+  const wrongIDFormat = hasWrongIDFormat(column, cellValues, firstRowIsHeaders);
 
   const isConfigurable = [
     ColumnKind.ID_FIELD,
