@@ -20,7 +20,7 @@ import {
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
-  submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
+  submissionList: RemoteList<ZetkinSurveySubmission>;
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
   surveyIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
   surveyList: RemoteList<ZetkinSurvey>;
@@ -30,7 +30,7 @@ export interface SurveysStoreSlice {
 const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
   statsBySurveyId: {},
-  submissionsBySurveyId: {},
+  submissionList: remoteList(),
   surveyIdsByCampaignId: {},
   surveyList: remoteList(),
   surveysWithElementsList: remoteList(),
@@ -207,28 +207,20 @@ const surveysSlice = createSlice({
       state.statsBySurveyId[surveyId].loaded = new Date().toISOString();
       state.statsBySurveyId[surveyId].isStale = false;
     },
-    submissionLoad: (state, action: PayloadAction<[number, number]>) => {
-      const [surveyId, submissionId] = action.payload;
-      if (!state.submissionsBySurveyId[surveyId]) {
-        state.submissionsBySurveyId[surveyId] = remoteList();
-      }
-      const item = state.submissionsBySurveyId[surveyId].items.find(
-        (item) => item.id == submissionId
-      );
-      state.submissionsBySurveyId[surveyId].items = state.submissionsBySurveyId[
-        surveyId
-      ].items
-        .filter((item) => item.id != submissionId)
-        .concat([
-          remoteItem(submissionId, { data: item?.data, isLoading: true }),
-        ]);
+    submissionLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.submissionList.items.find((item) => item.id == id);
+      state.submissionList.items = state.submissionList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     submissionLoaded: (
       state,
       action: PayloadAction<ZetkinSurveySubmission>
     ) => {
+      // TODO: Segregate submission content from submission list
       const submission = action.payload;
-      const item = state.submissionsBySurveyId[submission.survey.id].items.find(
+      const item = state.submissionList.items.find(
         (item) => item.id == submission.id
       );
       if (!item) {
@@ -280,10 +272,10 @@ const surveysSlice = createSlice({
     },
     surveySubmissionUpdate: (
       state,
-      action: PayloadAction<[number, number, string[]]>
+      action: PayloadAction<[number, string[]]>
     ) => {
-      const [surveyId, submissionId, mutating] = action.payload;
-      const item = state.submissionsBySurveyId[surveyId].items.find(
+      const [submissionId, mutating] = action.payload;
+      const item = state.submissionList.items.find(
         (item) => item.id == submissionId
       );
       if (item) {
@@ -295,7 +287,7 @@ const surveysSlice = createSlice({
       action: PayloadAction<ZetkinSurveySubmission>
     ) => {
       const submission = action.payload;
-      const item = state.submissionsBySurveyId[submission.survey.id].items.find(
+      const item = state.submissionList.items.find(
         (item) => item.id == submission.id
       );
       if (item) {
@@ -316,19 +308,17 @@ const surveysSlice = createSlice({
     },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
-      const surveyId = action.payload;
-      if (!state.submissionsBySurveyId[surveyId]) {
-        state.submissionsBySurveyId[surveyId] = remoteList();
-      }
-      state.submissionsBySurveyId[surveyId].isLoading = true;
+      // TODO: Segregate submissions by survey ID
+      state.submissionList.isLoading = true;
     },
     surveySubmissionsLoaded: (
       state,
       action: PayloadAction<[number, ZetkinSurveySubmission[]]>
     ) => {
-      const [surveyId, submissions] = action.payload;
-      state.submissionsBySurveyId[surveyId] = remoteList(submissions);
-      state.submissionsBySurveyId[surveyId].loaded = new Date().toISOString();
+      // TODO: Segregate submissions by survey ID
+      const [, submissions] = action.payload;
+      state.submissionList = remoteList(submissions);
+      state.submissionList.loaded = new Date().toISOString();
     },
     surveyUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [surveyId, mutating] = action.payload;

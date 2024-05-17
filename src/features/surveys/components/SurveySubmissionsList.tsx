@@ -27,7 +27,7 @@ const SurveySubmissionsList = ({
   submissions: ZetkinSurveySubmission[];
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId, surveyId } = useRouter().query;
+  const { orgId } = useRouter().query;
   const { openPane } = usePanes();
 
   const sortedSubmissions = useMemo(() => {
@@ -174,8 +174,8 @@ const SurveySubmissionsList = ({
     row: ZetkinSurveySubmission;
   }> = ({ row }) => {
     const api = useGridApiContext();
-    const { orgId, surveyId } = useNumericRouteParams();
-    const { setRespondentId } = useSurveySubmission(orgId, surveyId, row.id);
+    const { orgId } = useNumericRouteParams();
+    const { setRespondentId } = useSurveySubmission(orgId, row.id);
 
     const emailOrName =
       row.respondent?.email ||
@@ -234,7 +234,6 @@ const SurveySubmissionsList = ({
                   <SurveySubmissionPane
                     id={params.row.id}
                     orgId={parseInt(orgId as string)}
-                    surveyId={parseInt(surveyId as string)}
                   />
                 );
               },

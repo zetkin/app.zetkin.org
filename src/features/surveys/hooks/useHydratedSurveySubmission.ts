@@ -61,12 +61,11 @@ export interface HydratedSurveySubmission {
 
 export default function useHydratedSurveySubmission(
   orgId: number,
-  surveyId: number,
   submissionId: number
 ): IFuture<HydratedSurveySubmission> {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
-  const submissionFuture = useSurveySubmission(orgId, surveyId, submissionId);
+  const submissionFuture = useSurveySubmission(orgId, submissionId);
   const surveysSlice = useAppSelector((state) => state.surveys);
 
   if (!submissionFuture.data) {
@@ -74,6 +73,7 @@ export default function useHydratedSurveySubmission(
   }
 
   const submission = submissionFuture.data;
+  const surveyId = submission.survey.id;
   const elementsList = surveysSlice.elementsBySurveyId[surveyId];
 
   const surveyElementsFuture = loadListIfNecessary<

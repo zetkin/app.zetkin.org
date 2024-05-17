@@ -18,20 +18,17 @@ type UseSurveySubmissionReturn = IFuture<ZetkinSurveySubmission> & {
 
 export default function useSurveySubmission(
   orgId: number,
-  surveyId: number,
   submissionId: number
 ): UseSurveySubmissionReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
   const submissionItem = useAppSelector((state) =>
-    state.surveys.submissionsBySurveyId[surveyId].items.find(
-      (item) => item.id == submissionId
-    )
+    state.surveys.submissionList.items.find((item) => item.id == submissionId)
   );
 
   const future = loadItemIfNecessary(submissionItem, dispatch, {
-    actionOnLoad: () => submissionLoad([surveyId, submissionId]),
+    actionOnLoad: () => submissionLoad(submissionId),
     actionOnSuccess: (data) => submissionLoaded(data),
     loader: () =>
       apiClient.get(`/api/orgs/${orgId}/survey_submissions/${submissionId}`),
@@ -40,9 +37,7 @@ export default function useSurveySubmission(
   return {
     ...futureToObject(future),
     setRespondentId(id) {
-      dispatch(
-        surveySubmissionUpdate([surveyId, submissionId, ['respondent_id']])
-      );
+      dispatch(surveySubmissionUpdate([submissionId, ['respondent_id']]));
       apiClient
         .patch<ZetkinSurveySubmission, ZetkinSurveySubmissionPatchBody>(
           `/api/orgs/${orgId}/survey_submissions/${submissionId}`,

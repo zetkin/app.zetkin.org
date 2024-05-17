@@ -50,7 +50,7 @@ export default class SurveySubmittedColumnType
 }
 
 const Cell: FC<{ cell: SurveySubmittedViewCell | undefined }> = ({ cell }) => {
-  const { orgId, surveyId } = useRouter().query;
+  const { orgId } = useRouter().query;
   const { openPane } = usePanes();
 
   if (!cell?.length) {
@@ -83,7 +83,6 @@ const Cell: FC<{ cell: SurveySubmittedViewCell | undefined }> = ({ cell }) => {
                 <SurveySubmissionPane
                   id={sorted[0].submission_id}
                   orgId={parseInt(orgId as string)}
-                  surveyId={parseInt(surveyId as string)}
                 />
               );
             },

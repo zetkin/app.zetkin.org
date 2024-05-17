@@ -11,7 +11,7 @@ export default function useSurveySubmissions(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const submissionList = useAppSelector(
-    (state) => state.surveys.submissionsBySurveyId[surveyId]
+    (state) => state.surveys.submissionList
   );
 
   return loadListIfNecessary(submissionList, dispatch, {
