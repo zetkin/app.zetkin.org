@@ -23,7 +23,7 @@ const RoleAddPersonButton = ({
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const addAdmin = roleType === 'admin';
-  const { promoteOrganizer, demoteAdmin } = useRolesMutations(orgId);
+  const { addToAdmin, addToOrganizer } = useRolesMutations(orgId);
   const getOptionExtraLabel = (personId: number) => {
     if (disabledList.some((person) => person.id === personId)) {
       return (
@@ -53,7 +53,6 @@ const RoleAddPersonButton = ({
       >
         <Msg id={messageIds.addPerson.button} />
       </Button>
-
       <Popover
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -81,14 +80,14 @@ const RoleAddPersonButton = ({
           <ZUIPersonSelect
             disabled
             getOptionDisabled={(option) =>
-              disabledList.some((participant) => participant.id == option.id)
+              disabledList.some((person) => person.id == option.id)
             }
             getOptionExtraLabel={(option) => {
               return getOptionExtraLabel(option.id);
             }}
             name="person"
             onChange={(person) => {
-              addAdmin ? promoteOrganizer(person.id) : demoteAdmin(person.id);
+              addAdmin ? addToAdmin(person.id) : addToOrganizer(person.id);
             }}
             placeholder={messages.addPerson.placeholder({
               list: addAdmin

@@ -33,8 +33,7 @@ const SettingsPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const roles = useRoles(orgId).data || [];
   const messages = useMessages(messageIds);
-  const { demoteAdmin, promoteOrganizer, removeAccess } =
-    useRolesMutations(orgId);
+  const { addToAdmin, addToOrganizer, removeAccess } = useRolesMutations(orgId);
   const user = useCurrentUser();
 
   if (onServer) {
@@ -99,7 +98,10 @@ const SettingsPage: PageWithLayout = () => {
                 justifyContent: 'flex-end',
               }}
             >
-              <Button onClick={() => demoteAdmin(params.row.id)} size="small">
+              <Button
+                onClick={() => addToOrganizer(params.row.id)}
+                size="small"
+              >
                 <ArrowDownward />
                 {messages.tableButtons.demote()}
               </Button>
@@ -123,10 +125,10 @@ const SettingsPage: PageWithLayout = () => {
               }}
             >
               <Button
-                onClick={() => promoteOrganizer(params.row.id)}
+                onClick={() => addToAdmin(params.row.id)}
                 size="small"
+                startIcon={<ArrowUpward />}
               >
-                <ArrowUpward />
                 {messages.tableButtons.promote()}
               </Button>
               <Button
