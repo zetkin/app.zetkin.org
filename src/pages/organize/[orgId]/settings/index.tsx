@@ -1,21 +1,16 @@
 import { GetServerSideProps } from 'next';
-import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
-import { Box, Button, FormControl, Typography } from '@mui/material';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { Box, Typography } from '@mui/material';
 
 import messageIds from 'features/settings/l10n/messageIds';
+import { Msg } from 'core/i18n';
+import OfficialList from 'features/settings/components/OfficialList';
 import { PageWithLayout } from 'utils/types';
 import RoleAddPersonButton from 'features/settings/components/RoleAddPersonButton';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import useRoles from 'features/settings/hooks/useRoles';
-import useRolesMutations from 'features/settings/hooks/useRolesMutations';
 import useServerSide from 'core/useServerSide';
-import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import { Msg, useMessages } from 'core/i18n';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -32,118 +27,12 @@ const SettingsPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const roles = useRoles(orgId).data || [];
-  const messages = useMessages(messageIds);
-  const { addToAdmin, addToOrganizer, removeAccess } = useRolesMutations(orgId);
-  const user = useCurrentUser();
 
   if (onServer) {
     return null;
   }
   const adminRoles = roles.filter((user) => user.role === 'admin');
   const organizersRoles = roles.filter((user) => user.role === 'organizer');
-
-  const columns: GridColDef[] = [
-    {
-      align: 'left',
-      disableColumnMenu: true,
-      field: 'avatar',
-      headerName: messages.administrators.columns.name(),
-      hideSortIcons: true,
-      minWidth: 250,
-      renderCell: (params) => (
-        <ZUIPersonHoverCard personId={params.row.id}>
-          <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
-          <Typography
-            sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
-          >
-            {params.row.first_name + ' ' + params.row.last_name}
-          </Typography>
-        </ZUIPersonHoverCard>
-      ),
-      resizable: true,
-      sortable: false,
-    },
-    {
-      disableColumnMenu: true,
-      field: 'role',
-      flex: 1,
-      headerName: messages.administrators.columns.inheritance(),
-      renderCell: (params) => (
-        <Typography
-          sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
-        >
-          {params.row.role}
-        </Typography>
-      ),
-      resizable: false,
-      sortingOrder: ['asc', 'desc', null],
-    },
-    {
-      align: 'right',
-      disableColumnMenu: true,
-      field: 'cancel',
-      flex: 1,
-      headerName: '',
-      minWidth: 300,
-      renderCell: (params) => {
-        if (params.row.id === user?.id) {
-          return <Typography>{messages.you()}</Typography>;
-        } else if (params.row.role === 'admin') {
-          return (
-            <FormControl
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 2,
-                justifyContent: 'flex-end',
-              }}
-            >
-              <Button
-                onClick={() => addToOrganizer(params.row.id)}
-                size="small"
-              >
-                <ArrowDownward />
-                {messages.tableButtons.demote()}
-              </Button>
-              <Button
-                onClick={() => removeAccess(params.row.id)}
-                size="small"
-                variant="outlined"
-              >
-                {messages.tableButtons.remove()}
-              </Button>
-            </FormControl>
-          );
-        } else {
-          return (
-            <FormControl
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 2,
-                justifyContent: 'flex-end',
-              }}
-            >
-              <Button
-                onClick={() => addToAdmin(params.row.id)}
-                size="small"
-                startIcon={<ArrowUpward />}
-              >
-                {messages.tableButtons.promote()}
-              </Button>
-              <Button
-                onClick={() => removeAccess(params.row.id)}
-                size="small"
-                variant="outlined"
-              >
-                {messages.tableButtons.remove()}
-              </Button>
-            </FormControl>
-          );
-        }
-      },
-    },
-  ];
 
   return (
     <Box>
@@ -168,12 +57,7 @@ const SettingsPage: PageWithLayout = () => {
       <Typography mb={2} variant="body2">
         <Msg id={messageIds.administrators.description} />
       </Typography>
-      <DataGridPro
-        autoHeight
-        checkboxSelection={false}
-        columns={columns}
-        rows={adminRoles}
-      />
+      <OfficialList officialList={adminRoles} orgId={orgId} />
       <Box
         alignItems="center"
         display="flex"
@@ -195,12 +79,7 @@ const SettingsPage: PageWithLayout = () => {
       <Typography mb={2} variant="body2">
         <Msg id={messageIds.organizers.description} />
       </Typography>
-      <DataGridPro
-        autoHeight
-        checkboxSelection={false}
-        columns={columns}
-        rows={organizersRoles}
-      />
+      <OfficialList officialList={organizersRoles} orgId={orgId} />
     </Box>
   );
 };
