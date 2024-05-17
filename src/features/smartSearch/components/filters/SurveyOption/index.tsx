@@ -6,6 +6,7 @@ import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CONDITION_OPERATOR,
@@ -262,9 +263,11 @@ const SurveyOption = ({
                       <Msg
                         id={localMessageIds.questionSelect.question}
                         values={{
-                          question:
+                          question: truncateOnMiddle(
                             validQuestions.find((q) => q.id === value)?.question
                               .question ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -279,7 +282,16 @@ const SurveyOption = ({
                 )}
                 {validQuestions.map((q) => (
                   <MenuItem key={q.id} value={q.id}>
-                    {q.question.question}
+                    <Tooltip
+                      placement="right-start"
+                      title={
+                        q.question.question.length >= 40
+                          ? q.question.question
+                          : ''
+                      }
+                    >
+                      <Box>{truncateOnMiddle(q.question.question, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -295,8 +307,10 @@ const SurveyOption = ({
                       <Msg
                         id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle:
+                          surveyTitle: truncateOnMiddle(
                             surveys.find((s) => s.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -311,7 +325,12 @@ const SurveyOption = ({
                 )}
                 {surveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {s.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={s.title.length >= 40 ? s.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
