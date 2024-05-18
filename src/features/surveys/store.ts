@@ -21,6 +21,7 @@ import {
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
   submissionList: RemoteList<ZetkinSurveySubmission>;
+  submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
   surveyIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
   surveyList: RemoteList<ZetkinSurvey>;
@@ -31,6 +32,7 @@ const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
   statsBySurveyId: {},
   submissionList: remoteList(),
+  submissionsBySurveyId: {},
   surveyIdsByCampaignId: {},
   surveyList: remoteList(),
   surveysWithElementsList: remoteList(),
@@ -226,7 +228,8 @@ const surveysSlice = createSlice({
       if (!item) {
         throw new Error('Finished loading item that never started loading');
       }
-
+      addSubmissionToState(state, [submission]);
+      state.submissionsBySurveyId[submission.survey.id].isLoading = false;
       item.data = submission;
       item.isLoading = false;
       item.loaded = new Date().toISOString();
@@ -308,17 +311,19 @@ const surveysSlice = createSlice({
     },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
-      // TODO: Segregate submissions by survey ID
+      state.submissionsBySurveyId[action.payload] = remoteList();
+      state.submissionsBySurveyId[action.payload].isLoading = true;
       state.submissionList.isLoading = true;
     },
     surveySubmissionsLoaded: (
       state,
       action: PayloadAction<[number, ZetkinSurveySubmission[]]>
     ) => {
-      // TODO: Segregate submissions by survey ID
-      const [, submissions] = action.payload;
-      state.submissionList = remoteList(submissions);
+      const [surveyId, submissions] = action.payload;
+      addSubmissionToState(state, submissions);
       state.submissionList.loaded = new Date().toISOString();
+      state.submissionsBySurveyId[surveyId].isLoading = false;
+      state.submissionsBySurveyId[surveyId].loaded = new Date().toISOString();
     },
     surveyUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [surveyId, mutating] = action.payload;
@@ -347,6 +352,39 @@ const surveysSlice = createSlice({
     },
   },
 });
+
+function addSubmissionToState(
+  state: SurveysStoreSlice,
+  submissions: ZetkinSurveySubmission[]
+) {
+  submissions.forEach((submission) => {
+    const submissionListItem = state.submissionList.items.find(
+      (item) => item.id == submission.id
+    );
+    const submissionBySurveyId = state.submissionsBySurveyId[
+      submission.survey.id
+    ].items.find((item) => item.id == submission.id);
+
+    if (submissionListItem) {
+      submissionListItem.data = { ...submissionListItem.data, ...submission };
+    } else {
+      state.submissionList.items.push(
+        remoteItem(submission.id, { data: submission })
+      );
+    }
+
+    if (submissionBySurveyId) {
+      submissionBySurveyId.data = {
+        ...submissionBySurveyId.data,
+        ...submission,
+      };
+    } else {
+      state.submissionsBySurveyId[submission.survey.id].items.push(
+        remoteItem(submission.id, { data: submission })
+      );
+    }
+  });
+}
 
 export default surveysSlice;
 export const {
