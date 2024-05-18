@@ -363,7 +363,7 @@ function addSubmissionToState(
     );
     const submissionBySurveyId = state.submissionsBySurveyId[
       submission.survey.id
-    ].items.find((item) => item.id == submission.id);
+    ]?.items.find((item) => item.id == submission.id);
 
     if (submissionListItem) {
       submissionListItem.data = { ...submissionListItem.data, ...submission };
@@ -379,6 +379,9 @@ function addSubmissionToState(
         ...submission,
       };
     } else {
+      if (!state.submissionsBySurveyId[submission.survey.id]) {
+        state.submissionsBySurveyId[submission.survey.id] = remoteList();
+      }
       state.submissionsBySurveyId[submission.survey.id].items.push(
         remoteItem(submission.id, { data: submission })
       );
