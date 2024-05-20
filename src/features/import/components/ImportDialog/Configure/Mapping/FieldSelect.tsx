@@ -99,6 +99,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
             kind: ColumnKind.DATE,
             selected: true,
           });
+          onConfigureStart();
         }
       }}
       sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}

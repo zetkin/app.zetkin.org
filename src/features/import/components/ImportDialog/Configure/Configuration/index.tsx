@@ -45,6 +45,11 @@ const Configuration: FC<ConfigurationProps> = ({
         uiDataColumn.originalColumn.kind == ColumnKind.ORGANIZATION && (
           <OrgConfig uiDataColumn={uiDataColumn as UIDataColumn<OrgColumn>} />
         )}
+      {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.DATE && (
+        <Box display="flex" justifyContent="center">
+          You will configure the date format here
+        </Box>
+      )}
     </Box>
   );
 };
