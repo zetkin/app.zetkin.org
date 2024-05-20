@@ -31,6 +31,10 @@ const FieldSelect: FC<FieldSelectProps> = ({
       return `field:${column.originalColumn.field}`;
     }
 
+    if (column.originalColumn.kind == ColumnKind.DATE) {
+      return `date:${column.originalColumn.field}`;
+    }
+
     if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
       return column.originalColumn.kind.toString();
     }
@@ -86,6 +90,12 @@ const FieldSelect: FC<FieldSelectProps> = ({
           onChange({
             field: event.target.value.slice(6),
             kind: ColumnKind.FIELD,
+            selected: true,
+          });
+        } else if (event.target.value.startsWith('date')) {
+          onChange({
+            field: event.target.value.slice(5),
+            kind: ColumnKind.DATE,
             selected: true,
           });
         }

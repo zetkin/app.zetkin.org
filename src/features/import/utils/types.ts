@@ -21,6 +21,7 @@ export type Row = {
 
 export enum ColumnKind {
   FIELD = 'field',
+  DATE = 'date',
   ID_FIELD = 'id',
   TAG = 'tag',
   ORGANIZATION = 'org',
@@ -38,6 +39,11 @@ type UnknownColumn = BaseColumn & {
 export type FieldColumn = BaseColumn & {
   field: string;
   kind: ColumnKind.FIELD;
+};
+
+export type DateColumn = BaseColumn & {
+  field: string;
+  kind: ColumnKind.DATE;
 };
 
 export type IDFieldColumn = BaseColumn & {
@@ -64,6 +70,7 @@ export type OrgColumn = BaseColumn & {
 export type Column =
   | UnknownColumn
   | FieldColumn
+  | DateColumn
   | IDFieldColumn
   | TagColumn
   | OrgColumn;

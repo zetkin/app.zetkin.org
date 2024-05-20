@@ -17,6 +17,11 @@ export default function hasUnfinishedMapping(column: Column) {
     return column.mapping.length === 0;
   }
 
+  if (column.kind === ColumnKind.DATE) {
+    //TODO: This needs to actually do something when the shape of the mapping is decided
+    return false;
+  }
+
   //Column kind must be ORGANIZATION
   return column.mapping.length === 0;
 }
