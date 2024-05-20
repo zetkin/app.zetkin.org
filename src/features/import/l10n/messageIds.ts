@@ -125,11 +125,15 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
-      needsConfig: m('You need to configure the IDs'),
-      needsMapping: m('You need to map values'),
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
       tags: m('Tags'),
+      unfinished: {
+        date: m('You need to configure date format'),
+        id: m('You need to configure the IDs'),
+        org: m('You need to map values'),
+        tag: m('You need to map values'),
+      },
       zetkinFieldGroups: {
         fields: m('Fields'),
         id: m('ID'),

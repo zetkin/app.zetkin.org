@@ -16,7 +16,20 @@ import { Msg } from 'core/i18n';
 import { Option } from 'features/import/hooks/useColumn';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import useUIDataColumn from 'features/import/hooks/useUIDataColumn';
-import { Column, ColumnKind } from 'features/import/utils/types';
+import {
+  Column,
+  ColumnKind,
+  ConfigurableColumn,
+} from 'features/import/utils/types';
+
+const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
+  return [
+    ColumnKind.ID_FIELD,
+    ColumnKind.ORGANIZATION,
+    ColumnKind.TAG,
+    ColumnKind.DATE,
+  ].includes(column.kind);
+};
 
 interface MappingRowProps {
   clearConfiguration: () => void;
@@ -117,14 +130,14 @@ const MappingRow: FC<MappingRowProps> = ({
         marginLeft={5.5}
         minHeight="40px"
       >
-        {!column.needsConfig && (
+        {!isConfigurableColumn(column.originalColumn) && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
             <Typography color="secondary" variant="body2">
               {columnValuesMessage}
             </Typography>
           </Box>
         )}
-        {column.needsConfig && (
+        {isConfigurableColumn(column.originalColumn) && (
           <>
             <Typography
               color={
@@ -137,9 +150,9 @@ const MappingRow: FC<MappingRowProps> = ({
               {column.unfinishedMapping && (
                 <Msg
                   id={
-                    column.originalColumn.kind == ColumnKind.ID_FIELD
-                      ? messageIds.configuration.mapping.needsConfig
-                      : messageIds.configuration.mapping.needsMapping
+                    messageIds.configuration.mapping.unfinished[
+                      column.originalColumn.kind
+                    ]
                   }
                 />
               )}
@@ -152,7 +165,8 @@ const MappingRow: FC<MappingRowProps> = ({
             >
               <Msg
                 id={
-                  column.originalColumn.kind == ColumnKind.ID_FIELD
+                  column.originalColumn.kind == ColumnKind.ID_FIELD ||
+                  column.originalColumn.kind == ColumnKind.DATE
                     ? messageIds.configuration.mapping.configButton
                     : messageIds.configuration.mapping.mapValuesButton
                 }

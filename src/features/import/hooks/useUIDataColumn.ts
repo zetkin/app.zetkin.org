@@ -8,7 +8,6 @@ import { Column, ColumnKind } from '../utils/types';
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
   mappingResultsMessage: string;
-  needsConfig: boolean;
   numRowsByUniqueValue: Record<string | number, number>;
   numberOfEmptyRows: number;
   originalColumn: CType;
@@ -103,19 +102,12 @@ export default function useUIDataColumn(
       });
   }
 
-  const isConfigurable = [
-    ColumnKind.ID_FIELD,
-    ColumnKind.ORGANIZATION,
-    ColumnKind.TAG,
-  ].includes(column.kind);
-
   const wrongIDFormat = hasWrongIDFormat(column, cellValues, firstRowIsHeaders);
   const unfinishedMapping = hasUnfinishedMapping(column);
 
   return {
     columnIndex,
     mappingResultsMessage,
-    needsConfig: column.selected && isConfigurable,
     numRowsByUniqueValue: Object.fromEntries(numRowsByUniqueValue.entries()),
     numberOfEmptyRows,
     originalColumn: column,

@@ -42,6 +42,7 @@ export type FieldColumn = BaseColumn & {
 };
 
 export type DateColumn = BaseColumn & {
+  dateFormat: string | null;
   field: string;
   kind: ColumnKind.DATE;
 };
@@ -67,13 +68,13 @@ export type OrgColumn = BaseColumn & {
   }[];
 };
 
-export type Column =
-  | UnknownColumn
-  | FieldColumn
+export type ConfigurableColumn =
   | DateColumn
   | IDFieldColumn
   | TagColumn
   | OrgColumn;
+
+export type Column = UnknownColumn | FieldColumn | ConfigurableColumn;
 
 export interface ZetkinPersonImportPostBody {
   ops: ZetkinPersonImportOp[];
