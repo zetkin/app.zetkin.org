@@ -13,6 +13,16 @@ export default makeMessages('feat.import', {
   },
   configuration: {
     configure: {
+      dates: {
+        confirmButton: m('Yes this is the format'),
+        customFormatLabel: m('Custom date format'),
+        dateInputLabel: m('Write the format here'),
+        description: m(
+          'Select the format of the dates in this column so they can be imported correctly.'
+        ),
+        dropDownLabel: m('Select date format'),
+        header: m('Configure date format'),
+      },
       ids: {
         configExplanation: m(
           'Importing with IDs allows Zetkin (now or in the future) to update existing people in the database instead of creating duplicates.'
@@ -53,6 +63,9 @@ export default makeMessages('feat.import', {
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
       emptyStateMessage: m('Start by mapping file columns.'),
       fileHeader: m('File'),
+      finishedMappingDates: m<{ dateFormat: string; numValues: number }>(
+        'Mapping {numValues, plural, =1 {1 value} other {# values}} to dates in this format: {dateFormat}'
+      ),
       finishedMappingIds: m<{
         idField: 'ext_id' | 'id';
         numValues: number;

@@ -1,11 +1,13 @@
 import { FC } from 'react';
 import { Box, useTheme } from '@mui/material';
 
+import DateConfig from './DateConfig';
 import IdConfig from './IdConfig';
 import OrgConfig from './OrgConfig';
 import TagConfig from './TagConfig';
 import {
   ColumnKind,
+  DateColumn,
   IDFieldColumn,
   OrgColumn,
   TagColumn,
@@ -46,9 +48,7 @@ const Configuration: FC<ConfigurationProps> = ({
           <OrgConfig uiDataColumn={uiDataColumn as UIDataColumn<OrgColumn>} />
         )}
       {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.DATE && (
-        <Box display="flex" justifyContent="center">
-          You will configure the date format here
-        </Box>
+        <DateConfig uiDataColumn={uiDataColumn as UIDataColumn<DateColumn>} />
       )}
     </Box>
   );

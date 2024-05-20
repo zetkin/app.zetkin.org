@@ -100,6 +100,15 @@ export default function useUIDataColumn(
         numMappedTo: Array.from(new Set(orgs)).length,
         numPeople,
       });
+  } else if (column.kind == ColumnKind.DATE) {
+    mappingResultsMessage = messages.configuration.mapping.finishedMappingDates(
+      {
+        dateFormat: column.dateFormat || '',
+        numValues: firstRowIsHeaders
+          ? cellValues.length - 1
+          : cellValues.length,
+      }
+    );
   }
 
   const wrongIDFormat = hasWrongIDFormat(column, cellValues, firstRowIsHeaders);

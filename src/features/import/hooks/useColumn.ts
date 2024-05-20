@@ -49,10 +49,13 @@ export default function useColumn(orgId: number) {
     }
 
     const exists = selectedColumns.find((column) => {
-      return (
-        (column.kind == ColumnKind.FIELD || column.kind == ColumnKind.DATE) &&
-        column.field == value.slice(6)
-      );
+      if (column.kind == ColumnKind.FIELD) {
+        return column.field == value.slice(6);
+      }
+
+      if (column.kind == ColumnKind.DATE) {
+        return column.field == value.slice(5);
+      }
     });
 
     return !!exists;
