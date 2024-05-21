@@ -1,11 +1,10 @@
-import { ZetkinOfficial } from 'utils/types/zetkin';
-import { accessDeleted, adminAdded, organizerAdded } from '../store';
+import updateNewRole from '../rpc/updateNewRole';
+import { accessDeleted, updatedRole } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 type useRolesMutationsReturn = {
-  addToAdmin: (personId: number) => void;
-  addToOrganizer: (personId: number) => void;
   removeAccess: (personId: number) => void;
+  updateRole: (personId: number, role: 'organizer' | 'admin') => void;
 };
 
 export default function useRolesMutations(
@@ -14,36 +13,25 @@ export default function useRolesMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const addToOrganizer = async (personId: number) => {
-    return apiClient
-      .put<ZetkinOfficial>(`/api/orgs/${orgId}/officials/${personId}`, {
-        role: 'organizer',
-      })
-      .then((user) => {
-        dispatch(adminAdded([personId, user]));
-        return user;
-      });
-  };
-
-  const addToAdmin = async (personId: number) => {
-    return apiClient
-      .put<ZetkinOfficial>(`/api/orgs/${orgId}/officials/${personId}`, {
-        role: 'admin',
-      })
-      .then((user) => {
-        dispatch(organizerAdded([personId, user]));
-        return user;
-      });
-  };
-
   const removeAccess = async (personId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/officials/${personId}`);
     dispatch(accessDeleted(personId));
   };
 
+  const updateRole = async (personId: number, role: 'organizer' | 'admin') => {
+    await apiClient
+      .rpc(updateNewRole, {
+        orgId,
+        personId,
+        role,
+      })
+      .then((membership) => {
+        dispatch(updatedRole([personId, membership]));
+      });
+  };
+
   return {
-    addToAdmin,
-    addToOrganizer,
     removeAccess,
+    updateRole,
   };
 }

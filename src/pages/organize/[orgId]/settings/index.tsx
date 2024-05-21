@@ -9,7 +9,7 @@ import RoleAddPersonButton from 'features/settings/components/RoleAddPersonButto
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
-import useRoles from 'features/settings/hooks/useRoles';
+import useRolesList from 'features/settings/hooks/useRolesList';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -26,13 +26,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const SettingsPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const roles = useRoles(orgId).data || [];
+  const listFuture = useRolesList(orgId).data || [];
 
   if (onServer) {
     return null;
   }
-  const adminRoles = roles.filter((user) => user.role === 'admin');
-  const organizersRoles = roles.filter((user) => user.role === 'organizer');
 
   return (
     <Box>
@@ -49,7 +47,7 @@ const SettingsPage: PageWithLayout = () => {
           <Msg id={messageIds.administrators.title} />
         </Typography>
         <RoleAddPersonButton
-          disabledList={adminRoles}
+          disabledList={listFuture.filter((user) => user.role === 'admin')}
           orgId={orgId}
           roleType="admin"
         />
@@ -57,7 +55,10 @@ const SettingsPage: PageWithLayout = () => {
       <Typography mb={2} variant="body2">
         <Msg id={messageIds.administrators.description} />
       </Typography>
-      <OfficialList officialList={adminRoles} orgId={orgId} />
+      <OfficialList
+        officialList={listFuture.filter((user) => user.role === 'admin')}
+        orgId={orgId}
+      />
       <Box
         alignItems="center"
         display="flex"
@@ -71,7 +72,7 @@ const SettingsPage: PageWithLayout = () => {
           <Msg id={messageIds.organizers.title} />
         </Typography>
         <RoleAddPersonButton
-          disabledList={organizersRoles}
+          disabledList={listFuture.filter((user) => user.role === 'organizer')}
           orgId={orgId}
           roleType="organizer"
         />
@@ -79,7 +80,10 @@ const SettingsPage: PageWithLayout = () => {
       <Typography mb={2} variant="body2">
         <Msg id={messageIds.organizers.description} />
       </Typography>
-      <OfficialList officialList={organizersRoles} orgId={orgId} />
+      <OfficialList
+        officialList={listFuture.filter((user) => user.role === 'organizer')}
+        orgId={orgId}
+      />
     </Box>
   );
 };
