@@ -28,6 +28,9 @@ const SettingsPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const listFuture = useRolesList(orgId).data || [];
 
+  const adminList = listFuture.filter((user) => user.role === 'admin');
+  const organizerList = listFuture.filter((user) => user.role === 'organizer');
+
   if (onServer) {
     return null;
   }
@@ -47,7 +50,7 @@ const SettingsPage: PageWithLayout = () => {
           <Msg id={messageIds.administrators.title} />
         </Typography>
         <RoleAddPersonButton
-          disabledList={listFuture.filter((user) => user.role === 'admin')}
+          disabledList={adminList}
           orgId={orgId}
           roleType="admin"
         />
@@ -55,10 +58,7 @@ const SettingsPage: PageWithLayout = () => {
       <Typography mb={2} variant="body2">
         <Msg id={messageIds.administrators.description} />
       </Typography>
-      <OfficialList
-        officialList={listFuture.filter((user) => user.role === 'admin')}
-        orgId={orgId}
-      />
+      <OfficialList officialList={adminList} orgId={orgId} />
       <Box
         alignItems="center"
         display="flex"
@@ -72,7 +72,7 @@ const SettingsPage: PageWithLayout = () => {
           <Msg id={messageIds.organizers.title} />
         </Typography>
         <RoleAddPersonButton
-          disabledList={listFuture.filter((user) => user.role === 'organizer')}
+          disabledList={organizerList}
           orgId={orgId}
           roleType="organizer"
         />
@@ -80,10 +80,7 @@ const SettingsPage: PageWithLayout = () => {
       <Typography mb={2} variant="body2">
         <Msg id={messageIds.organizers.description} />
       </Typography>
-      <OfficialList
-        officialList={listFuture.filter((user) => user.role === 'organizer')}
-        orgId={orgId}
-      />
+      <OfficialList officialList={organizerList} orgId={orgId} />
     </Box>
   );
 };
