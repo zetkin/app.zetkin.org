@@ -24,7 +24,7 @@ export default makeMessages('feat.import', {
         listSubHeaders: {
           custom: m('Custom'),
           dates: m('Date formats'),
-          personNumbers: m('Person number formats'),
+          personNumbers: m('Person numbers'),
         },
         personNumberFormat: {
           dk: {
