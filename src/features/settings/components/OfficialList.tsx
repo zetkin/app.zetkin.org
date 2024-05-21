@@ -38,7 +38,6 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       align: 'left',
       disableColumnMenu: true,
       field: 'avatar',
-      headerName: messages.administrators.columns.name(),
       minWidth: 250,
       renderCell: (params) => (
         <ZUIPersonHoverCard personId={params.row.profile.id}>
@@ -61,7 +60,6 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       disableColumnMenu: true,
       field: 'role',
       flex: 1,
-      headerName: '',
       renderCell: (params) => {
         if (params.row.inherited) {
           return (
@@ -90,7 +88,6 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       disableColumnMenu: true,
       field: 'cancel',
       flex: 1,
-      headerName: '',
       minWidth: 300,
       renderCell: (params) => {
         if (params.row.profile.id === user?.id) {
@@ -163,6 +160,9 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       disableRowSelectionOnClick
       hideFooter
       rows={sortedOfficialList || []}
+      slots={{
+        columnHeaders: () => null,
+      }}
       sx={{ backgroundColor: 'white' }}
     />
   );

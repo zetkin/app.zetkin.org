@@ -32,6 +32,7 @@ export default makeMessages('feat.settings', {
   },
   settingsLayout: {
     access: m('Access'),
+    title: m('Settings'),
   },
   tableButtons: {
     demote: m('Demote'),
