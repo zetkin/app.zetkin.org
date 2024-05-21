@@ -37,7 +37,7 @@ export default makeMessages('feat.import', {
             description: m(
               'The values in this column will be parsed from 11 digit Norwegian fødselsnummer and D-nummer into dates.'
             ),
-            label: m('Norwegian Fødselsnummer and D-nummer'),
+            label: m('Norwegian fødselsnummer and D-nummer'),
           },
           se: {
             description: m(
@@ -88,7 +88,7 @@ export default makeMessages('feat.import', {
       emptyStateMessage: m('Start by mapping file columns.'),
       fileHeader: m('File'),
       finishedMappingDates: m<{ dateFormat: string; numValues: number }>(
-        'Mapping {numValues, plural, =1 {1 value} other {# values}} to dates in this format: {dateFormat}'
+        'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer and samordningsnummer} no {Norwegian fødselsnummer and D-nummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
       ),
       finishedMappingIds: m<{
         idField: 'ext_id' | 'id';
