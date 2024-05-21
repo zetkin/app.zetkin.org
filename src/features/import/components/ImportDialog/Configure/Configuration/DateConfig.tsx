@@ -148,6 +148,15 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           value={dateFormat}
         />
       )}
+      {isCustomFormat && (
+        <Typography>
+          <Msg
+            id={
+              messageIds.configuration.configure.dates.customFormatDescription
+            }
+          />
+        </Typography>
+      )}
       {isPersonNumberFormat(dateFormat) && (
         <Typography>
           <Msg

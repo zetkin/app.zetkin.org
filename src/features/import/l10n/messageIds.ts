@@ -14,6 +14,9 @@ export default makeMessages('feat.import', {
   configuration: {
     configure: {
       dates: {
+        customFormatDescription: m(
+          'Describe the format of the values in this column, using the letters Y, M and D and any characters you use to separate them. For example, if your dates are written 1998.03.23, you would describe that as YYYY.MM.DD.'
+        ),
         customFormatLabel: m('Custom date format'),
         dateInputLabel: m('Date format'),
         description: m(
