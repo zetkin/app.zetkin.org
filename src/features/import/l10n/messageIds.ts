@@ -15,11 +15,11 @@ export default makeMessages('feat.import', {
     configure: {
       dates: {
         customFormatLabel: m('Custom date format'),
-        dateInputLabel: m('Write the format here'),
+        dateInputLabel: m('Date format'),
         description: m(
-          'Select the format of the dates in this column so they can be imported correctly.'
+          'Select the format of the values in this column so they can be imported correctly.'
         ),
-        dropDownLabel: m('Select date format'),
+        dropDownLabel: m('Select format'),
         header: m('Configure date format'),
         listSubHeaders: {
           custom: m('Custom'),
@@ -28,18 +28,20 @@ export default makeMessages('feat.import', {
         },
         personNumberFormat: {
           dk: {
-            description: m('Takes the dates out of Danish CPR-Nummer'),
-            label: m('Danish CPR-Nummer'),
+            description: m(
+              'The values in this column will be parsed from 10 digit Danish CPR-numbers into dates.'
+            ),
+            label: m('Danish CPR-number'),
           },
           no: {
             description: m(
-              'Takes the dates from Nowrwegian Fødselsnummer and D-nummer'
+              'The values in this column will be parsed from 11 digit Norwegian fødselsnummer and D-nummer into dates.'
             ),
             label: m('Norwegian Fødselsnummer and D-nummer'),
           },
           se: {
             description: m(
-              'Takes the dates from Swedish Personnummer and Samordningsnummer'
+              'The values in this column will be parsed from 10 or 12 digit Swedish personnummer and samordningsnummer into dates.'
             ),
             label: m('Swedish Personnummer and Samordningsnummer'),
           },
