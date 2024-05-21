@@ -1,13 +1,13 @@
-import { ZetkinOfficial } from 'utils/types/zetkin';
+import { ZetkinMembership } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface RolesStoreSlice {
-  rolesList: RemoteList<ZetkinOfficial>;
+  membershipsList: RemoteList<ZetkinMembership & { id: number }>;
 }
 
 const initialState: RolesStoreSlice = {
-  rolesList: remoteList(),
+  membershipsList: remoteList(),
 };
 
 const RolesSlice = createSlice({
@@ -15,45 +15,48 @@ const RolesSlice = createSlice({
   name: 'roles',
   reducers: {
     accessDeleted: (state, action: PayloadAction<number>) => {
-      const officialId = action.payload;
-      state.rolesList.items = state.rolesList.items.filter(
-        (user) => user.id !== officialId
+      const membershipId = action.payload;
+      state.membershipsList.items = state.membershipsList.items.filter(
+        (user) => user.id !== membershipId
       );
     },
-    adminAdded: (state, action: PayloadAction<[number, ZetkinOfficial]>) => {
-      const [userId, user] = action.payload;
-      const item = state.rolesList.items.find((item) => item.id === userId);
-
-      if (item) {
-        item.data = { ...item.data, ...user };
-        item.mutating = [];
-      } else {
-        state.rolesList.items.push(remoteItem(userId, { data: user }));
-      }
+    membershipsRolesLoad: (state) => {
+      state.membershipsList.isLoading = true;
     },
-    organizerAdded: (
+    membershipsRolesLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinOfficial]>
+      action: PayloadAction<ZetkinMembership[]>
     ) => {
-      const [userId, user] = action.payload;
-      const item = state.rolesList.items.find((item) => item.id === userId);
+      const memberships = action.payload;
 
-      if (item) {
-        item.data = { ...item.data, ...user };
-        item.mutating = [];
+      const membershipsWithIds = memberships.map((membership) => ({
+        ...membership,
+        id: membership.profile.id,
+      }));
+
+      state.membershipsList = remoteList(membershipsWithIds);
+      state.membershipsList.loaded = new Date().toISOString();
+      state.membershipsList.isLoading = false;
+    },
+    updatedRole: (state, action: PayloadAction<[number, ZetkinMembership]>) => {
+      const [membershipId, membership] = action.payload;
+      const item = state.membershipsList.items.find(
+        (item) => item.id === membershipId
+      );
+
+      if (item && item.data) {
+        item.data.role = membership.role;
+        item.data = { ...item.data, ...membership, id: membershipId };
       } else {
-        state.rolesList.items.push(remoteItem(userId, { data: user }));
+        state.membershipsList.items.push(
+          remoteItem(membershipId, {
+            data: {
+              ...membership,
+              id: membershipId,
+            },
+          })
+        );
       }
-    },
-    rolesLoad: (state) => {
-      state.rolesList.isLoading = true;
-    },
-    rolesLoaded: (state, action: PayloadAction<ZetkinOfficial[]>) => {
-      const roles = action.payload;
-
-      state.rolesList = remoteList(roles);
-      state.rolesList.loaded = new Date().toISOString();
-      state.rolesList.isLoading = false;
     },
   },
 });
@@ -61,8 +64,7 @@ const RolesSlice = createSlice({
 export default RolesSlice;
 export const {
   accessDeleted,
-  adminAdded,
-  organizerAdded,
-  rolesLoaded,
-  rolesLoad,
+  membershipsRolesLoad,
+  membershipsRolesLoaded,
+  updatedRole,
 } = RolesSlice.actions;
