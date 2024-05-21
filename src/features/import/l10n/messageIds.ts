@@ -21,6 +21,29 @@ export default makeMessages('feat.import', {
         ),
         dropDownLabel: m('Select date format'),
         header: m('Configure date format'),
+        listSubHeaders: {
+          custom: m('Custom'),
+          dates: m('Date formats'),
+          personNumbers: m('Person number formats'),
+        },
+        personNumberFormat: {
+          dk: {
+            description: m('Takes the dates out of Danish CPR-Nummer'),
+            label: m('Danish CPR-Nummer'),
+          },
+          no: {
+            description: m(
+              'Takes the dates from Nowrwegian Fødselsnummer and D-nummer'
+            ),
+            label: m('Norwegian Fødselsnummer and D-nummer'),
+          },
+          se: {
+            description: m(
+              'Takes the dates from Swedish Personnummer and Samordningsnummer'
+            ),
+            label: m('Swedish Personnummer and Samordningsnummer'),
+          },
+        },
       },
       ids: {
         configExplanation: m(

@@ -2,6 +2,7 @@ import {
   Box,
   FormControl,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Select,
   TextField,
@@ -25,7 +26,16 @@ const useDateConfig = (column: DateColumn, columnIndex: number) => {
   };
 };
 
+type PersonNumberFormat = 'se' | 'dk' | 'no';
+const personNumberFormats: PersonNumberFormat[] = ['se', 'dk', 'no'];
+
 const dateFormats = ['YYYY-MM-DD', 'YY-MM-DD', 'MM-DD-YYYY'];
+
+const isPersonNumberFormat = (
+  dateFormat: string
+): dateFormat is PersonNumberFormat => {
+  return !!personNumberFormats.find((format) => format == dateFormat);
+};
 
 interface DateConfigProps {
   uiDataColumn: UIDataColumn<DateColumn>;
@@ -47,7 +57,8 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
     updateDateFormat(dateFormat);
   }, 400);
 
-  const isCustomValue = !dateFormats.includes(dateFormat);
+  const isCustomFormat =
+    !dateFormats.includes(dateFormat) && !isPersonNumberFormat(dateFormat);
 
   return (
     <Box
@@ -78,32 +89,76 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
               updateDateFormat(value);
             }
           }}
-          value={isCustomValue ? 'custom' : dateFormat}
+          value={isCustomFormat ? 'custom' : dateFormat}
         >
-          {dateFormats.map((format, index) => (
-            <MenuItem key={index} value={format}>
+          <ListSubheader>
+            <Msg
+              id={messageIds.configuration.configure.dates.listSubHeaders.dates}
+            />
+          </ListSubheader>
+          {dateFormats.map((format) => (
+            <MenuItem key={format} sx={{ paddingLeft: 4 }} value={format}>
               {format}
             </MenuItem>
           ))}
-          <MenuItem value="custom">
+          <ListSubheader>
+            <Msg
+              id={
+                messageIds.configuration.configure.dates.listSubHeaders
+                  .personNumbers
+              }
+            />
+          </ListSubheader>
+          {Object.values(personNumberFormats).map((format) => (
+            <MenuItem key={format} sx={{ paddingLeft: 4 }} value={format}>
+              <Msg
+                id={
+                  messageIds.configuration.configure.dates.personNumberFormat[
+                    format
+                  ].label
+                }
+              />
+            </MenuItem>
+          ))}
+          <ListSubheader>
+            <Msg
+              id={
+                messageIds.configuration.configure.dates.listSubHeaders.custom
+              }
+            />
+          </ListSubheader>
+          <MenuItem sx={{ paddingLeft: 4 }} value="custom">
             <Msg
               id={messageIds.configuration.configure.dates.customFormatLabel}
             />
           </MenuItem>
         </Select>
       </FormControl>
-      <TextField
-        label={messages.configuration.configure.dates.dateInputLabel()}
-        onChange={(event) => {
-          const value = event.target.value;
-          setDateFormat(value);
-          if (value) {
-            debouncedFinishedTyping(value);
-          }
-        }}
-        sx={{ paddingBottom: 2 }}
-        value={dateFormat}
-      />
+      {!isPersonNumberFormat(dateFormat) && (
+        <TextField
+          label={messages.configuration.configure.dates.dateInputLabel()}
+          onChange={(event) => {
+            const value = event.target.value;
+            setDateFormat(value);
+            if (value) {
+              debouncedFinishedTyping(value);
+            }
+          }}
+          sx={{ paddingBottom: 2 }}
+          value={dateFormat}
+        />
+      )}
+      {isPersonNumberFormat(dateFormat) && (
+        <Typography>
+          <Msg
+            id={
+              messageIds.configuration.configure.dates.personNumberFormat[
+                dateFormat
+              ].description
+            }
+          />
+        </Typography>
+      )}
     </Box>
   );
 };
