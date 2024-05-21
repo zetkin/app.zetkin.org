@@ -14,7 +14,6 @@ export default makeMessages('feat.import', {
   configuration: {
     configure: {
       dates: {
-        confirmButton: m('Yes this is the format'),
         customFormatLabel: m('Custom date format'),
         dateInputLabel: m('Write the format here'),
         description: m(

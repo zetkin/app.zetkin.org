@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -15,6 +14,7 @@ import { DateColumn } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import { useAppDispatch } from 'core/hooks';
+import useDebounce from 'utils/hooks/useDebounce';
 import { Msg, useMessages } from 'core/i18n';
 
 const useDateConfig = (column: DateColumn, columnIndex: number) => {
@@ -31,33 +31,23 @@ interface DateConfigProps {
   uiDataColumn: UIDataColumn<DateColumn>;
 }
 
-const getInitialDateFormat = (dateFormat: string | null) => {
-  if (!dateFormat) {
-    return 'YYYY-MM-DD';
-  }
-
-  if (dateFormats.includes(dateFormat)) {
-    return dateFormat;
-  }
-
-  return 'custom';
-};
-
 const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
   const messages = useMessages(messageIds);
 
-  const initialDateFormat = getInitialDateFormat(
-    uiDataColumn.originalColumn.dateFormat
-  );
-  const [dateFormat, setDateFormat] = useState(initialDateFormat);
-  const [diyDateFormat, setDiyDateFormat] = useState(
-    dateFormat === 'custom' ? uiDataColumn.originalColumn.dateFormat : ''
+  const [dateFormat, setDateFormat] = useState(
+    uiDataColumn.originalColumn.dateFormat ?? 'YYYY-MM-DD'
   );
 
   const updateDateFormat = useDateConfig(
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex
   );
+
+  const debouncedFinishedTyping = useDebounce(async (dateFormat: string) => {
+    updateDateFormat(dateFormat);
+  }, 400);
+
+  const isCustomValue = !dateFormats.includes(dateFormat);
 
   return (
     <Box
@@ -79,10 +69,16 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
         <Select
           label={messages.configuration.configure.dates.dropDownLabel()}
           onChange={(event) => {
-            setDiyDateFormat('');
-            setDateFormat(event.target.value);
+            const value = event.target.value;
+
+            if (value === 'custom') {
+              setDateFormat('');
+            } else {
+              setDateFormat(event.target.value);
+              updateDateFormat(value);
+            }
           }}
-          value={dateFormat}
+          value={isCustomValue ? 'custom' : dateFormat}
         >
           {dateFormats.map((format, index) => (
             <MenuItem key={index} value={format}>
@@ -96,30 +92,18 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           </MenuItem>
         </Select>
       </FormControl>
-      {dateFormat === 'custom' && (
-        <TextField
-          label={messages.configuration.configure.dates.dateInputLabel()}
-          onChange={(event) => setDiyDateFormat(event.target.value)}
-          sx={{ paddingBottom: 2 }}
-          value={diyDateFormat}
-        />
-      )}
-      <Button
-        disabled={
-          (dateFormat === 'custom' && !diyDateFormat) ||
-          dateFormat === uiDataColumn.originalColumn.dateFormat
-        }
-        onClick={() => {
-          if (dateFormat === 'custom' && diyDateFormat) {
-            updateDateFormat(diyDateFormat);
-          } else {
-            updateDateFormat(dateFormat);
+      <TextField
+        label={messages.configuration.configure.dates.dateInputLabel()}
+        onChange={(event) => {
+          const value = event.target.value;
+          setDateFormat(value);
+          if (value) {
+            debouncedFinishedTyping(value);
           }
         }}
-        variant="outlined"
-      >
-        <Msg id={messageIds.configuration.configure.dates.confirmButton} />
-      </Button>
+        sx={{ paddingBottom: 2 }}
+        value={dateFormat}
+      />
     </Box>
   );
 };
