@@ -1,8 +1,8 @@
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FC } from 'react';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
 import { Button, FormControl, Typography } from '@mui/material';
-import { DataGridPro, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
@@ -30,7 +30,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
     if (b.profile.id === user?.id) {
       return 1;
     }
-    return 0;
+    return a.profile.name.localeCompare(b.profile.name);
   });
 
   const columns: GridColDef[] = [
@@ -50,11 +50,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
         </ZUIPersonHoverCard>
       ),
       resizable: true,
-      sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
-      sortable: true,
-      sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params: GridRenderCellParams<ZetkinMembership>) =>
-        params.row.profile.name,
+      sortable: false,
     },
     {
       disableColumnMenu: true,
