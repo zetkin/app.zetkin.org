@@ -5,13 +5,13 @@ import { Box, Button, Popover } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import useRolesMutations from '../hooks/useRolesMutations';
-import { ZetkinOfficial } from 'utils/types/zetkin';
+import { ZetkinMembership } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';
 
 interface RoleAddPersonButtonProps {
   orgId: number;
-  disabledList: ZetkinOfficial[];
+  disabledList: ZetkinMembership[];
   roleType: 'admin' | 'organizer';
 }
 
@@ -23,9 +23,9 @@ const RoleAddPersonButton = ({
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const addAdmin = roleType === 'admin';
-  const { addToAdmin, addToOrganizer } = useRolesMutations(orgId);
+  const { updateRole } = useRolesMutations(orgId);
   const getOptionExtraLabel = (personId: number) => {
-    if (disabledList.some((person) => person.id === personId)) {
+    if (disabledList.some((person) => person.profile.id === personId)) {
       return (
         <Box
           sx={{
@@ -51,7 +51,13 @@ const RoleAddPersonButton = ({
         sx={{ fontSize: '1rem' }}
         variant="outlined"
       >
-        <Msg id={messageIds.addPerson.button} />
+        <Msg
+          id={
+            roleType === 'admin'
+              ? messageIds.addPerson.addAdmin
+              : messageIds.addPerson.addOrganizer
+          }
+        />
       </Button>
       <Popover
         anchorEl={anchorEl}
@@ -80,14 +86,16 @@ const RoleAddPersonButton = ({
           <ZUIPersonSelect
             disabled
             getOptionDisabled={(option) =>
-              disabledList.some((person) => person.id == option.id)
+              disabledList.some((person) => person.profile.id == option.id)
             }
             getOptionExtraLabel={(option) => {
               return getOptionExtraLabel(option.id);
             }}
             name="person"
             onChange={(person) => {
-              addAdmin ? addToAdmin(person.id) : addToOrganizer(person.id);
+              addAdmin
+                ? updateRole(person.id, 'admin')
+                : updateRole(person.id, 'organizer');
             }}
             placeholder={messages.addPerson.placeholder({
               list: addAdmin
