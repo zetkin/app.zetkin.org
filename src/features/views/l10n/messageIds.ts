@@ -36,6 +36,7 @@ export default makeMessages('feat.views', {
   },
   browserLayout: {
     tabs: {
+      duplicates: m('Duplicates'),
       views: m('Lists'),
     },
     title: m('People'),
