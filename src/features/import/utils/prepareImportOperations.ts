@@ -4,6 +4,7 @@ import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
+  dateFormat?: string | null; //STÄMMER DETTA?
   op: 'person.import';
   organizations?: number[];
   tags?: { id: number }[];
