@@ -57,7 +57,7 @@ export default function useEventsFromDateRange(
   const events = dateRange.flatMap((date) => {
     const dateStr = date.slice(0, 10);
     return eventsState.eventsByDate[dateStr].items
-      .filter((item) => !!item.data)
+      .filter((item) => !!item.data && !item.deleted)
       .map((item) => item.data) as ZetkinEvent[];
   });
 
