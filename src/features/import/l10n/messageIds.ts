@@ -50,6 +50,9 @@ export default makeMessages('feat.import', {
             label: m('Swedish Personnummer'),
           },
         },
+        wrongDateFormatWarning: m(
+          'Some of the values in this column can not be parsed into dates using this format.'
+        ),
       },
       ids: {
         configExplanation: m(

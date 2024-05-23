@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   FormControl,
   InputLabel,
@@ -39,7 +40,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
     uiDataColumn.originalColumn.dateFormat ?? 'YYYY-MM-DD'
   );
 
-  const updateDateFormat = useDateConfig(
+  const { wrongDateFormat, updateDateFormat } = useDateConfig(
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex
   );
@@ -159,6 +160,13 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
             }
           />
         </Typography>
+      )}
+      {wrongDateFormat && (
+        <Alert severity="warning" sx={{ marginTop: 1 }}>
+          <Msg
+            id={messageIds.configuration.configure.dates.wrongDateFormatWarning}
+          />
+        </Alert>
       )}
     </Box>
   );
