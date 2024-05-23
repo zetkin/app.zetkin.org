@@ -175,6 +175,12 @@ export default makeMessages('feat.emails', {
     ),
     unsubButton: m('Unsubscribe me'),
   },
+  unsubscribedPage: {
+    h: m('Unsubscribed!'),
+    info: m<{ org: string }>(
+      'You have been unsubscribed from mass email from {org}.'
+    ),
+  },
   varDefaults: {
     target: m('reader'),
   },
