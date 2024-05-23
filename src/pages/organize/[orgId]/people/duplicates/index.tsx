@@ -40,14 +40,19 @@ const DuplicatesPage: PageWithLayout = () => {
         <Box>
           {list.map((cluster) => (
             <Paper key={cluster.id} elevation={2} sx={{ m: 2, p: 1.5 }}>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                {cluster.duplicatePersons.map((duplicate, index) => (
-                  <ZUIPerson
-                    key={index}
-                    id={duplicate.id}
-                    name={`${duplicate.first_name} ${duplicate.last_name}`}
-                  />
-                ))}
+              <Box display={'flex'} flexDirection={'column'} gap={1.5}>
+                <Typography variant="body1">
+                  {messages.page.duplicatesExistDescription()}
+                </Typography>
+                <Box display={'flex'} flexWrap={'wrap'} gap={4}>
+                  {cluster.duplicatePersons.map((duplicate, index) => (
+                    <ZUIPerson
+                      key={index}
+                      id={duplicate.id}
+                      name={`${duplicate.first_name} ${duplicate.last_name}`}
+                    />
+                  ))}
+                </Box>
               </Box>
             </Paper>
           ))}
