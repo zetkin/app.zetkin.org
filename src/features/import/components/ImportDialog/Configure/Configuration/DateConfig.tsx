@@ -10,21 +10,12 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import { columnUpdate } from 'features/import/store';
 import { DateColumn } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
-import { useAppDispatch } from 'core/hooks';
+import useDateConfig from 'features/import/hooks/useDateConfig';
 import useDebounce from 'utils/hooks/useDebounce';
 import { Msg, useMessages } from 'core/i18n';
-
-const useDateConfig = (column: DateColumn, columnIndex: number) => {
-  const dispatch = useAppDispatch();
-
-  return (dateFormat: string) => {
-    dispatch(columnUpdate([columnIndex, { ...column, dateFormat }]));
-  };
-};
 
 type PersonNumberFormat = 'se' | 'dk' | 'no';
 const personNumberFormats: PersonNumberFormat[] = ['se', 'dk', 'no'];
