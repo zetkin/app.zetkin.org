@@ -1,8 +1,10 @@
 import { FC } from 'react';
 
 import { CellData } from 'features/import/utils/types';
+import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import useColumn from 'features/import/hooks/useColumn';
+import { useMessages } from 'core/i18n';
 
 interface DatePreviewProps {
   fields: Record<string, CellData> | undefined;
@@ -11,6 +13,7 @@ interface DatePreviewProps {
 }
 
 const DatePreview: FC<DatePreviewProps> = ({ fieldKey, fields, orgId }) => {
+  const messages = useMessages(messageIds);
   const { fieldOptions } = useColumn(orgId);
 
   let columnHeader = '';
@@ -25,7 +28,10 @@ const DatePreview: FC<DatePreviewProps> = ({ fieldKey, fields, orgId }) => {
   return (
     <PreviewGrid
       columnHeader={columnHeader}
-      rowValue={value || null}
+      emptyLabel={
+        !value ? messages.configuration.configure.dates.emptyPreview() : ''
+      }
+      rowValue={value || ''}
       unmappedRow={!value}
     />
   );

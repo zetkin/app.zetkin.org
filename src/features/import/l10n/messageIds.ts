@@ -23,6 +23,7 @@ export default makeMessages('feat.import', {
           'Select the format of the values in this column so they can be imported correctly.'
         ),
         dropDownLabel: m('Select format'),
+        emptyPreview: m('Could not be parsed'),
         header: m('Configure date format'),
         listSubHeaders: {
           custom: m('Custom'),
