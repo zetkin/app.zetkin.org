@@ -89,6 +89,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
               updateDateFormat(value);
             }
           }}
+          sx={{ minWidth: '200px' }}
           value={isCustomFormat ? 'custom' : dateFormat}
         >
           <ListSubheader>
