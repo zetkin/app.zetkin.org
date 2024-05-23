@@ -1,4 +1,5 @@
 import getUniqueTags from './getUniqueTags';
+import parseDate from './parseDate';
 import { CellData, ColumnKind, Sheet } from './types';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
@@ -109,6 +110,23 @@ export default function prepareImportOperations(
               personImportOps[rowIndex].organizations = [mappedColumn.orgId];
             }
           });
+        }
+
+        //dates
+        if (column.kind === ColumnKind.DATE) {
+          if (column.dateFormat) {
+            const fieldKey = column.field;
+            let value = row.data[colIdx];
+
+            if (value) {
+              value = parseDate(value, column.dateFormat);
+
+              personImportOps[rowIndex].data = {
+                ...personImportOps[rowIndex].data,
+                [`${fieldKey}`]: value,
+              };
+            }
+          }
         }
       });
     }
