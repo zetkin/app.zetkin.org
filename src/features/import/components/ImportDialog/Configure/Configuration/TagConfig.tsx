@@ -6,8 +6,8 @@ import { TagColumn } from 'features/import/utils/types';
 import TagConfigRow from './TagConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useGuessTags from 'features/import/hooks/useGuessTags';
-import useImportTagging from 'features/import/hooks/useImportTagging';
 import { useNumericRouteParams } from 'core/hooks';
+import useTagConfig from 'features/import/hooks/useTagConfig';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -19,7 +19,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const guessTags = useGuessTags(orgId, uiDataColumn);
-  const { assignTag, getAssignedTags, unAssignTag } = useImportTagging(
+  const { assignTag, getAssignedTags, unAssignTag } = useTagConfig(
     orgId,
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex

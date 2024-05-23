@@ -5,7 +5,7 @@ import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { CellData, Column, ColumnKind, TagColumn } from '../utils/types';
 
-export default function useImportTagging(
+export default function useTagConfig(
   orgId: number,
   column: Column,
   columnIndex: number
