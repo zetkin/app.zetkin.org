@@ -17,6 +17,9 @@ import campaignsSlice, {
   campaignDeleted,
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
+import duplicatesSlice, {
+  DuplicatesStoreSlice,
+} from 'features/duplicates/store';
 import emailsSlice, {
   emailCreated,
   EmailStoreSlice,
@@ -49,6 +52,7 @@ export interface RootState {
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
+  duplicates: DuplicatesStoreSlice;
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
@@ -69,6 +73,7 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  duplicates: duplicatesSlice.reducer,
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   files: filesSlice.reducer,
