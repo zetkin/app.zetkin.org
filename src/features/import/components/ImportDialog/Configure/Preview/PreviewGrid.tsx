@@ -53,9 +53,10 @@ const PreviewGrid = ({
       <Box
         sx={{
           alignItems: 'center',
-          backgroundColor: unmappedRow
-            ? theme.palette.transparentGrey.light
-            : 'transparent',
+          backgroundColor:
+            unmappedRow && !emptyLabel
+              ? theme.palette.transparentGrey.light
+              : 'transparent',
           display: 'flex',
           height: '14px',
           minWidth: '150px',
