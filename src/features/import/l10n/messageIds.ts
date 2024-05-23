@@ -32,21 +32,21 @@ export default makeMessages('feat.import', {
         personNumberFormat: {
           dk: {
             description: m(
-              'The values in this column will be parsed from 10 digit Danish CPR-numbers into dates.'
+              'The values in this column will be parsed from 10 digit Danish CPR-numbers (DDMMYY-XXXX or DDMMYYXXXX) into dates.'
             ),
             label: m('Danish CPR-number'),
           },
           no: {
             description: m(
-              'The values in this column will be parsed from 11 digit Norwegian fødselsnummer and D-nummer into dates.'
+              'The values in this column will be parsed from 11 digit Norwegian fødselsnummer (DDMMYYXXXXX or DDMMYY-XXXXX) into dates.'
             ),
-            label: m('Norwegian fødselsnummer and D-nummer'),
+            label: m('Norwegian fødselsnummer'),
           },
           se: {
             description: m(
-              'The values in this column will be parsed from 10 or 12 digit Swedish personnummer and samordningsnummer into dates.'
+              'The values in this column will be parsed from 10 or 12 digit Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.'
             ),
-            label: m('Swedish Personnummer and Samordningsnummer'),
+            label: m('Swedish Personnummer'),
           },
         },
       },
