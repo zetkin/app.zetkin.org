@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import {
   Alert,
   Box,
@@ -9,7 +10,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
 
 import { DateColumn } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
@@ -18,39 +18,26 @@ import useDateConfig from 'features/import/hooks/useDateConfig';
 import useDebounce from 'utils/hooks/useDebounce';
 import { Msg, useMessages } from 'core/i18n';
 
-type PersonNumberFormat = 'se' | 'dk' | 'no';
-const personNumberFormats: PersonNumberFormat[] = ['se', 'dk', 'no'];
-
-const dateFormats = ['YYYY-MM-DD', 'YY-MM-DD', 'MM-DD-YYYY'];
-
-const isPersonNumberFormat = (
-  dateFormat: string
-): dateFormat is PersonNumberFormat => {
-  return !!personNumberFormats.find((format) => format == dateFormat);
-};
-
 interface DateConfigProps {
   uiDataColumn: UIDataColumn<DateColumn>;
 }
 
 const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
   const messages = useMessages(messageIds);
-
-  const [dateFormat, setDateFormat] = useState(
-    uiDataColumn.originalColumn.dateFormat ?? 'YYYY-MM-DD'
-  );
-
-  const { wrongDateFormat, updateDateFormat } = useDateConfig(
-    uiDataColumn.originalColumn,
-    uiDataColumn.columnIndex
-  );
+  const {
+    dateFormat,
+    dateFormats,
+    isCustomFormat,
+    isPersonNumberFormat,
+    onDateFormatChange,
+    personNumberFormats,
+    wrongDateFormat,
+    updateDateFormat,
+  } = useDateConfig(uiDataColumn.originalColumn, uiDataColumn.columnIndex);
 
   const debouncedFinishedTyping = useDebounce(async (dateFormat: string) => {
     updateDateFormat(dateFormat);
   }, 400);
-
-  const isCustomFormat =
-    !dateFormats.includes(dateFormat) && !isPersonNumberFormat(dateFormat);
 
   return (
     <Box
@@ -71,16 +58,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
         </InputLabel>
         <Select
           label={messages.configuration.configure.dates.dropDownLabel()}
-          onChange={(event) => {
-            const value = event.target.value;
-
-            if (value === 'custom') {
-              setDateFormat('');
-            } else {
-              setDateFormat(event.target.value);
-              updateDateFormat(value);
-            }
-          }}
+          onChange={(event) => onDateFormatChange(event.target.value)}
           sx={{ minWidth: '200px' }}
           value={isCustomFormat ? 'custom' : dateFormat}
         >
@@ -132,7 +110,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           label={messages.configuration.configure.dates.dateInputLabel()}
           onChange={(event) => {
             const value = event.target.value;
-            setDateFormat(value);
+            onDateFormatChange(value);
             if (value) {
               debouncedFinishedTyping(value);
             }

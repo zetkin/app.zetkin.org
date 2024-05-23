@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { columnUpdate } from '../store';
 import { DateColumn } from '../utils/types';
 import parseDate from '../utils/parseDate';
@@ -16,6 +18,10 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const firstRowIsHeaders = sheet.firstRowIsHeaders;
   const rows = sheet.rows;
   const cellValues = rows.map((row) => row.data[columnIndex]);
+
+  const [dateFormat, setDateFormat] = useState(
+    column.dateFormat ?? 'YYYY-MM-DD'
+  );
 
   const wrongDateFormat = cellValues.some((value, index) => {
     if (index === 0 && firstRowIsHeaders) {
@@ -37,5 +43,37 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     dispatch(columnUpdate([columnIndex, { ...column, dateFormat }]));
   };
 
-  return { updateDateFormat, wrongDateFormat };
+  type PersonNumberFormat = 'se' | 'dk' | 'no';
+  const personNumberFormats: PersonNumberFormat[] = ['se', 'dk', 'no'];
+
+  const dateFormats = ['YYYY-MM-DD', 'YY-MM-DD', 'MM-DD-YYYY'];
+
+  const isPersonNumberFormat = (
+    dateFormat: string
+  ): dateFormat is PersonNumberFormat => {
+    return !!personNumberFormats.find((format) => format == dateFormat);
+  };
+
+  const onDateFormatChange = (newFormat: string) => {
+    if (newFormat === 'custom') {
+      setDateFormat('');
+    } else {
+      setDateFormat(newFormat);
+      updateDateFormat(newFormat);
+    }
+  };
+
+  const isCustomFormat =
+    !dateFormats.includes(dateFormat) && !isPersonNumberFormat(dateFormat);
+
+  return {
+    dateFormat,
+    dateFormats,
+    isCustomFormat,
+    isPersonNumberFormat,
+    onDateFormatChange,
+    personNumberFormats,
+    updateDateFormat,
+    wrongDateFormat,
+  };
 }
