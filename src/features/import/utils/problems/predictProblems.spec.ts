@@ -30,6 +30,21 @@ function makeFullField(
   };
 }
 
+const customFields: ZetkinCustomField[] = [
+  makeFullField({
+    slug: 'url',
+    type: CUSTOM_FIELD_TYPE.URL,
+  }),
+  makeFullField({
+    slug: 'birthday',
+    type: CUSTOM_FIELD_TYPE.DATE,
+  }),
+  makeFullField({
+    slug: 'joinDate',
+    type: CUSTOM_FIELD_TYPE.DATE,
+  }),
+];
+
 describe('predictProblem()', () => {
   it('returns NO_IMPACT problem for empty sheet', () => {
     const sheet: Sheet = {
@@ -164,7 +179,7 @@ describe('predictProblem()', () => {
     ]);
   });
 
-  it('correctly validates format for email, phone, date and url', () => {
+  it('correctly validates format for email, phone, and url', () => {
     const sheet = makeFullSheet({
       columns: [
         {
@@ -188,11 +203,6 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'date',
-          kind: ColumnKind.FIELD,
-          selected: true,
-        },
-        {
           field: 'url',
           kind: ColumnKind.FIELD,
           selected: true,
@@ -206,31 +216,19 @@ describe('predictProblem()', () => {
             'clara@example.com',
             '+46701234567',
             '0701234567',
-            '1857-07-05',
             'http://zetk.in',
           ],
         },
         // Invalid values
         {
-          data: [1, 'clara at example.com', '1234', 'abc123', '15/1', 'zetkin'],
+          data: [1, 'clara at example.com', '1234', 'abc123', 'zetkin'],
         },
         // Empty values should be ignored by validation
         {
-          data: [3, '', '', '', '', ''],
+          data: [3, '', '', '', ''],
         },
       ],
     });
-
-    const customFields: ZetkinCustomField[] = [
-      makeFullField({
-        slug: 'url',
-        type: CUSTOM_FIELD_TYPE.URL,
-      }),
-      makeFullField({
-        slug: 'date',
-        type: CUSTOM_FIELD_TYPE.DATE,
-      }),
-    ];
 
     const problems = predictProblems(sheet, 'SE', customFields);
     expect(problems).toEqual([
@@ -246,11 +244,6 @@ describe('predictProblem()', () => {
       },
       {
         field: 'alt_phone',
-        indices: [1],
-        kind: ImportProblemKind.INVALID_FORMAT,
-      },
-      {
-        field: 'date',
         indices: [1],
         kind: ImportProblemKind.INVALID_FORMAT,
       },
@@ -396,7 +389,7 @@ describe('predictProblem()', () => {
     const sheet = makeFullSheet({
       columns: [
         {
-          idField: 'ext_id',
+          idField: 'id',
           kind: ColumnKind.ID_FIELD,
           selected: true,
         },
@@ -449,6 +442,81 @@ describe('predictProblem()', () => {
       {
         indices: [0, 1, 2],
         kind: ImportProblemKind.MISSING_ID_AND_NAME,
+      },
+    ]);
+  });
+
+  it('returns no problems when date column is configured and all cells have a value', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          dateFormat: 'se',
+          field: 'birthday',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+        {
+          dateFormat: 'MMDDYY',
+          field: 'joinDate',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+      ],
+      rows: [
+        { data: [1, '19870314-3462', '210329'] },
+        { data: [2, '041231-1473', '201213'] },
+        { data: [3, '650114812', '030307'] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', customFields);
+    expect(problems).toEqual([]);
+  });
+
+  it('returns problem when date column is configured but some cells do not have a value', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          dateFormat: 'se',
+          field: 'birthday',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+        {
+          dateFormat: 'MMDDYY',
+          field: 'joinDate',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+      ],
+      rows: [
+        { data: [1, '999', '032921'] },
+        { data: [2, '041231-1473', 'no info'] },
+        { data: [3, '650114812', '030307'] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', customFields);
+    expect(problems).toEqual([
+      {
+        field: 'birthday',
+        indices: [0],
+        kind: ImportProblemKind.INVALID_FORMAT,
+      },
+      {
+        field: 'joinDate',
+        indices: [1],
+        kind: ImportProblemKind.INVALID_FORMAT,
       },
     ]);
   });
