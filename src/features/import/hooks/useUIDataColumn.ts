@@ -1,5 +1,4 @@
 import hasUnfinishedMapping from '../utils/hasUnfinishedMapping';
-import hasWrongIDFormat from '../utils/hasWrongIDFormat';
 import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';
 import { useMessages } from 'core/i18n';
@@ -14,7 +13,6 @@ export type UIDataColumn<CType extends Column> = {
   title: string;
   unfinishedMapping: boolean;
   uniqueValues: (string | number)[];
-  wrongIDFormat: boolean;
 };
 
 export default function useUIDataColumn(
@@ -111,7 +109,6 @@ export default function useUIDataColumn(
     );
   }
 
-  const wrongIDFormat = hasWrongIDFormat(column, cellValues, firstRowIsHeaders);
   const unfinishedMapping = hasUnfinishedMapping(column);
 
   return {
@@ -123,6 +120,5 @@ export default function useUIDataColumn(
     title,
     unfinishedMapping,
     uniqueValues: Array.from(numRowsByUniqueValue.keys()),
-    wrongIDFormat,
   };
 }

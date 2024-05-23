@@ -2,20 +2,6 @@ import { ColumnKind } from './types';
 import hasWrongIDFormat from './hasWrongIDFormat';
 
 describe('hasWrongIDFormat()', () => {
-  it('returns false if column is not ColumnKind.ID_FIELD', () => {
-    const wrongIDFormat = hasWrongIDFormat(
-      {
-        field: 'city',
-        kind: ColumnKind.FIELD,
-        selected: true,
-      },
-      [],
-      true
-    );
-
-    expect(wrongIDFormat).toBe(false);
-  });
-
   it('returns false if column is ID_FIELD, but not of type "id"', () => {
     const wrongIDFormat1 = hasWrongIDFormat(
       {

@@ -13,7 +13,7 @@ import { IDFieldColumn } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
-import useUpdateIdField from 'features/import/hooks/useUpdateIdField';
+import useIDConfig from 'features/import/hooks/useIDConfig';
 
 interface IdConfigProps {
   uiDataColumn: UIDataColumn<IDFieldColumn>;
@@ -21,7 +21,7 @@ interface IdConfigProps {
 
 const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const theme = useTheme();
-  const updateIdField = useUpdateIdField(
+  const { updateIDField, wrongIDFormat } = useIDConfig(
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex
   );
@@ -58,7 +58,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                   event.target.value == 'ext_id' ||
                   event.target.value == 'id'
                 ) {
-                  updateIdField(event.target.value);
+                  updateIDField(event.target.value);
                 }
               }}
               sx={{ paddingRight: 1 }}
@@ -92,9 +92,9 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
               onChange={(event) => {
                 if (
                   event.target.value == 'ext_id' ||
-                  (event.target.value == 'id' && !uiDataColumn.wrongIDFormat)
+                  (event.target.value == 'id' && !wrongIDFormat)
                 ) {
-                  updateIdField(event.target.value);
+                  updateIDField(event.target.value);
                 }
               }}
               sx={{ paddingRight: 1 }}
@@ -114,7 +114,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           </Box>
         </Box>
       </RadioGroup>
-      {uiDataColumn.wrongIDFormat && (
+      {wrongIDFormat && (
         <Alert severity="error">
           <Msg
             id={messageIds.configuration.configure.ids.wrongIDFormatWarning}
