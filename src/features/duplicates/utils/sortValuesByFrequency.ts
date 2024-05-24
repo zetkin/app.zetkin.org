@@ -1,9 +1,4 @@
-import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-
-export default function sortValuesByFrequency(
-  field: NATIVE_PERSON_FIELDS,
-  values: string[]
-) {
+export default function sortValuesByFrequency(values: string[]) {
   const frequency: Record<string | number, number> = {};
 
   values.forEach((value) => {

@@ -18,7 +18,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
   const messages = useMessages(messageIds);
   const [selectedValue, setSelectedValue] = useState(values[0]);
 
-  const sortedValues = sortValuesByFrequency(field, values);
+  const sortedValues = sortValuesByFrequency(values);
 
   const getLabel = (value: string) => {
     if (field === NATIVE_PERSON_FIELDS.GENDER) {
