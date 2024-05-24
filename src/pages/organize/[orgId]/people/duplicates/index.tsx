@@ -8,7 +8,7 @@ import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 
 import theme from 'theme';
 
@@ -70,6 +70,9 @@ const DuplicatesPage: PageWithLayout = () => {
                       />
                     </ZUIPersonHoverCard>
                   ))}
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'right' }}>
+                  <Button variant="outlined">{messages.page.dismiss()}</Button>
                 </Box>
               </Box>
             </Paper>
