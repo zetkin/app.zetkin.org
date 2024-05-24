@@ -1,10 +1,12 @@
+import { ArrowForward } from '@mui/icons-material';
+import { Box, MenuItem, Select, Typography, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import sortValuesByFrequency from 'features/duplicates/utils/sortValuesByFrequency';
-import { useMessages } from 'core/i18n';
-import { MenuItem, Select, Typography } from '@mui/material';
+import { Msg, useMessages } from 'core/i18n';
 
 interface FieldSettingsRowProps {
   field: NATIVE_PERSON_FIELDS;
@@ -12,6 +14,7 @@ interface FieldSettingsRowProps {
 }
 
 const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
+  const theme = useTheme();
   const messages = useMessages(messageIds);
   const [selectedValue, setSelectedValue] = useState(values[0]);
 
@@ -36,23 +39,53 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
   };
 
   return (
-    <>
-      {sortedValues.length === 1 && (
-        <Typography color="secondary">{getLabel(sortedValues[0])}</Typography>
-      )}
-      {sortedValues.length > 1 && (
-        <Select
-          onChange={(event) => setSelectedValue(event.target.value)}
-          value={selectedValue}
+    <Box
+      alignItems="center"
+      display="flex"
+      justifyContent="space-between"
+      padding={1}
+    >
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        width="50%"
+      >
+        <Box
+          bgcolor={theme.palette.grey[200]}
+          padding={1}
+          sx={{ borderRadius: 2 }}
         >
-          {sortedValues.map((value, index) => (
-            <MenuItem key={index} value={value}>
-              {getLabel(value)}
-            </MenuItem>
-          ))}
-        </Select>
-      )}
-    </>
+          <Typography>
+            <Msg id={globalMessageIds.personFields[field]} />
+          </Typography>
+        </Box>
+        <ArrowForward color="secondary" />
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="flex-start"
+        paddingLeft={1}
+        width="50%"
+      >
+        {sortedValues.length === 1 && (
+          <Typography color="secondary">{getLabel(sortedValues[0])}</Typography>
+        )}
+        {sortedValues.length > 1 && (
+          <Select
+            fullWidth
+            onChange={(event) => setSelectedValue(event.target.value)}
+            value={selectedValue}
+          >
+            {sortedValues.map((value, index) => (
+              <MenuItem key={index} value={value}>
+                {getLabel(value)}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      </Box>
+    </Box>
   );
 };
 
