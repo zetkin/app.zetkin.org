@@ -522,21 +522,40 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
     }
 
     const dateStr = event.start_time.slice(0, 10);
-
     if (!state.eventsByDate[dateStr]) {
       state.eventsByDate[dateStr] = remoteList();
     }
-    const eventByDateItem = state.eventsByDate[dateStr].items.find(
-      (item) => item.id == event.id
-    );
+    let oldDateStr: string | undefined = undefined;
+    for (const date in state.eventsByDate) {
+      const item = state.eventsByDate[date].items.find(
+        (item) => item.id == event.id
+      );
+      if (item) {
+        oldDateStr = item.data?.start_time.slice(0, 10);
+      }
+    }
 
-    if (eventByDateItem) {
-      eventByDateItem.data = { ...eventByDateItem.data, ...event };
-      eventByDateItem.mutating = [];
-    } else {
+    if (oldDateStr) {
+      // When updating an event date, remove the old date's event from state.eventsByDate and push that event to the new date.
+      const filteredEvents = state.eventsByDate[oldDateStr].items.filter(
+        (item) => item.data?.id !== event.id
+      );
+
+      state.eventsByDate[oldDateStr].items = filteredEvents;
       state.eventsByDate[dateStr].items.push(
         remoteItem(event.id, { data: event })
       );
+    } else {
+      //This is to check if the event already exists. In some places, addEventToState might be called more than once.
+      const newDateEventNotExists = !state.eventsByDate[dateStr].items.some(
+        (item) => item?.data?.id === event.id
+      );
+
+      if (newDateEventNotExists) {
+        state.eventsByDate[dateStr].items.push(
+          remoteItem(event.id, { data: event })
+        );
+      }
     }
     state.eventsByDate[dateStr].isLoading = false;
     state.eventsByDate[dateStr].isStale = false;
