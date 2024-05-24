@@ -95,7 +95,7 @@ export default makeMessages('feat.import', {
       emptyStateMessage: m('Start by mapping file columns.'),
       fileHeader: m('File'),
       finishedMappingDates: m<{ dateFormat: string; numValues: number }>(
-        'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer and samordningsnummer} no {Norwegian fødselsnummer and D-nummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
+        'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
       ),
       finishedMappingIds: m<{
         idField: 'ext_id' | 'id';
