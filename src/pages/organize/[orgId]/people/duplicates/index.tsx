@@ -67,14 +67,19 @@ const DuplicatesPage: PageWithLayout = () => {
                     numPeople: cluster.duplicatePersons.length,
                   })}
                 </Typography>
-                <Box display={'flex'} flexWrap={'wrap'} gap={4}>
+                <Box display={'flex'} flexWrap={'wrap'}>
                   {cluster.duplicatePersons.map((duplicate, index) => (
                     <ZUIPersonHoverCard key={index} personId={duplicate.id}>
-                      <ZUIPerson
-                        key={index}
-                        id={duplicate.id}
-                        name={`${duplicate.first_name} ${duplicate.last_name}`}
-                      />
+                      <Box
+                        component="div"
+                        sx={{ display: 'inline', pb: 1.5, pr: 4 }}
+                      >
+                        <ZUIPerson
+                          key={index}
+                          id={duplicate.id}
+                          name={`${duplicate.first_name} ${duplicate.last_name}`}
+                        />
+                      </Box>
                     </ZUIPersonHoverCard>
                   ))}
                 </Box>
