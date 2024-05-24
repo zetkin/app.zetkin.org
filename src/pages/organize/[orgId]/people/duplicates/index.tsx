@@ -7,6 +7,7 @@ import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 import ZUIPerson from 'zui/ZUIPerson';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Box, Paper, Typography } from '@mui/material';
 
 import theme from 'theme';
@@ -59,11 +60,13 @@ const DuplicatesPage: PageWithLayout = () => {
                 </Typography>
                 <Box display={'flex'} flexWrap={'wrap'} gap={4}>
                   {cluster.duplicatePersons.map((duplicate, index) => (
-                    <ZUIPerson
-                      key={index}
-                      id={duplicate.id}
-                      name={`${duplicate.first_name} ${duplicate.last_name}`}
-                    />
+                    <ZUIPersonHoverCard key={index} personId={duplicate.id}>
+                      <ZUIPerson
+                        key={index}
+                        id={duplicate.id}
+                        name={`${duplicate.first_name} ${duplicate.last_name}`}
+                      />
+                    </ZUIPersonHoverCard>
                   ))}
                 </Box>
               </Box>
