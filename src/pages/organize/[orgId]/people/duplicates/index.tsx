@@ -1,5 +1,7 @@
-import { Box, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { Box, Typography } from '@mui/material';
+
+import ConfigureModal from 'features/duplicates/components/ConfigureModal';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
@@ -47,6 +49,7 @@ const DuplicatesPage: PageWithLayout = () => {
           </Box>
         </>
       )}
+      <ConfigureModal duplicate={list[0]} onClose={() => {}} open={true} />
     </>
   );
 };
