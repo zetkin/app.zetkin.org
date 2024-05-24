@@ -8,7 +8,6 @@ import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
@@ -19,8 +18,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 
 const DuplicatesPage: PageWithLayout = () => {
   const onServer = useServerSide();
-  const { orgId } = useNumericRouteParams();
-  const list = useDuplicates(orgId).data ?? [];
+  const list = useDuplicates().data ?? [];
   const messages = useMessages(messageIds);
 
   if (onServer) {

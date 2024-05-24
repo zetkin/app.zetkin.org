@@ -9,6 +9,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
+import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinDuplicate } from '../store';
@@ -38,6 +39,9 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
     >
       <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
         <DialogTitle variant="h5">{messages.modal.title()}</DialogTitle>
+      </Box>
+      <Box display="flex" flexDirection="column">
+        <FieldSettings duplicatePersons={duplicate.duplicatePersons} />
       </Box>
       <DialogActions>
         <Button variant="text">{messages.modal.cancelButton()}</Button>
