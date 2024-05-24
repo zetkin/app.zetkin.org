@@ -53,7 +53,9 @@ export default class LocalPersonColumnType
         if (!v2) {
           return -1;
         }
-        return v1.first_name.localeCompare(v2.first_name);
+        const name1 = `${v1.first_name} ${v1.last_name}`;
+        const name2 = `${v2.first_name} ${v2.last_name}`;
+        return name1.localeCompare(name2);
       },
     };
   }
