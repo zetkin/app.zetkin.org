@@ -46,6 +46,7 @@ export default class LocalPersonColumnType
       renderEditCell: (params: GridRenderEditCellParams) => {
         return <EditCell cell={params.value} column={col} row={params.row} />;
       },
+      sortComparator: (v1, v2) => v1?.first_name.localeCompare(v2?.first_name),
     };
   }
   getSearchableStrings(cell: LocalPersonViewCell): string[] {
