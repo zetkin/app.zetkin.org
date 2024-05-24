@@ -3,14 +3,18 @@ import messageIds from 'features/duplicates/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
+import { useContext } from 'react';
 import useDuplicates from 'features/duplicates/hooks/useDuplicates';
+import useDuplicatesMutations from 'features/duplicates/hooks/useDuplicatesMutations';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Box, Button, Paper, Typography } from '@mui/material';
 
 import theme from 'theme';
+import { useNumericRouteParams } from 'core/hooks';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   return {
@@ -19,9 +23,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 });
 
 const DuplicatesPage: PageWithLayout = () => {
+  const { orgId } = useNumericRouteParams();
   const onServer = useServerSide();
   const list = useDuplicates().data ?? [];
   const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { dismissDuplicate } = useDuplicatesMutations(orgId);
 
   if (onServer) {
     return null;
@@ -72,7 +79,16 @@ const DuplicatesPage: PageWithLayout = () => {
                   ))}
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1, justifyContent: 'right' }}>
-                  <Button variant="outlined">{messages.page.dismiss()}</Button>
+                  <Button
+                    onClick={() => {
+                      showConfirmDialog({
+                        onSubmit: () => dismissDuplicate(cluster.id),
+                      });
+                    }}
+                    variant="text"
+                  >
+                    {messages.page.dismiss()}
+                  </Button>
                 </Box>
               </Box>
             </Paper>
