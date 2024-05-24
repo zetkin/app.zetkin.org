@@ -46,7 +46,15 @@ export default class LocalPersonColumnType
       renderEditCell: (params: GridRenderEditCellParams) => {
         return <EditCell cell={params.value} column={col} row={params.row} />;
       },
-      sortComparator: (v1, v2) => v1?.first_name.localeCompare(v2?.first_name),
+      sortComparator: (v1, v2) => {
+        if (!v1) {
+          return 1;
+        }
+        if (!v2) {
+          return -1;
+        }
+        return v1.first_name.localeCompare(v2.first_name);
+      },
     };
   }
   getSearchableStrings(cell: LocalPersonViewCell): string[] {
