@@ -89,6 +89,7 @@ const DuplicatesPage: PageWithLayout = () => {
                   >
                     {messages.page.dismiss()}
                   </Button>
+                  <Button variant="outlined">{messages.page.resolve()}</Button>
                 </Box>
               </Box>
             </Paper>

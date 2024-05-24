@@ -11,5 +11,6 @@ export default makeMessages('feat.duplicates', {
     possibleDuplicatesDescription: m<{ numPeople: number }>(
       'These {numPeople} people look very similar'
     ),
+    resolve: m('Resolve'),
   },
 });
