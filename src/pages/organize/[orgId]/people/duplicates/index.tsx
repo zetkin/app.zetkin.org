@@ -9,6 +9,8 @@ import useServerSide from 'core/useServerSide';
 import ZUIPerson from 'zui/ZUIPerson';
 import { Box, Paper, Typography } from '@mui/material';
 
+import theme from 'theme';
+
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   return {
     props: {},
@@ -37,12 +39,23 @@ const DuplicatesPage: PageWithLayout = () => {
         </Box>
       )}
       {list.length > 0 && (
-        <Box>
+        <Box p={1.5}>
+          <Typography
+            color={theme.palette.grey[500]}
+            sx={{ mb: 2, textTransform: 'uppercase' }}
+            variant="subtitle2"
+          >
+            {messages.page.possibleDuplicates()}
+          </Typography>
           {list.map((cluster) => (
-            <Paper key={cluster.id} elevation={2} sx={{ m: 2, p: 1.5 }}>
+            <Paper key={cluster.id} elevation={2} sx={{ p: 1.5 }}>
               <Box display={'flex'} flexDirection={'column'} gap={1.5}>
-                <Typography variant="body1">
-                  {messages.page.duplicatesExistDescription()}
+                <Typography
+                  color={theme.palette.grey[500]}
+                  sx={{ textTransform: 'uppercase' }}
+                  variant="subtitle2"
+                >
+                  {messages.page.possibleDuplicatesDescription()}
                 </Typography>
                 <Box display={'flex'} flexWrap={'wrap'} gap={4}>
                   {cluster.duplicatePersons.map((duplicate, index) => (
