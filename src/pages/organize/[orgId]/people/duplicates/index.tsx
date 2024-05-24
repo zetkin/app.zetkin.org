@@ -56,7 +56,9 @@ const DuplicatesPage: PageWithLayout = () => {
                   sx={{ textTransform: 'uppercase' }}
                   variant="subtitle2"
                 >
-                  {messages.page.possibleDuplicatesDescription()}
+                  {messages.page.possibleDuplicatesDescription({
+                    numPeople: cluster.duplicatePersons.length,
+                  })}
                 </Typography>
                 <Box display={'flex'} flexWrap={'wrap'} gap={4}>
                   {cluster.duplicatePersons.map((duplicate, index) => (

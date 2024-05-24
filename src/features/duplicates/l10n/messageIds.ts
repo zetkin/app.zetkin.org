@@ -7,6 +7,8 @@ export default makeMessages('feat.duplicates', {
       'Yay! all your members seem to be unique individuals.'
     ),
     possibleDuplicates: m('Possible duplicates'),
-    possibleDuplicatesDescription: m('These people look very similar'),
+    possibleDuplicatesDescription: m<{ numPeople: number }>(
+      'These {numPeople} people look very similar'
+    ),
   },
 });
