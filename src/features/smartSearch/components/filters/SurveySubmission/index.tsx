@@ -1,9 +1,10 @@
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   NewSmartSearchFilter,
@@ -126,8 +127,10 @@ const SurveySubmission = ({
                       <Msg
                         id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle:
+                          surveyTitle: truncateOnMiddle(
                             surveys.find((s) => s.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -142,7 +145,12 @@ const SurveySubmission = ({
                 )}
                 {surveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {s.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={s.title.length >= 40 ? s.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>

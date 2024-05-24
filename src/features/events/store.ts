@@ -120,7 +120,6 @@ const eventsSlice = createSlice({
 
       if (eventListItem) {
         eventListItem.deleted = true;
-        state.eventList.isStale = true;
       }
 
       for (const date in state.eventsByDate) {
@@ -130,7 +129,6 @@ const eventsSlice = createSlice({
 
         if (item) {
           item.deleted = true;
-          state.eventsByDate[date].isStale = true;
         }
       }
 
@@ -141,7 +139,6 @@ const eventsSlice = createSlice({
 
         if (item) {
           item.deleted = true;
-          state.eventsByCampaignId[campaignId].isStale = true;
         }
       }
     },
@@ -524,11 +521,10 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
       state.eventList.items.push(remoteItem(event.id, { data: event }));
     }
 
-    const newDateStr = event.start_time.slice(0, 10);
-    if (!state.eventsByDate[newDateStr]) {
-      state.eventsByDate[newDateStr] = remoteList();
+    const dateStr = event.start_time.slice(0, 10);
+    if (!state.eventsByDate[dateStr]) {
+      state.eventsByDate[dateStr] = remoteList();
     }
-
     let oldDateStr: string | undefined = undefined;
     for (const date in state.eventsByDate) {
       const item = state.eventsByDate[date].items.find(
@@ -538,6 +534,7 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
         oldDateStr = item.data?.start_time.slice(0, 10);
       }
     }
+
     if (oldDateStr) {
       // When updating an event date, remove the old date's event from state.eventsByDate and push that event to the new date.
       const filteredEvents = state.eventsByDate[oldDateStr].items.filter(
@@ -545,21 +542,24 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
       );
 
       state.eventsByDate[oldDateStr].items = filteredEvents;
-      state.eventsByDate[newDateStr].items.push(
+      state.eventsByDate[dateStr].items.push(
         remoteItem(event.id, { data: event })
       );
     } else {
       //This is to check if the event already exists. In some places, addEventToState might be called more than once.
-      const newDateEventNotExists = !state.eventsByDate[newDateStr].items.some(
+      const newDateEventNotExists = !state.eventsByDate[dateStr].items.some(
         (item) => item?.data?.id === event.id
       );
 
       if (newDateEventNotExists) {
-        state.eventsByDate[newDateStr].items.push(
+        state.eventsByDate[dateStr].items.push(
           remoteItem(event.id, { data: event })
         );
       }
     }
+    state.eventsByDate[dateStr].isLoading = false;
+    state.eventsByDate[dateStr].isStale = false;
+    state.eventsByDate[dateStr].loaded = new Date().toISOString();
 
     const campaign = event.campaign;
     if (campaign) {

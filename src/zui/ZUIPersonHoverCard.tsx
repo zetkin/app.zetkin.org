@@ -110,7 +110,12 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
                 </Grid>
                 {tags && (
                   <Grid item>
-                    <TagsList isGrouped={false} tags={tags} />
+                    <TagsList
+                      cap={10}
+                      capOverflowHref={`/organize/${orgId}/people/${person?.id}`}
+                      isGrouped={false}
+                      tags={tags}
+                    />
                   </Grid>
                 )}
                 {(['phone', 'alt_phone', 'email'] as Array<keyof ZetkinPerson>)

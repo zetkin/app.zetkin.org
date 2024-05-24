@@ -30,7 +30,7 @@ const Pane: FC<PaneProps> = ({ children, onClose }) => {
       <Box
         sx={{
           flex: 1,
-          overflowY: 'scroll',
+          overflowY: 'auto',
           padding: 2,
         }}
       >
