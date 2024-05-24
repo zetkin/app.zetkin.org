@@ -512,24 +512,23 @@ const eventsSlice = createSlice({
 
 function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
   events.forEach((event) => {
-    const dateStr = event.start_time.slice(0, 10);
-
-    if (!state.eventsByDate[dateStr]) {
-      state.eventsByDate[dateStr] = remoteList();
-    }
-
     const eventListItem = state.eventList.items.find(
       (item) => item.id == event.id
     );
-    const eventByDateItem = state.eventsByDate[dateStr].items.find(
-      (item) => item.id == event.id
-    );
-
     if (eventListItem) {
       eventListItem.data = { ...eventListItem.data, ...event };
     } else {
       state.eventList.items.push(remoteItem(event.id, { data: event }));
     }
+
+    const dateStr = event.start_time.slice(0, 10);
+
+    if (!state.eventsByDate[dateStr]) {
+      state.eventsByDate[dateStr] = remoteList();
+    }
+    const eventByDateItem = state.eventsByDate[dateStr].items.find(
+      (item) => item.id == event.id
+    );
 
     if (eventByDateItem) {
       eventByDateItem.data = { ...eventByDateItem.data, ...event };
@@ -539,6 +538,9 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
         remoteItem(event.id, { data: event })
       );
     }
+    state.eventsByDate[dateStr].isLoading = false;
+    state.eventsByDate[dateStr].isStale = false;
+    state.eventsByDate[dateStr].loaded = new Date().toISOString();
 
     const campaign = event.campaign;
     if (campaign) {
