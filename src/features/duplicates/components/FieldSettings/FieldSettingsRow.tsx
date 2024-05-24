@@ -17,28 +17,28 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
 
   const sortedValues = sortValuesByFrequency(field, values);
 
-  const getGender = (value: string) => {
+  const getLabel = (value: string) => {
+    if (field === NATIVE_PERSON_FIELDS.GENDER) {
+      if (value === 'f') {
+        return messages.modal.fieldSettings.gender.f();
+      } else if (value === 'm') {
+        return messages.modal.fieldSettings.gender.m();
+      } else {
+        return messages.modal.fieldSettings.gender.o();
+      }
+    }
+
     if (!value) {
       return messages.modal.fieldSettings.noData();
     }
 
-    if (value === 'f') {
-      return messages.modal.fieldSettings.gender.f();
-    } else if (value === 'm') {
-      return messages.modal.fieldSettings.gender.m();
-    } else {
-      return messages.modal.fieldSettings.gender.o();
-    }
+    return value;
   };
 
   return (
     <>
       {sortedValues.length === 1 && (
-        <Typography color="secondary">
-          {field === NATIVE_PERSON_FIELDS.GENDER
-            ? getGender(sortedValues[0])
-            : sortedValues[0]}
-        </Typography>
+        <Typography color="secondary">{getLabel(sortedValues[0])}</Typography>
       )}
       {sortedValues.length > 1 && (
         <Select
@@ -47,7 +47,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
         >
           {sortedValues.map((value, index) => (
             <MenuItem key={index} value={value}>
-              {field === NATIVE_PERSON_FIELDS.GENDER ? getGender(value) : value}
+              {getLabel(value)}
             </MenuItem>
           ))}
         </Select>
