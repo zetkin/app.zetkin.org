@@ -1,5 +1,3 @@
-import MailIcon from '@mui/icons-material/Mail';
-import PhoneIcon from '@mui/icons-material/Phone';
 import {
   Box,
   BoxProps,
@@ -13,15 +11,17 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import { CopyIcon } from './ZUIInlineCopyToClipBoard';
+import MailIcon from '@mui/icons-material/Mail';
 import messageIds from 'features/profile/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import PhoneIcon from '@mui/icons-material/Phone';
 import TagsList from 'features/tags/components/TagManager/components/TagsList';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
 import usePersonTags from 'features/tags/hooks/usePersonTags';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
-import { CopyIcon } from './ZUIInlineCopyToClipBoard';
 
 const ZUIPersonHoverCard: React.FunctionComponent<{
   BoxProps?: BoxProps;
