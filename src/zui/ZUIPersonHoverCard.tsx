@@ -7,7 +7,6 @@ import {
   Card,
   Fade,
   Grid,
-  Link,
   Popper,
   PopperProps,
   Typography,
@@ -21,7 +20,6 @@ import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
 import usePersonTags from 'features/tags/hooks/usePersonTags';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import ZUICopyToClipboard from 'zui/ZUICopyToClipboard';
 import ZUIPerson from 'zui/ZUIPerson';
 import { CopyIcon } from './ZUIInlineCopyToClipBoard';
 
