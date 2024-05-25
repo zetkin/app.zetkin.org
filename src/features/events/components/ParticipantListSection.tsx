@@ -192,11 +192,15 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       headerName: messages.eventParticipantsList.columnPhone(),
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
+      renderCell: (params) => {
         if (params.row.person) {
-          return params.row.person.phone;
+          return (
+            <a href={'tel:' + params.row.person.phone}>
+              {params.row.person.phone}
+            </a>
+          );
         } else {
-          return params.row.phone;
+          return <a href={'tel:' + params.row.phone}>{params.row.phone}</a>;
         }
       },
     },
@@ -207,11 +211,15 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       headerName: messages.eventParticipantsList.columnEmail(),
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
+      renderCell: (params) => {
         if (params.row.person) {
-          return params.row.person.email;
+          return (
+            <a href={'mailto:' + params.row.person.email}>
+              {params.row.person.email}
+            </a>
+          );
         } else {
-          return params.row.email;
+          return <a href={'mailto:' + params.row.email}>{params.row.email}</a>;
         }
       },
     },
