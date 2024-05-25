@@ -67,9 +67,7 @@ const ZUIPersonHoverCard: FC<{
             name: 'preventOverflow',
             options: {
               altAxis: true,
-              altBoundary: true,
               padding: 8,
-              rootBoundary: 'document',
               tether: true,
             },
           },
