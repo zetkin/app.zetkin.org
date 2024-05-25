@@ -3,9 +3,11 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import {
   Box,
   BoxProps,
+  Button,
   Card,
   Fade,
   Grid,
+  Link,
   Popper,
   PopperProps,
   Typography,
@@ -21,6 +23,7 @@ import usePersonTags from 'features/tags/hooks/usePersonTags';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUICopyToClipboard from 'zui/ZUICopyToClipboard';
 import ZUIPerson from 'zui/ZUIPerson';
+import { CopyIcon } from './ZUIInlineCopyToClipBoard';
 
 const ZUIPersonHoverCard: React.FunctionComponent<{
   BoxProps?: BoxProps;
@@ -122,23 +125,35 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
                   .filter((field) => !!person[field])
                   .map((field) => {
                     const value = person[field];
+                    const linkType = field.includes('mail')
+                      ? 'mailto:'
+                      : field.includes('phone')
+                      ? 'tel:'
+                      : '';
+
                     if (typeof value === 'object') {
                       return null;
                     }
                     return (
                       <Grid key={field} container item>
-                        <ZUICopyToClipboard copyText={value as string}>
-                          <Box display="flex" flexDirection="row">
-                            {field.includes('mail') ? (
-                              <MailIcon color="secondary" />
-                            ) : (
-                              <PhoneIcon color="secondary" />
-                            )}
-                            <Typography style={{ marginLeft: '1.5rem' }}>
-                              {value}
-                            </Typography>
-                          </Box>
-                        </ZUICopyToClipboard>
+                        <Box display="flex" flexDirection="row">
+                          {field.includes('mail') ? (
+                            <MailIcon color="secondary" />
+                          ) : (
+                            <PhoneIcon color="secondary" />
+                          )}
+                          <Typography style={{ marginLeft: '1.5rem' }}>
+                            <a href={linkType + value}> {value} </a>
+                          </Typography>
+                          <Button
+                            onClick={() =>
+                              navigator.clipboard.writeText(value as string)
+                            }
+                            style={{ marginTop: '-0.3rem' }}
+                          >
+                            <CopyIcon color="secondary" />
+                          </Button>
+                        </Box>
                       </Grid>
                     );
                   })}
