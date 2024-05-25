@@ -5,6 +5,7 @@ import {
   Card,
   Fade,
   Grid,
+  Link,
   Popper,
   PopperProps,
   Typography,
@@ -141,7 +142,7 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
                             <PhoneIcon color="secondary" />
                           )}
                           <Typography style={{ marginLeft: '1.5rem' }}>
-                            <a href={linkType + value}> {value} </a>
+                            <Link href={linkType + value}> {value} </Link>
                           </Typography>
                           <Button
                             onClick={() =>

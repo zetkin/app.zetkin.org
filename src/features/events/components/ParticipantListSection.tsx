@@ -1,10 +1,9 @@
-import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
-import { FC } from 'react';
 import {
   Box,
   Button,
   FormControl,
   InputLabel,
+  Link,
   MenuItem,
   Select,
   Tooltip,
@@ -12,6 +11,8 @@ import {
 } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
+import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
+import { FC } from 'react';
 import filterParticipants from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
@@ -193,12 +194,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       renderCell: (params) => {
         if (params.row.person) {
           return (
-            <a href={'tel:' + params.row.person.phone}>
+            <Link href={'tel:' + params.row.person.phone}>
               {params.row.person.phone}
-            </a>
+            </Link>
           );
         } else {
-          return <a href={'tel:' + params.row.phone}>{params.row.phone}</a>;
+          return (
+            <Link href={'tel:' + params.row.phone}>{params.row.phone}</Link>
+          );
         }
       },
       resizable: false,
@@ -212,12 +215,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       renderCell: (params) => {
         if (params.row.person) {
           return (
-            <a href={'mailto:' + params.row.person.email}>
+            <Link href={'mailto:' + params.row.person.email}>
               {params.row.person.email}
-            </a>
+            </Link>
           );
         } else {
-          return <a href={'mailto:' + params.row.email}>{params.row.email}</a>;
+          return (
+            <Link href={'mailto:' + params.row.email}>{params.row.email}</Link>
+          );
         }
       },
       resizable: false,
