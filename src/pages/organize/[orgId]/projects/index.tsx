@@ -1,19 +1,19 @@
-import { GetServerSideProps } from 'next';
-import Head from 'next/head';
-import { Suspense } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
+import { Msg, useMessages } from 'core/i18n';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import CampaignCard from 'features/campaigns/components/CampaignCard';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import { Suspense } from 'react';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
-import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -29,15 +29,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const campaignsState = await apiClient.get(`/api/orgs/${orgId}/campaigns`);
-  const eventsState = await apiClient.get(`/api/orgs/${orgId}/actions`);
-  const today = new Date(Date.now()).toISOString();
-  const upcomingEventsState = await apiClient.get(
-    `/api/orgs/${orgId}/actions?filter=start_time>${today}`
-  );
   const orgState = await apiClient.get(`/api/orgs/${orgId}`);
 
-  if (orgState && campaignsState && eventsState && upcomingEventsState) {
+  if (orgState) {
     return {
       props: {},
     };
