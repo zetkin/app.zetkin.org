@@ -16,6 +16,7 @@ export type ImportFieldProblem = {
 };
 
 export type ImportFieldMetaProblem = {
+  amount: number;
   field: string;
   kind: ImportProblemKind.MAJOR_CHANGE;
 };

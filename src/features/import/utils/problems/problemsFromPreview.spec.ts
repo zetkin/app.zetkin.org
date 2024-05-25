@@ -74,13 +74,13 @@ describe('problemsFromPreview()', () => {
       },
     });
 
-    const problems = problemsFromPreview(preview);
+    const problems = problemsFromPreview(0, preview);
     expect(problems).toHaveLength(0);
   });
 
   it('returns NO_IMPACT for empty preview', () => {
     const preview = makeFullPreview({});
-    const problems = problemsFromPreview(preview);
+    const problems = problemsFromPreview(0, preview);
     expect(problems).toEqual([
       {
         kind: ImportProblemKind.NO_IMPACT,
@@ -106,7 +106,7 @@ describe('problemsFromPreview()', () => {
       ],
     });
 
-    const problems = problemsFromPreview(preview);
+    const problems = problemsFromPreview(10, preview);
     expect(problems).toEqual([
       {
         indices: [0, 1],
@@ -131,7 +131,7 @@ describe('problemsFromPreview()', () => {
       ],
     });
 
-    const problems = problemsFromPreview(preview);
+    const problems = problemsFromPreview(0, preview);
     expect(problems).toEqual([
       {
         indices: [0, 2],
@@ -151,7 +151,7 @@ describe('problemsFromPreview()', () => {
       ],
     });
 
-    const problems = problemsFromPreview(preview);
+    const problems = problemsFromPreview(0, preview);
     expect(problems).toEqual([
       {
         indices: [1],
@@ -174,7 +174,7 @@ describe('problemsFromPreview()', () => {
       },
     });
 
-    const problems = problemsFromPreview(preview);
+    const problems = problemsFromPreview(0, preview);
     expect(problems).toEqual([]);
   });
 
@@ -195,7 +195,7 @@ describe('problemsFromPreview()', () => {
       },
     });
 
-    const problems = problemsFromPreview(preview);
+    const problems = problemsFromPreview(100, preview);
     expect(problems).toEqual([
       {
         field: 'first_name',
