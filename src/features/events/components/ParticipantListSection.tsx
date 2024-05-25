@@ -190,8 +190,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       field: 'phone',
       flex: 1,
       headerName: messages.eventParticipantsList.columnPhone(),
-      resizable: false,
-      sortingOrder: ['asc', 'desc', null],
       renderCell: (params) => {
         if (params.row.person) {
           return (
@@ -203,14 +201,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           return <a href={'tel:' + params.row.phone}>{params.row.phone}</a>;
         }
       },
+      resizable: false,
+      sortingOrder: ['asc', 'desc', null],
     },
     {
       disableColumnMenu: true,
       field: 'email',
       flex: 1,
       headerName: messages.eventParticipantsList.columnEmail(),
-      resizable: false,
-      sortingOrder: ['asc', 'desc', null],
       renderCell: (params) => {
         if (params.row.person) {
           return (
@@ -222,6 +220,8 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           return <a href={'mailto:' + params.row.email}>{params.row.email}</a>;
         }
       },
+      resizable: false,
+      sortingOrder: ['asc', 'desc', null],
     },
     {
       disableColumnMenu: true,
