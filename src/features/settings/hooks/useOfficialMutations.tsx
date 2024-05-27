@@ -26,7 +26,9 @@ export default function useOfficialMutations(
         role,
       })
       .then((membership) => {
-        dispatch(roleUpdated([personId, membership]));
+        if (membership) {
+          dispatch(roleUpdated([personId, membership]));
+        }
       });
   };
 

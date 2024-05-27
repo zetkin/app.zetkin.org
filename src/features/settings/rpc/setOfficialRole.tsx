@@ -11,7 +11,7 @@ const paramsSchema = z.object({
 });
 
 type Params = z.input<typeof paramsSchema>;
-type Result = ZetkinMembership;
+type Result = ZetkinMembership | null;
 
 export const setOfficialRoleDef = {
   handler: handle,
@@ -33,5 +33,5 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     `/api/orgs/${orgId}/people/${official.id}/connections`
   );
 
-  return memberships.find((m) => m.organization.id == orgId)!;
+  return memberships.find((m) => m.organization.id == orgId) || null;
 }
