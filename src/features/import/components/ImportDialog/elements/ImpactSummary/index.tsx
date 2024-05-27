@@ -6,7 +6,7 @@ import AddedTags from './AddedTags';
 import ChangedFields from './ChangedFields';
 import CreatedAndUpdated from './CreatedAndUpdated';
 import { PersonImportSummary } from 'features/import/utils/types';
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import useTags from 'features/tags/hooks/useTags';
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
 
 const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
   const tags = useTags(orgId).data ?? [];
-  const organizations = useOrganizations().data ?? [];
+  const subOrgs = useSubOrganizations(orgId).data ?? [];
 
   const { addedToOrg, tagged } = summary;
 
@@ -25,8 +25,9 @@ const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
     Object.keys(tagged.byTag).includes(tag.id.toString())
   );
 
-  const orgsWithNewPeople = organizations.filter((org) =>
-    Object.keys(addedToOrg.byOrg).includes(org.id.toString())
+  const orgsWithNewPeople = subOrgs.filter(
+    (org) =>
+      Object.keys(addedToOrg.byOrg).includes(org.id.toString()) && org.is_active
   );
 
   return (

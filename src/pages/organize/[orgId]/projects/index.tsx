@@ -10,9 +10,11 @@ import CampaignCard from 'features/campaigns/components/CampaignCard';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import SharedCard from 'features/campaigns/components/SharedCard';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import useSurveys from 'features/surveys/hooks/useSurveys';
 import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
@@ -55,10 +57,16 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   campaigns?.reverse();
 
   const onServer = useServerSide();
+  const surveys = useSurveys(orgId).data ?? [];
 
   if (onServer) {
     return null;
   }
+  //The shared card is currently only visible when there are shared surveys, but there will be more shared activities in the future.
+  const sharedSurveys = surveys.filter(
+    (survey) =>
+      survey.org_access === 'suborgs' && survey.organization.id != orgId
+  );
 
   return (
     <>
@@ -74,6 +82,11 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
         </Typography>
 
         <Grid container spacing={2}>
+          {sharedSurveys.length > 0 && (
+            <Grid item lg={3} md={4} xs={12}>
+              <SharedCard />
+            </Grid>
+          )}
           {campaigns?.map((campaign) => {
             return (
               <Grid key={campaign.id} item lg={3} md={4} xs={12}>

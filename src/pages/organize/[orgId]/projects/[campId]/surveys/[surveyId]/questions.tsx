@@ -14,10 +14,10 @@ import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId, surveyId } = ctx.params!;
-
+    const { campId, orgId, surveyId } = ctx.params!;
     return {
       props: {
+        campId,
         orgId,
         surveyId,
       },
@@ -30,11 +30,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 interface QuestionsPageProps {
+  campId: string;
   orgId: string;
   surveyId: string;
 }
 
 const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
+  campId,
   orgId,
   surveyId,
 }) => {
@@ -45,6 +47,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   // Figure out whether to display the read-only warning on top
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isShared = campId === 'shared';
 
   return (
     <>
@@ -63,12 +66,14 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
               <Grid item md={8} xs={12}>
                 <SurveyEditor
                   orgId={parseInt(orgId)}
-                  readOnly={receivingSubmissions && !forceEditable}
+                  readOnly={
+                    (receivingSubmissions && !forceEditable) || isShared
+                  }
                   surveyId={parseInt(surveyId)}
                 />
               </Grid>
               <Grid item md={4} xs={12}>
-                {receivingSubmissions && (
+                {receivingSubmissions && !isShared && (
                   <EditWarningCard
                     editing={forceEditable}
                     onToggle={(newValue) => setForceEditable(newValue)}
@@ -85,7 +90,11 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
 
 QuestionsPage.getLayout = function getLayout(page, props) {
   return (
-    <SurveyLayout orgId={props.orgId} surveyId={props.surveyId}>
+    <SurveyLayout
+      campId={props.campId}
+      orgId={props.orgId}
+      surveyId={props.surveyId}
+    >
       {page}
     </SurveyLayout>
   );

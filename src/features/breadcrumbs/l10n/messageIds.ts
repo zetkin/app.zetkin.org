@@ -28,6 +28,7 @@ export default makeMessages('feat.breadcrumbs', {
     projects: m('Projects'),
     questions: m('Questions'),
     settings: m('Settings'),
+    shared: m('Shared with us'),
     submissions: m('Submissions'),
     surveys: m('Surveys'),
     tasks: m('Tasks'),
