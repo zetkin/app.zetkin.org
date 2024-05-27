@@ -16,12 +16,30 @@ const FieldSettings: FC<FieldSettingsProps> = ({ duplicatePersons }) => {
     (field) => field !== NATIVE_PERSON_FIELDS.ID
   );
 
+  const sortedNativePersonFields = nativePersonFields.filter(
+    (field) =>
+      field === NATIVE_PERSON_FIELDS.FIRST_NAME ||
+      field === NATIVE_PERSON_FIELDS.LAST_NAME ||
+      field === NATIVE_PERSON_FIELDS.EMAIL ||
+      field === NATIVE_PERSON_FIELDS.PHONE
+  );
+
+  const otherFields = nativePersonFields.filter(
+    (field) =>
+      field !== NATIVE_PERSON_FIELDS.FIRST_NAME &&
+      field !== NATIVE_PERSON_FIELDS.LAST_NAME &&
+      field !== NATIVE_PERSON_FIELDS.EMAIL &&
+      field !== NATIVE_PERSON_FIELDS.PHONE
+  );
+
+  sortedNativePersonFields.push(...otherFields);
+
   return (
     <Box
       border={1}
       sx={{ borderColor: theme.palette.grey[300], borderRadius: 2 }}
     >
-      {nativePersonFields.map((field, index) => {
+      {sortedNativePersonFields.map((field, index) => {
         const values = duplicatePersons.map((person) => {
           const value = person[field];
           return value ? value.toString() : '';
