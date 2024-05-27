@@ -100,7 +100,7 @@ export default function useFilteredEventActivities(
         (filterState.selectedActions.includes(
           ACTION_FILTER_OPTIONS.UNSENT_NOTIFICATIONS
         ) &&
-          stats.numReminded != stats.numBooked)
+          stats.numReminded >= stats.numBooked)
       ) {
         return false;
       }
