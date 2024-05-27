@@ -7,6 +7,7 @@ import { scaffold } from 'utils/next';
 import theme from 'theme';
 import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { Box, Typography } from '@mui/material';
 
@@ -18,7 +19,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 
 const DuplicatesPage: PageWithLayout = () => {
   const onServer = useServerSide();
-  const list = useDuplicates().data ?? [];
+  const { orgId } = useNumericRouteParams();
+  const list = useDuplicates(orgId).data ?? [];
   const messages = useMessages(messageIds);
 
   if (onServer) {

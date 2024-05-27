@@ -27,11 +27,11 @@ const DuplicateCard: FC<DuplicateCardProps> = ({ cluster }) => {
           variant="subtitle2"
         >
           {messages.page.possibleDuplicatesDescription({
-            numPeople: cluster.duplicatePersons.length,
+            numPeople: cluster.duplicates.length,
           })}
         </Typography>
         <Box display={'flex'} flexWrap={'wrap'}>
-          {cluster.duplicatePersons.map((duplicate, index) => (
+          {cluster.duplicates.map((duplicate, index) => (
             <ZUIPersonHoverCard key={index} personId={duplicate.id}>
               <Box component="div" sx={{ display: 'inline', pb: 1.5, pr: 4 }}>
                 <ZUIPerson

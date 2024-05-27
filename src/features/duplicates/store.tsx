@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RemoteList, remoteList } from 'utils/storeUtils';
 
 export interface ZetkinDuplicate {
-  duplicatePersons: ZetkinPerson[];
+  duplicates: ZetkinPerson[];
   dismissed: string | null;
   id: number;
   merged: string | null;
