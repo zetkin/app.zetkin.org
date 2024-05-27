@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import theme from 'theme';
 import {
   Box,
@@ -8,8 +7,11 @@ import {
   DialogTitle,
   useMediaQuery,
 } from '@mui/material';
+import { FC, useState } from 'react';
 
+import DuplicatesModalList from './DuplicatesModalList';
 import messageIds from '../l10n/messageIds';
+import NotDuplicatesModalList from './NotDuplicatesModalList';
 import { useMessages } from 'core/i18n';
 import { ZetkinDuplicate } from '../store';
 
@@ -26,18 +28,22 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
 }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
+  const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('lg');
 
   return (
     <Dialog
       fullScreen={fullScreen}
-      fullWidth
+      maxWidth={maxWidth}
       onClose={() => {
         onClose();
+        setMaxWidth('sm');
       }}
       open={open}
     >
+      <DialogTitle variant="h5">{messages.modal.title()}</DialogTitle>
       <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
-        <DialogTitle variant="h5">{messages.modal.title()}</DialogTitle>
+        <DuplicatesModalList duplicate={duplicate} />
+        <NotDuplicatesModalList duplicate={duplicate} />
       </Box>
       <DialogActions>
         <Button variant="text">{messages.modal.cancelButton()}</Button>
