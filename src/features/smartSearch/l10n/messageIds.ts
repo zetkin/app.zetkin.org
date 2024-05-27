@@ -14,6 +14,7 @@ export default makeMessages('feat.smartSearch', {
   filterCategories: {
     campaignActivity: m('Project activity'),
     email: m('Email'),
+    journeySubjects: m('Journey'),
     misc: m('Misc'),
     peopleDatabase: m('People'),
     phoneBanking: m('Phone banking'),
@@ -27,6 +28,7 @@ export default makeMessages('feat.smartSearch', {
     email_blacklist: m('People who are blocked from emails'),
     email_click: m('Based on their interaction with links in email'),
     email_history: m('Based on their email history'),
+    journey_subjects: m('Based on journeys'),
     most_active: m('The most active people'),
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
@@ -201,6 +203,41 @@ export default makeMessages('feat.smartSearch', {
         opened: m('opened'),
         sent: m('been sent'),
       },
+    },
+    journey: {
+      closed: m('a closed'),
+      condition: {
+        conditionSelect: {
+          all: m('and has all'),
+          any: m('and has any'),
+          none: m('and has none'),
+          regardlessTags: m('regardless of tags'),
+          some: m('and has at least'),
+        },
+        preview: {
+          all: m('and has all'),
+          any: m('and has any'),
+          none: m('and has none'),
+          regardlessTags: m('regardless of tags'),
+          some: m<{ minMatching: number }>('and has at least {minMatching}'),
+        },
+      },
+      followingTags: m('of the following tags'),
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        condition: ReactElement;
+        journeySelect: ReactElement;
+        operator: ReactElement;
+        statusText: ReactElement;
+        tags: ReactElement | null;
+        tagsDesc: ReactElement | null;
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc} {tags}'
+      ),
+      opened: m('an open'),
+      thatFinished: m('that finished'),
+      thatOpened: m('that opened'),
     },
     mostActive: {
       examples: {

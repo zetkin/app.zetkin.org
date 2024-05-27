@@ -23,6 +23,7 @@ enum FILTER_CATEGORY {
   EMAIL = 'email',
   PEOPLE = 'peopleDatabase',
   PHONE_BANKING = 'phoneBanking',
+  JOURNEY = 'journeySubjects',
   CAMPAIGN_ACTIVITY = 'campaignActivity',
   SURVEYS = 'surveys',
   MISC = 'misc',
@@ -45,6 +46,7 @@ const GROUPED_FILTERS: { [key in FILTER_CATEGORY]: FILTER_TYPE[] } = {
     FILTER_TYPE.SURVEY_RESPONSE,
     FILTER_TYPE.SURVEY_OPTION,
   ],
+  [FILTER_CATEGORY.JOURNEY]: [FILTER_TYPE.JOURNEY],
   [FILTER_CATEGORY.EMAIL]: [
     FILTER_TYPE.EMAIL_HISTORY,
     FILTER_TYPE.EMAIL_CLICK,

@@ -8,6 +8,7 @@ export enum FILTER_TYPE {
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
+  JOURNEY = 'journey_subjects',
   MOST_ACTIVE = 'most_active',
   PERSON_DATA = 'person_data',
   PERSON_FIELD = 'person_field',
@@ -26,6 +27,13 @@ export enum CONDITION_OPERATOR {
   ALL = 'all',
   ANY = 'any',
   NONE = 'none',
+}
+
+export enum JOURNEY_CONDITION_OP {
+  ALL = 'all',
+  ANY = 'any',
+  NONE = 'none',
+  SOME = 'some',
 }
 
 export enum IN_OPERATOR {
@@ -226,6 +234,18 @@ export interface SubQueryFilterConfig {
   operator?: IN_OPERATOR;
 }
 
+export interface JourneyFilterConfig {
+  after?: string;
+  before?: string;
+  journey?: number;
+  operator: 'opened' | 'closed';
+  tags?: {
+    condition: JOURNEY_CONDITION_OP;
+    ids: number[];
+    min_matching?: number;
+  };
+}
+
 interface TaskTimeFrameBefore {
   before: string;
 }
@@ -278,6 +298,7 @@ export type AnyFilterConfig =
   | SurveyOptionFilterConfig
   | SurveyResponseFilterConfig
   | SurveySubmissionFilterConfig
+  | JourneyFilterConfig
   | TaskFilterConfig
   | UserFilterConfig; // Add all filter objects here
 
