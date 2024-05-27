@@ -31,7 +31,11 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     const membership = await apiClient.get<[ZetkinMembership]>(
       `/api/orgs/${orgId}/people/${official.id}/connections`
     );
-    memberships.push(membership.find((m) => m.organization.id == orgId)!);
+    const orgMembership = membership.find((m) => m.organization.id == orgId);
+
+    if (orgMembership) {
+      memberships.push(orgMembership);
+    }
   }
 
   return memberships;
