@@ -74,7 +74,7 @@ export default function useConfigure(orgId: number) {
           countryCode
         );
       } catch (error) {
-        addUnexpectedErrorToProblems();
+        return addUnexpectedErrorToProblems();
       }
 
       try {
