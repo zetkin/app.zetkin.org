@@ -19,7 +19,7 @@ const DuplicateCard: FC<DuplicateCardProps> = ({ cluster }) => {
   const { dismissDuplicate } = useDuplicatesMutations(orgId);
 
   return (
-    <Paper elevation={2} sx={{ p: 1.5 }}>
+    <Paper elevation={2} sx={{ mb: 1.5, p: 1.5 }}>
       <Box display={'flex'} flexDirection={'column'} gap={1.5}>
         <Typography
           color={theme.palette.grey[500]}
