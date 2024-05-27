@@ -4,6 +4,7 @@ import { FC } from 'react';
 
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
+import { JOURNEY_OP } from '.';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
@@ -50,35 +51,51 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
     return acc;
   }, []);
 
+  const getCondition = () => {
+    if (!tagsObj) {
+      return (
+        <UnderlinedMsg id={localMessageIds.condition.preview.regardlessTags} />
+      );
+    }
+
+    if (tagsObj.min_matching) {
+      return (
+        <UnderlinedMsg
+          id={localMessageIds.condition.preview.some}
+          values={{
+            minMatching: tagsObj.min_matching,
+          }}
+        />
+      );
+    } else {
+      return (
+        <UnderlinedMsg
+          id={
+            localMessageIds.condition.preview[
+              tagsObj.condition as 'all' | 'any' | 'none'
+            ]
+          }
+        />
+      );
+    }
+  };
+
   return (
     <Msg
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        condition: !tagsObj ? (
-          <UnderlinedMsg
-            id={localMessageIds.condition.preview.regardlessTags}
-          />
-        ) : tagsObj.min_matching ? (
-          <UnderlinedMsg
-            id={localMessageIds.condition.preview.some}
-            values={{
-              minMatching: tagsObj.min_matching,
-            }}
-          />
-        ) : (
-          <UnderlinedMsg
-            id={
-              localMessageIds.condition.preview[
-                tagsObj.condition as 'all' | 'any' | 'none'
-              ]
-            }
-          />
-        ),
+        condition: getCondition(),
         journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
         operator: (
           <UnderlinedMsg
-            id={localMessageIds[operator === 'opened' ? 'opened' : 'closed']}
+            id={
+              localMessageIds[
+                operator === JOURNEY_OP.OPEN
+                  ? JOURNEY_OP.OPEN
+                  : JOURNEY_OP.CLOSE
+              ]
+            }
           />
         ),
         statusText: (
@@ -97,7 +114,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
                 key={t.id}
                 label={t.title}
                 size="small"
-                sx={{ borderColor: t.color, margin: '2px' }}
+                sx={{ borderColor: t.color, margin: '2px', mt: 0.8 }}
                 variant="outlined"
               />
             ))}

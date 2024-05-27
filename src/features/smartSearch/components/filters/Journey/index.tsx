@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { Box, Chip, MenuItem } from '@mui/material';
+
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -11,7 +13,6 @@ import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { Box, Chip, MenuItem } from '@mui/material';
 import {
   JOURNEY_CONDITION_OP,
   JourneyFilterConfig,
@@ -24,7 +25,7 @@ import {
 
 const localMessageIds = messageIds.filters.journey;
 
-enum JOURNEY_OP {
+export enum JOURNEY_OP {
   OPEN = 'opened',
   CLOSE = 'closed',
 }
@@ -47,7 +48,7 @@ const Journey: FC<JourneyProps> = ({
   const { orgId } = useNumericRouteParams();
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {
-      operator: 'opened',
+      operator: JOURNEY_OP.OPEN,
       tags: {
         condition: JOURNEY_CONDITION_OP.ALL,
         ids: [],
@@ -235,7 +236,7 @@ const Journey: FC<JourneyProps> = ({
             statusText: (
               <Msg
                 id={
-                  filter.config.operator === 'opened'
+                  filter.config.operator === JOURNEY_OP.OPEN
                     ? localMessageIds.thatOpened
                     : localMessageIds.thatFinished
                 }
