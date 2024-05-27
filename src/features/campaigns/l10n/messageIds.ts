@@ -154,7 +154,7 @@ export default makeMessages('feat.campaigns', {
   },
   sharedLayout: {
     alertMsg: m(
-      'This project contains only activities shared from other organizations and it is viewable only.'
+      'This project contains only activities shared from other organizations and you can view it but not change it.'
     ),
     subtitle: m<{ numOfActivities: number }>(
       '{numOfActivities, plural, =1 {1 activity} other {# activities}}'

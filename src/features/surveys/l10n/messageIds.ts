@@ -11,11 +11,11 @@ export default makeMessages('feat.surveys', {
   },
   alert: {
     editable: m<{ orgTitle: string }>(
-      'This survey is owned by {orgTitle} and is editable only from its original location.'
+      'This survey is owned by {orgTitle} and you can only edit it from its original location.'
     ),
     goOriginal: m('Go to original'),
     notEditable: m<{ orgTitle: string }>(
-      'This survey is owned by {orgTitle} and it is not editable.'
+      'This survey is owned by {orgTitle} and you can not edit it.'
     ),
   },
   blocks: {
