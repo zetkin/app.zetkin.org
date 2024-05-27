@@ -5,20 +5,22 @@ import { FC, useState } from 'react';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import sortValuesByFrequency from 'features/duplicates/utils/sortValuesByFrequency';
 import { Msg, useMessages } from 'core/i18n';
 
 interface FieldSettingsRowProps {
   field: NATIVE_PERSON_FIELDS;
+  onChange: (selectedValue: string) => void;
   values: string[];
 }
 
-const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
+const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
+  field,
+  onChange,
+  values,
+}) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const [selectedValue, setSelectedValue] = useState(values[0]);
-
-  const sortedValues = sortValuesByFrequency(values);
 
   const getLabel = (value: string) => {
     if (field === NATIVE_PERSON_FIELDS.GENDER) {
@@ -72,16 +74,19 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
         paddingLeft={1}
         width="50%"
       >
-        {sortedValues.length === 1 && (
-          <Typography color="secondary">{getLabel(sortedValues[0])}</Typography>
+        {values.length === 1 && (
+          <Typography color="secondary">{getLabel(values[0])}</Typography>
         )}
-        {sortedValues.length > 1 && (
+        {values.length > 1 && (
           <Select
             fullWidth
-            onChange={(event) => setSelectedValue(event.target.value)}
+            onChange={(event) => {
+              setSelectedValue(event.target.value);
+              onChange(event.target.value);
+            }}
             value={selectedValue}
           >
-            {sortedValues.map((value, index) => (
+            {values.map((value, index) => (
               <MenuItem key={index} value={value}>
                 {getLabel(value)}
               </MenuItem>
