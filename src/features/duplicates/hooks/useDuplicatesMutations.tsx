@@ -15,7 +15,7 @@ export default function useDuplicatesMutations(
     const dismissedDate = new Date().toISOString();
     await apiClient
       .patch<ZetkinDuplicate>(
-        `/orgs/${orgId}/people/duplicates/${duplicateId}`,
+        `/api/orgs/${orgId}/people/duplicates/${duplicateId}`,
         { dismissed: dismissedDate }
       )
       .then((duplicate) => {
