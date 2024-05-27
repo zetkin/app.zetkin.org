@@ -39,16 +39,6 @@ const DuplicatesPage: PageWithLayout = () => {
           </Typography>
         </Box>
       )}
-      {list.length > 0 && (
-        <>
-          <Box>{list.map((person) => person.id)}</Box>
-          <Box>
-            {list.map((person) =>
-              person.duplicatePersons.map((duplicate) => duplicate.first_name)
-            )}
-          </Box>
-        </>
-      )}
       <ConfigureModal duplicate={list[0]} onClose={() => {}} open={true} />
     </>
   );
