@@ -1,12 +1,5 @@
 import { FC } from 'react';
-import theme from 'theme';
-import {
-  Box,
-  Button,
-  FormControl,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Button, FormControl, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from '../l10n/messageIds';
@@ -26,7 +19,6 @@ interface NotDuplicatesModalListProps {
 const NotDuplicatesModalList: FC<NotDuplicatesModalListProps> = ({
   duplicate,
 }) => {
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const { addDuplicatePerson } = useDuplicatesMutations(orgId);
