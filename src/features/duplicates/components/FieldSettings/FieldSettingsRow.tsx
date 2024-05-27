@@ -32,7 +32,11 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({ field, values }) => {
     }
 
     if (!value) {
-      return messages.modal.fieldSettings.noData();
+      return (
+        <span style={{ fontStyle: 'italic' }}>
+          {messages.modal.fieldSettings.noValue()}
+        </span>
+      );
     }
 
     return value;

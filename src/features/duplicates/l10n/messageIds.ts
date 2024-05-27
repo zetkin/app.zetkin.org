@@ -9,7 +9,7 @@ export default makeMessages('feat.duplicates', {
         m: m('Male'),
         o: m('Other'),
       },
-      noData: m('No data'),
+      noValue: m('No value'),
     },
     mergeButton: m('Merge'),
     title: m('Merge duplicates'),
