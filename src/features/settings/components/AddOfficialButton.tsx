@@ -4,26 +4,26 @@ import { useState } from 'react';
 import { Box, Button, Popover } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
-import useRolesMutations from '../hooks/useRolesMutations';
+import useOfficialMutations from '../hooks/useOfficialMutations';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';
 
-interface RoleAddPersonButtonProps {
+interface AddOfficialButtonProps {
   orgId: number;
   disabledList: ZetkinMembership[];
   roleType: 'admin' | 'organizer';
 }
 
-const RoleAddPersonButton = ({
+const AddOfficialButton = ({
   disabledList,
   orgId,
   roleType,
-}: RoleAddPersonButtonProps) => {
+}: AddOfficialButtonProps) => {
   const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const addAdmin = roleType === 'admin';
-  const { updateRole } = useRolesMutations(orgId);
+  const { updateRole } = useOfficialMutations(orgId);
   const getOptionExtraLabel = (personId: number) => {
     if (disabledList.some((person) => person.profile.id === personId)) {
       return (
@@ -35,7 +35,7 @@ const RoleAddPersonButton = ({
           }}
         >
           <People sx={{ fontSize: '1.3rem', mr: 1 }} />
-          <Msg id={messageIds.addPerson.alreadyInList} />
+          <Msg id={messageIds.officials.addPerson.alreadyInList} />
         </Box>
       );
     }
@@ -54,8 +54,8 @@ const RoleAddPersonButton = ({
         <Msg
           id={
             roleType === 'admin'
-              ? messageIds.addPerson.addAdmin
-              : messageIds.addPerson.addOrganizer
+              ? messageIds.officials.addPerson.addAdmin
+              : messageIds.officials.addPerson.addOrganizer
           }
         />
       </Button>
@@ -97,10 +97,10 @@ const RoleAddPersonButton = ({
                 ? updateRole(person.id, 'admin')
                 : updateRole(person.id, 'organizer');
             }}
-            placeholder={messages.addPerson.placeholder({
+            placeholder={messages.officials.addPerson.placeholder({
               list: addAdmin
-                ? messages.addPerson.administrators()
-                : messages.addPerson.organizers(),
+                ? messages.officials.addPerson.administrators()
+                : messages.officials.addPerson.organizers(),
             })}
             selectedPerson={null}
             variant="outlined"
@@ -111,4 +111,4 @@ const RoleAddPersonButton = ({
   );
 };
 
-export default RoleAddPersonButton;
+export default AddOfficialButton;

@@ -7,8 +7,8 @@ import { Button, FormControl, Typography } from '@mui/material';
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import { useMessages } from 'core/i18n';
+import useOfficialMutations from '../hooks/useOfficialMutations';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import useRolesMutations from '../hooks/useRolesMutations';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -20,7 +20,7 @@ interface OfficialListProps {
 
 const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
   const messages = useMessages(messageIds);
-  const { removeAccess, updateRole } = useRolesMutations(orgId);
+  const { removeAccess, updateRole } = useOfficialMutations(orgId);
   const user = useCurrentUser();
   const parentOrg = useOrganization(orgId);
   const sortedOfficialList = [...officialList].sort((a, b) => {
@@ -67,8 +67,8 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
               }}
             >
               {params.row.role === 'admin'
-                ? messages.administrators.roleInheritance()
-                : messages.organizers.roleInheritance()}{' '}
+                ? messages.officials.administrators.roleInheritance()
+                : messages.officials.organizers.roleInheritance()}{' '}
               {parentOrg.data?.parent?.title}
             </Typography>
           );
@@ -87,7 +87,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       minWidth: 300,
       renderCell: (params) => {
         if (params.row.profile.id === user?.id) {
-          return <Typography>{messages.you()}</Typography>;
+          return <Typography>{messages.officials.you()}</Typography>;
         } else if (params.row.role === 'admin') {
           return (
             <FormControl
@@ -104,7 +104,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
                 size="small"
                 startIcon={<ArrowDownward />}
               >
-                {messages.tableButtons.demote()}
+                {messages.officials.tableButtons.demote()}
               </Button>
               <Button
                 disabled={params.row.inherited ? true : false}
@@ -112,7 +112,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
                 size="small"
                 variant="outlined"
               >
-                {messages.tableButtons.remove()}
+                {messages.officials.tableButtons.remove()}
               </Button>
             </FormControl>
           );
@@ -131,7 +131,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
                 size="small"
                 startIcon={<ArrowUpward />}
               >
-                {messages.tableButtons.promote()}
+                {messages.officials.tableButtons.promote()}
               </Button>
               <Button
                 disabled={params.row.inherited ? true : false}
@@ -139,7 +139,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
                 size="small"
                 variant="outlined"
               >
-                {messages.tableButtons.remove()}
+                {messages.officials.tableButtons.remove()}
               </Button>
             </FormControl>
           );

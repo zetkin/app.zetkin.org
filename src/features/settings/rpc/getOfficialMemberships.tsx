@@ -11,13 +11,13 @@ const paramsSchema = z.object({
 type Params = z.input<typeof paramsSchema>;
 type Result = ZetkinMembership[];
 
-export const getMembershipsListDef = {
+export const getOfficialMembershipsDef = {
   handler: handle,
-  name: 'getMembershipsList',
+  name: 'getOfficialMemberships',
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, Result>(getMembershipsListDef.name);
+export default makeRPCDef<Params, Result>(getOfficialMembershipsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId } = params;
@@ -31,7 +31,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     const membership = await apiClient.get<[ZetkinMembership]>(
       `/api/orgs/${orgId}/people/${official.id}/connections`
     );
-    memberships.push(membership[0]);
+    memberships.push(membership.find((m) => m.organization.id == orgId)!);
   }
 
   return memberships;

@@ -13,13 +13,13 @@ const paramsSchema = z.object({
 type Params = z.input<typeof paramsSchema>;
 type Result = ZetkinMembership;
 
-export const updateNewRoleDef = {
+export const setOfficialRoleDef = {
   handler: handle,
-  name: 'updateNewRole',
+  name: 'setOfficialRole',
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, Result>(updateNewRoleDef.name);
+export default makeRPCDef<Params, Result>(setOfficialRoleDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId, personId, role } = params;
@@ -29,8 +29,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     { role: role }
   );
 
-  const membership = await apiClient.get<[ZetkinMembership]>(
+  const memberships = await apiClient.get<[ZetkinMembership]>(
     `/api/orgs/${orgId}/people/${official.id}/connections`
   );
-  return membership[0];
+
+  return memberships.find((m) => m.organization.id == orgId)!;
 }

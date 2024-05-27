@@ -1,5 +1,5 @@
-import updateNewRole from '../rpc/updateNewRole';
-import { accessDeleted, updatedRole } from '../store';
+import setOfficialRole from '../rpc/setOfficialRole';
+import { accessDeleted, roleUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 type useRolesMutationsReturn = {
@@ -7,7 +7,7 @@ type useRolesMutationsReturn = {
   updateRole: (personId: number, role: 'organizer' | 'admin') => void;
 };
 
-export default function useRolesMutations(
+export default function useOfficialMutations(
   orgId: number
 ): useRolesMutationsReturn {
   const apiClient = useApiClient();
@@ -20,13 +20,13 @@ export default function useRolesMutations(
 
   const updateRole = async (personId: number, role: 'organizer' | 'admin') => {
     await apiClient
-      .rpc(updateNewRole, {
+      .rpc(setOfficialRole, {
         orgId,
         personId,
         role,
       })
       .then((membership) => {
-        dispatch(updatedRole([personId, membership]));
+        dispatch(roleUpdated([personId, membership]));
       });
   };
 

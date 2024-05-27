@@ -1,15 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { Box, Typography } from '@mui/material';
 
+import AddOfficialButton from 'features/settings/components/AddOfficialButton';
 import messageIds from 'features/settings/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import OfficialList from 'features/settings/components/OfficialList';
 import { PageWithLayout } from 'utils/types';
-import RoleAddPersonButton from 'features/settings/components/RoleAddPersonButton';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
-import useRolesList from 'features/settings/hooks/useRolesList';
+import useOfficialMemberships from 'features/settings/hooks/useOfficialMemberships';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const SettingsPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const listFuture = useRolesList(orgId).data || [];
+  const listFuture = useOfficialMemberships(orgId).data || [];
 
   const adminList = listFuture.filter((user) => user.role === 'admin');
   const organizerList = listFuture.filter((user) => user.role === 'organizer');
@@ -47,16 +47,16 @@ const SettingsPage: PageWithLayout = () => {
         }}
       >
         <Typography variant="h4">
-          <Msg id={messageIds.administrators.title} />
+          <Msg id={messageIds.officials.administrators.title} />
         </Typography>
-        <RoleAddPersonButton
+        <AddOfficialButton
           disabledList={adminList}
           orgId={orgId}
           roleType="admin"
         />
       </Box>
       <Typography mb={2} variant="body2">
-        <Msg id={messageIds.administrators.description} />
+        <Msg id={messageIds.officials.administrators.description} />
       </Typography>
       <OfficialList officialList={adminList} orgId={orgId} />
       <Box
@@ -69,16 +69,16 @@ const SettingsPage: PageWithLayout = () => {
         }}
       >
         <Typography variant="h4">
-          <Msg id={messageIds.organizers.title} />
+          <Msg id={messageIds.officials.organizers.title} />
         </Typography>
-        <RoleAddPersonButton
+        <AddOfficialButton
           disabledList={organizerList}
           orgId={orgId}
           roleType="organizer"
         />
       </Box>
       <Typography mb={2} variant="body2">
-        <Msg id={messageIds.organizers.description} />
+        <Msg id={messageIds.officials.organizers.description} />
       </Typography>
       <OfficialList officialList={organizerList} orgId={orgId} />
     </Box>
