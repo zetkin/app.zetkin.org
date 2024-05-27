@@ -1,13 +1,14 @@
-import { Box, Typography } from '@mui/material';
+import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import { GetServerSideProps } from 'next';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
+import theme from 'theme';
 import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import { Box, Typography } from '@mui/material';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   return {
@@ -17,8 +18,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 
 const DuplicatesPage: PageWithLayout = () => {
   const onServer = useServerSide();
-  const { orgId } = useNumericRouteParams();
-  const list = useDuplicates(orgId).data ?? [];
+  const list = useDuplicates().data ?? [];
   const messages = useMessages(messageIds);
 
   if (onServer) {
@@ -38,14 +38,18 @@ const DuplicatesPage: PageWithLayout = () => {
         </Box>
       )}
       {list.length > 0 && (
-        <>
-          <Box>{list.map((person) => person.id)}</Box>
-          <Box>
-            {list.map((person) =>
-              person.duplicatePersons.map((duplicate) => duplicate.first_name)
-            )}
-          </Box>
-        </>
+        <Box p={1.5}>
+          <Typography
+            color={theme.palette.grey[500]}
+            sx={{ mb: 2, textTransform: 'uppercase' }}
+            variant="subtitle2"
+          >
+            {messages.page.possibleDuplicates()}
+          </Typography>
+          {list.map((cluster) => (
+            <DuplicateCard key={cluster.id} cluster={cluster} />
+          ))}
+        </Box>
       )}
     </>
   );
