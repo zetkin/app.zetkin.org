@@ -12,7 +12,9 @@ interface FieldSettingsProps {
 const FieldSettings: FC<FieldSettingsProps> = ({ duplicatePersons }) => {
   const theme = useTheme();
 
-  const nativePersonFields = Object.values(NATIVE_PERSON_FIELDS);
+  const nativePersonFields = Object.values(NATIVE_PERSON_FIELDS).filter(
+    (field) => field !== NATIVE_PERSON_FIELDS.ID
+  );
 
   return (
     <Box
