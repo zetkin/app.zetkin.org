@@ -10,7 +10,7 @@ export default function sortValuesByFrequency(values: string[]) {
 
   const uniqueValues = [...new Set(values)];
 
-  return uniqueValues.sort((value1, value2) => {
+  const sortedByFrequency = uniqueValues.sort((value1, value2) => {
     const a = value1 || '';
     const b = value2 || '';
 
@@ -22,4 +22,13 @@ export default function sortValuesByFrequency(values: string[]) {
       return 0;
     }
   });
+
+  const emptyValues = sortedByFrequency.filter((value) => !value);
+
+  const sortedWithEmptyValuesAtEnd = sortedByFrequency.filter(
+    (value) => !!value
+  );
+  sortedWithEmptyValuesAtEnd.push(...emptyValues);
+
+  return sortedWithEmptyValuesAtEnd;
 }
