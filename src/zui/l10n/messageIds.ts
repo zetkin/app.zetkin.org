@@ -130,6 +130,7 @@ export default makeMessages('zui', {
     people: m('People'),
     projects: m('Projects & Activities'),
     search: m('Search'),
+    settings: m('Settings'),
     signOut: m('Sign out'),
     userSettings: m('User settings'),
   },
