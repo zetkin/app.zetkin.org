@@ -22,8 +22,10 @@ feat:
       callers: Ringare
       campaigns: Projekt
       closed: Stängd
+      compose: Skapa
       conversation: Samtal
-      events: Events
+      emails: Email
+      events: Event
       folders: Listor
       insights: Insikter
       instances: Exempel
@@ -43,10 +45,11 @@ feat:
       views: Listor
   calendar:
     createMenu:
+      shiftEvent: Skapa flera event som blir till skift
       singleEvent: Skapa ett enskilt event
     event:
       differentLocations: '{numLocations} olika platser'
-      events: Events
+      events: Event
       noContactSelected: Ingen kontakt vald
       remindersNotSent: '{numNotSent} Påminnelse inte skickad'
       unbookedSignups: '{numUnbooked} Icke bokade anmälningar'
@@ -78,8 +81,8 @@ feat:
         all: Alla
         none: Inga
       type: Skriv för att filtrera innehåll
-    lastDayWithEvents: Det {numEvents, plural, one {var ett event} other {var {numEvents}
-      events}} på den senaste aktiva dagen
+    lastDayWithEvents: Den senaste dagen med aktivteter ägde {numEvents, plural, one
+      {ett} other {numEvents}} event rum
     loadMore: Ladda mer
     moreEvents: '{numEvents, plural, one {# event till} other {# fler event}}'
     next: NÄSTA
@@ -108,13 +111,14 @@ feat:
       move: Flytta
       moveCopyButtons:
         copy: Kopiera
-        copyMenuHeader: Kopiera {numberOfEvents} events till
+        copyMenuHeader: Kopiera {numberOfEvents} event till
         createShift: Skapa skift efter varje event
         duplicate: Samma tid och datum (duplicera)
         move: Flytta
         moveMenuHeader: Flytta {numberOfEvents} event till
         nextDay: Nästa dag {dates}
         nextWeek: Nästa vecka {dates}
+    shortWeek: v {weekNumber}
     showMore: Visa
     today: Idag
   callAssignments:
@@ -244,6 +248,7 @@ feat:
       filter:
         calls: Ringuppdrag
         canvasses: Canvassuppgifter
+        emails: Emails
         filter: Filtrera resultat
         standalones: Fristående event
         surveys: Enkäter
@@ -312,6 +317,7 @@ feat:
     linkGroup:
       createActivity: Skapa aktivitet
       createCallAssignment: Skapa ringuppdrag
+      createEmail: Skapa email
       createEvent: Skapa event
       createSurvey: Skapa enkät
       createTask: Skapa uppgift
@@ -335,6 +341,115 @@ feat:
         insights: Insikter
         summary: Sammanfattning
     tasks: Uppgifter
+  emails:
+    blocked:
+      blacklisted: Svartlistad
+      title: Blockerad
+    deliveryProblems:
+      contentError: Något är fel med innehållet i ditt email. Gå till fliken skapa
+        för att ändra felen.
+      empty: Ditt email är tomt. Gå till fliken skapa för att lägga till innehåll.
+      noSubject: Ditt email har ingen ämnesrad. Gå till inställningar under fliken
+        skapa för att lägga till en ämnesrad.
+      notTargeted: Ditt email har ingen målgrupp. Gå till målgrupp under översiktsfliken
+        för att skapa en Smart sökning som definierar din målgrupp.
+      targetsNotLocked: Målgruppen är inte låst. Gå till sektionen redo i översiktsfliken
+        för att låsa målgrupp.
+    deliveryStatus:
+      notLocked: Ej låst, ej schemalagd
+      notScheduled: Ej schemalagd
+      wasSent: Skickades {datetime}
+      willSend: Kommer skickas {datetime}
+    editor:
+      readOnlyModeInfo: Det här mailet är skrivskyddat eftersom det är schemalagt,
+        eller redan har skickats. Om det är schemalagt och du vill ändra det behöver
+        du avbryta schemaläggningen först.
+      settings:
+        tabs:
+          content: Innehåll
+          preview:
+            confirmation: En förhandsvisning har skickats till din mail.
+            instructions: Här kan du skicka det här mailet till dig själv för att
+              förhandsvisa hur det kommer se ut för mottagarna.
+            okButton: OK!
+            sendButton: Skicka
+            sendTo: 'Email kommer skickas till adressen:'
+            title: Förhandsvisning
+          settings:
+            senderAddressInputLabel: Adress på svsändare
+            senderNameInputLabel: Namn på avsändare
+            subjectInputLabel: Ämne
+            title: Inställningar
+      tools:
+        button:
+          block:
+            noButtonText: Klicka för att ändra texten!
+          settings:
+            invalidUrl: Länken fungerar inte
+            testLink: Klicka för att testa länk
+            urlLabel: Url till länk
+          title: Knapp
+        header:
+          title: Rubrik
+        libraryImage:
+          changeImage: Ändra bild
+          title: Bild
+        link:
+          addUrl: Lägg till länk
+          invalidUrl: Länken fungerar inte
+          testLink: Klicka för att testa länk
+          title: Länk
+        paragraph:
+          invalidUrls: Det finns en eller flera länkar som inte fungerar i textblocket.
+          title: Text
+        variable:
+          title: Variabel
+    emailActionButtons:
+      cancel: Avbryt
+      delete: Radera
+      delivery: Skickas
+      deliveryDate: Skickads datum
+      deliveryTime: Skickas tid
+      duplicate: Duplicera
+      schedule: Schemalägg
+      sendAnyway: Skicka ändå
+      sendLater: Skicka senare
+      sendNow:
+        alert:
+          desc: Det kan finnas en bättre tid att skicka mailet. Att schemalägga ett
+            mail ger också andra organisatörer möjlighet att samordna med dina planer.
+          title: Skicka just nu är kanske inte optimalt
+        header: Skicka nu
+      setDate: Ställ in datum för leverans för att fortsätta
+      timeZone: Tidszon
+      warning: Är du säker på att du vill radera mailet? Det är permanent och går
+        inte att ångra.
+    emailFeatureIsBlocked:
+      errorMessage: Din organisation har inte tillgång till email i Zetkin just nu.
+      goBackButton: Tillbaka
+    ready:
+      loading: Laddar...
+      lockButton: Lås för leverans
+      locked: Låst
+      title: Redo
+      unlockButton: Lås upp
+    state:
+      draft: Utkast
+      scheduled: Schemalagt
+      sent: Skickat
+    tabs:
+      compose: Skapa
+      overview: Översikt
+    targets:
+      defineButton: Definiera målgrupp
+      editButton: Redigera målgrupp
+      sentSubtitle: Du kan titta på den Smarta sökningen som användes för att definiera
+        mottagare för det här mailet
+      subtitle: Gör en Smart sökning för att definiera mottagare till det här mailet.
+      title: Målgrupp
+      viewButton: Titta på målgrupp
+    unsubscribePage:
+      consent: Jag förstår
   events:
     addPerson:
       addButton: Lägg till en person
@@ -393,6 +508,7 @@ feat:
       buttonBook: Boka
       buttonCancel: Avboka
       buttonCancelled: Avbokade
+      buttonDelete: Ta bort
       buttonNoshow: Kom ej
       cancelledParticipants: Avbokade deltagare
       columnEmail: E-post
@@ -445,6 +561,13 @@ feat:
         har inte blivit påminda än'
     eventRelatedCard:
       header: Relaterade event
+    eventShiftModal:
+      addShift: Lägg til skift
+      date: Datum
+      description: Beskrivning
+      draft: Utkast
+      end: Slut
+      event: Event
     eventStatus:
       cancelled: Inställt
       draft: Utkast
@@ -519,6 +642,24 @@ feat:
       createType: Skapa "{type}"
       tooltip: Klicka här för att byta typ
       uncategorized: Okategoriserade
+  files:
+    fileUpload:
+      dropToUpload: Släpp fil här för att ladda upp
+      instructions: eller dra en fil och släpp den här
+      selectClick: Klicka för att ladda upp
+    libraryDialog:
+      preview:
+        useButton: Använda
+    searching:
+      label: Sök
+    sorting:
+      options:
+        date: Datum
+    typeFilter:
+      anyOption: Någon typ
+      label: Typ
+      options:
+        image: Bilder
   import:
     actionButtons:
       back: Tillbaka
@@ -590,6 +731,10 @@ feat:
         organization: Organisation
         selectZetkinField: Importera som…
         tags: Etiketter
+        zetkinFieldGroups:
+          fields: Fält
+          id: ID
+          other: Annan
         zetkinHeader: Zetkin
       preview:
         columnHeader:
@@ -897,6 +1042,7 @@ feat:
       save: Spara
     filterCategories:
       campaignActivity: Projektaktivitet
+      email: Email
       misc: Övrigt
       peopleDatabase: Människor
       phoneBanking: Ringning
@@ -977,6 +1123,22 @@ feat:
         locationSelect:
           any: vilken plats som helst
           location: platsen "{location}"
+      emailClick:
+        operatorSelect:
+          clicked: klickade
+          notClicked: inte klickade
+      emailHistory:
+        emailScopeSelect:
+          any: något email
+          email: ett specifikt email från projketet
+          project: något email från projektet
+        inputString: '{addRemoveSelect} personer som har {operatorSelect} {emailScopeSelect}
+          {emailSelect} {projectSelect} {timeFrame}'
+        operatorSelect:
+          notOpened: inte öpnnade
+          notSent: inte blivit skickade
+          opened: öppnade
+          sent: skickade
       mostActive:
         addRemoveSelect:
           add: Lägg till
@@ -994,9 +1156,8 @@ feat:
           sub: ta bort
         ellipsis: '...'
         examples:
-          one: Lägg till alla personer vars förnamn är 'Clara' och vars efternamn
-            är 'Zetkin'.
-          two: Ta bort alla personer vars stad är Stockholm.
+          one: Lägg till personer vars förnamn är 'Clara' och vars efternamn är 'Zetkin'.
+          two: Ta bort personer vars stad är Stockholm.
         fieldMatches: '{field} matchar {value}'
         fieldSelect:
           alt_phone: annat telefonnummer
@@ -1011,7 +1172,7 @@ feat:
           street_address: gatuadress
           zip_code: postnummer
         fieldTuple: '{first} och {second}'
-        inputString: '{addRemoveSelect} alla personer vars {criteria}.'
+        inputString: '{addRemoveSelect} personer vars {criteria}.'
       personField:
         addRemoveSelect:
           add: Lägg till
@@ -1023,7 +1184,7 @@ feat:
           url: '{fieldSelect} matchar "{freeTextInput}"'
         fieldSelect:
           any: anpassat fält
-        inputString: '{addRemoveSelect} alla personer vars {field}.'
+        inputString: '{addRemoveSelect} personer vars {field}.'
         preview:
           date: '{fieldName} är {timeFrame}'
           text: '{fieldName} matchar "{searchTerm}"'
@@ -1034,25 +1195,25 @@ feat:
           sub: Ta bort
         condition:
           conditionSelect:
-            all: alla
-            any: någon av
-            minMatching: minst
-            none: ingen
+            all: har alla
+            any: har någon av
+            minMatching: har minst
+            none: inte har
           edit:
             all: '{conditionSelect}'
             any: '{conditionSelect}'
             minMatching: '{conditionSelect} {minMatchingInput}'
             none: '{conditionSelect}'
           preview:
-            all: alla
-            any: någon av
-            minMatching: minst {minMatching}
-            none: ingen av
+            all: har alla
+            any: har någon av
+            minMatching: har minst {minMatching} av
+            none: inte har
         examples:
-          one: 'Lägg till personer med minst en av följande etiketter: ''Medlem'',
+          one: 'Lägg till personer som har minst en av följande etiketter: ''Medlem'',
             ''Aktivist'''
-          two: 'Ta bort personer med alla följande etiketter: ''Styrelseledamot'''
-        inputString: '{addRemoveSelect} personer med {condition} följande etiketter:
+          two: 'Ta bort personer som har alla följande etiketter: ''Styrelseledamot'''
+        inputString: '{addRemoveSelect} personer som {condition} följande etiketter:
           {tags}'
       personView:
         addRemoveSelect:
@@ -1124,11 +1285,10 @@ feat:
           any: har valt något
           none: inte har valt något
         examples:
-          one: 'Ta bort alla personer som har valt något av alternativen i enkäten
-            ''Medlemsenkät 2020'' (frågan ''Fråga ett''): ''Ibland'', ''Aldrig'''
-          two: 'Lägg till alla personer som har valt någon av följande alternativ
-            i enkäten ''Medlemsenkäten'' (question ''Question two''): ''Alternativ
-            två'''
+          one: 'Ta bort personer som har valt något av alternativen i enkäten ''Medlemsenkät
+            2020'' (frågan ''Fråga ett''): ''Ibland'', ''Aldrig'''
+          two: 'Lägg till personer som har valt någon av följande alternativ i enkäten
+            ''Medlemsenkäten'' (question ''Question two''): ''Alternativ två'''
         inputString: '{addRemoveSelect} personer som {conditionSelect} av följande
           alternativ i {surveySelect} ({questionSelect}): {options}'
         questionSelect:
@@ -1207,10 +1367,9 @@ feat:
           'false': inte är kopplade
           'true': är kopplade
         examples:
-          one: Ta bort alla personer som är ansluta Zetkinanvändare.
-          two: Lägg till alla personer som inte är ansluta Zetkinanvändare.
-        inputString: '{addRemoveSelect} alla personer som {connectedSelect} till en
-          Zetkinanvändare.'
+          one: Ta bort personer som är ansluta Zetkinanvändare.
+          two: Lägg till personer som inte är ansluta Zetkinanvändare.
+        inputString: '{addRemoveSelect} personer som {connectedSelect} till en Zetkinanvändare.'
     headers:
       examples: Exempel
       gallery: Hur vill du välja personer?
@@ -1237,6 +1396,7 @@ feat:
         once: minst en
     misc:
       noOptions: inga matchande etiketter
+      noOptionsLinks: Inga matchade länkar
     operators:
       add: Lägg till
       limit: Begränsa till
@@ -1260,7 +1420,7 @@ feat:
       hint: Den här Smarta sökningen kommer just nu ge dig {count}
     smartSearch: Smart sökning
     statsPopper:
-      change: ändra
+      change: förändring
       details: Smarta sökningar är dynamiska. Det betyder att antal matchningar kan
         variera över tid. Andra användare kan se ett annat resultat om de har tillgång
         till fler eller färre personer.
@@ -1635,6 +1795,7 @@ feat:
     actions:
       create: Skapa
       createFolder: Skapa mapp
+      createPerson: Skapa person
       createView: Skapa lista
       importPeople: Importera personer
     browser:
@@ -1744,7 +1905,7 @@ feat:
           title: Telefonnummer
         queryBooked:
           columnTitle: Bokad
-          description: Är de bokade på framtida events?
+          description: Är de bokade på framtida event?
           keywords: aktiv bokad deltagit
           title: Har framtida bokningar
         queryParticipated:
@@ -1973,6 +2134,16 @@ zui:
     copied: Kopierad
     copiedValue: Kopierade "{value}"
     copy: Kopiera
+  createPerson:
+    title:
+      caller: Skapa person och lägg till som ringare
+      contact: Skapa person och lägg till som kontaktperson
+      default: Skapa person
+      participant: Skapa person och lägg till som deltagare
+    validationWarning:
+      email: Lägg till en giltig email
+      phone: Lägg till giltigt telefonnummer
+      url: Lägg till en giltig URL
   dataTableSearch:
     button: Sök
     helpText: Skriv minst {minSearchLength} antal tecken
@@ -1992,6 +2163,12 @@ zui:
     indefinite: Synlig från {start}
     invisible: Varken synlig eller schemalagd
     start: Start
+  dateSpan:
+    multiDay: '{startDate} - {endDate}'
+    multiDayEndsToday: '{startDate} - Idag'
+    multiDayToday: Idag - {endDate}
+    singleDay: '{date}'
+    singleDayToday: Idag
   editTextInPlace:
     tooltip:
       edit: Klicka för att redigera
@@ -2009,10 +2186,12 @@ zui:
   organizeSidebar:
     allOrganizations: Alla organisationer
     areas: Areas
+    filter: Skriv för att filtrera
     home: Hem
     journeys: Journeys
     people: Människor
     projects: Projekt & Aktiviteter
+    search: Sök
     signOut: Logga ut
     userSettings: Användarinställningar
   personGridEditCell:
@@ -2091,3 +2270,7 @@ zui:
           deadlineRemove: deadline togs bort
           deadlineUpdate: ny deadline {datetime}
           incomplete: '{actor} markerade en milstolpe som ofärdig'
+  timezonePicker:
+    gmt: GMT
+    placeholder: Skriv för att söka på plats
+    timezone: Tidszon

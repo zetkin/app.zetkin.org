@@ -297,6 +297,7 @@ export default makeMessages('feat.import', {
         ),
         title: m('Trying to update records that do not exist'),
       },
+      validating: m('Validating'),
     },
   },
   steps: {

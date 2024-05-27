@@ -23,7 +23,6 @@ import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useC
 import useCreateView from 'features/views/hooks/useCreateView';
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
-import { useNumericRouteParams } from 'core/hooks';
 import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewColumnDialog from '../ViewColumnDialog';
@@ -36,6 +35,12 @@ import {
   SelectedViewColumn,
   ZetkinView,
 } from 'features/views/components/types';
+import {
+  useApiClient,
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewDataTableColumnMenu, {
   ViewDataTableColumnMenuProps,
@@ -343,19 +348,37 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     debouncedUpdateColumnOrder(newColumnOrder);
   };
 
+  const dispatch = useAppDispatch();
+  const apiClient = useApiClient();
+  const state = useAppSelector((state) => state);
+
   const unConfiguredGridColumns = [
     avatarColumn,
     ...columns.map((col) => ({
       field: `col_${col.id}`,
       filterOperators: getFilterOperators(
-        columnTypes[col.type].getColDef(col, accessLevel)
+        columnTypes[col.type].getColDef(
+          col,
+          accessLevel,
+          state,
+          apiClient,
+          dispatch,
+          orgId
+        )
       ),
       headerName: col.title,
       minWidth: 100,
       resizable: true,
       sortable: true,
       width: 150,
-      ...columnTypes[col.type].getColDef(col, accessLevel),
+      ...columnTypes[col.type].getColDef(
+        col,
+        accessLevel,
+        state,
+        apiClient,
+        dispatch,
+        orgId
+      ),
     })),
   ];
 
@@ -506,12 +529,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             if (col) {
               const processRowUpdate = columnTypes[col.type].processRowUpdate;
               if (processRowUpdate) {
-                processRowUpdate(
-                  viewGrid,
-                  col.id,
-                  after.id,
-                  after[changedField]
-                );
+                processRowUpdate(viewGrid, col, after.id, after[changedField]);
               }
             }
           }

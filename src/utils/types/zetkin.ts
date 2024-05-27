@@ -404,7 +404,7 @@ export interface ZetkinTag {
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   color: string | null;
   group: ZetkinTagGroup | null;
-  value?: string | number;
+  value?: string | number | null;
   value_type: string | null;
 }
 

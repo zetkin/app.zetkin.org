@@ -1,23 +1,27 @@
-import MailIcon from '@mui/icons-material/Mail';
-import PhoneIcon from '@mui/icons-material/Phone';
 import {
   Box,
   BoxProps,
+  Button,
   Card,
   Fade,
   Grid,
+  Link,
   Popper,
   PopperProps,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import { CopyIcon } from './ZUIInlineCopyToClipBoard';
+import MailIcon from '@mui/icons-material/Mail';
+import messageIds from 'features/profile/l10n/messageIds';
+import { Msg } from 'core/i18n';
+import PhoneIcon from '@mui/icons-material/Phone';
 import TagsList from 'features/tags/components/TagManager/components/TagsList';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
 import usePersonTags from 'features/tags/hooks/usePersonTags';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import ZUICopyToClipboard from 'zui/ZUICopyToClipboard';
 import ZUIPerson from 'zui/ZUIPerson';
 
 const ZUIPersonHoverCard: React.FunctionComponent<{
@@ -92,35 +96,63 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
                     id={person?.id}
                     link
                     name={`${person?.first_name} ${person?.last_name}`}
+                    subtitle={
+                      <Typography color="secondary" variant="body2">
+                        <Msg
+                          id={
+                            person?.is_user
+                              ? messageIds.user.hasAccount
+                              : messageIds.user.noAccount
+                          }
+                        />
+                      </Typography>
+                    }
                     tooltip={false}
                   />
                 </Grid>
                 {tags && (
                   <Grid item>
-                    <TagsList isGrouped={false} tags={tags} />
+                    <TagsList
+                      cap={10}
+                      capOverflowHref={`/organize/${orgId}/people/${person?.id}`}
+                      isGrouped={false}
+                      tags={tags}
+                    />
                   </Grid>
                 )}
                 {(['phone', 'alt_phone', 'email'] as Array<keyof ZetkinPerson>)
                   .filter((field) => !!person[field])
                   .map((field) => {
                     const value = person[field];
+                    const linkType = field.includes('mail')
+                      ? 'mailto:'
+                      : field.includes('phone')
+                      ? 'tel:'
+                      : '';
+
                     if (typeof value === 'object') {
                       return null;
                     }
                     return (
                       <Grid key={field} container item>
-                        <ZUICopyToClipboard copyText={value as string}>
-                          <Box display="flex" flexDirection="row">
-                            {field.includes('mail') ? (
-                              <MailIcon color="secondary" />
-                            ) : (
-                              <PhoneIcon color="secondary" />
-                            )}
-                            <Typography style={{ marginLeft: '1.5rem' }}>
-                              {value}
-                            </Typography>
-                          </Box>
-                        </ZUICopyToClipboard>
+                        <Box display="flex" flexDirection="row">
+                          {field.includes('mail') ? (
+                            <MailIcon color="secondary" />
+                          ) : (
+                            <PhoneIcon color="secondary" />
+                          )}
+                          <Typography style={{ marginLeft: '1.5rem' }}>
+                            <Link href={linkType + value}> {value} </Link>
+                          </Typography>
+                          <Button
+                            onClick={() =>
+                              navigator.clipboard.writeText(value as string)
+                            }
+                            style={{ marginTop: '-0.3rem' }}
+                          >
+                            <CopyIcon color="secondary" />
+                          </Button>
+                        </Box>
                       </Grid>
                     );
                   })}

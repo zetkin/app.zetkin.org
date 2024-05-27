@@ -55,6 +55,9 @@ export default makeMessages('feat.views', {
         '{count, plural, =1 {1 solved issue} other {# solved issues}}'
       ),
     },
+    personTag: {
+      emptyValue: m('Empty value'),
+    },
   },
   columnDialog: {
     categories: {

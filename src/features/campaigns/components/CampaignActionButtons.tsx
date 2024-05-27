@@ -79,6 +79,7 @@ const CampaignActionButtons: React.FunctionComponent<
       end_time: defaultEnd.toISOString(),
       location_id: null,
       start_time: defaultStart.toISOString(),
+      title: null,
     });
   };
 

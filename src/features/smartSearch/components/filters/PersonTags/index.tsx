@@ -1,5 +1,5 @@
+import { FormEvent } from 'react';
 import { Box, Chip, MenuItem } from '@mui/material';
-import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledItemSelect from 'features/smartSearch/components/inputs/StyledItemSelect';
@@ -51,17 +51,6 @@ const PersonTags = ({
       tags: [],
     });
 
-  //keep minMatching in state so last value is saved even when removed from config
-  const [minMatching, setMinMatching] = useState(
-    filter.config.min_matching || 1
-  );
-
-  useEffect(() => {
-    if (filter.config.condition === CONDITION_OPERATOR.ANY) {
-      setConfig({ ...filter.config, min_matching: minMatching });
-    }
-  }, [minMatching]);
-
   // preserve the order of the tag array
   const selectedTags = filter.config.tags.reduce((acc: ZetkinTag[], id) => {
     const tag = tags.find((tag) => tag.id === id);
@@ -89,7 +78,7 @@ const PersonTags = ({
       setConfig({
         ...filter.config,
         condition: CONDITION_OPERATOR.ANY,
-        min_matching: minMatching,
+        min_matching: 1,
       });
     } else {
       setConfig({
@@ -167,8 +156,14 @@ const PersonTags = ({
                           max: filter.config.tags.length,
                           min: '1',
                         }}
-                        onChange={(e) => setMinMatching(+e.target.value)}
-                        value={minMatching}
+                        onChange={(e) =>
+                          setConfig({
+                            ...filter.config,
+                            condition: CONDITION_OPERATOR.ANY,
+                            min_matching: +e.target.value,
+                          })
+                        }
+                        value={filter.config.min_matching}
                       />
                     ),
                   }}

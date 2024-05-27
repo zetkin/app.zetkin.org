@@ -22,7 +22,9 @@ feat:
       callers: Ringere
       campaigns: Prosjekter
       closed: Stengt
+      compose: Utforming
       conversation: Samtale
+      emails: E-post
       events: Arrangementer
       folders: Lister
       insights: Analyse
@@ -43,6 +45,7 @@ feat:
       views: Lister
   calendar:
     createMenu:
+      shiftEvent: Opprett flere arrangementer som blir til skift
       singleEvent: Nytt arrangement
     event:
       differentLocations: '{numLocations} ulike steder'
@@ -114,6 +117,7 @@ feat:
         moveMenuHeader: Flytt {numberOfEvents} arrangementer til
         nextDay: Neste dag {dates}
         nextWeek: Neste uke {dates}
+    shortWeek: uke {weekNumber}
     showMore: Vis
     today: I dag
   callAssignments:
@@ -245,6 +249,7 @@ feat:
       filter:
         calls: Ringeoppdrag
         canvasses: Dørbanking
+        emails: E-poster
         filter: Filtrer resultater
         standalones: Frittstående arrangementer
         surveys: Spørreundersøkelser
@@ -271,6 +276,8 @@ feat:
         create: Nytt prosjekt
         error: Kunne ikke opprette prosjektet
         newCampaign: Mitt prosjekt
+      createEmail:
+        newEmail: E-post uten tittel
       createSurvey:
         newSurvey: Min spørreundersøkelse
       createTask:
@@ -311,6 +318,7 @@ feat:
     linkGroup:
       createActivity: Ny aktivitet
       createCallAssignment: Nytt ringeoppdrag
+      createEmail: Ny e-post
       createEvent: Nytt arrangement
       createSurvey: Ny spørreundersøkelse
       createTask: Nytt app-innhold
@@ -334,6 +342,140 @@ feat:
         insights: Analyse
         summary: Oppsummering
     tasks: Innhold
+  emails:
+    blocked:
+      blacklisted: Svartelistet
+      missingEmail: Mangler e-postadresse
+      subtitle: Utilgjengelige mottakere
+      title: Blokkert
+      unsubscribed: Meldt seg av
+    deliveryProblems:
+      contentError: Det er problemer med innholdet i e-posten, gå til Utforming for
+        å rette dem opp.
+      empty: E-posten er tom, gå til Utforming for å legge til noe.
+      noSubject: E-posten har ikke emnefelt, få til Innstillinger i Utforming for
+        å legge til emne.
+      notTargeted: E-posten har ingen mottakere, gå til Målgruppe i Oversikt for å
+        lage et smartsøk som definerer mottakere.
+      targetsNotLocked: Målgruppa er ikke låst. Gå til Klar i Oversikt for å låse.
+    deliveryStatus:
+      notLocked: Ikke låst, ikke planlagt
+      notScheduled: Ikke planlagt
+      wasSent: Sendt {datetime}
+      willSend: Sendes {datetime}
+    editor:
+      readOnlyModeInfo: Denne e-posten kan ikke redigeres, enten fordi den er planlagt
+        eller har blitt sendt. Hvis den er planlagt og du vil redigere den må du avbryte
+        sendingen først.
+      settings:
+        tabs:
+          content: Innhold
+          preview:
+            confirmation: En forhåndsvisning har blitt sendt til din e-postadresse.
+            instructions: Her kan du sende denne e-posten til deg selv for å se hvordan
+              den vil se ut for mottakerne.
+            okButton: OK!
+            sendButton: Send
+            sendTo: 'E-posten blir sendt til denne adressen:'
+            title: Forhåndsvisning
+          settings:
+            senderAddressInputLabel: Avsenderadresse
+            senderNameInputLabel: Avsendernavn
+            subjectInputLabel: Emne
+            title: Innstillinger
+      tools:
+        button:
+          block:
+            noButtonText: Klikk for å endre denne teksten!
+          settings:
+            invalidUrl: Denne lenken er ikke gyldig
+            testLink: Klikk for å teste lenken
+            urlLabel: Lenkeadresse
+          title: Knapp
+        header:
+          title: Overskrift
+        libraryImage:
+          changeImage: Endre bilde
+          title: Bilde
+        link:
+          addUrl: Legg til lenke
+          invalidUrl: Dette er ikke en gyldig lenke
+          testLink: Klikk for å teste lenken
+          title: Lenke
+        paragraph:
+          invalidUrls: Det er en eller flere ugyldige lenker i denne tekstblokken.
+          title: Tekst
+        variable:
+          title: Variabel
+    emailActionButtons:
+      cancel: Avbryt
+      delete: Slett
+      delivery: Levering
+      deliveryDate: Leveringsdato
+      deliveryTime: Leveringstidspunkt
+      duplicate: Kopier
+      schedule: Planlegg
+      sendAnyway: Send likevel
+      sendLater: Send senere
+      sendNow:
+        alert:
+          desc: Det kan være et annet tidspunkt som er bedre for å sende. Hvis du
+            planlegger utsending gir du også andre tillitsvalgte og ansatte muligheten
+            til å koordinere med dine planer.
+          title: Å sende med en gang er ikke nødvendigvis best
+        header: Send nå
+      setDate: Velg leveringsdato for å fortsette
+      timeZone: Tidssone
+      warning: Er du sikker på at du vil slette e-posten? Handlingen er permanent
+        og kan ikke angres.
+    emailFeatureIsBlocked:
+      errorMessage: Organisasjonen din har ikke tilgang til å sende e-post.
+      goBackButton: Gå tilbake
+    ready:
+      loading: Laster...
+      lockButton: Lås for levering
+      lockDescription: Lås for å gjøre klar til levering
+      locked: Låst
+      scheduledDescription: Denne e-posten er planlagt, hvis du vil låse opp målgruppa
+        må du avbryte levering først.
+      sentSubtitle: Mottakere som var tilgjengelige for levering
+      subtitle: Mottakere som er tilgjengelige for levering nå
+      title: Klar
+      unlockButton: Lås opp
+      unlockDescription: Fortsett til levering eller lås opp mottakere for å redigere
+        målgruppa. Hvis du låser opp kan målgruppa bli større eller mindre basert
+        på hva smartsøket finner.
+    state:
+      draft: Utkast
+      scheduled: Planlagt
+      sent: Sendt
+    stats:
+      lockedTargets: '{numLocked, plural, =0 {Ingen låste mottakere} one {En låst
+        mottaker} other {# låste mottakere}}'
+      targets: '{numTargets, plural, =0 {Ingen mottakere} one {En mottaker} other
+        {# mottakere}}'
+    tabs:
+      compose: Utforming
+      overview: Oversikt
+    targets:
+      defineButton: Velg målgruppe
+      editButton: Rediger målgruppe
+      locked: Mottakerne er låst for levering
+      sentSubtitle: Du kan se smartsøket som ble brukt til å velge mottakerne av denne
+        e-posten
+      subtitle: Bruk smarstøk til å velge hvem som skal motta e-posten.
+      title: Mottakere
+      viewButton: Se målgruppe
+    unsubscribePage:
+      consent: Jeg forstår
+      h: Meld meg av e-post fra {org}
+      info: Når du melder deg av vil du ikke lenger motta de fleste e-postene fra
+        denne organisasjonen. Du kan fremdeles motta påminnelser dersom du er påmeldt
+        arrangementer eller gjør annet arbeid for organisasjonen. Du vil fremdeles
+        motta e-post om kontingentbetaling.
+      unsubButton: Meld meg av
+    varDefaults:
+      target: leser
   events:
     addPerson:
       addButton: Legg til person
@@ -381,6 +523,7 @@ feat:
       contact: Kontakt
       header: Deltakere
       noContact: Ingen tildelt
+      notifications: Varsler
       participantList: Se deltakere
       pending: Påmeldinger
       reqParticipantsHelperText: Minimum antall deltakere
@@ -392,6 +535,7 @@ feat:
       buttonBook: Registrer
       buttonCancel: Avmeld
       buttonCancelled: Avmeldt
+      buttonDelete: Slett
       buttonNoshow: Ikke møtt
       cancelledParticipants: Avmeldte deltakere
       columnEmail: E-post
@@ -443,6 +587,37 @@ feat:
         har ikke fått varsel'
     eventRelatedCard:
       header: Relaterte arrangementer
+    eventShiftModal:
+      addShift: Legg til skift
+      customTitle: Egendefinert tittel
+      date: Dato
+      description: Beskrivelse
+      draft: Utkast
+      end: Slutt
+      event: Arrangement
+      eventDuration: Varighet
+      header: Opprett arrangement med flere skift
+      hours: '{no, plural, one {En time} other {# timer}}'
+      hoursShort: t
+      invalidDate: Ugyldig dato
+      invalidTime: Ugyldig tid
+      link: Lenke
+      location: Sted
+      minutes: '{no, plural, one {Ett minutt} other {# minutter}}'
+      minutesShort: min
+      noEvents: Dette vil opprette {no} arrangementer
+      noTitle: Arrangement med flere skift uten tittel
+      participation: Deltakelse
+      participationDescription: Ønsket antall deltakere per skift
+      publish: Publiser
+      reset: Tilbakestill
+      shiftDuration: Varighet på skift
+      shiftStart: Start skift {no}
+      shifts: '{no, plural, one {1 skift} other {# skift}}'
+      shiftsHeader: Skift
+      showMoreSettingsButton: Fler innstillinger
+      start: Start
+      type: Type
     eventStatus:
       cancelled: Avlyst
       draft: Utkast
@@ -514,6 +689,28 @@ feat:
       createType: Ny "{type}"
       tooltip: Klikk for å endre type
       uncategorized: Ukategorisert
+  files:
+    fileUpload:
+      dropToUpload: Slipp en fil her for å laste opp
+      instructions: eller trekk og slipp
+      selectClick: Klikk for å laste opp
+    libraryDialog:
+      preview:
+        backButton: Tilbake til biblioteket
+        useButton: Bruk
+      title: Bibliotek
+    searching:
+      label: Søk
+    sorting:
+      label: Sortér etter
+      options:
+        date: Dato
+        originalName: Opprinnelig filnavn
+    typeFilter:
+      anyOption: Alle typer
+      label: Type
+      options:
+        image: Bilder
   import:
     actionButtons:
       back: Tilbake
@@ -540,11 +737,13 @@ feat:
           zetkinIDExplanation: Tallene i denne kolonnen er basert på en eksport fra
             Zetkin.
         orgs:
+          guess: Foreslå organisasjoner
           header: Velg organisasjoner
           organizations: Organisasjon
           status: Status
         tags:
           empty: Tomt
+          guess: Foreslå etiketter
           header: Sett opp etiketter
           numberOfRows: '{numRows, plural, =1 {En rad} other {# rader}}'
           tagsHeader: Etiketter
@@ -585,6 +784,10 @@ feat:
         organization: Organisasjon
         selectZetkinField: Importér som...
         tags: Etiketter
+        zetkinFieldGroups:
+          fields: Felter
+          id: ID
+          other: Andre
         zetkinHeader: Zetkin
       preview:
         columnHeader:
@@ -894,6 +1097,7 @@ feat:
       save: Lagre
     filterCategories:
       campaignActivity: Kampanjeaktivitet
+      email: E-post
       misc: Ymse
       peopleDatabase: Folk
       phoneBanking: Ringeaksjoner
@@ -903,6 +1107,9 @@ feat:
       call_blocked: Blokkert fra å ringes
       call_history: Basert på ringehistorikk
       campaign_participation: Basert på aktivitet
+      email_blacklist: Folk som er blokkert fra å motta e-post
+      email_click: Basert på lenkeklikk i e-post
+      email_history: Basert på e-posthistorikk
       most_active: De mest aktive
       person_data: Basert på navn, adresse, eller annen informasjon
       person_field: Basert på spesialfelter
@@ -973,6 +1180,36 @@ feat:
         locationSelect:
           any: et sted
           location: stedet "{location}"
+      emailBlacklist:
+        inputString: '{addRemoveSelect} folk som ikke kan motta e-post på grunn av
+          {reasonSelect}'
+        reasonSelect:
+          any: alle årsaker
+          unsubOrg: de har meldt seg av
+      emailClick:
+        inputString: '{addRemoveSelect} folk som har {operatorSelect} {linkScopeSelect}
+          {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
+        linkScopeSelect:
+          anyFollowingLinks: en av de følgende lenkene i den spesifikke e-posten
+          anyLink: hvilken som helst lenke i hvilken som helst e-post
+          anyLinkInEmail: hvilken som helst lenke i en spesifikk e-post
+          linkInEmailFromProject: hvilken som helst lenke i en hvilken som helst e-post
+            i det spesifikke prosjektet
+        operatorSelect:
+          clicked: klikket
+          notClicked: ikke klikket
+      emailHistory:
+        emailScopeSelect:
+          any: hvilken som helst e-post
+          email: den spesifikke e-posten
+          project: hvilken som helst e-post i prosjektet
+        inputString: '{addRemoveSelect} folk som har {operatorSelect} {emailScopeSelect}
+          {emailSelect} {projectSelect} {timeFrame}'
+        operatorSelect:
+          notOpened: ikke åpnet
+          notSent: ikke blitt tilsendt
+          opened: åpnet
+          sent: blitt tilsendt
       mostActive:
         addRemoveSelect:
           add: Legg til
@@ -1217,6 +1454,7 @@ feat:
         once: minst en gang
     misc:
       noOptions: Ingen like tags
+      noOptionsLinks: Ingen lenker som passer
     operators:
       add: Legg til
       limit: Begrens til
@@ -1602,6 +1840,7 @@ feat:
     actions:
       create: Opprett
       createFolder: Ny mappe
+      createPerson: Opprett person
       createView: Ny liste
       importPeople: Importér folk
     browser:
@@ -1936,6 +2175,32 @@ zui:
     copied: Kopiert
     copiedValue: Kopierte "{value}"
     copy: Kopier
+  createPerson:
+    cancel: Avbryt
+    createBtn: Opprett
+    defaultitle: Opprett person
+    genders:
+      f: Kvinne
+      m: Mann
+      o: Annet
+      unknown: Ukjent
+    showAllFields: Vis alle felter
+    submitLabel:
+      add: Opprett og legg til
+      assign: Opprett og tildel
+      default: Opprett
+    title:
+      addToJourney: Opprett person og legg til i {journey}
+      addToList: Opprett person og legg til i {list}
+      assignToJourney: Opprett person og tildel til {journey}
+      caller: Opprett person og legg til som ringer
+      contact: Opprett person og legg til som kontaktperson
+      default: Opprett person
+      participant: Opprett person og legg til som deltaker
+    validationWarning:
+      email: Legg til en gyldig e-postadresse
+      phone: Legg til et gyldig telefonnummer
+      url: Legg til en gyldig lenke
   dataTableSearch:
     button: Søk
     helpText: Skriv minst {minSearchLength} tegn
@@ -2012,6 +2277,7 @@ zui:
   timeSpan:
     multiDayEndsToday: '{startDate}, {start} - I dag, {end}'
     multiDayToday: I dag, {start} - {endDate}, {end}
+    singleDayAllDay: Hele dagen i dag
     singleDayToday: I dag, {start} - {end}
   timeline:
     addNotePlaceholder: Skriv her for å legge inn et notat
@@ -2058,3 +2324,6 @@ zui:
           deadlineRemove: frist ble fjernet
           deadlineUpdate: 'Frist: {datetime}'
           incomplete: '{actor} merket en oppfølging som ikke fullført'
+  timezonePicker:
+    placeholder: Skriv for å søke etter sted
+    timezone: Tidssone
