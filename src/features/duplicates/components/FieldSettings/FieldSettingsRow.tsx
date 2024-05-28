@@ -1,4 +1,3 @@
-import { ArrowForward } from '@mui/icons-material';
 import { Box, MenuItem, Select, Typography, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
@@ -66,7 +65,6 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
             <Msg id={globalMessageIds.personFields[field]} />
           </Typography>
         </Box>
-        <ArrowForward color="secondary" />
       </Box>
       <Box
         display="flex"
