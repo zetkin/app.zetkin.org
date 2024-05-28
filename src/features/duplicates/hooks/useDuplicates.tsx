@@ -2,7 +2,7 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { duplicatesLoad, duplicatesLoaded, ZetkinDuplicate } from '../store';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function useDuplicates(orgId: number) {
+export default function useDuplicates() {
   const dispatch = useAppDispatch();
   const duplicatesList = useAppSelector(
     (state) => state.duplicates.duplicatesList
