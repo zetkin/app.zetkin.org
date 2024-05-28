@@ -2,8 +2,8 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   addedDuplicatePerson,
   dismissedDuplicate,
+  PotentialDuplicate,
   removedDuplicatePerson,
-  ZetkinDuplicate,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
@@ -29,7 +29,7 @@ export default function useDuplicatesMutations(
   const dismissDuplicate = async (duplicateId: number) => {
     const dismissedDate = new Date().toISOString();
     await apiClient
-      .patch<ZetkinDuplicate>(
+      .patch<PotentialDuplicate>(
         `/orgs/${orgId}/people/duplicates/${duplicateId}`,
         { dismissed: dismissedDate }
       )

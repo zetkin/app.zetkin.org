@@ -3,16 +3,16 @@ import { Box, Button, FormControl, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from '../l10n/messageIds';
+import { PotentialDuplicate } from '../store';
 import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinDuplicate } from '../store';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 interface DuplicatesModalListProps {
-  duplicate: ZetkinDuplicate;
+  duplicate: PotentialDuplicate;
 }
 
 const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
@@ -58,7 +58,6 @@ const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
       disableColumnMenu: true,
       field: 'phone',
       headerName: messages.modal.possibleDuplicatesColumns.phone(),
-      minWidth: 250,
       renderCell: (params) => (
         <Typography
           sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
@@ -72,7 +71,7 @@ const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
       disableColumnMenu: true,
       field: 'button',
       headerName: '',
-      minWidth: 250,
+      minWidth: 150,
       renderCell: (params) => {
         return (
           <FormControl

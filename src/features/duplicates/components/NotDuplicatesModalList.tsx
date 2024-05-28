@@ -3,17 +3,17 @@ import { Box, Button, FormControl, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from '../l10n/messageIds';
+import { PotentialDuplicate } from '../store';
 import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
 import { useMessages } from 'core/i18n';
 import useNotDuplicates from '../hooks/useNotDuplicates';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinDuplicate } from '../store';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 interface NotDuplicatesModalListProps {
-  duplicate: ZetkinDuplicate;
+  duplicate: PotentialDuplicate;
 }
 
 const NotDuplicatesModalList: FC<NotDuplicatesModalListProps> = ({

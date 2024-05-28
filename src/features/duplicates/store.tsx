@@ -2,7 +2,7 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 
-export interface ZetkinDuplicate {
+export interface PotentialDuplicate {
   duplicates: ZetkinPerson[];
   dismissed: string | null;
   id: number;
@@ -12,7 +12,7 @@ export interface ZetkinDuplicate {
 }
 
 export interface DuplicatesStoreSlice {
-  duplicatesList: RemoteList<ZetkinDuplicate>;
+  duplicatesList: RemoteList<PotentialDuplicate>;
   notDuplicatesList: RemoteList<ZetkinPerson>;
 }
 
@@ -46,7 +46,7 @@ const duplicatesSlice = createSlice({
       );
       state.notDuplicatesList.items = nonDuplicates;
     },
-    dismissedDuplicate: (state, action: PayloadAction<ZetkinDuplicate>) => {
+    dismissedDuplicate: (state, action: PayloadAction<PotentialDuplicate>) => {
       const duplicate = action.payload;
       const item = state.duplicatesList.items.find(
         (item) => item.id === duplicate.id
@@ -60,7 +60,7 @@ const duplicatesSlice = createSlice({
     duplicatesLoad: (state) => {
       state.duplicatesList.isLoading = true;
     },
-    duplicatesLoaded: (state, action: PayloadAction<ZetkinDuplicate[]>) => {
+    duplicatesLoaded: (state, action: PayloadAction<PotentialDuplicate[]>) => {
       const duplicates = action.payload;
 
       state.duplicatesList = remoteList(duplicates);

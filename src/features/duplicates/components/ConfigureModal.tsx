@@ -13,12 +13,12 @@ import DuplicatesModalList from './DuplicatesModalList';
 import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
 import NotDuplicatesModalList from './NotDuplicatesModalList';
+import { PotentialDuplicate } from '../store';
 import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
-import { ZetkinDuplicate } from '../store';
 
 interface ConfigureModalProps {
-  duplicate: ZetkinDuplicate;
+  duplicate: PotentialDuplicate;
   onClose: () => void;
   open: boolean;
 }
