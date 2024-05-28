@@ -11,9 +11,9 @@ export default makeMessages('feat.duplicates', {
       },
       noValue: m('No value'),
     },
-    isDuplicateButton: m('Merge'),
+    isDuplicateButton: m('Add to merge'),
     mergeButton: m('Merge'),
-    notDuplicateButton: m('Not Merge'),
+    notDuplicateButton: m('Remove from merge'),
     peopleNotBeingMerge: m('People not being merged'),
     peopleToMerge: m('People to merge'),
     possibleDuplicatesColumns: {
