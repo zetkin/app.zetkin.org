@@ -38,6 +38,7 @@ const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
           </Typography>
         </ZUIPersonHoverCard>
       ),
+      sortable: false,
     },
     {
       align: 'left',
@@ -52,6 +53,7 @@ const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
           {params.row.email}
         </Typography>
       ),
+      sortable: false,
     },
     {
       align: 'left',
@@ -65,6 +67,7 @@ const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
           {params.row.phone}
         </Typography>
       ),
+      sortable: false,
     },
     {
       align: 'right',
@@ -92,6 +95,7 @@ const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
           </FormControl>
         );
       },
+      sortable: false,
     },
   ];
 

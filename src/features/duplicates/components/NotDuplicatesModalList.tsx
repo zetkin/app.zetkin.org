@@ -44,6 +44,7 @@ const NotDuplicatesModalList: FC<NotDuplicatesModalListProps> = ({
           </Typography>
         </ZUIPersonHoverCard>
       ),
+      sortable: false,
     },
     {
       align: 'left',
@@ -58,6 +59,8 @@ const NotDuplicatesModalList: FC<NotDuplicatesModalListProps> = ({
           {params.row.email}
         </Typography>
       ),
+
+      sortable: false,
     },
     {
       align: 'left',
@@ -72,6 +75,7 @@ const NotDuplicatesModalList: FC<NotDuplicatesModalListProps> = ({
           {params.row.phone}
         </Typography>
       ),
+      sortable: false,
     },
     {
       align: 'right',
@@ -99,6 +103,7 @@ const NotDuplicatesModalList: FC<NotDuplicatesModalListProps> = ({
           </FormControl>
         );
       },
+      sortable: false,
     },
   ];
 
