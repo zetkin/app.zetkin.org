@@ -3,7 +3,6 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.duplicates', {
   modal: {
     cancelButton: m('Cancel'),
-    isDuplicateButton: m('Merge'),
     fieldSettings: {
       gender: {
         f: m('Female'),
@@ -12,6 +11,7 @@ export default makeMessages('feat.duplicates', {
       },
       noValue: m('No value'),
     },
+    isDuplicateButton: m('Merge'),
     mergeButton: m('Merge'),
     notDuplicateButton: m('Not Merge'),
     peopleNotBeingMerge: m('People not being merged'),
