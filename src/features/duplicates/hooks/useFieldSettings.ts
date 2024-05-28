@@ -3,27 +3,20 @@ import sortValuesByFrequency from '../utils/sortValuesByFrequency';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 export default function useFieldSettings(duplicates: ZetkinPerson[]) {
-  const nativePersonFields = Object.values(NATIVE_PERSON_FIELDS).filter(
-    (field) => field !== NATIVE_PERSON_FIELDS.ID
-  );
-
-  const sortedNativePersonFields = nativePersonFields.filter(
-    (field) =>
-      field === NATIVE_PERSON_FIELDS.FIRST_NAME ||
-      field === NATIVE_PERSON_FIELDS.LAST_NAME ||
-      field === NATIVE_PERSON_FIELDS.EMAIL ||
-      field === NATIVE_PERSON_FIELDS.PHONE
-  );
-
-  const otherFields = nativePersonFields.filter(
-    (field) =>
-      field !== NATIVE_PERSON_FIELDS.FIRST_NAME &&
-      field !== NATIVE_PERSON_FIELDS.LAST_NAME &&
-      field !== NATIVE_PERSON_FIELDS.EMAIL &&
-      field !== NATIVE_PERSON_FIELDS.PHONE
-  );
-
-  sortedNativePersonFields.push(...otherFields);
+  const sortedNativePersonFields: NATIVE_PERSON_FIELDS[] = [
+    NATIVE_PERSON_FIELDS.FIRST_NAME,
+    NATIVE_PERSON_FIELDS.LAST_NAME,
+    NATIVE_PERSON_FIELDS.EMAIL,
+    NATIVE_PERSON_FIELDS.PHONE,
+    NATIVE_PERSON_FIELDS.ALT_PHONE,
+    NATIVE_PERSON_FIELDS.GENDER,
+    NATIVE_PERSON_FIELDS.STREET_ADDRESS,
+    NATIVE_PERSON_FIELDS.CO_ADDRESS,
+    NATIVE_PERSON_FIELDS.ZIP_CODE,
+    NATIVE_PERSON_FIELDS.CITY,
+    NATIVE_PERSON_FIELDS.COUNTRY,
+    NATIVE_PERSON_FIELDS.EXT_ID,
+  ];
 
   const fieldValues: Record<string, string[]> = {};
 
