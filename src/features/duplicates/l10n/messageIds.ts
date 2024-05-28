@@ -4,6 +4,14 @@ export default makeMessages('feat.duplicates', {
   modal: {
     cancelButton: m('Cancel'),
     isDuplicateButton: m('Merge'),
+    fieldSettings: {
+      gender: {
+        f: m('Female'),
+        m: m('Male'),
+        o: m('Other'),
+      },
+      noValue: m('No value'),
+    },
     mergeButton: m('Merge'),
     notDuplicateButton: m('Not Merge'),
     peopleNotBeingMerge: m('People not being merged'),
