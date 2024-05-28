@@ -8,8 +8,6 @@ import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
-import useServerSide from 'core/useServerSide';
-import { ZetkinDuplicate } from 'features/duplicates/store';
 import { useNumericRouteParams } from 'core/hooks';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
@@ -19,7 +17,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 });
 
 const DuplicatesPage: PageWithLayout = () => {
-  const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const list = useDuplicates(orgId).data ?? [];
   const messages = useMessages(messageIds);
@@ -36,7 +33,10 @@ const DuplicatesPage: PageWithLayout = () => {
           </Typography>
         </Box>
       )}
-      <ConfigureModal duplicate={list[0]} onClose={() => {}} open={true} />
+      {/* Temporary solution until we make the manage button active */}
+      {list.length > 0 && (
+        <ConfigureModal duplicate={list[0]} onClose={() => {}} open={true} />
+      )}
     </>
   );
 };
