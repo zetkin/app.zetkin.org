@@ -3,9 +3,11 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.duplicates', {
   modal: {
     cancelButton: m('Cancel'),
-    isDuplicateButton: m('Is duplicate'),
+    isDuplicateButton: m('Merge'),
     mergeButton: m('Merge'),
-    notDuplicateButton: m('Not duplicate'),
+    notDuplicateButton: m('Not Merge'),
+    peopleNotBeingMerge: m('People not being merged'),
+    peopleToMerge: m('People to merge'),
     possibleDuplicatesColumns: {
       email: m('E-mail'),
       name: m('Name'),

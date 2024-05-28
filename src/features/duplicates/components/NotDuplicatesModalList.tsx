@@ -106,7 +106,9 @@ const NotDuplicatesModalList: FC<NotDuplicatesModalListProps> = ({
     <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
       {rows.length > 0 && (
         <>
-          <Typography variant="h6">{'Not  duplicates'}</Typography>
+          <Typography variant="h6">
+            {messages.modal.peopleNotBeingMerge()}
+          </Typography>
           <DataGridPro
             autoHeight
             checkboxSelection={false}

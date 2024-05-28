@@ -98,7 +98,8 @@ const DuplicatesModalList: FC<DuplicatesModalListProps> = ({ duplicate }) => {
 
   return (
     <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
-      <Typography variant="h6">{'Possible duplicates'}</Typography>
+      <Typography variant="h6">{messages.modal.peopleToMerge()}</Typography>
+
       <DataGridPro
         autoHeight
         checkboxSelection={false}
