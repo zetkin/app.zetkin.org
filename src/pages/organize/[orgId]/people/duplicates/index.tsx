@@ -27,9 +27,11 @@ const DuplicatesPage: PageWithLayout = () => {
     return null;
   }
 
+  const filteredList = list.filter((cluster) => !cluster.dismissed);
+
   return (
     <>
-      {list.length === 0 && (
+      {filteredList.length === 0 && (
         <Box m={2}>
           <Typography variant="overline">
             {messages.page.noDuplicates()}
@@ -39,7 +41,7 @@ const DuplicatesPage: PageWithLayout = () => {
           </Typography>
         </Box>
       )}
-      {list.length > 0 && (
+      {filteredList.length > 0 && (
         <Box p={1.5}>
           <Typography
             color={theme.palette.grey[500]}
@@ -48,7 +50,7 @@ const DuplicatesPage: PageWithLayout = () => {
           >
             {messages.page.possibleDuplicates()}
           </Typography>
-          {list.map((cluster) => (
+          {filteredList.map((cluster) => (
             <DuplicateCard key={cluster.id} cluster={cluster} />
           ))}
         </Box>
