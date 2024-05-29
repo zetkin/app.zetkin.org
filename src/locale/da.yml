@@ -7,9 +7,9 @@ core:
   legacy:
     continueButton: Fortsæt til det gamle Zetkin
     header: Du bliver omdirigeret
-    info: Du bruger en prerelease version af Zetkin, der ikke understøtter den funktion
-      du vil bruge. Du bliver omdirigeret til en ældre version af Zetkin, der understøtter
-      den funktion.
+    info: Du bruger en prerelease version af Zetkin, der ikke understøtter den
+      funktion du vil bruge. Du bliver omdirigeret til en ældre version af
+      Zetkin, der understøtter den funktion.
 feat:
   breadcrumbs:
     elements:
@@ -95,13 +95,13 @@ feat:
       editEvents: Rediger begivenheder
       ellipsisMenu:
         cancel: Aflys
-        cancelWarning: Hvis du gør, så husk at informere alle deltagere og tilmeldte,
-          at begivenheden er blevet aflyst!
+        cancelWarning: Hvis du gør, så husk at informere alle deltagere og tilmeldte, at
+          begivenheden er blevet aflyst!
         confirmCancel: Er du sikker, at du vil aflyse de valgte begivenheder?
         confirmDelete: Er du sikker, at du vil slette de valgte begivenheder?
         delete: Slet
-        deleteWarning: Når begivenhederne er blevet slettet, er det ikke muligt at
-          tilgå dem igen.
+        deleteWarning: Når begivenhederne er blevet slettet, er det ikke muligt at tilgå
+          dem igen.
         print: Print skema
         publish: Offentliggør nu
         unpublish: Tilbagetræk offentliggørelse
@@ -146,8 +146,8 @@ feat:
       title: Ringere
     conversation:
       instructions:
-        confirm: Vil du slette alt data, der ikke er gemt og gå tilbage til de instruktioner,
-          der er gemt?
+        confirm: Vil du slette alt data, der ikke er gemt og gå tilbage til de
+          instruktioner, der er gemt?
         editorPlaceholder: Tilføj instruktion til dine ringere
         revertLink: Gå tilbage til tidligere gemt version?
         saveButton: Gem
@@ -157,12 +157,12 @@ feat:
         unsavedMessage: Du har ændringer, som ikke er gemt
       settings:
         notes:
-          message: At deaktivere opkaldsnoter kan øge opkaldsraten, men kan medføre
-            at vigtige informationer går tabt.
+          message: At deaktivere opkaldsnoter kan øge opkaldsraten, men kan medføre at
+            vigtige informationer går tabt.
           title: Tillad ringere at skrive noter
         targetData:
-          message: Målpersonens navn og telefonnumer er altid synlige for ringerne.
-            At aktivere yderelige måldata vil dele alle personfelter med ringerne.
+          message: Målpersonens navn og telefonnumer er altid synlige for ringerne. At
+            aktivere yderelige måldata vil dele alle personfelter med ringerne.
           title: Vis yderligere måldata
         title: Samtale indstillinger
     done:
@@ -188,9 +188,10 @@ feat:
       open: Åben
       scheduled: Planlagt
     stats:
-      callers: '{numCallers, plural, =0 {ingen ringere} one {1 ringer} other {# ringere}}'
-      targets: '{numTargets, plural, =0 {ingen målpersoner} one {1 målperson} other
-        {# målpersoner}}'
+      callers: '{numCallers, plural, =0 {ingen ringere} one {1 ringer} other {#
+        ringere}}'
+      targets: '{numTargets, plural, =0 {ingen målpersoner} one {1 målperson} other {#
+        målpersoner}}'
     statusSectionTitle: Status
     tabs:
       callers: Ringere
@@ -225,8 +226,8 @@ feat:
       eventItem:
         contact: Ingen kontaktperson er blevet tildelt
         locations: '{count} lokationer'
-        reminders: '{numMissing, plural, =1 {en deltager} other {# deltagere}} har
-          ikke modtaget påmindelser'
+        reminders: '{numMissing, plural, =1 {en deltager} other {# deltagere}} har ikke
+          modtaget påmindelser'
         signups: Der er verserende tilmeldinger
     all:
       cardCTA: Gå til projekt
@@ -243,8 +244,8 @@ feat:
       upcoming: '{numEvents, number} kommende begivenheder.'
     allProjects:
       linkToSummary: Gå til mine aktive projekter.
-      noActivities: Hvis din organisation har aktiviteter, der ikke hører til et projekt,
-        bliver de vist her.
+      noActivities: Hvis din organisation har aktiviteter, der ikke hører til et
+        projekt, bliver de vist her.
       viewArchive: Vis arkiv
     assigneeActions: Handlinger for ansvarlige
     calendarView: Se alle i kalenderen
@@ -390,13 +391,13 @@ feat:
       columnNotified: Påmindet
       columnPhone: Telefon
       contactTooltip: Kontaktperson
-      descriptionBooked: Dette er personer som du har booket og satser på kommer.
-        Hvis de ønsker at annulere skal de kontakte dig, så kan du annulere for dem
+      descriptionBooked: Dette er personer som du har booket og satser på kommer. Hvis
+        de ønsker at annulere skal de kontakte dig, så kan du annulere for dem
         manuelt
       descriptionCancelled: Disse personer har annuleret deres deltagelse. De står
         her, så du ikke forsøger at booke dem igen
-      descriptionSignups: Disse personer har tilmeldt sig gennem aktivistportalen.
-        De kan annulere deres deltagelse
+      descriptionSignups: Disse personer har tilmeldt sig gennem aktivistportalen. De
+        kan annulere deres deltagelse
       dropDownAttended: Bekræftet fremmøde
       dropDownNoshow: Mødte ikke op
       participantTooltip: Gør til kontaktperson
@@ -407,8 +408,8 @@ feat:
       backToShifts: Tilbage til vagtplanen
       booked: Booket
       cancel: Annuller
-      cancelWarning: Hvis du gør, så husk at informere alle deltagere og tilmeldte,
-        at begivenheden er blevet aflyst!
+      cancelWarning: Hvis du gør, så husk at informere alle deltagere og tilmeldte, at
+        begivenheden er blevet aflyst!
       confirmCancel: Er du sikker på, du vil aflyse denne begivenhed?
       confirmDelete: Er du sikker på, du vil slette denne begivenhed?
       contactPerson: Kontaktperson
@@ -432,8 +433,8 @@ feat:
       reminded: Påmindet
       shifts: Vagter
       signups: Tilmeldte
-      unsentReminders: '{numMissing, plural, =1 {en deltager} other {# deltagere}}
-        har ikke modtaget påmindelser endnu'
+      unsentReminders: '{numMissing, plural, =1 {en deltager} other {# deltagere}} har
+        ikke modtaget påmindelser endnu'
     eventRelatedCard:
       header: Relaterede begivenheder
     eventStatus:
@@ -465,9 +466,9 @@ feat:
       cancel: Afbryd
       createLocation: Opret ny loaktion
       description: Beskrivelse
-      infoText: For at bevæge kortet klik og brug en finger, for at zoome klik og
-        brug to fingre eller scroll-funktionen. For at oprette en ny lokation kan
-        du klikke på et tomt sted på kortet.
+      infoText: For at bevæge kortet klik og brug en finger, for at zoome klik og brug
+        to fingre eller scroll-funktionen. For at oprette en ny lokation kan du
+        klikke på et tomt sted på kortet.
       move: Flyt
       moveInstructions: Træk markøren for at vælge en lokation.
       noDescription: Ingen beskrivelse
@@ -488,8 +489,7 @@ feat:
       pending: Verserende tilmeldinger
       recordButton: Tag fremmøde
       remindButton: Påmind alle
-      remindButtondisabledTooltip: Du skal angive en kontaktperson, før du kan sende
-        påmindelser
+      remindButtondisabledTooltip: Du skal angive en kontaktperson, før du kan sende påmindelser
       reqParticipantsHelperText: Minimum antal deltagere nødvendige
       reqParticipantsLabel: Nødvendige deltagere
     search: Søg
@@ -621,12 +621,12 @@ feat:
           notreached: er blevet forsøgt uden held
           reached: er nået med succes
         examples:
-          one: Tilføj personer som vi har nået mindst to gange nogensinde i hvilken
-            som helst opgave til.
+          one: Tilføj personer som vi har nået mindst to gange nogensinde i hvilken som
+            helst opgave til.
           two: Fjern personer, der er blevet ringet op mindst 1 gang i opgaven 'Aktiver
             gamle medlemmer' i løbet af de sidste 30 dage.
-        inputString: '{addRemoveSelect} personer som {callSelect} mindst {minTimes}
-          i {assignmentSelect} {timeFrame}.'
+        inputString: '{addRemoveSelect} personer som {callSelect} mindst {minTimes} i
+          {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {gange}}'
         minTimesInput: '{input} {minTimes, plural, one {gang} other {gange}}'
       campaignParticipation:
@@ -643,17 +643,17 @@ feat:
           any: hvilket som helst projekt
           campaign: projekt "{campaign}"
         examples:
-          one: Tilføj personer, der har tilmeldt sig begivenheder på lokationen 'Dorfplatz'
-            uanset type, projekt eller tidspunkt
-          two: Fjern personer, der til dags dato ikke er blevet booket til begivenheder
-            af typen 'Sæt plakater op' i et hvilket som helst projekt, på en hvilken
-            som helst lokation.
+          one: Tilføj personer, der har tilmeldt sig begivenheder på lokationen
+            'Dorfplatz' uanset type, projekt eller tidspunkt
+          two: Fjern personer, der til dags dato ikke er blevet booket til begivenheder af
+            typen 'Sæt plakater op' i et hvilket som helst projekt, på en
+            hvilken som helst lokation.
         haveSelect:
           in: har
           notin: har ikke
         inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} til
-          begivenheden i {campaignSelect} af {activitySelect} på {locationSelect}
-          {timeFrame}'
+          begivenheden i {campaignSelect} af {activitySelect} på
+          {locationSelect} {timeFrame}'
         locationSelect:
           any: enhver lokation
           location: lokation "{location}"
@@ -664,15 +664,15 @@ feat:
         examples:
           one: Tilføj de 100 mest aktive medlemmer af organisationen før dags dato.
           two: Fjern de fem mest aktive medlemmer af organisationen nogensinde.
-        inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople}
-          i organisationen {timeFrame}.'
+        inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople} i
+          organisationen {timeFrame}.'
         numPeople: '{numPeople, plural, one {person} other {personer}}'
         numPeopleSelect: '{numPeopleSelect}'
       personData:
         addRemoveSelect:
           add: Tilføj
           sub: fjern
-        ellipsis: '...'
+        ellipsis: ...
         examples:
           one: Tilføj alle personer, hvis fornavn er 'Clara' og hvis efternavn er
             'Zetkin'.
@@ -729,11 +729,10 @@ feat:
             minMatching: mindst {minMatching}
             none: ingen
         examples:
-          one: 'Tilføj personer med mindst en af de følgende etiketter: ''medlem'',
-            ''aktivist'''
-          two: 'Fjern mennesker med de følgende etiketter: ''Bestyrelsesmedlem'''
-        inputString: '{addRemoveSelect} personer med {condition} af de følgende etiketter:
-          {tags}'
+          one: "Tilføj personer med mindst en af de følgende etiketter: 'medlem', 'aktivist'"
+          two: "Fjern mennesker med de følgende etiketter: 'Bestyrelsesmedlem'"
+        inputString: '{addRemoveSelect} personer med {condition} af de følgende
+          etiketter: {tags}'
       personView:
         addRemoveSelect:
           add: Tilføj
@@ -763,9 +762,9 @@ feat:
           add: Tilføj
           sub: Erstat
         examples:
-          one: Fjern personer, der matcher Smart Søgningen 'Personer, der bor i Stockholm'.
-          two: Tilføj personer der matcher målgruppen til ringeopgaven 'Ringeopgave
-            et'.
+          one: Fjern personer, der matcher Smart Søgningen 'Personer, der bor i
+            Stockholm'.
+          two: Tilføj personer der matcher målgruppen til ringeopgaven 'Ringeopgave et'.
         inputString: '{addRemoveSelect} personer der {matchSelect} {query}.'
         matchSelect:
           in: match
@@ -789,8 +788,7 @@ feat:
           selectOptions:
             callassignment_goal: formålsgruppen for denne ringeopgave
             callassignment_target: målgruppen for denne ringeopgave
-            none: Denne organisation har ingen ringeopgaver eller Smarte Søgninger
-              endnu.
+            none: Denne organisation har ingen ringeopgaver eller Smarte Søgninger endnu.
             standalone: en enkeltstående Smart Søgning
       surveyOption:
         addRemoveSelect:
@@ -801,14 +799,11 @@ feat:
           any: hvilke som helst
           none: ingen
         examples:
-          one: 'Fjern alle personer som har valgt en af følgende svarmuligheder i
-            spørgeskemaet ''medlemsspørgeskema 2020'' (question ''Question one''):
-            ''Nogle gange'', ''Aldrig'''
-          two: 'Tilføj alle personer som har valgt en af følgende svarmuligheder i
-            spørgeskemaet ''Medlemsspørgeskema'' (question ''Question one''): ''Svarmulighed
-            to'''
-        inputString: '{addRemoveSelect} personer som har valgt {conditionSelect} en
-          af de følgende svarmuligheder {surveySelect} ({questionSelect}): {options}'
+          one: "Fjern alle personer som har valgt en af følgende svarmuligheder i spørgeskemaet 'medlemsspørgeskema 2020' (question 'Question one'): 'Nogle gange', 'Aldrig'"
+          two: "Tilføj alle personer som har valgt en af følgende svarmuligheder i spørgeskemaet 'Medlemsspørgeskema' (question 'Question one'): 'Svarmulighed to'"
+        inputString: '{addRemoveSelect} personer som har valgt {conditionSelect} en af
+          de følgende svarmuligheder {surveySelect} ({questionSelect}):
+          {options}'
         questionSelect:
           any: et spørgsmål
           none: Der er ingen spørgsmål med svarmuligheder i dette spørgeskema
@@ -826,8 +821,8 @@ feat:
             'Question one') indeholder 'organizer'
           two: Personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
             'Question one') matcher nøjagtigt 'organizer'.
-        inputString: '{addRemoveSelect} personer hvis svar på {surveySelect} ({questionSelect})
-          {matchSelect} "{freeTextInput}"'
+        inputString: '{addRemoveSelect} personer hvis svar på {surveySelect}
+          ({questionSelect}) {matchSelect} "{freeTextInput}"'
         matchSelect:
           eq: matcher nøjagtigt
           in: indeholder
@@ -846,11 +841,12 @@ feat:
           add: Tilføj
           sub: Fjern
         examples:
-          one: Personer, der har afgivet svar på spørgeskemaet 'Medlemsspørgeskema
-            2020' før i dag.
-          two: Personer som har besvaret spørgeskemaet 'Medlemsspørgeskema 2020' inden
-            for de sidste 30 dage.
-        inputString: '{addRemoveSelect} personer som har besvaret {surveySelect} {timeFrame}.'
+          one: Personer, der har afgivet svar på spørgeskemaet 'Medlemsspørgeskema 2020'
+            før i dag.
+          two: Personer som har besvaret spørgeskemaet 'Medlemsspørgeskema 2020' inden for
+            de sidste 30 dage.
+        inputString: '{addRemoveSelect} personer som har besvaret {surveySelect}
+          {timeFrame}.'
         surveySelect:
           any: et spørgeskema
           none: Denne organisation har ingen spørgeskemaer endnu
@@ -864,12 +860,12 @@ feat:
           campaign: projekt "{campaign}"
           in: i
         examples:
-          one: Tilføj personer, der har fuldført opgaven "Fortæl dine venner" mindst
-            én gang på et hvilket som helst tidspunkt
-          two: Tilføj personer, der har ignoreret en opgave i et projekt mellem 2
-            og 5 gange før dags dato
-        inputString: '{addRemoveSelect} personer som har {taskStatusSelect} {taskSelect}{campaignSelect}
-          {matchingSelect} {timeFrame}'
+          one: Tilføj personer, der har fuldført opgaven "Fortæl dine venner" mindst én
+            gang på et hvilket som helst tidspunkt
+          two: Tilføj personer, der har ignoreret en opgave i et projekt mellem 2 og 5
+            gange før dags dato
+        inputString: '{addRemoveSelect} personer som har {taskStatusSelect}
+          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: enhver opgave
           task: opgave "{task}"
@@ -887,8 +883,8 @@ feat:
         examples:
           one: Fjern alle personer, der er tilknyttet en Zetkin-bruger.
           two: Tilføj alle personer som ikke er tilknyttet en Zetkin-bruger.
-        inputString: '{addRemoveSelect} alle personer som er {connectedSelect} til
-          en Zetkinprofil.'
+        inputString: '{addRemoveSelect} alle personer som er {connectedSelect} til en
+          Zetkinprofil.'
     headers:
       examples: Eksempler
       gallery: Hvordan ønsker du at udvælge personer?
@@ -939,8 +935,8 @@ feat:
     statsPopper:
       change: ændr
       details: Smart Søgning er dynamisk. Det betyder, at over tid kan antallet af
-        matches variere. Andre brugere kan se forskellige resultater, hvis de har
-        adgang til flere eller færre personer.
+        matches variere. Andre brugere kan se forskellige resultater, hvis de
+        har adgang til flere eller færre personer.
       exit: Resultat
       headline: Indvirkning på udvalg
       info: Dette er et dynamisk valg, og tallene kan ændre sig over tid.
@@ -1010,8 +1006,8 @@ feat:
           er permanent og kan ikke fortrydes.
       deleteOptionDialog:
         title: Slet svarmulighed
-        warningText: Er du sikker på, at du vil slette denne svarmulighed? Denne handling
-          er permanent og kan ikke fortrydes.
+        warningText: Er du sikker på, at du vil slette denne svarmulighed? Denne
+          handling er permanent og kan ikke fortrydes.
       open:
         description: Beskrivelse
         empty: Unavngivent åbent spørgsmål
@@ -1041,17 +1037,18 @@ feat:
           bullet3: Skjule spørgsmål
           bullet4: Tilføje spørgsmål eller svarmuligheder
           header: Sikker
-        subheader: Pas på ikke at foretage ændringer, der kan medføre, at svardata
-          går tabt eller beskadiges.
+        subheader: Pas på ikke at foretage ændringer, der kan medføre, at svardata går
+          tabt eller beskadiges.
         unsafe:
           bullet1: Slet spørgsmål (skjul i stedet)
-          bullet2: Omdøbning af spørgsmål eller svarmuligheder på måder, der ændrer
-            deres betydning
+          bullet2: Omdøbning af spørgsmål eller svarmuligheder på måder, der ændrer deres
+            betydning
           header: Usikker
       locked:
         header: Spørgeskema låst
-        subheader: Denne undersøgelse er begyndt at modtage besvarelser. Redigering
-          af undersøgelsen kan forårsage problemer med dataene. Fortsæt med forsigtighed.
+        subheader: Denne undersøgelse er begyndt at modtage besvarelser. Redigering af
+          undersøgelsen kan forårsage problemer med dataene. Fortsæt med
+          forsigtighed.
         unlockButton: Lås op
     layout:
       actions:
@@ -1073,7 +1070,8 @@ feat:
         title: Der er ingen spørgsmål i dette spørgeskema endnu
     shareSuborgsCard:
       caption: Når dette er aktiveret, kan oficielle i underorganisationer læse og
-        søge i spørgeskemaer indsendt af personer, der er forbundet med deres organisation.
+        søge i spørgeskemaer indsendt af personer, der er forbundet med deres
+        organisation.
       title: Del med underorganisationer
     state:
       draft: Udkast
@@ -1101,17 +1099,18 @@ feat:
       submissions: Besvarelser
     unlinkedCard:
       description: Når nogen besvarer et spørgeskema uden at være logget ind, vil
-        denne besvarelse ikke været tilknyttet deres profil. Søgning efter personer
-        i Zetkin baseret på deres besvarekser fungerer ikke på ikke-tilknyttede besvarelser.
+        denne besvarelse ikke været tilknyttet deres profil. Søgning efter
+        personer i Zetkin baseret på deres besvarekser fungerer ikke på
+        ikke-tilknyttede besvarelser.
       header: Ikke-tilknyttede besvarelse
-      openLink: '{numUnlink, plural, one {tilknyt besvarelse nu} other {tilknyt besvarelser
-        nu}}'
+      openLink: '{numUnlink, plural, one {tilknyt besvarelse nu} other {tilknyt
+        besvarelser nu}}'
     unlinkedWarningAlert:
       default:
         description: '{numUnlink, plural, one {en besvarelse er ikke knyttet til en
-          Zetkinprofil, hvilket betyder den ikke inkluderes under søgningen.} other
-          {Der er besvarelser, der ikke er knyttet til Zetkinprofiler, hvilket betyder
-          de ikke inkluderes under søgningen.}}'
+          Zetkinprofil, hvilket betyder den ikke inkluderes under søgningen.}
+          other {Der er besvarelser, der ikke er knyttet til Zetkinprofiler,
+          hvilket betyder de ikke inkluderes under søgningen.}}'
         header: Ikke-tilknyttede besvarelser
         viewUnlinked: Vis kun ikke-tilknyttede
       filtered:
@@ -1164,12 +1163,12 @@ feat:
         edit: Rediger Smart Søgning
         readOnly: Vis Smart Søgning
       queryStates:
-        assigned: Denne opgave er blevet tildelt alle personer, der matcher den målrettede
-          Smart Søgning.
+        assigned: Denne opgave er blevet tildelt alle personer, der matcher den
+          målrettede Smart Søgning.
         editable: Når denne opgave offentliggøres, tildeles den til de personer, der
           matcher den målrettede Smart Søgning.
-        new: Denne opgave vil være målrettet personer, der matcher en Smart Søgning.
-          Før du kan offentliggøre, skal du oprette en målgruppe ved hjælp af Smart
+        new: Denne opgave vil være målrettet personer, der matcher en Smart Søgning. Før
+          du kan offentliggøre, skal du oprette en målgruppe ved hjælp af Smart
           Søgning.
         published: Denne opgave tildels i øjeblikket alle, der matcher den målrettede
           Smart Søgning...
@@ -1202,8 +1201,8 @@ feat:
       error: Der er opstået en fejl under slettelsen af opgaven
       submitButton: Bekræft slettelse
       title: Slet opgave
-      warning: Er du sikker på, at du vil slette denne opgave? Denne handling er permanent
-        og kan ikke fortrydes.
+      warning: Er du sikker på, at du vil slette denne opgave? Denne handling er
+        permanent og kan ikke fortrydes.
     editTask:
       title: Rediger opgave
     form:
@@ -1226,8 +1225,8 @@ feat:
           lessThanOneMinute: Mindre end et minut
           noEstimate: Intet estimat
         timeValidationErrors:
-          deadlineNotSecond: Dette skal blive planlagt efter Offentliggørelsedatoen
-            og før Udløbsdatoen
+          deadlineNotSecond: Dette skal blive planlagt efter Offentliggørelsedatoen og før
+            Udløbsdatoen
           expiresNotThird: Dette skal planlægges sidst
           publishedNotFirst: Dette skal planlægges først
         title: Titel
@@ -1254,8 +1253,8 @@ feat:
       cancel: Afbryd
       submitButton: Offentliggør opgave nu
       title: Offentliggør opgave
-      warning: Bekræft venligst, at du er klar til at offentliggøre denne opgave.
-        Den vil blive sendt til alle ansvarlige.
+      warning: Bekræft venligst, at du er klar til at offentliggøre denne opgave. Den
+        vil blive sendt til alle ansvarlige.
     showExpiredTasksPrompt: Vis udløbne opgaver...
     statuses:
       active: Aktiv
@@ -1271,11 +1270,11 @@ feat:
       publishedTime: Offentliggørelsestidspunkt
       reassignInterval:
         label: Tildel intervallet påny
-        value: Tildeles påny {value, plural, =1{en time} other{# timer}} efter gennemførelse
+        value: Tildeles påny {value, plural, =1{en time} other{# timer}} efter
+          gennemførelse
       reassignLimit:
         label: Tildelingsgrænse
-        value: Gentages maksimalt {value, plural, =1{en gang} other{# gange}} per
-          person
+        value: Gentages maksimalt {value, plural, =1{en gang} other{# gange}} per person
       statusLabel: Status
       timeEstimateLabel: Forventet tid det tager at gennemføre
       title: Opgave Detaljer
@@ -1297,8 +1296,8 @@ feat:
     taskPreview:
       addImage: Tilføj forsidebillede
       sectionTitle: Forhåndsvisning
-      timeEstimate: '{minutes, plural, =0 {mindre end et minut} =1 {et minut} other
-        {# minutter}}'
+      timeEstimate: '{minutes, plural, =0 {mindre end et minut} =1 {et minut} other {#
+        minutter}}'
     taskTypeDetails:
       demographic:
         title: Indsaml demografi-indstillinger
@@ -1360,11 +1359,12 @@ feat:
           description: Krydstjek med data i Zetkin ved hjælp af Smart Søgning.
           title: Krydstjekning
         outreach:
-          description: Planlæg, uddeleger og udfør kontaktarbejde og afrapporter når
-            du er færdig
+          description: Planlæg, uddeleger og udfør kontaktarbejde og afrapporter når du er
+            færdig
           title: Kontaktarbejde
         surveys:
-          description: Udforsk, søg og filtrer baseret på personernes spørgeskemabesvarelser.
+          description: Udforsk, søg og filtrer baseret på personernes
+            spørgeskemabesvarelser.
           title: Spørgeskemaer
         utility:
           description: Pålidelige kolonner, som du gerne vil genbruge i mange situationer
@@ -1528,8 +1528,8 @@ feat:
         dynamic: Dette er en Smart Søgning liste, men ingen personer passer søgningen
         static: Du har ikke tilføjet nogle rækker endnu
       static:
-        description: Tilføj den første person her, for at skabe en statisk liste,
-          hvor folk skal tilføjes eller fjernes manuelt.
+        description: Tilføj den første person her, for at skabe en statisk liste, hvor
+          folk skal tilføjes eller fjernes manuelt.
         headline: Tilføj personer manuelt
     folder:
       summary:
@@ -1552,18 +1552,18 @@ feat:
           xlsx: Download Excel-fil
         shareLink: del data sikkert
         tabLabel: Download
-        warning1: Undgå at exportere data fra Zetkin hvis muligt, for at sikre at
-          dataen holdes i orden.
-        warning2: Du kan {shareLink} internt i Zetkin. Eksport giver mening, hvis
-          du vil kopiere data til et andet system.
+        warning1: Undgå at exportere data fra Zetkin hvis muligt, for at sikre at dataen
+          holdes i orden.
+        warning2: Du kan {shareLink} internt i Zetkin. Eksport giver mening, hvis du vil
+          kopiere data til et andet system.
       share:
         addPlaceholder: Tilføj samarbejdspartnere
         collabInstructions: Efter at have tilføjet samarbejdspartnere, kopier og send
           dem dette {viewLink}
         showOfficials: Vis officielle
-        statusLabel: Delt med {collaborators, plural, =1 {1 samarbejdspartner} other
-          {# samarbejdspartnere}}, {officials, plural, =1 {1 officiel} other {# officielle}}
-          can se alle lister.
+        statusLabel: Delt med {collaborators, plural, =1 {1 samarbejdspartner} other {#
+          samarbejdspartnere}}, {officials, plural, =1 {1 officiel} other {#
+          officielle}} can se alle lister.
         tabLabel: Del
         viewLink: begrænset link
       title: Del "{title}"
@@ -1583,8 +1583,8 @@ feat:
     toolbar:
       createColumn: Ny kolonne
       createFromSelection: Skab liste fra udvalg
-      removeFromSelection: Fjern {numSelected, plural, one {1 person} other {{numSelected}
-        people} } fra liste
+      removeFromSelection: Fjern {numSelected, plural, one {1 person} other
+        {{numSelected} people} } fra liste
       removeTooltip: Det er ikke muligt at fjerne rækker i en Smart Søgning
     viewLayout:
       actions:
@@ -1599,7 +1599,8 @@ feat:
       subtitle:
         collaborators: '{count, plural, =1 {1 ekstern samarbejdspartner} other {#
           ekstern samarbejdspartnere}}'
-        columns: '{count, plural, =0 {ingen kolonner} =1 {1 kolonne} other {# kolonner}}'
+        columns: '{count, plural, =0 {ingen kolonner} =1 {1 kolonne} other {#
+          kolonner}}'
         people: '{count, plural, =0 {tomt} =1 {1 person} other {# personer}}'
     viewsList:
       columns:
@@ -1640,8 +1641,7 @@ zui:
   confirmDialog:
     button: Bekræft
     defaultTitle: Bekræft
-    defaultWarningText: Er du sikker på, at du vil udføre denne handling? Det kan
-      ikke fortrydes.
+    defaultWarningText: Er du sikker på, at du vil udføre denne handling? Det kan ikke fortrydes.
   copyToClipboard:
     copied: Kopieret
     copiedValue: Kopieret "{value}"
@@ -1651,7 +1651,7 @@ zui:
     helpText: Indtast mindst {minSearchLength} tegn
     idSearchHelpText: Skriv et ID-nummer (kun tal)
     placeholder: Søg i denne tabel
-    placeholderWithIdSearch: 'Søg - brug # til ID''er, f.eks. type #123'
+    placeholderWithIdSearch: "Søg - brug # til ID'er, f.eks. type #123"
     title: Søg
   dataTableSorting:
     addButton: Tilføj sorteringskolonne
