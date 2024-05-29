@@ -1,16 +1,16 @@
 import NextLink from 'next/link';
 import { OpenInNew } from '@mui/icons-material';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
 
+import EditPersonDialog from './EditPersonDialog';
+import globalMessageIds from 'core/i18n/globalMessageIds';
+import messageIds from '../l10n/messageIds';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIList from 'zui/ZUIList';
 import ZUISection from 'zui/ZUISection';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
-
-import globalMessageIds from 'core/i18n/globalMessageIds';
-import messageIds from '../l10n/messageIds';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -41,7 +41,7 @@ const PersonDetailsCard: React.FunctionComponent<{
 }> = ({ customFields, person }) => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
-  const router = useRouter();
+  const [editPersonDialogOpen, setEditPersonDialogOpen] = useState(false);
 
   const nativeFields = nativeFieldsToDisplay.map((field) => {
     // NAtive fields are never objects
@@ -96,29 +96,37 @@ const PersonDetailsCard: React.FunctionComponent<{
   const allFields = [...nativeFields, ...customFieldsConfig];
 
   return (
-    <ZUISection
-      action={
-        <Link href={`${router.asPath}/edit`} target="_blank">
-          <Button color="primary" startIcon={<OpenInNew />}>
+    <>
+      <EditPersonDialog
+        onClose={() => setEditPersonDialogOpen(false)}
+        open={editPersonDialogOpen}
+      />
+      <ZUISection
+        action={
+          <Button
+            color="primary"
+            onClick={() => setEditPersonDialogOpen(true)}
+            startIcon={<OpenInNew />}
+          >
             <Msg id={messageIds.editButtonLabel} />
           </Button>
-        </Link>
-      }
-      title={messages.details.title()}
-    >
-      <Card>
-        <ZUIList initialLength={4} showMoreStep={allFields.length - 4}>
-          {allFields.map((detail, idx) => (
-            <ListItem key={idx} divider>
-              <ListItemText
-                primary={detail.value || '-'}
-                secondary={detail.title}
-              />
-            </ListItem>
-          ))}
-        </ZUIList>
-      </Card>
-    </ZUISection>
+        }
+        title={messages.details.title()}
+      >
+        <Card>
+          <ZUIList initialLength={4} showMoreStep={allFields.length - 4}>
+            {allFields.map((detail, idx) => (
+              <ListItem key={idx} divider>
+                <ListItemText
+                  primary={detail.value || '-'}
+                  secondary={detail.title}
+                />
+              </ListItem>
+            ))}
+          </ZUIList>
+        </Card>
+      </ZUISection>
+    </>
   );
 };
 
