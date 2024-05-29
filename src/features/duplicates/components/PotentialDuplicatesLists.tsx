@@ -21,15 +21,15 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
   const { orgId } = useNumericRouteParams();
   const { addDuplicatePerson, removeDuplicatePerson } =
     useDuplicatesMutations(orgId);
-  const rowsToMerge: ZetkinPerson[] = potentialDuplicate?.duplicates || [];
-  const [rows, setRows] = useState<ZetkinPerson[]>([]);
+  const peopleToMerge: ZetkinPerson[] = potentialDuplicate?.duplicates || [];
+  const [peopleNoToMerge, setPeopleNoToMerge] = useState<ZetkinPerson[]>([]);
 
   const handleChangeOfRows = (add: boolean, person: ZetkinPerson) => {
     if (add) {
-      setRows([...rows, person]);
+      setPeopleNoToMerge([...peopleNoToMerge, person]);
     } else {
-      const newRows = rows.filter((row) => row.id !== person.id);
-      setRows(newRows);
+      const newRows = peopleNoToMerge.filter((row) => row.id !== person.id);
+      setPeopleNoToMerge(newRows);
     }
   };
 
@@ -42,7 +42,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
     orgId
   );
 
-  const columns: GridColDef[] = getColumns(
+  const columnsNotBeingMerged: GridColDef[] = getColumns(
     addDuplicatePerson,
     potentialDuplicate.id,
     handleChangeOfRows,
@@ -61,10 +61,10 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           columns={columnsToMerge}
           disableRowSelectionOnClick
           hideFooter
-          rows={rowsToMerge}
+          rows={peopleToMerge}
         />
       </Box>
-      {rows.length > 0 && (
+      {peopleNoToMerge.length > 0 && (
         <Box
           display="flex"
           flexDirection="column"
@@ -72,15 +72,15 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           padding={2}
         >
           <Typography variant="h6">
-            {messages.modal.peopleNotBeingMerge()}
+            {messages.modal.peopleNotBeingMerged()}
           </Typography>
           <DataGridPro
             autoHeight
             checkboxSelection={false}
-            columns={columns}
+            columns={columnsNotBeingMerged}
             disableRowSelectionOnClick
             hideFooter
-            rows={rows}
+            rows={peopleNoToMerge}
           />
         </Box>
       )}
