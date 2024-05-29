@@ -100,6 +100,7 @@ const PersonDetailsCard: React.FunctionComponent<{
       <EditPersonDialog
         onClose={() => setEditPersonDialogOpen(false)}
         open={editPersonDialogOpen}
+        person={person}
       />
       <ZUISection
         action={

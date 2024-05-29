@@ -15,6 +15,7 @@ export default makeMessages('feat.profile', {
   editButton: m<{ title: string }>('Edit {title}'),
   editButtonClose: m<{ title: string }>('Stop editing {title}'),
   editButtonLabel: m('Edit Details'),
+  editPersonHeader: m<{ person: string }>('Edit {person}'),
   genders: {
     f: m('Female'),
     m: m('Male'),
