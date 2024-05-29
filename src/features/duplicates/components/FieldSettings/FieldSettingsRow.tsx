@@ -1,4 +1,3 @@
-import { ArrowForward } from '@mui/icons-material';
 import { Box, MenuItem, Select, Typography, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
@@ -28,7 +27,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
         return messages.modal.fieldSettings.gender.f();
       } else if (value === 'm') {
         return messages.modal.fieldSettings.gender.m();
-      } else {
+      } else if (value === 'o') {
         return messages.modal.fieldSettings.gender.o();
       }
     }
@@ -66,7 +65,6 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
             <Msg id={globalMessageIds.personFields[field]} />
           </Typography>
         </Box>
-        <ArrowForward color="secondary" />
       </Box>
       <Box
         display="flex"
@@ -74,7 +72,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
         paddingLeft={1}
         width="50%"
       >
-        {values.length === 1 && (
+        {values.length <= 1 && (
           <Typography color="secondary">{getLabel(values[0])}</Typography>
         )}
         {values.length > 1 && (
