@@ -13,12 +13,10 @@ export interface PotentialDuplicate {
 
 export interface DuplicatesStoreSlice {
   duplicatesList: RemoteList<PotentialDuplicate>;
-  notDuplicatesList: RemoteList<ZetkinPerson>;
 }
 
 const initialState: DuplicatesStoreSlice = {
   duplicatesList: remoteList(),
-  notDuplicatesList: remoteList(),
 };
 
 const duplicatesSlice = createSlice({
@@ -41,10 +39,6 @@ const duplicatesSlice = createSlice({
           remoteItem(duplicate.data.id, { data: duplicate.data })
         );
       }
-      const nonDuplicates = state.notDuplicatesList.items.filter(
-        (item) => item.id !== person.id
-      );
-      state.notDuplicatesList.items = nonDuplicates;
     },
     dismissedDuplicate: (state, action: PayloadAction<PotentialDuplicate>) => {
       const duplicate = action.payload;
@@ -88,10 +82,6 @@ const duplicatesSlice = createSlice({
           );
         }
       }
-
-      state.notDuplicatesList.items.push(
-        remoteItem(person.id, { data: person })
-      );
     },
   },
 });

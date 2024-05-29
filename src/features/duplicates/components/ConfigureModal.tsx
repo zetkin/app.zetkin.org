@@ -9,11 +9,10 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import DuplicatesModalList from './DuplicatesModalList';
 import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
-import NotDuplicatesModalList from './NotDuplicatesModalList';
 import { PotentialDuplicate } from '../store';
+import PotentialDuplicatesLists from './PotentialDuplicatesLists';
 import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
 
@@ -54,8 +53,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
           sx={{ overflowY: 'auto' }}
           width="50%"
         >
-          <DuplicatesModalList duplicate={duplicate} />
-          <NotDuplicatesModalList duplicate={duplicate} />
+          <PotentialDuplicatesLists duplicate={duplicate} />
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
           <FieldSettings

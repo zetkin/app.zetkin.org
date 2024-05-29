@@ -10,6 +10,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 function getColumns(
   buttonAction: (duplicateId: number, person: ZetkinPerson) => void,
   duplicateId: number,
+  handleChangeOfRows: (add: boolean, person: ZetkinPerson) => void,
   isPeopleToMergeTable: boolean,
   messages: UseMessagesMap<typeof messageIds>,
   orgId: number
@@ -81,7 +82,12 @@ function getColumns(
             }}
           >
             <Button
-              onClick={() => buttonAction(duplicateId, params.row)}
+              onClick={() => {
+                buttonAction(duplicateId, params.row),
+                  isPeopleToMergeTable
+                    ? handleChangeOfRows(true, params.row)
+                    : handleChangeOfRows(false, params.row);
+              }}
               size="small"
               variant="outlined"
             >
