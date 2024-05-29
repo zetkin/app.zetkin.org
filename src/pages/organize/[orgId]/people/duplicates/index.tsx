@@ -35,7 +35,11 @@ const DuplicatesPage: PageWithLayout = () => {
       )}
       {/* Temporary solution until we make the manage button active */}
       {list.length > 0 && (
-        <ConfigureModal duplicate={list[0]} onClose={() => {}} open={true} />
+        <ConfigureModal
+          onClose={() => {}}
+          open={true}
+          potentialDuplicate={list[0]}
+        />
       )}
     </>
   );

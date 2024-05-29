@@ -1,9 +1,9 @@
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
-  addedDuplicatePerson,
-  dismissedDuplicate,
+  addedPotentialDuplicatePerson,
+  dismissedPotentialDuplicate,
   PotentialDuplicate,
-  removedDuplicatePerson,
+  removedPotentialDuplicatePerson,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
@@ -23,7 +23,7 @@ export default function useDuplicatesMutations(
     duplicateId: number,
     person: ZetkinPerson
   ) => {
-    dispatch(addedDuplicatePerson([duplicateId, person]));
+    dispatch(addedPotentialDuplicatePerson([duplicateId, person]));
   };
 
   const dismissDuplicate = async (duplicateId: number) => {
@@ -34,7 +34,7 @@ export default function useDuplicatesMutations(
         { dismissed: dismissedDate }
       )
       .then((duplicate) => {
-        dispatch(dismissedDuplicate(duplicate));
+        dispatch(dismissedPotentialDuplicate(duplicate));
       });
   };
 
@@ -42,7 +42,7 @@ export default function useDuplicatesMutations(
     duplicateId: number,
     person: ZetkinPerson
   ) => {
-    dispatch(removedDuplicatePerson([duplicateId, person]));
+    dispatch(removedPotentialDuplicatePerson([duplicateId, person]));
   };
 
   return {

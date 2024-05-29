@@ -11,17 +11,17 @@ import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface PotentialDuplicatesListsProps {
-  duplicate: PotentialDuplicate;
+  potentialDuplicate: PotentialDuplicate;
 }
 
 const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
-  duplicate,
+  potentialDuplicate,
 }) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const { addDuplicatePerson, removeDuplicatePerson } =
     useDuplicatesMutations(orgId);
-  const rowsToMerge: ZetkinPerson[] = duplicate?.duplicates || [];
+  const rowsToMerge: ZetkinPerson[] = potentialDuplicate?.duplicates || [];
   const [rows, setRows] = useState<ZetkinPerson[]>([]);
 
   const handleChangeOfRows = (add: boolean, person: ZetkinPerson) => {
@@ -35,7 +35,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
 
   const columnsToMerge: GridColDef[] = getColumns(
     removeDuplicatePerson,
-    duplicate.id,
+    potentialDuplicate.id,
     handleChangeOfRows,
     true,
     messages,
@@ -44,7 +44,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
 
   const columns: GridColDef[] = getColumns(
     addDuplicatePerson,
-    duplicate.id,
+    potentialDuplicate.id,
     handleChangeOfRows,
     false,
     messages,

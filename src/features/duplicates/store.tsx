@@ -11,74 +11,84 @@ export interface PotentialDuplicate {
   status: 'merged' | 'dismissed' | 'pending';
 }
 
-export interface DuplicatesStoreSlice {
-  duplicatesList: RemoteList<PotentialDuplicate>;
+export interface PotentialDuplicatesStoreSlice {
+  potentialDuplicatesList: RemoteList<PotentialDuplicate>;
 }
 
-const initialState: DuplicatesStoreSlice = {
-  duplicatesList: remoteList(),
+const initialState: PotentialDuplicatesStoreSlice = {
+  potentialDuplicatesList: remoteList(),
 };
 
-const duplicatesSlice = createSlice({
+const potentialDuplicatesSlice = createSlice({
   initialState,
-  name: 'duplicates',
+  name: 'potentialDuplicates',
   reducers: {
-    addedDuplicatePerson: (
+    addedPotentialDuplicatePerson: (
       state,
       action: PayloadAction<[number, ZetkinPerson]>
     ) => {
-      const [duplicateId, person] = action.payload;
-      const duplicate = state.duplicatesList.items.find(
-        (item) => item.id === duplicateId
+      const [potentialDuplicateId, person] = action.payload;
+      const potentialDuplicate = state.potentialDuplicatesList.items.find(
+        (item) => item.id === potentialDuplicateId
       );
 
-      if (duplicate && duplicate.data) {
-        duplicate.data.duplicates.push(person);
+      if (potentialDuplicate && potentialDuplicate.data) {
+        potentialDuplicate.data.duplicates.push(person);
 
-        state.duplicatesList.items.push(
-          remoteItem(duplicate.data.id, { data: duplicate.data })
+        state.potentialDuplicatesList.items.push(
+          remoteItem(potentialDuplicate.data.id, {
+            data: potentialDuplicate.data,
+          })
         );
       }
     },
-    dismissedDuplicate: (state, action: PayloadAction<PotentialDuplicate>) => {
-      const duplicate = action.payload;
-      const item = state.duplicatesList.items.find(
-        (item) => item.id === duplicate.id
+    dismissedPotentialDuplicate: (
+      state,
+      action: PayloadAction<PotentialDuplicate>
+    ) => {
+      const potentialDuplicate = action.payload;
+      const item = state.potentialDuplicatesList.items.find(
+        (item) => item.id === potentialDuplicate.id
       );
 
       if (item && item.data) {
-        item.data.dismissed = duplicate.dismissed;
-        item.data = { ...duplicate };
+        item.data.dismissed = potentialDuplicate.dismissed;
+        item.data = { ...potentialDuplicate };
       }
     },
-    duplicatesLoad: (state) => {
-      state.duplicatesList.isLoading = true;
+    potentialDuplicatesLoad: (state) => {
+      state.potentialDuplicatesList.isLoading = true;
     },
-    duplicatesLoaded: (state, action: PayloadAction<PotentialDuplicate[]>) => {
-      const duplicates = action.payload;
+    potentialDuplicatesLoaded: (
+      state,
+      action: PayloadAction<PotentialDuplicate[]>
+    ) => {
+      const potentialDuplicates = action.payload;
 
-      state.duplicatesList = remoteList(duplicates);
-      state.duplicatesList.isLoading = false;
-      state.duplicatesList.loaded = new Date().toISOString();
+      state.potentialDuplicatesList = remoteList(potentialDuplicates);
+      state.potentialDuplicatesList.isLoading = false;
+      state.potentialDuplicatesList.loaded = new Date().toISOString();
     },
-    removedDuplicatePerson: (
+    removedPotentialDuplicatePerson: (
       state,
       action: PayloadAction<[number, ZetkinPerson]>
     ) => {
-      const [duplicateId, person] = action.payload;
-      const duplicate = state.duplicatesList.items.find(
-        (item) => item.id === duplicateId
+      const [potentialDuplicateId, person] = action.payload;
+      const potentialDuplicate = state.potentialDuplicatesList.items.find(
+        (item) => item.id === potentialDuplicateId
       );
 
-      if (duplicate && duplicate.data) {
-        const duplicatesPersonList = duplicate.data.duplicates.filter(
+      if (potentialDuplicate && potentialDuplicate.data) {
+        const duplicatesPersonList = potentialDuplicate.data.duplicates.filter(
           (item) => item.id !== person.id
         );
         if (duplicatesPersonList) {
-          duplicate.data.duplicates = duplicatesPersonList;
+          potentialDuplicate.data.duplicates = duplicatesPersonList;
 
-          state.duplicatesList.items.push(
-            remoteItem(duplicate.data.id, { data: duplicate.data })
+          state.potentialDuplicatesList.items.push(
+            remoteItem(potentialDuplicate.data.id, {
+              data: potentialDuplicate.data,
+            })
           );
         }
       }
@@ -86,11 +96,11 @@ const duplicatesSlice = createSlice({
   },
 });
 
-export default duplicatesSlice;
+export default potentialDuplicatesSlice;
 export const {
-  addedDuplicatePerson,
-  dismissedDuplicate,
-  duplicatesLoad,
-  duplicatesLoaded,
-  removedDuplicatePerson,
-} = duplicatesSlice.actions;
+  addedPotentialDuplicatePerson,
+  dismissedPotentialDuplicate,
+  potentialDuplicatesLoad,
+  potentialDuplicatesLoaded,
+  removedPotentialDuplicatePerson,
+} = potentialDuplicatesSlice.actions;

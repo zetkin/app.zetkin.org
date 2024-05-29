@@ -17,13 +17,13 @@ import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
 
 interface ConfigureModalProps {
-  duplicate: PotentialDuplicate;
+  potentialDuplicate: PotentialDuplicate;
   onClose: () => void;
   open: boolean;
 }
 
 const ConfigureModal: FC<ConfigureModalProps> = ({
-  duplicate,
+  potentialDuplicate,
   open,
   onClose,
 }) => {
@@ -31,7 +31,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   const messages = useMessages(messageIds);
   const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('lg');
   const { fieldValues, initialOverrides } = useFieldSettings(
-    duplicate.duplicates
+    potentialDuplicate.duplicates
   );
   const [overrides, setOverrides] = useState(initialOverrides);
 
@@ -53,7 +53,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
           sx={{ overflowY: 'auto' }}
           width="50%"
         >
-          <PotentialDuplicatesLists duplicate={duplicate} />
+          <PotentialDuplicatesLists potentialDuplicate={potentialDuplicate} />
         </Box>
         <Box display="flex" flexDirection="column" width="50%">
           <FieldSettings
