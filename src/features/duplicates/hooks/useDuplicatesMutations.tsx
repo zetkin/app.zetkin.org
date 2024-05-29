@@ -11,12 +11,17 @@ export default function useDuplicatesMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
+  type ZetkinDuplicatePatchBody = Partial<
+    Omit<ZetkinDuplicate, 'id' | 'dismissed'>
+  > & {
+    dismissed?: boolean;
+  };
+
   const dismissDuplicate = async (duplicateId: number) => {
-    const dismissedDate = new Date().toISOString();
     await apiClient
-      .patch<ZetkinDuplicate>(
+      .patch<ZetkinDuplicate, ZetkinDuplicatePatchBody>(
         `/api/orgs/${orgId}/people/duplicates/${duplicateId}`,
-        { dismissed: dismissedDate }
+        { dismissed: true }
       )
       .then((duplicate) => {
         dispatch(dismissedDuplicate(duplicate));
