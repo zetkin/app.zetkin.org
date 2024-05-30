@@ -31,12 +31,10 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
 
-  const potentialDuplicatesPersons: number[] =
-    potentialDuplicate?.duplicates.map((person) => person.id);
-
   const [selectedIds, setSelectedIds] = useState<number[]>(
-    potentialDuplicatesPersons
+    potentialDuplicate?.duplicates.map((person) => person.id) ?? []
   );
+
   const peopleToMerge = potentialDuplicate?.duplicates.filter((person) =>
     selectedIds.includes(person.id)
   );
