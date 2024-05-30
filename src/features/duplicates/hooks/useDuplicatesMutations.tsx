@@ -1,4 +1,4 @@
-import { dismissedDuplicate, ZetkinDuplicate } from '../store';
+import { duplicateUpdated, PotentialDuplicate } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 type DuplicatesMutationsReturn = {
@@ -12,19 +12,19 @@ export default function useDuplicatesMutations(
   const dispatch = useAppDispatch();
 
   type ZetkinDuplicatePatchBody = Partial<
-    Omit<ZetkinDuplicate, 'id' | 'dismissed'>
+    Omit<PotentialDuplicate, 'id' | 'dismissed'>
   > & {
     dismissed?: boolean;
   };
 
   const dismissDuplicate = async (duplicateId: number) => {
     await apiClient
-      .patch<ZetkinDuplicate, ZetkinDuplicatePatchBody>(
+      .patch<PotentialDuplicate, ZetkinDuplicatePatchBody>(
         `/api/orgs/${orgId}/people/duplicates/${duplicateId}`,
         { dismissed: true }
       )
       .then((duplicate) => {
-        dispatch(dismissedDuplicate(duplicate));
+        dispatch(duplicateUpdated(duplicate));
       });
   };
 

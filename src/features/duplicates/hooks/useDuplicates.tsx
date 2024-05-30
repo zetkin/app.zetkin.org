@@ -1,18 +1,17 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { duplicatesLoad, duplicatesLoaded, ZetkinDuplicate } from '../store';
+import { potentialDuplicatesLoad, potentialDuplicatesLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useDuplicates(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const duplicatesList = useAppSelector(
-    (state) => state.duplicates.duplicatesList
+    (state) => state.duplicates.potentialDuplicatesList
   );
 
   return loadListIfNecessary(duplicatesList, dispatch, {
-    actionOnLoad: () => duplicatesLoad(),
-    actionOnSuccess: (duplicates) => duplicatesLoaded(duplicates),
-    loader: () =>
-      apiClient.get<ZetkinDuplicate[]>(`/api/orgs/${orgId}/people/duplicates`),
+    actionOnLoad: () => potentialDuplicatesLoad(),
+    actionOnSuccess: (duplicates) => potentialDuplicatesLoaded(duplicates),
+    loader: () => apiClient.get(`/api/orgs/${orgId}/people/duplicates`),
   });
 }

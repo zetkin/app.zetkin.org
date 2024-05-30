@@ -1,5 +1,7 @@
 import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import { GetServerSideProps } from 'next';
+import { Box, Typography } from '@mui/material';
+
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
@@ -9,7 +11,6 @@ import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
-import { Box, Typography } from '@mui/material';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   return {

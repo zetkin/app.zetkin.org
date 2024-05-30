@@ -1,16 +1,17 @@
-import messageIds from '../l10n/messageIds';
 import theme from 'theme';
-import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
-import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinDuplicate } from '../store';
-import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import ZUIPerson from 'zui/ZUIPerson';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
-type DuplicateCardProps = { cluster: ZetkinDuplicate };
+import messageIds from '../l10n/messageIds';
+import { PotentialDuplicate } from '../store';
+import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
+import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ZUIPerson from 'zui/ZUIPerson';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+
+type DuplicateCardProps = { cluster: PotentialDuplicate };
 
 const DuplicateCard: FC<DuplicateCardProps> = ({ cluster }) => {
   const messages = useMessages(messageIds);

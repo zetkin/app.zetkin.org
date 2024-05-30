@@ -2,7 +2,7 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RemoteList, remoteList } from 'utils/storeUtils';
 
-export interface ZetkinDuplicate {
+export interface PotentialDuplicate {
   duplicates: ZetkinPerson[];
   dismissed: string | null;
   id: number;
@@ -11,42 +11,47 @@ export interface ZetkinDuplicate {
   status: 'merged' | 'dismissed' | 'pending';
 }
 
-export interface DuplicatesStoreSlice {
-  duplicatesList: RemoteList<ZetkinDuplicate>;
+export interface PotentialDuplicatesStoreSlice {
+  potentialDuplicatesList: RemoteList<PotentialDuplicate>;
 }
 
-const initialState: DuplicatesStoreSlice = {
-  duplicatesList: remoteList(),
+const initialState: PotentialDuplicatesStoreSlice = {
+  potentialDuplicatesList: remoteList(),
 };
 
-const duplicatesSlice = createSlice({
+const potentialDuplicatesSlice = createSlice({
   initialState,
-  name: 'duplicates',
+  name: 'potentialDuplicates',
   reducers: {
-    dismissedDuplicate: (state, action: PayloadAction<ZetkinDuplicate>) => {
-      const duplicate = action.payload;
-      const item = state.duplicatesList.items.find(
-        (item) => item.id === duplicate.id
+    duplicateUpdated: (state, action: PayloadAction<PotentialDuplicate>) => {
+      const potentialDuplicate = action.payload;
+      const item = state.potentialDuplicatesList.items.find(
+        (item) => item.id === potentialDuplicate.id
       );
 
       if (item && item.data) {
-        item.data.dismissed = duplicate.dismissed;
-        item.data = { ...duplicate };
+        item.data = potentialDuplicate;
       }
     },
-    duplicatesLoad: (state) => {
-      state.duplicatesList.isLoading = true;
+    potentialDuplicatesLoad: (state) => {
+      state.potentialDuplicatesList.isLoading = true;
     },
-    duplicatesLoaded: (state, action: PayloadAction<ZetkinDuplicate[]>) => {
-      const duplicates = action.payload;
+    potentialDuplicatesLoaded: (
+      state,
+      action: PayloadAction<PotentialDuplicate[]>
+    ) => {
+      const potentialDuplicates = action.payload;
 
-      state.duplicatesList = remoteList(duplicates);
-      state.duplicatesList.isLoading = false;
-      state.duplicatesList.loaded = new Date().toISOString();
+      state.potentialDuplicatesList = remoteList(potentialDuplicates);
+      state.potentialDuplicatesList.isLoading = false;
+      state.potentialDuplicatesList.loaded = new Date().toISOString();
     },
   },
 });
 
-export default duplicatesSlice;
-export const { dismissedDuplicate, duplicatesLoad, duplicatesLoaded } =
-  duplicatesSlice.actions;
+export default potentialDuplicatesSlice;
+export const {
+  duplicateUpdated,
+  potentialDuplicatesLoad,
+  potentialDuplicatesLoaded,
+} = potentialDuplicatesSlice.actions;
