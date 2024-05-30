@@ -30,7 +30,6 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
 }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
-  const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('lg');
 
   const potentialDuplicatesPersons: number[] =
     potentialDuplicate?.duplicates.map((person) => person.id);
@@ -52,10 +51,9 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   return (
     <Dialog
       fullScreen={fullScreen}
-      maxWidth={maxWidth}
+      maxWidth={'lg'}
       onClose={() => {
         onClose();
-        setMaxWidth('sm');
       }}
       open={open}
     >
