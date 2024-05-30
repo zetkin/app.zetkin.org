@@ -10,18 +10,21 @@ import {
   useTheme,
 } from '@mui/material';
 
-import messageIds from '../l10n/messageIds';
+import EditPersonFields from './EditPersonFields';
+import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface EditPersonDialogProps {
   onClose: () => void;
   open: boolean;
+  orgId: number;
   person: ZetkinPerson;
 }
 
 const EditPersonDialog: FC<EditPersonDialogProps> = ({
   open,
+  orgId,
   onClose,
   person,
 }) => {
@@ -35,12 +38,14 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
+        overflow="hidden"
         p={2}
       >
         <Box
           alignItems="center"
           display="flex"
           justifyContent="space-between"
+          paddingBottom={2}
           width="100%"
         >
           <Typography variant="h4">
@@ -53,12 +58,22 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
             <Close />
           </IconButton>
         </Box>
+        <Box overflow="auto" width="100%">
+          <EditPersonFields
+            onChange={(field, value) => {
+              field;
+              value;
+            }}
+            orgId={orgId}
+          />
+        </Box>
         <Box
           alignItems="center"
           component="div"
           display="flex"
           gap={2}
           justifyContent="flex-end"
+          paddingTop={2}
           width="100%"
         >
           <Typography color={theme.palette.grey[500]}>

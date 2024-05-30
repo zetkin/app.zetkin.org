@@ -6,6 +6,7 @@ import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
 import EditPersonDialog from './EditPersonDialog';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIList from 'zui/ZUIList';
 import ZUISection from 'zui/ZUISection';
@@ -39,6 +40,7 @@ const PersonDetailsCard: React.FunctionComponent<{
   customFields: ZetkinCustomField[];
   person: ZetkinPerson;
 }> = ({ customFields, person }) => {
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const [editPersonDialogOpen, setEditPersonDialogOpen] = useState(false);
@@ -100,6 +102,7 @@ const PersonDetailsCard: React.FunctionComponent<{
       <EditPersonDialog
         onClose={() => setEditPersonDialogOpen(false)}
         open={editPersonDialogOpen}
+        orgId={orgId}
         person={person}
       />
       <ZUISection
