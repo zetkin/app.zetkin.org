@@ -32,10 +32,19 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { onFieldValueChange } = useEditPerson(person);
+  const { invalidFields, onFieldValueChange, setFieldsToUpdate } =
+    useEditPerson(person, orgId);
 
   return (
-    <Dialog fullScreen={fullScreen} fullWidth onClose={onClose} open={open}>
+    <Dialog
+      fullScreen={fullScreen}
+      fullWidth
+      onClose={() => {
+        setFieldsToUpdate({});
+        onClose();
+      }}
+      open={open}
+    >
       <Box
         alignItems="center"
         display="flex"
@@ -63,6 +72,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
         </Box>
         <Box overflow="auto" width="100%">
           <EditPersonFields
+            invalidFields={invalidFields}
             onChange={(field, value) => {
               onFieldValueChange(field, value);
             }}
