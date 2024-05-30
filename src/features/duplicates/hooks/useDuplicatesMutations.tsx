@@ -1,16 +1,8 @@
-import { ZetkinPerson } from 'utils/types/zetkin';
-import {
-  addedPotentialDuplicatePerson,
-  dismissedPotentialDuplicate,
-  PotentialDuplicate,
-  removedPotentialDuplicatePerson,
-} from '../store';
+import { dismissedPotentialDuplicate, PotentialDuplicate } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 type DuplicatesMutationsReturn = {
-  addDuplicatePerson: (duplicateId: number, person: ZetkinPerson) => void;
   dismissDuplicate: (duplicateId: number) => void;
-  removeDuplicatePerson: (duplicateId: number, person: ZetkinPerson) => void;
 };
 
 export default function useDuplicatesMutations(
@@ -18,13 +10,6 @@ export default function useDuplicatesMutations(
 ): DuplicatesMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-
-  const addDuplicatePerson = async (
-    duplicateId: number,
-    person: ZetkinPerson
-  ) => {
-    dispatch(addedPotentialDuplicatePerson([duplicateId, person]));
-  };
 
   const dismissDuplicate = async (duplicateId: number) => {
     const dismissedDate = new Date().toISOString();
@@ -38,16 +23,7 @@ export default function useDuplicatesMutations(
       });
   };
 
-  const removeDuplicatePerson = async (
-    duplicateId: number,
-    person: ZetkinPerson
-  ) => {
-    dispatch(removedPotentialDuplicatePerson([duplicateId, person]));
-  };
-
   return {
-    addDuplicatePerson,
     dismissDuplicate,
-    removeDuplicatePerson,
   };
 }
