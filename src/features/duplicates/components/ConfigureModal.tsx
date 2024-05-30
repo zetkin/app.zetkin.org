@@ -17,11 +17,6 @@ import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
-export interface SelectedPerson {
-  id: number;
-  selected: boolean;
-}
-
 interface ConfigureModalProps {
   potentialDuplicate: PotentialDuplicate;
   onClose: () => void;
@@ -37,60 +32,19 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   const messages = useMessages(messageIds);
   const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('lg');
 
-  const potentialDuplicatesPersons: SelectedPerson[] =
-    potentialDuplicate?.duplicates.map((person) => ({
-      id: person.id,
-      selected: false,
-    }));
+  const potentialDuplicatesPersons: number[] =
+    potentialDuplicate?.duplicates.map((person) => person.id);
 
-  const [selectedPeople, setSelectedPeople] = useState<SelectedPerson[]>(
+  const [selectedIds, setSelectedIds] = useState<number[]>(
     potentialDuplicatesPersons
   );
-  const [peopleToMerge, setPeopleToMerge] = useState<ZetkinPerson[]>(
-    potentialDuplicate?.duplicates
+  const peopleToMerge = potentialDuplicate?.duplicates.filter((person) =>
+    selectedIds.includes(person.id)
   );
-  const [peopleNoToMerge, setPeopleNoToMerge] = useState<ZetkinPerson[]>([]);
 
-  function getPeopleForFields(
-    selectedPersons: SelectedPerson[]
-  ): ZetkinPerson[] {
-    const matchingValues = potentialDuplicate.duplicates.filter((item) => {
-      const person = selectedPersons.find((person) => person.id === item.id);
-      return person && !person.selected;
-    });
-
-    setPeopleToMerge(matchingValues);
-    return matchingValues;
-  }
-
-  function getPeopleNoToMerge(
-    selectedPersons: SelectedPerson[]
-  ): ZetkinPerson[] {
-    const matchingValues = potentialDuplicate.duplicates.filter((item) => {
-      const person = selectedPersons.find((person) => person.id === item.id);
-      return person && person.selected;
-    });
-
-    setPeopleNoToMerge(matchingValues);
-    return matchingValues;
-  }
-
-  const handleChangeOfTable = (person: ZetkinPerson) => {
-    const index = selectedPeople.findIndex((item) => item.id === person.id);
-    const personToHandle = selectedPeople[index];
-
-    if (personToHandle?.selected) {
-      selectedPeople[index].selected = false;
-      setSelectedPeople(selectedPeople);
-      getPeopleForFields(selectedPeople);
-      getPeopleNoToMerge(selectedPeople);
-    } else {
-      selectedPeople[index].selected = true;
-      setSelectedPeople(selectedPeople);
-      getPeopleNoToMerge(selectedPeople);
-      getPeopleForFields(selectedPeople);
-    }
-  };
+  const peopleNoToMerge = potentialDuplicate?.duplicates.filter(
+    (person) => !selectedIds.some((selectedId) => selectedId == person.id)
+  );
 
   const { fieldValues, initialOverrides } = useFieldSettings(peopleToMerge);
   const [overrides, setOverrides] = useState(initialOverrides);
@@ -114,7 +68,16 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
           width="50%"
         >
           <PotentialDuplicatesLists
-            handleChangeOfTable={handleChangeOfTable}
+            onDeselect={(person: ZetkinPerson) => {
+              const filteredIds = selectedIds.filter(
+                (item) => item !== person.id
+              );
+              setSelectedIds(filteredIds);
+            }}
+            onSelect={(person: ZetkinPerson) => {
+              const selectedIdsUpdated = [...selectedIds, person.id];
+              setSelectedIds(selectedIdsUpdated);
+            }}
             peopleNoToMerge={peopleNoToMerge}
             peopleToMerge={peopleToMerge}
           />

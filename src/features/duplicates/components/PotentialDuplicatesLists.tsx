@@ -1,55 +1,193 @@
-import { Box, Typography } from '@mui/material';
+import { FC } from 'react';
+import { Box, Button, FormControl, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-import { FC, useState } from 'react';
 
-import getColumns from '../utils/getColumns';
 import messageIds from '../l10n/messageIds';
-import { PotentialDuplicate } from '../store';
-import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 interface PotentialDuplicatesListsProps {
-  potentialDuplicate: PotentialDuplicate;
+  onDeselect: (person: ZetkinPerson) => void;
+  onSelect: (person: ZetkinPerson) => void;
+  peopleNoToMerge: ZetkinPerson[];
+  peopleToMerge: ZetkinPerson[];
 }
 
 const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
-  potentialDuplicate,
+  onDeselect,
+  onSelect,
+  peopleNoToMerge,
+  peopleToMerge,
 }) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { addDuplicatePerson, removeDuplicatePerson } =
-    useDuplicatesMutations(orgId);
-  const peopleToMerge: ZetkinPerson[] = potentialDuplicate?.duplicates || [];
-  const [peopleNoToMerge, setPeopleNoToMerge] = useState<ZetkinPerson[]>([]);
 
-  const handleChangeOfRows = (add: boolean, person: ZetkinPerson) => {
-    if (add) {
-      setPeopleNoToMerge([...peopleNoToMerge, person]);
-    } else {
-      const newRows = peopleNoToMerge.filter((row) => row.id !== person.id);
-      setPeopleNoToMerge(newRows);
-    }
-  };
+  const columns: GridColDef[] = [
+    {
+      align: 'left',
+      disableColumnMenu: true,
+      field: 'Name',
+      headerName: messages.modal.possibleDuplicatesColumns.name(),
+      minWidth: 250,
+      renderCell: (params) => (
+        <ZUIPersonHoverCard personId={params.row.id}>
+          <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
+          <Typography
+            sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
+          >
+            {params.row.first_name + ' ' + params.row.last_name}
+          </Typography>
+        </ZUIPersonHoverCard>
+      ),
+      sortable: false,
+    },
+    {
+      align: 'left',
+      disableColumnMenu: true,
+      field: 'E-Mail',
+      headerName: messages.modal.possibleDuplicatesColumns.email(),
+      minWidth: 250,
+      renderCell: (params) => (
+        <Typography
+          sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
+        >
+          {params.row.email}
+        </Typography>
+      ),
 
-  const columnsToMerge: GridColDef[] = getColumns(
-    removeDuplicatePerson,
-    potentialDuplicate.id,
-    handleChangeOfRows,
-    true,
-    messages,
-    orgId
-  );
+      sortable: false,
+    },
+    {
+      align: 'left',
+      disableColumnMenu: true,
+      field: 'phone',
+      headerName: messages.modal.possibleDuplicatesColumns.phone(),
+      minWidth: 250,
+      renderCell: (params) => (
+        <Typography
+          sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
+        >
+          {params.row.phone}
+        </Typography>
+      ),
+      sortable: false,
+    },
+    {
+      align: 'right',
+      disableColumnMenu: true,
+      field: 'button',
+      headerName: '',
+      minWidth: 250,
+      renderCell: (params) => {
+        return (
+          <FormControl
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 2,
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button
+              onClick={() => {
+                onDeselect(params.row);
+              }}
+              size="small"
+              variant="outlined"
+            >
+              {messages.modal.notDuplicateButton()}
+            </Button>
+          </FormControl>
+        );
+      },
+      sortable: false,
+    },
+  ];
 
-  const columnsNotBeingMerged: GridColDef[] = getColumns(
-    addDuplicatePerson,
-    potentialDuplicate.id,
-    handleChangeOfRows,
-    false,
-    messages,
-    orgId
-  );
+  const columnsNoToMerge: GridColDef[] = [
+    {
+      align: 'left',
+      disableColumnMenu: true,
+      field: 'Name',
+      headerName: messages.modal.possibleDuplicatesColumns.name(),
+      minWidth: 250,
+      renderCell: (params) => (
+        <ZUIPersonHoverCard personId={params.row.id}>
+          <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
+          <Typography
+            sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
+          >
+            {params.row.first_name + ' ' + params.row.last_name}
+          </Typography>
+        </ZUIPersonHoverCard>
+      ),
+      sortable: false,
+    },
+    {
+      align: 'left',
+      disableColumnMenu: true,
+      field: 'E-Mail',
+      headerName: messages.modal.possibleDuplicatesColumns.email(),
+      minWidth: 250,
+      renderCell: (params) => (
+        <Typography
+          sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
+        >
+          {params.row.email}
+        </Typography>
+      ),
+
+      sortable: false,
+    },
+    {
+      align: 'left',
+      disableColumnMenu: true,
+      field: 'phone',
+      headerName: messages.modal.possibleDuplicatesColumns.phone(),
+      minWidth: 250,
+      renderCell: (params) => (
+        <Typography
+          sx={{ alignItems: 'center', display: 'inline-flex', marginLeft: 2 }}
+        >
+          {params.row.phone}
+        </Typography>
+      ),
+      sortable: false,
+    },
+    {
+      align: 'right',
+      disableColumnMenu: true,
+      field: 'button',
+      headerName: '',
+      minWidth: 250,
+      renderCell: (params) => {
+        return (
+          <FormControl
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 2,
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button
+              onClick={() => {
+                onSelect(params.row);
+              }}
+              size="small"
+              variant="outlined"
+            >
+              {messages.modal.isDuplicateButton()}
+            </Button>
+          </FormControl>
+        );
+      },
+      sortable: false,
+    },
+  ];
 
   return (
     <>
@@ -58,7 +196,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
         <DataGridPro
           autoHeight
           checkboxSelection={false}
-          columns={columnsToMerge}
+          columns={columns}
           disableRowSelectionOnClick
           hideFooter
           rows={peopleToMerge}
@@ -77,7 +215,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           <DataGridPro
             autoHeight
             checkboxSelection={false}
-            columns={columnsNotBeingMerged}
+            columns={columnsNoToMerge}
             disableRowSelectionOnClick
             hideFooter
             rows={peopleNoToMerge}
