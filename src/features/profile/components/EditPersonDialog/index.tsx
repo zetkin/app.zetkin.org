@@ -35,13 +35,12 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
   const { updatePerson } = usePersonMutations(orgId, person.id);
   const {
     fieldsToUpdate,
+    hasInvalidFields,
+    hasUpdatedValues,
     invalidFields,
     onFieldValueChange,
     setFieldsToUpdate,
   } = useEditPerson(person, orgId);
-
-  const hasUpdatedValues = !!Object.entries(fieldsToUpdate).length;
-  const hasInvalidFields = !!Object.entries(invalidFields).length;
 
   return (
     <Dialog
@@ -96,12 +95,14 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
           paddingTop={2}
           width="100%"
         >
-          <Typography color={theme.palette.grey[500]}>
-            <Msg
-              id={messageIds.numberOfChangesMessage}
-              values={{ number: 2 }}
-            />
-          </Typography>
+          {hasUpdatedValues && (
+            <Typography color={theme.palette.grey[500]}>
+              <Msg
+                id={messageIds.numberOfChangesMessage}
+                values={{ number: Object.entries(fieldsToUpdate).length }}
+              />
+            </Typography>
+          )}
           <Button disabled={!hasUpdatedValues}>
             <Msg id={messageIds.resetButton} />
           </Button>

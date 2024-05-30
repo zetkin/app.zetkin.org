@@ -26,8 +26,13 @@ export default function useEditPerson(
     }
   };
 
+  const hasUpdatedValues = !!Object.entries(fieldsToUpdate).length;
+  const hasInvalidFields = !!Object.entries(invalidFields).length;
+
   return {
     fieldsToUpdate,
+    hasInvalidFields,
+    hasUpdatedValues,
     invalidFields,
     onFieldValueChange,
     setFieldsToUpdate,
