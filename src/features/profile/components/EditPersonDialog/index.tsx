@@ -13,6 +13,7 @@ import {
 import EditPersonFields from './EditPersonFields';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useEditPerson from 'features/profile/hooks/useEditPerson';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface EditPersonDialogProps {
@@ -30,6 +31,8 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const { onFieldValueChange } = useEditPerson(person);
 
   return (
     <Dialog fullScreen={fullScreen} fullWidth onClose={onClose} open={open}>
@@ -61,8 +64,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
         <Box overflow="auto" width="100%">
           <EditPersonFields
             onChange={(field, value) => {
-              field;
-              value;
+              onFieldValueChange(field, value);
             }}
             orgId={orgId}
           />
