@@ -84,6 +84,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
               onFieldValueChange(field, value);
             }}
             orgId={orgId}
+            person={person}
           />
         </Box>
         <Box
