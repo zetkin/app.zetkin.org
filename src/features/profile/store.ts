@@ -78,6 +78,25 @@ const profilesSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    personUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [personId, attributes] = action.payload;
+      const item = state.personById[personId];
+
+      if (item) {
+        item.mutating = item.mutating
+          .filter((attr) => !attributes.includes(attr))
+          .concat(attributes);
+      }
+    },
+    personUpdated: (state, action: PayloadAction<ZetkinPerson>) => {
+      const person = action.payload;
+      const item = state.personById[person.id];
+
+      if (item) {
+        item.data = { ...item.data, ...person };
+        item.mutating = [];
+      }
+    },
   },
 });
 
@@ -91,4 +110,6 @@ export const {
   personOrgsLoaded,
   personOrgAdded,
   personOrgRemoved,
+  personUpdate,
+  personUpdated,
 } = profilesSlice.actions;

@@ -21,11 +21,16 @@ enum GENDERS {
 }
 
 interface EditPersonFieldsProps {
+  invalidFields: string[];
   onChange: (field: string, value: string) => void;
   orgId: number;
 }
 
-const EditPersonFields: FC<EditPersonFieldsProps> = ({ onChange, orgId }) => {
+const EditPersonFields: FC<EditPersonFieldsProps> = ({
+  invalidFields,
+  onChange,
+  orgId,
+}) => {
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
 
@@ -44,14 +49,17 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({ onChange, orgId }) => {
         />
       </Box>
       <PersonFieldInput
+        error={invalidFields.includes(NATIVE_PERSON_FIELDS.EMAIL)}
         field={NATIVE_PERSON_FIELDS.EMAIL}
         onChange={(field, value) => onChange(field, value)}
       />
       <PersonFieldInput
+        error={invalidFields.includes(NATIVE_PERSON_FIELDS.PHONE)}
         field={NATIVE_PERSON_FIELDS.PHONE}
         onChange={(field, value) => onChange(field, value)}
       />
       <PersonFieldInput
+        error={invalidFields.includes(NATIVE_PERSON_FIELDS.ALT_PHONE)}
         field={NATIVE_PERSON_FIELDS.ALT_PHONE}
         onChange={(field, value) => onChange(field, value === ' ' ? '' : value)}
       />
@@ -131,6 +139,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({ onChange, orgId }) => {
           return (
             <PersonFieldInput
               key={field.slug}
+              error={invalidFields.includes(field.slug)}
               field={field.slug}
               isURLField
               label={field.title}

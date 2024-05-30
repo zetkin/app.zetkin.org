@@ -13,6 +13,8 @@ import {
 import EditPersonFields from './EditPersonFields';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useEditPerson from 'features/profile/hooks/useEditPerson';
+import usePersonMutations from 'features/profile/hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface EditPersonDialogProps {
@@ -30,9 +32,26 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const { updatePerson } = usePersonMutations(orgId, person.id);
+  const {
+    fieldsToUpdate,
+    hasInvalidFields,
+    hasUpdatedValues,
+    invalidFields,
+    onFieldValueChange,
+    setFieldsToUpdate,
+  } = useEditPerson(person, orgId);
 
   return (
-    <Dialog fullScreen={fullScreen} fullWidth onClose={onClose} open={open}>
+    <Dialog
+      fullScreen={fullScreen}
+      fullWidth
+      onClose={() => {
+        setFieldsToUpdate({});
+        onClose();
+      }}
+      open={open}
+    >
       <Box
         alignItems="center"
         display="flex"
@@ -60,9 +79,9 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
         </Box>
         <Box overflow="auto" width="100%">
           <EditPersonFields
+            invalidFields={invalidFields}
             onChange={(field, value) => {
-              field;
-              value;
+              onFieldValueChange(field, value);
             }}
             orgId={orgId}
           />
@@ -76,16 +95,26 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
           paddingTop={2}
           width="100%"
         >
-          <Typography color={theme.palette.grey[500]}>
-            <Msg
-              id={messageIds.numberOfChangesMessage}
-              values={{ number: 2 }}
-            />
-          </Typography>
-          <Button disabled={true}>
+          {hasUpdatedValues && (
+            <Typography color={theme.palette.grey[500]}>
+              <Msg
+                id={messageIds.numberOfChangesMessage}
+                values={{ number: Object.entries(fieldsToUpdate).length }}
+              />
+            </Typography>
+          )}
+          <Button disabled={!hasUpdatedValues}>
             <Msg id={messageIds.resetButton} />
           </Button>
-          <Button disabled={true} variant="contained">
+          <Button
+            disabled={!hasUpdatedValues || hasInvalidFields}
+            onClick={() => {
+              updatePerson(fieldsToUpdate);
+              setFieldsToUpdate({});
+              onClose();
+            }}
+            variant="contained"
+          >
             <Msg id={messageIds.saveButton} />
           </Button>
         </Box>
