@@ -1,9 +1,15 @@
+import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import { GetServerSideProps } from 'next';
+import messageIds from 'features/duplicates/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
-import { Typography } from '@mui/material';
+import theme from 'theme';
+import useDuplicates from 'features/duplicates/hooks/useDuplicates';
+import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import { Box, Typography } from '@mui/material';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   return {
@@ -13,11 +19,44 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 
 const DuplicatesPage: PageWithLayout = () => {
   const onServer = useServerSide();
+  const { orgId } = useNumericRouteParams();
+  const list = useDuplicates(orgId).data ?? [];
+  const messages = useMessages(messageIds);
+
   if (onServer) {
     return null;
   }
 
-  return <Typography>{'WIP'}</Typography>;
+  const filteredList = list.filter((cluster) => !cluster.dismissed);
+
+  return (
+    <>
+      {filteredList.length === 0 && (
+        <Box m={2}>
+          <Typography variant="overline">
+            {messages.page.noDuplicates()}
+          </Typography>
+          <Typography variant="body1">
+            {messages.page.noDuplicatesDescription()}
+          </Typography>
+        </Box>
+      )}
+      {filteredList.length > 0 && (
+        <Box p={1.5}>
+          <Typography
+            color={theme.palette.grey[500]}
+            sx={{ mb: 2, textTransform: 'uppercase' }}
+            variant="subtitle2"
+          >
+            {messages.page.possibleDuplicates()}
+          </Typography>
+          {filteredList.map((cluster) => (
+            <DuplicateCard key={cluster.id} cluster={cluster} />
+          ))}
+        </Box>
+      )}
+    </>
+  );
 };
 
 DuplicatesPage.getLayout = function getLayout(page) {
