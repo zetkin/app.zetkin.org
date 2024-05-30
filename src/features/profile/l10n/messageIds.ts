@@ -26,7 +26,9 @@ export default makeMessages('feat.profile', {
     addButton: m('Start new journey'),
     title: m('Journeys'),
   },
-  numberOfChangesMessage: m<{ number: number }>('Will update {number} fields.'),
+  numberOfChangesMessage: m<{ number: number }>(
+    'Will update {number, plural, =1 {1 field} other {# fields}}.'
+  ),
   organizations: {
     add: m('Add a new sub-organization'),
     addError: m('This organization could not be added'),
