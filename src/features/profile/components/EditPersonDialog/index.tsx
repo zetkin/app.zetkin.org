@@ -14,6 +14,7 @@ import EditPersonFields from './EditPersonFields';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useEditPerson from 'features/profile/hooks/useEditPerson';
+import usePersonMutations from 'features/profile/hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface EditPersonDialogProps {
@@ -31,7 +32,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
+  const { updatePerson } = usePersonMutations(orgId, person.id);
   const {
     fieldsToUpdate,
     invalidFields,
@@ -106,6 +107,11 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
           </Button>
           <Button
             disabled={!hasUpdatedValues || hasInvalidFields}
+            onClick={() => {
+              updatePerson(fieldsToUpdate);
+              setFieldsToUpdate({});
+              onClose();
+            }}
             variant="contained"
           >
             <Msg id={messageIds.saveButton} />
