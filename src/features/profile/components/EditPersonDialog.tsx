@@ -2,6 +2,7 @@ import { Close } from '@mui/icons-material';
 import { FC } from 'react';
 import {
   Box,
+  Button,
   Dialog,
   IconButton,
   Typography,
@@ -39,22 +40,51 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
       <Box
         alignItems="center"
         display="flex"
+        flexDirection="column"
         justifyContent="space-between"
         p={2}
       >
-        <Typography fontSize="1.4em" variant="h4">
-          <Msg
-            id={messageIds.editPersonHeader}
-            values={{ person: person.first_name + ' ' + person.last_name }}
-          />
-        </Typography>
-        <IconButton
-          onClick={() => {
-            onClose();
-          }}
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          width="100%"
         >
-          <Close />
-        </IconButton>
+          <Typography fontSize="1.4em" variant="h4">
+            <Msg
+              id={messageIds.editPersonHeader}
+              values={{ person: person.first_name + ' ' + person.last_name }}
+            />
+          </Typography>
+          <IconButton
+            onClick={() => {
+              onClose();
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Box>
+        <Box
+          alignItems="center"
+          component="div"
+          display="flex"
+          gap={2}
+          justifyContent="flex-end"
+          width="100%"
+        >
+          <Typography color={theme.palette.grey[500]}>
+            <Msg
+              id={messageIds.numberOfChangesMessage}
+              values={{ number: 2 }}
+            />
+          </Typography>
+          <Button disabled={true}>
+            <Msg id={messageIds.resetButton} />
+          </Button>
+          <Button disabled={true} variant="contained">
+            <Msg id={messageIds.saveButton} />
+          </Button>
+        </Box>
       </Box>
     </Dialog>
   );

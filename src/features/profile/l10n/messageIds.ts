@@ -26,12 +26,15 @@ export default makeMessages('feat.profile', {
     addButton: m('Start new journey'),
     title: m('Journeys'),
   },
+  numberOfChangesMessage: m<{ number: number }>('Will update {number} fields.'),
   organizations: {
     add: m('Add a new sub-organization'),
     addError: m('This organization could not be added'),
     removeError: m('This organization could not be removed'),
     title: m('Organizations'),
   },
+  resetButton: m('Reset'),
+  saveButton: m('Save'),
   tabs: {
     manage: m('Manage'),
     profile: m('Profile'),
