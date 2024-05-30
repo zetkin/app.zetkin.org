@@ -40,7 +40,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   );
 
   const peopleNoToMerge = potentialDuplicate?.duplicates.filter(
-    (person) => !selectedIds.some((selectedId) => selectedId == person.id)
+    (person) => !selectedIds.includes(person.id)
   );
 
   const { fieldValues, initialOverrides } = useFieldSettings(peopleToMerge);
