@@ -1,4 +1,4 @@
-import { dismissedPotentialDuplicate, PotentialDuplicate } from '../store';
+import { duplicateUpdated, PotentialDuplicate } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 type DuplicatesMutationsReturn = {
@@ -19,7 +19,7 @@ export default function useDuplicatesMutations(
         { dismissed: dismissedDate }
       )
       .then((duplicate) => {
-        dispatch(dismissedPotentialDuplicate(duplicate));
+        dispatch(duplicateUpdated(duplicate));
       });
   };
 

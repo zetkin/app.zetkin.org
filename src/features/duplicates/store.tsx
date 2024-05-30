@@ -23,10 +23,7 @@ const potentialDuplicatesSlice = createSlice({
   initialState,
   name: 'potentialDuplicates',
   reducers: {
-    dismissedPotentialDuplicate: (
-      state,
-      action: PayloadAction<PotentialDuplicate>
-    ) => {
+    duplicateUpdated: (state, action: PayloadAction<PotentialDuplicate>) => {
       const potentialDuplicate = action.payload;
       const item = state.potentialDuplicatesList.items.find(
         (item) => item.id === potentialDuplicate.id
@@ -55,7 +52,7 @@ const potentialDuplicatesSlice = createSlice({
 
 export default potentialDuplicatesSlice;
 export const {
-  dismissedPotentialDuplicate,
+  duplicateUpdated,
   potentialDuplicatesLoad,
   potentialDuplicatesLoaded,
 } = potentialDuplicatesSlice.actions;
