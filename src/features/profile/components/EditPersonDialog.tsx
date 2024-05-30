@@ -29,14 +29,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      fullWidth
-      onClose={() => {
-        onClose();
-      }}
-      open={open}
-    >
+    <Dialog fullScreen={fullScreen} fullWidth onClose={onClose} open={open}>
       <Box
         alignItems="center"
         display="flex"
@@ -50,17 +43,13 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
           justifyContent="space-between"
           width="100%"
         >
-          <Typography fontSize="1.4em" variant="h4">
+          <Typography variant="h4">
             <Msg
               id={messageIds.editPersonHeader}
               values={{ person: person.first_name + ' ' + person.last_name }}
             />
           </Typography>
-          <IconButton
-            onClick={() => {
-              onClose();
-            }}
-          >
+          <IconButton onClick={onClose}>
             <Close />
           </IconButton>
         </Box>
