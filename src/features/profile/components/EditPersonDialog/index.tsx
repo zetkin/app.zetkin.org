@@ -32,8 +32,15 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { invalidFields, onFieldValueChange, setFieldsToUpdate } =
-    useEditPerson(person, orgId);
+  const {
+    fieldsToUpdate,
+    invalidFields,
+    onFieldValueChange,
+    setFieldsToUpdate,
+  } = useEditPerson(person, orgId);
+
+  const hasUpdatedValues = !!Object.entries(fieldsToUpdate).length;
+  const hasInvalidFields = !!Object.entries(invalidFields).length;
 
   return (
     <Dialog
@@ -94,10 +101,13 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
               values={{ number: 2 }}
             />
           </Typography>
-          <Button disabled={true}>
+          <Button disabled={!hasUpdatedValues}>
             <Msg id={messageIds.resetButton} />
           </Button>
-          <Button disabled={true} variant="contained">
+          <Button
+            disabled={!hasUpdatedValues || hasInvalidFields}
+            variant="contained"
+          >
             <Msg id={messageIds.saveButton} />
           </Button>
         </Box>

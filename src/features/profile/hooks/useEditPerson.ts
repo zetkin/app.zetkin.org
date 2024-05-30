@@ -26,5 +26,10 @@ export default function useEditPerson(
     }
   };
 
-  return { invalidFields, onFieldValueChange, setFieldsToUpdate };
+  return {
+    fieldsToUpdate,
+    invalidFields,
+    onFieldValueChange,
+    setFieldsToUpdate,
+  };
 }
