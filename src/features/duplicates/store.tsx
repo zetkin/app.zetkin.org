@@ -34,7 +34,7 @@ const potentialDuplicatesSlice = createSlice({
 
       if (item && item.data) {
         item.data.dismissed = potentialDuplicate.dismissed;
-        item.data = { ...potentialDuplicate };
+        item.data = potentialDuplicate;
       }
     },
     potentialDuplicatesLoad: (state) => {
