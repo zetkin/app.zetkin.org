@@ -95,6 +95,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
       <DialogActions>
         <Button variant="text">{messages.modal.cancelButton()}</Button>
         <Button
+          disabled={selectedIds.length > 1 ? false : true}
           onClick={() =>
             mergeDuplicate(potentialDuplicate.id, selectedIds, overrides)
           }
