@@ -21,13 +21,13 @@ export default function useDuplicatesMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  type ZetkinDuplicatePatchBody = Partial<
+  type PotentialDuplicatePatchBody = Partial<
     Omit<PotentialDuplicate, 'id' | 'dismissed'>
   > & {
     dismissed?: boolean;
   };
 
-  type PotentialDuplicateMergePatchBody = {
+  type PotentialDuplicatePostBody = {
     objects: number[];
     override: Partial<ZetkinPerson>;
     type: 'person';
@@ -35,7 +35,7 @@ export default function useDuplicatesMutations(
 
   const dismissDuplicate = async (duplicateId: number) => {
     await apiClient
-      .patch<PotentialDuplicate, ZetkinDuplicatePatchBody>(
+      .patch<PotentialDuplicate, PotentialDuplicatePatchBody>(
         `/api/orgs/${orgId}/people/duplicates/${duplicateId}`,
         { dismissed: true }
       )
@@ -50,7 +50,7 @@ export default function useDuplicatesMutations(
     override: Partial<ZetkinPerson>
   ) => {
     await apiClient
-      .post<ZetkinPerson, PotentialDuplicateMergePatchBody>(
+      .post<ZetkinPerson, PotentialDuplicatePostBody>(
         `/api/orgs/${orgId}/merges`,
         {
           objects: duplicatesIds,
