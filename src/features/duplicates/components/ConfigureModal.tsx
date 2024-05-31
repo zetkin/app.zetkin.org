@@ -1,3 +1,4 @@
+import React from 'react';
 import theme from 'theme';
 import {
   Box,
@@ -13,8 +14,10 @@ import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
 import { PotentialDuplicate } from '../store';
 import PotentialDuplicatesLists from './PotentialDuplicatesLists';
+import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
 import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface ConfigureModalProps {
@@ -28,8 +31,10 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   open,
   onClose,
 }) => {
+  const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
+  const { mergeDuplicate } = useDuplicatesMutations(orgId);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
     potentialDuplicate?.duplicates.map((person) => person.id) ?? []
@@ -89,7 +94,14 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
       </Box>
       <DialogActions>
         <Button variant="text">{messages.modal.cancelButton()}</Button>
-        <Button variant="contained">{messages.modal.mergeButton()}</Button>
+        <Button
+          onClick={() =>
+            mergeDuplicate(potentialDuplicate.id, selectedIds, overrides)
+          }
+          variant="contained"
+        >
+          {messages.modal.mergeButton()}
+        </Button>
       </DialogActions>
     </Dialog>
   );
