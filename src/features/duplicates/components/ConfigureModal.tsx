@@ -1,6 +1,8 @@
 import React from 'react';
 import theme from 'theme';
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -76,13 +78,18 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
             peopleToMerge={peopleToMerge}
           />
         </Box>
-        <Box display="flex" flexDirection="column" width="50%">
+        <Box display="flex" flexDirection="column" marginRight={2} width="50%">
           <FieldSettings
             fieldValues={fieldValues}
             onChange={(field, value) => {
               setOverrides({ ...overrides, [`${field}`]: value });
             }}
           />
+          <Box marginBottom={2} />
+          <Alert severity="info">
+            <AlertTitle>{messages.modal.infoTitle()}</AlertTitle>
+            {messages.modal.infoMessage()}
+          </Alert>
         </Box>
       </Box>
       <DialogActions>
