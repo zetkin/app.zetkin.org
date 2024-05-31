@@ -23,8 +23,16 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
 
   return (
     <>
-      <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
-        <Typography variant="h6">{messages.modal.peopleToMerge()}</Typography>
+      <Box
+        display="flex"
+        flexDirection="column"
+        marginLeft={2}
+        marginRight={2}
+        overflow="hidden"
+      >
+        <Typography marginBottom={2} variant="h6">
+          {messages.modal.peopleToMerge()}
+        </Typography>
         <ModalList
           buttonLabel={messages.modal.notDuplicateButton()}
           onButtonClick={onDeselect}
