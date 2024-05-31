@@ -1,11 +1,10 @@
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { FC } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
+import CustomDateField from './CustomDateField';
 import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/globalMessageIds';
-import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import PersonFieldInput from 'zui/ZUICreatePerson/PersonFieldInput';
@@ -135,17 +134,15 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
           return (
-            <DatePicker
+            <CustomDateField
               key={field.slug}
-              format="DD-MM-YYYY"
-              label={field.title}
-              onChange={(date: Dayjs | null) => {
-                if (date) {
-                  const dateStr = makeNaiveDateString(date.utc().toDate());
-                  onChange(field.slug, dateStr);
-                }
-              }}
-              value={null}
+              field={field}
+              initialValue={
+                person[field.slug]
+                  ? dayjs(person[field.slug]?.toString())
+                  : null
+              }
+              onChange={(field, value) => onChange(field, value)}
             />
           );
         } else if (field.type === CUSTOM_FIELD_TYPE.URL) {
