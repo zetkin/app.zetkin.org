@@ -52,14 +52,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   const [overrides, setOverrides] = useState(initialOverrides);
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      maxWidth={'lg'}
-      onClose={() => {
-        onClose();
-      }}
-      open={open}
-    >
+    <Dialog fullScreen={fullScreen} maxWidth={'lg'} open={open}>
       <DialogTitle variant="h5">{messages.modal.title()}</DialogTitle>
       <Box display="flex" flexGrow={1} overflow="hidden">
         <Box
@@ -93,7 +86,17 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
         </Box>
       </Box>
       <DialogActions>
-        <Button variant="text">{messages.modal.cancelButton()}</Button>
+        <Button
+          onClick={() => {
+            setSelectedIds(
+              potentialDuplicate?.duplicates.map((person) => person.id) ?? []
+            );
+            onClose();
+          }}
+          variant="text"
+        >
+          {messages.modal.cancelButton()}
+        </Button>
         <Button
           disabled={selectedIds.length > 1 ? false : true}
           onClick={() =>
