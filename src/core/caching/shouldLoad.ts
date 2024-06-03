@@ -2,8 +2,13 @@ import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
 const DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes
 
+type RemoteObjectRecord = Record<
+  number | string,
+  RemoteList<unknown> | RemoteItem<unknown>
+>;
+
 type ObjThatNeedsLoading =
-  | Record<number | string, RemoteList<unknown> | RemoteItem<unknown>>
+  | RemoteObjectRecord
   | RemoteItem<unknown>
   | RemoteList<unknown>
   | undefined;
