@@ -38,7 +38,7 @@ const OrgScope: FC<Props> = ({ orgId, organizations }) => {
     content = orgString;
   }
   return (
-    <Typography color="gray" variant="body2">
+    <Typography color="secondary" variant="body2">
       {content}
     </Typography>
   );
