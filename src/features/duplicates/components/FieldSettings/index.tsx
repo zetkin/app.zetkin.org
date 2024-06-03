@@ -47,7 +47,7 @@ const FieldSettings: FC<FieldSettingsProps> = ({ fieldValues, onChange }) => {
             <>
               {index !== 0 && <Divider />}
               <FieldSettingsRow
-                key={index}
+                key={field}
                 field={field as NATIVE_PERSON_FIELDS}
                 onChange={(selectedValue: string) =>
                   onChange(field as NATIVE_PERSON_FIELDS, selectedValue)
