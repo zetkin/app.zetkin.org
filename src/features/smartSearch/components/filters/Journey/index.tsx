@@ -25,11 +25,6 @@ import {
 
 const localMessageIds = messageIds.filters.journey;
 
-export enum JOURNEY_OP {
-  OPEN = 'opened',
-  CLOSE = 'closed',
-}
-
 interface JourneyProps {
   filter: SmartSearchFilterWithId<JourneyFilterConfig> | NewSmartSearchFilter;
   onSubmit: (
@@ -48,7 +43,6 @@ const Journey: FC<JourneyProps> = ({
   const { orgId } = useNumericRouteParams();
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {
-      operator: JOURNEY_OP.OPEN,
       tags: {
         condition: JOURNEY_CONDITION_OP.ALL,
         ids: [],
@@ -71,16 +65,6 @@ const Journey: FC<JourneyProps> = ({
       return acc;
     }, []) || [];
 
-  const handleTimeFrameChange = (range: {
-    after?: string;
-    before?: string;
-  }) => {
-    setConfig({
-      ...filter.config,
-      after: range.after,
-      before: range.before,
-    });
-  };
   const handleTagDelete = (tag: ZetkinTag) => {
     const tags = filter.config?.tags;
     if (tags) {
@@ -145,6 +129,8 @@ const Journey: FC<JourneyProps> = ({
     </StyledSelect>
   );
 
+  const state = filter.config.closed ? 'closed' : 'open';
+
   return (
     <FilterForm
       disableSubmit={
@@ -172,6 +158,32 @@ const Journey: FC<JourneyProps> = ({
                 ))}
               </StyledSelect>
             ),
+            closedTimeFrame:
+              state == 'closed' ? (
+                <TimeFrame
+                  filterConfig={{
+                    after: filter.config.opened?.after,
+                    before: filter.config.opened?.before,
+                  }}
+                  onChange={(range) => {
+                    setConfig({
+                      ...filter.config,
+                      opened: {
+                        after: range.after,
+                        before: range.before,
+                      },
+                    });
+                  }}
+                  options={[
+                    TIME_FRAME.EVER,
+                    TIME_FRAME.AFTER_DATE,
+                    TIME_FRAME.BEFORE_DATE,
+                    TIME_FRAME.BETWEEN,
+                    TIME_FRAME.LAST_FEW_DAYS,
+                    TIME_FRAME.BEFORE_TODAY,
+                  ]}
+                />
+              ) : null,
             condition: (
               <>
                 {conditionSelect}
@@ -210,37 +222,56 @@ const Journey: FC<JourneyProps> = ({
               >
                 {journeys.map((journey) => (
                   <MenuItem key={`journey-${journey.id}`} value={journey.id}>
-                    {`"${journey.title}"`}
+                    {journey.plural_label}
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
-            operator: (
-              <StyledSelect
-                onChange={(e) =>
+            openedTimeFrame: (
+              <TimeFrame
+                filterConfig={{
+                  after: filter.config.opened?.after,
+                  before: filter.config.opened?.before,
+                }}
+                onChange={(range) => {
                   setConfig({
                     ...filter.config,
-                    operator: e.target.value as JOURNEY_OP,
-                  })
-                }
-                value={filter.config.operator}
+                    opened: {
+                      after: range.after,
+                      before: range.before,
+                    },
+                  });
+                }}
+                options={[
+                  TIME_FRAME.EVER,
+                  TIME_FRAME.AFTER_DATE,
+                  TIME_FRAME.BEFORE_DATE,
+                  TIME_FRAME.BETWEEN,
+                  TIME_FRAME.LAST_FEW_DAYS,
+                  TIME_FRAME.BEFORE_TODAY,
+                ]}
+              />
+            ),
+            stateSelect: (
+              <StyledSelect
+                onChange={(ev) => {
+                  setConfig({
+                    ...filter.config,
+                    closed:
+                      ev.target.value == 'open'
+                        ? null
+                        : filter.config.closed || {},
+                  });
+                }}
+                value={state}
               >
-                <MenuItem value={JOURNEY_OP.OPEN}>
-                  <Msg id={localMessageIds.opened} />
+                <MenuItem value="open">
+                  <Msg id={localMessageIds.stateOptions.open} />
                 </MenuItem>
-                <MenuItem value={JOURNEY_OP.CLOSE}>
-                  <Msg id={localMessageIds.closed} />
+                <MenuItem value="closed">
+                  <Msg id={localMessageIds.stateOptions.closed} />
                 </MenuItem>
               </StyledSelect>
-            ),
-            statusText: (
-              <Msg
-                id={
-                  filter.config.operator === JOURNEY_OP.OPEN
-                    ? localMessageIds.thatOpened
-                    : localMessageIds.thatFinished
-                }
-              />
             ),
             tags: notRegardlessTags ? (
               <Box
@@ -290,23 +321,6 @@ const Journey: FC<JourneyProps> = ({
                 <Msg id={localMessageIds.followingTags} /> :
               </>
             ) : null,
-            timeFrame: (
-              <TimeFrame
-                filterConfig={{
-                  after: filter.config.after,
-                  before: filter.config.before,
-                }}
-                onChange={handleTimeFrameChange}
-                options={[
-                  TIME_FRAME.EVER,
-                  TIME_FRAME.AFTER_DATE,
-                  TIME_FRAME.BEFORE_DATE,
-                  TIME_FRAME.BETWEEN,
-                  TIME_FRAME.LAST_FEW_DAYS,
-                  TIME_FRAME.BEFORE_TODAY,
-                ]}
-              />
-            ),
           }}
         />
       )}

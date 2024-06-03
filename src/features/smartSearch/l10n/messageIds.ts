@@ -205,7 +205,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     journey: {
-      closed: m('a closed'),
       condition: {
         conditionSelect: {
           all: m('and has all'),
@@ -225,19 +224,20 @@ export default makeMessages('feat.smartSearch', {
       followingTags: m('of the following tags'),
       inputString: m<{
         addRemoveSelect: ReactElement;
+        closedTimeFrame: ReactElement | null;
         condition: ReactElement;
         journeySelect: ReactElement;
-        operator: ReactElement;
-        statusText: ReactElement;
+        openedTimeFrame: ReactElement;
+        stateSelect: ReactElement;
         tags: ReactElement | null;
         tagsDesc: ReactElement | null;
-        timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc} {tags}'
+        '{addRemoveSelect} people who are part of {journeySelect} that opened {openedTimeFrame} and {stateSelect} {closedTimeFrame} {condition} {tagsDesc} {tags}'
       ),
-      opened: m('an open'),
-      thatFinished: m('that finished'),
-      thatOpened: m('that opened'),
+      stateOptions: {
+        closed: m('closed'),
+        open: m('are still open'),
+      },
     },
     mostActive: {
       examples: {

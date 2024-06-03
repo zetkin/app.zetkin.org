@@ -235,10 +235,15 @@ export interface SubQueryFilterConfig {
 }
 
 export interface JourneyFilterConfig {
-  after?: string;
-  before?: string;
+  closed?: {
+    after?: string;
+    before?: string;
+  } | null;
   journey?: number;
-  operator: 'opened' | 'closed';
+  opened?: {
+    after?: string;
+    before?: string;
+  };
   tags?: {
     condition: JOURNEY_CONDITION_OP;
     ids: number[];
