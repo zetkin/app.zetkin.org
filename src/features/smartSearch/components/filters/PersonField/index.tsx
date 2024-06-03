@@ -205,11 +205,7 @@ const PersonField = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
-      enableOrgSelect
       onCancel={onCancel}
-      onOrgsChange={(orgs) => {
-        setConfig({ ...filter.config, organizations: orgs });
-      }}
       onSubmit={(e) => handleSubmit(e)}
       renderSentence={() => (
         <Msg
@@ -231,7 +227,6 @@ const PersonField = ({
           }}
         />
       )}
-      selectedOrgs={filter.config.organizations}
     />
   );
 };
