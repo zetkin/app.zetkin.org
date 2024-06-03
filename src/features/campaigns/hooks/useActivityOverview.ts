@@ -42,7 +42,7 @@ export default function useActivitiyOverview(
     taskActivitiesFuture.error ||
     emailActivitiesFuture.error
   ) {
-    return new ErrorFuture('Error loading acitvities');
+    return new ErrorFuture('Error loading activities');
   }
 
   const activities: CampaignActivity[] = [];
@@ -54,7 +54,7 @@ export default function useActivitiyOverview(
     ...(emailActivitiesFuture.data || [])
   );
 
-  const sortedAcitvities = activities.sort((first, second) => {
+  const sortedActivities = activities.sort((first, second) => {
     if (first.visibleFrom === null) {
       return -1;
     } else if (second.visibleFrom === null) {
@@ -74,7 +74,7 @@ export default function useActivitiyOverview(
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
-  overview.today = sortedAcitvities.filter((activity) => {
+  overview.today = sortedActivities.filter((activity) => {
     if (activity.kind == ACTIVITIES.EVENT) {
       const startDate = new Date(activity.data.start_time);
       return isSameDate(startDate, todayDate);
@@ -86,7 +86,7 @@ export default function useActivitiyOverview(
     }
   });
 
-  overview.tomorrow = sortedAcitvities.filter((activity) => {
+  overview.tomorrow = sortedActivities.filter((activity) => {
     if (activity.kind == ACTIVITIES.EVENT) {
       const startDate = new Date(activity.data.start_time);
       return isSameDate(startDate, tomorrowDate);
@@ -100,7 +100,7 @@ export default function useActivitiyOverview(
     }
   });
 
-  overview.alsoThisWeek = sortedAcitvities.filter((activity) => {
+  overview.alsoThisWeek = sortedActivities.filter((activity) => {
     if (
       overview.today.includes(activity) ||
       overview.tomorrow.includes(activity)
