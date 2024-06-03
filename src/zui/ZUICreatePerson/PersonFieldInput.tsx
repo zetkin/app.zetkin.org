@@ -11,28 +11,27 @@ import {
 interface PersonFieldInputProps {
   field: keyof ZetkinCreatePerson;
   label?: string;
-  initialValue?: string;
-  onChange: (field: string, value: string) => void;
+  onChange: (field: string, newValue: string) => void;
   required?: boolean;
   isURLField?: boolean;
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
   style?: Record<string, unknown>;
   error?: boolean;
+  value?: string;
 }
 const PersonFieldInput: FC<PersonFieldInputProps> = ({
   field,
   label,
-  initialValue,
   onChange,
   required,
   style,
   inputRef,
   isURLField,
   error,
+  value,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
   const [blurred, setBlurred] = useState(false);
-  const [value, setValue] = useState(initialValue ?? '');
 
   return (
     <TextField
@@ -63,7 +62,6 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
       onBlur={() => setBlurred(true)}
       onChange={(e) => {
         const trimmedValue = e.target.value.trim();
-        setValue(trimmedValue);
         onChange(field, trimmedValue);
       }}
       onFocus={() => setBlurred(false)}

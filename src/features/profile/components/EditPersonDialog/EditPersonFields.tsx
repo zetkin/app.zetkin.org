@@ -1,10 +1,11 @@
-import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers-pro';
 import { FC } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import dayjs, { Dayjs } from 'dayjs';
 
-import CustomDateField from './CustomDateField';
 import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/globalMessageIds';
+import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import PersonFieldInput from 'zui/ZUICreatePerson/PersonFieldInput';
@@ -21,16 +22,16 @@ enum GENDERS {
 
 interface EditPersonFieldsProps {
   invalidFields: string[];
-  onChange: (field: string, value: string) => void;
+  onChange: (field: string, newValue: string) => void;
   orgId: number;
-  person: ZetkinPerson;
+  fieldValues: ZetkinPerson;
 }
 
 const EditPersonFields: FC<EditPersonFieldsProps> = ({
   invalidFields,
   onChange,
   orgId,
-  person,
+  fieldValues,
 }) => {
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
@@ -40,41 +41,43 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
       <Box display="flex" gap={2}>
         <PersonFieldInput
           field={NATIVE_PERSON_FIELDS.FIRST_NAME}
-          initialValue={person.first_name}
-          onChange={(field, value) => onChange(field, value)}
+          onChange={(field, newValue) => onChange(field, newValue)}
           required
+          value={fieldValues.first_name}
         />
         <PersonFieldInput
           field={NATIVE_PERSON_FIELDS.LAST_NAME}
-          initialValue={person.last_name}
-          onChange={(field, value) => onChange(field, value)}
+          onChange={(field, newValue) => onChange(field, newValue)}
           required
+          value={fieldValues.last_name}
         />
       </Box>
       <PersonFieldInput
         error={invalidFields.includes(NATIVE_PERSON_FIELDS.EMAIL)}
         field={NATIVE_PERSON_FIELDS.EMAIL}
-        initialValue={person.email ?? ''}
-        onChange={(field, value) => onChange(field, value)}
+        onChange={(field, newValue) => onChange(field, newValue)}
+        value={fieldValues.email ?? ''}
       />
       <PersonFieldInput
         error={invalidFields.includes(NATIVE_PERSON_FIELDS.PHONE)}
         field={NATIVE_PERSON_FIELDS.PHONE}
-        initialValue={person.phone ?? ''}
-        onChange={(field, value) => onChange(field, value)}
+        onChange={(field, newValue) => onChange(field, newValue)}
+        value={fieldValues.phone ?? ''}
       />
       <PersonFieldInput
         error={invalidFields.includes(NATIVE_PERSON_FIELDS.ALT_PHONE)}
         field={NATIVE_PERSON_FIELDS.ALT_PHONE}
-        initialValue={person.alt_phone ?? ''}
-        onChange={(field, value) => onChange(field, value === ' ' ? '' : value)}
+        onChange={(field, newValue) =>
+          onChange(field, newValue === ' ' ? '' : newValue)
+        }
+        value={fieldValues.alt_phone ?? ''}
       />
       <FormControl fullWidth>
         <InputLabel>
           <Msg id={globalMessageIds.personFields.gender} />
         </InputLabel>
         <Select
-          defaultValue={person.gender ?? ''}
+          defaultValue={fieldValues.gender ?? ''}
           label={globalMessages.personFields.gender()}
           onChange={(e) =>
             onChange(
@@ -92,57 +95,63 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
       </FormControl>
       <PersonFieldInput
         field={NATIVE_PERSON_FIELDS.STREET_ADDRESS}
-        initialValue={person.street_address ?? ''}
-        onChange={(field, value) => onChange(field, value)}
+        onChange={(field, newValue) => onChange(field, newValue)}
+        value={fieldValues.street_address ?? ''}
       />
       <PersonFieldInput
         field={NATIVE_PERSON_FIELDS.CO_ADDRESS}
-        initialValue={person.co_address ?? ''}
-        onChange={(field, value) => onChange(field, value)}
+        onChange={(field, newValue) => onChange(field, newValue)}
+        value={fieldValues.co_address ?? ''}
       />
       <Box>
         <PersonFieldInput
           field={NATIVE_PERSON_FIELDS.ZIP_CODE}
-          initialValue={person.zip_code ?? ''}
-          onChange={(field, value) => onChange(field, value)}
+          onChange={(field, newValue) => onChange(field, newValue)}
           style={{
             pr: 2,
             width: '30%',
           }}
+          value={fieldValues.zip_code ?? ''}
         />
         <PersonFieldInput
           field={NATIVE_PERSON_FIELDS.CITY}
-          initialValue={person.city ?? ''}
-          onChange={(field, value) => onChange(field, value)}
+          onChange={(field, newValue) => onChange(field, newValue)}
           style={{
             width: '70%',
           }}
+          value={fieldValues.city ?? ''}
         />
       </Box>
       <PersonFieldInput
         field={NATIVE_PERSON_FIELDS.COUNTRY}
-        initialValue={person.country ?? ''}
-        onChange={(field, value) => onChange(field, value)}
+        onChange={(field, newValue) => onChange(field, newValue)}
+        value={fieldValues.country ?? ''}
       />
       <PersonFieldInput
         field={'ext_id'}
-        initialValue={person.ext_id ? person.ext_id : undefined}
-        onChange={(field, value) => onChange(field, value)}
+        onChange={(field, newValue) => onChange(field, newValue)}
+        value={fieldValues.ext_id ? fieldValues.ext_id : undefined}
       />
       {customFields.map((field) => {
         if (field.type === CUSTOM_FIELD_TYPE.JSON) {
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
           return (
-            <CustomDateField
+            <DatePicker
               key={field.slug}
-              field={field}
-              initialValue={
-                person[field.slug]
-                  ? dayjs(person[field.slug]?.toString())
+              format="DD-MM-YYYY"
+              label={field.title}
+              onChange={(date: Dayjs | null) => {
+                if (date) {
+                  const dateStr = makeNaiveDateString(date.utc().toDate());
+                  onChange(field.slug, dateStr);
+                }
+              }}
+              value={
+                fieldValues[field.slug]
+                  ? dayjs(fieldValues[field.slug]?.toString())
                   : null
               }
-              onChange={(field, value) => onChange(field, value)}
             />
           );
         } else if (field.type === CUSTOM_FIELD_TYPE.URL) {
@@ -151,13 +160,13 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               key={field.slug}
               error={invalidFields.includes(field.slug)}
               field={field.slug}
-              initialValue={person[field.slug]?.toString() ?? ''}
               isURLField
               label={field.title}
-              onChange={(field, value) => {
-                const formattedUrl = formatUrl(value as string);
-                onChange(field, formattedUrl ?? value);
+              onChange={(field, newValue) => {
+                const formattedUrl = formatUrl(newValue as string);
+                onChange(field, formattedUrl ?? newValue);
               }}
+              value={fieldValues[field.slug]?.toString() ?? ''}
             />
           );
         } else {
@@ -165,9 +174,9 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
             <PersonFieldInput
               key={field.slug}
               field={field.slug}
-              initialValue={person[field.slug]?.toString() ?? ''}
               label={field.title}
-              onChange={(field, value) => onChange(field, value)}
+              onChange={(field, newValue) => onChange(field, newValue)}
+              value={fieldValues[field.slug]?.toString() ?? ''}
             />
           );
         }

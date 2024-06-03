@@ -1,5 +1,4 @@
 import { Close } from '@mui/icons-material';
-import { FC } from 'react';
 import {
   Box,
   Button,
@@ -9,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { FC, useState } from 'react';
 
 import EditPersonFields from './EditPersonFields';
 import messageIds from '../../l10n/messageIds';
@@ -41,6 +41,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
     onFieldValueChange,
     setFieldsToUpdate,
   } = useEditPerson(person, orgId);
+  const [fieldValues, setFieldValues] = useState(person);
 
   return (
     <Dialog
@@ -79,12 +80,13 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
         </Box>
         <Box overflow="auto" width="100%">
           <EditPersonFields
+            fieldValues={fieldValues}
             invalidFields={invalidFields}
-            onChange={(field, value) => {
-              onFieldValueChange(field, value);
+            onChange={(field, newValue) => {
+              onFieldValueChange(field, newValue);
+              setFieldValues({ ...fieldValues, [field]: newValue });
             }}
             orgId={orgId}
-            person={person}
           />
         </Box>
         <Box
@@ -104,7 +106,13 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
               />
             </Typography>
           )}
-          <Button disabled={!hasUpdatedValues}>
+          <Button
+            disabled={!hasUpdatedValues}
+            onClick={() => {
+              setFieldsToUpdate({});
+              //setValue(value);
+            }}
+          >
             <Msg id={messageIds.resetButton} />
           </Button>
           <Button
