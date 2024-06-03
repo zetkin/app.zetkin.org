@@ -168,7 +168,7 @@ const Journey: FC<JourneyProps> = ({
                   onChange={(range) => {
                     setConfig({
                       ...filter.config,
-                      opened: {
+                      closed: {
                         after: range.after,
                         before: range.before,
                       },
