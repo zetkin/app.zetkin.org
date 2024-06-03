@@ -13,9 +13,7 @@ type ObjThatNeedsLoading =
   | RemoteList<unknown>
   | undefined;
 
-function isMap(
-  thing: ObjThatNeedsLoading
-): thing is Record<string | number, RemoteList<unknown> | RemoteItem<unknown>> {
+function isMap(thing: ObjThatNeedsLoading): thing is RemoteObjectRecord {
   if (thing) {
     const hasItemOrListProps = 'error' in thing && 'isLoading' in thing;
     return !hasItemOrListProps;
@@ -33,9 +31,7 @@ export default function shouldLoad(
   item: RemoteItem<unknown> | RemoteList<unknown> | undefined
 ): boolean;
 export default function shouldLoad(
-  item:
-    | Record<number | string, RemoteList<unknown> | RemoteItem<unknown>>
-    | undefined,
+  item: RemoteObjectRecord | undefined,
   ids: number[]
 ): boolean;
 export default function shouldLoad(
