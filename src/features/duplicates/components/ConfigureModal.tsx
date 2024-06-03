@@ -1,4 +1,3 @@
-import React from 'react';
 import theme from 'theme';
 import {
   Alert,
@@ -11,6 +10,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { FC, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
@@ -53,6 +53,12 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   const { fieldValues, initialOverrides } = useFieldSettings(peopleToMerge);
   const [overrides, setOverrides] = useState(initialOverrides);
 
+  useEffect(() => {
+    setSelectedIds(
+      potentialDuplicate?.duplicates.map((person) => person.id) ?? []
+    );
+  }, [open]);
+
   return (
     <Dialog fullScreen={fullScreen} maxWidth={'lg'} open={open}>
       <DialogTitle variant="h5">{messages.modal.title()}</DialogTitle>
@@ -93,15 +99,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
         </Box>
       </Box>
       <DialogActions>
-        <Button
-          onClick={() => {
-            setSelectedIds(
-              potentialDuplicate?.duplicates.map((person) => person.id) ?? []
-            );
-            onClose();
-          }}
-          variant="text"
-        >
+        <Button onClick={() => onClose()} variant="text">
           {messages.modal.cancelButton()}
         </Button>
         <Button
