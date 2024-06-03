@@ -25,7 +25,7 @@ export default function useDuplicatesMutations(
     dismissed?: boolean;
   };
 
-  type PotentialDuplicatePostBody = {
+  type MergePostBody = {
     objects: number[];
     override: Partial<ZetkinPerson>;
     type: 'person';
@@ -48,14 +48,11 @@ export default function useDuplicatesMutations(
     override: Partial<ZetkinPerson>
   ) => {
     await apiClient
-      .post<ZetkinPerson, PotentialDuplicatePostBody>(
-        `/api/orgs/${orgId}/merges`,
-        {
-          objects: duplicatesIds,
-          override,
-          type: 'person',
-        }
-      )
+      .post<ZetkinPerson, MergePostBody>(`/api/orgs/${orgId}/merges`, {
+        objects: duplicatesIds,
+        override,
+        type: 'person',
+      })
       .then(() => {
         dispatch(duplicateMerged(potentialDuplicateId));
       });
