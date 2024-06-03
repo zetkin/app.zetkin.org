@@ -1,5 +1,6 @@
 import { isSameDate } from 'utils/dateUtils';
 import useCallAssignmentActivities from './useCallAssignmentActivities';
+import useEmailActivities from './useEmailActivities';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useSurveyActivities from './useSurveyActivities';
 import useTaskActivities from './useTaskActivities';
@@ -26,17 +27,20 @@ export default function useActivitiyOverview(
     orgId,
     campId
   );
+  const emailActivitiesFuture = useEmailActivities(orgId, campId);
 
   if (
     callAssignmentActivitiesFuture.isLoading ||
     surveyActivitiesFuture.isLoading ||
-    taskActivitiesFuture.isLoading
+    taskActivitiesFuture.isLoading ||
+    emailActivitiesFuture.isLoading
   ) {
     return new LoadingFuture();
   } else if (
     callAssignmentActivitiesFuture.error ||
     surveyActivitiesFuture.error ||
-    taskActivitiesFuture.error
+    taskActivitiesFuture.error ||
+    emailActivitiesFuture.error
   ) {
     return new ErrorFuture('Error loading acitvities');
   }
@@ -46,7 +50,8 @@ export default function useActivitiyOverview(
     ...eventActivites,
     ...(taskActivitiesFuture.data || []),
     ...(surveyActivitiesFuture.data || []),
-    ...(callAssignmentActivitiesFuture.data || [])
+    ...(callAssignmentActivitiesFuture.data || []),
+    ...(emailActivitiesFuture.data || [])
   );
 
   const sortedAcitvities = activities.sort((first, second) => {
