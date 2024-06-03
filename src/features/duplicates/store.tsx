@@ -30,9 +30,7 @@ const potentialDuplicatesSlice = createSlice({
           (item) => item.id !== mergedDuplicateId
         );
 
-      if (potentialDuplicatesFiltered) {
-        state.potentialDuplicatesList.items = potentialDuplicatesFiltered;
-      }
+      state.potentialDuplicatesList.items = potentialDuplicatesFiltered;
     },
     duplicateUpdated: (state, action: PayloadAction<PotentialDuplicate>) => {
       const potentialDuplicate = action.payload;
