@@ -110,7 +110,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
             disabled={!hasUpdatedValues}
             onClick={() => {
               setFieldsToUpdate({});
-              //setValue(value);
+              setFieldValues(person);
             }}
           >
             <Msg id={messageIds.resetButton} />
