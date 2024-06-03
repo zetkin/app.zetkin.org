@@ -41,11 +41,11 @@ const FieldSettings: FC<FieldSettingsProps> = ({ fieldValues, onChange }) => {
         border={1}
         sx={{ borderColor: theme.palette.grey[300], borderRadius: 2 }}
       >
-        {Object.entries(fieldValues).map((entry, index) => {
+        {Object.entries(fieldValues).map((entry) => {
           const [field, values] = entry;
           return (
             <>
-              {index !== 0 && <Divider />}
+              {field !== NATIVE_PERSON_FIELDS.FIRST_NAME && <Divider />}
               <FieldSettingsRow
                 key={field}
                 field={field as NATIVE_PERSON_FIELDS}
