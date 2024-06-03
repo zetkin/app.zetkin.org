@@ -21,9 +21,7 @@ export default function useDuplicatesMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  type PotentialDuplicatePatchBody = Partial<
-    Omit<PotentialDuplicate, 'id' | 'dismissed'>
-  > & {
+  type PotentialDuplicatePatchBody = {
     dismissed?: boolean;
   };
 
