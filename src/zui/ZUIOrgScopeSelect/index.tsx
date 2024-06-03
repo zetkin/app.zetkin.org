@@ -46,7 +46,7 @@ const ZUIOrgScopeSelect: FC<Props> = ({
         onChange={(ev) => setScope(ev.target.value as Scope)}
         size="small"
         sx={{
-          width: '50%',
+          minWidth: '50%',
         }}
         value={scope}
       >
