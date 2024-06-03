@@ -171,9 +171,22 @@ const eventsSlice = createSlice({
         state.eventsByDate[dateStr].isLoading = true;
       });
     },
-    eventRangeLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      const events = action.payload;
+    eventRangeLoaded: (
+      state,
+      action: PayloadAction<[ZetkinEvent[], string[]]>
+    ) => {
+      const [events, isoDateRange] = action.payload;
       addEventToState(state, events);
+
+      isoDateRange.forEach((isoDate) => {
+        const dateStr = isoDate.slice(0, 10);
+        if (!state.eventsByDate[dateStr]) {
+          state.eventsByDate[dateStr] = remoteList();
+        }
+
+        state.eventsByDate[dateStr].isLoading = false;
+        state.eventsByDate[dateStr].loaded = new Date().toISOString();
+      });
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
@@ -510,11 +523,15 @@ const eventsSlice = createSlice({
   },
 });
 
+//skriva tester för storen
+//hur testar man en store? Redux-manualen
+
 function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
   events.forEach((event) => {
     const eventListItem = state.eventList.items.find(
       (item) => item.id == event.id
     );
+
     if (eventListItem) {
       eventListItem.data = { ...eventListItem.data, ...event };
     } else {
@@ -557,6 +574,7 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
         );
       }
     }
+
     state.eventsByDate[dateStr].isLoading = false;
     state.eventsByDate[dateStr].isStale = false;
     state.eventsByDate[dateStr].loaded = new Date().toISOString();
