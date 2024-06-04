@@ -1,10 +1,11 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
@@ -144,8 +145,10 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.activitySelect.activity}
                         values={{
-                          activity:
+                          activity: truncateOnMiddle(
                             activities.find((l) => l.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -158,7 +161,12 @@ const CampaignParticipation = ({
                 </MenuItem>
                 {activities.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
-                    {a.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={a.title.length >= 40 ? a.title : ''}
+                    >
+                      <Box>{a.title}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -258,8 +266,10 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.locationSelect.location}
                         values={{
-                          location:
+                          location: truncateOnMiddle(
                             locations.find((l) => l.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );

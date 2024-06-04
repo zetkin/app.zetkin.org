@@ -7,7 +7,9 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import FilterValueSelect from './FilterValueSelect';
+import messageIds from 'features/journeys/l10n/messageIds';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
+import ValueTagCell from 'features/views/components/ViewDataTable/columnTypes/PersonTagColumnType/ValueTagCell';
 import {
   JourneyTagColumnData,
   JourneyTagColumnType,
@@ -17,8 +19,6 @@ import {
 } from 'features/journeys/utils/journeyInstanceUtils';
 import { Msg, UseMessagesMap } from 'core/i18n';
 import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
-
-import messageIds from 'features/journeys/l10n/messageIds';
 
 const has = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
@@ -152,6 +152,15 @@ const getTagColumns = (
       colDefs.push({
         field: `valueTag${col.tag.id}`,
         headerName: col.tag.title,
+        renderCell: (params: GridRenderCellParams<ZetkinJourneyInstance>) => {
+          const tag = params.row.tags.find((t) => t.id === col.tag.id);
+
+          if (!tag) {
+            return null;
+          } else {
+            return <ValueTagCell tag={tag} />;
+          }
+        },
         valueGetter: (params) =>
           col.valueGetter(params.row as ZetkinJourneyInstance),
       });

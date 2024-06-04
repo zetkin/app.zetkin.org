@@ -291,6 +291,41 @@ export default makeMessages('feat.smartSearch', {
         sent: m('been sent'),
       },
     },
+    journey: {
+      closed: m('a closed'),
+      condition: {
+        conditionSelect: {
+          all: m('and has all'),
+          any: m('and has any'),
+          none: m('and has none'),
+          regardlessTags: m('regardless of tags'),
+          some: m('and has at least'),
+        },
+        preview: {
+          all: m('and has all'),
+          any: m('and has any'),
+          none: m('and has none'),
+          regardlessTags: m('regardless of tags'),
+          some: m<{ minMatching: number }>('and has at least {minMatching}'),
+        },
+      },
+      followingTags: m('of the following tags'),
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        condition: ReactElement;
+        journeySelect: ReactElement;
+        operator: ReactElement;
+        statusText: ReactElement;
+        tags: ReactElement | null;
+        tagsDesc: ReactElement | null;
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc} {tags}'
+      ),
+      opened: m('an open'),
+      thatFinished: m('that finished'),
+      thatOpened: m('that opened'),
+    },
     mostActive: {
       examples: {
         one: m(
@@ -341,6 +376,12 @@ export default makeMessages('feat.smartSearch', {
       fieldTuple: m<{ first: ReactElement; second: ReactElement }>(
         '{first} and {second}'
       ),
+      genders: {
+        f: m('female'),
+        m: m('male'),
+        o: m('other'),
+        unknown: m('unknown'),
+      },
       inputString: m<{
         addRemoveSelect: ReactElement;
         criteria: ReactElement | string | null;

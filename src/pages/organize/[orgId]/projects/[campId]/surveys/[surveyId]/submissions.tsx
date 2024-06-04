@@ -16,11 +16,12 @@ import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId, surveyId } = ctx.params!;
+    const { campId, orgId, surveyId } = ctx.params!;
     const filter = ctx.query.filter ? true : false;
 
     return {
       props: {
+        campId,
         orgId,
         showUnlinkedOnly: filter,
         surveyId,
@@ -54,6 +55,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
     getSurveyCampId(surveyFuture?.data, parsedOrg) || 'standalone';
 
   const router = useRouter();
+  const isShared = campaignId === 'shared';
 
   return (
     <>
@@ -61,7 +63,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
         <title>{surveyFuture.data?.title}</title>
       </Head>
       <Grid container spacing={2}>
-        <Grid item md={8} sm={12} xs={12}>
+        <Grid item md={isShared ? 12 : 8} sm={12} xs={12}>
           <ZUIFuture future={submissionsFuture}>
             {(data) => {
               let submissions = data;
@@ -89,10 +91,12 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
             surveyId={parseInt(surveyId)}
           />
 
-          <SurveySuborgsCard
-            orgId={parseInt(orgId)}
-            surveyId={parseInt(surveyId)}
-          />
+          {!isShared && (
+            <SurveySuborgsCard
+              orgId={parseInt(orgId)}
+              surveyId={parseInt(surveyId)}
+            />
+          )}
         </Grid>
       </Grid>
     </>
@@ -101,7 +105,11 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
 
 SubmissionsPage.getLayout = function getLayout(page, props) {
   return (
-    <SurveyLayout orgId={props.orgId} surveyId={props.surveyId}>
+    <SurveyLayout
+      campId={props.campId}
+      orgId={props.orgId}
+      surveyId={props.surveyId}
+    >
       {page}
     </SurveyLayout>
   );

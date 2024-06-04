@@ -68,6 +68,10 @@ export default function prepareImportOperations(
               value = parsedPhoneNumber.format('E.164');
             }
 
+            if (fieldKey == 'email') {
+              value = value.toString().trim();
+            }
+
             //If they have uppecase letters we parse to lower
             if (fieldKey == 'gender') {
               value = value.toString().toLowerCase();

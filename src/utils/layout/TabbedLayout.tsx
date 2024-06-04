@@ -1,6 +1,15 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
-import { Box, Collapse, Tab, TabProps, Tabs, Theme } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Collapse,
+  Tab,
+  TabProps,
+  Tabs,
+  Theme,
+} from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
@@ -21,6 +30,8 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
+  alertBtnMsg?: string;
+  alertMsg?: React.ReactElement;
   avatar?: string;
   baseHref: string;
   belowActionButtons?: ReactElement;
@@ -32,10 +43,13 @@ interface TabbedLayoutProps {
   defaultTab: string;
   noPad?: boolean;
   tabs: { href: string; label: string; tabProps?: TabProps }[];
+  onClickAlertBtn?: () => void;
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   actionButtons,
+  alertBtnMsg,
+  alertMsg,
   avatar,
   baseHref,
   belowActionButtons,
@@ -44,6 +58,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   ellipsisMenuItems,
   fixedHeight,
   noPad,
+  onClickAlertBtn,
   subtitle,
   tabs,
   title,
@@ -74,6 +89,20 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
 
   return (
     <DefaultLayout>
+      {alertMsg && (
+        <Alert
+          action={
+            alertBtnMsg && (
+              <Button color="inherit" onClick={onClickAlertBtn} size="small">
+                {alertBtnMsg}
+              </Button>
+            )
+          }
+          severity="info"
+        >
+          {alertMsg}
+        </Alert>
+      )}
       <Box
         display={fixedHeight ? 'flex' : 'block'}
         flexDirection="column"

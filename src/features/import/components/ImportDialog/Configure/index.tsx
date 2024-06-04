@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
 import Configuration from './Configuration';
@@ -26,63 +26,90 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
     number | null
   >(null);
   const { orgId } = useNumericRouteParams();
+  const theme = useTheme();
   const { forwardMessageDisabled, numRows, uiDataColumns } =
     useUIDataColumns(orgId);
+  const [loading, setLoading] = useState(false);
   const getPreflightStats = useConfigure(orgId);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" overflow="hidden">
-      <ImportHeader activeStep={ImportStep.CONFIGURE} onClose={onClose} />
-      <Box display="flex" flexGrow={1} overflow="hidden">
+    <>
+      {loading && (
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          paddingY={4}
+        >
+          <CircularProgress sx={{ color: theme.palette.statusColors.blue }} />
+          <Typography sx={{ color: theme.palette.text.primary }}>
+            {messages.preflight.messages.validating()}
+          </Typography>
+        </Box>
+      )}
+      {!loading && (
         <Box
           display="flex"
           flexDirection="column"
-          sx={{ overflowY: 'auto' }}
-          width="50%"
+          height="100%"
+          overflow="hidden"
         >
-          <SheetSettings
-            clearConfiguration={() => setColumnIndexBeingConfigured(null)}
-          />
-          <Mapping
-            clearConfiguration={() => setColumnIndexBeingConfigured(null)}
-            columnIndexBeingConfigured={columnIndexBeingConfigured}
-            columns={uiDataColumns}
-            onConfigureStart={(columnIndex: number) =>
-              setColumnIndexBeingConfigured(columnIndex)
+          <ImportHeader activeStep={ImportStep.CONFIGURE} onClose={onClose} />
+          <Box display="flex" flexGrow={1} overflow="hidden">
+            <Box
+              display="flex"
+              flexDirection="column"
+              sx={{ overflowY: 'auto' }}
+              width="50%"
+            >
+              <SheetSettings
+                clearConfiguration={() => setColumnIndexBeingConfigured(null)}
+              />
+              <Mapping
+                clearConfiguration={() => setColumnIndexBeingConfigured(null)}
+                columnIndexBeingConfigured={columnIndexBeingConfigured}
+                columns={uiDataColumns}
+                onConfigureStart={(columnIndex: number) =>
+                  setColumnIndexBeingConfigured(columnIndex)
+                }
+              />
+            </Box>
+            <Box display="flex" flexDirection="column" width="50%">
+              <Configuration
+                uiDataColumn={
+                  typeof columnIndexBeingConfigured == 'number'
+                    ? uiDataColumns[columnIndexBeingConfigured]
+                    : null
+                }
+              />
+            </Box>
+          </Box>
+          <Preview />
+          <ImportFooter
+            onClickPrimary={async () => {
+              setLoading(true);
+              if (getPreflightStats) {
+                await getPreflightStats();
+              }
+              onValidate();
+              setLoading(false);
+            }}
+            onClickSecondary={onRestart}
+            primaryButtonDisabled={forwardMessageDisabled}
+            primaryButtonMsg={messages.actionButtons.validate()}
+            secondaryButtonMsg={messages.actionButtons.restart()}
+            statusMessage={
+              forwardMessageDisabled
+                ? messages.configuration.statusMessage.notDone()
+                : messages.configuration.statusMessage.done({
+                    numConfiguredPeople: numRows,
+                  })
             }
           />
         </Box>
-        <Box display="flex" flexDirection="column" width="50%">
-          <Configuration
-            uiDataColumn={
-              typeof columnIndexBeingConfigured == 'number'
-                ? uiDataColumns[columnIndexBeingConfigured]
-                : null
-            }
-          />
-        </Box>
-      </Box>
-      <Preview />
-      <ImportFooter
-        onClickPrimary={async () => {
-          if (getPreflightStats) {
-            await getPreflightStats();
-          }
-          onValidate();
-        }}
-        onClickSecondary={onRestart}
-        primaryButtonDisabled={forwardMessageDisabled}
-        primaryButtonMsg={messages.actionButtons.validate()}
-        secondaryButtonMsg={messages.actionButtons.restart()}
-        statusMessage={
-          forwardMessageDisabled
-            ? messages.configuration.statusMessage.notDone()
-            : messages.configuration.statusMessage.done({
-                numConfiguredPeople: numRows,
-              })
-        }
-      />
-    </Box>
+      )}
+    </>
   );
 };
 

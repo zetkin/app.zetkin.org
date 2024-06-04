@@ -1,11 +1,12 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -116,9 +117,11 @@ const CallHistory = ({
                       <Msg
                         id={localMessageIds.assignmentSelect.assignment}
                         values={{
-                          assignmentTitle:
+                          assignmentTitle: truncateOnMiddle(
                             assignmentsFuture.data?.find((a) => a.id === value)
                               ?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -138,7 +141,12 @@ const CallHistory = ({
                 )}
                 {assignmentsFuture.data?.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
-                    {a.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={a.title.length >= 40 ? a.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(a.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>

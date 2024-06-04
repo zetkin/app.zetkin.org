@@ -104,7 +104,10 @@ export function predictProblems(
               rowHasFirstName = true;
             } else if (column.field == 'last_name') {
               rowHasLastName = true;
-            } else if (column.field == 'email' && !isEmail(value.toString())) {
+            } else if (
+              column.field == 'email' &&
+              !isEmail(value.toString().trim())
+            ) {
               accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
               if (!isValidPhoneNumber(value.toString(), country)) {

@@ -23,7 +23,12 @@ export interface UseViewGridReturn {
     colId: number,
     data: CellType
   ) => void;
-  toggleTag: (personId: number, tagId: number, assigned: boolean) => void;
+  toggleTag: (
+    personId: number,
+    tagId: number,
+    assigned: boolean,
+    value?: string
+  ) => void;
   updateColumn: (
     columnId: number,
     data: Partial<Omit<ZetkinViewColumn, 'id'>>
@@ -106,9 +111,14 @@ export default function useViewGrid(
     }
   };
 
-  const toggleTag = (personId: number, tagId: number, assigned: boolean) => {
+  const toggleTag = (
+    personId: number,
+    tagId: number,
+    assigned: boolean,
+    value?: string
+  ) => {
     if (assigned) {
-      assignToPerson(personId, tagId);
+      assignToPerson(personId, tagId, value);
     } else {
       removeFromPerson(personId, tagId);
     }
