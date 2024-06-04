@@ -31,6 +31,10 @@ export default makeMessages('feat.smartSearch', {
         description: m('Select based on data from events'),
         title: m('Events'),
       },
+      journey: {
+        description: m('Select based on data from journeys'),
+        title: m('Journeys'),
+      },
       misc: {
         description: m('Miscellaneous ways of selecting'),
         title: m('Misc'),

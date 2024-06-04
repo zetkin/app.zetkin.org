@@ -5,6 +5,7 @@ export enum FILTER_CATEGORY {
   CROSS_REFERENCING = 'crossReferencing',
   EMAIL = 'email',
   EVENTS = 'events',
+  JOURNEY = 'journey',
   MISC = 'misc',
   PHONE_BANKING = 'phoneBanking',
   SURVEYS = 'surveys',

@@ -38,6 +38,13 @@ export const GROUPED_FILTERS: {
     },
     filters: [FILTER_TYPE.CAMPAIGN_PARTICIPATION],
   },
+  [FILTER_CATEGORY.JOURNEY]: {
+    colors: {
+      pale: filterCategoryColors.grey.pale,
+      strong: filterCategoryColors.grey.strong,
+    },
+    filters: [FILTER_TYPE.JOURNEY],
+  },
   [FILTER_CATEGORY.TASKS]: {
     colors: {
       pale: filterCategoryColors.yellow.pale,
