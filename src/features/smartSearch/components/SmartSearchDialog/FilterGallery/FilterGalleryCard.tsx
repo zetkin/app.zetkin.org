@@ -3,8 +3,8 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 
 import { FILTER_TYPE } from '../../types';
 import filterGalleryPattern from './filterGalleryPattern';
-/* import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n'; */
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 interface FilterGalleryCardProps {
   colors: { pale: string; strong: string };
@@ -37,10 +37,10 @@ const FilterGalleryCard: FC<FilterGalleryCardProps> = ({
       />
       <CardContent>
         <Typography variant="h5">
-          {/* <Msg id={messageIds.filterGallery.filters[filter].title} /> */}
+          <Msg id={messageIds.filterGallery.filters[filter].title} />
         </Typography>
         <Typography sx={{ paddingTop: 1 }} variant="body2">
-          {/* <Msg id={messageIds.filterGallery.filters[filter].description} /> */}
+          <Msg id={messageIds.filterGallery.filters[filter].description} />
         </Typography>
       </CardContent>
     </Card>

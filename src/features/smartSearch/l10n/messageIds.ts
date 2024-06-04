@@ -71,6 +71,10 @@ export default makeMessages('feat.smartSearch', {
         description: m('Who was sent what, when?'),
         title: m('Based on their email history'),
       },
+      journey_subjects: {
+        description: m('Journeys info'),
+        title: m('Journeys info'),
+      },
       person_data: {
         description: m('Name, address, email and more!'),
         title: m('Personal info'),
