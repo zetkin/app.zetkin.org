@@ -49,6 +49,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
       fullWidth
       onClose={() => {
         setFieldsToUpdate({});
+        setFieldValues(person);
         onClose();
       }}
       open={open}
@@ -74,17 +75,28 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
               values={{ person: person.first_name + ' ' + person.last_name }}
             />
           </Typography>
-          <IconButton onClick={onClose}>
+          <IconButton
+            onClick={() => {
+              setFieldsToUpdate({});
+              setFieldValues(person);
+              onClose();
+            }}
+          >
             <Close />
           </IconButton>
         </Box>
         <Box overflow="auto" width="100%">
           <EditPersonFields
+            fieldsToUpdate={fieldsToUpdate}
             fieldValues={fieldValues}
             invalidFields={invalidFields}
             onChange={(field, newValue) => {
               onFieldValueChange(field, newValue);
               setFieldValues({ ...fieldValues, [field]: newValue });
+            }}
+            onReset={(field) => {
+              onFieldValueChange(field, person[field]?.toString() ?? '');
+              setFieldValues({ ...fieldValues, [field]: person[field] });
             }}
             orgId={orgId}
           />
