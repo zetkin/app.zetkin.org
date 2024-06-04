@@ -40,8 +40,8 @@ export const GROUPED_FILTERS: {
   },
   [FILTER_CATEGORY.JOURNEY]: {
     colors: {
-      pale: filterCategoryColors.grey.pale,
-      strong: filterCategoryColors.grey.strong,
+      pale: filterCategoryColors.pink.pale,
+      strong: filterCategoryColors.pink.strong,
     },
     filters: [FILTER_TYPE.JOURNEY],
   },
