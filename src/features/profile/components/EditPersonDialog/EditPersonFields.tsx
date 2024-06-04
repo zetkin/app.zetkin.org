@@ -140,16 +140,12 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         onReset={() => onReset(NATIVE_PERSON_FIELDS.CO_ADDRESS)}
         value={fieldValues.co_address ?? ''}
       />
-      <Box>
+      <Box display="flex" gap={2}>
         <EditPersonField
           field={NATIVE_PERSON_FIELDS.ZIP_CODE}
           hasChanges={NATIVE_PERSON_FIELDS.ZIP_CODE in fieldsToUpdate}
           onChange={(field, newValue) => onChange(field, newValue)}
           onReset={() => onReset(NATIVE_PERSON_FIELDS.ZIP_CODE)}
-          style={{
-            pr: 2,
-            width: '30%',
-          }}
           value={fieldValues.zip_code ?? ''}
         />
         <EditPersonField
@@ -157,9 +153,6 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           hasChanges={NATIVE_PERSON_FIELDS.CITY in fieldsToUpdate}
           onChange={(field, newValue) => onChange(field, newValue)}
           onReset={() => onReset(NATIVE_PERSON_FIELDS.CITY)}
-          style={{
-            width: '70%',
-          }}
           value={fieldValues.city ?? ''}
         />
       </Box>
