@@ -23,6 +23,7 @@ declare module '@mui/material/styles/createPalette' {
     filterCategoryColors: {
       darkBlue: FilterCategoryColors;
       green: FilterCategoryColors;
+      grey: FilterCategoryColors;
       lightBlue: FilterCategoryColors;
       orange: FilterCategoryColors;
       purple: FilterCategoryColors;
@@ -62,6 +63,7 @@ const themePalette = {
   filterCategoryColors: {
     darkBlue: { pale: '#BED0F9', strong: '#2563EB' },
     green: { pale: '#D1F39A', strong: '#A3E635' },
+    grey: { pale: '#DFDFDF', strong: '#A7A7A7' },
     lightBlue: { pale: '#93E9EB', strong: '#28D4D7' },
     orange: { pale: '#FDD497', strong: '#FBA930' },
     purple: { pale: '#E5C0F5', strong: '#C026D3' },
