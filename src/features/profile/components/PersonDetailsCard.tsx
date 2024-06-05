@@ -1,5 +1,4 @@
 import NextLink from 'next/link';
-import { OpenInNew } from '@mui/icons-material';
 import { useState } from 'react';
 import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
 
@@ -107,11 +106,7 @@ const PersonDetailsCard: React.FunctionComponent<{
       />
       <ZUISection
         action={
-          <Button
-            color="primary"
-            onClick={() => setEditPersonDialogOpen(true)}
-            startIcon={<OpenInNew />}
-          >
+          <Button onClick={() => setEditPersonDialogOpen(true)}>
             <Msg id={messageIds.editButtonLabel} />
           </Button>
         }

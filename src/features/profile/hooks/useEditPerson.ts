@@ -17,7 +17,9 @@ export default function useEditPerson(
     field: keyof ZetkinUpdatePerson,
     newValue: string
   ) => {
-    if (newValue === '' || newValue === initialValues[field]?.toString()) {
+    const isEmptyStringValue = !initialValues[field] && newValue === '';
+
+    if (isEmptyStringValue || newValue === initialValues[field]?.toString()) {
       const copied = { ...fieldsToUpdate };
       delete copied[field];
       setFieldsToUpdate(copied);

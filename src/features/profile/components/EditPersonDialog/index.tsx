@@ -1,5 +1,4 @@
 import { Close } from '@mui/icons-material';
-import { FC } from 'react';
 import {
   Box,
   Button,
@@ -9,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { FC, useState } from 'react';
 
 import EditPersonFields from './EditPersonFields';
 import messageIds from '../../l10n/messageIds';
@@ -41,6 +41,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
     onFieldValueChange,
     setFieldsToUpdate,
   } = useEditPerson(person, orgId);
+  const [fieldValues, setFieldValues] = useState(person);
 
   return (
     <Dialog
@@ -48,6 +49,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
       fullWidth
       onClose={() => {
         setFieldsToUpdate({});
+        setFieldValues(person);
         onClose();
       }}
       open={open}
@@ -73,15 +75,28 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
               values={{ person: person.first_name + ' ' + person.last_name }}
             />
           </Typography>
-          <IconButton onClick={onClose}>
+          <IconButton
+            onClick={() => {
+              setFieldsToUpdate({});
+              setFieldValues(person);
+              onClose();
+            }}
+          >
             <Close />
           </IconButton>
         </Box>
-        <Box overflow="auto" width="100%">
+        <Box overflow="auto" paddingRight={2} width="100%">
           <EditPersonFields
+            fieldsToUpdate={fieldsToUpdate}
+            fieldValues={fieldValues}
             invalidFields={invalidFields}
-            onChange={(field, value) => {
-              onFieldValueChange(field, value);
+            onChange={(field, newValue) => {
+              onFieldValueChange(field, newValue);
+              setFieldValues({ ...fieldValues, [field]: newValue });
+            }}
+            onReset={(field) => {
+              onFieldValueChange(field, person[field]?.toString() ?? '');
+              setFieldValues({ ...fieldValues, [field]: person[field] });
             }}
             orgId={orgId}
           />
@@ -103,7 +118,13 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
               />
             </Typography>
           )}
-          <Button disabled={!hasUpdatedValues}>
+          <Button
+            disabled={!hasUpdatedValues}
+            onClick={() => {
+              setFieldsToUpdate({});
+              setFieldValues(person);
+            }}
+          >
             <Msg id={messageIds.resetButton} />
           </Button>
           <Button
