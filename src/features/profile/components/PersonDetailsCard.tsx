@@ -106,10 +106,7 @@ const PersonDetailsCard: React.FunctionComponent<{
       />
       <ZUISection
         action={
-          <Button
-            color="secondary"
-            onClick={() => setEditPersonDialogOpen(true)}
-          >
+          <Button onClick={() => setEditPersonDialogOpen(true)}>
             <Msg id={messageIds.editButtonLabel} />
           </Button>
         }

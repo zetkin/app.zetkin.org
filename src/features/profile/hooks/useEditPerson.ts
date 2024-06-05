@@ -19,7 +19,6 @@ export default function useEditPerson(
   ) => {
     const isEmptyStringValue = !initialValues[field] && newValue === '';
 
-    //om det gamla värdet inte fanns, och det nya värdet är tom sträng - plocka bort den
     if (isEmptyStringValue || newValue === initialValues[field]?.toString()) {
       const copied = { ...fieldsToUpdate };
       delete copied[field];

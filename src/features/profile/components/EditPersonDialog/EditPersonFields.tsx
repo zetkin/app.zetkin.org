@@ -141,13 +141,15 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         value={fieldValues.co_address ?? ''}
       />
       <Box display="flex" gap={2}>
-        <EditPersonField
-          field={NATIVE_PERSON_FIELDS.ZIP_CODE}
-          hasChanges={NATIVE_PERSON_FIELDS.ZIP_CODE in fieldsToUpdate}
-          onChange={(field, newValue) => onChange(field, newValue)}
-          onReset={() => onReset(NATIVE_PERSON_FIELDS.ZIP_CODE)}
-          value={fieldValues.zip_code ?? ''}
-        />
+        <Box flex={0.3}>
+          <EditPersonField
+            field={NATIVE_PERSON_FIELDS.ZIP_CODE}
+            hasChanges={NATIVE_PERSON_FIELDS.ZIP_CODE in fieldsToUpdate}
+            onChange={(field, newValue) => onChange(field, newValue)}
+            onReset={() => onReset(NATIVE_PERSON_FIELDS.ZIP_CODE)}
+            value={fieldValues.zip_code ?? ''}
+          />
+        </Box>
         <EditPersonField
           field={NATIVE_PERSON_FIELDS.CITY}
           hasChanges={NATIVE_PERSON_FIELDS.CITY in fieldsToUpdate}

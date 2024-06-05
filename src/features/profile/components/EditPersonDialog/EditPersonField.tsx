@@ -13,7 +13,6 @@ interface EditPersonFieldProps {
   onChange: (field: string, newValue: string) => void;
   onReset: () => void;
   required?: boolean;
-  style?: Record<string, unknown>;
   value: string;
 }
 const EditPersonField: FC<EditPersonFieldProps> = ({
@@ -25,11 +24,10 @@ const EditPersonField: FC<EditPersonFieldProps> = ({
   onChange,
   onReset,
   required,
-  style,
   value,
 }) => {
   return (
-    <Box display="flex">
+    <Box display="flex" flex={1}>
       <PersonFieldInput
         error={error}
         field={field}
@@ -37,7 +35,6 @@ const EditPersonField: FC<EditPersonFieldProps> = ({
         label={label}
         onChange={(field, newValue) => onChange(field, newValue)}
         required={required}
-        style={style}
         value={value}
       />
       {hasChanges && (
