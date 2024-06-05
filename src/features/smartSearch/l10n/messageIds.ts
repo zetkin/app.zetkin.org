@@ -304,18 +304,18 @@ export default makeMessages('feat.smartSearch', {
     journey: {
       condition: {
         conditionSelect: {
-          all: m('and has all'),
-          any: m('and has any'),
-          none: m('and has none'),
+          all: m('and have all'),
+          any: m('and have any'),
+          none: m('and have none'),
           regardlessTags: m('regardless of tags'),
-          some: m('and has at least'),
+          some: m('and have at least'),
         },
         preview: {
-          all: m('and has all'),
-          any: m('and has any'),
-          none: m('and has none'),
+          all: m('and have all'),
+          any: m('and have any'),
+          none: m('and have none'),
           regardlessTags: m('regardless of tags'),
-          some: m<{ minMatching: number }>('and has at least {minMatching}'),
+          some: m<{ minMatching: number }>('and have at least {minMatching}'),
         },
       },
       followingTags: m('of the following tags'),
