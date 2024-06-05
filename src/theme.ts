@@ -11,10 +11,26 @@ interface PaletteIntensityOptions {
   main?: string;
 }
 
+interface FilterCategoryColors {
+  pale: string;
+  strong: string;
+}
+
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
     onSurface: Required<PaletteIntensityOptions>;
     outline: PaletteIntensityOptions;
+    filterCategoryColors: {
+      darkBlue: FilterCategoryColors;
+      green: FilterCategoryColors;
+      lightBlue: FilterCategoryColors;
+      orange: FilterCategoryColors;
+      pink: FilterCategoryColors;
+      purple: FilterCategoryColors;
+      red: FilterCategoryColors;
+      teal: FilterCategoryColors;
+      yellow: FilterCategoryColors;
+    };
     statusColors: {
       blue: string;
       gray: string;
@@ -43,6 +59,17 @@ const themePalette = {
   },
   error: {
     main: '#EE323E',
+  },
+  filterCategoryColors: {
+    darkBlue: { pale: '#BED0F9', strong: '#2563EB' },
+    green: { pale: '#D1F39A', strong: '#A3E635' },
+    lightBlue: { pale: '#93E9EB', strong: '#28D4D7' },
+    orange: { pale: '#FDD497', strong: '#FBA930' },
+    pink: { pale: ' #FCE4EC', strong: '#F48FB1' },
+    purple: { pale: '#E5C0F5', strong: '#C026D3' },
+    red: { pale: '#F1A8A8', strong: '#DC2626' },
+    teal: { pale: '#99E9CC ', strong: '#34D399' },
+    yellow: { pale: '#EEEA8F', strong: '#DDD520' },
   },
   info: {
     main: '#3598c5',
