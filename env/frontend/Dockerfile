@@ -7,5 +7,6 @@ COPY yarn.lock /var/app/yarn.lock
 RUN yarn install --no-cache --frozen-lockfile
 
 COPY . /var/app
+RUN yarn build
 
 CMD ./run.sh
