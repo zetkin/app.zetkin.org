@@ -15,8 +15,8 @@ export default function useEventType(
   );
 
   return loadItemIfNecessary(typeItem, dispatch, {
-    actionOnLoad: () => typeLoad(orgId),
-    actionOnSuccess: (data) => typeLoaded([orgId, data]),
+    actionOnLoad: () => typeLoad(typeId),
+    actionOnSuccess: (data) => typeLoaded(data),
     loader: () =>
       apiClient.get<ZetkinActivity>(`/api/orgs/${orgId}/activities/${typeId}`),
   });
