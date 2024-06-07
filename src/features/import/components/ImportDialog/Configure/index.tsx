@@ -11,9 +11,9 @@ import messageIds from 'features/import/l10n/messageIds';
 import Preview from './Preview';
 import SheetSettings from './SheetSettings';
 import useConfigure from 'features/import/hooks/useConfigure';
+import useImportConfigState from 'features/import/hooks/useUIDataColumns';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 
 interface ConfigureProps {
@@ -29,7 +29,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
   >(null);
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
-  const { configIsIncomplete, numColumns, numRows } = useUIDataColumns();
+  const { configIsIncomplete, numColumns, numRows } = useImportConfigState();
   const getPreflightStats = useConfigure(orgId);
   const [loading, setLoading] = useState(false);
 

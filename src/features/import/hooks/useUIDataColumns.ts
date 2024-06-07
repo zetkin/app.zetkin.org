@@ -8,7 +8,7 @@ interface UseUIDataColumnsReturn {
   numRows: number;
 }
 
-export default function useUIDataColumns(): UseUIDataColumnsReturn {
+export default function useImportConfigState(): UseUIDataColumnsReturn {
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
 
   const sheet = pendingFile.sheets[pendingFile.selectedSheetIndex];
