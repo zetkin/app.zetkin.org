@@ -34,7 +34,6 @@ export default function prepareImportOperations(
           });
         }
 
-        //ID column
         if (column.kind === ColumnKind.ID_FIELD) {
           const fieldKey = column.idField;
           let value = row.data[colIdx];
@@ -55,7 +54,6 @@ export default function prepareImportOperations(
           }
         }
 
-        //Fields
         if (column.kind === ColumnKind.FIELD) {
           const fieldKey = column.field;
           let value = row.data[colIdx];
@@ -86,7 +84,6 @@ export default function prepareImportOperations(
           }
         }
 
-        //tags
         if (column.kind === ColumnKind.TAG) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
@@ -103,7 +100,6 @@ export default function prepareImportOperations(
           });
         }
 
-        //orgs
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx] && mappedColumn.orgId) {
@@ -112,7 +108,6 @@ export default function prepareImportOperations(
           });
         }
 
-        //dates
         if (column.kind === ColumnKind.DATE) {
           if (column.dateFormat) {
             const fieldKey = column.field;
