@@ -136,59 +136,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           {event.activity?.title || messages.common.noActivity()}
         </Typography>
       </Box>
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="space-between"
-        sx={{ my: 2 }}
-      >
-        <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
-            <ZUIIconLabel
-              color="secondary"
-              icon={<People color="secondary" sx={{ fontSize: '1.3rem' }} />}
-              label={messages.eventPopper.booked().toUpperCase()}
-              size="xs"
-            />
-          </Box>
-          <Quota
-            denominator={event.num_participants_required}
-            numerator={event.num_participants_available}
-          />
-        </Box>
-        <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
-            <ZUIIconLabel
-              color="secondary"
-              icon={
-                <MailOutline color="secondary" sx={{ fontSize: '1.3rem' }} />
-              }
-              label={messages.eventPopper.notified().toUpperCase()}
-              size="xs"
-            />
-          </Box>
-          <Quota
-            denominator={availableParticipants}
-            numerator={remindedParticipants}
-          />
-        </Box>
-        <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
-            <ZUIIconLabel
-              color="secondary"
-              icon={
-                <EmojiPeople color="secondary" sx={{ fontSize: '1.3rem' }} />
-              }
-              label={messages.eventPopper.signups().toUpperCase()}
-              size="xs"
-            />
-          </Box>
-          <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
-            {signedParticipants}
-          </Typography>
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
+      {/* box: tid och datum */}
+      <Box display="flex" flexDirection="column" sx={{ mb: 2, my: 2 }}>
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
             color="secondary"
@@ -220,7 +169,9 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           />
         </Typography>
       </Box>
+      {/* box: plats */}
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
+        {/* box: plats-ikon + text */}
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
             color="secondary"
@@ -231,11 +182,68 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             size="xs"
           />
         </Box>
+        {/* plats */}
         <Typography color="secondary" variant="body2">
           <LocationLabel location={event.location} />
         </Typography>
       </Box>
+      {/* box: bokade - påminda - anmälda*/}
+      <Box display="flex" flexDirection="column" gap={1} sx={{ my: 2 }}>
+        {/* box: anmälningar */}
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          {/* box: anmälningar-ikon + text */}
+          <Box alignItems="center" display="flex">
+            <ZUIIconLabel
+              color="secondary"
+              icon={
+                <EmojiPeople color="secondary" sx={{ fontSize: '1.3rem' }} />
+              }
+              label={messages.eventPopper.signups().toUpperCase()}
+              size="xs"
+            />
+          </Box>
+          {/* anmälda, antal */}
+          <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
+            {signedParticipants}
+          </Typography>
+        </Box>
+        {/* box: bokade */}
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          {/* box: bokade-ikon + text*/}
+          <Box alignItems="center" display="flex">
+            <ZUIIconLabel
+              color="secondary"
+              icon={<People color="secondary" sx={{ fontSize: '1.3rem' }} />}
+              label={messages.eventPopper.booked().toUpperCase()}
+              size="xs"
+            />
+          </Box>
+          {/* bokade, antal*/}
+          <Typography>{event.num_participants_available}</Typography>
+        </Box>
+        {/* box: påminda */}
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          {/* box: påminda-ikon + text */}
+          <Box alignItems="center" display="flex">
+            <ZUIIconLabel
+              color="secondary"
+              icon={
+                <MailOutline color="secondary" sx={{ fontSize: '1.3rem' }} />
+              }
+              label={messages.eventPopper.notified().toUpperCase()}
+              size="xs"
+            />
+          </Box>
+          {/* påminda, antal */}
+          <Quota
+            denominator={availableParticipants}
+            numerator={remindedParticipants}
+          />
+        </Box>
+      </Box>
+      {/* box: kontaktperson */}
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
+        {/* box: kontaktperson-ikon + text */}
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
             color="secondary"
@@ -246,6 +254,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             size="xs"
           />
         </Box>
+        {/* kontaktperson */}
         {event.contact ? (
           <ZUIPersonHoverCard personId={event.contact.id}>
             <ZUIPerson
@@ -260,6 +269,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </Typography>
         )}
       </Box>
+      {/* beskrivning, om det finns */}
       {event.info_text && (
         <Box display="flex" flexDirection="column" sx={{ mb: 3 }}>
           <Typography color="secondary" fontSize="0.7em">
