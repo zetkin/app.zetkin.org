@@ -478,7 +478,7 @@ describe('predictProblem()', () => {
     expect(problems).toEqual([]);
   });
 
-  it('returns problem when date column is configured but some cells do not have a value', () => {
+  it('returns problem when date column is configured but some cells have invalid values', () => {
     const sheet = makeFullSheet({
       columns: [
         {
