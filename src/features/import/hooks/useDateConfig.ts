@@ -62,7 +62,17 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     personNumberFormats.push('se', 'dk', 'no');
   }
 
-  const dateFormats = ['YYYY-MM-DD', 'YY-MM-DD', 'MM-DD-YYYY'];
+  enum DateFormats {
+    'YYYY-MM-DD' = 'YYYY-MM-DD',
+    'YY-MM-DD' = 'YY-MM-DD',
+    'MM-DD-YYYY' = 'MM-DD-YYYY',
+  }
+
+  const dateFormats: DateFormats[] = [
+    DateFormats['YYYY-MM-DD'],
+    DateFormats['YY-MM-DD'],
+    DateFormats['MM-DD-YYYY'],
+  ];
 
   const isPersonNumberFormat = (
     dateFormat: string
@@ -80,7 +90,8 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   };
 
   const isCustomFormat =
-    !dateFormats.includes(dateFormat) && !isPersonNumberFormat(dateFormat);
+    !dateFormats.includes(dateFormat as DateFormats) &&
+    !isPersonNumberFormat(dateFormat);
 
   return {
     dateFormat,

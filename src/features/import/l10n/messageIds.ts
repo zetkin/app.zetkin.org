@@ -18,6 +18,11 @@ export default makeMessages('feat.import', {
           'Describe the format of the values in this column, using the letters Y, M and D and any characters you use to separate them. For example, if your dates are written 1998.03.23, you would describe that as YYYY.MM.DD.'
         ),
         customFormatLabel: m('Custom date format'),
+        dateFormats: {
+          ['MM-DD-YYYY']: m('10-06-2024'),
+          ['YY-MM-DD']: m('24-10-06'),
+          ['YYYY-MM-DD']: m('2024-10-06'),
+        },
         dateInputLabel: m('Date format'),
         description: m(
           'Select the format of the values in this column so they can be imported correctly.'
