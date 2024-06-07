@@ -65,4 +65,20 @@ describe('parseDate()', () => {
 
     expect(parsedDate).toBe('');
   });
+
+  it('correctly parses a 2-digit year into the right century', () => {
+    const firstDate = parseDate(230101, 'YYMMDD');
+    const secondDate = parseDate(120101, 'YYMMDD');
+
+    expect(firstDate).toBe('1923-01-01');
+    expect(secondDate).toBe('2012-01-01');
+  });
+
+  it('does not attempt to change the century of a date with 4-digit year', () => {
+    const firstDate = parseDate(230101, 'YYMMDD');
+    const secondDate = parseDate(20230101, 'YYYYMMDD');
+
+    expect(firstDate).toBe('1923-01-01');
+    expect(secondDate).toBe('2023-01-01');
+  });
 });
