@@ -479,14 +479,14 @@ const eventsSlice = createSlice({
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
-    typeLoad: (state, action) => {
+    typeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.typeList.items.find((item) => item.id == id);
       state.typeList.items = state.typeList.items
         .filter((item) => item.id != id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
-    typeLoaded: (state, action) => {
+    typeLoaded: (state, action: PayloadAction<ZetkinActivity>) => {
       const activity = action.payload;
       const item = state.typeList.items.find((item) => item.id == activity.id);
 
