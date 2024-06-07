@@ -46,7 +46,10 @@ export default function parseDate(value: CellData, format: string) {
   }
 
   const date = parsedDate.toDate();
-  placeInCorrectCentury(date);
+
+  if (!dateFormat.includes('YYYY')) {
+    placeInCorrectCentury(date);
+  }
 
   return makeNaiveDateString(date);
 }
