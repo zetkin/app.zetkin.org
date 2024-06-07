@@ -2,8 +2,8 @@ import { ColumnKind } from './types';
 import hasWrongIDFormat from './hasWrongIDFormat';
 
 describe('hasWrongIDFormat()', () => {
-  it('returns false if column is ID_FIELD, but not of type "id"', () => {
-    const wrongIDFormat1 = hasWrongIDFormat(
+  it('returns false for external ID columns', () => {
+    const wrongIDFormat = hasWrongIDFormat(
       {
         idField: 'ext_id',
         kind: ColumnKind.ID_FIELD,
@@ -13,7 +13,11 @@ describe('hasWrongIDFormat()', () => {
       true
     );
 
-    const wrongIDFormat2 = hasWrongIDFormat(
+    expect(wrongIDFormat).toBe(false);
+  });
+
+  it('returns false if column is ID_FIELD, but config is unfinished', () => {
+    const wrongIDFormat = hasWrongIDFormat(
       {
         idField: null,
         kind: ColumnKind.ID_FIELD,
@@ -23,8 +27,7 @@ describe('hasWrongIDFormat()', () => {
       true
     );
 
-    expect(wrongIDFormat1).toBe(false);
-    expect(wrongIDFormat2).toBe(false);
+    expect(wrongIDFormat).toBe(false);
   });
 
   it('returns false if columnValues are digits and first row is header', () => {
