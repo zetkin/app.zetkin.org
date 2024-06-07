@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { useMessages } from 'core/i18n';
 import {
   AccessTime,
   ArrowForward,
@@ -10,8 +9,9 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Avatar, Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
+import { Msg, useMessages } from 'core/i18n';
 
 import { eventsDeselected } from 'features/events/store';
 import EventSelectionCheckBox from '../EventSelectionCheckBox';
@@ -56,6 +56,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
+  const orgId = event.organization.id;
   const { participantsFuture, respondentsFuture } = useEventParticipants(
     event.organization.id,
     event.id
@@ -84,6 +85,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const signedParticipants =
     respondents.filter((r) => !participants.some((p) => p.id === r.id))
       .length ?? 0;
+
+  const availableParticipantsList = participants.filter((p) => !p.cancelled);
+  const maxAvailableParticipantsToDisplay: number = 25;
+  const maxAvailableParticipantsToDisplayList = availableParticipantsList.slice(
+    0,
+    maxAvailableParticipantsToDisplay
+  );
 
   const ellipsisMenuItems = [
     {
@@ -221,6 +229,33 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           {/* bokade, antal*/}
           <Typography>{event.num_participants_available}</Typography>
         </Box>
+        {availableParticipantsList.length > 0 && (
+          <Box alignItems="center" display="flex" flexWrap="wrap" gap={0.5}>
+            {maxAvailableParticipantsToDisplayList.map((p, index) => (
+              <ZUIPersonHoverCard key={index} personId={p.id}>
+                <Avatar
+                  src={orgId ? `/api/orgs/${orgId}/people/${p.id}/avatar` : ''}
+                  sx={{ height: 20, width: 20 }}
+                />
+              </ZUIPersonHoverCard>
+            ))}
+            {availableParticipantsList.length >
+              maxAvailableParticipantsToDisplay && (
+              <Box>
+                <Typography color="secondary">
+                  <Msg
+                    id={messageIds.eventPopper.surplus}
+                    values={{
+                      numOthers:
+                        availableParticipantsList.length -
+                        maxAvailableParticipantsToDisplay,
+                    }}
+                  />
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        )}
         {/* box: påminda */}
         <Box alignItems="center" display="flex" justifyContent="space-between">
           {/* box: påminda-ikon + text */}

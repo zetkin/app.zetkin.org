@@ -125,6 +125,9 @@ export default makeMessages('feat.events', {
     reminded: m('Reminded'),
     shifts: m('Shifts'),
     signups: m('Signups'),
+    surplus: m<{ numOthers: number }>(
+      '+ {numOthers, plural, =1 { 1 more participant} other {# more participants}}'
+    ),
     unsentReminders: m<{ numMissing: number }>(
       '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
     ),
