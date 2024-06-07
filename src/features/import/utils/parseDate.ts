@@ -9,14 +9,11 @@ dayjs.extend(customParseFormat);
 const placeInCorrectCentury = (date: Date) => {
   const thisYear = new Date().getFullYear();
 
-  //This cutoff is to calculate a date window of 100 years,
-  //so we can decide which century a 2-digit year belongs to.
-  //It seems unlikely users will import people who are older than 110 years of age.
-  const cutoff = thisYear - 110;
-
+  //This cutoff is to calculate which century a 2-digit year belongs to.
+  //It seems unlikely users will import people who are younger than 10 years of age.
+  const cutoff = thisYear - 10;
   const year = date.getFullYear();
-
-  if (year - cutoff > thisYear - cutoff) {
+  if (year > cutoff) {
     date.setFullYear(year - 100);
   }
 };
