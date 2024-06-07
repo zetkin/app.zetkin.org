@@ -31,7 +31,7 @@ describe('hasUnfinishedMapping()', () => {
     expect(unfinishedMapping).toBe(true);
   });
 
-  it('returns true if columnKind is TAG and mapping lenght is 0', () => {
+  it('returns true if columnKind is TAG and mapping length is 0', () => {
     const unfinishedMapping = hasUnfinishedMapping({
       kind: ColumnKind.TAG,
       mapping: [],
@@ -41,7 +41,7 @@ describe('hasUnfinishedMapping()', () => {
     expect(unfinishedMapping).toBe(true);
   });
 
-  it('returns true if columnKind is ORGANIZATION and mapping legnth is 0', () => {
+  it('returns true if columnKind is ORGANIZATION and mapping length is 0', () => {
     const unfinishedMapping = hasUnfinishedMapping({
       kind: ColumnKind.ORGANIZATION,
       mapping: [],
