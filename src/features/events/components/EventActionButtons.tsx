@@ -43,7 +43,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
     setPublished(null);
   };
   const handleChangeDate = (date: string | null) => {
-    if(date) {
+    if (date) {
       setPublished(date);
     }
   };
