@@ -27,7 +27,7 @@ export default makeMessages('feat.profile', {
     title: m('Journeys'),
   },
   numberOfChangesMessage: m<{ number: number }>(
-    'Will update {number, plural, =1 {1 field} other {# fields}}.'
+    'Will update {number, plural, =1 {1 field} other {# fields}}'
   ),
   organizations: {
     add: m('Add a new sub-organization'),
