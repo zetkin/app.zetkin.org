@@ -1,4 +1,4 @@
-import { Box, Chip } from '@mui/material';
+import { Box, Chip, useMediaQuery } from '@mui/material';
 
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
@@ -26,6 +26,7 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
   const { condition, tags: tagIds, min_matching } = config;
   const { data } = useTags(orgId);
   const tags = data || [];
+  const isDesktop = useMediaQuery('(min-width:600px');
 
   // preserve the order of the tag array
   const selectedTags = tagIds.reduce((acc: ZetkinTag[], id) => {
@@ -52,7 +53,7 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
           <UnderlinedMsg id={localMessageIds.condition.preview[condition]} />
         ),
         tags: (
-          <Box alignItems="start" display="inline-flex">
+          <Box alignItems="start" display="inline-flex" sx={{ marginTop:  isDesktop ? '10px' : null }}>
             {selectedTags.map((t) => (
               <Chip
                 key={t.id}
