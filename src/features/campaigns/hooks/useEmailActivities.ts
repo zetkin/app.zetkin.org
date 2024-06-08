@@ -1,4 +1,4 @@
-import { getUTCDateWithoutTime } from 'utils/dateUtils';
+import dayjs from 'dayjs';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ACTIVITIES, CampaignActivity } from '../types';
 import { emailsLoad, emailsLoaded } from 'features/emails/store';
@@ -10,14 +10,22 @@ import {
 } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
+const visibleFrom = (published: string | null): Date | null => {
+  if (!published) {
+    return null;
+  }
+  const visibleUntil = dayjs(new Date(published)).startOf('day');
+  return visibleUntil.toDate();
+};
+
 const visibleUntil = (published: string | null): Date | null => {
   if (!published) {
     return null;
   }
-  const visibleUntil = new Date(published);
-  visibleUntil.setDate(visibleUntil.getDate() + 1);
-  return visibleUntil;
+  const visibleUntil = dayjs(new Date(published)).endOf('day');
+  return visibleUntil.toDate();
 };
+
 
 export default function useEmailActivities(
   orgId: number,
@@ -49,11 +57,12 @@ export default function useEmailActivities(
         (email) => email.campaign?.id === campId
       );
 
+
       campaignEmails.forEach((email) => {
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
-          visibleFrom: getUTCDateWithoutTime(email.published || null),
+          visibleFrom: visibleFrom(email.published || null),
           visibleUntil: visibleUntil(email.published),
         });
       });
@@ -62,7 +71,7 @@ export default function useEmailActivities(
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
-          visibleFrom: getUTCDateWithoutTime(email.published || null),
+          visibleFrom: visibleFrom(email.published || null),
           visibleUntil: visibleUntil(email.published),
         });
       });
