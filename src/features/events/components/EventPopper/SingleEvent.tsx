@@ -9,7 +9,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Avatar, Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -19,6 +19,7 @@ import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import { MultiDayEvent } from 'features/calendar/components/utils';
+import ParticipantsAvatarsBox from './ParticipantsAvatarsBox';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
@@ -92,6 +93,14 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     0,
     maxAvailableParticipantsToDisplay
   );
+  const signedParticipantsList = respondents.filter(
+    (r) => !participants.some((p) => p.id === r.id)
+  );
+  const maxSignedParticipantsToDisplay: number = 25;
+  const maxSignedParticipantsToDisplayList = signedParticipantsList.slice(
+    0,
+    maxSignedParticipantsToDisplay
+  );
 
   const ellipsisMenuItems = [
     {
@@ -144,7 +153,6 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           {event.activity?.title || messages.common.noActivity()}
         </Typography>
       </Box>
-      {/* box: tid och datum */}
       <Box display="flex" flexDirection="column" sx={{ mb: 2, my: 2 }}>
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
@@ -177,9 +185,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           />
         </Typography>
       </Box>
-      {/* box: plats */}
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
-        {/* box: plats-ikon + text */}
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
             color="secondary"
@@ -190,34 +196,54 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             size="xs"
           />
         </Box>
-        {/* plats */}
         <Typography color="secondary" variant="body2">
           <LocationLabel location={event.location} />
         </Typography>
       </Box>
-      {/* box: bokade - påminda - anmälda*/}
       <Box display="flex" flexDirection="column" gap={1} sx={{ my: 2 }}>
-        {/* box: anmälningar */}
-        <Box alignItems="center" display="flex" justifyContent="space-between">
-          {/* box: anmälningar-ikon + text */}
-          <Box alignItems="center" display="flex">
-            <ZUIIconLabel
-              color="secondary"
-              icon={
-                <EmojiPeople color="secondary" sx={{ fontSize: '1.3rem' }} />
+        {signedParticipantsList.length > 0 && (
+          <>
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Box alignItems="center" display="flex">
+                <ZUIIconLabel
+                  color="secondary"
+                  icon={
+                    <EmojiPeople
+                      color="secondary"
+                      sx={{ fontSize: '1.3rem' }}
+                    />
+                  }
+                  label={messages.eventPopper.signups().toUpperCase()}
+                  size="xs"
+                />
+              </Box>
+              <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
+                {signedParticipants}
+              </Typography>
+            </Box>
+            <ParticipantsAvatarsBox
+              list={signedParticipantsList}
+              max={maxSignedParticipantsToDisplay}
+              maxList={maxSignedParticipantsToDisplayList}
+              message={
+                <Msg
+                  id={messageIds.eventPopper.surplusSigned}
+                  values={{
+                    numOthers:
+                      signedParticipantsList.length -
+                      maxSignedParticipantsToDisplay,
+                  }}
+                />
               }
-              label={messages.eventPopper.signups().toUpperCase()}
-              size="xs"
+              orgId={orgId}
             />
-          </Box>
-          {/* anmälda, antal */}
-          <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
-            {signedParticipants}
-          </Typography>
-        </Box>
-        {/* box: bokade */}
+          </>
+        )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
-          {/* box: bokade-ikon + text*/}
           <Box alignItems="center" display="flex">
             <ZUIIconLabel
               color="secondary"
@@ -226,39 +252,27 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
               size="xs"
             />
           </Box>
-          {/* bokade, antal*/}
           <Typography>{event.num_participants_available}</Typography>
         </Box>
         {availableParticipantsList.length > 0 && (
-          <Box alignItems="center" display="flex" flexWrap="wrap" gap={0.5}>
-            {maxAvailableParticipantsToDisplayList.map((p, index) => (
-              <ZUIPersonHoverCard key={index} personId={p.id}>
-                <Avatar
-                  src={orgId ? `/api/orgs/${orgId}/people/${p.id}/avatar` : ''}
-                  sx={{ height: 20, width: 20 }}
-                />
-              </ZUIPersonHoverCard>
-            ))}
-            {availableParticipantsList.length >
-              maxAvailableParticipantsToDisplay && (
-              <Box>
-                <Typography color="secondary">
-                  <Msg
-                    id={messageIds.eventPopper.surplus}
-                    values={{
-                      numOthers:
-                        availableParticipantsList.length -
-                        maxAvailableParticipantsToDisplay,
-                    }}
-                  />
-                </Typography>
-              </Box>
-            )}
-          </Box>
+          <ParticipantsAvatarsBox
+            list={availableParticipantsList}
+            max={maxAvailableParticipantsToDisplay}
+            maxList={maxAvailableParticipantsToDisplayList}
+            message={
+              <Msg
+                id={messageIds.eventPopper.surplusAvailable}
+                values={{
+                  numOthers:
+                    availableParticipantsList.length -
+                    maxAvailableParticipantsToDisplay,
+                }}
+              />
+            }
+            orgId={orgId}
+          />
         )}
-        {/* box: påminda */}
         <Box alignItems="center" display="flex" justifyContent="space-between">
-          {/* box: påminda-ikon + text */}
           <Box alignItems="center" display="flex">
             <ZUIIconLabel
               color="secondary"
@@ -269,16 +283,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
               size="xs"
             />
           </Box>
-          {/* påminda, antal */}
           <Quota
             denominator={availableParticipants}
             numerator={remindedParticipants}
           />
         </Box>
       </Box>
-      {/* box: kontaktperson */}
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
-        {/* box: kontaktperson-ikon + text */}
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
             color="secondary"
@@ -289,7 +300,6 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             size="xs"
           />
         </Box>
-        {/* kontaktperson */}
         {event.contact ? (
           <ZUIPersonHoverCard personId={event.contact.id}>
             <ZUIPerson
@@ -304,7 +314,6 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </Typography>
         )}
       </Box>
-      {/* beskrivning, om det finns */}
       {event.info_text && (
         <Box display="flex" flexDirection="column" sx={{ mb: 3 }}>
           <Typography color="secondary" fontSize="0.7em">
