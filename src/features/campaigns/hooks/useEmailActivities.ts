@@ -26,7 +26,6 @@ const visibleUntil = (published: string | null): Date | null => {
   return visibleUntil.toDate();
 };
 
-
 export default function useEmailActivities(
   orgId: number,
   campId?: number
@@ -56,7 +55,6 @@ export default function useEmailActivities(
       const campaignEmails = allEmails.filter(
         (email) => email.campaign?.id === campId
       );
-
 
       campaignEmails.forEach((email) => {
         activities.push({

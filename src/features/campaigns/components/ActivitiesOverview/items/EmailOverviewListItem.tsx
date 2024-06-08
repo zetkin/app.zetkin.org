@@ -28,19 +28,19 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
     if (published === null) {
       return undefined;
     }
-    const now = new Date()
+    const now = new Date();
     const publishedDate = dayjs(published);
-    const id = publishedDate.isBefore(now) ?
-      messageIds.activitiesOverview.subtitles.sentEarlier :
-      messageIds.activitiesOverview.subtitles.sentLater;
-    return (<Msg
-      id={id}
-      values={{
-        relative: <ZUIRelativeTime datetime={publishedDate.toISOString()} />,
-      }}
-    />
+    const id = publishedDate.isBefore(now)
+      ? messageIds.activitiesOverview.subtitles.sentEarlier
+      : messageIds.activitiesOverview.subtitles.sentLater;
+    return (
+      <Msg
+        id={id}
+        values={{
+          relative: <ZUIRelativeTime datetime={publishedDate.toISOString()} />,
+        }}
+      />
     );
-
   }
 
   return (
