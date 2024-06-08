@@ -53,7 +53,11 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
           <UnderlinedMsg id={localMessageIds.condition.preview[condition]} />
         ),
         tags: (
-          <Box alignItems="start" display="inline-flex" sx={{ marginTop:  isDesktop ? '10px' : null }}>
+          <Box
+            alignItems="start"
+            display="inline-flex"
+            sx={{ marginTop: isDesktop ? '10px' : null }}
+          >
             {selectedTags.map((t) => (
               <Chip
                 key={t.id}
