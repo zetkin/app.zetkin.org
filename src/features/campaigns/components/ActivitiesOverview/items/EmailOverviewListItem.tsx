@@ -1,8 +1,12 @@
 import { FC } from 'react';
 
+import dayjs from 'dayjs';
 import { EmailActivity } from 'features/campaigns/types';
+import messageIds from 'features/campaigns/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import OverviewListItem from './OverviewListItem';
 import useEmailStats from 'features/emails/hooks/useEmailStats';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { EmailOutlined, Person } from '@mui/icons-material';
 
 interface EmailOverviewListItemProps {
@@ -20,6 +24,25 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
     email.id
   );
 
+  function getSubtitle(published: string | null) {
+    if (published === null) {
+      return undefined;
+    }
+    const now = new Date()
+    const publishedDate = dayjs(published);
+    const id = publishedDate.isBefore(now) ?
+      messageIds.activitiesOverview.subtitles.sentEarlier :
+      messageIds.activitiesOverview.subtitles.sentLater;
+    return (<Msg
+      id={id}
+      values={{
+        relative: <ZUIRelativeTime datetime={publishedDate.toISOString()} />,
+      }}
+    />
+    );
+
+  }
+
   return (
     <OverviewListItem
       endDate={activity.visibleUntil}
@@ -31,6 +54,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
       startDate={activity.visibleFrom}
+      subtitle={getSubtitle(activity.data.published)}
       title={email.title || ''}
     />
   );
