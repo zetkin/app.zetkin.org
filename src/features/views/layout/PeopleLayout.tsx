@@ -47,6 +47,14 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
           href: `/duplicates`,
           label: messages.browserLayout.tabs.duplicates(),
         },
+        {
+          href: `/joinforms`,
+          label: messages.browserLayout.tabs.joinForms(),
+        },
+        {
+          href: '/inbox',
+          label: messages.browserLayout.tabs.inbox(),
+        },
       ]}
       title={messages.browserLayout.title()}
     >
