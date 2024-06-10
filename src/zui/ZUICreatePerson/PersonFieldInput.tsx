@@ -1,7 +1,7 @@
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
 import { TextField } from '@mui/material';
-import { FC, MutableRefObject, useState } from 'react';
+import { FC, MutableRefObject } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinCreatePerson,
@@ -31,15 +31,13 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
   value,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
-  const [blurred, setBlurred] = useState(false);
 
   return (
     <TextField
       error={error}
       fullWidth
       helperText={
-        error &&
-        blurred && (
+        error && (
           <Msg
             id={
               isURLField
@@ -61,12 +59,10 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
               field as keyof ZetkinPersonNativeFields
             ]()
       }
-      onBlur={() => setBlurred(true)}
       onChange={(e) => {
         const trimmedValue = e.target.value.trim();
         onChange(field, trimmedValue);
       }}
-      onFocus={() => setBlurred(false)}
       required={required}
       sx={style}
       value={value}
