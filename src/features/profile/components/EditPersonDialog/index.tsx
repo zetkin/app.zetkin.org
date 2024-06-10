@@ -42,6 +42,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
     setFieldsToUpdate,
   } = useEditPerson(person, orgId);
   const [fieldValues, setFieldValues] = useState(person);
+  const willUpdateValueMessage = hasUpdatedValues && !hasInvalidFields;
 
   return (
     <Dialog
@@ -110,7 +111,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
           paddingTop={2}
           width="100%"
         >
-          {hasUpdatedValues && (
+          {willUpdateValueMessage && (
             <Typography color={theme.palette.grey[500]}>
               <Msg
                 id={messageIds.numberOfChangesMessage}
