@@ -9,22 +9,27 @@ import {
 
 interface ParticipantsAvatarsBoxProps {
   list: ZetkinEventParticipant[] | ZetkinEventResponse[];
-  max: number;
-  maxList: ZetkinEventParticipant[] | ZetkinEventResponse[];
+  maxWithMessage: number;
+  maxWithoutMessage: number;
   message: React.ReactNode;
   orgId: number;
 }
 
 const ParticipantsAvatarsBox = ({
   list,
-  max,
-  maxList,
+  maxWithMessage,
+  maxWithoutMessage,
   message,
   orgId,
 }: ParticipantsAvatarsBoxProps) => {
+  let avatarsToDisplay;
+  list.length > maxWithoutMessage
+    ? (avatarsToDisplay = list.slice(0, maxWithMessage))
+    : (avatarsToDisplay = list);
+
   return (
     <Box alignItems="center" display="flex" flexWrap="wrap" gap={0.5}>
-      {maxList.map((p, index) => (
+      {avatarsToDisplay.map((p, index) => (
         <ZUIPersonHoverCard key={index} personId={p.id}>
           <Avatar
             src={orgId ? `/api/orgs/${orgId}/people/${p.id}/avatar` : ''}
@@ -32,7 +37,7 @@ const ParticipantsAvatarsBox = ({
           />
         </ZUIPersonHoverCard>
       ))}
-      {list.length > max && (
+      {list.length > maxWithoutMessage && (
         <Box>
           <Typography color="secondary">{message}</Typography>
         </Box>

@@ -88,19 +88,11 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       .length ?? 0;
 
   const availableParticipantsList = participants.filter((p) => !p.cancelled);
-  const maxAvailableParticipantsToDisplay: number = 25;
-  const maxAvailableParticipantsToDisplayList = availableParticipantsList.slice(
-    0,
-    maxAvailableParticipantsToDisplay
-  );
   const signedParticipantsList = respondents.filter(
     (r) => !participants.some((p) => p.id === r.id)
   );
-  const maxSignedParticipantsToDisplay: number = 25;
-  const maxSignedParticipantsToDisplayList = signedParticipantsList.slice(
-    0,
-    maxSignedParticipantsToDisplay
-  );
+  const maxNumberOfAvatarsWithMessage: number = 25;
+  const maxNumberOfAvatarsWithoutMessage: number = 36;
 
   const ellipsisMenuItems = [
     {
@@ -227,15 +219,15 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             </Box>
             <ParticipantsAvatarsBox
               list={signedParticipantsList}
-              max={maxSignedParticipantsToDisplay}
-              maxList={maxSignedParticipantsToDisplayList}
+              maxWithMessage={maxNumberOfAvatarsWithMessage}
+              maxWithoutMessage={maxNumberOfAvatarsWithoutMessage}
               message={
                 <Msg
                   id={messageIds.eventPopper.surplusSigned}
                   values={{
                     numOthers:
                       signedParticipantsList.length -
-                      maxSignedParticipantsToDisplay,
+                      maxNumberOfAvatarsWithMessage,
                   }}
                 />
               }
@@ -257,15 +249,15 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         {availableParticipantsList.length > 0 && (
           <ParticipantsAvatarsBox
             list={availableParticipantsList}
-            max={maxAvailableParticipantsToDisplay}
-            maxList={maxAvailableParticipantsToDisplayList}
+            maxWithMessage={maxNumberOfAvatarsWithMessage}
+            maxWithoutMessage={maxNumberOfAvatarsWithoutMessage}
             message={
               <Msg
                 id={messageIds.eventPopper.surplusAvailable}
                 values={{
                   numOthers:
                     availableParticipantsList.length -
-                    maxAvailableParticipantsToDisplay,
+                    maxNumberOfAvatarsWithMessage,
                 }}
               />
             }
