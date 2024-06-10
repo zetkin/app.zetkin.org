@@ -1,8 +1,9 @@
-import globalMessageIds from 'core/i18n/globalMessageIds';
-import messageIds from 'zui/l10n/messageIds';
 import { TextField } from '@mui/material';
 import { FC, MutableRefObject } from 'react';
-import { Msg, useMessages } from 'core/i18n';
+
+import FieldValidationWarning from './FieldValidationWarning';
+import globalMessageIds from 'core/i18n/globalMessageIds';
+import { useMessages } from 'core/i18n';
 import {
   ZetkinCreatePerson,
   ZetkinPersonNativeFields,
@@ -38,17 +39,7 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
       fullWidth
       helperText={
         error && (
-          <Msg
-            id={
-              isURLField
-                ? messageIds.createPerson.validationWarning.url
-                : field === 'first_name' || field === 'last_name'
-                ? messageIds.createPerson.validationWarning.name
-                : field === 'alt_phone' || field === 'phone'
-                ? messageIds.createPerson.validationWarning.phone
-                : messageIds.createPerson.validationWarning.email
-            }
-          />
+          <FieldValidationWarning field={field} isURLField={isURLField} />
         )
       }
       inputRef={inputRef}
