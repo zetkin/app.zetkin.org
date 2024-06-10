@@ -55,6 +55,7 @@ export default makeMessages('zui', {
     },
     validationWarning: {
       email: m('Please add a valid email address'),
+      name: m('This field cannot be empty'),
       phone: m('Please add a valid phone number'),
       url: m('Please add a valid URL'),
     },

@@ -56,6 +56,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
     <Box display="flex" flexDirection="column" gap={2} paddingTop={1}>
       <Box display="flex" gap={2}>
         <EditPersonField
+          error={invalidFields.includes(NATIVE_PERSON_FIELDS.FIRST_NAME)}
           field={NATIVE_PERSON_FIELDS.FIRST_NAME}
           hasChanges={NATIVE_PERSON_FIELDS.FIRST_NAME in fieldsToUpdate}
           onChange={(field, newValue) => onChange(field, newValue)}
@@ -64,6 +65,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           value={fieldValues.first_name}
         />
         <EditPersonField
+          error={invalidFields.includes(NATIVE_PERSON_FIELDS.LAST_NAME)}
           field={NATIVE_PERSON_FIELDS.LAST_NAME}
           hasChanges={NATIVE_PERSON_FIELDS.LAST_NAME in fieldsToUpdate}
           onChange={(field, newValue) => onChange(field, newValue)}

@@ -44,6 +44,8 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
             id={
               isURLField
                 ? messageIds.createPerson.validationWarning.url
+                : field === 'first_name' || field === 'last_name'
+                ? messageIds.createPerson.validationWarning.name
                 : field === 'alt_phone' || field === 'phone'
                 ? messageIds.createPerson.validationWarning.phone
                 : messageIds.createPerson.validationWarning.email

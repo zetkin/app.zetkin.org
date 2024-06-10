@@ -10,6 +10,19 @@ export default function checkInvalidFields(
 ) {
   let invalidFields: string[] = [];
 
+  //name
+  if (personalInfo.first_name === '') {
+    invalidFields.push('first_name');
+  } else {
+    invalidFields = invalidFields.filter((item) => item !== 'first_name');
+  }
+
+  if (personalInfo.last_name === '') {
+    invalidFields.push('last_name');
+  } else {
+    invalidFields = invalidFields.filter((item) => item !== 'last_name');
+  }
+
   //email
   if (personalInfo.email && !isEmail(personalInfo.email || '')) {
     invalidFields.push('email');
