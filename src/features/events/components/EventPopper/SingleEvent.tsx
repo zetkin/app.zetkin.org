@@ -229,7 +229,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
               size="xs"
             />
           </Box>
-          <Typography>{event.num_participants_available}</Typography>
+          <Quota
+            denominator={event.num_participants_required}
+            numerator={event.num_participants_available}
+          />
         </Box>
         {availableParticipants.length > 0 && (
           <ParticipantAvatars
