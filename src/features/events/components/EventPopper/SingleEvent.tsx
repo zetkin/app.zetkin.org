@@ -185,7 +185,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           <LocationLabel location={event.location} />
         </Typography>
       </Box>
-      <Box display="flex" flexDirection="column" gap={1} sx={{ my: 2 }}>
+      <Box display="flex" flexDirection="column" gap={1} sx={{ mb: 2 }}>
         {signedParticipants.length > 0 && (
           <>
             <Box
