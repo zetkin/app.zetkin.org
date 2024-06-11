@@ -15,6 +15,12 @@ const joinFormsSlice = createSlice({
   initialState: initialState,
   name: 'joinForms',
   reducers: {
+    joinFormCreated: (state, action: PayloadAction<ZetkinJoinForm>) => {
+      const form = action.payload;
+      const item = findOrAddItem(state.formList, form.id);
+      item.loaded = new Date().toISOString();
+      item.data = form;
+    },
     joinFormLoad: (state, action: PayloadAction<number>) => {
       const formId = action.payload;
       const item = findOrAddItem(state.formList, formId);
@@ -50,6 +56,7 @@ const joinFormsSlice = createSlice({
 
 export default joinFormsSlice;
 export const {
+  joinFormCreated,
   joinFormLoad,
   joinFormLoaded,
   joinFormUpdate,

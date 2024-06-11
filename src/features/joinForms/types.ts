@@ -19,3 +19,9 @@ export type ZetkinJoinForm = {
 export type ZetkinJoinFormPatchBody = Partial<
   Omit<ZetkinJoinForm, 'id' | 'organization' | 'submit_token'>
 >;
+
+export type ZetkinJoinFormPostBody =
+  // Most fields are optional
+  Partial<Omit<ZetkinJoinForm, 'id' | 'organization' | 'submit_token'>> &
+    // Require title and fields
+    Pick<ZetkinJoinForm, 'title' | 'fields'>;
