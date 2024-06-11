@@ -83,6 +83,7 @@ export const PaneProvider: FC<PaneProviderProps> = ({
         ref={paneContainerRef}
         style={{
           height: fixedHeight ? '100%' : 'auto',
+          minHeight: '100%',
         }}
       >
         <Slide
