@@ -15,3 +15,7 @@ export type ZetkinJoinForm = {
   }[];
   title: string;
 };
+
+export type ZetkinJoinFormPatchBody = Partial<
+  Omit<ZetkinJoinForm, 'id' | 'organization' | 'submit_token'>
+>;

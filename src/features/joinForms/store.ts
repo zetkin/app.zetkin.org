@@ -27,6 +27,17 @@ const joinFormsSlice = createSlice({
       item.loaded = new Date().toISOString();
       item.data = form;
     },
+    joinFormUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [formId, mutating] = action.payload;
+      const item = findOrAddItem(state.formList, formId);
+      item.mutating = mutating;
+    },
+    joinFormUpdated: (state, action: PayloadAction<ZetkinJoinForm>) => {
+      const form = action.payload;
+      const item = findOrAddItem(state.formList, form.id);
+      item.data = form;
+      item.mutating = [];
+    },
     joinFormsLoad: (state) => {
       state.formList.isLoading = true;
     },
@@ -38,5 +49,11 @@ const joinFormsSlice = createSlice({
 });
 
 export default joinFormsSlice;
-export const { joinFormLoad, joinFormLoaded, joinFormsLoad, joinFormsLoaded } =
-  joinFormsSlice.actions;
+export const {
+  joinFormLoad,
+  joinFormLoaded,
+  joinFormUpdate,
+  joinFormUpdated,
+  joinFormsLoad,
+  joinFormsLoaded,
+} = joinFormsSlice.actions;

@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import {
   Autocomplete,
   Box,
@@ -5,7 +6,6 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
 
 import { Delete } from '@mui/icons-material';
 import globalMessageIds from 'core/i18n/globalMessageIds';
@@ -14,6 +14,7 @@ import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import PaneHeader from 'utils/panes/PaneHeader';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJoinForm from '../hooks/useJoinForm';
+import useJoinFormMutations from '../hooks/useJoinFormMutations';
 import { useMessages } from 'core/i18n';
 
 type Props = {
@@ -23,13 +24,9 @@ type Props = {
 
 const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
   const { data } = useJoinForm(orgId, formId);
+  const { updateForm } = useJoinFormMutations(orgId, formId);
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
-  const [title, setTitle] = useState(data?.title ?? '');
-  const [description, setDescription] = useState(data?.description ?? '');
-  const [fields, setFields] = useState(
-    data?.fields ?? ['first_name', 'last_name']
-  );
   const customFields = useCustomFields(orgId);
   const theme = useTheme();
 
@@ -55,28 +52,28 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       <PaneHeader title={messages.formPane.title()} />
       <Box mb={2}>
         <TextField
+          defaultValue={data.title}
           fullWidth
           label={messages.formPane.labels.title()}
-          onChange={(evt) => setTitle(evt.target.value)}
-          value={title}
+          onChange={(evt) => updateForm({ title: evt.target.value })}
         />
       </Box>
       <Box mb={1}>
         <TextField
+          defaultValue={data.description}
           fullWidth
           label={messages.formPane.labels.description()}
-          onChange={(evt) => setDescription(evt.target.value)}
-          value={description}
+          onChange={(evt) => updateForm({ description: evt.target.value })}
         />
       </Box>
       <Box mb={1}>
         <Autocomplete
           fullWidth
-          getOptionDisabled={(option) => fields.includes(option)}
+          getOptionDisabled={(option) => data.fields.includes(option)}
           getOptionLabel={slugToLabel}
           onChange={(ev, value) => {
             if (value) {
-              setFields([...fields, value]);
+              updateForm({ fields: [...data.fields, value] });
             }
           }}
           options={[
@@ -93,7 +90,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
         />
       </Box>
       <Box>
-        {fields.map((slug) => {
+        {data.fields.map((slug) => {
           return (
             <Box
               key={slug}
@@ -114,9 +111,11 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
               {slug != 'first_name' && slug != 'last_name' && (
                 <IconButton
                   onClick={() =>
-                    setFields(
-                      fields.filter((existingSlug) => existingSlug != slug)
-                    )
+                    updateForm({
+                      fields: data.fields.filter(
+                        (existingSlug) => existingSlug != slug
+                      ),
+                    })
                   }
                 >
                   <Delete />
