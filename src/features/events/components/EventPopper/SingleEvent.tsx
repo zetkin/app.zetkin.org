@@ -1,5 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
+import { useMessages } from 'core/i18n';
 import {
   AccessTime,
   ArrowForward,
@@ -11,7 +12,6 @@ import {
 } from '@mui/icons-material';
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
-import { Msg, useMessages } from 'core/i18n';
 
 import { eventsDeselected } from 'features/events/store';
 import EventSelectionCheckBox from '../EventSelectionCheckBox';
@@ -19,7 +19,7 @@ import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import { MultiDayEvent } from 'features/calendar/components/utils';
-import ParticipantsAvatarsBox from './ParticipantsAvatarsBox';
+import ParticipantAvatars from './ParticipantAvatars';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
@@ -78,21 +78,14 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     state == EventState.SCHEDULED ||
     state == EventState.CANCELLED;
 
-  const remindedParticipants =
+  const numRemindedParticipants =
     participants.filter((p) => p.reminder_sent != null && !p.cancelled)
       .length ?? 0;
-  const availableParticipants =
-    participants.filter((p) => !p.cancelled).length ?? 0;
-  const signedParticipants =
-    respondents.filter((r) => !participants.some((p) => p.id === r.id))
-      .length ?? 0;
 
-  const availableParticipantsList = participants.filter((p) => !p.cancelled);
-  const signedParticipantsList = respondents.filter(
+  const availableParticipants = participants.filter((p) => !p.cancelled);
+  const signedParticipants = respondents.filter(
     (r) => !participants.some((p) => p.id === r.id)
   );
-  const maxNumberOfAvatarsWithMessage: number = 25;
-  const maxNumberOfAvatarsWithoutMessage: number = 36;
 
   const ellipsisMenuItems = [
     {
@@ -193,7 +186,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         </Typography>
       </Box>
       <Box display="flex" flexDirection="column" gap={1} sx={{ my: 2 }}>
-        {signedParticipantsList.length > 0 && (
+        {signedParticipants.length > 0 && (
           <>
             <Box
               alignItems="center"
@@ -213,25 +206,17 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                   size="xs"
                 />
               </Box>
-              <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
-                {signedParticipants}
+              <Typography
+                color={
+                  (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
+                }
+              >
+                {signedParticipants.length ?? 0}
               </Typography>
             </Box>
-            <ParticipantsAvatarsBox
-              list={signedParticipantsList}
-              maxWithMessage={maxNumberOfAvatarsWithMessage}
-              maxWithoutMessage={maxNumberOfAvatarsWithoutMessage}
-              message={
-                <Msg
-                  id={messageIds.eventPopper.surplusSigned}
-                  values={{
-                    numOthers:
-                      signedParticipantsList.length -
-                      maxNumberOfAvatarsWithMessage,
-                  }}
-                />
-              }
+            <ParticipantAvatars
               orgId={orgId}
+              participants={signedParticipants}
             />
           </>
         )}
@@ -246,22 +231,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </Box>
           <Typography>{event.num_participants_available}</Typography>
         </Box>
-        {availableParticipantsList.length > 0 && (
-          <ParticipantsAvatarsBox
-            list={availableParticipantsList}
-            maxWithMessage={maxNumberOfAvatarsWithMessage}
-            maxWithoutMessage={maxNumberOfAvatarsWithoutMessage}
-            message={
-              <Msg
-                id={messageIds.eventPopper.surplusAvailable}
-                values={{
-                  numOthers:
-                    availableParticipantsList.length -
-                    maxNumberOfAvatarsWithMessage,
-                }}
-              />
-            }
+        {availableParticipants.length > 0 && (
+          <ParticipantAvatars
             orgId={orgId}
+            participants={availableParticipants}
           />
         )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -276,8 +249,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             />
           </Box>
           <Quota
-            denominator={availableParticipants}
-            numerator={remindedParticipants}
+            denominator={availableParticipants.length ?? 0}
+            numerator={numRemindedParticipants}
           />
         </Box>
       </Box>
