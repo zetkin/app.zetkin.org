@@ -10,4 +10,12 @@ export default makeMessages('feat.joinForms', {
     },
     title: m('Edit form'),
   },
+  submissionList: {
+    approveButton: m('Approve'),
+    firstName: m('First name'),
+    form: m('Form'),
+    lastName: m('Last name'),
+    rejectButton: m('Reject'),
+    timestamp: m('Timestamp'),
+  },
 });
