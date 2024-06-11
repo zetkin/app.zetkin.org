@@ -1,3 +1,5 @@
+import { ZetkinPerson } from 'utils/types/zetkin';
+
 export type ZetkinJoinForm = {
   description: string;
   embeddable: boolean;
@@ -25,3 +27,15 @@ export type ZetkinJoinFormPostBody =
   Partial<Omit<ZetkinJoinForm, 'id' | 'organization' | 'submit_token'>> &
     // Require title and fields
     Pick<ZetkinJoinForm, 'title' | 'fields'>;
+
+export type ZetkinJoinSubmission = {
+  accepted: string | null;
+  form: {
+    id: number;
+    title: string;
+  };
+  id: number;
+  person_data: ZetkinPerson;
+  state: 'pending' | 'accepted';
+  submitted: string;
+};

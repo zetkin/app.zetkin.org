@@ -1,14 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ZetkinJoinForm } from './types';
 import { findOrAddItem, remoteList, RemoteList } from 'utils/storeUtils';
+import { ZetkinJoinForm, ZetkinJoinSubmission } from './types';
 
 export interface JoinFormsStoreSlice {
   formList: RemoteList<ZetkinJoinForm>;
+  submissionList: RemoteList<ZetkinJoinSubmission>;
 }
 
 const initialState: JoinFormsStoreSlice = {
   formList: remoteList(),
+  submissionList: remoteList(),
 };
 
 const joinFormsSlice = createSlice({
@@ -51,6 +53,16 @@ const joinFormsSlice = createSlice({
       state.formList = remoteList(action.payload);
       state.formList.loaded = new Date().toISOString();
     },
+    submissionsLoad: (state) => {
+      state.submissionList.isLoading = true;
+    },
+    submissionsLoaded: (
+      state,
+      action: PayloadAction<ZetkinJoinSubmission[]>
+    ) => {
+      state.submissionList = remoteList(action.payload);
+      state.submissionList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -63,4 +75,6 @@ export const {
   joinFormUpdated,
   joinFormsLoad,
   joinFormsLoaded,
+  submissionsLoad,
+  submissionsLoaded,
 } = joinFormsSlice.actions;
