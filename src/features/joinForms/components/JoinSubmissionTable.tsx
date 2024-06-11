@@ -7,10 +7,11 @@ import { ZetkinJoinSubmission } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 
 type Props = {
+  onSelect: (submission: ZetkinJoinSubmission) => void;
   submissions: ZetkinJoinSubmission[];
 };
 
-const JoinSubmissionTable: FC<Props> = ({ submissions }) => {
+const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
   const messages = useMessages(messageIds);
 
   return (
@@ -65,8 +66,8 @@ const JoinSubmissionTable: FC<Props> = ({ submissions }) => {
           ]}
           hideFooter
           isRowSelectable={() => false}
-          onRowClick={() => {
-            // TODO: Open pane
+          onRowClick={(params) => {
+            onSelect(params.row);
           }}
           rows={submissions}
         />
