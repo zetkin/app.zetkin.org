@@ -18,9 +18,9 @@ export default makeMessages('feat.duplicates', {
       'All activity history and tags from all people being merged will carry over and will be visible on the merged person.'
     ),
     infoTitle: m('No data will be lost'),
-    isDuplicateButton: m('Add to merge'),
+    isDuplicateButton: m('Include'),
     mergeButton: m('Merge'),
-    notDuplicateButton: m('Remove from merge'),
+    notDuplicateButton: m('Exclude'),
     peopleNotBeingMerged: m('People not being merged'),
     peopleToMerge: m('People to merge'),
     possibleDuplicatesColumns: {
