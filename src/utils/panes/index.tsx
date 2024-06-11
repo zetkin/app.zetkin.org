@@ -44,7 +44,7 @@ const useStyles = makeStyles({
     position: 'absolute',
     right: 16,
     top: 16,
-    zIndex: 9999,
+    zIndex: 999,
   },
   paper: {
     height: '100%',
