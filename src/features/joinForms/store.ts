@@ -53,6 +53,18 @@ const joinFormsSlice = createSlice({
       state.formList = remoteList(action.payload);
       state.formList.loaded = new Date().toISOString();
     },
+    submissionLoad: (state, action: PayloadAction<number>) => {
+      const submissionId = action.payload;
+      const item = findOrAddItem(state.submissionList, submissionId);
+      item.isLoading = true;
+    },
+    submissionLoaded: (state, action: PayloadAction<ZetkinJoinSubmission>) => {
+      const submission = action.payload;
+      const item = findOrAddItem(state.submissionList, submission.id);
+      item.isLoading = false;
+      item.data = submission;
+      item.loaded = new Date().toISOString();
+    },
     submissionsLoad: (state) => {
       state.submissionList.isLoading = true;
     },
@@ -75,6 +87,8 @@ export const {
   joinFormUpdated,
   joinFormsLoad,
   joinFormsLoaded,
+  submissionLoad,
+  submissionLoaded,
   submissionsLoad,
   submissionsLoaded,
 } = joinFormsSlice.actions;
