@@ -1,10 +1,12 @@
 import { GetServerSideProps } from 'next';
 
 import JoinFormList from 'features/joinForms/components/JoinFormList';
+import JoinFormPane from 'features/joinForms/panes/JoinFormPane';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import useJoinForms from 'features/joinForms/hooks/useJoinForms';
+import { usePanes } from 'utils/panes';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
@@ -22,6 +24,7 @@ type PageProps = {
 
 const DuplicatesPage: PageWithLayout<PageProps> = ({ orgId }) => {
   const { data } = useJoinForms(parseInt(orgId));
+  const { openPane } = usePanes();
 
   if (!data) {
     return null;
@@ -31,8 +34,12 @@ const DuplicatesPage: PageWithLayout<PageProps> = ({ orgId }) => {
     <JoinFormList
       forms={data}
       onItemClick={(form) => {
-        // eslint-disable-next-line no-console
-        console.log(form.title);
+        openPane({
+          render: () => (
+            <JoinFormPane formId={form.id} orgId={form.organization.id} />
+          ),
+          width: 500,
+        });
       }}
     />
   );
