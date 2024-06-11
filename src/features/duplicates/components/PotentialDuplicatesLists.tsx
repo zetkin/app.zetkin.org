@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import ModalList from './ModalList';
@@ -38,6 +38,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           onButtonClick={onDeselect}
           rows={peopleToMerge}
         />
+        {peopleToMerge.length > 0 && <Divider />}
       </Box>
       {peopleNoToMerge.length > 0 && (
         <Box
@@ -46,7 +47,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           overflow="hidden"
           padding={2}
         >
-          <Typography variant="h6">
+          <Typography marginBottom={2} variant="h6">
             {messages.modal.peopleNotBeingMerged()}
           </Typography>
           <ModalList
@@ -54,6 +55,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
             onButtonClick={onSelect}
             rows={peopleNoToMerge}
           />
+          <Divider />
         </Box>
       )}
     </>
