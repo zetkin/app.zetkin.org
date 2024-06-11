@@ -294,38 +294,57 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </Box>
         </Box>
       )}
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="flex-end"
-        marginBottom={2}
-      >
-        <NextLink href={getEventUrl(event)} legacyBehavior passHref>
-          <Link underline="none">
-            <Button
-              endIcon={<ArrowForward />}
-              onClick={onClickAway}
-              variant="text"
-            >
-              {messages.eventPopper.eventPageLink().toUpperCase()}
-            </Button>
-          </Link>
-        </NextLink>
-      </Box>
-      <Box alignItems="center" display="flex" justifyContent="flex-end">
-        {showPublishButton && (
-          <Button
-            onClick={() => {
-              publishEvent();
-              onClickAway();
-            }}
-            variant="contained"
+      {showPublishButton ? (
+        <>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="flex-end"
+            marginBottom={2}
           >
-            {messages.eventPopper.publish()}
-          </Button>
-        )}
-        <ZUIEllipsisMenu items={ellipsisMenuItems} />
-      </Box>
+            <NextLink href={getEventUrl(event)} legacyBehavior passHref>
+              <Link underline="none">
+                <Button
+                  endIcon={<ArrowForward />}
+                  onClick={onClickAway}
+                  variant="text"
+                >
+                  {messages.eventPopper.eventPageLink().toUpperCase()}
+                </Button>
+              </Link>
+            </NextLink>
+          </Box>
+          <Box alignItems="center" display="flex" justifyContent="flex-end">
+            <Button
+              onClick={() => {
+                publishEvent();
+                onClickAway();
+              }}
+              variant="contained"
+            >
+              {messages.eventPopper.publish()}
+            </Button>
+
+            <ZUIEllipsisMenu items={ellipsisMenuItems} />
+          </Box>
+        </>
+      ) : (
+        <Box alignItems="center" display="flex" justifyContent="flex-end">
+          <NextLink href={getEventUrl(event)} legacyBehavior passHref>
+            <Link underline="none">
+              <Button
+                endIcon={<ArrowForward />}
+                onClick={onClickAway}
+                variant="text"
+              >
+                {messages.eventPopper.eventPageLink().toUpperCase()}
+              </Button>
+            </Link>
+          </NextLink>
+
+          <ZUIEllipsisMenu items={ellipsisMenuItems} />
+        </Box>
+      )}
     </>
   );
 };
