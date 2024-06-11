@@ -6,6 +6,7 @@ export default makeMessages('feat.views', {
   actions: {
     create: m('Create'),
     createFolder: m('Create folder'),
+    createJoinForm: m('Create join form'),
     createPerson: m('Create person'),
     createView: m('Create list'),
     importPeople: m('Import people'),

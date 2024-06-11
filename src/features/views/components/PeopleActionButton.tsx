@@ -1,14 +1,18 @@
 import { Box } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import {
   FolderOutlined,
+  FormatListBulleted,
   InsertDriveFileOutlined,
   PersonAdd,
   UploadFileOutlined,
 } from '@mui/icons-material';
 
 import ImportDialog from 'features/import/components/ImportDialog';
+import joinFormMessageIds from 'features/joinForms/l10n/messageIds';
 import messageIds from '../l10n/messageIds';
+import useCreateJoinForm from 'features/joinForms/hooks/useCreateJoinForm';
 import useCreateView from '../hooks/useCreateView';
 import useFolder from '../hooks/useFolder';
 import { useMessages } from 'core/i18n';
@@ -25,6 +29,8 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   folderId,
   orgId,
 }) => {
+  const router = useRouter();
+  const joinFormMessages = useMessages(joinFormMessageIds);
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
@@ -32,6 +38,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
 
   const createView = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
+  const { createForm } = useCreateJoinForm(orgId);
 
   return (
     <Box>
@@ -63,6 +70,17 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             label: messages.actions.createPerson(),
             onClick: () => {
               setCreatePersonOpen(true);
+            },
+          },
+          {
+            icon: <FormatListBulleted />,
+            label: messages.actions.createJoinForm(),
+            onClick: async () => {
+              router.push(`/organize/${orgId}/people/joinforms`);
+              await createForm({
+                fields: ['first_name', 'last_name'],
+                title: joinFormMessages.defaultTitle(),
+              });
             },
           },
         ]}
