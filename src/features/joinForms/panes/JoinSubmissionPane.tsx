@@ -7,6 +7,7 @@ import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import PaneHeader from 'utils/panes/PaneHeader';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJoinSubmission from '../hooks/useJoinSubmission';
+import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
 import { useMessages } from 'core/i18n';
 import ZUIDateTime from 'zui/ZUIDateTime';
 
@@ -20,6 +21,7 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
+  const { approveSubmission } = useJoinSubmissionMutations(orgId, submissionId);
 
   if (!data) {
     return null;
@@ -58,7 +60,11 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
         <Button sx={{ flexGrow: 1 }} variant="outlined">
           {messages.submissionPane.rejectButton()}
         </Button>
-        <Button sx={{ flexGrow: 1 }} variant="contained">
+        <Button
+          onClick={() => approveSubmission()}
+          sx={{ flexGrow: 1 }}
+          variant="contained"
+        >
           {messages.submissionPane.approveButton()}
         </Button>
       </Box>

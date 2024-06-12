@@ -39,3 +39,5 @@ export type ZetkinJoinSubmission = {
   state: 'pending' | 'accepted';
   submitted: string;
 };
+
+export type ZetkinJoinSubmissionPatchBody = Pick<ZetkinJoinSubmission, 'state'>;
