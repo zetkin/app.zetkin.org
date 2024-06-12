@@ -1,10 +1,21 @@
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FC } from 'react';
+import { makeStyles } from '@mui/styles';
 import { Box, Button, useTheme } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { ZetkinJoinSubmission } from '../types';
 import { Msg, useMessages } from 'core/i18n';
+
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    backgroundColor: theme.palette.grey[300],
+    borderRadius: '1em',
+    color: theme.palette.text.secondary,
+    fontSize: 'xs',
+    padding: '0.2em 0.7em',
+  },
+}));
 
 type Props = {
   onSelect: (submission: ZetkinJoinSubmission) => void;
@@ -12,6 +23,7 @@ type Props = {
 };
 
 const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
+  const classes = useStyles();
   const messages = useMessages(messageIds);
   const theme = useTheme();
 
@@ -19,6 +31,15 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
     <Box bgcolor={theme.palette.background.paper} m={2}>
       <DataGridPro
         columns={[
+          {
+            field: 'state',
+            flex: 1,
+            headerName: messages.submissionList.status(),
+            renderCell: (params) => {
+              return <Box className={classes.chip}>{params.row.state}</Box>;
+            },
+            valueGetter: (params) => params.row.state,
+          },
           {
             field: 'first_name',
             flex: 1,

@@ -16,6 +16,7 @@ export default makeMessages('feat.joinForms', {
     form: m('Form'),
     lastName: m('Last name'),
     rejectButton: m('Reject'),
+    status: m('Status'),
     timestamp: m('Timestamp'),
   },
   submissionPane: {
