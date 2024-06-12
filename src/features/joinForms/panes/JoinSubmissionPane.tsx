@@ -10,6 +10,7 @@ import useJoinSubmission from '../hooks/useJoinSubmission';
 import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
 import { useMessages } from 'core/i18n';
 import ZUIDateTime from 'zui/ZUIDateTime';
+import ZUIPerson from 'zui/ZUIPerson';
 
 type Props = {
   orgId: number;
@@ -56,7 +57,7 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
           value={data.form.title}
         />
       </Box>
-      {!data.accepted && (
+      {!data.accepted ? (
         <Box display="flex" gap={1} justifyContent="stretch" my={4}>
           <Button sx={{ flexGrow: 1 }} variant="outlined">
             {messages.submissionPane.rejectButton()}
@@ -68,6 +69,14 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
           >
             {messages.submissionPane.approveButton()}
           </Button>
+        </Box>
+      ) : (
+        <Box>
+          <ZUIPerson
+            id={data.person_data.id}
+            link
+            name={`${data.person_data.first_name} ${data.person_data.last_name}`}
+          />
         </Box>
       )}
       <Box>
