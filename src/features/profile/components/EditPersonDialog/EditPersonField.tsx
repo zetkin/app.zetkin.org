@@ -27,7 +27,7 @@ const EditPersonField: FC<EditPersonFieldProps> = ({
   value,
 }) => {
   return (
-    <Box display="flex" flex={1}>
+    <Box alignItems="flex-start" display="flex" flex={1}>
       <PersonFieldInput
         error={error}
         field={field}
@@ -38,7 +38,7 @@ const EditPersonField: FC<EditPersonFieldProps> = ({
         value={value}
       />
       {hasChanges && (
-        <IconButton onClick={onReset}>
+        <IconButton onClick={onReset} sx={{ paddingTop: 2 }}>
           <UndoIcon />
         </IconButton>
       )}
