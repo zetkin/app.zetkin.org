@@ -18,4 +18,14 @@ export default makeMessages('feat.joinForms', {
     rejectButton: m('Reject'),
     timestamp: m('Timestamp'),
   },
+  submissionPane: {
+    approveButton: m('Approve'),
+    form: m('Form'),
+    rejectButton: m('Reject'),
+    states: {
+      accepted: m('Approved'),
+      pending: m('Pending'),
+    },
+    status: m('Status'),
+  },
 });

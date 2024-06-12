@@ -1,12 +1,14 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
+import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import PaneHeader from 'utils/panes/PaneHeader';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJoinSubmission from '../hooks/useJoinSubmission';
 import { useMessages } from 'core/i18n';
+import ZUIDateTime from 'zui/ZUIDateTime';
 
 type Props = {
   orgId: number;
@@ -15,6 +17,7 @@ type Props = {
 
 const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   const { data } = useJoinSubmission(orgId, submissionId);
+  const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
 
@@ -38,26 +41,56 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   return (
     <>
       <PaneHeader
+        subtitle={<ZUIDateTime datetime={data.submitted} />}
         title={`${data.person_data.first_name} ${data.person_data.last_name}`}
       />
+      <Box>
+        <AttributeWithValue
+          label={messages.submissionPane.status()}
+          value={messages.submissionPane.states[data.state]()}
+        />
+        <AttributeWithValue
+          label={messages.submissionPane.form()}
+          value={data.form.title}
+        />
+      </Box>
+      <Box display="flex" gap={1} justifyContent="stretch" my={4}>
+        <Button sx={{ flexGrow: 1 }} variant="outlined">
+          {messages.submissionPane.rejectButton()}
+        </Button>
+        <Button sx={{ flexGrow: 1 }} variant="contained">
+          {messages.submissionPane.approveButton()}
+        </Button>
+      </Box>
       <Box>
         {Object.keys(data.person_data).map((slug) => {
           const value = data.person_data[slug];
           return (
-            <Box key={slug} my={1}>
-              <Box>
-                <Typography variant="body2">{slugToLabel(slug)}</Typography>
-              </Box>
-              <Box>
-                <Typography variant="body1">
-                  {value?.toString() ?? '-'}
-                </Typography>
-              </Box>
-            </Box>
+            <AttributeWithValue
+              key={slug}
+              label={slugToLabel(slug)}
+              value={value?.toString() ?? '-'}
+            />
           );
         })}
       </Box>
     </>
+  );
+};
+
+const AttributeWithValue: FC<{ label: string; value: string }> = ({
+  label,
+  value,
+}) => {
+  return (
+    <Box my={1}>
+      <Box>
+        <Typography variant="body2">{label}</Typography>
+      </Box>
+      <Box>
+        <Typography variant="body1">{value}</Typography>
+      </Box>
+    </Box>
   );
 };
 
