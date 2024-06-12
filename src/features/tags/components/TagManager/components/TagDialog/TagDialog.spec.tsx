@@ -12,6 +12,7 @@ jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('<TagDialog />', () => {
   let onSubmit: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;
+  const deleteTagCallback = jest.fn((tagId: number) => tagId);
 
   beforeEach(() => {
     onSubmit = jest.fn((tag: NewTag | EditTag) => tag);
@@ -25,6 +26,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
       />
@@ -54,6 +56,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
       />
@@ -86,6 +89,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
       />
@@ -125,6 +129,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
         tag={mockTag({ id: 1000, title })}
@@ -153,6 +158,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
         tag={mockTag({ id: 1000, title: 'Value tag', value_type: 'text' })}

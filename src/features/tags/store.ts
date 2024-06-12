@@ -37,7 +37,7 @@ const tagsSlice = createSlice({
         state.tagsByPersonId[personId] = remoteList();
       }
       state.tagsByPersonId[personId].items.push(
-        remoteItem(personId, { data: tag })
+        remoteItem(tag.id, { data: tag })
       );
     },
     tagCreate: (state) => {
@@ -47,6 +47,24 @@ const tagsSlice = createSlice({
       const tag = action.payload;
       state.tagList.isLoading = false;
       state.tagList.items.push(remoteItem(tag.id, { data: tag }));
+    },
+    tagDeleted: (state, action: PayloadAction<number>) => {
+      const tagId = action.payload;
+      const tagListItem = state.tagList.items.find((item) => item.id === tagId);
+
+      if (tagListItem) {
+        tagListItem.deleted = true;
+      }
+
+      for (const personId in state.tagsByPersonId) {
+        const item = state.tagsByPersonId[personId].items.find((item) => {
+          return item.id === tagId;
+        });
+
+        if (item) {
+          item.deleted = true;
+        }
+      }
     },
     tagGroupCreate: (state) => {
       state.tagGroupList.isLoading;
@@ -139,6 +157,7 @@ export const {
   tagAssigned,
   tagCreate,
   tagCreated,
+  tagDeleted,
   tagGroupCreate,
   tagGroupCreated,
   tagGroupsLoad,

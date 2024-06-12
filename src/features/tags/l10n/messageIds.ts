@@ -7,6 +7,10 @@ export default makeMessages('feat.tags', {
     colorErrorText: m('Please enter a valid hex code'),
     colorLabel: m('Color'),
     createTitle: m('Create tag'),
+    deleteButtonLabel: m('Delete'),
+    deleteWarning: m(
+      'Are you sure you want to delete this tag? Deleting a tag cannot be undone.'
+    ),
     editTitle: m('Edit tag'),
     groupCreatePrompt: m<{ groupName: string }>('Add "{groupName}"'),
     groupLabel: m('Group'),
