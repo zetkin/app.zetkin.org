@@ -37,7 +37,12 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
             flex: 1,
             headerName: messages.submissionList.status(),
             renderCell: (params) => {
-              return <Box className={classes.chip}>{params.row.state}</Box>;
+              return (
+                <Box className={classes.chip}>
+                  {messages.submissionPane.states[params.row.state]()}
+                </Box>
+              );
+              // />
             },
             valueGetter: (params) => params.row.state,
           },
@@ -94,7 +99,6 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
                 );
               }
             },
-            valueGetter: (params) => params.row.state,
           },
         ]}
         hideFooter
