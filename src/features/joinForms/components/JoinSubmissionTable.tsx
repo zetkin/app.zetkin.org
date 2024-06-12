@@ -49,19 +49,23 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
             field: 'actions',
             flex: 1,
             headerName: '',
-            renderCell: () => {
-              // TODO: Handle clicks
-              return (
-                <Box display="flex" gap={2}>
-                  <Button variant="text">
-                    <Msg id={messageIds.submissionList.rejectButton} />
-                  </Button>
-                  <Button variant="outlined">
-                    <Msg id={messageIds.submissionList.approveButton} />
-                  </Button>
-                </Box>
-              );
+            renderCell: (params) => {
+              if (params.row.state !== 'accepted') {
+                // TODO: Handle clicks
+                return (
+                  <Box display="flex" gap={2}>
+                    <Button variant="text">
+                      <Msg id={messageIds.submissionList.rejectButton} />
+                    </Button>
+                    <Button variant="outlined">
+                      <Msg id={messageIds.submissionList.approveButton} />
+                    </Button>
+                  </Box>
+                );
+              }
+              return null;
             },
+            valueGetter: (params) => params.row.state,
           },
         ]}
         hideFooter
