@@ -56,18 +56,20 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
           value={data.form.title}
         />
       </Box>
-      <Box display="flex" gap={1} justifyContent="stretch" my={4}>
-        <Button sx={{ flexGrow: 1 }} variant="outlined">
-          {messages.submissionPane.rejectButton()}
-        </Button>
-        <Button
-          onClick={() => approveSubmission()}
-          sx={{ flexGrow: 1 }}
-          variant="contained"
-        >
-          {messages.submissionPane.approveButton()}
-        </Button>
-      </Box>
+      {!data.accepted && (
+        <Box display="flex" gap={1} justifyContent="stretch" my={4}>
+          <Button sx={{ flexGrow: 1 }} variant="outlined">
+            {messages.submissionPane.rejectButton()}
+          </Button>
+          <Button
+            onClick={() => approveSubmission()}
+            sx={{ flexGrow: 1 }}
+            variant="contained"
+          >
+            {messages.submissionPane.approveButton()}
+          </Button>
+        </Box>
+      )}
       <Box>
         {Object.keys(data.person_data).map((slug) => {
           const value = data.person_data[slug];
