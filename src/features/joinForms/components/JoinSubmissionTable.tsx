@@ -1,7 +1,8 @@
+import { ContentCopy } from '@mui/icons-material';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Box, Button, useTheme } from '@mui/material';
+import { Box, Button, IconButton, useTheme } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { ZetkinJoinSubmission } from '../types';
@@ -83,8 +84,15 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
                     </Button>
                   </Box>
                 );
+              } else {
+                return (
+                  <Box>
+                    <IconButton>
+                      <ContentCopy />
+                    </IconButton>
+                  </Box>
+                );
               }
-              return null;
             },
             valueGetter: (params) => params.row.state,
           },
