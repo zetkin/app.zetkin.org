@@ -44,8 +44,8 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
     }
   };
 
-  const formTitles = submissions.map((submission) => submission.form.title);
-  const uniqueFormTitles = [...new Set(formTitles)];
+  /* const formTitles = submissions.map((submission) => submission.form.title);
+  const uniqueFormTitles = [...new Set(formTitles)]; */
 
   return (
     <>
@@ -56,7 +56,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
         justifyContent="flex-end"
         sx={{ mr: 2, my: 2 }}
       >
-        <FormControl sx={{ minWidth: 200 }}>
+        {/* <FormControl sx={{ minWidth: 200 }}>
           <InputLabel>{messages.submissionPane.forms()}</InputLabel>
           <Select
             label={messages.submissionPane.forms()}
@@ -71,7 +71,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
         <FormControl sx={{ minWidth: 150 }}>
           <InputLabel>{messages.submissionPane.status()}</InputLabel>
           <Select
