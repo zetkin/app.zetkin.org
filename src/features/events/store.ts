@@ -523,9 +523,6 @@ const eventsSlice = createSlice({
   },
 });
 
-//skriva tester för storen
-//hur testar man en store? Redux-manualen
-
 function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
   events.forEach((event) => {
     const eventListItem = state.eventList.items.find(
@@ -535,7 +532,9 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
     if (eventListItem) {
       eventListItem.data = { ...eventListItem.data, ...event };
     } else {
-      state.eventList.items.push(remoteItem(event.id, { data: event }));
+      state.eventList.items.push(
+        remoteItem(event.id, { data: event, loaded: new Date().toISOString() })
+      );
     }
 
     const dateStr = event.start_time.slice(0, 10);
