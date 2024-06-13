@@ -41,5 +41,6 @@ export default makeMessages('feat.tags', {
   tagsPage: {
     overviewTabLabel: m('Overview'),
     title: m('Tags'),
+    ungroupedHeader: m('No group'),
   },
 });
