@@ -18,6 +18,7 @@ import {
   Groups,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
+  Label,
   Logout,
   Map,
   Search,
@@ -110,6 +111,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Groups />, name: 'people' },
     { icon: <Architecture />, name: 'projects' },
     { icon: <Explore />, name: 'journeys' },
+    { icon: <Label />, name: 'tags' },
     { icon: <Map />, name: 'areas' },
     { icon: <Settings />, name: 'settings' },
   ] as const;

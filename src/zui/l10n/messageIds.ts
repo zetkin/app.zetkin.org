@@ -132,6 +132,7 @@ export default makeMessages('zui', {
     search: m('Search'),
     settings: m('Settings'),
     signOut: m('Sign out'),
+    tags: m('Tags'),
     userSettings: m('User settings'),
   },
   personGridEditCell: {
