@@ -15,7 +15,8 @@ export default makeMessages('feat.tags', {
     groupCreatePrompt: m<{ groupName: string }>('Add "{groupName}"'),
     groupLabel: m('Group'),
     groupSelectPlaceholder: m('Type to search or create a group'),
-    submitCreateTagButton: m('Create and apply'),
+    submitCreateAndApplyTagButton: m('Create and apply'),
+    submitCreateTagButton: m('Create'),
     titleErrorText: m('Tag name is required'),
     titleLabel: m('Tag name'),
     typeLabel: m('Tag type'),
@@ -39,6 +40,7 @@ export default makeMessages('feat.tags', {
     },
   },
   tagsPage: {
+    createTagButton: m('Create'),
     noTags: m('Your organization does not have any tags yet'),
     overviewTabLabel: m('Overview'),
     title: m('Tags'),
