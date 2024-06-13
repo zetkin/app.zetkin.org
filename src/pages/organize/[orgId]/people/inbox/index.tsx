@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { useState } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 import JoinSubmissionPane from 'features/joinForms/panes/JoinSubmissionPane';
@@ -10,11 +11,6 @@ import { scaffold } from 'utils/next';
 import useJoinSubmissions from 'features/joinForms/hooks/useJoinSubmissions';
 import { useMessages } from 'core/i18n';
 import { usePanes } from 'utils/panes';
-
-enum STATUSES {
-  PENDING = 'pending',
-  ACCEPTED = 'accepted',
-}
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
@@ -28,15 +24,27 @@ type Props = {
 };
 
 const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
-  const { data } = useJoinSubmissions(parseInt(orgId));
+  const { data: submissions } = useJoinSubmissions(parseInt(orgId));
+
+  const [filterByStatus, setFilterByStatus] = useState<string>('');
   const messages = useMessages(messageIds);
   const { openPane } = usePanes();
 
-  if (!data) {
+  if (!submissions) {
     return null;
   }
 
-  const formTitles = data.map((submission) => submission.form.title);
+  const filterSubmissions = () => {
+    if (filterByStatus === 'all' || filterByStatus === '') {
+      return submissions;
+    } else {
+      return submissions.filter(
+        (submission) => submission.state === filterByStatus
+      );
+    }
+  };
+
+  const formTitles = submissions.map((submission) => submission.form.title);
   const uniqueFormTitles = [...new Set(formTitles)];
 
   return (
@@ -49,13 +57,9 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
         sx={{ mr: 2, my: 2 }}
       >
         <FormControl sx={{ minWidth: 200 }}>
-          <InputLabel id="demo-simple-select-label">
-            {messages.submissionPane.forms()}
-          </InputLabel>
+          <InputLabel>{messages.submissionPane.forms()}</InputLabel>
           <Select
-            id="demo-simple-select"
             label={messages.submissionPane.forms()}
-            labelId="demo-simple-select-label"
             placeholder={messages.submissionPane.forms()}
           >
             <MenuItem value={'all'}>
@@ -69,23 +73,24 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
           </Select>
         </FormControl>
         <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel id="demo-simple-select-label">
-            {messages.submissionPane.status()}
-          </InputLabel>
+          <InputLabel>{messages.submissionPane.status()}</InputLabel>
           <Select
-            id="demo-simple-select"
             label={messages.submissionPane.status()}
-            labelId="demo-simple-select-label"
+            onChange={(event) => {
+              setFilterByStatus(event.target.value);
+            }}
             placeholder={messages.submissionPane.status()}
+            value={filterByStatus}
           >
-            <MenuItem value={'all'}>
+            <MenuItem value="all">
               {messages.submissionPane.allStatuses()}
             </MenuItem>
-            {Object.values(STATUSES).map((status) => (
-              <MenuItem key={status} value={status}>
-                {messages.submissionPane.states[status]()}
-              </MenuItem>
-            ))}
+            <MenuItem value="pending">
+              {messages.submissionPane.states.pending()}
+            </MenuItem>
+            <MenuItem value="accepted">
+              {messages.submissionPane.states.accepted()}
+            </MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -102,7 +107,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
           });
         }}
         orgId={parseInt(orgId)}
-        submissions={data}
+        submissions={filterSubmissions()}
       />
     </>
   );
