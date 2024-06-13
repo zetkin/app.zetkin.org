@@ -5,6 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { Box, Button, IconButton, useTheme } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
+import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
 import { ZetkinJoinSubmission } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -20,13 +21,15 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   onSelect: (submission: ZetkinJoinSubmission) => void;
+  orgId: number;
   submissions: ZetkinJoinSubmission[];
 };
 
-const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
+const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
   const classes = useStyles();
   const messages = useMessages(messageIds);
   const theme = useTheme();
+  const { approveSubmission } = useJoinSubmissionMutations(orgId);
 
   return (
     <Box bgcolor={theme.palette.background.paper} m={2}>
@@ -84,7 +87,12 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, submissions }) => {
                     <Button variant="text">
                       <Msg id={messageIds.submissionList.rejectButton} />
                     </Button>
-                    <Button variant="outlined">
+                    <Button
+                      onClick={() => {
+                        approveSubmission(params.row.id);
+                      }}
+                      variant="outlined"
+                    >
                       <Msg id={messageIds.submissionList.approveButton} />
                     </Button>
                   </Box>

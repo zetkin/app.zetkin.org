@@ -22,7 +22,7 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
-  const { approveSubmission } = useJoinSubmissionMutations(orgId, submissionId);
+  const { approveSubmission } = useJoinSubmissionMutations(orgId);
 
   if (!data) {
     return null;
@@ -63,7 +63,7 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
             {messages.submissionPane.rejectButton()}
           </Button>
           <Button
-            onClick={() => approveSubmission()}
+            onClick={() => approveSubmission(submissionId)}
             sx={{ flexGrow: 1 }}
             variant="contained"
           >

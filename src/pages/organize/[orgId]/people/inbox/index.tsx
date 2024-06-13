@@ -40,6 +40,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
           width: 500,
         });
       }}
+      orgId={parseInt(orgId)}
       submissions={data}
     />
   );
