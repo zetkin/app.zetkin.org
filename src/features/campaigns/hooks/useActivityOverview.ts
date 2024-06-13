@@ -19,7 +19,12 @@ export default function useActivitiyOverview(
   const weekFromNow = new Date(startOfToday);
   weekFromNow.setDate(startOfToday.getDate() + 8);
 
-  const eventActivites = useEventsFromDateRange(startOfToday, weekFromNow);
+  const eventActivites = useEventsFromDateRange(
+    startOfToday,
+    weekFromNow,
+    orgId,
+    campId
+  );
   const taskActivitiesFuture = useTaskActivities(orgId, campId);
   const surveyActivitiesFuture = useSurveyActivities(orgId, campId);
   const callAssignmentActivitiesFuture = useCallAssignmentActivities(
