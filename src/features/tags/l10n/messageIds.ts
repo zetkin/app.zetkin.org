@@ -39,6 +39,7 @@ export default makeMessages('feat.tags', {
     },
   },
   tagsPage: {
+    noTags: m('Your organization does not have any tags yet'),
     overviewTabLabel: m('Overview'),
     title: m('Tags'),
     ungroupedHeader: m('No group'),

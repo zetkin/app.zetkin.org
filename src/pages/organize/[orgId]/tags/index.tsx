@@ -7,10 +7,10 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import TagsLayout from 'features/tags/layout/TagsLayout';
-import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useTags from 'features/tags/hooks/useTags';
+import { Msg, useMessages } from 'core/i18n';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -41,6 +41,11 @@ const TagsPage: PageWithLayout = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
+      {groupedTags.length === 0 && (
+        <Typography>
+          <Msg id={messageIds.tagsPage.noTags} />
+        </Typography>
+      )}
       {groupedTags.map((group) => {
         return (
           <Box
