@@ -26,7 +26,10 @@ type Props = {
 const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
   const { data: submissions } = useJoinSubmissions(parseInt(orgId));
 
-  const [filterByStatus, setFilterByStatus] = useState<string>('');
+  type FilterByStatusType = 'all' | 'pending' | 'accepted';
+
+  const [filterByStatus, setFilterByStatus] =
+    useState<FilterByStatusType>('all');
   const messages = useMessages(messageIds);
   const { openPane } = usePanes();
 
@@ -35,7 +38,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
   }
 
   const filterSubmissions = () => {
-    if (filterByStatus === 'all' || filterByStatus === '') {
+    if (filterByStatus === 'all') {
       return submissions;
     } else {
       return submissions.filter(
@@ -77,12 +80,12 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
           <Select
             label={messages.status()}
             onChange={(event) => {
-              setFilterByStatus(event.target.value);
+              setFilterByStatus(event.target.value as FilterByStatusType);
             }}
             placeholder={messages.status()}
             value={filterByStatus}
           >
-            <MenuItem value="all">
+            <MenuItem selected value="all">
               {messages.submissionPane.allStatuses()}
             </MenuItem>
             <MenuItem value="pending">
