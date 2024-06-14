@@ -1,8 +1,7 @@
-import { ContentCopy } from '@mui/icons-material';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Box, Button, IconButton, useTheme } from '@mui/material';
+import { Box, Button, useTheme } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
@@ -81,7 +80,7 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             headerName: '',
             renderCell: (params) => {
               if (params.row.state !== 'accepted') {
-                // TODO: Handle clicks
+                // TODO: Handle rejectButton click
                 return (
                   <Box display="flex" gap={2}>
                     <Button variant="text">
@@ -95,14 +94,6 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
                     >
                       <Msg id={messageIds.submissionList.approveButton} />
                     </Button>
-                  </Box>
-                );
-              } else {
-                return (
-                  <Box>
-                    <IconButton>
-                      <ContentCopy />
-                    </IconButton>
                   </Box>
                 );
               }
