@@ -57,13 +57,9 @@ const tagsSlice = createSlice({
       }
 
       for (const personId in state.tagsByPersonId) {
-        const item = state.tagsByPersonId[personId].items.find((item) => {
-          return item.id === tagId;
-        });
-
-        if (item) {
-          item.deleted = true;
-        }
+        state.tagsByPersonId[personId].items = state.tagsByPersonId[
+          personId
+        ].items.filter((item) => item.id != tagId);
       }
     },
     tagGroupCreate: (state) => {
