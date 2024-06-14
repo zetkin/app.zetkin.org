@@ -31,10 +31,10 @@ const MergeCandidateList: FC<MergeCandidateListProps> = ({
 
   return (
     <List>
-      {rows.map((person) => {
+      {rows.map((person, index) => {
         return (
           <>
-            <Divider />
+            {index > 0 && <Divider />}
             <ZUIPersonHoverCard personId={person.id}>
               <ListItem
                 secondaryAction={
