@@ -41,12 +41,33 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
     }
   }
 
+  const Header = () => {
+    if (data.accepted) {
+      return (
+        <Box>
+          <ZUIPerson
+            id={data.person_data.id}
+            link
+            name={`${data.person_data.first_name} ${data.person_data.last_name}`}
+          />
+          <Box display="flex" justifyContent="space-between">
+            {<ZUIDateTime datetime={data.submitted} />}
+          </Box>
+        </Box>
+      );
+    } else {
+      return (
+        <PaneHeader
+          subtitle={<ZUIDateTime datetime={data.submitted} />}
+          title={`${data.person_data.first_name} ${data.person_data.last_name}`}
+        />
+      );
+    }
+  };
+
   return (
     <>
-      <PaneHeader
-        subtitle={<ZUIDateTime datetime={data.submitted} />}
-        title={`${data.person_data.first_name} ${data.person_data.last_name}`}
-      />
+      <Header />
       <Box>
         <AttributeWithValue
           label={messages.status()}
@@ -57,7 +78,7 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
           value={data.form.title}
         />
       </Box>
-      {!data.accepted ? (
+      {!data.accepted && (
         <Box display="flex" gap={1} justifyContent="stretch" my={4}>
           <Button sx={{ flexGrow: 1 }} variant="outlined">
             {messages.submissionPane.rejectButton()}
@@ -69,14 +90,6 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
           >
             {messages.submissionPane.approveButton()}
           </Button>
-        </Box>
-      ) : (
-        <Box>
-          <ZUIPerson
-            id={data.person_data.id}
-            link
-            name={`${data.person_data.first_name} ${data.person_data.last_name}`}
-          />
         </Box>
       )}
       <Box>
