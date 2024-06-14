@@ -75,6 +75,7 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
           },
           {
             align: 'right',
+            disableColumnMenu: true,
             field: 'actions',
             flex: 1,
             headerName: '',
@@ -100,6 +101,7 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
                 return null;
               }
             },
+            sortable: false,
           },
         ]}
         hideFooter
