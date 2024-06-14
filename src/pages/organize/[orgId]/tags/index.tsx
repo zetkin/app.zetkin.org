@@ -55,9 +55,7 @@ const TagsPage: PageWithLayout = () => {
   return (
     <>
       <Head>
-        <Head>
-          <title>{messages.tagsPage.title()}</title>
-        </Head>
+        <title>{messages.tagsPage.title()}</title>
       </Head>
       <Box display="flex" flexDirection="column" gap={2}>
         {groupedTags.length === 0 && (
