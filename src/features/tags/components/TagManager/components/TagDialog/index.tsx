@@ -1,22 +1,22 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-import { TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import ColorPicker from './ColorPicker';
+import messageIds from '../../../../l10n/messageIds';
 import TagGroupSelect from './TagGroupSelect';
 import TypeSelect from './TypeSelect';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { EditTag, NewTag, NewTagGroup } from '../../types';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
-
-import messageIds from '../../../../l10n/messageIds';
-import { useMessages } from 'core/i18n';
 
 interface TagDialogProps {
   groups: ZetkinTagGroup[];
   open: boolean;
   onClose: () => void;
+  onDelete: (tagId: number) => void;
   onSubmit: (tag: NewTag | EditTag) => void;
   tag?: ZetkinTag | Pick<ZetkinTag, 'title'>;
 }
@@ -25,6 +25,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   groups,
   open,
   onClose,
+  onDelete,
   onSubmit,
   tag,
 }) => {
@@ -132,13 +133,30 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           onChange={(value) => setType(value)}
           value={type}
         />
-        <ZUISubmitCancelButtons
-          onCancel={closeAndClear}
-          submitDisabled={!title || !color.valid}
-          submitText={
-            editingTag ? undefined : messages.dialog.submitCreateTagButton()
-          }
-        />
+        <Box
+          alignItems="flex-end"
+          display="flex"
+          justifyContent="space-between"
+        >
+          {tag && 'id' in tag && (
+            <Button
+              onClick={() => {
+                onDelete(tag.id);
+                closeAndClear();
+              }}
+              sx={{ margin: 1 }}
+            >
+              <Msg id={messageIds.dialog.deleteButtonLabel} />
+            </Button>
+          )}
+          <ZUISubmitCancelButtons
+            onCancel={closeAndClear}
+            submitDisabled={!title || !color.valid}
+            submitText={
+              editingTag ? undefined : messages.dialog.submitCreateTagButton()
+            }
+          />
+        </Box>
       </form>
     </ZUIDialog>
   );

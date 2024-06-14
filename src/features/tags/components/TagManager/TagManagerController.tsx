@@ -1,14 +1,13 @@
 import { Add } from '@mui/icons-material';
-import { useState } from 'react';
 import { Box, Button, Popover } from '@mui/material';
+import { FC, useState } from 'react';
 
+import messageIds from '../../l10n/messageIds';
+import { Msg } from 'core/i18n';
 import TagSelect from 'features/tags/components/TagManager/components/TagSelect';
 import TagsList from './components/TagsList';
 import { EditTag, NewTag } from './types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
-
-import messageIds from '../../l10n/messageIds';
-import { Msg } from 'core/i18n';
 
 export interface TagManagerControllerProps {
   assignedTags: ZetkinTag[];
@@ -20,13 +19,12 @@ export interface TagManagerControllerProps {
   ignoreValues?: boolean;
   onAssignTag: (tag: ZetkinTag) => void;
   onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
+  onDeleteTag: (tagId: number) => void;
   onEditTag: (tag: EditTag) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }
 
-export const TagManagerController: React.FunctionComponent<
-  TagManagerControllerProps
-> = ({
+export const TagManagerController: FC<TagManagerControllerProps> = ({
   assignedTags,
   availableGroups,
   availableTags,
@@ -36,6 +34,7 @@ export const TagManagerController: React.FunctionComponent<
   ignoreValues = false,
   onAssignTag,
   onCreateTag,
+  onDeleteTag,
   onEditTag,
   onUnassignTag,
 }) => {
@@ -76,6 +75,7 @@ export const TagManagerController: React.FunctionComponent<
               // New tag is accessible in TagSelect
               return newTag;
             }}
+            onDeleteTag={onDeleteTag}
             onEditTag={onEditTag}
             onSelect={onAssignTag}
             tags={availableTags}
