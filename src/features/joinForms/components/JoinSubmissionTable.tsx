@@ -88,8 +88,9 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
                       <Msg id={messageIds.submissionList.rejectButton} />
                     </Button>
                     <Button
-                      onClick={() => {
+                      onClick={(event) => {
                         approveSubmission(params.row.id);
+                        event.stopPropagation();
                       }}
                       variant="outlined"
                     >
