@@ -57,10 +57,10 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
         sx={{ mr: 2, my: 2 }}
       >
         {/* <FormControl sx={{ minWidth: 200 }}>
-          <InputLabel>{messages.submissionPane.forms()}</InputLabel>
+          <InputLabel>{messages.forms()}</InputLabel>
           <Select
-            label={messages.submissionPane.forms()}
-            placeholder={messages.submissionPane.forms()}
+            label={messages.forms()}
+            placeholder={messages.forms()}
           >
             <MenuItem value={'all'}>
               {messages.submissionPane.allForms()}
@@ -73,13 +73,13 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
           </Select>
         </FormControl> */}
         <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel>{messages.submissionPane.status()}</InputLabel>
+          <InputLabel>{messages.status()}</InputLabel>
           <Select
-            label={messages.submissionPane.status()}
+            label={messages.status()}
             onChange={(event) => {
               setFilterByStatus(event.target.value);
             }}
-            placeholder={messages.submissionPane.status()}
+            placeholder={messages.status()}
             value={filterByStatus}
           >
             <MenuItem value="all">

@@ -10,6 +10,8 @@ export default makeMessages('feat.joinForms', {
     },
     title: m('Edit form'),
   },
+  forms: m('Forms'),
+  status: m('Status'),
   submissionList: {
     approveButton: m('Approve'),
     firstName: m('First name'),
@@ -24,12 +26,10 @@ export default makeMessages('feat.joinForms', {
     allStatuses: m('All'),
     approveButton: m('Approve'),
     form: m('Form'),
-    forms: m('Forms'),
     rejectButton: m('Reject'),
     states: {
       accepted: m('Approved'),
       pending: m('Pending'),
     },
-    status: m('Status'),
   },
 });
