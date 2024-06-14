@@ -31,6 +31,9 @@ import journeysSlice, {
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
+import potentialDuplicatesSlice, {
+  PotentialDuplicatesStoreSlice,
+} from 'features/duplicates/store';
 import profilesSlice, { ProfilesStoreSlice } from 'features/profile/store';
 import searchSlice, { SearchStoreSlice } from 'features/search/store';
 import settingsSlice, { SettingsStoreSlice } from 'features/settings/store';
@@ -50,6 +53,7 @@ export interface RootState {
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
+  duplicates: PotentialDuplicatesStoreSlice;
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
@@ -71,6 +75,7 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  duplicates: potentialDuplicatesSlice.reducer,
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   files: filesSlice.reducer,
