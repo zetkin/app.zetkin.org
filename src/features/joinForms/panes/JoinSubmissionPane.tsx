@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import NextLink from 'next/link';
+import { Avatar, Box, Button, Link, Typography } from '@mui/material';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
@@ -10,7 +11,6 @@ import useJoinSubmission from '../hooks/useJoinSubmission';
 import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
 import { useMessages } from 'core/i18n';
 import ZUIDateTime from 'zui/ZUIDateTime';
-import ZUIPerson from 'zui/ZUIPerson';
 
 type Props = {
   orgId: number;
@@ -44,15 +44,33 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   const Header = () => {
     if (data.accepted) {
       return (
-        <Box>
-          <ZUIPerson
-            id={data.person_data.id}
-            link
-            name={`${data.person_data.first_name} ${data.person_data.last_name}`}
-          />
-          <Box display="flex" justifyContent="space-between">
-            {<ZUIDateTime datetime={data.submitted} />}
-          </Box>
+        <Box marginBottom={2} marginRight={2}>
+          <NextLink
+            href={`/organize/${orgId}/people/${data.person_data.id}`}
+            legacyBehavior
+            passHref
+          >
+            <Link style={{ cursor: 'pointer' }} underline="none">
+              <Box alignItems="center" display="flex">
+                <Avatar
+                  src={`/api/orgs/${orgId}/people/${data.person_data.id}/avatar`}
+                  style={{ height: 30, width: 30 }}
+                />
+                <Box
+                  alignItems="start"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  ml={1}
+                >
+                  <Typography fontSize={30} variant="h3">
+                    {`${data.person_data.first_name} ${data.person_data.last_name}`}
+                  </Typography>
+                </Box>
+              </Box>
+            </Link>
+          </NextLink>
+          <Box>{<ZUIDateTime datetime={data.submitted} />}</Box>
         </Box>
       );
     } else {
