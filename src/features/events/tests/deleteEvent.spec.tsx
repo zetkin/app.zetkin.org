@@ -2,13 +2,14 @@ import { renderHook } from '@testing-library/react';
 
 import createStore from 'core/store';
 import { eventDeleted } from '../store';
+import { makeWrapper } from 'utils/testing';
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import mockState from 'utils/testing/mocks/mockState';
 import { remoteItem } from 'utils/storeUtils';
+import { remoteListWithEventItems } from '../utils/testUtils';
 import useCampaignEvents from 'features/campaigns/hooks/useCampaignEvents';
 import useEvent from '../hooks/useEvent';
 import useEventsFromDateRange from '../hooks/useEventsFromDateRange';
-import { makeWrapper, remoteListWithEventItems } from '../utils/testUtils';
 
 describe('Deleting an event', () => {
   it('does not return the event when trying to get it', () => {

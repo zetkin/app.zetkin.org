@@ -1,12 +1,13 @@
 import { renderHook } from '@testing-library/react';
 
 import createStore from 'core/store';
+import { makeWrapper } from 'utils/testing';
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import mockState from 'utils/testing/mocks/mockState';
 import { remoteItem } from 'utils/storeUtils';
+import { remoteListWithEventItems } from '../utils/testUtils';
 import useEvent from '../hooks/useEvent';
 import { eventUpdate, eventUpdated } from '../store';
-import { makeWrapper, remoteListWithEventItems } from '../utils/testUtils';
 
 describe('Updating an event', () => {
   it('updates the title of an event', () => {

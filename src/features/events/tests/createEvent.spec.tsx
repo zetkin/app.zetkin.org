@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 
 import createStore from 'core/store';
-import { makeWrapper } from '../utils/testUtils';
+import { makeWrapper } from 'utils/testing';
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import mockState from 'utils/testing/mocks/mockState';
 import useEvent from '../hooks/useEvent';
