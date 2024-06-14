@@ -47,7 +47,7 @@ const FilterForm: FC<FilterFormProps> = ({
                 onChange={(value) => {
                   onOrgsChange?.(value);
                 }}
-                organizations={orgsFuture.data}
+                organizations={orgsFuture.data.filter((org) => org.is_active)}
                 orgId={orgId}
                 value={selectedOrgs || [orgId]}
               />
