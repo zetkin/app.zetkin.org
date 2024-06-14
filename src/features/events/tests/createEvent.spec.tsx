@@ -8,8 +8,8 @@ import useEvent from '../hooks/useEvent';
 import useEventsFromDateRange from '../hooks/useEventsFromDateRange';
 import { eventCreate, eventCreated } from '../store';
 
-describe('The event feature', () => {
-  it('creates an event', () => {
+describe('When creating an event', () => {
+  it('the event is created and retrieved from cache', () => {
     const event = mockEvent();
 
     const initialState = mockState();
@@ -27,7 +27,7 @@ describe('The event feature', () => {
     expect(result.current?.isLoading).toEqual(false);
   });
 
-  it('puts a created event on the right day', () => {
+  it('the created event is saved on the right date', () => {
     const startTime = new Date();
     const endTime = new Date();
     endTime.setHours(endTime.getHours() + 2);
