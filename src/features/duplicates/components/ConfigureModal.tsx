@@ -79,7 +79,13 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
             peopleToMerge={peopleToMerge}
           />
         </Box>
-        <Box display="flex" flexDirection="column" marginRight={2} width="50%">
+        <Box
+          display="flex"
+          flexDirection="column"
+          marginRight={2}
+          sx={{ overflowY: 'auto' }}
+          width="50%"
+        >
           <FieldSettings
             fieldValues={fieldValues}
             onChange={(field, value) => {
