@@ -30,6 +30,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
 
   const [filterByStatus, setFilterByStatus] =
     useState<FilterByStatusType>('all');
+  const [filterByForm, setFilterByForm] = useState('all');
   const messages = useMessages(messageIds);
   const { openPane } = usePanes();
 
@@ -37,18 +38,16 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
     return null;
   }
 
-  const filterSubmissions = () => {
-    if (filterByStatus === 'all') {
-      return submissions;
-    } else {
-      return submissions.filter(
-        (submission) => submission.state === filterByStatus
-      );
-    }
-  };
+  const formTitles = submissions.map((submission) => submission.form.title);
+  const uniqueFormTitles = [...new Set(formTitles)];
 
-  /* const formTitles = submissions.map((submission) => submission.form.title);
-  const uniqueFormTitles = [...new Set(formTitles)]; */
+  const filteredSubmissions = submissions.filter((submission) => {
+    const hasFormMatches =
+      filterByForm === 'all' || submission.form.title === filterByForm;
+    const hasStatusMatches =
+      filterByStatus === 'all' || submission.state === filterByStatus;
+    return hasFormMatches && hasStatusMatches;
+  });
 
   return (
     <>
@@ -59,13 +58,16 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
         justifyContent="flex-end"
         sx={{ mr: 2, my: 2 }}
       >
-        {/* <FormControl sx={{ minWidth: 200 }}>
+        {/* filter by form name */}
+        <FormControl sx={{ minWidth: 200 }}>
           <InputLabel>{messages.forms()}</InputLabel>
           <Select
             label={messages.forms()}
+            onChange={(event) => setFilterByForm(event.target.value)}
             placeholder={messages.forms()}
+            value={filterByForm}
           >
-            <MenuItem value={'all'}>
+            <MenuItem selected value={'all'}>
               {messages.submissionPane.allForms()}
             </MenuItem>
             {uniqueFormTitles.map((title, index) => (
@@ -74,7 +76,9 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
               </MenuItem>
             ))}
           </Select>
-        </FormControl> */}
+        </FormControl>
+
+        {/* filter by form submission status */}
         <FormControl sx={{ minWidth: 150 }}>
           <InputLabel>{messages.status()}</InputLabel>
           <Select
@@ -110,7 +114,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
           });
         }}
         orgId={parseInt(orgId)}
-        submissions={filterSubmissions()}
+        submissions={filteredSubmissions}
       />
     </>
   );
