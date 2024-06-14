@@ -1,13 +1,13 @@
 import { AppSession } from '../utils/types';
 import { getIronSession } from 'iron-session';
 import { GetServerSideProps } from 'next';
-import { Msg } from 'core/i18n';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Container, Typography } from '@mui/material';
 
 import getUserMemberships from 'utils/getUserMemberships';
-import Head from 'next/head';
 import messageIds from 'core/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import requiredEnvVar from 'utils/requiredEnvVar';
 import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../utils/types/zetkin';
