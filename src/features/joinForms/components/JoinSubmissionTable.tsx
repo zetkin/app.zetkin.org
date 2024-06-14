@@ -38,11 +38,11 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             disableColumnMenu: true,
             field: 'state',
             flex: 1,
-            headerName: messages.submissionList.status(),
+            headerName: messages.status(),
             renderCell: (params) => {
               return (
                 <Box className={classes.chip}>
-                  {messages.submissionPane.states[params.row.state]()}
+                  {messages.states[params.row.state]()}
                 </Box>
               );
               // />

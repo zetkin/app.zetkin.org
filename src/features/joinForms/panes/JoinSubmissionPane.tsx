@@ -89,7 +89,7 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
       <Box>
         <AttributeWithValue
           label={messages.status()}
-          value={messages.submissionPane.states[data.state]()}
+          value={messages.states[data.state]()}
         />
         <AttributeWithValue
           label={messages.submissionPane.form()}

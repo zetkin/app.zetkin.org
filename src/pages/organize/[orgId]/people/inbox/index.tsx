@@ -92,12 +92,8 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
             <MenuItem selected value="all">
               {messages.submissionPane.allStatuses()}
             </MenuItem>
-            <MenuItem value="pending">
-              {messages.submissionPane.states.pending()}
-            </MenuItem>
-            <MenuItem value="accepted">
-              {messages.submissionPane.states.accepted()}
-            </MenuItem>
+            <MenuItem value="pending">{messages.states.pending()}</MenuItem>
+            <MenuItem value="accepted">{messages.states.accepted()}</MenuItem>
           </Select>
         </FormControl>
       </Box>
