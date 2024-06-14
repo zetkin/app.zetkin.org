@@ -35,6 +35,7 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
       <DataGridPro
         columns={[
           {
+            disableColumnMenu: true,
             field: 'state',
             flex: 1,
             headerName: messages.submissionList.status(),
@@ -49,24 +50,28 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             valueGetter: (params) => params.row.state,
           },
           {
+            disableColumnMenu: true,
             field: 'first_name',
             flex: 1,
             headerName: messages.submissionList.firstName(),
             valueGetter: (params) => params.row.person_data.first_name,
           },
           {
+            disableColumnMenu: true,
             field: 'last_name',
             flex: 1,
             headerName: messages.submissionList.lastName(),
             valueGetter: (params) => params.row.person_data.last_name,
           },
           {
+            disableColumnMenu: true,
             field: 'form',
             flex: 1,
             headerName: messages.submissionList.form(),
             valueGetter: (params) => params.row.form.title,
           },
           {
+            disableColumnMenu: true,
             field: 'submitted',
             flex: 1,
             headerName: messages.submissionList.timestamp(),
