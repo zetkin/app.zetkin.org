@@ -21,6 +21,7 @@ export default makeMessages('feat.joinForms', {
     firstName: m('First name'),
     form: m('Form'),
     lastName: m('Last name'),
+    noFilteringResults: m('Your filtering yielded no results.'),
     rejectButton: m('Reject'),
     timestamp: m('Timestamp'),
   },

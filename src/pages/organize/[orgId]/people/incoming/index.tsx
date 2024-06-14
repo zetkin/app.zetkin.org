@@ -49,6 +49,30 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
     return hasFormMatches && hasStatusMatches;
   });
 
+  const RenderSubmissions = () => {
+    if (filteredSubmissions.length > 0) {
+      return (
+        <JoinSubmissionTable
+          onSelect={(submission) => {
+            openPane({
+              render: () => (
+                <JoinSubmissionPane
+                  orgId={parseInt(orgId)}
+                  submissionId={submission.id}
+                />
+              ),
+              width: 500,
+            });
+          }}
+          orgId={parseInt(orgId)}
+          submissions={filteredSubmissions}
+        />
+      );
+    } else {
+      return <Box m={2}>{messages.submissionList.noFilteringResults()}</Box>;
+    }
+  };
+
   return (
     <>
       <Box
@@ -97,21 +121,7 @@ const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
           </Select>
         </FormControl>
       </Box>
-      <JoinSubmissionTable
-        onSelect={(submission) => {
-          openPane({
-            render: () => (
-              <JoinSubmissionPane
-                orgId={parseInt(orgId)}
-                submissionId={submission.id}
-              />
-            ),
-            width: 500,
-          });
-        }}
-        orgId={parseInt(orgId)}
-        submissions={filteredSubmissions}
-      />
+      <RenderSubmissions />
     </>
   );
 };
