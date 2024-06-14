@@ -96,6 +96,8 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
                     </Button>
                   </Box>
                 );
+              } else {
+                return null;
               }
             },
           },
