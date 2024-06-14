@@ -61,9 +61,11 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
 
   return (
     <Dialog fullScreen={fullScreen} maxWidth={'lg'} open={open}>
-      <DialogTitle variant="h5">{messages.modal.title()}</DialogTitle>
+      <DialogTitle sx={{ paddingLeft: 2 }} variant="h5">
+        {messages.modal.title()}
+      </DialogTitle>
       <Box display="flex" flexGrow={1} overflow="hidden">
-        <Box sx={{ overflowY: 'auto' }} width="50%">
+        <Box paddingX={2} sx={{ overflowY: 'auto' }} width="50%">
           <PotentialDuplicatesLists
             onDeselect={(person: ZetkinPerson) => {
               const filteredIds = selectedIds.filter(

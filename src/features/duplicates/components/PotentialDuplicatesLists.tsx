@@ -23,23 +23,21 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
 
   return (
     <>
-      <Box marginX={2}>
-        <Typography marginBottom={2} variant="h6">
-          {messages.modal.peopleToMerge()}
-        </Typography>
-        <MergeCandidateList
-          buttonLabel={messages.modal.notDuplicateButton()}
-          onButtonClick={onDeselect}
-          rows={peopleToMerge}
-        />
-        {peopleToMerge.length > 0 && <Divider />}
-      </Box>
+      <Typography marginBottom={2} variant="h6">
+        {messages.modal.peopleToMerge()}
+      </Typography>
+      <MergeCandidateList
+        buttonLabel={messages.modal.notDuplicateButton()}
+        onButtonClick={onDeselect}
+        rows={peopleToMerge}
+      />
+      {peopleToMerge.length > 0 && <Divider />}
       {peopleNotToMerge.length > 0 && (
         <Box
           display="flex"
           flexDirection="column"
           overflow="hidden"
-          padding={2}
+          paddingTop={2}
         >
           <Typography marginBottom={2} variant="h6">
             {messages.modal.peopleNotBeingMerged()}
