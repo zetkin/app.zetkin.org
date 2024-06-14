@@ -38,7 +38,7 @@ export default makeMessages('feat.views', {
   browserLayout: {
     tabs: {
       duplicates: m('Duplicates'),
-      inbox: m('Incoming'),
+      incoming: m('Incoming'),
       joinForms: m('Join forms'),
       views: m('Lists'),
     },

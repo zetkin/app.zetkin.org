@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import NextLink from 'next/link';
+import { Avatar, Box, Button, Link, Typography } from '@mui/material';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
@@ -21,7 +22,7 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
-  const { approveSubmission } = useJoinSubmissionMutations(orgId, submissionId);
+  const { approveSubmission } = useJoinSubmissionMutations(orgId);
 
   if (!data) {
     return null;
@@ -40,34 +41,76 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
     }
   }
 
+  const Header = () => {
+    if (data.accepted) {
+      return (
+        <Box marginBottom={2} marginRight={2}>
+          <NextLink
+            href={`/organize/${orgId}/people/${data.person_data.id}`}
+            legacyBehavior
+            passHref
+          >
+            <Link style={{ cursor: 'pointer' }} underline="none">
+              <Box alignItems="center" display="flex">
+                <Avatar
+                  src={`/api/orgs/${orgId}/people/${data.person_data.id}/avatar`}
+                  style={{ height: 30, width: 30 }}
+                />
+                <Box
+                  alignItems="start"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  ml={1}
+                >
+                  <Typography fontSize={30} variant="h3">
+                    {`${data.person_data.first_name} ${data.person_data.last_name}`}
+                  </Typography>
+                </Box>
+              </Box>
+            </Link>
+          </NextLink>
+          <Box>{<ZUIDateTime datetime={data.submitted} />}</Box>
+        </Box>
+      );
+    } else {
+      return (
+        <PaneHeader
+          subtitle={<ZUIDateTime datetime={data.submitted} />}
+          title={`${data.person_data.first_name} ${data.person_data.last_name}`}
+        />
+      );
+    }
+  };
+
   return (
     <>
-      <PaneHeader
-        subtitle={<ZUIDateTime datetime={data.submitted} />}
-        title={`${data.person_data.first_name} ${data.person_data.last_name}`}
-      />
+      <Header />
       <Box>
         <AttributeWithValue
-          label={messages.submissionPane.status()}
-          value={messages.submissionPane.states[data.state]()}
+          label={messages.status()}
+          value={messages.states[data.state]()}
         />
         <AttributeWithValue
           label={messages.submissionPane.form()}
           value={data.form.title}
         />
       </Box>
-      <Box display="flex" gap={1} justifyContent="stretch" my={4}>
-        <Button sx={{ flexGrow: 1 }} variant="outlined">
-          {messages.submissionPane.rejectButton()}
-        </Button>
-        <Button
-          onClick={() => approveSubmission()}
-          sx={{ flexGrow: 1 }}
-          variant="contained"
-        >
-          {messages.submissionPane.approveButton()}
-        </Button>
-      </Box>
+      {!data.accepted && (
+        <Box display="flex" gap={1} justifyContent="stretch" my={4}>
+          {/* TODO: Handle rejectButton click */}
+          {/* <Button sx={{ flexGrow: 1 }} variant="outlined">
+            {messages.submissionPane.rejectButton()}
+          </Button> */}
+          <Button
+            onClick={() => approveSubmission(submissionId)}
+            sx={{ width: '50%' }}
+            variant="contained"
+          >
+            {messages.submissionPane.approveButton()}
+          </Button>
+        </Box>
+      )}
       <Box>
         {Object.keys(data.person_data).map((slug) => {
           const value = data.person_data[slug];

@@ -10,22 +10,26 @@ export default makeMessages('feat.joinForms', {
     },
     title: m('Edit form'),
   },
+  forms: m('Forms'),
+  states: {
+    accepted: m('Approved'),
+    pending: m('Pending'),
+  },
+  status: m('Status'),
   submissionList: {
     approveButton: m('Approve'),
     firstName: m('First name'),
     form: m('Form'),
     lastName: m('Last name'),
+    noFilteringResults: m('Your filtering yielded no results.'),
     rejectButton: m('Reject'),
     timestamp: m('Timestamp'),
   },
   submissionPane: {
+    allForms: m('All forms'),
+    allStatuses: m('All'),
     approveButton: m('Approve'),
     form: m('Form'),
     rejectButton: m('Reject'),
-    states: {
-      accepted: m('Approved'),
-      pending: m('Pending'),
-    },
-    status: m('Status'),
   },
 });
