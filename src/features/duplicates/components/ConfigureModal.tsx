@@ -46,7 +46,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
     selectedIds.includes(person.id)
   );
 
-  const peopleNoToMerge = potentialDuplicate?.duplicates.filter(
+  const peopleNotToMerge = potentialDuplicate?.duplicates.filter(
     (person) => !selectedIds.includes(person.id)
   );
 
@@ -63,12 +63,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
     <Dialog fullScreen={fullScreen} maxWidth={'lg'} open={open}>
       <DialogTitle variant="h5">{messages.modal.title()}</DialogTitle>
       <Box display="flex" flexGrow={1} overflow="hidden">
-        <Box
-          display="flex"
-          flexDirection="column"
-          sx={{ overflowY: 'auto' }}
-          width="50%"
-        >
+        <Box sx={{ overflowY: 'auto' }} width="50%">
           <PotentialDuplicatesLists
             onDeselect={(person: ZetkinPerson) => {
               const filteredIds = selectedIds.filter(
@@ -80,7 +75,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
               const selectedIdsUpdated = [...selectedIds, person.id];
               setSelectedIds(selectedIdsUpdated);
             }}
-            peopleNoToMerge={peopleNoToMerge}
+            peopleNotToMerge={peopleNotToMerge}
             peopleToMerge={peopleToMerge}
           />
         </Box>

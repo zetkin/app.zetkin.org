@@ -9,27 +9,21 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 interface PotentialDuplicatesListsProps {
   onDeselect: (person: ZetkinPerson) => void;
   onSelect: (person: ZetkinPerson) => void;
-  peopleNoToMerge: ZetkinPerson[];
+  peopleNotToMerge: ZetkinPerson[];
   peopleToMerge: ZetkinPerson[];
 }
 
 const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
   onDeselect,
   onSelect,
-  peopleNoToMerge,
+  peopleNotToMerge,
   peopleToMerge,
 }) => {
   const messages = useMessages(messageIds);
 
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        marginLeft={2}
-        marginRight={2}
-        overflow="hidden"
-      >
+      <Box marginX={2}>
         <Typography marginBottom={2} variant="h6">
           {messages.modal.peopleToMerge()}
         </Typography>
@@ -40,7 +34,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
         />
         {peopleToMerge.length > 0 && <Divider />}
       </Box>
-      {peopleNoToMerge.length > 0 && (
+      {peopleNotToMerge.length > 0 && (
         <Box
           display="flex"
           flexDirection="column"
@@ -53,7 +47,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           <MergeCandidateList
             buttonLabel={messages.modal.isDuplicateButton()}
             onButtonClick={onSelect}
-            rows={peopleNoToMerge}
+            rows={peopleNotToMerge}
           />
           <Divider />
         </Box>
