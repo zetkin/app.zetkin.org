@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
+import MergeCandidateList from './MergeCandidateList';
 import messageIds from '../l10n/messageIds';
-import ModalList from './ModalList';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
@@ -33,7 +33,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
         <Typography marginBottom={2} variant="h6">
           {messages.modal.peopleToMerge()}
         </Typography>
-        <ModalList
+        <MergeCandidateList
           buttonLabel={messages.modal.notDuplicateButton()}
           onButtonClick={onDeselect}
           rows={peopleToMerge}
@@ -50,7 +50,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           <Typography marginBottom={2} variant="h6">
             {messages.modal.peopleNotBeingMerged()}
           </Typography>
-          <ModalList
+          <MergeCandidateList
             buttonLabel={messages.modal.isDuplicateButton()}
             onButtonClick={onSelect}
             rows={peopleNoToMerge}

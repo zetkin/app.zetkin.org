@@ -16,13 +16,13 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
-interface ModalListProps {
+interface MergeCandidateListProps {
   buttonLabel: string;
   onButtonClick: (person: ZetkinPerson) => void;
   rows: ZetkinPerson[];
 }
 
-const ModalList: FC<ModalListProps> = ({
+const MergeCandidateList: FC<MergeCandidateListProps> = ({
   buttonLabel,
   onButtonClick,
   rows,
@@ -106,4 +106,4 @@ const ModalList: FC<ModalListProps> = ({
   );
 };
 
-export default ModalList;
+export default MergeCandidateList;
