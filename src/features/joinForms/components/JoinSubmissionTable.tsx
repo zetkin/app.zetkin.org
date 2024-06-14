@@ -86,12 +86,12 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             headerName: '',
             renderCell: (params) => {
               if (params.row.state !== 'accepted') {
-                // TODO: Handle rejectButton click
                 return (
                   <Box display="flex" gap={2}>
-                    <Button variant="text">
+                    {/* TODO: Handle rejectButton click */}
+                    {/* <Button variant="text">
                       <Msg id={messageIds.submissionList.rejectButton} />
-                    </Button>
+                    </Button> */}
                     <Button
                       onClick={(event) => {
                         approveSubmission(params.row.id);
