@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Divider,
-  FormControl,
   List,
   ListItem,
   ListItemAvatar,
@@ -35,34 +34,19 @@ const MergeCandidateList: FC<MergeCandidateListProps> = ({
         return (
           <>
             {index > 0 && <Divider />}
-            <ZUIPersonHoverCard personId={person.id}>
-              <ListItem
-                secondaryAction={
-                  <FormControl
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      gap: 2,
-                      justifyContent: 'flex-end',
-                    }}
-                  >
-                    <Button
-                      onClick={() => {
-                        onButtonClick(person);
-                      }}
-                      size="small"
-                      variant="outlined"
-                    >
-                      {buttonLabel}
-                    </Button>
-                  </FormControl>
-                }
-              >
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <ListItem>
                 <ListItemAvatar>
-                  <ZUIAvatar
-                    size={'md'}
-                    url={`/api/orgs/${orgId}/people/${person.id}/avatar`}
-                  />
+                  <ZUIPersonHoverCard personId={person.id}>
+                    <ZUIAvatar
+                      size={'md'}
+                      url={`/api/orgs/${orgId}/people/${person.id}/avatar`}
+                    />
+                  </ZUIPersonHoverCard>
                 </ListItemAvatar>
                 <ListItemText
                   primary={
@@ -98,7 +82,17 @@ const MergeCandidateList: FC<MergeCandidateListProps> = ({
                   }
                 />
               </ListItem>
-            </ZUIPersonHoverCard>
+              <Button
+                onClick={() => {
+                  onButtonClick(person);
+                }}
+                size="small"
+                sx={{ marginRight: 2 }}
+                variant="outlined"
+              >
+                {buttonLabel}
+              </Button>
+            </Box>
           </>
         );
       })}

@@ -23,9 +23,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
 
   return (
     <>
-      <Typography marginBottom={2} variant="h6">
-        {messages.modal.peopleToMerge()}
-      </Typography>
+      <Typography variant="h6">{messages.modal.peopleToMerge()}</Typography>
       <MergeCandidateList
         buttonLabel={messages.modal.notDuplicateButton()}
         onButtonClick={onDeselect}
@@ -37,9 +35,9 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
           display="flex"
           flexDirection="column"
           overflow="hidden"
-          paddingTop={2}
+          paddingTop={4}
         >
-          <Typography marginBottom={2} variant="h6">
+          <Typography variant="h6">
             {messages.modal.peopleNotBeingMerged()}
           </Typography>
           <MergeCandidateList
