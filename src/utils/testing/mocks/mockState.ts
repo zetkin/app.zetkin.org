@@ -37,6 +37,7 @@ const emptyState: RootState = {
     },
     locationList: remoteList(),
     participantsByEventId: {},
+    pendingParticipantOps: [],
     remindingByEventId: {},
     respondentsByEventId: {},
     selectedEventIds: [],

@@ -1,3 +1,4 @@
+import { ParticipantOp } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
@@ -58,6 +59,7 @@ export interface EventsStoreSlice {
     text: string;
   };
   locationList: RemoteList<ZetkinLocation>;
+  pendingParticipantOps: ParticipantOp[];
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   remindingByEventId: Record<number, boolean>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
@@ -78,6 +80,7 @@ const initialState: EventsStoreSlice = {
   },
   locationList: remoteList(),
   participantsByEventId: {},
+  pendingParticipantOps: [],
   remindingByEventId: {},
   respondentsByEventId: {},
   selectedEventIds: [],
@@ -388,6 +391,23 @@ const eventsSlice = createSlice({
         eventId
       ].items.filter((participant) => participant.id !== participantId);
     },
+    participantOpAdd: (state, action: PayloadAction<ParticipantOp>) => {
+      const newOp = action.payload;
+      const existingInverseOp = state.pendingParticipantOps.find(
+        (existingOp) =>
+          existingOp.eventId == newOp.eventId &&
+          existingOp.personId == newOp.personId &&
+          existingOp.kind != newOp.kind
+      );
+
+      if (existingInverseOp) {
+        state.pendingParticipantOps = state.pendingParticipantOps.filter(
+          (op) => op != existingInverseOp
+        );
+      } else {
+        state.pendingParticipantOps.push(newOp);
+      }
+    },
     participantUpdated: (
       state,
       action: PayloadAction<[number, ZetkinEventParticipant]>
@@ -664,6 +684,7 @@ export const {
   locationsLoaded,
   participantAdded,
   participantDeleted,
+  participantOpAdd,
   participantUpdated,
   participantsLoad,
   participantsLoaded,
