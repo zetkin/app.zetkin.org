@@ -40,6 +40,10 @@ export default makeMessages('feat.settings', {
       promote: m('Promote'),
       remove: m('Remove'),
     },
+    urlCard: {
+      linkToPub: m('Link to public organization'),
+      subTitle: m('Connect to the organization before assigning'),
+    },
     you: m('You'),
   },
 });

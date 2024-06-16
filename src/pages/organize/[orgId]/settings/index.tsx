@@ -4,7 +4,6 @@ import { Box, Grid, Link, Typography } from '@mui/material';
 
 import AddOfficialButton from 'features/settings/components/AddOfficialButton';
 import messageIds from 'features/settings/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import OfficialList from 'features/settings/components/OfficialList';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -14,6 +13,7 @@ import useOfficialMemberships from 'features/settings/hooks/useOfficialMembershi
 import useServerSide from 'core/useServerSide';
 import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
+import { Msg, useMessages } from 'core/i18n';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -30,7 +30,8 @@ const SettingsPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const listFuture = useOfficialMemberships(orgId).data || [];
-  const publicUrl = `https://app.zetkin.org/o/${orgId}`;
+  const messages = useMessages(messageIds);
+  const publicOrgUrl = `https://app.zetkin.org/o/${orgId}`;
 
   const adminList = listFuture.filter((user) => user.role === 'admin');
   const organizerList = listFuture.filter((user) => user.role === 'organizer');
@@ -89,22 +90,22 @@ const SettingsPage: PageWithLayout = () => {
       </Grid>
       <Grid item md={4}>
         <ZUICard
-          header={'Link to public organization'}
-          subheader="Connect to the organization before assigning"
+          header={messages.officials.urlCard.linkToPub()}
+          subheader={messages.officials.urlCard.subTitle()}
         >
           <Box display="flex" paddingBottom={2}>
-            <ZUITextfieldToClipboard copyText={publicUrl}>
-              {publicUrl}
+            <ZUITextfieldToClipboard copyText={publicOrgUrl}>
+              {publicOrgUrl}
             </ZUITextfieldToClipboard>
           </Box>
           <Link
             display="flex"
-            href={`/o/${orgId}`}
+            href={publicOrgUrl}
             sx={{ alignItems: 'center', gap: 1 }}
             target="_blank"
           >
             <OpenInNew fontSize="inherit" />
-            Link to public organization
+            {messages.officials.urlCard.linkToPub()}
           </Link>
         </ZUICard>
       </Grid>
