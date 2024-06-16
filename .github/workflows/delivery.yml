@@ -42,6 +42,7 @@ jobs:
           tags: |
             type=sha,prefix={{date 'YYMMDD'}}-
             type=raw,value={{date 'YYMMDD'}}
+            type=raw,value=latest
 
       - name: Build and push Docker image
         id: push
