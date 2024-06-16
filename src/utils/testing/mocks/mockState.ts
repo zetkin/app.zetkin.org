@@ -16,6 +16,9 @@ const emptyState: RootState = {
     campaignList: remoteList(),
     recentlyCreatedCampaign: null,
   },
+  duplicates: {
+    potentialDuplicatesList: remoteList(),
+  },
   emails: {
     emailList: remoteList(),
     linksByEmailId: {},
