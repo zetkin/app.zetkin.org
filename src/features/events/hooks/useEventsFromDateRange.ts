@@ -5,23 +5,19 @@ import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
-import {
-  useApiClient,
-  useAppDispatch,
-  useAppSelector,
-  useNumericRouteParams,
-} from 'core/hooks';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useEventsFromDateRange(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  orgId: number,
+  campId?: number
 ): EventActivity[] {
-  const { campId, orgId } = useNumericRouteParams();
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const eventsState = useAppSelector((state) => state.events);
 
-  const dateRange = range(dayjs(endDate).diff(startDate, 'day') + 2).map(
+  const dateRange = range(dayjs(endDate).diff(startDate, 'day') + 1).map(
     (diff) => {
       const curDate = new Date(startDate);
       curDate.setDate(curDate.getDate() + diff);
@@ -46,7 +42,7 @@ export default function useEventsFromDateRange(
           .slice(0, 10)}`
       )
       .then((events) => {
-        dispatch(eventRangeLoaded(events));
+        dispatch(eventRangeLoaded([events, dateRange]));
       });
 
     // This will suspend React from rendering this branch

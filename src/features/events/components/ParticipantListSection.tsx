@@ -119,7 +119,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   type,
 }) => {
   const messages = useMessages(messageIds);
-  const eventFuture = useEvent(orgId, eventId);
+  const event = useEvent(orgId, eventId)?.data;
   const { setContact } = useEventContact(orgId, eventId);
   const { deleteParticipant, setParticipantStatus } =
     useEventParticipantsMutations(orgId, eventId);
@@ -150,7 +150,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         if (params.row.person) {
           return <Typography>{params.row.person.name}</Typography>;
         } else {
-          return eventFuture.data?.contact?.id === params.row.id ? (
+          return event?.contact?.id === params.row.id ? (
             <Typography>
               {params.row.first_name + ' ' + params.row.last_name}
               <Tooltip title={messages.eventParticipantsList.contactTooltip()}>
@@ -284,10 +284,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             />
           );
         } else if (type == 'booked') {
-          if (
-            eventFuture.data &&
-            new Date(removeOffset(eventFuture.data.start_time)) < new Date()
-          ) {
+          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
             const options: ButtonOption[] = [
               {
                 callback: () => {

@@ -2,7 +2,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { CssBaseline } from '@mui/material';
 import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { FC, ReactElement } from 'react';
+import { Provider as ReduxProvider } from 'react-redux';
+import { FC, ReactElement, ReactNode } from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import {
   StyledEngineProvider,
@@ -12,11 +13,13 @@ import {
 
 import { AnyMessage } from 'core/i18n/messages';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
-import createStore from 'core/store';
 import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
+import IApiClient from 'core/api/client/IApiClient';
+import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLuxemburgUser';
 import theme from 'theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
+import createStore, { Store } from 'core/store';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -94,3 +97,26 @@ const customRender = (
 export * from '@testing-library/react';
 
 export { customRender as render };
+
+export const makeWrapper = (store: Store) =>
+  function Wrapper({ children }: { children: ReactNode }) {
+    const apiClient: jest.Mocked<IApiClient> = {
+      delete: jest.fn(),
+      get: jest.fn(),
+      patch: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      rpc: jest.fn(),
+    };
+
+    const env = new Environment(store, apiClient);
+    return (
+      <ReduxProvider store={store}>
+        <EnvProvider env={env}>
+          <UserContext.Provider value={RosaLuxemburgUser}>
+            {children}
+          </UserContext.Provider>
+        </EnvProvider>
+      </ReduxProvider>
+    );
+  };

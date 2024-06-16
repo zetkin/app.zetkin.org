@@ -1,6 +1,7 @@
 import { isSameDate } from 'utils/dateUtils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
+import { useNumericRouteParams } from 'core/hooks';
 import clusterEventsForWeekCalender, {
   AnyClusteredEvent,
 } from '../utils/clusterEventsForWeekCalender';
@@ -19,9 +20,12 @@ type UseWeekCalendarEventsReturn = {
 export default function useWeekCalendarEvents({
   dates,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
+  const { campId, orgId } = useNumericRouteParams();
   const eventActivities = useEventsFromDateRange(
     dates[0],
-    dates[dates.length - 1]
+    dates[dates.length - 1],
+    orgId,
+    campId
   );
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
