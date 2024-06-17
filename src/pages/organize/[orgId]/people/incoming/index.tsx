@@ -19,11 +19,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 });
 
-type DuplicatesPageProps = {
+type Props = {
   orgId: string;
 };
 
-const DuplicatesPage: PageWithLayout<DuplicatesPageProps> = ({ orgId }) => {
+const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
   const { data: submissions } = useJoinSubmissions(parseInt(orgId));
 
   type FilterByStatusType = 'all' | 'pending' | 'accepted';
@@ -126,8 +126,8 @@ const DuplicatesPage: PageWithLayout<DuplicatesPageProps> = ({ orgId }) => {
   );
 };
 
-DuplicatesPage.getLayout = function getLayout(page) {
+IncomingPage.getLayout = function getLayout(page) {
   return <PeopleLayout>{page}</PeopleLayout>;
 };
 
-export default DuplicatesPage;
+export default IncomingPage;
