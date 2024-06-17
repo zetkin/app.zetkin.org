@@ -1,8 +1,9 @@
-import globalMessageIds from 'core/i18n/globalMessageIds';
-import messageIds from 'zui/l10n/messageIds';
 import { TextField } from '@mui/material';
-import { FC, MutableRefObject, useState } from 'react';
-import { Msg, useMessages } from 'core/i18n';
+import { FC, MutableRefObject } from 'react';
+
+import FieldValidationWarning from './FieldValidationWarning';
+import globalMessageIds from 'core/i18n/globalMessageIds';
+import { useMessages } from 'core/i18n';
 import {
   ZetkinCreatePerson,
   ZetkinPersonNativeFields,
@@ -11,12 +12,13 @@ import {
 interface PersonFieldInputProps {
   field: keyof ZetkinCreatePerson;
   label?: string;
-  onChange: (field: string, value: string) => void;
+  onChange: (field: string, newValue: string) => void;
   required?: boolean;
   isURLField?: boolean;
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
   style?: Record<string, unknown>;
   error?: boolean;
+  value?: string;
 }
 const PersonFieldInput: FC<PersonFieldInputProps> = ({
   field,
@@ -27,26 +29,17 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
   inputRef,
   isURLField,
   error,
+  value,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
-  const [blurred, setBlurred] = useState(false);
 
   return (
     <TextField
       error={error}
       fullWidth
       helperText={
-        error &&
-        blurred && (
-          <Msg
-            id={
-              isURLField
-                ? messageIds.createPerson.validationWarning.url
-                : field === 'alt_phone' || field === 'phone'
-                ? messageIds.createPerson.validationWarning.phone
-                : messageIds.createPerson.validationWarning.email
-            }
-          />
+        error && (
+          <FieldValidationWarning field={field} isURLField={isURLField} />
         )
       }
       inputRef={inputRef}
@@ -57,11 +50,13 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
               field as keyof ZetkinPersonNativeFields
             ]()
       }
-      onBlur={() => setBlurred(true)}
-      onChange={(e) => onChange(field, e.target.value.trim())}
-      onFocus={() => setBlurred(false)}
+      onChange={(e) => {
+        const trimmedValue = e.target.value.trim();
+        onChange(field, trimmedValue);
+      }}
       required={required}
       sx={style}
+      value={value}
     />
   );
 };
