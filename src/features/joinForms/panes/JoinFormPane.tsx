@@ -23,14 +23,14 @@ type Props = {
 };
 
 const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
-  const { data } = useJoinForm(orgId, formId);
+  const { data: joinForm } = useJoinForm(orgId, formId);
   const { updateForm } = useJoinFormMutations(orgId, formId);
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
   const theme = useTheme();
 
-  if (!data) {
+  if (!joinForm) {
     return null;
   }
 
@@ -52,7 +52,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       <PaneHeader title={messages.formPane.title()} />
       <Box mb={2}>
         <TextField
-          defaultValue={data.title}
+          defaultValue={joinForm.title}
           fullWidth
           label={messages.formPane.labels.title()}
           onChange={(evt) => updateForm({ title: evt.target.value })}
@@ -60,7 +60,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       </Box>
       <Box mb={1}>
         <TextField
-          defaultValue={data.description}
+          defaultValue={joinForm.description}
           fullWidth
           label={messages.formPane.labels.description()}
           onChange={(evt) => updateForm({ description: evt.target.value })}
@@ -69,11 +69,11 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       <Box mb={1}>
         <Autocomplete
           fullWidth
-          getOptionDisabled={(option) => data.fields.includes(option)}
+          getOptionDisabled={(option) => joinForm.fields.includes(option)}
           getOptionLabel={slugToLabel}
           onChange={(ev, value) => {
             if (value) {
-              updateForm({ fields: [...data.fields, value] });
+              updateForm({ fields: [...joinForm.fields, value] });
             }
           }}
           options={[
@@ -90,7 +90,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
         />
       </Box>
       <Box>
-        {data.fields.map((slug) => {
+        {joinForm.fields.map((slug) => {
           return (
             <Box
               key={slug}
@@ -112,7 +112,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
                 <IconButton
                   onClick={() =>
                     updateForm({
-                      fields: data.fields.filter(
+                      fields: joinForm.fields.filter(
                         (existingSlug) => existingSlug != slug
                       ),
                     })

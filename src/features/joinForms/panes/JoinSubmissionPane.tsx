@@ -18,13 +18,13 @@ type Props = {
 };
 
 const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
-  const { data } = useJoinSubmission(orgId, submissionId);
+  const { data: joinSubmission } = useJoinSubmission(orgId, submissionId);
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
   const { approveSubmission } = useJoinSubmissionMutations(orgId);
 
-  if (!data) {
+  if (!joinSubmission) {
     return null;
   }
 
@@ -42,18 +42,18 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   }
 
   const Header = () => {
-    if (data.accepted) {
+    if (joinSubmission.accepted) {
       return (
         <Box marginBottom={2} marginRight={2}>
           <NextLink
-            href={`/organize/${orgId}/people/${data.person_data.id}`}
+            href={`/organize/${orgId}/people/${joinSubmission.person_data.id}`}
             legacyBehavior
             passHref
           >
             <Link style={{ cursor: 'pointer' }} underline="none">
               <Box alignItems="center" display="flex">
                 <Avatar
-                  src={`/api/orgs/${orgId}/people/${data.person_data.id}/avatar`}
+                  src={`/api/orgs/${orgId}/people/${joinSubmission.person_data.id}/avatar`}
                   style={{ height: 30, width: 30 }}
                 />
                 <Box
@@ -64,20 +64,20 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
                   ml={1}
                 >
                   <Typography fontSize={30} variant="h3">
-                    {`${data.person_data.first_name} ${data.person_data.last_name}`}
+                    {`${joinSubmission.person_data.first_name} ${joinSubmission.person_data.last_name}`}
                   </Typography>
                 </Box>
               </Box>
             </Link>
           </NextLink>
-          <Box>{<ZUIDateTime datetime={data.submitted} />}</Box>
+          <Box>{<ZUIDateTime datetime={joinSubmission.submitted} />}</Box>
         </Box>
       );
     } else {
       return (
         <PaneHeader
-          subtitle={<ZUIDateTime datetime={data.submitted} />}
-          title={`${data.person_data.first_name} ${data.person_data.last_name}`}
+          subtitle={<ZUIDateTime datetime={joinSubmission.submitted} />}
+          title={`${joinSubmission.person_data.first_name} ${joinSubmission.person_data.last_name}`}
         />
       );
     }
@@ -89,14 +89,14 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
       <Box>
         <AttributeWithValue
           label={messages.status()}
-          value={messages.states[data.state]()}
+          value={messages.states[joinSubmission.state]()}
         />
         <AttributeWithValue
           label={messages.submissionPane.form()}
-          value={data.form.title}
+          value={joinSubmission.form.title}
         />
       </Box>
-      {!data.accepted && (
+      {!joinSubmission.accepted && (
         <Box display="flex" gap={1} justifyContent="stretch" my={4}>
           {/* TODO: Handle rejectButton click */}
           {/* <Button sx={{ flexGrow: 1 }} variant="outlined">
@@ -112,8 +112,8 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
         </Box>
       )}
       <Box>
-        {Object.keys(data.person_data).map((slug) => {
-          const value = data.person_data[slug];
+        {Object.keys(joinSubmission.person_data).map((slug) => {
+          const value = joinSubmission.person_data[slug];
           return (
             <AttributeWithValue
               key={slug}

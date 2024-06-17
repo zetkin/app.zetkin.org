@@ -22,17 +22,17 @@ type PageProps = {
   orgId: string;
 };
 
-const DuplicatesPage: PageWithLayout<PageProps> = ({ orgId }) => {
-  const { data } = useJoinForms(parseInt(orgId));
+const JoinFormsPage: PageWithLayout<PageProps> = ({ orgId }) => {
+  const { data: joinForms } = useJoinForms(parseInt(orgId));
   const { openPane } = usePanes();
 
-  if (!data) {
+  if (!joinForms) {
     return null;
   }
 
   return (
     <JoinFormList
-      forms={data}
+      forms={joinForms}
       onItemClick={(form) => {
         openPane({
           render: () => (
@@ -45,8 +45,8 @@ const DuplicatesPage: PageWithLayout<PageProps> = ({ orgId }) => {
   );
 };
 
-DuplicatesPage.getLayout = function getLayout(page) {
+JoinFormsPage.getLayout = function getLayout(page) {
   return <PeopleLayout>{page}</PeopleLayout>;
 };
 
-export default DuplicatesPage;
+export default JoinFormsPage;

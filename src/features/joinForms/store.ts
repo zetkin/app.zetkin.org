@@ -45,6 +45,7 @@ const joinFormsSlice = createSlice({
       const item = findOrAddItem(state.formList, form.id);
       item.data = form;
       item.mutating = [];
+      item.loaded = new Date().toISOString();
     },
     joinFormsLoad: (state) => {
       state.formList.isLoading = true;
