@@ -217,6 +217,9 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   participantsModal: {
+    participantsList: {
+      moveButton: m('Move'),
+    },
     title: m('Edit participants'),
   },
   search: m('Search'),
