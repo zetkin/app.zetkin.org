@@ -1,6 +1,6 @@
 import { CheckBoxOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { Box, Button, Divider, Paper, Typography } from '@mui/material';
+import { Badge, Box, Button, Divider, Paper, Typography } from '@mui/material';
 
 import EventParticipantsModal from '../EventParticipantsModal';
 import messageIds from '../../../calendar/l10n/messageIds';
@@ -9,11 +9,13 @@ import { Msg } from 'core/i18n';
 import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
+import useParticipantPool from 'features/events/hooks/useParticipantPool';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 const SelectionBar = () => {
   const dispatch = useAppDispatch();
   const [participantsDialogOpen, setParticipantsDialogOpen] = useState(false);
+  const { affectedParticipantIds } = useParticipantPool();
   const selectedEventIds = useAppSelector(
     (state: RootState) => state.events.selectedEventIds
   );
@@ -66,12 +68,17 @@ const SelectionBar = () => {
                 gap={1}
                 justifyContent="center"
               >
-                <Button
-                  onClick={() => setParticipantsDialogOpen(true)}
-                  variant="outlined"
+                <Badge
+                  badgeContent={affectedParticipantIds.length}
+                  color="primary"
                 >
-                  <Msg id={messageIds.selectionBar.editParticipants} />
-                </Button>
+                  <Button
+                    onClick={() => setParticipantsDialogOpen(true)}
+                    variant="outlined"
+                  >
+                    <Msg id={messageIds.selectionBar.editParticipants} />
+                  </Button>
+                </Badge>
               </Box>
               <Box
                 alignItems="center"
