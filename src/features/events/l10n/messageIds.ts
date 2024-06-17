@@ -218,7 +218,14 @@ export default makeMessages('feat.events', {
   },
   participantsModal: {
     participantsList: {
-      moveButton: m('Move'),
+      buttons: {
+        addBack: m('Add back'),
+        move: m('Move'),
+      },
+      states: {
+        pending: m('Pending'),
+        removed: m('Moving away from this event'),
+      },
     },
     title: m('Edit participants'),
   },
