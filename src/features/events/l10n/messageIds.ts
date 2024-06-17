@@ -220,10 +220,17 @@ export default makeMessages('feat.events', {
     participantsList: {
       buttons: {
         addBack: m('Add back'),
+        addHere: m('Add here'),
         move: m('Move'),
+        undo: m('Undo'),
+      },
+      headers: {
+        booked: m('This event'),
+        pending: m('Participant pool'),
       },
       states: {
-        pending: m('Pending'),
+        added: m('Being added to this event'),
+        pending: m('In the pool'),
         removed: m('Moving away from this event'),
       },
     },

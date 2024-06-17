@@ -64,6 +64,28 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             />
           </Button>
         )}
+        {participant.status == 'pending' && (
+          <Button
+            onClick={() => moveTo(eventId, participant.person.id)}
+            size="small"
+            variant="outlined"
+          >
+            <Msg
+              id={messageIds.participantsModal.participantsList.buttons.addHere}
+            />
+          </Button>
+        )}
+        {participant.status == 'added' && (
+          <Button
+            onClick={() => moveFrom(eventId, participant.person.id)}
+            size="small"
+            variant="outlined"
+          >
+            <Msg
+              id={messageIds.participantsModal.participantsList.buttons.undo}
+            />
+          </Button>
+        )}
         {participant.status == 'removed' && (
           <Button
             onClick={() => moveTo(eventId, participant.person.id)}
@@ -84,24 +106,7 @@ const SecondaryLabel: FC<{ participant: ParticipantWithPoolState }> = ({
   participant,
 }) => {
   if (participant.status == 'booked') {
-    return (
-      <>
-        <Typography
-          gutterBottom
-          sx={{ display: 'inline', textOverflow: 'ellipsis' }}
-          variant="body2"
-        >
-          {participant.person.email || ''}
-        </Typography>{' '}
-        <Typography
-          gutterBottom
-          sx={{ display: 'inline', textOverflow: 'ellipsis' }}
-          variant="body2"
-        >
-          {participant.person.phone || ''}
-        </Typography>
-      </>
-    );
+    return null;
   } else {
     const msgId =
       messageIds.participantsModal.participantsList.states[participant.status];

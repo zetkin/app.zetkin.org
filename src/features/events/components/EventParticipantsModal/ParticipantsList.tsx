@@ -2,22 +2,18 @@ import { FC } from 'react';
 import { List } from '@mui/material';
 
 import ParticipantsListItem from './ParticipantsListItem';
-import useEventParticipantsWithChanges from 'features/events/hooks/useEventParticipantsWithChanges';
+import { ParticipantWithPoolState } from 'features/events/types';
 
 type Props = {
   eventId: number;
   orgId: number;
+  participants: ParticipantWithPoolState[];
 };
 
-const ParticipantsList: FC<Props> = ({ eventId, orgId }) => {
-  const { bookedParticipants } = useEventParticipantsWithChanges(
-    orgId,
-    eventId
-  );
-
+const ParticipantsList: FC<Props> = ({ eventId, orgId, participants }) => {
   return (
     <List>
-      {bookedParticipants.map((participant) => (
+      {participants.map((participant) => (
         <ParticipantsListItem
           key={participant.person.id}
           eventId={eventId}

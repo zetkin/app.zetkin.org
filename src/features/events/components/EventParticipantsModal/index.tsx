@@ -2,7 +2,7 @@ import { Box, Card } from '@mui/material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
-import ParticipantsList from './ParticipantsList';
+import ParticipantsSection from './ParticipantsSection';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useParticipantPool from 'features/events/hooks/useParticipantPool';
@@ -41,12 +41,7 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
           ))}
         </Box>
         <Box flex={1} sx={{ overflowY: 'auto' }}>
-          {selectedEvent && (
-            <ParticipantsList
-              eventId={selectedEvent.id}
-              orgId={selectedEvent.organization.id}
-            />
-          )}
+          {selectedEvent && <ParticipantsSection event={selectedEvent} />}
         </Box>
       </Box>
       {affectedParticipantIds.length > 0 && (
