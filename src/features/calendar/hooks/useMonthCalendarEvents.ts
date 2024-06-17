@@ -2,6 +2,7 @@ import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
 import { getActivitiesByDay } from '../components/utils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
+import { useNumericRouteParams } from 'core/hooks';
 import {
   CLUSTER_TYPE,
   clusterEvents,
@@ -25,7 +26,13 @@ export default function useMonthCalendarEvents({
   maxPerDay,
   startDate,
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
-  const eventActivities = useEventsFromDateRange(startDate, endDate);
+  const { campId, orgId } = useNumericRouteParams();
+  const eventActivities = useEventsFromDateRange(
+    startDate,
+    endDate,
+    orgId,
+    campId
+  );
 
   // Filter events based on user filters
   const filteredActivities = useFilteredEventActivities(eventActivities);

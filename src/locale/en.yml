@@ -1239,27 +1239,26 @@ feat:
           opened: opened
           sent: been sent
       journey:
-        closed: a closed
         condition:
           conditionSelect:
-            all: and has all
-            any: and has any
-            none: and has none
+            all: and have all
+            any: and have any
+            none: and have none
             regardlessTags: regardless of tags
-            some: and has at least
+            some: and have at least
           preview:
-            all: and has all
-            any: and has any
-            none: and has none
+            all: and have all
+            any: and have any
+            none: and have none
             regardlessTags: regardless of tags
-            some: and has at least {minMatching}
+            some: and have at least {minMatching}
         followingTags: of the following tags
-        inputString: "{addRemoveSelect} people who are part of {operator}
-          {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc}
-          {tags}"
-        opened: an open
-        thatFinished: that finished
-        thatOpened: that opened
+        inputString: "{addRemoveSelect} people who are part of {journeySelect} that
+          opened {openedTimeFrame} and {stateSelect} {closedTimeFrame}
+          {condition} {tagsDesc} {tags}"
+        stateOptions:
+          closed: closed
+          open: are still open
       mostActive:
         examples:
           one: Add the 100 most active members of the organization before today.

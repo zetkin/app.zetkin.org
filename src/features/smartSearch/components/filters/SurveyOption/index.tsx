@@ -10,6 +10,7 @@ import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CONDITION_OPERATOR,
+  FilterConfigOrgOptions,
   NewSmartSearchFilter,
   OPERATION,
   SmartSearchFilterWithId,
@@ -47,6 +48,7 @@ interface InternalConfig {
   question?: number;
   operator: CONDITION_OPERATOR;
   options: number[];
+  organizations?: FilterConfigOrgOptions;
 }
 
 const SurveyOption = ({
@@ -180,7 +182,11 @@ const SurveyOption = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -338,6 +344,7 @@ const SurveyOption = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

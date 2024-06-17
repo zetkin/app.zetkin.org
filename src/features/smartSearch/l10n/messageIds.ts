@@ -302,39 +302,39 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     journey: {
-      closed: m('a closed'),
       condition: {
         conditionSelect: {
-          all: m('and has all'),
-          any: m('and has any'),
-          none: m('and has none'),
+          all: m('and have all'),
+          any: m('and have any'),
+          none: m('and have none'),
           regardlessTags: m('regardless of tags'),
-          some: m('and has at least'),
+          some: m('and have at least'),
         },
         preview: {
-          all: m('and has all'),
-          any: m('and has any'),
-          none: m('and has none'),
+          all: m('and have all'),
+          any: m('and have any'),
+          none: m('and have none'),
           regardlessTags: m('regardless of tags'),
-          some: m<{ minMatching: number }>('and has at least {minMatching}'),
+          some: m<{ minMatching: number }>('and have at least {minMatching}'),
         },
       },
       followingTags: m('of the following tags'),
       inputString: m<{
         addRemoveSelect: ReactElement;
+        closedTimeFrame: ReactElement | null;
         condition: ReactElement;
         journeySelect: ReactElement;
-        operator: ReactElement;
-        statusText: ReactElement;
+        openedTimeFrame: ReactElement;
+        stateSelect: ReactElement;
         tags: ReactElement | null;
         tagsDesc: ReactElement | null;
-        timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc} {tags}'
+        '{addRemoveSelect} people who are part of {journeySelect} that opened {openedTimeFrame} and {stateSelect} {closedTimeFrame} {condition} {tagsDesc} {tags}'
       ),
-      opened: m('an open'),
-      thatFinished: m('that finished'),
-      thatOpened: m('that opened'),
+      stateOptions: {
+        closed: m('closed'),
+        open: m('are still open'),
+      },
     },
     mostActive: {
       examples: {
@@ -781,6 +781,15 @@ export default makeMessages('feat.smartSearch', {
     add: m('Add'),
     limit: m('Limit to'),
     sub: m('Remove'),
+  },
+  orgScope: {
+    all: m('Searching in all organizations'),
+    few: m<{ first: string; last: string }>('Searching in {first} and {last}'),
+    many: m<{ additional: number; first: string }>(
+      'Searching in {first} and {additional} other organizations'
+    ),
+    single: m<{ value: string }>('Searching in {value}'),
+    suborgs: m('Searching in all sub-organizations'),
   },
   quantity: {
     edit: {
