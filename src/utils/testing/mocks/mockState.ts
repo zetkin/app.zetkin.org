@@ -14,6 +14,7 @@ const emptyState: RootState = {
   },
   campaigns: {
     campaignList: remoteList(),
+    campaignsByOrgId: {},
     recentlyCreatedCampaign: null,
   },
   duplicates: {
