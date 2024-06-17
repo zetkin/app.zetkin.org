@@ -31,9 +31,10 @@ const ParticipantAvatars = ({
             color: theme.palette.text.primary,
             fontSize: '0.7em',
             height: 20,
-            marginLeft: 0.1,
+            margin: 0.1,
             maxWidth: 'max-content',
-            minWidth: 20,
+            minWidth: 'min-content',
+            padding: '0 0.3em',
           },
         }}
       >
