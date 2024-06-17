@@ -62,17 +62,11 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     personNumberFormats.push('se', 'dk', 'no');
   }
 
-  enum DateFormats {
-    'YYYY-MM-DD' = 'YYYY-MM-DD',
-    'YY-MM-DD' = 'YY-MM-DD',
-    'MM-DD-YYYY' = 'MM-DD-YYYY',
-  }
-
-  const dateFormats: DateFormats[] = [
-    DateFormats['YYYY-MM-DD'],
-    DateFormats['YY-MM-DD'],
-    DateFormats['MM-DD-YYYY'],
-  ];
+  const dateFormats = {
+    ['MM-DD-YYYY']: '10-06-2024',
+    ['YY-MM-DD']: '24-10-06',
+    ['YYYY-MM-DD']: '2024-10-06',
+  };
 
   const isPersonNumberFormat = (
     dateFormat: string
@@ -90,7 +84,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   };
 
   const isCustomFormat =
-    !dateFormats.includes(dateFormat as DateFormats) &&
+    !Object.keys(dateFormats).includes(dateFormat) &&
     !isPersonNumberFormat(dateFormat);
 
   return {

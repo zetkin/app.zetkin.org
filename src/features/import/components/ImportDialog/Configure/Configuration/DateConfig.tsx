@@ -67,15 +67,14 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
               id={messageIds.configuration.configure.dates.listSubHeaders.dates}
             />
           </ListSubheader>
-          {dateFormats.map((format) => (
-            <MenuItem key={format} sx={{ paddingLeft: 4 }} value={format}>
-              <Msg
-                id={
-                  messageIds.configuration.configure.dates.dateFormats[format]
-                }
-              />
-            </MenuItem>
-          ))}
+          {Object.entries(dateFormats).map((entry) => {
+            const [format, label] = entry;
+            return (
+              <MenuItem key={format} sx={{ paddingLeft: 4 }} value={format}>
+                {label}
+              </MenuItem>
+            );
+          })}
           <ListSubheader>
             <Msg
               id={
