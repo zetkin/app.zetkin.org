@@ -13,5 +13,5 @@ export type ParticipantOp = {
 
 export type ParticipantWithPoolState = {
   person: ZetkinPerson;
-  status: 'booked' | 'removed' | 'pending';
+  status: 'added' | 'booked' | 'removed' | 'pending';
 };
