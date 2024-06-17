@@ -52,6 +52,11 @@ const QueryOverviewFilterListItem: FC<QueryOverviewFilterListItemProps> = ({
         }
         onClickDelete={() => onDeleteFilter(filter)}
         onClickEdit={() => onEditFilter(filter)}
+        organizations={
+          'organizations' in filter.config
+            ? filter.config.organizations
+            : undefined
+        }
       />
     </>
   );

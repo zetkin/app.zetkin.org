@@ -37,6 +37,13 @@ export default function problemsFromPreview(
         ImportProblemKind.MISSING_ID_AND_NAME,
         previewProblem.index
       );
+    } else if (
+      previewProblem.code == ImportPreviewProblemCode.UNEXPECTED_ERROR
+    ) {
+      accumulateProblem(
+        ImportProblemKind.UNEXPECTED_ERROR,
+        previewProblem.index
+      );
     } else if (previewProblem.level == 'error') {
       // Unknown error (unknown warnings are ignored)
       accumulateProblem(ImportProblemKind.UNKNOWN_ERROR, previewProblem.index);

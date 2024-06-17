@@ -39,6 +39,8 @@ feat:
       people: People
       projects: Projects
       questions: Questions
+      settings: Settings
+      shared: Shared with us
       submissions: Submissions
       surveys: Surveys
       tasks: Tasks
@@ -325,6 +327,21 @@ feat:
       create: Create call assignment
       heading: Mobilization and outreach (none configured)
     noManager: No Project Manager
+    shared:
+      cta: Go to project
+      noActivities: All ongoing activities shared with your organization will appear here.
+      noArchives: All expired activities that have been shared with your organization
+        will appear here.
+      title: Shared with us
+    sharedLayout:
+      alertMsg: This project contains only activities shared from other organizations
+        and you can view it but not change it.
+      subtitle: "{numOfActivities, plural, =1 {1 activity} other {# activities}}"
+      tabs:
+        activities: Activities
+        archive: Archive
+        overview: Overview
+      title: Shared with us
     singleProject:
       filterActivities: Type to filter
       noActivities: There are no activities in this project yet.
@@ -468,6 +485,9 @@ feat:
         organization. You may still receive reminders and other email sent
         specifically to you as part of work you do in the organization.
       unsubButton: Unsubscribe me
+    unsubscribedPage:
+      h: Unsubscribed!
+      info: You have been unsubscribed from mass email from {org}.
     varDefaults:
       target: reader
   events:
@@ -870,6 +890,7 @@ feat:
             that don't exist. Did you mean to use External ID, or could some
             people have been deleted since the file was created?
           title: Trying to update records that do not exist
+        validating: Validating
     steps:
       configure: Configure
       import: Import
@@ -1052,6 +1073,9 @@ feat:
       manage: Manage
       profile: Profile
       timeline: Timeline
+    user:
+      hasAccount: Connected to a Zetkin account
+      noAccount: Not connected to a Zetkin account
   search:
     error: There was an error
     label: Search
@@ -1065,6 +1089,38 @@ feat:
       survey: Survey
       task: Task
       view: List
+  settings:
+    officials:
+      addPerson:
+        addAdmin: Add administrator
+        addOrganizer: Add organizer
+        administrators: administrators
+        alreadyInList: Already in list
+        organizers: organizers
+        placeholder: Type to add person to {list}
+      administrators:
+        columns:
+          name: Name
+        description: Administrators have full access to creating, editing and deleting
+          any type of content.
+        roleInheritance: Administrator in
+        title: Administrators
+      organizers:
+        columns:
+          inheritance: Role inheritance
+          name: Name
+        description: Organizers have enough privileges to do things like organizing
+          campaigns and managing existing call assignments.
+        roleInheritance: Organizer in
+        title: Organizers
+      settingsLayout:
+        access: Access
+        title: Settings
+      tableButtons:
+        demote: Demote
+        promote: Promote
+        remove: Remove
+      you: You
   smartSearch:
     buttonLabels:
       add: Save selection
@@ -1076,6 +1132,7 @@ feat:
     filterCategories:
       campaignActivity: Project activity
       email: Email
+      journeySubjects: Journey
       misc: Misc
       peopleDatabase: People
       phoneBanking: Phone banking
@@ -1088,6 +1145,7 @@ feat:
       email_blacklist: People who are blocked from emails
       email_click: Based on their interaction with links in email
       email_history: Based on their email history
+      journey_subjects: Based on journeys
       most_active: The most active people
       person_data: Based on their name, address or other data
       person_field: Based on custom fields
@@ -1180,6 +1238,27 @@ feat:
           notSent: not been sent
           opened: opened
           sent: been sent
+      journey:
+        condition:
+          conditionSelect:
+            all: and have all
+            any: and have any
+            none: and have none
+            regardlessTags: regardless of tags
+            some: and have at least
+          preview:
+            all: and have all
+            any: and have any
+            none: and have none
+            regardlessTags: regardless of tags
+            some: and have at least {minMatching}
+        followingTags: of the following tags
+        inputString: "{addRemoveSelect} people who are part of {journeySelect} that
+          opened {openedTimeFrame} and {stateSelect} {closedTimeFrame}
+          {condition} {tagsDesc} {tags}"
+        stateOptions:
+          closed: closed
+          open: are still open
       mostActive:
         examples:
           one: Add the 100 most active members of the organization before today.
@@ -1207,6 +1286,11 @@ feat:
           street_address: street address
           zip_code: zip code
         fieldTuple: "{first} and {second}"
+        genders:
+          f: female
+          m: male
+          o: other
+          unknown: unknown
         inputString: "{addRemoveSelect} any person whose {criteria}."
       personField:
         edit:
@@ -1474,6 +1558,11 @@ feat:
       openQuestionButton: Open question
       textButton: Text
       title: Choose a block type to add more content to your survey
+    alert:
+      editable: This survey is owned by {orgTitle} and you can only edit it from its
+        original location.
+      goOriginal: Go to original
+      notEditable: This survey is owned by {orgTitle} and you can not edit it.
     blocks:
       choice:
         addOption: Add option
@@ -1837,6 +1926,8 @@ feat:
         actionNeeded: Organizer action needed
         showDetails: Show details
         solvedIssues: "{count, plural, =1 {1 solved issue} other {# solved issues}}"
+      personTag:
+        emptyValue: Empty value
     columnDialog:
       categories:
         basic:
@@ -2218,6 +2309,7 @@ zui:
     people: People
     projects: Projects & Activities
     search: Search
+    settings: Settings
     signOut: Sign out
     userSettings: User settings
   personGridEditCell:

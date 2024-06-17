@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 import GroupToggle from './components/GroupToggle';
+import messageIds from '../../l10n/messageIds';
 import useCreateTag from 'features/tags/hooks/useCreateTag';
+import useDeleteTag from 'features/tags/hooks/useDeleteTag';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useTagGroups from 'features/tags/hooks/useTagGroups';
+import useTagMutations from 'features/tags/hooks/useTagMutations';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -13,23 +16,33 @@ import TagManagerController, {
   TagManagerControllerProps,
 } from './TagManagerController';
 
-import messageIds from '../../l10n/messageIds';
-import useTagMutations from 'features/tags/hooks/useTagMutations';
-
 type TagManagerProps = Omit<
   TagManagerControllerProps,
-  'availableGroups' | 'availableTags' | 'onCreateTag' | 'onEditTag'
+  | 'availableGroups'
+  | 'availableTags'
+  | 'onCreateTag'
+  | 'onEditTag'
+  | 'onDeleteTag'
 > & {
-  disableEditTags?: boolean;
   disableValueTags?: boolean;
   onTagEdited?: (tag: ZetkinTag) => void;
 };
 
-const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
+const TagManager: FC<TagManagerProps> = ({
+  disableEditTags,
+  disableValueTags,
+  onTagEdited,
+  onAssignTag,
+  onUnassignTag,
+  assignedTags,
+  disabledTags,
+  groupTags,
+  ignoreValues,
+}) => {
   const { orgId } = useNumericRouteParams();
   const tagsFuture = useTags(orgId);
   const { tagGroupsFuture } = useTagGroups(orgId);
-
+  const deleteTag = useDeleteTag(orgId);
   const createTag = useCreateTag(orgId);
   const { updateTag } = useTagMutations(orgId);
 
@@ -41,16 +54,23 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
         );
         return (
           <TagManagerController
+            assignedTags={assignedTags}
             availableGroups={tagGroups}
-            availableTags={props.disableValueTags ? tagsWithoutValueTags : tags}
+            availableTags={disableValueTags ? tagsWithoutValueTags : tags}
+            disabledTags={disabledTags}
+            disableEditTags={disableEditTags}
+            groupTags={groupTags}
+            ignoreValues={ignoreValues}
+            onAssignTag={onAssignTag}
             onCreateTag={createTag}
+            onDeleteTag={deleteTag}
             onEditTag={async (newValue) => {
               const updated = await updateTag(newValue);
-              if (props.onTagEdited) {
-                props.onTagEdited(updated);
+              if (onTagEdited) {
+                onTagEdited(updated);
               }
             }}
-            {...props}
+            onUnassignTag={onUnassignTag}
           />
         );
       }}
@@ -58,9 +78,16 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   );
 };
 
-export const TagManagerSection: React.FunctionComponent<
-  Omit<TagManagerProps, 'groupTags'>
-> = (props) => {
+export const TagManagerSection: FC<Omit<TagManagerProps, 'groupTags'>> = ({
+  assignedTags,
+  onAssignTag,
+  onUnassignTag,
+  disableEditTags,
+  disableValueTags,
+  disabledTags,
+  ignoreValues,
+  onTagEdited,
+}) => {
   const messages = useMessages(messageIds);
 
   const [isGrouped, setIsGrouped] = useState(true);
@@ -75,7 +102,17 @@ export const TagManagerSection: React.FunctionComponent<
       }
       title={messages.manager.title()}
     >
-      <TagManager groupTags={isGrouped} {...props} />
+      <TagManager
+        assignedTags={assignedTags}
+        disabledTags={disabledTags}
+        disableEditTags={disableEditTags}
+        disableValueTags={disableValueTags}
+        groupTags={isGrouped}
+        ignoreValues={ignoreValues}
+        onAssignTag={onAssignTag}
+        onTagEdited={onTagEdited}
+        onUnassignTag={onUnassignTag}
+      />
     </ZUISection>
   );
 };

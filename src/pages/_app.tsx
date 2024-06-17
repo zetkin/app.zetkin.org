@@ -20,11 +20,6 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
-// MUI-X license
-if (process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY) {
-  LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY);
-}
-
 // Progress bar
 NProgress.configure({ showSpinner: false });
 Router.events.on(
@@ -47,7 +42,7 @@ declare global {
 }
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  const { lang, messages, ...restProps } = pageProps;
+  const { envVars, lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
   const getLayout = c.getLayout || ((page) => page);
 
@@ -55,7 +50,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     window.__reactRendered = true;
   }
 
-  const env = new Environment(store, new BrowserApiClient());
+  const env = new Environment(store, new BrowserApiClient(), envVars || {});
+
+  // MUI-X license
+  if (env.vars.MUIX_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(env.vars.MUIX_LICENSE_KEY);
+  }
 
   useEffect(() => {
     // Remove the server-side injected CSS.

@@ -7,6 +7,7 @@ const LEVEL_BY_PROBLEM_KIND: Record<ImportProblemKind, 'warning' | 'error'> = {
   NO_IMPACT: 'error',
   UNCONFIGURED_ID: 'warning',
   UNCONFIGURED_ID_AND_NAME: 'error',
+  UNEXPECTED_ERROR: 'error',
   UNKNOWN_ERROR: 'error',
   UNKNOWN_PERSON: 'error',
 };

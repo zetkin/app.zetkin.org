@@ -4,7 +4,6 @@ import { FC } from 'react';
 
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
-import { JOURNEY_OP } from '.';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
@@ -27,19 +26,13 @@ const localMessageIds = messageIds.filters.journey;
 const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const op = filter.op || OPERATION.ADD;
-  const {
-    operator,
-    journey: journeyId,
-    after,
-    before,
-    tags: tagsObj,
-  } = filter.config;
+  const { journey: journeyId, tags: tagsObj } = filter.config;
   const journeys = useJourneys(orgId).data || [];
-  const journeyTitle = journeys?.find((item) => item.id === journeyId)?.title;
-  const timeFrame = getTimeFrameWithConfig({
-    after: after,
-    before: before,
-  });
+  const journeyTitle = journeys?.find(
+    (item) => item.id === journeyId
+  )?.plural_label;
+  const openedTimeFrame = getTimeFrameWithConfig(filter.config.opened || {});
+  const closedTimeFrame = getTimeFrameWithConfig(filter.config.closed || {});
   const { data } = useTags(orgId);
   const tags = data || [];
 
@@ -80,33 +73,21 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
     }
   };
 
+  const state = filter.config.closed ? 'closed' : 'open';
+
   return (
     <Msg
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
+        closedTimeFrame:
+          state == 'closed' ? (
+            <DisplayTimeFrame config={closedTimeFrame} />
+          ) : null,
         condition: getCondition(),
-        journeySelect: <UnderlinedText text={`"${journeyTitle}"`} />,
-        operator: (
-          <UnderlinedMsg
-            id={
-              localMessageIds[
-                operator === JOURNEY_OP.OPEN
-                  ? JOURNEY_OP.OPEN
-                  : JOURNEY_OP.CLOSE
-              ]
-            }
-          />
-        ),
-        statusText: (
-          <Msg
-            id={
-              operator === 'opened'
-                ? localMessageIds.thatOpened
-                : localMessageIds.thatFinished
-            }
-          />
-        ),
+        journeySelect: <UnderlinedText text={journeyTitle} />,
+        openedTimeFrame: <DisplayTimeFrame config={openedTimeFrame} />,
+        stateSelect: <Msg id={localMessageIds.stateOptions[state]} />,
         tags: selectedTags ? (
           <Box alignItems="start" display="inline-flex">
             {selectedTags.map((t) => (
@@ -125,7 +106,6 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
             <Msg id={localMessageIds.followingTags} /> :
           </>
         ) : null,
-        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

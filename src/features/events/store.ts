@@ -171,9 +171,22 @@ const eventsSlice = createSlice({
         state.eventsByDate[dateStr].isLoading = true;
       });
     },
-    eventRangeLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      const events = action.payload;
+    eventRangeLoaded: (
+      state,
+      action: PayloadAction<[ZetkinEvent[], string[]]>
+    ) => {
+      const [events, isoDateRange] = action.payload;
       addEventToState(state, events);
+
+      isoDateRange.forEach((isoDate) => {
+        const dateStr = isoDate.slice(0, 10);
+        if (!state.eventsByDate[dateStr]) {
+          state.eventsByDate[dateStr] = remoteList();
+        }
+
+        state.eventsByDate[dateStr].isLoading = false;
+        state.eventsByDate[dateStr].loaded = new Date().toISOString();
+      });
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
@@ -479,14 +492,14 @@ const eventsSlice = createSlice({
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
-    typeLoad: (state, action) => {
+    typeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.typeList.items.find((item) => item.id == id);
       state.typeList.items = state.typeList.items
         .filter((item) => item.id != id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
-    typeLoaded: (state, action) => {
+    typeLoaded: (state, action: PayloadAction<ZetkinActivity>) => {
       const activity = action.payload;
       const item = state.typeList.items.find((item) => item.id == activity.id);
 
@@ -515,10 +528,13 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
     const eventListItem = state.eventList.items.find(
       (item) => item.id == event.id
     );
+
     if (eventListItem) {
       eventListItem.data = { ...eventListItem.data, ...event };
     } else {
-      state.eventList.items.push(remoteItem(event.id, { data: event }));
+      state.eventList.items.push(
+        remoteItem(event.id, { data: event, loaded: new Date().toISOString() })
+      );
     }
 
     const dateStr = event.start_time.slice(0, 10);
@@ -557,6 +573,7 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
         );
       }
     }
+
     state.eventsByDate[dateStr].isLoading = false;
     state.eventsByDate[dateStr].isStale = false;
     state.eventsByDate[dateStr].loaded = new Date().toISOString();

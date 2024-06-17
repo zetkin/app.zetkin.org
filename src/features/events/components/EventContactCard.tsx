@@ -103,14 +103,18 @@ const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
 
 const EventContactCard: FC<EventContactCardProps> = ({ data, orgId }) => {
   const messages = useMessages(messageIds);
-  const eventFuture = useEvent(orgId, data.id);
+  const event = useEvent(orgId, data.id)?.data;
+
+  if (!event) {
+    return null;
+  }
 
   return (
     <Box mb={2}>
       <ZUICard
         header={
           <Box>
-            {eventFuture.data?.contact?.id ? (
+            {event.contact?.id ? (
               <Box>
                 <FaceOutlined sx={{ margin: 1, verticalAlign: 'middle' }} />
                 {messages.eventContactCard.header()}

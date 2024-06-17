@@ -7,8 +7,8 @@ export default function useParticipantStatus(
   eventId: number
 ): string {
   const { numAvailParticipants } = useEventParticipants(orgId, eventId);
-  const event = useEvent(orgId, eventId);
-  const reqParticipants = event.data?.num_participants_required ?? 0;
+  const event = useEvent(orgId, eventId)?.data;
+  const reqParticipants = event?.num_participants_required ?? 0;
   const diff = reqParticipants - numAvailParticipants;
 
   if (diff <= 0) {

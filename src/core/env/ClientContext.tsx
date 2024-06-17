@@ -25,6 +25,10 @@ declare module '@mui/styles/defaultTheme' {
 
 type ClientContextProps = {
   children: ReactNode;
+  envVars: {
+    MUIX_LICENSE_KEY: string | null;
+    ZETKIN_APP_DOMAIN: string | null;
+  };
   lang: string;
   messages: MessageList;
   user: ZetkinUser | null;
@@ -32,11 +36,12 @@ type ClientContextProps = {
 
 const ClientContext: FC<ClientContextProps> = ({
   children,
+  envVars,
   lang,
   messages,
   user,
 }) => {
-  const env = new Environment(store, new BrowserApiClient());
+  const env = new Environment(store, new BrowserApiClient(), envVars);
   return (
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>
