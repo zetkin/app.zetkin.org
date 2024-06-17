@@ -2,6 +2,10 @@ import { Delete, Edit } from '@mui/icons-material';
 import { FC, ReactNode, useState } from 'react';
 import { Grid, IconButton, ListItem, Typography } from '@mui/material';
 
+import { FilterConfigOrgOptions } from '../../types';
+import OrgScope from '../../OrgScope';
+import { useNumericRouteParams } from 'core/hooks';
+
 type RenderFunction = (hovered: boolean) => ReactNode;
 type Renderable = ReactNode | RenderFunction;
 
@@ -13,6 +17,7 @@ type QueryOverviewListItemProps = {
   icon?: Renderable;
   onClickDelete?: () => void;
   onClickEdit?: () => void;
+  organizations?: FilterConfigOrgOptions;
 };
 
 const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
@@ -23,8 +28,10 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
   icon,
   onClickDelete,
   onClickEdit,
+  organizations,
 }) => {
   const [hovered, setHovered] = useState(false);
+  const { orgId } = useNumericRouteParams();
 
   const render = (renderable: Renderable): ReactNode => {
     if (typeof renderable == 'function') {
@@ -50,6 +57,9 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
           {render(icon)}
         </Grid>
         <Grid item lg={8} py={2} xs={7}>
+          {organizations && (
+            <OrgScope organizations={organizations} orgId={orgId} />
+          )}
           <Typography>{render(filterText)}</Typography>
         </Grid>
         <Grid alignSelf="stretch" item lg={2} px={3} xs={3}>

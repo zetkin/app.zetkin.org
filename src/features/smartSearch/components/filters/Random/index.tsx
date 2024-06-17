@@ -81,7 +81,11 @@ const Random = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -176,6 +180,7 @@ const Random = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };
