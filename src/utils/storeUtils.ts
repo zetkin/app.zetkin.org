@@ -48,3 +48,17 @@ export function remoteList<DataType extends RemoteData>(
     loaded: null,
   };
 }
+
+export function findOrAddItem<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  id: number
+): RemoteItem<DataType> {
+  const existingItem = list.items.find((item) => item.id == id);
+  if (existingItem) {
+    return existingItem;
+  } else {
+    const newItem = remoteItem<DataType>(id);
+    list.items.push(newItem);
+    return newItem;
+  }
+}

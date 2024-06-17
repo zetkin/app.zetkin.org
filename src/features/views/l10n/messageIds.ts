@@ -6,6 +6,7 @@ export default makeMessages('feat.views', {
   actions: {
     create: m('Create'),
     createFolder: m('Create folder'),
+    createJoinForm: m('Create join form'),
     createPerson: m('Create person'),
     createView: m('Create list'),
     importPeople: m('Import people'),
@@ -37,6 +38,8 @@ export default makeMessages('feat.views', {
   browserLayout: {
     tabs: {
       duplicates: m('Duplicates'),
+      incoming: m('Incoming'),
+      joinForms: m('Join forms'),
       views: m('Lists'),
     },
     title: m('People'),

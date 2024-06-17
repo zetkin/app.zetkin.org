@@ -56,6 +56,10 @@ const emptyState: RootState = {
     },
     preflightSummary: null,
   },
+  joinForms: {
+    formList: remoteList(),
+    submissionList: remoteList(),
+  },
   journeys: {
     journeyInstanceList: remoteList(),
     journeyInstancesByJourneyId: {},
