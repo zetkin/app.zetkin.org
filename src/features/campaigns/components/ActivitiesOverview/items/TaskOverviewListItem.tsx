@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { CheckBoxOutlined, People } from '@mui/icons-material';
 
+import getStatusColor from 'features/campaigns/utils/getStatusColor';
 import OverviewListItem from './OverviewListItem';
 import { TaskActivity } from 'features/campaigns/types';
 import useTaskStats from 'features/tasks/hooks/useTaskStats';
@@ -20,6 +21,7 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
+      color={getStatusColor(activity.visibleFrom, activity.visibleUntil)}
       endDate={activity.visibleUntil}
       endNumber={stats?.individuals || 0}
       focusDate={focusDate}

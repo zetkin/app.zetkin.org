@@ -1,13 +1,13 @@
-import { FC } from 'react';
-
 import dayjs from 'dayjs';
+import { FC } from 'react';
+import { EmailOutlined, Person } from '@mui/icons-material';
+
 import { EmailActivity } from 'features/campaigns/types';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import OverviewListItem from './OverviewListItem';
 import useEmailStats from 'features/emails/hooks/useEmailStats';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { EmailOutlined, Person } from '@mui/icons-material';
+import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
 
 interface EmailOverviewListItemProps {
   activity: EmailActivity;
@@ -43,8 +43,27 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
     );
   }
 
+  function getColor() {
+    const now = new Date();
+
+    const sendTime = activity.visibleFrom;
+
+    if (sendTime) {
+      if (sendTime > now) {
+        return STATUS_COLORS.BLUE;
+      } else if (sendTime < now) {
+        return STATUS_COLORS.GREEN;
+      }
+    }
+
+    // Should never happen, because it should not be in the
+    // overview if it's not yet scheduled/published.
+    return STATUS_COLORS.GRAY;
+  }
+
   return (
     <OverviewListItem
+      color={getColor()}
       endDate={activity.visibleUntil}
       endNumber={email.locked ? lockedReadyTargets ?? 0 : numTargetMatches}
       focusDate={focusDate}

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ACTIVITIES, CampaignActivity } from '../types';
 import { emailsLoad, emailsLoaded } from 'features/emails/store';
@@ -9,22 +8,6 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-
-const visibleFrom = (published: string | null): Date | null => {
-  if (!published) {
-    return null;
-  }
-  const visibleUntil = dayjs(new Date(published)).startOf('day');
-  return visibleUntil.toDate();
-};
-
-const visibleUntil = (published: string | null): Date | null => {
-  if (!published) {
-    return null;
-  }
-  const visibleUntil = dayjs(new Date(published)).endOf('day');
-  return visibleUntil.toDate();
-};
 
 export default function useEmailActivities(
   orgId: number,
@@ -60,8 +43,8 @@ export default function useEmailActivities(
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
-          visibleFrom: visibleFrom(email.published || null),
-          visibleUntil: visibleUntil(email.published),
+          visibleFrom: email.published ? new Date(email.published) : null,
+          visibleUntil: email.published ? new Date(email.published) : null,
         });
       });
     } else {
@@ -69,8 +52,8 @@ export default function useEmailActivities(
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
-          visibleFrom: visibleFrom(email.published || null),
-          visibleUntil: visibleUntil(email.published),
+          visibleFrom: email.published ? new Date(email.published) : null,
+          visibleUntil: email.published ? new Date(email.published) : null,
         });
       });
     }

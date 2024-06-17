@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
+import getStatusColor from 'features/campaigns/utils/getStatusColor';
 import getSurveyUrl from 'features/surveys/utils/getSurveyUrl';
 import OverviewListItem from './OverviewListItem';
 import { SurveyActivity } from 'features/campaigns/types';
@@ -23,6 +24,7 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
   const { orgId } = useNumericRouteParams();
   return (
     <OverviewListItem
+      color={getStatusColor(activity.visibleFrom, activity.visibleUntil)}
       endDate={activity.visibleUntil}
       endNumber={submissionCount}
       focusDate={focusDate}
