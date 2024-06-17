@@ -1,3 +1,4 @@
+import { Delete } from '@mui/icons-material';
 import { FC } from 'react';
 import {
   Autocomplete,
@@ -7,7 +8,6 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { Delete } from '@mui/icons-material';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';

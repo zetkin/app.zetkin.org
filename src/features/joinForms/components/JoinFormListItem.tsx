@@ -1,7 +1,7 @@
+import { FormatListBulleted } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Box, Theme, Typography } from '@mui/material';
 
-import { FormatListBulleted } from '@mui/icons-material';
 import theme from 'theme';
 import { ZetkinJoinForm } from '../types';
 

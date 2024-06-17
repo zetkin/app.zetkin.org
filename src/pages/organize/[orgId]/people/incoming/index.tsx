@@ -19,11 +19,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 });
 
-type Props = {
+type DuplicatesPageProps = {
   orgId: string;
 };
 
-const DuplicatesPage: PageWithLayout<Props> = ({ orgId }) => {
+const DuplicatesPage: PageWithLayout<DuplicatesPageProps> = ({ orgId }) => {
   const { data: submissions } = useJoinSubmissions(parseInt(orgId));
 
   type FilterByStatusType = 'all' | 'pending' | 'accepted';

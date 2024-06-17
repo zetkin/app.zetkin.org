@@ -18,13 +18,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = {
+type JoinSubmissionTableProps = {
   onSelect: (submission: ZetkinJoinSubmission) => void;
   orgId: number;
   submissions: ZetkinJoinSubmission[];
 };
 
-const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
+const JoinSubmissionTable: FC<JoinSubmissionTableProps> = ({
+  onSelect,
+  orgId,
+  submissions,
+}) => {
   const classes = useStyles();
   const messages = useMessages(messageIds);
   const theme = useTheme();
@@ -45,7 +49,6 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
                   {messages.states[params.row.state]()}
                 </Box>
               );
-              // />
             },
             valueGetter: (params) => params.row.state,
           },
