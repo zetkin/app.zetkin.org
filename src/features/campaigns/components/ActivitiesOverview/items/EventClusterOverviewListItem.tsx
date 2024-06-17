@@ -7,6 +7,7 @@ import {
 } from '@mui/icons-material';
 
 import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
+import getStatusColor from 'features/campaigns/utils/getStatusColor';
 import LocationLabel from 'features/events/components/LocationLabel';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -48,8 +49,12 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
     title,
   } = useEventClusterData(cluster);
 
+  const startDate = cluster.events[0].published
+    ? new Date(cluster.events[0].published)
+    : null;
   return (
     <OverviewListItem
+      color={getStatusColor(startDate, null)}
       endDate={null}
       endNumber={`${numBooked} / ${numParticipantsRequired}`}
       endNumberColor={numBooked < numParticipantsRequired ? 'error' : undefined}
@@ -74,11 +79,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
           : SplitscreenOutlined
       }
       SecondaryIcon={Group}
-      startDate={
-        cluster.events[0].published
-          ? new Date(cluster.events[0].published)
-          : null
-      }
+      startDate={startDate}
       subtitle={
         <ZUIIconLabelRow
           color="secondary"

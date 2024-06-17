@@ -1,4 +1,3 @@
-import { getUTCDateWithoutTime } from 'utils/dateUtils';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ACTIVITIES, CampaignActivity } from '../types';
 import { emailsLoad, emailsLoaded } from 'features/emails/store';
@@ -9,15 +8,6 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-
-const visibleUntil = (published: string | null): Date | null => {
-  if (!published) {
-    return null;
-  }
-  const visibleUntil = new Date(published);
-  visibleUntil.setDate(visibleUntil.getDate() + 1);
-  return visibleUntil;
-};
 
 export default function useEmailActivities(
   orgId: number,
@@ -53,8 +43,8 @@ export default function useEmailActivities(
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
-          visibleFrom: getUTCDateWithoutTime(email.published || null),
-          visibleUntil: visibleUntil(email.published),
+          visibleFrom: email.published ? new Date(email.published) : null,
+          visibleUntil: email.published ? new Date(email.published) : null,
         });
       });
     } else {
@@ -62,8 +52,8 @@ export default function useEmailActivities(
         activities.push({
           data: email,
           kind: ACTIVITIES.EMAIL,
-          visibleFrom: getUTCDateWithoutTime(email.published || null),
-          visibleUntil: visibleUntil(email.published),
+          visibleFrom: email.published ? new Date(email.published) : null,
+          visibleUntil: email.published ? new Date(email.published) : null,
         });
       });
     }

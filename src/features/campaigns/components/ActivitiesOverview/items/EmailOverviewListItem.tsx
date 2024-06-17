@@ -1,9 +1,13 @@
+import dayjs from 'dayjs';
 import { FC } from 'react';
+import { EmailOutlined, Person } from '@mui/icons-material';
 
 import { EmailActivity } from 'features/campaigns/types';
-import OverviewListItem from './OverviewListItem';
+import messageIds from 'features/campaigns/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import useEmailStats from 'features/emails/hooks/useEmailStats';
-import { EmailOutlined, Person } from '@mui/icons-material';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
 
 interface EmailOverviewListItemProps {
   activity: EmailActivity;
@@ -20,8 +24,46 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
     email.id
   );
 
+  function getSubtitle(published: string | null) {
+    if (published === null) {
+      return undefined;
+    }
+    const now = new Date();
+    const publishedDate = dayjs(published);
+    const id = publishedDate.isBefore(now)
+      ? messageIds.activitiesOverview.subtitles.sentEarlier
+      : messageIds.activitiesOverview.subtitles.sentLater;
+    return (
+      <Msg
+        id={id}
+        values={{
+          relative: <ZUIRelativeTime datetime={publishedDate.toISOString()} />,
+        }}
+      />
+    );
+  }
+
+  function getColor() {
+    const now = new Date();
+
+    const sendTime = activity.visibleFrom;
+
+    if (sendTime) {
+      if (sendTime > now) {
+        return STATUS_COLORS.BLUE;
+      } else if (sendTime < now) {
+        return STATUS_COLORS.GREEN;
+      }
+    }
+
+    // Should never happen, because it should not be in the
+    // overview if it's not yet scheduled/published.
+    return STATUS_COLORS.GRAY;
+  }
+
   return (
     <OverviewListItem
+      color={getColor()}
       endDate={activity.visibleUntil}
       endNumber={email.locked ? lockedReadyTargets ?? 0 : numTargetMatches}
       focusDate={focusDate}
@@ -31,6 +73,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
       startDate={activity.visibleFrom}
+      subtitle={getSubtitle(activity.data.published)}
       title={email.title || ''}
     />
   );
