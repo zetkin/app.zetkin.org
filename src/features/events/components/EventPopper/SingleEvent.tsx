@@ -294,7 +294,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </Box>
         </Box>
       )}
-      {showPublishButton ? (
+      {showPublishButton && (
         <>
           <Box
             alignItems="center"
@@ -328,7 +328,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             <ZUIEllipsisMenu items={ellipsisMenuItems} />
           </Box>
         </>
-      ) : (
+      )}
+      {!showPublishButton && (
         <Box alignItems="center" display="flex" justifyContent="flex-end">
           <NextLink href={getEventUrl(event)} legacyBehavior passHref>
             <Link underline="none">
