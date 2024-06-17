@@ -285,6 +285,12 @@ export default makeMessages('feat.import', {
         ),
         title: m('You have not configured identifying columns'),
       },
+      unexpectedError: {
+        description: m(
+          'No people have been imported. You can go back and check the import settings or select a new file to import. There were errors in the form you submitted. Please try again and make sure you fill in all the necessary information. If the error persist you can contact support at info@zetkin.org'
+        ),
+        title: m('Something went wrong and the import was aborted'),
+      },
       unknownError: {
         description: m(
           'Contact support if you need help understanding the problem.'

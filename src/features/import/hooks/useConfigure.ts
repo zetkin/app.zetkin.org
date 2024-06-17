@@ -6,7 +6,11 @@ import { predictProblems } from '../utils/problems/predictProblems';
 import prepareImportOperations from '../utils/prepareImportOperations';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import { ImportPreview, ZetkinPersonImportPostBody } from '../utils/types';
+import {
+  ImportPreview,
+  ImportPreviewProblemCode,
+  ZetkinPersonImportPostBody,
+} from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useConfigure(orgId: number) {
@@ -20,6 +24,29 @@ export default function useConfigure(orgId: number) {
     return;
   }
   const countryCode = organization.country as CountryCode;
+
+  const emptyStats = {
+    person: {
+      summary: {
+        addedToOrg: {
+          byOrg: {},
+          total: 0,
+        },
+        created: {
+          total: 0,
+        },
+        tagged: {
+          byTag: {},
+          total: 0,
+        },
+        updated: {
+          byChangedField: {},
+          byInitializedField: {},
+          total: 0,
+        },
+      },
+    },
+  };
 
   return async () => {
     const problems = predictProblems(
@@ -36,44 +63,47 @@ export default function useConfigure(orgId: number) {
       dispatch(
         importPreviewAdd({
           problems: [],
-          stats: {
-            person: {
-              summary: {
-                addedToOrg: {
-                  byOrg: {},
-                  total: 0,
-                },
-                created: {
-                  total: 0,
-                },
-                tagged: {
-                  byTag: {},
-                  total: 0,
-                },
-                updated: {
-                  byChangedField: {},
-                  byInitializedField: {},
-                  total: 0,
-                },
-              },
-            },
-          },
+          stats: emptyStats,
         })
       );
     } else {
-      const importOperations = prepareImportOperations(
-        configuredSheet,
-        countryCode
-      );
+      let importOperations;
+      try {
+        importOperations = prepareImportOperations(
+          configuredSheet,
+          countryCode
+        );
+      } catch (error) {
+        addUnexpectedErrorToProblems();
+        return;
+      }
 
-      const previewRes = await apiClient.post<
-        ImportPreview,
-        ZetkinPersonImportPostBody
-      >(`/api/orgs/${orgId}/bulk/preview`, {
-        ops: importOperations,
-      });
-
-      dispatch(importPreviewAdd(previewRes));
+      try {
+        const previewRes = await apiClient.post<
+          ImportPreview,
+          ZetkinPersonImportPostBody
+        >(`/api/orgs/${orgId}/bulk/preview`, {
+          ops: importOperations,
+        });
+        dispatch(importPreviewAdd(previewRes));
+      } catch (error) {
+        addUnexpectedErrorToProblems();
+      }
     }
   };
+
+  function addUnexpectedErrorToProblems() {
+    dispatch(
+      importPreviewAdd({
+        problems: [
+          {
+            code: ImportPreviewProblemCode.UNEXPECTED_ERROR,
+            index: 1,
+            level: 'error',
+          },
+        ],
+        stats: emptyStats,
+      })
+    );
+  }
 }
