@@ -8,6 +8,7 @@ import {
   Paper,
   Popper,
   TextField,
+  Theme,
   Typography,
 } from '@mui/material';
 import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
@@ -110,30 +111,34 @@ const iconAndMessage = (
 
 interface ZUIDateRangePickerProps {
   endDate: string | null;
+  readonly?: boolean;
   onChange?: (startDate: string | null, endDate: string | null) => void;
   startDate: string | null;
 }
-
-const useStyles = makeStyles((theme) => ({
+interface StyleProps {
+  readonly: boolean | undefined;
+}
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   label: {
     '&:hover': {
       borderBottomColor: lighten(theme.palette.primary.main, 0.65),
       borderBottomStyle: 'dotted',
-      borderBottomWidth: 2,
+      borderBottomWidth: ({ readonly }) => (!readonly ? 2 : 0),
     },
-    cursor: 'pointer',
+    cursor: ({ readonly }) => (!readonly ? 'pointer' : ''),
   },
 }));
 
 const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   endDate,
+  readonly,
   onChange,
   startDate,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
   const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
 
-  const classes = useStyles();
+  const classes = useStyles({ readonly });
   const messages = useMessages(messageIds);
   const intl = useIntl();
 
@@ -161,8 +166,10 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
           justifyContent="center"
           marginLeft={1}
           onClick={(ev: MouseEvent<HTMLSpanElement>) => {
-            ev.stopPropagation();
-            setAnchorEl(ev.currentTarget);
+            if (!readonly) {
+              ev.stopPropagation();
+              setAnchorEl(ev.currentTarget);
+            }
           }}
         >
           {icon}

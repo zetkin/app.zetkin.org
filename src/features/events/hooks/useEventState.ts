@@ -14,11 +14,11 @@ export default function useEventState(
   orgId: number,
   eventId: number
 ): EventState {
-  const event = useEvent(orgId, eventId);
+  const event = useEvent(orgId, eventId)?.data;
 
-  if (!event.data) {
+  if (!event) {
     return EventState.UNKNOWN;
   }
 
-  return getEventState(event.data);
+  return getEventState(event);
 }

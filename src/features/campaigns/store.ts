@@ -5,11 +5,13 @@ import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 
 export interface CampaignsStoreSlice {
   campaignList: RemoteList<ZetkinCampaign>;
+  campaignsByOrgId: Record<string, RemoteList<ZetkinCampaign>>;
   recentlyCreatedCampaign: ZetkinCampaign | null;
 }
 
 const initialCampaignsState: CampaignsStoreSlice = {
   campaignList: remoteList(),
+  campaignsByOrgId: {},
   recentlyCreatedCampaign: null,
 };
 
@@ -86,12 +88,27 @@ const campaignsSlice = createSlice({
         item.mutating = [];
       }
     },
-    campaignsLoad: (state) => {
+    campaignsLoad: (state, action: PayloadAction<number[]>) => {
+      const orgIds = action.payload;
+      orgIds.forEach((orgId) => {
+        const list = (state.campaignsByOrgId[orgId] ||= remoteList());
+        list.isLoading = true;
+      });
       state.campaignList.isLoading = true;
     },
     campaignsLoaded: (state, action: PayloadAction<ZetkinCampaign[]>) => {
       const campaigns = action.payload;
       const timestamp = new Date().toISOString();
+
+      campaigns.forEach((campaign) => {
+        const orgId = campaign.organization.id;
+        const listByOrg = (state.campaignsByOrgId[orgId] ||=
+          remoteList<ZetkinCampaign>([]));
+
+        listByOrg.isLoading = false;
+        listByOrg.loaded = timestamp;
+        listByOrg.items.push(remoteItem(campaign.id, { data: campaign }));
+      });
 
       state.campaignList = remoteList(campaigns);
       state.campaignList.loaded = timestamp;

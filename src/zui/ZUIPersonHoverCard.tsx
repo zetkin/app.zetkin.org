@@ -1,28 +1,30 @@
-import MailIcon from '@mui/icons-material/Mail';
-import PhoneIcon from '@mui/icons-material/Phone';
 import {
   Box,
   BoxProps,
+  Button,
   Card,
   Fade,
   Grid,
+  Link,
   Popper,
   PopperProps,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
+import { CopyIcon } from './ZUIInlineCopyToClipBoard';
+import MailIcon from '@mui/icons-material/Mail';
 import messageIds from 'features/profile/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import PhoneIcon from '@mui/icons-material/Phone';
 import TagsList from 'features/tags/components/TagManager/components/TagsList';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
 import usePersonTags from 'features/tags/hooks/usePersonTags';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import ZUICopyToClipboard from 'zui/ZUICopyToClipboard';
 import ZUIPerson from 'zui/ZUIPerson';
 
-const ZUIPersonHoverCard: React.FunctionComponent<{
+const ZUIPersonHoverCard: FC<{
   BoxProps?: BoxProps;
   children: React.ReactNode;
   personId: number;
@@ -48,10 +50,6 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
     setOpen(false);
   };
 
-  const { orgId } = useNumericRouteParams();
-  const person = usePerson(orgId, personId).data;
-  const tags = usePersonTags(orgId, personId).data;
-
   return (
     <Box
       onMouseEnter={openPopover}
@@ -69,9 +67,7 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
             name: 'preventOverflow',
             options: {
               altAxis: true,
-              altBoundary: true,
               padding: 8,
-              rootBoundary: 'document',
               tether: true,
             },
           },
@@ -80,74 +76,93 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
         style={{ zIndex: 1300 }}
         {...popperProps}
       >
-        {person && (
-          <Fade in={open} timeout={200}>
-            <Card elevation={5} style={{ padding: 24 }} variant="elevation">
-              <Grid
-                container
-                direction="column"
-                spacing={2}
-                style={{ width: '25rem' }}
-              >
-                <Grid item>
-                  <ZUIPerson
-                    id={person?.id}
-                    link
-                    name={`${person?.first_name} ${person?.last_name}`}
-                    subtitle={
-                      <Typography color="secondary" variant="body2">
-                        <Msg
-                          id={
-                            person?.is_user
-                              ? messageIds.user.hasAccount
-                              : messageIds.user.noAccount
-                          }
-                        />
-                      </Typography>
-                    }
-                    tooltip={false}
-                  />
-                </Grid>
-                {tags && (
-                  <Grid item>
-                    <TagsList
-                      cap={10}
-                      capOverflowHref={`/organize/${orgId}/people/${person?.id}`}
-                      isGrouped={false}
-                      tags={tags}
-                    />
-                  </Grid>
-                )}
-                {(['phone', 'alt_phone', 'email'] as Array<keyof ZetkinPerson>)
-                  .filter((field) => !!person[field])
-                  .map((field) => {
-                    const value = person[field];
-                    if (typeof value === 'object') {
-                      return null;
-                    }
-                    return (
-                      <Grid key={field} container item>
-                        <ZUICopyToClipboard copyText={value as string}>
-                          <Box display="flex" flexDirection="row">
-                            {field.includes('mail') ? (
-                              <MailIcon color="secondary" />
-                            ) : (
-                              <PhoneIcon color="secondary" />
-                            )}
-                            <Typography style={{ marginLeft: '1.5rem' }}>
-                              {value}
-                            </Typography>
-                          </Box>
-                        </ZUICopyToClipboard>
-                      </Grid>
-                    );
-                  })}
-              </Grid>
-            </Card>
-          </Fade>
-        )}
+        <Fade in={open} timeout={200}>
+          <Box>{open && <HoverCardContent personId={personId} />}</Box>
+        </Fade>
       </Popper>
     </Box>
+  );
+};
+
+const HoverCardContent: FC<{ personId: number }> = ({ personId }) => {
+  const { orgId } = useNumericRouteParams();
+  const person = usePerson(orgId, personId).data;
+  const tags = usePersonTags(orgId, personId).data;
+
+  if (!person) {
+    return null;
+  }
+
+  return (
+    <Card elevation={5} style={{ padding: 24 }} variant="elevation">
+      <Grid container direction="column" spacing={2} style={{ width: '25rem' }}>
+        <Grid item>
+          <ZUIPerson
+            id={person?.id}
+            link
+            name={`${person?.first_name} ${person?.last_name}`}
+            subtitle={
+              <Typography color="secondary" variant="body2">
+                <Msg
+                  id={
+                    person?.is_user
+                      ? messageIds.user.hasAccount
+                      : messageIds.user.noAccount
+                  }
+                />
+              </Typography>
+            }
+            tooltip={false}
+          />
+        </Grid>
+        {tags && (
+          <Grid item>
+            <TagsList
+              cap={10}
+              capOverflowHref={`/organize/${orgId}/people/${person?.id}`}
+              isGrouped={false}
+              tags={tags}
+            />
+          </Grid>
+        )}
+        {(['phone', 'alt_phone', 'email'] as Array<keyof ZetkinPerson>)
+          .filter((field) => !!person[field])
+          .map((field) => {
+            const value = person[field];
+            const linkType = field.includes('mail')
+              ? 'mailto:'
+              : field.includes('phone')
+              ? 'tel:'
+              : '';
+
+            if (typeof value === 'object') {
+              return null;
+            }
+            return (
+              <Grid key={field} container item>
+                <Box display="flex" flexDirection="row">
+                  {field.includes('mail') ? (
+                    <MailIcon color="secondary" />
+                  ) : (
+                    <PhoneIcon color="secondary" />
+                  )}
+                  <Typography style={{ marginLeft: '1.5rem' }}>
+                    <Link href={linkType + value}> {value} </Link>
+                  </Typography>
+                  <Button
+                    onClick={() =>
+                      navigator.clipboard.writeText(value as string)
+                    }
+                    style={{ marginTop: '-0.3rem' }}
+                  >
+                    <CopyIcon color="secondary" />
+                  </Button>
+                </Box>
+              </Grid>
+            );
+          })}
+      </Grid>
+    </Card>
   );
 };
 

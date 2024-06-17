@@ -1,9 +1,12 @@
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import messageIds from 'features/views/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
+import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 import ViewBrowser from 'features/views/components/ViewBrowser';
 
@@ -37,11 +40,19 @@ type PeopleViewsPageProps = {
 
 const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
   const onServer = useServerSide();
+  const messages = useMessages(messageIds);
   if (onServer) {
     return null;
   }
 
-  return <ViewBrowser basePath={`/organize/${orgId}/people`} />;
+  return (
+    <>
+      <Head>
+        <title>{messages.browserLayout.title()}</title>
+      </Head>
+      <ViewBrowser basePath={`/organize/${orgId}/people`} />
+    </>
+  );
 };
 
 PeopleViewsPage.getLayout = function getLayout(page) {

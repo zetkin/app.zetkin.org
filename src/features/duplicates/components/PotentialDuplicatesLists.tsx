@@ -1,59 +1,51 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 
+import MergeCandidateList from './MergeCandidateList';
 import messageIds from '../l10n/messageIds';
-import ModalList from './ModalList';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface PotentialDuplicatesListsProps {
   onDeselect: (person: ZetkinPerson) => void;
   onSelect: (person: ZetkinPerson) => void;
-  peopleNoToMerge: ZetkinPerson[];
+  peopleNotToMerge: ZetkinPerson[];
   peopleToMerge: ZetkinPerson[];
 }
 
 const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
   onDeselect,
   onSelect,
-  peopleNoToMerge,
+  peopleNotToMerge,
   peopleToMerge,
 }) => {
   const messages = useMessages(messageIds);
 
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        marginLeft={2}
-        marginRight={2}
-        overflow="hidden"
-      >
-        <Typography marginBottom={2} variant="h6">
-          {messages.modal.peopleToMerge()}
-        </Typography>
-        <ModalList
-          buttonLabel={messages.modal.notDuplicateButton()}
-          onButtonClick={onDeselect}
-          rows={peopleToMerge}
-        />
-      </Box>
-      {peopleNoToMerge.length > 0 && (
+      <Typography variant="h6">{messages.modal.peopleToMerge()}</Typography>
+      <MergeCandidateList
+        buttonLabel={messages.modal.notDuplicateButton()}
+        onButtonClick={onDeselect}
+        rows={peopleToMerge}
+      />
+      {peopleToMerge.length > 0 && <Divider />}
+      {peopleNotToMerge.length > 0 && (
         <Box
           display="flex"
           flexDirection="column"
           overflow="hidden"
-          padding={2}
+          paddingTop={4}
         >
           <Typography variant="h6">
             {messages.modal.peopleNotBeingMerged()}
           </Typography>
-          <ModalList
+          <MergeCandidateList
             buttonLabel={messages.modal.isDuplicateButton()}
             onButtonClick={onSelect}
-            rows={peopleNoToMerge}
+            rows={peopleNotToMerge}
           />
+          <Divider />
         </Box>
       )}
     </>

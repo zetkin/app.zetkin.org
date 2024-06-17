@@ -113,7 +113,11 @@ const EmailClick = ({
         (linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS &&
           (!filter.config.email || !filter.config.links?.length))
       }
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(filter);
@@ -279,6 +283,7 @@ const EmailClick = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };
