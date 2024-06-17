@@ -21,6 +21,7 @@ import {
   Logout,
   Map,
   Search,
+  Settings,
 } from '@mui/icons-material/';
 import {
   Avatar,
@@ -110,6 +111,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Architecture />, name: 'projects' },
     { icon: <Explore />, name: 'journeys' },
     { icon: <Map />, name: 'areas' },
+    { icon: <Settings />, name: 'settings' },
   ] as const;
 
   function logOut() {

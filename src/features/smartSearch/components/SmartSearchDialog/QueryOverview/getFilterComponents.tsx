@@ -8,6 +8,7 @@ import {
   CheckBoxOutlined,
   DraftsOutlined,
   Event,
+  ExploreOutlined,
   FilterAlt,
   LocalOfferOutlined,
   MarkEmailReadOutlined,
@@ -27,6 +28,7 @@ import DisplayCampaignParticipation from '../../filters/CampaignParticipation/Di
 import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
 import DisplayEmailClick from '../../filters/EmailClick/DisplayEmailClick';
 import DisplayEmailHistory from '../../filters/EmailHistory/DisplayEmailHistory';
+import DisplayJourney from '../../filters/Journey/DisplayJourney';
 import DisplayMostActive from '../../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../../filters/PersonData/DisplayPersonData';
 import DisplayPersonField from '../../filters/PersonField/DisplayPersonField';
@@ -48,6 +50,7 @@ import {
   EmailClickFilterConfig,
   EmailHistoryFilterConfig,
   FILTER_TYPE,
+  JourneyFilterConfig,
   MostActiveFilterConfig,
   OPERATION,
   PersonDataFilterConfig,
@@ -122,6 +125,13 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <Event color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.JOURNEY) {
+    displayFilter = (
+      <DisplayJourney
+        filter={filter as SmartSearchFilterWithId<JourneyFilterConfig>}
+      />
+    );
+    filterTypeIcon = <ExploreOutlined color="secondary" fontSize="small" />;
   } else if (filter.type === FILTER_TYPE.MOST_ACTIVE) {
     displayFilter = (
       <DisplayMostActive

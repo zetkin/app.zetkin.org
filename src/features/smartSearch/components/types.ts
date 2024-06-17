@@ -1,5 +1,17 @@
 import { TASK_TYPE } from 'features/tasks/components/types';
 
+export enum FILTER_CATEGORY {
+  BASIC = 'basicInformation',
+  CROSS_REFERENCING = 'crossReferencing',
+  EMAIL = 'email',
+  EVENTS = 'events',
+  JOURNEY = 'journey',
+  MISC = 'misc',
+  PHONE_BANKING = 'phoneBanking',
+  SURVEYS = 'surveys',
+  TASKS = 'tasks',
+}
+
 export enum FILTER_TYPE {
   ALL = 'all',
   CALL_BLOCKED = 'call_blocked',
@@ -8,6 +20,7 @@ export enum FILTER_TYPE {
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
+  JOURNEY = 'journey_subjects',
   MOST_ACTIVE = 'most_active',
   PERSON_DATA = 'person_data',
   PERSON_FIELD = 'person_field',
@@ -26,6 +39,13 @@ export enum CONDITION_OPERATOR {
   ALL = 'all',
   ANY = 'any',
   NONE = 'none',
+}
+
+export enum JOURNEY_CONDITION_OP {
+  ALL = 'all',
+  ANY = 'any',
+  NONE = 'none',
+  SOME = 'some',
 }
 
 export enum IN_OPERATOR {
@@ -99,6 +119,7 @@ export enum TASK_STATUS {
 export type DefaultFilterConfig = Record<string, never>; // Default filter config is an empty object
 
 export interface CallBlockedFilterConfig {
+  organizations?: FilterConfigOrgOptions;
   reason:
     | 'allocated'
     | 'organizer_action_needed'
@@ -114,9 +135,11 @@ export interface CallHistoryFilterConfig {
   minTimes?: number;
   before?: string;
   after?: string;
+  organizations?: FilterConfigOrgOptions;
 }
 export interface EmailBlacklistFilterConfig {
   operator: 'blacklisted';
+  organizations?: FilterConfigOrgOptions;
   reason: 'unsub_org' | 'any';
 }
 export interface EmailClickFilterConfig {
@@ -125,9 +148,11 @@ export interface EmailClickFilterConfig {
   campaign?: number;
   email?: number;
   operator: 'clicked' | 'not_clicked';
+  organizations?: FilterConfigOrgOptions;
   links?: number[];
 }
 export interface EmailHistoryFilterConfig {
+  organizations?: FilterConfigOrgOptions;
   after?: string;
   before?: string;
   campaign?: number;
@@ -137,6 +162,7 @@ export interface EmailHistoryFilterConfig {
 export interface MostActiveFilterConfig {
   after?: string;
   before?: string;
+  organizations?: FilterConfigOrgOptions;
   size: number;
 }
 
@@ -156,12 +182,14 @@ export interface PersonDataFilterConfig {
     street_address?: string;
     zip_code?: string;
   };
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface PersonFieldFilterConfig {
   after?: string;
   before?: string;
   field: string;
+  organizations?: FilterConfigOrgOptions;
   search?: string;
 }
 
@@ -169,14 +197,17 @@ export interface PersonTagsFilterConfig {
   condition: CONDITION_OPERATOR;
   tags: number[];
   min_matching?: number;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface PersonViewFilterConfig {
   view: number;
   operator: IN_OPERATOR;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface RandomFilterConfig {
+  organizations?: FilterConfigOrgOptions;
   size: number;
   seed: string;
 }
@@ -186,10 +217,12 @@ export interface SurveyOptionFilterConfig {
   question: number;
   options: number[] | string[];
   operator: CONDITION_OPERATOR;
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface SurveyResponseBase {
   operator: MATCH_OPERATORS;
+  organizations?: FilterConfigOrgOptions;
   value: string;
 }
 
@@ -204,16 +237,21 @@ export interface SurveySubmissionFilterConfig {
   after?: string;
   before?: string;
   operator: 'submitted';
+  organizations?: FilterConfigOrgOptions;
   survey: number;
 }
 
 export interface UserFilterConfig {
   is_user: boolean;
+  organizations?: FilterConfigOrgOptions;
 }
+
+export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
 
 export interface CampaignParticipationConfig {
   state: 'booked' | 'signed_up';
   operator: 'in' | 'notin';
+  organizations?: FilterConfigOrgOptions;
   campaign?: number;
   activity?: number;
   location?: number;
@@ -224,6 +262,23 @@ export interface CampaignParticipationConfig {
 export interface SubQueryFilterConfig {
   query_id: number;
   operator?: IN_OPERATOR;
+}
+
+export interface JourneyFilterConfig {
+  closed?: {
+    after?: string;
+    before?: string;
+  } | null;
+  journey?: number;
+  opened?: {
+    after?: string;
+    before?: string;
+  };
+  tags?: {
+    condition: JOURNEY_CONDITION_OP;
+    ids: number[];
+    min_matching?: number;
+  };
 }
 
 interface TaskTimeFrameBefore {
@@ -252,6 +307,7 @@ export interface TaskFilterConfig {
   assigned?: TaskTimeFrame;
   completed?: TaskTimeFrame;
   ignored?: TaskTimeFrame;
+  organizations?: FilterConfigOrgOptions;
   time_estimate?: {
     max?: number;
     min?: number;
@@ -278,6 +334,7 @@ export type AnyFilterConfig =
   | SurveyOptionFilterConfig
   | SurveyResponseFilterConfig
   | SurveySubmissionFilterConfig
+  | JourneyFilterConfig
   | TaskFilterConfig
   | UserFilterConfig; // Add all filter objects here
 

@@ -42,7 +42,11 @@ const User = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -92,6 +96,7 @@ const User = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

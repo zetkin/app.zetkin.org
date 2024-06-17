@@ -1,12 +1,11 @@
-import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 
 import messageIds from 'features/tags/l10n/messageIds';
-import { TagManagerController } from './TagManagerController';
-
 import mockTag from 'utils/testing/mocks/mockTag';
+import { render } from 'utils/testing';
+import { TagManagerController } from './TagManagerController';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { EditTag, NewTag } from './types';
 
@@ -22,6 +21,7 @@ const createTagCallback = jest.fn<Promise<ZetkinTag>, [NewTag]>((tag) =>
 );
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const editTagCallback = jest.fn((tag: EditTag) => tag);
+const deleteTagCallback = jest.fn((tagId: number) => tagId);
 
 describe('<TagManagerController />', () => {
   describe('Renders list of tags passed in', () => {
@@ -35,6 +35,7 @@ describe('<TagManagerController />', () => {
           availableTags={[tag1, tag2]}
           onAssignTag={assignTagCallback}
           onCreateTag={createTagCallback}
+          onDeleteTag={deleteTagCallback}
           onEditTag={editTagCallback}
           onUnassignTag={unassignTagCallback}
         />
@@ -86,6 +87,7 @@ describe('<TagManagerController />', () => {
         groupTags
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
+        onDeleteTag={deleteTagCallback}
         onEditTag={editTagCallback}
         onUnassignTag={unassignTagCallback}
       />
@@ -118,6 +120,7 @@ describe('<TagManagerController />', () => {
         availableTags={[tag1]}
         onAssignTag={onAssignTag}
         onCreateTag={createTagCallback}
+        onDeleteTag={deleteTagCallback}
         onEditTag={editTagCallback}
         onUnassignTag={unassignTagCallback}
       />
@@ -152,6 +155,7 @@ describe('<TagManagerController />', () => {
         availableTags={[tag]}
         onAssignTag={onAssignTag}
         onCreateTag={createTagCallback}
+        onDeleteTag={deleteTagCallback}
         onEditTag={editTagCallback}
         onUnassignTag={unassignTagCallback}
       />
@@ -201,6 +205,7 @@ describe('<TagManagerController />', () => {
         availableTags={[tag1]}
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
+        onDeleteTag={deleteTagCallback}
         onEditTag={editTagCallback}
         onUnassignTag={onUnassignTag}
       />
@@ -244,6 +249,7 @@ describe('<TagManagerController />', () => {
           availableTags={[]}
           onAssignTag={assignTagCallback}
           onCreateTag={onCreateTag}
+          onDeleteTag={deleteTagCallback}
           onEditTag={editTagCallback}
           onUnassignTag={unassignTagCallback}
         />
@@ -273,6 +279,7 @@ describe('<TagManagerController />', () => {
           availableTags={[]}
           onAssignTag={assignTagCallback}
           onCreateTag={onCreateTag}
+          onDeleteTag={deleteTagCallback}
           onEditTag={editTagCallback}
           onUnassignTag={unassignTagCallback}
         />
@@ -310,6 +317,7 @@ describe('<TagManagerController />', () => {
           availableTags={[]}
           onAssignTag={assignTagCallback}
           onCreateTag={onCreateTag}
+          onDeleteTag={deleteTagCallback}
           onEditTag={editTagCallback}
           onUnassignTag={unassignTagCallback}
         />
@@ -379,6 +387,7 @@ describe('<TagManagerController />', () => {
           disableEditTags
           onAssignTag={assignTagCallback}
           onCreateTag={onCreateTag}
+          onDeleteTag={deleteTagCallback}
           onEditTag={editTagCallback}
           onUnassignTag={unassignTagCallback}
         />
@@ -403,6 +412,7 @@ describe('<TagManagerController />', () => {
           availableTags={[tagToEdit]}
           onAssignTag={assignTagCallback}
           onCreateTag={onCreateTag}
+          onDeleteTag={deleteTagCallback}
           onEditTag={editTagCallback}
           onUnassignTag={unassignTagCallback}
         />
