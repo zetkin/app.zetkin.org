@@ -36,6 +36,9 @@ export default makeMessages('feat.profile', {
     profile: m('Profile'),
     timeline: m('Timeline'),
   },
+  tags: {
+    createAndApplyLabel: m('Create and apply'),
+  },
   user: {
     hasAccount: m('Connected to a Zetkin account'),
     noAccount: m('Not connected to a Zetkin account'),

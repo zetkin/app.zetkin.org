@@ -38,6 +38,7 @@ const TagManager: FC<TagManagerProps> = ({
   disabledTags,
   groupTags,
   ignoreValues,
+  submitCreateTagLabel,
 }) => {
   const { orgId } = useNumericRouteParams();
   const tagsFuture = useTags(orgId);
@@ -71,6 +72,7 @@ const TagManager: FC<TagManagerProps> = ({
               }
             }}
             onUnassignTag={onUnassignTag}
+            submitCreateTagLabel={submitCreateTagLabel}
           />
         );
       }}
@@ -87,6 +89,7 @@ export const TagManagerSection: FC<Omit<TagManagerProps, 'groupTags'>> = ({
   disabledTags,
   ignoreValues,
   onTagEdited,
+  submitCreateTagLabel,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -112,6 +115,7 @@ export const TagManagerSection: FC<Omit<TagManagerProps, 'groupTags'>> = ({
         onAssignTag={onAssignTag}
         onTagEdited={onTagEdited}
         onUnassignTag={onUnassignTag}
+        submitCreateTagLabel={submitCreateTagLabel}
       />
     </ZUISection>
   );

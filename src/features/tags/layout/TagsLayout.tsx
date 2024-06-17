@@ -45,7 +45,6 @@ const TagsLayout: FC<TagsLayoutProps> = ({ children }) => {
       <TagDialog
         groups={tagGroups}
         onClose={() => setPendingTag(undefined)}
-        onlyCreateTags
         onSubmit={(tag) => {
           if (!('id' in tag)) {
             createTag(tag);
