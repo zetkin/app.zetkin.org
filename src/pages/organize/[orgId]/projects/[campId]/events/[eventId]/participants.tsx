@@ -46,6 +46,10 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
   const listRef = useRef<HTMLDivElement>();
   const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
+  if (!eventFuture) {
+    return null;
+  }
+
   return (
     <ZUIFuture future={eventFuture}>
       {(data) => {

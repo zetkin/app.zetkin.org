@@ -29,7 +29,15 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <AppRouterCacheProvider>
-          <ClientContext lang={lang} messages={messages} user={user}>
+          <ClientContext
+            envVars={{
+              MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
+              ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
+            }}
+            lang={lang}
+            messages={messages}
+            user={user}
+          >
             {children}
           </ClientContext>
         </AppRouterCacheProvider>

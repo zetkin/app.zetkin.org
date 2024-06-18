@@ -1,4 +1,5 @@
 import useEventsFromDateRange from './useEventsFromDateRange';
+import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { dateIsAfter, dateIsBefore, isSameDate } from 'utils/dateUtils';
 
@@ -10,7 +11,8 @@ export default function useParallelEvents(
   const start = new Date(startString);
   const end = new Date(endString);
 
-  const allEvents = useEventsFromDateRange(start, end);
+  const { campId } = useNumericRouteParams();
+  const allEvents = useEventsFromDateRange(start, end, orgId, campId);
 
   const filteredEvents = allEvents
     .filter((event) => {

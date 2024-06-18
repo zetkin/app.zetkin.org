@@ -1,3 +1,4 @@
+import { CompareArrows } from '@mui/icons-material';
 import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
@@ -10,9 +11,10 @@ import messageIds from 'features/import/l10n/messageIds';
 import Preview from './Preview';
 import SheetSettings from './SheetSettings';
 import useConfigure from 'features/import/hooks/useConfigure';
+import useImportConfigState from 'features/import/hooks/useUIDataColumns';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import useUIDataColumns from 'features/import/hooks/useUIDataColumns';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
 
 interface ConfigureProps {
   onClose: () => void;
@@ -25,12 +27,11 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
   const [columnIndexBeingConfigured, setColumnIndexBeingConfigured] = useState<
     number | null
   >(null);
-  const { orgId } = useNumericRouteParams();
   const theme = useTheme();
-  const { forwardMessageDisabled, numRows, uiDataColumns } =
-    useUIDataColumns(orgId);
-  const [loading, setLoading] = useState(false);
+  const { orgId } = useNumericRouteParams();
+  const { configIsIncomplete, numColumns, numRows } = useImportConfigState();
   const getPreflightStats = useConfigure(orgId);
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
@@ -69,20 +70,32 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
               <Mapping
                 clearConfiguration={() => setColumnIndexBeingConfigured(null)}
                 columnIndexBeingConfigured={columnIndexBeingConfigured}
-                columns={uiDataColumns}
+                numberOfColumns={numColumns}
                 onConfigureStart={(columnIndex: number) =>
                   setColumnIndexBeingConfigured(columnIndex)
                 }
               />
             </Box>
             <Box display="flex" flexDirection="column" width="50%">
-              <Configuration
-                uiDataColumn={
-                  typeof columnIndexBeingConfigured == 'number'
-                    ? uiDataColumns[columnIndexBeingConfigured]
-                    : null
-                }
-              />
+              {columnIndexBeingConfigured !== null && (
+                <Configuration
+                  columnIndexBeingConfigured={columnIndexBeingConfigured}
+                />
+              )}
+              {columnIndexBeingConfigured === null && (
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  height="100%"
+                  justifyContent="center"
+                  sx={{ opacity: '50%' }}
+                >
+                  <ZUIEmptyState
+                    message={messages.configuration.mapping.emptyStateMessage()}
+                    renderIcon={(props) => <CompareArrows {...props} />}
+                  />
+                </Box>
+              )}
             </Box>
           </Box>
           <Preview />
@@ -96,11 +109,11 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
               setLoading(false);
             }}
             onClickSecondary={onRestart}
-            primaryButtonDisabled={forwardMessageDisabled}
+            primaryButtonDisabled={configIsIncomplete}
             primaryButtonMsg={messages.actionButtons.validate()}
             secondaryButtonMsg={messages.actionButtons.restart()}
             statusMessage={
-              forwardMessageDisabled
+              configIsIncomplete
                 ? messages.configuration.statusMessage.notDone()
                 : messages.configuration.statusMessage.done({
                     numConfiguredPeople: numRows,

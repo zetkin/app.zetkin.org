@@ -6,22 +6,34 @@ import {
   Checkbox,
   FormControl,
   InputLabel,
-  ListSubheader,
-  MenuItem,
-  Select,
   Typography,
   useTheme,
 } from '@mui/material';
 
+import FieldSelect from './FieldSelect';
 import messageIds from 'features/import/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { Option } from 'features/import/hooks/useColumn';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import { Column, ColumnKind } from 'features/import/utils/types';
-import { Msg, useMessages } from 'core/i18n';
+import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
+import useUIDataColumn from 'features/import/hooks/useUIDataColumn';
+import {
+  Column,
+  ColumnKind,
+  ConfigurableColumn,
+} from 'features/import/utils/types';
+
+const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
+  return [
+    ColumnKind.ID_FIELD,
+    ColumnKind.ORGANIZATION,
+    ColumnKind.TAG,
+    ColumnKind.DATE,
+  ].includes(column.kind);
+};
 
 interface MappingRowProps {
   clearConfiguration: () => void;
-  column: UIDataColumn<Column>;
+  columnIndex: number;
   fieldOptions: Option[];
   isBeingConfigured: boolean;
   onChange: (newColumn: Column) => void;
@@ -31,7 +43,7 @@ interface MappingRowProps {
 
 const MappingRow: FC<MappingRowProps> = ({
   clearConfiguration,
-  column,
+  columnIndex,
   fieldOptions,
   isBeingConfigured,
   onChange,
@@ -39,36 +51,12 @@ const MappingRow: FC<MappingRowProps> = ({
   optionAlreadySelected,
 }) => {
   const theme = useTheme();
-  const messages = useMessages(messageIds);
+  const column = useUIDataColumn(columnIndex);
 
-  const getValue = () => {
-    if (column.originalColumn.kind == ColumnKind.FIELD) {
-      return `field:${column.originalColumn.field}`;
-    }
-
-    if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
-      return column.originalColumn.kind.toString();
-    }
-
-    //Column kind is UNKNOWN, so we want no selected value
-    return '';
-  };
-
-  // This has to be a function, not a component with PascalCase. If it is used
-  // as a component, the `Select` below won't recognise it as a valid option.
-  const listOption = ({ value, label, key }: Option & { key?: string }) => {
-    const alreadySelected = optionAlreadySelected(value);
-    return (
-      <MenuItem
-        key={key}
-        disabled={alreadySelected}
-        sx={{ paddingLeft: 4 }}
-        value={value}
-      >
-        {label}
-      </MenuItem>
-    );
-  };
+  const columnValuesMessage = useColumnValuesMessage(
+    column.numberOfEmptyRows,
+    column.uniqueValues
+  );
 
   return (
     <Box
@@ -124,78 +112,14 @@ const MappingRow: FC<MappingRowProps> = ({
             >
               <Msg id={messageIds.configuration.mapping.selectZetkinField} />
             </InputLabel>
-            <Select
-              disabled={!column.originalColumn.selected}
-              label={messages.configuration.mapping.selectZetkinField()}
-              onChange={(event) => {
-                clearConfiguration();
-                if (event.target.value == 'id') {
-                  onChange({
-                    idField: null,
-                    kind: ColumnKind.ID_FIELD,
-                    selected: true,
-                  });
-                  onConfigureStart();
-                } else if (event.target.value == 'org') {
-                  onChange({
-                    kind: ColumnKind.ORGANIZATION,
-                    mapping: [],
-                    selected: true,
-                  });
-                  onConfigureStart();
-                } else if (event.target.value == 'tag') {
-                  onChange({
-                    kind: ColumnKind.TAG,
-                    mapping: [],
-                    selected: true,
-                  });
-                  onConfigureStart();
-                } else if (event.target.value.startsWith('field')) {
-                  onChange({
-                    field: event.target.value.slice(6),
-                    kind: ColumnKind.FIELD,
-                    selected: true,
-                  });
-                }
-              }}
-              sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
-              value={getValue()}
-            >
-              <ListSubheader>
-                <Msg
-                  id={messageIds.configuration.mapping.zetkinFieldGroups.id}
-                />
-              </ListSubheader>
-              {listOption({
-                label: messages.configuration.mapping.id(),
-                value: 'id',
-              })}
-
-              {fieldOptions.length > 0 && (
-                <ListSubheader>
-                  <Msg
-                    id={
-                      messageIds.configuration.mapping.zetkinFieldGroups.fields
-                    }
-                  />
-                </ListSubheader>
-              )}
-              {fieldOptions.map((option) => listOption(option))}
-
-              <ListSubheader>
-                <Msg
-                  id={messageIds.configuration.mapping.zetkinFieldGroups.other}
-                />
-              </ListSubheader>
-              {listOption({
-                label: messages.configuration.mapping.organization(),
-                value: 'org',
-              })}
-              {listOption({
-                label: messages.configuration.mapping.tags(),
-                value: 'tag',
-              })}
-            </Select>
+            <FieldSelect
+              clearConfiguration={clearConfiguration}
+              column={column}
+              fieldOptions={fieldOptions}
+              onChange={onChange}
+              onConfigureStart={onConfigureStart}
+              optionAlreadySelected={optionAlreadySelected}
+            />
           </FormControl>
         </Box>
       </Box>
@@ -206,49 +130,49 @@ const MappingRow: FC<MappingRowProps> = ({
         marginLeft={5.5}
         minHeight="40px"
       >
-        {column.showColumnValuesMessage && (
+        {!isConfigurableColumn(column.originalColumn) && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
             <Typography color="secondary" variant="body2">
-              {column.columnValuesMessage}
+              {columnValuesMessage}
             </Typography>
           </Box>
         )}
-        <Typography
-          color={
-            column.showNeedsConfigMessage
-              ? theme.palette.warning.main
-              : 'secondary'
-          }
-          variant="body2"
-        >
-          {column.showNeedsConfigMessage &&
-            !column.showMappingResultMessage && (
+        {isConfigurableColumn(column.originalColumn) && (
+          <>
+            <Typography
+              color={
+                column.unfinishedMapping
+                  ? theme.palette.warning.main
+                  : 'secondary'
+              }
+              variant="body2"
+            >
+              {column.unfinishedMapping && (
+                <Msg
+                  id={
+                    messageIds.configuration.mapping.unfinished[
+                      column.originalColumn.kind
+                    ]
+                  }
+                />
+              )}
+              {!column.unfinishedMapping && column.mappingResultsMessage}
+            </Typography>
+            <Button
+              endIcon={<ChevronRight />}
+              onClick={() => onConfigureStart()}
+              variant="text"
+            >
               <Msg
                 id={
-                  column.originalColumn.kind == ColumnKind.ID_FIELD
-                    ? messageIds.configuration.mapping.needsConfig
-                    : messageIds.configuration.mapping.needsMapping
+                  column.originalColumn.kind == ColumnKind.ID_FIELD ||
+                  column.originalColumn.kind == ColumnKind.DATE
+                    ? messageIds.configuration.mapping.configButton
+                    : messageIds.configuration.mapping.mapValuesButton
                 }
               />
-            )}
-          {column.showMappingResultMessage &&
-            !column.showNeedsConfigMessage &&
-            column.mappingResultsMessage}
-        </Typography>
-        {(column.showNeedsConfigMessage || column.showMappingResultMessage) && (
-          <Button
-            endIcon={<ChevronRight />}
-            onClick={() => onConfigureStart()}
-            variant="text"
-          >
-            <Msg
-              id={
-                column.originalColumn.kind == ColumnKind.ID_FIELD
-                  ? messageIds.configuration.mapping.configButton
-                  : messageIds.configuration.mapping.mapValuesButton
-              }
-            />
-          </Button>
+            </Button>
+          </>
         )}
       </Box>
     </Box>

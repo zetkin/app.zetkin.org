@@ -104,9 +104,10 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
         </Alert>
       )}
       <Box
-        display={fixedHeight ? 'flex' : 'block'}
+        display="flex"
         flexDirection="column"
         height={fixedHeight ? 1 : 'auto'}
+        minHeight="100vh"
       >
         <Header
           actionButtons={actionButtons}

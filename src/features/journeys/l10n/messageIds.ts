@@ -23,6 +23,7 @@ export default makeMessages('feat.journeys', {
       label: m<{ singularLabel: string }>('Close {singularLabel}'),
     },
     collapseButton: m('Collapse'),
+    createAndApplyTagButton: m('Create and apply'),
     created: m<{ relative: ReactElement }>('Created {relative}'),
     deadlineLabel: m<{ date: ReactElement }>('(Was due {date})'),
     dueDateInputClear: m('Clear'),

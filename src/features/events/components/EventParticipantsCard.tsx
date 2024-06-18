@@ -34,7 +34,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   eventId,
   orgId,
 }) => {
-  const eventData = useEvent(orgId, eventId).data;
+  const event = useEvent(orgId, eventId)?.data;
   const { pendingSignUps, participantsFuture } = useEventParticipants(
     orgId,
     eventId
@@ -48,8 +48,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
     participants.filter((p) => p.reminder_sent != null && !p.cancelled)
       .length ?? 0;
 
-  const availParticipants = eventData?.num_participants_available ?? 0;
-  const reqParticipants = eventData?.num_participants_required ?? 0;
+  const availParticipants = event?.num_participants_available ?? 0;
+  const reqParticipants = event?.num_participants_required ?? 0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -58,7 +58,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
     null | (EventTarget & SVGSVGElement)
   >(null);
 
-  if (!eventData) {
+  if (!event) {
     return null;
   }
 
@@ -176,18 +176,18 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.contact()}
             </Typography>
-            {eventData.contact && (
+            {event.contact && (
               <Box alignItems="center" display="flex">
-                <ZUIPersonHoverCard personId={eventData.contact.id}>
+                <ZUIPersonHoverCard personId={event.contact.id}>
                   <Avatar
-                    src={`/api/orgs/${eventData.organization.id}/people/${eventData.contact.id}/avatar`}
+                    src={`/api/orgs/${event.organization.id}/people/${event.contact.id}/avatar`}
                     style={{ height: 30, marginRight: 10, width: 30 }}
                   />
-                  {eventData.contact.name}
+                  {event.contact.name}
                 </ZUIPersonHoverCard>
               </Box>
             )}
-            {!eventData.contact && (
+            {!event.contact && (
               <Typography>
                 {messages.eventParticipantsCard.noContact()}
               </Typography>
@@ -197,7 +197,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
         <Divider />
         <Box display="flex" justifyContent="center" marginTop={2}>
           <NextLink
-            href={`${getEventUrl(eventData)}/participants`}
+            href={`${getEventUrl(event)}/participants`}
             legacyBehavior
             passHref
           >

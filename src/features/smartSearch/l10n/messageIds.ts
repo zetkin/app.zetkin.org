@@ -11,38 +11,135 @@ export default makeMessages('feat.smartSearch', {
     goBack: m('Go back to query'),
     save: m('Save'),
   },
-  filterCategories: {
-    campaignActivity: m('Project activity'),
-    email: m('Email'),
-    journeySubjects: m('Journey'),
-    misc: m('Misc'),
-    peopleDatabase: m('People'),
-    phoneBanking: m('Phone banking'),
-    surveys: m('Surveys'),
-  },
-  filterTitles: {
-    all: m('Everyone'),
-    call_blocked: m('Blocked from calling'),
-    call_history: m('Based on their call history'),
-    campaign_participation: m('Based on their event participation'),
-    email_blacklist: m('People who are blocked from emails'),
-    email_click: m('Based on their interaction with links in email'),
-    email_history: m('Based on their email history'),
-    journey_subjects: m('Based on journeys'),
-    most_active: m('The most active people'),
-    person_data: m('Based on their name, address or other data'),
-    person_field: m('Based on custom fields'),
-    person_tags: m('Based on their tags'),
-    person_view: m('People from a list'),
-    random: m('A random selection of people'),
-    sub_query: m('Based on another Smart Search query'),
-    survey_option: m(
-      'Based on the options they have selected in survey questions'
-    ),
-    survey_response: m('Based on their responses to survey questions'),
-    survey_submission: m('People who have submitted a survey'),
-    task: m('People who have engaged in tasks'),
-    user: m('People who used Zetkin'),
+  filterGallery: {
+    categories: {
+      basicInformation: {
+        description: m('Select based on personal information'),
+        title: m('Basic information'),
+      },
+      crossReferencing: {
+        description: m('Select based on lists and smart searches'),
+        title: m('Cross referencing'),
+      },
+      email: {
+        description: m(
+          'Find people based on the data gathered by sending emails.'
+        ),
+        title: m('Emails'),
+      },
+      events: {
+        description: m('Select based on data from events'),
+        title: m('Events'),
+      },
+      journey: {
+        description: m('Select based on data from journeys'),
+        title: m('Journeys'),
+      },
+      misc: {
+        description: m('Miscellaneous ways of selecting'),
+        title: m('Misc'),
+      },
+      phoneBanking: {
+        description: m('Use call data to select'),
+        title: m('Call assignments'),
+      },
+      surveys: {
+        description: m('Select based on survey submissions'),
+        title: m('Surveys'),
+      },
+      tasks: {
+        description: m('Select on task data'),
+        title: m('Tasks'),
+      },
+    },
+    filters: {
+      call_history: {
+        description: m('Find people who were called, reached or tried.'),
+        title: m('Call history'),
+      },
+      campaign_participation: {
+        description: m("Who signed up? Got booked? Who didn't? Find them!"),
+        title: m('Participation in events'),
+      },
+      email_blacklist: {
+        description: m(
+          'Bounced, incorrect address, not received - here they are.'
+        ),
+        title: m('People who are blocked from emails'),
+      },
+      email_click: {
+        description: m('Did they click? Did they not?'),
+        title: m('Based on their interaction with links in emails.'),
+      },
+      email_history: {
+        description: m('Who was sent what, when?'),
+        title: m('Based on their email history'),
+      },
+      journey_subjects: {
+        description: m(
+          'Find people who are on a journey or finished it already'
+        ),
+        title: m('People on a journey'),
+      },
+      person_data: {
+        description: m('Name, address, email and more!'),
+        title: m('Personal info'),
+      },
+      person_field: {
+        description: m(
+          'Like basic personal info, but search fields that are custom to this organization.'
+        ),
+        title: m('Custom fields'),
+      },
+      person_tags: {
+        description: m('For finding people with or without specific tags.'),
+        title: m('Tags'),
+      },
+      person_view: {
+        description: m("When you want people who are, or aren't, in a list."),
+        title: m('People from a list'),
+      },
+      random: {
+        description: m('Randomly add or remove people.'),
+        title: m('Random selection'),
+      },
+      sub_query: {
+        description: m(
+          'Use a another Smart Search to refine this Smart Search.'
+        ),
+        title: m('People who match a saved Smart Search query'),
+      },
+      survey_option: {
+        description: m(
+          'Use your survey responses for their glorious purpose: finding the right people!'
+        ),
+        title: m('Responses to checkbox questions'),
+      },
+      survey_response: {
+        description: m(
+          'Use your survey responses for their glorious purpose: finding the right people!'
+        ),
+        title: m('Responses to text questions'),
+      },
+      survey_submission: {
+        description: m(
+          'Did they submit a survey? Did they not? Find them here!'
+        ),
+        title: m('Submitted survey'),
+      },
+      task: {
+        description: m(
+          'Add or remove people based on their participation in tasks'
+        ),
+        title: m('Tasks'),
+      },
+      user: {
+        description: m(
+          "Find people who are, or aren't, connected to a Zetkin account"
+        ),
+        title: m('Zetkin users'),
+      },
+    },
   },
   filters: {
     all: {
@@ -205,39 +302,39 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     journey: {
-      closed: m('a closed'),
       condition: {
         conditionSelect: {
-          all: m('and has all'),
-          any: m('and has any'),
-          none: m('and has none'),
+          all: m('and have all'),
+          any: m('and have any'),
+          none: m('and have none'),
           regardlessTags: m('regardless of tags'),
-          some: m('and has at least'),
+          some: m('and have at least'),
         },
         preview: {
-          all: m('and has all'),
-          any: m('and has any'),
-          none: m('and has none'),
+          all: m('and have all'),
+          any: m('and have any'),
+          none: m('and have none'),
           regardlessTags: m('regardless of tags'),
-          some: m<{ minMatching: number }>('and has at least {minMatching}'),
+          some: m<{ minMatching: number }>('and have at least {minMatching}'),
         },
       },
       followingTags: m('of the following tags'),
       inputString: m<{
         addRemoveSelect: ReactElement;
+        closedTimeFrame: ReactElement | null;
         condition: ReactElement;
         journeySelect: ReactElement;
-        operator: ReactElement;
-        statusText: ReactElement;
+        openedTimeFrame: ReactElement;
+        stateSelect: ReactElement;
         tags: ReactElement | null;
         tagsDesc: ReactElement | null;
-        timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who are part of {operator} {journeySelect} {statusText} {timeFrame} {condition} {tagsDesc} {tags}'
+        '{addRemoveSelect} people who are part of {journeySelect} that opened {openedTimeFrame} and {stateSelect} {closedTimeFrame} {condition} {tagsDesc} {tags}'
       ),
-      opened: m('an open'),
-      thatFinished: m('that finished'),
-      thatOpened: m('that opened'),
+      stateOptions: {
+        closed: m('closed'),
+        open: m('are still open'),
+      },
     },
     mostActive: {
       examples: {
@@ -684,6 +781,15 @@ export default makeMessages('feat.smartSearch', {
     add: m('Add'),
     limit: m('Limit to'),
     sub: m('Remove'),
+  },
+  orgScope: {
+    all: m('Searching in all organizations'),
+    few: m<{ first: string; last: string }>('Searching in {first} and {last}'),
+    many: m<{ additional: number; first: string }>(
+      'Searching in {first} and {additional} other organizations'
+    ),
+    single: m<{ value: string }>('Searching in {value}'),
+    suborgs: m('Searching in all sub-organizations'),
   },
   quantity: {
     edit: {
