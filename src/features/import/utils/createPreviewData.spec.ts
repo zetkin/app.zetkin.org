@@ -79,6 +79,7 @@ describe('createPreviewData()', () => {
       tags: [{ id: 123 }, { id: 100 }],
     });
   });
+
   it('converts orgs to preview object', () => {
     const configData: Sheet = {
       columns: [
@@ -120,6 +121,7 @@ describe('createPreviewData()', () => {
       organizations: [111],
     });
   });
+
   it('returns empty obejct when there are no values', () => {
     const configData: Sheet = {
       columns: [
@@ -155,6 +157,7 @@ describe('createPreviewData()', () => {
     const result = createPreviewData(configData, 0);
     expect(result).toEqual({});
   });
+
   it('returns tags for empty value', () => {
     const configData: Sheet = {
       columns: [
@@ -195,6 +198,47 @@ describe('createPreviewData()', () => {
         id: '123',
       },
       tags: [{ id: 222 }, { id: 100 }],
+    });
+  });
+
+  it('converts dates into preview object', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          dateFormat: 'se',
+          field: 'birthday',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Malmö', '890215-3459'],
+        },
+        {
+          data: ['124', 'Linköping', '021208-5643'],
+        },
+        {
+          data: ['125', 'Linköping', '650325-2391'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({
+      data: {
+        birthday: '1989-02-15',
+        city: 'Malmö',
+        id: '123',
+      },
     });
   });
 });

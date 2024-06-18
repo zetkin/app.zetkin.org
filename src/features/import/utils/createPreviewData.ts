@@ -1,4 +1,5 @@
 import getUniqueTags from './getUniqueTags';
+import parseDate from './parseDate';
 import { ZetkinPersonImportOp } from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
 
@@ -51,6 +52,16 @@ export default function createPreviewData(
             personPreviewOp.organizations = [mappedColumn?.orgId as number];
           }
         });
+      }
+
+      if (column.kind === ColumnKind.DATE) {
+        if (row[colIdx] && column.dateFormat) {
+          const date = parseDate(row[colIdx], column.dateFormat);
+          personPreviewOp.data = {
+            ...personPreviewOp.data,
+            [`${column.field}`]: date,
+          };
+        }
       }
     }
   });
