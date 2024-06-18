@@ -859,8 +859,9 @@ feat:
         invalidFormat:
           title: "Wrong format for field: {field}"
         majorChange:
-          description: Make sure you have configured the columns correctly
-          title: This import will overwrite lots of people's {field}
+          description: This warning is shown when more than 30% of imported people are
+            affected. Make sure you have configured the columns correctly
+          title: This import will overwrite "{field}" for {amount} people
         missingIdAndName:
           description: Every row needs to contain at least a full name, or an ID of a
             person that already exists in Zetkin.

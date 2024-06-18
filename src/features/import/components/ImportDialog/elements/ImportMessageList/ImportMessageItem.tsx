@@ -41,6 +41,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         onClickBack={onClickBack}
         status="warning"
         title={messages.preflight.messages.majorChange.title({
+          amount: problem.amount,
           field: getFieldTitle(problem.field),
         })}
       />

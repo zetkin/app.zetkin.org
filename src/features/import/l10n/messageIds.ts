@@ -298,9 +298,11 @@ export default makeMessages('feat.import', {
         title: m<{ field: string }>('Wrong format for field: {field}'),
       },
       majorChange: {
-        description: m('Make sure you have configured the columns correctly'),
-        title: m<{ field: string }>(
-          "This import will overwrite lots of people's {field}"
+        description: m(
+          'This warning is shown when more than 30% of imported people are affected. Make sure you have configured the columns correctly'
+        ),
+        title: m<{ amount: number; field: string }>(
+          'This import will overwrite "{field}" for {amount} people'
         ),
       },
       missingIdAndName: {
