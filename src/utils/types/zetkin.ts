@@ -18,7 +18,7 @@ export interface ZetkinCampaign {
   info_text: string;
   title: string;
   id: number;
-  organization?: ZetkinOrganization;
+  organization: ZetkinOrganization;
   manager: null | {
     id: number;
     name: string;
@@ -556,3 +556,5 @@ export type ZetkinCreatePerson = Partial<
   Omit<ZetkinPersonNativeFields, 'id' | 'is_user'>
 > &
   Record<string, string | null>;
+
+export type ZetkinUpdatePerson = ZetkinCreatePerson;

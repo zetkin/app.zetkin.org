@@ -86,7 +86,7 @@ export function isInFuture(datestring: string): boolean {
 }
 
 export function isSameDate(first: Date, second: Date): boolean {
-  return first.toISOString().slice(0, 10) == second.toISOString().slice(0, 10);
+  return dayjs(first).isSame(dayjs(second), 'day');
 }
 
 export function isValidDate(date: Date): boolean {

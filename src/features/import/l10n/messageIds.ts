@@ -13,6 +13,47 @@ export default makeMessages('feat.import', {
   },
   configuration: {
     configure: {
+      dates: {
+        customFormatDescription: m(
+          'Describe the format of the values in this column, using the letters Y, M and D and any characters you use to separate them. For example, if your dates are written 1998.03.23, you would describe that as YYYY.MM.DD.'
+        ),
+        customFormatLabel: m('Custom date format'),
+        dateInputLabel: m('Date format'),
+        description: m(
+          'Select the format of the values in this column so they can be imported correctly.'
+        ),
+        dropDownLabel: m('Select format'),
+        emptyPreview: m('Could not be parsed'),
+        header: m('Configure date format'),
+        listSubHeaders: {
+          custom: m('Custom'),
+          dates: m('Date formats'),
+          personNumbers: m('Person numbers'),
+        },
+        personNumberFormat: {
+          dk: {
+            description: m(
+              'The values in this column will be parsed from 10 digit Danish CPR-numbers (DDMMYY-XXXX or DDMMYYXXXX) into dates.'
+            ),
+            label: m('Danish CPR-number'),
+          },
+          no: {
+            description: m(
+              'The values in this column will be parsed from 11 digit Norwegian fødselsnummer (DDMMYYXXXXX or DDMMYY-XXXXX) into dates.'
+            ),
+            label: m('Norwegian fødselsnummer'),
+          },
+          se: {
+            description: m(
+              'The values in this column will be parsed from 10 or 12 digit Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.'
+            ),
+            label: m('Swedish Personnummer'),
+          },
+        },
+        wrongDateFormatWarning: m(
+          'Some of the values in this column can not be parsed into dates using this format.'
+        ),
+      },
       ids: {
         configExplanation: m(
           'Importing with IDs allows Zetkin (now or in the future) to update existing people in the database instead of creating duplicates.'
@@ -53,6 +94,9 @@ export default makeMessages('feat.import', {
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
       emptyStateMessage: m('Start by mapping file columns.'),
       fileHeader: m('File'),
+      finishedMappingDates: m<{ dateFormat: string; numValues: number }>(
+        'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
+      ),
       finishedMappingIds: m<{
         idField: 'ext_id' | 'id';
         numValues: number;
@@ -125,11 +169,15 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
-      needsConfig: m('You need to configure the IDs'),
-      needsMapping: m('You need to map values'),
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
       tags: m('Tags'),
+      unfinished: {
+        date: m('You need to configure date format'),
+        id: m('You need to configure the IDs'),
+        org: m('You need to map values'),
+        tag: m('You need to map values'),
+      },
       zetkinFieldGroups: {
         fields: m('Fields'),
         id: m('ID'),
@@ -250,9 +298,11 @@ export default makeMessages('feat.import', {
         title: m<{ field: string }>('Wrong format for field: {field}'),
       },
       majorChange: {
-        description: m('Make sure you have configured the columns correctly'),
-        title: m<{ field: string }>(
-          "This import will overwrite lots of people's {field}"
+        description: m(
+          'This warning is shown when more than 30% of imported people are affected. Make sure you have configured the columns correctly'
+        ),
+        title: m<{ amount: number; field: string }>(
+          'This import will overwrite "{field}" for {amount} people'
         ),
       },
       missingIdAndName: {
@@ -285,6 +335,12 @@ export default makeMessages('feat.import', {
         ),
         title: m('You have not configured identifying columns'),
       },
+      unexpectedError: {
+        description: m(
+          'No people have been imported. You can go back and check the import settings or select a new file to import. There were errors in the form you submitted. Please try again and make sure you fill in all the necessary information. If the error persist you can contact support at info@zetkin.org'
+        ),
+        title: m('Something went wrong and the import was aborted'),
+      },
       unknownError: {
         description: m(
           'Contact support if you need help understanding the problem.'
@@ -297,6 +353,7 @@ export default makeMessages('feat.import', {
         ),
         title: m('Trying to update records that do not exist'),
       },
+      validating: m('Validating'),
     },
   },
   steps: {

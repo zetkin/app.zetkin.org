@@ -4,7 +4,6 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridRenderEditCellParams,
-  GridValueGetterParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
 
@@ -42,20 +41,21 @@ export default class LocalPersonColumnType
       headerAlign: 'center',
 
       renderCell: (params: GridRenderCellParams) => {
-        return <ZUIPersonGridCell person={params.row[params.field]} />;
+        return <ZUIPersonGridCell person={params.value} />;
       },
       renderEditCell: (params: GridRenderEditCellParams) => {
-        return (
-          <EditCell
-            cell={params.row[params.field]}
-            column={col}
-            row={params.row}
-          />
-        );
+        return <EditCell cell={params.value} column={col} row={params.row} />;
       },
-      valueGetter: (params: GridValueGetterParams) => {
-        const cell = params.row[params.field];
-        return this.cellToString(cell);
+      sortComparator: (v1, v2) => {
+        if (!v1) {
+          return 1;
+        }
+        if (!v2) {
+          return -1;
+        }
+        const name1 = `${v1.first_name} ${v1.last_name}`;
+        const name2 = `${v2.first_name} ${v2.last_name}`;
+        return name1.localeCompare(name2);
       },
     };
   }

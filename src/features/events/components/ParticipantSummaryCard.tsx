@@ -34,7 +34,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   onClickRecord,
   orgId,
 }) => {
-  const eventData = useEvent(orgId, eventId).data;
+  const event = useEvent(orgId, eventId)?.data;
   const participantStatus = useParticipantStatus(orgId, eventId);
   const {
     respondentsFuture,
@@ -51,8 +51,8 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   const respondents = respondentsFuture.data;
   const messages = useMessages(messageIds);
 
-  const reqParticipants = eventData?.num_participants_required ?? 0;
-  const contactPerson = eventData?.contact;
+  const reqParticipants = event?.num_participants_required ?? 0;
+  const contactPerson = event?.contact;
 
   const hasRecordedAttendance =
     numCancelledParticipants +
@@ -71,7 +71,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     (state) => state.events.remindingByEventId[eventId]
   );
 
-  if (!eventData) {
+  if (!event) {
     return null;
   }
 
@@ -179,7 +179,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               )}
             </Box>
           </Box>
-          {new Date(removeOffset(eventData.start_time)) > new Date() ? (
+          {new Date(removeOffset(event.start_time)) > new Date() ? (
             <Box display="flex" flexDirection="column">
               <Typography color={'secondary'}>
                 {messages.participantSummaryCard.booked()}

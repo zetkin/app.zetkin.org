@@ -26,6 +26,7 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
         : '',
     [survey.data, surveyId]
   );
+
   return (
     <ZUICard
       header={isOpen ? messages.urlCard.open() : messages.urlCard.preview()}

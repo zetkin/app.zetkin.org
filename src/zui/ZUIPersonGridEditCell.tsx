@@ -287,14 +287,14 @@ const ZUIPersonGridEditCell: FC<{
                         )}
 
                         {searchResults.map((option, index) => {
-                          const optProps = autoComplete.getOptionProps({
-                            index,
-                            option,
-                          });
                           return (
                             <PersonListItem
                               key={option.id}
-                              itemProps={optProps}
+                              itemProps={{
+                                onClick: () => {
+                                  onUpdate(option);
+                                },
+                              }}
                               orgId={orgId}
                               person={option}
                               selected={

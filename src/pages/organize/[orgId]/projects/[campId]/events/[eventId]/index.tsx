@@ -50,7 +50,7 @@ interface EventPageProps {
 const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
   const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
-  if (!eventFuture.data) {
+  if (!eventFuture || !eventFuture.data) {
     return null;
   }
 

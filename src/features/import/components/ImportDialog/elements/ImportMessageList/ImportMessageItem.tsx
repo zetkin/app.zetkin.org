@@ -41,6 +41,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         onClickBack={onClickBack}
         status="warning"
         title={messages.preflight.messages.majorChange.title({
+          amount: problem.amount,
           field: getFieldTitle(problem.field),
         })}
       />
@@ -84,6 +85,16 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         onClickBack={onClickBack}
         status="error"
         title={messages.preflight.messages.unconfiguredIdAndName.title()}
+      />
+    );
+  } else if (problem.kind == ImportProblemKind.UNEXPECTED_ERROR) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.unexpectedError.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        status="error"
+        title={messages.preflight.messages.unexpectedError.title()}
       />
     );
   } else if (problem.kind == ImportProblemKind.UNKNOWN_PERSON) {

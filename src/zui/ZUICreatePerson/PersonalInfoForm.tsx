@@ -241,6 +241,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         onUnassignTag={(tag) => {
           onChange('tags', tag.id);
         }}
+        submitCreateTagLabel={messages.createPerson.tagCreateAndApplyLabel()}
       />
     </Box>
   );

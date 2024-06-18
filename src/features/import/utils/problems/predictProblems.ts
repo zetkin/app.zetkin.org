@@ -1,5 +1,6 @@
 import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
+import parseDate from '../parseDate';
 import { ColumnKind, Sheet } from '../types';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
@@ -115,6 +116,16 @@ export function predictProblems(
               }
             } else if (column.field == 'gender') {
               if (!['m', 'f', 'o', ''].includes(value.toString())) {
+                accumulateFieldProblem(column.field, rowIndex);
+              }
+            }
+          } else if (column.kind == ColumnKind.DATE) {
+            const validator = VALIDATORS['date'];
+
+            if (column.dateFormat) {
+              const date = parseDate(value, column.dateFormat);
+              const valid = validator(date);
+              if (!valid) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
             }

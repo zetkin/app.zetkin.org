@@ -4,6 +4,7 @@ import CampaignParticipation from '../filters/CampaignParticipation';
 import EmailBlacklist from '../filters/EmailBlacklist';
 import EmailClick from '../filters/EmailClick';
 import EmailHistory from '../filters/EmailHistory';
+import Journey from '../filters/Journey';
 import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
 import PersonField from '../filters/PersonField';
@@ -160,6 +161,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.USER && (
         <User
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.JOURNEY && (
+        <Journey
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

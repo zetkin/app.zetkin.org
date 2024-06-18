@@ -189,6 +189,10 @@ export const scaffold =
     if (hasProps(result)) {
       result.props = {
         ...result.props,
+        envVars: {
+          MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
+          ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
+        },
         lang,
         messages,
         user: ctx.user,

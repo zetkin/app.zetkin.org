@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import { CallAssignmentActivity } from 'features/campaigns/types';
+import getStatusColor from 'features/campaigns/utils/getStatusColor';
 import OverviewListItem from './OverviewListItem';
 import useCallAssignmentStats from 'features/callAssignments/hooks/useCallAssignmentStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
@@ -23,6 +24,7 @@ const CallAssignmentOverviewListItem: FC<
 
   return (
     <OverviewListItem
+      color={getStatusColor(activity.visibleFrom, activity.visibleUntil)}
       endDate={activity.visibleUntil}
       endNumber={callsMade}
       focusDate={focusDate}

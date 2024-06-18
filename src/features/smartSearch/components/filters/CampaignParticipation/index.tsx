@@ -1,14 +1,16 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
-import { Msg } from 'core/i18n';
+import StyledGroupedSelect from '../../inputs/StyledGroupedSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrgIdsFromOrgScope from 'features/smartSearch/hooks/useOrgIdsFromOrgScope';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   CampaignParticipationConfig,
@@ -17,6 +19,7 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
 
@@ -62,17 +65,24 @@ const CampaignParticipation = ({
   filter: initialFilter,
 }: CampaignParticipationProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-
-  // TODO: Show loading indicator instead of empty arrays?
-  const activities = useEventTypes(orgId).data || [];
-  const campaigns = useCampaigns(orgId).data || [];
-  const locations = useEventLocations(orgId) || [];
+  const messages = useMessages(localMessageIds);
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CampaignParticipationConfig>(initialFilter, {
       operator: 'in',
+      organizations: [orgId],
       state: 'booked',
     });
+
+  const orgIds = useOrgIdsFromOrgScope(
+    orgId,
+    filter.config.organizations || [orgId]
+  );
+
+  // TODO: Show loading indicator instead of empty arrays?
+  const activities = useEventTypes(orgId).data || [];
+  const campaigns = useCampaigns(orgId, orgIds).data || [];
+  const locations = useEventLocations(orgId) || [];
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -83,12 +93,14 @@ const CampaignParticipation = ({
     after?: string;
     before?: string;
   }) => {
-    const { state, operator, campaign, activity, location } = filter.config;
+    const { state, operator, campaign, activity, location, organizations } =
+      filter.config;
     setConfig({
       activity,
       campaign,
       location,
       operator,
+      organizations,
       state,
       ...range,
     });
@@ -120,7 +132,11 @@ const CampaignParticipation = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -144,8 +160,10 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.activitySelect.activity}
                         values={{
-                          activity:
+                          activity: truncateOnMiddle(
                             activities.find((l) => l.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -158,7 +176,12 @@ const CampaignParticipation = ({
                 </MenuItem>
                 {activities.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
-                    {a.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={a.title.length >= 40 ? a.title : ''}
+                    >
+                      <Box>{a.title}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -198,36 +221,24 @@ const CampaignParticipation = ({
               </StyledSelect>
             ),
             campaignSelect: (
-              <StyledSelect
+              <StyledGroupedSelect
+                items={[
+                  {
+                    group: null,
+                    id: DEFAULT_VALUE,
+                    label: messages.campaignSelect.any(),
+                  },
+                  ...campaigns.map((campaign) => ({
+                    group: campaign.organization.title,
+                    id: campaign.id,
+                    label: campaign.title,
+                  })),
+                ]}
                 onChange={(e) => {
                   handleCampaignSelectChange(e.target.value);
                 }}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.campaignSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.campaignSelect.campaign}
-                        values={{
-                          campaign:
-                            campaigns.find((c) => c.id === value)?.title ?? '',
-                        }}
-                      />
-                    );
-                  },
-                }}
                 value={filter.config.campaign || DEFAULT_VALUE}
-              >
-                <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id={localMessageIds.campaignSelect.any} />
-                </MenuItem>
-                {campaigns.map((c) => (
-                  <MenuItem key={c.id} value={c.id}>
-                    {c.title}
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             haveSelect: (
               <StyledSelect
@@ -258,8 +269,10 @@ const CampaignParticipation = ({
                       <Msg
                         id={localMessageIds.locationSelect.location}
                         values={{
-                          location:
+                          location: truncateOnMiddle(
                             locations.find((l) => l.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -289,6 +302,7 @@ const CampaignParticipation = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

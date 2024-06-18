@@ -8,6 +8,7 @@ import {
 } from '@mui/icons-material';
 import React, { useContext } from 'react';
 
+import dayjs from 'dayjs';
 import messageIds from '../l10n/messageIds';
 import useDuplicateEvent from '../hooks/useDuplicateEvent';
 import useEventMutations from '../hooks/useEventMutations';
@@ -34,7 +35,6 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
 
   const published =
     !!event.published && new Date(event.published) <= new Date();
-
   const handlePublish = () => {
     setPublished(new Date().toISOString());
   };
@@ -43,7 +43,12 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
     setPublished(null);
   };
   const handleChangeDate = (date: string | null) => {
-    setPublished(date);
+    const newDateIsDifferent =
+      date && date != dayjs(event.published).format('YYYY-MM-DD');
+
+    if (newDateIsDifferent) {
+      setPublished(date);
+    }
   };
 
   const handleDelete = () => {

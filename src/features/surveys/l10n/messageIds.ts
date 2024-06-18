@@ -8,6 +8,15 @@ export default makeMessages('feat.surveys', {
     textButton: m('Text'),
     title: m('Choose a block type to add more content to your survey'),
   },
+  alert: {
+    editable: m<{ orgTitle: string }>(
+      'This survey is owned by {orgTitle} and you can only edit it from its original location.'
+    ),
+    goOriginal: m('Go to original'),
+    notEditable: m<{ orgTitle: string }>(
+      'This survey is owned by {orgTitle} and you can not edit it.'
+    ),
+  },
   blocks: {
     choice: {
       addOption: m('Add option'),

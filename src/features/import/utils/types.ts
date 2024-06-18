@@ -21,6 +21,7 @@ export type Row = {
 
 export enum ColumnKind {
   FIELD = 'field',
+  DATE = 'date',
   ID_FIELD = 'id',
   TAG = 'tag',
   ORGANIZATION = 'org',
@@ -38,6 +39,12 @@ type UnknownColumn = BaseColumn & {
 export type FieldColumn = BaseColumn & {
   field: string;
   kind: ColumnKind.FIELD;
+};
+
+export type DateColumn = BaseColumn & {
+  dateFormat: string | null;
+  field: string;
+  kind: ColumnKind.DATE;
 };
 
 export type IDFieldColumn = BaseColumn & {
@@ -61,12 +68,13 @@ export type OrgColumn = BaseColumn & {
   }[];
 };
 
-export type Column =
-  | UnknownColumn
-  | FieldColumn
+export type ConfigurableColumn =
+  | DateColumn
   | IDFieldColumn
   | TagColumn
   | OrgColumn;
+
+export type Column = UnknownColumn | FieldColumn | ConfigurableColumn;
 
 export interface ZetkinPersonImportPostBody {
   ops: ZetkinPersonImportOp[];
@@ -134,6 +142,7 @@ export type PersonImport =
 export enum ImportPreviewProblemCode {
   INVALID_FORMAT = 'INVALID_FORMAT',
   MISSING_ID_AND_NAME = 'MISSING_ID_AND_NAME',
+  UNEXPECTED_ERROR = 'UNEXPECTED_ERROR',
   UNKNOWN = 'UNKNOWN',
   UNKNOWN_ORG = 'UNKNOWN_ORG',
   UNKNOWN_OBJECT = 'UNKNOWN_OBJECT',

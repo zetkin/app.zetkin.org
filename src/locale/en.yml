@@ -4,6 +4,7 @@ core:
     backToHomePage: Back to home page
     pageNotFound: Page not found
   home:
+    redirecting: Redirecting...
     welcome: This will become Zetkin
   legacy:
     continueButton: Continue to old Zetkin
@@ -25,11 +26,14 @@ feat:
       closed: Closed
       compose: Compose
       conversation: Conversation
+      duplicates: Duplicates
       emails: Emails
       events: Events
       folders: Lists
+      incoming: Incoming
       insights: Insights
       instances: Instances
+      joinforms: Join forms
       journeys: Journeys
       manage: Manage
       milestones: Milestones
@@ -39,8 +43,11 @@ feat:
       people: People
       projects: Projects
       questions: Questions
+      settings: Settings
+      shared: Shared with us
       submissions: Submissions
       surveys: Surveys
+      tags: Tags
       tasks: Tasks
       untitledEvent: Untitled event
       views: Lists
@@ -226,6 +233,8 @@ feat:
       subtitles:
         endsLater: Ends {relative}
         endsToday: Ends today
+        sentEarlier: Was sent {relative}
+        sentLater: To be sent {relative}
         startsLater: Starts {relative}
         startsToday: Starts today
       thisWeekCard: Also this week
@@ -325,6 +334,21 @@ feat:
       create: Create call assignment
       heading: Mobilization and outreach (none configured)
     noManager: No Project Manager
+    shared:
+      cta: Go to project
+      noActivities: All ongoing activities shared with your organization will appear here.
+      noArchives: All expired activities that have been shared with your organization
+        will appear here.
+      title: Shared with us
+    sharedLayout:
+      alertMsg: This project contains only activities shared from other organizations
+        and you can view it but not change it.
+      subtitle: "{numOfActivities, plural, =1 {1 activity} other {# activities}}"
+      tabs:
+        activities: Activities
+        archive: Archive
+        overview: Overview
+      title: Shared with us
     singleProject:
       filterActivities: Type to filter
       noActivities: There are no activities in this project yet.
@@ -337,6 +361,38 @@ feat:
         insights: Insights
         summary: Summary
     tasks: Tasks
+  duplicates:
+    modal:
+      cancelButton: Cancel
+      fieldSettings:
+        data: Data
+        field: Field
+        gender:
+          f: Female
+          m: Male
+          o: Other
+        noValue: No value
+        title: Data to merge
+      infoMessage: All activity history and tags from all people being merged will
+        carry over and will be visible on the merged person.
+      infoTitle: No data will be lost
+      isDuplicateButton: Include
+      mergeButton: Merge
+      notDuplicateButton: Exclude
+      peopleNotBeingMerged: People not being merged
+      peopleToMerge: People to merge
+      possibleDuplicatesColumns:
+        email: E-mail
+        name: Name
+        phone: Phone
+      title: Merge duplicates
+    page:
+      dismiss: Dismiss
+      noDuplicates: No duplicates
+      noDuplicatesDescription: Yay! all your members seem to be unique individuals.
+      possibleDuplicates: Possible duplicates
+      possibleDuplicatesDescription: These {numPeople} people look very similar
+      resolve: Resolve
   emails:
     blocked:
       blacklisted: Blacklisted
@@ -468,6 +524,9 @@ feat:
         organization. You may still receive reminders and other email sent
         specifically to you as part of work you do in the organization.
       unsubButton: Unsubscribe me
+    unsubscribedPage:
+      h: Unsubscribed!
+      info: You have been unsubscribed from mass email from {org}.
     varDefaults:
       target: reader
   events:
@@ -701,6 +760,37 @@ feat:
       validate: Validate
     configuration:
       configure:
+        dates:
+          customFormatDescription: Describe the format of the values in this column, using
+            the letters Y, M and D and any characters you use to separate them.
+            For example, if your dates are written 1998.03.23, you would
+            describe that as YYYY.MM.DD.
+          customFormatLabel: Custom date format
+          dateInputLabel: Date format
+          description: Select the format of the values in this column so they can be
+            imported correctly.
+          dropDownLabel: Select format
+          emptyPreview: Could not be parsed
+          header: Configure date format
+          listSubHeaders:
+            custom: Custom
+            dates: Date formats
+            personNumbers: Person numbers
+          personNumberFormat:
+            dk:
+              description: The values in this column will be parsed from 10 digit Danish
+                CPR-numbers (DDMMYY-XXXX or DDMMYYXXXX) into dates.
+              label: Danish CPR-number
+            no:
+              description: The values in this column will be parsed from 11 digit Norwegian
+                fødselsnummer (DDMMYYXXXXX or DDMMYY-XXXXX) into dates.
+              label: Norwegian fødselsnummer
+            se:
+              description: The values in this column will be parsed from 10 or 12 digit
+                Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.
+              label: Swedish Personnummer
+          wrongDateFormatWarning: Some of the values in this column can not be parsed into
+            dates using this format.
         ids:
           configExplanation: Importing with IDs allows Zetkin (now or in the future) to
             update existing people in the database instead of creating
@@ -732,6 +822,9 @@ feat:
         defaultColumnHeader: Column {columnIndex}
         emptyStateMessage: Start by mapping file columns.
         fileHeader: File
+        finishedMappingDates: Mapping {numValues, plural, =1 {1 value} other {# values}}
+          from {dateFormat, select, se {Swedish personnummer} no {Norwegian
+          fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates
         finishedMappingIds: Mapping {numValues, plural, =1 {1 value} other {# values}}
           to {idField, select, id {Zetkin ID} other {external ID}}
         finishedMappingOrganizations: "{numPeople, plural, =1 {1 person} other {#
@@ -759,11 +852,14 @@ feat:
           twoValuesAndEmpty: "{firstValue}, {secondValue} and {numEmpty, plural, =1 {one
             empty row} other {# empty rows}}."
           twoValuesNoEmpty: "{firstValue} and {secondValue}."
-        needsConfig: You need to configure the IDs
-        needsMapping: You need to map values
         organization: Organization
         selectZetkinField: Import as...
         tags: Tags
+        unfinished:
+          date: You need to configure date format
+          id: You need to configure the IDs
+          org: You need to map values
+          tag: You need to map values
         zetkinFieldGroups:
           fields: Fields
           id: ID
@@ -839,8 +935,9 @@ feat:
         invalidFormat:
           title: "Wrong format for field: {field}"
         majorChange:
-          description: Make sure you have configured the columns correctly
-          title: This import will overwrite lots of people's {field}
+          description: This warning is shown when more than 30% of imported people are
+            affected. Make sure you have configured the columns correctly
+          title: This import will overwrite "{field}" for {amount} people
         missingIdAndName:
           description: Every row needs to contain at least a full name, or an ID of a
             person that already exists in Zetkin.
@@ -862,6 +959,13 @@ feat:
           description: Every import must at least include either full names, or IDs of
             people that already exist in Zetkin.
           title: You have not configured identifying columns
+        unexpectedError:
+          description: No people have been imported. You can go back and check the import
+            settings or select a new file to import. There were errors in the
+            form you submitted. Please try again and make sure you fill in all
+            the necessary information. If the error persist you can contact
+            support at info@zetkin.org
+          title: Something went wrong and the import was aborted
         unknownError:
           description: Contact support if you need help understanding the problem.
           title: An unknown error ocurred
@@ -870,6 +974,7 @@ feat:
             that don't exist. Did you mean to use External ID, or could some
             people have been deleted since the file was created?
           title: Trying to update records that do not exist
+        validating: Validating
     steps:
       configure: Configure
       import: Import
@@ -897,6 +1002,33 @@ feat:
         error: You have to fix the errors before you can import
         update: This import will update {numUpdated, plural, =1 {1 person} other {#
           people}}.
+  joinForms:
+    defaultTitle: Untitled form
+    formPane:
+      labels:
+        addField: Add field
+        description: Description
+        title: Title
+      title: Edit form
+    forms: Forms
+    states:
+      accepted: Approved
+      pending: Pending
+    status: Status
+    submissionList:
+      approveButton: Approve
+      firstName: First name
+      form: Form
+      lastName: Last name
+      noFilteringResults: Your filtering yielded no results.
+      rejectButton: Reject
+      timestamp: Timestamp
+    submissionPane:
+      allForms: All forms
+      allStatuses: All
+      approveButton: Approve
+      form: Form
+      rejectButton: Reject
   journeys:
     instance:
       addAssigneeButton: Add assignee
@@ -912,6 +1044,7 @@ feat:
         error: There was an error closing the {singularLabel}
         label: Close {singularLabel}
       collapseButton: Collapse
+      createAndApplyTagButton: Create and apply
       created: Created {relative}
       deadlineLabel: (Was due {date})
       dueDateInputClear: Clear
@@ -1035,6 +1168,7 @@ feat:
     editButton: Edit {title}
     editButtonClose: Stop editing {title}
     editButtonLabel: Edit Details
+    editPersonHeader: Edit {person}
     genders:
       f: Female
       m: Male
@@ -1043,15 +1177,23 @@ feat:
     journeys:
       addButton: Start new journey
       title: Journeys
+    numberOfChangesMessage: Will update {number, plural, =1 {1 field} other {# fields}}
     organizations:
       add: Add a new sub-organization
       addError: This organization could not be added
       removeError: This organization could not be removed
       title: Organizations
+    resetButton: Reset
+    saveButton: Save
     tabs:
       manage: Manage
       profile: Profile
       timeline: Timeline
+    tags:
+      createAndApplyLabel: Create and apply
+    user:
+      hasAccount: Connected to a Zetkin account
+      noAccount: Not connected to a Zetkin account
   search:
     error: There was an error
     label: Search
@@ -1065,6 +1207,38 @@ feat:
       survey: Survey
       task: Task
       view: List
+  settings:
+    officials:
+      addPerson:
+        addAdmin: Add administrator
+        addOrganizer: Add organizer
+        administrators: administrators
+        alreadyInList: Already in list
+        organizers: organizers
+        placeholder: Type to add person to {list}
+      administrators:
+        columns:
+          name: Name
+        description: Administrators have full access to creating, editing and deleting
+          any type of content.
+        roleInheritance: Administrator in
+        title: Administrators
+      organizers:
+        columns:
+          inheritance: Role inheritance
+          name: Name
+        description: Organizers have enough privileges to do things like organizing
+          campaigns and managing existing call assignments.
+        roleInheritance: Organizer in
+        title: Organizers
+      settingsLayout:
+        access: Access
+        title: Settings
+      tableButtons:
+        demote: Demote
+        promote: Promote
+        remove: Remove
+      you: You
   smartSearch:
     buttonLabels:
       add: Save selection
@@ -1073,33 +1247,90 @@ feat:
       close: Close
       goBack: Go back to query
       save: Save
-    filterCategories:
-      campaignActivity: Project activity
-      email: Email
-      misc: Misc
-      peopleDatabase: People
-      phoneBanking: Phone banking
-      surveys: Surveys
-    filterTitles:
-      all: Everyone
-      call_blocked: Blocked from calling
-      call_history: Based on their call history
-      campaign_participation: Based on their event participation
-      email_blacklist: People who are blocked from emails
-      email_click: Based on their interaction with links in email
-      email_history: Based on their email history
-      most_active: The most active people
-      person_data: Based on their name, address or other data
-      person_field: Based on custom fields
-      person_tags: Based on their tags
-      person_view: People from a list
-      random: A random selection of people
-      sub_query: Based on another Smart Search query
-      survey_option: Based on the options they have selected in survey questions
-      survey_response: Based on their responses to survey questions
-      survey_submission: People who have submitted a survey
-      task: People who have engaged in tasks
-      user: People who used Zetkin
+    filterGallery:
+      categories:
+        basicInformation:
+          description: Select based on personal information
+          title: Basic information
+        crossReferencing:
+          description: Select based on lists and smart searches
+          title: Cross referencing
+        email:
+          description: Find people based on the data gathered by sending emails.
+          title: Emails
+        events:
+          description: Select based on data from events
+          title: Events
+        journey:
+          description: Select based on data from journeys
+          title: Journeys
+        misc:
+          description: Miscellaneous ways of selecting
+          title: Misc
+        phoneBanking:
+          description: Use call data to select
+          title: Call assignments
+        surveys:
+          description: Select based on survey submissions
+          title: Surveys
+        tasks:
+          description: Select on task data
+          title: Tasks
+      filters:
+        call_history:
+          description: Find people who were called, reached or tried.
+          title: Call history
+        campaign_participation:
+          description: Who signed up? Got booked? Who didn't? Find them!
+          title: Participation in events
+        email_blacklist:
+          description: Bounced, incorrect address, not received - here they are.
+          title: People who are blocked from emails
+        email_click:
+          description: Did they click? Did they not?
+          title: Based on their interaction with links in emails.
+        email_history:
+          description: Who was sent what, when?
+          title: Based on their email history
+        journey_subjects:
+          description: Find people who are on a journey or finished it already
+          title: People on a journey
+        person_data:
+          description: Name, address, email and more!
+          title: Personal info
+        person_field:
+          description: Like basic personal info, but search fields that are custom to this
+            organization.
+          title: Custom fields
+        person_tags:
+          description: For finding people with or without specific tags.
+          title: Tags
+        person_view:
+          description: When you want people who are, or aren't, in a list.
+          title: People from a list
+        random:
+          description: Randomly add or remove people.
+          title: Random selection
+        sub_query:
+          description: Use a another Smart Search to refine this Smart Search.
+          title: People who match a saved Smart Search query
+        survey_option:
+          description: "Use your survey responses for their glorious purpose: finding the
+            right people!"
+          title: Responses to checkbox questions
+        survey_response:
+          description: "Use your survey responses for their glorious purpose: finding the
+            right people!"
+          title: Responses to text questions
+        survey_submission:
+          description: Did they submit a survey? Did they not? Find them here!
+          title: Submitted survey
+        task:
+          description: Add or remove people based on their participation in tasks
+          title: Tasks
+        user:
+          description: Find people who are, or aren't, connected to a Zetkin account
+          title: Zetkin users
     filters:
       all:
         inputString: Start with {startWithSelect}.
@@ -1180,6 +1411,27 @@ feat:
           notSent: not been sent
           opened: opened
           sent: been sent
+      journey:
+        condition:
+          conditionSelect:
+            all: and have all
+            any: and have any
+            none: and have none
+            regardlessTags: regardless of tags
+            some: and have at least
+          preview:
+            all: and have all
+            any: and have any
+            none: and have none
+            regardlessTags: regardless of tags
+            some: and have at least {minMatching}
+        followingTags: of the following tags
+        inputString: "{addRemoveSelect} people who are part of {journeySelect} that
+          opened {openedTimeFrame} and {stateSelect} {closedTimeFrame}
+          {condition} {tagsDesc} {tags}"
+        stateOptions:
+          closed: closed
+          open: are still open
       mostActive:
         examples:
           one: Add the 100 most active members of the organization before today.
@@ -1207,6 +1459,11 @@ feat:
           street_address: street address
           zip_code: zip code
         fieldTuple: "{first} and {second}"
+        genders:
+          f: female
+          m: male
+          o: other
+          unknown: unknown
         inputString: "{addRemoveSelect} any person whose {criteria}."
       personField:
         edit:
@@ -1406,6 +1663,12 @@ feat:
       add: Add
       limit: Limit to
       sub: Remove
+    orgScope:
+      all: Searching in all organizations
+      few: Searching in {first} and {last}
+      many: Searching in {first} and {additional} other organizations
+      single: Searching in {value}
+      suborgs: Searching in all sub-organizations
     quantity:
       edit:
         integer: "{numInput} {quantitySelect}"
@@ -1474,6 +1737,11 @@ feat:
       openQuestionButton: Open question
       textButton: Text
       title: Choose a block type to add more content to your survey
+    alert:
+      editable: This survey is owned by {orgTitle} and you can only edit it from its
+        original location.
+      goOriginal: Go to original
+      notEditable: This survey is owned by {orgTitle} and you can not edit it.
     blocks:
       choice:
         addOption: Add option
@@ -1618,12 +1886,15 @@ feat:
     dialog:
       colorErrorText: Please enter a valid hex code
       colorLabel: Color
+      createTagButton: Create
       createTitle: Create tag
+      deleteButtonLabel: Delete
+      deleteWarning: Are you sure you want to delete this tag? Deleting a tag cannot
+        be undone.
       editTitle: Edit tag
       groupCreatePrompt: Add "{groupName}"
       groupLabel: Group
       groupSelectPlaceholder: Type to search or create a group
-      submitCreateTagButton: Create and apply
       titleErrorText: Tag name is required
       titleLabel: Tag name
       typeLabel: Tag type
@@ -1641,6 +1912,12 @@ feat:
       valueTagForm:
         typeHint: "{type, select, text {Enter some text} other {Enter a value}} to go
           along with the tag."
+    tagsPage:
+      createTagButton: Create
+      noTags: Your organization does not have any tags yet
+      overviewTabLabel: Overview
+      title: Tags
+      ungroupedHeader: No group
   tasks:
     assignees:
       completedStates:
@@ -1802,6 +2079,7 @@ feat:
     actions:
       create: Create
       createFolder: Create folder
+      createJoinForm: Create join form
       createPerson: Create person
       createView: Create list
       importPeople: Import people
@@ -1824,6 +2102,9 @@ feat:
       moveToRoot: Move to all lists
     browserLayout:
       tabs:
+        duplicates: Duplicates
+        incoming: Incoming
+        joinForms: Join forms
         views: Lists
       title: People
     cells:
@@ -1837,6 +2118,8 @@ feat:
         actionNeeded: Organizer action needed
         showDetails: Show details
         solvedIssues: "{count, plural, =1 {1 solved issue} other {# solved issues}}"
+      personTag:
+        emptyValue: Empty value
     columnDialog:
       categories:
         basic:
@@ -2159,6 +2442,7 @@ zui:
       add: Create & add
       assign: Create & assign
       default: Create
+    tagCreateAndApplyLabel: Create and apply
     title:
       addToJourney: Create person and add to {journey}
       addToList: Create person and add to {list}
@@ -2169,6 +2453,7 @@ zui:
       participant: Create person and add as participant
     validationWarning:
       email: Please add a valid email address
+      name: This field cannot be empty
       phone: Please add a valid phone number
       url: Please add a valid URL
   dataTableSearch:
@@ -2210,6 +2495,14 @@ zui:
     instructions: Drag and drop an image file, or click to select
   lists:
     showMore: Show more...
+  orgScopeSelect:
+    orgPlaceholder: Select organizations
+    orgSelectionLabel: "{count} selected"
+    scope:
+      all: "{org} and all sub-organizations"
+      specific: Specific organizations
+      suborgs: Only sub-organizations
+      this: Only {org}
   organizeSidebar:
     areas: Areas
     filter: Type to filter
@@ -2218,7 +2511,9 @@ zui:
     people: People
     projects: Projects & Activities
     search: Search
+    settings: Settings
     signOut: Sign out
+    tags: Tags
     userSettings: User settings
   personGridEditCell:
     keepTyping: Keep typing..

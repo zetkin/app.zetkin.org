@@ -24,6 +24,7 @@ import emailsSlice, {
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import filesSlice, { FilesStoreSlice } from 'features/files/store';
 import importSlice, { ImportStoreSlice } from 'features/import/store';
+import joinFormsSlice, { JoinFormsStoreSlice } from 'features/joinForms/store';
 import journeysSlice, {
   journeyInstanceCreated,
   JourneysStoreSlice,
@@ -31,8 +32,12 @@ import journeysSlice, {
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
+import potentialDuplicatesSlice, {
+  PotentialDuplicatesStoreSlice,
+} from 'features/duplicates/store';
 import profilesSlice, { ProfilesStoreSlice } from 'features/profile/store';
 import searchSlice, { SearchStoreSlice } from 'features/search/store';
+import settingsSlice, { SettingsStoreSlice } from 'features/settings/store';
 import smartSearchSlice, {
   smartSearchStoreSlice,
 } from 'features/smartSearch/store';
@@ -49,13 +54,16 @@ export interface RootState {
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
+  duplicates: PotentialDuplicatesStoreSlice;
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
   import: ImportStoreSlice;
+  joinForms: JoinFormsStoreSlice;
   journeys: JourneysStoreSlice;
   organizations: OrganizationsStoreSlice;
   profiles: ProfilesStoreSlice;
+  settings: SettingsStoreSlice;
   search: SearchStoreSlice;
   smartSearch: smartSearchStoreSlice;
   surveys: SurveysStoreSlice;
@@ -69,14 +77,17 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  duplicates: potentialDuplicatesSlice.reducer,
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   files: filesSlice.reducer,
   import: importSlice.reducer,
+  joinForms: joinFormsSlice.reducer,
   journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
   profiles: profilesSlice.reducer,
   search: searchSlice.reducer,
+  settings: settingsSlice.reducer,
   smartSearch: smartSearchSlice.reducer,
   surveys: surveysSlice.reducer,
   tags: tagsSlice.reducer,

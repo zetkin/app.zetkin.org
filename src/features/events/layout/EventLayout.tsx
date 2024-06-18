@@ -44,6 +44,10 @@ const EventLayout: React.FC<EventLayoutProps> = ({
 
   const eventTypes = useEventTypes(parseInt(orgId));
 
+  if (!eventFuture) {
+    return null;
+  }
+
   return (
     <TabbedLayout
       actionButtons={

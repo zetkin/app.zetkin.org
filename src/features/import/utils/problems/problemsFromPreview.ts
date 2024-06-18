@@ -2,6 +2,7 @@ import { ImportPreview, ImportPreviewProblemCode } from '../types';
 import { ImportProblem, ImportProblemKind, ImportRowProblem } from './types';
 
 export default function problemsFromPreview(
+  opCount: number,
   preview: ImportPreview
 ): ImportProblem[] {
   const problems: ImportProblem[] = [];
@@ -37,6 +38,13 @@ export default function problemsFromPreview(
         ImportProblemKind.MISSING_ID_AND_NAME,
         previewProblem.index
       );
+    } else if (
+      previewProblem.code == ImportPreviewProblemCode.UNEXPECTED_ERROR
+    ) {
+      accumulateProblem(
+        ImportProblemKind.UNEXPECTED_ERROR,
+        previewProblem.index
+      );
     } else if (previewProblem.level == 'error') {
       // Unknown error (unknown warnings are ignored)
       accumulateProblem(ImportProblemKind.UNKNOWN_ERROR, previewProblem.index);
@@ -46,10 +54,11 @@ export default function problemsFromPreview(
   // Check for major changes to fields
   Object.keys(summary.updated.byChangedField).forEach((fieldSlug) => {
     const fieldChanges = summary.updated.byChangedField[fieldSlug] || 0;
-    const percentage = fieldChanges / summary.updated.total;
+    const percentage = fieldChanges / opCount;
 
-    if (percentage > 0.3) {
+    if (fieldChanges > 1 && percentage >= 0.3) {
       problems.push({
+        amount: fieldChanges,
         field: fieldSlug,
         kind: ImportProblemKind.MAJOR_CHANGE,
       });

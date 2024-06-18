@@ -18,9 +18,11 @@ import {
   Groups,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
+  LocalOffer,
   Logout,
   Map,
   Search,
+  Settings,
 } from '@mui/icons-material/';
 import {
   Avatar,
@@ -109,7 +111,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Groups />, name: 'people' },
     { icon: <Architecture />, name: 'projects' },
     { icon: <Explore />, name: 'journeys' },
+    { icon: <LocalOffer />, name: 'tags' },
     { icon: <Map />, name: 'areas' },
+    { icon: <Settings />, name: 'settings' },
   ] as const;
 
   function logOut() {

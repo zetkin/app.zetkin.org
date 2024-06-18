@@ -102,7 +102,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
             <Grid item md={4}>
               <SurveyURLCard
                 isOpen={isOpen}
-                orgId={orgId}
+                orgId={survey.organization.id.toString()}
                 surveyId={surveyId}
               />
               <SurveyUnlinkedCard
@@ -124,7 +124,11 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
 
 SurveyPage.getLayout = function getLayout(page, props) {
   return (
-    <SurveyLayout orgId={props.orgId} surveyId={props.surveyId}>
+    <SurveyLayout
+      campId={props.campId}
+      orgId={props.orgId}
+      surveyId={props.surveyId}
+    >
       {page}
     </SurveyLayout>
   );

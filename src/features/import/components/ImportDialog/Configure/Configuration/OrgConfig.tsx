@@ -4,9 +4,10 @@ import { Box, Button, Divider, Typography } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import { OrgColumn } from 'features/import/utils/types';
 import OrgConfigRow from './OrgConfigRow';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useGuessOrganization from 'features/import/hooks/useGuessOrganization';
 import { useNumericRouteParams } from 'core/hooks';
+import useOrgMapping from 'features/import/hooks/useOrgMapping';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -20,6 +21,10 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const subOrgs = useSubOrganizations(orgId).data || [];
   const activeOrgs = subOrgs.filter((subOrg) => subOrg.is_active);
   const guessOrgs = useGuessOrganization(activeOrgs, uiDataColumn);
+  const { deselectOrg, getSelectedOrgId, selectOrg } = useOrgMapping(
+    uiDataColumn.originalColumn,
+    uiDataColumn.columnIndex
+  );
 
   if (!activeOrgs.length) {
     return null;
@@ -65,10 +70,10 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
           {index != 0 && <Divider sx={{ marginY: 1 }} />}
           <OrgConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
-            onDeselectOrg={() => uiDataColumn.deselectOrg(uniqueValue)}
-            onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, uniqueValue)}
+            onDeselectOrg={() => deselectOrg(uniqueValue)}
+            onSelectOrg={(orgId) => selectOrg(orgId, uniqueValue)}
             orgs={activeOrgs}
-            selectedOrgId={uiDataColumn.getSelectedOrgId(uniqueValue)}
+            selectedOrgId={getSelectedOrgId(uniqueValue)}
             title={uniqueValue.toString()}
           />
         </Box>
@@ -79,10 +84,10 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
           <OrgConfigRow
             italic
             numRows={uiDataColumn.numberOfEmptyRows}
-            onDeselectOrg={() => uiDataColumn.deselectOrg(null)}
-            onSelectOrg={(orgId) => uiDataColumn.selectOrg(orgId, null)}
+            onDeselectOrg={() => deselectOrg(null)}
+            onSelectOrg={(orgId) => selectOrg(orgId, null)}
             orgs={activeOrgs}
-            selectedOrgId={uiDataColumn.getSelectedOrgId(null)}
+            selectedOrgId={getSelectedOrgId(null)}
             title={messages.configuration.configure.tags.empty()}
           />
         </>

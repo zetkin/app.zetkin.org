@@ -57,7 +57,11 @@ const MostActive = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -111,6 +115,7 @@ const MostActive = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

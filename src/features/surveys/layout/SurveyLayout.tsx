@@ -3,6 +3,8 @@ import getSurveyUrl from '../utils/getSurveyUrl';
 import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
+import useMemberships from 'features/organizations/hooks/useMemberships';
+import { useRouter } from 'next/router';
 import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
@@ -19,16 +21,19 @@ import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 
 interface SurveyLayoutProps {
+  campId: string;
   children: React.ReactNode;
   orgId: string;
   surveyId: string;
 }
 
 const SurveyLayout: React.FC<SurveyLayoutProps> = ({
+  campId,
   children,
   orgId,
   surveyId,
 }) => {
+  const router = useRouter();
   const parsedOrg = parseInt(orgId);
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(parsedOrg, parseInt(surveyId));
@@ -42,17 +47,43 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     parseInt(surveyId)
   );
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
+  const originalOrgId = surveyFuture.data?.organization.id;
+  const isShared = campId === 'shared';
+  const orgs = useMemberships().data ?? [];
 
+  const roleAdmin =
+    orgs.find((item) => item.organization.id === originalOrgId)?.role ===
+    'admin';
+
+  const getAlertMsg = () => {
+    if (!isShared || !surveyFuture.data?.organization.title) {
+      return undefined;
+    }
+    const messageId = roleAdmin
+      ? messageIds.alert.editable
+      : messageIds.alert.notEditable;
+
+    return (
+      <Msg
+        id={messageId}
+        values={{ orgTitle: surveyFuture.data!.organization.title }}
+      />
+    );
+  };
   return (
     <TabbedLayout
       actionButtons={
         state == SurveyState.PUBLISHED ? (
-          <Button onClick={() => unpublish()} variant="outlined">
+          <Button
+            disabled={isShared}
+            onClick={() => unpublish()}
+            variant="outlined"
+          >
             <Msg id={messageIds.layout.actions.unpublish} />
           </Button>
         ) : (
           <Button
-            disabled={surveyIsEmpty}
+            disabled={surveyIsEmpty || isShared}
             onClick={() => publish()}
             variant="contained"
           >
@@ -60,6 +91,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         )
       }
+      alertBtnMsg={
+        isShared && roleAdmin ? messages.alert.goOriginal() : undefined
+      }
+      alertMsg={getAlertMsg()}
       baseHref={getSurveyUrl(surveyFuture.data, parsedOrg)}
       belowActionButtons={
         <ZUIDateRangePicker
@@ -67,10 +102,16 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           onChange={(startDate, endDate) => {
             updateSurvey({ expires: endDate, published: startDate });
           }}
+          readonly={isShared}
           startDate={surveyFuture.data?.published || null}
         />
       }
       defaultTab="/"
+      onClickAlertBtn={() => {
+        router.push(
+          `/organize/${originalOrgId}/projects/${surveyFuture.data?.campaign?.id}/surveys/${surveyId}`
+        );
+      }}
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
@@ -143,6 +184,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
                 onChange={(val) => {
                   updateSurvey({ title: val });
                 }}
+                readonly={isShared}
                 value={data.title}
               />
             );

@@ -12,7 +12,8 @@ import {
 import { IDFieldColumn } from 'features/import/utils/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
+import useIDConfig from 'features/import/hooks/useIDConfig';
 
 interface IdConfigProps {
   uiDataColumn: UIDataColumn<IDFieldColumn>;
@@ -20,6 +21,10 @@ interface IdConfigProps {
 
 const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const theme = useTheme();
+  const { updateIDField, wrongIDFormat } = useIDConfig(
+    uiDataColumn.originalColumn,
+    uiDataColumn.columnIndex
+  );
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
@@ -53,7 +58,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                   event.target.value == 'ext_id' ||
                   event.target.value == 'id'
                 ) {
-                  uiDataColumn.updateIdField(event.target.value);
+                  updateIDField(event.target.value);
                 }
               }}
               sx={{ paddingRight: 1 }}
@@ -87,9 +92,9 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
               onChange={(event) => {
                 if (
                   event.target.value == 'ext_id' ||
-                  (event.target.value == 'id' && !uiDataColumn.wrongIDFormat)
+                  (event.target.value == 'id' && !wrongIDFormat)
                 ) {
-                  uiDataColumn.updateIdField(event.target.value);
+                  updateIDField(event.target.value);
                 }
               }}
               sx={{ paddingRight: 1 }}
@@ -109,7 +114,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           </Box>
         </Box>
       </RadioGroup>
-      {uiDataColumn.wrongIDFormat && (
+      {wrongIDFormat && (
         <Alert severity="error">
           <Msg
             id={messageIds.configuration.configure.ids.wrongIDFormatWarning}

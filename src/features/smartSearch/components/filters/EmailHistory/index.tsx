@@ -1,11 +1,12 @@
-import { MenuItem } from '@mui/material';
 import { useState } from 'react';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -97,7 +98,11 @@ const EmailHistory = ({
         (emailSelectScope === 'project' && !filter.config.campaign) ||
         (emailSelectScope === 'email' && !filter.config.email)
       }
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(filter);
@@ -150,7 +155,19 @@ const EmailHistory = ({
                 >
                   {emailsFuture?.map((email) => (
                     <MenuItem key={`email-${email.id}`} value={email.id}>
-                      {`"${email.title}"`}
+                      <Tooltip
+                        placement="right-start"
+                        title={
+                          !email.title || email.title.length < 40
+                            ? ''
+                            : email.title
+                        }
+                      >
+                        <Box>{`"${truncateOnMiddle(
+                          email.title ?? '',
+                          40
+                        )}"`}</Box>
+                      </Tooltip>
                     </MenuItem>
                   ))}
                 </StyledSelect>
@@ -195,6 +212,7 @@ const EmailHistory = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

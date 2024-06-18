@@ -120,7 +120,6 @@ const eventsSlice = createSlice({
 
       if (eventListItem) {
         eventListItem.deleted = true;
-        state.eventList.isStale = true;
       }
 
       for (const date in state.eventsByDate) {
@@ -130,7 +129,6 @@ const eventsSlice = createSlice({
 
         if (item) {
           item.deleted = true;
-          state.eventsByDate[date].isStale = true;
         }
       }
 
@@ -141,7 +139,6 @@ const eventsSlice = createSlice({
 
         if (item) {
           item.deleted = true;
-          state.eventsByCampaignId[campaignId].isStale = true;
         }
       }
     },
@@ -174,9 +171,22 @@ const eventsSlice = createSlice({
         state.eventsByDate[dateStr].isLoading = true;
       });
     },
-    eventRangeLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      const events = action.payload;
+    eventRangeLoaded: (
+      state,
+      action: PayloadAction<[ZetkinEvent[], string[]]>
+    ) => {
+      const [events, isoDateRange] = action.payload;
       addEventToState(state, events);
+
+      isoDateRange.forEach((isoDate) => {
+        const dateStr = isoDate.slice(0, 10);
+        if (!state.eventsByDate[dateStr]) {
+          state.eventsByDate[dateStr] = remoteList();
+        }
+
+        state.eventsByDate[dateStr].isLoading = false;
+        state.eventsByDate[dateStr].loaded = new Date().toISOString();
+      });
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
@@ -482,14 +492,14 @@ const eventsSlice = createSlice({
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
-    typeLoad: (state, action) => {
+    typeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.typeList.items.find((item) => item.id == id);
       state.typeList.items = state.typeList.items
         .filter((item) => item.id != id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
-    typeLoaded: (state, action) => {
+    typeLoaded: (state, action: PayloadAction<ZetkinActivity>) => {
       const activity = action.payload;
       const item = state.typeList.items.find((item) => item.id == activity.id);
 
@@ -515,33 +525,58 @@ const eventsSlice = createSlice({
 
 function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
   events.forEach((event) => {
-    const dateStr = event.start_time.slice(0, 10);
-
-    if (!state.eventsByDate[dateStr]) {
-      state.eventsByDate[dateStr] = remoteList();
-    }
-
     const eventListItem = state.eventList.items.find(
-      (item) => item.id == event.id
-    );
-    const eventByDateItem = state.eventsByDate[dateStr].items.find(
       (item) => item.id == event.id
     );
 
     if (eventListItem) {
       eventListItem.data = { ...eventListItem.data, ...event };
     } else {
-      state.eventList.items.push(remoteItem(event.id, { data: event }));
+      state.eventList.items.push(
+        remoteItem(event.id, { data: event, loaded: new Date().toISOString() })
+      );
     }
 
-    if (eventByDateItem) {
-      eventByDateItem.data = { ...eventByDateItem.data, ...event };
-      eventByDateItem.mutating = [];
-    } else {
+    const dateStr = event.start_time.slice(0, 10);
+    if (!state.eventsByDate[dateStr]) {
+      state.eventsByDate[dateStr] = remoteList();
+    }
+    let oldDateStr: string | undefined = undefined;
+    for (const date in state.eventsByDate) {
+      const item = state.eventsByDate[date].items.find(
+        (item) => item.id == event.id
+      );
+      if (item) {
+        oldDateStr = item.data?.start_time.slice(0, 10);
+      }
+    }
+
+    if (oldDateStr) {
+      // When updating an event date, remove the old date's event from state.eventsByDate and push that event to the new date.
+      const filteredEvents = state.eventsByDate[oldDateStr].items.filter(
+        (item) => item.data?.id !== event.id
+      );
+
+      state.eventsByDate[oldDateStr].items = filteredEvents;
       state.eventsByDate[dateStr].items.push(
         remoteItem(event.id, { data: event })
       );
+    } else {
+      //This is to check if the event already exists. In some places, addEventToState might be called more than once.
+      const newDateEventNotExists = !state.eventsByDate[dateStr].items.some(
+        (item) => item?.data?.id === event.id
+      );
+
+      if (newDateEventNotExists) {
+        state.eventsByDate[dateStr].items.push(
+          remoteItem(event.id, { data: event })
+        );
+      }
     }
+
+    state.eventsByDate[dateStr].isLoading = false;
+    state.eventsByDate[dateStr].isStale = false;
+    state.eventsByDate[dateStr].loaded = new Date().toISOString();
 
     const campaign = event.campaign;
     if (campaign) {

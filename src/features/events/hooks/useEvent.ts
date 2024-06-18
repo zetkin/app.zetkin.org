@@ -7,12 +7,16 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 export default function useEvent(
   orgId: number,
   id: number
-): IFuture<ZetkinEvent> {
+): IFuture<ZetkinEvent> | null {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const eventList = useAppSelector((state) => state.events.eventList);
 
   const item = eventList.items.find((item) => item.id == id);
+
+  if (item && item.deleted) {
+    return null;
+  }
 
   const eventFuture = loadItemIfNecessary(item, dispatch, {
     actionOnLoad: () => eventLoad(id),
