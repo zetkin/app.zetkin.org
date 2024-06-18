@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useState } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
@@ -11,6 +12,7 @@ import { scaffold } from 'utils/next';
 import useJoinSubmissions from 'features/joinForms/hooks/useJoinSubmissions';
 import { useMessages } from 'core/i18n';
 import { usePanes } from 'utils/panes';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
@@ -69,7 +71,20 @@ const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
         />
       );
     } else {
-      return <Box m={2}>{messages.submissionList.noFilteringResults()}</Box>;
+      return (
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          height="100%"
+          justifyContent="center"
+        >
+          <ZUIEmptyState
+            message={messages.submissionList.noFilteringResults()}
+            renderIcon={(props) => <InfoOutlinedIcon {...props} />}
+          />
+        </Box>
+      );
     }
   };
 
