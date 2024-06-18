@@ -6,6 +6,7 @@ export default makeMessages('feat.tags', {
   dialog: {
     colorErrorText: m('Please enter a valid hex code'),
     colorLabel: m('Color'),
+    createTagButton: m('Create'),
     createTitle: m('Create tag'),
     deleteButtonLabel: m('Delete'),
     deleteWarning: m(
@@ -15,7 +16,6 @@ export default makeMessages('feat.tags', {
     groupCreatePrompt: m<{ groupName: string }>('Add "{groupName}"'),
     groupLabel: m('Group'),
     groupSelectPlaceholder: m('Type to search or create a group'),
-    submitCreateTagButton: m('Create and apply'),
     titleErrorText: m('Tag name is required'),
     titleLabel: m('Tag name'),
     typeLabel: m('Tag type'),
@@ -37,5 +37,12 @@ export default makeMessages('feat.tags', {
         '{type, select, text {Enter some text} other {Enter a value}} to go along with the tag.'
       ),
     },
+  },
+  tagsPage: {
+    createTagButton: m('Create'),
+    noTags: m('Your organization does not have any tags yet'),
+    overviewTabLabel: m('Overview'),
+    title: m('Tags'),
+    ungroupedHeader: m('No group'),
   },
 });

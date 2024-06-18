@@ -40,6 +40,7 @@ export default makeMessages('zui', {
       assign: m('Create & assign'),
       default: m('Create'),
     },
+    tagCreateAndApplyLabel: m('Create and apply'),
     title: {
       addToJourney: m<{ journey: string }>(
         'Create person and add to {journey}'
@@ -143,6 +144,7 @@ export default makeMessages('zui', {
     search: m('Search'),
     settings: m('Settings'),
     signOut: m('Sign out'),
+    tags: m('Tags'),
     userSettings: m('User settings'),
   },
   personGridEditCell: {
