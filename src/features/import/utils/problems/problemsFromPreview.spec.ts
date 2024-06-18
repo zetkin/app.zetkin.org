@@ -198,10 +198,12 @@ describe('problemsFromPreview()', () => {
     const problems = problemsFromPreview(100, preview);
     expect(problems).toEqual([
       {
+        amount: 40,
         field: 'first_name',
         kind: ImportProblemKind.MAJOR_CHANGE,
       },
       {
+        amount: 40,
         field: 'last_name',
         kind: ImportProblemKind.MAJOR_CHANGE,
       },
