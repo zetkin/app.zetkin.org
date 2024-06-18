@@ -6,6 +6,8 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 type UseEventParticipantsWithChangesReturn = {
   bookedParticipants: ParticipantWithPoolState[];
+  numParticipantsAvailable: number;
+  numParticipantsRequired: number;
   pendingParticipants: ParticipantWithPoolState[];
 };
 
@@ -22,6 +24,11 @@ export default function useEventParticipantsWithChanges(
   );
   const participantsByEventId = useAppSelector(
     (state) => state.events.participantsByEventId
+  );
+  const event = useAppSelector(
+    (state) =>
+      state.events.eventList.items.find((item) => item.id == eventId)?.data ??
+      null
   );
   const dispatch = useAppDispatch();
 
@@ -102,6 +109,10 @@ export default function useEventParticipantsWithChanges(
 
   return {
     bookedParticipants,
+    numParticipantsAvailable: bookedParticipants.filter(
+      (p) => p.status == 'booked' || p.status == 'added'
+    ).length,
+    numParticipantsRequired: event?.num_participants_required ?? 0,
     pendingParticipants,
   };
 }
