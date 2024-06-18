@@ -1,6 +1,7 @@
 import { Box, Card } from '@mui/material';
 import { FC, useState } from 'react';
 
+import EventsSection from './EventsSection';
 import messageIds from 'features/events/l10n/messageIds';
 import ParticipantsSection from './ParticipantsSection';
 import { useMessages } from 'core/i18n';
@@ -32,13 +33,13 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
       open={open}
       title={messages.participantsModal.title()}
     >
-      <Box display="flex" height="60vh">
+      <Box display="flex" gap={2} height="60vh">
         <Box flex={1} sx={{ overflowY: 'auto' }}>
-          {events.map((event) => (
-            <Box key={event.id} onClick={() => setSelectedEvent(event)}>
-              {event.title || event.activity?.title}
-            </Box>
-          ))}
+          <EventsSection
+            events={events}
+            onSelect={(event) => setSelectedEvent(event)}
+            selectedEvent={selectedEvent}
+          />
         </Box>
         <Box flex={1} sx={{ overflowY: 'auto' }}>
           {selectedEvent && <ParticipantsSection event={selectedEvent} />}
