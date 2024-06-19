@@ -77,7 +77,7 @@ export default makeMessages('feat.calendar', {
   selectionBar: {
     deselect: m('Deselect'),
     editEvents: m('Edit events'),
-    editParticipants: m('Edit participants'),
+    editParticipants: m('Manage participants'),
     ellipsisMenu: {
       cancel: m('Cancel'),
       cancelWarning: m(

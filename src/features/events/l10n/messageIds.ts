@@ -217,6 +217,14 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   participantsModal: {
+    emptyStates: {
+      booked: m(
+        'No one has been booked at this event. You can add participants from the pool.'
+      ),
+      pending: m(
+        'There are no additional participants in the pool. You can move participants from an event to the pool to work with them here.'
+      ),
+    },
     participantsList: {
       buttons: {
         addBack: m('Add back'),
@@ -226,7 +234,7 @@ export default makeMessages('feat.events', {
       },
       headers: {
         booked: m('This event'),
-        pending: m('Participant pool'),
+        pending: m('People that can be added'),
       },
       states: {
         added: m('Being added to this event'),
@@ -234,7 +242,7 @@ export default makeMessages('feat.events', {
         removed: m('Moving away from this event'),
       },
     },
-    title: m('Edit participants'),
+    title: m('Manage participants'),
   },
   search: m('Search'),
   state: {

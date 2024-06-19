@@ -1,4 +1,4 @@
-import { Box, Card } from '@mui/material';
+import { Box, Card, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
 import EventsSection from './EventsSection';
@@ -25,6 +25,7 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
   const messages = useMessages(messageIds);
   const [selectedEvent, setSelectedEvent] = useState<ZetkinEvent | null>(null);
   const { affectedParticipantIds } = useParticipantPool();
+  const theme = useTheme();
 
   return (
     <ZUIDialog
@@ -33,7 +34,7 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
       open={open}
       title={messages.participantsModal.title()}
     >
-      <Box display="flex" gap={2} height="60vh">
+      <Box alignItems="stretch" display="flex" height="60vh">
         <Box flex={1} sx={{ overflowY: 'auto' }}>
           <EventsSection
             events={events}
@@ -41,7 +42,11 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
             selectedEvent={selectedEvent}
           />
         </Box>
-        <Box flex={1} sx={{ overflowY: 'auto' }}>
+        <Box
+          bgcolor={theme.palette.grey[100]}
+          flex={1}
+          sx={{ overflowY: 'auto' }}
+        >
           {selectedEvent && <ParticipantsSection event={selectedEvent} />}
         </Box>
       </Box>

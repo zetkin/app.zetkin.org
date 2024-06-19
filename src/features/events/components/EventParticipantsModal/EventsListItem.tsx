@@ -24,11 +24,8 @@ interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
     alignItems: 'center',
-    borderColor: ({ selected }) =>
-      selected ? theme.palette.grey[300] : 'transparent',
-    borderRadius: 1,
-    borderStyle: 'solid',
-    borderWidth: 1,
+    backgroundColor: ({ selected }) =>
+      selected ? theme.palette.grey[100] : 'transparent',
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'space-between',

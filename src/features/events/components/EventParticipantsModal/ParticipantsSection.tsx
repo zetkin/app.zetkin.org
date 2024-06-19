@@ -16,28 +16,46 @@ const ParticipantsSection: FC<Props> = ({ event }) => {
     useEventParticipantsWithChanges(event.organization.id, event.id);
 
   return (
-    <Box>
-      <Typography variant="h5">
-        <Msg
-          id={messageIds.participantsModal.participantsList.headers.booked}
-        />
-      </Typography>
-      <ParticipantsList
-        eventId={event.id}
-        orgId={event.organization.id}
-        participants={bookedParticipants}
-      />
+    <Box p={2}>
+      <Box mb={4}>
+        <Typography variant="h5">
+          <Msg
+            id={messageIds.participantsModal.participantsList.headers.booked}
+          />
+        </Typography>
+        {!bookedParticipants.length && (
+          <Typography variant="body1">
+            <Msg id={messageIds.participantsModal.emptyStates.booked} />
+          </Typography>
+        )}
+        {!!bookedParticipants.length && (
+          <ParticipantsList
+            eventId={event.id}
+            orgId={event.organization.id}
+            participants={bookedParticipants}
+          />
+        )}
+      </Box>
 
-      <Typography variant="h5">
-        <Msg
-          id={messageIds.participantsModal.participantsList.headers.pending}
-        />
-      </Typography>
-      <ParticipantsList
-        eventId={event.id}
-        orgId={event.organization.id}
-        participants={pendingParticipants}
-      />
+      <Box mb={4}>
+        <Typography variant="h5">
+          <Msg
+            id={messageIds.participantsModal.participantsList.headers.pending}
+          />
+        </Typography>
+        {!pendingParticipants.length && (
+          <Typography variant="body1">
+            <Msg id={messageIds.participantsModal.emptyStates.pending} />
+          </Typography>
+        )}
+        {!!pendingParticipants.length && (
+          <ParticipantsList
+            eventId={event.id}
+            orgId={event.organization.id}
+            participants={pendingParticipants}
+          />
+        )}
+      </Box>
     </Box>
   );
 };
