@@ -231,7 +231,7 @@ export default makeMessages('feat.events', {
         'There are no additional participants in the pool. You can move participants from an event to the pool to work with them here.'
       ),
     },
-    participantsList: {
+    participants: {
       buttons: {
         addBack: m('Add back'),
         addHere: m('Add here'),

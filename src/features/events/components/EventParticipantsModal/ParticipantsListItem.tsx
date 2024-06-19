@@ -59,9 +59,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             size="small"
             variant="outlined"
           >
-            <Msg
-              id={messageIds.participantsModal.participantsList.buttons.move}
-            />
+            <Msg id={messageIds.participantsModal.participants.buttons.move} />
           </Button>
         )}
         {participant.status == 'pending' && (
@@ -71,7 +69,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             variant="outlined"
           >
             <Msg
-              id={messageIds.participantsModal.participantsList.buttons.addHere}
+              id={messageIds.participantsModal.participants.buttons.addHere}
             />
           </Button>
         )}
@@ -81,9 +79,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             size="small"
             variant="outlined"
           >
-            <Msg
-              id={messageIds.participantsModal.participantsList.buttons.undo}
-            />
+            <Msg id={messageIds.participantsModal.participants.buttons.undo} />
           </Button>
         )}
         {participant.status == 'removed' && (
@@ -93,7 +89,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             variant="outlined"
           >
             <Msg
-              id={messageIds.participantsModal.participantsList.buttons.addBack}
+              id={messageIds.participantsModal.participants.buttons.addBack}
             />
           </Button>
         )}
@@ -109,7 +105,7 @@ const SecondaryLabel: FC<{ participant: ParticipantWithPoolState }> = ({
     return null;
   } else {
     const msgId =
-      messageIds.participantsModal.participantsList.states[participant.status];
+      messageIds.participantsModal.participants.states[participant.status];
 
     return <Msg id={msgId} />;
   }

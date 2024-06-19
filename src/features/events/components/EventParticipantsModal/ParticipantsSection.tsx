@@ -19,9 +19,7 @@ const ParticipantsSection: FC<Props> = ({ event }) => {
     <Box p={2}>
       <Box mb={4}>
         <Typography variant="h5">
-          <Msg
-            id={messageIds.participantsModal.participantsList.headers.booked}
-          />
+          <Msg id={messageIds.participantsModal.participants.headers.booked} />
         </Typography>
         {!bookedParticipants.length && (
           <Typography variant="body1">
@@ -39,9 +37,7 @@ const ParticipantsSection: FC<Props> = ({ event }) => {
 
       <Box mb={4}>
         <Typography variant="h5">
-          <Msg
-            id={messageIds.participantsModal.participantsList.headers.pending}
-          />
+          <Msg id={messageIds.participantsModal.participants.headers.pending} />
         </Typography>
         {!pendingParticipants.length && (
           <Typography variant="body1">
