@@ -1,4 +1,4 @@
-import { Box, Card, Typography, useTheme } from '@mui/material';
+import { Box, Button, Card, Typography, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
 import EventsSection from './EventsSection';
@@ -6,12 +6,12 @@ import messageIds from 'features/events/l10n/messageIds';
 import ParticipantsSection from './ParticipantsSection';
 import { useNumericRouteParams } from 'core/hooks';
 import useParticipantPool from 'features/events/hooks/useParticipantPool';
+import useParticipantPoolApi from 'features/events/hooks/useParticipantPoolApi';
 import useSelectedEvents from 'features/events/hooks/useSelectedEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
 
 type Props = {
@@ -25,6 +25,7 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
   const messages = useMessages(messageIds);
   const [selectedEvent, setSelectedEvent] = useState<ZetkinEvent | null>(null);
   const { affectedParticipantIds } = useParticipantPool();
+  const { discard, execute } = useParticipantPoolApi(orgId);
   const theme = useTheme();
 
   return (
@@ -72,7 +73,44 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
           </Box>
         )}
       </Card>
-      <ZUISubmitCancelButtons onCancel={() => onClose()} />
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="flex-end"
+        paddingTop={1}
+      >
+        <Box alignItems="center" display="flex" justifyContent="flex-end">
+          {!!affectedParticipantIds.length && (
+            <Typography color="secondary">
+              <Msg
+                id={messageIds.participantsModal.statusText}
+                values={{ personCount: affectedParticipantIds.length }}
+              />
+            </Typography>
+          )}
+          <Button
+            onClick={() => {
+              discard();
+              onClose();
+            }}
+            sx={{ mx: 1 }}
+            variant="text"
+          >
+            {messages.participantsModal.discardButton()}
+          </Button>
+          <Button
+            disabled={affectedParticipantIds.length == 0}
+            onClick={() => {
+              execute();
+              onClose();
+            }}
+            sx={{ ml: 1 }}
+            variant="contained"
+          >
+            {messages.participantsModal.submitButton()}
+          </Button>
+        </Box>
+      </Box>
     </ZUIDialog>
   );
 };

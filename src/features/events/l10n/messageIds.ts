@@ -223,6 +223,7 @@ export default makeMessages('feat.events', {
       ),
       header: m('Affected people'),
     },
+    discardButton: m('Discard changes'),
     emptyStates: {
       booked: m(
         'No one has been booked at this event. You can add participants from the pool.'
@@ -248,6 +249,10 @@ export default makeMessages('feat.events', {
         removed: m('Moving away from this event'),
       },
     },
+    statusText: m<{ personCount: number }>(
+      '{personCount, plural, =1 {One person} other {# people}} will be moved around'
+    ),
+    submitButton: m('Execute'),
     title: m('Manage participants'),
   },
   search: m('Search'),
