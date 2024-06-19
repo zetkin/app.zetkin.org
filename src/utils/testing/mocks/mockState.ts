@@ -15,6 +15,7 @@ export default function mockState(overrides?: RootState) {
     },
     campaigns: {
       campaignList: remoteList(),
+      campaignsByOrgId: {},
       recentlyCreatedCampaign: null,
     },
     duplicates: {
@@ -56,6 +57,10 @@ export default function mockState(overrides?: RootState) {
         title: '',
       },
       preflightSummary: null,
+    },
+    joinForms: {
+      formList: remoteList(),
+      submissionList: remoteList(),
     },
     journeys: {
       journeyInstanceList: remoteList(),

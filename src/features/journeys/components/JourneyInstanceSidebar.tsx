@@ -167,6 +167,7 @@ const JourneyInstanceSidebar = ({
           onAssignTag={onAssignTag}
           onTagEdited={onTagEdited}
           onUnassignTag={onUnassignTag}
+          submitCreateTagLabel={messages.instance.createAndApplyTagButton()}
         />
       </Grid>
       {journeyInstance.milestones?.length && (

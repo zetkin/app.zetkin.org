@@ -1,29 +1,30 @@
-import { CompareArrows } from '@mui/icons-material';
 import { FC } from 'react';
 import { Box, useTheme } from '@mui/material';
 
+import DateConfig from './DateConfig';
 import IdConfig from './IdConfig';
-import messageIds from 'features/import/l10n/messageIds';
 import OrgConfig from './OrgConfig';
 import TagConfig from './TagConfig';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
-import { useMessages } from 'core/i18n';
-import ZUIEmptyState from 'zui/ZUIEmptyState';
 import {
-  Column,
   ColumnKind,
+  DateColumn,
   IDFieldColumn,
   OrgColumn,
   TagColumn,
 } from 'features/import/utils/types';
+import useUIDataColumn, {
+  UIDataColumn,
+} from 'features/import/hooks/useUIDataColumn';
 
 interface ConfigurationProps {
-  uiDataColumn: UIDataColumn<Column> | null;
+  columnIndexBeingConfigured: number;
 }
 
-const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
-  const messages = useMessages(messageIds);
+const Configuration: FC<ConfigurationProps> = ({
+  columnIndexBeingConfigured,
+}) => {
   const theme = useTheme();
+  const uiDataColumn = useUIDataColumn(columnIndexBeingConfigured);
 
   return (
     <Box
@@ -46,19 +47,8 @@ const Configuration: FC<ConfigurationProps> = ({ uiDataColumn }) => {
         uiDataColumn.originalColumn.kind == ColumnKind.ORGANIZATION && (
           <OrgConfig uiDataColumn={uiDataColumn as UIDataColumn<OrgColumn>} />
         )}
-      {!uiDataColumn && (
-        <Box
-          alignItems="center"
-          display="flex"
-          height="100%"
-          justifyContent="center"
-          sx={{ opacity: '50%' }}
-        >
-          <ZUIEmptyState
-            message={messages.configuration.mapping.emptyStateMessage()}
-            renderIcon={(props) => <CompareArrows {...props} />}
-          />
-        </Box>
+      {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.DATE && (
+        <DateConfig uiDataColumn={uiDataColumn as UIDataColumn<DateColumn>} />
       )}
     </Box>
   );

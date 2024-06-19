@@ -15,6 +15,8 @@ export default makeMessages('feat.campaigns', {
     subtitles: {
       endsLater: m<{ relative: ReactElement }>('Ends {relative}'),
       endsToday: m('Ends today'),
+      sentEarlier: m<{ relative: ReactElement }>('Was sent {relative}'),
+      sentLater: m<{ relative: ReactElement }>('To be sent {relative}'),
       startsLater: m<{ relative: ReactElement }>('Starts {relative}'),
       startsToday: m('Starts today'),
     },

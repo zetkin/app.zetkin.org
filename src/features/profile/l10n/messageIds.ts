@@ -15,6 +15,7 @@ export default makeMessages('feat.profile', {
   editButton: m<{ title: string }>('Edit {title}'),
   editButtonClose: m<{ title: string }>('Stop editing {title}'),
   editButtonLabel: m('Edit Details'),
+  editPersonHeader: m<{ person: string }>('Edit {person}'),
   genders: {
     f: m('Female'),
     m: m('Male'),
@@ -25,16 +26,24 @@ export default makeMessages('feat.profile', {
     addButton: m('Start new journey'),
     title: m('Journeys'),
   },
+  numberOfChangesMessage: m<{ number: number }>(
+    'Will update {number, plural, =1 {1 field} other {# fields}}'
+  ),
   organizations: {
     add: m('Add a new sub-organization'),
     addError: m('This organization could not be added'),
     removeError: m('This organization could not be removed'),
     title: m('Organizations'),
   },
+  resetButton: m('Reset'),
+  saveButton: m('Save'),
   tabs: {
     manage: m('Manage'),
     profile: m('Profile'),
     timeline: m('Timeline'),
+  },
+  tags: {
+    createAndApplyLabel: m('Create and apply'),
   },
   user: {
     hasAccount: m('Connected to a Zetkin account'),

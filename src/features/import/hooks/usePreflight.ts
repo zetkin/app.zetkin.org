@@ -51,7 +51,12 @@ export default function usePreflight(orgId: number) {
   );
 
   if (problems.length == 0) {
-    problems.push(...problemsFromPreview(previewData));
+    problems.push(
+      ...problemsFromPreview(
+        sheet.firstRowIsHeaders ? sheet.rows.length - 1 : sheet.rows.length,
+        previewData
+      )
+    );
   }
 
   const hasError = problems.some(

@@ -22,6 +22,7 @@ export interface TagManagerControllerProps {
   onDeleteTag: (tagId: number) => void;
   onEditTag: (tag: EditTag) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
+  submitCreateTagLabel?: string;
 }
 
 export const TagManagerController: FC<TagManagerControllerProps> = ({
@@ -37,6 +38,7 @@ export const TagManagerController: FC<TagManagerControllerProps> = ({
   onDeleteTag,
   onEditTag,
   onUnassignTag,
+  submitCreateTagLabel,
 }) => {
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
   return (
@@ -78,6 +80,7 @@ export const TagManagerController: FC<TagManagerControllerProps> = ({
             onDeleteTag={onDeleteTag}
             onEditTag={onEditTag}
             onSelect={onAssignTag}
+            submitCreateTagLabel={submitCreateTagLabel}
             tags={availableTags}
           />
         </Popover>

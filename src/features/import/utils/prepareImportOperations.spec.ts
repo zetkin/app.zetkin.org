@@ -931,4 +931,54 @@ describe('prepareImportOperations()', () => {
       ]);
     });
   });
+
+  it('correctly parses dates into ISO date strings and ignores empty values', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          dateFormat: 'se',
+          field: 'birthday',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['19650313-4571', 1],
+        },
+        {
+          data: ['6408120923', 2],
+        },
+        {
+          data: ['', 3],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData, countryCode);
+    expect(result).toEqual([
+      {
+        data: {
+          birthday: '1965-03-13',
+          id: 1,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          birthday: '1964-08-12',
+          id: 2,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 3,
+        },
+        op: 'person.import',
+      },
+    ]);
+  });
 });

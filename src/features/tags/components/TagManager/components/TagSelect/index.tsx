@@ -22,6 +22,7 @@ interface TagSelectProps {
   onDeleteTag: (tagId: number) => void;
   onEditTag: (tag: EditTag) => void;
   onSelect: (tag: ZetkinTag) => void;
+  submitCreateTagLabel?: string;
   tags: ZetkinTag[];
 }
 
@@ -35,6 +36,7 @@ const TagSelect: FC<TagSelectProps> = ({
   onDeleteTag,
   onEditTag,
   onSelect,
+  submitCreateTagLabel,
   tags,
 }) => {
   const messages = useMessages(messageIds);
@@ -162,6 +164,7 @@ const TagSelect: FC<TagSelectProps> = ({
           }
         }}
         open={Boolean(tagToEdit)}
+        submitLabel={submitCreateTagLabel}
         tag={tagToEdit}
       />
     </>

@@ -98,7 +98,11 @@ const EmailHistory = ({
         (emailSelectScope === 'project' && !filter.config.campaign) ||
         (emailSelectScope === 'email' && !filter.config.email)
       }
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(filter);
@@ -208,6 +212,7 @@ const EmailHistory = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

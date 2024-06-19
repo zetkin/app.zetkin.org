@@ -16,8 +16,9 @@ interface TagDialogProps {
   groups: ZetkinTagGroup[];
   open: boolean;
   onClose: () => void;
-  onDelete: (tagId: number) => void;
+  onDelete?: (tagId: number) => void;
   onSubmit: (tag: NewTag | EditTag) => void;
+  submitLabel?: string;
   tag?: ZetkinTag | Pick<ZetkinTag, 'title'>;
 }
 
@@ -27,6 +28,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   onClose,
   onDelete,
   onSubmit,
+  submitLabel,
   tag,
 }) => {
   const messages = useMessages(messageIds);
@@ -63,6 +65,8 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     setType(null);
     onClose();
   };
+
+  const showDeleteButton = tag && 'id' in tag && onDelete;
 
   return (
     <ZUIDialog
@@ -138,7 +142,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           display="flex"
           justifyContent="space-between"
         >
-          {tag && 'id' in tag && (
+          {showDeleteButton && (
             <Button
               onClick={() => {
                 onDelete(tag.id);
@@ -152,9 +156,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           <ZUISubmitCancelButtons
             onCancel={closeAndClear}
             submitDisabled={!title || !color.valid}
-            submitText={
-              editingTag ? undefined : messages.dialog.submitCreateTagButton()
-            }
+            submitText={submitLabel ?? messages.dialog.createTagButton()}
           />
         </Box>
       </form>
