@@ -408,6 +408,34 @@ const eventsSlice = createSlice({
         state.pendingParticipantOps.push(newOp);
       }
     },
+    participantOpsClear: (state) => {
+      state.pendingParticipantOps = [];
+    },
+    participantOpsExecuted: (state) => {
+      while (state.pendingParticipantOps.length) {
+        const op = state.pendingParticipantOps.pop();
+        if (!op) {
+          return;
+        }
+
+        const eventItem = state.eventList.items.find(
+          (item) => item.id == op.eventId
+        );
+        if (eventItem) {
+          eventItem.isStale = true;
+        }
+
+        const participantsList = state.participantsByEventId[op.eventId];
+        if (participantsList) {
+          participantsList.isStale = true;
+        }
+
+        const statsItem = state.statsByEventId[op.eventId];
+        if (statsItem) {
+          statsItem.isStale = true;
+        }
+      }
+    },
     participantUpdated: (
       state,
       action: PayloadAction<[number, ZetkinEventParticipant]>
@@ -685,6 +713,8 @@ export const {
   participantAdded,
   participantDeleted,
   participantOpAdd,
+  participantOpsClear,
+  participantOpsExecuted,
   participantUpdated,
   participantsLoad,
   participantsLoaded,

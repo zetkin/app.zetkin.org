@@ -5,6 +5,7 @@ import { makeWrapper } from 'utils/testing';
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import mockEventParticipant from 'utils/testing/mocks/mockEventParticipant';
 import mockState from 'utils/testing/mocks/mockState';
+import { participantOpsExecuted } from '../store';
 import useEventParticipantsWithChanges from '../hooks/useEventParticipantsWithChanges';
 import useParticipantPool from '../hooks/useParticipantPool';
 import { remoteItem, remoteList } from 'utils/storeUtils';
@@ -232,5 +233,54 @@ describe('Moving event participants', () => {
     );
 
     expect(result.current.numParticipantsAvailable).toEqual(2);
+  });
+
+  it('updates store when after executing', () => {
+    const initialState = mockState();
+    initialState.events.eventList.items = [
+      remoteItem(11, {
+        data: mockEvent({ id: 11 }),
+        loaded: new Date().toISOString(),
+      }),
+      remoteItem(12, {
+        data: mockEvent({ id: 12 }),
+        loaded: new Date().toISOString(),
+      }),
+    ];
+
+    initialState.events.participantsByEventId[11] = remoteList([
+      mockEventParticipant({ id: 1101 }),
+      mockEventParticipant({ id: 1102 }),
+    ]);
+    initialState.events.participantsByEventId[11].loaded =
+      new Date().toISOString();
+
+    initialState.events.participantsByEventId[12] = remoteList([
+      mockEventParticipant({ id: 1201 }),
+      mockEventParticipant({ id: 1202 }),
+    ]);
+    initialState.events.participantsByEventId[12].loaded =
+      new Date().toISOString();
+
+    const store = createStore(initialState);
+
+    const poolHook = renderHook(() => useParticipantPool(), {
+      wrapper: makeWrapper(store),
+    });
+
+    act(() => {
+      // "Move" one participant from 11 to 12
+      poolHook.result.current.moveFrom(11, 1101);
+      poolHook.result.current.moveTo(12, 1101);
+
+      // Simulate "executing" the pending ops
+      store.dispatch(participantOpsExecuted());
+    });
+
+    const output = store.getState();
+
+    expect(output.events.participantsByEventId[11].isStale).toBeTruthy();
+    expect(output.events.participantsByEventId[12].isStale).toBeTruthy();
+    expect(output.events.pendingParticipantOps).toEqual([]);
   });
 });
