@@ -217,6 +217,12 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   participantsModal: {
+    affected: {
+      empty: m(
+        "You haven't made any changes yet. Pick an event to move participants around."
+      ),
+      header: m('Affected people'),
+    },
     emptyStates: {
       booked: m(
         'No one has been booked at this event. You can add participants from the pool.'
