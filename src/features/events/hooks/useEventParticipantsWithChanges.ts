@@ -64,10 +64,17 @@ export default function useEventParticipantsWithChanges(
           op.kind == ParticipantOpKind.REMOVE
       );
 
-      bookedParticipants.push({
-        person,
-        status: movedAway ? 'removed' : 'booked',
-      });
+      if (movedAway) {
+        pendingParticipants.push({
+          person,
+          status: 'removed',
+        });
+      } else {
+        bookedParticipants.push({
+          person,
+          status: 'booked',
+        });
+      }
     });
 
     pendingOps
