@@ -42,7 +42,9 @@ export default makeMessages('feat.settings', {
     },
     urlCard: {
       linkToPub: m('Link to public organization'),
-      subTitle: m('Connect to the organization before assigning'),
+      subTitle: m(
+        'Users must connect to the organization before they can access Zetkin as officials.'
+      ),
     },
     you: m('You'),
   },

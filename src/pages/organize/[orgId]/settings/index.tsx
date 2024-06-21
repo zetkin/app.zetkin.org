@@ -8,6 +8,7 @@ import OfficialList from 'features/settings/components/OfficialList';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
+import { useEnv } from 'core/hooks';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import useOfficialMemberships from 'features/settings/hooks/useOfficialMemberships';
 import useServerSide from 'core/useServerSide';
@@ -31,7 +32,8 @@ const SettingsPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const listFuture = useOfficialMemberships(orgId).data || [];
   const messages = useMessages(messageIds);
-  const publicOrgUrl = `https://app.zetkin.org/o/${orgId}`;
+  const env = useEnv();
+  const publicOrgUrl = `${env.vars.ZETKIN_APP_DOMAIN}/o/${orgId}`;
 
   const adminList = listFuture.filter((user) => user.role === 'admin');
   const organizerList = listFuture.filter((user) => user.role === 'organizer');
