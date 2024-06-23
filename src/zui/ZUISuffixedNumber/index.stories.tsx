@@ -10,4 +10,5 @@ const Template: ComponentStory<typeof ZUISuffixedNumber> = (args) => {
   return <ZUISuffixedNumber number={args.number} />;
 };
 
-export const basic = Template.bind({ number: 54321 });
+export const basic = Template.bind({});
+basic.args = { number: 54321 };
