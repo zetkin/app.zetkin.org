@@ -50,10 +50,8 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
               field as keyof ZetkinPersonNativeFields
             ]()
       }
-      onChange={(e) => {
-        const trimmedValue = e.target.value.trim();
-        onChange(field, trimmedValue);
-      }}
+      onBlur={(e) => onChange(field, e.target.value.trim())}
+      onChange={(e) => onChange(field, e.target.value)}
       required={required}
       sx={style}
       value={value}
