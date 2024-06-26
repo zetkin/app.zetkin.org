@@ -96,8 +96,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
 
   const HorizontallyCenteredBadge = styled(Badge)(() => ({
     '& .MuiBadge-badge': {
-      top: '50%',
       right: -15,
+      top: '50%',
       transform: 'translateY(-50%)',
     },
   }));
