@@ -63,6 +63,7 @@ const ZUIEditableImage: React.FC<
       )}
       {!file && (
         <Box
+          data-testid="ZUIEditableImage-placeholder"
           onClick={() => setSelecting(true)}
           sx={{
             alignItems: 'center',

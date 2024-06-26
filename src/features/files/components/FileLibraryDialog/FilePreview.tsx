@@ -44,7 +44,11 @@ const FilePreview: FC<Props> = ({ file, onBack, onSelect }) => {
         <Button onClick={() => onBack()} variant="outlined">
           <Msg id={messageIds.libraryDialog.preview.backButton} />
         </Button>
-        <Button onClick={() => onSelect()} variant="contained">
+        <Button
+          data-testid="FileLibraryDialog-useButton"
+          onClick={() => onSelect()}
+          variant="contained"
+        >
           <Msg id={messageIds.libraryDialog.preview.useButton} />
         </Button>
       </Box>
