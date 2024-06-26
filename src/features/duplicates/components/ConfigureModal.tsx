@@ -101,7 +101,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
           </Alert>
         </Box>
       </Box>
-      <DialogActions>
+      <DialogActions sx={{ p: 2 }}>
         <Button onClick={() => onClose()} variant="text">
           {messages.modal.cancelButton()}
         </Button>
