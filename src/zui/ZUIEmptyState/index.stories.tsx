@@ -1,12 +1,12 @@
 import ZUIEmptyState from '.';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 export default {
   component: ZUIEmptyState,
   title: 'ZUIEmptyState',
-} as ComponentMeta<typeof ZUIEmptyState>;
+} as Meta<typeof ZUIEmptyState>;
 
-const Template: ComponentStory<typeof ZUIEmptyState> = (args) => {
+const Template: StoryFn<typeof ZUIEmptyState> = (args) => {
   return (
     <ZUIEmptyState
       href={args.href}

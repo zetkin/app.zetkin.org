@@ -1,5 +1,5 @@
 import { Box, Paper } from '@mui/material';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { ReactNode, useState } from 'react';
 
 import ZUIReorderable from '.';
@@ -7,9 +7,9 @@ import ZUIReorderable from '.';
 export default {
   component: ZUIReorderable,
   title: 'Atoms/ZUIReorderable',
-} as ComponentMeta<typeof ZUIReorderable>;
+} as Meta<typeof ZUIReorderable>;
 
-const Template: ComponentStory<typeof ZUIReorderable> = (args) => {
+const Template: StoryFn<typeof ZUIReorderable> = (args) => {
   const [items, setItems] = useState(args.items);
 
   return (

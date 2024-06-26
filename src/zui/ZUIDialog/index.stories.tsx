@@ -1,14 +1,14 @@
 import { Box, Typography } from '@mui/material';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIDialog from '.';
 
 export default {
   component: ZUIDialog,
   title: 'Atoms/ZUIDialog',
-} as ComponentMeta<typeof ZUIDialog>;
+} as Meta<typeof ZUIDialog>;
 
-const Template: ComponentStory<typeof ZUIDialog> = (args) => (
+const Template: StoryFn<typeof ZUIDialog> = (args) => (
   <ZUIDialog
     maxWidth={args.maxWidth}
     onClose={args.onClose}

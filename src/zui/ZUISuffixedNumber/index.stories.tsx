@@ -1,12 +1,12 @@
 import ZUISuffixedNumber from '.';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 export default {
   component: ZUISuffixedNumber,
   title: 'ZUISuffixedNumber',
-} as ComponentMeta<typeof ZUISuffixedNumber>;
+} as Meta<typeof ZUISuffixedNumber>;
 
-const Template: ComponentStory<typeof ZUISuffixedNumber> = (args) => {
+const Template: StoryFn<typeof ZUISuffixedNumber> = (args) => {
   return <ZUISuffixedNumber number={args.number} />;
 };
 

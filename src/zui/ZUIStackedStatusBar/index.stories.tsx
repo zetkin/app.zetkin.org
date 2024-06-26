@@ -2,14 +2,14 @@ import { useState } from '@storybook/preview-api';
 import { Box, Button } from '@mui/material';
 
 import ZUIStackedStatusBar from '.';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 export default {
   component: ZUIStackedStatusBar,
   title: 'ZUIStackedStatusBar',
-} as ComponentMeta<typeof ZUIStackedStatusBar>;
+} as Meta<typeof ZUIStackedStatusBar>;
 
-const Template: ComponentStory<typeof ZUIStackedStatusBar> = (args) => {
+const Template: StoryFn<typeof ZUIStackedStatusBar> = (args) => {
   const [values, setValues] = useState([
     {
       color: 'rgba(245, 124, 0, 1)',

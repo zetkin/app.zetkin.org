@@ -1,14 +1,14 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { HTMLProps, useState } from 'react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIPreviewableInput, { ZUIPreviewableMode } from '.';
 
 export default {
   component: ZUIPreviewableInput,
   title: 'Atoms/ZUIPreviewableInput',
-} as ComponentMeta<typeof ZUIPreviewableInput>;
+} as Meta<typeof ZUIPreviewableInput>;
 
-const Template: ComponentStory<typeof ZUIPreviewableInput> = (args) => {
+const Template: StoryFn<typeof ZUIPreviewableInput> = (args) => {
   const [value, setValue] = useState(args.value);
   const [otherValue, setOtherValue] = useState(args.value);
   const [mode, setMode] = useState<ZUIPreviewableMode>(

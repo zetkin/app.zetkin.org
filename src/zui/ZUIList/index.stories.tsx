@@ -1,14 +1,14 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { ListItem, ListItemText } from '@mui/material';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIList from '.';
 
 export default {
   component: ZUIList,
   title: 'Atoms/ZUIList',
-} as ComponentMeta<typeof ZUIList>;
+} as Meta<typeof ZUIList>;
 
-const Template: ComponentStory<typeof ZUIList> = (args) => (
+const Template: StoryFn<typeof ZUIList> = (args) => (
   <ZUIList initialLength={args.initialLength} showMoreStep={args.showMoreStep}>
     {args.children}
   </ZUIList>
