@@ -4,7 +4,6 @@ import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { muiTheme } from 'storybook-addon-material-ui5';
-import { RouterContext } from 'next/dist/shared/lib/router-context'; // next 11.1
 import withMock from 'storybook-addon-mock';
 import { Provider as ReduxProvider } from 'react-redux';
 
@@ -33,11 +32,12 @@ export const decorators = [
 ];
 
 export const parameters = {
-  nextRouter: {
-    Provider: RouterContext.Provider,
-    query: {
-      orgId: 1,
-      personId: 1,
+  nextjs: {
+    router: {
+      query: {
+        orgId: 1,
+        personId: 1,
+      },
     },
   },
   mockData: [
