@@ -86,7 +86,7 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
             <Close />
           </IconButton>
         </Box>
-        <Box overflow="auto" paddingRight={2} width="100%">
+        <Box overflow="auto" width="100%">
           <EditPersonFields
             fieldsToUpdate={fieldsToUpdate}
             fieldValues={fieldValues}
