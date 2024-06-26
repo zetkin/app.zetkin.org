@@ -33,7 +33,7 @@ const Template: ComponentStory<typeof ZUIStackedStatusBar> = (args) => {
             values.map((valueObj) => ({
               ...valueObj,
               value: Math.floor(Math.random() * 100),
-            }))
+            })),
           );
         }}
         variant="contained"
@@ -46,7 +46,7 @@ const Template: ComponentStory<typeof ZUIStackedStatusBar> = (args) => {
             values.map(() => ({
               color: 'rgba(0, 0, 0, 0.12)',
               value: 1,
-            }))
+            })),
           );
         }}
         variant="contained"

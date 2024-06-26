@@ -12,7 +12,7 @@ const Template: ComponentStory<typeof ZUIPreviewableInput> = (args) => {
   const [value, setValue] = useState(args.value);
   const [otherValue, setOtherValue] = useState(args.value);
   const [mode, setMode] = useState<ZUIPreviewableMode>(
-    ZUIPreviewableMode.PREVIEW
+    ZUIPreviewableMode.PREVIEW,
   );
 
   return (
