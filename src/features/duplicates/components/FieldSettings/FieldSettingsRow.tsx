@@ -1,4 +1,11 @@
-import { Box, MenuItem, Select, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  MenuItem,
+  Select,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { FC, useState } from 'react';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
@@ -76,20 +83,21 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
           <Typography color="secondary">{getLabel(values[0])}</Typography>
         )}
         {values.length > 1 && (
-          <Select
-            fullWidth
-            onChange={(event) => {
-              setSelectedValue(event.target.value);
-              onChange(event.target.value);
-            }}
-            value={selectedValue}
-          >
-            {values.map((value, index) => (
-              <MenuItem key={index} value={value}>
-                {getLabel(value)}
-              </MenuItem>
-            ))}
-          </Select>
+          <FormControl fullWidth size="small">
+            <Select
+              onChange={(event) => {
+                setSelectedValue(event.target.value);
+                onChange(event.target.value);
+              }}
+              value={selectedValue}
+            >
+              {values.map((value, index) => (
+                <MenuItem key={index} value={value}>
+                  {getLabel(value)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         )}
       </Box>
     </Box>
