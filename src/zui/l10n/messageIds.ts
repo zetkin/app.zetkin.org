@@ -121,9 +121,6 @@ export default makeMessages('zui', {
       expand: m('Expand'),
     },
   },
-  imageSelectDialog: {
-    instructions: m('Drag and drop an image file, or click to select'),
-  },
   lists: {
     showMore: m('Show more...'),
   },
