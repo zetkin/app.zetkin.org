@@ -109,6 +109,9 @@ export default makeMessages('zui', {
       noEmpty: m('This cannot be empty'),
     },
   },
+  editableImage: {
+    add: m('Click to add image'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
