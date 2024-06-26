@@ -20,7 +20,7 @@
     "playwright": "cross-env NODE_ENV=production playwright test",
     "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test",
     "playwright:ci": "cross-env NODE_ENV=production playwright test",
-    "storybook": "storybook dev -p 6006 -s ./src",
+    "storybook": "storybook dev -p 6006",
     "make-yaml": "ts-node src/tools/make-yaml.ts",
     "build-storybook": "storybook build"
   },
