@@ -10,7 +10,7 @@ module.exports = {
     'storybook-addon-material-ui5',
     'storybook-addon-mock/register',
   ],
-  framework: '@storybook/react',
+  framework: '@storybook/nextjs',
   core: {
     builder: '@storybook/builder-webpack5',
   },
