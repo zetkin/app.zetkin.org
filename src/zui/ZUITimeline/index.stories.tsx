@@ -58,8 +58,8 @@ const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
       timestamp: dayjs()
         .subtract(Math.random() * 100, 'hours')
         .format(),
-    },
-  ),
+    }
+  )
 );
 
 const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {

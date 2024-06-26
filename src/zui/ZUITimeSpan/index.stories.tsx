@@ -17,7 +17,7 @@ const todayAt12 = new Date(
   now.getFullYear(),
   now.getMonth(),
   now.getDate(),
-  12,
+  12
 );
 
 const todayAt14 = new Date(todayAt12);
