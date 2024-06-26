@@ -1,7 +1,10 @@
 import { FC } from 'react';
-import { ClickAwayListener, Paper, Popover } from '@mui/material';
+import Image from 'next/image';
+import { Box, ClickAwayListener, Paper, Popover } from '@mui/material';
 
+import messageIds from 'features/events/l10n/messageIds';
 import SingleEvent from './SingleEvent';
+import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 export interface SingleEventPopperProps {
@@ -17,6 +20,7 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
   onClickAway,
   open,
 }) => {
+  const messages = useMessages(messageIds);
   return (
     <Popover
       anchorPosition={anchorPosition}
@@ -24,8 +28,24 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
       open={open}
     >
       <ClickAwayListener onClickAway={onClickAway}>
-        <Paper sx={{ padding: 2, width: '480px' }}>
-          <SingleEvent event={event} onClickAway={onClickAway} />
+        <Paper sx={{ width: '480px' }}>
+          {event.cover_file && (
+            <Box height={120} position="relative">
+              <Image
+                alt={
+                  event.title ||
+                  event.activity?.title ||
+                  messages.common.noTitle()
+                }
+                fill
+                src={event.cover_file.url}
+                style={{ objectFit: 'cover' }}
+              />
+            </Box>
+          )}
+          <Box p={2}>
+            <SingleEvent event={event} onClickAway={onClickAway} />
+          </Box>
         </Paper>
       </ClickAwayListener>
     </Popover>
