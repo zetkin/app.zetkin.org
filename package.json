@@ -148,7 +148,6 @@
     "npm-run-all2": "^6.0.4",
     "prettier": "^2.5.1",
     "storybook": "7.0",
-    "storybook-addon-material-ui5": "^1.0.0",
     "storybook-addon-mock": "^2.4.0",
     "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.6",

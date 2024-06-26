@@ -3,9 +3,9 @@ import dayjs from 'dayjs';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { muiTheme } from 'storybook-addon-material-ui5';
 import withMock from 'storybook-addon-mock';
 import { Provider as ReduxProvider } from 'react-redux';
+import { ThemeProvider } from '@mui/material';
 
 import theme from '../src/theme';
 import '../src/styles.css';
@@ -25,7 +25,11 @@ const I18nProvider = (props) => {
 };
 
 export const decorators = [
-  muiTheme([theme]),
+  (Story) => (
+    <ThemeProvider theme={theme}>
+      <Story />
+    </ThemeProvider>
+  ),
   (story) => <ReduxProvider store={createStore()}>{story()}</ReduxProvider>,
   (story) => <I18nProvider>{story()}</I18nProvider>,
   withMock,

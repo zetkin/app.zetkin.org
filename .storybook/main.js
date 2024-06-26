@@ -6,7 +6,6 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    'storybook-addon-material-ui5',
     'storybook-addon-mock/register',
   ],
   framework: '@storybook/nextjs',
