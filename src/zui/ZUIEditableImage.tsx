@@ -3,11 +3,11 @@ import { Box, IconButton, useTheme } from '@mui/material';
 import { Clear, Edit } from '@mui/icons-material';
 import Image, { ImageProps } from 'next/image';
 
+import FileLibraryDialog from 'features/files/components/FileLibraryDialog';
 import messageIds from './l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinFile } from 'utils/types/zetkin';
-import ZUIImageSelectDialog from './ZUIImageSelectDialog';
 
 interface ZUIEditableImageProps {
   alt: string;
@@ -72,11 +72,13 @@ const ZUIEditableImage: React.FC<
           <Msg id={messageIds.editableImage.add} />
         </Box>
       )}
-      <ZUIImageSelectDialog
-        onClose={() => setSelecting(false)}
-        onSelectFile={(file) => {
+      <FileLibraryDialog
+        onClose={() => {
           setSelecting(false);
+        }}
+        onSelectFile={(file) => {
           onFileSelect(file);
+          setSelecting(false);
         }}
         open={selecting}
         orgId={orgId}
