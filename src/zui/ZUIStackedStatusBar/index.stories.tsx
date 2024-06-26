@@ -1,4 +1,4 @@
-import { useState } from '@storybook/addons';
+import { useState } from '@storybook/preview-api';
 import { Box, Button } from '@mui/material';
 
 import ZUIStackedStatusBar from '.';
