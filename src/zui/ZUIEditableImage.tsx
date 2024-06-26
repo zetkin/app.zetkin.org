@@ -23,7 +23,12 @@ const ZUIEditableImage: React.FC<
   const [selecting, setSelecting] = useState(false);
 
   return (
-    <Box style={{ position: 'relative' }}>
+    <Box
+      onClick={(ev) => {
+        ev.stopPropagation();
+      }}
+      style={{ position: 'relative' }}
+    >
       <Box style={{ bottom: 10, position: 'absolute', right: 10, zIndex: 1 }}>
         {file && (
           <>
@@ -51,7 +56,11 @@ const ZUIEditableImage: React.FC<
           </>
         )}
       </Box>
-      {file && <Image {...imageProps} alt={alt} src={file.url} />}
+      {file && (
+        <Box minHeight={200}>
+          <Image {...imageProps} alt={alt} src={file.url} />
+        </Box>
+      )}
       {!file && (
         <Box
           onClick={() => setSelecting(true)}
