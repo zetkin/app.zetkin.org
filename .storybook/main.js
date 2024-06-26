@@ -11,9 +11,6 @@ module.exports = {
     'storybook-addon-mock/register',
   ],
   framework: '@storybook/nextjs',
-  core: {
-    builder: '@storybook/builder-webpack5',
-  },
   webpackFinal: async (config) => {
     config.resolve.plugins = [
       ...(config.resolve.plugins || []),
