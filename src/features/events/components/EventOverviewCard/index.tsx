@@ -31,6 +31,7 @@ import useEventMutations from 'features/events/hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
 import useParallelEvents from 'features/events/hooks/useParallelEvents';
 import ZUIDate from 'zui/ZUIDate';
+import ZUIEditableImage from 'zui/ZUIEditableImage';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
   isSameDate,
@@ -38,7 +39,7 @@ import {
   makeNaiveTimeString,
   removeOffset,
 } from 'utils/dateUtils';
-import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinFile, ZetkinLocation } from 'utils/types/zetkin';
 
 dayjs.extend(utc);
 
@@ -114,6 +115,15 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
         <Card>
+          <ZUIEditableImage
+            alt=""
+            file={data.cover_file}
+            fill
+            onFileSelect={(file: ZetkinFile | null) => {
+              updateEvent({ cover_file_id: file?.id ?? null });
+            }}
+            style={{ objectFit: 'cover' }}
+          />
           {!editable && (
             <Box display="flex" justifyContent="flex-end" m={2}>
               <Button startIcon={<EditIcon />} variant="outlined">
@@ -121,7 +131,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
               </Button>
             </Box>
           )}
-          <Box display="flex" marginTop={12} padding={2}>
+          <Box display="flex" padding={2}>
             <Box display="flex" flex={1} gap={1}>
               <Box flex={1}>
                 <ZUIPreviewableInput

@@ -54,7 +54,7 @@ test.describe('Task detail page', () => {
 
     await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
-    await page.locator('data-testid=TaskPreviewSection-addImage').click();
+    await page.locator('data-testid=ZUIEditableImage-placeholder').click();
 
     const buffer = await fs.readFile(
       'integrationTesting/mockFiles/clara_and_rosa.jpg'
@@ -68,7 +68,7 @@ test.describe('Task detail page', () => {
       return dt;
     }, buffer);
 
-    await page.dispatchEvent('data-testid=ImageSelectDialog-dropZone', 'drop', {
+    await page.dispatchEvent('data-testid=FileDropZone-dropZone', 'drop', {
       dataTransfer,
     });
 
@@ -79,7 +79,7 @@ test.describe('Task detail page', () => {
       page.waitForResponse((res) =>
         res.request().url().includes('clara_and_rosa.jpg')
       ),
-      page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
+      page.locator('data-testid=FileLibraryDialog-useButton').click(),
     ]);
 
     await page.locator('data-testid=TaskPreviewSection-section').waitFor();

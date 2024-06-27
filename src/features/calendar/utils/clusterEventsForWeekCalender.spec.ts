@@ -14,6 +14,7 @@ const mockEventData: ZetkinEvent = {
   },
   cancelled: null,
   contact: null,
+  cover_file: null,
   end_time: '1857-07-05T13:37:00.000Z',
   id: 1,
   info_text: '',
