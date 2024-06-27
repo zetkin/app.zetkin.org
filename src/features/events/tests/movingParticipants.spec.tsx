@@ -213,6 +213,55 @@ describe('Moving event participants', () => {
     expect(result.current.pendingParticipants).toEqual([]);
   });
 
+  it('returns participant as booked and not pending when already booked', () => {
+    const participant = mockEventParticipant({ id: 1001 });
+    const initialState = mockState();
+    initialState.events.eventList.items = [
+      remoteItem(11, {
+        data: mockEvent({ id: 11 }),
+        loaded: new Date().toISOString(),
+      }),
+      remoteItem(12, {
+        data: mockEvent({ id: 12 }),
+        loaded: new Date().toISOString(),
+      }),
+    ];
+
+    initialState.events.participantsByEventId[11] = remoteList([participant]);
+    initialState.events.participantsByEventId[11].loaded =
+      new Date().toISOString();
+
+    initialState.events.participantsByEventId[12] = remoteList([participant]);
+    initialState.events.participantsByEventId[12].loaded =
+      new Date().toISOString();
+
+    const store = createStore(initialState);
+
+    const poolHook = renderHook(() => useParticipantPool(), {
+      wrapper: makeWrapper(store),
+    });
+
+    act(() => {
+      poolHook.result.current.moveFrom(11, 1001);
+    });
+
+    const { result } = renderHook(
+      () => useEventParticipantsWithChanges(1, 12),
+      {
+        wrapper: makeWrapper(store),
+      }
+    );
+
+    expect(result.current.numParticipantsAvailable).toEqual(1);
+    expect(result.current.bookedParticipants).toEqual([
+      {
+        person: participant,
+        status: 'booked',
+      },
+    ]);
+    expect(result.current.pendingParticipants).toEqual([]);
+  });
+
   it('counts booked and added as participants, but not removed or pending', () => {
     const initialState = mockState();
     initialState.events.eventList.items = [

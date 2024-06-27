@@ -101,6 +101,9 @@ export default function useEventParticipantsWithChanges(
           const addedPreviously = addedIds.includes(op.personId);
           const removingFromAnotherEvent =
             op.kind == ParticipantOpKind.REMOVE && op.eventId != eventId;
+          const alreadyBooked = bookedParticipants.find(
+            (p) => p.person.id == op.personId
+          );
 
           if (addingToThisEvent) {
             addedIds.push(op.personId);
@@ -108,7 +111,11 @@ export default function useEventParticipantsWithChanges(
               person: participant,
               status: 'added',
             });
-          } else if (removingFromAnotherEvent && !addedPreviously) {
+          } else if (
+            removingFromAnotherEvent &&
+            !addedPreviously &&
+            !alreadyBooked
+          ) {
             pendingParticipants.push({
               person: participant,
               status: 'pending',
