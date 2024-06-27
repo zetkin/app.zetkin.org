@@ -1,3 +1,4 @@
+import { ParticipantOp } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   RemoteItem,
@@ -58,6 +59,7 @@ export interface EventsStoreSlice {
     text: string;
   };
   locationList: RemoteList<ZetkinLocation>;
+  pendingParticipantOps: ParticipantOp[];
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   remindingByEventId: Record<number, boolean>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
@@ -78,6 +80,7 @@ const initialState: EventsStoreSlice = {
   },
   locationList: remoteList(),
   participantsByEventId: {},
+  pendingParticipantOps: [],
   remindingByEventId: {},
   respondentsByEventId: {},
   selectedEventIds: [],
@@ -388,6 +391,51 @@ const eventsSlice = createSlice({
         eventId
       ].items.filter((participant) => participant.id !== participantId);
     },
+    participantOpAdd: (state, action: PayloadAction<ParticipantOp>) => {
+      const newOp = action.payload;
+      const existingInverseOp = state.pendingParticipantOps.find(
+        (existingOp) =>
+          existingOp.eventId == newOp.eventId &&
+          existingOp.personId == newOp.personId &&
+          existingOp.kind != newOp.kind
+      );
+
+      if (existingInverseOp) {
+        state.pendingParticipantOps = state.pendingParticipantOps.filter(
+          (op) => op != existingInverseOp
+        );
+      } else {
+        state.pendingParticipantOps.push(newOp);
+      }
+    },
+    participantOpsClear: (state) => {
+      state.pendingParticipantOps = [];
+    },
+    participantOpsExecuted: (state) => {
+      while (state.pendingParticipantOps.length) {
+        const op = state.pendingParticipantOps.pop();
+        if (!op) {
+          return;
+        }
+
+        const eventItem = state.eventList.items.find(
+          (item) => item.id == op.eventId
+        );
+        if (eventItem) {
+          eventItem.isStale = true;
+        }
+
+        const participantsList = state.participantsByEventId[op.eventId];
+        if (participantsList) {
+          participantsList.isStale = true;
+        }
+
+        const statsItem = state.statsByEventId[op.eventId];
+        if (statsItem) {
+          statsItem.isStale = true;
+        }
+      }
+    },
     participantUpdated: (
       state,
       action: PayloadAction<[number, ZetkinEventParticipant]>
@@ -664,6 +712,9 @@ export const {
   locationsLoaded,
   participantAdded,
   participantDeleted,
+  participantOpAdd,
+  participantOpsClear,
+  participantOpsExecuted,
   participantUpdated,
   participantsLoad,
   participantsLoaded,
