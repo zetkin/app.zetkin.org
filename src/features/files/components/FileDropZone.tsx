@@ -40,7 +40,11 @@ const FileDropZone: FC<Props> = ({ children, onUploadComplete, orgId }) => {
         </DropZoneContainer>
       )}
       {!isUploading && (
-        <Box height="100%" {...getDropZoneProps()}>
+        <Box
+          data-testid="FileDropZone-dropZone"
+          height="100%"
+          {...getDropZoneProps()}
+        >
           <input {...getInputProps()} />
           {isDraggingOver && (
             <DropZoneContainer state="accepting">

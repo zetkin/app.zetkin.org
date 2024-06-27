@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIPersonAvatar from '.';
 
 export default {
   component: ZUIPersonAvatar,
   title: 'Atoms/ZUIPersonAvatar',
-} as ComponentMeta<typeof ZUIPersonAvatar>;
+} as Meta<typeof ZUIPersonAvatar>;
 
-const Template: ComponentStory<typeof ZUIPersonAvatar> = (args) => {
+const Template: StoryFn<typeof ZUIPersonAvatar> = (args) => {
   return <ZUIPersonAvatar orgId={args.orgId} personId={args.personId} />;
 };
 

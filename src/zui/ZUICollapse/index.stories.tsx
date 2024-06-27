@@ -1,12 +1,12 @@
 import ZUICollapse from '.';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 export default {
   component: ZUICollapse,
   title: 'Atoms/ZUICollapse',
-} as ComponentMeta<typeof ZUICollapse>;
+} as Meta<typeof ZUICollapse>;
 
-const Template: ComponentStory<typeof ZUICollapse> = (args) => (
+const Template: StoryFn<typeof ZUICollapse> = (args) => (
   <ZUICollapse collapsedSize={args.collapsedSize}>{args.children}</ZUICollapse>
 );
 

@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import ZUIJourneyInstanceCard from '.';
@@ -6,9 +6,9 @@ import ZUIJourneyInstanceCard from '.';
 export default {
   component: ZUIJourneyInstanceCard,
   title: 'Molecules/ZUIJourneyInstanceCard',
-} as ComponentMeta<typeof ZUIJourneyInstanceCard>;
+} as Meta<typeof ZUIJourneyInstanceCard>;
 
-const Template: ComponentStory<typeof ZUIJourneyInstanceCard> = (args) => (
+const Template: StoryFn<typeof ZUIJourneyInstanceCard> = (args) => (
   <ZUIJourneyInstanceCard instance={args.instance} orgId={1} />
 );
 

@@ -109,6 +109,9 @@ export default makeMessages('zui', {
       noEmpty: m('This cannot be empty'),
     },
   },
+  editableImage: {
+    add: m('Click to add image'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
@@ -117,9 +120,6 @@ export default makeMessages('zui', {
       collapse: m('Collapse'),
       expand: m('Expand'),
     },
-  },
-  imageSelectDialog: {
-    instructions: m('Drag and drop an image file, or click to select'),
   },
   lists: {
     showMore: m('Show more...'),

@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import mockOrganization from 'utils/testing/mocks/mockOrganization';
@@ -7,9 +7,9 @@ import ZUIJourneyInstanceItem from '.';
 export default {
   component: ZUIJourneyInstanceItem,
   title: 'Atoms/ZUIJourneyInstanceItem',
-} as ComponentMeta<typeof ZUIJourneyInstanceItem>;
+} as Meta<typeof ZUIJourneyInstanceItem>;
 
-const Template: ComponentStory<typeof ZUIJourneyInstanceItem> = (args) => (
+const Template: StoryFn<typeof ZUIJourneyInstanceItem> = (args) => (
   <ZUIJourneyInstanceItem instance={args.instance} orgId={args.orgId} />
 );
 
