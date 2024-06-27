@@ -981,4 +981,105 @@ describe('prepareImportOperations()', () => {
       },
     ]);
   });
+
+  it('correctly parses and converts phone numbers with obvious formatting errors', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          dateFormat: 'se',
+          field: 'phone',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['+46732789887', 1],
+        },
+        {
+          data: ['46732789887', 2],
+        },
+        {
+          data: ['0046732789887', 3],
+        },
+        {
+          data: ['-460732789887', 4],
+        },
+        {
+          data: ['46732-78-98-87', 5],
+        },
+        {
+          data: ['460732789887', 6],
+        },
+        {
+          data: ['0732789887', 7],
+        },
+        {
+          data: ['+46 73278 98 87‬', 8],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData, countryCode);
+    expect(result).toEqual([
+      {
+        data: {
+          phone: '+46732789887',
+          id: 1,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          phone: '+46732789887',
+          id: 2,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          phone: '+46732789887',
+          id: 3,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          phone: '+46732789887',
+          id: 4,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          phone: '+46732789887',
+          id: 5,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          phone: '+46732789887',
+          id: 6,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          phone: '+46732789887',
+          id: 7,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          phone: '+46732789887',
+          id: 8,
+        },
+        op: 'person.import',
+      },
+    ]);
+  });
 });
