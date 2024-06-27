@@ -541,5 +541,4 @@ describe('predictProblem()', () => {
     const result = predictProblems(sheet, 'SE', customFields);
     expect(result).toEqual([]);
   });
-
 });

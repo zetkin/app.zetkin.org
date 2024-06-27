@@ -111,7 +111,7 @@ export function predictProblems(
             ) {
               accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
-              const phoneValue = value.replaceAll(/[^\d\+]/g, '');
+              const phoneValue = value.toString().replaceAll(/[^+\d]/g, '');
               if (!isValidPhoneNumber(phoneValue.toString(), country)) {
                 accumulateFieldProblem(column.field, rowIndex);
               }

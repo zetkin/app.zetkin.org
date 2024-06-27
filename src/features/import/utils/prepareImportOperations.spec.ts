@@ -986,7 +986,6 @@ describe('prepareImportOperations()', () => {
     const configData: Sheet = {
       columns: [
         {
-          dateFormat: 'se',
           field: 'phone',
           kind: ColumnKind.FIELD,
           selected: true,
@@ -1026,57 +1025,57 @@ describe('prepareImportOperations()', () => {
     expect(result).toEqual([
       {
         data: {
-          phone: '+46732789887',
           id: 1,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
       {
         data: {
-          phone: '+46732789887',
           id: 2,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
       {
         data: {
-          phone: '+46732789887',
           id: 3,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
       {
         data: {
-          phone: '+46732789887',
           id: 4,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
       {
         data: {
-          phone: '+46732789887',
           id: 5,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
       {
         data: {
-          phone: '+46732789887',
           id: 6,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
       {
         data: {
-          phone: '+46732789887',
           id: 7,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
       {
         data: {
-          phone: '+46732789887',
           id: 8,
+          phone: '+46732789887',
         },
         op: 'person.import',
       },
