@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Box, Theme, Tooltip, Typography, useTheme } from '@mui/material';
+import { Box, Theme, Tooltip, Typography } from '@mui/material';
 import { Group, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
 import { EventState } from 'features/events/hooks/useEventState';
@@ -67,7 +67,6 @@ type Props = {
 const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
   const event = useEvent(orgId, eventId)?.data;
   const messages = useMessages(messageIds);
-  const theme = useTheme();
   const { numParticipantsAvailable, numParticipantsRequired } =
     useEventParticipantsWithChanges(orgId, eventId);
 
@@ -107,7 +106,7 @@ const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
           <Box className={classes.dot} />
         </Tooltip>
         <Box>
-          <Typography color={theme.palette.text.primary}>{title}</Typography>
+          <Typography>{title}</Typography>
           <Box>
             <Typography variant="body2">
               <ZUIIconLabelRow

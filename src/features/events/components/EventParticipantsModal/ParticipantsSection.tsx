@@ -22,7 +22,7 @@ const ParticipantsSection: FC<Props> = ({ event }) => {
           <Msg id={messageIds.participantsModal.participants.headers.booked} />
         </Typography>
         {!bookedParticipants.length && (
-          <Typography variant="body1">
+          <Typography>
             <Msg id={messageIds.participantsModal.emptyStates.booked} />
           </Typography>
         )}
@@ -40,7 +40,7 @@ const ParticipantsSection: FC<Props> = ({ event }) => {
           <Msg id={messageIds.participantsModal.participants.headers.pending} />
         </Typography>
         {!pendingParticipants.length && (
-          <Typography variant="body1">
+          <Typography>
             <Msg id={messageIds.participantsModal.emptyStates.pending} />
           </Typography>
         )}
