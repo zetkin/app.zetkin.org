@@ -43,6 +43,36 @@ describe('Moving event participants', () => {
     ]);
   });
 
+  it('does not include cancelled participants', () => {
+    const participant = mockEventParticipant({
+      cancelled: '1857-07-05T13:37:00.000Z',
+      id: 1001,
+    });
+    const initialState = mockState();
+    initialState.events.eventList.items.push(
+      remoteItem(11, {
+        data: mockEvent({ id: 11 }),
+        loaded: new Date().toISOString(),
+      })
+    );
+    initialState.events.participantsByEventId[11] = remoteList([participant]);
+
+    initialState.events.participantsByEventId[11].loaded =
+      new Date().toISOString();
+
+    const store = createStore(initialState);
+
+    const { result } = renderHook(
+      () => useEventParticipantsWithChanges(1, 11),
+      {
+        wrapper: makeWrapper(store),
+      }
+    );
+
+    expect(result.current.numParticipantsAvailable).toEqual(0);
+    expect(result.current.bookedParticipants).toEqual([]);
+  });
+
   it('returns participant as moved away after moving them', () => {
     const participant = mockEventParticipant({ id: 1001 });
     const initialState = mockState();

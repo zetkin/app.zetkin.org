@@ -57,6 +57,10 @@ export default function useEventParticipantsWithChanges(
     });
 
     participantsFuture.data.forEach((person) => {
+      if (person.cancelled) {
+        return;
+      }
+
       const movedAway = pendingOps.some(
         (op) =>
           op.eventId == eventId &&
