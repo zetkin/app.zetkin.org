@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUITimeSpan from '.';
 
 export default {
   component: ZUITimeSpan,
   title: 'ZUITimeSpan',
-} as ComponentMeta<typeof ZUITimeSpan>;
+} as Meta<typeof ZUITimeSpan>;
 
-const Template: ComponentStory<typeof ZUITimeSpan> = (args) => {
+const Template: StoryFn<typeof ZUITimeSpan> = (args) => {
   return <ZUITimeSpan end={args.end} start={args.start} />;
 };
 

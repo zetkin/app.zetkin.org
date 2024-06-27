@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIRelativeTime from '.';
 
 export default {
   component: ZUIRelativeTime,
   title: 'Atoms/ZUIRelativeTime',
-} as ComponentMeta<typeof ZUIRelativeTime>;
+} as Meta<typeof ZUIRelativeTime>;
 
-const Template: ComponentStory<typeof ZUIRelativeTime> = (args) => (
+const Template: StoryFn<typeof ZUIRelativeTime> = (args) => (
   <ZUIRelativeTime
     convertToLocal={args.convertToLocal}
     datetime={args.datetime}

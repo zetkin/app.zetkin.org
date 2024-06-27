@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import mockFile from 'utils/testing/mocks/mockFile';
 import ZUIFileChip from '.';
@@ -6,9 +6,9 @@ import ZUIFileChip from '.';
 export default {
   component: ZUIFileChip,
   title: 'Atoms/ZUIFileChip',
-} as ComponentMeta<typeof ZUIFileChip>;
+} as Meta<typeof ZUIFileChip>;
 
-const Template: ComponentStory<typeof ZUIFileChip> = (args) => (
+const Template: StoryFn<typeof ZUIFileChip> = (args) => (
   <ZUIFileChip
     loading={args.loading}
     name={args.name}

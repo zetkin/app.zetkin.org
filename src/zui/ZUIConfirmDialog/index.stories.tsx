@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIConfirmDialog from '.';
 
 export default {
   component: ZUIConfirmDialog,
   title: 'Atoms/ZetkinConfirmDialog',
-} as ComponentMeta<typeof ZUIConfirmDialog>;
+} as Meta<typeof ZUIConfirmDialog>;
 
-const Template: ComponentStory<typeof ZUIConfirmDialog> = (args) => (
+const Template: StoryFn<typeof ZUIConfirmDialog> = (args) => (
   <ZUIConfirmDialog
     onCancel={args.onCancel}
     onSubmit={args.onSubmit}

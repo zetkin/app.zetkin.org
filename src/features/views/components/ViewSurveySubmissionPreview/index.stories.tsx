@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import ViewSurveySubmissionPreview from '.';
@@ -7,9 +7,9 @@ import ViewSurveySubmissionPreview from '.';
 export default {
   component: ViewSurveySubmissionPreview,
   title: 'Views/ViewSurveySubmissionPreview',
-} as ComponentMeta<typeof ViewSurveySubmissionPreview>;
+} as Meta<typeof ViewSurveySubmissionPreview>;
 
-const Template: ComponentStory<typeof ViewSurveySubmissionPreview> = (args) => {
+const Template: StoryFn<typeof ViewSurveySubmissionPreview> = (args) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   return (
     <AccessLevelProvider>

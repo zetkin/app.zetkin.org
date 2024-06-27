@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import {
   MULTIPART,
   MULTIPART_WITH_REPLY,
@@ -11,9 +11,9 @@ import PrettyEmail from './PrettyEmail';
 export default {
   component: PrettyEmail,
   title: 'Organisms/Timeline/Updates/PrettyEmail',
-} as ComponentMeta<typeof PrettyEmail>;
+} as Meta<typeof PrettyEmail>;
 
-const Template: ComponentStory<typeof PrettyEmail> = (args) => (
+const Template: StoryFn<typeof PrettyEmail> = (args) => (
   <PrettyEmail emailStr={args.emailStr} />
 );
 
