@@ -39,8 +39,14 @@ export const CopyIcon = ({
 const ZUIInlineCopyToClipboard: React.FunctionComponent<{
   alwaysShowIcon?: boolean;
   children: React.ReactNode;
+  clickableChildren?: boolean;
   copyText: string | number | boolean;
-}> = ({ alwaysShowIcon = false, children, copyText }) => {
+}> = ({
+  alwaysShowIcon = false,
+  children,
+  clickableChildren = false,
+  copyText,
+}) => {
   const messages = useMessages(messageIds);
   const [hover, setHover] = useState<boolean>(false);
 
@@ -64,7 +70,9 @@ const ZUIInlineCopyToClipboard: React.FunctionComponent<{
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <Box>{children}</Box>
+      <Box onClick={clickableChildren ? handleClick : undefined}>
+        {children}
+      </Box>
       <Fade in={hover || alwaysShowIcon}>
         <Box
           alignItems="center"
@@ -73,7 +81,7 @@ const ZUIInlineCopyToClipboard: React.FunctionComponent<{
           height={40}
           position="relative"
         >
-          <IconButton onClick={() => handleClick()}>
+          <IconButton onClick={handleClick}>
             <CopyIcon />
           </IconButton>
         </Box>
