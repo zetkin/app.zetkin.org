@@ -1,11 +1,11 @@
 import { Meta, StoryFn } from '@storybook/react';
+
 import {
   MULTIPART,
   MULTIPART_WITH_REPLY,
   PLAINTEXT,
   PLAINTEXT_MULTI_CC,
 } from 'utils/testing/mocks/email';
-
 import PrettyEmail from './PrettyEmail';
 
 export default {

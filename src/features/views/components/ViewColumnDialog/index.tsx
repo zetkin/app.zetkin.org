@@ -9,7 +9,6 @@ import {
   SelectedViewColumn,
   ZetkinViewColumn,
 } from 'features/views/components/types';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ViewColumnDialogProps {

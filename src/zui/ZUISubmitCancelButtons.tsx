@@ -1,7 +1,6 @@
 import { Box, Button, ButtonProps } from '@mui/material';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from './l10n/messageIds';
 
 const ZUISubmitCancelButtons: React.FunctionComponent<{

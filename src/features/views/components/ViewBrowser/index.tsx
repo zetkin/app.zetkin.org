@@ -27,7 +27,6 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import useViewBrowserItems, {
   ViewBrowserItem,
 } from 'features/views/hooks/useViewBrowserItems';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ViewBrowserProps {

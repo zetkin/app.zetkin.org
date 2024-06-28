@@ -2,15 +2,14 @@ import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Avatar, Box, Button, Tooltip } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { Delete, Edit } from '@mui/icons-material';
 
 import { CallAssignmentCaller } from '../apiTypes';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
-import { Delete, Edit } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({

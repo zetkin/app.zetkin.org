@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import test from '../../../../fixtures/next';
 
+import test from '../../../../fixtures/next';
 import ActivistTag from '../../../../mockData/orgs/KPD/tags/Activist';
 import ClarasOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';

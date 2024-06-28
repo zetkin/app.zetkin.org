@@ -2,7 +2,6 @@ import { expect } from '@playwright/test';
 import fs from 'fs/promises';
 
 import test from '../../../../fixtures/next';
-
 import KPD from '../../../../mockData/orgs/KPD';
 import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import SpeakToFriend from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';

@@ -23,7 +23,6 @@ import useViewBrowserItems, {
   ViewBrowserItem,
   ViewBrowserViewItem,
 } from '../hooks/useViewBrowserItems';
-
 import messageIds from '../l10n/messageIds';
 
 const ViewJumpMenu: FunctionComponent = () => {

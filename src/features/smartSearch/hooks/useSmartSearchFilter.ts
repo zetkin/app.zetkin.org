@@ -1,4 +1,6 @@
 import { Dispatch } from 'react';
+import { SetStateAction, useState } from 'react';
+
 import {
   DefaultFilterConfig,
   NewSmartSearchFilter,
@@ -6,7 +8,6 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-import { SetStateAction, useState } from 'react';
 
 interface UseSmartSearchFilter<T> {
   filter: ZetkinSmartSearchFilter<T> | SmartSearchFilterWithId<T>;

@@ -3,7 +3,6 @@ import { TextField } from 'mui-rff';
 
 import { DEFAULT_REASSIGN_INTERVAL, TASK_DETAILS_FIELDS } from '../constants';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 
 const ReassignFields: React.FunctionComponent = () => {

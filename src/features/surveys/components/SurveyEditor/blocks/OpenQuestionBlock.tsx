@@ -16,7 +16,6 @@ import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/surveys/l10n/messageIds';
 
 interface OpenQuestionBlockProps {

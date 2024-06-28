@@ -9,7 +9,6 @@ import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 type SubmissionChartCardProps = {

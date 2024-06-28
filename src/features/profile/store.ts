@@ -1,5 +1,6 @@
-import { PersonOrganization } from 'utils/organize/people';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { PersonOrganization } from 'utils/organize/people';
 import {
   RemoteItem,
   remoteItem,

@@ -56,7 +56,6 @@ import {
   ZetkinViewColumn,
   ZetkinViewRow,
 } from 'utils/types/zetkin';
-
 import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';

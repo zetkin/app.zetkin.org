@@ -21,7 +21,6 @@ import { useMessages } from 'core/i18n';
 import { usePersonSelect } from './ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
-
 import messageIds from './l10n/messageIds';
 
 const ZUIPersonGridEditCell: FC<{

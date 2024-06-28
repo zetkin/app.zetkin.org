@@ -7,7 +7,6 @@ import ZUIEditableImage from 'zui/ZUIEditableImage';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUISection from 'zui/ZUISection';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 interface TaskPreviewSectionProps {

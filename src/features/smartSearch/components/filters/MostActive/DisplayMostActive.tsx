@@ -4,10 +4,8 @@ import {
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 const localMessageIds = messageIds.filters.mostActive;

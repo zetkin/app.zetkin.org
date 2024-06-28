@@ -1,7 +1,8 @@
+import { NextRouter, useRouter } from 'next/router';
+
 import { BreadcrumbElement } from 'pages/api/breadcrumbs';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { crumbsLoad, crumbsLoaded } from '../store';
-import { NextRouter, useRouter } from 'next/router';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useBreadcrumbElements() {

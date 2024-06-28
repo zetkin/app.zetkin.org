@@ -1,5 +1,6 @@
-import { ParticipantOp } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { ParticipantOp } from './types';
 import {
   RemoteItem,
   remoteItem,

@@ -1,7 +1,8 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { headers } from 'next/headers';
+
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
-import { headers } from 'next/headers';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 

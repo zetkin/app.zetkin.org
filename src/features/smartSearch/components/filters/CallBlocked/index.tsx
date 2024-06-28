@@ -12,7 +12,6 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import { useNumericRouteParams } from 'core/hooks';

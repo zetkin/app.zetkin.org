@@ -8,7 +8,6 @@ import { useMessages } from 'core/i18n';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
-
 import messageIds from '../l10n/messageIds';
 
 interface CallerConfigDialogProps {

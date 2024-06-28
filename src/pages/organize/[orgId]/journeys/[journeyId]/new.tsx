@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Chip, Grid, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import DefaultLayout from 'utils/layout/DefaultLayout';
@@ -13,7 +14,6 @@ import { scaffold } from 'utils/next';
 import { useApiClient } from 'core/hooks';
 import useCreateJourneyInstance from 'features/journeys/hooks/useCreateJourneyInstance';
 import useJourney from 'features/journeys/hooks/useJourney';
-import { useRouter } from 'next/router';
 import ZUIAutoTextArea from 'zui/ZUIAutoTextArea';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';

@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { isEqual } from 'lodash';
 import { makeStyles } from '@mui/styles';
-import { markdownToSlate } from './utils/markdownToSlate';
 import { withHistory } from 'slate-history';
 import { Box, ClickAwayListener, Collapse } from '@mui/material';
 import {
@@ -28,6 +27,7 @@ import React, {
   useState,
 } from 'react';
 
+import { markdownToSlate } from './utils/markdownToSlate';
 import './types';
 import { FileUpload } from 'features/files/hooks/useFileUploads';
 import TextElement from './TextElement';

@@ -1,7 +1,8 @@
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
+
 import getUniqueTags from './getUniqueTags';
 import parseDate from './parseDate';
 import { CellData, ColumnKind, Sheet } from './types';
-import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;

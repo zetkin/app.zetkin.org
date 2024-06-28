@@ -10,7 +10,6 @@ import { Msg } from 'core/i18n';
 import theme from 'theme';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ELEMENT_TYPE, RESPONSE_TYPE } from 'utils/types/zetkin';
-
 import messageIds from 'features/surveys/l10n/messageIds';
 
 type AddBlocksProps = {

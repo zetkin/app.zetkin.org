@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import CampaignsActionButtons from '../components/CampaignsActionButtons';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 interface AllCampaignsLayoutProps {

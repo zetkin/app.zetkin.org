@@ -16,7 +16,6 @@ import {
   FILTER_TYPE,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import QueryOverviewChip from './QueryOverviewChip';
 import QueryOverviewFilterListItem from './QueryOverviewFilterListItem';

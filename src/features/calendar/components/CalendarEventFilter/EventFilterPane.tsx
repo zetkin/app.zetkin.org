@@ -1,3 +1,5 @@
+import { Box, Button } from '@mui/material';
+
 import CheckboxFilterList from './CheckboxFilterList';
 import EventInputFilter from './EventInputFilter';
 import messageIds from 'features/calendar/l10n/messageIds';
@@ -12,7 +14,6 @@ import {
   filterUpdated,
   STATE_FILTER_OPTIONS,
 } from 'features/events/store';
-import { Box, Button } from '@mui/material';
 import { Msg, useMessages } from 'core/i18n';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 

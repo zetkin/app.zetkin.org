@@ -4,7 +4,6 @@ import { Box, CircularProgress } from '@mui/material';
 
 import { CallAssignmentState } from '../hooks/useCallAssignmentState';
 import { Msg } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 interface CallAssignmentStatusChipProps {

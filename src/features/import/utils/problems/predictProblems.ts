@@ -1,8 +1,9 @@
 import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
+import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
+
 import parseDate from '../parseDate';
 import { ColumnKind, Sheet } from '../types';
-import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 import {
   ImportFieldProblem,

@@ -1,7 +1,7 @@
-import { createApiFetch } from 'utils/apiFetch';
-import makeSearchRequest from 'utils/api/makeSearchRequest';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { createApiFetch } from 'utils/apiFetch';
+import makeSearchRequest from 'utils/api/makeSearchRequest';
 import { SEARCH_DATA_TYPE } from 'features/search/components/types';
 
 /**

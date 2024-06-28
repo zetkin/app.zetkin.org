@@ -13,9 +13,9 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { PersonAdd } from '@mui/icons-material';
 
 import messageIds from './l10n/messageIds';
-import { PersonAdd } from '@mui/icons-material';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonSearch from 'features/profile/hooks/usePersonSearch';
 import { ZetkinPerson } from 'utils/types/zetkin';

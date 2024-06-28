@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import { EmailState } from '../hooks/useEmailState';
 import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 
+import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 

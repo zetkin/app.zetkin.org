@@ -6,7 +6,6 @@ import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstance } from 'zui/ZUITimeline/types';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 interface Props {

@@ -18,7 +18,6 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.callHistory;

@@ -6,7 +6,6 @@ import {
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedActivityTitle from './UnderlinedActivityTitle';
 import UnderlinedCampaignTitle from './UnderlinedCampaignTitle';

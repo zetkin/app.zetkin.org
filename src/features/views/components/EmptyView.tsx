@@ -14,7 +14,6 @@ import UseViewDataTableMutations from '../hooks/useViewDataTableMutations';
 import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinView } from 'features/views/components/types';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 import zuiMessageIds from 'zui/l10n/messageIds';
 

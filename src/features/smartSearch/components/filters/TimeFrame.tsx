@@ -8,7 +8,6 @@ import { Msg } from 'core/i18n';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import { TIME_FRAME } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledDatePicker from '../inputs/StyledDatePicker';
 

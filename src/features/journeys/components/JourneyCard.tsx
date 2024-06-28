@@ -4,7 +4,6 @@ import { Box, Card, CardActionArea, Link, Typography } from '@mui/material';
 
 import { Msg } from 'core/i18n';
 import { ZetkinJourney } from 'utils/types/zetkin';
-
 import messageIds from '../l10n/messageIds';
 
 interface JourneyCardProps {

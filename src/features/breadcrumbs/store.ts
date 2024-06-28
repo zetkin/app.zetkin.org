@@ -1,5 +1,6 @@
-import { BreadcrumbElement } from 'pages/api/breadcrumbs';
 import { Action, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { BreadcrumbElement } from 'pages/api/breadcrumbs';
 import { remoteItem, RemoteItem } from 'utils/storeUtils';
 
 type BreadcrumbItem = {

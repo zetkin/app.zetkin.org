@@ -1,4 +1,3 @@
-import theme from 'theme';
 import {
   Alert,
   AlertTitle,
@@ -12,6 +11,7 @@ import {
 import { FC, useState } from 'react';
 import React, { useEffect } from 'react';
 
+import theme from 'theme';
 import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
 import { PotentialDuplicate } from '../store';

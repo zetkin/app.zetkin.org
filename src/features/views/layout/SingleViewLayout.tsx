@@ -2,8 +2,9 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import { Box, Button, Theme } from '@mui/material';
 import { FunctionComponent, useContext, useState } from 'react';
-
 import NProgress from 'nprogress';
+import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
+
 import ShareViewDialog from '../components/ShareViewDialog';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
@@ -20,9 +21,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useView from '../hooks/useView';

@@ -4,7 +4,6 @@ import { Box, Typography } from '@mui/material';
 import TagChip from '../TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
-
 import messageIds from '../../../../l10n/messageIds';
 import Msg from 'core/i18n/Msg';
 

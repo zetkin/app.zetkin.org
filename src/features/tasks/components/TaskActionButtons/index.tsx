@@ -11,7 +11,6 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 import { ZetkinTaskRequestBody } from '../types';
 

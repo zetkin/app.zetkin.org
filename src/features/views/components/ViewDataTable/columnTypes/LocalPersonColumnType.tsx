@@ -19,7 +19,6 @@ import {
   ZetkinViewColumn,
 } from '../../types';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
-
 import messageIds from 'features/views/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 

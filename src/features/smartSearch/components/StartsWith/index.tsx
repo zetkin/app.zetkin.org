@@ -3,7 +3,6 @@ import { FormEvent, useState } from 'react';
 
 import FilterForm from '../FilterForm';
 import StyledSelect from 'features/smartSearch/components/inputs/StyledSelect';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 const localMessageIds = messageIds.filters.all;

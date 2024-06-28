@@ -2,7 +2,6 @@ import { QuizOutlined } from '@mui/icons-material';
 import { Box, Button, Link, Typography } from '@mui/material';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 interface EmptyOverviewProps {

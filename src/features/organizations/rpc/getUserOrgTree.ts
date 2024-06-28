@@ -1,8 +1,9 @@
+import { z } from 'zod';
+
 import generateTreeData from '../utils/generateTreeData';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import { TreeItemData } from '../types';
-import { z } from 'zod';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 const paramsSchema = z.object({});

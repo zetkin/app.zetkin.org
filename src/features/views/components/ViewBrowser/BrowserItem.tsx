@@ -8,9 +8,7 @@ import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutations';
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
-
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface BrowserItemProps {

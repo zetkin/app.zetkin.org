@@ -2,7 +2,6 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 
 import { Msg } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
-
 import messageIds from '../l10n/messageIds';
 
 const JourneyInstanceOutcome = ({

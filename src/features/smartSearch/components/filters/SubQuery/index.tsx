@@ -19,7 +19,6 @@ import {
   ZetkinQuery,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 
 const localMessageIds = messageIds.filters.subQuery;

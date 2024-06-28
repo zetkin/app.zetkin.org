@@ -1,5 +1,6 @@
-import { EnvContext } from 'core/env/EnvContext';
 import { useContext } from 'react';
+
+import { EnvContext } from 'core/env/EnvContext';
 
 export default function useEnv() {
   const env = useContext(EnvContext);

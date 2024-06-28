@@ -1,8 +1,8 @@
 import { useState } from '@storybook/preview-api';
 import { Box, Button } from '@mui/material';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIStackedStatusBar from '.';
-import { Meta, StoryFn } from '@storybook/react';
 
 export default {
   component: ZUIStackedStatusBar,
