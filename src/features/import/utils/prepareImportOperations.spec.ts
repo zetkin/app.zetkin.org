@@ -1016,6 +1016,7 @@ describe('prepareImportOperations()', () => {
           data: ['0732789887', 7],
         },
         {
+          // Phone number contains U202C, a Unicode control character, to validate that it is stripped.
           data: ['+46 73278 98 87‬', 8],
         },
       ],
