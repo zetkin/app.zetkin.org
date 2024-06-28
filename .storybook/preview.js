@@ -27,20 +27,31 @@ const I18nProvider = (props) => {
   );
 };
 
-function mockFetch(path, init) {
+async function mockFetch(path, init) {
   if (path === '/api/orgs/1/people/1' && init === undefined) {
-    return Promise.resolve(
-      new Response(
-        JSON.stringify({
-          data: mockPerson(),
-        })
-      )
+    return new Response(
+      JSON.stringify({
+        data: mockPerson(),
+      })
     );
-  } else if (path === '/api/orgs/1/people/1/tags' && init === undefined) {
-    return Promise.resolve(new Response('[]'));
-  } else {
-    return Promise.reject({ error: 'unmocked request', path, init });
   }
+
+  if (path === '/api/orgs/1/people/1/tags' && init === undefined) {
+    return new Response('[]');
+  }
+
+  if (path === '/api/orgs/1/people/fields' && init === undefined) {
+    return new Response(
+      JSON.stringify({
+        data: [],
+      })
+    );
+  }
+
+  throw new Error(
+    `unmocked request to path: '${path}'
+    with init: ${JSON.stringify(init)}`
+  );
 }
 
 class MockApiClient extends FetchApiClient {
