@@ -534,6 +534,7 @@ describe('predictProblem()', () => {
       firstRowIsHeaders: false,
       rows: [
         {
+          // Phone number contains U202C, a Unicode control character, to check that it is stripped before validating.
           data: ['+46 30777 88 68‬', 10],
         },
       ],
