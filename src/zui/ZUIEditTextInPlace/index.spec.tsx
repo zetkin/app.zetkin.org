@@ -1,10 +1,10 @@
 import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { act, render } from 'utils/testing';
 import ZUIEditTextinPlace, {
   ZUIEditTextinPlaceProps,
 } from 'zui/ZUIEditTextInPlace';
-
 import messageIds from 'zui/l10n/messageIds';
 
 const props: ZUIEditTextinPlaceProps = {

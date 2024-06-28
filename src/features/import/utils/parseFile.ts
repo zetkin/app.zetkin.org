@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx';
 import { parse } from 'papaparse';
+
 import { CellData, ImportedFile, Row } from './types';
 
 export async function parseCSVFile(file: File): Promise<ImportedFile> {

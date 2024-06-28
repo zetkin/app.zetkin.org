@@ -19,7 +19,6 @@ import useFilterUpdates, {
   UPDATE_TYPE_FILTER_OPTIONS,
 } from './useFilterUpdates';
 import { ZetkinNote, ZetkinNoteBody } from 'utils/types/zetkin';
-
 import messageIds from './l10n/messageIds';
 
 export interface ZUITimelineProps {

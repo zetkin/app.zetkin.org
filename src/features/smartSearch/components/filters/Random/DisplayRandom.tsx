@@ -1,11 +1,9 @@
 import { getQuantityWithConfig } from 'features/smartSearch/components/utils';
-
 import {
   OPERATION,
   RandomFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';

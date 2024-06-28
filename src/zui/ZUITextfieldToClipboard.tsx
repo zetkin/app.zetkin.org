@@ -3,7 +3,6 @@ import { Box, Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from './l10n/messageIds';
 
 const ZUITextfieldToClipboard: React.FunctionComponent<{

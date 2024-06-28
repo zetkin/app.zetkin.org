@@ -7,7 +7,6 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import ViewBrowser from 'features/views/components/ViewBrowser';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 const scaffoldOptions = {

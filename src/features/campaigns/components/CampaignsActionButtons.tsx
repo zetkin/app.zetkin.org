@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Button } from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 import useCreateCampaign from '../hooks/useCreateCampaign';
 import { useNumericRouteParams } from 'core/hooks';

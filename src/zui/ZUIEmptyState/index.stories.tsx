@@ -1,5 +1,6 @@
-import ZUIEmptyState from '.';
 import { Meta, StoryFn } from '@storybook/react';
+
+import ZUIEmptyState from '.';
 
 export default {
   component: ZUIEmptyState,

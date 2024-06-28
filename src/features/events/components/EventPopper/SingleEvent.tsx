@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { useMessages } from 'core/i18n';
 import {
   AccessTime,
   ArrowForward,
@@ -13,6 +12,7 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
+import { useMessages } from 'core/i18n';
 import { eventsDeselected } from 'features/events/store';
 import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';

@@ -1,6 +1,6 @@
-import { Msg } from 'core/i18n';
 import { Box, Typography, useTheme } from '@mui/material';
 
+import { Msg } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
 
 type CalendarWeekNumberProps = {

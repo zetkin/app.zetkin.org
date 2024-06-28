@@ -8,7 +8,6 @@ import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstanceMilestone } from 'zui/ZUITimeline/types';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-
 import messageIds from '../l10n/messageIds';
 
 interface Props {

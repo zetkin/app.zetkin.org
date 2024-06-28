@@ -1,6 +1,7 @@
+import { useState } from 'react';
+
 import { useNumericRouteParams } from 'core/hooks';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import { useState } from 'react';
 
 export default function useEmailSettings(initialSubject: string) {
   const { orgId } = useNumericRouteParams();

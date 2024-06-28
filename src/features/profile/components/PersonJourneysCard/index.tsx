@@ -6,7 +6,6 @@ import { Button, List, ListItem, Menu, MenuItem } from '@mui/material';
 import PersonCard from '../PersonCard';
 import ZUIJourneyInstanceItem from 'zui/ZUIJourneyInstanceItem';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/profile/l10n/messageIds';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import usePersonJourneyInstances from 'features/journeys/hooks/usePersonJourneyInstances';

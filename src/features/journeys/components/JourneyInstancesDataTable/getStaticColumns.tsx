@@ -17,7 +17,6 @@ import {
   ZetkinJourneyInstance,
   ZetkinPerson as ZetkinPersonType,
 } from 'utils/types/zetkin';
-
 import messageIds from 'features/journeys/l10n/messageIds';
 
 function makeSelectFilterOperator(

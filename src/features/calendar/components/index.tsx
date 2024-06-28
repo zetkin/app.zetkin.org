@@ -2,6 +2,7 @@ import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { Suspense, useEffect, useState } from 'react';
+import utc from 'dayjs/plugin/utc';
 
 import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
@@ -10,7 +11,6 @@ import CalendarWeekView from './CalendarWeekView';
 import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
 
-import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
 export enum TimeScale {

@@ -2,12 +2,9 @@ import { MenuItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getMatchingWithConfig } from '../utils';
-
 import { MATCHING } from 'features/smartSearch/components/types';
-
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 

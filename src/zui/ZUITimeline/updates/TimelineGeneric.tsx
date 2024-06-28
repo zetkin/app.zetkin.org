@@ -2,7 +2,6 @@ import UpdateContainer from './elements/UpdateContainer';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import { AnyMessage, Msg } from 'core/i18n';
 import { UPDATE_TYPES, ZetkinUpdate } from 'zui/ZUITimeline/types';
-
 import messageIds from '../l10n/messageIds';
 
 interface TimelineGenericProps {

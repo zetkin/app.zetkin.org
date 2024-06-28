@@ -23,7 +23,6 @@ import {
   ZetkinSurveyOption,
   ZetkinSurveyQuestionElement,
 } from 'utils/types/zetkin';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';

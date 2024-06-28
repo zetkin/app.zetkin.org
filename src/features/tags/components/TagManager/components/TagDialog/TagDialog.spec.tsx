@@ -1,10 +1,9 @@
-import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 
+import { render } from 'utils/testing';
 import mockTag from 'utils/testing/mocks/mockTag';
 import { EditTag, NewTag } from '../../types';
-
 import messageIds from 'features/tags/l10n/messageIds';
 import TagDialog from 'features/tags/components/TagManager/components/TagDialog';
 

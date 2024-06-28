@@ -1,5 +1,6 @@
-import ZUISuffixedNumber from '.';
 import { Meta, StoryFn } from '@storybook/react';
+
+import ZUISuffixedNumber from '.';
 
 export default {
   component: ZUISuffixedNumber,

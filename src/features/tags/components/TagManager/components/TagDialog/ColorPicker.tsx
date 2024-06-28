@@ -2,7 +2,6 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import { Box, InputAdornment, TextField } from '@mui/material';
 
 import { DEFAULT_TAG_COLOR, hexRegex, randomColor } from '../../utils';
-
 import messageIds from '../../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 

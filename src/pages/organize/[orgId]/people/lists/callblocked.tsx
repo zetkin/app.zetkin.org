@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { isEqualWith } from 'lodash';
-import { scaffold } from 'utils/next';
 
+import { scaffold } from 'utils/next';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';

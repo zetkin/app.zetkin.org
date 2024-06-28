@@ -1,3 +1,5 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { Call } from 'features/callAssignments/apiTypes';
 import { callUpdated } from 'features/callAssignments/store';
 import columnTypes from './components/ViewDataTable/columnTypes';
@@ -12,7 +14,6 @@ import {
   ZetkinViewFolder,
   ZetkinViewRow,
 } from './components/types';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { tagAssigned, tagUnassigned } from 'features/tags/store';
 import {

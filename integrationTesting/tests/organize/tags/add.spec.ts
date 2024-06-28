@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import test from '../../../fixtures/next';
 
+import test from '../../../fixtures/next';
 import ClaraZetkin from '../../../mockData/orgs/KPD/people/ClaraZetkin';
 import CodingSkillsTag from '../../../mockData/orgs/KPD/tags/Coding';
 import KPD from '../../../mockData/orgs/KPD';

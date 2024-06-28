@@ -21,7 +21,6 @@ import {
 
 import { Msg } from 'core/i18n';
 import ShiftKeyIcon from '../../features/views/components/ViewDataTable/ShiftKeyIcon';
-
 import messageIds from 'zui/l10n/messageIds';
 
 const useStyles = makeStyles({

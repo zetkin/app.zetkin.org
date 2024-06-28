@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { Box } from '@mui/material';
 
 import Ancestors from './Ancestors';
-import { Box } from '@mui/material';
 
 export default {
   component: Ancestors,

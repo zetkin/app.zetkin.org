@@ -1,5 +1,6 @@
-import getEventUrl from '../utils/getEventUrl';
 import { useRouter } from 'next/router';
+
+import getEventUrl from '../utils/getEventUrl';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventPostBody } from './useEventMutations';
 import { eventCreate, eventCreated } from '../store';

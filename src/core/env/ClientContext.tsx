@@ -1,22 +1,23 @@
 'use client';
 
-import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import CssBaseline from '@mui/material/CssBaseline';
-import Environment from 'core/env/Environment';
-import { EnvProvider } from 'core/env/EnvContext';
 import { IntlProvider } from 'react-intl';
-import { MessageList } from 'utils/locale';
 import { Provider as ReduxProvider } from 'react-redux';
-import { store } from 'core/store';
-import { themeWithLocale } from '../../theme';
-import { UserProvider } from './UserContext';
-import { ZetkinUser } from 'utils/types/zetkin';
 import { FC, ReactNode } from 'react';
 import {
   StyledEngineProvider,
   Theme,
   ThemeProvider,
 } from '@mui/material/styles';
+
+import BrowserApiClient from 'core/api/client/BrowserApiClient';
+import Environment from 'core/env/Environment';
+import { EnvProvider } from 'core/env/EnvContext';
+import { MessageList } from 'utils/locale';
+import { store } from 'core/store';
+import { themeWithLocale } from '../../theme';
+import { UserProvider } from './UserContext';
+import { ZetkinUser } from 'utils/types/zetkin';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

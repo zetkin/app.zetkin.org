@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+
 import messageIds from 'features/organizations/l10n/messageIds';
 import NoMenuLayout from 'utils/layout/NoMenuLayout';
 import { PageWithLayout } from 'utils/types';

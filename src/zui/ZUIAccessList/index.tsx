@@ -6,7 +6,6 @@ import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
-
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
 

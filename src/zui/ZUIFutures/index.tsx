@@ -4,7 +4,6 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 
 import { IFuture } from 'core/caching/futures';
 import { Msg } from 'core/i18n';
-
 import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIFuturesProps<G extends Record<string, unknown>> {

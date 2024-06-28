@@ -3,7 +3,6 @@
 import Header from '@editorjs/header';
 //@ts-ignore
 import Paragraph from '@editorjs/paragraph';
-
 import { Box, useTheme } from '@mui/material';
 import EditorJS, {
   EditorConfig,

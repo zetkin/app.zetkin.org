@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { FunctionComponent } from 'react';
-
 import makeStyles from '@mui/styles/makeStyles';
+
 import ZUIOrganizeSidebarNoMenu from 'zui/ZUIOrganizeSidebarNoMenu';
 
 const useStyles = makeStyles((theme) => ({

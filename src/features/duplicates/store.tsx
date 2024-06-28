@@ -1,5 +1,6 @@
-import { ZetkinPerson } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { ZetkinPerson } from 'utils/types/zetkin';
 import { RemoteList, remoteList } from 'utils/storeUtils';
 
 export interface PotentialDuplicate {

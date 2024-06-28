@@ -1,7 +1,6 @@
 import { CollectDemographicsConfig } from 'features/tasks/components/types';
 import TaskProperty from '../TaskProperty';
 import { useMessages } from 'core/i18n';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 
 interface CollectDemographicsDetailsProps {

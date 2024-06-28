@@ -1,6 +1,5 @@
 import { ZetkinTask } from 'utils/types/zetkin';
 import { TASK_TYPE, VisitLinkConfig } from 'features/tasks/components/types';
-
 import KPD from '../../..';
 import ReferendumSignatureCollection from '..';
 

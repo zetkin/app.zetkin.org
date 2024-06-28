@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import { FunctionComponent } from 'react';
 
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-
 import getTaskStatus from 'features/tasks/utils/getTaskStatus';
 import TaskActionButtons from '../components/TaskActionButtons';
 import TaskStatusChip from '../components/TaskStatusChip';
@@ -10,7 +9,6 @@ import TaskStatusText from '../components/TaskStatusText';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useTask from '../hooks/useTask';
-
 import messageIds from '../l10n/messageIds';
 
 interface SingleTaskLayoutProps {

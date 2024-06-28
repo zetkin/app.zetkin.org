@@ -1,5 +1,6 @@
-import { flatOrgs } from './organizations.spec';
 import { isEqual } from 'lodash';
+
+import { flatOrgs } from './organizations.spec';
 import { getConnectedOrganizations, getPersonOrganizations } from './people';
 
 const personConnections = [

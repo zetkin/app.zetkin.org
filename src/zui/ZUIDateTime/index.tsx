@@ -1,5 +1,6 @@
-import convertDateTimeToLocal from './utils/convertDateTimeToLocal';
 import { FormattedDate, FormattedTime } from 'react-intl';
+
+import convertDateTimeToLocal from './utils/convertDateTimeToLocal';
 
 interface ZUIDateTimeProps {
   convertToLocal?: boolean;

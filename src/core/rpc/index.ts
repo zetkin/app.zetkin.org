@@ -1,5 +1,4 @@
 import { RPCRouter } from './router';
-
 import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
 import { copyEmailDef } from 'features/emails/rpc/copyEmail';
 import { copyEventsDef } from 'features/events/rpc/copyEvents';

@@ -1,6 +1,7 @@
+import { z } from 'zod';
+
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
-import { z } from 'zod';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 const paramsSchema = z.object({

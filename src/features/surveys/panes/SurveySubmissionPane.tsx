@@ -1,9 +1,9 @@
-import { EyeClosed } from 'zui/icons/EyeClosed';
 import { makeStyles } from '@mui/styles';
 import { Box, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
 import { FC, ReactNode } from 'react';
 
+import { EyeClosed } from 'zui/icons/EyeClosed';
 import { Msg } from 'core/i18n';
 import PaneHeader from 'utils/panes/PaneHeader';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -12,7 +12,6 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useHydratedSurveySubmission, {
   ELEM_TYPE,
 } from '../hooks/useHydratedSurveySubmission';
-
 import messageIds from '../l10n/messageIds';
 
 interface SurveySubmissionPaneProps {

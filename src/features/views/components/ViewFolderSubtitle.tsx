@@ -8,7 +8,6 @@ import {
 import { useMessages } from 'core/i18n';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
-
 import messageIds from '../l10n/messageIds';
 
 interface ViewFolderSubtitleProps {

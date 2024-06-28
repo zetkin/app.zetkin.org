@@ -4,7 +4,6 @@ import ColumnChoiceCard from '../ColumnChoiceCard';
 import { ColumnChoiceWithKey } from '../choices';
 import { useMessages } from 'core/i18n';
 import { ZetkinViewColumn } from '../../types';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface SearchResultsProps {

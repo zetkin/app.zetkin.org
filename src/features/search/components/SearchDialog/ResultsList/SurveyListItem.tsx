@@ -6,7 +6,6 @@ import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 import getSurveyUrl from 'features/surveys/utils/getSurveyUrl';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinSurvey } from 'utils/types/zetkin';
-
 import messageIds from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 

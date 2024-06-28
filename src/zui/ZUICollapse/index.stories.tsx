@@ -1,5 +1,6 @@
-import ZUICollapse from '.';
 import { Meta, StoryFn } from '@storybook/react';
+
+import ZUICollapse from '.';
 
 export default {
   component: ZUICollapse,
