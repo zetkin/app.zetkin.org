@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { useContext } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import messageIds from 'features/profile/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PersonDetailsCard from 'features/profile/components/PersonDetailsCard';
 import PersonJourneysCard from 'features/profile/components/PersonJourneysCard';
@@ -13,7 +12,6 @@ import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJourneys from 'features/journeys/hooks/useJourneys';
-import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';
 import usePersonTags from 'features/tags/hooks/usePersonTags';
@@ -55,7 +53,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 const PersonProfilePage: PageWithLayout = () => {
   const { orgId, personId } = useNumericRouteParams();
-  const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
   const fieldsFuture = useCustomFields(orgId);
@@ -102,7 +99,6 @@ const PersonProfilePage: PageWithLayout = () => {
                     showSnackbar('error');
                   }
                 }}
-                submitCreateTagLabel={messages.tags.createAndApplyLabel()}
               />
             )}
           </ZUIFuture>
