@@ -12,6 +12,7 @@ export default makeMessages('feat.tags', {
     deleteWarning: m(
       'Are you sure you want to delete this tag? Deleting a tag cannot be undone.'
     ),
+    editTagButton: m('Update'),
     editTitle: m('Edit tag'),
     groupCreatePrompt: m<{ groupName: string }>('Add "{groupName}"'),
     groupLabel: m('Group'),
