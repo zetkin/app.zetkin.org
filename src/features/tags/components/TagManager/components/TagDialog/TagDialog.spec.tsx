@@ -31,10 +31,10 @@ describe('<TagDialog />', () => {
       />
     );
 
-    // Fill in dialog
+    // Fill in dialog with paste, as keyboard is slow with many characters
     const titleField = getByTestId('TagManager-TagDialog-titleField');
     await userEvent.click(titleField);
-    await userEvent.keyboard('Spongeworthy');
+    await userEvent.paste('Spongeworthy');
 
     const submit = getByTestId('SubmitCancelButtons-submitButton');
     await userEvent.click(submit);
@@ -61,14 +61,14 @@ describe('<TagDialog />', () => {
       />
     );
 
-    // Fill in dialog
+    // Fill in dialog with paste, as keyboard is slow with many characters
     const titleField = getByTestId('TagManager-TagDialog-titleField');
     await userEvent.click(titleField);
-    await userEvent.keyboard('Tag Title');
+    await userEvent.paste('Tag Title');
 
     const groupField = getByTestId('TagManager-TagDialog-tagGroupSelect');
     await userEvent.click(groupField);
-    await userEvent.keyboard('New Group');
+    await userEvent.paste('New Group');
     const newGroupOption = getByMessageId(messageIds.dialog.groupCreatePrompt);
     await userEvent.click(newGroupOption);
 
