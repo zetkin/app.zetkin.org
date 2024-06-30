@@ -8,7 +8,6 @@ import ShareViewDialogShareTab from './ShareViewDialogShareTab';
 import { useMessages } from 'core/i18n';
 import { ZetkinView } from '../types';
 import ZUIDialog from 'zui/ZUIDialog';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ShareViewDialogProps {

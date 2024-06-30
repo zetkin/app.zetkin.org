@@ -1,6 +1,4 @@
 import { MoreVert } from '@mui/icons-material';
-import noPropagate from 'utils/noPropagate';
-import theme from 'theme';
 import {
   Button,
   ListItemIcon,
@@ -9,6 +7,9 @@ import {
   Typography,
 } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
+
+import noPropagate from 'utils/noPropagate';
+import theme from 'theme';
 
 type horizontalType = 'left' | 'center' | 'right';
 type verticalType = 'top' | 'center' | 'bottom';

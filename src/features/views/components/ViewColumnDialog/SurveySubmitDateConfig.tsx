@@ -8,7 +8,6 @@ import {
 
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveys from 'features/surveys/hooks/useSurveys';

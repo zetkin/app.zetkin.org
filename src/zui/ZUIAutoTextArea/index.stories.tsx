@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIAutoTextArea from '.';
 
 export default {
   component: ZUIAutoTextArea,
   title: 'Atoms/ZUIAutoTextArea',
-} as ComponentMeta<typeof ZUIAutoTextArea>;
+} as Meta<typeof ZUIAutoTextArea>;
 
-const Template: ComponentStory<typeof ZUIAutoTextArea> = (args) => (
+const Template: StoryFn<typeof ZUIAutoTextArea> = (args) => (
   <ZUIAutoTextArea
     onChange={args.onChange}
     placeholder={args.placeholder}

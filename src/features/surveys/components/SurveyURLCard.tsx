@@ -5,7 +5,6 @@ import { Box, Link, useTheme } from '@mui/material';
 import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 import useSurvey from '../hooks/useSurvey';
 

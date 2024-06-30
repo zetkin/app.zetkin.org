@@ -7,7 +7,6 @@ import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
-
 import messageIds from 'features/surveys/l10n/messageIds';
 
 interface TextBlockProps {

@@ -1,7 +1,7 @@
 import { Chip } from '@mui/material';
+
 import { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 enum ChipColors {

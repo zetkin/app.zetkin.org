@@ -1,6 +1,7 @@
+import { OutputData } from '@editorjs/editorjs';
+
 import blockProblems from '../components/EmailEditor/EmailSettings/utils/blockProblems';
 import { DeliveryProblem } from '../types';
-import { OutputData } from '@editorjs/editorjs';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 export default function deliveryProblems(

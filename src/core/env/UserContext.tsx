@@ -1,5 +1,6 @@
-import { ZetkinUser } from 'utils/types/zetkin';
 import { createContext, FC, ReactNode } from 'react';
+
+import { ZetkinUser } from 'utils/types/zetkin';
 
 const UserContext = createContext<ZetkinUser | null>(null);
 

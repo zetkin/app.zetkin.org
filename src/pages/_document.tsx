@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-sync-scripts */
 import { Children } from 'react';
 import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
-import theme from '../theme';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
+
+import theme from '../theme';
 
 // boilerplate page taken from https://github.com/mui-org/material-ui/tree/master/examples/nextjs
 

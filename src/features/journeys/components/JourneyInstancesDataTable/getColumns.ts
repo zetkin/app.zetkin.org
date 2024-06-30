@@ -5,7 +5,6 @@ import getTagColumns from './getTagColumns';
 import { JourneyTagColumnData } from 'features/journeys/utils/journeyInstanceUtils';
 import { UseMessagesMap } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
-
 import messageIds from 'features/journeys/l10n/messageIds';
 
 const getColumns = (

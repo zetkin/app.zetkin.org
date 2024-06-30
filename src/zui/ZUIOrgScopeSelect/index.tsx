@@ -91,7 +91,12 @@ const ZUIOrgScopeSelect: FC<Props> = ({
           }}
           renderOption={(props, option, { selected }) => {
             return (
-              <ListItem {...props} key={option.id} value={option.id}>
+              <ListItem
+                {...props}
+                key={option.id}
+                sx={{ whiteSpace: 'nowrap' }}
+                value={option.id}
+              >
                 <Checkbox checked={selected} />
                 <ListItemText primary={option.title} />
               </ListItem>

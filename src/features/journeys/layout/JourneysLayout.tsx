@@ -1,8 +1,7 @@
-import { useMessages } from 'core/i18n';
 import { useRouter } from 'next/router';
 
+import { useMessages } from 'core/i18n';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-
 import messageIds from '../l10n/messageIds';
 
 interface JourneysLayoutProps {

@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
+
 import { useApiClient } from 'core/hooks';
 import useDebounce from 'utils/hooks/useDebounce';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import { useEffect, useState } from 'react';
 
 type UsePersonSearchReturn = {
   isLoading: boolean;

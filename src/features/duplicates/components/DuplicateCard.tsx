@@ -1,7 +1,7 @@
-import theme from 'theme';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 
+import theme from 'theme';
 import ConfigureModal from './ConfigureModal';
 import messageIds from '../l10n/messageIds';
 import { PotentialDuplicate } from '../store';

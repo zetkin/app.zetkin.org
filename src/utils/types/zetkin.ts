@@ -72,6 +72,7 @@ export interface ZetkinEvent {
   } | null;
   cancelled: string | null;
   contact?: null | { id: number; name: string };
+  cover_file: ZetkinFile | null;
   end_time: string;
   id: number;
   info_text: string;

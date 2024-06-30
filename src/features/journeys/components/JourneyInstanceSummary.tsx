@@ -9,7 +9,6 @@ import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUISection from 'zui/ZUISection';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 import useJourneyInstanceMutations from '../hooks/useJourneyInstanceMutations';
 import { useNumericRouteParams } from 'core/hooks';

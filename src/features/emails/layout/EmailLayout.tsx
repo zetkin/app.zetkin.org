@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, Dialog, Typography } from '@mui/material';
+import { People } from '@mui/icons-material';
 
 import DeliveryStatusMessage from '../components/DeliveryStatusMessage';
 import EmailActionButtons from '../components/EmailActionButtons';
 import EmailStatusChip from '../components/EmailStatusChip';
 import messageIds from '../l10n/messageIds';
-import { People } from '@mui/icons-material';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
 import useEmailStats from '../hooks/useEmailStats';

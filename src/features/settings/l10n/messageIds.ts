@@ -40,6 +40,12 @@ export default makeMessages('feat.settings', {
       promote: m('Promote'),
       remove: m('Remove'),
     },
+    urlCard: {
+      linkToPub: m('Link to public organization'),
+      subTitle: m(
+        'Users must connect to the organization before they can access Zetkin as officials.'
+      ),
+    },
     you: m('You'),
   },
 });

@@ -11,12 +11,12 @@ import {
   Typography,
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
+import MailIcon from '@mui/icons-material/Mail';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 import { CopyIcon } from './ZUIInlineCopyToClipBoard';
-import MailIcon from '@mui/icons-material/Mail';
 import messageIds from 'features/profile/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import PhoneIcon from '@mui/icons-material/Phone';
 import TagsList from 'features/tags/components/TagManager/components/TagsList';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from 'features/profile/hooks/usePerson';

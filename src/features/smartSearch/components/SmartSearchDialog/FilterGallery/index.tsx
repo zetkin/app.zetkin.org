@@ -9,12 +9,12 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { useRef } from 'react';
 
 import FilterGalleryCard from './FilterGalleryCard';
 import { GROUPED_FILTERS } from './groupedFilters';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { useRef } from 'react';
 import {
   FILTER_CATEGORY,
   FILTER_TYPE,

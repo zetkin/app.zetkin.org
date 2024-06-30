@@ -1,12 +1,12 @@
 /* eslint-disable sort-keys */
 import { Box } from '@mui/material';
 import { FC, useState } from 'react';
+import ContentEditable from 'react-contenteditable';
+import DOMPurify from 'dompurify';
 
 import { BlockAttributes } from 'features/emails/types';
 import { ButtonData } from '.';
-import ContentEditable from 'react-contenteditable';
 import { defaultButtonAttributes } from '../../utils/defaultBlockAttributes';
-import DOMPurify from 'dompurify';
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 

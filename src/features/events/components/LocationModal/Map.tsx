@@ -3,9 +3,6 @@ import Fuse from 'fuse.js';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
-
-import BasicMarker from './BasicMarker';
-import SelectedMarker from './SelectedMarker';
 import { useTheme } from '@mui/material';
 import {
   divIcon,
@@ -13,6 +10,9 @@ import {
   Map as MapType,
   Marker as MarkerType,
 } from 'leaflet';
+
+import BasicMarker from './BasicMarker';
+import SelectedMarker from './SelectedMarker';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface MapProps {

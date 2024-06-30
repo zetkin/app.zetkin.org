@@ -1,5 +1,4 @@
 import { RPCRouter } from './router';
-
 import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
 import { copyEmailDef } from 'features/emails/rpc/copyEmail';
 import { copyEventsDef } from 'features/events/rpc/copyEvents';
@@ -13,6 +12,7 @@ import { getPrevEventDayDef } from 'features/events/rpc/getPrevEventDay';
 import { getSurveyStatsDef } from 'features/surveys/rpc/getSurveyStats';
 import { getTaskStatsRouteDef } from 'features/tasks/rpc/getTaskStats';
 import { getUserOrgTreeDef } from 'features/organizations/rpc/getUserOrgTree';
+import { moveParticipantsDef } from 'features/events/rpc/moveParticipants';
 import { setOfficialRoleDef } from 'features/settings/rpc/setOfficialRole';
 import { updateEventsDef } from 'features/events/rpc/updateEvents';
 
@@ -27,6 +27,7 @@ export function createRPCRouter() {
   rpcRouter.register(getEventStatsDef);
   rpcRouter.register(getPrevEventDayDef);
   rpcRouter.register(getNextEventDayDef);
+  rpcRouter.register(moveParticipantsDef);
   rpcRouter.register(updateEventsDef);
   rpcRouter.register(copyEmailDef);
   rpcRouter.register(copyEventsDef);

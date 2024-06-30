@@ -7,7 +7,6 @@ import { GetServerSideProps, NextPage } from 'next';
 
 import { scaffold } from 'utils/next';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'core/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(

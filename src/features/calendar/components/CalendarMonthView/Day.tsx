@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
-import theme from 'theme';
 import { Box, Typography } from '@mui/material';
 
+import theme from 'theme';
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import EventCluster from '../EventCluster';
 

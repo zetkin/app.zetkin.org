@@ -1,11 +1,10 @@
 import { FunctionComponent, useState } from 'react';
-
 import { TextField } from '@mui/material';
+
 import { useMessages } from 'core/i18n';
 import { ZetkinViewColumn } from 'features/views/components/types';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
-
 import messageIds from '../l10n/messageIds';
 
 interface ViewRenameColumnDialogProps {

@@ -1,7 +1,8 @@
+import singletonRouter from 'next/router';
+
 import { ASSIGNED_STATUS } from 'features/tasks/components/types';
 import mockAssignedTask from 'utils/testing/mocks/mockAssignedTask';
 import { render } from 'utils/testing';
-import singletonRouter from 'next/router';
 import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));

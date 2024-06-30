@@ -1,8 +1,12 @@
 import { Box } from '@mui/material';
-
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from '@mui/x-data-grid-pro';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
@@ -10,12 +14,6 @@ import { SurveyResponseViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
-
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from '@mui/x-data-grid-pro';
 
 export type SurveyResponseViewCell = {
   submission_id: number;

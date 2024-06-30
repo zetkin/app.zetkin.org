@@ -1,6 +1,7 @@
+import { describe, expect, it } from '@jest/globals';
+
 import generateTreeData from './generateTreeData';
 import { TreeItemData } from '../types';
-import { describe, expect, it } from '@jest/globals';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 describe('generateTreeData()', () => {

@@ -14,7 +14,6 @@ import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import ZUITextEditor from '../../ZUITextEditor';
 import { ZetkinFile, ZetkinNote } from 'utils/types/zetkin';
-
 import messageIds from '../l10n/messageIds';
 
 interface Props {

@@ -7,7 +7,6 @@ import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
 
 import { Breadcrumb } from 'utils/types';
 import { Msg } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 import useBreadcrumbElements from '../hooks/useBreadcrumbs';
 

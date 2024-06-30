@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import mockOrganization from 'utils/testing/mocks/mockOrganization';
@@ -10,10 +10,10 @@ import PersonDetailsCard from './PersonDetailsCard';
 export default {
   component: PersonDetailsCard,
   title: 'PersonDetailsCard',
-} as ComponentMeta<typeof PersonDetailsCard>;
+} as Meta<typeof PersonDetailsCard>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof PersonDetailsCard> = (args) => (
+const Template: StoryFn<typeof PersonDetailsCard> = (args) => (
   <Box maxWidth="400px">
     <PersonDetailsCard {...args} />
   </Box>

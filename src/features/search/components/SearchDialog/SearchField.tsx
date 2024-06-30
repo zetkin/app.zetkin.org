@@ -5,10 +5,8 @@ import {
   useEffect,
   useRef,
 } from 'react';
-
 import Error from '@mui/icons-material/Error';
 import Search from '@mui/icons-material/Search';
-
 import {
   CircularProgress,
   InputAdornment,

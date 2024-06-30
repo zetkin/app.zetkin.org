@@ -1,7 +1,8 @@
 import { FC } from 'react';
+import { useTheme } from '@mui/material';
+
 import SmartSearchSankeySegment from './SmartSearchSankeySegment';
 import { useSankey } from './SmartSearchSankeyProvider';
-import { useTheme } from '@mui/material';
 
 type SmartSearchSankeyEntrySegmentProps = {
   hovered: boolean;

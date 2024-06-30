@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import test from '../../../../fixtures/next';
 
+import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import KPD from '../../../../mockData/orgs/KPD';
 

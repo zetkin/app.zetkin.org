@@ -5,7 +5,6 @@ import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 import { useMessages } from 'core/i18n';
 import ZUISnackbarContext from './ZUISnackbarContext';
-
 import messageIds from './l10n/messageIds';
 
 interface IconProps {

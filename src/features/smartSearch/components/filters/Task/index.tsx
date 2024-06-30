@@ -12,7 +12,6 @@ import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTasks from 'features/tasks/hooks/useTasks';
 import { getTaskStatus, getTaskTimeFrameWithConfig } from '../../utils';
-
 import {
   NewSmartSearchFilter,
   OPERATION,
@@ -23,7 +22,6 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 

@@ -13,6 +13,7 @@ import {
   Stack,
   Tab,
 } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import deliveryProblems from '../utils/deliveryProblems';
 import messageIds from '../l10n/messageIds';
@@ -25,7 +26,6 @@ import {
   removeOffset,
 } from 'utils/dateUtils';
 import { Msg, useMessages } from 'core/i18n';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ZUITimezonePicker, { findCurrentTZ } from 'zui/ZUITimezonePicker';
 
 interface EmailDeliveryProps {

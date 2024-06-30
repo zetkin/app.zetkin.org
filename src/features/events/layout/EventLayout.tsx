@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
-import TabbedLayout from 'utils/layout/TabbedLayout';
 import { useState } from 'react';
 
+import TabbedLayout from 'utils/layout/TabbedLayout';
 import EventActionButtons from '../components/EventActionButtons';
 import EventStatusChip from '../components/EventStatusChip';
 import EventTypeAutocomplete from '../components/EventTypeAutocomplete';

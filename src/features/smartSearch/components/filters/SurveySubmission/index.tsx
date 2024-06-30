@@ -14,7 +14,6 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';

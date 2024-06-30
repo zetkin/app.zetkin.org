@@ -17,7 +17,6 @@ import { useMessages } from 'core/i18n';
 import usePersonOrgData from 'features/profile/hooks/usePersonOrgData';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-
 import messageIds from 'features/profile/l10n/messageIds';
 
 interface PersonOrganizationsCardProps {

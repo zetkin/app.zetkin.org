@@ -298,6 +298,16 @@ const surveysSlice = createSlice({
         item.mutating = [];
         state.statsBySurveyId[submission.survey.id].isStale = true;
       }
+      const submissions = state.submissionsBySurveyId[submission.survey.id];
+      if (submissions) {
+        const itemCopy = submissions.items.find(
+          (item) => item.id == submission.id
+        );
+        if (itemCopy) {
+          itemCopy.data = { ...itemCopy.data, ...submission };
+          itemCopy.mutating = [];
+        }
+      }
     },
     surveysLoad: (state) => {
       state.surveyList.isLoading = true;

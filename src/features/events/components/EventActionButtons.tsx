@@ -7,8 +7,8 @@ import {
   RestoreOutlined,
 } from '@mui/icons-material';
 import React, { useContext } from 'react';
-
 import dayjs from 'dayjs';
+
 import messageIds from '../l10n/messageIds';
 import useDuplicateEvent from '../hooks/useDuplicateEvent';
 import useEventMutations from '../hooks/useEventMutations';

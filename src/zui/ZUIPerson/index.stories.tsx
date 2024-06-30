@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import { person } from '../../utils/testing/mocks/mockPerson';
 import ZUIPerson from '.';
@@ -6,9 +6,9 @@ import ZUIPerson from '.';
 export default {
   component: ZUIPerson,
   title: 'Atoms/ZUIPerson',
-} as ComponentMeta<typeof ZUIPerson>;
+} as Meta<typeof ZUIPerson>;
 
-const Template: ComponentStory<typeof ZUIPerson> = (args) => (
+const Template: StoryFn<typeof ZUIPerson> = (args) => (
   <ZUIPerson
     id={args.id}
     link={args.link}

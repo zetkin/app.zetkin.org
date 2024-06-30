@@ -13,6 +13,7 @@ const event: ZetkinEvent = {
   },
   cancelled: null,
   contact: null,
+  cover_file: null,
   end_time: '2022-06-16T09:00:00+00:00',
   id: 1,
   info_text: 'Info text is informational',

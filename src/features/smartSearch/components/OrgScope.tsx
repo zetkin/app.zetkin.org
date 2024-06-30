@@ -1,9 +1,9 @@
 import { FC, ReactElement } from 'react';
+import { Typography } from '@mui/material';
 
 import { FilterConfigOrgOptions } from './types';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { Typography } from '@mui/material';
 import useCommaPlural from 'zui/hooks/useCommaPlural';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 

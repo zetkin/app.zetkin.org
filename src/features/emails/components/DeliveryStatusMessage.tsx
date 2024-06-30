@@ -1,9 +1,9 @@
 import { Box } from '@mui/system';
 import { AccessTime, Send } from '@mui/icons-material';
+import { Typography } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { Typography } from '@mui/material';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import ZUIDateTime from 'zui/ZUIDateTime';
 

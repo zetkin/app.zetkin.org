@@ -2,7 +2,6 @@ import { Msg } from 'core/i18n';
 import { ZetkinTask } from 'utils/types/zetkin';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
-
 import messageIds from '../l10n/messageIds';
 
 interface TaskStatusTextProps {

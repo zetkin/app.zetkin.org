@@ -3,7 +3,6 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from 'zui/l10n/messageIds';
 
 interface ZUICollapseProps {

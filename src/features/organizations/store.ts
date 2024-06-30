@@ -1,5 +1,6 @@
-import { TreeItemData } from './types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { TreeItemData } from './types';
 import {
   remoteItem,
   RemoteItem,

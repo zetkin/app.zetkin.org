@@ -1,7 +1,8 @@
+import { useState } from 'react';
+
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { SearchResult } from '../components/types';
 import useDebounce from 'utils/hooks/useDebounce';
-import { useState } from 'react';
 import {
   resultsError,
   resultsLoad,

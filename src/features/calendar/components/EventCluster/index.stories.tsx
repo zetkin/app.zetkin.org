@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import Arbitrary from './Arbitrary';
 import mockEvent from 'utils/testing/mocks/mockEvent';
@@ -9,9 +9,9 @@ import Single from './Single';
 export default {
   component: Single,
   title: 'Calendar',
-} as ComponentMeta<typeof Single>;
+} as Meta<typeof Single>;
 
-const SingleEvent: ComponentStory<typeof Single> = (args) => (
+const SingleEvent: StoryFn<typeof Single> = (args) => (
   <Single
     event={args.event}
     height={args.height}
@@ -21,7 +21,7 @@ const SingleEvent: ComponentStory<typeof Single> = (args) => (
   />
 );
 
-const MultiLocationEvent: ComponentStory<typeof MultiLocation> = (args) => (
+const MultiLocationEvent: StoryFn<typeof MultiLocation> = (args) => (
   <MultiLocation
     events={args.events}
     height={args.height}
@@ -32,7 +32,7 @@ const MultiLocationEvent: ComponentStory<typeof MultiLocation> = (args) => (
   />
 );
 
-const MultiShiftEvent: ComponentStory<typeof MultiShift> = (args) => (
+const MultiShiftEvent: StoryFn<typeof MultiShift> = (args) => (
   <MultiShift
     events={args.events}
     height={args.height}
@@ -43,7 +43,7 @@ const MultiShiftEvent: ComponentStory<typeof MultiShift> = (args) => (
   />
 );
 
-const ArbitraryCluster: ComponentStory<typeof Arbitrary> = (args) => (
+const ArbitraryCluster: StoryFn<typeof Arbitrary> = (args) => (
   <Arbitrary
     events={args.events}
     height={args.height}

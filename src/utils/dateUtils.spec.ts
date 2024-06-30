@@ -1,6 +1,5 @@
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import { ZetkinEvent } from 'utils/types/zetkin';
-
 import { getFirstAndLastEvent, removeOffset } from './dateUtils';
 
 describe('getFirstAndLastEvent()', () => {

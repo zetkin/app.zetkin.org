@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 
 import { ZetkinTag } from 'utils/types/zetkin';
-
 import messageIds from '../../../../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 

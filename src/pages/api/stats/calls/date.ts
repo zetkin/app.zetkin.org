@@ -1,5 +1,6 @@
-import { createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
+
+import { createApiFetch } from 'utils/apiFetch';
 
 export interface DateStats {
   date: string;
