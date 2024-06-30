@@ -2,6 +2,7 @@
 
 import { Box } from '@mui/material';
 import { FC } from 'react';
+// @ts-expect-error Erroneous `Module '"react-dom"' has no exported member 'useFormState'`
 import { useFormState } from 'react-dom';
 
 import { submit } from 'features/surveys/actions/submit';
