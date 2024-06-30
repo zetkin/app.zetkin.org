@@ -2,6 +2,8 @@
 
 import { Box } from '@mui/material';
 import { FC } from 'react';
+import { useFormState } from 'react-dom';
+
 import { submit } from 'features/surveys/actions/submit';
 import SurveyElements from './SurveyElements';
 import SurveyHeading from './SurveyHeading';
@@ -21,7 +23,6 @@ import {
 // import this.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { useFormState } from 'react-dom';
 
 export type SurveyFormProps = {
   survey: ZetkinSurveyExtended;

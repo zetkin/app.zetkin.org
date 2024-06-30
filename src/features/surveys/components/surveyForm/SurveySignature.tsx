@@ -1,10 +1,3 @@
-import messageIds from 'features/surveys/l10n/messageIds';
-import { Msg } from 'core/i18n';
-import SurveyContainer from './SurveyContainer';
-import SurveyOption from './SurveyOption';
-import SurveySubheading from './SurveySubheading';
-// import useCurrentUser from 'features/user/hooks/useCurrentUser';
-
 import {
   Box,
   FormControl,
@@ -16,6 +9,12 @@ import {
   useTheme,
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
+
+import messageIds from 'features/surveys/l10n/messageIds';
+import { Msg } from 'core/i18n';
+import SurveyContainer from './SurveyContainer';
+import SurveyOption from './SurveyOption';
+import SurveySubheading from './SurveySubheading';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveySignatureType,
@@ -28,7 +27,6 @@ export type SurveySignatureProps = {
 };
 
 const SurveySignature: FC<SurveySignatureProps> = ({ survey, user }) => {
-  // const currentUser = useCurrentUser();
   const theme = useTheme();
 
   const [signatureType, setSignatureType] = useState<

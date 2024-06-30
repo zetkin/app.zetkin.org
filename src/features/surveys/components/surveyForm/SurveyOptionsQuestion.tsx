@@ -1,9 +1,3 @@
-import messageIds from 'features/surveys/l10n/messageIds';
-import SurveyContainer from './SurveyContainer';
-import SurveyOption from './SurveyOption';
-import SurveyQuestionDescription from './SurveyQuestionDescription';
-import SurveySubheading from './SurveySubheading';
-import { useMessages } from 'core/i18n';
 import {
   Box,
   Checkbox,
@@ -17,6 +11,13 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
+
+import messageIds from 'features/surveys/l10n/messageIds';
+import SurveyContainer from './SurveyContainer';
+import SurveyOption from './SurveyOption';
+import SurveyQuestionDescription from './SurveyQuestionDescription';
+import SurveySubheading from './SurveySubheading';
+import { useMessages } from 'core/i18n';
 import {
   ZetkinSurveyOption,
   ZetkinSurveyOptionsQuestionElement,

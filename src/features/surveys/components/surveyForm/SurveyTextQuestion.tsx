@@ -1,11 +1,12 @@
 import { FC } from 'react';
+import { Box, FormControl, FormLabel, TextField } from '@mui/material';
+
 import messageIds from 'features/surveys/l10n/messageIds';
 import SurveyContainer from './SurveyContainer';
 import SurveyQuestionDescription from './SurveyQuestionDescription';
 import SurveySubheading from './SurveySubheading';
 import { useMessages } from 'core/i18n';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
-import { Box, FormControl, FormLabel, TextField } from '@mui/material';
 
 export type SurveyOptionsQuestionProps = {
   element: ZetkinSurveyTextQuestionElement;

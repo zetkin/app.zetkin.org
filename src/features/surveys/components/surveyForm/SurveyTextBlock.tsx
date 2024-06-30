@@ -1,7 +1,8 @@
 import { FC } from 'react';
+import { Typography } from '@mui/material';
+
 import SurveyContainer from './SurveyContainer';
 import SurveySubheading from './SurveySubheading';
-import { Typography } from '@mui/material';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 
 export type SurveyTextBlockProps = {

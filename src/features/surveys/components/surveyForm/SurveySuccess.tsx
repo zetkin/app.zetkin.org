@@ -1,10 +1,11 @@
 'use client';
 
 import { FC } from 'react';
+import { Typography } from '@mui/material';
+
 import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SurveyContainer from './SurveyContainer';
-import { Typography } from '@mui/material';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 
 export type SurveySuccessProps = {

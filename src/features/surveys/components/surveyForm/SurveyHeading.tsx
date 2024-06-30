@@ -1,9 +1,10 @@
 import { FC } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Box, Typography } from '@mui/material';
+
 import SurveyContainer from './SurveyContainer';
 import SurveyErrorMessage from './SurveyErrorMessage';
-import { useSearchParams } from 'next/navigation';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import { Box, Typography } from '@mui/material';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyFormStatus,

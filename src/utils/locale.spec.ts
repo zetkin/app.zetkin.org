@@ -1,5 +1,6 @@
-import { getBrowserLanguage } from './locale';
 import { NextApiRequest } from 'next';
+
+import { getBrowserLanguage } from './locale';
 
 describe('getBrowserLanguage', () => {
   it('returns the preferred language of the user if available', () => {

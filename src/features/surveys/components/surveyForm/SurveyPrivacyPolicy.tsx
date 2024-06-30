@@ -1,9 +1,4 @@
 import { FC } from 'react';
-import messageIds from 'features/surveys/l10n/messageIds';
-import SurveyContainer from './SurveyContainer';
-import SurveyOption from './SurveyOption';
-import SurveySubheading from './SurveySubheading';
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import {
   Box,
   Checkbox,
@@ -13,6 +8,12 @@ import {
   Link,
   Typography,
 } from '@mui/material';
+
+import messageIds from 'features/surveys/l10n/messageIds';
+import SurveyContainer from './SurveyContainer';
+import SurveyOption from './SurveyOption';
+import SurveySubheading from './SurveySubheading';
+import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
 export type SurveyPrivacyPolicyProps = {
