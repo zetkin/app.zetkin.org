@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { TimeScale } from '../components';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
@@ -23,11 +23,6 @@ export default function useTimeScale(
   const [timeScale, setTimeScale] = useState<TimeScale>(
     localStorageTimeScale || getTimeScale(timeScaleQueryParam)
   );
-
-  // When the time scale query param changes in the URL
-  useEffect(() => {
-    setTimeScale(getTimeScale(timeScaleQueryParam));
-  }, [timeScaleQueryParam]);
 
   const setPersistentTimeScale = (newTimeScale: TimeScale) => {
     setLocalStorageTimeScale(newTimeScale);
