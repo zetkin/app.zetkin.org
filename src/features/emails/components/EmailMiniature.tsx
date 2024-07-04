@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { Box, useTheme } from '@mui/material';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { useApiClient } from 'core/hooks';
 import renderEmail from '../rpc/renderEmail/client';
@@ -7,14 +7,33 @@ import ZUICleanHtml from 'zui/ZUICleanHtml';
 
 type Props = {
   emailId: number;
+  margin?: number;
   orgId: number;
+  selectedTag?: string | null;
   width: number;
 };
 
-const EmailMiniature: FC<Props> = ({ emailId, orgId, width }) => {
+type Rect = {
+  height: number;
+  left: number;
+  top: number;
+  width: number;
+};
+
+const EmailMiniature: FC<Props> = ({
+  emailId,
+  margin = 4,
+  orgId,
+  selectedTag,
+  width,
+}) => {
+  const containerRef = useRef<HTMLDivElement>();
   const [html, setHtml] = useState('');
   const [height, setHeight] = useState(0);
   const apiClient = useApiClient();
+  const [rect, setRect] = useState<Rect | null>(null);
+
+  const theme = useTheme();
 
   useEffect(() => {
     async function load() {
@@ -23,16 +42,49 @@ const EmailMiniature: FC<Props> = ({ emailId, orgId, width }) => {
     }
 
     load();
-  });
+  }, []);
+
+  useEffect(() => {
+    const elem = document.querySelector(`.email-link-${selectedTag}`);
+    if (elem && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const elemRect = elem.getBoundingClientRect();
+      setRect({
+        height: elemRect.height,
+        left: elemRect.left - containerRect.left,
+        top: elemRect.top - containerRect.top,
+        width: elemRect.width,
+      });
+    } else {
+      setRect(null);
+    }
+  }, [selectedTag]);
 
   return (
     <Box
+      ref={containerRef}
       sx={{
         height: height,
         position: 'relative',
         width: width,
       }}
     >
+      {rect && (
+        <Box
+          sx={{
+            borderColor: theme.palette.primary.main,
+            borderRadius: 1,
+            borderStyle: 'solid',
+            borderWidth: 2,
+            height: rect.height + margin * 2,
+            left: rect.left - margin,
+            position: 'absolute',
+            top: rect.top - margin,
+            width: rect.width + margin * 2,
+            zIndex: 100,
+          }}
+        />
+      )}
       <div
         ref={(elem) => {
           if (elem) {

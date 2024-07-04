@@ -14,6 +14,7 @@ import { linearGradientDef } from '@nivo/core';
 import { FormattedTime } from 'react-intl';
 import { OpenInNew } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
+import { useState } from 'react';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
@@ -50,6 +51,7 @@ const EmailPage: PageWithLayout = () => {
   const { data: email } = useEmail(orgId, emailId);
   const stats = useEmailStats(orgId, emailId);
   const insightsFuture = useEmailInsights(orgId, emailId);
+  const [selectedLinkTag, setSelectedLinkTag] = useState<string | null>(null);
 
   const onServer = useServerSide();
 
@@ -185,7 +187,11 @@ const EmailPage: PageWithLayout = () => {
                       .concat()
                       .sort((a, b) => b.clicks - a.clicks)
                       .map((link) => (
-                        <TableRow key={link.id}>
+                        <TableRow
+                          key={link.id}
+                          onMouseEnter={() => setSelectedLinkTag(link.tag)}
+                          onMouseLeave={() => setSelectedLinkTag(null)}
+                        >
                           <TableCell>{link.clicks}</TableCell>
                           <TableCell>
                             {sanitizer.sanitize(link.text, {
@@ -207,13 +213,12 @@ const EmailPage: PageWithLayout = () => {
                         </TableRow>
                       ))}
                   </Table>
-                  <Box>
-                    <EmailMiniature
-                      emailId={emailId}
-                      orgId={orgId}
-                      width={150}
-                    />
-                  </Box>
+                  <EmailMiniature
+                    emailId={emailId}
+                    orgId={orgId}
+                    selectedTag={selectedLinkTag}
+                    width={150}
+                  />
                 </Box>
               )}
             </ZUIFuture>
