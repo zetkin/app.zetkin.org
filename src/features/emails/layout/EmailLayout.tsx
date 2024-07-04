@@ -100,6 +100,10 @@ const EmailLayout: FC<EmailLayoutProps> = ({
             href: '/compose',
             label: messages.tabs.compose(),
           },
+          {
+            href: '/insights',
+            label: messages.tabs.insights(),
+          },
         ]}
         title={
           <ZUIEditTextinPlace

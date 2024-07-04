@@ -123,6 +123,17 @@ export default makeMessages('feat.emails', {
     ),
     goBackButton: m('Go back'),
   },
+  insights: {
+    opened: {
+      description: m(
+        'Open rate is the percentage of recipients who opened the email. A high rate is an indicator of good targeting and a compelling subject line.'
+      ),
+      gauge: {
+        header: m('Open rate'),
+      },
+      header: m('Opened'),
+    },
+  },
   ready: {
     loading: m('Loading...'),
     lockButton: m('Lock for delivery'),
@@ -154,6 +165,7 @@ export default makeMessages('feat.emails', {
   },
   tabs: {
     compose: m('Compose'),
+    insights: m('Insights'),
     overview: m('Overview'),
   },
   targets: {
