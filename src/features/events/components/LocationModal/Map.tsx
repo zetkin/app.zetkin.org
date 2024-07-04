@@ -1,9 +1,9 @@
 import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
-import { FC, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useTheme } from '@mui/material';
-import { latLngBounds, Map as MapType, Marker as MarkerType } from 'leaflet';
+import { latLngBounds, Map as MapType } from 'leaflet';
 
 import BasicMarker from './BasicMarker';
 import SelectedMarker from './SelectedMarker';
@@ -49,8 +49,6 @@ const Map: FC<MapProps> = ({
     ZetkinLocation,
     'lat' | 'lng'
   > | null>(null);
-
-  const selectedMarkerRef = useRef<MarkerType>(null);
 
   const fuse = new Fuse(locations, {
     keys: ['title'],
@@ -127,8 +125,7 @@ const Map: FC<MapProps> = ({
                         map.setView(evt.latlng, 17);
                         onMarkerClick(location.id);
                       },
-                      dragend: () => {
-                        const marker = selectedMarkerRef.current;
+                      dragend: ({ target: marker }) => {
                         if (marker !== null) {
                           setNewPosition(marker.getLatLng());
                           onMarkerDragEnd(
@@ -138,9 +135,6 @@ const Map: FC<MapProps> = ({
                         }
                       },
                     }}
-                    markerRef={
-                      inMoveState && isSelectedMarker ? selectedMarkerRef : null
-                    }
                     position={
                       isSelectedMarker && newPosition && inMoveState
                         ? newPosition
