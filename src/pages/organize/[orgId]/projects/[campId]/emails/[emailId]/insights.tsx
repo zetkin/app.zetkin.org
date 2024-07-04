@@ -37,6 +37,10 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
 import EmailMiniature from 'features/emails/components/EmailMiniature';
 import ZUIDuration from 'zui/ZUIDuration';
+import ZUIFutures from 'zui/ZUIFutures';
+import useSecondaryEmailInsights from 'features/emails/hooks/useSecondaryEmailInsights';
+import getRelevantDataPoints from 'features/emails/utils/getRelevantDataPoints';
+import useEmails from 'features/emails/hooks/useEmails';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -81,6 +85,7 @@ function axisFromSpanValue(value: string): AxisProps {
 }
 
 const EmailPage: PageWithLayout = () => {
+  const [secondaryEmailId, setSecondaryEmailId] = useState(0);
   const [timeSpan, setTimeSpan] = useState<string>('first48');
   const messages = useMessages(messageIds);
   const { orgId, emailId } = useNumericRouteParams();
@@ -89,6 +94,12 @@ const EmailPage: PageWithLayout = () => {
   const stats = useEmailStats(orgId, emailId);
   const insightsFuture = useEmailInsights(orgId, emailId);
   const [selectedLinkTag, setSelectedLinkTag] = useState<string | null>(null);
+  const emailsFuture = useEmails(orgId);
+  const {
+    emailFuture: secondaryEmailFuture,
+    insightsFuture: secondaryInsightsFuture,
+    statsFuture: secondaryStatsFuture,
+  } = useSecondaryEmailInsights(orgId, secondaryEmailId);
 
   const onServer = useServerSide();
 
@@ -105,6 +116,30 @@ const EmailPage: PageWithLayout = () => {
       <Head>
         <title>{email.title}</title>
       </Head>
+      <Box display="flex" justifyContent="flex-end" mb={1}>
+        <ZUIFuture future={emailsFuture}>
+          {(emails) => (
+            <TextField
+              label="Compare with"
+              onChange={(ev) =>
+                setSecondaryEmailId(parseInt(ev.target.value) || 0)
+              }
+              select
+              size="small"
+              value={secondaryEmailId}
+            >
+              <MenuItem value={0}>Nothing</MenuItem>
+              {emails
+                .filter((email) => email.id != emailId)
+                .map((email) => (
+                  <MenuItem key={email.id} value={email.id}>
+                    {email.title}
+                  </MenuItem>
+                ))}
+            </TextField>
+          )}
+        </ZUIFuture>
+      </Box>
       <ZUICard
         header={messages.insights.opened.header()}
         status={
@@ -160,109 +195,211 @@ const EmailPage: PageWithLayout = () => {
                 </MenuItem>
               </TextField>
             </Box>
-            <ZUIFuture future={insightsFuture}>
-              {(insights) => (
-                <ResponsiveLine
-                  animate={false}
-                  axisBottom={axisFromSpanValue(timeSpan)}
-                  axisLeft={{
-                    format: (val) => Math.round(val * 100) + '%',
-                  }}
-                  colors={[theme.palette.primary.main]}
-                  curve="basis"
-                  data={[
-                    {
-                      data: insights.opensByDate.map((openEvent) => ({
-                        x:
-                          (new Date(openEvent.date).getTime() -
-                            new Date(insights.opensByDate[0].date).getTime()) /
-                          1000,
-                        y: openEvent.accumulatedOpens / stats.numSent,
-                      })),
-                      id: email.title || '',
-                    },
-                  ]}
-                  defs={[
-                    linearGradientDef('gradientA', [
-                      { color: 'inherit', offset: 0 },
-                      { color: 'inherit', offset: 100, opacity: 0 },
-                    ]),
-                  ]}
-                  enableArea={true}
-                  enableGridX={false}
-                  enableGridY={false}
-                  enablePoints={false}
-                  enableSlices="x"
-                  fill={[{ id: 'gradientA', match: '*' }]}
-                  isInteractive={true}
-                  lineWidth={3}
-                  margin={{
-                    bottom: 30,
-                    // Calculate the left margin from the number of digits
-                    // in the y axis labels, to make sure the labels will fit
-                    // inside the clipping rectangle.
-                    left:
-                      15 + insights.opensByDate.length.toString().length * 8,
-                    right: 8,
-                    top: 20,
-                  }}
-                  sliceTooltip={(props) => {
-                    const publishDate = new Date(email.published || 0);
-                    const index = props.slice.points[0].index;
-                    const count = insights.opensByDate[index].accumulatedOpens;
-                    const date = new Date(insights.opensByDate[index].date);
-                    const secondsAfterPublish =
-                      (date.getTime() - publishDate.getTime()) / 1000;
+            <ZUIFutures
+              futures={{
+                mainInsights: insightsFuture,
+                secondaryEmail: secondaryEmailFuture,
+                secondaryInsights: secondaryInsightsFuture,
+                secondaryStats: secondaryStatsFuture,
+              }}
+            >
+              {({
+                data: {
+                  mainInsights,
+                  secondaryEmail,
+                  secondaryInsights,
+                  secondaryStats,
+                },
+              }) => {
+                const lineData = [
+                  {
+                    data: mainInsights.opensByDate.map((openEvent) => ({
+                      x:
+                        (new Date(openEvent.date).getTime() -
+                          new Date(
+                            mainInsights.opensByDate[0].date
+                          ).getTime()) /
+                        1000,
+                      y: openEvent.accumulatedOpens / stats.numSent,
+                    })),
+                    id: 'main',
+                  },
+                ];
 
-                    return (
-                      <Paper sx={{ minWidth: 200 }}>
-                        <Box p={2}>
-                          <Typography variant="h6">
-                            <ZUIDuration seconds={secondsAfterPublish} />
-                          </Typography>
-                          <Typography variant="body2">
-                            <Msg
-                              id={messageIds.insights.opened.chart.afterSend}
-                            />
-                          </Typography>
-                        </Box>
-                        <Divider />
-                        <Box
-                          alignItems="center"
-                          display="flex"
-                          gap={2}
-                          justifyContent="space-between"
-                          p={2}
-                        >
-                          <Box>
-                            <Typography variant="body2">
-                              <FormattedDate value={date} />
+                if (secondaryInsights && secondaryStats) {
+                  lineData.push({
+                    data: secondaryInsights.opensByDate.map((openEvent) => ({
+                      x:
+                        (new Date(openEvent.date).getTime() -
+                          new Date(
+                            secondaryInsights.opensByDate[0].date
+                          ).getTime()) /
+                        1000,
+                      y: openEvent.accumulatedOpens / secondaryStats.num_sent,
+                    })),
+                    id: 'secondary',
+                  });
+                }
+
+                return (
+                  <ResponsiveLine
+                    animate={false}
+                    axisBottom={axisFromSpanValue(timeSpan)}
+                    axisLeft={{
+                      format: (val) => Math.round(val * 100) + '%',
+                    }}
+                    colors={[
+                      theme.palette.primary.main,
+                      theme.palette.secondary.dark,
+                    ]}
+                    curve="basis"
+                    data={lineData}
+                    defs={[
+                      linearGradientDef('gradientA', [
+                        { color: 'inherit', offset: 0 },
+                        { color: 'inherit', offset: 100, opacity: 0 },
+                      ]),
+                      linearGradientDef('transparent', [
+                        { color: 'white', offset: 0, opacity: 0 },
+                        { color: 'white', offset: 100, opacity: 0 },
+                      ]),
+                    ]}
+                    enableArea={true}
+                    enableGridX={false}
+                    enableGridY={false}
+                    enablePoints={false}
+                    enableSlices="x"
+                    fill={[
+                      { id: 'gradientA', match: { id: 'main' } },
+                      { id: 'transparent', match: { id: 'secondary' } },
+                    ]}
+                    isInteractive={true}
+                    lineWidth={3}
+                    margin={{
+                      bottom: 30,
+                      // Calculate the left margin from the number of digits
+                      // in the y axis labels, to make sure the labels will fit
+                      // inside the clipping rectangle.
+                      left:
+                        15 +
+                        mainInsights.opensByDate.length.toString().length * 8,
+                      right: 8,
+                      top: 20,
+                    }}
+                    sliceTooltip={(props) => {
+                      const publishDate = new Date(email?.published || 0);
+                      const { mainPoint, secondaryPoint } =
+                        getRelevantDataPoints(
+                          props.slice.points[0],
+                          {
+                            startDate: new Date(email.published!),
+                            values: mainInsights.opensByDate,
+                          },
+                          secondaryInsights && secondaryEmail?.published
+                            ? {
+                                startDate: new Date(secondaryEmail.published),
+                                values: secondaryInsights.opensByDate,
+                              }
+                            : null
+                        );
+                      const count = mainPoint.accumulatedOpens;
+                      const date = new Date(mainPoint.date);
+
+                      const secondsAfterPublish =
+                        (date.getTime() - publishDate.getTime()) / 1000;
+
+                      return (
+                        <Paper sx={{ minWidth: 200 }}>
+                          <Box p={2}>
+                            <Typography variant="h6">
+                              <ZUIDuration seconds={secondsAfterPublish} />
                             </Typography>
                             <Typography variant="body2">
                               <Msg
-                                id={messageIds.insights.opened.chart.opened}
-                                values={{
-                                  count: count,
-                                }}
+                                id={messageIds.insights.opened.chart.afterSend}
                               />
                             </Typography>
                           </Box>
-                          <Box>
-                            <Typography color="primary" variant="h5">
-                              {Math.round((count / stats.numSent) * 100)}%
-                            </Typography>
+                          <Divider />
+                          <Box p={2}>
+                            <Box
+                              alignItems="center"
+                              display="flex"
+                              gap={2}
+                              justifyContent="space-between"
+                            >
+                              <Box>
+                                <Typography variant="body2">
+                                  <FormattedDate value={date} />
+                                </Typography>
+                                <Typography variant="body2">
+                                  <Msg
+                                    id={messageIds.insights.opened.chart.opened}
+                                    values={{
+                                      count: count,
+                                    }}
+                                  />
+                                </Typography>
+                              </Box>
+                              <Box>
+                                <Typography color="primary" variant="h5">
+                                  {Math.round((count / stats.numSent) * 100)}%
+                                </Typography>
+                              </Box>
+                            </Box>
+                            {secondaryPoint && secondaryStats && (
+                              <>
+                                <Divider sx={{ my: 1 }} />
+                                <Box
+                                  alignItems="center"
+                                  display="flex"
+                                  gap={2}
+                                  justifyContent="space-between"
+                                >
+                                  <Box>
+                                    <Typography variant="body2">
+                                      <FormattedDate
+                                        value={secondaryPoint.date}
+                                      />
+                                    </Typography>
+                                    <Typography variant="body2">
+                                      <Msg
+                                        id={
+                                          messageIds.insights.opened.chart
+                                            .opened
+                                        }
+                                        values={{
+                                          count:
+                                            secondaryPoint.accumulatedOpens,
+                                        }}
+                                      />
+                                    </Typography>
+                                  </Box>
+                                  <Box>
+                                    <Typography color="secondary" variant="h5">
+                                      {Math.round(
+                                        (secondaryPoint.accumulatedOpens /
+                                          secondaryStats.num_sent) *
+                                          100
+                                      )}
+                                      %
+                                    </Typography>
+                                  </Box>
+                                </Box>
+                              </>
+                            )}
                           </Box>
-                        </Box>
-                      </Paper>
-                    );
-                  }}
-                  xScale={{
-                    max: timeSpanHours ? timeSpanHours * 60 * 60 : undefined,
-                    type: 'linear',
-                  }}
-                />
-              )}
-            </ZUIFuture>
+                        </Paper>
+                      );
+                    }}
+                    xScale={{
+                      max: timeSpanHours ? timeSpanHours * 60 * 60 : undefined,
+                      type: 'linear',
+                    }}
+                  />
+                );
+              }}
+            </ZUIFutures>
           </Box>
         </Box>
       </ZUICard>
