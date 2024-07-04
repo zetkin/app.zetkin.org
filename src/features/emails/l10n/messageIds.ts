@@ -133,6 +133,10 @@ export default makeMessages('feat.emails', {
       },
       header: m('Clicked'),
     },
+    comparison: {
+      label: m('Compare with'),
+      noneOption: m('(No other email)'),
+    },
     opened: {
       chart: {
         afterSend: m('After it was sent'),

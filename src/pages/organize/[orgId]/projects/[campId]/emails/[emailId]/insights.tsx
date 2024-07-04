@@ -120,7 +120,7 @@ const EmailPage: PageWithLayout = () => {
         <ZUIFuture future={emailsFuture}>
           {(emails) => (
             <TextField
-              label="Compare with"
+              label={messages.insights.comparison.label()}
               onChange={(ev) =>
                 setSecondaryEmailId(parseInt(ev.target.value) || 0)
               }
@@ -128,7 +128,9 @@ const EmailPage: PageWithLayout = () => {
               size="small"
               value={secondaryEmailId}
             >
-              <MenuItem value={0}>Nothing</MenuItem>
+              <MenuItem value={0}>
+                {messages.insights.comparison.noneOption()}
+              </MenuItem>
               {emails
                 .filter((email) => email.id != emailId)
                 .map((email) => (
@@ -152,15 +154,29 @@ const EmailPage: PageWithLayout = () => {
       >
         <Box display="flex" gap={2}>
           <Box flexGrow={0} maxWidth={300}>
-            <EmailKPIChart
-              email={email}
-              title={messages.insights.opened.gauge.header()}
-              total={stats.numSent}
-              value={stats.numOpened}
-            />
-            <Typography mb={2} mt={1} variant="body2">
-              {messages.insights.opened.description()}
-            </Typography>
+            <ZUIFutures
+              futures={{
+                secondaryEmail: secondaryEmailFuture,
+                secondaryStats: secondaryStatsFuture,
+              }}
+            >
+              {({ data: { secondaryEmail, secondaryStats } }) => (
+                <>
+                  <EmailKPIChart
+                    email={email}
+                    secondaryEmail={secondaryEmail}
+                    secondaryTotal={secondaryStats?.num_sent}
+                    secondaryValue={secondaryStats?.num_opened}
+                    title={messages.insights.opened.gauge.header()}
+                    total={stats.numSent}
+                    value={stats.numOpened}
+                  />
+                  <Typography mb={2} mt={1} variant="body2">
+                    {messages.insights.opened.description()}
+                  </Typography>
+                </>
+              )}
+            </ZUIFutures>
           </Box>
           <Box flexGrow={1} height={550} position="relative">
             <Box
@@ -414,15 +430,29 @@ const EmailPage: PageWithLayout = () => {
       >
         <Box display="flex" gap={2}>
           <Box flexGrow={0} maxWidth={300}>
-            <EmailKPIChart
-              email={email}
-              title={messages.insights.clicked.gauge.header()}
-              total={stats.numSent}
-              value={stats.numClicked}
-            />
-            <Typography mb={2} mt={1} variant="body2">
-              {messages.insights.clicked.description()}
-            </Typography>
+            <ZUIFutures
+              futures={{
+                secondaryEmail: secondaryEmailFuture,
+                secondaryStats: secondaryStatsFuture,
+              }}
+            >
+              {({ data: { secondaryEmail, secondaryStats } }) => (
+                <>
+                  <EmailKPIChart
+                    email={email}
+                    secondaryEmail={secondaryEmail}
+                    secondaryTotal={secondaryStats?.num_sent ?? null}
+                    secondaryValue={secondaryStats?.num_clicks ?? null}
+                    title={messages.insights.clicked.gauge.header()}
+                    total={stats.numSent}
+                    value={stats.numClicked}
+                  />
+                  <Typography mb={2} mt={1} variant="body2">
+                    {messages.insights.clicked.description()}
+                  </Typography>
+                </>
+              )}
+            </ZUIFutures>
           </Box>
           <Box flexGrow={1} minHeight={500}>
             <ZUIFuture future={insightsFuture}>
