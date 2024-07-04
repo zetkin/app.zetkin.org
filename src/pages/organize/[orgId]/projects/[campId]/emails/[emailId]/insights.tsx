@@ -179,28 +179,31 @@ const EmailPage: PageWithLayout = () => {
             <ZUIFuture future={insightsFuture}>
               {(insights) => (
                 <Table>
-                  {insights.links.map((link) => (
-                    <TableRow key={link.id}>
-                      <TableCell>{link.clicks}</TableCell>
-                      <TableCell>
-                        {sanitizer.sanitize(link.text, {
-                          // Remove all inline tags that may exist here
-                          ALLOWED_TAGS: ['#text'],
-                        })}
-                      </TableCell>
-                      <TableCell>
-                        <Link
-                          display="flex"
-                          gap={1}
-                          href={link.url}
-                          target="_blank"
-                        >
-                          {link.url}
-                          <OpenInNew fontSize="small" />
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {insights.links
+                    .concat()
+                    .sort((a, b) => b.clicks - a.clicks)
+                    .map((link) => (
+                      <TableRow key={link.id}>
+                        <TableCell>{link.clicks}</TableCell>
+                        <TableCell>
+                          {sanitizer.sanitize(link.text, {
+                            // Remove all inline tags that may exist here
+                            ALLOWED_TAGS: ['#text'],
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          <Link
+                            display="flex"
+                            gap={1}
+                            href={link.url}
+                            target="_blank"
+                          >
+                            {link.url}
+                            <OpenInNew fontSize="small" />
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </Table>
               )}
             </ZUIFuture>
