@@ -1,15 +1,19 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import {
+  Box,
   Divider,
   Link,
+  MenuItem,
   Paper,
   Table,
   TableCell,
   TableRow,
+  TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
-import { Box, useTheme } from '@mui/system';
+import { AxisProps } from '@nivo/axes';
 import { ResponsiveLine } from '@nivo/line';
 import { linearGradientDef } from '@nivo/core';
 import { OpenInNew } from '@mui/icons-material';
@@ -46,7 +50,38 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
+const HOURS_BY_SPAN: Record<string, number> = {
+  first24: 24,
+  first48: 48,
+  firstMonth: 24 * 30,
+  firstWeek: 24 * 7,
+};
+
+function hoursFromSpanValue(value: string): number | undefined {
+  return HOURS_BY_SPAN[value];
+}
+
+function axisFromSpanValue(value: string): AxisProps {
+  if (value == 'first24' || value == 'first48') {
+    const output: number[] = [];
+    for (let i = 0; i < 48; i += 4) {
+      output.push(i * 60 * 60);
+    }
+
+    return {
+      format: (val) => Math.round(val / 60 / 60),
+      tickValues: output,
+    };
+  } else {
+    return {
+      format: (val) => Math.round(val / 60 / 60 / 24),
+      tickValues: value == 'firstWeek' ? 7 : 15,
+    };
+  }
+}
+
 const EmailPage: PageWithLayout = () => {
+  const [timeSpan, setTimeSpan] = useState<string>('first48');
   const messages = useMessages(messageIds);
   const { orgId, emailId } = useNumericRouteParams();
   const theme = useTheme();
@@ -62,6 +97,8 @@ const EmailPage: PageWithLayout = () => {
   }
 
   const sanitizer = DOMPurify();
+
+  const timeSpanHours = hoursFromSpanValue(timeSpan);
 
   return (
     <>
@@ -90,14 +127,44 @@ const EmailPage: PageWithLayout = () => {
               {messages.insights.opened.description()}
             </Typography>
           </Box>
-          <Box flexGrow={1} height={550}>
+          <Box flexGrow={1} height={550} position="relative">
+            <Box
+              bgcolor={theme.palette.background.paper}
+              bottom={40}
+              position="absolute"
+              right={0}
+              width={160}
+              zIndex={1000}
+            >
+              <TextField
+                fullWidth
+                onChange={(ev) => setTimeSpan(ev.target.value)}
+                select
+                size="small"
+                value={timeSpan}
+              >
+                <MenuItem value="first24">
+                  <Msg id={messageIds.insights.opened.chart.spans.first24} />
+                </MenuItem>
+                <MenuItem value="first48">
+                  <Msg id={messageIds.insights.opened.chart.spans.first48} />
+                </MenuItem>
+                <MenuItem value="firstWeek">
+                  <Msg id={messageIds.insights.opened.chart.spans.firstWeek} />
+                </MenuItem>
+                <MenuItem value="firstMonth">
+                  <Msg id={messageIds.insights.opened.chart.spans.firstMonth} />
+                </MenuItem>
+                <MenuItem value="allTime">
+                  <Msg id={messageIds.insights.opened.chart.spans.allTime} />
+                </MenuItem>
+              </TextField>
+            </Box>
             <ZUIFuture future={insightsFuture}>
               {(insights) => (
                 <ResponsiveLine
                   animate={false}
-                  axisBottom={{
-                    format: '%b %d',
-                  }}
+                  axisBottom={axisFromSpanValue(timeSpan)}
                   axisLeft={{
                     format: (val) => Math.round(val * 100) + '%',
                   }}
@@ -106,7 +173,10 @@ const EmailPage: PageWithLayout = () => {
                   data={[
                     {
                       data: insights.opensByDate.map((openEvent) => ({
-                        x: new Date(openEvent.date),
+                        x:
+                          (new Date(openEvent.date).getTime() -
+                            new Date(insights.opensByDate[0].date).getTime()) /
+                          1000,
                         y: openEvent.accumulatedOpens / stats.numSent,
                       })),
                       id: email.title || '',
@@ -133,24 +203,22 @@ const EmailPage: PageWithLayout = () => {
                     // inside the clipping rectangle.
                     left:
                       15 + insights.opensByDate.length.toString().length * 8,
+                    right: 8,
                     top: 20,
                   }}
                   sliceTooltip={(props) => {
-                    const dataPoint = props.slice.points[0];
-                    const date = new Date(dataPoint.data.xFormatted);
                     const publishDate = new Date(email.published || 0);
                     const index = props.slice.points[0].index;
                     const count = insights.opensByDate[index].accumulatedOpens;
+                    const date = new Date(insights.opensByDate[index].date);
+                    const secondsAfterPublish =
+                      (date.getTime() - publishDate.getTime()) / 1000;
 
                     return (
                       <Paper sx={{ minWidth: 200 }}>
                         <Box p={2}>
                           <Typography variant="h6">
-                            <ZUIDuration
-                              seconds={
-                                (date.getTime() - publishDate.getTime()) / 1000
-                              }
-                            />
+                            <ZUIDuration seconds={secondsAfterPublish} />
                           </Typography>
                           <Typography variant="body2">
                             <Msg
@@ -188,12 +256,9 @@ const EmailPage: PageWithLayout = () => {
                       </Paper>
                     );
                   }}
-                  xFormat="time:%Y-%m-%d %H:%M:%S.%L"
                   xScale={{
-                    format: '%Y-%m-%d %H:%M:%S.%L',
-                    precision: 'minute',
-                    type: 'time',
-                    useUTC: false,
+                    max: timeSpanHours ? timeSpanHours * 60 * 60 : undefined,
+                    type: 'linear',
                   }}
                 />
               )}

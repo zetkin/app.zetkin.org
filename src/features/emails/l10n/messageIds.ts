@@ -137,6 +137,13 @@ export default makeMessages('feat.emails', {
       chart: {
         afterSend: m('After it was sent'),
         opened: m<{ count: number }>('{count} opened'),
+        spans: {
+          allTime: m('All time'),
+          first24: m('First 24 hours'),
+          first48: m('First 48 hours'),
+          firstMonth: m('First month'),
+          firstWeek: m('First week'),
+        },
       },
       description: m(
         'Open rate is the percentage of recipients who opened the email. A high rate is an indicator of good targeting and a compelling subject line.'
