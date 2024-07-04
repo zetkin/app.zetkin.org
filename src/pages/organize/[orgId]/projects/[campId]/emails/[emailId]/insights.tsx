@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import {
+  Divider,
   Link,
   Paper,
   Table,
@@ -11,10 +12,10 @@ import {
 import { Box, useTheme } from '@mui/system';
 import { ResponsiveLine } from '@nivo/line';
 import { linearGradientDef } from '@nivo/core';
-import { FormattedTime } from 'react-intl';
 import { OpenInNew } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
+import { FormattedDate } from 'react-intl';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
@@ -28,9 +29,10 @@ import ZUINumberChip from 'zui/ZUINumberChip';
 import EmailKPIChart from 'features/emails/components/EmailKPIChart';
 import useEmailInsights from 'features/emails/hooks/useEmailInsights';
 import ZUIFuture from 'zui/ZUIFuture';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
 import EmailMiniature from 'features/emails/components/EmailMiniature';
+import ZUIDuration from 'zui/ZUIDuration';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -96,13 +98,16 @@ const EmailPage: PageWithLayout = () => {
                   axisBottom={{
                     format: '%b %d',
                   }}
+                  axisLeft={{
+                    format: (val) => Math.round(val * 100) + '%',
+                  }}
                   colors={[theme.palette.primary.main]}
                   curve="basis"
                   data={[
                     {
                       data: insights.opensByDate.map((openEvent) => ({
                         x: new Date(openEvent.date),
-                        y: openEvent.accumulatedOpens,
+                        y: openEvent.accumulatedOpens / stats.numSent,
                       })),
                       id: email.title || '',
                     },
@@ -133,13 +138,52 @@ const EmailPage: PageWithLayout = () => {
                   sliceTooltip={(props) => {
                     const dataPoint = props.slice.points[0];
                     const date = new Date(dataPoint.data.xFormatted);
+                    const publishDate = new Date(email.published || 0);
+                    const index = props.slice.points[0].index;
+                    const count = insights.opensByDate[index].accumulatedOpens;
 
                     return (
-                      <Paper>
-                        <Box p={1}>
+                      <Paper sx={{ minWidth: 200 }}>
+                        <Box p={2}>
                           <Typography variant="h6">
-                            <FormattedTime value={date} />
+                            <ZUIDuration
+                              seconds={
+                                (date.getTime() - publishDate.getTime()) / 1000
+                              }
+                            />
                           </Typography>
+                          <Typography variant="body2">
+                            <Msg
+                              id={messageIds.insights.opened.chart.afterSend}
+                            />
+                          </Typography>
+                        </Box>
+                        <Divider />
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                          gap={2}
+                          justifyContent="space-between"
+                          p={2}
+                        >
+                          <Box>
+                            <Typography variant="body2">
+                              <FormattedDate value={date} />
+                            </Typography>
+                            <Typography variant="body2">
+                              <Msg
+                                id={messageIds.insights.opened.chart.opened}
+                                values={{
+                                  count: count,
+                                }}
+                              />
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography color="primary" variant="h5">
+                              {Math.round((count / stats.numSent) * 100)}%
+                            </Typography>
+                          </Box>
                         </Box>
                       </Paper>
                     );
