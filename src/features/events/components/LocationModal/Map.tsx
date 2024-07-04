@@ -1,12 +1,14 @@
 import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { FC, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { FC, ReactNode, Ref, useMemo, useRef, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import { useTheme } from '@mui/material';
 import {
   divIcon,
   latLngBounds,
+  LatLngExpression,
+  LeafletEventHandlerFnMap,
   Map as MapType,
   Marker as MarkerType,
 } from 'leaflet';
@@ -122,11 +124,8 @@ const Map: FC<MapProps> = ({
                     event.id !== currentEventId
                 ).length;
                 return (
-                  <Marker
+                  <DivIconMarker
                     key={location.id}
-                    ref={
-                      inMoveState && isSelectedMarker ? selectedMarkerRef : null
-                    }
                     draggable={inMoveState && isSelectedMarker}
                     eventHandlers={{
                       click: (evt) => {
@@ -146,44 +145,63 @@ const Map: FC<MapProps> = ({
                         }
                       },
                     }}
-                    icon={
-                      isSelectedMarker
-                        ? divIcon({
-                            className: '',
-                            html: renderToStaticMarkup(<SelectedMarker />),
-                          })
-                        : divIcon({
-                            className: '',
-                            html: renderToStaticMarkup(
-                              <BasicMarker
-                                color={theme.palette.primary.main}
-                                events={noOfRelevantEvents}
-                              />
-                            ),
-                          })
+                    markerRef={
+                      inMoveState && isSelectedMarker ? selectedMarkerRef : null
                     }
                     position={
                       isSelectedMarker && newPosition && inMoveState
                         ? newPosition
                         : [location.lat, location.lng]
                     }
-                  />
+                  >
+                    {isSelectedMarker ? (
+                      <SelectedMarker />
+                    ) : (
+                      <BasicMarker
+                        color={theme.palette.primary.main}
+                        events={noOfRelevantEvents}
+                      />
+                    )}
+                  </DivIconMarker>
                 );
               })}
               {pendingLocation && (
-                <Marker
-                  icon={divIcon({
-                    className: '',
-                    html: renderToStaticMarkup(<SelectedMarker />),
-                  })}
+                <DivIconMarker
                   position={[pendingLocation.lat, pendingLocation.lng]}
-                />
+                >
+                  <SelectedMarker />
+                </DivIconMarker>
               )}
             </>
           );
         }}
       </MapWrapper>
     </MapContainer>
+  );
+};
+
+const DivIconMarker: FC<{
+  children: ReactNode;
+  draggable?: boolean;
+  eventHandlers?: LeafletEventHandlerFnMap;
+  markerRef?: Ref<MarkerType> | undefined;
+  position: LatLngExpression;
+}> = ({ children, draggable, eventHandlers, markerRef, position }) => {
+  const iconDiv = useMemo(() => document.createElement('div'), []);
+  return (
+    <>
+      <Marker
+        ref={markerRef}
+        draggable={draggable}
+        eventHandlers={eventHandlers}
+        icon={divIcon({
+          className: '',
+          html: iconDiv,
+        })}
+        position={position}
+      />
+      {createPortal(children, iconDiv)}
+    </>
   );
 };
 
