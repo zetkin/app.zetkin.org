@@ -3,11 +3,16 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
+  BlockKind,
   EmailInsights,
+  InlineNodeKind,
   ZetkinEmailLink,
   ZetkinEmailRecipient,
   ZetkinEmailStats,
 } from '../types';
+import { ZetkinEmail } from 'utils/types/zetkin';
+import EmailContentTraverser from '../utils/rendering/EmailContentTraverser';
+import inlineNodesToHtml from '../utils/inlineNodesToHtml';
 
 const paramsSchema = z.object({
   emailId: z.number(),
@@ -74,11 +79,34 @@ async function handle(params: Params, apiClient: IApiClient) {
     `/api/orgs/${orgId}/emails/${emailId}/links`
   );
 
+  const email = await apiClient.get<ZetkinEmail>(
+    `/api/orgs/${orgId}/emails/${emailId}`
+  );
+
+  const linkTextByTag: Record<string, string | undefined> = {};
+  const traverser = new EmailContentTraverser(
+    JSON.parse(email.content || '{}')
+  );
+  traverser.traverse({
+    handleBlock(block) {
+      if (block.kind == BlockKind.BUTTON) {
+        linkTextByTag[block.data.tag] = block.data.text;
+      }
+      return block;
+    },
+    handleInline(node) {
+      if (node.kind == InlineNodeKind.LINK) {
+        linkTextByTag[node.tag] = inlineNodesToHtml(node.content);
+      }
+      return node;
+    },
+  });
+
   links.forEach((link) => {
     output.links.push({
       ...link,
       clicks: stats.num_clicks_by_link[link.id] || 0,
-      text: '',
+      text: linkTextByTag[link.tag] || '',
     });
   });
 

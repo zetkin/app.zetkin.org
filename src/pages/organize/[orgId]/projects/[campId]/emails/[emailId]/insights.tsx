@@ -13,6 +13,7 @@ import { ResponsiveLine } from '@nivo/line';
 import { linearGradientDef } from '@nivo/core';
 import { FormattedTime } from 'react-intl';
 import { OpenInNew } from '@mui/icons-material';
+import DOMPurify from 'dompurify';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
@@ -54,6 +55,8 @@ const EmailPage: PageWithLayout = () => {
   if (onServer || !email) {
     return null;
   }
+
+  const sanitizer = DOMPurify();
 
   return (
     <>
@@ -179,7 +182,12 @@ const EmailPage: PageWithLayout = () => {
                   {insights.links.map((link) => (
                     <TableRow key={link.id}>
                       <TableCell>{link.clicks}</TableCell>
-                      <TableCell>{link.text}</TableCell>
+                      <TableCell>
+                        {sanitizer.sanitize(link.text, {
+                          // Remove all inline tags that may exist here
+                          ALLOWED_TAGS: ['#text'],
+                        })}
+                      </TableCell>
                       <TableCell>
                         <Link
                           display="flex"
