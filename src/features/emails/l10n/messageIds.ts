@@ -124,6 +124,15 @@ export default makeMessages('feat.emails', {
     goBackButton: m('Go back'),
   },
   insights: {
+    clicked: {
+      description: m(
+        'Click rate is the percentage of recipients who not only opened the email but also clicked one of the links. A high rate is an indicator of a well-targeted email with convincing copy.'
+      ),
+      gauge: {
+        header: m('Click rate'),
+      },
+      header: m('Clicked'),
+    },
     opened: {
       description: m(
         'Open rate is the percentage of recipients who opened the email. A high rate is an indicator of good targeting and a compelling subject line.'

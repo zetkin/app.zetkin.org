@@ -1,10 +1,18 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Paper, Typography } from '@mui/material';
+import {
+  Link,
+  Paper,
+  Table,
+  TableCell,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import { Box, useTheme } from '@mui/system';
 import { ResponsiveLine } from '@nivo/line';
 import { linearGradientDef } from '@nivo/core';
 import { FormattedTime } from 'react-intl';
+import { OpenInNew } from '@mui/icons-material';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
@@ -60,8 +68,9 @@ const EmailPage: PageWithLayout = () => {
             value={stats.numOpened}
           />
         }
+        sx={{ mb: 2 }}
       >
-        <Box display="flex" gap={1}>
+        <Box display="flex" gap={2}>
           <Box flexGrow={0} maxWidth={300}>
             <EmailKPIChart
               email={email}
@@ -137,6 +146,54 @@ const EmailPage: PageWithLayout = () => {
                     useUTC: false,
                   }}
                 />
+              )}
+            </ZUIFuture>
+          </Box>
+        </Box>
+      </ZUICard>
+      <ZUICard
+        header={messages.insights.clicked.header()}
+        status={
+          <ZUINumberChip
+            color={theme.palette.grey[200]}
+            value={stats.numClicked}
+          />
+        }
+      >
+        <Box display="flex" gap={2}>
+          <Box flexGrow={0} maxWidth={300}>
+            <EmailKPIChart
+              email={email}
+              title={messages.insights.clicked.gauge.header()}
+              total={stats.numSent}
+              value={stats.numClicked}
+            />
+            <Typography mb={2} mt={1} variant="body2">
+              {messages.insights.clicked.description()}
+            </Typography>
+          </Box>
+          <Box flexGrow={1} minHeight={500}>
+            <ZUIFuture future={insightsFuture}>
+              {(insights) => (
+                <Table>
+                  {insights.links.map((link) => (
+                    <TableRow key={link.id}>
+                      <TableCell>{link.clicks}</TableCell>
+                      <TableCell>{link.text}</TableCell>
+                      <TableCell>
+                        <Link
+                          display="flex"
+                          gap={1}
+                          href={link.url}
+                          target="_blank"
+                        >
+                          {link.url}
+                          <OpenInNew fontSize="small" />
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </Table>
               )}
             </ZUIFuture>
           </Box>

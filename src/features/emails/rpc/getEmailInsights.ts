@@ -2,7 +2,12 @@ import { z } from 'zod';
 
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
-import { EmailInsights, ZetkinEmailRecipient } from '../types';
+import {
+  EmailInsights,
+  ZetkinEmailLink,
+  ZetkinEmailRecipient,
+  ZetkinEmailStats,
+} from '../types';
 
 const paramsSchema = z.object({
   emailId: z.number(),
@@ -22,6 +27,12 @@ export default makeRPCDef<Params, Result>(getEmailInsightsDef.name);
 async function handle(params: Params, apiClient: IApiClient) {
   const { emailId, orgId } = params;
 
+  const output: Result = {
+    id: emailId,
+    links: [],
+    opensByDate: [],
+  };
+
   const recipients = await apiClient.get<ZetkinEmailRecipient[]>(
     `/api/orgs/${orgId}/emails/${emailId}/recipients`
   );
@@ -32,11 +43,6 @@ async function handle(params: Params, apiClient: IApiClient) {
       (a, b) =>
         new Date(a.opened || 0).getTime() - new Date(b.opened || 0).getTime()
     );
-
-  const output: Result = {
-    id: emailId,
-    opensByDate: [],
-  };
 
   const firstEvent = sortedOpens[0];
 
@@ -59,6 +65,22 @@ async function handle(params: Params, apiClient: IApiClient) {
       }
     });
   }
+
+  const stats = await apiClient.get<ZetkinEmailStats>(
+    `/api/orgs/${orgId}/emails/${emailId}/stats`
+  );
+
+  const links = await apiClient.get<ZetkinEmailLink[]>(
+    `/api/orgs/${orgId}/emails/${emailId}/links`
+  );
+
+  links.forEach((link) => {
+    output.links.push({
+      ...link,
+      clicks: stats.num_clicks_by_link[link.id] || 0,
+      text: '',
+    });
+  });
 
   return output;
 }

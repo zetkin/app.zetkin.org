@@ -191,8 +191,21 @@ export type ZetkinEmailRecipient = {
   status: 'pending' | 'sent' | 'opened';
 };
 
+export type ZetkinEmailLink = {
+  email: {
+    id: number;
+    title: string;
+  };
+  id: number;
+  tag: string;
+  url: string;
+};
+
+type EmailLinkWithMeta = ZetkinEmailLink & { clicks: number; text: string };
+
 export type EmailInsights = {
   id: number;
+  links: EmailLinkWithMeta[];
   opensByDate: {
     accumulatedOpens: number;
     date: string;
