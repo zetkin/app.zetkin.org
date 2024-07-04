@@ -16,6 +16,7 @@ import { moveParticipantsDef } from 'features/events/rpc/moveParticipants';
 import { setOfficialRoleDef } from 'features/settings/rpc/setOfficialRole';
 import { updateEventsDef } from 'features/events/rpc/updateEvents';
 import { getEmailInsightsDef } from 'features/emails/rpc/getEmailInsights';
+import { renderEmailDef } from 'features/emails/rpc/renderEmail/server';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -37,6 +38,7 @@ export function createRPCRouter() {
   rpcRouter.register(getOfficialMembershipsDef);
   rpcRouter.register(setOfficialRoleDef);
   rpcRouter.register(getEmailInsightsDef);
+  rpcRouter.register(renderEmailDef);
 
   return rpcRouter;
 }

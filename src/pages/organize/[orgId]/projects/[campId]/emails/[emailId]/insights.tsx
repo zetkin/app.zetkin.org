@@ -29,6 +29,7 @@ import useEmailInsights from 'features/emails/hooks/useEmailInsights';
 import ZUIFuture from 'zui/ZUIFuture';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
+import EmailMiniature from 'features/emails/components/EmailMiniature';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -178,33 +179,42 @@ const EmailPage: PageWithLayout = () => {
           <Box flexGrow={1} minHeight={500}>
             <ZUIFuture future={insightsFuture}>
               {(insights) => (
-                <Table>
-                  {insights.links
-                    .concat()
-                    .sort((a, b) => b.clicks - a.clicks)
-                    .map((link) => (
-                      <TableRow key={link.id}>
-                        <TableCell>{link.clicks}</TableCell>
-                        <TableCell>
-                          {sanitizer.sanitize(link.text, {
-                            // Remove all inline tags that may exist here
-                            ALLOWED_TAGS: ['#text'],
-                          })}
-                        </TableCell>
-                        <TableCell>
-                          <Link
-                            display="flex"
-                            gap={1}
-                            href={link.url}
-                            target="_blank"
-                          >
-                            {link.url}
-                            <OpenInNew fontSize="small" />
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </Table>
+                <Box alignItems="flex-start" display="flex">
+                  <Table>
+                    {insights.links
+                      .concat()
+                      .sort((a, b) => b.clicks - a.clicks)
+                      .map((link) => (
+                        <TableRow key={link.id}>
+                          <TableCell>{link.clicks}</TableCell>
+                          <TableCell>
+                            {sanitizer.sanitize(link.text, {
+                              // Remove all inline tags that may exist here
+                              ALLOWED_TAGS: ['#text'],
+                            })}
+                          </TableCell>
+                          <TableCell>
+                            <Link
+                              display="flex"
+                              gap={1}
+                              href={link.url}
+                              target="_blank"
+                            >
+                              {link.url}
+                              <OpenInNew fontSize="small" />
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </Table>
+                  <Box>
+                    <EmailMiniature
+                      emailId={emailId}
+                      orgId={orgId}
+                      width={150}
+                    />
+                  </Box>
+                </Box>
               )}
             </ZUIFuture>
           </Box>
