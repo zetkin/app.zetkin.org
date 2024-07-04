@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { EmailStats } from './hooks/useEmailStats';
-import { EmailTheme } from './types';
+import { EmailInsights, EmailTheme } from './types';
 import {
   RemoteItem,
   remoteItem,
@@ -15,10 +15,12 @@ export interface EmailStoreSlice {
   themeList: RemoteList<EmailTheme>;
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
   statsById: Record<number, RemoteItem<EmailStats>>;
+  insightsByEmailId: Record<number, RemoteItem<EmailInsights>>;
 }
 
 const initialState: EmailStoreSlice = {
   emailList: remoteList(),
+  insightsByEmailId: {},
   linksByEmailId: {},
   statsById: {},
   themeList: remoteList(),
@@ -120,6 +122,18 @@ const emailsSlice = createSlice({
       state.emailList.loaded = timestamp;
       state.emailList.items.forEach((item) => (item.loaded = timestamp));
     },
+    insightsLoad: (state, action: PayloadAction<number>) => {
+      const emailId = action.payload;
+      state.insightsByEmailId[emailId] ||= remoteItem<EmailInsights>(emailId);
+      state.insightsByEmailId[emailId].isLoading = true;
+    },
+    insightsLoaded: (state, action: PayloadAction<EmailInsights>) => {
+      const insights = action.payload;
+      state.insightsByEmailId[insights.id] = remoteItem(insights.id, {
+        data: insights,
+        loaded: new Date().toISOString(),
+      });
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const statsItem = state.statsById[id];
@@ -181,6 +195,8 @@ export const {
   emailUpdated,
   emailsLoad,
   emailsLoaded,
+  insightsLoad,
+  insightsLoaded,
   themesLoad,
   themesLoaded,
   statsLoad,
