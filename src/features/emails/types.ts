@@ -171,3 +171,30 @@ export type EmailTheme = {
   frame_mjml: MJMLJsonObject | null;
   id: number;
 };
+
+export type ZetkinEmailRecipient = {
+  delivered: string | null;
+  email: {
+    id: number;
+    title: string;
+  };
+  email_address: null;
+  error: null;
+  id: number;
+  opened: string | null;
+  person: {
+    first_name: string;
+    id: number;
+    last_name: string;
+  };
+  sent: string | null;
+  status: 'pending' | 'sent' | 'opened';
+};
+
+export type EmailInsights = {
+  id: number;
+  opensByDate: {
+    accumulatedOpens: number;
+    date: string;
+  }[];
+};
