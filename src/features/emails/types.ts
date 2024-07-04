@@ -198,3 +198,19 @@ export type EmailInsights = {
     date: string;
   }[];
 };
+
+export type ZetkinEmailStats = {
+  id: number;
+  num_blocked: {
+    any: number;
+    blacklisted: number;
+    no_email: number;
+    unsubscribed: number;
+  };
+  num_clicks: number;
+  num_clicks_by_link: Record<number, number | undefined>;
+  num_locked_targets: number | null;
+  num_opened: number;
+  num_sent: number;
+  num_target_matches: number;
+};
