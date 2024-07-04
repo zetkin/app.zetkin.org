@@ -1,20 +1,13 @@
 import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
-import { createPortal } from 'react-dom';
-import { FC, ReactNode, Ref, useMemo, useRef, useState } from 'react';
-import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
+import { FC, useRef, useState } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useTheme } from '@mui/material';
-import {
-  divIcon,
-  latLngBounds,
-  LatLngExpression,
-  LeafletEventHandlerFnMap,
-  Map as MapType,
-  Marker as MarkerType,
-} from 'leaflet';
+import { latLngBounds, Map as MapType, Marker as MarkerType } from 'leaflet';
 
 import BasicMarker from './BasicMarker';
 import SelectedMarker from './SelectedMarker';
+import { DivIconMarker } from './DivIconMarker';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface MapProps {
@@ -177,31 +170,6 @@ const Map: FC<MapProps> = ({
         }}
       </MapWrapper>
     </MapContainer>
-  );
-};
-
-const DivIconMarker: FC<{
-  children: ReactNode;
-  draggable?: boolean;
-  eventHandlers?: LeafletEventHandlerFnMap;
-  markerRef?: Ref<MarkerType> | undefined;
-  position: LatLngExpression;
-}> = ({ children, draggable, eventHandlers, markerRef, position }) => {
-  const iconDiv = useMemo(() => document.createElement('div'), []);
-  return (
-    <>
-      <Marker
-        ref={markerRef}
-        draggable={draggable}
-        eventHandlers={eventHandlers}
-        icon={divIcon({
-          className: '',
-          html: iconDiv,
-        })}
-        position={position}
-      />
-      {createPortal(children, iconDiv)}
-    </>
   );
 };
 
