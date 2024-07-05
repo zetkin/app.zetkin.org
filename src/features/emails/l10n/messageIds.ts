@@ -135,7 +135,6 @@ export default makeMessages('feat.emails', {
     },
     comparison: {
       label: m('Compare with'),
-      noneOption: m('(No other email)'),
     },
     opened: {
       chart: {

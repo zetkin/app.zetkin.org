@@ -1,9 +1,11 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import {
+  Autocomplete,
   Box,
   Divider,
   Link,
+  ListItem,
   MenuItem,
   Paper,
   Table,
@@ -119,26 +121,56 @@ const EmailPage: PageWithLayout = () => {
       <Box display="flex" justifyContent="flex-end" mb={1}>
         <ZUIFuture future={emailsFuture}>
           {(emails) => (
-            <TextField
-              label={messages.insights.comparison.label()}
-              onChange={(ev) =>
-                setSecondaryEmailId(parseInt(ev.target.value) || 0)
+            <Autocomplete
+              filterOptions={(options, state) =>
+                options.filter(
+                  (email) =>
+                    email.title
+                      ?.toLowerCase()
+                      .includes(state.inputValue.toLowerCase()) ||
+                    email.campaign?.title
+                      .toLowerCase()
+                      .includes(state.inputValue.toLowerCase())
+                )
               }
-              select
-              size="small"
-              value={secondaryEmailId}
-            >
-              <MenuItem value={0}>
-                {messages.insights.comparison.noneOption()}
-              </MenuItem>
-              {emails
-                .filter((email) => email.id != emailId)
-                .map((email) => (
-                  <MenuItem key={email.id} value={email.id}>
-                    {email.title}
-                  </MenuItem>
-                ))}
-            </TextField>
+              getOptionLabel={(option) => option.title || ''}
+              onChange={(_, value) => setSecondaryEmailId(value?.id ?? 0)}
+              onReset={() => setSecondaryEmailId(0)}
+              options={emails.filter(
+                // Can only compare with published emails, and not itself
+                (email) => email.id != emailId && email.published
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={messages.insights.comparison.label()}
+                  size="small"
+                  variant="outlined"
+                />
+              )}
+              renderOption={(props, option) => (
+                <ListItem {...props}>
+                  <Box
+                    sx={{
+                      alignItems: 'stretch',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <Typography>{option.title}</Typography>
+                    <Typography variant="body2">
+                      {option.campaign?.title}
+                    </Typography>
+                  </Box>
+                </ListItem>
+              )}
+              sx={{
+                minWidth: 300,
+              }}
+              value={
+                emails.find((email) => email.id == secondaryEmailId) || null
+              }
+            />
           )}
         </ZUIFuture>
       </Box>
