@@ -125,13 +125,25 @@ export default makeMessages('feat.emails', {
   },
   insights: {
     clicked: {
-      description: m(
-        'Click rate is the percentage of recipients who not only opened the email but also clicked one of the links. A high rate is an indicator of a well-targeted email with convincing copy.'
-      ),
+      descriptions: {
+        ctor: m(
+          'Click-to-open rate (CTOR) is the share of those who have opened the email that also clicked one of the links. A high rate is an indicator of a well-targeted email with convincing copy.'
+        ),
+        ctr: m(
+          'Clickthrough rate (CTR) is the percentage of recipients who not only opened the email but also clicked one of the links. A high rate is an indicator of a well-targeted email with convincing copy.'
+        ),
+      },
       gauge: {
-        header: m('Click rate'),
+        headers: {
+          ctor: m('CTOR'),
+          ctr: m('CTR'),
+        },
       },
       header: m('Clicked'),
+      metrics: {
+        ctor: m('CTOR'),
+        ctr: m('CTR'),
+      },
     },
     comparison: {
       label: m('Compare with'),

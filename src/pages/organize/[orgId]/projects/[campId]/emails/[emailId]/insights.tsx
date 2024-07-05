@@ -12,6 +12,8 @@ import {
   TableCell,
   TableRow,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -87,6 +89,7 @@ function axisFromSpanValue(value: string): AxisProps {
 }
 
 const EmailPage: PageWithLayout = () => {
+  const [clickMetric, setClickMetric] = useState<'ctr' | 'ctor'>('ctr');
   const [secondaryEmailId, setSecondaryEmailId] = useState(0);
   const [timeSpan, setTimeSpan] = useState<string>('first48');
   const messages = useMessages(messageIds);
@@ -479,14 +482,39 @@ const EmailPage: PageWithLayout = () => {
                   <EmailKPIChart
                     email={email}
                     secondaryEmail={secondaryEmail}
-                    secondaryTotal={secondaryStats?.num_sent ?? null}
+                    secondaryTotal={
+                      clickMetric == 'ctr'
+                        ? secondaryStats?.num_sent ?? null
+                        : secondaryStats?.num_opened ?? null
+                    }
                     secondaryValue={secondaryStats?.num_clicks ?? null}
-                    title={messages.insights.clicked.gauge.header()}
-                    total={stats.numSent}
+                    title={messages.insights.clicked.gauge.headers[
+                      clickMetric
+                    ]()}
+                    total={
+                      clickMetric == 'ctr' ? stats.numSent : stats.numOpened
+                    }
                     value={stats.numClicked}
                   />
+                  <Box display="flex" justifyContent="center">
+                    <ToggleButtonGroup
+                      exclusive
+                      onChange={(_, value) =>
+                        setClickMetric(value || clickMetric)
+                      }
+                      size="small"
+                      value={clickMetric}
+                    >
+                      <ToggleButton value="ctr">
+                        {messages.insights.clicked.metrics.ctr()}
+                      </ToggleButton>
+                      <ToggleButton value="ctor">
+                        {messages.insights.clicked.metrics.ctor()}
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                  </Box>
                   <Typography mb={2} mt={1} variant="body2">
-                    {messages.insights.clicked.description()}
+                    {messages.insights.clicked.descriptions[clickMetric]()}
                   </Typography>
                 </>
               )}
