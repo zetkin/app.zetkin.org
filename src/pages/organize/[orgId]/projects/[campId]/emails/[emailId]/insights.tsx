@@ -23,7 +23,7 @@ import { linearGradientDef } from '@nivo/core';
 import { OpenInNew } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
-import { FormattedTime } from 'react-intl';
+import { FormattedDate, FormattedTime } from 'react-intl';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
@@ -160,10 +160,19 @@ const EmailPage: PageWithLayout = () => {
                       flexDirection: 'column',
                     }}
                   >
-                    <Typography>{option.title}</Typography>
-                    <Typography variant="body2">
-                      {option.campaign?.title}
-                    </Typography>
+                    <Box>
+                      <Typography>{option.title}</Typography>
+                    </Box>
+                    <Box display="flex" gap={1}>
+                      <Typography variant="body2">
+                        {option.published && (
+                          <FormattedDate value={option.published} />
+                        )}
+                      </Typography>
+                      <Typography variant="body2">
+                        {option.campaign?.title}
+                      </Typography>
+                    </Box>
                   </Box>
                 </ListItem>
               )}
