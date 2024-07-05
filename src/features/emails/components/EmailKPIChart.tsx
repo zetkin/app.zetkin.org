@@ -1,7 +1,8 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 import { ResponsiveRadialBar } from '@nivo/radial-bar';
 import { FC } from 'react';
 
+import { truncateOnMiddle } from 'utils/stringUtils';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 type Props = {
@@ -29,15 +30,15 @@ const EmailKPIChart: FC<Props> = ({
     {
       data: [
         {
-          x: 'Opened',
+          x: 'main',
           y: value / total,
         },
         {
-          x: 'Opened 2',
+          x: 'secondary',
           y: 0,
         },
         {
-          x: 'Other',
+          x: 'void',
           y: 1 - value / total,
         },
       ],
@@ -49,15 +50,15 @@ const EmailKPIChart: FC<Props> = ({
     data.push({
       data: [
         {
-          x: 'Opened',
+          x: 'main',
           y: 0,
         },
         {
-          x: 'Opened 2',
+          x: 'secondary',
           y: secondaryValue / secondaryTotal,
         },
         {
-          x: 'Other',
+          x: 'void',
           y: 1 - secondaryValue / secondaryTotal,
         },
       ],
@@ -94,7 +95,9 @@ const EmailKPIChart: FC<Props> = ({
         }}
       >
         <Typography variant="body2">{title}</Typography>
-        <Typography variant="h4">{percentage + '%'}</Typography>
+        <Typography color="primary" variant="h4">
+          {percentage + '%'}
+        </Typography>
         <Typography color={theme.palette.grey[700]} variant="body2">
           {secondaryPercentage >= 0 &&
             secondaryPercentage.toString().concat('%')}
@@ -105,7 +108,7 @@ const EmailKPIChart: FC<Props> = ({
           circularAxisOuter={null}
           colors={[
             theme.palette.primary.main,
-            theme.palette.grey[500],
+            theme.palette.grey[400],
             theme.palette.grey[100],
           ]}
           cornerRadius={2}
@@ -116,6 +119,33 @@ const EmailKPIChart: FC<Props> = ({
           innerRadius={0.6}
           padding={0.4}
           radialAxisStart={null}
+          tooltip={(props) => {
+            if (props.bar.category == 'void') {
+              return null;
+            }
+
+            const percentage = Math.round(props.bar.value * 100);
+
+            return (
+              <Paper>
+                <Box p={1} textAlign="center">
+                  <Typography variant="body2">
+                    {truncateOnMiddle(props.bar.groupId, 40)}
+                  </Typography>
+                  <Typography
+                    color={
+                      props.bar.category == 'main'
+                        ? theme.palette.primary.main
+                        : theme.palette.secondary.main
+                    }
+                    variant="h5"
+                  >
+                    {percentage}%
+                  </Typography>
+                </Box>
+              </Paper>
+            );
+          }}
           valueFormat=">-.2f"
         />
       </Box>

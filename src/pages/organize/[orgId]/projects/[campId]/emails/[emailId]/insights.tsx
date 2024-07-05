@@ -310,7 +310,7 @@ const EmailPage: PageWithLayout = () => {
                     }}
                     colors={[
                       theme.palette.primary.main,
-                      theme.palette.secondary.dark,
+                      theme.palette.grey[600],
                     ]}
                     curve="basis"
                     data={lineData}
