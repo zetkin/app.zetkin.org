@@ -21,7 +21,7 @@ import { linearGradientDef } from '@nivo/core';
 import { OpenInNew } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
-import { FormattedDate } from 'react-intl';
+import { FormattedTime } from 'react-intl';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
@@ -357,7 +357,7 @@ const EmailPage: PageWithLayout = () => {
                         (date.getTime() - publishDate.getTime()) / 1000;
 
                       return (
-                        <Paper sx={{ minWidth: 200 }}>
+                        <Paper sx={{ minWidth: 240 }}>
                           <Box p={2}>
                             <Typography variant="h6">
                               <ZUIDuration seconds={secondsAfterPublish} />
@@ -378,7 +378,11 @@ const EmailPage: PageWithLayout = () => {
                             >
                               <Box>
                                 <Typography variant="body2">
-                                  <FormattedDate value={date} />
+                                  <FormattedTime
+                                    day="numeric"
+                                    month="short"
+                                    value={date}
+                                  />
                                 </Typography>
                                 <Typography variant="body2">
                                   <Msg
@@ -406,7 +410,9 @@ const EmailPage: PageWithLayout = () => {
                                 >
                                   <Box>
                                     <Typography variant="body2">
-                                      <FormattedDate
+                                      <FormattedTime
+                                        day="numeric"
+                                        month="short"
                                         value={secondaryPoint.date}
                                       />
                                     </Typography>
