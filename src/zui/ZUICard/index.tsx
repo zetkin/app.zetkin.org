@@ -1,4 +1,4 @@
-import { Box, Card, Typography } from '@mui/material';
+import { Box, Card, CardProps, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 type ZUICardProps = {
@@ -6,11 +6,18 @@ type ZUICardProps = {
   header: string | JSX.Element;
   status?: ReactNode;
   subheader?: string;
+  sx?: CardProps['sx'];
 };
 
-const ZUICard: FC<ZUICardProps> = ({ children, header, status, subheader }) => {
+const ZUICard: FC<ZUICardProps> = ({
+  children,
+  header,
+  status,
+  subheader,
+  sx,
+}) => {
   return (
-    <Card>
+    <Card sx={sx}>
       <Box display="flex" justifyContent="space-between" m={2}>
         <Box>
           <Typography variant="h5">{header}</Typography>

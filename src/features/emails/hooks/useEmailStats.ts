@@ -4,24 +4,10 @@ import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useEmail from './useEmail';
 import { statsLoad, statsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-
-export interface EmailStats {
-  id: number;
-  num_target_matches: number;
-  num_locked_targets: number | null;
-  num_blocked: {
-    any: number;
-    blacklisted: number;
-    no_email: number;
-    unsubscribed: number;
-  };
-  num_sent: number;
-  num_opened: number;
-  num_clicked: number;
-}
+import { ZetkinEmailStats } from '../types';
 
 interface UseEmailStatsReturn {
-  data: EmailStats | null;
+  data: ZetkinEmailStats | null;
   error: unknown | null;
   isLoading: boolean;
   lockedReadyTargets: number | null;
@@ -52,7 +38,7 @@ export default function useEmailStats(
     actionOnLoad: () => statsLoad(emailId),
     actionOnSuccess: (data) => statsLoaded(data),
     loader: async () => {
-      const data = await apiClient.get<EmailStats & { id: number }>(
+      const data = await apiClient.get<ZetkinEmailStats & { id: number }>(
         `/api/orgs/${orgId}/emails/${emailId}/stats`
       );
       return { ...data, id: emailId };
@@ -72,7 +58,8 @@ export default function useEmailStats(
         no_email: 0,
         unsubscribed: 0,
       },
-      num_clicked: 0,
+      num_clicks: 0,
+      num_clicks_by_link: {},
       num_locked_targets: 0,
       num_opened: 0,
       num_sent: 0,
@@ -95,7 +82,7 @@ export default function useEmailStats(
       noEmail: statsFuture.data?.num_blocked.no_email ?? 0,
       unsubscribed: statsFuture.data?.num_blocked.unsubscribed ?? 0,
     },
-    numClicked: statsFuture.data?.num_clicked ?? 0,
+    numClicked: statsFuture.data?.num_clicks ?? 0,
     numLockedTargets: statsFuture.data?.num_locked_targets ?? 0,
     numOpened: statsFuture.data?.num_opened ?? 0,
     numSent: statsFuture.data?.num_sent ?? 0,
