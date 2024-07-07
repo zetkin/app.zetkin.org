@@ -1,11 +1,17 @@
 import Fuse from 'fuse.js';
 
-import { UIDataColumn } from './useUIDataColumns';
+import { UIDataColumn } from './useUIDataColumn';
+import useTagConfig from './useTagConfig';
 import useTags from 'features/tags/hooks/useTags';
 import { CellData, TagColumn } from '../utils/types';
 
 const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const tags = useTags(orgId);
+  const { assignTags } = useTagConfig(
+    orgId,
+    uiDataColumn.originalColumn,
+    uiDataColumn.columnIndex
+  );
   const fuse = new Fuse(tags.data || [], {
     includeScore: true,
     keys: ['title'],
@@ -38,7 +44,7 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
       []
     );
 
-    uiDataColumn.assignTags(matchedRows);
+    assignTags(matchedRows);
   };
 
   return guessTags;

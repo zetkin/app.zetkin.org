@@ -1,8 +1,9 @@
+import { useState } from 'react';
+
 import { addFile } from '../store';
 import { parseCSVFile } from '../utils/parseFile';
 import { parseExcelFile } from '../utils/parseFile';
 import { useAppDispatch } from 'core/hooks';
-import { useState } from 'react';
 import { ColumnKind, ImportedFile } from '../utils/types';
 
 function fileWithColumns(file: ImportedFile): ImportedFile {

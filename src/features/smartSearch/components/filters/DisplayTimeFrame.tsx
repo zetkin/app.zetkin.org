@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { TIME_FRAME } from '../types';
 import { TimeFrameConfig } from '../utils';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../UnderlinedMsg';
 

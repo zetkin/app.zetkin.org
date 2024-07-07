@@ -1,10 +1,11 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import {
   Column,
   ImportedFile,
   ImportPreview,
   PersonImport,
 } from './utils/types';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ImportStoreSlice {
   importResult: PersonImport | null;

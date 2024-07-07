@@ -1,7 +1,9 @@
 import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
-import { ColumnKind, Sheet } from '../types';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
+
+import parseDate from '../parseDate';
+import { ColumnKind, Sheet } from '../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 import {
   ImportFieldProblem,
@@ -110,11 +112,22 @@ export function predictProblems(
             ) {
               accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
-              if (!isValidPhoneNumber(value.toString(), country)) {
+              const phoneValue = value.toString().replaceAll(/[^+\d]/g, '');
+              if (!isValidPhoneNumber(phoneValue.toString(), country)) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
             } else if (column.field == 'gender') {
               if (!['m', 'f', 'o', ''].includes(value.toString())) {
+                accumulateFieldProblem(column.field, rowIndex);
+              }
+            }
+          } else if (column.kind == ColumnKind.DATE) {
+            const validator = VALIDATORS['date'];
+
+            if (column.dateFormat) {
+              const date = parseDate(value, column.dateFormat);
+              const valid = validator(date);
+              if (!valid) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
             }

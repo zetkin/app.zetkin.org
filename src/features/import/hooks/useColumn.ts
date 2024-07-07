@@ -1,4 +1,5 @@
 import { columnUpdate } from '../store';
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
@@ -48,7 +49,13 @@ export default function useColumn(orgId: number) {
     }
 
     const exists = selectedColumns.find((column) => {
-      return column.kind == ColumnKind.FIELD && column.field == value.slice(6);
+      if (column.kind == ColumnKind.FIELD) {
+        return column.field == value.slice(6);
+      }
+
+      if (column.kind == ColumnKind.DATE) {
+        return column.field == value.slice(5);
+      }
     });
 
     return !!exists;
@@ -60,14 +67,25 @@ export default function useColumn(orgId: number) {
       label: globalMessages.personFields[fieldSlug](),
       value: `field:${fieldSlug}`,
     }));
-  const customFieldsOptions: Option[] = customFields.map((field) => ({
-    label: field.title,
-    value: `field:${field.slug}`,
-  }));
+
+  const customFieldsOptions: Option[] = customFields.map((field) => {
+    if (field.type === CUSTOM_FIELD_TYPE.DATE) {
+      return {
+        label: field.title,
+        value: `date:${field.slug}`,
+      };
+    } else {
+      return {
+        label: field.title,
+        value: `field:${field.slug}`,
+      };
+    }
+  });
 
   const fieldOptions: Option[] = [
     ...nativeFieldsOptions,
     ...customFieldsOptions,
   ].sort((a, b) => a.label.localeCompare(b.label));
+
   return { fieldOptions, optionAlreadySelected, updateColumn };
 }

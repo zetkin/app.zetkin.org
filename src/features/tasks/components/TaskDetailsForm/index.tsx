@@ -15,13 +15,11 @@ import {
 } from 'features/tasks/components/types';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { Msg, useMessages } from 'core/i18n';
-
 import CollectDemographicsFields from './fields/CollectDemographicsFields';
 import ReassignFields from './fields/ReassignFields';
 import ShareLinkFields from './fields/ShareLinkFields';
 import TimeEstimateField from './fields/TimeEstimateField';
 import VisitLinkFields from './fields/VisitLinkFields';
-
 import ZUISubmitCancelButtons from '../../../../zui/ZUISubmitCancelButtons';
 import {
   configForTaskType,
@@ -34,7 +32,6 @@ import {
   DEFAULT_TIME_ESTIMATE,
   TASK_DETAILS_FIELDS,
 } from './constants';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';

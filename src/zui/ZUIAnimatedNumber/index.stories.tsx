@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIAnimatedNumber from '.';
 
 export default {
   component: ZUIAnimatedNumber,
   title: 'Atoms/ZUIAnimatedNumber',
-} as ComponentMeta<typeof ZUIAnimatedNumber>;
+} as Meta<typeof ZUIAnimatedNumber>;
 
-const Template: ComponentStory<typeof ZUIAnimatedNumber> = (args) => {
+const Template: StoryFn<typeof ZUIAnimatedNumber> = (args) => {
   const value = args.value || 0;
   return (
     <div style={{ width: 400 }}>

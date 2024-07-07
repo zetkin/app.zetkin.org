@@ -1,9 +1,9 @@
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
+
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-
 import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventParticipantsCard';
@@ -50,7 +50,7 @@ interface EventPageProps {
 const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
   const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
-  if (!eventFuture.data) {
+  if (!eventFuture || !eventFuture.data) {
     return null;
   }
 

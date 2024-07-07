@@ -69,6 +69,7 @@ interface OverviewListItemProps {
   SecondaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
+  color: STATUS_COLORS;
   endDate: CampaignActivity['visibleUntil'];
   startDate: CampaignActivity['visibleFrom'];
   focusDate: Date | null;
@@ -85,6 +86,7 @@ interface OverviewListItemProps {
 const OverviewListItem = ({
   PrimaryIcon,
   SecondaryIcon,
+  color,
   endDate,
   startDate,
   focusDate,
@@ -97,7 +99,7 @@ const OverviewListItem = ({
   statusBar,
   subtitle,
 }: OverviewListItemProps) => {
-  const color = getStatusColor(startDate, endDate);
+  //const color = getStatusColor(startDate, endDate);
   const classes = useStyles({ color });
 
   const now = new Date();
@@ -227,28 +229,3 @@ const OverviewListItem = ({
 };
 
 export default OverviewListItem;
-
-function getStatusColor(
-  startDate: Date | null,
-  endDate: Date | null
-): STATUS_COLORS {
-  const now = new Date();
-
-  if (startDate) {
-    if (startDate > now) {
-      return STATUS_COLORS.BLUE;
-    } else if (startDate < now) {
-      if (!endDate || endDate > now) {
-        return STATUS_COLORS.GREEN;
-      } else if (endDate && endDate < now) {
-        // Should never happen, because it should not be
-        // in the overview after it's closed.
-        return STATUS_COLORS.RED;
-      }
-    }
-  }
-
-  // Should never happen, because it should not be in the
-  // overview if it's not yet scheduled/published.
-  return STATUS_COLORS.GRAY;
-}

@@ -12,7 +12,6 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDataTableSearch from 'zui/ZUIDataTableSearch';
 import ZUIDataTableSorting from 'zui/ZUIDataTableSorting';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 export interface ViewDataTableToolbarProps {

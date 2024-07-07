@@ -7,6 +7,7 @@ import { Msg } from 'core/i18n';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
@@ -51,7 +52,7 @@ const EmailClick = ({
   onSubmit,
 }: EmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const emailsFuture = useEmails(orgId).data || [];
+  const emails = useEmails(orgId).data || [];
   const projectsFuture = useCampaigns(orgId).data || [];
 
   const { filter, setConfig, setOp } =
@@ -112,7 +113,11 @@ const EmailClick = ({
         (linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS &&
           (!filter.config.email || !filter.config.links?.length))
       }
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(filter);
@@ -143,9 +148,21 @@ const EmailClick = ({
                   }
                   value={filter.config.email || ''}
                 >
-                  {emailsFuture?.map((email) => (
-                    <MenuItem key={`email-${email.id}`} value={email.id}>
-                      {`"${email.title}"`}
+                  {emails.map((email) => (
+                    <MenuItem key={email.id} value={email.id}>
+                      <Tooltip
+                        placement="right-start"
+                        title={
+                          !email.title || email.title.length < 40
+                            ? ''
+                            : email.title
+                        }
+                      >
+                        <Box>{`"${truncateOnMiddle(
+                          email.title ?? '',
+                          40
+                        )}"`}</Box>
+                      </Tooltip>
                     </MenuItem>
                   ))}
                 </StyledSelect>
@@ -266,6 +283,7 @@ const EmailClick = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

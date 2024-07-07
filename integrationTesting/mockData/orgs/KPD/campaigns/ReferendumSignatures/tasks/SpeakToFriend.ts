@@ -1,6 +1,5 @@
 import { TASK_TYPE } from 'features/tasks/components/types';
 import { ZetkinTask } from 'utils/types/zetkin';
-
 import KPD from '../../..';
 import ReferendumSignatureCollection from '..';
 

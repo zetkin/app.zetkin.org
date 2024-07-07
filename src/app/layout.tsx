@@ -1,7 +1,8 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { headers } from 'next/headers';
+
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
-import { headers } from 'next/headers';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 
@@ -29,7 +30,15 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <AppRouterCacheProvider>
-          <ClientContext lang={lang} messages={messages} user={user}>
+          <ClientContext
+            envVars={{
+              MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
+              ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
+            }}
+            lang={lang}
+            messages={messages}
+            user={user}
+          >
             {children}
           </ClientContext>
         </AppRouterCacheProvider>

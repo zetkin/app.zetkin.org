@@ -22,7 +22,6 @@ import { usePanes } from 'utils/panes';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 import { ZetkinViewRow } from '../../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 type OrganizerActionViewCell = null | ZetkinOrganizerAction[];

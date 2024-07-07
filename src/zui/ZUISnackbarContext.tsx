@@ -4,7 +4,6 @@ import { Alert, AlertColor } from '@mui/material';
 import { createContext, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
-
 import messageIds from './l10n/messageIds';
 
 interface ZUISnackbarContextProps {

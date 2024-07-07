@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 
 import { CopyIcon } from './ZUIInlineCopyToClipBoard';
 import { Msg } from 'core/i18n';
-
 import messageIds from './l10n/messageIds';
 
 const ZUICopyToClipboard: React.FunctionComponent<{

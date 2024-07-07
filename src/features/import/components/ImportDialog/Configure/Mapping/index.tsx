@@ -1,25 +1,23 @@
 import { FC } from 'react';
 import { Box, Divider, Typography, useTheme } from '@mui/material';
 
-import { Column } from 'features/import/utils/types';
 import MappingRow from './MappingRow';
 import messageIds from 'features/import/l10n/messageIds';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumns';
 import useColumn from 'features/import/hooks/useColumn';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 
 interface MappingProps {
   clearConfiguration: () => void;
-  columns: UIDataColumn<Column>[];
   columnIndexBeingConfigured: number | null;
+  numberOfColumns: number;
   onConfigureStart: (columnIndex: number) => void;
 }
 
 const Mapping: FC<MappingProps> = ({
   clearConfiguration,
-  columns,
   columnIndexBeingConfigured,
+  numberOfColumns,
   onConfigureStart,
 }) => {
   const theme = useTheme();
@@ -57,13 +55,13 @@ const Mapping: FC<MappingProps> = ({
         borderRadius={1}
         flexGrow={1}
       >
-        {columns.map((column, index) => {
+        {Array.from(Array(numberOfColumns)).map((x, index) => {
           return (
             <Box key={index}>
               {index !== 0 && <Divider />}
               <MappingRow
                 clearConfiguration={clearConfiguration}
-                column={column}
+                columnIndex={index}
                 fieldOptions={fieldOptions}
                 isBeingConfigured={columnIndexBeingConfigured == index}
                 onChange={(column) => updateColumn(index, column)}

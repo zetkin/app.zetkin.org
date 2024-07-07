@@ -12,7 +12,14 @@ import { useMessages } from 'core/i18n';
 
 export interface SidebarListItemProps {
   icon: JSX.Element;
-  name: 'people' | 'projects' | 'journeys' | 'areas' | 'search';
+  name:
+    | 'people'
+    | 'projects'
+    | 'journeys'
+    | 'areas'
+    | 'search'
+    | 'settings'
+    | 'tags';
   open: boolean;
   selected?: boolean;
   onClick?: () => void;

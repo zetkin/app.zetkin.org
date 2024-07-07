@@ -1,16 +1,17 @@
-import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
-import { FC } from 'react';
 import {
   Box,
   Button,
   FormControl,
   InputLabel,
+  Link,
   MenuItem,
   Select,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
+import { FC } from 'react';
 
 import filterParticipants from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
@@ -118,7 +119,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   type,
 }) => {
   const messages = useMessages(messageIds);
-  const eventFuture = useEvent(orgId, eventId);
+  const event = useEvent(orgId, eventId)?.data;
   const { setContact } = useEventContact(orgId, eventId);
   const { deleteParticipant, setParticipantStatus } =
     useEventParticipantsMutations(orgId, eventId);
@@ -149,7 +150,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         if (params.row.person) {
           return <Typography>{params.row.person.name}</Typography>;
         } else {
-          return eventFuture.data?.contact?.id === params.row.id ? (
+          return event?.contact?.id === params.row.id ? (
             <Typography>
               {params.row.first_name + ' ' + params.row.last_name}
               <Tooltip title={messages.eventParticipantsList.contactTooltip()}>
@@ -190,30 +191,42 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       field: 'phone',
       flex: 1,
       headerName: messages.eventParticipantsList.columnPhone(),
-      resizable: false,
-      sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
+      renderCell: (params) => {
         if (params.row.person) {
-          return params.row.person.phone;
+          return (
+            <Link href={'tel:' + params.row.person.phone}>
+              {params.row.person.phone}
+            </Link>
+          );
         } else {
-          return params.row.phone;
+          return (
+            <Link href={'tel:' + params.row.phone}>{params.row.phone}</Link>
+          );
         }
       },
+      resizable: false,
+      sortingOrder: ['asc', 'desc', null],
     },
     {
       disableColumnMenu: true,
       field: 'email',
       flex: 1,
       headerName: messages.eventParticipantsList.columnEmail(),
-      resizable: false,
-      sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
+      renderCell: (params) => {
         if (params.row.person) {
-          return params.row.person.email;
+          return (
+            <Link href={'mailto:' + params.row.person.email}>
+              {params.row.person.email}
+            </Link>
+          );
         } else {
-          return params.row.email;
+          return (
+            <Link href={'mailto:' + params.row.email}>{params.row.email}</Link>
+          );
         }
       },
+      resizable: false,
+      sortingOrder: ['asc', 'desc', null],
     },
     {
       disableColumnMenu: true,
@@ -271,10 +284,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             />
           );
         } else if (type == 'booked') {
-          if (
-            eventFuture.data &&
-            new Date(removeOffset(eventFuture.data.start_time)) < new Date()
-          ) {
+          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
             const options: ButtonOption[] = [
               {
                 callback: () => {

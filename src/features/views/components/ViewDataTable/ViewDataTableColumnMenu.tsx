@@ -9,7 +9,6 @@ import {
 
 import { Msg } from 'core/i18n';
 import noPropagate from 'utils/noPropagate';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 export type ViewDataTableColumnMenuProps = {

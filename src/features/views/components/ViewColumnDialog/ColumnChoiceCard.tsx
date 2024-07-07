@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ColumnChoiceCardProps {

@@ -2,6 +2,7 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import DatePreview from './DatePreview';
 import EmptyPreview from './EmptyPreview';
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
@@ -109,6 +110,7 @@ const Preview = () => {
                     ].data[columnIdx];
                   return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
                 }
+
                 if (
                   column.kind === ColumnKind.FIELD ||
                   column.kind === ColumnKind.ID_FIELD
@@ -126,12 +128,24 @@ const Preview = () => {
                     />
                   );
                 }
+
                 if (column.kind === ColumnKind.ORGANIZATION) {
                   return (
                     <OrgPreview
                       key={columnIdx}
                       currentSheet={currentSheet}
                       org={org}
+                    />
+                  );
+                }
+
+                if (column.kind === ColumnKind.DATE) {
+                  return (
+                    <DatePreview
+                      key={columnIdx}
+                      fieldKey={column.field}
+                      fields={fields}
+                      orgId={orgId}
                     />
                   );
                 }

@@ -1,12 +1,14 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import Environment from 'core/env/Environment';
+import FetchApiClient from 'core/api/client/FetchApiClient';
+import { EnvProvider } from 'core/env/EnvContext';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { muiTheme } from 'storybook-addon-material-ui5';
-import { RouterContext } from 'next/dist/shared/lib/router-context'; // next 11.1
-import withMock from 'storybook-addon-mock';
 import { Provider as ReduxProvider } from 'react-redux';
+import { ThemeProvider } from '@mui/material';
+import { useRouter } from 'next/router';
 
 import theme from '../src/theme';
 import '../src/styles.css';
@@ -25,37 +27,66 @@ const I18nProvider = (props) => {
   );
 };
 
+async function mockFetch(path, init) {
+  if (path === '/api/orgs/1/people/1' && init === undefined) {
+    return new Response(
+      JSON.stringify({
+        data: mockPerson(),
+      })
+    );
+  }
+
+  if (path === '/api/orgs/1/people/1/tags' && init === undefined) {
+    return new Response('[]');
+  }
+
+  if (path === '/api/orgs/1/people/fields' && init === undefined) {
+    return new Response(
+      JSON.stringify({
+        data: [],
+      })
+    );
+  }
+
+  throw new Error(
+    `unmocked request to path: '${path}'
+    with init: ${JSON.stringify(init)}`
+  );
+}
+
+class MockApiClient extends FetchApiClient {
+  constructor() {
+    super(mockFetch);
+  }
+}
+
 export const decorators = [
-  muiTheme([theme]),
-  (story) => <ReduxProvider store={createStore()}>{story()}</ReduxProvider>,
+  (Story) => (
+    <ThemeProvider theme={theme}>
+      <Story />
+    </ThemeProvider>
+  ),
+  (story) => {
+    const store = createStore();
+    const router = useRouter();
+    const env = new Environment(store, new MockApiClient(), router);
+    return (
+      <ReduxProvider store={store}>
+        <EnvProvider env={env}>{story()}</EnvProvider>
+      </ReduxProvider>
+    );
+  },
   (story) => <I18nProvider>{story()}</I18nProvider>,
-  withMock,
 ];
 
 export const parameters = {
-  nextRouter: {
-    Provider: RouterContext.Provider,
-    query: {
-      orgId: 1,
-      personId: 1,
+  nextjs: {
+    router: {
+      query: {
+        orgId: 1,
+        personId: 1,
+      },
     },
   },
-  mockData: [
-    {
-      url: 'api/orgs/1/people/1',
-      method: 'GET',
-      status: 200,
-      response: {
-        data: mockPerson(),
-      },
-    },
-    {
-      url: 'api/orgs/1/people/1/tags',
-      method: 'GET',
-      status: 200,
-      response: {
-        data: [],
-      },
-    },
-  ],
 };
+export const tags = ['autodocs'];

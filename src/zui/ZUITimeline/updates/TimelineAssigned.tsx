@@ -5,7 +5,6 @@ import {
   UPDATE_TYPES,
   ZetkinUpdateJourneyInstanceAssignee,
 } from 'zui/ZUITimeline/types';
-
 import messageIds from '../l10n/messageIds';
 
 interface Props {

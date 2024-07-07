@@ -1,10 +1,10 @@
 import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { act, render } from 'utils/testing';
 import ZUIEditTextinPlace, {
   ZUIEditTextinPlaceProps,
 } from 'zui/ZUIEditTextInPlace';
-
 import messageIds from 'zui/l10n/messageIds';
 
 const props: ZUIEditTextinPlaceProps = {
@@ -36,8 +36,10 @@ describe('ZUIEditTextInPlace', () => {
       <ZUIEditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
-    await userEvent.click(inputEl);
-    await userEvent.hover(inputEl);
+    await act(async () => {
+      await userEvent.click(inputEl);
+      await userEvent.hover(inputEl);
+    });
     const tooltip = queryByRole('tooltip');
     expect(tooltip).toBeNull();
   });
@@ -47,9 +49,13 @@ describe('ZUIEditTextInPlace', () => {
       <ZUIEditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
-    await userEvent.click(inputEl);
-    await userEvent.clear(inputEl);
-    await userEvent.hover(inputEl);
+    await act(async () => {
+      await userEvent.click(inputEl);
+    });
+    await act(async () => {
+      await userEvent.clear(inputEl);
+      await userEvent.hover(inputEl);
+    });
     const tooltip = await findByMessageId(
       messageIds.editTextInPlace.tooltip.noEmpty
     );
@@ -62,14 +68,20 @@ describe('ZUIEditTextInPlace', () => {
       <ZUIEditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    await userEvent.click(inputEl);
+    await act(async () => {
+      await userEvent.click(inputEl);
+    });
     // If user tries to save no text
-    await userEvent.clear(inputEl);
-    await userEvent.keyboard('{enter}');
+    await act(async () => {
+      await userEvent.clear(inputEl);
+      await userEvent.keyboard('{enter}');
+    });
     expect(onChange).toHaveBeenCalledTimes(0);
     // If user saves the previous value, it doesn't need to save
-    await userEvent.paste(props.value);
-    await userEvent.keyboard('{enter}');
+    await act(async () => {
+      await userEvent.paste(props.value);
+      await userEvent.keyboard('{enter}');
+    });
     expect(onChange).toHaveBeenCalledTimes(0);
   });
 
@@ -79,11 +91,15 @@ describe('ZUIEditTextInPlace', () => {
       <ZUIEditTextinPlace allowEmpty={true} {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    await userEvent.click(inputEl);
+    await act(async () => {
+      await userEvent.click(inputEl);
+    });
 
     // If user tries to save no text
-    await userEvent.clear(inputEl);
-    await userEvent.keyboard('{enter}');
+    await act(async () => {
+      await userEvent.clear(inputEl);
+      await userEvent.keyboard('{enter}');
+    });
     expect(onChange).toHaveBeenCalledTimes(1);
   });
 
@@ -93,9 +109,11 @@ describe('ZUIEditTextInPlace', () => {
       <ZUIEditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value) as HTMLInputElement;
-    await userEvent.click(inputEl);
-    await userEvent.paste('New Text');
-    await userEvent.keyboard('{escape}');
+    await act(async () => {
+      await userEvent.click(inputEl);
+      await userEvent.paste('New Text');
+      await userEvent.keyboard('{escape}');
+    });
     expect(onChange).toHaveBeenCalledTimes(0);
     expect(inputEl.value).toBe(props.value);
   });
@@ -106,9 +124,11 @@ describe('ZUIEditTextInPlace', () => {
       <ZUIEditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    await userEvent.click(inputEl);
-    await userEvent.paste('New Text');
     await act(async () => {
+      await userEvent.click(inputEl);
+    });
+    await act(async () => {
+      await userEvent.paste('New Text');
       await userEvent.keyboard('{enter}');
     });
     expect(onChange).toHaveBeenCalledTimes(1);
@@ -120,11 +140,15 @@ describe('ZUIEditTextInPlace', () => {
       <ZUIEditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    await userEvent.click(inputEl);
-    await userEvent.clear(inputEl);
-    await userEvent.paste('New Text');
+    await act(async () => {
+      await userEvent.click(inputEl);
+    });
+    await act(async () => {
+      await userEvent.clear(inputEl);
+      await userEvent.paste('New Text');
 
-    fireEvent.blur(inputEl);
+      fireEvent.blur(inputEl);
+    });
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith('New Text');

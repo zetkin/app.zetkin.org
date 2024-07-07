@@ -216,6 +216,45 @@ export default makeMessages('feat.events', {
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
+  participantsModal: {
+    affected: {
+      empty: m(
+        "You haven't made any changes yet. Pick an event to move participants around."
+      ),
+      header: m('Affected people'),
+    },
+    discardButton: m('Discard changes'),
+    emptyStates: {
+      booked: m(
+        'No one has been booked at this event. You can add participants from the pool.'
+      ),
+      pending: m(
+        'There are no additional participants in the pool. You can move participants from an event to the pool to work with them here.'
+      ),
+    },
+    participants: {
+      buttons: {
+        addBack: m('Add back'),
+        addHere: m('Add here'),
+        move: m('Move'),
+        undo: m('Undo'),
+      },
+      headers: {
+        booked: m('This event'),
+        pending: m('People that can be added'),
+      },
+      states: {
+        added: m('Being added to this event'),
+        pending: m('In the pool'),
+        removed: m('Moving away from this event'),
+      },
+    },
+    statusText: m<{ personCount: number }>(
+      '{personCount, plural, =1 {One person} other {# people}} will be moved around'
+    ),
+    submitButton: m('Execute'),
+    title: m('Manage participants'),
+  },
   search: m('Search'),
   state: {
     cancelled: m('Cancelled'),

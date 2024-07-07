@@ -1,8 +1,8 @@
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Grid } from '@mui/material';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
@@ -102,7 +102,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
             <Grid item md={4}>
               <SurveyURLCard
                 isOpen={isOpen}
-                orgId={orgId}
+                orgId={survey.organization.id.toString()}
                 surveyId={surveyId}
               />
               <SurveyUnlinkedCard
@@ -124,7 +124,11 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
 
 SurveyPage.getLayout = function getLayout(page, props) {
   return (
-    <SurveyLayout orgId={props.orgId} surveyId={props.surveyId}>
+    <SurveyLayout
+      campId={props.campId}
+      orgId={props.orgId}
+      surveyId={props.surveyId}
+    >
       {page}
     </SurveyLayout>
   );

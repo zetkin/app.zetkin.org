@@ -1,9 +1,12 @@
-import getUniqueTags from './getUniqueTags';
-import { CellData, ColumnKind, Sheet } from './types';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
+
+import getUniqueTags from './getUniqueTags';
+import parseDate from './parseDate';
+import { CellData, ColumnKind, Sheet } from './types';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
+  dateFormat?: string | null; //STÄMMER DETTA?
   op: 'person.import';
   organizations?: number[];
   tags?: { id: number }[];
@@ -32,7 +35,6 @@ export default function prepareImportOperations(
           });
         }
 
-        //ID column
         if (column.kind === ColumnKind.ID_FIELD) {
           const fieldKey = column.idField;
           let value = row.data[colIdx];
@@ -53,7 +55,6 @@ export default function prepareImportOperations(
           }
         }
 
-        //Fields
         if (column.kind === ColumnKind.FIELD) {
           const fieldKey = column.field;
           let value = row.data[colIdx];
@@ -84,7 +85,6 @@ export default function prepareImportOperations(
           }
         }
 
-        //tags
         if (column.kind === ColumnKind.TAG) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx]) {
@@ -101,13 +101,28 @@ export default function prepareImportOperations(
           });
         }
 
-        //orgs
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx] && mappedColumn.orgId) {
               personImportOps[rowIndex].organizations = [mappedColumn.orgId];
             }
           });
+        }
+
+        if (column.kind === ColumnKind.DATE) {
+          if (column.dateFormat) {
+            const fieldKey = column.field;
+            let value = row.data[colIdx];
+
+            if (value) {
+              value = parseDate(value, column.dateFormat);
+
+              personImportOps[rowIndex].data = {
+                ...personImportOps[rowIndex].data,
+                [`${fieldKey}`]: value,
+              };
+            }
+          }
         }
       });
     }

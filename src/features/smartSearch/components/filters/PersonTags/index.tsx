@@ -17,7 +17,6 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 const localMessageIds = messageIds.filters.personTags;
@@ -121,7 +120,11 @@ const PersonTags = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -213,6 +216,7 @@ const PersonTags = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

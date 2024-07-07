@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'yaml';
+
 import { AnyMessage, MessageMap } from 'core/i18n/messages';
 
 run();

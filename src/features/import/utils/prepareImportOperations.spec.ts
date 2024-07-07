@@ -931,4 +931,155 @@ describe('prepareImportOperations()', () => {
       ]);
     });
   });
+
+  it('correctly parses dates into ISO date strings and ignores empty values', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          dateFormat: 'se',
+          field: 'birthday',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['19650313-4571', 1],
+        },
+        {
+          data: ['6408120923', 2],
+        },
+        {
+          data: ['', 3],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData, countryCode);
+    expect(result).toEqual([
+      {
+        data: {
+          birthday: '1965-03-13',
+          id: 1,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          birthday: '1964-08-12',
+          id: 2,
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 3,
+        },
+        op: 'person.import',
+      },
+    ]);
+  });
+
+  it('correctly parses and converts phone numbers with obvious formatting errors', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          field: 'phone',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['+46732789887', 1],
+        },
+        {
+          data: ['46732789887', 2],
+        },
+        {
+          data: ['0046732789887', 3],
+        },
+        {
+          data: ['-460732789887', 4],
+        },
+        {
+          data: ['46732-78-98-87', 5],
+        },
+        {
+          data: ['460732789887', 6],
+        },
+        {
+          data: ['0732789887', 7],
+        },
+        {
+          // Phone number contains U202C, a Unicode control character, to validate that it is stripped.
+          data: ['+46 73278 98 87‬', 8],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = prepareImportOperations(configData, countryCode);
+    expect(result).toEqual([
+      {
+        data: {
+          id: 1,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 2,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 3,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 4,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 5,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 6,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 7,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 8,
+          phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+    ]);
+  });
 });

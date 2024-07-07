@@ -1,9 +1,10 @@
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   ELEMENT_TYPE,
@@ -19,10 +20,8 @@ import {
   SurveyResponseFilterConfig,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 const localMessageIds = messageIds.filters.surveyResponse;
@@ -161,7 +160,11 @@ const SurveyResponse = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setInternalConfig({ ...internalConfig, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -245,7 +248,16 @@ const SurveyResponse = ({
                 )}
                 {validQuestions.map((q) => (
                   <MenuItem key={q.id} value={q.id}>
-                    {truncateOnMiddle(q.question.question, 50)}
+                    <Tooltip
+                      placement="right-start"
+                      title={
+                        q.question.question.length >= 40
+                          ? q.question.question
+                          : ''
+                      }
+                    >
+                      <Box>{truncateOnMiddle(q.question.question, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -279,7 +291,12 @@ const SurveyResponse = ({
                 )}
                 {surveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {s.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={s.title.length >= 40 ? s.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -287,6 +304,7 @@ const SurveyResponse = ({
           }}
         />
       )}
+      selectedOrgs={internalConfig.organizations}
     />
   );
 };

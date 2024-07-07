@@ -1,7 +1,8 @@
+import { useState } from 'react';
+
 import { CallAssignmentData } from '../apiTypes';
 import { RootState } from 'core/store';
 import useCallAssignment from './useCallAssignment';
-import { useState } from 'react';
 import { callAssignmentUpdate, callAssignmentUpdated } from '../store';
 import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';

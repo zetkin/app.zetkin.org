@@ -1,10 +1,10 @@
 import { OpenInNew } from '@mui/icons-material';
 import { Box, Link, useTheme } from '@mui/material';
 
+import { useEnv } from 'core/hooks';
 import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 interface SurveyURLCardProps {
@@ -16,6 +16,8 @@ interface SurveyURLCardProps {
 const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
+  const env = useEnv();
+
   return (
     <ZUICard
       header={isOpen ? messages.urlCard.open() : messages.urlCard.preview()}
@@ -37,9 +39,9 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
     >
       <Box display="flex" paddingBottom={2}>
         <ZUITextfieldToClipboard
-          copyText={`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
+          copyText={`${env.vars.ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
         >
-          {`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
+          {`${env.vars.ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
         </ZUITextfieldToClipboard>
       </Box>
       <Link

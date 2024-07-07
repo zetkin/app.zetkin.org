@@ -13,7 +13,6 @@ import {
   ZetkinPerson as ZetkinPersonType,
   ZetkinTag,
 } from 'utils/types/zetkin';
-
 import messageIds from '../l10n/messageIds';
 import zuiMessageIds from 'zui/l10n/messageIds';
 
@@ -167,6 +166,7 @@ const JourneyInstanceSidebar = ({
           onAssignTag={onAssignTag}
           onTagEdited={onTagEdited}
           onUnassignTag={onUnassignTag}
+          submitCreateTagLabel={messages.instance.createAndApplyTagButton()}
         />
       </Grid>
       {journeyInstance.milestones?.length && (

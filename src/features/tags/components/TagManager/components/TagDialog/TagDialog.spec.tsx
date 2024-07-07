@@ -1,10 +1,9 @@
-import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 
+import { render } from 'utils/testing';
 import mockTag from 'utils/testing/mocks/mockTag';
 import { EditTag, NewTag } from '../../types';
-
 import messageIds from 'features/tags/l10n/messageIds';
 import TagDialog from 'features/tags/components/TagManager/components/TagDialog';
 
@@ -12,6 +11,7 @@ jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('<TagDialog />', () => {
   let onSubmit: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;
+  const deleteTagCallback = jest.fn((tagId: number) => tagId);
 
   beforeEach(() => {
     onSubmit = jest.fn((tag: NewTag | EditTag) => tag);
@@ -25,15 +25,16 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
       />
     );
 
-    // Fill in dialog
+    // Fill in dialog with paste, as keyboard is slow with many characters
     const titleField = getByTestId('TagManager-TagDialog-titleField');
     await userEvent.click(titleField);
-    await userEvent.keyboard('Spongeworthy');
+    await userEvent.paste('Spongeworthy');
 
     const submit = getByTestId('SubmitCancelButtons-submitButton');
     await userEvent.click(submit);
@@ -54,19 +55,20 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
       />
     );
 
-    // Fill in dialog
+    // Fill in dialog with paste, as keyboard is slow with many characters
     const titleField = getByTestId('TagManager-TagDialog-titleField');
     await userEvent.click(titleField);
-    await userEvent.keyboard('Tag Title');
+    await userEvent.paste('Tag Title');
 
     const groupField = getByTestId('TagManager-TagDialog-tagGroupSelect');
     await userEvent.click(groupField);
-    await userEvent.keyboard('New Group');
+    await userEvent.paste('New Group');
     const newGroupOption = getByMessageId(messageIds.dialog.groupCreatePrompt);
     await userEvent.click(newGroupOption);
 
@@ -86,6 +88,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
       />
@@ -125,6 +128,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
         tag={mockTag({ id: 1000, title })}
@@ -153,6 +157,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
+        onDelete={deleteTagCallback}
         onSubmit={onSubmit}
         open={true}
         tag={mockTag({ id: 1000, title: 'Value tag', value_type: 'text' })}

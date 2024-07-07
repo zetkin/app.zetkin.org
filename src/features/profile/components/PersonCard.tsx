@@ -11,7 +11,6 @@ import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
-
 import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({

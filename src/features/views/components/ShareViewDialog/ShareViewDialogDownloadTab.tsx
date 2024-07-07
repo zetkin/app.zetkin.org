@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { Box, Button, Link, Typography } from '@mui/material';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ShareViewDialogDownloadTabProps {

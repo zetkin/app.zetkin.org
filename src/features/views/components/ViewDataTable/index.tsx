@@ -56,7 +56,6 @@ import {
   ZetkinViewColumn,
   ZetkinViewRow,
 } from 'utils/types/zetkin';
-
 import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
@@ -299,7 +298,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     renderCell: (params) => {
       const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
       return (
-        // eslint-disable-next-line @next/next/no-img-element
         <ZUIPersonHoverCard personId={params.value as number}>
           <NextLink
             href={`/organize/${orgId}/people/${params.value}`}

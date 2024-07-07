@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import test from '../../../fixtures/next';
 
+import test from '../../../fixtures/next';
 import KPD from '../../../mockData/orgs/KPD';
 import MarxistTraining from '../../../mockData/orgs/KPD/journeys/MarxistTraining';
 import MemberOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding';

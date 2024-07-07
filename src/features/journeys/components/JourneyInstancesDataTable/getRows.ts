@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js';
+
 import { ID_SEARCH_CHAR } from 'zui/ZUIDataTableSearch';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 

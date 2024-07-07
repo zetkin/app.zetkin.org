@@ -9,7 +9,6 @@ import {
   JourneyTagColumnType,
 } from 'features/journeys/utils/journeyInstanceUtils';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
-
 import messageIds from 'features/journeys/l10n/messageIds';
 
 const FORMAT_TYPES = {

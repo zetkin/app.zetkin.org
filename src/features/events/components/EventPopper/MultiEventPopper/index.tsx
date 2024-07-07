@@ -7,6 +7,11 @@ import {
   Typography,
 } from '@mui/material';
 import React, { FC, useState } from 'react';
+import {
+  ArrowBack,
+  EventOutlined,
+  SplitscreenOutlined,
+} from '@mui/icons-material';
 
 import ArbitraryCluster from './ArbitraryCluster';
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
@@ -18,11 +23,6 @@ import SingleEvent from '../SingleEvent';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from '../../../../../utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
-import {
-  ArrowBack,
-  EventOutlined,
-  SplitscreenOutlined,
-} from '@mui/icons-material';
 
 export interface MultiEventPopperProps {
   anchorPosition: { left: number; top: number } | undefined;

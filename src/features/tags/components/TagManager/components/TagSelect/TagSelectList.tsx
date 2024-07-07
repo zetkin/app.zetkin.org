@@ -4,7 +4,6 @@ import { Box, IconButton, List, ListItem, ListSubheader } from '@mui/material';
 
 import TagChip from '../TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
-
 import messageIds from '../../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 

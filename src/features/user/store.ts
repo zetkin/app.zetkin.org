@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import {
   RemoteItem,
   remoteItem,
@@ -21,21 +22,6 @@ const userSlice = createSlice({
   initialState: initialState,
   name: 'user',
   reducers: {
-    membershipsLoad: (state) => {
-      state.membershipList.isLoading = true;
-    },
-    membershipsLoaded: (state, action: PayloadAction<ZetkinMembership[]>) => {
-      const memberships = action.payload;
-      const timestamp = new Date().toISOString();
-
-      const membershipsWithIds = memberships.map((membership) => ({
-        ...membership,
-        id: membership.organization.id,
-      }));
-
-      state.membershipList = remoteList(membershipsWithIds);
-      state.membershipList.loaded = timestamp;
-    },
     userLoad: (state) => {
       state.userItem = remoteItem('me');
       state.userItem.isLoading = true;
@@ -50,5 +36,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice;
-export const { membershipsLoad, membershipsLoaded, userLoad, userLoaded } =
-  userSlice.actions;
+export const { userLoad, userLoaded } = userSlice.actions;

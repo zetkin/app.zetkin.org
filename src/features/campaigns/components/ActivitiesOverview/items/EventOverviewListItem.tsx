@@ -9,6 +9,7 @@ import {
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import getEventUrl from 'features/events/utils/getEventUrl';
+import getStatusColor from 'features/campaigns/utils/getStatusColor';
 import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
 import { removeOffset } from 'utils/dateUtils';
@@ -30,9 +31,13 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
   const { openEventPopper } = useEventPopper();
   const messages = useMessages(messageIds);
 
+  const startDate = event.published ? new Date(event.published) : null;
+  const endDate = event.cancelled ? new Date(event.cancelled) : null;
+
   return (
     <OverviewListItem
-      endDate={event.cancelled ? new Date(event.cancelled) : null}
+      color={getStatusColor(startDate, endDate)}
+      endDate={endDate}
       endNumber={`${event.num_participants_available} / ${event.num_participants_required}`}
       endNumberColor={
         event.num_participants_available < event.num_participants_required
@@ -56,7 +61,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       }}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
-      startDate={event.published ? new Date(event.published) : null}
+      startDate={startDate}
       statusBar={null}
       subtitle={
         <ZUIIconLabelRow

@@ -1,9 +1,10 @@
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -18,7 +19,6 @@ import {
   ZetkinQuery,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 
 const localMessageIds = messageIds.filters.subQuery;
@@ -262,7 +262,14 @@ const SubQuery = ({
                       >
                         {renderedOptions.map((o) => (
                           <MenuItem key={o.id} value={o.id}>
-                            {o.title}
+                            <Tooltip
+                              placement="right-start"
+                              title={
+                                !o.title || o.title.length < 40 ? '' : o.title
+                              }
+                            >
+                              <Box>{truncateOnMiddle(o.title ?? '', 40)}</Box>
+                            </Tooltip>
                           </MenuItem>
                         ))}
                       </StyledSelect>

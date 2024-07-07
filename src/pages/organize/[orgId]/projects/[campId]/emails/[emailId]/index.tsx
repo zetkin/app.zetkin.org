@@ -1,11 +1,11 @@
 import { Box } from '@mui/material';
 import Head from 'next/head';
+import { GetServerSideProps } from 'next';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import EmailTargets from 'features/emails/components/EmailTargets';
 import EmailTargetsBlocked from 'features/emails/components/EmailTargetsBlocked';
 import EmailTargetsReady from 'features/emails/components/EmailTargetsReady';
-import { GetServerSideProps } from 'next';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useEmail from 'features/emails/hooks/useEmail';

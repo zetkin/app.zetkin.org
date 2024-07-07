@@ -1,9 +1,10 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useViewTree from 'features/views/hooks/useViewTree';
@@ -15,7 +16,6 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.personView;
 
@@ -72,7 +72,11 @@ const PersonView = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -124,7 +128,12 @@ const PersonView = ({
                 >
                   {personViews.map((v) => (
                     <MenuItem key={v.id} value={v.id}>
-                      {v.title}
+                      <Tooltip
+                        placement="right-start"
+                        title={v.title.length >= 40 ? v.title : ''}
+                      >
+                        <Box>{truncateOnMiddle(v.title, 40)}</Box>
+                      </Tooltip>
                     </MenuItem>
                   ))}
                 </StyledSelect>
@@ -135,6 +144,7 @@ const PersonView = ({
           <Msg id={localMessageIds.viewSelect.none} />
         )
       }
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

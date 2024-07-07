@@ -12,7 +12,6 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.emailBlacklist;
 
@@ -51,7 +50,11 @@ const EmailBlacklist = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderSentence={() => (
         <Msg
@@ -91,6 +94,7 @@ const EmailBlacklist = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

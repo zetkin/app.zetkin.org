@@ -1,9 +1,10 @@
+import { Box, Switch } from '@mui/material';
+
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useSurvey from '../hooks/useSurvey';
 import useSurveyMutations from '../hooks/useSurveyMutations';
 import ZUICard from 'zui/ZUICard';
-import { Box, Switch } from '@mui/material';
 
 const SurveySuborgsCard = ({
   orgId,

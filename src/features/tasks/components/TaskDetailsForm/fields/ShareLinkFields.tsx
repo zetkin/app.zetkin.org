@@ -2,7 +2,6 @@ import { TextField } from 'mui-rff';
 
 import { SHARE_LINK_FIELDS } from '../constants';
 import { useMessages } from 'core/i18n';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 
 const ShareLinkFields = (): JSX.Element => {

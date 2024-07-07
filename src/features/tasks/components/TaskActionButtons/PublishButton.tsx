@@ -8,7 +8,6 @@ import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { Msg, useMessages, UseMessagesMap } from 'core/i18n';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 
 const getTooltipContents = (

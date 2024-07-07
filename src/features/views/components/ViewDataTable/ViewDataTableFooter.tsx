@@ -7,7 +7,6 @@ import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
-
 import messageIds from 'features/views/l10n/messageIds';
 import zuiMessageIds from 'zui/l10n/messageIds';
 

@@ -1,11 +1,12 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -17,7 +18,6 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.callHistory;
@@ -80,7 +80,11 @@ const CallHistory = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -116,9 +120,11 @@ const CallHistory = ({
                       <Msg
                         id={localMessageIds.assignmentSelect.assignment}
                         values={{
-                          assignmentTitle:
+                          assignmentTitle: truncateOnMiddle(
                             assignmentsFuture.data?.find((a) => a.id === value)
                               ?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -138,7 +144,12 @@ const CallHistory = ({
                 )}
                 {assignmentsFuture.data?.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
-                    {a.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={a.title.length >= 40 ? a.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(a.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -200,6 +211,7 @@ const CallHistory = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

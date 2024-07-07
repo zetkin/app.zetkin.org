@@ -1,9 +1,10 @@
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   NewSmartSearchFilter,
@@ -13,7 +14,6 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
@@ -86,7 +86,11 @@ const SurveySubmission = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -126,8 +130,10 @@ const SurveySubmission = ({
                       <Msg
                         id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle:
+                          surveyTitle: truncateOnMiddle(
                             surveys.find((s) => s.id === value)?.title ?? '',
+                            40
+                          ),
                         }}
                       />
                     );
@@ -142,7 +148,12 @@ const SurveySubmission = ({
                 )}
                 {surveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {s.title}
+                    <Tooltip
+                      placement="right-start"
+                      title={s.title.length >= 40 ? s.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -167,6 +178,7 @@ const SurveySubmission = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

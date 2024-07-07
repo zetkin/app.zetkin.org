@@ -3,7 +3,6 @@ import { Typography } from '@mui/material';
 import { useMessages } from 'core/i18n';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
-
 import messageIds from 'zui/l10n/messageIds';
 
 export interface ZUIConfirmDialogProps {

@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test';
-import test, { NextWorkerFixtures } from '../../../../fixtures/next';
 
+import test, { NextWorkerFixtures } from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import KPD from '../../../../mockData/orgs/KPD';
 

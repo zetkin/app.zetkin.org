@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'react';
-
 import { List, ListItem, ListItemText } from '@mui/material';
 
 import CallAssignmentListItem from './CallAssignmentListItem';
@@ -9,12 +8,10 @@ import PersonListItem from './PersonListItem';
 import SurveyListItem from './SurveyListItem';
 import TaskListItem from './TaskListItem';
 import ViewListItem from './ViewListItem';
-
 import {
   SEARCH_DATA_TYPE,
   SearchResult,
 } from 'features/search/components/types';
-
 import messages from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 

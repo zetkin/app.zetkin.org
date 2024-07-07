@@ -1,4 +1,5 @@
 import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('zui', {
@@ -40,6 +41,7 @@ export default makeMessages('zui', {
       assign: m('Create & assign'),
       default: m('Create'),
     },
+    tagCreateAndApplyLabel: m('Create and apply'),
     title: {
       addToJourney: m<{ journey: string }>(
         'Create person and add to {journey}'
@@ -55,6 +57,7 @@ export default makeMessages('zui', {
     },
     validationWarning: {
       email: m('Please add a valid email address'),
+      name: m('This field cannot be empty'),
       phone: m('Please add a valid phone number'),
       url: m('Please add a valid URL'),
     },
@@ -107,6 +110,9 @@ export default makeMessages('zui', {
       noEmpty: m('This cannot be empty'),
     },
   },
+  editableImage: {
+    add: m('Click to add image'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
@@ -116,11 +122,18 @@ export default makeMessages('zui', {
       expand: m('Expand'),
     },
   },
-  imageSelectDialog: {
-    instructions: m('Drag and drop an image file, or click to select'),
-  },
   lists: {
     showMore: m('Show more...'),
+  },
+  orgScopeSelect: {
+    orgPlaceholder: m('Select organizations'),
+    orgSelectionLabel: m<{ count: number }>('{count} selected'),
+    scope: {
+      all: m<{ org: string }>('{org} and all sub-organizations'),
+      specific: m('Specific organizations'),
+      suborgs: m('Only sub-organizations'),
+      this: m<{ org: string }>('Only {org}'),
+    },
   },
   organizeSidebar: {
     areas: m('Areas'),
@@ -130,7 +143,9 @@ export default makeMessages('zui', {
     people: m('People'),
     projects: m('Projects & Activities'),
     search: m('Search'),
+    settings: m('Settings'),
     signOut: m('Sign out'),
+    tags: m('Tags'),
     userSettings: m('User settings'),
   },
   personGridEditCell: {

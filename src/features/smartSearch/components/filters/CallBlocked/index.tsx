@@ -12,7 +12,6 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import { useNumericRouteParams } from 'core/hooks';
@@ -37,12 +36,10 @@ const CallBlocked = ({
 }: CallBlockedProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const assignmentsFuture = useCallAssignments(orgId);
-  const { filter, setOp } = useSmartSearchFilter<CallBlockedFilterConfig>(
-    initialFilter,
-    {
+  const { filter, setConfig, setOp } =
+    useSmartSearchFilter<CallBlockedFilterConfig>(initialFilter, {
       reason: 'any',
-    }
-  );
+    });
 
   // only submit if assignments exist
   const submittable = !!assignmentsFuture.data?.length;
@@ -55,7 +52,11 @@ const CallBlocked = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderSentence={() => (
         <Msg
@@ -76,6 +77,7 @@ const CallBlocked = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

@@ -4,7 +4,6 @@ import { ZetkinUpdateJourneyInstanceStart } from 'zui/ZUITimeline/types';
 import ZUIJourneyInstanceCard from 'zui/ZUIJourneyInstanceCard';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
-
 import messageIds from '../l10n/messageIds';
 
 interface TimelineJourneyStartProps {

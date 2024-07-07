@@ -16,7 +16,6 @@ import choices, {
   ColumnChoiceWithKey,
 } from '../choices';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ColumnGalleryProps {

@@ -1,17 +1,17 @@
 import { FormEvent } from 'react';
-import { Box, MenuItem } from '@mui/material';
+import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
 import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTasks from 'features/tasks/hooks/useTasks';
 import { getTaskStatus, getTaskTimeFrameWithConfig } from '../../utils';
-
 import {
   NewSmartSearchFilter,
   OPERATION,
@@ -22,7 +22,6 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
@@ -128,7 +127,11 @@ const Task = ({
   return (
     <FilterForm
       disableSubmit={!submittable}
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -185,6 +188,23 @@ const Task = ({
             taskSelect: (
               <StyledSelect
                 onChange={(e) => handleTaskSelectChange(e.target.value)}
+                SelectProps={{
+                  renderValue: function getLabel(value) {
+                    return value === ANY_TASK ? (
+                      <Msg id={localMessageIds.taskSelect.any} />
+                    ) : (
+                      <Msg
+                        id={localMessageIds.taskSelect.task}
+                        values={{
+                          task: truncateOnMiddle(
+                            tasks.find((t) => t.id === value)?.title ?? '',
+                            40
+                          ),
+                        }}
+                      />
+                    );
+                  },
+                }}
                 value={filter.config.task || ANY_TASK}
               >
                 <MenuItem key={ANY_TASK} value={ANY_TASK}>
@@ -192,10 +212,12 @@ const Task = ({
                 </MenuItem>
                 {tasks.map((t) => (
                   <MenuItem key={t.id} value={t.id}>
-                    <Msg
-                      id={localMessageIds.taskSelect.task}
-                      values={{ task: t.title }}
-                    />
+                    <Tooltip
+                      placement="right-start"
+                      title={t.title.length >= 40 ? t.title : ''}
+                    >
+                      <Box>{truncateOnMiddle(t.title, 40)}</Box>
+                    </Tooltip>
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -237,6 +259,7 @@ const Task = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

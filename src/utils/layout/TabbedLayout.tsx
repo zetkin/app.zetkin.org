@@ -1,6 +1,17 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
-import { Box, Collapse, Tab, TabProps, Tabs, Theme } from '@mui/material';
+import {
+  Alert,
+  Badge,
+  Box,
+  Button,
+  Collapse,
+  styled,
+  Tab,
+  TabProps,
+  Tabs,
+  Theme,
+} from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
@@ -21,6 +32,8 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
+  alertBtnMsg?: string;
+  alertMsg?: React.ReactElement;
   avatar?: string;
   baseHref: string;
   belowActionButtons?: ReactElement;
@@ -31,11 +44,19 @@ interface TabbedLayoutProps {
   subtitle?: string | ReactElement;
   defaultTab: string;
   noPad?: boolean;
-  tabs: { href: string; label: string; tabProps?: TabProps }[];
+  tabs: {
+    badge?: number;
+    href: string;
+    label: string;
+    tabProps?: TabProps;
+  }[];
+  onClickAlertBtn?: () => void;
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   actionButtons,
+  alertBtnMsg,
+  alertMsg,
   avatar,
   baseHref,
   belowActionButtons,
@@ -44,6 +65,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   ellipsisMenuItems,
   fixedHeight,
   noPad,
+  onClickAlertBtn,
   subtitle,
   tabs,
   title,
@@ -72,12 +94,35 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
     ? (value: boolean) => setCollapsed(value)
     : undefined;
 
+  const HorizontallyCenteredBadge = styled(Badge)(() => ({
+    '& .MuiBadge-badge': {
+      right: -15,
+      top: '50%',
+      transform: 'translateY(-50%)',
+    },
+  }));
+
   return (
     <DefaultLayout>
+      {alertMsg && (
+        <Alert
+          action={
+            alertBtnMsg && (
+              <Button color="inherit" onClick={onClickAlertBtn} size="small">
+                {alertBtnMsg}
+              </Button>
+            )
+          }
+          severity="info"
+        >
+          {alertMsg}
+        </Alert>
+      )}
       <Box
-        display={fixedHeight ? 'flex' : 'block'}
+        display="flex"
         flexDirection="column"
         height={fixedHeight ? 1 : 'auto'}
+        minHeight="100vh"
       >
         <Header
           actionButtons={actionButtons}
@@ -100,7 +145,20 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 <Tab
                   {...tab.tabProps}
                   key={tab.href}
-                  label={tab.label}
+                  label={
+                    !tab.badge ? (
+                      tab.label
+                    ) : (
+                      <HorizontallyCenteredBadge
+                        badgeContent={tab.badge}
+                        color="primary"
+                      >
+                        <Box component="span" sx={{ mr: 1.5 }}>
+                          {tab.label}
+                        </Box>
+                      </HorizontallyCenteredBadge>
+                    )
+                  }
                   sx={{
                     paddingX: 3,
                   }}

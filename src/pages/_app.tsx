@@ -6,10 +6,10 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import Router from 'next/router';
-import { store } from 'core/store';
 import { Theme } from '@mui/material/styles';
 import { useEffect } from 'react';
 
+import { store } from 'core/store';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
 import { PageWithLayout } from '../utils/types';
@@ -18,11 +18,6 @@ import Providers from 'core/Providers';
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
-}
-
-// MUI-X license
-if (process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY) {
-  LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY);
 }
 
 // Progress bar
@@ -47,7 +42,7 @@ declare global {
 }
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  const { lang, messages, ...restProps } = pageProps;
+  const { envVars, lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
   const getLayout = c.getLayout || ((page) => page);
 
@@ -55,7 +50,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     window.__reactRendered = true;
   }
 
-  const env = new Environment(store, new BrowserApiClient());
+  const env = new Environment(store, new BrowserApiClient(), envVars || {});
+
+  // MUI-X license
+  if (env.vars.MUIX_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(env.vars.MUIX_LICENSE_KEY);
+  }
 
   useEffect(() => {
     // Remove the server-side injected CSS.

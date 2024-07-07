@@ -14,7 +14,6 @@ import { useEffect, useState } from 'react';
 import { Msg } from 'core/i18n';
 import ZUICleanHtml from 'zui/ZUICleanHtml';
 import ZUICollapse from 'zui/ZUICollapse';
-
 import messageIds from 'zui/ZUITimeline/l10n/messageIds';
 
 interface PrettyEmailProps {

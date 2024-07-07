@@ -9,7 +9,6 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 const PersonDeleteCard: React.FunctionComponent<{

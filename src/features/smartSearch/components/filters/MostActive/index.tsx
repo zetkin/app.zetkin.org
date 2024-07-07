@@ -13,7 +13,6 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 const localMessageIds = messageIds.filters.mostActive;
@@ -57,7 +56,11 @@ const MostActive = ({
 
   return (
     <FilterForm
+      enableOrgSelect
       onCancel={onCancel}
+      onOrgsChange={(orgs) => {
+        setConfig({ ...filter.config, organizations: orgs });
+      }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
@@ -111,6 +114,7 @@ const MostActive = ({
           }}
         />
       )}
+      selectedOrgs={filter.config.organizations}
     />
   );
 };

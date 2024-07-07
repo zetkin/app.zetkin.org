@@ -20,9 +20,9 @@
     "playwright": "cross-env NODE_ENV=production playwright test",
     "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test",
     "playwright:ci": "cross-env NODE_ENV=production playwright test",
-    "storybook": "start-storybook -p 6006 -s ./src",
+    "storybook": "storybook dev -p 6006",
     "make-yaml": "ts-node src/tools/make-yaml.ts",
-    "build-storybook": "build-storybook"
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@date-io/date-fns": "1.x",
@@ -102,14 +102,13 @@
   "devDependencies": {
     "@babel/core": "^7.17.9",
     "@playwright/test": "~1.25.0",
-    "@storybook/addon-actions": "^6.5.5",
-    "@storybook/addon-essentials": "^6.5.5",
-    "@storybook/addon-interactions": "^6.5.5",
-    "@storybook/addon-links": "^6.5.5",
-    "@storybook/builder-webpack5": "^6.5.5",
-    "@storybook/manager-webpack5": "^6.5.5",
-    "@storybook/react": "^6.5.5",
-    "@storybook/testing-library": "^0.0.11",
+    "@storybook/addon-actions": "^8.1.10",
+    "@storybook/addon-essentials": "^8.1.10",
+    "@storybook/addon-interactions": "^8.1.10",
+    "@storybook/addon-links": "^8.1.10",
+    "@storybook/nextjs": "^8.1.10",
+    "@storybook/react": "^8.1.10",
+    "@storybook/test": "^8.1.10",
     "@testing-library/react": "^13.3.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.4.3",
@@ -134,7 +133,6 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.1.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-loader": "^4.0.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-next": "^0.0.0",
     "eslint-plugin-no-switch-statements": "^1.0.0",
@@ -148,16 +146,13 @@
     "next-transpile-modules": "^4.1.0",
     "npm-run-all2": "^6.0.4",
     "prettier": "^2.5.1",
-    "storybook-addon-material-ui5": "^1.0.0",
-    "storybook-addon-mock": "^2.4.0",
-    "storybook-addon-next-router": "^4.0.0",
+    "storybook": "^8.1.10",
     "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.6",
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
-    "typescript": "^5.4.3",
-    "webpack": "^5.58.1"
+    "typescript": "^5.4.3"
   },
   "engines": {
     "node": ">=18.0.0"

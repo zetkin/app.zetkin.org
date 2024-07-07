@@ -1,14 +1,14 @@
 import { Box } from '@mui/material';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ProceduralColorIcon from '.';
 
 export default {
   component: ProceduralColorIcon,
   title: 'ProceduralColorIcon',
-} as ComponentMeta<typeof ProceduralColorIcon>;
+} as Meta<typeof ProceduralColorIcon>;
 
-const Template: ComponentStory<typeof ProceduralColorIcon> = (args) => (
+const Template: StoryFn<typeof ProceduralColorIcon> = (args) => (
   <Box display="flex">
     <ProceduralColorIcon id={args.id} />
   </Box>

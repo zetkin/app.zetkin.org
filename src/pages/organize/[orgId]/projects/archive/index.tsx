@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -14,7 +15,6 @@ import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
-import { ChangeEvent, useState } from 'react';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {

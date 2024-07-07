@@ -1,15 +1,14 @@
-import messageIds from 'features/organizations/l10n/messageIds';
 import NextLink from 'next/link';
-import { useMessages } from 'core/i18n';
-import useOrganizations from '../hooks/useOrganizations';
-import { ZetkinMembership } from 'utils/types/zetkin';
-
-import ZUIFuture from 'zui/ZUIFuture';
 import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
+
+import messageIds from 'features/organizations/l10n/messageIds';
+import useMemberships from '../hooks/useMemberships';
+import { useMessages } from 'core/i18n';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const OrganizationsList = () => {
   const messages = useMessages(messageIds);
-  const organizations = useOrganizations();
+  const organizations = useMemberships();
 
   return (
     <ZUIFuture future={organizations}>
@@ -18,19 +17,22 @@ const OrganizationsList = () => {
           <Box style={{ margin: '30px' }}>
             <Typography variant="h3">{messages.page.title()}</Typography>
             <List>
-              {data?.map((org: ZetkinMembership['organization']) => {
+              {data?.map((membership) => {
+                const orgId = membership.organization.id;
                 return (
-                  <ListItem key={org.id}>
+                  <ListItem key={orgId}>
                     <Avatar
-                      src={`/api/orgs/${org.id}/avatar`}
+                      src={`/api/orgs/${orgId}/avatar`}
                       style={{ margin: '15px' }}
                     />
                     <NextLink
-                      href={`/organize/${org.id}`}
+                      href={`/organize/${orgId}`}
                       legacyBehavior
                       passHref
                     >
-                      <Link underline="hover">{org.title}</Link>
+                      <Link underline="hover">
+                        {membership.organization.title}
+                      </Link>
                     </NextLink>
                   </ListItem>
                 );

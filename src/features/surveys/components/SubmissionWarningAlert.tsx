@@ -1,9 +1,10 @@
-import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
+import { Alert, AlertTitle, Box, Link } from '@mui/material';
+
+import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIFuture from 'zui/ZUIFuture';
-import { Alert, AlertTitle, Box, Link } from '@mui/material';
 
 type SubmissionWarningAlertProps = {
   campId: number | 'standalone' | 'shared';

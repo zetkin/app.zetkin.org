@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { useMessages } from 'core/i18n';
 import {
   AccessTime,
   ArrowForward,
@@ -13,12 +12,14 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 
+import { useMessages } from 'core/i18n';
 import { eventsDeselected } from 'features/events/store';
 import EventSelectionCheckBox from '../EventSelectionCheckBox';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import LocationLabel from '../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import { MultiDayEvent } from 'features/calendar/components/utils';
+import ParticipantAvatars from './ParticipantAvatars';
 import Quota from './Quota';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
@@ -56,6 +57,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const classes = useStyles();
+  const orgId = event.organization.id;
   const { participantsFuture, respondentsFuture } = useEventParticipants(
     event.organization.id,
     event.id
@@ -76,14 +78,14 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     state == EventState.SCHEDULED ||
     state == EventState.CANCELLED;
 
-  const remindedParticipants =
+  const numRemindedParticipants =
     participants.filter((p) => p.reminder_sent != null && !p.cancelled)
       .length ?? 0;
-  const availableParticipants =
-    participants.filter((p) => !p.cancelled).length ?? 0;
-  const signedParticipants =
-    respondents.filter((r) => !participants.some((p) => p.id === r.id))
-      .length ?? 0;
+
+  const availableParticipants = participants.filter((p) => !p.cancelled);
+  const signedParticipants = respondents.filter(
+    (r) => !participants.some((p) => p.id === r.id)
+  );
 
   const ellipsisMenuItems = [
     {
@@ -136,59 +138,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           {event.activity?.title || messages.common.noActivity()}
         </Typography>
       </Box>
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="space-between"
-        sx={{ my: 2 }}
-      >
-        <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
-            <ZUIIconLabel
-              color="secondary"
-              icon={<People color="secondary" sx={{ fontSize: '1.3rem' }} />}
-              label={messages.eventPopper.booked().toUpperCase()}
-              size="xs"
-            />
-          </Box>
-          <Quota
-            denominator={event.num_participants_required}
-            numerator={event.num_participants_available}
-          />
-        </Box>
-        <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
-            <ZUIIconLabel
-              color="secondary"
-              icon={
-                <MailOutline color="secondary" sx={{ fontSize: '1.3rem' }} />
-              }
-              label={messages.eventPopper.notified().toUpperCase()}
-              size="xs"
-            />
-          </Box>
-          <Quota
-            denominator={availableParticipants}
-            numerator={remindedParticipants}
-          />
-        </Box>
-        <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
-            <ZUIIconLabel
-              color="secondary"
-              icon={
-                <EmojiPeople color="secondary" sx={{ fontSize: '1.3rem' }} />
-              }
-              label={messages.eventPopper.signups().toUpperCase()}
-              size="xs"
-            />
-          </Box>
-          <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
-            {signedParticipants}
-          </Typography>
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
+      <Box display="flex" flexDirection="column" sx={{ mb: 2, my: 2 }}>
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
             color="secondary"
@@ -235,6 +185,78 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           <LocationLabel location={event.location} />
         </Typography>
       </Box>
+      <Box display="flex" flexDirection="column" gap={1} sx={{ mb: 2 }}>
+        {signedParticipants.length > 0 && (
+          <>
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Box alignItems="center" display="flex">
+                <ZUIIconLabel
+                  color="secondary"
+                  icon={
+                    <EmojiPeople
+                      color="secondary"
+                      sx={{ fontSize: '1.3rem' }}
+                    />
+                  }
+                  label={messages.eventPopper.signups().toUpperCase()}
+                  size="xs"
+                />
+              </Box>
+              <Typography
+                color={
+                  (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
+                }
+              >
+                {signedParticipants.length ?? 0}
+              </Typography>
+            </Box>
+            <ParticipantAvatars
+              orgId={orgId}
+              participants={signedParticipants}
+            />
+          </>
+        )}
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          <Box alignItems="center" display="flex">
+            <ZUIIconLabel
+              color="secondary"
+              icon={<People color="secondary" sx={{ fontSize: '1.3rem' }} />}
+              label={messages.eventPopper.booked().toUpperCase()}
+              size="xs"
+            />
+          </Box>
+          <Quota
+            denominator={event.num_participants_required}
+            numerator={event.num_participants_available}
+          />
+        </Box>
+        {availableParticipants.length > 0 && (
+          <ParticipantAvatars
+            orgId={orgId}
+            participants={availableParticipants}
+          />
+        )}
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          <Box alignItems="center" display="flex">
+            <ZUIIconLabel
+              color="secondary"
+              icon={
+                <MailOutline color="secondary" sx={{ fontSize: '1.3rem' }} />
+              }
+              label={messages.eventPopper.notified().toUpperCase()}
+              size="xs"
+            />
+          </Box>
+          <Quota
+            denominator={availableParticipants.length ?? 0}
+            numerator={numRemindedParticipants}
+          />
+        </Box>
+      </Box>
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
         <Box sx={{ mb: 0.4 }}>
           <ZUIIconLabel
@@ -272,38 +294,58 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </Box>
         </Box>
       )}
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="flex-end"
-        marginBottom={2}
-      >
-        <NextLink href={getEventUrl(event)} legacyBehavior passHref>
-          <Link underline="none">
-            <Button
-              endIcon={<ArrowForward />}
-              onClick={onClickAway}
-              variant="text"
-            >
-              {messages.eventPopper.eventPageLink().toUpperCase()}
-            </Button>
-          </Link>
-        </NextLink>
-      </Box>
-      <Box alignItems="center" display="flex" justifyContent="flex-end">
-        {showPublishButton && (
-          <Button
-            onClick={() => {
-              publishEvent();
-              onClickAway();
-            }}
-            variant="contained"
+      {showPublishButton && (
+        <>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="flex-end"
+            marginBottom={2}
           >
-            {messages.eventPopper.publish()}
-          </Button>
-        )}
-        <ZUIEllipsisMenu items={ellipsisMenuItems} />
-      </Box>
+            <NextLink href={getEventUrl(event)} legacyBehavior passHref>
+              <Link underline="none">
+                <Button
+                  endIcon={<ArrowForward />}
+                  onClick={onClickAway}
+                  variant="text"
+                >
+                  {messages.eventPopper.eventPageLink().toUpperCase()}
+                </Button>
+              </Link>
+            </NextLink>
+          </Box>
+          <Box alignItems="center" display="flex" justifyContent="flex-end">
+            <Button
+              onClick={() => {
+                publishEvent();
+                onClickAway();
+              }}
+              variant="contained"
+            >
+              {messages.eventPopper.publish()}
+            </Button>
+
+            <ZUIEllipsisMenu items={ellipsisMenuItems} />
+          </Box>
+        </>
+      )}
+      {!showPublishButton && (
+        <Box alignItems="center" display="flex" justifyContent="flex-end">
+          <NextLink href={getEventUrl(event)} legacyBehavior passHref>
+            <Link underline="none">
+              <Button
+                endIcon={<ArrowForward />}
+                onClick={onClickAway}
+                variant="text"
+              >
+                {messages.eventPopper.eventPageLink().toUpperCase()}
+              </Button>
+            </Link>
+          </NextLink>
+
+          <ZUIEllipsisMenu items={ellipsisMenuItems} />
+        </Box>
+      )}
     </>
   );
 };

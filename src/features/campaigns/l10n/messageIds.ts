@@ -15,6 +15,8 @@ export default makeMessages('feat.campaigns', {
     subtitles: {
       endsLater: m<{ relative: ReactElement }>('Ends {relative}'),
       endsToday: m('Ends today'),
+      sentEarlier: m<{ relative: ReactElement }>('Was sent {relative}'),
+      sentLater: m<{ relative: ReactElement }>('To be sent {relative}'),
       startsLater: m<{ relative: ReactElement }>('Starts {relative}'),
       startsToday: m('Starts today'),
     },
@@ -142,6 +144,30 @@ export default makeMessages('feat.campaigns', {
     heading: m('Mobilization and outreach (none configured)'),
   },
   noManager: m('No Project Manager'),
+  shared: {
+    cta: m('Go to project'),
+    noActivities: m(
+      'All ongoing activities shared with your organization will appear here.'
+    ),
+    noArchives: m(
+      'All expired activities that have been shared with your organization will appear here.'
+    ),
+    title: m('Shared with us'),
+  },
+  sharedLayout: {
+    alertMsg: m(
+      'This project contains only activities shared from other organizations and you can view it but not change it.'
+    ),
+    subtitle: m<{ numOfActivities: number }>(
+      '{numOfActivities, plural, =1 {1 activity} other {# activities}}'
+    ),
+    tabs: {
+      activities: m('Activities'),
+      archive: m('Archive'),
+      overview: m('Overview'),
+    },
+    title: m('Shared with us'),
+  },
   singleProject: {
     filterActivities: m('Type to filter'),
     noActivities: m('There are no activities in this project yet.'),

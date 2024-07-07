@@ -1,4 +1,5 @@
 import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.calendar', {
@@ -77,6 +78,7 @@ export default makeMessages('feat.calendar', {
   selectionBar: {
     deselect: m('Deselect'),
     editEvents: m('Edit events'),
+    editParticipants: m('Manage participants'),
     ellipsisMenu: {
       cancel: m('Cancel'),
       cancelWarning: m(
