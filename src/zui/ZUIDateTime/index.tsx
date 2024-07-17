@@ -11,7 +11,11 @@ const ZUIDateTime: React.FunctionComponent<ZUIDateTimeProps> = ({
   convertToLocal,
   datetime,
 }) => {
-  const value = convertToLocal ? convertDateTimeToLocal(datetime) : datetime;
+  const value =
+    (convertToLocal ? convertDateTimeToLocal(datetime) : datetime).replace(
+      /(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}).+/,
+      '$1'
+    ) + '.000Z';
 
   return (
     <>

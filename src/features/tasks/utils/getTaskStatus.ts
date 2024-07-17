@@ -21,7 +21,11 @@ const getTaskStatus = (task: ZetkinTask): TASK_STATUS => {
   }
 
   const isPublishedPassed =
-    published && dayjs(published + '.000Z').isBefore(now);
+    published &&
+    dayjs(
+      published?.replace(/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}).+/, '$1') +
+        '.000Z'
+    ).isBefore(now);
 
   if (isPublishedPassed) {
     return TASK_STATUS.ACTIVE;
