@@ -21,6 +21,15 @@ import { EyeClosed } from 'zui/icons/EyeClosed';
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 
+const units: Intl.RelativeTimeFormatUnit[] = [
+  'year',
+  'month',
+  'day',
+  'hour',
+  'minute',
+  'second',
+];
+
 const iconAndMessage = (
   intl: IntlShape,
   messages: UseMessagesMap<typeof messageIds.dateRange>,
@@ -35,10 +44,37 @@ const iconAndMessage = (
 
   if (start && end) {
     if (end.isBefore(now)) {
+      // Builds an object with the difference in each unit, like this.
+      // { "year": 0, "month": -1, "day": -32, "hour": -784, "minute": -47044, "second": -2822665 }
+      // It's important for the number to be negative, because that's how
+      // formatRelativeTime knows to return a string in the past tense.
+      const diffs = Object.fromEntries(
+        units.map(
+          (
+            unit: Intl.RelativeTimeFormatUnit
+          ): [Intl.RelativeTimeFormatUnit, number] => [
+            unit,
+            0 - now.diff(end, unit),
+          ]
+        )
+      ) as Record<Intl.RelativeTimeFormatUnit, number>;
+
+      // Pick the largest unit with a negative difference. So if the period
+      // ended 5 days ago, the largest unit would be `day`. If it ended 100
+      // minutes ago, the largest unit would be `hour`, and so on.
+      const [unit, diff] = (Object.entries(diffs).find(
+        ([, diff]) => diff < 0
+      ) as [Intl.RelativeTimeFormatUnit, number]) ?? [
+        'second' as Intl.RelativeTimeFormatUnit,
+        0,
+      ];
+
+      const time = intl.formatRelativeTime(diff, unit);
+
       //In the past, invisible
       return {
         icon: <EyeClosed />,
-        message: messages.invisible(),
+        message: messages.ended({ time }),
       };
     }
     if (start.isAfter(now)) {
