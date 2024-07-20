@@ -1,7 +1,7 @@
 import useSurvey from './useSurvey';
 
 export enum SurveyState {
-  UNPUBLISHED = 'unpublished',
+  EXPIRED = 'expired',
   DRAFT = 'draft',
   PUBLISHED = 'published',
   SCHEDULED = 'scheduled',
@@ -29,7 +29,7 @@ export default function useSurveyState(
         const expiryDate = new Date(data.expires);
 
         if (expiryDate < now) {
-          return SurveyState.UNPUBLISHED;
+          return SurveyState.EXPIRED;
         }
       }
 
