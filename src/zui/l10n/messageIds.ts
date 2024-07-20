@@ -83,6 +83,7 @@ export default makeMessages('zui', {
   dateRange: {
     draft: m('No start date'),
     end: m('End'),
+    ended: m<{ time: string }>('Ended {time}'),
     finite: m<{ end: string; start: string }>('Visible from {start} to {end}'),
     indefinite: m<{ start: string }>('Visible from {start} onwards'),
     invisible: m('Not visible or scheduled'),
