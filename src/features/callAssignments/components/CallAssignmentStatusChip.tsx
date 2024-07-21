@@ -65,6 +65,8 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
           className={classes.spinner}
           size={14}
           style={{ color: 'white' }}
+          value={75}
+          variant="determinate"
         />
       )}
     </Box>
