@@ -1,0 +1,9 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "./src/utils/storeUtils.ts",
+    "./src/core/caching/shouldLoad.ts"
+  ],
+  "out": "typedoc",
+  "readme": "./docs/index.md"
+}
