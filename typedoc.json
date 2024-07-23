@@ -1,21 +1,15 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "alwaysCreateEntryPointModule": false,
-  "basePath": "/zetkin/app.zetkin.org/typedoc",
+  "basePath": "./",
   "cleanOutputDir": true,
   "name": "Zetkin",
-  "entryPoints": [
-    "./docs/index.ts"
-    // "./src/utils/storeUtils.ts",
-    // "./src/core/caching/shouldLoad.ts",
-    // "./src/core/caching/cacheUtils.ts",
-    // "./src/zui/ZUIFuture/index.tsx",
-    // "./src/core/caching/futures.ts"
-  ],
+  "entryPoints": ["./docs/index.ts"],
   "out": "./typedoc",
   "readme": "docs/index.md",
   "sort": ["source-order"],
   "categorizeByGroup": false,
   "navigation": { "includeCategories": true },
+  "plugin": ["typedoc-plugin-mermaid"],
   "projectDocuments": ["docs/*/*.md"]
 }

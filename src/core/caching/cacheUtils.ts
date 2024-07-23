@@ -42,10 +42,35 @@ export function loadListIfNecessary<
   remoteList: RemoteList<DataType> | undefined,
   dispatch: AppDispatch,
   hooks: {
+    /**
+     * Called when an error occurs while loading the list.
+     * @param err The error that occurred during the loading process.
+     * @return {PayloadAction} The action to dispatch when an error occurs.
+     */
     actionOnError?: (err: unknown) => PayloadAction<unknown>;
+
+    /**
+     * Called when the list begins loading.
+     * @returns {PayloadAction} The action to dispatch when the list is loading.
+     */
     actionOnLoad: () => PayloadAction<OnLoadPayload>;
+
+    /**
+     * Called when the list loads successfully.
+     * @returns {PayloadAction} The action to dispatch when the list has loaded.
+     */
     actionOnSuccess: (items: DataType[]) => PayloadAction<OnSuccessPayload>;
+
+    /**
+     * Optionally override {@link shouldLoad shouldLoad} with a custom function.
+     * @returns {boolean} Whether the list should be loaded.
+     */
     isNecessary?: () => boolean;
+
+    /**
+     * The function that loads the list. Typically an API call.
+     * @returns {Promise<DataType[]>}
+     */
     loader: () => Promise<DataType[]>;
   }
 ): IFuture<DataType[]> {
@@ -124,8 +149,22 @@ export function loadItemIfNecessary<
   remoteItem: RemoteItem<DataType> | undefined,
   dispatch: AppDispatch,
   hooks: {
+    /**
+     * Called when the item begins loading.
+     * @returns {PayloadAction} The action to dispatch when the item is loading.
+     */
     actionOnLoad: () => PayloadAction<OnLoadPayload>;
+
+    /**
+     * Called when the item loads successfully.
+     * @returns {PayloadAction} The action to dispatch when the item has loaded.
+     */
     actionOnSuccess: (item: DataType) => PayloadAction<OnSuccessPayload>;
+
+    /**
+     * The function that loads the item. Typically an API call.
+     * @returns {Promise<DataType[]>}
+     */
     loader: () => Promise<DataType>;
   }
 ): IFuture<DataType> {

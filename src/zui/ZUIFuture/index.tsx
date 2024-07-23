@@ -45,9 +45,11 @@ export interface ZUIFutureProps<DataType> {
 }
 
 /**
- * Zetkin's equivalent of a [Suspense](https://react.dev/reference/react/Suspense) boundary.
+ * Facilitates displaying fallback content while an {@link IFuture} object is loading.
  *
- * Typically looks something like this in everyday use.
+ * ZUIFuture is Zetkin's equivalent of a
+ * [Suspense](https://react.dev/reference/react/Suspense) boundary, and
+ * typically looks something like this in everyday use.
  *
  * ```tsx
  * <ZUIFuture future={timelineUpdatesFuture}>

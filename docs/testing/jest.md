@@ -3,6 +3,8 @@ title: Jest
 category: Testing
 ---
 
+# Jest
+
 ## Running Jest
 
 ### Run all tests

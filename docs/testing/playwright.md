@@ -3,6 +3,8 @@ title: Playwright
 category: Testing
 ---
 
+# Playwright
+
 ## Running Playwright
 
 ### Run all tests

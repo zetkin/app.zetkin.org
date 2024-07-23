@@ -2,6 +2,21 @@ import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
 /**
  * Encapsulates the state of an asynchronous operation to fetch a piece of data.
+ * Most commonly, this means a network request.
+ *
+ * ```mermaid
+ * flowchart TD
+ *   A[data: null\nerror: null\nisLoading: false]
+ *   B[data: null\nerror: null\nisLoading: true]
+ *   C[data: null\nerror: Error\nisLoading: false]
+ *   D[data: Object\nerror: null\nisLoading: false]
+ *   E{Success?}
+ *   A -->|Asynchronous operation begins| B
+ *   B -->|Asynchronous operation ends| E
+ *   E -->|Yes| D
+ *   E -->|No| C
+ * ```
+ *
  *
  * @category Async
  */
