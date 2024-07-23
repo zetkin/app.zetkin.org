@@ -1,6 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "alwaysCreateEntryPointModule": false,
+  "basePath": "/zetkin/app.zetkin.org/typedoc",
   "cleanOutputDir": true,
   "name": "Zetkin",
   "entryPoints": [
@@ -15,6 +16,6 @@
   "readme": "docs/index.md",
   "sort": ["source-order"],
   "categorizeByGroup": false,
-  "navigation": {},
+  "navigation": { "includeCategories": true },
   "projectDocuments": ["docs/*/*.md"]
 }
