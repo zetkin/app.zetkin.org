@@ -112,7 +112,6 @@ export interface RemoteList<DataType> {
   items: RemoteItem<DataType>[];
 }
 
-/** @hidden */
 export function remoteItem<DataType extends RemoteData>(
   id: number | string,
   item?: Partial<Omit<RemoteItem<DataType>, 'id'>>
@@ -129,7 +128,6 @@ export function remoteItem<DataType extends RemoteData>(
   };
 }
 
-/** @hidden */
 export function remoteList<DataType extends RemoteData>(
   items: DataType[] = []
 ): RemoteList<DataType> {
@@ -142,7 +140,6 @@ export function remoteList<DataType extends RemoteData>(
   };
 }
 
-/** @hidden */
 export function findOrAddItem<DataType extends RemoteData>(
   list: RemoteList<DataType>,
   id: number

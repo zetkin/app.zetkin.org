@@ -61,7 +61,6 @@ export function loadListIfNecessary<
   });
 }
 
-/** @hidden */
 export function loadList<
   DataType,
   OnLoadPayload = void,
