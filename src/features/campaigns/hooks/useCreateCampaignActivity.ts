@@ -1,3 +1,4 @@
+import updateCallAssignment from 'features/callAssignments/rpc/updateCallAssignment';
 import {
   callAssignmentCreate,
   callAssignmentCreated,
@@ -40,6 +41,21 @@ export default function useCreateCampaignActivity(
         //making a POST to create call_assignment, so adding them here.
         { ...callAssignmentBody, goal_filters: [], target_filters: [] }
       )
+      .then((callAssignment) => {
+        return apiClient.rpc(updateCallAssignment, {
+          callAssignmentId: callAssignment.id,
+          goal_filters: [
+            {
+              config: {
+                assignment: callAssignment.id,
+                operator: 'reached',
+              },
+              type: 'call_history',
+            },
+          ],
+          orgId,
+        });
+      })
       .then((callAssignment) => {
         dispatch(callAssignmentCreated([callAssignment, campId]));
         return callAssignment;
