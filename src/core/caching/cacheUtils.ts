@@ -10,6 +10,30 @@ import {
 } from './futures';
 import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
+/**
+ * Used by data fetching hooks to manage cache invalidation and fetching for their collection.
+ *
+ * A typical call to `loadListIfNecessary` looks like this one.
+ *
+ * ```typescript
+ * const tasksFuture = loadListIfNecessary(tasksList, dispatch, {
+ *   actionOnLoad: () => tasksLoad(),
+ *   actionOnSuccess: (data) => tasksLoaded(data),
+ *   loader: () =>
+ *     apiClient.get<ZetkinTask[]>(
+ *       `/api/orgs/${orgId}/campaigns/${campId}/tasks`
+ *     ),
+ * });
+ * ```
+ *
+ * Under the hood, {@link shouldLoad shouldLoad} is used for cache invalidation.
+ *
+ * @category Cache
+ * @param {RemoteList} remoteList The remote list to check and load.
+ * @param {AppDispatch} dispatch The Redux dispatch function.
+ * @param {Object} hooks Callbacks to handle the loading process.
+ * @return {IFuture} An {@link IFuture} object that can be used to render a loading spinner or the data itself.
+ */
 export function loadListIfNecessary<
   DataType,
   OnLoadPayload = void,
@@ -37,6 +61,7 @@ export function loadListIfNecessary<
   });
 }
 
+/** @hidden */
 export function loadList<
   DataType,
   OnLoadPayload = void,
@@ -69,6 +94,29 @@ export function loadList<
   return new PromiseFuture(promise);
 }
 
+/**
+ * Used by data fetching hooks to manage cache invalidation and fetching for their entity.
+ *
+ * A typical call to `loadItemIfNecessary` looks like this one.
+ *
+ * ```typescript
+ * const future = loadItemIfNecessary(submissionItem, dispatch, {
+ *   actionOnLoad: () => submissionLoad(submissionId),
+ *   actionOnSuccess: (data) => submissionLoaded(data),
+ *   loader: () =>
+ *     apiClient.get(`/api/orgs/${orgId}/survey_submissions/${submissionId}`),
+ * });
+ * ```
+ *
+ * Under the hood, {@link shouldLoad shouldLoad} is used for cache invalidation.
+ *
+ *
+ * @category Cache
+ * @param {RemoteItem} remoteItem The remote item to check and load.
+ * @param {AppDispatch} dispatch The Redux dispatch function.
+ * @param {Object} hooks Callbacks to handle the loading process.
+ * @return {IFuture} An {@link IFuture} object that can be used to render a loading spinner or the data itself.
+ */
 export function loadItemIfNecessary<
   DataType,
   OnLoadPayload = void,

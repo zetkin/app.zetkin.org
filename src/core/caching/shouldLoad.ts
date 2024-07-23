@@ -35,6 +35,10 @@ function isItem(
  *
  * Returns `true` for items whose data is older than the TTL or has been marked
  * as stale.
+ *
+ * @category Cache
+ * @param {RemoteItem|RemoteList} item The remote object to check.
+ * @return {boolean} `true` if the object should be loaded, `false` otherwise.
  */
 export default function shouldLoad(
   /**
@@ -42,10 +46,16 @@ export default function shouldLoad(
    */
   item: RemoteItem<unknown> | RemoteList<unknown> | undefined
 ): boolean;
+/**
+ * @category Cache
+ */
 export default function shouldLoad(
   item: RemoteObjectRecord | undefined,
   ids: number[]
 ): boolean;
+/**
+ * @category Cache
+ */
 export default function shouldLoad(
   item: ObjThatNeedsLoading,
   idsOrVoid?: number[]

@@ -1,9 +1,20 @@
 {
   "$schema": "https://typedoc.org/schema.json",
+  "alwaysCreateEntryPointModule": false,
+  "cleanOutputDir": true,
+  "name": "Zetkin",
   "entryPoints": [
-    "./src/utils/storeUtils.ts",
-    "./src/core/caching/shouldLoad.ts"
+    "./docs/index.ts"
+    // "./src/utils/storeUtils.ts",
+    // "./src/core/caching/shouldLoad.ts",
+    // "./src/core/caching/cacheUtils.ts",
+    // "./src/zui/ZUIFuture/index.tsx",
+    // "./src/core/caching/futures.ts"
   ],
-  "out": "typedoc",
-  "readme": "./docs/index.md"
+  "out": "./typedoc",
+  "readme": "docs/index.md",
+  "sort": ["source-order"],
+  "categorizeByGroup": false,
+  "navigation": {},
+  "projectDocuments": ["docs/*/*.md"]
 }

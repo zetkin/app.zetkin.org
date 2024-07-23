@@ -15,7 +15,7 @@ interface RemoteData {
  * remote item is defined with type `RemoteItem<User>`, the `data` field will be
  * of type `User`.
  *
- * @category Caching
+ * @category Cache
  */
 export interface RemoteItem<DataType> {
   /**
@@ -66,12 +66,49 @@ export interface RemoteItem<DataType> {
   deleted: boolean;
 }
 
-/* @hidden */
+/**
+ * Zetkin's front end uses the RemoteList interface to represent a reference to
+ * a collection in the back end. It's comparable to React Query's
+ * [`QueryResult`](https://tanstack.com/query/v4/docs/framework/react/reference/useQuery)
+ * object.
+ *
+ * In addition to the collection itself, it contains metadata about the
+ * state of the collection, which is used to power things like loading states.
+ *
+ * @param DataType What type of remote list  to represent. For example, if a
+ * remote item is defined with type `RemoteList<User>`, the `data` field will be
+ * of type `User[]`.
+ *
+ * @category Cache
+ */
 export interface RemoteList<DataType> {
+  /**
+   * A general-purpose error field. This can be used to store any error that occurs
+   * while fetching or mutating the collection.
+   */
   error: unknown;
+
+  /**
+   * Denotes whether the collection is currently being loaded. A `true` value here
+   * might be used to show a loading spinner in the UI
+   */
   isLoading: boolean;
+
+  /**
+   * Indicates whether the local copy of the collection might be out of date in
+   * comparison to the latest data in the back end. A `true` value here is one
+   * of the criteria that cause `shouldLoad()` to trigger a new fetch.
+   */
   isStale: boolean;
+
+  /**
+   * Timestamp of the last successful fetch.
+   */
   loaded: string | null;
+
+  /**
+   * The collection itself.
+   */
   items: RemoteItem<DataType>[];
 }
 

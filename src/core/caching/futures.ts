@@ -1,11 +1,29 @@
 import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
+/**
+ * Encapsulates the state of an asynchronous operation to fetch a piece of data.
+ *
+ * @category Async
+ */
 export interface IFuture<DataType> {
+  /**
+   * The payload of the asynchronous operation.
+   */
   data: DataType | null;
+
+  /**
+   * General purpose error object where any error that occurs during the
+   * asynchronous operation can be stored.
+   */
   error: unknown | null;
+
+  /**
+   * Denotes whether the operation is currently in progress.
+   */
   isLoading: boolean;
 }
 
+/** @hidden */
 export function futureToObject<DataType>(future: IFuture<DataType>) {
   return {
     data: future.data,
@@ -14,6 +32,7 @@ export function futureToObject<DataType>(future: IFuture<DataType>) {
   };
 }
 
+/** @hidden */
 export class FutureBase<DataType> {
   constructor(
     protected _data: DataType | null = null,
@@ -34,6 +53,7 @@ export class FutureBase<DataType> {
   }
 }
 
+/** @hidden */
 export class PromiseFuture<DataType>
   extends FutureBase<DataType>
   implements IFuture<DataType>
@@ -61,6 +81,7 @@ export class PromiseFuture<DataType>
   }
 }
 
+/** @hidden */
 export class ResolvedFuture<DataType>
   extends FutureBase<DataType>
   implements IFuture<DataType>
@@ -70,6 +91,7 @@ export class ResolvedFuture<DataType>
   }
 }
 
+/** @hidden */
 export class LoadingFuture<DataType>
   extends FutureBase<DataType>
   implements IFuture<DataType>
@@ -79,6 +101,7 @@ export class LoadingFuture<DataType>
   }
 }
 
+/** @hidden */
 export class PlaceholderFuture<DataType>
   extends FutureBase<DataType>
   implements IFuture<DataType>
@@ -88,6 +111,7 @@ export class PlaceholderFuture<DataType>
   }
 }
 
+/** @hidden */
 export class RemoteItemFuture<DataType>
   extends FutureBase<DataType>
   implements IFuture<DataType>
@@ -97,6 +121,7 @@ export class RemoteItemFuture<DataType>
   }
 }
 
+/** @hidden */
 export class RemoteListFuture<DataType>
   extends FutureBase<DataType[]>
   implements IFuture<DataType[]>
@@ -112,6 +137,7 @@ export class RemoteListFuture<DataType>
   }
 }
 
+/** @hidden */
 export class ErrorFuture<DataType>
   extends FutureBase<DataType>
   implements IFuture<DataType>
