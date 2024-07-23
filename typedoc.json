@@ -6,7 +6,6 @@
   "name": "Zetkin",
   "entryPoints": ["./docs/index.ts"],
   "out": "./typedoc",
-  "readme": "docs/index.md",
   "sort": ["source-order"],
   "categorizeByGroup": false,
   "navigation": { "includeCategories": true },
