@@ -15115,9 +15115,6 @@ typedoc-plugin-mermaid@^1.12.0:
   dependencies:
     html-escaper "^3.0.3"
 
-typedoc-theme-zetkin@../typedoc-theme-zetkin:
-  version "0.0.0"
-
 typedoc@^0.26.5:
   version "0.26.5"
   resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.26.5.tgz#08032bd57cac3d56e8ac296a07e3482dc0c645ac"
