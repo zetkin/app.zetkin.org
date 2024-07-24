@@ -1,4 +1,4 @@
-import updateCallAssignment from 'features/callAssignments/rpc/updateCallAssignment';
+import fixNewCallAssignmentFilterConfigRpc from 'features/callAssignments/rpc/fixNewCallAssignmentFilterConfig';
 import {
   callAssignmentCreate,
   callAssignmentCreated,
@@ -14,12 +14,25 @@ import {
   ZetkinSurveyExtended,
   ZetkinSurveyPostBody,
 } from 'utils/types/zetkin';
+import IApiClient from 'core/api/client/IApiClient';
 
 interface UseCreateCampaignActivityReturn {
   createCallAssignment: (
     callAssignmentBody: ZetkinCallAssignmentPartial
   ) => IFuture<ZetkinCallAssignment>;
   createSurvey: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
+}
+
+async function fixNewCallAssignmentFilterConfig(
+  apiClient: IApiClient,
+  callAssignment: ZetkinCallAssignment
+): Promise<ZetkinCallAssignment> {
+  await apiClient.rpc(fixNewCallAssignmentFilterConfigRpc, {
+    callAssignmentId: callAssignment.id,
+    orgId: callAssignment.organization.id,
+    queryId: callAssignment.target.id,
+  });
+  return callAssignment;
 }
 
 export default function useCreateCampaignActivity(
@@ -42,19 +55,7 @@ export default function useCreateCampaignActivity(
         { ...callAssignmentBody, goal_filters: [], target_filters: [] }
       )
       .then((callAssignment) => {
-        return apiClient.rpc(updateCallAssignment, {
-          callAssignmentId: callAssignment.id,
-          goal_filters: [
-            {
-              config: {
-                assignment: callAssignment.id,
-                operator: 'reached',
-              },
-              type: 'call_history',
-            },
-          ],
-          orgId,
-        });
+        return fixNewCallAssignmentFilterConfig(apiClient, callAssignment);
       })
       .then((callAssignment) => {
         dispatch(callAssignmentCreated([callAssignment, campId]));
