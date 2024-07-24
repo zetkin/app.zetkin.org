@@ -15,7 +15,7 @@ import { getUserOrgTreeDef } from 'features/organizations/rpc/getUserOrgTree';
 import { moveParticipantsDef } from 'features/events/rpc/moveParticipants';
 import { setOfficialRoleDef } from 'features/settings/rpc/setOfficialRole';
 import { updateEventsDef } from 'features/events/rpc/updateEvents';
-import { fixNewCallAssignmentFilterConfigDef } from 'features/callAssignments/rpc/fixNewCallAssignmentFilterConfig';
+import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCallAssignment';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -36,7 +36,7 @@ export function createRPCRouter() {
   rpcRouter.register(deleteEventsDef);
   rpcRouter.register(getOfficialMembershipsDef);
   rpcRouter.register(setOfficialRoleDef);
-  rpcRouter.register(fixNewCallAssignmentFilterConfigDef);
+  rpcRouter.register(createCallAssignmentDef);
 
   return rpcRouter;
 }
