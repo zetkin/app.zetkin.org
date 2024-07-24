@@ -49,7 +49,10 @@ export default makeRPCDef<Params, Result>(createCallAssignmentDef.name);
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { callAssignment, campId, orgId } = params;
 
-  const assignment = await apiClient.post<ZetkinCallAssignmentPostBody>(
+  const assignment = await apiClient.post<
+    ZetkinCallAssignment,
+    ZetkinCallAssignmentPostBody
+  >(
     `/api/orgs/${orgId}/campaigns/${campId}/call_assignments`,
     //goal_filters and target_filters are required by server when
     //making a POST to create call_assignment, so adding them here.
@@ -75,5 +78,5 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     assignment.goal = updatedGoal;
   }
 
-  return assignment as unknown as ZetkinCallAssignment;
+  return assignment;
 }
