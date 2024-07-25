@@ -388,8 +388,6 @@ const viewsSlice = createSlice({
       if (viewItem) {
         viewItem.deleted = true;
       }
-
-      state.viewList.isStale = true;
     },
     viewLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
