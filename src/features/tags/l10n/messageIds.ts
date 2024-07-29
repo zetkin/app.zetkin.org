@@ -6,12 +6,14 @@ export default makeMessages('feat.tags', {
   dialog: {
     colorErrorText: m('Please enter a valid hex code'),
     colorLabel: m('Color'),
+    createAndApplyButton: m('Create and apply'),
     createTagButton: m('Create'),
     createTitle: m('Create tag'),
     deleteButtonLabel: m('Delete'),
     deleteWarning: m(
       'Are you sure you want to delete this tag? Deleting a tag cannot be undone.'
     ),
+    editTagButton: m('Update'),
     editTitle: m('Edit tag'),
     groupCreatePrompt: m<{ groupName: string }>('Add "{groupName}"'),
     groupLabel: m('Group'),
