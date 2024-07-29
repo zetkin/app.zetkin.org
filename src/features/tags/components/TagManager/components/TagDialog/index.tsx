@@ -28,11 +28,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   onClose,
   onDelete,
   onSubmit,
-  submitLabel,
   tag,
 }) => {
   const messages = useMessages(messageIds);
-
   const [title, setTitle] = useState('');
   const [titleEdited, setTitleEdited] = useState(false);
   const [color, setColor] = useState<{ valid: boolean; value: string }>({
@@ -43,8 +41,20 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     ZetkinTagGroup | NewTagGroup | null | undefined
   >();
   const [type, setType] = useState<ZetkinTag['value_type']>(null);
-
   const editingTag = tag && 'id' in tag;
+  const isTagPage = window.location.pathname.includes('tags');
+
+  const submitLabel = () => {
+    if (isTagPage) {
+      return editingTag
+        ? messages.dialog.editTagButton()
+        : messages.dialog.createTagButton();
+    } else {
+      return editingTag
+        ? messages.dialog.editTagButton()
+        : messages.dialog.createAndApplyButton();
+    }
+  };
 
   useEffect(() => {
     setTitle(tag?.title || '');
@@ -156,12 +166,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           <ZUISubmitCancelButtons
             onCancel={closeAndClear}
             submitDisabled={!title || !color.valid}
-            submitText={
-              submitLabel ??
-              (editingTag
-                ? messages.dialog.editTagButton()
-                : messages.dialog.createTagButton())
-            }
+            submitText={submitLabel()}
           />
         </Box>
       </form>

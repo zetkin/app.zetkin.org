@@ -1238,6 +1238,10 @@ feat:
         demote: Demote
         promote: Promote
         remove: Remove
+      urlCard:
+        linkToPub: Link to public organization
+        subTitle: Users must connect to the organization before they can access Zetkin
+          as officials.
       you: You
   smartSearch:
     buttonLabels:
@@ -1886,11 +1890,13 @@ feat:
     dialog:
       colorErrorText: Please enter a valid hex code
       colorLabel: Color
+      createAndApplyButton: Create and apply
       createTagButton: Create
       createTitle: Create tag
       deleteButtonLabel: Delete
       deleteWarning: Are you sure you want to delete this tag? Deleting a tag cannot
         be undone.
+      editTagButton: Update
       editTitle: Edit tag
       groupCreatePrompt: Add "{groupName}"
       groupLabel: Group
