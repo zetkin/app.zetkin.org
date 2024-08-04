@@ -31,69 +31,65 @@ const CheckboxFilterList = ({
 
   const visibleOptions = expand ? options : options.slice(0, maxCollapsed);
   return (
-    <>
-      <FormGroup sx={{ mb: 2 }}>
-        <Box alignItems="center" display="flex" justifyContent="space-between">
-          <Typography color="secondary" variant="body1">
-            {title}
-          </Typography>
-          <AllAndNoneToggle
-            maxLength={options.length}
-            onSelectAll={() =>
-              onFilterChange(options.map((item) => item.value))
+    <FormGroup sx={{ mb: 2 }}>
+      <Box alignItems="center" display="flex" justifyContent="space-between">
+        <Typography color="secondary" variant="body1">
+          {title}
+        </Typography>
+        <AllAndNoneToggle
+          maxLength={options.length}
+          onSelectAll={() => onFilterChange(options.map((item) => item.value))}
+          onSelectNone={() => onFilterChange([])}
+          selectedFilterLength={selectedValues.length}
+        />
+      </Box>
+      {visibleOptions.map((item) => {
+        return (
+          <FormControlLabel
+            key={item.value}
+            control={
+              <Checkbox
+                checked={selectedValues.includes(item.value)}
+                name={item.value}
+                onChange={() => {
+                  const alreadyExists = selectedValues.includes(item.value);
+                  onFilterChange(
+                    alreadyExists
+                      ? selectedValues.filter(
+                          (filterOption) => filterOption !== item.value
+                        )
+                      : [...selectedValues, item.value]
+                  );
+                }}
+              />
             }
-            onSelectNone={() => onFilterChange([])}
-            selectedFilterLength={selectedValues.length}
+            label={item.label}
+            sx={{ pl: 1 }}
           />
-        </Box>
-        {visibleOptions.map((item) => {
-          return (
-            <FormControlLabel
-              key={item.value}
-              control={
-                <Checkbox
-                  checked={selectedValues.includes(item.value)}
-                  name={item.value}
-                  onChange={() => {
-                    const alreadyExists = selectedValues.includes(item.value);
-                    onFilterChange(
-                      alreadyExists
-                        ? selectedValues.filter(
-                            (filterOption) => filterOption !== item.value
-                          )
-                        : [...selectedValues, item.value]
-                    );
-                  }}
-                />
-              }
-              label={item.label}
-              sx={{ pl: 1 }}
-            />
-          );
-        })}
-        {options.length > maxCollapsed && (
-          <Button
-            onClick={() => setExpand(!expand)}
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              width: 'fit-content',
-            }}
-            variant="text"
-          >
-            {expand && <Msg id={messageIds.eventFilter.collapse} />}
-            {!expand && (
-              <Typography sx={{ textDecoration: 'underline' }} variant="body2">
-                <Msg
-                  id={messageIds.eventFilter.expand}
-                  values={{ numOfOptions: options.length - maxCollapsed }}
-                />
-              </Typography>
-            )}
-          </Button>
-        )}
-      </FormGroup>
-    </>
+        );
+      })}
+      {options.length > maxCollapsed && (
+        <Button
+          onClick={() => setExpand(!expand)}
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            width: 'fit-content',
+          }}
+          variant="text"
+        >
+          {expand && <Msg id={messageIds.eventFilter.collapse} />}
+          {!expand && (
+            <Typography sx={{ textDecoration: 'underline' }} variant="body2">
+              <Msg
+                id={messageIds.eventFilter.expand}
+                values={{ numOfOptions: options.length - maxCollapsed }}
+              />
+            </Typography>
+          )}
+        </Button>
+      )}
+    </FormGroup>
   );
 };
 

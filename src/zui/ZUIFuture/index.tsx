@@ -1,15 +1,15 @@
+import { FC } from 'react';
 import { Skeleton } from '@mui/material';
-import { FC, ReactNode } from 'react';
 
 import { IFuture } from 'core/caching/futures';
 
 type ZUIFutureBuilderFunc<DataType> = (
   data: DataType,
   isLoading: boolean
-) => JSX.Element;
+) => JSX.Element | null;
 
 interface ZUIFutureProps<DataType> {
-  children: ReactNode | null | ZUIFutureBuilderFunc<DataType>;
+  children: JSX.Element | null | ZUIFutureBuilderFunc<DataType>;
   future: IFuture<DataType>;
   ignoreDataWhileLoading?: boolean;
   skeleton?: JSX.Element;
@@ -37,7 +37,7 @@ function ZUIFuture<DataType>({
     if (typeof children == 'function') {
       return children(future.data, future.isLoading);
     } else {
-      return <>{children}</>;
+      return children;
     }
   } else if (future.isLoading) {
     return skeleton;

@@ -30,6 +30,26 @@ export default class SurveyResponseColumnType
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },
+      sortComparator: (
+        v1: SurveyResponseViewCell,
+        v2: SurveyResponseViewCell
+      ) => {
+        const getConcatenatedText = (arr: SurveyResponseViewCell) => {
+          if (!arr || arr.length === 0) {
+            return '';
+          }
+
+          return arr
+            .filter((obj) => obj && obj.text) // Filter out null or undefined elements
+            .map((obj) => obj.text)
+            .join('');
+        };
+
+        const text1 = getConcatenatedText(v1);
+        const text2 = getConcatenatedText(v2);
+
+        return text1.localeCompare(text2);
+      },
       width: 250,
     };
   }

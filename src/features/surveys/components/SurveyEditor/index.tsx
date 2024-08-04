@@ -136,7 +136,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                     }
 
                     // Only required to satisfy typescript. Should never happen.
-                    return <></>;
+                    return null;
                   },
                 }))}
                 onReorder={(ids) => {

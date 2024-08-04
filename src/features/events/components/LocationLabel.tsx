@@ -17,7 +17,7 @@ const LocationLabel: FC<LocationLabelProps> = ({ location }) => {
   if (!location) {
     return <>{messages.common.noLocation()}</>;
   }
-  return <>{location.title}</>;
+  return <span>{location.title}</span>;
 };
 
 export default LocationLabel;

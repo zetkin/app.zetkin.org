@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 
 import { InterpolatedMessage, PlainMessage, ValueRecord } from './messages';
@@ -19,7 +20,7 @@ function Msg<Values extends ValueRecord>({
 function Msg<Values extends ValueRecord>({
   id,
   values,
-}: MsgProps<Values>): JSX.Element {
+}: MsgProps<Values>): ReactNode {
   const intl = useIntl();
 
   const descriptor = {
@@ -31,7 +32,7 @@ function Msg<Values extends ValueRecord>({
     ? intl.formatMessage(descriptor, values)
     : intl.formatMessage(descriptor);
 
-  return <>{str}</>;
+  return str;
 }
 
 export default Msg;

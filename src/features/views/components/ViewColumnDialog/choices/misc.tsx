@@ -73,9 +73,6 @@ export const localPerson: ColumnChoice = {
   color: blue,
   defaultColumns: (messages, columns) => [
     {
-      config: {
-        field: COLUMN_TYPE.LOCAL_PERSON,
-      },
       title: getUniqueColumnName(
         messages.columnDialog.choices.localPerson.columnTitle(),
         columns

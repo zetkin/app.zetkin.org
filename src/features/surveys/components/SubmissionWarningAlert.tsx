@@ -26,7 +26,7 @@ const SubmissionWarningAlert = ({
         const unlinkedSubs = sub.unlinkedSubmissionCount;
 
         if (unlinkedSubs === 0) {
-          return <></>;
+          return null;
         }
 
         return (

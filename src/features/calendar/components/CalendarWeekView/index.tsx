@@ -154,6 +154,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
               sx={{
                 backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}px)`,
                 marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
+                overflow: 'hidden', // Will prevent the ghostElement to expand the size of the calender, showing vertical scrollbar and whitespace underneath calender #issue-#1614
               }}
             >
               <EventDayLane
@@ -173,8 +174,8 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                       date.getFullYear(),
                       date.getMonth(),
                       date.getDate(),
-                      endTime[0],
-                      endTime[1]
+                      endTime[0] >= 24 ? 23 : endTime[0],
+                      endTime[0] >= 24 ? 59 : endTime[1]
                     )
                   );
 
@@ -238,7 +239,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                         anchorEl={ghostAnchorEl}
                         anchorOrigin={{
                           horizontal: index > 3 ? 'left' : 'right',
-                          vertical: 'top',
+                          vertical: 'bottom',
                         }}
                         onClose={() => {
                           setPendingEvent(null);

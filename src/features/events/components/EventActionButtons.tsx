@@ -74,13 +74,9 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
         <ZUIEllipsisMenu
           items={[
             {
-              label: (
-                <>
-                  {event.cancelled
-                    ? messages.eventActionButtons.restore()
-                    : messages.eventActionButtons.cancel()}
-                </>
-              ),
+              label: event.cancelled
+                ? messages.eventActionButtons.restore()
+                : messages.eventActionButtons.cancel(),
               onSelect: () => {
                 showConfirmDialog({
                   onSubmit: handleCancel,

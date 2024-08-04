@@ -53,6 +53,7 @@ module.exports = {
           },
         ],
         'react/jsx-no-target-blank': 'error',
+        'react/jsx-no-useless-fragment': 'error',
         'react/jsx-sort-props': [
           'error',
           {

@@ -10,13 +10,11 @@ const TimelineActor: React.FunctionComponent<{
   size: number;
 }> = ({ actor, size }) => {
   return (
-    <>
-      <Grid item>
-        <ZUIPersonHoverCard personId={actor.id}>
-          <ZUIPerson id={actor.id} name={''} showText={false} size={size} />
-        </ZUIPersonHoverCard>
-      </Grid>
-    </>
+    <Grid item>
+      <ZUIPersonHoverCard personId={actor.id}>
+        <ZUIPerson id={actor.id} name={''} showText={false} size={size} />
+      </ZUIPersonHoverCard>
+    </Grid>
   );
 };
 

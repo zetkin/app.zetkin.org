@@ -131,44 +131,46 @@ const ViewJumpMenu: FunctionComponent = () => {
         }}
       >
         <ZUIFuture future={itemsFuture}>
-          <Box {...getRootProps()} p={1}>
-            <TextField
-              {...tfProps}
-              autoFocus={true}
-              color="primary"
-              fullWidth
-              placeholder={messages.viewLayout.jumpMenu.placeholder()}
-              size="small"
-              variant="outlined"
-            />
-          </Box>
-          <List
-            {...getListboxProps()}
-            ref={listRef}
-            dense
-            style={{ overflowY: 'scroll' }}
-          >
-            {options.map((view, idx) => {
-              return (
-                <Link
-                  key={view.id}
-                  href={{
-                    pathname: `/organize/${orgId}/people/lists/${view.id}`,
-                  }}
-                  passHref
-                >
-                  <ListItem
-                    button
-                    component="a"
-                    selected={idx == activeIndex}
-                    tabIndex={-1}
+          <>
+            <Box {...getRootProps()} p={1}>
+              <TextField
+                {...tfProps}
+                autoFocus={true}
+                color="primary"
+                fullWidth
+                placeholder={messages.viewLayout.jumpMenu.placeholder()}
+                size="small"
+                variant="outlined"
+              />
+            </Box>
+            <List
+              {...getListboxProps()}
+              ref={listRef}
+              dense
+              style={{ overflowY: 'scroll' }}
+            >
+              {options.map((view, idx) => {
+                return (
+                  <Link
+                    key={view.id}
+                    href={{
+                      pathname: `/organize/${orgId}/people/lists/${view.id}`,
+                    }}
+                    passHref
                   >
-                    <ListItemText>{view.title}</ListItemText>
-                  </ListItem>
-                </Link>
-              );
-            })}
-          </List>
+                    <ListItem
+                      button
+                      component="a"
+                      selected={idx == activeIndex}
+                      tabIndex={-1}
+                    >
+                      <ListItemText>{view.title}</ListItemText>
+                    </ListItem>
+                  </Link>
+                );
+              })}
+            </List>
+          </>
         </ZUIFuture>
       </Popover>
     </>

@@ -57,7 +57,6 @@ const CallBlocked = ({
       disableSubmit={!submittable}
       onCancel={onCancel}
       onSubmit={(e) => handleSubmit(e)}
-      renderExamples={() => <></>}
       renderSentence={() => (
         <Msg
           id={localMessageIds.inputString}

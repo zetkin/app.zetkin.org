@@ -20,7 +20,7 @@ const ZUISuffixedNumber: FC<ZUISuffixedNumberProps> = ({ number }) => {
     );
   }
 
-  return <>{number}</>;
+  return <span>{number}</span>;
 };
 
 export default ZUISuffixedNumber;

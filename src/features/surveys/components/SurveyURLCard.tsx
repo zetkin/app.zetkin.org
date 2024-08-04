@@ -37,9 +37,9 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
     >
       <Box display="flex" paddingBottom={2}>
         <ZUITextfieldToClipboard
-          copyText={`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}o/${orgId}/surveys/${surveyId}`}
+          copyText={`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
         >
-          {`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}o/${orgId}/surveys/${surveyId}`}
+          {`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
         </ZUITextfieldToClipboard>
       </Box>
       <Link

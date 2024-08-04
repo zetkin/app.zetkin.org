@@ -2,7 +2,7 @@ import { Box, Card, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 type ZUICardProps = {
-  children: ReactNode;
+  children?: ReactNode;
   header: string | JSX.Element;
   status?: ReactNode;
   subheader?: string;

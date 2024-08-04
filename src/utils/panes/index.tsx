@@ -1,10 +1,12 @@
 import { makeStyles } from '@mui/styles';
+import { useRouter } from 'next/router';
 import { Box, Paper, Slide } from '@mui/material';
 import {
   createContext,
   FC,
   ReactNode,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -57,9 +59,14 @@ export const PaneProvider: FC<PaneProviderProps> = ({
   const [open, setOpen] = useState(false);
   const styles = useStyles();
   const [key, setKey] = useState(0);
+  const { pathname } = useRouter();
 
   const { paneContainerRef, slideRef, updatePaneHeight } =
     useResizablePane(fixedHeight);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <PaneContext.Provider

@@ -93,11 +93,9 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           </Head>
 
           <AccessLevelProvider>
-            <>
-              {(!columnsFuture.isLoading || !!columnsFuture.data?.length) && (
-                <ViewDataTable columns={cols} rows={rows} view={view} />
-              )}
-            </>
+            {!columnsFuture.isLoading || !!columnsFuture.data?.length ? (
+              <ViewDataTable columns={cols} rows={rows} view={view} />
+            ) : null}
           </AccessLevelProvider>
         </>
       )}

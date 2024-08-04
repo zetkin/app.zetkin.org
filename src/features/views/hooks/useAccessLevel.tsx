@@ -8,7 +8,7 @@ const AccessLevelContext = createContext<UseAccessLevelReturn>([false, null]);
 
 type AccessLevelProviderProps = {
   accessLevel?: ZetkinObjectAccess['level'] | null;
-  children: JSX.Element;
+  children: JSX.Element | null;
   isRestricted?: boolean;
 };
 

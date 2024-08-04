@@ -106,25 +106,23 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
               };
 
               return (
-                <>
-                  <ZUIPersonSelect
-                    getOptionDisabled={(option) =>
-                      participants.some(
-                        (participant) => participant.id == option.id
-                      )
-                    }
-                    getOptionExtraLabel={(option) => {
-                      return getOptionExtraLabel(option.id);
-                    }}
-                    name="person"
-                    onChange={(person) => {
-                      addParticipant(person.id);
-                    }}
-                    placeholder={messages.addPerson.addPlaceholder()}
-                    selectedPerson={null}
-                    variant="outlined"
-                  />
-                </>
+                <ZUIPersonSelect
+                  getOptionDisabled={(option) =>
+                    participants.some(
+                      (participant) => participant.id == option.id
+                    )
+                  }
+                  getOptionExtraLabel={(option) => {
+                    return getOptionExtraLabel(option.id);
+                  }}
+                  name="person"
+                  onChange={(person) => {
+                    addParticipant(person.id);
+                  }}
+                  placeholder={messages.addPerson.addPlaceholder()}
+                  selectedPerson={null}
+                  variant="outlined"
+                />
               );
             }}
           </ZUIFutures>

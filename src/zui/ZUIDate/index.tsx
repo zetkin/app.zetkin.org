@@ -6,14 +6,7 @@ interface ZUIDateProps {
 
 const ZUIDate: React.FunctionComponent<ZUIDateProps> = ({ datetime }) => {
   return (
-    <>
-      <FormattedDate
-        day="numeric"
-        month="long"
-        value={datetime}
-        year="numeric"
-      />
-    </>
+    <FormattedDate day="numeric" month="long" value={datetime} year="numeric" />
   );
 };
 

@@ -36,7 +36,15 @@ const BasicMarker: FC<BasicMarkerProps> = ({ color, events }) => {
           <Typography>{events > 9 ? '9+' : events}</Typography>
         </Box>
       )}
-      <svg fill="none" height="40" viewBox="0 0 31 40" width="27">
+      <svg
+        fill="none"
+        height="40"
+        style={{
+          transform: 'translate(-7.5px, -34px)',
+        }}
+        viewBox="0 0 31 40"
+        width="27"
+      >
         <path
           d="M14 38.479C13.6358 38.0533 13.1535 37.4795
            12.589 36.7839C11.2893 35.1826 9.55816 32.9411

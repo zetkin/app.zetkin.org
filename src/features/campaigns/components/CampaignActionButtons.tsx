@@ -144,7 +144,7 @@ const CampaignActionButtons: React.FunctionComponent<
                   <Link
                     color="inherit"
                     display="flex"
-                    href={`https://www.zetk.in/o/${orgId}/campaigns/${campaign.id}`}
+                    href={`/o/${orgId}/campaigns/${campId}`}
                     sx={{ alignItems: 'center', gap: 1 }}
                     target="_blank"
                     underline="none"

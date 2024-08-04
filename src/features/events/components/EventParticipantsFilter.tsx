@@ -23,20 +23,16 @@ const EventParticipantsFilter = ({
   return (
     <TextField
       InputProps={{
-        endAdornment: (
-          <>
-            {userInput && (
-              <IconButton
-                onClick={() => {
-                  setUserInput('');
-                  onFilterChange('');
-                }}
-              >
-                <ClearIcon />
-              </IconButton>
-            )}
-          </>
-        ),
+        endAdornment: userInput ? (
+          <IconButton
+            onClick={() => {
+              setUserInput('');
+              onFilterChange('');
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        ) : null,
         startAdornment: <SearchIcon color="secondary" sx={{ mr: 1 }} />,
       }}
       onChange={(e) => {

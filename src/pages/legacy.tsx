@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     const orgQuerystring = context.query.orgId
       ? `?org=${context.query.orgId}`
       : '';
-    const destination = `https://organize.zetk.in/${path}${orgQuerystring}`;
+    const destination = `https://organize.${process.env.ZETKIN_API_DOMAIN}/${path}${orgQuerystring}`;
 
     return {
       props: {

@@ -116,13 +116,11 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
                   value={title}
                 />
               )}
-              renderPreview={() => {
-                if (location.title !== '') {
-                  return <Typography variant="h5">{location.title}</Typography>;
-                } else {
-                  return <></>;
-                }
-              }}
+              {...(location.title !== '' && {
+                renderPreview: () => (
+                  <Typography variant="h5">{location.title}</Typography>
+                ),
+              })}
               value={location.title}
             />
             <Close
