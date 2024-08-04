@@ -31,20 +31,16 @@ const EventInputFilter = ({
     <TextField
       fullWidth
       InputProps={{
-        endAdornment: (
-          <>
-            {userInput && (
-              <IconButton
-                onClick={() => {
-                  setUserInput('');
-                  onChangeFilterText('');
-                }}
-              >
-                <Clear />
-              </IconButton>
-            )}
-          </>
-        ),
+        endAdornment: userInput ? (
+          <IconButton
+            onClick={() => {
+              setUserInput('');
+              onChangeFilterText('');
+            }}
+          >
+            <Clear />
+          </IconButton>
+        ) : null,
         startAdornment: (
           <InputAdornment position="start">
             <FilterList />

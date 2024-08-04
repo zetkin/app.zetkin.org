@@ -67,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const router = useRouter();
   const { lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
-  const getLayout = c.getLayout || ((page) => <>{page}</>);
+  const getLayout = c.getLayout || ((page) => page);
 
   if (typeof window !== 'undefined') {
     window.__reactRendered = true;

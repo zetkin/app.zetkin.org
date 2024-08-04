@@ -27,35 +27,31 @@ const SurveyUnlinkedCard = ({
       {(sub) => {
         const unlinkedSubmitters = sub.unlinkedSubmissionCount;
 
-        return (
-          <>
-            {unlinkedSubmitters > 0 && (
-              <Box paddingTop={2}>
-                <ZUICard
-                  header={messages.unlinkedCard.header()}
-                  status={
-                    <ZUINumberChip
-                      color={theme.palette.grey[200]}
-                      value={unlinkedSubmitters}
-                    />
-                  }
-                  subheader={messages.unlinkedCard.description()}
-                >
-                  <NextLink
-                    href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?filter=linked`}
-                    passHref
-                  >
-                    <Link>
-                      {messages.unlinkedCard.openLink({
-                        numUnlink: unlinkedSubmitters,
-                      })}
-                    </Link>
-                  </NextLink>
-                </ZUICard>
-              </Box>
-            )}
-          </>
-        );
+        return unlinkedSubmitters > 0 ? (
+          <Box paddingTop={2}>
+            <ZUICard
+              header={messages.unlinkedCard.header()}
+              status={
+                <ZUINumberChip
+                  color={theme.palette.grey[200]}
+                  value={unlinkedSubmitters}
+                />
+              }
+              subheader={messages.unlinkedCard.description()}
+            >
+              <NextLink
+                href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?filter=linked`}
+                passHref
+              >
+                <Link>
+                  {messages.unlinkedCard.openLink({
+                    numUnlink: unlinkedSubmitters,
+                  })}
+                </Link>
+              </NextLink>
+            </ZUICard>
+          </Box>
+        ) : null;
       }}
     </ZUIFuture>
   );

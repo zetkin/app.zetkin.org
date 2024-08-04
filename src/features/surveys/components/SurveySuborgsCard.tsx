@@ -32,9 +32,7 @@ const SurveySuborgsCard = ({
           />
         }
         subheader={messages.shareSuborgsCard.caption()}
-      >
-        <></>
-      </ZUICard>
+      />
     </Box>
   );
 };

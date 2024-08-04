@@ -2,7 +2,15 @@ import { FC } from 'react';
 
 const SelectedMarker: FC = () => {
   return (
-    <svg fill="none" height="50" viewBox="0 0 44 63" width="40">
+    <svg
+      fill="none"
+      height="50"
+      style={{
+        transform: 'translate(-14px, -44px)',
+      }}
+      viewBox="0 0 44 63"
+      width="40"
+    >
       <path
         d="M22 61L21.6289 61.3351L22 61.7459L22.3711
          61.3351L22 61ZM22 61C22.3711 61.3351 22.3712

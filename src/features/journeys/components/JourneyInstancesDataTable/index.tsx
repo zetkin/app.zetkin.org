@@ -50,32 +50,30 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   });
 
   return (
-    <>
-      <DataGridPro
-        checkboxSelection
-        columns={columnsWithHeaderTitles}
-        disableRowSelectionOnClick={true}
-        initialState={{ pagination: { paginationModel: { pageSize: 50 } } }}
-        onColumnOrderChange={(params) => {
-          setColumnOrder(params.column.field, params.targetIndex - 1);
-        }}
-        onColumnResize={(params) => {
-          setColumnWidth(params.colDef.field, params.width);
-        }}
-        rows={rows}
-        slotProps={{
-          toolbar: {
-            gridColumns: columnsWithHeaderTitles,
-            onQuickSearchChange: setQuickSearch,
-            onSortModelChange: modelGridProps.onSortModelChange,
-            sortModel: modelGridProps.sortModel,
-          },
-        }}
-        slots={{ toolbar: Toolbar }}
-        {...modelGridProps}
-        {...dataGridProps}
-      />
-    </>
+    <DataGridPro
+      checkboxSelection
+      columns={columnsWithHeaderTitles}
+      disableRowSelectionOnClick={true}
+      initialState={{ pagination: { paginationModel: { pageSize: 50 } } }}
+      onColumnOrderChange={(params) => {
+        setColumnOrder(params.column.field, params.targetIndex - 1);
+      }}
+      onColumnResize={(params) => {
+        setColumnWidth(params.colDef.field, params.width);
+      }}
+      rows={rows}
+      slotProps={{
+        toolbar: {
+          gridColumns: columnsWithHeaderTitles,
+          onQuickSearchChange: setQuickSearch,
+          onSortModelChange: modelGridProps.onSortModelChange,
+          sortModel: modelGridProps.sortModel,
+        },
+      }}
+      slots={{ toolbar: Toolbar }}
+      {...modelGridProps}
+      {...dataGridProps}
+    />
   );
 };
 

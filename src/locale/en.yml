@@ -25,7 +25,7 @@ feat:
       closed: Closed
       conversation: Conversation
       events: Events
-      folders: Views
+      folders: Lists
       insights: Insights
       instances: Instances
       journeys: Journeys
@@ -41,7 +41,7 @@ feat:
       surveys: Surveys
       tasks: Tasks
       untitledEvent: Untitled event
-      views: Views
+      views: Lists
   calendar:
     createMenu:
       singleEvent: Create single event
@@ -178,7 +178,6 @@ feat:
       defineButton: Edit done criteria
       subtitle: Targets that meet the done criteria
       title: Done
-    insightsHeader: Calls and conversations
     organizerActionPane:
       markAsSolved: Mark as solved
       markAsUnsolved: Mark as unsolved
@@ -204,7 +203,6 @@ feat:
     tabs:
       callers: Callers
       conversation: Conversation
-      insights: Insights
       overview: Overview
     targets:
       defineButton: Define target group
@@ -1791,7 +1789,6 @@ zui:
     createCampaign: Create campaign
     createEvent: Create event
     createTask: Create task
-    requestError: There was an error
   submitOrCancel:
     cancel: Cancel
     submit: Submit
