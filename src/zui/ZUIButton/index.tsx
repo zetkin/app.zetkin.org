@@ -1,5 +1,5 @@
 import { Button, CircularProgress } from '@mui/material';
-import { FC, KeyboardEventHandler, MouseEventHandler, ReactNode } from 'react';
+import { FC, KeyboardEventHandler, MouseEventHandler } from 'react';
 
 type ZUIButtonType =
   | 'primary'
@@ -12,13 +12,13 @@ type ZUIButtonType =
 interface ZUIButtonProps {
   buttonType?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
-  endIcon?: ReactNode;
+  endIcon?: JSX.Element;
   fullWidth?: boolean;
-  label: ReactNode;
+  label: string | JSX.Element;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
   size?: 'large' | 'medium' | 'small';
-  startIcon?: ReactNode;
+  startIcon?: JSX.Element;
   type?: ZUIButtonType;
 }
 
