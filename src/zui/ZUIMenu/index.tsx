@@ -1,6 +1,13 @@
 import { makeStyles } from '@mui/styles';
 import { FC, ReactNode } from 'react';
-import { Menu, Theme } from '@mui/material';
+import {
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Theme,
+  Typography,
+} from '@mui/material';
 
 const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>({
   menu: {
@@ -11,9 +18,21 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>({
   },
 });
 
+export interface MenuItem {
+  dense?: boolean;
+  disabled?: boolean;
+  disableGutters?: boolean;
+  divider?: boolean;
+  endContent?: ReactNode;
+  label: string;
+  onClick: () => void;
+  smallScreen?: boolean;
+  startIcon?: ReactNode;
+}
+
 interface ZUIMenuProps {
   anchorEl?: Element | null;
-  children: ReactNode;
+  menuItems: MenuItem[];
   maxHeight?: string;
   width?: string;
   onClose?: () => void;
@@ -21,8 +40,8 @@ interface ZUIMenuProps {
 
 const ZUIMenu: FC<ZUIMenuProps> = ({
   anchorEl,
-  children,
   maxHeight,
+  menuItems,
   width,
   onClose,
 }) => {
@@ -34,7 +53,30 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
       onClose={onClose}
       open={!!anchorEl}
     >
-      {children}
+      {menuItems.map((item, index) => (
+        <MenuItem
+          key={index}
+          dense={item.dense}
+          disabled={item.disabled}
+          disableGutters={item.disableGutters}
+          divider={item.divider}
+          onClick={() => {
+            item.onClick();
+            if (onClose) {
+              onClose();
+            }
+          }}
+          sx={{ paddingY: item.smallScreen ? 2 : '' }}
+        >
+          {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
+          <ListItemText>{item.label}</ListItemText>
+          {item.endContent && (
+            <Typography color="secondary" variant="body2">
+              {item.endContent}
+            </Typography>
+          )}
+        </MenuItem>
+      ))}
     </Menu>
   );
 };

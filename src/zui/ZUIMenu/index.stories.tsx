@@ -3,7 +3,6 @@ import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIButton from 'zui/ZUIButton';
 import ZUIMenu from './index';
-import ZUIMenuItem from '../ZUIMenuItem';
 
 const meta: Meta<typeof ZUIMenu> = {
   component: ZUIMenu,
@@ -14,13 +13,10 @@ type Story = StoryObj<typeof ZUIMenu>;
 
 export const Basic: Story = {
   args: {
-    children: (
-      <>
-        <ZUIMenuItem label="Mobilize" />
-        <ZUIMenuItem label="Strategize" />
-        <ZUIMenuItem label="Organize" />
-      </>
-    ),
+    menuItems: [
+      { label: 'Event', onClick: () => null },
+      { label: 'Email', onClick: () => null },
+    ],
   },
   render: function Render(args) {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
