@@ -1,38 +1,40 @@
-import { makeStyles } from '@mui/styles';
-import { FC, ReactNode } from 'react';
-import { MenuList, Theme } from '@mui/material';
+import { FC } from 'react';
+import {
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  MenuList,
+  Typography,
+} from '@mui/material';
 
-const useStyles = makeStyles<
-  Theme,
-  { disableGutters?: boolean; smallScreen?: boolean }
->({
-  list: {
-    '& li': {
-      paddingBottom: ({ smallScreen }) => (smallScreen ? '16px' : ''),
-      paddingLeft: ({ disableGutters }) => (disableGutters ? 0 : ''),
-      paddingRight: ({ disableGutters }) => (disableGutters ? 0 : ''),
-      paddingTop: ({ smallScreen }) => (smallScreen ? '16px' : ''),
-    },
-  },
-});
+import { MenuItem as MenuItemType } from 'zui/ZUIMenu';
 
 interface ZUIMenuListProps {
-  children: ReactNode;
-  dense?: boolean;
-  disableGutters?: boolean;
-  smallScreen?: boolean;
+  menuItems: MenuItemType[];
 }
 
-const ZUIMenuList: FC<ZUIMenuListProps> = ({
-  children,
-  dense,
-  disableGutters,
-  smallScreen,
-}) => {
-  const classes = useStyles({ disableGutters, smallScreen });
+const ZUIMenuList: FC<ZUIMenuListProps> = ({ menuItems }) => {
   return (
-    <MenuList className={classes.list} dense={dense}>
-      {children}
+    <MenuList>
+      {menuItems.map((item, index) => (
+        <MenuItem
+          key={index}
+          dense={item.dense}
+          disabled={item.disabled}
+          disableGutters={item.disableGutters}
+          divider={item.divider}
+          onClick={item.onClick}
+          sx={{ paddingY: item.smallScreen ? 2 : '' }}
+        >
+          {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
+          <ListItemText>{item.label}</ListItemText>
+          {item.endContent && (
+            <Typography color="secondary" variant="body2">
+              {item.endContent}
+            </Typography>
+          )}
+        </MenuItem>
+      ))}
     </MenuList>
   );
 };
