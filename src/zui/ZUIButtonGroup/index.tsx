@@ -5,7 +5,7 @@ interface ZUIButtonGroupProps {
   children: ReactNode;
   orientation?: 'horizontal' | 'vertical';
   size?: 'large' | 'medium' | 'small';
-  type: 'primary' | 'secondary' | 'tertiary';
+  type?: 'primary' | 'secondary' | 'tertiary';
 }
 
 const getVariant = (type: 'primary' | 'secondary' | 'tertiary') => {
