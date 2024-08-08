@@ -1,5 +1,6 @@
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import {
+  Avatar,
   Box,
   Divider,
   Popover,
@@ -19,6 +20,7 @@ interface ZUIHeaderProps {
   actionButtonPopoverContent?: (onClose: () => void) => JSX.Element;
   actionButtonLabel?: string;
   actionButtonType?: 'primary' | 'secondary';
+  avatar?: string;
   belowActionButton?: JSX.Element;
   belowTitle?: JSX.Element;
   ellipsisMenuItems?: MenuItem[];
@@ -38,6 +40,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
   actionButtonLabel,
   actionButtonType = 'secondary',
   belowActionButton,
+  avatar,
   belowTitle,
   ellipsisMenuItems,
   metaData,
@@ -51,27 +54,38 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
     useState<Element | null>(null);
 
   return (
-    <Box border={1} display="flex" justifyContent="space-between">
+    <Box display="flex" justifyContent="space-between">
       <Box display="flex" flexDirection="column">
-        <Typography
-          component="div"
-          noWrap
-          sx={{
-            display: 'flex',
-            marginBottom: '8px',
-            transition: 'margin 0.3s ease',
-          }}
-          variant="h4"
-        >
-          {onTitleChange ? (
-            <ZUIEditTextinPlace
-              onChange={(newValue) => onTitleChange(newValue)}
-              value={title}
+        <Box alignItems="center" display="flex">
+          {avatar && (
+            <Avatar
+              src={avatar}
+              sx={{
+                height: 32,
+                marginRight: 1,
+                width: 32,
+              }}
             />
-          ) : (
-            title
           )}
-        </Typography>
+          <Typography
+            component="div"
+            noWrap
+            sx={{
+              display: 'flex',
+              transition: 'margin 0.3s ease',
+            }}
+            variant="h4"
+          >
+            {onTitleChange ? (
+              <ZUIEditTextinPlace
+                onChange={(newValue) => onTitleChange(newValue)}
+                value={title}
+              />
+            ) : (
+              title
+            )}
+          </Typography>
+        </Box>
         {(belowTitle || metaData) && (
           <Box display="flex">
             {belowTitle && belowTitle}

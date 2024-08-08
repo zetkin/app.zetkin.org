@@ -16,13 +16,16 @@ type Story = StoryObj<typeof RightSide>;
 export const EditableTitle: Story = {
   args: {
     actionButtonLabel: 'Publish',
+    actionButtonType: 'primary',
+    avatar:
+      'https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg',
     belowActionButton: (
-      <Box border={1} padding={1}>
+      <Box bgcolor="lightcoral" padding={1}>
         You can put a thing here below the action button
       </Box>
     ),
     belowTitle: (
-      <Box border={1} padding={1}>
+      <Box bgcolor="lightblue" padding={1}>
         You can put a thing here below the title
       </Box>
     ),
@@ -47,13 +50,15 @@ export const EditableTitle: Story = {
 export const StaticTitle: Story = {
   args: {
     actionButtonLabel: 'Publish',
+    avatar:
+      'https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg',
     belowActionButton: (
-      <Box border={1} padding={1}>
+      <Box bgcolor="lightcoral" padding={1}>
         You can put a thing here below the action button
       </Box>
     ),
     belowTitle: (
-      <Box border={1} padding={1}>
+      <Box bgcolor="lightblue" padding={1}>
         You can put a thing here below the title
       </Box>
     ),
