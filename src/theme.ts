@@ -367,8 +367,10 @@ export const newTheme = createTheme({
               },
               minWidth: '30px',
             },
-            paddingLeft: 0,
-            paddingRight: 0,
+            ':has(> svg)': {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
           },
           ':hover': {
             boxShadow: 'none',
