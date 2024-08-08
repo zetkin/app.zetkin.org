@@ -53,73 +53,46 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
   const [actionButtonPopoverAnchorEl, setactionButtonPopoverAnchorEl] =
     useState<Element | null>(null);
 
+  const showActionButton = !!actionButtonLabel;
+  const showEllipsisMenu = !!ellipsisMenuItems?.length;
+  const showBottomRow = belowTitle || metaData || belowActionButton;
+
   return (
-    <Box display="flex" justifyContent="space-between">
-      <Box display="flex" flexDirection="column">
-        <Box alignItems="center" display="flex">
-          {avatar && (
-            <Avatar
-              src={avatar}
+    <Box>
+      <Box alignItems="center" display="flex" justifyContent="space-between">
+        <Box display="flex" flexDirection="column">
+          <Box alignItems="center" display="flex">
+            {avatar && (
+              <Avatar
+                src={avatar}
+                sx={{
+                  height: 32,
+                  marginRight: 1,
+                  width: 32,
+                }}
+              />
+            )}
+            <Typography
+              component="div"
+              noWrap
               sx={{
-                height: 32,
-                marginRight: 1,
-                width: 32,
+                display: 'flex',
+                transition: 'margin 0.3s ease',
               }}
-            />
-          )}
-          <Typography
-            component="div"
-            noWrap
-            sx={{
-              display: 'flex',
-              transition: 'margin 0.3s ease',
-            }}
-            variant="h4"
-          >
-            {onTitleChange ? (
-              <ZUIEditTextinPlace
-                onChange={(newValue) => onTitleChange(newValue)}
-                value={title}
-              />
-            ) : (
-              title
-            )}
-          </Typography>
-        </Box>
-        {(belowTitle || metaData) && (
-          <Box display="flex">
-            {belowTitle && belowTitle}
-            {belowTitle && metaData && (
-              <Divider
-                flexItem
-                orientation="vertical"
-                sx={{ marginX: 1 }}
-                variant="middle"
-              />
-            )}
-            {metaData && (
-              <ZUIIconLabelRow
-                color="secondary"
-                iconLabels={metaData.map((data) => {
-                  const Icon = data.icon;
-                  return {
-                    icon: <Icon color="secondary" fontSize="inherit" />,
-                    label: data.label,
-                  };
-                })}
-                size="sm"
-              />
-            )}
+              variant="h4"
+            >
+              {onTitleChange ? (
+                <ZUIEditTextinPlace
+                  onChange={(newValue) => onTitleChange(newValue)}
+                  value={title}
+                />
+              ) : (
+                title
+              )}
+            </Typography>
           </Box>
-        )}
-      </Box>
-      {actionButtonLabel && (
-        <Box
-          alignItems="flex-end"
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
-        >
+        </Box>
+        {showActionButton && (
           <ZUIButtonGroup type={actionButtonType}>
             <ZUIButton
               endIcon={actionButtonPopoverContent ? <ExpandMore /> : undefined}
@@ -144,7 +117,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                 )}
               </Popover>
             )}
-            {!!ellipsisMenuItems?.length && (
+            {showEllipsisMenu && (
               <>
                 <ZUIButton
                   label={<MoreVert />}
@@ -162,7 +135,39 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               </>
             )}
           </ZUIButtonGroup>
-          {belowActionButton && <Box>{belowActionButton}</Box>}
+        )}
+      </Box>
+      {showBottomRow && (
+        <Box alignItems="center" display="flex" paddingTop={1}>
+          {(belowTitle || metaData) && (
+            <Box display="flex">
+              {belowTitle && belowTitle}
+              {belowTitle && metaData && (
+                <Divider
+                  flexItem
+                  orientation="vertical"
+                  sx={{ marginX: 1 }}
+                  variant="middle"
+                />
+              )}
+              {metaData && (
+                <ZUIIconLabelRow
+                  color="secondary"
+                  iconLabels={metaData.map((data) => {
+                    const Icon = data.icon;
+                    return {
+                      icon: <Icon color="secondary" fontSize="inherit" />,
+                      label: data.label,
+                    };
+                  })}
+                  size="sm"
+                />
+              )}
+            </Box>
+          )}
+          {belowActionButton && (
+            <Box marginLeft="auto">{belowActionButton}</Box>
+          )}
         </Box>
       )}
     </Box>
