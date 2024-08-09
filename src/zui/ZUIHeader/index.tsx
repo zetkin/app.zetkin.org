@@ -15,6 +15,7 @@ import ZUIButtonGroup from 'zui/ZUIButtonGroup';
 import ZUIMenu, { MenuItem } from 'zui/ZUIMenu';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
+import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 
 interface ZUIHeaderProps {
   actionButtonPopoverContent?: (onClose: () => void) => JSX.Element;
@@ -23,6 +24,7 @@ interface ZUIHeaderProps {
   avatar?: string;
   belowActionButton?: JSX.Element;
   belowTitle?: JSX.Element;
+  breadcrumbs?: BreadcrumbTreeItem[];
   ellipsisMenuItems?: MenuItem[];
   metaData?: {
     icon: OverridableComponent<
@@ -40,6 +42,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
   actionButtonLabel,
   actionButtonType = 'secondary',
   belowActionButton,
+  breadcrumbs,
   avatar,
   belowTitle,
   ellipsisMenuItems,
@@ -61,13 +64,13 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
     <Box>
       <Box alignItems="center" display="flex" justifyContent="space-between">
         <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
+          <Box alignItems="center" display="flex" gap={1}>
+            {breadcrumbs && <ZUIBreadcrumbs breadcrumbs={breadcrumbs} />}
             {avatar && (
               <Avatar
                 src={avatar}
                 sx={{
                   height: 32,
-                  marginRight: 1,
                   width: 32,
                 }}
               />
