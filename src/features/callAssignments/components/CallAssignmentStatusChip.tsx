@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Box, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { CallAssignmentState } from '../hooks/useCallAssignmentState';
 import { Msg } from 'core/i18n';
@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
   scheduled: {
     backgroundColor: theme.palette.statusColors.blue,
   },
-  spinner: {
-    marginLeft: '0.5em',
-  },
 }));
 
 const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
@@ -60,15 +57,6 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
   return (
     <Box className={`${colorClassName} ${classes.chip}`}>
       <Msg id={messageIds.state[state]} />
-      {state == CallAssignmentState.ACTIVE && (
-        <CircularProgress
-          className={classes.spinner}
-          size={14}
-          style={{ color: 'white' }}
-          value={75}
-          variant="determinate"
-        />
-      )}
     </Box>
   );
 };
