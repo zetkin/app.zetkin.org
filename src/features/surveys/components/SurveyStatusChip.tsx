@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
   draft: {
     backgroundColor: theme.palette.grey[500],
   },
+  expired: {
+    backgroundColor: theme.palette.error.main,
+  },
   published: {
     backgroundColor: theme.palette.success.main,
   },
@@ -31,9 +34,6 @@ const useStyles = makeStyles((theme) => ({
   },
   spinner: {
     marginLeft: '0.5em',
-  },
-  unpublished: {
-    backgroundColor: theme.palette.error.main,
   },
 }));
 
@@ -45,8 +45,8 @@ const SurveyStatusChip: FC<SurveyStatusChipProps> = ({ state }) => {
   }
 
   const classMap: Record<SurveyState, string> = {
-    [SurveyState.UNPUBLISHED]: classes.unpublished,
     [SurveyState.DRAFT]: classes.draft,
+    [SurveyState.EXPIRED]: classes.expired,
     [SurveyState.PUBLISHED]: classes.published,
     [SurveyState.SCHEDULED]: classes.scheduled,
     [SurveyState.UNKNOWN]: classes.draft,

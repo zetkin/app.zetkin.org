@@ -146,9 +146,9 @@ export default makeMessages('feat.surveys', {
   },
   state: {
     draft: m('Draft'),
+    expired: m('Ended'),
     published: m('Published'),
     scheduled: m('Scheduled'),
-    unpublished: m('Unpublished'),
   },
   submissionPane: {
     anonymous: m('Anonymous'),
