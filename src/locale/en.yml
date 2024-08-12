@@ -104,6 +104,7 @@ feat:
     selectionBar:
       deselect: Deselect
       editEvents: Edit events
+      editParticipants: Manage participants
       ellipsisMenu:
         cancel: Cancel
         cancelWarning: If you do, remember to notify all participants and sign-ups that
@@ -710,6 +711,34 @@ feat:
       remindButtondisabledTooltip: You have to assign a contact person before sending reminders
       reqParticipantsHelperText: The minimum number of participants required
       reqParticipantsLabel: Required participants
+    participantsModal:
+      affected:
+        empty: You haven't made any changes yet. Pick an event to move participants
+          around.
+        header: Affected people
+      discardButton: Discard changes
+      emptyStates:
+        booked: No one has been booked at this event. You can add participants from the
+          pool.
+        pending: There are no additional participants in the pool. You can move
+          participants from an event to the pool to work with them here.
+      participants:
+        buttons:
+          addBack: Add back
+          addHere: Add here
+          move: Move
+          undo: Undo
+        headers:
+          booked: This event
+          pending: People that can be added
+        states:
+          added: Being added to this event
+          pending: In the pool
+          removed: Moving away from this event
+      statusText: "{personCount, plural, =1 {One person} other {# people}} will be
+        moved around"
+      submitButton: Execute
+      title: Manage participants
     search: Search
     state:
       cancelled: Cancelled
@@ -1238,6 +1267,10 @@ feat:
         demote: Demote
         promote: Promote
         remove: Remove
+      urlCard:
+        linkToPub: Link to public organization
+        subTitle: Users must connect to the organization before they can access Zetkin
+          as officials.
       you: You
   smartSearch:
     buttonLabels:
@@ -2485,14 +2518,14 @@ zui:
     tooltip:
       edit: Click to edit
       noEmpty: This cannot be empty
+  editableImage:
+    add: Click to add image
   futures:
     errorLoading: There was an error loading the data.
   header:
     collapseButton:
       collapse: Collapse
       expand: Expand
-  imageSelectDialog:
-    instructions: Drag and drop an image file, or click to select
   lists:
     showMore: Show more...
   orgScopeSelect:
