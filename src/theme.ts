@@ -379,6 +379,13 @@ export const newTheme = createTheme({
         },
       },
     },
+    MuiButtonGroup: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+        },
+      },
+    },
     MuiCircularProgress: {
       styleOverrides: {
         root: {
