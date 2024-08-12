@@ -31,19 +31,14 @@ export interface BreadcrumbTreeItem {
   href: string;
   id: number;
   title: string;
-  parent: {
-    href: string;
-    id: number;
-    title: string;
-  } | null;
   children: BreadcrumbTreeItem[] | [];
 }
 
 const renderTree = (
   breadcrumbs: BreadcrumbTreeItem[],
-  currentItemId: number
+  currentItemId: number,
+  isTopLevel: boolean
 ) => {
-  const isTopLevel = !breadcrumbs[0].parent;
   const isLastLevel = !breadcrumbs[0].children.length;
   return (
     <Box>
@@ -77,7 +72,9 @@ const renderTree = (
                   </Typography>
                 </Link>
               </NextLink>
-              {!isLastLevel ? renderTree(item.children, currentItemId) : ''}
+              {!isLastLevel
+                ? renderTree(item.children, currentItemId, false)
+                : ''}
             </Box>
           ))}
         </Box>
@@ -97,6 +94,18 @@ const findCurrentItem = (
   }
 };
 
+const findParentItem = (
+  currentItem: BreadcrumbTreeItem,
+  breadcrumbs: BreadcrumbTreeItem[]
+): BreadcrumbTreeItem => {
+  const crumb = breadcrumbs[0];
+  if (crumb.children.find((item) => item.id === currentItem.id)) {
+    return crumb;
+  } else {
+    return findParentItem(currentItem, crumb.children);
+  }
+};
+
 interface ZUIBreadcrumbsProps {
   breadcrumbs: BreadcrumbTreeItem[];
 }
@@ -107,10 +116,11 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
     useState<Element | null>(null);
 
   const currentItem = findCurrentItem(breadcrumbs);
+  const parentItem = findParentItem(currentItem, breadcrumbs);
 
   return (
     <Box alignItems="center" display="inline-flex">
-      <NextLink href={currentItem?.parent?.href || ''}>
+      <NextLink href={parentItem.href || ''}>
         <Box className={classes.leftSide}>
           <SubdirectoryArrowLeft
             color="secondary"
@@ -134,7 +144,9 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
           onClose={() => setBreadcrumbsAnchorEl(null)}
           open={!!breadcrumbsAnchorEl}
         >
-          <Box paddingX={2}>{renderTree(breadcrumbs, currentItem?.id)}</Box>
+          <Box paddingX={2}>
+            {renderTree(breadcrumbs, currentItem?.id, true)}
+          </Box>
         </Menu>
       </Box>
     </Box>
