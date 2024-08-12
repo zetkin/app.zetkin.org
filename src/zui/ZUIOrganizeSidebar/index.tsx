@@ -1,13 +1,7 @@
 import makeStyles from '@mui/styles/makeStyles';
-import messageIds from '../l10n/messageIds';
 import NextLink from 'next/link';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import {
   Architecture,
   Close,
@@ -36,6 +30,12 @@ import {
   Typography,
 } from '@mui/material';
 
+import messageIds from '../l10n/messageIds';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';

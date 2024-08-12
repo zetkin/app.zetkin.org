@@ -1,16 +1,14 @@
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { FunctionComponent, useState } from 'react';
 
 import getColumns from './getColumns';
 import { getRows } from './getRows';
 import Toolbar from './Toolbar';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
-import { FunctionComponent, useState } from 'react';
-
 import { JourneyTagColumnData } from 'features/journeys/utils/journeyInstanceUtils';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
-
 import messageIds from 'features/journeys/l10n/messageIds';
 
 interface JourneysDataTableProps {

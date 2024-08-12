@@ -86,13 +86,13 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
             <Close />
           </IconButton>
         </Box>
-        <Box overflow="auto" paddingRight={2} width="100%">
+        <Box overflow="auto" width="100%">
           <EditPersonFields
             fieldsToUpdate={fieldsToUpdate}
             fieldValues={fieldValues}
             invalidFields={invalidFields}
             onChange={(field, newValue) => {
-              onFieldValueChange(field, newValue);
+              onFieldValueChange(field, newValue.trim());
               setFieldValues({ ...fieldValues, [field]: newValue });
             }}
             onReset={(field) => {

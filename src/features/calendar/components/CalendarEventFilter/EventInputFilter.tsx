@@ -1,7 +1,8 @@
-import useDebounce from 'utils/hooks/useDebounce';
 import { Clear, FilterList } from '@mui/icons-material';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
+
+import useDebounce from 'utils/hooks/useDebounce';
 
 interface EventInputFilterProps {
   onChangeFilterText: (value: string) => void;

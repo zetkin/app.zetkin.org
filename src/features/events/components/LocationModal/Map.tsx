@@ -1,18 +1,13 @@
 import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { FC, useRef, useState } from 'react';
-import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
+import { FC, useState } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { useTheme } from '@mui/material';
+import { latLngBounds, Map as MapType } from 'leaflet';
 
 import BasicMarker from './BasicMarker';
 import SelectedMarker from './SelectedMarker';
-import { useTheme } from '@mui/material';
-import {
-  divIcon,
-  latLngBounds,
-  Map as MapType,
-  Marker as MarkerType,
-} from 'leaflet';
+import { DivIconMarker } from './DivIconMarker';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface MapProps {
@@ -54,8 +49,6 @@ const Map: FC<MapProps> = ({
     ZetkinLocation,
     'lat' | 'lng'
   > | null>(null);
-
-  const selectedMarkerRef = useRef<MarkerType>(null);
 
   const fuse = new Fuse(locations, {
     keys: ['title'],
@@ -110,8 +103,8 @@ const Map: FC<MapProps> = ({
           return (
             <>
               <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               {filteredLocations.map((location) => {
                 const isSelectedMarker = selectedLocation?.id == location.id;
@@ -122,11 +115,8 @@ const Map: FC<MapProps> = ({
                     event.id !== currentEventId
                 ).length;
                 return (
-                  <Marker
+                  <DivIconMarker
                     key={location.id}
-                    ref={
-                      inMoveState && isSelectedMarker ? selectedMarkerRef : null
-                    }
                     draggable={inMoveState && isSelectedMarker}
                     eventHandlers={{
                       click: (evt) => {
@@ -135,8 +125,7 @@ const Map: FC<MapProps> = ({
                         map.setView(evt.latlng, 17);
                         onMarkerClick(location.id);
                       },
-                      dragend: () => {
-                        const marker = selectedMarkerRef.current;
+                      dragend: ({ target: marker }) => {
                         if (marker !== null) {
                           setNewPosition(marker.getLatLng());
                           onMarkerDragEnd(
@@ -146,38 +135,29 @@ const Map: FC<MapProps> = ({
                         }
                       },
                     }}
-                    icon={
-                      isSelectedMarker
-                        ? divIcon({
-                            className: '',
-                            html: renderToStaticMarkup(<SelectedMarker />),
-                          })
-                        : divIcon({
-                            className: '',
-                            html: renderToStaticMarkup(
-                              <BasicMarker
-                                color={theme.palette.primary.main}
-                                events={noOfRelevantEvents}
-                              />
-                            ),
-                          })
-                    }
                     position={
                       isSelectedMarker && newPosition && inMoveState
                         ? newPosition
                         : [location.lat, location.lng]
                     }
-                  />
+                  >
+                    {isSelectedMarker ? (
+                      <SelectedMarker />
+                    ) : (
+                      <BasicMarker
+                        color={theme.palette.primary.main}
+                        events={noOfRelevantEvents}
+                      />
+                    )}
+                  </DivIconMarker>
                 );
               })}
               {pendingLocation && (
-                <Marker
-                  icon={divIcon({
-                    className: '',
-                    html: renderToStaticMarkup(<SelectedMarker />),
-                  })}
+                <DivIconMarker
                   position={[pendingLocation.lat, pendingLocation.lng]}
-                />
+                >
+                  <SelectedMarker />
+                </DivIconMarker>
               )}
             </>
           );

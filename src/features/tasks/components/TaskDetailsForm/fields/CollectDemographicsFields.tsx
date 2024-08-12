@@ -4,7 +4,6 @@ import { TextField } from 'mui-rff';
 import { COLLECT_DEMOGRAPHICS_FIELDS } from '../constants';
 import { DEMOGRAPHICS_FIELD } from 'features/tasks/components/types';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 
 const CollectDemographicsFields: React.FunctionComponent = (): JSX.Element => {

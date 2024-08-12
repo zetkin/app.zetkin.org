@@ -1,5 +1,6 @@
-import { ZetkinMembership } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { ZetkinMembership } from 'utils/types/zetkin';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface SettingsStoreSlice {

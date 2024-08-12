@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUILogo from '.';
 
 export default {
   component: ZUILogo,
   title: 'Atoms/ZUILogo',
-} as ComponentMeta<typeof ZUILogo>;
+} as Meta<typeof ZUILogo>;
 
-const Template: ComponentStory<typeof ZUILogo> = (args) => (
+const Template: StoryFn<typeof ZUILogo> = (args) => (
   <ZUILogo color={args.color} htmlColor={args.htmlColor} size={args.size} />
 );
 

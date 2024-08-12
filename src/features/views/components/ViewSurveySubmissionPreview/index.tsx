@@ -13,7 +13,6 @@ import { FC, ReactNode, useMemo } from 'react';
 import { Msg } from 'core/i18n';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface PreviewableSubmissionData {

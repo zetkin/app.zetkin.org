@@ -1,6 +1,7 @@
+import { OutputBlockData } from '@editorjs/editorjs';
+
 import blockProblems from './blockProblems';
 import { ButtonData } from '../../tools/Button';
-import { OutputBlockData } from '@editorjs/editorjs';
 import { TextBlockData } from '../TextBlockListItem';
 import { BLOCK_TYPES, BlockProblem } from 'features/emails/types';
 

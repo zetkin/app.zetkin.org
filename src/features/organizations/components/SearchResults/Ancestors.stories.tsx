@@ -1,14 +1,14 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
+import { Box } from '@mui/material';
 
 import Ancestors from './Ancestors';
-import { Box } from '@mui/material';
 
 export default {
   component: Ancestors,
   title: 'Ancestors',
-} as ComponentMeta<typeof Ancestors>;
+} as Meta<typeof Ancestors>;
 
-const Template: ComponentStory<typeof Ancestors> = (args) => (
+const Template: StoryFn<typeof Ancestors> = (args) => (
   <Box width="100%">
     <Ancestors ancestors={args.ancestors} />
   </Box>

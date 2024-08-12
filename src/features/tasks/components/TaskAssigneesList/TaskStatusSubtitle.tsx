@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { Done, NotInterested } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -6,8 +7,6 @@ import {
   ASSIGNED_STATUS,
   ZetkinAssignedTask,
 } from 'features/tasks/components/types';
-import { Done, NotInterested } from '@mui/icons-material';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 
 const TaskStatusSubtitle = ({

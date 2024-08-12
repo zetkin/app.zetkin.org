@@ -13,7 +13,6 @@ import {
 import BreadcrumbTrail from 'features/breadcrumbs/components/BreadcrumbTrail';
 import { Msg } from 'core/i18n';
 import ZUIEllipsisMenu, { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
-
 import messageIds from './l10n/messageIds';
 
 interface StyleProps {

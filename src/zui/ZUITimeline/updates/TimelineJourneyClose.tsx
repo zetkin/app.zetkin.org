@@ -5,7 +5,6 @@ import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstanceClose } from 'zui/ZUITimeline/types';
 import ZUIJourneyInstanceCard from 'zui/ZUIJourneyInstanceCard';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
-
 import messageIds from '../l10n/messageIds';
 
 interface TimelineJourneyCloseProps {

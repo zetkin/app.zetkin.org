@@ -1,5 +1,6 @@
-import addBulkOptions from '../rpc/addBulkOptions';
 import dayjs from 'dayjs';
+
+import addBulkOptions from '../rpc/addBulkOptions';
 import {
   ELEMENT_TYPE,
   ZetkinOptionsQuestion,

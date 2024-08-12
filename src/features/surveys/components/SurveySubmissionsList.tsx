@@ -1,16 +1,6 @@
 import { Box } from '@mui/system';
 import { Link } from '@mui/material';
-import messageIds from '../l10n/messageIds';
-import SurveySubmissionPane from '../panes/SurveySubmissionPane';
-import { useNumericRouteParams } from 'core/hooks';
-import { usePanes } from 'utils/panes';
-import usePersonSearch from 'features/profile/hooks/usePersonSearch';
 import { useRouter } from 'next/router';
-import useSurveySubmission from '../hooks/useSurveySubmission';
-import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
-import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   DataGridPro,
   GridCellParams,
@@ -18,6 +8,17 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
 import { FC, useEffect, useMemo } from 'react';
+
+import messageIds from '../l10n/messageIds';
+import SurveySubmissionPane from '../panes/SurveySubmissionPane';
+import { useNumericRouteParams } from 'core/hooks';
+import { usePanes } from 'utils/panes';
+import usePersonSearch from 'features/profile/hooks/usePersonSearch';
+import useSurveySubmission from '../hooks/useSurveySubmission';
+import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
+import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 

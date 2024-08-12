@@ -1,5 +1,6 @@
-import theme from 'theme';
 import { Box, Typography } from '@mui/material';
+
+import theme from 'theme';
 
 type CalendarWeekNumberProps = {
   onClick: () => void;

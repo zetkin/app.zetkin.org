@@ -1,6 +1,6 @@
 import { Box, Grid, Typography, useTheme } from '@mui/material';
-import choices, { ColumnChoiceWithKey } from '../choices';
 
+import choices, { ColumnChoiceWithKey } from '../choices';
 import categories from '../categories';
 import { ColumnChoice } from '../choices';
 import ColumnChoiceCard from '../ColumnChoiceCard';
@@ -8,7 +8,6 @@ import { filterChoicesByMode } from './utils';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinViewColumn } from '../../types';
 import { Msg, useMessages } from 'core/i18n';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface CategoriesProps {

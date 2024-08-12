@@ -4,7 +4,6 @@ import {
   SelectedViewColumn,
   ZetkinViewColumn,
 } from '../../types';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 export enum CHOICES {

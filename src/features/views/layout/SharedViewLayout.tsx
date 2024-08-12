@@ -10,7 +10,6 @@ import useViewGrid from '../hooks/useViewGrid';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
-
 import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({

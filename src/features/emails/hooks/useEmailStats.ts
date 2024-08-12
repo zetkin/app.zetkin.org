@@ -1,5 +1,4 @@
 import { PlaceholderFuture, ResolvedFuture } from 'core/caching/futures';
-
 import { futureToObject } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useEmail from './useEmail';

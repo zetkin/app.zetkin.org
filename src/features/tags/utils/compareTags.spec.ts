@@ -1,6 +1,7 @@
+import { describe, expect, it } from '@jest/globals';
+
 import compareTags from './compareTags';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { describe, expect, it } from '@jest/globals';
 
 describe('compareTags()', () => {
   it('puts any tag before null', () => {

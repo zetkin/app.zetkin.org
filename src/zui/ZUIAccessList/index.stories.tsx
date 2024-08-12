@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIAccessList from '.';
 
 export default {
   component: ZUIAccessList,
   title: 'Molecules/ZUIAccessList',
-} as ComponentMeta<typeof ZUIAccessList>;
+} as Meta<typeof ZUIAccessList>;
 
-const Template: ComponentStory<typeof ZUIAccessList> = (args) => {
+const Template: StoryFn<typeof ZUIAccessList> = (args) => {
   return (
     <div style={{ width: 700 }}>
       <ZUIAccessList

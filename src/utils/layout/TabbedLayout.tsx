@@ -2,9 +2,11 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import {
   Alert,
+  Badge,
   Box,
   Button,
   Collapse,
+  styled,
   Tab,
   TabProps,
   Tabs,
@@ -42,7 +44,12 @@ interface TabbedLayoutProps {
   subtitle?: string | ReactElement;
   defaultTab: string;
   noPad?: boolean;
-  tabs: { href: string; label: string; tabProps?: TabProps }[];
+  tabs: {
+    badge?: number;
+    href: string;
+    label: string;
+    tabProps?: TabProps;
+  }[];
   onClickAlertBtn?: () => void;
 }
 
@@ -87,6 +94,14 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
     ? (value: boolean) => setCollapsed(value)
     : undefined;
 
+  const HorizontallyCenteredBadge = styled(Badge)(() => ({
+    '& .MuiBadge-badge': {
+      right: -15,
+      top: '50%',
+      transform: 'translateY(-50%)',
+    },
+  }));
+
   return (
     <DefaultLayout>
       {alertMsg && (
@@ -130,7 +145,20 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 <Tab
                   {...tab.tabProps}
                   key={tab.href}
-                  label={tab.label}
+                  label={
+                    !tab.badge ? (
+                      tab.label
+                    ) : (
+                      <HorizontallyCenteredBadge
+                        badgeContent={tab.badge}
+                        color="primary"
+                      >
+                        <Box component="span" sx={{ mr: 1.5 }}>
+                          {tab.label}
+                        </Box>
+                      </HorizontallyCenteredBadge>
+                    )
+                  }
                   sx={{
                     paddingX: 3,
                   }}

@@ -1,3 +1,4 @@
+import createCallAssignmentRpc from 'features/callAssignments/rpc/createCallAssignment';
 import {
   callAssignmentCreate,
   callAssignmentCreated,
@@ -8,7 +9,6 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   ZetkinCallAssignment,
   ZetkinCallAssignmentPartial,
-  ZetkinCallAssignmentPostBody,
   ZetkinSurvey,
   ZetkinSurveyExtended,
   ZetkinSurveyPostBody,
@@ -34,12 +34,11 @@ export default function useCreateCampaignActivity(
     dispatch(callAssignmentCreate);
 
     const promise = apiClient
-      .post<ZetkinCallAssignment, ZetkinCallAssignmentPostBody>(
-        `/api/orgs/${orgId}/campaigns/${campId}/call_assignments`,
-        //goal_filters and target_filters are required by server when
-        //making a POST to create call_assignment, so adding them here.
-        { ...callAssignmentBody, goal_filters: [], target_filters: [] }
-      )
+      .rpc(createCallAssignmentRpc, {
+        callAssignment: callAssignmentBody,
+        campId,
+        orgId,
+      })
       .then((callAssignment) => {
         dispatch(callAssignmentCreated([callAssignment, campId]));
         return callAssignment;

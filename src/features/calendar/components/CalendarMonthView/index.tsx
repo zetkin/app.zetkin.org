@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
+import dayjs from 'dayjs';
 
 import Day from './Day';
-import dayjs from 'dayjs';
 import range from 'utils/range';
 import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
 import { useNumericRouteParams } from 'core/hooks';

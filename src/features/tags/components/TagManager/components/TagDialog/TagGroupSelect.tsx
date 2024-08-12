@@ -4,7 +4,6 @@ import { Box, TextField } from '@mui/material';
 
 import { NewTagGroup } from '../../types';
 import { ZetkinTagGroup } from 'utils/types/zetkin';
-
 import messageIds from '../../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 

@@ -8,7 +8,6 @@ import ZUITextEditor from '../ZUITextEditor';
 import useFileUploads, {
   FileUploadState,
 } from 'features/files/hooks/useFileUploads';
-
 import messageIds from './l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 

@@ -1,5 +1,6 @@
-import createNew from '../rpc/createNew/client';
 import { useRouter } from 'next/router';
+
+import createNew from '../rpc/createNew/client';
 import { ZetkinView } from '../components/types';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { viewCreate, viewCreated } from '../store';

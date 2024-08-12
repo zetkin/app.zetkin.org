@@ -1,13 +1,15 @@
+import { Meta, StoryFn } from '@storybook/react';
+
 import ZUISuffixedNumber from '.';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
   component: ZUISuffixedNumber,
   title: 'ZUISuffixedNumber',
-} as ComponentMeta<typeof ZUISuffixedNumber>;
+} as Meta<typeof ZUISuffixedNumber>;
 
-const Template: ComponentStory<typeof ZUISuffixedNumber> = (args) => {
+const Template: StoryFn<typeof ZUISuffixedNumber> = (args) => {
   return <ZUISuffixedNumber number={args.number} />;
 };
 
-export const basic = Template.bind({ number: 54321 });
+export const basic = Template.bind({});
+basic.args = { number: 54321 };

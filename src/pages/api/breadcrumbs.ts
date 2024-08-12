@@ -1,6 +1,6 @@
-import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { isInteger } from 'utils/stringUtils';
 import { ZetkinViewFolder } from 'features/views/components/types';
 

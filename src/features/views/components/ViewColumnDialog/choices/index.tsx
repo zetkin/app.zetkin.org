@@ -1,5 +1,4 @@
 import { CHOICES, ColumnChoice, ColumnChoiceWithKey } from './types';
-
 import * as fields from './fields';
 import * as misc from './misc';
 import * as query from './query';

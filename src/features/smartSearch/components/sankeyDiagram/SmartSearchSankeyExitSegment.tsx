@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import SmartSearchSankeySegment from './SmartSearchSankeySegment';
 import { useSankey } from './SmartSearchSankeyProvider';
 

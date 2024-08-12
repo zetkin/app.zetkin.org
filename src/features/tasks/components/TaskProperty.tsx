@@ -2,7 +2,6 @@ import NextLink from 'next/link';
 import { Link, ListItem, ListItemText } from '@mui/material';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from '../l10n/messageIds';
 
 interface TaskPropertyProps {

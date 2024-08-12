@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIDateTime from '.';
 
 export default {
   component: ZUIDateTime,
   title: 'Atoms/ZUIDateTime',
-} as ComponentMeta<typeof ZUIDateTime>;
+} as Meta<typeof ZUIDateTime>;
 
-const Template: ComponentStory<typeof ZUIDateTime> = (args) => (
+const Template: StoryFn<typeof ZUIDateTime> = (args) => (
   <ZUIDateTime convertToLocal={args.convertToLocal} datetime={args.datetime} />
 );
 

@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+
 import { SelectedViewColumn } from '../types';
 import SmartSearch from 'features/smartSearch/components/SmartSearchDialog/SmartSearch';
 

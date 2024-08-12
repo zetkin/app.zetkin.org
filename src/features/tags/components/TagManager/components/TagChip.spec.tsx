@@ -1,7 +1,7 @@
-import { render } from 'utils/testing';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 
+import { render } from 'utils/testing';
 import mockTag from 'utils/testing/mocks/mockTag';
 import TagChip from './TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';

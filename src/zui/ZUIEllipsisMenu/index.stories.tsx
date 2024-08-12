@@ -1,14 +1,14 @@
 import MovieIcon from '@mui/icons-material/Movie';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIEllipsisMenu from '.';
 
 export default {
   component: ZUIEllipsisMenu,
   title: 'Atoms/ZUIEllipsisMenu',
-} as ComponentMeta<typeof ZUIEllipsisMenu>;
+} as Meta<typeof ZUIEllipsisMenu>;
 
-const Template: ComponentStory<typeof ZUIEllipsisMenu> = (args) => (
+const Template: StoryFn<typeof ZUIEllipsisMenu> = (args) => (
   <ZUIEllipsisMenu items={args.items} />
 );
 

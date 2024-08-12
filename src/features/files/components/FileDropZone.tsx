@@ -1,10 +1,10 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
+import { UploadFileOutlined } from '@mui/icons-material';
 
 import DropZoneContainer from './DropZoneContainer';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { UploadFileOutlined } from '@mui/icons-material';
 import { ZetkinFile } from 'utils/types/zetkin';
 import useFileUploads, { FileUploadState } from '../hooks/useFileUploads';
 
@@ -40,7 +40,11 @@ const FileDropZone: FC<Props> = ({ children, onUploadComplete, orgId }) => {
         </DropZoneContainer>
       )}
       {!isUploading && (
-        <Box height="100%" {...getDropZoneProps()}>
+        <Box
+          data-testid="FileDropZone-dropZone"
+          height="100%"
+          {...getDropZoneProps()}
+        >
           <input {...getInputProps()} />
           {isDraggingOver && (
             <DropZoneContainer state="accepting">

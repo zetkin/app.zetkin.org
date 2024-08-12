@@ -3,7 +3,6 @@ import { FC } from 'react';
 
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
-
 import useCampaign from '../hooks/useCampaign';
 import { useNumericRouteParams } from 'core/hooks';
 

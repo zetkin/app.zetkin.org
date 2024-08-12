@@ -1,8 +1,8 @@
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Grid } from '@mui/material';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';

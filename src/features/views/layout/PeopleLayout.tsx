@@ -3,10 +3,10 @@ import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
-
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useItemSummary from '../hooks/useItemSummary';
+import useJoinSubmissions from 'features/joinForms/hooks/useJoinSubmissions';
 import { useNumericRouteParams } from 'core/hooks';
 
 interface PeopleLayoutProps {
@@ -19,6 +19,11 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const itemSummaryFuture = useItemSummary(orgId, null);
+
+  const { data: submissions } = useJoinSubmissions(orgId);
+  const pendingSubmissions = submissions?.filter(
+    (submission) => submission.state === 'pending'
+  );
 
   const onServer = useServerSide();
   if (onServer) {
@@ -52,6 +57,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
           label: messages.browserLayout.tabs.joinForms(),
         },
         {
+          badge: pendingSubmissions?.length || 0,
           href: '/incoming',
           label: messages.browserLayout.tabs.incoming(),
         },

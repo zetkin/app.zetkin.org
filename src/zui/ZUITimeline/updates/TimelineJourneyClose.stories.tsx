@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import mockPerson from 'utils/testing/mocks/mockPerson';
@@ -8,9 +8,9 @@ import { UPDATE_TYPES } from 'zui/ZUITimeline/types';
 export default {
   component: TimelineJourneyClose,
   title: 'Organisms/Timeline/Updates/TimelineJourneyClose',
-} as ComponentMeta<typeof TimelineJourneyClose>;
+} as Meta<typeof TimelineJourneyClose>;
 
-const Template: ComponentStory<typeof TimelineJourneyClose> = (args) => (
+const Template: StoryFn<typeof TimelineJourneyClose> = (args) => (
   <TimelineJourneyClose update={args.update} />
 );
 

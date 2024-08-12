@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUITextEditor from 'zui/ZUITextEditor/index';
 
@@ -9,10 +9,10 @@ export default {
   },
   component: ZUITextEditor,
   title: 'Organisms/TextEditor',
-} as ComponentMeta<typeof ZUITextEditor>;
+} as Meta<typeof ZUITextEditor>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof ZUITextEditor> = (args) => (
+const Template: StoryFn<typeof ZUITextEditor> = (args) => (
   <ZUITextEditor {...args} />
 );
 

@@ -1,4 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
+
 import useConfigurableDataGridColumns, {
   StorageBackend,
 } from './useConfigurableDataGridColumns';

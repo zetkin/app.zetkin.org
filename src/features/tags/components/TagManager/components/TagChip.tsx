@@ -1,7 +1,6 @@
 import { Clear } from '@mui/icons-material';
 import { useState } from 'react';
 import { Box, IconButton, lighten, Theme, Tooltip } from '@mui/material';
-
 import makeStyles from '@mui/styles/makeStyles';
 
 import { DEFAULT_TAG_COLOR } from '../utils';

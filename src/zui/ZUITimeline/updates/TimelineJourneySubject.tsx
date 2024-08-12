@@ -5,7 +5,6 @@ import {
   UPDATE_TYPES,
   ZetkinUpdateJourneyInstanceSubject,
 } from 'zui/ZUITimeline/types';
-
 import messageIds from '../l10n/messageIds';
 
 interface TimelineJourneySubjectProps {

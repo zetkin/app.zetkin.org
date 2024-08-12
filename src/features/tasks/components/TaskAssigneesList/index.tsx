@@ -6,7 +6,6 @@ import { useMessages } from 'core/i18n';
 import { ZetkinAssignedTask } from 'features/tasks/components/types';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUISection from 'zui/ZUISection';
-
 import messageIds from 'features/tasks/l10n/messageIds';
 
 const TaskAssigneesList: React.FunctionComponent<{

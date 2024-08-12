@@ -1,12 +1,11 @@
+import { Card, List } from '@mui/material';
+
 import { ZetkinTask } from 'utils/types/zetkin';
 import ZUIDateTime from 'zui/ZUIDateTime';
-
 import TaskProperty from './TaskProperty';
 import TaskTypeDetailsSection from 'features/tasks/components/TaskTypeDetailsSection';
 import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
-import { Card, List } from '@mui/material';
-
 import messageIds from '../l10n/messageIds';
 
 interface TaskDetailsCardProps {

@@ -13,7 +13,6 @@ import {
   SmartSearchFilterWithId,
   SurveyOptionFilterConfig,
 } from 'features/smartSearch/components/types';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';

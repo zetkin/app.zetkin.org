@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import {
   remoteItem,
   RemoteItem,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-
 import {
   Call,
   CallAssignmentCaller,

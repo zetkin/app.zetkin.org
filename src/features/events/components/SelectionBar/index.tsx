@@ -1,16 +1,21 @@
 import { CheckBoxOutlined } from '@mui/icons-material';
-import { Box, Button, Divider, Paper, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Badge, Box, Button, Divider, Paper, Typography } from '@mui/material';
 
+import EventParticipantsModal from '../EventParticipantsModal';
 import messageIds from '../../../calendar/l10n/messageIds';
 import MoveCopyButtons from './MoveCopyButtons';
 import { Msg } from 'core/i18n';
 import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
+import useParticipantPool from 'features/events/hooks/useParticipantPool';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 const SelectionBar = () => {
   const dispatch = useAppDispatch();
+  const [participantsDialogOpen, setParticipantsDialogOpen] = useState(false);
+  const { affectedParticipantIds } = useParticipantPool();
   const selectedEventIds = useAppSelector(
     (state: RootState) => state.events.selectedEventIds
   );
@@ -63,11 +68,36 @@ const SelectionBar = () => {
                 gap={1}
                 justifyContent="center"
               >
+                <Badge
+                  badgeContent={affectedParticipantIds.length}
+                  color="primary"
+                >
+                  <Button
+                    onClick={() => setParticipantsDialogOpen(true)}
+                    variant="outlined"
+                  >
+                    <Msg id={messageIds.selectionBar.editParticipants} />
+                  </Button>
+                </Badge>
+              </Box>
+              <Box
+                alignItems="center"
+                display="flex"
+                gap={1}
+                justifyContent="center"
+              >
+                <Divider orientation="vertical" variant="fullWidth" />
                 <MoveCopyButtons />
                 <SelectionBarEllipsis />
               </Box>
             </Box>
           </Paper>
+          <EventParticipantsModal
+            onClose={() => {
+              setParticipantsDialogOpen(false);
+            }}
+            open={participantsDialogOpen}
+          />
         </Box>
       )}
     </Box>

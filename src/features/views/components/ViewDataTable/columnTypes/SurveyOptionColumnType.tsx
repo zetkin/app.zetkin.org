@@ -11,7 +11,6 @@ import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import theme from '../../../../../theme';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 type SurveyOptionViewCell =

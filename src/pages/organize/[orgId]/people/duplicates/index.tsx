@@ -1,7 +1,7 @@
-import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import { GetServerSideProps } from 'next';
 import { Box, Typography } from '@mui/material';
 
+import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';

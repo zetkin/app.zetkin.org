@@ -5,7 +5,6 @@ import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinView } from 'utils/types/zetkin';
-
 import messageIds from '../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 

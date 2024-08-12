@@ -13,7 +13,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
-
 import makeStyles from '@mui/styles/makeStyles';
 
 import { PersonOrganization } from 'utils/organize/people';

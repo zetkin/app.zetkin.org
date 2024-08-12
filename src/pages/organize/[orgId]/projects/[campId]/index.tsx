@@ -1,13 +1,13 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Grid, Typography } from '@mui/material';
+import { Suspense } from 'react';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
-import { Suspense } from 'react';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';

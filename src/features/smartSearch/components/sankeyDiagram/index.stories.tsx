@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import SmartSearchSankeySegment from './SmartSearchSankeySegment';
 import {
@@ -17,7 +17,7 @@ type StoryArgs = SankeyConfig & {
   segments: SankeySegment[];
 };
 
-const Template: Story<StoryArgs> = (args) => {
+const Template: StoryFn<StoryArgs> = (args) => {
   const { segments, ...config } = args;
 
   return (

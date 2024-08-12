@@ -3,10 +3,8 @@ import { useRouter } from 'next/router';
 
 import TaskDetailsForm from 'features/tasks/components/TaskDetailsForm';
 import { ZetkinTaskRequestBody } from 'features/tasks/components/types';
-
 import { ACTIONS } from '../constants';
 import { ActionConfig, DialogContentBaseProps } from './types';
-
 import useCreateTask from 'features/tasks/hooks/useCreateTask';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({

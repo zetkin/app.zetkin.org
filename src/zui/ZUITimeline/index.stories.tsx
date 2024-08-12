@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import dayjs from 'dayjs';
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 const chance = Chance();
 
@@ -21,10 +21,10 @@ export default {
   },
   component: ZUITimeline,
   title: 'Organisms/ZUITimeline',
-} as ComponentMeta<typeof ZUITimeline>;
+} as Meta<typeof ZUITimeline>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof ZUITimeline> = (args) => (
+const Template: StoryFn<typeof ZUITimeline> = (args) => (
   <div style={{ maxWidth: 450 }}>
     <ZUITimeline {...args} />
   </div>

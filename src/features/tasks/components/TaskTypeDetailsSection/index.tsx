@@ -5,7 +5,6 @@ import {
   TASK_TYPE,
   VisitLinkConfig,
 } from 'features/tasks/components/types';
-
 import CollectDemographicsDetails from './CollectDemographicsDetails';
 import ShareLinkDetails from './ShareLinkDetails';
 import VisitLinkDetails from './VisitLinkDetails';

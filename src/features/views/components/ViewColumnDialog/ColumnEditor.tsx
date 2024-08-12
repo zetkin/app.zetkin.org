@@ -5,7 +5,6 @@ import { FunctionComponent, useState } from 'react';
 import { ColumnChoiceWithKey } from './choices';
 import { Msg, useMessages } from 'core/i18n';
 import { SelectedViewColumn, ZetkinViewColumn } from '../types';
-
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ColumnEditorProps {

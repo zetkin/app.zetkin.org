@@ -1,13 +1,13 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import ZUIDatePicker from '.';
 
 export default {
   component: ZUIDatePicker,
   title: 'Molecules/ZUIDatePicker',
-} as ComponentMeta<typeof ZUIDatePicker>;
+} as Meta<typeof ZUIDatePicker>;
 
-const Template: ComponentStory<typeof ZUIDatePicker> = () => (
+const Template: StoryFn<typeof ZUIDatePicker> = () => (
   <ZUIDatePicker date={null} />
 );
 

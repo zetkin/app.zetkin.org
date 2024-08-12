@@ -6,10 +6,10 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import Router from 'next/router';
-import { store } from 'core/store';
 import { Theme } from '@mui/material/styles';
 import { useEffect } from 'react';
 
+import { store } from 'core/store';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
 import { PageWithLayout } from '../utils/types';

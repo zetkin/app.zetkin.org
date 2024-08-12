@@ -8,7 +8,6 @@ import {
   RESPONSE_TYPE,
   ZetkinSurveyQuestionElement,
 } from 'utils/types/zetkin';
-
 import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';

@@ -2,7 +2,6 @@ import { List, ListItem, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
 
 import { Msg } from 'core/i18n';
-
 import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIListProps {

@@ -1,9 +1,6 @@
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
-
 import messageIds from 'features/smartSearch/l10n/messageIds';
-const localMessageIds = messageIds.filters.task;
-
 import UnderlinedCampaignTitle from '../CampaignParticipation/UnderlinedCampaignTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedTaskTitle from './UnderlinedTaskTitle';
@@ -23,6 +20,8 @@ import {
 interface DisplayTaskProps {
   filter: SmartSearchFilterWithId<TaskFilterConfig>;
 }
+
+const localMessageIds = messageIds.filters.task;
 
 const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();

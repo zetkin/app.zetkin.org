@@ -1,5 +1,6 @@
-import { AppDispatch } from 'core/store';
 import { PayloadAction } from '@reduxjs/toolkit';
+
+import { AppDispatch } from 'core/store';
 import shouldLoad from './shouldLoad';
 import {
   IFuture,

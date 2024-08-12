@@ -10,9 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
 import { FC } from 'react';
+
 import filterParticipants from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
