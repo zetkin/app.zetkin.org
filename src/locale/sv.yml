@@ -25,7 +25,7 @@ feat:
       closed: Stängd
       compose: Skapa
       conversation: Samtal
-      duplicates: Dubbletter
+      duplicates: Dubletter
       emails: E-post
       events: Event
       folders: Listor
@@ -380,9 +380,9 @@ feat:
           o: Annat
         noValue: Inget värde
         title: Data att slå samman
-      infoMessage: All historisk från aktiviteter och taggar från alla personer kommer
+      infoMessage: All historik från aktiviteter och taggar från alla personer kommer
         slås samman och visas på den sammanslagna personen.
-      infoTitle: Ingen data kommer förloras
+      infoTitle: Ingen data kommer att gå förlorad
       isDuplicateButton: Inkludera
       mergeButton: Slå samman
       notDuplicateButton: Exkludera
@@ -392,13 +392,14 @@ feat:
         email: E-post
         name: Namn
         phone: Telefon
-      title: Slå samman dubbletter
+      title: Slå samman dubletter
     page:
       dismiss: Avfärda
-      noDuplicates: Inga dubbletter
-      noDuplicatesDescription: Yay! Alla medlemmar är unika individer.
-      possibleDuplicates: Eventuella dubbletter
-      possibleDuplicatesDescription: Personer {numPeople} som ser väldigt lika ut
+      noDuplicates: Inga dubletter
+      noDuplicatesDescription: Yay! Alla personer i din organisation är unika individer.
+      possibleDuplicates: Eventuella dubletter
+      possibleDuplicatesDescription: De här {numPeople} personerna ser väldigt lika
+        ut
       resolve: Slå samman
   emails:
     blocked:
@@ -654,7 +655,7 @@ feat:
       draft: Utkast
       end: Slut
       event: Event
-      eventDuration: Eventets varaktighet
+      eventDuration: Eventets längd
       header: Skapa flerskiftsevent
       hours: '{no, plural, one {1 timme} other {# timmar}}'
       hoursShort: t
@@ -664,13 +665,13 @@ feat:
       location: Plats
       minutes: '{no, plural, one {1 minut} other {# minuter}}'
       minutesShort: min
-      noEvents: Det här kommer inte skapa några {no} events
+      noEvents: Det här kommer att skapa skapa {no} events
       noTitle: Icke namngivet event med fler skift
       participation: Deltagande
       participationDescription: Önskat antal deltagare per skift
       publish: Publicera
       reset: Nollställ
-      shiftDuration: Skiftets varaktighet
+      shiftDuration: Skiftets längd
       shiftStart: Starta skift {no}
       shifts: '{no, plural, one {1 skift} other {# skift}}'
       shiftsHeader: Skift
@@ -785,10 +786,10 @@ feat:
     configuration:
       configure:
         dates:
-          customFormatDescription: Beskriv formatet av värdena i den här kolumnen,
-            använd bokstäverna Y,M och D och något tecken för att separera dem. Till
-            exempel om dina datum är skrivna 1998.03.23, så skriver du in det som
-            YYYY.MM.DD.
+          customFormatDescription: Beskriv formatet av värdena i den här kolumnen
+            med bokstäverna Y, M, D och det tecken du använder för att separera dem.
+            Till exempel om dina datum är skrivna 1998.03.23, så skriver du in det
+            som YYYY.MM.DD.
           customFormatLabel: Anpassat datumformat
           dateInputLabel: Datumformat
           description: Välj format för värdena i den här kolumnen så att de kan importeras
@@ -802,11 +803,11 @@ feat:
           personNumberFormat:
             dk:
               description: Värdena i den här kolumnen kommer översättas från tiosiffriga
-                danska CPR-nummer (DDMMYY-XXXX or DDMMYYXXXX) till datum.
+                danska CPR-nummer (DDMMÅÅ-XXXX or DDMMÅÅXXXX) till datum.
               label: Danskt CPR-nummer
             'no':
               description: Värdena i den här kolumnen kommer översättas från 11-siffriga
-                norska födelsenummer (DDMMYYXXXXX eller DDMMYY-XXXXX) till datum.
+                norska födelsenummer (DDMMÅÅXXXXX eller DDMMÅÅ-XXXXX) till datum.
               label: Norska fødselsnummer
             se:
               description: Värden i den här kolumnen kommer att översättas från tio-
@@ -815,7 +816,7 @@ feat:
               label: Svenskt personnummer
         ids:
           configExplanation: När du importerar med ID (nu och framöver) kan Zetkin
-            uppdatera existerande personer istället för att skapa dubbletter.
+            uppdatera existerande personer istället för att skapa dubletter.
           externalID: Externt ID
           externalIDExplanation: Den här kolumnen innehåller ID från vårt vanliga
             register (inte Zetkin)
@@ -828,7 +829,7 @@ feat:
           zetkinIDExplanation: Den här kolumnen innehåller ID:n från en export ur
             Zetkin.
         orgs:
-          guess: Giss organisationer
+          guess: Gissa organisationer
           header: Välj en organisation per värde
           organizations: Organisation
           status: Status
@@ -877,9 +878,9 @@ feat:
         tags: Etiketter
         unfinished:
           date: Du behöver konfigurera formatet på datum
-          id: Du behöver konfigurera ID
-          org: Du behöver kartlägga värden
-          tag: Du behöver kartlägga värden
+          id: Du behöver konfigurera ID:n
+          org: Du behöver väja organisationer att importera värden som
+          tag: Du behöver välja taggar att importera värden som
         zetkinFieldGroups:
           fields: Fält
           id: ID
@@ -968,9 +969,9 @@ feat:
             "Importera" för att genomföra importen.
           title: Allt ser bra ut!
         unconfiguredId:
-          description: Den här importen kommer leda till dubbletter. Om detta är din
-            första import och du vill undvika dubbletter i framtiden, gå tillbaka
-            och välj ett externt ID som du kan använda framöver.
+          description: Den här importen kommer leda till dubletter. Om detta är din
+            första import och du vill undvika dubletter i framtiden, gå tillbaka och
+            välj ett externt ID som du kan använda framöver.
           title: Du har inte valt något ID
         unconfiguredIdAndName:
           description: Varje import måste innehålla fullständiga namn eller ID för
@@ -1200,7 +1201,7 @@ feat:
       addError: Organisationen kunde inte läggas till
       removeError: Organisationen kunde inte tas bort
       title: Organisationer
-    resetButton: Nollställ
+    resetButton: Återställ
     saveButton: Spara
     tabs:
       manage: Hantera
@@ -1244,10 +1245,10 @@ feat:
       organizers:
         columns:
           name: Namn
-        description: Organisatörer har tillgång till att göra saker som organisera
-          kampanjer och hantera redan skapade ringuppdrag
+        description: Organisatörer kan göra saker som till exempel att skapa kampanjer
+          och hantera redan skapade ringuppdrag
         roleInheritance: Organisatör i
-        title: Organisstörer
+        title: Organisatörer
       settingsLayout:
         access: Tillgång
         title: Inställningar
@@ -1280,7 +1281,8 @@ feat:
           description: Välj baserat på listor och Smarta sökningar
           title: Korsreferera
         email:
-          description: Hitta personer baserat på information från att ha skickat  e-post
+          description: Hitta personer baserat på information som samlats in genom
+            att göra e-postutskick.
           title: E-post
         events:
           description: Välj baserat på data från events
@@ -1302,12 +1304,10 @@ feat:
           title: Uppgifter
       filters:
         call_history:
-          description: Hitta personer som har blivit uppringda, nådda eller fått ett
-            samtalsförsök.
+          description: Hitta personer som har blivit uppringda, nådda eller fått samtalsförsök.
           title: Ringhistorik
         campaign_participation:
-          description: Vem anmälde sig? Vem blev bokad? Vem gjorde det inte? Hitta
-            dem!
+          description: Vem anmälde sig? Vem blev bokad? Vem blev det inte? Hitta dem!
           title: Deltagande i events
         email_blacklist:
           description: Studsade, felaktig adress, ej mottaget - här är dem.
@@ -1326,8 +1326,9 @@ feat:
           description: Namn, adress, e-post och annat!
           title: Personinfo
         person_field:
-          description: Som personinfo, fast sökfälten är anpassade till den här organisationen.
-          title: Valbara fält
+          description: Som personinfo, men sök i fält som är anpassade för den här
+            organisationen.
+          title: Anpassade fält
         person_tags:
           description: För att hitta personer med eller utan specifika etiketter
           title: Etiketter
@@ -1343,12 +1344,10 @@ feat:
             sökningen
           title: Personer som matchar en sparad Smart sökning
         survey_option:
-          description: 'Använd dina enkätsvar för deras underbara syfte: Hitta rätt
-            personer!'
+          description: 'Använd enkätsvar i deras underbara syfte: att hitta rätt personer!'
           title: Svar på kryssrutor
         survey_response:
-          description: 'Använd dina enkätsvar för deras underbara syfte: Hitta rätt
-            personer!'
+          description: 'Använd enkätsvar i deras underbara syfte: att hitta rätt personer!'
           title: Svar på textfrågor
         survey_submission:
           description: Har de svarat på en enkät? Har de inte svarat på en enkät?
@@ -2191,7 +2190,7 @@ feat:
       moveToRoot: Flytta till alla listor
     browserLayout:
       tabs:
-        duplicates: Dubbletter
+        duplicates: Dubletter
         incoming: Inkommande
         joinForms: Join forms
         views: Listor
