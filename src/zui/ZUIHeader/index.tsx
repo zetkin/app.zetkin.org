@@ -16,12 +16,17 @@ import ZUIMenu, { MenuItem } from 'zui/ZUIMenu';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
+import { WithRequired } from 'utils/types';
+import ZUIMenuList from 'zui/ZUIMenuList';
 
 interface ZUIHeaderProps {
   /**
-   * This is the content of popover that is opened by clicking the actionbutton
+   * Either an array of menu items, to be displayed as a menu OR a function that returns a component that will be displayed in the popover.
+   * If the action button should open a menu - send in menu items, not a whole component.
    */
-  actionButtonPopoverContent?: (onClose: () => void) => JSX.Element;
+  actionButtonPopoverContent?:
+    | WithRequired<MenuItem, 'startIcon'>[]
+    | ((onClose: () => void) => JSX.Element);
 
   /**
    * The text on the action button
@@ -45,8 +50,8 @@ interface ZUIHeaderProps {
   /**Send in the breadcrumbs and the breadcrumb widget will show them */
   breadcrumbs?: BreadcrumbTreeItem[];
 
-  /**Send in some menu items and the ellipsis menu will show them */
-  ellipsisMenuItems?: MenuItem[];
+  /**Start icon is required for each menu item */
+  ellipsisMenuItems?: WithRequired<MenuItem, 'startIcon'>[];
 
   /**Icon + text pairs to be shown under the title */
   metaData?: {
@@ -149,12 +154,30 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
             {!!actionButtonPopoverContent && (
               <Popover
                 anchorEl={actionButtonPopoverAnchorEl}
-                anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 onClose={() => setactionButtonPopoverAnchorEl(null)}
                 open={!!actionButtonPopoverAnchorEl}
+                transformOrigin={{
+                  horizontal: 'right',
+                  vertical: 'top',
+                }}
               >
-                {actionButtonPopoverContent(() =>
-                  setactionButtonPopoverAnchorEl(null)
+                {typeof actionButtonPopoverContent === 'function' &&
+                  actionButtonPopoverContent(() =>
+                    setactionButtonPopoverAnchorEl(null)
+                  )}
+                {typeof actionButtonPopoverContent !== 'function' && (
+                  <Box minWidth={200}>
+                    <ZUIMenuList
+                      menuItems={actionButtonPopoverContent.map((menuItem) => ({
+                        ...menuItem,
+                        onClick: () => {
+                          menuItem.onClick();
+                          setactionButtonPopoverAnchorEl(null);
+                        },
+                      }))}
+                    />
+                  </Box>
                 )}
               </Popover>
             )}
