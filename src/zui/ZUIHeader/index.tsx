@@ -18,25 +18,63 @@ import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 
 interface ZUIHeaderProps {
+  /**
+   * This is the content of popover that is opened by clicking the actionbutton
+   */
   actionButtonPopoverContent?: (onClose: () => void) => JSX.Element;
+
+  /**
+   * The text on the action button
+   */
   actionButtonLabel?: string;
+
+  /**
+   * Type of actionbutton. Defaults to 'secondary'
+   */
   actionButtonType?: 'primary' | 'secondary';
+
+  /**The href to an avatar */
   avatar?: string;
+
+  /**A component to be shown under the action button */
   belowActionButton?: JSX.Element;
+
+  /**A component to be shown under the title */
   belowTitle?: JSX.Element;
+
+  /**Send in the breadcrumbs and the breadcrumb widget will show them */
   breadcrumbs?: BreadcrumbTreeItem[];
+
+  /**Send in some menu items and the ellipsis menu will show them */
   ellipsisMenuItems?: MenuItem[];
+
+  /**Icon + text pairs to be shown under the title */
   metaData?: {
     icon: OverridableComponent<
       SvgIconTypeMap<Record<string, unknown>, 'svg'>
     > & { muiName: string };
     label: string;
   }[];
+
+  /**
+   * If the action button performs a direct action (not opens a popover), this is the callback to perform that action
+   */
   onActionButtonClick?: () => void;
+
+  /**
+   * If you want the title to be editable, send in this callback
+   */
   onTitleChange?: (newValue: string) => void;
+
+  /**
+   * The page title
+   */
   title: string;
 }
 
+/**
+ *  This is the header component that is shown at the top of each page. It is used in the layout files.
+ */
 const ZUIHeader: FC<ZUIHeaderProps> = ({
   actionButtonPopoverContent,
   actionButtonLabel,

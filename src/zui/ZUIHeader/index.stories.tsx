@@ -1,5 +1,10 @@
 import { Box } from '@mui/material';
-import { CatchingPokemon, Surfing } from '@mui/icons-material';
+import {
+  CatchingPokemon,
+  HeadsetMicOutlined,
+  People,
+  Surfing,
+} from '@mui/icons-material';
 import { Meta, StoryObj } from '@storybook/react';
 
 import RightSide from './index';
@@ -13,81 +18,40 @@ export default meta;
 
 type Story = StoryObj<typeof RightSide>;
 
-export const EditableTitle: Story = {
+export const PersonPageHeader: Story = {
   args: {
-    actionButtonLabel: 'Publish',
-    actionButtonType: 'primary',
     avatar:
       'https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg',
-    belowActionButton: (
-      <Box bgcolor="lightcoral" padding={1}>
-        You can put a thing here below the action button
-      </Box>
-    ),
-    belowTitle: (
-      <Box bgcolor="lightblue" padding={1}>
-        You can put a thing here below the title
-      </Box>
-    ),
     breadcrumbs: [
       {
         children: [
           {
-            children: [
-              {
-                children: [],
-                href: 'test3',
-                id: 3,
-                title: 'My event',
-              },
-              {
-                children: [],
-                href: 'test4',
-                id: 4,
-                title: 'My other event',
-              },
-            ],
+            children: [],
             href: 'test2',
             id: 2,
-            title: 'Events',
+            title: 'Angela Davis',
           },
         ],
         href: 'test1',
         id: 1,
-        title: 'Projects',
+        title: 'People',
       },
     ],
-    metaData: [
-      {
-        icon: CatchingPokemon,
-        label: 'Pokemon',
-      },
-      {
-        icon: Surfing,
-        label: 'Surf dude',
-      },
-    ],
-    onActionButtonClick: () => null,
-    onTitleChange: (newValue) => {
-      newValue;
-    },
-    title: 'Page title',
+    title: 'Angela Davis',
   },
 };
 
-export const StaticTitle: Story = {
+export const ProjectActivityHeader: Story = {
   args: {
-    actionButtonLabel: 'Publish',
-    avatar:
-      'https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg',
+    actionButtonLabel: 'Publication',
     belowActionButton: (
       <Box bgcolor="lightcoral" padding={1}>
-        You can put a thing here below the action button
+        Component with scheduling and status info here
       </Box>
     ),
     belowTitle: (
       <Box bgcolor="lightblue" padding={1}>
-        You can put a thing here below the title
+        Interactive component here
       </Box>
     ),
     breadcrumbs: [
@@ -99,18 +63,18 @@ export const StaticTitle: Story = {
                 children: [],
                 href: 'test3',
                 id: 3,
-                title: 'My event',
+                title: 'My call assignmemnt',
               },
               {
                 children: [],
                 href: 'test4',
                 id: 4,
-                title: 'My other event',
+                title: 'My other call assignment',
               },
             ],
             href: 'test2',
             id: 2,
-            title: 'Events',
+            title: 'My project',
           },
         ],
         href: 'test1',
@@ -120,16 +84,16 @@ export const StaticTitle: Story = {
     ],
     metaData: [
       {
-        icon: CatchingPokemon,
-        label: 'Pokemon',
+        icon: People,
+        label: '3668 targets',
       },
       {
-        icon: Surfing,
-        label: 'Surf dude',
+        icon: HeadsetMicOutlined,
+        label: '12 callers',
       },
     ],
-    onActionButtonClick: () => null,
-    title: 'Page title',
+    onTitleChange: () => null,
+    title: 'My call assignment',
   },
 };
 
@@ -139,8 +103,8 @@ export const PrimaryActionWithPopoverAndBelowActionButton: Story = {
     actionButtonPopoverContent: (onClose) => (
       <ZUIMenuList
         menuItems={[
-          { label: 'Event', onClick: onClose },
-          { label: 'Email', onClick: onClose },
+          { label: 'Event', onClick: onClose, startIcon: <Surfing /> },
+          { label: 'Email', onClick: onClose, startIcon: <CatchingPokemon /> },
         ]}
       />
     ),
