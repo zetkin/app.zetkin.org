@@ -60,81 +60,6 @@ declare module '@mui/material/styles/createPalette' {
   }
 }
 
-//New theme palette for new design system
-const newThemePalette = {
-  activityStatusColors: {
-    cancelled: '#6D6D6D',
-    draft: '#F3C81C',
-    expired: '#D1D1D1',
-    published: '#1B9E4B',
-    scheduled: '#3E6CD2',
-  },
-  background: {
-    default: '#F9F9F9',
-  },
-  error: {
-    dark: '#8F2525',
-    main: '#CE3434',
-  },
-  filterCategoryColors: {
-    darkBlue: { pale: '#BED0F9', strong: '#2563EB' },
-    green: { pale: '#D1F39A', strong: '#A3E635' },
-    lightBlue: { pale: '#93E9EB', strong: '#28D4D7' },
-    orange: { pale: '#FDD497', strong: '#FBA930' },
-    pink: { pale: ' #FCE4EC', strong: '#F48FB1' },
-    purple: { pale: '#E5C0F5', strong: '#C026D3' },
-    red: { pale: '#F1A8A8', strong: '#DC2626' },
-    teal: { pale: '#99E9CC ', strong: '#34D399' },
-    yellow: { pale: '#EEEA8F', strong: '#DDD520' },
-  },
-  info: {
-    main: '#3E6CD2',
-  },
-  onSurface: {
-    disabled: '#231F2061',
-    high: '#231F20DE',
-    medium: '#231F2099',
-  },
-  outline: {
-    main: 'rgba(0,0,0,0.12)',
-  },
-  primary: {
-    dark: '#000000',
-    light: '#5D5D5D',
-    main: '#252525',
-  },
-  secondary: {
-    light: '#9f9f9f',
-    main: 'rgba(0, 0, 0, 0.6)',
-  },
-  statusColors: {
-    blue: 'rgba(25, 118, 210, 1)',
-    gray: 'rgba(0, 0, 0, 0.12)',
-    green: 'rgba(102, 187, 106, 1)',
-    orange: 'rgba(245, 124, 0, 1)',
-    red: 'rgba(239, 83, 80, 1)',
-  },
-  success: {
-    light: '#9fdfb8',
-    main: '#1B9E4B',
-  },
-  text: {
-    secondary: 'rgba(0, 0, 0, 0.6)',
-  },
-  transparentGrey: {
-    light: 'rgba(0,0,0,0.04)',
-  },
-  viewColumnGallery: {
-    blue: '#1976D2',
-    purple: '#BA68C8',
-    red: '#ED1C55',
-  },
-  warning: {
-    dark: '#C4880A',
-    main: '#F3C81C',
-  },
-};
-
 const themePalette = {
   background: {
     default: '#F9F9F9',
@@ -324,6 +249,99 @@ const theme = createTheme({
     },
   },
 });
+
+//The new theme palette
+const newThemePalette = {
+  activityStatusColors: {
+    cancelled: '#6D6D6D',
+    draft: '#F3C81C',
+    expired: '#D1D1D1',
+    published: '#1B9E4B',
+    scheduled: '#3E6CD2',
+  },
+  background: {
+    default: '#F9F9F9',
+  },
+  basic: {
+    black: '#000000',
+    white: '#FFFFFF',
+  },
+  error: {
+    dark: '#8F2525',
+    main: '#CE3434',
+  },
+  filterCategoryColors: {
+    darkBlue: { pale: '#BED0F9', strong: '#2563EB' },
+    green: { pale: '#D1F39A', strong: '#A3E635' },
+    lightBlue: { pale: '#93E9EB', strong: '#28D4D7' },
+    orange: { pale: '#FDD497', strong: '#FBA930' },
+    pink: { pale: ' #FCE4EC', strong: '#F48FB1' },
+    purple: { pale: '#E5C0F5', strong: '#C026D3' },
+    red: { pale: '#F1A8A8', strong: '#DC2626' },
+    teal: { pale: '#99E9CC ', strong: '#34D399' },
+    yellow: { pale: '#EEEA8F', strong: '#DDD520' },
+  },
+  gray: {
+    [100]: '#E7E7E7',
+    [200]: '#D1D1D1',
+    [25]: '#FBFBFB',
+    [300]: '#B0B0B0',
+    [400]: '#888888',
+    [50]: '#F6F6F6',
+    [500]: '#6D6D6D',
+    [600]: '#5D5D5D',
+    [700]: '#4F4F4F',
+    [800]: '#454545',
+    [900]: '#3D3D3D',
+    [950]: '#252525',
+  },
+  info: {
+    main: '#3E6CD2',
+  },
+  onSurface: {
+    disabled: '#231F2061',
+    high: '#231F20DE',
+    medium: '#231F2099',
+  },
+  outline: {
+    main: 'rgba(0,0,0,0.12)',
+  },
+  primary: {
+    dark: '#000000',
+    light: '#5D5D5D',
+    main: '#252525',
+  },
+  secondary: {
+    light: '#9f9f9f',
+    main: 'rgba(0, 0, 0, 0.6)',
+  },
+  statusColors: {
+    blue: 'rgba(25, 118, 210, 1)',
+    gray: 'rgba(0, 0, 0, 0.12)',
+    green: 'rgba(102, 187, 106, 1)',
+    orange: 'rgba(245, 124, 0, 1)',
+    red: 'rgba(239, 83, 80, 1)',
+  },
+  success: {
+    light: '#9fdfb8',
+    main: '#1B9E4B',
+  },
+  text: {
+    secondary: '#6D6D6D',
+  },
+  transparentGrey: {
+    light: 'rgba(0,0,0,0.04)',
+  },
+  viewColumnGallery: {
+    blue: '#1976D2',
+    purple: '#BA68C8',
+    red: '#ED1C55',
+  },
+  warning: {
+    dark: '#C4880A',
+    main: '#F3C81C',
+  },
+};
 
 // The new theme.
 export const newTheme = createTheme({

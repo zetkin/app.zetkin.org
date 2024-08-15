@@ -11,19 +11,19 @@ import {
 const useStyles = makeStyles((theme) => ({
   leftSide: {
     alignItems: 'center',
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[50],
     borderRadius: '2em 0 0 2em',
     borderRight: `1px solid ${theme.palette.grey[300]}`,
     display: 'flex',
-    paddingLeft: 0.2,
+    height: '26px',
   },
   rightSide: {
     alignItems: 'center',
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[50],
     borderRadius: '0 2em 2em 0',
     cursor: 'pointer',
     display: 'flex',
-    paddingRight: 0.2,
+    height: '26px',
   },
 }));
 
@@ -124,9 +124,9 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
         <Box className={classes.leftSide}>
           <SubdirectoryArrowLeft
             color="secondary"
-            fontSize="small"
             sx={{
-              margin: 0.5,
+              fontSize: '1rem',
+              margin: '4px 2px 4px 6px',
               transform: 'rotate(0.25turn)',
             }}
           />
@@ -138,11 +138,15 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
           setBreadcrumbsAnchorEl(breadcrumbsAnchorEl ? null : ev.currentTarget)
         }
       >
-        <MoreHoriz color="secondary" fontSize="small" sx={{ margin: 0.5 }} />
+        <MoreHoriz
+          color="secondary"
+          sx={{ fontSize: '1.125rem', margin: '4px 6px 4px 2px' }}
+        />
         <Menu
           anchorEl={breadcrumbsAnchorEl}
           onClose={() => setBreadcrumbsAnchorEl(null)}
           open={!!breadcrumbsAnchorEl}
+          PaperProps={{ sx: { boxShadow: '0px 4px 20px 0px #0000001F' } }}
         >
           <Box paddingX={2}>
             {renderTree(breadcrumbs, currentItem?.id, true)}
