@@ -42,27 +42,40 @@ const getColor = (type: ZUIButtonType) => {
   }
 };
 
-const getLoadingIndicatorSize = (
-  size: 'large' | 'medium' | 'small' = 'medium'
-) => {
-  if (size == 'large') {
-    return '15px';
-  } else if (size == 'medium') {
-    return '14px';
-  } else if (size == 'small') {
-    return '13px';
-  }
-};
-
 const getLoadingIndicatorPadding = (
   size: 'large' | 'medium' | 'small' = 'medium'
 ) => {
   if (size == 'large') {
-    return 1.7;
+    return '13px 22px 13px 22px';
   } else if (size == 'medium') {
-    return 1.4;
+    return '10px 16px 10px 16px';
   } else if (size == 'small') {
-    return 1.1;
+    return '7px 10px 7px 10px';
+  }
+};
+
+const getTextPadding = (
+  size: 'large' | 'medium' | 'small' = 'medium',
+  type: ZUIButtonType = 'secondary'
+) => {
+  if (size === 'large') {
+    if (type === 'secondary') {
+      return '7px 22px 7px 22px';
+    } else {
+      return '8px 22px 8px 22px';
+    }
+  }
+
+  if (size === 'medium') {
+    if (type === 'tertiary') {
+      return '6px 16px 6px 16px';
+    }
+  }
+
+  if (size === 'small') {
+    if (type === 'tertiary') {
+      return '4px 10px 4px 10px';
+    }
   }
 };
 
@@ -89,15 +102,16 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       onKeyDown={onKeyDown}
       size={size}
       startIcon={startIcon}
-      sx={{ padding: isLoading ? getLoadingIndicatorPadding(size) : '' }}
+      sx={{
+        minWidth: '35px',
+        padding: isLoading
+          ? getLoadingIndicatorPadding(size)
+          : getTextPadding(size, type),
+      }}
       type={buttonType}
       variant={type ? getVariant(type) : undefined}
     >
-      {isLoading ? (
-        <CircularProgress size={getLoadingIndicatorSize(size)} />
-      ) : (
-        label
-      )}
+      {isLoading ? <CircularProgress size={16} /> : label}
     </Button>
   );
 };
