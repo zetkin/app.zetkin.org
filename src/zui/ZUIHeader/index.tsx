@@ -6,6 +6,7 @@ import {
   Popover,
   SvgIconTypeMap,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { ExpandMore, MoreVert } from '@mui/icons-material';
 import { FC, useState } from 'react';
@@ -14,7 +15,6 @@ import ZUIButton from 'zui/ZUIButton';
 import ZUIButtonGroup from 'zui/ZUIButtonGroup';
 import ZUIMenu, { MenuItem } from 'zui/ZUIMenu';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
-import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 import { WithRequired } from 'utils/types';
 import ZUIMenuList from 'zui/ZUIMenuList';
@@ -94,6 +94,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
   onTitleChange,
   title,
 }) => {
+  const theme = useTheme();
   const [ellipsisMenuAnchorEl, setEllipsisMenuAnchorEl] =
     useState<Element | null>(null);
   const [actionButtonPopoverAnchorEl, setactionButtonPopoverAnchorEl] =
@@ -107,13 +108,18 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
     <Box>
       <Box alignItems="center" display="flex" justifyContent="space-between">
         <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex" gap={1}>
-            {breadcrumbs && <ZUIBreadcrumbs breadcrumbs={breadcrumbs} />}
+          <Box alignItems="center" display="flex">
+            {breadcrumbs && (
+              <Box marginRight={avatar ? '16px' : '12px'}>
+                <ZUIBreadcrumbs breadcrumbs={breadcrumbs} />
+              </Box>
+            )}
             {avatar && (
               <Avatar
                 src={avatar}
                 sx={{
                   height: 32,
+                  marginRight: '12px',
                   width: 32,
                 }}
               />
@@ -123,6 +129,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               noWrap
               sx={{
                 display: 'flex',
+                fontSize: '22px',
                 transition: 'margin 0.3s ease',
               }}
               variant="h4"
@@ -204,28 +211,43 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
       {showBottomRow && (
         <Box alignItems="center" display="flex" paddingTop={1}>
           {(belowTitle || metaData) && (
-            <Box display="flex">
+            <Box alignItems="center" display="flex">
               {belowTitle && belowTitle}
               {belowTitle && metaData && (
                 <Divider
                   flexItem
                   orientation="vertical"
-                  sx={{ marginX: 1 }}
+                  sx={{ height: '22px', marginX: '16px' }}
                   variant="middle"
                 />
               )}
               {metaData && (
-                <ZUIIconLabelRow
-                  color="secondary"
-                  iconLabels={metaData.map((data) => {
+                <Box display="flex" flexShrink={0} gap={2}>
+                  {metaData.map((data) => {
                     const Icon = data.icon;
-                    return {
-                      icon: <Icon color="secondary" fontSize="inherit" />,
-                      label: data.label,
-                    };
+                    return (
+                      <Box
+                        key={data.label}
+                        alignItems="center"
+                        display="flex"
+                        flexShrink="0"
+                        gap="6px"
+                      >
+                        <Icon
+                          size={20}
+                          sx={{ color: theme.palette.grey[400] }}
+                        />
+                        <Typography
+                          flexShrink="0"
+                          fontSize={14}
+                          sx={{ color: theme.palette.text.secondary }}
+                        >
+                          {data.label}
+                        </Typography>
+                      </Box>
+                    );
                   })}
-                  size="sm"
-                />
+                </Box>
               )}
             </Box>
           )}
