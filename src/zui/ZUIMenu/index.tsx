@@ -9,14 +9,19 @@ import {
   Typography,
 } from '@mui/material';
 
-const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>({
-  menu: {
-    '& ul': {
-      maxHeight: ({ maxHeight }) => (maxHeight ? maxHeight : ''),
-      width: ({ width }) => (width ? width : ''),
+const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
+  (theme) => ({
+    menu: {
+      '& ul': {
+        maxHeight: ({ maxHeight }) => (maxHeight ? maxHeight : ''),
+        width: ({ width }) => (width ? width : ''),
+      },
     },
-  },
-});
+    paper: {
+      boxShadow: theme.elevation.bottom.small.medium,
+    },
+  })
+);
 
 export interface MenuItem {
   disabled?: boolean;
@@ -55,6 +60,7 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
       className={classes.menu}
       onClose={onClose}
       open={!!anchorEl}
+      PaperProps={{ className: classes.paper }}
     >
       {menuItems.map((item, index) => (
         <MenuItem

@@ -16,6 +16,58 @@ interface FilterCategoryColors {
   strong: string;
 }
 
+declare module '@mui/material/styles' {
+  interface Theme {
+    elevation: {
+      bottom: {
+        big: {
+          light: string;
+          medium: string;
+        };
+        small: {
+          light: string;
+          medium: string;
+        };
+      };
+      top: {
+        big: {
+          light: string;
+          medium: string;
+        };
+        small: {
+          light: string;
+          medium: string;
+        };
+      };
+    };
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    elevation?: {
+      bottom?: {
+        big?: {
+          light?: string;
+          medium?: string;
+        };
+        small?: {
+          light?: string;
+          medium?: string;
+        };
+      };
+      top?: {
+        big?: {
+          light?: string;
+          medium?: string;
+        };
+        small?: {
+          light?: string;
+          medium?: string;
+        };
+      };
+    };
+  }
+}
+
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
     onSurface: Required<PaletteIntensityOptions>;
@@ -409,6 +461,28 @@ export const newTheme = createTheme({
         root: {
           color: '#B0B0B0',
         },
+      },
+    },
+  },
+  elevation: {
+    bottom: {
+      big: {
+        light: '0px 4px 40px 0px #00000014',
+        medium: '0px 4px 40px 0px #0000001F',
+      },
+      small: {
+        light: '0px 4px 20px 0px #00000014',
+        medium: '0px 4px 20px 0px #0000001F',
+      },
+    },
+    top: {
+      big: {
+        light: '0px -4px 40px 0px #00000014',
+        medium: '0px -4px 40px 0px #0000001F',
+      },
+      small: {
+        light: '0px -4px 20px 0px #00000014',
+        medium: '0px -4px 20px 0px #0000001F',
       },
     },
   },
