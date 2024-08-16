@@ -12,7 +12,7 @@ const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
     color: ({ status }) =>
       getContrastColor(theme.palette.activityStatusColors[status]),
     display: 'inline-flex',
-    padding: '0.5em 0.7em',
+    padding: '0.438rem 0.625rem',
   },
 }));
 
