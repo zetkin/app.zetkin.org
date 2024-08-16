@@ -1,5 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { SquareFootSharp, Surfing } from '@mui/icons-material';
+import {
+  HomeRepairService,
+  PartyMode,
+  SportsBar,
+  SquareFootSharp,
+  Surfing,
+} from '@mui/icons-material';
 
 import ZUIBreadcrumbs from './index';
 
@@ -37,10 +43,73 @@ export const Basic: Story = {
                 id: 5,
                 title: 'My other event',
               },
+              {
+                children: [],
+                href: 'test6',
+                icon: HomeRepairService,
+                id: 6,
+                title: 'Another event',
+              },
+              {
+                children: [],
+                href: 'test7',
+                icon: SquareFootSharp,
+                id: 7,
+                title: 'My other event',
+              },
+              {
+                children: [],
+                href: 'test8',
+                icon: Surfing,
+                id: 8,
+                title: 'My other event',
+              },
+              {
+                children: [],
+                href: 'test9',
+                icon: SportsBar,
+                id: 9,
+                title: 'My party',
+              },
+              {
+                children: [],
+                href: 'test10',
+                icon: SquareFootSharp,
+                id: 10,
+                title: 'My other event',
+              },
+              {
+                children: [],
+                href: 'test11',
+                icon: Surfing,
+                id: 11,
+                title: 'My other event',
+              },
+              {
+                children: [],
+                href: 'test12',
+                icon: PartyMode,
+                id: 12,
+                title: 'Birthday',
+              },
+              {
+                children: [],
+                href: 'test13',
+                icon: SquareFootSharp,
+                id: 13,
+                title: 'My other event',
+              },
+              {
+                children: [],
+                href: 'test14',
+                icon: Surfing,
+                id: 14,
+                title: 'My other event',
+              },
             ],
             href: 'test2',
             id: 2,
-            title: 'Events',
+            title: 'My project',
           },
         ],
         href: 'test1',

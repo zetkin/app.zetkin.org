@@ -9,6 +9,9 @@ export default makeMessages('zui', {
     ),
     removeAccess: m('Remove access'),
   },
+  breadcrumbs: {
+    showMore: m<{ number: number }>('{number} more...'),
+  },
   collapse: {
     collapse: m('Collapse'),
     expand: m('Expand'),

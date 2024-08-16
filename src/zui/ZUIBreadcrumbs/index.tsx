@@ -16,6 +16,9 @@ import {
 } from '@mui/icons-material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
+import { Msg } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
+
 const useStyles = makeStyles((theme) => ({
   icon: {
     color: theme.palette.grey[200],
@@ -76,9 +79,9 @@ const BreadCrumbSibling: FC<{
             )}
             <Typography
               sx={{
+                fontSize: '14px',
                 fontWeight: isCurrentItem ? 'bold' : 'normal',
               }}
-              variant="body2"
             >
               {item.title}
             </Typography>
@@ -122,21 +125,36 @@ const Breadcrumb: FC<{
 const renderTree = (
   breadcrumbs: BreadcrumbTreeItem[],
   currentItemId: number,
-  isTopLevel: boolean
+  isTopLevel: boolean,
+  parentHref: string
 ) => {
   const isLastLevel = !breadcrumbs[0].children.length;
   return (
     <Breadcrumb isLastLevel={isLastLevel} isTopLevel={isTopLevel}>
-      {breadcrumbs.map((item, index) => (
+      {breadcrumbs.slice(0, 9).map((item, index) => (
         <BreadCrumbSibling
           key={item.id}
           isCurrentItem={currentItemId == item.id}
           isLast={isLastLevel && index == breadcrumbs.length - 1}
           item={item}
         >
-          {!isLastLevel ? renderTree(item.children, currentItemId, false) : ''}
+          {!isLastLevel
+            ? renderTree(item.children, currentItemId, false, parentHref)
+            : ''}
         </BreadCrumbSibling>
       ))}
+      {breadcrumbs.length > 9 && (
+        <NextLink href={parentHref} legacyBehavior passHref>
+          <Link>
+            <Typography sx={{ fontSize: '14px' }}>
+              <Msg
+                id={messageIds.breadcrumbs.showMore}
+                values={{ number: breadcrumbs.length - 9 }}
+              />
+            </Typography>
+          </Link>
+        </NextLink>
+      )}
     </Breadcrumb>
   );
 };
@@ -207,7 +225,7 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
           PaperProps={{ sx: { boxShadow: '0px 4px 20px 0px #0000001F' } }}
         >
           <Box paddingX={2}>
-            {renderTree(breadcrumbs, currentItem?.id, true)}
+            {renderTree(breadcrumbs, currentItem?.id, true, parentItem.href)}
           </Box>
         </Menu>
       </Box>
