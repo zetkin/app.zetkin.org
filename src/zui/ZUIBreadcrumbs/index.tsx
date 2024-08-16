@@ -20,9 +20,6 @@ import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
-  icon: {
-    color: theme.palette.grey[200],
-  },
   leftSide: {
     alignItems: 'center',
     backgroundColor: theme.palette.grey[50],
