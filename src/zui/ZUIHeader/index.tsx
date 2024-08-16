@@ -3,6 +3,10 @@ import {
   Avatar,
   Box,
   Divider,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  MenuList,
   Popover,
   SvgIconTypeMap,
   Typography,
@@ -13,11 +17,10 @@ import { FC, useState } from 'react';
 
 import ZUIButton from 'zui/ZUIButton';
 import ZUIButtonGroup from 'zui/ZUIButtonGroup';
-import ZUIMenu, { MenuItem } from 'zui/ZUIMenu';
+import ZUIMenu, { MenuItem as MenuItemType } from 'zui/ZUIMenu';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 import { WithRequired } from 'utils/types';
-import ZUIMenuList from 'zui/ZUIMenuList';
 
 interface ZUIHeaderProps {
   /**
@@ -25,7 +28,7 @@ interface ZUIHeaderProps {
    * If the action button should open a menu - send in menu items, not a whole component.
    */
   actionButtonPopoverContent?:
-    | WithRequired<MenuItem, 'startIcon'>[]
+    | WithRequired<MenuItemType, 'startIcon'>[]
     | ((onClose: () => void) => JSX.Element);
 
   /**
@@ -51,7 +54,7 @@ interface ZUIHeaderProps {
   breadcrumbs?: BreadcrumbTreeItem[];
 
   /**Start icon is required for each menu item */
-  ellipsisMenuItems?: WithRequired<MenuItem, 'startIcon'>[];
+  ellipsisMenuItems?: WithRequired<MenuItemType, 'startIcon'>[];
 
   /**Icon + text pairs to be shown under the title */
   metaData?: {
@@ -175,15 +178,29 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                   )}
                 {typeof actionButtonPopoverContent !== 'function' && (
                   <Box minWidth={200}>
-                    <ZUIMenuList
-                      menuItems={actionButtonPopoverContent.map((menuItem) => ({
-                        ...menuItem,
-                        onClick: () => {
-                          menuItem.onClick();
-                          setactionButtonPopoverAnchorEl(null);
-                        },
-                      }))}
-                    />
+                    <MenuList>
+                      {actionButtonPopoverContent.map((item, index) => (
+                        <MenuItem
+                          key={index}
+                          disabled={item.disabled}
+                          divider={item.divider}
+                          onClick={() => {
+                            item.onClick();
+                            setactionButtonPopoverAnchorEl(null);
+                          }}
+                        >
+                          {item.startIcon && (
+                            <ListItemIcon>{item.startIcon}</ListItemIcon>
+                          )}
+                          <ListItemText>{item.label}</ListItemText>
+                          {item.endContent && (
+                            <Typography color="secondary" variant="body2">
+                              {item.endContent}
+                            </Typography>
+                          )}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
                   </Box>
                 )}
               </Popover>

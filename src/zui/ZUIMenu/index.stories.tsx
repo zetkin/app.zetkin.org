@@ -1,3 +1,4 @@
+import { Surfing } from '@mui/icons-material';
 import { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 
@@ -14,8 +15,16 @@ type Story = StoryObj<typeof ZUIMenu>;
 export const Basic: Story = {
   args: {
     menuItems: [
-      { label: 'Event', onClick: () => null },
-      { label: 'Email', onClick: () => null },
+      {
+        endContent: '#B',
+        label: 'Call assignment',
+        onClick: () => null,
+      },
+      { label: 'Survey', onClick: () => null, startIcon: <Surfing /> },
+      { label: 'Task', onClick: () => null },
+      { label: 'Journey', onClick: () => null },
+      { divider: true, label: 'Event', onClick: () => null },
+      { disabled: true, label: 'Email', onClick: () => null },
     ],
   },
   render: function Render(args) {
@@ -35,6 +44,30 @@ export const Basic: Story = {
       </>
     );
   },
+};
+
+export const Dense: Story = {
+  args: {
+    ...Basic.args,
+    dense: true,
+  },
+  render: Basic.render,
+};
+
+export const GuttersDisabled: Story = {
+  args: {
+    ...Basic.args,
+    disableGutters: true,
+  },
+  render: Basic.render,
+};
+
+export const SmallScreen: Story = {
+  args: {
+    ...Basic.args,
+    smallScreen: true,
+  },
+  render: Basic.render,
 };
 
 export const MaxHeight: Story = {

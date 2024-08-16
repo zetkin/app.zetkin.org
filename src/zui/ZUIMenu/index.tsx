@@ -19,29 +19,32 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>({
 });
 
 export interface MenuItem {
-  dense?: boolean;
   disabled?: boolean;
-  disableGutters?: boolean;
   divider?: boolean;
   endContent?: ReactNode;
   label: string;
   onClick: () => void;
-  smallScreen?: boolean;
   startIcon?: ReactNode;
 }
 
 interface ZUIMenuProps {
   anchorEl?: Element | null;
+  dense?: boolean;
+  disableGutters?: boolean;
   menuItems: MenuItem[];
   maxHeight?: string;
-  width?: string;
   onClose?: () => void;
+  smallScreen?: boolean;
+  width?: string;
 }
 
 const ZUIMenu: FC<ZUIMenuProps> = ({
+  dense,
+  disableGutters,
   anchorEl,
   maxHeight,
   menuItems,
+  smallScreen,
   width,
   onClose,
 }) => {
@@ -56,9 +59,9 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
       {menuItems.map((item, index) => (
         <MenuItem
           key={index}
-          dense={item.dense}
+          dense={dense}
           disabled={item.disabled}
-          disableGutters={item.disableGutters}
+          disableGutters={disableGutters}
           divider={item.divider}
           onClick={() => {
             item.onClick();
@@ -66,7 +69,7 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
               onClose();
             }
           }}
-          sx={{ paddingY: item.smallScreen ? 2 : '' }}
+          sx={{ paddingY: smallScreen ? 2 : '' }}
         >
           {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
           <ListItemText>{item.label}</ListItemText>
