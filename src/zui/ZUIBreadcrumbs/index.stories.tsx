@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { SquareFootSharp, Surfing } from '@mui/icons-material';
 
 import ZUIBreadcrumbs from './index';
 
@@ -25,7 +26,15 @@ export const Basic: Story = {
               {
                 children: [],
                 href: 'test4',
+                icon: SquareFootSharp,
                 id: 4,
+                title: 'My other event',
+              },
+              {
+                children: [],
+                href: 'test5',
+                icon: Surfing,
+                id: 5,
                 title: 'My other event',
               },
             ],

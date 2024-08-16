@@ -1,14 +1,25 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { Box, Link, Menu, Typography } from '@mui/material';
-import { FC, useState } from 'react';
+import {
+  Box,
+  Link,
+  Menu,
+  SvgIconTypeMap,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { FC, ReactNode, useState } from 'react';
 import {
   MoreHoriz,
   SubdirectoryArrowLeft,
   SubdirectoryArrowRight,
 } from '@mui/icons-material';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 const useStyles = makeStyles((theme) => ({
+  icon: {
+    color: theme.palette.grey[200],
+  },
   leftSide: {
     alignItems: 'center',
     backgroundColor: theme.palette.grey[50],
@@ -29,10 +40,84 @@ const useStyles = makeStyles((theme) => ({
 
 export interface BreadcrumbTreeItem {
   href: string;
+  icon?: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
   id: number;
   title: string;
   children: BreadcrumbTreeItem[] | [];
 }
+
+const BreadCrumbSibling: FC<{
+  children: ReactNode;
+  isCurrentItem: boolean;
+  isLast: boolean;
+  item: BreadcrumbTreeItem;
+}> = ({ children, item, isCurrentItem, isLast }) => {
+  const theme = useTheme();
+  const Icon = item.icon;
+  return (
+    <Box>
+      <NextLink href={item.href} legacyBehavior passHref>
+        <Link underline="none">
+          <Box
+            alignItems="center"
+            display="flex"
+            paddingBottom={isLast ? '' : 1}
+          >
+            {Icon ? (
+              <Icon
+                sx={{
+                  color: theme.palette.grey[300],
+                  fontSize: '20px',
+                  marginRight: '6px',
+                }}
+              />
+            ) : (
+              ''
+            )}
+            <Typography
+              sx={{
+                fontWeight: isCurrentItem ? 'bold' : 'normal',
+              }}
+              variant="body2"
+            >
+              {item.title}
+            </Typography>
+          </Box>
+        </Link>
+      </NextLink>
+      {children}
+    </Box>
+  );
+};
+
+const Breadcrumb: FC<{
+  children: ReactNode;
+  isLastLevel: boolean;
+  isTopLevel: boolean;
+}> = ({ children, isTopLevel, isLastLevel }) => {
+  const theme = useTheme();
+  return (
+    <Box display="flex">
+      {!isTopLevel ? (
+        <SubdirectoryArrowRight
+          sx={{
+            color: theme.palette.grey[200],
+            fontSize: '20px',
+            marginRight: 0.5,
+          }}
+        />
+      ) : (
+        ''
+      )}
+      <Box
+        display={isLastLevel ? 'flex' : undefined}
+        flexDirection={isLastLevel ? 'column' : undefined}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
+};
 
 const renderTree = (
   breadcrumbs: BreadcrumbTreeItem[],
@@ -41,45 +126,18 @@ const renderTree = (
 ) => {
   const isLastLevel = !breadcrumbs[0].children.length;
   return (
-    <Box>
-      <Box display="flex">
-        {!isTopLevel ? (
-          <SubdirectoryArrowRight
-            color="secondary"
-            fontSize="small"
-            sx={{ marginRight: 0.5 }}
-          />
-        ) : (
-          ''
-        )}
-        <Box
-          display={isLastLevel ? 'flex' : undefined}
-          flexDirection={isLastLevel ? 'column' : undefined}
+    <Breadcrumb isLastLevel={isLastLevel} isTopLevel={isTopLevel}>
+      {breadcrumbs.map((item, index) => (
+        <BreadCrumbSibling
+          key={item.id}
+          isCurrentItem={currentItemId == item.id}
+          isLast={isLastLevel && index == breadcrumbs.length - 1}
+          item={item}
         >
-          {breadcrumbs.map((item, index) => (
-            <Box key={item.id}>
-              <NextLink href={item.href} legacyBehavior passHref>
-                <Link underline="none">
-                  <Typography
-                    sx={{
-                      fontWeight: currentItemId == item.id ? 'bold' : 'normal',
-                      paddingBottom:
-                        isLastLevel && index == breadcrumbs.length - 1 ? '' : 1,
-                    }}
-                    variant="body2"
-                  >
-                    {item.title}
-                  </Typography>
-                </Link>
-              </NextLink>
-              {!isLastLevel
-                ? renderTree(item.children, currentItemId, false)
-                : ''}
-            </Box>
-          ))}
-        </Box>
-      </Box>
-    </Box>
+          {!isLastLevel ? renderTree(item.children, currentItemId, false) : ''}
+        </BreadCrumbSibling>
+      ))}
+    </Breadcrumb>
   );
 };
 

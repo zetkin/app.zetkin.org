@@ -333,7 +333,7 @@ const newThemePalette = {
     teal: { pale: '#99E9CC ', strong: '#34D399' },
     yellow: { pale: '#EEEA8F', strong: '#DDD520' },
   },
-  gray: {
+  grey: {
     [100]: '#E7E7E7',
     [200]: '#D1D1D1',
     [25]: '#FBFBFB',
@@ -365,7 +365,7 @@ const newThemePalette = {
   },
   secondary: {
     light: '#9f9f9f',
-    main: 'rgba(0, 0, 0, 0.6)',
+    main: '#6D6D6D',
   },
   statusColors: {
     blue: 'rgba(25, 118, 210, 1)',
@@ -379,6 +379,7 @@ const newThemePalette = {
     main: '#1B9E4B',
   },
   text: {
+    primary: '#252525',
     secondary: '#6D6D6D',
   },
   transparentGrey: {
