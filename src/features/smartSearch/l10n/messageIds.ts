@@ -775,6 +775,10 @@ export default makeMessages('feat.smartSearch', {
   },
   misc: {
     noOptions: m('No matching tags'),
+    noOptionsEmailNotSent: m(
+      'Email not sent. Links included in the email are added after it has been sent.'
+    ),
+    noOptionsInvalidEmail: m('Invalid email. Select an email first.'),
     noOptionsLinks: m('No matching links'),
   },
   operators: {
