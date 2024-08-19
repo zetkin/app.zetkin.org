@@ -21,7 +21,9 @@ export default function useViewTree(orgId: number): IFuture<ViewTreeData> {
   } else {
     return new ResolvedFuture({
       folders: views.folderList.items.map((item) => item.data!),
-      views: views.viewList.items.map((item) => item.data!),
+      views: views.viewList.items
+        .filter((item) => !item.deleted)
+        .map((item) => item.data!),
     });
   }
 }
