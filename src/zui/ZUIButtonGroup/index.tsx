@@ -1,8 +1,10 @@
 import { ButtonGroup } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
+
+import ZUIButton, { ZUIButtonProps } from 'zui/ZUIButton';
 
 interface ZUIButtonGroupProps {
-  children: ReactNode;
+  buttons: ZUIButtonProps[];
   orientation?: 'horizontal' | 'vertical';
   size?: 'large' | 'medium' | 'small';
   variant?: 'primary' | 'secondary' | 'tertiary';
@@ -19,7 +21,7 @@ const getVariant = (type: 'primary' | 'secondary' | 'tertiary') => {
 };
 
 const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
-  children,
+  buttons,
   orientation = 'horizontal',
   size = 'medium',
   variant = 'primary',
@@ -30,7 +32,9 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
       size={size}
       variant={getVariant(variant)}
     >
-      {children}
+      {buttons.map((button, index) => (
+        <ZUIButton key={index} {...button} />
+      ))}
     </ButtonGroup>
   );
 };

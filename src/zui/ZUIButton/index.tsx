@@ -9,7 +9,7 @@ type ZUIButtonVariant =
   | 'warning'
   | 'loading';
 
-interface ZUIButtonProps {
+export interface ZUIButtonProps {
   actionType?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
   endIcon?: JSX.Element;

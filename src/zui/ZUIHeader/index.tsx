@@ -15,7 +15,7 @@ import {
 import { ExpandMore, MoreVert } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
-import ZUIButton from 'zui/ZUIButton';
+import { ZUIButtonProps } from 'zui/ZUIButton';
 import ZUIButtonGroup from 'zui/ZUIButtonGroup';
 import ZUIMenu, { MenuItem as MenuItemType } from 'zui/ZUIMenu';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -107,6 +107,30 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
   const showEllipsisMenu = !!ellipsisMenuItems?.length;
   const showBottomRow = belowTitle || metaData || belowActionButton;
 
+  const actionButtons: ZUIButtonProps[] = actionButtonLabel
+    ? [
+        {
+          endIcon: actionButtonPopoverContent ? <ExpandMore /> : undefined,
+          label: actionButtonLabel,
+          onClick: (ev) => {
+            if (actionButtonPopoverContent) {
+              setactionButtonPopoverAnchorEl(ev.currentTarget);
+            } else if (onActionButtonClick) {
+              onActionButtonClick();
+            }
+          },
+        },
+      ]
+    : [];
+
+  if (actionButtonLabel && showEllipsisMenu) {
+    actionButtons.push({
+      label: <MoreVert />,
+      onClick: (ev) =>
+        setEllipsisMenuAnchorEl(ellipsisMenuAnchorEl ? null : ev.currentTarget),
+    });
+  }
+
   return (
     <Box>
       <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -149,17 +173,10 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
           </Box>
         </Box>
         {showActionButton && (
-          <ZUIButtonGroup variant={actionButtonVariant}>
-            <ZUIButton
-              endIcon={actionButtonPopoverContent ? <ExpandMore /> : undefined}
-              label={actionButtonLabel}
-              onClick={(ev) => {
-                if (actionButtonPopoverContent) {
-                  setactionButtonPopoverAnchorEl(ev.currentTarget);
-                } else if (onActionButtonClick) {
-                  onActionButtonClick();
-                }
-              }}
+          <>
+            <ZUIButtonGroup
+              buttons={actionButtons}
+              variant={actionButtonVariant}
             />
             {!!actionButtonPopoverContent && (
               <Popover
@@ -206,23 +223,13 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               </Popover>
             )}
             {showEllipsisMenu && (
-              <>
-                <ZUIButton
-                  label={<MoreVert />}
-                  onClick={(ev) =>
-                    setEllipsisMenuAnchorEl(
-                      ellipsisMenuAnchorEl ? null : ev.currentTarget
-                    )
-                  }
-                />
-                <ZUIMenu
-                  anchorEl={ellipsisMenuAnchorEl}
-                  menuItems={ellipsisMenuItems}
-                  onClose={() => setEllipsisMenuAnchorEl(null)}
-                />
-              </>
+              <ZUIMenu
+                anchorEl={ellipsisMenuAnchorEl}
+                menuItems={ellipsisMenuItems}
+                onClose={() => setEllipsisMenuAnchorEl(null)}
+              />
             )}
-          </ZUIButtonGroup>
+          </>
         )}
       </Box>
       {showBottomRow && (
