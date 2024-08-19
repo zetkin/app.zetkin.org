@@ -4,6 +4,10 @@ import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 type Props = {
+  /**
+   * The duration in seconds that should be visualized. Only positive durations
+   * are supported and negative values will result in no rendered output.
+   */
   seconds: number;
   withDays?: boolean;
   withHours?: boolean;
