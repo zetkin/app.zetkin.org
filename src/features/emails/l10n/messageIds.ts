@@ -156,8 +156,8 @@ export default makeMessages('feat.emails', {
           allTime: m('All time'),
           first24: m('First 24 hours'),
           first48: m('First 48 hours'),
-          firstMonth: m('First month'),
-          firstWeek: m('First week'),
+          firstMonth: m('First 30 days'),
+          firstWeek: m('First 7 days'),
         },
       },
       description: m(
