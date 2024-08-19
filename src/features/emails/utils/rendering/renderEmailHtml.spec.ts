@@ -325,6 +325,7 @@ export default function mockEmail(
       title: 'Organization',
     },
     published: null,
+    processed: null,
     subject: 'This is the subject',
     target: {
       id: 1,
