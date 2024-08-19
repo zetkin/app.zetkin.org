@@ -170,6 +170,14 @@ export default makeMessages('zui', {
     success: m('Success!'),
     warning: m('Warning!'),
   },
+  statusChip: {
+    cancelled: m('Cancelled'),
+    closed: m('Closed'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    published: m('Published'),
+    scheduled: m('Scheduled'),
+  },
   submitOrCancel: {
     cancel: m('Cancel'),
     submit: m('Submit'),

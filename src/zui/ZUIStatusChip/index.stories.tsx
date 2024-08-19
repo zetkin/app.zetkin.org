@@ -11,35 +11,36 @@ type Story = StoryObj<typeof ZUIStatusChip>;
 
 export const Draft: Story = {
   args: {
-    label: 'Draft',
     status: 'draft',
   },
 };
 
 export const Scheduled: Story = {
   args: {
-    label: 'Scheduled',
     status: 'scheduled',
   },
 };
 
 export const Published: Story = {
   args: {
-    label: 'Open',
     status: 'published',
   },
 };
 
 export const Cancelled: Story = {
   args: {
-    label: 'Cancelled',
     status: 'cancelled',
   },
 };
 
-export const Expired: Story = {
+export const Closed: Story = {
   args: {
-    label: 'Ended',
-    status: 'expired',
+    status: 'closed',
+  },
+};
+
+export const Ended: Story = {
+  args: {
+    status: 'ended',
   },
 };

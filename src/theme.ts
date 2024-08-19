@@ -85,8 +85,9 @@ declare module '@mui/material/styles/createPalette' {
     };
     activityStatusColors: {
       cancelled: string;
+      closed: string;
       draft: string;
-      expired: string;
+      ended: string;
       published: string;
       scheduled: string;
     };
@@ -306,8 +307,9 @@ const theme = createTheme({
 const newThemePalette = {
   activityStatusColors: {
     cancelled: '#6D6D6D',
+    closed: '#D1D1D1',
     draft: '#F3C81C',
-    expired: '#D1D1D1',
+    ended: '#D1D1D1',
     published: '#1B9E4B',
     scheduled: '#3E6CD2',
   },

@@ -3,6 +3,8 @@ import { makeStyles } from '@mui/styles';
 import { Box, Theme, Typography } from '@mui/material';
 
 import { getContrastColor } from 'utils/colorUtils';
+import { Msg } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
   chip: {
@@ -18,21 +20,23 @@ const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
 
 type ActivityStatus =
   | 'cancelled'
+  | 'closed'
   | 'draft'
-  | 'expired'
+  | 'ended'
   | 'published'
   | 'scheduled';
 
 interface ZUIStatusChipProps {
-  label: string;
   status: ActivityStatus;
 }
 
-const ZUIStatusChip: FC<ZUIStatusChipProps> = ({ label, status }) => {
+const ZUIStatusChip: FC<ZUIStatusChipProps> = ({ status }) => {
   const classes = useStyles({ status });
   return (
     <Box className={classes.chip}>
-      <Typography sx={{ fontSize: 13 }}>{label}</Typography>
+      <Typography sx={{ fontSize: 13 }}>
+        <Msg id={messageIds.statusChip[status]} />
+      </Typography>
     </Box>
   );
 };
