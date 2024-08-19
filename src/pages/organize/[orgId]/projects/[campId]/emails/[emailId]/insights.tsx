@@ -362,6 +362,11 @@ const EmailPage: PageWithLayout = () => {
                               }
                             : null
                         );
+
+                      if (!mainPoint) {
+                        return null;
+                      }
+
                       const count = mainPoint.accumulatedOpens;
                       const date = new Date(mainPoint.date);
 

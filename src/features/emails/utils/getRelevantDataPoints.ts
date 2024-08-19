@@ -7,7 +7,7 @@ type InputPoint = {
 type OutputPoint = EmailInsights['opensByDate'][0];
 
 type GetRelevantDataPoints = {
-  mainPoint: OutputPoint;
+  mainPoint: OutputPoint | null;
   secondaryPoint: OutputPoint | null;
 };
 
@@ -64,7 +64,7 @@ export default function getRelevantDataPoints(
     });
 
     return {
-      mainPoint: mainPoint!,
+      mainPoint: mainPoint || null,
       secondaryPoint,
     };
   } else {
