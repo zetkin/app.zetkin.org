@@ -100,11 +100,7 @@ const EmailPage: PageWithLayout = () => {
   const insightsFuture = useEmailInsights(orgId, emailId);
   const [selectedLinkTag, setSelectedLinkTag] = useState<string | null>(null);
   const emailsFuture = useEmails(orgId);
-  const {
-    emailFuture: secondaryEmailFuture,
-    insightsFuture: secondaryInsightsFuture,
-    statsFuture: secondaryStatsFuture,
-  } = useSecondaryEmailInsights(orgId, secondaryEmailId);
+  const secondary = useSecondaryEmailInsights(orgId, secondaryEmailId);
 
   const onServer = useServerSide();
 
@@ -200,8 +196,8 @@ const EmailPage: PageWithLayout = () => {
           <Box flexGrow={0} maxWidth={300}>
             <ZUIFutures
               futures={{
-                secondaryEmail: secondaryEmailFuture,
-                secondaryStats: secondaryStatsFuture,
+                secondaryEmail: secondary.emailFuture,
+                secondaryStats: secondary.statsFuture,
               }}
             >
               {({ data: { secondaryEmail, secondaryStats } }) => (
@@ -258,9 +254,9 @@ const EmailPage: PageWithLayout = () => {
             <ZUIFutures
               futures={{
                 mainInsights: insightsFuture,
-                secondaryEmail: secondaryEmailFuture,
-                secondaryInsights: secondaryInsightsFuture,
-                secondaryStats: secondaryStatsFuture,
+                secondaryEmail: secondary.emailFuture,
+                secondaryInsights: secondary.insightsFuture,
+                secondaryStats: secondary.statsFuture,
               }}
             >
               {({
@@ -487,8 +483,8 @@ const EmailPage: PageWithLayout = () => {
           <Box flexGrow={0} maxWidth={300}>
             <ZUIFutures
               futures={{
-                secondaryEmail: secondaryEmailFuture,
-                secondaryStats: secondaryStatsFuture,
+                secondaryEmail: secondary.emailFuture,
+                secondaryStats: secondary.statsFuture,
               }}
             >
               {({ data: { secondaryEmail, secondaryStats } }) => (
