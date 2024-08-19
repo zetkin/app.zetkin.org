@@ -39,7 +39,6 @@ interface ZUIMenuProps {
   menuItems: MenuItem[];
   maxHeight?: string;
   onClose?: () => void;
-  smallScreen?: boolean;
   width?: string;
 }
 
@@ -49,7 +48,6 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
   anchorEl,
   maxHeight,
   menuItems,
-  smallScreen,
   width,
   onClose,
 }) => {
@@ -75,7 +73,6 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
               onClose();
             }
           }}
-          sx={{ paddingY: smallScreen ? 2 : '' }}
         >
           {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
           <ListItemText>{item.label}</ListItemText>

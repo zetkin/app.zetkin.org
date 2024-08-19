@@ -62,14 +62,6 @@ export const GuttersDisabled: Story = {
   render: Basic.render,
 };
 
-export const SmallScreen: Story = {
-  args: {
-    ...Basic.args,
-    smallScreen: true,
-  },
-  render: Basic.render,
-};
-
 export const MaxHeight: Story = {
   args: {
     ...Basic.args,
