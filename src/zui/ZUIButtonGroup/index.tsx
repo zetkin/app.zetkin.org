@@ -1,24 +1,15 @@
 import { ButtonGroup } from '@mui/material';
 import { FC } from 'react';
 
-import ZUIButton, { ZUIButtonProps } from 'zui/ZUIButton';
+import ZUIButton, { getVariant, ZUIButtonProps } from 'zui/ZUIButton';
+import ZUIIconButton, { ZUIIconButtonProps } from 'zui/ZUIIconButton';
 
 interface ZUIButtonGroupProps {
-  buttons: ZUIButtonProps[];
+  buttons: (ZUIButtonProps | ZUIIconButtonProps)[];
   orientation?: 'horizontal' | 'vertical';
   size?: 'large' | 'medium' | 'small';
   variant?: 'primary' | 'secondary' | 'tertiary';
 }
-
-const getVariant = (type: 'primary' | 'secondary' | 'tertiary') => {
-  if (type === 'secondary') {
-    return 'outlined';
-  } else if (type === 'tertiary') {
-    return 'text';
-  } else {
-    return 'contained';
-  }
-};
 
 const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   buttons,
@@ -32,9 +23,13 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
       size={size}
       variant={getVariant(variant)}
     >
-      {buttons.map((button, index) => (
-        <ZUIButton key={index} {...button} />
-      ))}
+      {buttons.map((button) => {
+        if ('icon' in button) {
+          return <ZUIIconButton {...button} />;
+        } else {
+          return <ZUIButton {...button} />;
+        }
+      })}
     </ButtonGroup>
   );
 };

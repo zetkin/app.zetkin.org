@@ -14,7 +14,7 @@ export interface ZUIButtonProps {
   disabled?: boolean;
   endIcon?: JSX.Element;
   fullWidth?: boolean;
-  label: string | JSX.Element;
+  label: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
   size?: 'large' | 'medium' | 'small';
@@ -22,7 +22,7 @@ export interface ZUIButtonProps {
   variant?: ZUIButtonVariant;
 }
 
-const getVariant = (variant: ZUIButtonVariant) => {
+export const getVariant = (variant: ZUIButtonVariant) => {
   if (variant === 'secondary') {
     return 'outlined';
   } else if (variant === 'tertiary') {

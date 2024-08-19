@@ -21,6 +21,7 @@ import ZUIMenu, { MenuItem as MenuItemType } from 'zui/ZUIMenu';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 import { WithRequired } from 'utils/types';
+import { ZUIIconButtonProps } from 'zui/ZUIIconButton';
 
 interface ZUIHeaderProps {
   /**
@@ -107,28 +108,30 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
   const showEllipsisMenu = !!ellipsisMenuItems?.length;
   const showBottomRow = belowTitle || metaData || belowActionButton;
 
-  const actionButtons: ZUIButtonProps[] = actionButtonLabel
-    ? [
-        {
-          endIcon: actionButtonPopoverContent ? <ExpandMore /> : undefined,
-          label: actionButtonLabel,
-          onClick: (ev) => {
-            if (actionButtonPopoverContent) {
-              setactionButtonPopoverAnchorEl(ev.currentTarget);
-            } else if (onActionButtonClick) {
-              onActionButtonClick();
-            }
-          },
-        },
-      ]
-    : [];
+  const actionButtons: (ZUIButtonProps | ZUIIconButtonProps)[] = [];
 
-  if (actionButtonLabel && showEllipsisMenu) {
+  if (actionButtonLabel) {
     actionButtons.push({
-      label: <MoreVert />,
-      onClick: (ev) =>
-        setEllipsisMenuAnchorEl(ellipsisMenuAnchorEl ? null : ev.currentTarget),
+      endIcon: actionButtonPopoverContent ? <ExpandMore /> : undefined,
+      label: actionButtonLabel,
+      onClick: (ev) => {
+        if (actionButtonPopoverContent) {
+          setactionButtonPopoverAnchorEl(ev.currentTarget);
+        } else if (onActionButtonClick) {
+          onActionButtonClick();
+        }
+      },
     });
+
+    if (showEllipsisMenu) {
+      actionButtons.push({
+        icon: MoreVert,
+        onClick: (ev) =>
+          setEllipsisMenuAnchorEl(
+            ellipsisMenuAnchorEl ? null : ev.currentTarget
+          ),
+      });
+    }
   }
 
   return (

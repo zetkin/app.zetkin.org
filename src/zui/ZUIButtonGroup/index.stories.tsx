@@ -18,7 +18,7 @@ export const PrimaryHorizontal: Story = {
 
 export const PrimaryHorizontalWithIcon: Story = {
   args: {
-    buttons: [{ label: 'Hallå' }, { label: <MoreVert /> }],
+    buttons: [{ label: 'Hallå' }, { icon: MoreVert }],
     orientation: 'horizontal',
   },
 };
@@ -46,7 +46,7 @@ export const PrimaryVertical: Story = {
 
 export const PrimaryVerticalWithIcon: Story = {
   args: {
-    buttons: [{ label: 'Hallå' }, { label: <CatchingPokemon /> }],
+    buttons: [{ label: 'Hallå' }, { icon: CatchingPokemon }],
 
     orientation: 'vertical',
   },
