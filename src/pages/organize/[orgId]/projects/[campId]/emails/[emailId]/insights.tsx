@@ -134,7 +134,6 @@ const EmailPage: PageWithLayout = () => {
               }
               getOptionLabel={(option) => option.title || ''}
               onChange={(_, value) => setSecondaryEmailId(value?.id ?? 0)}
-              onReset={() => setSecondaryEmailId(0)}
               options={emails.filter(
                 // Can only compare with published emails, and not itself
                 (email) => email.id != emailId && email.published
