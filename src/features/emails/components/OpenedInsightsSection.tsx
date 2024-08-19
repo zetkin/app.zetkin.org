@@ -25,6 +25,7 @@ import { ZetkinEmail } from 'utils/types/zetkin';
 import useEmailInsights from '../hooks/useEmailInsights';
 import useEmailStats from '../hooks/useEmailStats';
 import useSecondaryEmailInsights from '../hooks/useSecondaryEmailInsights';
+import { EmailInsights } from '../types';
 
 type Props = {
   email: ZetkinEmail;
@@ -59,6 +60,19 @@ function axisFromSpanValue(value: string): AxisProps {
       tickValues: value == 'firstWeek' ? 7 : 15,
     };
   }
+}
+
+function lineDataFromInsights(
+  insights: EmailInsights,
+  numSent: number
+): { x: number; y: number }[] {
+  return insights.opensByDate.map((openEvent) => ({
+    x:
+      (new Date(openEvent.date).getTime() -
+        new Date(insights.opensByDate[0].date).getTime()) /
+      1000,
+    y: openEvent.accumulatedOpens / numSent,
+  }));
 }
 
 const OpenedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
@@ -167,28 +181,17 @@ const OpenedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
             }) => {
               const lineData = [
                 {
-                  data: mainInsights.opensByDate.map((openEvent) => ({
-                    x:
-                      (new Date(openEvent.date).getTime() -
-                        new Date(mainInsights.opensByDate[0].date).getTime()) /
-                      1000,
-                    y: openEvent.accumulatedOpens / stats.numSent,
-                  })),
+                  data: lineDataFromInsights(mainInsights, stats.numSent),
                   id: 'main',
                 },
               ];
 
               if (secondaryInsights && secondaryStats) {
                 lineData.push({
-                  data: secondaryInsights.opensByDate.map((openEvent) => ({
-                    x:
-                      (new Date(openEvent.date).getTime() -
-                        new Date(
-                          secondaryInsights.opensByDate[0].date
-                        ).getTime()) /
-                      1000,
-                    y: openEvent.accumulatedOpens / secondaryStats.num_sent,
-                  })),
+                  data: lineDataFromInsights(
+                    secondaryInsights,
+                    secondaryStats.num_sent
+                  ),
                   id: 'secondary',
                 });
               }
