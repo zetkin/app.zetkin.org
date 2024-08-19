@@ -5,7 +5,7 @@ interface ZUIButtonGroupProps {
   children: ReactNode;
   orientation?: 'horizontal' | 'vertical';
   size?: 'large' | 'medium' | 'small';
-  type?: 'primary' | 'secondary' | 'tertiary';
+  variant?: 'primary' | 'secondary' | 'tertiary';
 }
 
 const getVariant = (type: 'primary' | 'secondary' | 'tertiary') => {
@@ -22,13 +22,13 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   children,
   orientation = 'horizontal',
   size = 'medium',
-  type = 'primary',
+  variant = 'primary',
 }) => {
   return (
     <ButtonGroup
       orientation={orientation}
       size={size}
-      variant={getVariant(type)}
+      variant={getVariant(variant)}
     >
       {children}
     </ButtonGroup>

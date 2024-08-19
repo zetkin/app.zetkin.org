@@ -37,9 +37,9 @@ interface ZUIHeaderProps {
   actionButtonLabel?: string;
 
   /**
-   * Type of actionbutton. Defaults to 'secondary'
+   * Variant of actionbutton. Defaults to 'secondary'
    */
-  actionButtonType?: 'primary' | 'secondary';
+  actionButtonVariant?: 'primary' | 'secondary';
 
   /**The href to an avatar */
   avatar?: string;
@@ -86,7 +86,7 @@ interface ZUIHeaderProps {
 const ZUIHeader: FC<ZUIHeaderProps> = ({
   actionButtonPopoverContent,
   actionButtonLabel,
-  actionButtonType = 'secondary',
+  actionButtonVariant = 'secondary',
   belowActionButton,
   breadcrumbs,
   avatar,
@@ -149,7 +149,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
           </Box>
         </Box>
         {showActionButton && (
-          <ZUIButtonGroup type={actionButtonType}>
+          <ZUIButtonGroup variant={actionButtonVariant}>
             <ZUIButton
               endIcon={actionButtonPopoverContent ? <ExpandMore /> : undefined}
               label={actionButtonLabel}

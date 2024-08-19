@@ -44,7 +44,7 @@ export const SecondaryHorizontal: Story = {
         <ZUIButton label="Hej" />
       </>
     ),
-    type: 'secondary',
+    variant: 'secondary',
   },
 };
 
@@ -57,7 +57,7 @@ export const TertiaryHorizontal: Story = {
         <ZUIButton label="Hej" />
       </>
     ),
-    type: 'tertiary',
+    variant: 'tertiary',
   },
 };
 
@@ -96,7 +96,7 @@ export const SecondaryVertical: Story = {
       </>
     ),
     orientation: 'vertical',
-    type: 'secondary',
+    variant: 'secondary',
   },
 };
 
@@ -110,6 +110,6 @@ export const TertiaryVertical: Story = {
       </>
     ),
     orientation: 'vertical',
-    type: 'tertiary',
+    variant: 'tertiary',
   },
 };

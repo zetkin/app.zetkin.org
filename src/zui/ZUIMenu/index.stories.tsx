@@ -34,7 +34,7 @@ export const Basic: Story = {
         <ZUIButton
           label="Click to open menu"
           onClick={(ev) => setAnchorEl(anchorEl ? null : ev.currentTarget)}
-          type="primary"
+          variant="primary"
         />
         <ZUIMenu
           {...args}

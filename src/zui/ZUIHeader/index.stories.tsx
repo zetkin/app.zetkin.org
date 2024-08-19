@@ -95,7 +95,7 @@ export const ProjectActivityHeader: Story = {
 export const FeaturePageHeader: Story = {
   args: {
     actionButtonLabel: 'Create',
-    actionButtonType: 'primary',
+    actionButtonVariant: 'primary',
     onActionButtonClick: () => null,
     title: 'Tags',
   },
@@ -132,7 +132,7 @@ export const ActionWithPopoverContentAndEllipsisMenu: Story = {
           Hello! This is just a random component with whatever content you want
         </Box>
         <Box alignSelf="flex-end">
-          <ZUIButton label="Close me" onClick={onClose} type="primary" />
+          <ZUIButton label="Close me" onClick={onClose} variant="primary" />
         </Box>
       </Box>
     ),

@@ -13,42 +13,42 @@ type Story = StoryObj<typeof ZUIButton>;
 export const Primary: Story = {
   args: {
     label: 'Primary',
-    type: 'primary',
+    variant: 'primary',
   },
 };
 
 export const Secondary: Story = {
   args: {
     label: 'Secondary',
-    type: 'secondary',
+    variant: 'secondary',
   },
 };
 
 export const Tertiary: Story = {
   args: {
     label: 'Tertiary',
-    type: 'tertiary',
+    variant: 'tertiary',
   },
 };
 
 export const Warning: Story = {
   args: {
     label: 'Warning',
-    type: 'warning',
+    variant: 'warning',
   },
 };
 
 export const Destructive: Story = {
   args: {
     label: 'Destructive',
-    type: 'destructive',
+    variant: 'destructive',
   },
 };
 
 export const Loading: Story = {
   args: {
     label: 'Loading',
-    type: 'loading',
+    variant: 'loading',
   },
 };
 
@@ -56,7 +56,7 @@ export const StartIcon: Story = {
   args: {
     label: 'Start icon',
     startIcon: <CatchingPokemon />,
-    type: 'primary',
+    variant: 'primary',
   },
 };
 
@@ -64,6 +64,6 @@ export const EndIcon: Story = {
   args: {
     endIcon: <ExpandMore />,
     label: 'End icon',
-    type: 'primary',
+    variant: 'primary',
   },
 };

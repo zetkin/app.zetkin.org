@@ -1,7 +1,7 @@
 import { Button, CircularProgress } from '@mui/material';
 import { FC, KeyboardEventHandler, MouseEventHandler } from 'react';
 
-type ZUIButtonType =
+type ZUIButtonVariant =
   | 'primary'
   | 'secondary'
   | 'tertiary'
@@ -10,7 +10,7 @@ type ZUIButtonType =
   | 'loading';
 
 interface ZUIButtonProps {
-  buttonType?: 'button' | 'reset' | 'submit';
+  actionType?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
   endIcon?: JSX.Element;
   fullWidth?: boolean;
@@ -19,23 +19,23 @@ interface ZUIButtonProps {
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
   size?: 'large' | 'medium' | 'small';
   startIcon?: JSX.Element;
-  type?: ZUIButtonType;
+  variant?: ZUIButtonVariant;
 }
 
-const getVariant = (type: ZUIButtonType) => {
-  if (type === 'secondary') {
+const getVariant = (variant: ZUIButtonVariant) => {
+  if (variant === 'secondary') {
     return 'outlined';
-  } else if (type === 'tertiary') {
+  } else if (variant === 'tertiary') {
     return 'text';
   } else {
     return 'contained';
   }
 };
 
-const getColor = (type: ZUIButtonType) => {
-  if (type === 'destructive') {
+const getColor = (variant: ZUIButtonVariant) => {
+  if (variant === 'destructive') {
     return 'error';
-  } else if (type === 'warning') {
+  } else if (variant === 'warning') {
     return 'warning';
   } else {
     return 'primary';
@@ -56,10 +56,10 @@ const getLoadingIndicatorPadding = (
 
 const getTextPadding = (
   size: 'large' | 'medium' | 'small' = 'medium',
-  type: ZUIButtonType = 'secondary'
+  variant: ZUIButtonVariant = 'secondary'
 ) => {
   if (size === 'large') {
-    if (type === 'secondary') {
+    if (variant === 'secondary') {
       return '7px 22px 7px 22px';
     } else {
       return '8px 22px 8px 22px';
@@ -67,20 +67,20 @@ const getTextPadding = (
   }
 
   if (size === 'medium') {
-    if (type === 'tertiary') {
+    if (variant === 'tertiary') {
       return '6px 16px 6px 16px';
     }
   }
 
   if (size === 'small') {
-    if (type === 'tertiary') {
+    if (variant === 'tertiary') {
       return '4px 10px 4px 10px';
     }
   }
 };
 
 const ZUIButton: FC<ZUIButtonProps> = ({
-  buttonType,
+  actionType,
   disabled,
   endIcon,
   fullWidth,
@@ -89,12 +89,12 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   onKeyDown,
   size,
   startIcon,
-  type,
+  variant,
 }) => {
-  const isLoading = type === 'loading';
+  const isLoading = variant === 'loading';
   return (
     <Button
-      color={type ? getColor(type) : undefined}
+      color={variant ? getColor(variant) : undefined}
       disabled={disabled || isLoading}
       endIcon={endIcon}
       fullWidth={fullWidth}
@@ -106,10 +106,10 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         minWidth: '35px',
         padding: isLoading
           ? getLoadingIndicatorPadding(size)
-          : getTextPadding(size, type),
+          : getTextPadding(size, variant),
       }}
-      type={buttonType}
-      variant={type ? getVariant(type) : undefined}
+      type={actionType}
+      variant={variant ? getVariant(variant) : undefined}
     >
       {isLoading ? <CircularProgress size={16} /> : label}
     </Button>
