@@ -9,11 +9,11 @@ export default {
 
 export const Basic: StoryObj<typeof ZUIDuration> = {
   args: {
-    enableDays: true,
-    enableHours: true,
-    enableMilliseconds: false,
-    enableMinutes: true,
-    enableSeconds: false,
     seconds: 12345,
+    withDays: true,
+    withHours: true,
+    withMinutes: true,
+    withSeconds: false,
+    withThousands: false,
   },
 };

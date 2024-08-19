@@ -4,12 +4,12 @@ import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 type Props = {
-  enableDays?: boolean;
-  enableHours?: boolean;
-  enableMilliseconds?: boolean;
-  enableMinutes?: boolean;
-  enableSeconds?: boolean;
   seconds: number;
+  withDays?: boolean;
+  withHours?: boolean;
+  withMinutes?: boolean;
+  withSeconds?: boolean;
+  withThousands?: boolean;
 };
 
 type DurField = {
@@ -19,11 +19,11 @@ type DurField = {
 };
 
 const ZUIDuration: FC<Props> = ({
-  enableDays = true,
-  enableHours = true,
-  enableMilliseconds = false,
-  enableMinutes = true,
-  enableSeconds = false,
+  withDays = true,
+  withHours = true,
+  withThousands = false,
+  withMinutes = true,
+  withSeconds = false,
   seconds,
 }) => {
   const ms = (seconds * 1000) % 1000;
@@ -33,11 +33,11 @@ const ZUIDuration: FC<Props> = ({
   const days = Math.floor(seconds / 60 / 60 / 24);
 
   const fields: DurField[] = [
-    { msgId: 'days', n: days, visible: enableDays },
-    { msgId: 'h', n: h, visible: enableHours },
-    { msgId: 'm', n: m, visible: enableMinutes },
-    { msgId: 's', n: s, visible: enableSeconds },
-    { msgId: 'ms', n: ms, visible: enableMilliseconds },
+    { msgId: 'days', n: days, visible: withDays },
+    { msgId: 'h', n: h, visible: withHours },
+    { msgId: 'm', n: m, visible: withMinutes },
+    { msgId: 's', n: s, visible: withSeconds },
+    { msgId: 'ms', n: ms, visible: withThousands },
   ];
 
   return (
