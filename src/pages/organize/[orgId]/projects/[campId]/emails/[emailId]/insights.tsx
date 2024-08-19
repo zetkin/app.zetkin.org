@@ -337,12 +337,7 @@ const EmailPage: PageWithLayout = () => {
                     lineWidth={3}
                     margin={{
                       bottom: 30,
-                      // Calculate the left margin from the number of digits
-                      // in the y axis labels, to make sure the labels will fit
-                      // inside the clipping rectangle.
-                      left:
-                        15 +
-                        mainInsights.opensByDate.length.toString().length * 8,
+                      left: 40,
                       right: 8,
                       top: 20,
                     }}
