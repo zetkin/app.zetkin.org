@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 export interface BreadcrumbTreeItem {
   href: string;
   icon?: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
-  id: number;
   title: string;
   children: BreadcrumbTreeItem[] | [];
 }
@@ -121,7 +120,7 @@ const Breadcrumb: FC<{
 
 const renderTree = (
   breadcrumbs: BreadcrumbTreeItem[],
-  currentItemId: number,
+  currentItemHref: string,
   isTopLevel: boolean,
   parentHref: string
 ) => {
@@ -130,13 +129,13 @@ const renderTree = (
     <Breadcrumb isLastLevel={isLastLevel} isTopLevel={isTopLevel}>
       {breadcrumbs.slice(0, 9).map((item, index) => (
         <BreadCrumbSibling
-          key={item.id}
-          isCurrentItem={currentItemId == item.id}
+          key={item.href}
+          isCurrentItem={currentItemHref == item.href}
           isLast={isLastLevel && index == breadcrumbs.length - 1}
           item={item}
         >
           {!isLastLevel
-            ? renderTree(item.children, currentItemId, false, parentHref)
+            ? renderTree(item.children, currentItemHref, false, parentHref)
             : ''}
         </BreadCrumbSibling>
       ))}
@@ -172,7 +171,7 @@ const findParentItem = (
   breadcrumbs: BreadcrumbTreeItem[]
 ): BreadcrumbTreeItem => {
   const crumb = breadcrumbs[0];
-  if (crumb.children.find((item) => item.id === currentItem.id)) {
+  if (crumb.children.find((item) => item.href === currentItem.href)) {
     return crumb;
   } else {
     return findParentItem(currentItem, crumb.children);
@@ -222,7 +221,7 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
           PaperProps={{ sx: { boxShadow: '0px 4px 20px 0px #0000001F' } }}
         >
           <Box paddingX={2}>
-            {renderTree(breadcrumbs, currentItem?.id, true, parentItem.href)}
+            {renderTree(breadcrumbs, currentItem?.href, true, parentItem.href)}
           </Box>
         </Menu>
       </Box>
