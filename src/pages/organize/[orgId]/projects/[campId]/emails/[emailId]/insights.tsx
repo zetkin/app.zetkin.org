@@ -108,6 +108,11 @@ const EmailPage: PageWithLayout = () => {
     return null;
   }
 
+  const emailPublished = email.published;
+  if (!emailPublished || !email.processed) {
+    return null;
+  }
+
   const sanitizer = DOMPurify();
 
   const timeSpanHours = hoursFromSpanValue(timeSpan);
@@ -342,12 +347,12 @@ const EmailPage: PageWithLayout = () => {
                       top: 20,
                     }}
                     sliceTooltip={(props) => {
-                      const publishDate = new Date(email?.published || 0);
+                      const publishDate = new Date(emailPublished);
                       const { mainPoint, secondaryPoint } =
                         getRelevantDataPoints(
                           props.slice.points[0],
                           {
-                            startDate: new Date(email.published!),
+                            startDate: new Date(emailPublished),
                             values: mainInsights.opensByDate,
                           },
                           secondaryInsights && secondaryEmail?.published
