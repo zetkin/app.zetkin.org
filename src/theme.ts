@@ -1,8 +1,12 @@
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import { createElement } from 'react';
 import { createTheme } from '@mui/material/styles';
+import { Figtree } from 'next/font/google';
 import { Localization } from '@mui/x-data-grid/utils/getGridLocalization';
 import { daDK, deDE, nbNO, svSE } from '@mui/x-data-grid-pro';
+
+//Font family
+const figtree = Figtree({ subsets: ['latin-ext'] });
 
 interface PaletteIntensityOptions {
   disabled?: string;
@@ -495,6 +499,7 @@ export const newTheme = createTheme({
       fontWeight: 600,
       textTransform: 'none',
     },
+    fontFamily: figtree.style.fontFamily,
   },
 });
 
