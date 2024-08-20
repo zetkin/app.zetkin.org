@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: theme.palette.grey[50],
     borderRadius: '2em 0 0 2em',
-    borderRight: `1px solid ${theme.palette.grey[300]}`,
+    borderRight: `1px solid ${theme.palette.grey[200]}`,
     display: 'flex',
     height: '26px',
   },
@@ -198,7 +198,7 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
             color="secondary"
             sx={{
               fontSize: '1rem',
-              margin: '4px 2px 4px 6px',
+              margin: '4px 4px 4px 6px',
               transform: 'rotate(0.25turn)',
             }}
           />
@@ -212,7 +212,7 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
       >
         <MoreHoriz
           color="secondary"
-          sx={{ fontSize: '1.125rem', margin: '4px 6px 4px 2px' }}
+          sx={{ fontSize: '1.125rem', margin: '4px 6px 4px 4px' }}
         />
         <Menu
           anchorEl={breadcrumbsAnchorEl}
