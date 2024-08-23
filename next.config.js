@@ -34,11 +34,6 @@ module.exports = {
       },
       // redirects to Gen2 for MVP August 2021
       {
-        source: '/organize/:orgId/people/:personId/edit',
-        destination: `http://organize.${process.env.ZETKIN_API_DOMAIN}/people/person%3A:personId/?org=:orgId`,
-        permanent: false,
-      },
-      {
         source: '/organize/:orgId(\\d{1,})',
         destination: '/legacy?orgId=:orgId',
         permanent: false,
@@ -58,21 +53,6 @@ module.exports = {
         source:
           '/organize/:orgId(\\d{1,})/projects/:campId(\\d{1,})/calendar/events/:eventId(\\d{1,})',
         destination: '/legacy?path=/campaign/action%3A:eventId&orgId=:orgId',
-        permanent: false,
-      },
-      {
-        source: '/o/:orgId',
-        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId`,
-        permanent: false,
-      },
-      {
-        source: '/o/:orgId/events/:eventId',
-        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId`,
-        permanent: false,
-      },
-      {
-        source: '/o/:orgId/projects/:campId',
-        destination: `http://${process.env.ZETKIN_API_DOMAIN}/o/:orgId/campaigns/:campId`,
         permanent: false,
       },
       {
