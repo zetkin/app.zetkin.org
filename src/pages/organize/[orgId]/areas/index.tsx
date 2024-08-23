@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 
-import AreasMap from 'features/areas/components/AreasMap';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -15,6 +15,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
     props: {},
   };
 }, scaffoldOptions);
+
+const AreasMap = dynamic(
+  () => import('../../../../features/areas/components/AreasMap'),
+  { ssr: false }
+);
 
 const AreasPage: PageWithLayout = () => {
   return (
