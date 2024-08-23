@@ -1,15 +1,16 @@
 import 'leaflet/dist/leaflet.css';
-import 'leaflet-draw/dist/images/spritesheet.png';
-import 'leaflet-draw/dist/images/spritesheet-2x.png';
-import { FC, useRef } from 'react';
+import { FC, useRef, useState } from 'react';
 import {
   FeatureGroup as FGComponent,
   MapContainer,
+  Polygon,
+  Polyline,
   TileLayer,
   useMap,
 } from 'react-leaflet';
 import { FeatureGroup, latLngBounds, Map as MapType } from 'leaflet';
-import { EditControl } from 'react-leaflet-draw';
+import { Box, ButtonGroup, IconButton } from '@mui/material';
+import { Create } from '@mui/icons-material';
 
 interface MapProps {}
 
@@ -21,45 +22,95 @@ const MapWrapper = ({
   const map = useMap();
   return children(map);
 };
+
+type PointData = [number, number];
+type PolygonData = {
+  id: number;
+  points: PointData[];
+};
+
 const Map: FC<MapProps> = () => {
   const reactFGref = useRef<FeatureGroup | null>(null);
+  const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
+  const [polygons, setPolygons] = useState<PolygonData[]>([]);
 
   return (
-    <MapContainer
-      bounds={latLngBounds([54, 12], [56, 14])}
-      style={{ height: '100%', width: '100%' }}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+      }}
     >
-      <MapWrapper>
-        {() => {
-          return (
-            <>
-              <TileLayer
-                attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <FGComponent
-                ref={(fgRef) => {
-                  reactFGref.current = fgRef;
-                }}
-              >
-                <EditControl
-                  draw={{
-                    circle: false,
-                    circlemarker: false,
-                    marker: false,
-                    polygon: true,
-                    polyline: false,
-                    rectangle: false,
-                  }}
-                  edit={null}
-                  position="topright"
-                />
-              </FGComponent>
-            </>
-          );
-        }}
-      </MapWrapper>
-    </MapContainer>
+      <Box>
+        <ButtonGroup>
+          <IconButton
+            onClick={() => {
+              if (drawingPoints) {
+                if (drawingPoints.length > 2) {
+                  setPolygons((current) => [
+                    ...current,
+                    { id: current.length + 1, points: drawingPoints },
+                  ]);
+                }
+                setDrawingPoints(null);
+              } else {
+                setDrawingPoints([]);
+              }
+            }}
+          >
+            <Create color={drawingPoints ? 'primary' : 'secondary'} />
+          </IconButton>
+        </ButtonGroup>
+      </Box>
+
+      <Box flexGrow={1}>
+        <MapContainer
+          bounds={latLngBounds([54, 12], [56, 14])}
+          style={{ height: '100%', width: '100%' }}
+        >
+          <MapWrapper>
+            {(map) => {
+              map.on('click', (evt) => {
+                if (drawingPoints) {
+                  const lat = evt.latlng.lat;
+                  const lng = evt.latlng.lng;
+                  setDrawingPoints((current) => [
+                    ...(current || []),
+                    [lat, lng],
+                  ]);
+                }
+              });
+
+              return (
+                <>
+                  <TileLayer
+                    attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <FGComponent
+                    ref={(fgRef) => {
+                      reactFGref.current = fgRef;
+                    }}
+                  >
+                    {drawingPoints && (
+                      <Polyline
+                        pathOptions={{ color: 'red' }}
+                        positions={drawingPoints}
+                      />
+                    )}
+                    {polygons.map((polygon) => (
+                      <Polygon key={polygon.id} positions={polygon.points} />
+                    ))}
+                  </FGComponent>
+                </>
+              );
+            }}
+          </MapWrapper>
+        </MapContainer>
+      </Box>
+    </Box>
   );
 };
 
