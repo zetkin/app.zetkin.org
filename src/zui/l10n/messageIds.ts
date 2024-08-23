@@ -9,6 +9,9 @@ export default makeMessages('zui', {
     ),
     removeAccess: m('Remove access'),
   },
+  breadcrumbs: {
+    showMore: m<{ number: number }>('{number} more...'),
+  },
   collapse: {
     collapse: m('Collapse'),
     expand: m('Expand'),
@@ -166,6 +169,14 @@ export default makeMessages('zui', {
     info: m(''),
     success: m('Success!'),
     warning: m('Warning!'),
+  },
+  statusChip: {
+    cancelled: m('Cancelled'),
+    closed: m('Closed'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    published: m('Published'),
+    scheduled: m('Scheduled'),
   },
   submitOrCancel: {
     cancel: m('Cancel'),
