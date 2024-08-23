@@ -244,7 +244,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                 <Divider
                   flexItem
                   orientation="vertical"
-                  sx={{ marginX: '16px', marginY: '4 px' }}
+                  sx={{ marginX: '16px', marginY: '4px' }}
                   variant="middle"
                 />
               )}
