@@ -33,6 +33,7 @@ const Map: FC<MapProps> = () => {
   const reactFGref = useRef<FeatureGroup | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const [polygons, setPolygons] = useState<PolygonData[]>([]);
+  const drawingRef = useRef(false);
 
   return (
     <Box
@@ -55,8 +56,10 @@ const Map: FC<MapProps> = () => {
                   ]);
                 }
                 setDrawingPoints(null);
+                drawingRef.current = false;
               } else {
                 setDrawingPoints([]);
+                drawingRef.current = true;
               }
             }}
           >
@@ -73,7 +76,7 @@ const Map: FC<MapProps> = () => {
           <MapWrapper>
             {(map) => {
               map.on('click', (evt) => {
-                if (drawingPoints) {
+                if (drawingRef.current) {
                   const lat = evt.latlng.lat;
                   const lng = evt.latlng.lng;
                   setDrawingPoints((current) => [
@@ -101,7 +104,15 @@ const Map: FC<MapProps> = () => {
                       />
                     )}
                     {polygons.map((polygon) => (
-                      <Polygon key={polygon.id} positions={polygon.points} />
+                      <Polygon
+                        key={polygon.id}
+                        eventHandlers={{
+                          click: () => {
+                            alert('clicked polygon ' + polygon.id);
+                          },
+                        }}
+                        positions={polygon.points}
+                      />
                     ))}
                   </FGComponent>
                 </>
