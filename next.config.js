@@ -39,11 +39,6 @@ module.exports = {
         permanent: false,
       },
       {
-        source: '/organize/:orgId(\\d{1,})/areas',
-        destination: '/legacy?path=/maps&orgId=:orgId',
-        permanent: false,
-      },
-      {
         source:
           '/organize/:orgId(\\d{1,})/projects/calendar/events/:eventId(\\d{1,})',
         destination: '/legacy?path=/campaign/action%3A:eventId&orgId=:orgId',
