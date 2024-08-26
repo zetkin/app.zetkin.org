@@ -1,8 +1,36 @@
 import { ButtonGroup } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
 
 import ZUIButton, { getVariant, ZUIButtonProps } from 'zui/ZUIButton';
 import ZUIIconButton, { ZUIIconButtonProps } from 'zui/ZUIIconButton';
+
+const useStyles = makeStyles({
+  buttonGroup: {
+    '& > button': {
+      '&.MuiButtonGroup-groupedHorizontal:has(.MuiSvgIcon-root)': {
+        '&.MuiButton-sizeLarge': {
+          ' svg': {
+            fontSize: '1.75rem',
+          },
+        },
+        '&.MuiButton-sizeMedium': {
+          ' svg': {
+            fontSize: '1.5rem',
+          },
+        },
+        '&.MuiButton-sizeSmall': {
+          ' svg': {
+            fontSize: '1.25rem',
+          },
+          minWidth: '1.875rem',
+        },
+        paddingLeft: 0,
+        paddingRight: 0,
+      },
+    },
+  },
+});
 
 interface ZUIButtonGroupProps {
   buttons: (ZUIButtonProps | ZUIIconButtonProps)[];
@@ -17,8 +45,10 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   size = 'medium',
   variant = 'primary',
 }) => {
+  const classes = useStyles();
   return (
     <ButtonGroup
+      className={classes.buttonGroup}
       orientation={orientation}
       size={size}
       variant={getVariant(variant)}

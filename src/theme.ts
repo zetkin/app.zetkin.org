@@ -488,28 +488,6 @@ export const newTheme = createTheme({
               color: '#888888',
             },
           },
-          '&.MuiButtonGroup-groupedHorizontal:has(.MuiSvgIcon-root)': {
-            '&.MuiButton-sizeLarge': {
-              ' svg': {
-                fontSize: '1.75em',
-              },
-            },
-            '&.MuiButton-sizeMedium': {
-              ' svg': {
-                fontSize: '1.5rem',
-              },
-            },
-            '&.MuiButton-sizeSmall': {
-              ' svg': {
-                fontSize: '1.25rem',
-              },
-              minWidth: '30px',
-            },
-            ':has(> svg)': {
-              paddingLeft: 0,
-              paddingRight: 0,
-            },
-          },
           ':hover': {
             boxShadow: 'none',
           },
@@ -548,22 +526,22 @@ export const newTheme = createTheme({
   elevation: {
     bottom: {
       big: {
-        light: '0px 4px 40px 0px #00000014',
-        medium: '0px 4px 40px 0px #0000001F',
+        light: '0rem 0.25rem 2.5rem 0rem #00000014',
+        medium: '0rem 0.25rem 2.5rem 0rem #0000001F',
       },
       small: {
-        light: '0px 4px 20px 0px #00000014',
-        medium: '0px 4px 20px 0px #0000001F',
+        light: '0rem 0.25rem 1.25rem 0rem #00000014',
+        medium: '0rem 0.25rem 1.25rem 0rem #0000001F',
       },
     },
     top: {
       big: {
-        light: '0px -4px 40px 0px #00000014',
-        medium: '0px -4px 40px 0px #0000001F',
+        light: '0.rem -0.25rem 2.25rem 0rem #00000014',
+        medium: '0rem -0.25rem 2.25rem 0rem #0000001F',
       },
       small: {
-        light: '0px -4px 20px 0px #00000014',
-        medium: '0px -4px 20px 0px #0000001F',
+        light: '0rem -0.25rem 1.25rem 0rem #00000014',
+        medium: '0rem -0.25rem 1.25rem 0rem #0000001F',
       },
     },
   },

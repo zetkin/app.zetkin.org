@@ -22,7 +22,7 @@ export interface ZUIButtonProps {
   variant?: ZUIButtonVariant;
 }
 
-export const getVariant = (variant: ZUIButtonVariant) => {
+export const getVariant = (variant: ZUIButtonVariant = 'secondary') => {
   if (variant === 'secondary') {
     return 'outlined';
   } else if (variant === 'tertiary') {
@@ -32,7 +32,7 @@ export const getVariant = (variant: ZUIButtonVariant) => {
   }
 };
 
-const getColor = (variant: ZUIButtonVariant) => {
+const getColor = (variant: ZUIButtonVariant = 'secondary') => {
   if (variant === 'destructive') {
     return 'error';
   } else if (variant === 'warning') {
@@ -42,7 +42,9 @@ const getColor = (variant: ZUIButtonVariant) => {
   }
 };
 
-const getLoadingIndicatorPadding = (size: 'large' | 'medium' | 'small') => {
+const getLoadingIndicatorPadding = (
+  size: 'large' | 'medium' | 'small' = 'medium'
+) => {
   if (size == 'large') {
     return '0.183rem 1.375rem 0.183rem 1.375rem';
   } else if (size == 'medium') {
@@ -53,8 +55,8 @@ const getLoadingIndicatorPadding = (size: 'large' | 'medium' | 'small') => {
 };
 
 const getTextPadding = (
-  size: 'large' | 'medium' | 'small',
-  variant: ZUIButtonVariant
+  size: 'large' | 'medium' | 'small' = 'medium',
+  variant: ZUIButtonVariant = 'secondary'
 ) => {
   if (size === 'large') {
     if (variant === 'secondary') {
@@ -77,7 +79,7 @@ const getTextPadding = (
   }
 };
 
-const getFontSize = (size: 'small' | 'medium' | 'large') => {
+const getFontSize = (size: 'small' | 'medium' | 'large' = 'medium') => {
   if (size === 'small') {
     return '0.183rem';
   } else if (size === 'medium') {
@@ -97,12 +99,12 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   onKeyDown,
   size = 'medium',
   startIcon,
-  variant = 'secondary',
+  variant,
 }) => {
   const isLoading = variant === 'loading';
   return (
     <Button
-      color={getColor(variant)}
+      color={variant ? getColor(variant) : undefined}
       disabled={disabled || isLoading}
       endIcon={endIcon}
       fullWidth={fullWidth}
@@ -119,7 +121,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
           : getTextPadding(size, variant),
       }}
       type={actionType}
-      variant={getVariant(variant)}
+      variant={variant ? getVariant(variant) : undefined}
     >
       {isLoading ? <CircularProgress size={16} /> : label}
     </Button>
