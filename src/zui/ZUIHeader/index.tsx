@@ -159,10 +159,9 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               noWrap
               sx={{
                 display: 'flex',
-                fontSize: '22px',
                 transition: 'margin 0.3s ease',
               }}
-              variant="h4"
+              variant="headingLg"
             >
               {onTitleChange ? (
                 <ZUIEditTextinPlace
@@ -214,7 +213,10 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                           )}
                           <ListItemText>{item.label}</ListItemText>
                           {item.endContent && (
-                            <Typography color="secondary" variant="body2">
+                            <Typography
+                              color="secondary"
+                              variant="bodySmRegular"
+                            >
                               {item.endContent}
                             </Typography>
                           )}

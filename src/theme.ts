@@ -20,6 +20,38 @@ interface FilterCategoryColors {
   strong: string;
 }
 
+// Update the Typography's variant prop options
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    //TO-DO: set these to 'false' once the old theme is removed
+    h1: true;
+    h3: true;
+    h2: true;
+    h4: true;
+    h5: true;
+    h6: true;
+    subtitle1: true;
+    subtitle2: true;
+    body1: true;
+    body2: true;
+    caption: true;
+    button: true;
+    overline: true;
+    //Keep these as true for the new theme
+    headingLg: true;
+    headingMd: true;
+    headingSm: true;
+    bodyMdBold: true;
+    bodyMdRegular: true;
+    bodySmBold: true;
+    bodySmRegular: true;
+    linkMd: true;
+    linkSm: true;
+    labelMdMedium: true;
+    labelMdRegular: true;
+  }
+}
+
 declare module '@mui/material/styles' {
   interface Theme {
     elevation: {
@@ -69,6 +101,35 @@ declare module '@mui/material/styles' {
         };
       };
     };
+  }
+
+  interface TypographyVariants {
+    headingLg: React.CSSProperties;
+    headingMd: React.CSSProperties;
+    headingSm: React.CSSProperties;
+    bodyMdBold: React.CSSProperties;
+    bodyMdRegular: React.CSSProperties;
+    bodySmBold: React.CSSProperties;
+    bodySmRegular: React.CSSProperties;
+    linkMd: React.CSSProperties;
+    linkSm: React.CSSProperties;
+    labelMdMedium: React.CSSProperties;
+    labelMdRegular: React.CSSProperties;
+  }
+
+  // allow configuration using `createTheme`
+  interface TypographyVariantsOptions {
+    headingLg?: React.CSSProperties;
+    headingMd?: React.CSSProperties;
+    headingSm?: React.CSSProperties;
+    bodyMdBold?: React.CSSProperties;
+    bodyMdRegular?: React.CSSProperties;
+    bodySmBold?: React.CSSProperties;
+    bodySmRegular?: React.CSSProperties;
+    linkMd?: React.CSSProperties;
+    linkSm?: React.CSSProperties;
+    labelMdMedium?: React.CSSProperties;
+    labelMdRegular?: React.CSSProperties;
   }
 }
 
@@ -470,6 +531,19 @@ export const newTheme = createTheme({
         },
       },
     },
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          bodyMdBold: 'p',
+          bodyMdRegular: 'p',
+          bodySmBold: 'p',
+          bodySmRegular: 'p',
+          headingLg: 'h1',
+          headingMd: 'h2',
+          headingSm: 'h3',
+        },
+      },
+    },
   },
   elevation: {
     bottom: {
@@ -495,11 +569,99 @@ export const newTheme = createTheme({
   },
   palette: newThemePalette,
   typography: {
+    body1: undefined,
+    body2: undefined,
+    bodyMdBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 600,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodyMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 400,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodySmBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 600,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
+    bodySmRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
     button: {
       fontWeight: 600,
       textTransform: 'none',
     },
+    caption: undefined,
     fontFamily: figtree.style.fontFamily,
+    fontSize: 16,
+    h1: undefined,
+    h2: undefined,
+    h3: undefined,
+    h4: undefined,
+    h5: undefined,
+    h6: undefined,
+    headingLg: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.375rem',
+      fontWeight: '500',
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.788rem',
+    },
+    headingMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.125rem',
+      fontWeight: '500',
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.463rem',
+    },
+    headingSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: '500',
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.3rem',
+    },
+    labelMdMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: '400',
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    linkMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: '400',
+      lineHeight: '1.5rem',
+    },
+    linkSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: '400',
+      lineHeight: '1.313rem',
+    },
+    overline: undefined,
+    subtitle1: undefined,
+    subtitle2: undefined,
   },
 });
 
