@@ -74,10 +74,7 @@ const BreadCrumbSibling: FC<{
               ''
             )}
             <Typography
-              sx={{
-                fontSize: '14px',
-                fontWeight: isCurrentItem ? 'bold' : 'normal',
-              }}
+              variant={isCurrentItem ? 'bodySmBold' : 'bodySmRegular'}
             >
               {item.title}
             </Typography>
@@ -142,7 +139,7 @@ const renderTree = (
       {breadcrumbs.length > 9 && (
         <NextLink href={parentHref} legacyBehavior passHref>
           <Link>
-            <Typography sx={{ fontSize: '14px' }}>
+            <Typography variant="bodySmRegular">
               <Msg
                 id={messageIds.breadcrumbs.showMore}
                 values={{ number: breadcrumbs.length - 9 }}

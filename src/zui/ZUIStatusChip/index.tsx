@@ -10,7 +10,7 @@ const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
   chip: {
     alignItems: 'center',
     backgroundColor: ({ status }) => theme.palette.activityStatusColors[status],
-    borderRadius: '2em',
+    borderRadius: '2rem',
     color: ({ status }) =>
       getContrastColor(theme.palette.activityStatusColors[status]),
     display: 'inline-flex',
@@ -34,7 +34,7 @@ const ZUIStatusChip: FC<ZUIStatusChipProps> = ({ status }) => {
   const classes = useStyles({ status });
   return (
     <Box className={classes.chip}>
-      <Typography sx={{ fontSize: 13 }}>
+      <Typography sx={{ fontSize: '0.813rem' }} variant="bodySmRegular">
         <Msg id={messageIds.statusChip[status]} />
       </Typography>
     </Box>

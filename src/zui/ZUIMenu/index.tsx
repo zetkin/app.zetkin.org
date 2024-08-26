@@ -1,13 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import { FC, ReactNode } from 'react';
-import {
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Theme,
-  Typography,
-} from '@mui/material';
+import { ListItemIcon, Menu, MenuItem, Theme, Typography } from '@mui/material';
 
 const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
   (theme) => ({
@@ -75,9 +68,9 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
           }}
         >
           {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
-          <ListItemText>{item.label}</ListItemText>
+          <Typography variant="bodySmRegular">{item.label}</Typography>
           {item.endContent && (
-            <Typography color="secondary" variant="body2">
+            <Typography color="secondary" variant="bodySmRegular">
               {item.endContent}
             </Typography>
           )}

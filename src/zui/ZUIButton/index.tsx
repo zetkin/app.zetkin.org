@@ -42,40 +42,48 @@ const getColor = (variant: ZUIButtonVariant) => {
   }
 };
 
-const getLoadingIndicatorPadding = (
-  size: 'large' | 'medium' | 'small' = 'medium'
-) => {
+const getLoadingIndicatorPadding = (size: 'large' | 'medium' | 'small') => {
   if (size == 'large') {
-    return '13px 22px 13px 22px';
+    return '0.183rem 1.375rem 0.183rem 1.375rem';
   } else if (size == 'medium') {
-    return '10px 16px 10px 16px';
+    return '0.625rem 1rem 0.625rem 1rem';
   } else if (size == 'small') {
-    return '7px 10px 7px 10px';
+    return '0.438rem 0.625rem 0.438rem 0.625rem';
   }
 };
 
 const getTextPadding = (
-  size: 'large' | 'medium' | 'small' = 'medium',
-  variant: ZUIButtonVariant = 'secondary'
+  size: 'large' | 'medium' | 'small',
+  variant: ZUIButtonVariant
 ) => {
   if (size === 'large') {
     if (variant === 'secondary') {
-      return '7px 22px 7px 22px';
+      return '0.438rem 1.375rem 0.438rem 1.375rem';
     } else {
-      return '8px 22px 8px 22px';
+      return '0.5rem 1.375rem 0.5rem 1.375rem';
     }
   }
 
   if (size === 'medium') {
     if (variant === 'tertiary') {
-      return '6px 16px 6px 16px';
+      return '0.375rem 1rem 0.375rem 1rem';
     }
   }
 
   if (size === 'small') {
     if (variant === 'tertiary') {
-      return '4px 10px 4px 10px';
+      return '0.25rem 0.625rem 0.25rem 0.625rem';
     }
+  }
+};
+
+const getFontSize = (size: 'small' | 'medium' | 'large') => {
+  if (size === 'small') {
+    return '0.183rem';
+  } else if (size === 'medium') {
+    return '0.875rem';
+  } else {
+    return '0.938rem';
   }
 };
 
@@ -87,14 +95,14 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   label,
   onClick,
   onKeyDown,
-  size,
+  size = 'medium',
   startIcon,
-  variant,
+  variant = 'secondary',
 }) => {
   const isLoading = variant === 'loading';
   return (
     <Button
-      color={variant ? getColor(variant) : undefined}
+      color={getColor(variant)}
       disabled={disabled || isLoading}
       endIcon={endIcon}
       fullWidth={fullWidth}
@@ -103,13 +111,15 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       size={size}
       startIcon={startIcon}
       sx={{
-        minWidth: '35px',
+        fontSize: getFontSize(size),
+        letterSpacing: size === 'medium' ? '0.025rem' : '0.029rem',
+        minWidth: '2.188rem',
         padding: isLoading
           ? getLoadingIndicatorPadding(size)
           : getTextPadding(size, variant),
       }}
       type={actionType}
-      variant={variant ? getVariant(variant) : undefined}
+      variant={getVariant(variant)}
     >
       {isLoading ? <CircularProgress size={16} /> : label}
     </Button>

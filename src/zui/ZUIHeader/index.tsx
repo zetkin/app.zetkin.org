@@ -140,7 +140,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
             {breadcrumbs && (
-              <Box marginRight={avatar ? '16px' : '12px'}>
+              <Box marginRight={avatar ? '1rem' : '0.75rem'}>
                 <ZUIBreadcrumbs breadcrumbs={breadcrumbs} />
               </Box>
             )}
@@ -148,9 +148,9 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               <Avatar
                 src={avatar}
                 sx={{
-                  height: 32,
-                  marginRight: '12px',
-                  width: 32,
+                  height: '2rem',
+                  marginRight: '0.75rem',
+                  width: '2rem',
                 }}
               />
             )}
@@ -196,7 +196,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                     setactionButtonPopoverAnchorEl(null)
                   )}
                 {typeof actionButtonPopoverContent !== 'function' && (
-                  <Box minWidth={200}>
+                  <Box minWidth="12.5rem">
                     <MenuList>
                       {actionButtonPopoverContent.map((item, index) => (
                         <MenuItem
@@ -238,7 +238,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
         )}
       </Box>
       {showBottomRow && (
-        <Box alignItems="center" display="flex" paddingTop={1}>
+        <Box alignItems="center" display="flex" paddingTop="0.25rem">
           {(belowTitle || metaData) && (
             <Box alignItems="center" display="flex">
               {belowTitle && belowTitle}
@@ -246,12 +246,12 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                 <Divider
                   flexItem
                   orientation="vertical"
-                  sx={{ height: '22px', marginX: '16px' }}
+                  sx={{ height: '1.375rem', marginX: '1rem' }}
                   variant="middle"
                 />
               )}
               {metaData && (
-                <Box display="flex" flexShrink={0} gap={2}>
+                <Box display="flex" flexShrink={0} gap="0.5rem">
                   {metaData.map((data) => {
                     const Icon = data.icon;
                     return (
@@ -260,16 +260,16 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                         alignItems="center"
                         display="flex"
                         flexShrink="0"
-                        gap="6px"
+                        gap="0.375rem"
                       >
                         <Icon
-                          size={20}
+                          size="1.25rem"
                           sx={{ color: theme.palette.grey[400] }}
                         />
                         <Typography
+                          color="secondary"
                           flexShrink="0"
-                          fontSize={14}
-                          sx={{ color: theme.palette.text.secondary }}
+                          variant="bodySmRegular"
                         >
                           {data.label}
                         </Typography>
