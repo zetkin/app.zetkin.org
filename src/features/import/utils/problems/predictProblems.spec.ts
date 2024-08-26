@@ -520,4 +520,26 @@ describe('predictProblem()', () => {
       },
     ]);
   });
+
+  it('Removes weird characters from phone fields', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          field: 'phone',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          // Phone number contains U202C, a Unicode control character, to check that it is stripped before validating.
+          data: ['+46 30777 88 68‬', 10],
+        },
+      ],
+    });
+    const result = predictProblems(sheet, 'SE', customFields);
+    expect(result).toEqual([]);
+  });
 });

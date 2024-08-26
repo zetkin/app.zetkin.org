@@ -6,6 +6,15 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
   (theme) => ({
     menu: {
       '& ul': {
+        '& .MuiMenuItem-divider': {
+          '& + li': {
+            paddingTop: '8px',
+          },
+          paddingBottom: '8px',
+        },
+        '& li > p': {
+          marginLeft: '12px',
+        },
         maxHeight: ({ maxHeight }) => (maxHeight ? maxHeight : ''),
         width: ({ width }) => (width ? width : ''),
       },

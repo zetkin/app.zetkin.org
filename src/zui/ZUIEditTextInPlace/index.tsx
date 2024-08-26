@@ -203,7 +203,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           readOnly={!editing}
-          value={editing ? text : text || placeholder}
+          value={editing ? text : text || placeholder || ''}
         />
       </FormControl>
     </Tooltip>

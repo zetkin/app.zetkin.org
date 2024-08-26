@@ -7,6 +7,12 @@ import ZUIIconButton, { ZUIIconButtonProps } from 'zui/ZUIIconButton';
 
 const useStyles = makeStyles({
   buttonGroup: {
+    '& .MuiButton-outlined': {
+      padding: '0.313rem 0.938rem 0.313rem 0.938rem',
+    },
+    '& .MuiButton-text, & .MuiButton-contained': {
+      padding: '0.375rem 1rem 0.375rem 1rem',
+    },
     '& > button': {
       '&.MuiButtonGroup-groupedHorizontal:has(.MuiSvgIcon-root)': {
         '&.MuiButton-sizeLarge': {

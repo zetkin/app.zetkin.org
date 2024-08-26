@@ -10,7 +10,7 @@ export default {
 } as Meta<typeof ZUIPersonLink>;
 
 const Template: StoryFn<typeof ZUIPersonLink> = (args) => (
-  <Typography>
+  <Typography component={'div'}>
     <ZUIPersonLink person={args.person} />
   </Typography>
 );
