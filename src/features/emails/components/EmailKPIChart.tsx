@@ -9,9 +9,9 @@ type Props = {
   mainEmail: ZetkinEmail;
   mainTotal: number;
   mainValue: number;
-  secondaryEmail?: ZetkinEmail | null;
-  secondaryTotal?: number | null;
-  secondaryValue?: number | null;
+  secondaryEmail: ZetkinEmail | null;
+  secondaryTotal: number | null;
+  secondaryValue: number | null;
   title: string;
 };
 

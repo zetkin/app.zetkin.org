@@ -114,8 +114,8 @@ const OpenedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
                   mainTotal={stats.numSent}
                   mainValue={stats.numOpened}
                   secondaryEmail={secondaryEmail}
-                  secondaryTotal={secondaryStats?.num_sent}
-                  secondaryValue={secondaryStats?.num_opened}
+                  secondaryTotal={secondaryStats?.num_sent ?? null}
+                  secondaryValue={secondaryStats?.num_opened ?? null}
                   title={messages.insights.opened.gauge.header()}
                 />
                 <Typography mb={2} mt={1} variant="body2">
