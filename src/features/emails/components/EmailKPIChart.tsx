@@ -6,23 +6,23 @@ import { truncateOnMiddle } from 'utils/stringUtils';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 type Props = {
-  email: ZetkinEmail;
+  mainEmail: ZetkinEmail;
+  mainTotal: number;
+  mainValue: number;
   secondaryEmail?: ZetkinEmail | null;
   secondaryTotal?: number | null;
   secondaryValue?: number | null;
   title: string;
-  total: number;
-  value: number;
 };
 
 const EmailKPIChart: FC<Props> = ({
-  email,
+  mainEmail,
+  mainTotal,
+  mainValue,
   secondaryEmail,
   secondaryTotal,
   secondaryValue,
   title,
-  total,
-  value,
 }) => {
   const theme = useTheme();
 
@@ -31,7 +31,7 @@ const EmailKPIChart: FC<Props> = ({
       data: [
         {
           x: 'main',
-          y: value / total,
+          y: mainValue / mainTotal,
         },
         {
           x: 'secondary',
@@ -39,10 +39,10 @@ const EmailKPIChart: FC<Props> = ({
         },
         {
           x: 'void',
-          y: 1 - value / total,
+          y: 1 - mainValue / mainTotal,
         },
       ],
-      id: email.title || '',
+      id: mainEmail.title || '',
     },
   ];
 
@@ -66,7 +66,7 @@ const EmailKPIChart: FC<Props> = ({
     });
   }
 
-  const percentage = Math.round((value / total) * 100);
+  const percentage = Math.round((mainValue / mainTotal) * 100);
   const secondaryPercentage =
     secondaryValue && secondaryTotal
       ? Math.round((secondaryValue / secondaryTotal) * 100)

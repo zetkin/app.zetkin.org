@@ -66,7 +66,11 @@ const ClickedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
             {({ data: { secondaryEmail, secondaryStats } }) => (
               <>
                 <EmailKPIChart
-                  email={email}
+                  mainEmail={email}
+                  mainTotal={
+                    clickMetric == 'ctr' ? stats.numSent : stats.numOpened
+                  }
+                  mainValue={stats.numClicked}
                   secondaryEmail={secondaryEmail}
                   secondaryTotal={
                     clickMetric == 'ctr'
@@ -75,8 +79,6 @@ const ClickedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
                   }
                   secondaryValue={secondaryStats?.num_clicks ?? null}
                   title={messages.insights.clicked.gauge.headers[clickMetric]()}
-                  total={clickMetric == 'ctr' ? stats.numSent : stats.numOpened}
-                  value={stats.numClicked}
                 />
                 <Box display="flex" justifyContent="center">
                   <ToggleButtonGroup

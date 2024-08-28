@@ -110,13 +110,13 @@ const OpenedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
             {({ data: { secondaryEmail, secondaryStats } }) => (
               <>
                 <EmailKPIChart
-                  email={email}
+                  mainEmail={email}
+                  mainTotal={stats.numSent}
+                  mainValue={stats.numOpened}
                   secondaryEmail={secondaryEmail}
                   secondaryTotal={secondaryStats?.num_sent}
                   secondaryValue={secondaryStats?.num_opened}
                   title={messages.insights.opened.gauge.header()}
-                  total={stats.numSent}
-                  value={stats.numOpened}
                 />
                 <Typography mb={2} mt={1} variant="body2">
                   {messages.insights.opened.description()}
