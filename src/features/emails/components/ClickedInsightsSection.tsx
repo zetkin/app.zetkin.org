@@ -1,8 +1,8 @@
-import { Box } from '@mui/system';
 import DOMPurify from 'dompurify';
 import { OpenInNew } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
+  Box,
   Link,
   Table,
   TableCell,
