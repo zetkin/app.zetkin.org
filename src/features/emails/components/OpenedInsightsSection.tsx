@@ -63,13 +63,18 @@ function axisFromSpanValue(value: string): AxisProps {
 }
 
 function lineDataFromInsights(
+  email: ZetkinEmail,
   insights: EmailInsights,
   numSent: number
 ): { x: number; y: number }[] {
+  const startTime = email.published;
+  if (!startTime) {
+    return [];
+  }
+
   return insights.opensByDate.map((openEvent) => ({
     x:
-      (new Date(openEvent.date).getTime() -
-        new Date(insights.opensByDate[0].date).getTime()) /
+      (new Date(openEvent.date).getTime() - new Date(startTime).getTime()) /
       1000,
     y: openEvent.accumulatedOpens / numSent,
   }));
@@ -181,14 +186,19 @@ const OpenedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
             }) => {
               const lineData = [
                 {
-                  data: lineDataFromInsights(mainInsights, stats.numSent),
+                  data: lineDataFromInsights(
+                    email,
+                    mainInsights,
+                    stats.numSent
+                  ),
                   id: 'main',
                 },
               ];
 
-              if (secondaryInsights && secondaryStats) {
+              if (secondaryEmail && secondaryInsights && secondaryStats) {
                 lineData.push({
                   data: lineDataFromInsights(
+                    secondaryEmail,
                     secondaryInsights,
                     secondaryStats.num_sent
                   ),
