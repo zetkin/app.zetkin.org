@@ -1,17 +1,8 @@
 import { AxisProps } from '@nivo/axes';
-import { FormattedTime } from 'react-intl';
 import { ResponsiveLine } from '@nivo/line';
 import { linearGradientDef } from '@nivo/core';
 import { FC, useState } from 'react';
-import {
-  Box,
-  Divider,
-  MenuItem,
-  Paper,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Box, MenuItem, TextField, Typography, useTheme } from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
@@ -19,13 +10,12 @@ import ZUINumberChip from 'zui/ZUINumberChip';
 import messageIds from '../l10n/messageIds';
 import ZUIFutures from 'zui/ZUIFutures';
 import EmailKPIChart from './EmailKPIChart';
-import getRelevantDataPoints from '../utils/getRelevantDataPoints';
-import ZUIDuration from 'zui/ZUIDuration';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import useEmailInsights from '../hooks/useEmailInsights';
 import useEmailStats from '../hooks/useEmailStats';
 import useSecondaryEmailInsights from '../hooks/useSecondaryEmailInsights';
 import { EmailInsights } from '../types';
+import EmailDiagramHoverCard from './EmailDiagramHoverCard';
 
 type Props = {
   email: ZetkinEmail;
@@ -244,117 +234,16 @@ const OpenedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
                     top: 20,
                   }}
                   sliceTooltip={(props) => {
-                    const publishDate = new Date(emailPublished);
-                    const { mainPoint, secondaryPoint } = getRelevantDataPoints(
-                      props.slice.points[0],
-                      {
-                        startDate: new Date(emailPublished),
-                        values: mainInsights.opensByDate,
-                      },
-                      secondaryInsights && secondaryEmail?.published
-                        ? {
-                            startDate: new Date(secondaryEmail.published),
-                            values: secondaryInsights.opensByDate,
-                          }
-                        : null
-                    );
-
-                    if (!mainPoint) {
-                      return null;
-                    }
-
-                    const count = mainPoint.accumulatedOpens;
-                    const date = new Date(mainPoint.date);
-
-                    const secondsAfterPublish =
-                      (date.getTime() - publishDate.getTime()) / 1000;
-
                     return (
-                      <Paper sx={{ minWidth: 240 }}>
-                        <Box p={2}>
-                          <Typography variant="h6">
-                            <ZUIDuration seconds={secondsAfterPublish} />
-                          </Typography>
-                          <Typography variant="body2">
-                            <Msg
-                              id={messageIds.insights.opened.chart.afterSend}
-                            />
-                          </Typography>
-                        </Box>
-                        <Divider />
-                        <Box p={2}>
-                          <Box
-                            alignItems="center"
-                            display="flex"
-                            gap={2}
-                            justifyContent="space-between"
-                          >
-                            <Box>
-                              <Typography variant="body2">
-                                <FormattedTime
-                                  day="numeric"
-                                  month="short"
-                                  value={date}
-                                />
-                              </Typography>
-                              <Typography variant="body2">
-                                <Msg
-                                  id={messageIds.insights.opened.chart.opened}
-                                  values={{
-                                    count: count,
-                                  }}
-                                />
-                              </Typography>
-                            </Box>
-                            <Box>
-                              <Typography color="primary" variant="h5">
-                                {Math.round((count / stats.numSent) * 100)}%
-                              </Typography>
-                            </Box>
-                          </Box>
-                          {secondaryPoint && secondaryStats && (
-                            <>
-                              <Divider sx={{ my: 1 }} />
-                              <Box
-                                alignItems="center"
-                                display="flex"
-                                gap={2}
-                                justifyContent="space-between"
-                              >
-                                <Box>
-                                  <Typography variant="body2">
-                                    <FormattedTime
-                                      day="numeric"
-                                      month="short"
-                                      value={secondaryPoint.date}
-                                    />
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    <Msg
-                                      id={
-                                        messageIds.insights.opened.chart.opened
-                                      }
-                                      values={{
-                                        count: secondaryPoint.accumulatedOpens,
-                                      }}
-                                    />
-                                  </Typography>
-                                </Box>
-                                <Box>
-                                  <Typography color="secondary" variant="h5">
-                                    {Math.round(
-                                      (secondaryPoint.accumulatedOpens /
-                                        secondaryStats.num_sent) *
-                                        100
-                                    )}
-                                    %
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </>
-                          )}
-                        </Box>
-                      </Paper>
+                      <EmailDiagramHoverCard
+                        mainInsights={mainInsights}
+                        mainStats={stats.data}
+                        pointId={props.slice.points[0].id}
+                        publishDate={new Date(emailPublished)}
+                        secondaryEmail={secondaryEmail}
+                        secondaryInsights={secondaryInsights}
+                        secondaryStats={secondaryStats}
+                      />
                     );
                   }}
                   xScale={{
