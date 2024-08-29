@@ -15,24 +15,28 @@ const useStyles = makeStyles({
     },
     '& > button': {
       '&.MuiButtonGroup-groupedHorizontal:has(.MuiSvgIcon-root)': {
-        '&.MuiButton-sizeLarge': {
-          ' svg': {
+        '&.MuiButton-sizeLarge:has(> svg)': {
+          '&> svg': {
             fontSize: '1.75rem',
           },
+          paddingLeft: 0,
+          paddingRight: 0,
         },
-        '&.MuiButton-sizeMedium': {
-          ' svg': {
+        '&.MuiButton-sizeMedium:has(> svg)': {
+          '&> svg': {
             fontSize: '1.5rem',
           },
+          paddingLeft: 0,
+          paddingRight: 0,
         },
-        '&.MuiButton-sizeSmall': {
-          ' svg': {
+        '&.MuiButton-sizeSmall:has(> svg)': {
+          '&> svg': {
             fontSize: '1.25rem',
           },
           minWidth: '1.875rem',
+          paddingLeft: 0,
+          paddingRight: 0,
         },
-        paddingLeft: 0,
-        paddingRight: 0,
       },
     },
   },

@@ -1,5 +1,12 @@
 import { Button, CircularProgress } from '@mui/material';
-import { FC, KeyboardEventHandler, MouseEventHandler } from 'react';
+import {
+  CSSProperties,
+  FC,
+  KeyboardEventHandler,
+  MouseEventHandler,
+} from 'react';
+
+import { textVariants } from 'zui/ZUIText';
 
 type ZUIButtonVariant =
   | 'primary'
@@ -79,16 +86,6 @@ const getTextPadding = (
   }
 };
 
-const getFontSize = (size: 'small' | 'medium' | 'large' = 'medium') => {
-  if (size === 'small') {
-    return '0.183rem';
-  } else if (size === 'medium') {
-    return '0.875rem';
-  } else {
-    return '0.938rem';
-  }
-};
-
 const ZUIButton: FC<ZUIButtonProps> = ({
   actionType,
   disabled,
@@ -112,13 +109,23 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       onKeyDown={onKeyDown}
       size={size}
       startIcon={startIcon}
-      sx={{
-        fontSize: getFontSize(size),
-        letterSpacing: size === 'medium' ? '0.025rem' : '0.029rem',
-        minWidth: '2.188rem',
-        padding: isLoading
-          ? getLoadingIndicatorPadding(size)
-          : getTextPadding(size, variant),
+      sx={(theme) => {
+        let textStyle: CSSProperties;
+        if (size === 'small') {
+          textStyle = theme.typography.labelSmSemiBold;
+        } else if (size === 'medium') {
+          textStyle = textVariants.bodySmSemiBold;
+        } else {
+          textStyle = theme.typography.labelLgSemiBold;
+        }
+
+        return {
+          ...textStyle,
+          minWidth: '2.188rem',
+          padding: isLoading
+            ? getLoadingIndicatorPadding(size)
+            : getTextPadding(size, variant),
+        };
       }}
       type={actionType}
       variant={variant ? getVariant(variant) : undefined}

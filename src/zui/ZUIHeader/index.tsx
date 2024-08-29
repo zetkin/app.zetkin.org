@@ -4,7 +4,6 @@ import {
   Box,
   Divider,
   ListItemIcon,
-  ListItemText,
   MenuItem,
   MenuList,
   Popover,
@@ -22,6 +21,7 @@ import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 import { WithRequired } from 'utils/types';
 import { ZUIIconButtonProps } from 'zui/ZUIIconButton';
+import ZUIText from 'zui/ZUIText';
 
 interface ZUIHeaderProps {
   /**
@@ -154,15 +154,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                 }}
               />
             )}
-            <Typography
-              component="div"
-              noWrap
-              sx={{
-                display: 'flex',
-                transition: 'margin 0.3s ease',
-              }}
-              variant="headingLg"
-            >
+            <ZUIText component="div" display="flex" noWrap variant="headingLg">
               {onTitleChange ? (
                 <ZUIEditTextinPlace
                   onChange={(newValue) => onTitleChange(newValue)}
@@ -171,13 +163,14 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               ) : (
                 title
               )}
-            </Typography>
+            </ZUIText>
           </Box>
         </Box>
         {showActionButton && (
           <>
             <ZUIButtonGroup
               buttons={actionButtons}
+              size="small"
               variant={actionButtonVariant}
             />
             {!!actionButtonPopoverContent && (
@@ -211,11 +204,14 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                           {item.startIcon && (
                             <ListItemIcon>{item.startIcon}</ListItemIcon>
                           )}
-                          <ListItemText>{item.label}</ListItemText>
+                          <Typography variant="labelXlMedium">
+                            {item.label}
+                          </Typography>
                           {item.endContent && (
                             <Typography
                               color="secondary"
-                              variant="bodySmRegular"
+                              marginLeft="0.75rem"
+                              variant="labelSmMedium"
                             >
                               {item.endContent}
                             </Typography>
@@ -263,16 +259,18 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                         gap="0.375rem"
                       >
                         <Icon
-                          size="1.25rem"
-                          sx={{ color: theme.palette.grey[400] }}
+                          sx={{
+                            color: theme.palette.grey[400],
+                            fontSize: '1.25rem',
+                          }}
                         />
-                        <Typography
+                        <ZUIText
                           color="secondary"
                           flexShrink="0"
-                          variant="bodySmRegular"
+                          variant="labelMdRegular"
                         >
                           {data.label}
-                        </Typography>
+                        </ZUIText>
                       </Box>
                     );
                   })}

@@ -8,12 +8,9 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
       '& ul': {
         '& .MuiMenuItem-divider': {
           '& + li': {
-            paddingTop: '8px',
+            paddingTop: '0.5rem',
           },
-          paddingBottom: '8px',
-        },
-        '& li > p': {
-          marginLeft: '12px',
+          paddingBottom: '0.5rem',
         },
         maxHeight: ({ maxHeight }) => (maxHeight ? maxHeight : ''),
         width: ({ width }) => (width ? width : ''),
@@ -28,7 +25,7 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
 export interface MenuItem {
   disabled?: boolean;
   divider?: boolean;
-  endContent?: ReactNode;
+  endContent?: string;
   label: string;
   onClick: () => void;
   startIcon?: ReactNode;
@@ -77,9 +74,13 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
           }}
         >
           {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
-          <Typography variant="bodySmRegular">{item.label}</Typography>
+          <Typography variant="labelXlMedium">{item.label}</Typography>
           {item.endContent && (
-            <Typography color="secondary" variant="bodySmRegular">
+            <Typography
+              color="secondary"
+              marginLeft="0.75rem"
+              variant="labelSmMedium"
+            >
               {item.endContent}
             </Typography>
           )}

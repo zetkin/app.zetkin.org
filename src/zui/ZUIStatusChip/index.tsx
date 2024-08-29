@@ -34,7 +34,7 @@ const ZUIStatusChip: FC<ZUIStatusChipProps> = ({ status }) => {
   const classes = useStyles({ status });
   return (
     <Box className={classes.chip}>
-      <Typography sx={{ fontSize: '0.813rem' }} variant="bodySmRegular">
+      <Typography variant="labelSmMedium">
         <Msg id={messageIds.statusChip[status]} />
       </Typography>
     </Box>

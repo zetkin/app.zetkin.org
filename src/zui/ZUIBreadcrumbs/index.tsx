@@ -1,13 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import {
-  Box,
-  Link,
-  Menu,
-  SvgIconTypeMap,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Box, Link, Menu, SvgIconTypeMap, useTheme } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import {
   MoreHoriz,
@@ -18,6 +11,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import ZUIText from 'zui/ZUIText';
 
 const useStyles = makeStyles((theme) => ({
   leftSide: {
@@ -73,11 +67,11 @@ const BreadCrumbSibling: FC<{
             ) : (
               ''
             )}
-            <Typography
-              variant={isCurrentItem ? 'bodySmBold' : 'bodySmRegular'}
+            <ZUIText
+              variant={isCurrentItem ? 'bodySmSemiBold' : 'bodySmRegular'}
             >
               {item.title}
-            </Typography>
+            </ZUIText>
           </Box>
         </Link>
       </NextLink>
@@ -139,12 +133,12 @@ const renderTree = (
       {breadcrumbs.length > 9 && (
         <NextLink href={parentHref} legacyBehavior passHref>
           <Link>
-            <Typography variant="bodySmRegular">
+            <ZUIText variant="bodySmRegular">
               <Msg
                 id={messageIds.breadcrumbs.showMore}
                 values={{ number: breadcrumbs.length - 9 }}
               />
-            </Typography>
+            </ZUIText>
           </Link>
         </NextLink>
       )}
