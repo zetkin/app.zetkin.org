@@ -54,7 +54,12 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
 
   const personNumberFormats: PersonNumberFormat[] = [];
 
-  if (organization) {
+  if (
+    organization &&
+    (organization.country === 'se' ||
+      organization.country === 'dk' ||
+      organization.country === 'no')
+  ) {
     personNumberFormats.push(
       organization.country.toLowerCase() as PersonNumberFormat
     );
