@@ -1,5 +1,5 @@
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-import { createElement } from 'react';
+import { createElement, CSSProperties } from 'react';
 import { createTheme } from '@mui/material/styles';
 import { Figtree } from 'next/font/google';
 import { Localization } from '@mui/x-data-grid/utils/getGridLocalization';
@@ -23,6 +23,17 @@ interface FilterCategoryColors {
 // Update the Typography's variant prop options
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
+    bodyMdRegular: true;
+    bodyMdSemiBold: true;
+    bodySmRegular: true;
+    bodySmSemiBold: true;
+    headingLg: true;
+    headingMd: true;
+    headingSm: true;
+    labelMdMedium: true;
+    labelMdRegular: true;
+    linkMd: true;
+    linkSm: true;
     labelXlMedium: true;
     labelLgSemiBold: true;
     labelLgMedium: true;
@@ -99,21 +110,43 @@ declare module '@mui/material/styles' {
   }
 
   interface TypographyVariants {
-    labelXlMedium: React.CSSProperties;
-    labelLgSemiBold: React.CSSProperties;
-    labelLgMedium: React.CSSProperties;
-    labelMdSemiBold: React.CSSProperties;
-    labelSmSemiBold: React.CSSProperties;
-    labelSmMedium: React.CSSProperties;
+    bodyMdRegular: CSSProperties;
+    bodyMdSemiBold: CSSProperties;
+    bodySmRegular: CSSProperties;
+    bodySmSemiBold: CSSProperties;
+    headingLg: CSSProperties;
+    headingMd: CSSProperties;
+    headingSm: CSSProperties;
+    labelMdMedium: CSSProperties;
+    labelMdRegular: CSSProperties;
+    linkMd: CSSProperties;
+    linkSm: CSSProperties;
+    labelXlMedium: CSSProperties;
+    labelLgSemiBold: CSSProperties;
+    labelLgMedium: CSSProperties;
+    labelMdSemiBold: CSSProperties;
+    labelSmSemiBold: CSSProperties;
+    labelSmMedium: CSSProperties;
   }
 
   interface TypographyVariantsOptions {
-    labelXlMedium?: React.CSSProperties;
-    labelLgSemiBold?: React.CSSProperties;
-    labelLgMedium?: React.CSSProperties;
-    labelMdSemiBold?: React.CSSProperties;
-    labelSmSemiBold?: React.CSSProperties;
-    labelSmMedium?: React.CSSProperties;
+    bodyMdRegular?: CSSProperties;
+    bodyMdSemiBold?: CSSProperties;
+    bodySmRegular?: CSSProperties;
+    bodySmSemiBold?: CSSProperties;
+    headingLg?: CSSProperties;
+    headingMd?: CSSProperties;
+    headingSm?: CSSProperties;
+    labelMdMedium?: CSSProperties;
+    labelMdRegular?: CSSProperties;
+    linkMd?: CSSProperties;
+    linkSm?: CSSProperties;
+    labelXlMedium?: CSSProperties;
+    labelLgSemiBold?: CSSProperties;
+    labelLgMedium?: CSSProperties;
+    labelMdSemiBold?: CSSProperties;
+    labelSmSemiBold?: CSSProperties;
+    labelSmMedium?: CSSProperties;
   }
 }
 
@@ -520,6 +553,34 @@ export const newTheme = createTheme({
   typography: {
     body1: undefined,
     body2: undefined,
+    bodyMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 300,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodyMdSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 500,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodySmRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
+    bodySmSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
     button: {
       fontWeight: 600,
       textTransform: 'none',
@@ -533,6 +594,27 @@ export const newTheme = createTheme({
     h4: undefined,
     h5: undefined,
     h6: undefined,
+    headingLg: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.375rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.788rem',
+    },
+    headingMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.125rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.463rem',
+    },
+    headingSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.3rem',
+    },
     labelLgMedium: {
       fontFamily: figtree.style.fontFamily,
       fontSize: '0.938rem',
@@ -546,6 +628,20 @@ export const newTheme = createTheme({
       fontWeight: 500,
       letterSpacing: '0.03rem',
       lineHeight: '1.406rem',
+    },
+    labelMdMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
     },
     labelMdSemiBold: {
       fontFamily: figtree.style.fontFamily,
@@ -574,6 +670,18 @@ export const newTheme = createTheme({
       fontWeight: 400,
       letterSpacing: '0.03rem',
       lineHeight: '1.5rem',
+    },
+    linkMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 300,
+      lineHeight: '1.5rem',
+    },
+    linkSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      lineHeight: '1.313rem',
     },
     overline: undefined,
     subtitle1: undefined,

@@ -6,8 +6,6 @@ import {
   MouseEventHandler,
 } from 'react';
 
-import { textVariants } from 'zui/ZUIText';
-
 type ZUIButtonVariant =
   | 'primary'
   | 'secondary'
@@ -114,7 +112,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         if (size === 'small') {
           textStyle = theme.typography.labelSmSemiBold;
         } else if (size === 'medium') {
-          textStyle = textVariants.bodySmSemiBold;
+          textStyle = theme.typography.bodySmSemiBold;
         } else {
           textStyle = theme.typography.labelLgSemiBold;
         }
