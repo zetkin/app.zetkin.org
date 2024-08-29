@@ -25,7 +25,6 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
 export interface MenuItem {
   disabled?: boolean;
   divider?: boolean;
-  endContent?: string;
   label: string;
   onClick: () => void;
   startIcon?: ReactNode;
@@ -75,15 +74,6 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
         >
           {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
           <Typography variant="labelXlMedium">{item.label}</Typography>
-          {item.endContent && (
-            <Typography
-              color="secondary"
-              marginLeft="0.75rem"
-              variant="labelSmMedium"
-            >
-              {item.endContent}
-            </Typography>
-          )}
         </MenuItem>
       ))}
     </Menu>

@@ -207,15 +207,6 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                           <Typography variant="labelXlMedium">
                             {item.label}
                           </Typography>
-                          {item.endContent && (
-                            <Typography
-                              color="secondary"
-                              marginLeft="0.75rem"
-                              variant="labelSmMedium"
-                            >
-                              {item.endContent}
-                            </Typography>
-                          )}
                         </MenuItem>
                       ))}
                     </MenuList>

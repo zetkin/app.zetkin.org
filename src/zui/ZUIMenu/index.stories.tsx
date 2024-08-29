@@ -16,7 +16,6 @@ export const Basic: Story = {
   args: {
     menuItems: [
       {
-        endContent: '#B',
         label: 'Call assignment',
         onClick: () => null,
       },
