@@ -2,15 +2,15 @@ import mongoose from 'mongoose';
 
 import { ZetkinArea } from './types';
 
-type IZetkinModel = ZetkinArea & {
+type IZetkinModel = {
   orgId: number;
+  points: ZetkinArea['points'];
 };
 
 const areaSchema = new mongoose.Schema<IZetkinModel>({
-  id: Number,
-  orgId: Number,
+  orgId: { required: true, type: Number },
   points: Array,
 });
 
-export const AreaModel =
+export const AreaModel: mongoose.Model<IZetkinModel> =
   mongoose.models.Area || mongoose.model<IZetkinModel>('Area', areaSchema);

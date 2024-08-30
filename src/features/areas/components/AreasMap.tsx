@@ -13,6 +13,8 @@ import { Box, ButtonGroup, IconButton } from '@mui/material';
 import { Create } from '@mui/icons-material';
 
 import { PointData, ZetkinArea } from '../types';
+import useCreateArea from '../hooks/useCreateArea';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -30,8 +32,10 @@ const MapWrapper = ({
 const Map: FC<MapProps> = ({ areas }) => {
   const reactFGref = useRef<FeatureGroup | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
-  const [polygons, setPolygons] = useState<ZetkinArea[]>(areas);
   const drawingRef = useRef(false);
+
+  const { orgId } = useNumericRouteParams();
+  const createArea = useCreateArea(orgId);
 
   return (
     <Box
@@ -48,10 +52,7 @@ const Map: FC<MapProps> = ({ areas }) => {
             onClick={() => {
               if (drawingPoints) {
                 if (drawingPoints.length > 2) {
-                  setPolygons((current) => [
-                    ...current,
-                    { id: current.length + 1, points: drawingPoints },
-                  ]);
+                  createArea({ points: drawingPoints });
                 }
                 setDrawingPoints(null);
                 drawingRef.current = false;
@@ -103,7 +104,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                         positions={drawingPoints}
                       />
                     )}
-                    {polygons.map((polygon) => (
+                    {areas.map((polygon) => (
                       <Polygon
                         key={polygon.id}
                         eventHandlers={{
