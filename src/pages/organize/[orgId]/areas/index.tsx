@@ -5,6 +5,9 @@ import dynamic from 'next/dynamic';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
+import useAreas from 'features/areas/hooks/useAreas';
+import { useNumericRouteParams } from 'core/hooks';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,12 +25,17 @@ const AreasMap = dynamic(
 );
 
 const AreasPage: PageWithLayout = () => {
+  const { orgId } = useNumericRouteParams();
+  const areasFuture = useAreas(orgId);
+
   return (
     <>
       <Head>
         <title>Areas</title>
       </Head>
-      <AreasMap />
+      <ZUIFuture future={areasFuture}>
+        {(areas) => <AreasMap areas={areas} />}
+      </ZUIFuture>
     </>
   );
 };
