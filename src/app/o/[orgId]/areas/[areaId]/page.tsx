@@ -1,11 +1,13 @@
-interface AreaPageParams {
+import AreaPage from 'features/areas/components/AreaPage';
+
+interface AreaPageProps {
   params: {
     areaId: string;
     orgId: string;
   };
 }
 
-export default function Page({ params }: AreaPageParams) {
+export default function Page({ params }: AreaPageProps) {
   const { orgId, areaId } = params;
-  return <div>{`this is the page for org ${orgId} area ${areaId}`}</div>;
+  return <AreaPage areaId={parseInt(areaId)} orgId={parseInt(orgId)} />;
 }
