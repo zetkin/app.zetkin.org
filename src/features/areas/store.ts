@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteList, RemoteList } from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinArea } from './types';
 
 export interface AreasStoreSlice {
@@ -21,6 +21,10 @@ const areasSlice = createSlice({
 
       if (item) {
         item.isLoading = true;
+      } else {
+        state.areaList.items = state.areaList.items.concat([
+          remoteItem(areaId, { isLoading: true }),
+        ]);
       }
     },
     areaLoaded: (state, action: PayloadAction<ZetkinArea>) => {
