@@ -12,7 +12,11 @@ import { FeatureGroup, latLngBounds, Map as MapType } from 'leaflet';
 import { Box, ButtonGroup, IconButton } from '@mui/material';
 import { Create } from '@mui/icons-material';
 
-interface MapProps {}
+import { PointData, ZetkinArea } from '../types';
+
+interface MapProps {
+  areas: ZetkinArea[];
+}
 
 const MapWrapper = ({
   children,
@@ -23,16 +27,10 @@ const MapWrapper = ({
   return children(map);
 };
 
-type PointData = [number, number];
-type PolygonData = {
-  id: number;
-  points: PointData[];
-};
-
-const Map: FC<MapProps> = () => {
+const Map: FC<MapProps> = ({ areas }) => {
   const reactFGref = useRef<FeatureGroup | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
-  const [polygons, setPolygons] = useState<PolygonData[]>([]);
+  const [polygons, setPolygons] = useState<ZetkinArea[]>(areas);
   const drawingRef = useRef(false);
 
   return (
