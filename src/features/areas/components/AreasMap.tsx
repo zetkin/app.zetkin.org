@@ -73,16 +73,18 @@ const Map: FC<MapProps> = ({ areas }) => {
         >
           <MapWrapper>
             {(map) => {
-              map.on('click', (evt) => {
-                if (drawingRef.current) {
-                  const lat = evt.latlng.lat;
-                  const lng = evt.latlng.lng;
-                  setDrawingPoints((current) => [
-                    ...(current || []),
-                    [lat, lng],
-                  ]);
-                }
-              });
+              if (!map.hasEventListeners('click')) {
+                map.on('click', (evt) => {
+                  if (drawingRef.current) {
+                    const lat = evt.latlng.lat;
+                    const lng = evt.latlng.lng;
+                    setDrawingPoints((current) => [
+                      ...(current || []),
+                      [lat, lng],
+                    ]);
+                  }
+                });
+              }
 
               return (
                 <>
