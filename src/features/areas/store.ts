@@ -15,6 +15,26 @@ const areasSlice = createSlice({
   initialState: initialState,
   name: 'areas',
   reducers: {
+    areaLoad: (state, action: PayloadAction<number>) => {
+      const areaId = action.payload;
+      const item = state.areaList.items.find((item) => item.id == areaId);
+
+      if (item) {
+        item.isLoading = true;
+      }
+    },
+    areaLoaded: (state, action: PayloadAction<ZetkinArea>) => {
+      const area = action.payload;
+      const item = state.areaList.items.find((item) => item.id == area.id);
+
+      if (!item) {
+        throw new Error('Finished loading item that never started loading');
+      }
+
+      item.data = area;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
     areasLoad: (state) => {
       state.areaList.isLoading = true;
     },
@@ -29,4 +49,5 @@ const areasSlice = createSlice({
 });
 
 export default areasSlice;
-export const { areasLoad, areasLoaded } = areasSlice.actions;
+export const { areaLoad, areaLoaded, areasLoad, areasLoaded } =
+  areasSlice.actions;
