@@ -1,6 +1,7 @@
 module.exports = {
   experimental: {
-    serverComponentsExternalPackages: ["mjml"],
+    esmExternals: "loose",
+    serverComponentsExternalPackages: ["mjml", "mongoose"],
   },
   images: {
     domains: [
