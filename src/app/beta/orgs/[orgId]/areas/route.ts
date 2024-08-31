@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { AreaModel } from 'features/areas/models';
 import { ZetkinArea } from 'features/areas/types';
+import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {
   params: {
@@ -11,33 +12,51 @@ type RouteMeta = {
 };
 
 export async function GET(request: NextRequest, { params }: RouteMeta) {
-  await mongoose.connect(process.env.MONGODB_URL || '');
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin', 'organizer'],
+    },
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
 
-  const areaModels = await AreaModel.find({ orgId: parseInt(params.orgId) });
-  const areas: ZetkinArea[] = areaModels.map((model) => ({
-    id: model._id.toString(),
-    points: model.points,
-  }));
+      const areaModels = await AreaModel.find({ orgId });
+      const areas: ZetkinArea[] = areaModels.map((model) => ({
+        id: model._id.toString(),
+        points: model.points,
+      }));
 
-  return Response.json({ data: areas });
+      return Response.json({ data: areas });
+    }
+  );
 }
 
 export async function POST(request: NextRequest, { params }: RouteMeta) {
-  await mongoose.connect(process.env.MONGODB_URL || '');
-
-  const payload = await request.json();
-
-  const model = new AreaModel({
-    orgId: parseInt(params.orgId),
-    points: payload.points,
-  });
-
-  await model.save();
-
-  return NextResponse.json({
-    data: {
-      id: model._id.toString(),
-      points: model.points,
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
     },
-  });
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const payload = await request.json();
+
+      const model = new AreaModel({
+        orgId: orgId,
+        points: payload.points,
+      });
+
+      await model.save();
+
+      return NextResponse.json({
+        data: {
+          id: model._id.toString(),
+          points: model.points,
+        },
+      });
+    }
+  );
 }
