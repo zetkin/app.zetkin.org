@@ -15,6 +15,7 @@ import { Create } from '@mui/icons-material';
 import { PointData, ZetkinArea } from '../types';
 import useCreateArea from '../hooks/useCreateArea';
 import { useNumericRouteParams } from 'core/hooks';
+import AreaOverlay from './AreaOverlay';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -33,6 +34,9 @@ const Map: FC<MapProps> = ({ areas }) => {
   const reactFGref = useRef<FeatureGroup | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const drawingRef = useRef(false);
+  const [selectedId, setSelectedId] = useState('');
+
+  const selectedArea = areas.find((area) => area.id == selectedId);
 
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
@@ -67,7 +71,8 @@ const Map: FC<MapProps> = ({ areas }) => {
         </ButtonGroup>
       </Box>
 
-      <Box flexGrow={1}>
+      <Box flexGrow={1} position="relative">
+        {selectedArea && <AreaOverlay area={selectedArea} />}
         <MapContainer
           bounds={latLngBounds([54, 12], [56, 14])}
           style={{ height: '100%', width: '100%' }}
@@ -109,7 +114,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                         key={polygon.id}
                         eventHandlers={{
                           click: () => {
-                            alert('clicked polygon ' + polygon.id);
+                            setSelectedId(polygon.id);
                           },
                         }}
                         positions={polygon.points}
