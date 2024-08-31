@@ -8,7 +8,7 @@ import {
   TileLayer,
   useMap,
 } from 'react-leaflet';
-import { FeatureGroup, latLngBounds, Map as MapType } from 'leaflet';
+import { FeatureGroup, Map as MapType } from 'leaflet';
 import { Box, Button, ButtonGroup } from '@mui/material';
 import { Add, Close, Create, Remove, Save } from '@mui/icons-material';
 
@@ -35,6 +35,7 @@ const MapWrapper = ({
 
 const Map: FC<MapProps> = ({ areas }) => {
   const mapRef = useRef<MapType | null>(null);
+  const zoomedRef = useRef(false);
   const reactFGref = useRef<FeatureGroup | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const drawingRef = useRef(false);
@@ -51,6 +52,15 @@ const Map: FC<MapProps> = ({ areas }) => {
       ctr.style.cursor = drawingPoints ? 'crosshair' : '';
     }
   }, [drawingPoints]);
+
+  useEffect(() => {
+    if (!zoomedRef.current) {
+      const bounds = reactFGref.current?.getBounds();
+      if (bounds) {
+        mapRef.current?.fitBounds(bounds);
+      }
+    }
+  }, [areas]);
 
   function finishDrawing() {
     if (drawingPoints && drawingPoints.length > 2) {
@@ -129,8 +139,9 @@ const Map: FC<MapProps> = ({ areas }) => {
           <AreaOverlay area={selectedArea} onClose={() => setSelectedId('')} />
         )}
         <MapContainer
-          bounds={latLngBounds([54, 12], [56, 14])}
+          center={[0, 0]}
           style={{ height: '100%', width: '100%' }}
+          zoom={2}
           zoomControl={false}
         >
           <MapWrapper>
@@ -146,6 +157,10 @@ const Map: FC<MapProps> = ({ areas }) => {
                       [lat, lng],
                     ]);
                   }
+                });
+
+                map.on('zoom', () => {
+                  zoomedRef.current = true;
                 });
               }
 
