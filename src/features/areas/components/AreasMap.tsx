@@ -18,6 +18,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import AreaOverlay from './AreaOverlay';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -50,6 +51,14 @@ const Map: FC<MapProps> = ({ areas }) => {
       ctr.style.cursor = drawingPoints ? 'crosshair' : '';
     }
   }, [drawingPoints]);
+
+  function finishDrawing() {
+    if (drawingPoints && drawingPoints.length > 2) {
+      createArea({ points: drawingPoints });
+    }
+    setDrawingPoints(null);
+    drawingRef.current = false;
+  }
 
   return (
     <Box
@@ -105,9 +114,7 @@ const Map: FC<MapProps> = ({ areas }) => {
           {drawingPoints && drawingPoints.length > 2 && (
             <Button
               onClick={() => {
-                createArea({ points: drawingPoints });
-                setDrawingPoints(null);
-                drawingRef.current = false;
+                finishDrawing();
               }}
               startIcon={<Save />}
             >
@@ -158,6 +165,23 @@ const Map: FC<MapProps> = ({ areas }) => {
                         pathOptions={{ color: 'red' }}
                         positions={drawingPoints}
                       />
+                    )}
+                    {drawingPoints && drawingPoints.length > 0 && (
+                      <DivIconMarker position={drawingPoints[0]}>
+                        <Box
+                          onClick={(ev) => {
+                            ev.stopPropagation();
+                            finishDrawing();
+                          }}
+                          sx={{
+                            backgroundColor: 'red',
+                            borderRadius: '10px',
+                            height: 20,
+                            transform: 'translate(-25%, -25%)',
+                            width: 20,
+                          }}
+                        />
+                      </DivIconMarker>
                     )}
                     {areas.map((polygon) => (
                       <Polygon
