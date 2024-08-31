@@ -72,7 +72,9 @@ const Map: FC<MapProps> = ({ areas }) => {
       </Box>
 
       <Box flexGrow={1} position="relative">
-        {selectedArea && <AreaOverlay area={selectedArea} />}
+        {selectedArea && (
+          <AreaOverlay area={selectedArea} onClose={() => setSelectedId('')} />
+        )}
         <MapContainer
           bounds={latLngBounds([54, 12], [56, 14])}
           style={{ height: '100%', width: '100%' }}
