@@ -9,8 +9,8 @@ import {
   useMap,
 } from 'react-leaflet';
 import { FeatureGroup, latLngBounds, Map as MapType } from 'leaflet';
-import { Box, ButtonGroup, IconButton } from '@mui/material';
-import { Create } from '@mui/icons-material';
+import { Box, Button, ButtonGroup, IconButton } from '@mui/material';
+import { Add, Create, Remove } from '@mui/icons-material';
 
 import { PointData, ZetkinArea } from '../types';
 import useCreateArea from '../hooks/useCreateArea';
@@ -31,6 +31,7 @@ const MapWrapper = ({
 };
 
 const Map: FC<MapProps> = ({ areas }) => {
+  const mapRef = useRef<MapType | null>(null);
   const reactFGref = useRef<FeatureGroup | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const drawingRef = useRef(false);
@@ -51,6 +52,14 @@ const Map: FC<MapProps> = ({ areas }) => {
       }}
     >
       <Box>
+        <ButtonGroup variant="outlined">
+          <Button onClick={() => mapRef.current?.zoomIn()}>
+            <Add />
+          </Button>
+          <Button onClick={() => mapRef.current?.zoomOut()}>
+            <Remove />
+          </Button>
+        </ButtonGroup>
         <ButtonGroup>
           <IconButton
             onClick={() => {
@@ -78,9 +87,11 @@ const Map: FC<MapProps> = ({ areas }) => {
         <MapContainer
           bounds={latLngBounds([54, 12], [56, 14])}
           style={{ height: '100%', width: '100%' }}
+          zoomControl={false}
         >
           <MapWrapper>
             {(map) => {
+              mapRef.current = map;
               if (!map.hasEventListeners('click')) {
                 map.on('click', (evt) => {
                   if (drawingRef.current) {
