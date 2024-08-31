@@ -44,6 +44,13 @@ const Map: FC<MapProps> = ({ areas }) => {
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
 
+  useEffect(() => {
+    const ctr = mapRef.current?.getContainer();
+    if (ctr) {
+      ctr.style.cursor = drawingPoints ? 'crosshair' : '';
+    }
+  }, [drawingPoints]);
+
   return (
     <Box
       sx={{
