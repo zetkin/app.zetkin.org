@@ -5,4 +5,9 @@ export default makeMessages('feat.areas', {
     description: m('Empty description'),
     title: m('Untitled area'),
   },
+  tools: {
+    cancel: m('Cancel'),
+    draw: m('Draw'),
+    save: m('Save'),
+  },
 });

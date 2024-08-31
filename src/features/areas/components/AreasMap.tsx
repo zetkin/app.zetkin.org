@@ -1,5 +1,5 @@
 import 'leaflet/dist/leaflet.css';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import {
   FeatureGroup as FGComponent,
   MapContainer,
@@ -9,13 +9,15 @@ import {
   useMap,
 } from 'react-leaflet';
 import { FeatureGroup, latLngBounds, Map as MapType } from 'leaflet';
-import { Box, Button, ButtonGroup, IconButton } from '@mui/material';
-import { Add, Create, Remove } from '@mui/icons-material';
+import { Box, Button, ButtonGroup } from '@mui/material';
+import { Add, Close, Create, Remove, Save } from '@mui/icons-material';
 
 import { PointData, ZetkinArea } from '../types';
 import useCreateArea from '../hooks/useCreateArea';
 import { useNumericRouteParams } from 'core/hooks';
 import AreaOverlay from './AreaOverlay';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -51,8 +53,17 @@ const Map: FC<MapProps> = ({ areas }) => {
         width: '100%',
       }}
     >
-      <Box>
-        <ButtonGroup variant="outlined">
+      <Box
+        display="flex"
+        gap={1}
+        sx={{
+          left: '1rem',
+          position: 'absolute',
+          top: '1rem',
+          zIndex: 9999,
+        }}
+      >
+        <ButtonGroup variant="contained">
           <Button onClick={() => mapRef.current?.zoomIn()}>
             <Add />
           </Button>
@@ -60,23 +71,42 @@ const Map: FC<MapProps> = ({ areas }) => {
             <Remove />
           </Button>
         </ButtonGroup>
-        <ButtonGroup>
-          <IconButton
-            onClick={() => {
-              if (drawingPoints) {
-                if (drawingPoints.length > 2) {
-                  createArea({ points: drawingPoints });
-                }
-                setDrawingPoints(null);
-                drawingRef.current = false;
-              } else {
+
+        <ButtonGroup variant="contained">
+          {!drawingPoints && (
+            <Button
+              onClick={() => {
                 setDrawingPoints([]);
                 drawingRef.current = true;
-              }
-            }}
-          >
-            <Create color={drawingPoints ? 'primary' : 'secondary'} />
-          </IconButton>
+              }}
+              startIcon={<Create />}
+            >
+              <Msg id={messageIds.tools.draw} />
+            </Button>
+          )}
+          {drawingPoints && (
+            <Button
+              onClick={() => {
+                setDrawingPoints(null);
+                drawingRef.current = false;
+              }}
+              startIcon={<Close />}
+            >
+              <Msg id={messageIds.tools.cancel} />
+            </Button>
+          )}
+          {drawingPoints && drawingPoints.length > 2 && (
+            <Button
+              onClick={() => {
+                createArea({ points: drawingPoints });
+                setDrawingPoints(null);
+                drawingRef.current = false;
+              }}
+              startIcon={<Save />}
+            >
+              <Msg id={messageIds.tools.save} />
+            </Button>
+          )}
         </ButtonGroup>
       </Box>
 
