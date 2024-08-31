@@ -23,11 +23,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const areaModels = await AreaModel.find({ orgId });
       const areas: ZetkinArea[] = areaModels.map((model) => ({
+        description: model.description,
         id: model._id.toString(),
         organization: {
           id: orgId,
         },
         points: model.points,
+        title: model.title,
       }));
 
       return Response.json({ data: areas });
@@ -48,19 +50,23 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       const payload = await request.json();
 
       const model = new AreaModel({
+        description: payload.description,
         orgId: orgId,
         points: payload.points,
+        title: payload.title,
       });
 
       await model.save();
 
       return NextResponse.json({
         data: {
+          description: model.description,
           id: model._id.toString(),
           organization: {
             id: orgId,
           },
           points: model.points,
+          title: model.title,
         },
       });
     }
