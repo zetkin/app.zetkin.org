@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { FeatureGroup } from 'leaflet';
 import { FC, useEffect, useRef, useState } from 'react';
 import {
@@ -18,6 +18,7 @@ type Props = {
   onChangeDrawingPoints: (points: PointData[]) => void;
   onFinishDrawing: () => void;
   onSelectArea: (area: ZetkinArea) => void;
+  selectedId: string | null;
 };
 
 const MapRenderer: FC<Props> = ({
@@ -26,9 +27,11 @@ const MapRenderer: FC<Props> = ({
   onChangeDrawingPoints,
   onFinishDrawing,
   onSelectArea,
+  selectedId,
 }) => {
   const [zoomed, setZoomed] = useState(false);
   const reactFGref = useRef<FeatureGroup | null>(null);
+  const theme = useTheme();
 
   const map = useMapEvents({
     click: (evt) => {
@@ -94,17 +97,37 @@ const MapRenderer: FC<Props> = ({
             />
           </DivIconMarker>
         )}
-        {areas.map((area) => (
-          <Polygon
-            key={area.id}
-            eventHandlers={{
-              click: () => {
-                onSelectArea(area);
-              },
-            }}
-            positions={area.points}
-          />
-        ))}
+        {areas
+          .sort((a0, a1) => {
+            // Always render selected last, so that it gets
+            // rendered on top of the unselected ones in case
+            // there are overlaps.
+            if (a0.id == selectedId) {
+              return 1;
+            } else if (a1.id == selectedId) {
+              return -1;
+            }
+            return 0;
+          })
+          .map((area) => {
+            const color =
+              selectedId == '' || selectedId == area.id
+                ? theme.palette.primary.main
+                : theme.palette.secondary.main;
+
+            return (
+              <Polygon
+                key={area.id + color}
+                color={color}
+                eventHandlers={{
+                  click: () => {
+                    onSelectArea(area);
+                  },
+                }}
+                positions={area.points}
+              />
+            );
+          })}
       </FeatureGroupComponent>
     </>
   );
