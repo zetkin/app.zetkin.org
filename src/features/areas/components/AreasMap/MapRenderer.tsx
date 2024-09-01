@@ -116,21 +116,27 @@ const MapRenderer: FC<Props> = ({
             return 0;
           })
           .map((area) => {
-            const color =
-              selectedId == '' || selectedId == area.id
-                ? theme.palette.primary.main
-                : theme.palette.secondary.main;
+            const selected = selectedId == area.id;
+
+            // The key changes when selected, to force redraw of polygon
+            // to reflect new state through visual style
+            const key = area.id + (selected ? '-selected' : '-default');
 
             return (
               <Polygon
-                key={area.id + color}
-                color={color}
+                key={key}
+                color={
+                  selected
+                    ? theme.palette.primary.main
+                    : theme.palette.secondary.main
+                }
                 eventHandlers={{
                   click: () => {
                     onSelectArea(area);
                   },
                 }}
                 positions={area.points}
+                weight={selected ? 5 : 2}
               />
             );
           })}
