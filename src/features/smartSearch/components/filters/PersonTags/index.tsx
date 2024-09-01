@@ -153,7 +153,7 @@ const PersonTags = ({
                     minMatchingInput: (
                       <StyledNumberInput
                         inputProps={{
-                          max: tags.length,
+                          max: selectedTags.length,
                           min: '1',
                         }}
                         onChange={(e) =>
