@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/material';
-import { FeatureGroup } from 'leaflet';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FeatureGroup, Map } from 'leaflet';
+import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import {
   FeatureGroup as FeatureGroupComponent,
   Polygon,
@@ -15,6 +15,7 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 type Props = {
   areas: ZetkinArea[];
   drawingPoints: PointData[] | null;
+  mapRef: MutableRefObject<Map | null>;
   onChangeDrawingPoints: (points: PointData[]) => void;
   onFinishDrawing: () => void;
   onSelectArea: (area: ZetkinArea) => void;
@@ -24,6 +25,7 @@ type Props = {
 const MapRenderer: FC<Props> = ({
   areas,
   drawingPoints,
+  mapRef,
   onChangeDrawingPoints,
   onFinishDrawing,
   onSelectArea,
@@ -48,6 +50,10 @@ const MapRenderer: FC<Props> = ({
   });
 
   const isDrawing = !!drawingPoints;
+
+  useEffect(() => {
+    mapRef.current = map;
+  }, [map]);
 
   useEffect(() => {
     const ctr = map.getContainer();

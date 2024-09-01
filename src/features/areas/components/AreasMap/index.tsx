@@ -1,5 +1,5 @@
 import 'leaflet/dist/leaflet.css';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { MapContainer } from 'react-leaflet';
 import {
   Autocomplete,
@@ -9,7 +9,8 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { Close, Create, Save } from '@mui/icons-material';
+import { Add, Close, Create, Remove, Save } from '@mui/icons-material';
+import { Map as MapType } from 'leaflet';
 
 import { PointData, ZetkinArea } from '../../types';
 import useCreateArea from '../../hooks/useCreateArea';
@@ -25,6 +26,7 @@ interface MapProps {
 
 const Map: FC<MapProps> = ({ areas }) => {
   const messages = useMessages(messageIds);
+  const mapRef = useRef<MapType | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
@@ -77,19 +79,17 @@ const Map: FC<MapProps> = ({ areas }) => {
           position: 'absolute',
           right: '1rem',
           top: '1rem',
-          zIndex: 9999,
+          zIndex: 999,
         }}
       >
         <Box alignItems="center" display="flex" gap={1}>
           <ButtonGroup variant="contained">
-            {/*
             <Button onClick={() => mapRef.current?.zoomIn()}>
               <Add />
             </Button>
             <Button onClick={() => mapRef.current?.zoomOut()}>
               <Remove />
             </Button>
-            */}
           </ButtonGroup>
 
           <ButtonGroup variant="contained">
@@ -176,6 +176,7 @@ const Map: FC<MapProps> = ({ areas }) => {
           <MapRenderer
             areas={filteredAreas}
             drawingPoints={drawingPoints}
+            mapRef={mapRef}
             onChangeDrawingPoints={(points) => setDrawingPoints(points)}
             onFinishDrawing={() => finishDrawing()}
             onSelectArea={(area) => setSelectedId(area.id)}
