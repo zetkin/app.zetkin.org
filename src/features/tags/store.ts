@@ -38,9 +38,7 @@ const tagsSlice = createSlice({
         state.tagsByPersonId[personId].items.push(
           remoteItem(tag.id, { data: tag })
         );
-      }
-
-      if (state.tagsByPersonId[personId]) {
+      } else {
         const item = state.tagsByPersonId[personId].items.find(
           (item) => item.id == tag.id
         );
