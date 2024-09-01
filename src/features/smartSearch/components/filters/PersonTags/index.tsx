@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react';
 import { Box, Chip, MenuItem } from '@mui/material';
+import { FormEvent, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledItemSelect from 'features/smartSearch/components/inputs/StyledItemSelect';
@@ -19,9 +19,8 @@ import {
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
-const localMessageIds = messageIds.filters.personTags;
 
-const MIN_MATCHING = 'min_matching';
+const localMessageIds = messageIds.filters.personTags;
 
 interface PersonTagsProps {
   filter:
@@ -50,7 +49,7 @@ const PersonTags = ({
       tags: [],
     });
 
-  const [selected, setSelected] = useState<CONDITION_OPERATOR | 'min_matching'>(
+  const [selected, setSelected] = useState<CONDITION_OPERATOR>(
     filter.config.condition
   );
 
@@ -73,21 +72,20 @@ const PersonTags = ({
   };
 
   const handleConditionChange = (conditionValue: string) => {
-    if (conditionValue === MIN_MATCHING) {
+    if (conditionValue === CONDITION_OPERATOR.SOME) {
       setConfig({
         ...filter.config,
-        condition: CONDITION_OPERATOR.ANY,
+        condition: CONDITION_OPERATOR.SOME,
         min_matching: 1,
       });
-      setSelected(MIN_MATCHING);
     } else {
       setConfig({
         ...filter.config,
         condition: conditionValue as CONDITION_OPERATOR,
         min_matching: undefined,
       });
-      setSelected(conditionValue as CONDITION_OPERATOR);
     }
+    setSelected(conditionValue as CONDITION_OPERATOR);
   };
 
   const handleTagChange = (tags: { id: number; title: string }[]) => {
@@ -111,9 +109,6 @@ const PersonTags = ({
           <Msg id={localMessageIds.condition.conditionSelect[o]} />
         </MenuItem>
       ))}
-      <MenuItem key={MIN_MATCHING} value={MIN_MATCHING}>
-        <Msg id={localMessageIds.condition.conditionSelect.minMatching} />
-      </MenuItem>
     </StyledSelect>
   );
 
@@ -150,9 +145,9 @@ const PersonTags = ({
               </StyledSelect>
             ),
             condition:
-              selected == 'min_matching' ? (
+              selected == 'some' ? (
                 <Msg
-                  id={localMessageIds.condition.edit.minMatching}
+                  id={localMessageIds.condition.edit.some}
                   values={{
                     conditionSelect,
                     minMatchingInput: (
@@ -164,7 +159,7 @@ const PersonTags = ({
                         onChange={(e) =>
                           setConfig({
                             ...filter.config,
-                            condition: CONDITION_OPERATOR.ANY,
+                            condition: CONDITION_OPERATOR.SOME,
                             min_matching: +e.target.value || undefined,
                           })
                         }
