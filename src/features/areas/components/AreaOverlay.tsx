@@ -2,6 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { Close } from '@mui/icons-material';
 import {
   Box,
+  Button,
   ClickAwayListener,
   Divider,
   Link,
@@ -15,15 +16,24 @@ import useAreaMutations from '../hooks/useAreaMutations';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 type Props = {
   area: ZetkinArea;
+  editing: boolean;
+  onBeginEdit: () => void;
+  onCancelEdit: () => void;
   onClose: () => void;
 };
 
-const AreaOverlay: FC<Props> = ({ area, onClose }) => {
+const AreaOverlay: FC<Props> = ({
+  area,
+  editing,
+  onBeginEdit,
+  onCancelEdit,
+  onClose,
+}) => {
   const [title, setTitle] = useState(area.title);
   const [description, setDescription] = useState(area.description);
   const [fieldEditing, setFieldEditing] = useState<
@@ -57,6 +67,8 @@ const AreaOverlay: FC<Props> = ({ area, onClose }) => {
     <Paper
       sx={{
         bottom: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
         minWidth: 400,
         padding: 2,
         position: 'absolute',
@@ -159,11 +171,38 @@ const AreaOverlay: FC<Props> = ({ area, onClose }) => {
         </Box>
       </ClickAwayListener>
       <Divider />
-      <Typography>
-        <Link href={href} target="_blank">
-          {hostAndPath}
-        </Link>
-      </Typography>
+      <Box flexGrow={1}>
+        <Typography>
+          <Link href={href} target="_blank">
+            {hostAndPath}
+          </Link>
+        </Typography>
+      </Box>
+      <Box display="flex" gap={1}>
+        {editing && (
+          <>
+            <Button
+              onClick={() => {
+                updateArea({
+                  points: area.points,
+                });
+                onCancelEdit();
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.overlay.buttons.save} />
+            </Button>
+            <Button onClick={() => onCancelEdit()} variant="outlined">
+              <Msg id={messageIds.overlay.buttons.cancel} />
+            </Button>
+          </>
+        )}
+        {!editing && (
+          <Button onClick={() => onBeginEdit()} variant="outlined">
+            <Msg id={messageIds.overlay.buttons.edit} />
+          </Button>
+        )}
+      </Box>
     </Paper>
   );
 };

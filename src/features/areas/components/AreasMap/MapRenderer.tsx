@@ -15,7 +15,9 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 type Props = {
   areas: ZetkinArea[];
   drawingPoints: PointData[] | null;
+  editingArea: ZetkinArea | null;
   mapRef: MutableRefObject<Map | null>;
+  onChangeArea: (area: ZetkinArea) => void;
   onChangeDrawingPoints: (points: PointData[]) => void;
   onFinishDrawing: () => void;
   onSelectArea: (area: ZetkinArea) => void;
@@ -25,7 +27,9 @@ type Props = {
 const MapRenderer: FC<Props> = ({
   areas,
   drawingPoints,
+  editingArea,
   mapRef,
+  onChangeArea,
   onChangeDrawingPoints,
   onFinishDrawing,
   onSelectArea,
@@ -103,7 +107,43 @@ const MapRenderer: FC<Props> = ({
             />
           </DivIconMarker>
         )}
+        {!!editingArea && (
+          <Polygon
+            key={'editing'}
+            color={theme.palette.primary.main}
+            positions={editingArea.points}
+            weight={5}
+          />
+        )}
+        {editingArea?.points?.map((point, index) => {
+          return (
+            <DivIconMarker
+              key={index}
+              draggable
+              eventHandlers={{
+                dragend: (evt) => {
+                  onChangeArea({
+                    ...editingArea,
+                    points: editingArea.points.map((oldPoint, oldIndex) =>
+                      oldIndex == index ? evt.target.getLatLng() : oldPoint
+                    ),
+                  });
+                },
+              }}
+              position={point}
+            >
+              <Box
+                sx={{
+                  bgcolor: theme.palette.primary.main,
+                  height: 14,
+                  width: 14,
+                }}
+              />
+            </DivIconMarker>
+          );
+        })}
         {areas
+          .filter((area) => area.id != editingArea?.id)
           .sort((a0, a1) => {
             // Always render selected last, so that it gets
             // rendered on top of the unselected ones in case

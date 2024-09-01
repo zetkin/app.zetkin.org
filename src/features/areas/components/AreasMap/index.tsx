@@ -30,6 +30,7 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
+  const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
 
   const selectedArea = areas.find((area) => area.id == selectedId);
 
@@ -165,7 +166,13 @@ const Map: FC<MapProps> = ({ areas }) => {
 
       <Box flexGrow={1} position="relative">
         {selectedArea && (
-          <AreaOverlay area={selectedArea} onClose={() => setSelectedId('')} />
+          <AreaOverlay
+            area={editingArea || selectedArea}
+            editing={!!editingArea}
+            onBeginEdit={() => setEditingArea(selectedArea)}
+            onCancelEdit={() => setEditingArea(null)}
+            onClose={() => setSelectedId('')}
+          />
         )}
         <MapContainer
           center={[0, 0]}
@@ -176,7 +183,9 @@ const Map: FC<MapProps> = ({ areas }) => {
           <MapRenderer
             areas={filteredAreas}
             drawingPoints={drawingPoints}
+            editingArea={editingArea}
             mapRef={mapRef}
+            onChangeArea={(area) => setEditingArea(area)}
             onChangeDrawingPoints={(points) => setDrawingPoints(points)}
             onFinishDrawing={() => finishDrawing()}
             onSelectArea={(area) => setSelectedId(area.id)}
