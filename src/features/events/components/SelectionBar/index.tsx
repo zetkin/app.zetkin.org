@@ -10,15 +10,53 @@ import { resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
 import useParticipantPool from 'features/events/hooks/useParticipantPool';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 
 const SelectionBar = () => {
   const dispatch = useAppDispatch();
   const [participantsDialogOpen, setParticipantsDialogOpen] = useState(false);
   const { affectedParticipantIds } = useParticipantPool();
+  const eventList = useAppSelector((state) => state.events.eventList);
   const selectedEventIds = useAppSelector(
     (state: RootState) => state.events.selectedEventIds
   );
+  const { orgId } = useNumericRouteParams();
+
+  const handleOpenEventList = () => {
+    const filteredEvents = eventList.items
+      .filter(
+        (item) => item.data?.id && selectedEventIds.includes(item.data.id)
+      )
+      .map((x) => x.data);
+
+    const endDates = filteredEvents.map((x) => x?.end_time);
+    const startDates = filteredEvents.map((x) => x?.start_time);
+
+    const minDate = startDates.reduce((min, current) => {
+      const currentDate = new Date(current || '');
+      const minDate = new Date(min || '');
+      return currentDate < minDate ? current : min;
+    });
+
+    const maxDate = endDates.reduce((min, current) => {
+      const currentDate = new Date(current || '');
+      const minDate = new Date(min || '');
+      return currentDate < minDate ? current : min;
+    });
+
+    window
+      .open(
+        `/organize/${orgId}/projects/eventlist?minDate=${minDate}&maxDate=${maxDate}&ids=${selectedEventIds.join(
+          ','
+        )}`,
+        '_blank'
+      )
+      ?.focus();
+  };
 
   const handleDeselect = () => {
     dispatch(resetSelection());
@@ -68,6 +106,10 @@ const SelectionBar = () => {
                 gap={1}
                 justifyContent="center"
               >
+                <Button onClick={handleOpenEventList} variant="text">
+                  <Msg id={messageIds.selectionBar.openEventList} />
+                </Button>
+
                 <Badge
                   badgeContent={affectedParticipantIds.length}
                   color="primary"

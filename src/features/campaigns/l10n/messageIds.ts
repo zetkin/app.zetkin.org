@@ -123,6 +123,7 @@ export default makeMessages('feat.campaigns', {
     allCampaigns: m('All Projects & Activities'),
     archive: m('Archive'),
     calendar: m('Calendar'),
+    eventList: m('Event List'),
     insights: m('Insights'),
     overview: m('Overview'),
   },

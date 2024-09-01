@@ -126,6 +126,7 @@ feat:
         moveMenuHeader: Move {numberOfEvents} events to
         nextDay: Next day {dates}
         nextWeek: Next week {dates}
+      openEventList: Make questionnaire
     shortWeek: w {weekNumber}
     showMore: Show
     today: Today
