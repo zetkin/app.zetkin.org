@@ -8,6 +8,7 @@ export default makeMessages('feat.areas', {
   overlay: {
     buttons: {
       cancel: m('Cancel'),
+      delete: m('Delete'),
       edit: m('Edit'),
       save: m('Save'),
     },

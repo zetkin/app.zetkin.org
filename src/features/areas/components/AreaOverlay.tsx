@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Close } from '@mui/icons-material';
 import {
   Box,
@@ -18,6 +18,8 @@ import ZUIPreviewableInput, {
 } from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 type Props = {
   area: ZetkinArea;
@@ -39,8 +41,12 @@ const AreaOverlay: FC<Props> = ({
   const [fieldEditing, setFieldEditing] = useState<
     'title' | 'description' | null
   >(null);
-  const { updateArea } = useAreaMutations(area.organization.id, area.id);
+  const { deleteArea, updateArea } = useAreaMutations(
+    area.organization.id,
+    area.id
+  );
   const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const handleDescriptionTextAreaRef = useCallback(
     (el: HTMLTextAreaElement | null) => {
@@ -74,7 +80,7 @@ const AreaOverlay: FC<Props> = ({
         position: 'absolute',
         right: '1rem',
         top: '1rem',
-        zIndex: 9999,
+        zIndex: 1000,
       }}
     >
       <ClickAwayListener
@@ -198,9 +204,25 @@ const AreaOverlay: FC<Props> = ({
           </>
         )}
         {!editing && (
-          <Button onClick={() => onBeginEdit()} variant="outlined">
-            <Msg id={messageIds.overlay.buttons.edit} />
-          </Button>
+          <>
+            <Button onClick={() => onBeginEdit()} variant="outlined">
+              <Msg id={messageIds.overlay.buttons.edit} />
+            </Button>
+            <ZUIEllipsisMenu
+              items={[
+                {
+                  label: messages.overlay.buttons.delete(),
+                  onSelect: () => {
+                    showConfirmDialog({
+                      onSubmit: () => {
+                        deleteArea();
+                      },
+                    });
+                  },
+                },
+              ]}
+            />
+          </>
         )}
       </Box>
     </Paper>
