@@ -51,3 +51,19 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
     }
   );
 }
+
+export async function DELETE(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async () => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+      await AreaModel.findOneAndDelete({ _id: params.areaId });
+
+      return new NextResponse(null, { status: 204 });
+    }
+  );
+}

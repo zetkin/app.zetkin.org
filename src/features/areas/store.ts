@@ -29,6 +29,12 @@ const areasSlice = createSlice({
 
       state.areaList.items.push(item);
     },
+    areaDeleted: (state, action: PayloadAction<string>) => {
+      const deletedId = action.payload;
+      state.areaList.items = state.areaList.items.filter(
+        (item) => item.id != deletedId
+      );
+    },
     areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
       const item = findOrAddItem(state.areaList, area.id);
@@ -50,5 +56,5 @@ const areasSlice = createSlice({
 });
 
 export default areasSlice;
-export const { areaCreated, areaUpdated, areasLoad, areasLoaded } =
+export const { areaCreated, areaDeleted, areaUpdated, areasLoad, areasLoaded } =
   areasSlice.actions;
