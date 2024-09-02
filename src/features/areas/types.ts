@@ -1,6 +1,13 @@
 export type PointData = [number, number];
 
 export type ZetkinArea = {
-  id: number;
+  description: string | null;
+  id: string;
+  organization: {
+    id: number;
+  };
   points: PointData[];
+  title: string | null;
 };
+
+export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;

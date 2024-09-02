@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  findOrAddItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import { ZetkinArea } from './types';
 
 export interface AreasStoreSlice {
@@ -15,6 +20,21 @@ const areasSlice = createSlice({
   initialState: initialState,
   name: 'areas',
   reducers: {
+    areaCreated: (state, action: PayloadAction<ZetkinArea>) => {
+      const area = action.payload;
+      const item = remoteItem(area.id, {
+        data: area,
+        loaded: new Date().toISOString(),
+      });
+
+      state.areaList.items.push(item);
+    },
+    areaDeleted: (state, action: PayloadAction<string>) => {
+      const deletedId = action.payload;
+      state.areaList.items = state.areaList.items.filter(
+        (item) => item.id != deletedId
+      );
+    },
     areaLoad: (state, action: PayloadAction<number>) => {
       const areaId = action.payload;
       const item = state.areaList.items.find((item) => item.id == areaId);
@@ -39,6 +59,13 @@ const areasSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
+      const area = action.payload;
+      const item = findOrAddItem(state.areaList, area.id);
+
+      item.data = area;
+      item.loaded = new Date().toISOString();
+    },
     areasLoad: (state) => {
       state.areaList.isLoading = true;
     },
@@ -53,5 +80,12 @@ const areasSlice = createSlice({
 });
 
 export default areasSlice;
-export const { areaLoad, areaLoaded, areasLoad, areasLoaded } =
-  areasSlice.actions;
+export const {
+  areaCreated,
+  areaDeleted,
+  areaLoad,
+  areaLoaded,
+  areasLoad,
+  areasLoaded,
+  areaUpdated,
+} = areasSlice.actions;
