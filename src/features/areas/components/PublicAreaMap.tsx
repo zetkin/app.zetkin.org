@@ -11,7 +11,7 @@ type PublicAreaMapProps = {
 const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   return (
     <MapContainer
-      bounds={latLngBounds([54, 12], [56, 14])}
+      bounds={latLngBounds(area.points)}
       style={{ height: '100%', width: '100%' }}
     >
       <TileLayer
