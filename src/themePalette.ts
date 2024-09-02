@@ -1,7 +1,9 @@
+import { alpha } from '@mui/material/styles';
+
 const palette = {
   basic: {
-    black: '000000',
-    white: 'FFFFFF',
+    black: '#000000',
+    white: '#FFFFFF',
   },
   blue: {
     [100]: '#DFEBFA',
@@ -44,11 +46,11 @@ const palette = {
     [950]: '#252525',
   },
   purple: {
-    [100]: '#C189EF',
-    [200]: '#AE66EA',
-    [300]: '#9D46E6',
-    [400]: '#7800DC',
-    [50]: '#E4CCF8',
+    [100]: '#E4CCF8',
+    [300]: '#C189EF',
+    [500]: '#AE66EA',
+    [700]: '#9D46E6',
+    [900]: '#7800DC',
   },
   red: {
     [100]: '#FCE4E4',
@@ -79,6 +81,146 @@ const palette = {
 } as const;
 
 const chipColors = {
+  aqua: {
+    dark: {
+      color: '#187F81',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#93E9EB',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#28D4D7',
+      contrast: palette.basic.white,
+    },
+  },
+  blue1: {
+    dark: {
+      color: '#147F8F',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#90E9F7',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#22D3EE',
+      contrast: palette.basic.white,
+    },
+  },
+  blue2: {
+    dark: {
+      color: '#014F77',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#B3DAEE',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#0284C7',
+      contrast: palette.basic.white,
+    },
+  },
+  blue3: {
+    dark: {
+      color: '#163B8D',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#BED0F9',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#2563EB',
+      contrast: palette.basic.white,
+    },
+  },
+  green1: {
+    dark: {
+      color: '#628A20',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#D1F39A',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#A3E635',
+      contrast: palette.basic.white,
+    },
+  },
+  green2: {
+    dark: {
+      color: '#478837',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#BBF1AD',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#77E25B',
+      contrast: palette.basic.white,
+    },
+  },
+  green3: {
+    dark: {
+      color: '#2C854D',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#A4EFBF',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#4ADE80',
+      contrast: palette.basic.white,
+    },
+  },
+  indigo: {
+    dark: {
+      color: '#2F2A89',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#CAC7F7',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#4F46E5',
+      contrast: palette.basic.white,
+    },
+  },
+  lime1: {
+    dark: {
+      color: '#858013',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#EEEA8F',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#DDD520',
+      contrast: palette.basic.white,
+    },
+  },
+  lime2: {
+    dark: {
+      color: '#73851A',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#DFEF95',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#C0DE2B',
+      contrast: palette.basic.white,
+    },
+  },
   orange1: {
     dark: {
       color: '#88260F',
@@ -107,6 +249,104 @@ const chipColors = {
       contrast: palette.basic.white,
     },
   },
+  orange3: {
+    dark: {
+      color: '#883E05',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#F3C39D',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#E26809',
+      contrast: palette.basic.white,
+    },
+  },
+  pink: {
+    dark: {
+      color: '#831747',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#F1A9C9',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#DB2777',
+      contrast: palette.basic.white,
+    },
+  },
+  purple1: {
+    dark: {
+      color: '#4A238E',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#D8C4FA',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#7C3AED',
+      contrast: palette.basic.white,
+    },
+  },
+  purple2: {
+    dark: {
+      color: '#581F8C',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#DFC2F9',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#9333EA',
+      contrast: palette.basic.white,
+    },
+  },
+  purple3: {
+    dark: {
+      color: '#661B86',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#E5C0F5',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#AA2DDF',
+      contrast: palette.basic.white,
+    },
+  },
+  purple4: {
+    dark: {
+      color: '#73177F',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#E6A8ED',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#C026D3',
+      contrast: palette.basic.white,
+    },
+  },
+  purple5: {
+    dark: {
+      color: '#7C1763',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#EBA9DB',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#CE27A5',
+      contrast: palette.basic.white,
+    },
+  },
   red1: {
     dark: {
       color: '#841717',
@@ -121,14 +361,213 @@ const chipColors = {
       contrast: palette.basic.white,
     },
   },
+  red2: {
+    dark: {
+      color: '#87112B',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#F3A5B6',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#E11D48',
+      contrast: palette.basic.white,
+    },
+  },
+  turquoise1: {
+    dark: {
+      color: '#1F7F5C',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#99E9CC',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#34D399',
+      contrast: palette.basic.white,
+    },
+  },
+  turquoise2: {
+    dark: {
+      color: '#1B7F73',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#96E9DF',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#2DD4BF',
+      contrast: palette.basic.white,
+    },
+  },
+  yellow1: {
+    dark: {
+      color: '#97651D',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#FDD497',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#FBA930',
+      contrast: palette.basic.white,
+    },
+  },
+  yellow2: {
+    dark: {
+      color: '#977316',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#FDDF91',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#FBBF24',
+      contrast: palette.basic.white,
+    },
+  },
+  yellow3: {
+    dark: {
+      color: '#967A0D',
+      contrast: palette.basic.white,
+    },
+    light: {
+      color: '#FDE58A',
+      contrast: palette.basic.black,
+    },
+    medium: {
+      color: '#FACC15',
+      contrast: palette.basic.white,
+    },
+  },
 } as const;
 
+//TO-DO: remove statusColors and viewColumnGallery properties
 export const themePalette = {
+  activityStatusColors: {
+    cancelled: palette.grey[500],
+    closed: palette.grey[200],
+    draft: palette.yellow[400],
+    ended: palette.grey[200],
+    published: palette.green[600],
+    scheduled: palette.blue[600],
+  },
+  background: {
+    default: palette.grey[25],
+    paper: palette.basic.white,
+  },
+  basic: {
+    black: palette.basic.black,
+    white: palette.basic.white,
+  },
   chipColors: chipColors,
+  common: {
+    black: palette.grey[950],
+    white: palette.basic.white,
+  },
+  data: {
+    final: palette.purple[100],
+    main: palette.purple[900],
+    mid1: palette.purple[700],
+    mid2: palette.purple[500],
+    mid3: palette.purple[300],
+  },
+  divider: '#E0E0E0',
+  dividerLighter: '#F0F0F0',
+  error: {
+    contrastText: palette.basic.white,
+    dark: palette.red[800],
+    light: palette.red[400],
+    main: palette.red[600],
+  },
+  filterCategoryColors: {
+    darkBlue: { pale: chipColors.blue3.light, strong: chipColors.blue3.medium },
+    green: { pale: chipColors.green1.light, strong: chipColors.green1.medium },
+    lightBlue: { pale: chipColors.aqua.light, strong: chipColors.aqua.medium },
+    orange: {
+      pale: chipColors.yellow1.light,
+      strong: chipColors.yellow1.medium,
+    },
+    pink: { pale: chipColors.pink.light, strong: chipColors.pink.medium },
+    purple: {
+      pale: chipColors.purple3.light,
+      strong: chipColors.purple3.medium,
+    },
+    red: { pale: chipColors.red1.light, strong: chipColors.red1.medium },
+    teal: {
+      pale: chipColors.turquoise1.light,
+      strong: chipColors.turquoise1.medium,
+    },
+    yellow: {
+      pale: chipColors.yellow3.light,
+      strong: chipColors.yellow3.medium,
+    },
+  },
+  info: {
+    contrastText: palette.basic.white,
+    dark: palette.blue[800],
+    light: palette.blue[400],
+    main: palette.blue[600],
+  },
+  onSurface: {
+    disabled: '#231F2061',
+    high: '#231F20DE',
+    medium: '#231F2099',
+  },
+  outline: {
+    main: alpha(palette.basic.black, 0.12),
+  },
   palette: palette,
   primary: {
+    contrastText: palette.basic.white,
     dark: palette.basic.black,
+    focus: alpha(palette.grey[950], 0.12),
+    focusVisible: alpha(palette.grey[950], 0.3),
+    hover: alpha(palette.grey[950], 0.04),
     light: palette.grey[600],
     main: palette.grey[950],
+    outlinedBorder: alpha(palette.grey[950], 0.5),
+    selected: alpha(palette.grey[950], 0.08),
+  },
+  secondary: {
+    light: palette.grey[400],
+    main: palette.grey[500],
+  },
+  statusColors: {
+    blue: 'rgba(25, 118, 210, 1)',
+    gray: alpha(palette.basic.black, 0.12),
+    green: 'rgba(102, 187, 106, 1)',
+    orange: 'rgba(245, 124, 0, 1)',
+    red: 'rgba(239, 83, 80, 1)',
+  },
+  success: {
+    contrastText: palette.basic.white,
+    dark: palette.green[800],
+    light: palette.green[400],
+    main: palette.green[600],
+  },
+  text: {
+    disabled: palette.grey[400],
+    primary: palette.grey[950],
+    secondary: palette.grey[500],
+  },
+  transparentGrey: {
+    light: alpha(palette.basic.black, 0.04),
+  },
+  viewColumnGallery: {
+    blue: '#1976D2',
+    purple: '#BA68C8',
+    red: '#ED1C55',
+  },
+  warning: {
+    contrastText: palette.basic.white,
+    dark: palette.yellow[600],
+    light: palette.yellow[200],
+    main: palette.yellow[400],
   },
 } as const;
