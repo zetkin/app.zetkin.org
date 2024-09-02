@@ -11,7 +11,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 const PublicAreaMap = dynamic(() => import('./PublicAreaMap'), { ssr: false });
 
 type AreaPageProps = {
-  areaId: number;
+  areaId: string;
   orgId: number;
 };
 

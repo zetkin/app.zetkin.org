@@ -11,5 +11,5 @@ interface PageProps {
 
 export default function Page({ params }: PageProps) {
   const { orgId, areaId } = params;
-  return <AreaPage areaId={parseInt(areaId)} orgId={parseInt(orgId)} />;
+  return <AreaPage areaId={areaId} orgId={parseInt(orgId)} />;
 }

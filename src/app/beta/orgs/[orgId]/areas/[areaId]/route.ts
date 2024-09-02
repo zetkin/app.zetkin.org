@@ -12,28 +12,35 @@ type RouteMeta = {
   };
 };
 
-export function GET() {
-  const area: ZetkinArea = {
-    description: null,
-    id: '2',
-    organization: {
-      id: 1,
+export async function GET(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin', 'organizer'],
     },
-    points: [
-      [55.59361532349994, 12.977986335754396],
-      [55.5914203134015, 12.97790050506592],
-      [55.59045010406615, 12.977342605590822],
-      [55.59007414150065, 12.979617118835451],
-      [55.58915241158536, 12.983243465423586],
-      [55.589698175333524, 12.983586788177492],
-      [55.59359106991554, 12.983479499816896],
-    ],
-    title: null,
-  };
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
 
-  return Response.json({
-    data: area,
-  });
+      const areaModel = await AreaModel.findOne({ _id: params.areaId, orgId });
+
+      if (!areaModel) {
+        return new NextResponse(null, { status: 404 });
+      }
+
+      const area: ZetkinArea = {
+        description: areaModel.description,
+        id: areaModel._id.toString(),
+        organization: {
+          id: orgId,
+        },
+        points: areaModel.points,
+        title: areaModel.title,
+      };
+
+      return Response.json({ data: area });
+    }
+  );
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteMeta) {

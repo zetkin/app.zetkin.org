@@ -3,7 +3,7 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { areaLoad, areaLoaded } from '../store';
 import { ZetkinArea } from '../types';
 
-export default function useArea(orgId: number, areaId: number) {
+export default function useArea(orgId: number, areaId: string) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const areaItems = useAppSelector((state) => state.areas.areaList.items);

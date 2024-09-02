@@ -35,7 +35,7 @@ const areasSlice = createSlice({
         (item) => item.id != deletedId
       );
     },
-    areaLoad: (state, action: PayloadAction<number>) => {
+    areaLoad: (state, action: PayloadAction<string>) => {
       const areaId = action.payload;
       const item = state.areaList.items.find((item) => item.id == areaId);
 
