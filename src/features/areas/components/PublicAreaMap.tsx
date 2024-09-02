@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
 import { latLngBounds } from 'leaflet';
+import { useTheme } from '@mui/material';
 
 import { ZetkinArea } from '../types';
 
@@ -9,6 +10,7 @@ type PublicAreaMapProps = {
 };
 
 const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
+  const theme = useTheme();
   return (
     <MapContainer
       bounds={latLngBounds(area.points)}
@@ -18,7 +20,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Polygon positions={area.points} />
+      <Polygon color={theme.palette.primary.main} positions={area.points} />
     </MapContainer>
   );
 };
