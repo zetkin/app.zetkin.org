@@ -145,10 +145,6 @@ interface DataColor {
 
 declare module '@mui/material/styles/createPalette' {
   interface PaletteColor {
-    contrastText: string;
-    dark: string;
-    light: string;
-    main: string;
     focus?: string;
     focusVisible?: string;
     hover?: string;
@@ -201,6 +197,13 @@ declare module '@mui/material/styles/createPalette' {
     dividerLighter?: string;
     onSurface: PaletteIntensityOptions;
     outline: PaletteIntensityOptions;
+  }
+  interface SimplePaletteColorOptions {
+    focus?: string;
+    focusVisible?: string;
+    hover?: string;
+    outlinedBorder?: string;
+    selected?: string;
   }
 }
 
