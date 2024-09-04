@@ -42,7 +42,7 @@ const ClientContext: FC<ClientContextProps> = ({
   messages,
   user,
 }) => {
-  const env = new Environment(store, new BrowserApiClient(), envVars);
+  const env = new Environment(new BrowserApiClient(), envVars);
   return (
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>
