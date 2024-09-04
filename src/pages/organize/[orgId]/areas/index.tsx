@@ -9,6 +9,7 @@ import useAreas from 'features/areas/hooks/useAreas';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
 import hasFeature from 'utils/featureFlags/hasFeature';
+import { AREAS } from 'utils/featureFlags';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -16,7 +17,7 @@ const scaffoldOptions = {
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
-  const hasAreas = hasFeature('AREAS', parseInt(orgId as string), process.env);
+  const hasAreas = hasFeature(AREAS, parseInt(orgId as string), process.env);
 
   if (!hasAreas) {
     return {

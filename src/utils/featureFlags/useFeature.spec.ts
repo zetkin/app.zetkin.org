@@ -35,7 +35,7 @@ describe('useFeature()', () => {
     const opts = getOptsWithEnvVars({
       FEAT_AREAS: '1',
     });
-    const { result } = renderHook(() => useFeature('AREAS', 1), opts);
+    const { result } = renderHook(() => useFeature('FEAT_AREAS', 1), opts);
     expect(result.current).toBeTruthy();
   });
 
@@ -43,7 +43,7 @@ describe('useFeature()', () => {
     const opts = getOptsWithEnvVars({
       FEAT_AREAS: '1,2,3',
     });
-    const { result } = renderHook(() => useFeature('AREAS', 2), opts);
+    const { result } = renderHook(() => useFeature('FEAT_AREAS', 2), opts);
     expect(result.current).toBeTruthy();
   });
 
@@ -51,7 +51,7 @@ describe('useFeature()', () => {
     const opts = getOptsWithEnvVars({
       FEAT_AREAS: '1,2,3',
     });
-    const { result } = renderHook(() => useFeature('AREAS', 4), opts);
+    const { result } = renderHook(() => useFeature('FEAT_AREAS', 4), opts);
     expect(result.current).toBeFalsy();
   });
 
@@ -61,7 +61,7 @@ describe('useFeature()', () => {
       const opts = getOptsWithEnvVars({
         FEAT_AREAS: '*',
       });
-      const { result } = renderHook(() => useFeature('AREAS', 1), opts);
+      const { result } = renderHook(() => useFeature('FEAT_AREAS', 1), opts);
       expect(result.current).toBeTruthy();
     }
   );

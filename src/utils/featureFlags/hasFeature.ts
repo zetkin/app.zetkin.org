@@ -3,7 +3,7 @@ export default function hasFeature(
   orgId: number,
   envVars: Record<string, string | undefined>
 ): boolean {
-  const envValue = envVars['FEAT_' + featureLabel];
+  const envValue = envVars[featureLabel];
 
   const settings = envValue?.split(',') || [];
 

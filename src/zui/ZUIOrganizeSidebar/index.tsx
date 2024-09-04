@@ -43,6 +43,7 @@ import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import useFeature from 'utils/featureFlags/useFeature';
+import { AREAS } from 'utils/featureFlags';
 
 const drawerWidth = 300;
 
@@ -94,7 +95,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [open, setOpen] = useState(lastOpen);
   const [searchString, setSearchString] = useState('');
   const organizationFuture = useOrganization(orgId);
-  const hasAreas = useFeature('AREAS', orgId);
+  const hasAreas = useFeature(AREAS, orgId);
 
   const handleExpansion = () => {
     setChecked(!checked);
