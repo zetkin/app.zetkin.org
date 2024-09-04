@@ -9,6 +9,7 @@ import { ZetkinArea } from '../types';
 import useAreaMutations from '../hooks/useAreaMutations';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 
 const useStyles = makeStyles((theme) => ({
   counter: {
@@ -19,6 +20,16 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     width: '100%',
     zIndex: 1000,
+  },
+  number: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: '2em',
+    display: 'flex',
+    height: 30,
+    justifyContent: 'center',
+    transform: 'translate(-20%, -60%)',
+    width: 30,
   },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
@@ -65,9 +76,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         >
           <Msg id={messageIds.activityCounter.button} />
         </Button>
-        <Box bgcolor="white" padding={1}>
-          {area.numberOfActions}
-        </Box>
       </Box>
       <MapContainer
         ref={mapRef}
@@ -81,6 +89,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Polygon color={theme.palette.primary.main} positions={area.points} />
+        <DivIconMarker position={latLngBounds(area.points).getCenter()}>
+          <Box className={classes.number}>{area.numberOfActions}</Box>
+        </DivIconMarker>
       </MapContainer>
     </>
   );
