@@ -4,6 +4,7 @@ import { ZetkinArea } from './types';
 
 type IZetkinModel = {
   description: string | null;
+  numberOfActions: number;
   orgId: number;
   points: ZetkinArea['points'];
   title: string | null;
@@ -11,6 +12,7 @@ type IZetkinModel = {
 
 const areaSchema = new mongoose.Schema<IZetkinModel>({
   description: String,
+  numberOfActions: Number,
   orgId: { required: true, type: Number },
   points: Array,
   title: String,

@@ -31,6 +31,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const area: ZetkinArea = {
         description: areaModel.description,
         id: areaModel._id.toString(),
+        numberOfActions: areaModel.numberOfActions,
         organization: {
           id: orgId,
         },
@@ -59,6 +60,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         { _id: params.areaId },
         {
           description: payload.description,
+          numberOfActions: payload.numberOfActions,
           points: payload.points,
           title: payload.title,
         },
@@ -73,6 +75,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         data: {
           description: model.description,
           id: model._id.toString(),
+          numberOfActions: model.numberOfActions,
           organization: {
             id: orgId,
           },

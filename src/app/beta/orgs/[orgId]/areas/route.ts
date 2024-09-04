@@ -25,6 +25,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const areas: ZetkinArea[] = areaModels.map((model) => ({
         description: model.description,
         id: model._id.toString(),
+        numberOfActions: model.numberOfActions,
         organization: {
           id: orgId,
         },
@@ -51,6 +52,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const model = new AreaModel({
         description: payload.description,
+        numberOfActions: 0,
         orgId: orgId,
         points: payload.points,
         title: payload.title,
@@ -62,6 +64,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         data: {
           description: model.description,
           id: model._id.toString(),
+          numberOfActions: model.numberOfActions,
           organization: {
             id: orgId,
           },

@@ -175,6 +175,7 @@ const Map: FC<MapProps> = ({ areas }) => {
           />
         )}
         <MapContainer
+          ref={mapRef}
           center={[0, 0]}
           style={{ height: '100%', width: '100%' }}
           zoom={2}
@@ -184,7 +185,6 @@ const Map: FC<MapProps> = ({ areas }) => {
             areas={filteredAreas}
             drawingPoints={drawingPoints}
             editingArea={editingArea}
-            mapRef={mapRef}
             onChangeArea={(area) => setEditingArea(area)}
             onChangeDrawingPoints={(points) => setDrawingPoints(points)}
             onFinishDrawing={() => finishDrawing()}

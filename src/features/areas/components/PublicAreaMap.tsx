@@ -1,13 +1,25 @@
-import { FC, useState } from 'react';
+import { FC, useRef } from 'react';
 import { latLngBounds, Map } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { Add, Remove } from '@mui/icons-material';
-import { Box, Divider, IconButton, useTheme } from '@mui/material';
+import { Box, Button, Divider, IconButton, useTheme } from '@mui/material';
 import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
 
 import { ZetkinArea } from '../types';
+import useAreaMutations from '../hooks/useAreaMutations';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
+  counter: {
+    bottom: 15,
+    display: 'flex',
+    gap: 8,
+    padding: 8,
+    position: 'absolute',
+    width: '100%',
+    zIndex: 1000,
+  },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
     borderRadius: 2,
@@ -27,23 +39,38 @@ type PublicAreaMapProps = {
 const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const theme = useTheme();
   const classes = useStyles();
-  const [map, setMap] = useState<Map | null>(null);
+  const mapRef = useRef<Map | null>(null);
+  const { updateArea } = useAreaMutations(area.organization.id, area.id);
 
   return (
     <>
-      {map && (
-        <Box className={classes.zoomControls}>
-          <IconButton onClick={() => map.zoomIn()}>
-            <Add />
-          </IconButton>
-          <Divider flexItem variant="fullWidth" />
-          <IconButton onClick={() => map.zoomOut()}>
-            <Remove />
-          </IconButton>
+      <Box className={classes.zoomControls}>
+        <IconButton onClick={() => mapRef.current?.zoomIn()}>
+          <Add />
+        </IconButton>
+        <Divider flexItem variant="fullWidth" />
+        <IconButton onClick={() => mapRef.current?.zoomOut()}>
+          <Remove />
+        </IconButton>
+      </Box>
+      <Box className={classes.counter}>
+        <Button
+          fullWidth
+          onClick={() =>
+            updateArea({
+              numberOfActions: area.numberOfActions + 1,
+            })
+          }
+          variant="contained"
+        >
+          <Msg id={messageIds.activityCounter.button} />
+        </Button>
+        <Box bgcolor="white" padding={1}>
+          {area.numberOfActions}
         </Box>
-      )}
+      </Box>
       <MapContainer
-        ref={setMap}
+        ref={mapRef}
         bounds={latLngBounds(area.points)}
         minZoom={1}
         style={{ height: '100%', width: '100%' }}
