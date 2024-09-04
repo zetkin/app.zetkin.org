@@ -2,7 +2,14 @@ import { FC, useRef } from 'react';
 import { latLngBounds, Map } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { Add, Remove } from '@mui/icons-material';
-import { Box, Button, Divider, IconButton, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  IconButton,
+  useTheme,
+} from '@mui/material';
 import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
 
 import { ZetkinArea } from '../types';
@@ -65,17 +72,32 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         </IconButton>
       </Box>
       <Box className={classes.counter}>
-        <Button
-          fullWidth
-          onClick={() =>
-            updateArea({
-              numberOfActions: area.numberOfActions + 1,
-            })
-          }
-          variant="contained"
-        >
-          <Msg id={messageIds.activityCounter.button} />
-        </Button>
+        <ButtonGroup fullWidth>
+          <Button
+            disabled={area.numberOfActions == 0}
+            onClick={() => {
+              if (area.numberOfActions > 0) {
+                updateArea({
+                  numberOfActions: area.numberOfActions - 1,
+                });
+              }
+            }}
+            sx={{ width: '20%' }}
+            variant="contained"
+          >
+            <Remove />
+          </Button>
+          <Button
+            onClick={() =>
+              updateArea({
+                numberOfActions: area.numberOfActions + 1,
+              })
+            }
+            variant="contained"
+          >
+            <Msg id={messageIds.activityCounter.button} />
+          </Button>
+        </ButtonGroup>
       </Box>
       <MapContainer
         ref={mapRef}
