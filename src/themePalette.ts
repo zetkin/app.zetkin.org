@@ -18,6 +18,10 @@ const palette = {
     [900]: '#2C417C',
     [950]: '#1F294C',
   },
+  divider: {
+    lighter: '#F0F0F0',
+    main: '#E0E0E0',
+  },
   green: {
     [100]: '#DDFBE7',
     [200]: '#BDF5D1',
@@ -92,7 +96,7 @@ const chipColors = {
     },
     medium: {
       color: '#28D4D7',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   blue1: {
@@ -106,7 +110,7 @@ const chipColors = {
     },
     medium: {
       color: '#22D3EE',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   blue2: {
@@ -148,7 +152,7 @@ const chipColors = {
     },
     medium: {
       color: '#A3E635',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   green2: {
@@ -162,7 +166,7 @@ const chipColors = {
     },
     medium: {
       color: '#77E25B',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   green3: {
@@ -176,7 +180,7 @@ const chipColors = {
     },
     medium: {
       color: '#4ADE80',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   indigo: {
@@ -204,7 +208,7 @@ const chipColors = {
     },
     medium: {
       color: '#DDD520',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   lime2: {
@@ -217,8 +221,8 @@ const chipColors = {
       contrast: palette.basic.black,
     },
     medium: {
-      color: '#C0DE2B',
-      contrast: palette.basic.white,
+      color: '#',
+      contrast: palette.basic.black,
     },
   },
   orange1: {
@@ -386,7 +390,7 @@ const chipColors = {
     },
     medium: {
       color: '#34D399',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   turquoise2: {
@@ -400,7 +404,7 @@ const chipColors = {
     },
     medium: {
       color: '#2DD4BF',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   yellow1: {
@@ -414,7 +418,7 @@ const chipColors = {
     },
     medium: {
       color: '#FBA930',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   yellow2: {
@@ -428,7 +432,7 @@ const chipColors = {
     },
     medium: {
       color: '#FBBF24',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
   yellow3: {
@@ -442,12 +446,11 @@ const chipColors = {
     },
     medium: {
       color: '#FACC15',
-      contrast: palette.basic.white,
+      contrast: palette.basic.black,
     },
   },
 } as const;
 
-//TO-DO: remove statusColors and viewColumnGallery properties
 export const themePalette = {
   activityStatusColors: {
     cancelled: palette.grey[500],
@@ -461,24 +464,20 @@ export const themePalette = {
     default: palette.grey[25],
     paper: palette.basic.white,
   },
-  basic: {
-    black: palette.basic.black,
-    white: palette.basic.white,
-  },
   chipColors: chipColors,
   common: {
     black: palette.grey[950],
     white: palette.basic.white,
   },
   data: {
-    final: palette.purple[100],
-    main: palette.purple[900],
-    mid1: palette.purple[700],
-    mid2: palette.purple[500],
-    mid3: palette.purple[300],
+    [100]: palette.purple[100],
+    [300]: palette.purple[300],
+    [500]: palette.purple[500],
+    [700]: palette.purple[700],
+    [900]: palette.purple[900],
   },
-  divider: '#E0E0E0',
-  dividerLighter: '#F0F0F0',
+  divider: palette.divider.main,
+  dividerLighter: palette.divider.lighter,
   error: {
     contrastText: palette.basic.white,
     dark: palette.red[800],
@@ -514,11 +513,13 @@ export const themePalette = {
     light: palette.blue[400],
     main: palette.blue[600],
   },
+  //TO-DO remove property and implement similar colors from our palette
   onSurface: {
     disabled: '#231F2061',
     high: '#231F20DE',
     medium: '#231F2099',
   },
+  //TO-DO remove property and implement similar colors from our palette
   outline: {
     main: alpha(palette.basic.black, 0.12),
   },
@@ -538,6 +539,7 @@ export const themePalette = {
     light: palette.grey[400],
     main: palette.grey[500],
   },
+  //TO-DO remove property and implement similar colors from our palette
   statusColors: {
     blue: 'rgba(25, 118, 210, 1)',
     gray: alpha(palette.basic.black, 0.12),
@@ -556,9 +558,11 @@ export const themePalette = {
     primary: palette.grey[950],
     secondary: palette.grey[500],
   },
+  //TO-DO remove property and implement similar colors from our palette
   transparentGrey: {
     light: alpha(palette.basic.black, 0.04),
   },
+  //TO-DO remove property and implement similar colors from our palette
   viewColumnGallery: {
     blue: '#1976D2',
     purple: '#BA68C8',
