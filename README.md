@@ -21,7 +21,7 @@ Also see [TESTING.md](./TESTING.md) for details about automated testing.
 ### Windows
 
 1. Fork zetkin/app.zetking.org into your personal GitHub account.
-1. Install Git for Windows from https://git-scm.com/download/win
+1. Install Git from https://git-scm.com/download
 2. Generate an SSH key, for example with
    Git Gui / Help / Show SSH Key / Generate Key
 3. Add your key to GitHub by copying the public part of it to
