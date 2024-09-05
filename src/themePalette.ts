@@ -515,13 +515,13 @@ export const themePalette = {
   },
   //TO-DO remove property and implement similar colors from our palette
   onSurface: {
-    disabled: '#231F2061',
-    high: '#231F20DE',
-    medium: '#231F2099',
+    disabled: chipColors.purple4.medium.color,
+    high: chipColors.purple4.medium.color,
+    medium: chipColors.purple4.medium.color,
   },
   //TO-DO remove property and implement similar colors from our palette
   outline: {
-    main: alpha(palette.basic.black, 0.12),
+    main: chipColors.purple4.medium.color,
   },
   palette: palette,
   primary: {
@@ -541,11 +541,11 @@ export const themePalette = {
   },
   //TO-DO remove property and implement similar colors from our palette
   statusColors: {
-    blue: 'rgba(25, 118, 210, 1)',
-    gray: alpha(palette.basic.black, 0.12),
-    green: 'rgba(102, 187, 106, 1)',
-    orange: 'rgba(245, 124, 0, 1)',
-    red: 'rgba(239, 83, 80, 1)',
+    blue: chipColors.purple4.medium.color,
+    gray: chipColors.purple4.medium.color,
+    green: chipColors.purple4.medium.color,
+    orange: chipColors.purple4.medium.color,
+    red: chipColors.purple4.medium.color,
   },
   success: {
     contrastText: palette.basic.white,
@@ -564,9 +564,9 @@ export const themePalette = {
   },
   //TO-DO remove property and implement similar colors from our palette
   viewColumnGallery: {
-    blue: '#1976D2',
-    purple: '#BA68C8',
-    red: '#ED1C55',
+    blue: chipColors.purple4.medium.color,
+    purple: chipColors.purple4.medium.color,
+    red: chipColors.purple4.medium.color,
   },
   warning: {
     contrastText: palette.basic.white,
