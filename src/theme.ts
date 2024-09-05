@@ -136,11 +136,11 @@ declare module '@mui/material/styles' {
 }
 
 interface DataColor {
-  final: string;
-  main: string;
-  mid1: string;
-  mid2: string;
-  mid3: string;
+  [100]: string;
+  [300]: string;
+  [500]: string;
+  [700]: string;
+  [900]: string;
 }
 
 declare module '@mui/material/styles/createPalette' {
@@ -152,7 +152,9 @@ declare module '@mui/material/styles/createPalette' {
     selected?: string;
   }
   interface Palette {
+    //TO-DO remove property once the old Palette is removed
     onSurface: Required<PaletteIntensityOptions>;
+    //TO-DO remove property once the old Palette is removed
     outline: PaletteIntensityOptions;
     filterCategoryColors: {
       darkBlue: FilterCategoryColors;
@@ -176,6 +178,7 @@ declare module '@mui/material/styles/createPalette' {
       published: string;
       scheduled: string;
     };
+    //TO-DO remove property once the old Palette is removed
     statusColors: {
       blue: string;
       gray: string;
@@ -183,9 +186,11 @@ declare module '@mui/material/styles/createPalette' {
       orange: string;
       red: string;
     };
+    //TO-DO remove property once the old Palette is removed
     transparentGrey: {
       light: string;
     };
+    //TO-DO remove property once the old Palette is removed
     viewColumnGallery: {
       blue: string;
       purple: string;
@@ -195,7 +200,9 @@ declare module '@mui/material/styles/createPalette' {
   interface PaletteOptions {
     data?: DataColor;
     dividerLighter?: string;
+    //TO-DO remove property
     onSurface: PaletteIntensityOptions;
+    //TO-DO remove property
     outline: PaletteIntensityOptions;
   }
   interface SimplePaletteColorOptions {
