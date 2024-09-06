@@ -2,17 +2,7 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { latLngBounds, Map } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  IconButton,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Box, Button, Divider, IconButton, useTheme } from '@mui/material';
 import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
 
 import { ZetkinArea } from '../types';
@@ -22,16 +12,6 @@ import messageIds from '../l10n/messageIds';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 
 const useStyles = makeStyles((theme) => ({
-  areaNumber: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: '2em',
-    display: 'flex',
-    height: 30,
-    justifyContent: 'center',
-    transform: 'translate(-20%, -60%)',
-    width: 30,
-  },
   counter: {
     bottom: 15,
     display: 'flex',
@@ -47,15 +27,6 @@ const useStyles = makeStyles((theme) => ({
     top: '40vh',
     transform: 'translate(-50%, -50%)',
     transition: 'opacity 0.1s',
-    zIndex: 2000,
-  },
-  markerNumber: {
-    bottom: -14,
-    color: 'blue',
-    left: '100%',
-    position: 'absolute',
-    textAlign: 'center',
-    transform: 'translate(-50%)',
     zIndex: 2000,
   },
   zoomControls: {
@@ -77,11 +48,10 @@ type PublicAreaMapProps = {
 const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const theme = useTheme();
   const classes = useStyles();
-  const mapRef = useRef<Map | null>(null);
-  const [mode, setMode] = useState<'area' | 'markers'>('area');
   const { updateArea } = useAreaMutations(area.organization.id, area.id);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
+  const mapRef = useRef<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
 
   const updateSelection = useCallback(() => {
@@ -89,7 +59,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
     let nearestDistance = Infinity;
 
     const map = mapRef.current;
-
     const crosshair = crosshairRef.current;
 
     if (map && crosshair) {
@@ -151,88 +120,50 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           <Remove />
         </IconButton>
       </Box>
-      {mode == 'markers' && (
-        <Box position="relative">
-          <Box
-            ref={crosshairRef}
-            className={classes.crosshair}
-            sx={{
-              opacity: selectedIndex < 0 ? 1 : 0.3,
-            }}
-          >
-            <GpsNotFixed />
-          </Box>
+      <Box position="relative">
+        <Box
+          ref={crosshairRef}
+          className={classes.crosshair}
+          sx={{
+            opacity: selectedIndex < 0 ? 1 : 0.3,
+          }}
+        >
+          <GpsNotFixed />
         </Box>
-      )}
+      </Box>
       <Box className={classes.counter}>
-        <ToggleButtonGroup
-          color="primary"
-          exclusive
-          onChange={(ev, newMode) => {
-            if (newMode != null) {
-              setMode(newMode);
+        <Button
+          onClick={() => {
+            const crosshair = crosshairRef.current;
+            const mapContainer = mapRef.current?.getContainer();
+            if (crosshair && mapContainer) {
+              const mapRect = mapContainer.getBoundingClientRect();
+              const markerRect = crosshair.getBoundingClientRect();
+              const x = markerRect.x - mapRect.x;
+              const y = markerRect.y - mapRect.y;
+              const markerPoint: [number, number] = [
+                x + 0.5 * markerRect.width,
+                y + 0.8 * markerRect.height,
+              ];
+
+              const point = mapRef.current?.containerPointToLatLng(markerPoint);
+              if (point) {
+                updateArea({
+                  markers: [
+                    ...area.markers,
+                    {
+                      numberOfActions: 1,
+                      position: point,
+                    },
+                  ],
+                });
+              }
             }
           }}
-          sx={{ backgroundColor: theme.palette.background.default }}
+          variant="contained"
         >
-          <ToggleButton value="area">Area</ToggleButton>
-          <ToggleButton value="markers">Markers</ToggleButton>
-        </ToggleButtonGroup>
-        <ButtonGroup fullWidth>
-          <Button
-            disabled={area.numberOfActions == 0}
-            onClick={() => {
-              if (area.numberOfActions > 0) {
-                updateArea({
-                  numberOfActions: area.numberOfActions - 1,
-                });
-              }
-            }}
-            sx={{ width: '20%' }}
-            variant="contained"
-          >
-            <Remove />
-          </Button>
-          <Button
-            onClick={() => {
-              if (mode == 'markers') {
-                const crosshair = crosshairRef.current;
-                const mapContainer = mapRef.current?.getContainer();
-                if (crosshair && mapContainer) {
-                  const mapRect = mapContainer.getBoundingClientRect();
-                  const markerRect = crosshair.getBoundingClientRect();
-                  const x = markerRect.x - mapRect.x;
-                  const y = markerRect.y - mapRect.y;
-                  const markerPoint: [number, number] = [
-                    x + 0.5 * markerRect.width,
-                    y + 0.8 * markerRect.height,
-                  ];
-
-                  const point =
-                    mapRef.current?.containerPointToLatLng(markerPoint);
-                  if (point) {
-                    updateArea({
-                      markers: [
-                        ...area.markers,
-                        {
-                          numberOfActions: 1,
-                          position: point,
-                        },
-                      ],
-                    });
-                  }
-                }
-              } else {
-                updateArea({
-                  numberOfActions: area.numberOfActions + 1,
-                });
-              }
-            }}
-            variant="contained"
-          >
-            <Msg id={messageIds.activityCounter.button} />
-          </Button>
-        </ButtonGroup>
+          <Msg id={messageIds.activityCounter.button} />
+        </Button>
       </Box>
       <MapContainer
         ref={mapRef}
@@ -246,32 +177,23 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Polygon color={theme.palette.primary.main} positions={area.points} />
-        {mode == 'area' && (
-          <DivIconMarker position={latLngBounds(area.points).getCenter()}>
-            <Box className={classes.areaNumber}>{area.numberOfActions}</Box>
-          </DivIconMarker>
-        )}
-        {mode == 'markers' && (
-          <>
-            {area.markers.map((marker, index) => {
-              const selected = index == selectedIndex;
-              const key = `marker-${index}-${selected.toString()}`;
+        <>
+          {area.markers.map((marker, index) => {
+            const selected = index == selectedIndex;
+            const key = `marker-${index}-${selected.toString()}`;
 
-              return (
-                <DivIconMarker
-                  key={key}
-                  iconAnchor={[11, 33]}
-                  position={{
-                    lat: marker.position.lat,
-                    lng: marker.position.lng,
-                  }}
-                >
-                  <Box className={classes.markerNumber}>
-                    <Typography>{marker.numberOfActions}</Typography>
-                  </Box>
-                  <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
-                    <path
-                      d="M14 38.479C13.6358 38.0533 13.1535 37.4795
+            return (
+              <DivIconMarker
+                key={key}
+                iconAnchor={[11, 33]}
+                position={{
+                  lat: marker.position.lat,
+                  lng: marker.position.lng,
+                }}
+              >
+                <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
+                  <path
+                    d="M14 38.479C13.6358 38.0533 13.1535 37.4795
            12.589 36.7839C11.2893 35.1826 9.55816 32.9411
             7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
             3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
@@ -280,16 +202,15 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
             35.1826 15.411 36.7839C14.8465 37.4795 14.3642
             38.0533 14 38.479Z"
-                      fill={selected ? '#ED1C55' : 'white'}
-                      stroke="#ED1C55"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </DivIconMarker>
-              );
-            })}
-          </>
-        )}
+                    fill={selected ? '#ED1C55' : 'white'}
+                    stroke="#ED1C55"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </DivIconMarker>
+            );
+          })}
+        </>
       </MapContainer>
     </>
   );
