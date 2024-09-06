@@ -1,9 +1,7 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.areas', {
-  activityCounter: {
-    button: m('Add activity'),
-  },
+  addNewPlaceButton: m('Add new place'),
   empty: {
     description: m('Empty description'),
     title: m('Untitled area'),

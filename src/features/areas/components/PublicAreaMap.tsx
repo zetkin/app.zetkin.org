@@ -12,10 +12,11 @@ import messageIds from '../l10n/messageIds';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 
 const useStyles = makeStyles((theme) => ({
-  counter: {
+  actionAreaContainer: {
     bottom: 15,
     display: 'flex',
     gap: 8,
+    justifyContent: 'center',
     padding: 8,
     position: 'absolute',
     width: '100%',
@@ -131,39 +132,42 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           <GpsNotFixed />
         </Box>
       </Box>
-      <Box className={classes.counter}>
-        <Button
-          onClick={() => {
-            const crosshair = crosshairRef.current;
-            const mapContainer = mapRef.current?.getContainer();
-            if (crosshair && mapContainer) {
-              const mapRect = mapContainer.getBoundingClientRect();
-              const markerRect = crosshair.getBoundingClientRect();
-              const x = markerRect.x - mapRect.x;
-              const y = markerRect.y - mapRect.y;
-              const markerPoint: [number, number] = [
-                x + 0.5 * markerRect.width,
-                y + 0.8 * markerRect.height,
-              ];
+      <Box className={classes.actionAreaContainer}>
+        {selectedIndex < 0 && (
+          <Button
+            onClick={() => {
+              const crosshair = crosshairRef.current;
+              const mapContainer = mapRef.current?.getContainer();
+              if (crosshair && mapContainer) {
+                const mapRect = mapContainer.getBoundingClientRect();
+                const markerRect = crosshair.getBoundingClientRect();
+                const x = markerRect.x - mapRect.x;
+                const y = markerRect.y - mapRect.y;
+                const markerPoint: [number, number] = [
+                  x + 0.5 * markerRect.width,
+                  y + 0.8 * markerRect.height,
+                ];
 
-              const point = mapRef.current?.containerPointToLatLng(markerPoint);
-              if (point) {
-                updateArea({
-                  markers: [
-                    ...area.markers,
-                    {
-                      numberOfActions: 1,
-                      position: point,
-                    },
-                  ],
-                });
+                const point =
+                  mapRef.current?.containerPointToLatLng(markerPoint);
+                if (point) {
+                  updateArea({
+                    markers: [
+                      ...area.markers,
+                      {
+                        numberOfActions: 1,
+                        position: point,
+                      },
+                    ],
+                  });
+                }
               }
-            }
-          }}
-          variant="contained"
-        >
-          <Msg id={messageIds.activityCounter.button} />
-        </Button>
+            }}
+            variant="contained"
+          >
+            <Msg id={messageIds.addNewPlaceButton} />
+          </Button>
+        )}
       </Box>
       <MapContainer
         ref={mapRef}
