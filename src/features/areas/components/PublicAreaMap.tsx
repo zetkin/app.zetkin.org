@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { latLngBounds, Map } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: '40vh',
     transform: 'translate(-50%, -50%)',
+    transition: 'opacity 0.1s',
     zIndex: 2000,
   },
   markerNumber: {
@@ -83,51 +84,61 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
   const crosshairRef = useRef<HTMLDivElement | null>(null);
 
+  const updateSelection = useCallback(() => {
+    let nearestIndex = -1;
+    let nearestDistance = Infinity;
+
+    const map = mapRef.current;
+
+    const crosshair = crosshairRef.current;
+
+    if (map && crosshair) {
+      const mapContainer = map.getContainer();
+      const markerRect = crosshair.getBoundingClientRect();
+      const mapRect = mapContainer.getBoundingClientRect();
+      const x = markerRect.x - mapRect.x;
+      const y = markerRect.y - mapRect.y;
+      const markerX = x + 0.5 * markerRect.width;
+      const markerY = y + 0.5 * markerRect.height;
+
+      area.markers.forEach((marker, index) => {
+        const screenPos = map.latLngToContainerPoint(marker.position);
+        const dx = screenPos.x - markerX;
+        const dy = screenPos.y - markerY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < nearestDistance) {
+          nearestDistance = dist;
+          nearestIndex = index;
+        }
+      });
+
+      if (nearestDistance < 20) {
+        if (nearestIndex != selectedIndex) {
+          setSelectedIndex(nearestIndex);
+        }
+      } else {
+        setSelectedIndex(-1);
+      }
+    }
+  }, [mapRef.current, selectedIndex, area]);
+
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
       map.on('move', () => {
-        let nearestIndex = -1;
-        let nearestDistance = Infinity;
-
-        const crosshair = crosshairRef.current;
-        const mapContainer = mapRef.current?.getContainer();
-
-        if (crosshair && mapContainer) {
-          const markerRect = crosshair.getBoundingClientRect();
-          const mapRect = mapContainer.getBoundingClientRect();
-          const x = markerRect.x - mapRect.x;
-          const y = markerRect.y - mapRect.y;
-          const markerX = x + 0.5 * markerRect.width;
-          const markerY = y + 0.5 * markerRect.height;
-
-          area.markers.forEach((marker, index) => {
-            const screenPos = map.latLngToContainerPoint(marker.position);
-            const dx = screenPos.x - markerX;
-            const dy = screenPos.y - markerY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < nearestDistance) {
-              nearestDistance = dist;
-              nearestIndex = index;
-            }
-          });
-
-          if (nearestDistance < 20) {
-            if (nearestIndex != selectedIndex) {
-              setSelectedIndex(nearestIndex);
-            }
-          } else {
-            setSelectedIndex(-1);
-          }
-        }
+        updateSelection();
       });
 
       return () => {
         map.off('move');
       };
     }
-  }, [mapRef.current, selectedIndex]);
+  }, [mapRef.current, selectedIndex, area]);
+
+  useEffect(() => {
+    updateSelection();
+  }, [area.markers]);
 
   return (
     <>
@@ -142,8 +153,14 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       </Box>
       {mode == 'markers' && (
         <Box position="relative">
-          <Box ref={crosshairRef} className={classes.crosshair}>
-            {selectedIndex < 0 && <GpsNotFixed />}
+          <Box
+            ref={crosshairRef}
+            className={classes.crosshair}
+            sx={{
+              opacity: selectedIndex < 0 ? 1 : 0.3,
+            }}
+          >
+            <GpsNotFixed />
           </Box>
         </Box>
       )}
