@@ -50,6 +50,13 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%)',
     zIndex: 2000,
   },
+  pendingMarker: {
+    left: '50%',
+    position: 'absolute',
+    top: '40vh',
+    transform: 'translate(-50%, -80%)',
+    zIndex: 2000,
+  },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
     borderRadius: 2,
@@ -73,6 +80,8 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const [mode, setMode] = useState<'area' | 'markers'>('area');
   const { updateArea } = useAreaMutations(area.organization.id, area.id);
 
+  const pendingMarkerRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <>
       <Box className={classes.zoomControls}>
@@ -84,6 +93,28 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           <Remove />
         </IconButton>
       </Box>
+      {mode == 'markers' && (
+        <Box position="relative">
+          <Box ref={pendingMarkerRef} className={classes.pendingMarker}>
+            <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
+              <path
+                d="M14 38.479C13.6358 38.0533 13.1535 37.4795
+           12.589 36.7839C11.2893 35.1826 9.55816 32.9411
+            7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
+            3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
+            6.81228 6.81228 1 14 1C21.1877 1 27 6.81228 27 14C27
+            16.4227 26.1867 19.211 24.8999 22.0833C23.6189 24.9426
+            21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
+            35.1826 15.411 36.7839C14.8465 37.4795 14.3642
+            38.0533 14 38.479Z"
+                fill="red"
+                stroke="#ED1C55"
+                strokeWidth="2"
+              />
+            </svg>
+          </Box>
+        </Box>
+      )}
       <Box className={classes.counter}>
         <ToggleButtonGroup
           color="primary"
@@ -94,7 +125,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             }
           }}
           sx={{ backgroundColor: theme.palette.background.default }}
-          value={mode}
         >
           <ToggleButton value="area">Area</ToggleButton>
           <ToggleButton value="markers">Markers</ToggleButton>
@@ -115,11 +145,40 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             <Remove />
           </Button>
           <Button
-            onClick={() =>
-              updateArea({
-                numberOfActions: area.numberOfActions + 1,
-              })
-            }
+            onClick={() => {
+              if (mode == 'markers') {
+                const pendingMarker = pendingMarkerRef.current;
+                const mapContainer = mapRef.current?.getContainer();
+                if (pendingMarker && mapContainer) {
+                  const mapRect = mapContainer.getBoundingClientRect();
+                  const markerRect = pendingMarker.getBoundingClientRect();
+                  const x = markerRect.x - mapRect.x;
+                  const y = markerRect.y - mapRect.y;
+                  const markerPoint: [number, number] = [
+                    x + 0.5 * markerRect.width,
+                    y + 0.8 * markerRect.height,
+                  ];
+
+                  const point =
+                    mapRef.current?.containerPointToLatLng(markerPoint);
+                  if (point) {
+                    updateArea({
+                      markers: [
+                        ...area.markers,
+                        {
+                          numberOfActions: 1,
+                          position: point,
+                        },
+                      ],
+                    });
+                  }
+                }
+              } else {
+                updateArea({
+                  numberOfActions: area.numberOfActions + 1,
+                });
+              }
+            }}
             variant="contained"
           >
             <Msg id={messageIds.activityCounter.button} />
