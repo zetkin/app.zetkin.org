@@ -19,4 +19,5 @@ export default makeMessages('feat.areas', {
     draw: m('Draw'),
     save: m('Save'),
   },
+  viewPlaceButton: m('View place'),
 });

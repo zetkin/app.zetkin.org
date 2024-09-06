@@ -2,7 +2,14 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { latLngBounds, Map } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
-import { Box, Button, Divider, IconButton, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  IconButton,
+  useTheme,
+} from '@mui/material';
 import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
 
 import { ZetkinArea } from '../types';
@@ -28,7 +35,16 @@ const useStyles = makeStyles((theme) => ({
     top: '40vh',
     transform: 'translate(-50%, -50%)',
     transition: 'opacity 0.1s',
-    zIndex: 2000,
+    zIndex: 1200,
+  },
+  infoButtons: {
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.grey[300]}`,
+    borderRadius: '4px',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '8px',
+    width: '90%',
   },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
@@ -51,9 +67,12 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const classes = useStyles();
   const { updateArea } = useAreaMutations(area.organization.id, area.id);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const mapRef = useRef<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
+
+  const showViewPlaceButton = selectedIndex > 0 && !anchorEl;
 
   const updateSelection = useCallback(() => {
     let nearestIndex = -1;
@@ -133,6 +152,16 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         </Box>
       </Box>
       <Box className={classes.actionAreaContainer}>
+        {showViewPlaceButton && (
+          <Box className={classes.infoButtons}>
+            <Button
+              onClick={(ev) => setAnchorEl(ev.currentTarget)}
+              variant="outlined"
+            >
+              <Msg id={messageIds.viewPlaceButton} />
+            </Button>
+          </Box>
+        )}
         {selectedIndex < 0 && (
           <Button
             onClick={() => {
@@ -216,6 +245,16 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           })}
         </>
       </MapContainer>
+      <Dialog
+        fullWidth
+        maxWidth="xl"
+        onClose={() => setAnchorEl(null)}
+        open={!!anchorEl}
+      >
+        <Box height="90vh" padding={2}>
+          Here will be info about the marker
+        </Box>
+      </Dialog>
     </>
   );
 };
