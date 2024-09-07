@@ -3,7 +3,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode } from 'react';
 import {
   StyledEngineProvider,
   Theme,
@@ -45,10 +45,7 @@ const ClientContext: FC<ClientContextProps> = ({
   messages,
   user,
 }) => {
-  const [onServer, setOnServer] = useState(true);
-  useEffect(() => {
-    setOnServer(false);
-  }, []);
+  const onServer = typeof window == 'undefined';
 
   const apiClient = onServer
     ? new BackendApiClient(headers)
