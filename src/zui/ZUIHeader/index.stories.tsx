@@ -111,12 +111,12 @@ export const ActionButtonWithMenuAndEllipsisMenu: Story = {
   args: {
     actionButtonLabel: 'Create an activity',
     actionButtonPopoverContent: [
-      { label: 'Event', onClick: () => null, startIcon: <Celebration /> },
-      { label: 'Email', onClick: () => null, startIcon: <Email /> },
+      { label: 'Event', onClick: () => null, startIcon: Celebration },
+      { label: 'Email', onClick: () => null, startIcon: Email },
     ],
     ellipsisMenuItems: [
-      { label: 'Rename', onClick: () => null, startIcon: <Edit /> },
-      { label: 'Share', onClick: () => null, startIcon: <Share /> },
+      { label: 'Rename', onClick: () => null, startIcon: Edit },
+      { label: 'Share', onClick: () => null, startIcon: Share },
     ],
   },
 };
@@ -138,8 +138,8 @@ export const ActionWithPopoverContentAndEllipsisMenu: Story = {
       </Box>
     ),
     ellipsisMenuItems: [
-      { label: 'Rename', onClick: () => null, startIcon: <Edit /> },
-      { label: 'Share', onClick: () => null, startIcon: <Share /> },
+      { label: 'Rename', onClick: () => null, startIcon: Edit },
+      { label: 'Share', onClick: () => null, startIcon: Share },
     ],
   },
 };

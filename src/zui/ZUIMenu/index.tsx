@@ -1,6 +1,14 @@
+import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
-import { FC, ReactNode } from 'react';
-import { ListItemIcon, Menu, MenuItem, Theme, Typography } from '@mui/material';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+import {
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  SvgIconTypeMap,
+  Theme,
+  Typography,
+} from '@mui/material';
 
 const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
   (theme) => ({
@@ -27,7 +35,9 @@ export interface MenuItem {
   divider?: boolean;
   label: string;
   onClick: () => void;
-  startIcon?: ReactNode;
+  startIcon?: OverridableComponent<
+    SvgIconTypeMap<Record<string, unknown>, 'svg'>
+  >;
 }
 
 interface ZUIMenuProps {
@@ -58,24 +68,31 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
       open={!!anchorEl}
       PaperProps={{ className: classes.paper }}
     >
-      {menuItems.map((item, index) => (
-        <MenuItem
-          key={index}
-          dense={dense}
-          disabled={item.disabled}
-          disableGutters={disableGutters}
-          divider={item.divider}
-          onClick={() => {
-            item.onClick();
-            if (onClose) {
-              onClose();
-            }
-          }}
-        >
-          {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
-          <Typography variant="labelXlMedium">{item.label}</Typography>
-        </MenuItem>
-      ))}
+      {menuItems.map((item, index) => {
+        const Icon = item.startIcon;
+        return (
+          <MenuItem
+            key={index}
+            dense={dense}
+            disabled={item.disabled}
+            disableGutters={disableGutters}
+            divider={item.divider}
+            onClick={() => {
+              item.onClick();
+              if (onClose) {
+                onClose();
+              }
+            }}
+          >
+            {Icon && (
+              <ListItemIcon>
+                <Icon sx={{ fontSize: '1.5rem' }} />
+              </ListItemIcon>
+            )}
+            <Typography variant="labelXlMedium">{item.label}</Typography>
+          </MenuItem>
+        );
+      })}
     </Menu>
   );
 };

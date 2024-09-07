@@ -191,24 +191,25 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                 {typeof actionButtonPopoverContent !== 'function' && (
                   <Box minWidth="12.5rem">
                     <MenuList>
-                      {actionButtonPopoverContent.map((item, index) => (
-                        <MenuItem
-                          key={index}
-                          disabled={item.disabled}
-                          divider={item.divider}
-                          onClick={() => {
-                            item.onClick();
-                            setactionButtonPopoverAnchorEl(null);
-                          }}
-                        >
-                          {item.startIcon && (
-                            <ListItemIcon>{item.startIcon}</ListItemIcon>
-                          )}
-                          <Typography variant="labelXlMedium">
-                            {item.label}
-                          </Typography>
-                        </MenuItem>
-                      ))}
+                      {actionButtonPopoverContent.map((item, index) => {
+                        const Icon = item.startIcon;
+                        return (
+                          <MenuItem
+                            key={index}
+                            disabled={item.disabled}
+                            divider={item.divider}
+                            onClick={() => {
+                              item.onClick();
+                              setactionButtonPopoverAnchorEl(null);
+                            }}
+                          >
+                            {Icon && <ListItemIcon>{<Icon />}</ListItemIcon>}
+                            <Typography variant="labelXlMedium">
+                              {item.label}
+                            </Typography>
+                          </MenuItem>
+                        );
+                      })}
                     </MenuList>
                   </Box>
                 )}

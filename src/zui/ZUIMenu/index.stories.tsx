@@ -19,7 +19,7 @@ export const Basic: Story = {
         label: 'Call assignment',
         onClick: () => null,
       },
-      { label: 'Survey', onClick: () => null, startIcon: <Surfing /> },
+      { label: 'Survey', onClick: () => null, startIcon: Surfing },
       { label: 'Task', onClick: () => null },
       { label: 'Journey', onClick: () => null },
       { divider: true, label: 'Event', onClick: () => null },
