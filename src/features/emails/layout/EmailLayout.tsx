@@ -79,7 +79,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
                           id={messageIds.stats.lockedTargets}
                           values={{
                             numLocked:
-                              emailStats.num_locked_targets -
+                              emailStats.num_target_matches -
                               emailStats.num_blocked.any,
                           }}
                         />
