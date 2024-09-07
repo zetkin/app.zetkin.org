@@ -9,6 +9,7 @@ import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useServerSide from 'core/useServerSide';
 
 const PublicAreaMap = dynamic(() => import('./PublicAreaMap'), { ssr: false });
 
@@ -20,6 +21,11 @@ type AreaPageProps = {
 const AreaPage: FC<AreaPageProps> = ({ areaId, orgId }) => {
   const orgFuture = useOrganization(orgId);
   const areaFuture = useArea(orgId, areaId);
+
+  const isServer = useServerSide();
+  if (isServer) {
+    return null;
+  }
 
   return (
     <ZUIFutures futures={{ area: areaFuture, org: orgFuture }}>
