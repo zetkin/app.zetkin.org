@@ -1,6 +1,6 @@
 import { alpha } from '@mui/material/styles';
 
-const palette = {
+export const palette = {
   basic: {
     black: '#000000',
     white: '#FFFFFF',
@@ -221,7 +221,7 @@ const chipColors = {
       contrast: palette.basic.black,
     },
     medium: {
-      color: '#',
+      color: '#C0DE2B',
       contrast: palette.basic.black,
     },
   },
@@ -526,11 +526,9 @@ export const themePalette = {
   palette: palette,
   primary: {
     contrastText: palette.basic.white,
-    dark: palette.basic.black,
     focus: alpha(palette.grey[950], 0.12),
     focusVisible: alpha(palette.grey[950], 0.3),
     hover: alpha(palette.grey[950], 0.04),
-    light: palette.grey[600],
     main: palette.grey[950],
     outlinedBorder: alpha(palette.grey[950], 0.5),
     selected: alpha(palette.grey[950], 0.08),
