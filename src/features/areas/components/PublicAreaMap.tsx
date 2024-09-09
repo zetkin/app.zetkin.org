@@ -74,7 +74,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const mapRef = useRef<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
 
-  const showViewPlaceButton = selectedIndex > 0 && !anchorEl;
+  const showViewPlaceButton = selectedIndex >= 0 && !anchorEl;
 
   const updateSelection = useCallback(() => {
     let nearestIndex = -1;
@@ -112,7 +112,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         setSelectedIndex(-1);
       }
     }
-  }, [mapRef.current, selectedIndex, area]);
+  }, [mapRef.current, selectedIndex, places]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -125,7 +125,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         map.off('move');
       };
     }
-  }, [mapRef.current, selectedIndex, area]);
+  }, [mapRef.current, selectedIndex, places]);
 
   useEffect(() => {
     updateSelection();
