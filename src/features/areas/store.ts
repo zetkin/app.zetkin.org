@@ -6,14 +6,16 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { ZetkinArea } from './types';
+import { ZetkinArea, ZetkinPlace } from './types';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
+  placeList: RemoteList<ZetkinPlace>;
 }
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  placeList: remoteList(),
 };
 
 const areasSlice = createSlice({
@@ -76,6 +78,25 @@ const areasSlice = createSlice({
       state.areaList.loaded = timestamp;
       state.areaList.items.forEach((item) => (item.loaded = timestamp));
     },
+    placeCreated: (state, action: PayloadAction<ZetkinPlace>) => {
+      const place = action.payload;
+      const item = remoteItem(place.id, {
+        data: place,
+        loaded: new Date().toISOString(),
+      });
+
+      state.placeList.items.push(item);
+    },
+    placesLoad: (state) => {
+      state.placeList.isLoading = true;
+    },
+    placesLoaded: (state, action: PayloadAction<ZetkinPlace[]>) => {
+      const timestamp = new Date().toISOString();
+      const places = action.payload;
+      state.placeList = remoteList(places);
+      state.placeList.loaded = timestamp;
+      state.placeList.items.forEach((item) => (item.loaded = timestamp));
+    },
   },
 });
 
@@ -88,4 +109,7 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
+  placeCreated,
+  placesLoad,
+  placesLoaded,
 } = areasSlice.actions;

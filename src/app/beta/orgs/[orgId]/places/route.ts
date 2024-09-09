@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 
-import { AreaModel } from 'features/areas/models';
-import { ZetkinArea } from 'features/areas/types';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
+import { PlaceModel } from 'features/areas/models';
+import { ZetkinPlace } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
@@ -21,18 +21,17 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
-      const areaModels = await AreaModel.find({ orgId });
-      const areas: ZetkinArea[] = areaModels.map((model) => ({
-        description: model.description,
+      const placeModels = await PlaceModel.find({ orgId });
+      const places: ZetkinPlace[] = placeModels.map((model) => ({
         id: model._id.toString(),
-        organization: {
-          id: orgId,
-        },
-        points: model.points,
+        orgId: orgId,
+        position: model.position,
         title: model.title,
+        type: model.type,
+        visits: model.visits,
       }));
 
-      return Response.json({ data: areas });
+      return Response.json({ data: places });
     }
   );
 }
@@ -49,24 +48,24 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const model = new AreaModel({
-        description: payload.description,
+      const model = new PlaceModel({
         orgId: orgId,
-        points: payload.points,
+        position: payload.position,
         title: payload.title,
+        type: payload.type,
+        visits: payload.visits,
       });
 
       await model.save();
 
       return NextResponse.json({
         data: {
-          description: model.description,
           id: model._id.toString(),
-          organization: {
-            id: orgId,
-          },
-          points: model.points,
+          orgId: orgId,
+          position: model.position,
           title: model.title,
+          type: model.type,
+          visits: model.visits,
         },
       });
     }

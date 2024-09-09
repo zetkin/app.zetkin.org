@@ -13,10 +13,11 @@ import {
 import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
 
 import { ZetkinArea } from '../types';
-import useAreaMutations from '../hooks/useAreaMutations';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import usePlaces from '../hooks/usePlaces';
+import useCreatePlace from '../hooks/useCreatePlace';
 
 const useStyles = makeStyles((theme) => ({
   actionAreaContainer: {
@@ -65,7 +66,8 @@ type PublicAreaMapProps = {
 const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const theme = useTheme();
   const classes = useStyles();
-  const { updateArea } = useAreaMutations(area.organization.id, area.id);
+  const createPlace = useCreatePlace(area.organization.id);
+  const places = usePlaces(area.organization.id).data || [];
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -90,8 +92,8 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       const markerX = x + 0.5 * markerRect.width;
       const markerY = y + 0.5 * markerRect.height;
 
-      area.markers.forEach((marker, index) => {
-        const screenPos = map.latLngToContainerPoint(marker.position);
+      places.forEach((place, index) => {
+        const screenPos = map.latLngToContainerPoint(place.position);
         const dx = screenPos.x - markerX;
         const dy = screenPos.y - markerY;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -127,7 +129,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
   useEffect(() => {
     updateSelection();
-  }, [area.markers]);
+  }, [places]);
 
   return (
     <>
@@ -180,14 +182,8 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
                 const point =
                   mapRef.current?.containerPointToLatLng(markerPoint);
                 if (point) {
-                  updateArea({
-                    markers: [
-                      ...area.markers,
-                      {
-                        numberOfActions: 1,
-                        position: point,
-                      },
-                    ],
+                  createPlace({
+                    position: point,
                   });
                 }
               }
@@ -211,7 +207,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         />
         <Polygon color={theme.palette.primary.main} positions={area.points} />
         <>
-          {area.markers.map((marker, index) => {
+          {places.map((place, index) => {
             const selected = index == selectedIndex;
             const key = `marker-${index}-${selected.toString()}`;
 
@@ -220,8 +216,8 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
                 key={key}
                 iconAnchor={[11, 33]}
                 position={{
-                  lat: marker.position.lat,
-                  lng: marker.position.lng,
+                  lat: place.position.lat,
+                  lng: place.position.lng,
                 }}
               >
                 <svg fill="none" height="35" viewBox="0 0 30 40" width="25">

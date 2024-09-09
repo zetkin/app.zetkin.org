@@ -1,24 +1,41 @@
 import mongoose from 'mongoose';
 
-import { ZetkinArea } from './types';
+import { ZetkinArea, ZetkinPlace } from './types';
 
-type IZetkinModel = {
+type ZetkinAreaModelType = {
   description: string | null;
-  markers: ZetkinArea['markers'];
-  numberOfActions: number;
   orgId: number;
   points: ZetkinArea['points'];
   title: string | null;
 };
 
-const areaSchema = new mongoose.Schema<IZetkinModel>({
+type ZetkinPlaceModelType = {
+  orgId: number;
+  position: ZetkinPlace['position'];
+  title: string | null;
+  type: 'address' | 'misc';
+  visits: ZetkinPlace['visits'];
+};
+
+const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
   description: String,
-  markers: Array,
-  numberOfActions: Number,
   orgId: { required: true, type: Number },
   points: Array,
   title: String,
 });
 
-export const AreaModel: mongoose.Model<IZetkinModel> =
-  mongoose.models.Area || mongoose.model<IZetkinModel>('Area', areaSchema);
+const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
+  orgId: { required: true, type: Number },
+  position: Object,
+  title: String,
+  type: String,
+  visits: Array,
+});
+
+export const AreaModel: mongoose.Model<ZetkinAreaModelType> =
+  mongoose.models.Area ||
+  mongoose.model<ZetkinAreaModelType>('Area', areaSchema);
+
+export const PlaceModel: mongoose.Model<ZetkinPlaceModelType> =
+  mongoose.models.Place ||
+  mongoose.model<ZetkinPlaceModelType>('Place', placeSchema);
