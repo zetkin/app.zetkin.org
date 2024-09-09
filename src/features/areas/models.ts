@@ -10,6 +10,7 @@ type ZetkinAreaModelType = {
 };
 
 type ZetkinPlaceModelType = {
+  description: string | null;
   orgId: number;
   position: ZetkinPlace['position'];
   title: string | null;
@@ -25,6 +26,7 @@ const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
 });
 
 const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
+  description: String,
   orgId: { required: true, type: Number },
   position: Object,
   title: String,

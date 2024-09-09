@@ -1,6 +1,7 @@
 export type PointData = [number, number];
 
 export type Visit = {
+  id: string;
   note: string;
   timestamp: string;
   visitor_id: number;
@@ -17,6 +18,7 @@ export type ZetkinArea = {
 };
 
 export type ZetkinPlace = {
+  description: string | null;
   id: string;
   orgId: number;
   position: { lat: number; lng: number };

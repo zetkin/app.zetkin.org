@@ -8,16 +8,18 @@ import {
   Dialog,
   Divider,
   IconButton,
+  Typography,
   useTheme,
 } from '@mui/material';
 import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
 
-import { ZetkinArea } from '../types';
+import { ZetkinArea, ZetkinPlace } from '../types';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import usePlaces from '../hooks/usePlaces';
 import useCreatePlace from '../hooks/useCreatePlace';
+import ZUIDateTime from 'zui/ZUIDateTime';
 
 const useStyles = makeStyles((theme) => ({
   actionAreaContainer: {
@@ -68,16 +70,17 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const classes = useStyles();
   const createPlace = useCreatePlace(area.organization.id);
   const places = usePlaces(area.organization.id).data || [];
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const mapRef = useRef<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
 
-  const showViewPlaceButton = selectedIndex >= 0 && !anchorEl;
+  const showViewPlaceButton = !!selectedPlace && !anchorEl;
 
   const updateSelection = useCallback(() => {
-    let nearestIndex = -1;
+    let nearestPlace: ZetkinPlace | null = null;
     let nearestDistance = Infinity;
 
     const map = mapRef.current;
@@ -92,7 +95,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       const markerX = x + 0.5 * markerRect.width;
       const markerY = y + 0.5 * markerRect.height;
 
-      places.forEach((place, index) => {
+      places.forEach((place) => {
         const screenPos = map.latLngToContainerPoint(place.position);
         const dx = screenPos.x - markerX;
         const dy = screenPos.y - markerY;
@@ -100,19 +103,19 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
         if (dist < nearestDistance) {
           nearestDistance = dist;
-          nearestIndex = index;
+          nearestPlace = place;
         }
       });
 
       if (nearestDistance < 20) {
-        if (nearestIndex != selectedIndex) {
-          setSelectedIndex(nearestIndex);
+        if (nearestPlace != selectedPlace) {
+          setSelectedPlace(nearestPlace);
         }
       } else {
-        setSelectedIndex(-1);
+        setSelectedPlace(null);
       }
     }
-  }, [mapRef.current, selectedIndex, places]);
+  }, [mapRef.current, selectedPlace, places]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -125,7 +128,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         map.off('move');
       };
     }
-  }, [mapRef.current, selectedIndex, places]);
+  }, [mapRef.current, selectedPlace, places]);
 
   useEffect(() => {
     updateSelection();
@@ -147,7 +150,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           ref={crosshairRef}
           className={classes.crosshair}
           sx={{
-            opacity: selectedIndex < 0 ? 1 : 0.3,
+            opacity: !selectedPlace ? 1 : 0.3,
           }}
         >
           <GpsNotFixed />
@@ -164,7 +167,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             </Button>
           </Box>
         )}
-        {selectedIndex < 0 && (
+        {!selectedPlace && (
           <Button
             onClick={() => {
               const crosshair = crosshairRef.current;
@@ -207,9 +210,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         />
         <Polygon color={theme.palette.primary.main} positions={area.points} />
         <>
-          {places.map((place, index) => {
-            const selected = index == selectedIndex;
-            const key = `marker-${index}-${selected.toString()}`;
+          {places.map((place) => {
+            const selected = place.id == selectedPlace?.id;
+            const key = `marker-${place.id}-${selected.toString()}`;
 
             return (
               <DivIconMarker
@@ -244,12 +247,78 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       <Dialog
         fullWidth
         maxWidth="xl"
-        onClose={() => setAnchorEl(null)}
+        onClose={() => {
+          setAnchorEl(null);
+          setSelectedPlace(null);
+        }}
         open={!!anchorEl}
       >
-        <Box height="90vh" padding={2}>
-          Here will be info about the marker
-        </Box>
+        {selectedPlace && (
+          <Box height="90vh" padding={2}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              height="100%"
+              justifyContent="space-between"
+            >
+              <Box>
+                <Box paddingBottom={1}>
+                  <Typography variant="h6">
+                    {selectedPlace.title || (
+                      <Msg id={messageIds.place.empty.title} />
+                    )}
+                  </Typography>
+                </Box>
+                <Divider />
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={1}
+                  paddingTop={1}
+                >
+                  <Typography variant="h6">
+                    <Msg id={messageIds.place.description} />
+                  </Typography>
+                  <Typography>
+                    {selectedPlace.description || (
+                      <Msg id={messageIds.place.empty.description} />
+                    )}
+                  </Typography>
+                  <Typography variant="h6">
+                    <Msg id={messageIds.place.activityHeader} />
+                  </Typography>
+                  <Box>
+                    {selectedPlace.visits.length == 0 && (
+                      <Msg id={messageIds.place.noActivity} />
+                    )}
+                    {selectedPlace.visits.map((visit) => (
+                      <Box key={visit.id}>
+                        <Typography color="secondary">
+                          <ZUIDateTime datetime={visit.timestamp} />
+                        </Typography>
+                        <Typography>{visit.note}</Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+              <Box display="flex" gap={1} justifyContent="flex-end">
+                <Button
+                  onClick={() => {
+                    setAnchorEl(null);
+                    setSelectedPlace(null);
+                  }}
+                  variant="outlined"
+                >
+                  <Msg id={messageIds.place.closeButton} />
+                </Button>
+                <Button disabled variant="contained">
+                  <Msg id={messageIds.place.logActivityButton} />
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        )}
       </Dialog>
     </>
   );

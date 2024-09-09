@@ -23,6 +23,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const placeModels = await PlaceModel.find({ orgId });
       const places: ZetkinPlace[] = placeModels.map((model) => ({
+        description: model.description,
         id: model._id.toString(),
         orgId: orgId,
         position: model.position,
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       const payload = await request.json();
 
       const model = new PlaceModel({
+        description: payload.description,
         orgId: orgId,
         position: payload.position,
         title: payload.title,
@@ -60,6 +62,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       return NextResponse.json({
         data: {
+          description: model.description,
           id: model._id.toString(),
           orgId: orgId,
           position: model.position,
