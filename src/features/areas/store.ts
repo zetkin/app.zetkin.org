@@ -87,6 +87,13 @@ const areasSlice = createSlice({
 
       state.placeList.items.push(item);
     },
+    placeUpdated: (state, action: PayloadAction<ZetkinPlace>) => {
+      const place = action.payload;
+      const item = findOrAddItem(state.placeList, place.id);
+
+      item.data = place;
+      item.loaded = new Date().toISOString();
+    },
     placesLoad: (state) => {
       state.placeList.isLoading = true;
     },
@@ -112,4 +119,5 @@ export const {
   placeCreated,
   placesLoad,
   placesLoaded,
+  placeUpdated,
 } = areasSlice.actions;

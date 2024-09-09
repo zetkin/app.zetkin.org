@@ -5,7 +5,7 @@ import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
 import {
   Box,
   Button,
-  Dialog,
+  ButtonGroup,
   Divider,
   IconButton,
   Typography,
@@ -19,7 +19,7 @@ import messageIds from '../l10n/messageIds';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import usePlaces from '../hooks/usePlaces';
 import useCreatePlace from '../hooks/useCreatePlace';
-import ZUIDateTime from 'zui/ZUIDateTime';
+import PlaceDialog from './PlaceDialog';
 
 const useStyles = makeStyles((theme) => ({
   actionAreaContainer: {
@@ -73,6 +73,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
   const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [inLogMode, setInLogMode] = useState(false);
 
   const mapRef = useRef<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -159,12 +160,28 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       <Box className={classes.actionAreaContainer}>
         {showViewPlaceButton && (
           <Box className={classes.infoButtons}>
-            <Button
-              onClick={(ev) => setAnchorEl(ev.currentTarget)}
-              variant="outlined"
-            >
-              <Msg id={messageIds.viewPlaceButton} />
-            </Button>
+            <Typography sx={{ paddingBottom: 1 }}>
+              {selectedPlace.title || <Msg id={messageIds.place.empty.title} />}
+            </Typography>
+            <Box display="flex">
+              <ButtonGroup fullWidth>
+                <Button
+                  onClick={(ev) => setAnchorEl(ev.currentTarget)}
+                  variant="outlined"
+                >
+                  <Msg id={messageIds.viewPlaceButton} />
+                </Button>
+                <Button
+                  onClick={(ev) => {
+                    setAnchorEl(ev.currentTarget);
+                    setInLogMode(true);
+                  }}
+                  variant="contained"
+                >
+                  <Msg id={messageIds.place.logActivityButton} />
+                </Button>
+              </ButtonGroup>
+            </Box>
           </Box>
         )}
         {!selectedPlace && (
@@ -244,82 +261,18 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           })}
         </>
       </MapContainer>
-      <Dialog
-        fullWidth
-        maxWidth="xl"
+      <PlaceDialog
+        inLogMode={inLogMode}
         onClose={() => {
           setAnchorEl(null);
           setSelectedPlace(null);
         }}
+        onLogCancel={() => setInLogMode(false)}
+        onLogStart={() => setInLogMode(true)}
         open={!!anchorEl}
-      >
-        {selectedPlace && (
-          <Box height="90vh" padding={2}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              height="100%"
-              justifyContent="space-between"
-            >
-              <Box>
-                <Box paddingBottom={1}>
-                  <Typography variant="h6">
-                    {selectedPlace.title || (
-                      <Msg id={messageIds.place.empty.title} />
-                    )}
-                  </Typography>
-                </Box>
-                <Divider />
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  gap={1}
-                  paddingTop={1}
-                >
-                  <Typography variant="h6">
-                    <Msg id={messageIds.place.description} />
-                  </Typography>
-                  <Typography>
-                    {selectedPlace.description || (
-                      <Msg id={messageIds.place.empty.description} />
-                    )}
-                  </Typography>
-                  <Typography variant="h6">
-                    <Msg id={messageIds.place.activityHeader} />
-                  </Typography>
-                  <Box>
-                    {selectedPlace.visits.length == 0 && (
-                      <Msg id={messageIds.place.noActivity} />
-                    )}
-                    {selectedPlace.visits.map((visit) => (
-                      <Box key={visit.id}>
-                        <Typography color="secondary">
-                          <ZUIDateTime datetime={visit.timestamp} />
-                        </Typography>
-                        <Typography>{visit.note}</Typography>
-                      </Box>
-                    ))}
-                  </Box>
-                </Box>
-              </Box>
-              <Box display="flex" gap={1} justifyContent="flex-end">
-                <Button
-                  onClick={() => {
-                    setAnchorEl(null);
-                    setSelectedPlace(null);
-                  }}
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.place.closeButton} />
-                </Button>
-                <Button disabled variant="contained">
-                  <Msg id={messageIds.place.logActivityButton} />
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        )}
-      </Dialog>
+        orgId={area.organization.id}
+        place={selectedPlace}
+      />
     </>
   );
 };

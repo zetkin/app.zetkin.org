@@ -4,7 +4,6 @@ export type Visit = {
   id: string;
   note: string;
   timestamp: string;
-  visitor_id: number;
 };
 
 export type ZetkinArea = {
@@ -30,3 +29,6 @@ export type ZetkinPlace = {
 export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;
 
 export type ZetkinPlacePostBody = Partial<Omit<ZetkinPlace, 'id'>>;
+export type ZetkinPlacePatchBody = Omit<ZetkinPlacePostBody, 'visits'> & {
+  visits?: Omit<Visit, 'id'>[];
+};

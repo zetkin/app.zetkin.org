@@ -16,6 +16,7 @@ export default makeMessages('feat.areas', {
   },
   place: {
     activityHeader: m('Activity'),
+    cancelButton: m('Cancel'),
     closeButton: m('Close'),
     description: m('Description'),
     empty: {
@@ -23,7 +24,9 @@ export default makeMessages('feat.areas', {
       title: m('Untitled place'),
     },
     logActivityButton: m('Log activity'),
+    logActivityHeader: m<{ title: string }>('Log activity at {title}'),
     noActivity: m('No visits have been recorded at this place.'),
+    saveButton: m('Save'),
   },
   tools: {
     cancel: m('Cancel'),
