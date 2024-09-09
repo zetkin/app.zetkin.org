@@ -1,0 +1,242 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
+import { palette, themePalette } from '../themePalette';
+
+<Meta title="Colors" />
+
+# Palette
+
+<ColorPalette>
+  <ColorItem
+    title="Basic"
+    colors={{
+      black: palette.basic.black,
+      white: palette.basic.white,
+    }}
+  />
+  <ColorItem
+    title="Blue"
+    colors={{
+      [100]: palette.blue[100],
+      [200]: palette.blue[200],
+      [300]: palette.blue[300],
+      [400]: palette.blue[400],
+      [50]: palette.blue[50],
+      [500]: palette.blue[500],
+      [600]: palette.blue[600],
+      [700]: palette.blue[700],
+      [800]: palette.blue[800],
+      [900]: palette.blue[900],
+      [950]: palette.blue[950],
+    }}
+  />
+  <ColorItem
+    title="Green"
+    colors={{
+      [100]: palette.green[100],
+      [200]: palette.green[200],
+      [300]: palette.green[300],
+      [400]: palette.green[400],
+      [50]: palette.green[50],
+      [500]: palette.green[500],
+      [600]: palette.green[600],
+      [700]: palette.green[700],
+      [800]: palette.green[800],
+      [900]: palette.green[900],
+      [950]: palette.green[950],
+    }}
+  />
+  <ColorItem
+    title="Grey"
+    colors={{
+      [100]: palette.grey[100],
+      [200]: palette.grey[200],
+      [25]: palette.grey[25],
+      [300]: palette.grey[300],
+      [400]: palette.grey[400],
+      [50]: palette.grey[50],
+      [500]: palette.grey[500],
+      [600]: palette.grey[600],
+      [700]: palette.grey[700],
+      [800]: palette.grey[800],
+      [900]: palette.grey[900],
+      [950]: palette.grey[950],
+    }}
+  />
+  <ColorItem
+    title="Purple"
+    colors={{
+      [100]: palette.purple[100],
+      [300]: palette.purple[300],
+      [500]: palette.purple[500],
+      [700]: palette.purple[700],
+      [900]: palette.purple[900],
+    }}
+  />
+  <ColorItem
+    title="Red"
+    colors={{
+      [100]: palette.red[100],
+      [200]: palette.red[200],
+      [300]: palette.red[300],
+      [400]: palette.red[400],
+      [50]: palette.red[50],
+      [500]: palette.red[500],
+      [600]: palette.red[600],
+      [700]: palette.red[700],
+      [800]: palette.red[800],
+      [900]: palette.red[900],
+      [950]: palette.red[950],
+    }}
+  />
+  <ColorItem
+    title="Yellow"
+    colors={{
+      [100]: palette.yellow[100],
+      [200]: palette.yellow[200],
+      [300]: palette.yellow[300],
+      [400]: palette.yellow[400],
+      [50]: palette.yellow[50],
+      [500]: palette.yellow[500],
+      [600]: palette.yellow[600],
+      [700]: palette.yellow[700],
+      [800]: palette.yellow[800],
+      [900]: palette.yellow[900],
+      [950]: palette.yellow[950],
+    }}
+  />
+</ColorPalette>
+
+# Contextualised Palette
+
+<ColorPalette>
+  <ColorItem
+    title="activityStatusColors"
+    colors={{
+      cancelled: themePalette.activityStatusColors.cancelled,
+      closed: themePalette.activityStatusColors.closed,
+      draft: themePalette.activityStatusColors.draft,
+      ended: themePalette.activityStatusColors.ended,
+      published: themePalette.activityStatusColors.published,
+      scheduled: themePalette.activityStatusColors.scheduled,
+    }}
+  />
+  <ColorItem
+    title="Background"
+    colors={{
+     default: themePalette.background.default,
+     paper: themePalette.background.paper,
+    }}
+  />
+  <ColorItem
+    title="Common"
+    colors={{
+      black: themePalette.common.black,
+      white: themePalette.common.white,
+    }}
+  />
+    <ColorItem
+    title="Data"
+    colors={{
+      [100]: themePalette.data[100],
+      [300]: themePalette.data[300],
+      [500]: themePalette.data[500],
+      [700]: themePalette.data[700],
+      [900]: themePalette.data[900],
+    }}
+  />
+    <ColorItem
+    title="Divider"
+    colors={{
+      divider: themePalette.divider,
+      dividerLighter: themePalette.dividerLighter,
+    }}
+  />
+    <ColorItem
+    title="Error"
+    colors={{
+      contrastText: themePalette.error.contrastText,
+      dark: themePalette.error.dark,
+      light: themePalette.error.light,
+      main: themePalette.error.main,
+    }}
+  />
+    <ColorItem
+    title="Info"
+    colors={{
+      contrastText: themePalette.info.contrastText,
+      dark: themePalette.info.dark,
+      light: themePalette.info.light,
+      main: themePalette.info.main,
+    }}
+  />
+    <ColorItem
+    title="Primary"
+    colors={{
+      contrastText: themePalette.primary.contrastText,
+      focus: themePalette.primary.focus,
+      focusVisible: themePalette.primary.focusVisible,
+      hover: themePalette.primary.hover,
+      main: themePalette.primary.main,
+      outlinedBorder: themePalette.primary.outlinedBorder,
+      selected: themePalette.primary.selected,
+    }}
+  />
+    <ColorItem
+    title="Secondary"
+    colors={{
+      light: themePalette.secondary.light,
+      main: themePalette.secondary.main,
+    }}
+  />
+    <ColorItem
+    title="Success"
+    colors={{
+      contrastText: themePalette.success.contrastText,
+      dark: themePalette.success.dark,
+      light: themePalette.success.light,
+      main: themePalette.success.main,
+    }}
+  />
+    <ColorItem
+    title="Text"
+    colors={{
+      disabled: themePalette.text.disabled,
+      primary: themePalette.text.primary,
+      secondary: themePalette.text.secondary
+    }}
+  />
+    <ColorItem
+    title="Warning"
+    colors={{
+      contrastText: themePalette.warning.contrastText,
+      dark: themePalette.warning.dark,
+      light: themePalette.warning.light,
+      main: themePalette.warning.main,
+    }}
+  />
+
+# filterCategoryColors
+
+{Object.entries(themePalette.filterCategoryColors).map(([colorCategory, shades]) => (
+
+<ColorItem
+  title={colorCategory[0].toUpperCase() + colorCategory.slice(1)}
+  colors={{ pale: shades.pale.color, strong: shades.strong.color }}
+/>
+))}
+
+# Chip colors
+
+{Object.entries(themePalette.chipColors).map(([colorName, colorGroup]) => (
+
+<ColorItem
+  title={colorName[0].toUpperCase() + colorName.slice(1)}
+  colors={{
+    dark: colorGroup.dark.color,
+    medium: colorGroup.medium.color,
+    light: colorGroup.light.color,
+  }}
+/>
+))}
+
+</ColorPalette>
