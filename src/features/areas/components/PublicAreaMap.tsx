@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { latLngBounds, Map } from 'leaflet';
+import { LatLng, latLngBounds, Map } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
 import {
@@ -145,9 +145,42 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
     }
   }, [mapRef.current, selectedPlace, places]);
 
+  const panTo = useCallback(
+    (pos: LatLng) => {
+      const map = mapRef.current;
+      const crosshair = crosshairRef.current;
+      if (crosshair && map) {
+        const mapContainer = map.getContainer();
+        const mapRect = mapContainer.getBoundingClientRect();
+        const markerRect = crosshair.getBoundingClientRect();
+        const x = markerRect.x - mapRect.x;
+        const y = markerRect.y - mapRect.y;
+        const markerPoint: [number, number] = [
+          x + 0.5 * markerRect.width,
+          y + 0.8 * markerRect.height,
+        ];
+
+        const crosshairPos = map.containerPointToLatLng(markerPoint);
+        const centerPos = map.getCenter();
+        const latOffset = centerPos.lat - crosshairPos.lat;
+        const lngOffset = centerPos.lng - crosshairPos.lng;
+        const adjustedPos = new LatLng(
+          pos.lat + latOffset,
+          pos.lng + lngOffset
+        );
+        map.panTo(adjustedPos, { animate: true });
+      }
+    },
+    [mapRef.current, crosshairRef.current]
+  );
+
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
+      map.on('click', (evt) => {
+        panTo(evt.latlng);
+      });
+
       map.on('movestart', () => {
         window.clearTimeout(standingStillTimerRef.current);
         setStandingStill(false);
@@ -304,6 +337,11 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             return (
               <DivIconMarker
                 key={key}
+                eventHandlers={{
+                  click: (evt) => {
+                    panTo(evt.latlng);
+                  },
+                }}
                 iconAnchor={[11, 33]}
                 position={{
                   lat: place.position.lat,
