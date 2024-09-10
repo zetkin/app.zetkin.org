@@ -40,6 +40,7 @@ const LogActivity: FC<LogActivityProps> = ({ onCancel, orgId, place }) => {
           <Msg id={messageIds.place.cancelButton} />
         </Button>
         <Button
+          disabled={!note}
           onClick={() => {
             updatePlace({
               ...place,
