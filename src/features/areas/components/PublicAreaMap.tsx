@@ -273,27 +273,30 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           })}
         </>
       </MapContainer>
-      <PlaceDialog
-        dialogStep={dialogStep}
-        onClose={() => {
-          setAnchorEl(null);
-          setSelectedPlace(null);
-        }}
-        onLogCancel={() => {
-          if (returnToMap) {
+      {selectedPlace && (
+        <PlaceDialog
+          dialogStep={dialogStep}
+          onClose={() => {
             setAnchorEl(null);
-          } else {
-            setDialogStep('place');
-          }
-        }}
-        onLogStart={() => {
-          setDialogStep('log');
-          setReturnToMap(false);
-        }}
-        open={!!anchorEl}
-        orgId={area.organization.id}
-        place={selectedPlace}
-      />
+            setSelectedPlace(null);
+          }}
+          onLogCancel={() => {
+            if (returnToMap) {
+              setAnchorEl(null);
+            } else {
+              setDialogStep('place');
+            }
+          }}
+          onLogSave={() => setDialogStep('place')}
+          onLogStart={() => {
+            setDialogStep('log');
+            setReturnToMap(false);
+          }}
+          open={!!anchorEl}
+          orgId={area.organization.id}
+          place={selectedPlace}
+        />
+      )}
     </>
   );
 };
