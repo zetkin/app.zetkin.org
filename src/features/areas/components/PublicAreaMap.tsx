@@ -5,7 +5,6 @@ import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
 import {
   Box,
   Button,
-  ButtonGroup,
   Divider,
   IconButton,
   Typography,
@@ -73,7 +72,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
   const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [inLogMode, setInLogMode] = useState(false);
+
+  const [dialogStep, setDialogStep] = useState<'place' | 'log'>('place');
+  const [returnToMap, setReturnToMap] = useState(false);
 
   const mapRef = useRef<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -163,24 +164,28 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             <Typography sx={{ paddingBottom: 1 }}>
               {selectedPlace.title || <Msg id={messageIds.place.empty.title} />}
             </Typography>
-            <Box display="flex">
-              <ButtonGroup fullWidth>
-                <Button
-                  onClick={(ev) => setAnchorEl(ev.currentTarget)}
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.viewPlaceButton} />
-                </Button>
-                <Button
-                  onClick={(ev) => {
-                    setAnchorEl(ev.currentTarget);
-                    setInLogMode(true);
-                  }}
-                  variant="contained"
-                >
-                  <Msg id={messageIds.place.logActivityButton} />
-                </Button>
-              </ButtonGroup>
+            <Box display="flex" gap={1}>
+              <Button
+                fullWidth
+                onClick={(ev) => {
+                  setAnchorEl(ev.currentTarget);
+                  setDialogStep('place');
+                }}
+                variant="outlined"
+              >
+                <Msg id={messageIds.viewPlaceButton} />
+              </Button>
+              <Button
+                fullWidth
+                onClick={(ev) => {
+                  setAnchorEl(ev.currentTarget);
+                  setDialogStep('log');
+                  setReturnToMap(true);
+                }}
+                variant="contained"
+              >
+                <Msg id={messageIds.place.logActivityButton} />
+              </Button>
             </Box>
           </Box>
         )}
@@ -262,13 +267,22 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         </>
       </MapContainer>
       <PlaceDialog
-        inLogMode={inLogMode}
+        dialogStep={dialogStep}
         onClose={() => {
           setAnchorEl(null);
           setSelectedPlace(null);
         }}
-        onLogCancel={() => setInLogMode(false)}
-        onLogStart={() => setInLogMode(true)}
+        onLogCancel={() => {
+          if (returnToMap) {
+            setAnchorEl(null);
+          } else {
+            setDialogStep('place');
+          }
+        }}
+        onLogStart={() => {
+          setDialogStep('log');
+          setReturnToMap(false);
+        }}
         open={!!anchorEl}
         orgId={area.organization.id}
         place={selectedPlace}

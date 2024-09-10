@@ -8,7 +8,7 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 type PlaceDialogProps = {
-  inLogMode: boolean;
+  dialogStep: 'place' | 'log';
   onClose: () => void;
   onLogCancel: () => void;
   onLogStart: () => void;
@@ -18,7 +18,7 @@ type PlaceDialogProps = {
 };
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
-  inLogMode,
+  dialogStep,
   onClose,
   onLogCancel,
   onLogStart,
@@ -35,14 +35,14 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           </Typography>
         </Box>
         <Divider />
-        {place && !inLogMode && (
+        {place && dialogStep == 'place' && (
           <PlaceDetails
             onClose={onClose}
             onLogActivity={onLogStart}
             place={place}
           />
         )}
-        {place && inLogMode && (
+        {place && dialogStep == 'log' && (
           <LogActivity onCancel={onLogCancel} orgId={orgId} place={place} />
         )}
       </Box>
