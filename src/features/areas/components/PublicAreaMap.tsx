@@ -10,7 +10,12 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { MapContainer, Polygon, TileLayer } from 'react-leaflet';
+import {
+  AttributionControl,
+  MapContainer,
+  Polygon,
+  TileLayer,
+} from 'react-leaflet';
 
 import { ZetkinArea, ZetkinPlace } from '../types';
 import { Msg } from 'core/i18n';
@@ -221,13 +226,15 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       </Box>
       <MapContainer
         ref={mapRef}
+        attributionControl={false}
         bounds={latLngBounds(area.points)}
         minZoom={1}
         style={{ height: '100%', width: '100%' }}
         zoomControl={false}
       >
+        <AttributionControl position="bottomright" prefix={false} />
         <TileLayer
-          attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Polygon color={theme.palette.primary.main} positions={area.points} />
