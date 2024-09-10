@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
     animationName: '$ghostMarkerBounce',
     animationTimingFunction: 'cubic-bezier(0,.71,.56,1)',
     position: 'absolute',
-    transition: 'opacity 0.5s',
     zIndex: 1000,
   },
   infoButtons: {
@@ -231,7 +230,10 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           {!selectedPlace && (
             <Box
               className={classes.ghostMarker}
-              sx={{ opacity: standingStill ? 1 : 0 }}
+              sx={{
+                opacity: standingStill ? 1 : 0,
+                transition: `opacity ${standingStill ? 0.8 : 0.2}s`,
+              }}
             >
               <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
                 <path
