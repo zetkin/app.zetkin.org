@@ -26,6 +26,16 @@ import useCreatePlace from '../hooks/useCreatePlace';
 import PlaceDialog from './PlaceDialog';
 
 const useStyles = makeStyles((theme) => ({
+  '@keyframes ghostMarkerBounce': {
+    '0%': {
+      top: -20,
+      transform: 'scale(1, 0.8)',
+    },
+    '100%': {
+      top: -40,
+      transform: 'scale(0.9, 1)',
+    },
+  },
   actionAreaContainer: {
     bottom: 15,
     display: 'flex',
@@ -43,6 +53,16 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     transition: 'opacity 0.1s',
     zIndex: 1200,
+  },
+  ghostMarker: {
+    animationDirection: 'alternate',
+    animationDuration: '0.4s',
+    animationIterationCount: 'infinite',
+    animationName: '$ghostMarkerBounce',
+    animationTimingFunction: 'cubic-bezier(0,.71,.56,1)',
+    position: 'absolute',
+    transition: 'opacity 0.5s',
+    zIndex: 1000,
   },
   infoButtons: {
     backgroundColor: theme.palette.background.default,
@@ -77,12 +97,13 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
   const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
   const [dialogStep, setDialogStep] = useState<'place' | 'log'>('place');
   const [returnToMap, setReturnToMap] = useState(false);
+  const [standingStill, setStandingStill] = useState(false);
 
   const mapRef = useRef<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
+  const standingStillTimerRef = useRef(0);
 
   const showViewPlaceButton = !!selectedPlace && !anchorEl;
 
@@ -127,12 +148,26 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
+      map.on('movestart', () => {
+        window.clearTimeout(standingStillTimerRef.current);
+        setStandingStill(false);
+      });
+
       map.on('move', () => {
         updateSelection();
       });
 
+      map.on('moveend', () => {
+        standingStillTimerRef.current = window.setTimeout(
+          () => setStandingStill(true),
+          1300
+        );
+      });
+
       return () => {
         map.off('move');
+        map.off('moveend');
+        map.off('movestart');
       };
     }
   }, [mapRef.current, selectedPlace, places]);
@@ -160,6 +195,27 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             opacity: !selectedPlace ? 1 : 0.3,
           }}
         >
+          <Box
+            className={classes.ghostMarker}
+            sx={{ opacity: standingStill ? 1 : 0 }}
+          >
+            <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
+              <path
+                d="M14 38.479C13.6358 38.0533 13.1535 37.4795
+           12.589 36.7839C11.2893 35.1826 9.55816 32.9411
+            7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
+            3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
+            6.81228 6.81228 1 14 1C21.1877 1 27 6.81228 27 14C27
+            16.4227 26.1867 19.211 24.8999 22.0833C23.6189 24.9426
+            21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
+            35.1826 15.411 36.7839C14.8465 37.4795 14.3642
+            38.0533 14 38.479Z"
+                fill="#ED1C55"
+                stroke="#ED1C55"
+                strokeWidth="2"
+              />
+            </svg>
+          </Box>
           <GpsNotFixed />
         </Box>
       </Box>
