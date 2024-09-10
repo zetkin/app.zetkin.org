@@ -100,7 +100,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const [returnToMap, setReturnToMap] = useState(false);
   const [standingStill, setStandingStill] = useState(false);
 
-  const mapRef = useRef<Map | null>(null);
+  const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const standingStillTimerRef = useRef(0);
 
@@ -110,7 +110,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
     let nearestPlace: ZetkinPlace | null = null;
     let nearestDistance = Infinity;
 
-    const map = mapRef.current;
     const crosshair = crosshairRef.current;
 
     if (map && crosshair) {
@@ -142,11 +141,10 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         setSelectedPlace(null);
       }
     }
-  }, [mapRef.current, selectedPlace, places]);
+  }, [map, selectedPlace, places]);
 
   const panTo = useCallback(
     (pos: LatLng) => {
-      const map = mapRef.current;
       const crosshair = crosshairRef.current;
       if (crosshair && map) {
         const mapContainer = map.getContainer();
@@ -170,11 +168,10 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         map.panTo(adjustedPos, { animate: true });
       }
     },
-    [mapRef.current, crosshairRef.current]
+    [map, crosshairRef.current]
   );
 
   useEffect(() => {
-    const map = mapRef.current;
     if (map) {
       map.on('click', (evt) => {
         panTo(evt.latlng);
@@ -202,7 +199,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         map.off('movestart');
       };
     }
-  }, [mapRef.current, selectedPlace, places]);
+  }, [map, selectedPlace, places, panTo, updateSelection]);
 
   useEffect(() => {
     updateSelection();
@@ -211,11 +208,11 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   return (
     <>
       <Box className={classes.zoomControls}>
-        <IconButton onClick={() => mapRef.current?.zoomIn()}>
+        <IconButton onClick={() => map?.zoomIn()}>
           <Add />
         </IconButton>
         <Divider flexItem variant="fullWidth" />
-        <IconButton onClick={() => mapRef.current?.zoomOut()}>
+        <IconButton onClick={() => map?.zoomOut()}>
           <Remove />
         </IconButton>
       </Box>
@@ -291,7 +288,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           <Button
             onClick={() => {
               const crosshair = crosshairRef.current;
-              const mapContainer = mapRef.current?.getContainer();
+              const mapContainer = map?.getContainer();
               if (crosshair && mapContainer) {
                 const mapRect = mapContainer.getBoundingClientRect();
                 const markerRect = crosshair.getBoundingClientRect();
@@ -302,8 +299,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
                   y + 0.8 * markerRect.height,
                 ];
 
-                const point =
-                  mapRef.current?.containerPointToLatLng(markerPoint);
+                const point = map?.containerPointToLatLng(markerPoint);
                 if (point) {
                   createPlace({
                     position: point,
@@ -318,7 +314,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         )}
       </Box>
       <MapContainer
-        ref={mapRef}
+        ref={(map) => setMap(map)}
         attributionControl={false}
         bounds={latLngBounds(area.points)}
         minZoom={1}
