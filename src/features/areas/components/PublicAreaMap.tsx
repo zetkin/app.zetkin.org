@@ -187,9 +187,14 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       });
 
       map.on('moveend', () => {
+        // When the map contains no places, show the bouncy marker
+        // quickly, but once there are places, wait longer before
+        // showing the bouncy marker.
+        const delay = places.length ? 10000 : 1300;
+
         standingStillTimerRef.current = window.setTimeout(
           () => setStandingStill(true),
-          1300
+          delay
         );
       });
 
