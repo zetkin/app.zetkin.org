@@ -73,9 +73,10 @@ const useStyles = makeStyles((theme) => ({
   label: {
     '&:hover': {
       borderBottomColor: lighten(theme.palette.primary.main, 0.65),
-      borderBottomStyle: 'dotted',
-      borderBottomWidth: 2,
     },
+    borderBottomColor: 'transparent',
+    borderBottomStyle: 'dotted',
+    borderBottomWidth: 2,
     cursor: 'pointer',
   },
 }));
@@ -96,8 +97,9 @@ const ZUIDatePicker: FC<ZUIDatePickerProps> = ({ onChange, date }) => {
 
   return (
     <>
-      <Box alignItems="center" className={classes.label} display="flex">
+      <Box alignItems="center" display="flex">
         <Box
+          className={classes.label}
           component="span"
           display="flex"
           justifyContent="center"
