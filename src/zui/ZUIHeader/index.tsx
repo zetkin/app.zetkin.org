@@ -4,7 +4,6 @@ import {
   Box,
   Divider,
   ListItemIcon,
-  ListItemText,
   MenuItem,
   MenuList,
   Popover,
@@ -22,6 +21,8 @@ import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 import { WithRequired } from 'utils/types';
 import { ZUIIconButtonProps } from 'zui/ZUIIconButton';
+import ZUIText from 'zui/ZUIText';
+import ZUILabel from 'zui/ZUILabel';
 
 interface ZUIHeaderProps {
   /**
@@ -140,7 +141,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
             {breadcrumbs && (
-              <Box marginRight={avatar ? '16px' : '12px'}>
+              <Box marginRight={avatar ? '1rem' : '0.75rem'}>
                 <ZUIBreadcrumbs breadcrumbs={breadcrumbs} />
               </Box>
             )}
@@ -148,22 +149,13 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               <Avatar
                 src={avatar}
                 sx={{
-                  height: 32,
-                  marginRight: '12px',
-                  width: 32,
+                  height: '2rem',
+                  marginRight: '0.75rem',
+                  width: '2rem',
                 }}
               />
             )}
-            <Typography
-              component="div"
-              noWrap
-              sx={{
-                display: 'flex',
-                fontSize: '22px',
-                transition: 'margin 0.3s ease',
-              }}
-              variant="h4"
-            >
+            <ZUIText component="div" display="flex" noWrap variant="headingLg">
               {onTitleChange ? (
                 <ZUIEditTextinPlace
                   onChange={(newValue) => onTitleChange(newValue)}
@@ -172,13 +164,14 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
               ) : (
                 title
               )}
-            </Typography>
+            </ZUIText>
           </Box>
         </Box>
         {showActionButton && (
           <>
             <ZUIButtonGroup
               buttons={actionButtons}
+              size="small"
               variant={actionButtonVariant}
             />
             {!!actionButtonPopoverContent && (
@@ -197,29 +190,27 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                     setactionButtonPopoverAnchorEl(null)
                   )}
                 {typeof actionButtonPopoverContent !== 'function' && (
-                  <Box minWidth={200}>
+                  <Box minWidth="12.5rem">
                     <MenuList>
-                      {actionButtonPopoverContent.map((item, index) => (
-                        <MenuItem
-                          key={index}
-                          disabled={item.disabled}
-                          divider={item.divider}
-                          onClick={() => {
-                            item.onClick();
-                            setactionButtonPopoverAnchorEl(null);
-                          }}
-                        >
-                          {item.startIcon && (
-                            <ListItemIcon>{item.startIcon}</ListItemIcon>
-                          )}
-                          <ListItemText>{item.label}</ListItemText>
-                          {item.endContent && (
-                            <Typography color="secondary" variant="body2">
-                              {item.endContent}
+                      {actionButtonPopoverContent.map((item, index) => {
+                        const Icon = item.startIcon;
+                        return (
+                          <MenuItem
+                            key={index}
+                            disabled={item.disabled}
+                            divider={item.divider}
+                            onClick={() => {
+                              item.onClick();
+                              setactionButtonPopoverAnchorEl(null);
+                            }}
+                          >
+                            {Icon && <ListItemIcon>{<Icon />}</ListItemIcon>}
+                            <Typography variant="labelXlMedium">
+                              {item.label}
                             </Typography>
-                          )}
-                        </MenuItem>
-                      ))}
+                          </MenuItem>
+                        );
+                      })}
                     </MenuList>
                   </Box>
                 )}
@@ -236,7 +227,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
         )}
       </Box>
       {showBottomRow && (
-        <Box alignItems="center" display="flex" paddingTop={1}>
+        <Box alignItems="center" display="flex" paddingTop="0.25rem">
           {(belowTitle || metaData) && (
             <Box alignItems="center" display="flex">
               {belowTitle && belowTitle}
@@ -244,12 +235,12 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                 <Divider
                   flexItem
                   orientation="vertical"
-                  sx={{ marginX: '16px', marginY: '4px' }}
+                  sx={{ height: '1.375rem', marginX: '1rem' }}
                   variant="middle"
                 />
               )}
               {metaData && (
-                <Box display="flex" flexShrink={0} gap={2}>
+                <Box display="flex" flexShrink={0} gap="0.5rem">
                   {metaData.map((data) => {
                     const Icon = data.icon;
                     return (
@@ -258,19 +249,21 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                         alignItems="center"
                         display="flex"
                         flexShrink="0"
-                        gap="6px"
+                        gap="0.375rem"
                       >
                         <Icon
-                          size={20}
-                          sx={{ color: theme.palette.grey[400] }}
+                          sx={{
+                            color: theme.palette.grey[400],
+                            fontSize: '1.25rem',
+                          }}
                         />
-                        <Typography
+                        <ZUILabel
+                          color="secondary"
                           flexShrink="0"
-                          fontSize={14}
-                          sx={{ color: theme.palette.text.secondary }}
+                          variant="labelMdRegular"
                         >
                           {data.label}
-                        </Typography>
+                        </ZUILabel>
                       </Box>
                     );
                   })}

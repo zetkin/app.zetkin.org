@@ -1,10 +1,11 @@
+import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
-import { FC, ReactNode } from 'react';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 import {
   ListItemIcon,
-  ListItemText,
   Menu,
   MenuItem,
+  SvgIconTypeMap,
   Theme,
   Typography,
 } from '@mui/material';
@@ -15,12 +16,9 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
       '& ul': {
         '& .MuiMenuItem-divider': {
           '& + li': {
-            paddingTop: '8px',
+            paddingTop: '0.5rem',
           },
-          paddingBottom: '8px',
-        },
-        '& li > p': {
-          marginLeft: '12px',
+          paddingBottom: '0.5rem',
         },
         maxHeight: ({ maxHeight }) => (maxHeight ? maxHeight : ''),
         width: ({ width }) => (width ? width : ''),
@@ -35,10 +33,11 @@ const useStyles = makeStyles<Theme, { maxHeight?: string; width?: string }>(
 export interface MenuItem {
   disabled?: boolean;
   divider?: boolean;
-  endContent?: ReactNode;
   label: string;
   onClick: () => void;
-  startIcon?: ReactNode;
+  startIcon?: OverridableComponent<
+    SvgIconTypeMap<Record<string, unknown>, 'svg'>
+  >;
 }
 
 interface ZUIMenuProps {
@@ -69,29 +68,31 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
       open={!!anchorEl}
       PaperProps={{ className: classes.paper }}
     >
-      {menuItems.map((item, index) => (
-        <MenuItem
-          key={index}
-          dense={dense}
-          disabled={item.disabled}
-          disableGutters={disableGutters}
-          divider={item.divider}
-          onClick={() => {
-            item.onClick();
-            if (onClose) {
-              onClose();
-            }
-          }}
-        >
-          {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
-          <ListItemText>{item.label}</ListItemText>
-          {item.endContent && (
-            <Typography color="secondary" variant="body2">
-              {item.endContent}
-            </Typography>
-          )}
-        </MenuItem>
-      ))}
+      {menuItems.map((item, index) => {
+        const Icon = item.startIcon;
+        return (
+          <MenuItem
+            key={index}
+            dense={dense}
+            disabled={item.disabled}
+            disableGutters={disableGutters}
+            divider={item.divider}
+            onClick={() => {
+              item.onClick();
+              if (onClose) {
+                onClose();
+              }
+            }}
+          >
+            {Icon && (
+              <ListItemIcon>
+                <Icon sx={{ fontSize: '1.5rem' }} />
+              </ListItemIcon>
+            )}
+            <Typography variant="labelXlMedium">{item.label}</Typography>
+          </MenuItem>
+        );
+      })}
     </Menu>
   );
 };

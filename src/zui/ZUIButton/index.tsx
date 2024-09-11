@@ -1,5 +1,10 @@
 import { Button, CircularProgress } from '@mui/material';
-import { FC, KeyboardEventHandler, MouseEventHandler } from 'react';
+import {
+  CSSProperties,
+  FC,
+  KeyboardEventHandler,
+  MouseEventHandler,
+} from 'react';
 
 type ZUIButtonVariant =
   | 'primary'
@@ -22,7 +27,7 @@ export interface ZUIButtonProps {
   variant?: ZUIButtonVariant;
 }
 
-export const getVariant = (variant: ZUIButtonVariant) => {
+export const getVariant = (variant: ZUIButtonVariant = 'secondary') => {
   if (variant === 'secondary') {
     return 'outlined';
   } else if (variant === 'tertiary') {
@@ -32,7 +37,7 @@ export const getVariant = (variant: ZUIButtonVariant) => {
   }
 };
 
-const getColor = (variant: ZUIButtonVariant) => {
+const getColor = (variant: ZUIButtonVariant = 'secondary') => {
   if (variant === 'destructive') {
     return 'error';
   } else if (variant === 'warning') {
@@ -46,11 +51,11 @@ const getLoadingIndicatorPadding = (
   size: 'large' | 'medium' | 'small' = 'medium'
 ) => {
   if (size == 'large') {
-    return '13px 22px 13px 22px';
+    return '0.183rem 1.375rem 0.183rem 1.375rem';
   } else if (size == 'medium') {
-    return '10px 16px 10px 16px';
+    return '0.625rem 1rem 0.625rem 1rem';
   } else if (size == 'small') {
-    return '7px 10px 7px 10px';
+    return '0.438rem 0.625rem 0.438rem 0.625rem';
   }
 };
 
@@ -60,21 +65,21 @@ const getTextPadding = (
 ) => {
   if (size === 'large') {
     if (variant === 'secondary') {
-      return '7px 22px 7px 22px';
+      return '0.438rem 1.375rem 0.438rem 1.375rem';
     } else {
-      return '8px 22px 8px 22px';
+      return '0.5rem 1.375rem 0.5rem 1.375rem';
     }
   }
 
   if (size === 'medium') {
     if (variant === 'tertiary') {
-      return '6px 16px 6px 16px';
+      return '0.375rem 1rem 0.375rem 1rem';
     }
   }
 
   if (size === 'small') {
     if (variant === 'tertiary') {
-      return '4px 10px 4px 10px';
+      return '0.25rem 0.625rem 0.25rem 0.625rem';
     }
   }
 };
@@ -87,7 +92,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   label,
   onClick,
   onKeyDown,
-  size,
+  size = 'medium',
   startIcon,
   variant,
 }) => {
@@ -102,11 +107,23 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       onKeyDown={onKeyDown}
       size={size}
       startIcon={startIcon}
-      sx={{
-        minWidth: '35px',
-        padding: isLoading
-          ? getLoadingIndicatorPadding(size)
-          : getTextPadding(size, variant),
+      sx={(theme) => {
+        let textStyle: CSSProperties;
+        if (size === 'small') {
+          textStyle = theme.typography.labelSmSemiBold;
+        } else if (size === 'medium') {
+          textStyle = theme.typography.labelMdSemiBold;
+        } else {
+          textStyle = theme.typography.labelLgSemiBold;
+        }
+
+        return {
+          ...textStyle,
+          minWidth: '2.188rem',
+          padding: isLoading
+            ? getLoadingIndicatorPadding(size)
+            : getTextPadding(size, variant),
+        };
       }}
       type={actionType}
       variant={variant ? getVariant(variant) : undefined}

@@ -6,12 +6,38 @@ import ZUIButton, { getVariant, ZUIButtonProps } from 'zui/ZUIButton';
 import ZUIIconButton, { ZUIIconButtonProps } from 'zui/ZUIIconButton';
 
 const useStyles = makeStyles({
-  group: {
+  buttonGroup: {
     '& .MuiButton-outlined': {
-      padding: '5px 15px 5px 15px',
+      padding: '0.313rem 0.938rem 0.313rem 0.938rem',
     },
     '& .MuiButton-text, & .MuiButton-contained': {
-      padding: '6px 16px 6px 16px',
+      padding: '0.375rem 1rem 0.375rem 1rem',
+    },
+    '& > button': {
+      '&.MuiButtonGroup-groupedHorizontal:has(.MuiSvgIcon-root)': {
+        '&.MuiButton-sizeLarge:has(> svg)': {
+          '&> svg': {
+            fontSize: '1.75rem',
+          },
+          paddingLeft: 0,
+          paddingRight: 0,
+        },
+        '&.MuiButton-sizeMedium:has(> svg)': {
+          '&> svg': {
+            fontSize: '1.5rem',
+          },
+          paddingLeft: 0,
+          paddingRight: 0,
+        },
+        '&.MuiButton-sizeSmall:has(> svg)': {
+          '&> svg': {
+            fontSize: '1.25rem',
+          },
+          minWidth: '1.875rem',
+          paddingLeft: 0,
+          paddingRight: 0,
+        },
+      },
     },
   },
 });
@@ -32,7 +58,7 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   const classes = useStyles();
   return (
     <ButtonGroup
-      className={classes.group}
+      className={classes.buttonGroup}
       orientation={orientation}
       size={size}
       variant={getVariant(variant)}

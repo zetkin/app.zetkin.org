@@ -47,7 +47,6 @@ export const PrimaryVertical: Story = {
 export const PrimaryVerticalWithIcon: Story = {
   args: {
     buttons: [{ label: 'Hallå' }, { icon: CatchingPokemon }],
-
     orientation: 'vertical',
   },
 };

@@ -11,6 +11,7 @@ import { Meta, StoryObj } from '@storybook/react';
 
 import RightSide from './index';
 import ZUIButton from 'zui/ZUIButton';
+import ZUIText from 'zui/ZUIText';
 
 const meta: Meta<typeof RightSide> = {
   component: RightSide,
@@ -45,12 +46,12 @@ export const ProjectActivityHeader: Story = {
     actionButtonLabel: 'Publication',
     belowActionButton: (
       <Box bgcolor="lightcoral" padding={1}>
-        Component with scheduling and status info here
+        <ZUIText>Component with scheduling and status info here</ZUIText>
       </Box>
     ),
     belowTitle: (
       <Box bgcolor="lightblue" padding={1}>
-        Interactive component here
+        <ZUIText>Interactive component here</ZUIText>
       </Box>
     ),
     breadcrumbs: [
@@ -110,12 +111,12 @@ export const ActionButtonWithMenuAndEllipsisMenu: Story = {
   args: {
     actionButtonLabel: 'Create an activity',
     actionButtonPopoverContent: [
-      { label: 'Event', onClick: () => null, startIcon: <Celebration /> },
-      { label: 'Email', onClick: () => null, startIcon: <Email /> },
+      { label: 'Event', onClick: () => null, startIcon: Celebration },
+      { label: 'Email', onClick: () => null, startIcon: Email },
     ],
     ellipsisMenuItems: [
-      { label: 'Rename', onClick: () => null, startIcon: <Edit /> },
-      { label: 'Share', onClick: () => null, startIcon: <Share /> },
+      { label: 'Rename', onClick: () => null, startIcon: Edit },
+      { label: 'Share', onClick: () => null, startIcon: Share },
     ],
   },
 };
@@ -128,17 +129,17 @@ export const ActionWithPopoverContentAndEllipsisMenu: Story = {
     actionButtonLabel: 'Schedule',
     actionButtonPopoverContent: (onClose) => (
       <Box display="flex" flexDirection="column" padding={2}>
-        <Box paddingY={2}>
+        <ZUIText paddingY={2}>
           Hello! This is just a random component with whatever content you want
-        </Box>
+        </ZUIText>
         <Box alignSelf="flex-end">
           <ZUIButton label="Close me" onClick={onClose} variant="primary" />
         </Box>
       </Box>
     ),
     ellipsisMenuItems: [
-      { label: 'Rename', onClick: () => null, startIcon: <Edit /> },
-      { label: 'Share', onClick: () => null, startIcon: <Share /> },
+      { label: 'Rename', onClick: () => null, startIcon: Edit },
+      { label: 'Share', onClick: () => null, startIcon: Share },
     ],
   },
 };
