@@ -2,8 +2,10 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   staticDirs: ['../src'],
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-
+  stories: [
+    '../src/**/*.mdx',
+    '../src/zui/!(ZUITimeline|ZUITextEditor|ZUIRelativeTime|ZUIReorderable|ZUISection|ZUIUserAvatar|ZUIDialog|ZUIEllipsisMenu|ZUIFileChip|ZUIJourneyInstanceItem|ZUIList|ZUILogo|ZUIPerson|ZUIPersonAvatar|ZUIPersonLink|ZUIPreviewableInput|ZUIAccessList|ZUIEmptyState|ZUIStackedStatusBar|ZUISuffixedNumber|ZUITimeSpan|ZUIAccessList|ZUIJourneyInstanceCard|ZUIAnimatedNumber|ZUIConfirmDialog|ZUIAutoTextArea|ZUICollapse|ZUIDate)/**/*.stories.@(js|jsx|ts|tsx)',
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -23,6 +25,6 @@ module.exports = {
   },
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript'
-  }
+    reactDocgen: 'react-docgen-typescript',
+  },
 };
