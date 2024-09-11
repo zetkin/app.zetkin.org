@@ -6,16 +6,26 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { ZetkinArea, ZetkinCanvassAssignment, ZetkinPlace } from './types';
+import {
+  ZetkinArea,
+  ZetkinCanvassAssignee,
+  ZetkinCanvassAssignment,
+  ZetkinPlace,
+} from './types';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
+  assigneesByCanvassAssignmentId: Record<
+    string,
+    RemoteList<ZetkinCanvassAssignee>
+  >;
   canvassAssignmentList: RemoteList<ZetkinCanvassAssignment>;
   placeList: RemoteList<ZetkinPlace>;
 }
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
   placeList: remoteList(),
 };
@@ -79,6 +89,28 @@ const areasSlice = createSlice({
       state.areaList = remoteList(areas);
       state.areaList.loaded = timestamp;
       state.areaList.items.forEach((item) => (item.loaded = timestamp));
+    },
+    assigneeAdd: (state, action: PayloadAction<[string, number]>) => {
+      const [canvassAssId, assigneeId] = action.payload;
+
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneesByCanvassAssignmentId[canvassAssId].items.push(
+        remoteItem(assigneeId, { isLoading: true })
+      );
+    },
+    assigneeAdded: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignee]>
+    ) => {
+      const [canvassAssId, assignee] = action.payload;
+
+      state.assigneesByCanvassAssignmentId[canvassAssId].items =
+        state.assigneesByCanvassAssignmentId[canvassAssId].items
+          .filter((c) => c.id != assignee.id)
+          .concat([remoteItem(assignee.id, { data: assignee })]);
     },
     canvassAssignmentCreated: (
       state,
@@ -162,6 +194,8 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
+  assigneeAdd,
+  assigneeAdded,
   canvassAssignmentCreated,
   canvassAssignmentLoad,
   canvassAssignmentLoaded,

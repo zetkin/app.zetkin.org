@@ -24,6 +24,11 @@ type ZetkinCanvassAssignmentModelType = {
   title: string | null;
 };
 
+type ZetkinCanvassAssigneeModelType = {
+  areaUrl: string;
+  id: number;
+};
+
 const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
   description: String,
   orgId: { required: true, type: Number },
@@ -47,6 +52,11 @@ const canvassAssignmentSchema =
     title: String,
   });
 
+const canvassAssigneeSchema =
+  new mongoose.Schema<ZetkinCanvassAssigneeModelType>({
+    id: { required: true, type: Number },
+  });
+
 export const AreaModel: mongoose.Model<ZetkinAreaModelType> =
   mongoose.models.Area ||
   mongoose.model<ZetkinAreaModelType>('Area', areaSchema);
@@ -60,4 +70,11 @@ export const CanvassAssignmentModel: mongoose.Model<ZetkinCanvassAssignmentModel
   mongoose.model<ZetkinCanvassAssignmentModelType>(
     'CanvassAssignment',
     canvassAssignmentSchema
+  );
+
+export const CanvassAssigneeModel: mongoose.Model<ZetkinCanvassAssigneeModelType> =
+  mongoose.models.CanvassAssignee ||
+  mongoose.model<ZetkinCanvassAssigneeModelType>(
+    'CanvassAssignee',
+    canvassAssigneeSchema
   );

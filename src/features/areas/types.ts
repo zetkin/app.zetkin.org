@@ -41,3 +41,8 @@ export type ZetkinPlacePatchBody = Omit<ZetkinPlacePostBody, 'visits'> & {
 export type ZetkinCanvassAssignmentPostBody = Partial<
   Omit<ZetkinCanvassAssignment, 'id'>
 >;
+export type ZetkinCanvassAssignmentPatchbody = ZetkinCanvassAssignmentPostBody;
+
+export type ZetkinCanvassAssignee = {
+  id: number;
+};

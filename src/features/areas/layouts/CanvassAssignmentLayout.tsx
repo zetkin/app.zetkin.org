@@ -1,9 +1,29 @@
 import { FC, ReactNode } from 'react';
 
-import DefaultLayout from 'utils/layout/DefaultLayout';
+import TabbedLayout from 'utils/layout/TabbedLayout';
 
-const CanvassAssignmentLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  return <DefaultLayout>{children}</DefaultLayout>;
+type CanvassAssignmentLayoutProps = {
+  campId: number;
+  canvassAssId: string;
+  children: ReactNode;
+  orgId: number;
+};
+
+const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
+  children,
+  orgId,
+  campId,
+  canvassAssId,
+}) => {
+  return (
+    <TabbedLayout
+      baseHref={`/organize/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`}
+      defaultTab="/"
+      tabs={[{ href: '/', label: 'Overview' }]}
+    >
+      {children}
+    </TabbedLayout>
+  );
 };
 
 export default CanvassAssignmentLayout;
