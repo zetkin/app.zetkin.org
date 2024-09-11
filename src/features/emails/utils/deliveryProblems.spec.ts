@@ -23,6 +23,7 @@ const mockEmail = (emailOverrides?: Partial<ZetkinEmail>): ZetkinEmail => {
     id: 1,
     locked: '2024-02-26T12:27:32.237413',
     organization: { id: 1, title: 'My Organization' },
+    processed: null,
     published: null,
     subject: 'Hello new member!',
     target: {

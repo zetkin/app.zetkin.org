@@ -510,6 +510,7 @@ export interface ZetkinEmail {
   id: number;
   locked: string | null;
   published: string | null;
+  processed: string | null;
   subject: string | null;
   organization: { id: number; title: string };
   content: string | null;
