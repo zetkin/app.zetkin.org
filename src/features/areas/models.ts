@@ -18,6 +18,12 @@ type ZetkinPlaceModelType = {
   visits: ZetkinPlace['visits'];
 };
 
+type ZetkinCanvassAssignmentModelType = {
+  campId: number;
+  orgId: number;
+  title: string | null;
+};
+
 const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
   description: String,
   orgId: { required: true, type: Number },
@@ -34,6 +40,13 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
   visits: Array,
 });
 
+const canvassAssignmentSchema =
+  new mongoose.Schema<ZetkinCanvassAssignmentModelType>({
+    campId: { required: true, type: Number },
+    orgId: { required: true, type: Number },
+    title: String,
+  });
+
 export const AreaModel: mongoose.Model<ZetkinAreaModelType> =
   mongoose.models.Area ||
   mongoose.model<ZetkinAreaModelType>('Area', areaSchema);
@@ -41,3 +54,10 @@ export const AreaModel: mongoose.Model<ZetkinAreaModelType> =
 export const PlaceModel: mongoose.Model<ZetkinPlaceModelType> =
   mongoose.models.Place ||
   mongoose.model<ZetkinPlaceModelType>('Place', placeSchema);
+
+export const CanvassAssignmentModel: mongoose.Model<ZetkinCanvassAssignmentModelType> =
+  mongoose.models.CanvassAssignment ||
+  mongoose.model<ZetkinCanvassAssignmentModelType>(
+    'CanvassAssignment',
+    canvassAssignmentSchema
+  );

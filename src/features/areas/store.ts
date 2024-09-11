@@ -6,15 +6,17 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { ZetkinArea, ZetkinPlace } from './types';
+import { ZetkinArea, ZetkinCanvassAssignment, ZetkinPlace } from './types';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
+  canvassAssignmentList: RemoteList<ZetkinCanvassAssignment>;
   placeList: RemoteList<ZetkinPlace>;
 }
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  canvassAssignmentList: remoteList(),
   placeList: remoteList(),
 };
 
@@ -78,6 +80,21 @@ const areasSlice = createSlice({
       state.areaList.loaded = timestamp;
       state.areaList.items.forEach((item) => (item.loaded = timestamp));
     },
+    canvassAssignmentCreate: (state) => {
+      state.canvassAssignmentList.isLoading = true;
+    },
+    canvassAssignmentCreated: (
+      state,
+      action: PayloadAction<ZetkinCanvassAssignment>
+    ) => {
+      const canvassAssignment = action.payload;
+      const item = remoteItem(canvassAssignment.id, {
+        data: canvassAssignment,
+        loaded: new Date().toISOString(),
+      });
+
+      state.canvassAssignmentList.items.push(item);
+    },
     placeCreated: (state, action: PayloadAction<ZetkinPlace>) => {
       const place = action.payload;
       const item = remoteItem(place.id, {
@@ -116,6 +133,8 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
+  canvassAssignmentCreate,
+  canvassAssignmentCreated,
   placeCreated,
   placesLoad,
   placesLoaded,

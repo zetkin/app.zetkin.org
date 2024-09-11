@@ -26,9 +26,18 @@ export type ZetkinPlace = {
   visits: Visit[];
 };
 
-export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;
+export type ZetkinCanvassAssignment = {
+  campId: number;
+  id: string;
+  orgId: number;
+  title: string | null;
+};
 
+export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;
 export type ZetkinPlacePostBody = Partial<Omit<ZetkinPlace, 'id'>>;
 export type ZetkinPlacePatchBody = Omit<ZetkinPlacePostBody, 'visits'> & {
   visits?: Omit<Visit, 'id'>[];
 };
+export type ZetkinCanvassAssignmentPostBody = Partial<
+  Omit<ZetkinCanvassAssignment, 'id'>
+>;
