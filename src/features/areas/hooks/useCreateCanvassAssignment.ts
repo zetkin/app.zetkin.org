@@ -3,7 +3,7 @@ import {
   ZetkinCanvassAssignment,
   ZetkinCanvassAssignmentPostBody,
 } from '../types';
-import { canvassAssignmentCreate, canvassAssignmentCreated } from '../store';
+import { canvassAssignmentCreated } from '../store';
 
 export default function useCreateCanvassAssignment(
   orgId: number,
@@ -13,7 +13,6 @@ export default function useCreateCanvassAssignment(
   const dispatch = useAppDispatch();
 
   return async (data: ZetkinCanvassAssignmentPostBody) => {
-    dispatch(canvassAssignmentCreate());
     const created = await apiClient.post<ZetkinCanvassAssignment>(
       `/beta/orgs/${orgId}/projects/${campId}/canvassassignments`,
       data

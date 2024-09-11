@@ -80,9 +80,6 @@ const areasSlice = createSlice({
       state.areaList.loaded = timestamp;
       state.areaList.items.forEach((item) => (item.loaded = timestamp));
     },
-    canvassAssignmentCreate: (state) => {
-      state.canvassAssignmentList.isLoading = true;
-    },
     canvassAssignmentCreated: (
       state,
       action: PayloadAction<ZetkinCanvassAssignment>
@@ -94,6 +91,38 @@ const areasSlice = createSlice({
       });
 
       state.canvassAssignmentList.items.push(item);
+    },
+    canvassAssignmentLoad: (state, action: PayloadAction<string>) => {
+      const canvassAssId = action.payload;
+      const item = state.canvassAssignmentList.items.find(
+        (item) => item.id == canvassAssId
+      );
+
+      if (item) {
+        item.isLoading = true;
+      } else {
+        state.canvassAssignmentList.items =
+          state.canvassAssignmentList.items.concat([
+            remoteItem(canvassAssId, { isLoading: true }),
+          ]);
+      }
+    },
+    canvassAssignmentLoaded: (
+      state,
+      action: PayloadAction<ZetkinCanvassAssignment>
+    ) => {
+      const canvassAssignment = action.payload;
+      const item = state.canvassAssignmentList.items.find(
+        (item) => item.id == canvassAssignment.id
+      );
+
+      if (!item) {
+        throw new Error('Finished loading item that never started loading');
+      }
+
+      item.data = canvassAssignment;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
     },
     placeCreated: (state, action: PayloadAction<ZetkinPlace>) => {
       const place = action.payload;
@@ -133,8 +162,9 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
-  canvassAssignmentCreate,
   canvassAssignmentCreated,
+  canvassAssignmentLoad,
+  canvassAssignmentLoaded,
   placeCreated,
   placesLoad,
   placesLoaded,

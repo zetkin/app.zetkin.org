@@ -49,7 +49,10 @@ import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
-import areasSlice, { AreasStoreSlice } from 'features/areas/store';
+import areasSlice, {
+  AreasStoreSlice,
+  canvassAssignmentCreated,
+} from 'features/areas/store';
 
 export interface RootState {
   areas: AreasStoreSlice;
@@ -100,6 +103,16 @@ const reducer = {
 };
 
 const listenerMiddleware = createListenerMiddleware();
+
+listenerMiddleware.startListening({
+  actionCreator: canvassAssignmentCreated,
+  effect: (action) => {
+    const canvassAssignment = action.payload;
+    Router.push(
+      `/organize/${canvassAssignment.orgId}/projects/${canvassAssignment.campId}/canvassassignments/${canvassAssignment.id}`
+    );
+  },
+});
 
 listenerMiddleware.startListening({
   actionCreator: campaignDeleted,
