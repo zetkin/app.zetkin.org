@@ -1,22 +1,13 @@
 import { FC, ReactNode } from 'react';
 import { BoxProps, Typography } from '@mui/material';
 
-type TextVariant =
-  | 'bodyMdRegular'
-  | 'bodyMdSemiBold'
-  | 'bodySmRegular'
-  | 'bodySmSemiBold'
-  | 'headingLg'
-  | 'headingMd'
-  | 'headingSm';
-
-type ZUITextProps = {
+type ZUILabelProps = {
   children: ReactNode;
   color?: 'primary' | 'secondary';
   component?: 'div' | 'p' | 'span';
   gutterBottom?: boolean;
   noWrap?: boolean;
-  variant?: TextVariant;
+  variant?: 'labelMdMedium' | 'labelMdRegular';
 } & Omit<
   BoxProps,
   | 'sx'
@@ -32,13 +23,13 @@ type ZUITextProps = {
   | 'textTransform'
 >;
 
-const ZUIText: FC<ZUITextProps> = ({
+const ZUILabel: FC<ZUILabelProps> = ({
   children,
   color,
   component = 'p',
   gutterBottom,
   noWrap,
-  variant = 'bodySmRegular',
+  variant = 'labelMdRegular',
   ...boxProps
 }) => {
   return (
@@ -55,4 +46,4 @@ const ZUIText: FC<ZUITextProps> = ({
   );
 };
 
-export default ZUIText;
+export default ZUILabel;

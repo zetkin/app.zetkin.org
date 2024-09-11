@@ -22,6 +22,7 @@ import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
 import { WithRequired } from 'utils/types';
 import { ZUIIconButtonProps } from 'zui/ZUIIconButton';
 import ZUIText from 'zui/ZUIText';
+import ZUILabel from 'zui/ZUILabel';
 
 interface ZUIHeaderProps {
   /**
@@ -256,13 +257,13 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                             fontSize: '1.25rem',
                           }}
                         />
-                        <ZUIText
+                        <ZUILabel
                           color="secondary"
                           flexShrink="0"
                           variant="labelMdRegular"
                         >
                           {data.label}
-                        </ZUIText>
+                        </ZUILabel>
                       </Box>
                     );
                   })}

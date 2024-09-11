@@ -57,31 +57,3 @@ export const BodySmallBold: Story = {
     variant: 'bodySmSemiBold',
   },
 };
-
-export const LabelMdMedium: Story = {
-  args: {
-    children: 'This is a medium size, medium weight label text',
-    variant: 'labelMdMedium',
-  },
-};
-
-export const LabelMdRegular: Story = {
-  args: {
-    children: 'This is a medium size, regular weight label text',
-    variant: 'labelMdRegular',
-  },
-};
-
-export const LinkMd: Story = {
-  args: {
-    children: 'This is a medium size link text',
-    variant: 'linkMd',
-  },
-};
-
-export const LinkSm: Story = {
-  args: {
-    children: 'This is a small size link text',
-    variant: 'linkSm',
-  },
-};
