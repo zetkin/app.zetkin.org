@@ -112,7 +112,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         if (size === 'small') {
           textStyle = theme.typography.labelSmSemiBold;
         } else if (size === 'medium') {
-          textStyle = theme.typography.bodySmSemiBold;
+          textStyle = theme.typography.labelMdSemiBold;
         } else {
           textStyle = theme.typography.labelLgSemiBold;
         }
