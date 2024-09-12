@@ -22,8 +22,8 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import usePlaces from '../hooks/usePlaces';
-import useCreatePlace from '../hooks/useCreatePlace';
 import PlaceDialog from './PlaceDialog';
+import { PlaceCard } from './PlaceCard';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -91,7 +91,6 @@ type PublicAreaMapProps = {
 const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const theme = useTheme();
   const classes = useStyles();
-  const createPlace = useCreatePlace(area.organization.id);
   const places = usePlaces(area.organization.id).data || [];
 
   const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
@@ -99,6 +98,8 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const [dialogStep, setDialogStep] = useState<'place' | 'log'>('place');
   const [returnToMap, setReturnToMap] = useState(false);
   const [standingStill, setStandingStill] = useState(false);
+  const [showCard, setShowCard] = useState(false);
+  const [point, setPoint] = useState<LatLng | null>(null);
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -229,12 +230,38 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             opacity: !selectedPlace ? 1 : 0.3,
           }}
         >
-          {!selectedPlace && (
+          {!selectedPlace && !showCard && (
             <Box
               className={classes.ghostMarker}
               sx={{
                 opacity: standingStill ? 1 : 0,
                 transition: `opacity ${standingStill ? 0.8 : 0.2}s`,
+              }}
+            >
+              <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
+                <path
+                  d="M14 38.479C13.6358 38.0533 13.1535 37.4795
+                12.589 36.7839C11.2893 35.1826 9.55816 32.9411
+                7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
+                3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
+                6.81228 6.81228 1 14 1C21.1877 1 27 6.81228 27 14C27
+                16.4227 26.1867 19.211 24.8999 22.0833C23.6189 24.9426
+                21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
+                35.1826 15.411 36.7839C14.8465 37.4795 14.3642
+                38.0533 14 38.479Z"
+                  fill="#ED1C55"
+                  stroke="#ED1C55"
+                  strokeWidth="2"
+                />
+              </svg>
+            </Box>
+          )}
+          {!selectedPlace && showCard && (
+            <Box
+              className={classes.ghostMarker}
+              sx={{
+                opacity: 1,
+                transition: `opacity  0.8s`,
               }}
             >
               <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
@@ -289,7 +316,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             </Box>
           </Box>
         )}
-        {!selectedPlace && (
+        {!selectedPlace && !showCard && (
           <Button
             onClick={() => {
               const crosshair = crosshairRef.current;
@@ -305,11 +332,8 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
                 ];
 
                 const point = map?.containerPointToLatLng(markerPoint);
-                if (point) {
-                  createPlace({
-                    position: point,
-                  });
-                }
+                setPoint(point ?? null);
+                setShowCard(true);
               }
             }}
             variant="contained"
@@ -394,6 +418,15 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           open={!!anchorEl}
           orgId={area.organization.id}
           place={selectedPlace}
+        />
+      )}
+      {showCard && (
+        <PlaceCard
+          onClose={() => {
+            setShowCard(false);
+          }}
+          orgId={area.organization.id}
+          point={point}
         />
       )}
     </>
