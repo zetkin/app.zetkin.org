@@ -35,7 +35,6 @@ export default makeMessages('feat.areas', {
     inputLabel: m('Type of place'),
     misc: m('Misc'),
     placeholderAddress: m('Enter address here'),
-    placeholderMisc: m('Enter visits here'),
     placeholderTitle: m('Enter title here'),
   },
   tools: {

@@ -23,7 +23,7 @@ import messageIds from '../l10n/messageIds';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import usePlaces from '../hooks/usePlaces';
 import PlaceDialog from './PlaceDialog';
-import { PlaceCard } from './PlaceCard';
+import { CreatePlaceCard } from './CreatePlaceCard';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -98,7 +98,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const [dialogStep, setDialogStep] = useState<'place' | 'log'>('place');
   const [returnToMap, setReturnToMap] = useState(false);
   const [standingStill, setStandingStill] = useState(false);
-  const [showCard, setShowCard] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [point, setPoint] = useState<LatLng | null>(null);
 
   const [map, setMap] = useState<Map | null>(null);
@@ -230,7 +230,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             opacity: !selectedPlace ? 1 : 0.3,
           }}
         >
-          {!selectedPlace && !showCard && (
+          {!selectedPlace && !isCreating && (
             <Box
               className={classes.ghostMarker}
               sx={{
@@ -256,7 +256,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
               </svg>
             </Box>
           )}
-          {!selectedPlace && showCard && (
+          {!selectedPlace && isCreating && (
             <Box
               className={classes.ghostMarker}
               sx={{
@@ -316,7 +316,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             </Box>
           </Box>
         )}
-        {!selectedPlace && !showCard && (
+        {!selectedPlace && !isCreating && (
           <Button
             onClick={() => {
               const crosshair = crosshairRef.current;
@@ -333,7 +333,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
                 const point = map?.containerPointToLatLng(markerPoint);
                 setPoint(point ?? null);
-                setShowCard(true);
+                setIsCreating(true);
               }
             }}
             variant="contained"
@@ -420,10 +420,10 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           place={selectedPlace}
         />
       )}
-      {showCard && (
-        <PlaceCard
+      {isCreating && (
+        <CreatePlaceCard
           onClose={() => {
-            setShowCard(false);
+            setIsCreating(false);
           }}
           orgId={area.organization.id}
           point={point}

@@ -38,7 +38,7 @@ type AddPlaceDialogProps = {
   point: LatLng | null;
 };
 
-export const PlaceCard: FC<AddPlaceDialogProps> = ({
+export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
   onClose,
   orgId,
   point,
@@ -51,15 +51,6 @@ export const PlaceCard: FC<AddPlaceDialogProps> = ({
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value);
-  };
-
-  const placeholderText = () => {
-    if (type === 'address') {
-      return messages.placeCard.placeholderAddress();
-    } else if (type === 'misc') {
-      return messages.placeCard.placeholderMisc();
-    }
-    return messages.placeCard.placeholderTitle();
   };
 
   return (
@@ -87,7 +78,11 @@ export const PlaceCard: FC<AddPlaceDialogProps> = ({
             <TextField
               fullWidth
               onChange={(ev) => setTitle(ev.target.value)}
-              placeholder={placeholderText()}
+              placeholder={
+                type === 'address'
+                  ? messages.placeCard.placeholderAddress()
+                  : messages.placeCard.placeholderTitle()
+              }
               sx={{ paddingTop: 1 }}
             />
           </FormControl>
