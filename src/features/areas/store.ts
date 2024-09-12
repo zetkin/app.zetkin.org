@@ -107,10 +107,52 @@ const areasSlice = createSlice({
     ) => {
       const [canvassAssId, assignee] = action.payload;
 
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
       state.assigneesByCanvassAssignmentId[canvassAssId].items =
         state.assigneesByCanvassAssignmentId[canvassAssId].items
           .filter((c) => c.id != assignee.id)
           .concat([remoteItem(assignee.id, { data: assignee })]);
+    },
+    assigneeUpdated: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignee]>
+    ) => {
+      const [canvassAssId, assignee] = action.payload;
+
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneesByCanvassAssignmentId[canvassAssId].items
+        .filter((item) => item.id == assignee.id)
+        .concat([remoteItem(assignee.id, { data: assignee })]);
+    },
+    assigneesLoad: (state, action: PayloadAction<string>) => {
+      const canvassAssId = action.payload;
+
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneesByCanvassAssignmentId[canvassAssId].isLoading = true;
+    },
+    assigneesLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignee[]]>
+    ) => {
+      const [canvassAssId, assignees] = action.payload;
+
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneesByCanvassAssignmentId[canvassAssId] =
+        remoteList(assignees);
+      state.assigneesByCanvassAssignmentId[canvassAssId].loaded =
+        new Date().toISOString();
     },
     canvassAssignmentCreated: (
       state,
@@ -196,6 +238,9 @@ export const {
   areaUpdated,
   assigneeAdd,
   assigneeAdded,
+  assigneeUpdated,
+  assigneesLoad,
+  assigneesLoaded,
   canvassAssignmentCreated,
   canvassAssignmentLoad,
   canvassAssignmentLoaded,

@@ -1,13 +1,15 @@
 import { GetServerSideProps } from 'next';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 
 import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import ZUIFuture from 'zui/ZUIFuture';
 import useAddAssignee from 'features/areas/hooks/useAddAssignee';
+import useAssignees from 'features/areas/hooks/useAssignees';
+import ZUIFutures from 'zui/ZUIFutures';
+import useAssigneeMutations from 'features/areas/hooks/useAssigneeMutations';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -19,6 +21,30 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     props: { campId, canvassAssId, orgId },
   };
 }, scaffoldOptions);
+
+const AssigneeListItem: FC<{
+  assigneeId: number;
+  onAddUrl: (url: string) => void;
+}> = ({ assigneeId, onAddUrl }) => {
+  const [url, setUrl] = useState('');
+  return (
+    <Box alignItems="center" display="flex" gap={1}>
+      <Typography>{assigneeId}</Typography>
+      <TextField onChange={(ev) => setUrl(ev.target.value)} value={url} />
+      <Button
+        disabled={!url}
+        onClick={() => {
+          if (url) {
+            onAddUrl(url);
+          }
+        }}
+        variant="outlined"
+      >
+        Add this area url
+      </Button>
+    </Box>
+  );
+};
 
 interface CanvassAssignmentPageProps {
   orgId: string;
@@ -39,14 +65,31 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
     canvassAssId
   );
 
+  const updateAssignee = useAssigneeMutations(
+    parseInt(orgId),
+    parseInt(campId),
+    canvassAssId
+  );
+
   const canvassAssignmentFuture = useCanvassAssignment(
     parseInt(orgId),
     parseInt(campId),
     canvassAssId
   );
+
+  const assigneesFuture = useAssignees(
+    parseInt(orgId),
+    parseInt(campId),
+    canvassAssId
+  );
   return (
-    <ZUIFuture future={canvassAssignmentFuture}>
-      {(canvassAssignment) => {
+    <ZUIFutures
+      futures={{
+        assignees: assigneesFuture,
+        canvassAssignment: canvassAssignmentFuture,
+      }}
+    >
+      {({ data: { canvassAssignment, assignees } }) => {
         return (
           <Box>
             {canvassAssignment.title}
@@ -70,13 +113,25 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 }}
                 variant="contained"
               >
-                Do it
+                Add assignee
               </Button>
+            </Box>
+            <Box>
+              Ids of people that have been added as assignees
+              {assignees.map((assignee) => (
+                <AssigneeListItem
+                  key={assignee.id}
+                  assigneeId={assignee.id}
+                  onAddUrl={(url) =>
+                    updateAssignee(assignee.id, { areaUrl: url })
+                  }
+                />
+              ))}
             </Box>
           </Box>
         );
       }}
-    </ZUIFuture>
+    </ZUIFutures>
   );
 };
 

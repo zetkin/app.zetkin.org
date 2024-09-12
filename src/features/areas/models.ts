@@ -26,6 +26,7 @@ type ZetkinCanvassAssignmentModelType = {
 
 type ZetkinCanvassAssigneeModelType = {
   areaUrl: string;
+  canvassAssId: string;
   id: number;
 };
 
@@ -54,6 +55,8 @@ const canvassAssignmentSchema =
 
 const canvassAssigneeSchema =
   new mongoose.Schema<ZetkinCanvassAssigneeModelType>({
+    areaUrl: String,
+    canvassAssId: String,
     id: { required: true, type: Number },
   });
 
