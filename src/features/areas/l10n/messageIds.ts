@@ -28,6 +28,16 @@ export default makeMessages('feat.areas', {
     noActivity: m('No visits have been recorded at this place.'),
     saveButton: m('Save'),
   },
+  placeCard: {
+    address: m('Address'),
+    cancel: m('Cancel'),
+    createPlace: m('Create place'),
+    inputLabel: m('Type of place'),
+    misc: m('Misc'),
+    placeholderAddress: m('Enter address here'),
+    placeholderMisc: m('Enter visits here'),
+    placeholderTitle: m('Enter title here'),
+  },
   tools: {
     cancel: m('Cancel'),
     draw: m('Draw'),
