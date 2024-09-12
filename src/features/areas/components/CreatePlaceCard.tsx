@@ -12,11 +12,9 @@ import {
   TextField,
 } from '@mui/material';
 import { FC, useState } from 'react';
-import { LatLng } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 
 import messageIds from '../l10n/messageIds';
-import useCreatePlace from '../hooks/useCreatePlace';
 import { Msg, useMessages } from 'core/i18n';
 
 export const useStyles = makeStyles(() => ({
@@ -34,18 +32,16 @@ export const useStyles = makeStyles(() => ({
 
 type AddPlaceDialogProps = {
   onClose: () => void;
-  orgId: number;
-  point: LatLng | null;
+  onCreate: (title: string, type: string) => void;
 };
 
 export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
   onClose,
-  orgId,
-  point,
+  onCreate,
 }) => {
   const classes = useStyles();
   const messages = useMessages(messageIds);
-  const createPlace = useCreatePlace(orgId);
+
   const [title, setTitle] = useState<string>('');
   const [type, setType] = useState<string>('');
 
@@ -93,13 +89,8 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
           </Button>
           <Button
             onClick={() => {
-              if (point) {
-                createPlace({
-                  position: point,
-                  title,
-                  type: type === 'address' ? 'address' : 'misc',
-                }).then(onClose);
-              }
+              onCreate(title, type);
+              onClose();
             }}
             size="small"
             variant="contained"

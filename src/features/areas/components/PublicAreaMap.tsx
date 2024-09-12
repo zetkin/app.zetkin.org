@@ -20,10 +20,11 @@ import {
 import { ZetkinArea, ZetkinPlace } from '../types';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import usePlaces from '../hooks/usePlaces';
-import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
+import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import PlaceDialog from './PlaceDialog';
+import useCreatePlace from '../hooks/useCreatePlace';
+import usePlaces from '../hooks/usePlaces';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -92,6 +93,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const theme = useTheme();
   const classes = useStyles();
   const places = usePlaces(area.organization.id).data || [];
+  const createPlace = useCreatePlace(area.organization.id);
 
   const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -99,7 +101,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const [returnToMap, setReturnToMap] = useState(false);
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [point, setPoint] = useState<LatLng | null>(null);
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -317,27 +318,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           </Box>
         )}
         {!selectedPlace && !isCreating && (
-          <Button
-            onClick={() => {
-              const crosshair = crosshairRef.current;
-              const mapContainer = map?.getContainer();
-              if (crosshair && mapContainer) {
-                const mapRect = mapContainer.getBoundingClientRect();
-                const markerRect = crosshair.getBoundingClientRect();
-                const x = markerRect.x - mapRect.x;
-                const y = markerRect.y - mapRect.y;
-                const markerPoint: [number, number] = [
-                  x + 0.5 * markerRect.width,
-                  y + 0.8 * markerRect.height,
-                ];
-
-                const point = map?.containerPointToLatLng(markerPoint);
-                setPoint(point ?? null);
-                setIsCreating(true);
-              }
-            }}
-            variant="contained"
-          >
+          <Button onClick={() => setIsCreating(true)} variant="contained">
             <Msg id={messageIds.addNewPlaceButton} />
           </Button>
         )}
@@ -425,8 +406,29 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           onClose={() => {
             setIsCreating(false);
           }}
-          orgId={area.organization.id}
-          point={point}
+          onCreate={(title, type) => {
+            const crosshair = crosshairRef.current;
+            const mapContainer = map?.getContainer();
+            if (crosshair && mapContainer) {
+              const mapRect = mapContainer.getBoundingClientRect();
+              const markerRect = crosshair.getBoundingClientRect();
+              const x = markerRect.x - mapRect.x;
+              const y = markerRect.y - mapRect.y;
+              const markerPoint: [number, number] = [
+                x + 0.5 * markerRect.width,
+                y + 0.8 * markerRect.height,
+              ];
+
+              const point = map?.containerPointToLatLng(markerPoint);
+              if (point) {
+                createPlace({
+                  position: point,
+                  title,
+                  type: type === 'address' ? 'address' : 'misc',
+                });
+              }
+            }
+          }}
         />
       )}
     </>
