@@ -20,7 +20,7 @@ export interface AreasStoreSlice {
     string,
     RemoteList<ZetkinIndividualCanvassAssignment>
   >;
-  //myAssignmentsList: RemoteList<ZetkinIndividualCanvassAssignment>;
+  myAssignmentsList: RemoteList<ZetkinIndividualCanvassAssignment>;
   placeList: RemoteList<ZetkinPlace>;
 }
 
@@ -28,7 +28,7 @@ const initialState: AreasStoreSlice = {
   areaList: remoteList(),
   canvassAssignmentList: remoteList(),
   individualAssignmentsByCanvassAssignmentId: {},
-  //myAssignmentsList: remoteList(),
+  myAssignmentsList: remoteList(),
   placeList: remoteList(),
 };
 
@@ -217,6 +217,22 @@ const areasSlice = createSlice({
       state.individualAssignmentsByCanvassAssignmentId[canvassAssId].loaded =
         new Date().toISOString();
     },
+    myAssignmentsLoad: (state) => {
+      state.myAssignmentsList.isLoading = true;
+    },
+    myAssignmentsLoaded: (
+      state,
+      action: PayloadAction<ZetkinIndividualCanvassAssignment[]>
+    ) => {
+      const individualAssignments = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.myAssignmentsList = remoteList(individualAssignments);
+      state.myAssignmentsList.loaded = timestamp;
+      state.myAssignmentsList.items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
+    },
     placeCreated: (state, action: PayloadAction<ZetkinPlace>) => {
       const place = action.payload;
       const item = remoteItem(place.id, {
@@ -260,6 +276,8 @@ export const {
   individualAssignmentUpdated,
   individualAssignmentsLoad,
   individualAssignmentsLoaded,
+  myAssignmentsLoad,
+  myAssignmentsLoaded,
   canvassAssignmentCreated,
   canvassAssignmentLoad,
   canvassAssignmentLoaded,
