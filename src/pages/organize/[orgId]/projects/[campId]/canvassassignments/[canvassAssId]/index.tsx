@@ -6,10 +6,10 @@ import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import useAddAssignee from 'features/areas/hooks/useAddAssignee';
-import useAssignees from 'features/areas/hooks/useAssignees';
+import useAddIndividualCanvassAssignment from 'features/areas/hooks/useAddIndividualCanvassAssignment';
+import useIndividualCanvassAssignments from 'features/areas/hooks/useIndividualCanvassAssignments';
 import ZUIFutures from 'zui/ZUIFutures';
-import useAssigneeMutations from 'features/areas/hooks/useAssigneeMutations';
+import useIndividualCanvassAssignmentMutations from 'features/areas/hooks/useIndividualCanvassAssignmentMutations';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,14 +22,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 }, scaffoldOptions);
 
-const AssigneeListItem: FC<{
-  assigneeId: number;
+const IndividualCanvassAssignmentListItem: FC<{
+  individualCanvassAssId: string;
   onAddUrl: (url: string) => void;
-}> = ({ assigneeId, onAddUrl }) => {
+}> = ({ individualCanvassAssId, onAddUrl }) => {
   const [url, setUrl] = useState('');
   return (
     <Box alignItems="center" display="flex" gap={1}>
-      <Typography>{assigneeId}</Typography>
+      <Typography>{individualCanvassAssId}</Typography>
       <TextField onChange={(ev) => setUrl(ev.target.value)} value={url} />
       <Button
         disabled={!url}
@@ -59,13 +59,13 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
 }) => {
   const [personId, setPersonId] = useState<number | null>(null);
 
-  const addAssignee = useAddAssignee(
+  const addIndividualCanvassAss = useAddIndividualCanvassAssignment(
     parseInt(orgId),
     parseInt(campId),
     canvassAssId
   );
 
-  const updateAssignee = useAssigneeMutations(
+  const updateIndividualCanvassAss = useIndividualCanvassAssignmentMutations(
     parseInt(orgId),
     parseInt(campId),
     canvassAssId
@@ -77,7 +77,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
     canvassAssId
   );
 
-  const assigneesFuture = useAssignees(
+  const individualCanvassAssignmentsFuture = useIndividualCanvassAssignments(
     parseInt(orgId),
     parseInt(campId),
     canvassAssId
@@ -85,11 +85,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   return (
     <ZUIFutures
       futures={{
-        assignees: assigneesFuture,
         canvassAssignment: canvassAssignmentFuture,
+        individualCanvassAssignments: individualCanvassAssignmentsFuture,
       }}
     >
-      {({ data: { canvassAssignment, assignees } }) => {
+      {({ data: { canvassAssignment, individualCanvassAssignments } }) => {
         return (
           <Box>
             {canvassAssignment.title}
@@ -108,22 +108,24 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               <Button
                 onClick={() => {
                   if (personId) {
-                    addAssignee(personId);
+                    addIndividualCanvassAss(personId);
                   }
                 }}
                 variant="contained"
               >
-                Add assignee
+                Add person (create indiviual canvass assignment)
               </Button>
             </Box>
             <Box>
-              Ids of people that have been added as assignees
-              {assignees.map((assignee) => (
-                <AssigneeListItem
-                  key={assignee.id}
-                  assigneeId={assignee.id}
+              Ids of people that have been added
+              {individualCanvassAssignments.map((individualCanvassAss) => (
+                <IndividualCanvassAssignmentListItem
+                  key={individualCanvassAss.id}
+                  individualCanvassAssId={individualCanvassAss.id}
                   onAddUrl={(url) =>
-                    updateAssignee(assignee.id, { areaUrl: url })
+                    updateIndividualCanvassAss(individualCanvassAss.personId, {
+                      areaUrl: url,
+                    })
                   }
                 />
               ))}

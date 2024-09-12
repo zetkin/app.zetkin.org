@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { CanvassAssigneeModel } from 'features/areas/models';
+import { IndividualCanvassAssignmentModel } from 'features/areas/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {
   params: {
-    assigneeId: string;
     canvassAssId: string;
     orgId: string;
+    personId: string;
   };
 };
 
@@ -22,16 +22,17 @@ export async function PUT(request: NextRequest, { params }: RouteMeta) {
     async () => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
-      const model = new CanvassAssigneeModel({
+      const model = new IndividualCanvassAssignmentModel({
         canvassAssId: params.canvassAssId,
-        id: params.assigneeId,
+        personId: params.personId,
       });
 
       await model.save();
 
       return NextResponse.json({
         data: {
-          id: model.id,
+          id: model._id.toString(),
+          personId: model.personId,
         },
       });
     }
@@ -50,14 +51,13 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const model = await CanvassAssigneeModel.findOneAndUpdate(
+      const model = await IndividualCanvassAssignmentModel.findOneAndUpdate(
         {
           canvassAssId: params.canvassAssId,
-          id: params.assigneeId,
+          personId: params.personId,
         },
         {
           areaUrl: payload.areaUrl,
-          id: params.assigneeId,
         },
         { new: true }
       );
@@ -69,7 +69,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           areaUrl: model.areaUrl,
-          id: model.id,
+          id: model._id.toString(),
         },
       });
     }
