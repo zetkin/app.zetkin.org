@@ -531,9 +531,8 @@ export interface ZetkinEmail {
   theme: EmailTheme | null;
   id: number;
   locked: string | null;
-  processed?: string | null;
-  published: string | null;
   processed: string | null;
+  published: string | null;
   subject: string | null;
   organization: { id: number; title: string };
   content: string | null;
