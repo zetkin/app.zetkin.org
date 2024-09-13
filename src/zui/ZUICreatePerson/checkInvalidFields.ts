@@ -1,12 +1,13 @@
 import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
-import { isValidPhoneNumber } from 'libphonenumber-js';
+import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 
 import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
 
 export default function checkInvalidFields(
   customFields: ZetkinCustomField[],
-  personalInfo: ZetkinCreatePerson
+  personalInfo: ZetkinCreatePerson,
+  countryCode: CountryCode
 ) {
   const invalidFields: string[] = [];
 
@@ -25,13 +26,16 @@ export default function checkInvalidFields(
   }
 
   //phones
-  if (personalInfo.phone && !isValidPhoneNumber(personalInfo.phone || '')) {
+  if (
+    personalInfo.phone &&
+    !isValidPhoneNumber(personalInfo.phone || '', countryCode)
+  ) {
     invalidFields.push('phone');
   }
 
   if (
     personalInfo.alt_phone &&
-    !isValidPhoneNumber(personalInfo.alt_phone || '')
+    !isValidPhoneNumber(personalInfo.alt_phone || '', countryCode)
   ) {
     invalidFields.push('alt_phone');
   }

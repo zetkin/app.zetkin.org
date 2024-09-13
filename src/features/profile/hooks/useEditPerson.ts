@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { CountryCode } from 'libphonenumber-js';
 
 import checkInvalidFields from 'zui/ZUICreatePerson/checkInvalidFields';
 import useCustomFields from './useCustomFields';
 import { ZetkinPerson, ZetkinUpdatePerson } from 'utils/types/zetkin';
+import useOrganization from '../../organizations/hooks/useOrganization';
 
 export default function useEditPerson(
   initialValues: ZetkinPerson,
@@ -10,8 +12,13 @@ export default function useEditPerson(
 ) {
   const customFields = useCustomFields(orgId).data ?? [];
   const [fieldsToUpdate, setFieldsToUpdate] = useState<ZetkinUpdatePerson>({});
-
-  const invalidFields = checkInvalidFields(customFields, fieldsToUpdate);
+  const organization = useOrganization(orgId).data;
+  const countryCode = organization?.country as CountryCode;
+  const invalidFields = checkInvalidFields(
+    customFields,
+    fieldsToUpdate,
+    countryCode
+  );
 
   const onFieldValueChange = (
     field: keyof ZetkinUpdatePerson,
