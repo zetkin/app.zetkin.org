@@ -14,14 +14,13 @@ import SurveyContainer from './SurveyContainer';
 import SurveyOption from './SurveyOption';
 import SurveySubheading from './SurveySubheading';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
-import { Msg, useMessages } from 'core/i18n';
+import { Msg } from 'core/i18n';
 
 export type SurveyPrivacyPolicyProps = {
   survey: ZetkinSurveyExtended;
 };
 
 const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({ survey }) => {
-  const messages = useMessages(messageIds);
   return (
     <FormControl fullWidth>
       <SurveyContainer paddingX={2}>
@@ -46,7 +45,10 @@ const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({ survey }) => {
             </Typography>
             <Typography style={{ fontSize: '0.8em', marginBottom: '0.5em' }}>
               <Link
-                href={messages.surveyForm.policy.link()}
+                href={
+                  process.env.ZETKIN_PRIVACY_POLICY_LINK ||
+                  'https://zetkin.org/privacy'
+                }
                 rel="noreferrer"
                 target="_blank"
               >
