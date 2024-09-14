@@ -53,8 +53,8 @@ const FieldSettings: FC<FieldSettingsProps> = ({
             <>
               {field !== NATIVE_PERSON_FIELDS.FIRST_NAME && <Divider />}
               <FieldSettingsRow
-                duplicates={duplicates}
                 key={field}
+                duplicates={duplicates}
                 field={field as NATIVE_PERSON_FIELDS}
                 onChange={(selectedValue: string) =>
                   onChange(field as NATIVE_PERSON_FIELDS, selectedValue)

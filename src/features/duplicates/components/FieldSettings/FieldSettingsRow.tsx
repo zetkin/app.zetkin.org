@@ -56,16 +56,17 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
     return value;
   };
 
-  const getAvatars = (value: String) => {
+  const getAvatars = (value: string) => {
     const peopleWithMatchingValues = duplicates.filter(
       (person) => person[field] == value
     );
 
     return (
       <Box display="flex" gap="2px">
-        {peopleWithMatchingValues.map((person) => {
+        {peopleWithMatchingValues.map((person, index) => {
           return (
             <ZUIAvatar
+              key={index}
               size={'xs'}
               url={`/api/orgs/${orgId}/people/${person.id}/avatar`}
             />
@@ -120,12 +121,12 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
               {values.map((value, index) => (
                 <MenuItem
                   key={index}
-                  value={value}
                   sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
                     gap: 1,
+                    justifyContent: 'space-between',
                   }}
+                  value={value}
                 >
                   {getLabel(value)}
                   {getAvatars(value)}

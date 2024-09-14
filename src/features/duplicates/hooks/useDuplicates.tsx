@@ -1,9 +1,5 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import {
-  PotentialDuplicate,
-  potentialDuplicatesLoad,
-  potentialDuplicatesLoaded,
-} from '../store';
+import { potentialDuplicatesLoad, potentialDuplicatesLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useDuplicates(orgId: number) {
