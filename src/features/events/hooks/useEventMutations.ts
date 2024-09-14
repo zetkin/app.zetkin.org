@@ -22,6 +22,7 @@ export type ZetkinEventPostBody = ZetkinEventPatchBody;
 
 type useEventMutationsReturn = {
   cancelEvent: () => void;
+  changeEventCampaign: (campaignId: number) => void;
   deleteEvent: () => void;
   publishEvent: () => void;
   restoreEvent: () => void;
@@ -62,6 +63,12 @@ export default function useEventMutations(
     });
   };
 
+  const changeEventCampaign = (campaignId: number) => {
+    updateEvent({
+      campaign_id: campaignId,
+    });
+  };
+
   const setPublished = (published: string | null) => {
     updateEvent({
       cancelled: null,
@@ -90,6 +97,7 @@ export default function useEventMutations(
 
   return {
     cancelEvent,
+    changeEventCampaign,
     deleteEvent,
     publishEvent,
     restoreEvent,
