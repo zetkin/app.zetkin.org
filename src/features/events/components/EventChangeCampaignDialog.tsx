@@ -1,5 +1,6 @@
 import { Architecture, Close, Search } from '@mui/icons-material';
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -17,7 +18,7 @@ import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import theme from 'theme';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { ZetkinCampaign, ZetkinEvent } from 'utils/types/zetkin';
@@ -44,15 +45,16 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
 }) => {
   const classes = useStyles();
   const messages = useMessages(messageIds);
-
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
   const router = useRouter();
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const [error, setError] = useState(false);
+
   const { changeEventCampaign } = useEventMutations(
     event.organization.id,
     event.id
   );
+
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [campaignFilter, setCampaignFilter] = useState('');
   const [isLoadingCampaign, setIsLoadingCampaign] = useState(0);
@@ -73,20 +75,25 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
   const handleMove = async (campaign: ZetkinCampaign) => {
     setIsLoadingCampaign(campaign.id);
 
-    changeEventCampaign(campaign.id);
+    try {
+      changeEventCampaign(campaign.id);
 
-    showSnackbar(
-      'success',
-      messages.eventChangeCampaign.changedMessage({
-        campaignTitle: campaign.title,
-      })
-    );
+      showSnackbar(
+        'success',
+        messages.eventChangeCampaign.success({
+          campaignTitle: campaign.title,
+        })
+      );
 
-    router.push(
-      `/organize/${campaign.organization.id}/projects/${campaign.id}/events/${event.id}`
-    );
+      router.push(
+        `/organize/${campaign.organization.id}/projects/${campaign.id}/events/${event.id}`
+      );
 
-    handleClose();
+      handleClose();
+    } catch (error) {
+      setIsLoadingCampaign(0);
+      setError(true);
+    }
   };
 
   const handleClose = () => {
@@ -127,7 +134,7 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
           </IconButton>
         </Box>
 
-        <Box>
+        <Box display="flex" flexDirection="column" rowGap={1}>
           <TextField
             fullWidth
             id="EventMoveDialog-inputField"
@@ -138,6 +145,12 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
             value={campaignFilter}
             variant="outlined"
           />
+
+          {error && (
+            <Alert severity="error">
+              <Msg id={messageIds.eventChangeCampaign.error} />
+            </Alert>
+          )}
 
           <Box
             sx={{
