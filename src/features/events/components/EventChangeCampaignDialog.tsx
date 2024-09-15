@@ -178,11 +178,10 @@ const EventChangeCampaignDialog: React.FunctionComponent<
                         <Box alignItems="center" display="flex">
                           {!isLoadingCampaign && (
                             <Button
-                              color="info"
                               onClick={() => handleMove(campaign)}
                               variant="outlined"
                             >
-                              Move
+                              {messages.eventChangeCampaignDialog.moveButtonLabel()}
                             </Button>
                           )}
                           {isLoadingCampaign === campaign.id && (
