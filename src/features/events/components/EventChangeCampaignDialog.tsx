@@ -135,7 +135,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
         <Box display="flex" flexDirection="column" rowGap={1}>
           <TextField
             fullWidth
-            id="EventMoveDialog-inputField"
+            id="EventChangeCampaignDialog-inputField"
             InputProps={{
               startAdornment: <Search color="secondary" />,
             }}
@@ -159,7 +159,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
               {filteredCampaigns?.map((campaign) => {
                 return (
                   <ListItem
-                    key={`EventMoveDialog-campaignItem-${campaign.id}`}
+                    key={`EventChangeCampaignDialog-campaignItem-${campaign.id}`}
                     className={classes.listItem}
                   >
                     <Box
