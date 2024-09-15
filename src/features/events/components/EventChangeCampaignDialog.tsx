@@ -156,42 +156,41 @@ const EventChangeCampaignDialog: React.FunctionComponent<
             }}
           >
             <List>
-              {Array.isArray(filteredCampaigns) &&
-                filteredCampaigns.map((campaign) => {
-                  return (
-                    <ListItem
-                      key={`EventMoveDialog-campaignItem-${campaign.id}`}
-                      className={classes.listItem}
+              {filteredCampaigns?.map((campaign) => {
+                return (
+                  <ListItem
+                    key={`EventMoveDialog-campaignItem-${campaign.id}`}
+                    className={classes.listItem}
+                  >
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      justifyContent="space-between"
+                      width="100%"
                     >
-                      <Box
-                        alignItems="center"
-                        display="flex"
-                        justifyContent="space-between"
-                        width="100%"
-                      >
-                        <Box alignItems="center" display="flex" marginRight={2}>
-                          <Box marginRight={2}>
-                            <Architecture color="secondary" />
-                          </Box>
-                          {campaign.title}
+                      <Box alignItems="center" display="flex" marginRight={2}>
+                        <Box marginRight={2}>
+                          <Architecture color="secondary" />
                         </Box>
-                        <Box alignItems="center" display="flex">
-                          {!isLoadingCampaign && (
-                            <Button
-                              onClick={() => handleMove(campaign)}
-                              variant="outlined"
-                            >
-                              {messages.eventChangeCampaignDialog.moveButtonLabel()}
-                            </Button>
-                          )}
-                          {isLoadingCampaign === campaign.id && (
-                            <CircularProgress color="secondary" />
-                          )}
-                        </Box>
+                        {campaign.title}
                       </Box>
-                    </ListItem>
-                  );
-                })}
+                      <Box alignItems="center" display="flex">
+                        {!isLoadingCampaign && (
+                          <Button
+                            onClick={() => handleMove(campaign)}
+                            variant="outlined"
+                          >
+                            {messages.eventChangeCampaignDialog.moveButtonLabel()}
+                          </Button>
+                        )}
+                        {isLoadingCampaign === campaign.id && (
+                          <CircularProgress color="secondary" />
+                        )}
+                      </Box>
+                    </Box>
+                  </ListItem>
+                );
+              })}
             </List>
           </Box>
         </Box>
