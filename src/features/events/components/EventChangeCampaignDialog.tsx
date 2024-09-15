@@ -74,7 +74,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
     setIsLoadingCampaign(campaign.id);
 
     try {
-      changeEventCampaign(campaign.id);
+      await changeEventCampaign(campaign.id);
 
       showSnackbar(
         'success',
