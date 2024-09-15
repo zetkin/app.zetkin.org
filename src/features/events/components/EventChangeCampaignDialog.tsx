@@ -38,11 +38,9 @@ const useStyles = makeStyles(() => ({
   listItem: {},
 }));
 
-const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
-  event,
-  isOpen,
-  close,
-}) => {
+const EventChangeCampaignDialog: React.FunctionComponent<
+  EventActionButtonsProps
+> = ({ event, isOpen, close }) => {
   const classes = useStyles();
   const messages = useMessages(messageIds);
   const router = useRouter();
@@ -80,7 +78,7 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
 
       showSnackbar(
         'success',
-        messages.eventChangeCampaign.success({
+        messages.eventChangeCampaignDialog.success({
           campaignTitle: campaign.title,
         })
       );
@@ -121,7 +119,7 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
       >
         <Box display="flex" justifyContent="space-between">
           <DialogTitle sx={{ paddingLeft: 2 }} variant="h5">
-            {messages.eventChangeCampaign.dialogTitle()}
+            {messages.eventChangeCampaignDialog.dialogTitle()}
           </DialogTitle>
 
           <IconButton onClick={handleClose}>
@@ -148,7 +146,7 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
 
           {error && (
             <Alert severity="error">
-              <Msg id={messageIds.eventChangeCampaign.error} />
+              <Msg id={messageIds.eventChangeCampaignDialog.error} />
             </Alert>
           )}
 
@@ -203,4 +201,4 @@ const EventMoveDialog: React.FunctionComponent<EventActionButtonsProps> = ({
   );
 };
 
-export default EventMoveDialog;
+export default EventChangeCampaignDialog;
