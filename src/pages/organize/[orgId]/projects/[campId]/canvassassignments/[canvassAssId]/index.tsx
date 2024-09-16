@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { FC } from 'react';
 import { GetServerSideProps } from 'next';
 
 import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
@@ -12,6 +13,8 @@ import { useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import zuiMessageIds from 'zui/l10n/messageIds';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
+import ZUIPerson from 'zui/ZUIPerson';
+import usePerson from 'features/profile/hooks/usePerson';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -23,6 +26,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     props: { campId, canvassAssId, orgId },
   };
 }, scaffoldOptions);
+
+const Assignee: FC<{ id: number; orgId: number }> = ({ id, orgId }) => {
+  const person = usePerson(orgId, id).data;
+  if (!person) {
+    return null;
+  }
+  return (
+    <ZUIPerson id={id} name={`${person?.first_name} ${person?.last_name}`} />
+  );
+};
 
 interface CanvassAssignmentPageProps {
   orgId: string;
@@ -66,9 +79,13 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               variant="outlined"
             />
             <Box>
-              Ids of people that have been added
+              Assignees
               {assignees.map((assignee) => (
-                <Box key={assignee.id}>{assignee.id}</Box>
+                <Assignee
+                  key={assignee.id}
+                  id={assignee.id}
+                  orgId={parseInt(orgId)}
+                />
               ))}
             </Box>
           </Box>
