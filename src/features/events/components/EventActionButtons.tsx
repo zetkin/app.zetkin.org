@@ -18,7 +18,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDatePicker from 'zui/ZUIDatePicker';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import EventMoveDialog from './EventChangeCampaignDialog';
+import EventChangeCampaignDialog from './EventChangeCampaignDialog';
 
 interface EventActionButtonsProps {
   event: ZetkinEvent;
@@ -150,7 +150,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
         <ZUIDatePicker date={event.published} onChange={handleChangeDate} />
       </Box>
 
-      <EventMoveDialog
+      <EventChangeCampaignDialog
         close={() => setIsMoveDialogOpen(false)}
         event={event}
         isOpen={isMoveDialogOpen}
