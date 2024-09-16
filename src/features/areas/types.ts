@@ -43,13 +43,8 @@ export type ZetkinCanvassAssignmentPostBody = Partial<
 >;
 export type ZetkinCanvassAssignmentPatchbody = ZetkinCanvassAssignmentPostBody;
 
-export type ZetkinIndividualCanvassAssignment = {
-  areaUrl: string;
-  id: string;
-  personId: number;
+export type ZetkinCanvassAssignee = {
+  canvassAssId: string;
+  id: number;
 };
-export type ZetkinIndividualCanvassAssignmentPostBody = Partial<
-  Omit<ZetkinIndividualCanvassAssignment, 'id'>
->;
-export type ZetkinIndividualCanvassAssignmentPatchBody =
-  ZetkinIndividualCanvassAssignmentPostBody;
+export type ZetkinCanvassAssigneePatchBody = Partial<ZetkinCanvassAssignee>;

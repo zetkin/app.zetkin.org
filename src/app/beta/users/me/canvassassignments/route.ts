@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 import { IncomingHttpHeaders } from 'http';
 
-import { IndividualCanvassAssignmentModel } from 'features/areas/models';
-import { ZetkinIndividualCanvassAssignment } from 'features/areas/types';
+import { CanvassAssigneeModel } from 'features/areas/models';
+import { ZetkinCanvassAssignee } from 'features/areas/types';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';
@@ -18,19 +18,16 @@ export async function GET(request: NextRequest) {
 
     await mongoose.connect(process.env.MONGODB_URL || '');
 
-    const individualCanvassAssignmentModels =
-      await IndividualCanvassAssignmentModel.find({
-        personId: currentUser.id,
-      });
+    const models = await CanvassAssigneeModel.find({
+      id: currentUser.id,
+    });
 
-    const individualCanvassAssignments: ZetkinIndividualCanvassAssignment[] =
-      individualCanvassAssignmentModels.map((model) => ({
-        areaUrl: model.areaUrl,
-        id: model._id.toString(),
-        personId: model.personId,
-      }));
+    const assignees: ZetkinCanvassAssignee[] = models.map((model) => ({
+      canvassAssId: model.canvassAssId,
+      id: model.id,
+    }));
 
-    return Response.json({ data: individualCanvassAssignments });
+    return Response.json({ data: assignees });
   } catch (err) {
     if (err instanceof ApiClientError) {
       return new NextResponse(null, { status: err.status });

@@ -5,7 +5,6 @@ import { canvassAssignmentLoad, canvassAssignmentLoaded } from '../store';
 
 export default function useCanvassAssignment(
   orgId: number,
-  campId: number,
   canvassAssId: string
 ) {
   const apiClient = useApiClient();
@@ -22,7 +21,7 @@ export default function useCanvassAssignment(
     actionOnSuccess: (data) => canvassAssignmentLoaded(data),
     loader: () =>
       apiClient.get<ZetkinCanvassAssignment>(
-        `/beta/orgs/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`
+        `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}`
       ),
   });
 }

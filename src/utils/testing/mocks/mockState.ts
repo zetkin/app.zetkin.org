@@ -5,8 +5,8 @@ export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
     areas: {
       areaList: remoteList(),
+      assigneeByCanvassAssignmentId: {},
       canvassAssignmentList: remoteList(),
-      individualAssignmentsByCanvassAssignmentId: {},
       myAssignmentsList: remoteList(),
       placeList: remoteList(),
     },

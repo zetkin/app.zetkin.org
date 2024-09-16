@@ -53,10 +53,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
-  const createCanvassAssignment = useCreateCanvassAssignment(
-    orgId,
-    campaign.id
-  );
+  const createCanvassAssignment = useCreateCanvassAssignment(orgId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,

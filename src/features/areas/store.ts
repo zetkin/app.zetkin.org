@@ -8,7 +8,7 @@ import {
 } from 'utils/storeUtils';
 import {
   ZetkinArea,
-  ZetkinIndividualCanvassAssignment,
+  ZetkinCanvassAssignee,
   ZetkinCanvassAssignment,
   ZetkinPlace,
 } from './types';
@@ -16,18 +16,18 @@ import {
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
   canvassAssignmentList: RemoteList<ZetkinCanvassAssignment>;
-  individualAssignmentsByCanvassAssignmentId: Record<
+  assigneeByCanvassAssignmentId: Record<
     string,
-    RemoteList<ZetkinIndividualCanvassAssignment>
+    RemoteList<ZetkinCanvassAssignee>
   >;
-  myAssignmentsList: RemoteList<ZetkinIndividualCanvassAssignment>;
+  myAssignmentsList: RemoteList<ZetkinCanvassAssignee>;
   placeList: RemoteList<ZetkinPlace>;
 }
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  assigneeByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
-  individualAssignmentsByCanvassAssignmentId: {},
   myAssignmentsList: remoteList(),
   placeList: remoteList(),
 };
@@ -92,6 +92,77 @@ const areasSlice = createSlice({
       state.areaList.loaded = timestamp;
       state.areaList.items.forEach((item) => (item.loaded = timestamp));
     },
+    assigneeAdd: (state, action: PayloadAction<[string, number]>) => {
+      const [canvassAssId, assigneeId] = action.payload;
+
+      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
+        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneeByCanvassAssignmentId[canvassAssId].items.push(
+        remoteItem(assigneeId, { isLoading: true })
+      );
+    },
+    assigneeAdded: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignee]>
+    ) => {
+      const [canvassAssId, assignee] = action.payload;
+
+      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
+        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneeByCanvassAssignmentId[canvassAssId].items =
+        state.assigneeByCanvassAssignmentId[canvassAssId].items
+          .filter((item) => item.id != assignee.id)
+          .concat([
+            remoteItem(assignee.canvassAssId, {
+              data: assignee,
+            }),
+          ]);
+    },
+    assigneeUpdated: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignee]>
+    ) => {
+      const [canvassAssId, assignee] = action.payload;
+
+      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
+        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneeByCanvassAssignmentId[canvassAssId].items
+        .filter((item) => item.id == assignee.id)
+        .concat([
+          remoteItem(assignee.canvassAssId, {
+            data: assignee,
+          }),
+        ]);
+    },
+    assigneesLoad: (state, action: PayloadAction<string>) => {
+      const canvassAssId = action.payload;
+
+      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
+        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneeByCanvassAssignmentId[canvassAssId].isLoading = true;
+    },
+    assigneesLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignee[]]>
+    ) => {
+      const [canvassAssId, assignees] = action.payload;
+
+      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
+        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      }
+
+      state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList(assignees);
+      state.assigneeByCanvassAssignmentId[canvassAssId].loaded =
+        new Date().toISOString();
+    },
     canvassAssignmentCreated: (
       state,
       action: PayloadAction<ZetkinCanvassAssignment>
@@ -136,98 +207,17 @@ const areasSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
-    individualAssignmentAdd: (
-      state,
-      action: PayloadAction<[string, number]>
-    ) => {
-      const [canvassAssId, personId] = action.payload;
-
-      if (!state.individualAssignmentsByCanvassAssignmentId[canvassAssId]) {
-        state.individualAssignmentsByCanvassAssignmentId[canvassAssId] =
-          remoteList();
-      }
-
-      state.individualAssignmentsByCanvassAssignmentId[canvassAssId].items.push(
-        remoteItem(personId, { isLoading: true })
-      );
-    },
-    individualAssignmentAdded: (
-      state,
-      action: PayloadAction<[string, ZetkinIndividualCanvassAssignment]>
-    ) => {
-      const [canvassAssId, individualAssignment] = action.payload;
-
-      if (!state.individualAssignmentsByCanvassAssignmentId[canvassAssId]) {
-        state.individualAssignmentsByCanvassAssignmentId[canvassAssId] =
-          remoteList();
-      }
-
-      state.individualAssignmentsByCanvassAssignmentId[canvassAssId].items =
-        state.individualAssignmentsByCanvassAssignmentId[canvassAssId].items
-          .filter((c) => c.id != individualAssignment.personId)
-          .concat([
-            remoteItem(individualAssignment.id, {
-              data: individualAssignment,
-            }),
-          ]);
-    },
-    individualAssignmentUpdated: (
-      state,
-      action: PayloadAction<[string, ZetkinIndividualCanvassAssignment]>
-    ) => {
-      const [canvassAssId, individualAssignment] = action.payload;
-
-      if (!state.individualAssignmentsByCanvassAssignmentId[canvassAssId]) {
-        state.individualAssignmentsByCanvassAssignmentId[canvassAssId] =
-          remoteList();
-      }
-
-      state.individualAssignmentsByCanvassAssignmentId[canvassAssId].items
-        .filter((item) => item.id == individualAssignment.personId)
-        .concat([
-          remoteItem(individualAssignment.id, {
-            data: individualAssignment,
-          }),
-        ]);
-    },
-    individualAssignmentsLoad: (state, action: PayloadAction<string>) => {
-      const canvassAssId = action.payload;
-
-      if (!state.individualAssignmentsByCanvassAssignmentId[canvassAssId]) {
-        state.individualAssignmentsByCanvassAssignmentId[canvassAssId] =
-          remoteList();
-      }
-
-      state.individualAssignmentsByCanvassAssignmentId[canvassAssId].isLoading =
-        true;
-    },
-    individualAssignmentsLoaded: (
-      state,
-      action: PayloadAction<[string, ZetkinIndividualCanvassAssignment[]]>
-    ) => {
-      const [canvassAssId, individualAssignments] = action.payload;
-
-      if (!state.individualAssignmentsByCanvassAssignmentId[canvassAssId]) {
-        state.individualAssignmentsByCanvassAssignmentId[canvassAssId] =
-          remoteList();
-      }
-
-      state.individualAssignmentsByCanvassAssignmentId[canvassAssId] =
-        remoteList(individualAssignments);
-      state.individualAssignmentsByCanvassAssignmentId[canvassAssId].loaded =
-        new Date().toISOString();
-    },
     myAssignmentsLoad: (state) => {
       state.myAssignmentsList.isLoading = true;
     },
     myAssignmentsLoaded: (
       state,
-      action: PayloadAction<ZetkinIndividualCanvassAssignment[]>
+      action: PayloadAction<ZetkinCanvassAssignee[]>
     ) => {
-      const individualAssignments = action.payload;
+      const assignees = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.myAssignmentsList = remoteList(individualAssignments);
+      state.myAssignmentsList = remoteList(assignees);
       state.myAssignmentsList.loaded = timestamp;
       state.myAssignmentsList.items.forEach(
         (item) => (item.loaded = timestamp)
@@ -271,11 +261,11 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
-  individualAssignmentAdd,
-  individualAssignmentAdded,
-  individualAssignmentUpdated,
-  individualAssignmentsLoad,
-  individualAssignmentsLoaded,
+  assigneeAdd,
+  assigneeAdded,
+  assigneeUpdated,
+  assigneesLoad,
+  assigneesLoaded,
   myAssignmentsLoad,
   myAssignmentsLoaded,
   canvassAssignmentCreated,

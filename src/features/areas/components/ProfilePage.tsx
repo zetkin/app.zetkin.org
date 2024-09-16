@@ -10,7 +10,7 @@ const ProfilePage: FC = () => {
   return (
     <div>
       {myCanvassAssignments.map((assignment) => (
-        <p key={assignment.id}>{`${assignment.id} ${assignment.areaUrl}`}</p>
+        <p key={assignment.id}>{`${assignment.canvassAssId}`}</p>
       ))}
     </div>
   );

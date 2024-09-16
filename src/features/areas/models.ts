@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { ZetkinArea, ZetkinPlace } from './types';
+import { ZetkinArea, ZetkinCanvassAssignee, ZetkinPlace } from './types';
 
 type ZetkinAreaModelType = {
   description: string | null;
@@ -20,15 +20,12 @@ type ZetkinPlaceModelType = {
 
 type ZetkinCanvassAssignmentModelType = {
   campId: number;
+  id: number;
   orgId: number;
   title: string | null;
 };
 
-type ZetkinIndividualCanvassAssignmentModelType = {
-  areaUrl: string;
-  canvassAssId: string;
-  personId: number;
-};
+type ZetkinCanvassAssigneeModelType = ZetkinCanvassAssignee;
 
 const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
   description: String,
@@ -48,16 +45,14 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
 
 const canvassAssignmentSchema =
   new mongoose.Schema<ZetkinCanvassAssignmentModelType>({
-    campId: { required: true, type: Number },
     orgId: { required: true, type: Number },
     title: String,
   });
 
-const individualCanvassAssignmentSchema =
-  new mongoose.Schema<ZetkinIndividualCanvassAssignmentModelType>({
-    areaUrl: String,
+const canvassAssigneeSchema =
+  new mongoose.Schema<ZetkinCanvassAssigneeModelType>({
     canvassAssId: String,
-    personId: { required: true, type: Number },
+    id: { required: true, type: Number },
   });
 
 export const AreaModel: mongoose.Model<ZetkinAreaModelType> =
@@ -75,9 +70,9 @@ export const CanvassAssignmentModel: mongoose.Model<ZetkinCanvassAssignmentModel
     canvassAssignmentSchema
   );
 
-export const IndividualCanvassAssignmentModel: mongoose.Model<ZetkinIndividualCanvassAssignmentModelType> =
-  mongoose.models.IndividualCanvassAssignment ||
-  mongoose.model<ZetkinIndividualCanvassAssignmentModelType>(
-    'IndividualCanvassAssignment',
-    individualCanvassAssignmentSchema
+export const CanvassAssigneeModel: mongoose.Model<ZetkinCanvassAssigneeModelType> =
+  mongoose.models.CanvassAssignee ||
+  mongoose.model<ZetkinCanvassAssigneeModelType>(
+    'CanvassAssignee',
+    canvassAssigneeSchema
   );

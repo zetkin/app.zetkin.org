@@ -1,7 +1,7 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { myAssignmentsLoad, myAssignmentsLoaded } from '../store';
-import { ZetkinIndividualCanvassAssignment } from '../types';
+import { ZetkinCanvassAssignee } from '../types';
 
 export default function useMyCanvassAssignments() {
   const apiClient = useApiClient();
@@ -14,7 +14,7 @@ export default function useMyCanvassAssignments() {
     actionOnLoad: () => myAssignmentsLoad(),
     actionOnSuccess: (data) => myAssignmentsLoaded(data),
     loader: () =>
-      apiClient.get<ZetkinIndividualCanvassAssignment[]>(
+      apiClient.get<ZetkinCanvassAssignee[]>(
         '/beta/users/me/canvassassignments'
       ),
   });
