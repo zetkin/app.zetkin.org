@@ -12,6 +12,9 @@ export default function useDuplicates(orgId: number) {
   return loadListIfNecessary(duplicatesList, dispatch, {
     actionOnLoad: () => potentialDuplicatesLoad(),
     actionOnSuccess: (duplicates) => potentialDuplicatesLoaded(duplicates),
-    loader: () => apiClient.get(`/api/orgs/${orgId}/people/duplicates?filter=status==pending`),
+    loader: () =>
+      apiClient.get(
+        `/api/orgs/${orgId}/people/duplicates?filter=status==pending`
+      ),
   });
 }
