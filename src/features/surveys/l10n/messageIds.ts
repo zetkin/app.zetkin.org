@@ -174,6 +174,7 @@ export default makeMessages('feat.surveys', {
       'Something went wrong when submitting your answers. Please try again later.'
     ),
     policy: {
+      link: m('https://zetkin.org/privacy'),
       text: m('Click to read the full Zetkin Privacy Policy'),
     },
     required: m('required'),
