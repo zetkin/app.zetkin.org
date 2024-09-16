@@ -1,6 +1,5 @@
+import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import { useState } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
 
 import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
@@ -9,8 +8,10 @@ import { PageWithLayout } from 'utils/types';
 import useAddAssignee from 'features/areas/hooks/useAddAssignee';
 import useAssignees from 'features/areas/hooks/useAssignees';
 import ZUIFutures from 'zui/ZUIFutures';
-import { Msg } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import zuiMessageIds from 'zui/l10n/messageIds';
+import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -32,10 +33,10 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
 }) => {
-  const [personId, setPersonId] = useState<number | null>(null);
+  const zuiMessages = useMessages(zuiMessageIds);
+  const messages = useMessages(messageIds);
 
   const addAssignee = useAddAssignee(parseInt(orgId), canvassAssId);
-
   const canvassAssignmentFuture = useCanvassAssignment(
     parseInt(orgId),
     canvassAssId
@@ -52,33 +53,18 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
       {({ data: { canvassAssignment, assignees } }) => {
         return (
           <Box>
-            {canvassAssignment.title || (
-              <Msg id={messageIds.canvassAssignment.empty.title} />
-            )}
-            <Box display="flex" flexDirection="column">
-              <Typography>Add a person Id</Typography>
-              <TextField
-                onChange={(ev) => {
-                  const value = ev.target.value;
-                  if (value) {
-                    setPersonId(parseInt(value));
-                  }
-                }}
-                type="number"
-                value={personId}
-              />
-              <Button
-                onClick={() => {
-                  if (personId) {
-                    addAssignee(personId);
-                  }
-                }}
-                variant="contained"
-              >
-                Add assignee
-              </Button>
-            </Box>
-
+            <ZUIPersonSelect
+              onChange={(person) => addAssignee(person.id)}
+              placeholder={messages.canvassAssignment.addAssignee()}
+              selectedPerson={null}
+              submitLabel={zuiMessages.createPerson.submitLabel.assign()}
+              title={zuiMessages.createPerson.title.assignToCanvassAssignment({
+                canvassAss:
+                  canvassAssignment.title ||
+                  messages.canvassAssignment.empty.title(),
+              })}
+              variant="outlined"
+            />
             <Box>
               Ids of people that have been added
               {assignees.map((assignee) => (
