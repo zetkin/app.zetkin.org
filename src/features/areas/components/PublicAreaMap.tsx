@@ -25,6 +25,7 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import PlaceDialog from './PlaceDialog';
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
+import getMarkerValues from '../utils/getMarkerValues';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -117,18 +118,12 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
     const crosshair = crosshairRef.current;
 
     if (map && crosshair) {
-      const mapContainer = map.getContainer();
-      const markerRect = crosshair.getBoundingClientRect();
-      const mapRect = mapContainer.getBoundingClientRect();
-      const x = markerRect.x - mapRect.x;
-      const y = markerRect.y - mapRect.y;
-      const markerX = x + 0.5 * markerRect.width;
-      const markerY = y + 0.5 * markerRect.height;
+      const markers = getMarkerValues(map, crosshair);
 
       places.forEach((place) => {
         const screenPos = map.latLngToContainerPoint(place.position);
-        const dx = screenPos.x - markerX;
-        const dy = screenPos.y - markerY;
+        const dx = screenPos.x - markers.markerX;
+        const dy = screenPos.y - markers.markerY;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < nearestDistance) {
@@ -151,17 +146,12 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
     (pos: LatLng) => {
       const crosshair = crosshairRef.current;
       if (crosshair && map) {
-        const mapContainer = map.getContainer();
-        const mapRect = mapContainer.getBoundingClientRect();
-        const markerRect = crosshair.getBoundingClientRect();
-        const x = markerRect.x - mapRect.x;
-        const y = markerRect.y - mapRect.y;
-        const markerPoint: [number, number] = [
-          x + 0.5 * markerRect.width,
-          y + 0.8 * markerRect.height,
-        ];
+        const markers = getMarkerValues(map, crosshair);
 
-        const crosshairPos = map.containerPointToLatLng(markerPoint);
+        const crosshairPos = map.containerPointToLatLng([
+          markers.markerX,
+          markers.markerY,
+        ]);
         const centerPos = map.getCenter();
         const latOffset = centerPos.lat - crosshairPos.lat;
         const lngOffset = centerPos.lng - crosshairPos.lng;
@@ -413,18 +403,13 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           }}
           onCreate={(title, type) => {
             const crosshair = crosshairRef.current;
-            const mapContainer = map?.getContainer();
-            if (crosshair && mapContainer) {
-              const mapRect = mapContainer.getBoundingClientRect();
-              const markerRect = crosshair.getBoundingClientRect();
-              const x = markerRect.x - mapRect.x;
-              const y = markerRect.y - mapRect.y;
-              const markerPoint: [number, number] = [
-                x + 0.5 * markerRect.width,
-                y + 0.8 * markerRect.height,
-              ];
+            if (crosshair && map) {
+              const markers = getMarkerValues(map, crosshair);
 
-              const point = map?.containerPointToLatLng(markerPoint);
+              const point = map?.containerPointToLatLng([
+                markers.markerX,
+                markers.markerY,
+              ]);
               if (point) {
                 createPlace({
                   position: point,
