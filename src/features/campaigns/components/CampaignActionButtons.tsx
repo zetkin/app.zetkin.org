@@ -89,11 +89,11 @@ const CampaignActionButtons: React.FunctionComponent<
   const menuItems = [
     {
       icon: <Map />,
-      label: 'Create canvass assignment',
+      label: messages.linkGroup.createCanvassAssignment(),
       onClick: () =>
         createCanvassAssignment({
           campId: campaign.id,
-          title: 'Untitled Canvass Assignment',
+          title: null,
         }),
     },
     {

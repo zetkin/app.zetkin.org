@@ -2,6 +2,14 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.areas', {
   addNewPlaceButton: m('Add new place'),
+  canvassAssignment: {
+    empty: {
+      title: m('Untitled canvass assignment'),
+    },
+    tabs: {
+      overview: m('Overview'),
+    },
+  },
   empty: {
     description: m('Empty description'),
     title: m('Untitled area'),

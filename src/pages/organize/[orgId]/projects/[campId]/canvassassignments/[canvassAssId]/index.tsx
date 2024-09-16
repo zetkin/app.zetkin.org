@@ -9,6 +9,8 @@ import { PageWithLayout } from 'utils/types';
 import useAddAssignee from 'features/areas/hooks/useAddAssignee';
 import useAssignees from 'features/areas/hooks/useAssignees';
 import ZUIFutures from 'zui/ZUIFutures';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -50,7 +52,9 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
       {({ data: { canvassAssignment, assignees } }) => {
         return (
           <Box>
-            {canvassAssignment.title}
+            {canvassAssignment.title || (
+              <Msg id={messageIds.canvassAssignment.empty.title} />
+            )}
             <Box display="flex" flexDirection="column">
               <Typography>Add a person Id</Typography>
               <TextField

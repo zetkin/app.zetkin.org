@@ -1,6 +1,8 @@
 import { FC, ReactNode } from 'react';
 
+import { useMessages } from 'core/i18n';
 import TabbedLayout from 'utils/layout/TabbedLayout';
+import messageIds from '../l10n/messageIds';
 
 type CanvassAssignmentLayoutProps = {
   campId: number;
@@ -15,11 +17,12 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
   campId,
   canvassAssId,
 }) => {
+  const messages = useMessages(messageIds);
   return (
     <TabbedLayout
       baseHref={`/organize/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`}
       defaultTab="/"
-      tabs={[{ href: '/', label: 'Overview' }]}
+      tabs={[{ href: '/', label: messages.canvassAssignment.tabs.overview() }]}
     >
       {children}
     </TabbedLayout>
