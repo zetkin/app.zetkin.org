@@ -5,7 +5,10 @@ type Marker = {
   markerY: number;
 };
 
-const getMarkerValues = (map: Map, crosshair: HTMLDivElement): Marker => {
+const getCrosshairPositionOnMap = (
+  map: Map,
+  crosshair: HTMLDivElement
+): Marker => {
   const mapContainer = map.getContainer();
   const markerRect = crosshair.getBoundingClientRect();
   const mapRect = mapContainer.getBoundingClientRect();
@@ -17,4 +20,4 @@ const getMarkerValues = (map: Map, crosshair: HTMLDivElement): Marker => {
   return { markerX, markerY };
 };
 
-export default getMarkerValues;
+export default getCrosshairPositionOnMap;
