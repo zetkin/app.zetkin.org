@@ -97,7 +97,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
   const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [dialogStep, setDialogStep] = useState<'place' | 'log'>('place');
+  const [dialogStep, setDialogStep] = useState<'place' | 'log' | 'edit'>(
+    'place'
+  );
   const [returnToMap, setReturnToMap] = useState(false);
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -383,6 +385,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           onClose={() => {
             setAnchorEl(null);
             setSelectedPlace(null);
+          }}
+          onEdit={() => {
+            setDialogStep('edit');
           }}
           onLogCancel={() => {
             if (returnToMap) {
