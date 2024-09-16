@@ -10,6 +10,7 @@ export default makeMessages('feat.breadcrumbs', {
     callassignments: m('Call assignments'),
     callers: m('Callers'),
     campaigns: m('Projects'),
+    canvassassignments: m('Canvass assignments'),
     closed: m('Closed'),
     compose: m('Compose'),
     conversation: m('Conversation'),
