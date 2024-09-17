@@ -4,6 +4,8 @@ import { useMessages } from 'core/i18n';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import messageIds from '../l10n/messageIds';
 import useCanvassAssignment from '../hooks/useCanvassAssignment';
+import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import useCanvassAssignmentMutations from '../hooks/useCanvassAssignmentMutations';
 
 type CanvassAssignmentLayoutProps = {
   campId: number;
@@ -20,6 +22,10 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const canvassAssignment = useCanvassAssignment(orgId, canvassAssId).data;
+  const updateCanvassAssignment = useCanvassAssignmentMutations(
+    orgId,
+    canvassAssId
+  );
 
   if (!canvassAssignment) {
     return null;
@@ -31,7 +37,12 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
       defaultTab="/"
       tabs={[{ href: '/', label: messages.canvassAssignment.tabs.overview() }]}
       title={
-        canvassAssignment.title || messages.canvassAssignment.empty.title()
+        <ZUIEditTextinPlace
+          onChange={(newTitle) => updateCanvassAssignment({ title: newTitle })}
+          value={
+            canvassAssignment.title || messages.canvassAssignment.empty.title()
+          }
+        />
       }
     >
       {children}

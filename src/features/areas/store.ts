@@ -208,6 +208,16 @@ const areasSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    canvassAssignmentUpdated: (
+      state,
+      action: PayloadAction<ZetkinCanvassAssignment>
+    ) => {
+      const assignment = action.payload;
+      const item = findOrAddItem(state.canvassAssignmentList, assignment.id);
+
+      item.data = assignment;
+      item.loaded = new Date().toISOString();
+    },
     myAssignmentsLoad: (state) => {
       state.myAssignmentsList.isLoading = true;
     },
@@ -272,6 +282,7 @@ export const {
   canvassAssignmentCreated,
   canvassAssignmentLoad,
   canvassAssignmentLoaded,
+  canvassAssignmentUpdated,
   placeCreated,
   placesLoad,
   placesLoaded,

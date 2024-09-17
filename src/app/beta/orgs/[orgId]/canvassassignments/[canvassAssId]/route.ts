@@ -42,3 +42,39 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     }
   );
 }
+
+export async function PATCH(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const payload = await request.json();
+
+      const model = await CanvassAssignmentModel.findOneAndUpdate(
+        { _id: params.canvassAssId },
+        {
+          title: payload.title,
+        },
+        { new: true }
+      );
+
+      if (!model) {
+        return new NextResponse(null, { status: 404 });
+      }
+
+      return NextResponse.json({
+        data: {
+          campId: model.campId,
+          id: model._id.toString(),
+          orgId,
+          title: model.title,
+        },
+      });
+    }
+  );
+}
