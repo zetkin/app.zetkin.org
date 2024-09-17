@@ -16,7 +16,7 @@ import {
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
   canvassAssignmentList: RemoteList<ZetkinCanvassAssignment>;
-  assigneeByCanvassAssignmentId: Record<
+  assigneesByCanvassAssignmentId: Record<
     string,
     RemoteList<ZetkinCanvassAssignee>
   >;
@@ -26,7 +26,7 @@ export interface AreasStoreSlice {
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
-  assigneeByCanvassAssignmentId: {},
+  assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
   myAssignmentsList: remoteList(),
   placeList: remoteList(),
@@ -95,11 +95,11 @@ const areasSlice = createSlice({
     assigneeAdd: (state, action: PayloadAction<[string, number]>) => {
       const [canvassAssId, assigneeId] = action.payload;
 
-      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
-        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
       }
 
-      state.assigneeByCanvassAssignmentId[canvassAssId].items.push(
+      state.assigneesByCanvassAssignmentId[canvassAssId].items.push(
         remoteItem(assigneeId, { isLoading: true })
       );
     },
@@ -109,12 +109,12 @@ const areasSlice = createSlice({
     ) => {
       const [canvassAssId, assignee] = action.payload;
 
-      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
-        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
       }
 
-      state.assigneeByCanvassAssignmentId[canvassAssId].items =
-        state.assigneeByCanvassAssignmentId[canvassAssId].items
+      state.assigneesByCanvassAssignmentId[canvassAssId].items =
+        state.assigneesByCanvassAssignmentId[canvassAssId].items
           .filter((item) => item.id != assignee.id)
           .concat([
             remoteItem(assignee.canvassAssId, {
@@ -128,11 +128,11 @@ const areasSlice = createSlice({
     ) => {
       const [canvassAssId, assignee] = action.payload;
 
-      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
-        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
       }
 
-      state.assigneeByCanvassAssignmentId[canvassAssId].items
+      state.assigneesByCanvassAssignmentId[canvassAssId].items
         .filter((item) => item.id == assignee.id)
         .concat([
           remoteItem(assignee.canvassAssId, {
@@ -143,11 +143,11 @@ const areasSlice = createSlice({
     assigneesLoad: (state, action: PayloadAction<string>) => {
       const canvassAssId = action.payload;
 
-      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
-        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
       }
 
-      state.assigneeByCanvassAssignmentId[canvassAssId].isLoading = true;
+      state.assigneesByCanvassAssignmentId[canvassAssId].isLoading = true;
     },
     assigneesLoaded: (
       state,
@@ -155,12 +155,13 @@ const areasSlice = createSlice({
     ) => {
       const [canvassAssId, assignees] = action.payload;
 
-      if (!state.assigneeByCanvassAssignmentId[canvassAssId]) {
-        state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList();
+      if (!state.assigneesByCanvassAssignmentId[canvassAssId]) {
+        state.assigneesByCanvassAssignmentId[canvassAssId] = remoteList();
       }
 
-      state.assigneeByCanvassAssignmentId[canvassAssId] = remoteList(assignees);
-      state.assigneeByCanvassAssignmentId[canvassAssId].loaded =
+      state.assigneesByCanvassAssignmentId[canvassAssId] =
+        remoteList(assignees);
+      state.assigneesByCanvassAssignmentId[canvassAssId].loaded =
         new Date().toISOString();
     },
     canvassAssignmentCreated: (

@@ -7,7 +7,7 @@ export default function useAssignees(orgId: number, canvassAssId: string) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const assigneeList = useAppSelector(
-    (state) => state.areas.assigneeByCanvassAssignmentId[canvassAssId]
+    (state) => state.areas.assigneesByCanvassAssignmentId[canvassAssId]
   );
 
   return loadListIfNecessary(assigneeList, dispatch, {
