@@ -25,6 +25,8 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import PlaceDialog from './PlaceDialog';
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
+import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
+import MarkerIcon from '../utils/markerIcon';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -97,7 +99,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
   const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [dialogStep, setDialogStep] = useState<'place' | 'log'>('place');
+  const [dialogStep, setDialogStep] = useState<'place' | 'log' | 'edit'>(
+    'place'
+  );
   const [returnToMap, setReturnToMap] = useState(false);
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -115,18 +119,12 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
     const crosshair = crosshairRef.current;
 
     if (map && crosshair) {
-      const mapContainer = map.getContainer();
-      const markerRect = crosshair.getBoundingClientRect();
-      const mapRect = mapContainer.getBoundingClientRect();
-      const x = markerRect.x - mapRect.x;
-      const y = markerRect.y - mapRect.y;
-      const markerX = x + 0.5 * markerRect.width;
-      const markerY = y + 0.5 * markerRect.height;
+      const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
       places.forEach((place) => {
         const screenPos = map.latLngToContainerPoint(place.position);
-        const dx = screenPos.x - markerX;
-        const dy = screenPos.y - markerY;
+        const dx = screenPos.x - markerPos.markerX;
+        const dy = screenPos.y - markerPos.markerY;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < nearestDistance) {
@@ -149,17 +147,12 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
     (pos: LatLng) => {
       const crosshair = crosshairRef.current;
       if (crosshair && map) {
-        const mapContainer = map.getContainer();
-        const mapRect = mapContainer.getBoundingClientRect();
-        const markerRect = crosshair.getBoundingClientRect();
-        const x = markerRect.x - mapRect.x;
-        const y = markerRect.y - mapRect.y;
-        const markerPoint: [number, number] = [
-          x + 0.5 * markerRect.width,
-          y + 0.8 * markerRect.height,
-        ];
+        const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
-        const crosshairPos = map.containerPointToLatLng(markerPoint);
+        const crosshairPos = map.containerPointToLatLng([
+          markerPos.markerX,
+          markerPos.markerY,
+        ]);
         const centerPos = map.getCenter();
         const latOffset = centerPos.lat - crosshairPos.lat;
         const lngOffset = centerPos.lng - crosshairPos.lng;
@@ -239,22 +232,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
                 transition: `opacity ${standingStill ? 0.8 : 0.2}s`,
               }}
             >
-              <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
-                <path
-                  d="M14 38.479C13.6358 38.0533 13.1535 37.4795
-                12.589 36.7839C11.2893 35.1826 9.55816 32.9411
-                7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
-                3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
-                6.81228 6.81228 1 14 1C21.1877 1 27 6.81228 27 14C27
-                16.4227 26.1867 19.211 24.8999 22.0833C23.6189 24.9426
-                21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
-                35.1826 15.411 36.7839C14.8465 37.4795 14.3642
-                38.0533 14 38.479Z"
-                  fill="#ED1C55"
-                  stroke="#ED1C55"
-                  strokeWidth="2"
-                />
-              </svg>
+              <MarkerIcon selected={true} />
             </Box>
           )}
           {!selectedPlace && isCreating && (
@@ -265,22 +243,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
                 transition: `opacity  0.8s`,
               }}
             >
-              <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
-                <path
-                  d="M14 38.479C13.6358 38.0533 13.1535 37.4795
-                12.589 36.7839C11.2893 35.1826 9.55816 32.9411
-                7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
-                3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
-                6.81228 6.81228 1 14 1C21.1877 1 27 6.81228 27 14C27
-                16.4227 26.1867 19.211 24.8999 22.0833C23.6189 24.9426
-                21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
-                35.1826 15.411 36.7839C14.8465 37.4795 14.3642
-                38.0533 14 38.479Z"
-                  fill="#ED1C55"
-                  stroke="#ED1C55"
-                  strokeWidth="2"
-                />
-              </svg>
+              <MarkerIcon selected={true} />
             </Box>
           )}
           <GpsNotFixed />
@@ -356,22 +319,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
                   lng: place.position.lng,
                 }}
               >
-                <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
-                  <path
-                    d="M14 38.479C13.6358 38.0533 13.1535 37.4795
-           12.589 36.7839C11.2893 35.1826 9.55816 32.9411
-            7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
-            3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
-            6.81228 6.81228 1 14 1C21.1877 1 27 6.81228 27 14C27
-            16.4227 26.1867 19.211 24.8999 22.0833C23.6189 24.9426
-            21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
-            35.1826 15.411 36.7839C14.8465 37.4795 14.3642
-            38.0533 14 38.479Z"
-                    fill={selected ? '#ED1C55' : 'white'}
-                    stroke="#ED1C55"
-                    strokeWidth="2"
-                  />
-                </svg>
+                <MarkerIcon selected={selected} />
               </DivIconMarker>
             );
           })}
@@ -383,6 +331,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           onClose={() => {
             setAnchorEl(null);
             setSelectedPlace(null);
+          }}
+          onEdit={() => {
+            setDialogStep('edit');
           }}
           onLogCancel={() => {
             if (returnToMap) {
@@ -408,18 +359,13 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           }}
           onCreate={(title, type) => {
             const crosshair = crosshairRef.current;
-            const mapContainer = map?.getContainer();
-            if (crosshair && mapContainer) {
-              const mapRect = mapContainer.getBoundingClientRect();
-              const markerRect = crosshair.getBoundingClientRect();
-              const x = markerRect.x - mapRect.x;
-              const y = markerRect.y - mapRect.y;
-              const markerPoint: [number, number] = [
-                x + 0.5 * markerRect.width,
-                y + 0.8 * markerRect.height,
-              ];
+            if (crosshair && map) {
+              const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
-              const point = map?.containerPointToLatLng(markerPoint);
+              const point = map?.containerPointToLatLng([
+                markerPos.markerX,
+                markerPos.markerY,
+              ]);
               if (point) {
                 createPlace({
                   position: point,
