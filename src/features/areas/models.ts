@@ -45,6 +45,7 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
 
 const canvassAssignmentSchema =
   new mongoose.Schema<ZetkinCanvassAssignmentModelType>({
+    campId: Number,
     orgId: { required: true, type: Number },
     title: String,
   });
