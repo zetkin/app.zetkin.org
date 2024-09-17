@@ -67,6 +67,9 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
         return (
           <Box>
             <ZUIPersonSelect
+              getOptionDisabled={(option) =>
+                assignees.some((assignee) => assignee.id == option.id)
+              }
               onChange={(person) => addAssignee(person.id)}
               placeholder={messages.canvassAssignment.addAssignee()}
               selectedPerson={null}
