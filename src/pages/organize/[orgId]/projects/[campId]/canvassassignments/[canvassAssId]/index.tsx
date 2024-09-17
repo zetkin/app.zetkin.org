@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import { GetServerSideProps } from 'next';
 
@@ -9,7 +9,7 @@ import { PageWithLayout } from 'utils/types';
 import useAddAssignee from 'features/areas/hooks/useAddAssignee';
 import useAssignees from 'features/areas/hooks/useAssignees';
 import ZUIFutures from 'zui/ZUIFutures';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import zuiMessageIds from 'zui/l10n/messageIds';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
@@ -81,16 +81,20 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               })}
               variant="outlined"
             />
-            <Box>
-              Assignees
-              {assignees.map((assignee) => (
-                <Assignee
-                  key={assignee.id}
-                  id={assignee.id}
-                  orgId={parseInt(orgId)}
-                />
-              ))}
-            </Box>
+            {assignees.length > 0 && (
+              <Box>
+                <Typography>
+                  <Msg id={messageIds.canvassAssignment.assigneesTitle} />
+                </Typography>
+                {assignees.map((assignee) => (
+                  <Assignee
+                    key={assignee.id}
+                    id={assignee.id}
+                    orgId={parseInt(orgId)}
+                  />
+                ))}
+              </Box>
+            )}
           </Box>
         );
       }}
