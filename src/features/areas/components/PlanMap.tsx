@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 
-import { ZetkinArea } from '../types';
+import { ZetkinArea, ZetkinCanvassSession } from '../types';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import AreaOverlay from './AreaOverlay';
@@ -19,9 +19,10 @@ import PlanMapRenderer from './PlanMapRenderer';
 
 type PlanMapProps = {
   areas: ZetkinArea[];
+  sessions: ZetkinCanvassSession[];
 };
 
-const PlanMap: FC<PlanMapProps> = ({ areas }) => {
+const PlanMap: FC<PlanMapProps> = ({ areas, sessions }) => {
   const messages = useMessages(messageIds);
 
   const mapRef = useRef<MapType | null>(null);
@@ -137,6 +138,7 @@ const PlanMap: FC<PlanMapProps> = ({ areas }) => {
             areas={areas}
             onSelectedIdChange={(newId) => setSelectedId(newId)}
             selectedId={selectedId}
+            sessions={sessions}
           />
         </MapContainer>
       </Box>

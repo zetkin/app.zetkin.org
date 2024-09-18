@@ -8,6 +8,8 @@ import { PageWithLayout } from 'utils/types';
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
+import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const PlanMap = dynamic(
   () => import('../../../../../../../features/areas/components/PlanMap'),
@@ -30,8 +32,9 @@ interface PlanPageProps {
   canvassAssId: string;
 }
 
-const PlanPage: PageWithLayout<PlanPageProps> = ({ orgId }) => {
+const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
+  const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
 
   const isServer = useServerSide();
   if (isServer) {
@@ -40,7 +43,9 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ orgId }) => {
 
   return (
     <Box height="100%">
-      <PlanMap areas={areas} />
+      <ZUIFuture future={sessionsFuture}>
+        {(sessions) => <PlanMap areas={areas} sessions={sessions} />}
+      </ZUIFuture>
     </Box>
   );
 };
