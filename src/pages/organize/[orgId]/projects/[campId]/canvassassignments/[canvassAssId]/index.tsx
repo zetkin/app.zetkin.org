@@ -10,6 +10,7 @@ import { ZetkinCanvassSession } from 'features/areas/types';
 import useAreas from 'features/areas/hooks/useAreas';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIDialog from 'zui/ZUIDialog';
+import useCreateCanvassSession from 'features/areas/hooks/useCreateCanvassSession';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -36,6 +37,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
   const areasFuture = useAreas(parseInt(orgId));
   const [adding, setAdding] = useState(false);
+
+  const createCanvassSession = useCreateCanvassSession(
+    parseInt(orgId),
+    canvassAssId
+  );
 
   async function loadSessions() {
     const res = await fetch(
@@ -87,22 +93,15 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               </Box>
               <Button
                 onClick={async () => {
-                  await fetch(
-                    `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/sessions`,
-                    {
-                      body: JSON.stringify({
-                        areaId: selectedAreaId,
-                        personId: selectedPersonId,
-                      }),
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      method: 'POST',
-                    }
-                  );
+                  if (selectedAreaId && selectedPersonId) {
+                    createCanvassSession({
+                      areaId: selectedAreaId,
+                      personId: selectedPersonId,
+                    });
 
-                  loadSessions();
-                  setAdding(false);
+                    loadSessions();
+                    setAdding(false);
+                  }
                 }}
               >
                 Save

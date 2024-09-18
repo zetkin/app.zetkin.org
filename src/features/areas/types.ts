@@ -44,6 +44,11 @@ export type ZetkinCanvassSession = {
   };
 };
 
+export type ZetkinCanvassSessionPostBody = {
+  areaId: string;
+  personId: number;
+};
+
 export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;
 export type ZetkinPlacePostBody = Partial<Omit<ZetkinPlace, 'id'>>;
 export type ZetkinPlacePatchBody = Omit<ZetkinPlacePostBody, 'visits'> & {
