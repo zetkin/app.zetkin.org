@@ -10,6 +10,7 @@ import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
 import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
 import ZUIFuture from 'zui/ZUIFuture';
+import useCreateCanvassSession from 'features/areas/hooks/useCreateCanvassSession';
 
 const PlanMap = dynamic(
   () => import('../../../../../../../features/areas/components/PlanMap'),
@@ -35,6 +36,10 @@ interface PlanPageProps {
 const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
   const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
+  const createCanvassSession = useCreateCanvassSession(
+    parseInt(orgId),
+    canvassAssId
+  );
 
   const isServer = useServerSide();
   if (isServer) {
@@ -44,7 +49,18 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
   return (
     <Box height="100%">
       <ZUIFuture future={sessionsFuture}>
-        {(sessions) => <PlanMap areas={areas} sessions={sessions} />}
+        {(sessions) => (
+          <PlanMap
+            areas={areas}
+            onAddAssigneeToArea={(area, person) => {
+              createCanvassSession({
+                areaId: area.id,
+                personId: person.id,
+              });
+            }}
+            sessions={sessions}
+          />
+        )}
       </ZUIFuture>
     </Box>
   );

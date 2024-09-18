@@ -16,13 +16,19 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import PlanMapRenderer from './PlanMapRenderer';
 import AreaPlanningOverlay from './AreaPlanningOverlay';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 type PlanMapProps = {
   areas: ZetkinArea[];
+  onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
   sessions: ZetkinCanvassSession[];
 };
 
-const PlanMap: FC<PlanMapProps> = ({ areas, sessions }) => {
+const PlanMap: FC<PlanMapProps> = ({
+  areas,
+  onAddAssigneeToArea,
+  sessions,
+}) => {
   const messages = useMessages(messageIds);
 
   const mapRef = useRef<MapType | null>(null);
@@ -123,6 +129,9 @@ const PlanMap: FC<PlanMapProps> = ({ areas, sessions }) => {
             assignees={sessions
               .filter((session) => session.area.id == selectedArea.id)
               .map((session) => session.assignee)}
+            onAddAssignee={(person) => {
+              onAddAssigneeToArea(selectedArea, person);
+            }}
             onClose={() => setSelectedId('')}
           />
         )}

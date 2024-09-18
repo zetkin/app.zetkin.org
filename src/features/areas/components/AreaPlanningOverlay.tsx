@@ -7,14 +7,21 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
+import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
 type Props = {
   area: ZetkinArea;
   assignees: ZetkinPerson[];
+  onAddAssignee: (person: ZetkinPerson) => void;
   onClose: () => void;
 };
 
-const AreaPlanningOverlay: FC<Props> = ({ area, assignees, onClose }) => {
+const AreaPlanningOverlay: FC<Props> = ({
+  area,
+  assignees,
+  onAddAssignee,
+  onClose,
+}) => {
   const messages = useMessages(messageIds);
 
   return (
@@ -69,6 +76,13 @@ const AreaPlanningOverlay: FC<Props> = ({ area, assignees, onClose }) => {
             />
           </Box>
         ))}
+        <Typography variant="h6">Add assignee</Typography>
+        <ZUIPersonSelect
+          onChange={function (person: ZetkinPerson): void {
+            onAddAssignee(person);
+          }}
+          selectedPerson={null}
+        />
       </Box>
     </Paper>
   );
