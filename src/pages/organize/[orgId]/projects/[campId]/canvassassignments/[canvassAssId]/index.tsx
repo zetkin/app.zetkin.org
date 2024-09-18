@@ -11,6 +11,9 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUIDialog from 'zui/ZUIDialog';
 import useCreateCanvassSession from 'features/areas/hooks/useCreateCanvassSession';
 import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
+import ZUIPerson from 'zui/ZUIPerson';
+import { ZetkinCanvassSession } from 'features/areas/types';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -46,15 +49,36 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   const sessions = allSessions.filter(
     (session) => session.assignment.id === canvassAssId
   );
+  const sessionByPersonId: Record<
+    number,
+    {
+      person: ZetkinPerson;
+      sessions: ZetkinCanvassSession[];
+    }
+  > = {};
+
+  sessions.forEach((session) => {
+    if (!sessionByPersonId[session.assignee.id]) {
+      sessionByPersonId[session.assignee.id] = {
+        person: session.assignee,
+        sessions: [session],
+      };
+    } else {
+      sessionByPersonId[session.assignee.id].sessions.push(session);
+    }
+  });
 
   return (
     <Box>
       <Button onClick={() => setAdding(true)}>Add</Button>
-      {sessions.map((session, index) => {
+      {Object.values(sessionByPersonId).map(({ sessions, person }, index) => {
         return (
-          <Box key={index}>
-            <Box>{session.assignee.first_name}</Box>
-            <Box>{session.area.title || session.area.id}</Box>
+          <Box key={index} alignItems="center" display="flex" gap={1}>
+            <ZUIPerson
+              id={person.id}
+              name={`${person.first_name} ${person.last_name}`}
+            />
+            <Box>{sessions.length}</Box>
           </Box>
         );
       })}
