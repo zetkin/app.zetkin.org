@@ -233,6 +233,24 @@ const areasSlice = createSlice({
 
       state.canvassSessionList.items.push(item);
     },
+    canvassSessionsLoad: (state) => {
+      state.canvassSessionList.isLoading = true;
+    },
+    canvassSessionsLoaded: (
+      state,
+      action: PayloadAction<ZetkinCanvassSession[]>
+    ) => {
+      const sessions = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.canvassSessionList = remoteList(
+        sessions.map((session) => ({ ...session, id: session.assignment.id }))
+      );
+      state.canvassSessionList.loaded = timestamp;
+      state.canvassSessionList.items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
+    },
     myAssignmentsLoad: (state) => {
       state.myAssignmentsList.isLoading = true;
     },
@@ -299,6 +317,8 @@ export const {
   canvassAssignmentLoaded,
   canvassAssignmentUpdated,
   canvassSessionCreated,
+  canvassSessionsLoad,
+  canvassSessionsLoaded,
   placeCreated,
   placesLoad,
   placesLoaded,
