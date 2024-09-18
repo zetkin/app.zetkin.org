@@ -14,8 +14,8 @@ import { Add, Remove } from '@mui/icons-material';
 import { ZetkinArea, ZetkinCanvassSession } from '../types';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import AreaOverlay from './AreaOverlay';
 import PlanMapRenderer from './PlanMapRenderer';
+import AreaPlanningOverlay from './AreaPlanningOverlay';
 
 type PlanMapProps = {
   areas: ZetkinArea[];
@@ -29,7 +29,6 @@ const PlanMap: FC<PlanMapProps> = ({ areas, sessions }) => {
 
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
-  const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
 
   const selectedArea = areas.find((area) => area.id == selectedId);
 
@@ -118,11 +117,8 @@ const PlanMap: FC<PlanMapProps> = ({ areas, sessions }) => {
       </Box>
       <Box flexGrow={1} position="relative">
         {selectedArea && (
-          <AreaOverlay
-            area={editingArea || selectedArea}
-            editing={!!editingArea}
-            onBeginEdit={() => setEditingArea(selectedArea)}
-            onCancelEdit={() => setEditingArea(null)}
+          <AreaPlanningOverlay
+            area={selectedArea}
             onClose={() => setSelectedId('')}
           />
         )}
