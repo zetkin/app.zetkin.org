@@ -9,12 +9,15 @@ export default function useCanvassSessions(
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const sessions = useAppSelector((state) => state.areas.canvassSessionList);
+  const sessions = useAppSelector(
+    (state) => state.areas.sessionsByAssignmentId[canvassAssId]
+  );
 
   return loadListIfNecessary(sessions, dispatch, {
-    actionOnLoad: () => dispatch(canvassSessionsLoad()),
+    actionOnLoad: () => dispatch(canvassSessionsLoad(canvassAssId)),
 
-    actionOnSuccess: (data) => dispatch(canvassSessionsLoaded(data)),
+    actionOnSuccess: (data) =>
+      dispatch(canvassSessionsLoaded([canvassAssId, data])),
     loader: () =>
       apiClient.get<ZetkinCanvassSession[]>(
         `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/sessions`

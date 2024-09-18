@@ -17,7 +17,10 @@ import {
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
   canvassAssignmentList: RemoteList<ZetkinCanvassAssignment>;
-  canvassSessionList: RemoteList<ZetkinCanvassSession & { id: string }>;
+  sessionsByAssignmentId: Record<
+    string,
+    RemoteList<ZetkinCanvassSession & { id: number }>
+  >;
   assigneesByCanvassAssignmentId: Record<
     string,
     RemoteList<ZetkinCanvassAssignee>
@@ -30,9 +33,9 @@ const initialState: AreasStoreSlice = {
   areaList: remoteList(),
   assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
-  canvassSessionList: remoteList(),
   myAssignmentsList: remoteList(),
   placeList: remoteList(),
+  sessionsByAssignmentId: {},
 };
 
 const areasSlice = createSlice({
@@ -226,30 +229,37 @@ const areasSlice = createSlice({
       action: PayloadAction<ZetkinCanvassSession>
     ) => {
       const session = action.payload;
+      if (!state.sessionsByAssignmentId[session.assignment.id]) {
+        state.sessionsByAssignmentId[session.assignment.id] = remoteList();
+      }
       const item = remoteItem(session.assignment.id, {
-        data: { ...session, id: session.assignment.id },
+        data: { ...session, id: session.assignee.id },
         loaded: new Date().toISOString(),
       });
 
-      state.canvassSessionList.items.push(item);
+      state.sessionsByAssignmentId[session.assignment.id].items.push(item);
     },
-    canvassSessionsLoad: (state) => {
-      state.canvassSessionList.isLoading = true;
+    canvassSessionsLoad: (state, action: PayloadAction<string>) => {
+      const assignmentId = action.payload;
+
+      if (!state.sessionsByAssignmentId[assignmentId]) {
+        state.sessionsByAssignmentId[assignmentId] = remoteList();
+      }
+
+      state.sessionsByAssignmentId[assignmentId].isLoading = true;
     },
     canvassSessionsLoaded: (
       state,
-      action: PayloadAction<ZetkinCanvassSession[]>
+      action: PayloadAction<[string, ZetkinCanvassSession[]]>
     ) => {
-      const sessions = action.payload;
-      const timestamp = new Date().toISOString();
+      const [assignmentId, sessions] = action.payload;
 
-      state.canvassSessionList = remoteList(
-        sessions.map((session) => ({ ...session, id: session.assignment.id }))
+      state.sessionsByAssignmentId[assignmentId] = remoteList(
+        sessions.map((session) => ({ ...session, id: session.assignee.id }))
       );
-      state.canvassSessionList.loaded = timestamp;
-      state.canvassSessionList.items.forEach(
-        (item) => (item.loaded = timestamp)
-      );
+
+      state.sessionsByAssignmentId[assignmentId].loaded =
+        new Date().toISOString();
     },
     myAssignmentsLoad: (state) => {
       state.myAssignmentsList.isLoading = true;

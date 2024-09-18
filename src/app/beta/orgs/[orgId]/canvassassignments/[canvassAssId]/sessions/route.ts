@@ -106,19 +106,21 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         await assignment.save();
 
         return NextResponse.json({
-          area: {
-            description: area.description,
-            id: area._id.toString(),
-            organization: {
-              id: orgId,
+          data: {
+            area: {
+              description: area.description,
+              id: area._id.toString(),
+              organization: {
+                id: orgId,
+              },
+              points: area.points,
+              title: area.title,
             },
-            points: area.points,
-            title: area.title,
-          },
-          assignee: person,
-          assignment: {
-            id: assignment._id.toString(),
-            title: assignment.title,
+            assignee: person,
+            assignment: {
+              id: assignment._id.toString(),
+              title: assignment.title,
+            },
           },
         });
       } else {
