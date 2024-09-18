@@ -38,6 +38,11 @@ export default makeMessages('feat.areas', {
     noActivity: m('No visits have been recorded at this place.'),
     saveButton: m('Save'),
   },
+  planOverlay: {
+    addAssignee: m('Add assignee'),
+    assignees: m('Assignees'),
+    noAssignees: m('No assignees'),
+  },
   tools: {
     cancel: m('Cancel'),
     draw: m('Draw'),

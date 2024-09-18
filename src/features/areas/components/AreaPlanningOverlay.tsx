@@ -3,7 +3,7 @@ import { Close } from '@mui/icons-material';
 import { Box, Divider, Paper, Typography } from '@mui/material';
 
 import { ZetkinArea } from '../types';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -67,22 +67,39 @@ const AreaPlanningOverlay: FC<Props> = ({
       </Box>
       <Divider />
       <Box m={1}>
-        <Typography variant="h6">Assignees</Typography>
-        {assignees.map((assignee) => (
-          <Box key={assignee.id} my={1}>
-            <ZUIPerson
-              id={assignee.id}
-              name={`${assignee.first_name} ${assignee.last_name}`}
-            />
-          </Box>
-        ))}
-        <Typography variant="h6">Add assignee</Typography>
-        <ZUIPersonSelect
-          onChange={function (person: ZetkinPerson): void {
-            onAddAssignee(person);
-          }}
-          selectedPerson={null}
-        />
+        <Box>
+          <Typography variant="h6">
+            <Msg id={messageIds.planOverlay.assignees} />
+          </Typography>
+          {!assignees.length && (
+            <Typography
+              color="secondary"
+              fontStyle={area.description?.trim().length ? 'inherit' : 'italic'}
+              sx={{ overflowWrap: 'anywhere' }}
+            >
+              <Msg id={messageIds.planOverlay.noAssignees} />
+            </Typography>
+          )}
+          {assignees.map((assignee) => (
+            <Box key={assignee.id} my={1}>
+              <ZUIPerson
+                id={assignee.id}
+                name={`${assignee.first_name} ${assignee.last_name}`}
+              />
+            </Box>
+          ))}
+        </Box>
+        <Box mt={2}>
+          <Typography variant="h6">
+            <Msg id={messageIds.planOverlay.addAssignee} />
+          </Typography>
+          <ZUIPersonSelect
+            onChange={function (person: ZetkinPerson): void {
+              onAddAssignee(person);
+            }}
+            selectedPerson={null}
+          />
+        </Box>
       </Box>
     </Paper>
   );
