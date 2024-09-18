@@ -5,13 +5,16 @@ import { Box, Divider, Paper, Typography } from '@mui/material';
 import { ZetkinArea } from '../types';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIPerson from 'zui/ZUIPerson';
 
 type Props = {
   area: ZetkinArea;
+  assignees: ZetkinPerson[];
   onClose: () => void;
 };
 
-const AreaPlanningOverlay: FC<Props> = ({ area, onClose }) => {
+const AreaPlanningOverlay: FC<Props> = ({ area, assignees, onClose }) => {
   const messages = useMessages(messageIds);
 
   return (
@@ -56,6 +59,17 @@ const AreaPlanningOverlay: FC<Props> = ({ area, onClose }) => {
         </Box>
       </Box>
       <Divider />
+      <Box m={1}>
+        <Typography variant="h6">Assignees</Typography>
+        {assignees.map((assignee) => (
+          <Box key={assignee.id} my={1}>
+            <ZUIPerson
+              id={assignee.id}
+              name={`${assignee.first_name} ${assignee.last_name}`}
+            />
+          </Box>
+        ))}
+      </Box>
     </Paper>
   );
 };

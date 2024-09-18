@@ -120,6 +120,9 @@ const PlanMap: FC<PlanMapProps> = ({ areas, sessions }) => {
           <AreaPlanningOverlay
             key={selectedArea.id}
             area={selectedArea}
+            assignees={sessions
+              .filter((session) => session.area.id == selectedArea.id)
+              .map((session) => session.assignee)}
             onClose={() => setSelectedId('')}
           />
         )}
