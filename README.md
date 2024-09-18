@@ -18,10 +18,10 @@ Also see [TESTING.md](./TESTING.md) for details about automated testing.
 
 ## Instructions
 
-### Windows
+### Common (Mac/Windows/Linux)
 
 1. Fork zetkin/app.zetking.org into your personal GitHub account.
-1. Install Git for Windows from https://git-scm.com/download/win
+1. Install Git for your OS from https://git-scm.com/download/
 2. Generate an SSH key, for example with
    Git Gui / Help / Show SSH Key / Generate Key
 3. Add your key to GitHub by copying the public part of it to
@@ -31,20 +31,12 @@ Also see [TESTING.md](./TESTING.md) for details about automated testing.
    installation of Visual Studio Code to your GitHub account, and then clone
    your fork from GitHub. Note that you will be prompted for the passphrase of
    your private key if you chose to use one when you created your SSH Key.
-
-### Common
-
-Install all the dependencies using [`yarn` (Classic)](https://classic.yarnpkg.com):
-
-```
+6. Install all the dependencies using [yarn (Classic)](https://classic.yarnpkg.com):
 $ yarn install
-```
 
-Then start the devserver:
-
-```
+7. Then start the devserver:
 $ yarn devserver
-```
+
 
 You should now be able to access the app on http://localhost:3000. It will
 communicate with the Zetkin API running on our public development server.
@@ -58,29 +50,29 @@ you can also run the provided Docker Compose setup.
 * Backend development: Run local production (after building, it starts very fast)
   and access the organizations directly on http://localhost:3000/organizations/.
 
-  ```
-  $ docker compose -f dev.yml --profile static up
-  ```
+  
+$ docker compose -f dev.yml --profile static up
+
 
 * Frontend development: Similar to the normal yarn setup documented here.
 
-  ```
-  $ docker compose -f dev.yml --profile dev up
-  ```
+  
+$ docker compose -f dev.yml --profile dev up
+
 
 * Linting: You can run lint commands from within a container, too:
 
-  ```
-  $ # Default: Run .githooks/precommit
+  
+$ # Default: Run .githooks/precommit
   $ docker compose -f dev.yml run lint
   $ # Run prettier, checking for errors
   $ docker compose -f dev.yml run lint npx prettier . --check
   $ # Run prettier in write-mode
   $ docker compose -f dev.yml run lint npx prettier . --write
-  ```
 
-Note: If you are running the backend locally and things like `dev.zetkin.org` resolve to `127.0.0.1`,
-then this only works on Linux-based systems, due to the nature of `127.0.0.1` pointing to the host on Linux
+
+Note: If you are running the backend locally and things like dev.zetkin.org resolve to 127.0.0.1,
+then this only works on Linux-based systems, due to the nature of 127.0.0.1 pointing to the host on Linux
 (but not on Windows/Mac, where it points to the container itself).
 
 ## Development server login credentials
@@ -96,4 +88,4 @@ Hint: when in doubt, use **Administrator**
 | Caller        | testcaller@example.com | password | 999999   |
 | Basic user    | testuser@example.com   | password | 999999   |
 
-The SMS one-time password is only required in some parts of the app.
+The SMS one-time password is only required in some parts of the app. does this make sense? 
