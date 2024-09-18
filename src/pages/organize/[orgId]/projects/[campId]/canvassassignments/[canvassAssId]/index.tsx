@@ -1,20 +1,15 @@
-import { Box, Typography } from '@mui/material';
-import { FC } from 'react';
+import { Box, Button } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 
-import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import useAddAssignee from 'features/areas/hooks/useAddAssignee';
-import useAssignees from 'features/areas/hooks/useAssignees';
-import ZUIFutures from 'zui/ZUIFutures';
-import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/areas/l10n/messageIds';
-import zuiMessageIds from 'zui/l10n/messageIds';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
-import ZUIPerson from 'zui/ZUIPerson';
-import usePerson from 'features/profile/hooks/usePerson';
+import { ZetkinCanvassSession } from 'features/areas/types';
+import useAreas from 'features/areas/hooks/useAreas';
+import ZUIFuture from 'zui/ZUIFuture';
+import ZUIDialog from 'zui/ZUIDialog';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -27,16 +22,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 }, scaffoldOptions);
 
-const Assignee: FC<{ id: number; orgId: number }> = ({ id, orgId }) => {
-  const person = usePerson(orgId, id).data;
-  if (!person) {
-    return null;
-  }
-  return (
-    <ZUIPerson id={id} name={`${person?.first_name} ${person?.last_name}`} />
-  );
-};
-
 interface CanvassAssignmentPageProps {
   orgId: string;
   canvassAssId: string;
@@ -46,59 +31,87 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
 }) => {
-  const zuiMessages = useMessages(zuiMessageIds);
-  const messages = useMessages(messageIds);
+  const [sessions, setSessions] = useState<ZetkinCanvassSession[] | null>(null);
+  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
+  const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
+  const areasFuture = useAreas(parseInt(orgId));
+  const [adding, setAdding] = useState(false);
 
-  const addAssignee = useAddAssignee(parseInt(orgId), canvassAssId);
-  const canvassAssignmentFuture = useCanvassAssignment(
-    parseInt(orgId),
-    canvassAssId
-  );
+  async function loadSessions() {
+    const res = await fetch(
+      `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/sessions`
+    );
+    const payload = await res.json();
+    setSessions(payload.data as ZetkinCanvassSession[]);
+  }
 
-  const assigneesFuture = useAssignees(parseInt(orgId), canvassAssId);
+  useEffect(() => {
+    loadSessions();
+  }, []);
+
   return (
-    <ZUIFutures
-      futures={{
-        assignees: assigneesFuture,
-        canvassAssignment: canvassAssignmentFuture,
-      }}
-    >
-      {({ data: { canvassAssignment, assignees } }) => {
+    <Box>
+      <Button onClick={() => setAdding(true)}>Add</Button>
+      {sessions?.map((session, index) => {
         return (
-          <Box>
-            <ZUIPersonSelect
-              getOptionDisabled={(option) =>
-                assignees.some((assignee) => assignee.id == option.id)
-              }
-              onChange={(person) => addAssignee(person.id)}
-              placeholder={messages.canvassAssignment.addAssignee()}
-              selectedPerson={null}
-              submitLabel={zuiMessages.createPerson.submitLabel.assign()}
-              title={zuiMessages.createPerson.title.assignToCanvassAssignment({
-                canvassAss:
-                  canvassAssignment.title ||
-                  messages.canvassAssignment.empty.title(),
-              })}
-              variant="outlined"
-            />
-            {assignees.length > 0 && (
-              <Box>
-                <Typography>
-                  <Msg id={messageIds.canvassAssignment.assigneesTitle} />
-                </Typography>
-                {assignees.map((assignee) => (
-                  <Assignee
-                    key={assignee.id}
-                    id={assignee.id}
-                    orgId={parseInt(orgId)}
-                  />
-                ))}
-              </Box>
-            )}
+          <Box key={index}>
+            <Box>{session.assignee.first_name}</Box>
+            <Box>{session.area.title || session.area.id}</Box>
           </Box>
         );
-      }}
-    </ZUIFutures>
+      })}
+      <ZUIDialog onClose={() => setAdding(false)} open={adding}>
+        <ZUIFuture future={areasFuture}>
+          {(areas) => (
+            <>
+              <Box height={100} width={300}>
+                <ZUIPersonSelect
+                  onChange={(person) => {
+                    setSelectedPersonId(person.id);
+                  }}
+                  selectedPerson={null}
+                />
+              </Box>
+              <Box>
+                <select
+                  onChange={(evt) => {
+                    setSelectedAreaId(evt.target.value);
+                  }}
+                >
+                  {areas.map((area) => (
+                    <option key={area.id} value={area.id}>
+                      {area.title || area.id}
+                    </option>
+                  ))}
+                </select>
+              </Box>
+              <Button
+                onClick={async () => {
+                  await fetch(
+                    `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/sessions`,
+                    {
+                      body: JSON.stringify({
+                        areaId: selectedAreaId,
+                        personId: selectedPersonId,
+                      }),
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      method: 'POST',
+                    }
+                  );
+
+                  loadSessions();
+                  setAdding(false);
+                }}
+              >
+                Save
+              </Button>
+            </>
+          )}
+        </ZUIFuture>
+      </ZUIDialog>
+    </Box>
   );
 };
 
