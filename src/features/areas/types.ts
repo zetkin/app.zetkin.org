@@ -1,3 +1,5 @@
+import { ZetkinPerson } from 'utils/types/zetkin';
+
 export type PointData = [number, number];
 
 export type Visit = {
@@ -31,6 +33,15 @@ export type ZetkinCanvassAssignment = {
   id: string;
   orgId: number;
   title: string | null;
+};
+
+export type ZetkinCanvassSession = {
+  area: ZetkinArea;
+  assignee: ZetkinPerson;
+  assignment: {
+    id: string;
+    title: string | null;
+  };
 };
 
 export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;

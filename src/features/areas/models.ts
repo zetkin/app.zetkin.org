@@ -22,6 +22,10 @@ type ZetkinCanvassAssignmentModelType = {
   campId: number;
   id: number;
   orgId: number;
+  sessions: {
+    areaId: string;
+    personId: number;
+  }[];
   title: string | null;
 };
 
@@ -47,6 +51,12 @@ const canvassAssignmentSchema =
   new mongoose.Schema<ZetkinCanvassAssignmentModelType>({
     campId: Number,
     orgId: { required: true, type: Number },
+    sessions: [
+      {
+        areaId: String,
+        personId: Number,
+      },
+    ],
     title: String,
   });
 
