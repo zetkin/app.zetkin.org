@@ -118,6 +118,7 @@ const PlanMap: FC<PlanMapProps> = ({ areas, sessions }) => {
       <Box flexGrow={1} position="relative">
         {selectedArea && (
           <AreaPlanningOverlay
+            key={selectedArea.id}
             area={selectedArea}
             onClose={() => setSelectedId('')}
           />

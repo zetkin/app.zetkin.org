@@ -103,7 +103,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
               {hasPeople && (
                 <DivIconMarker position={mid}>
                   {detailed && (
-                    <Box display="flex">
+                    <Box display="flex" sx={{ pointerEvents: 'none' }}>
                       <Box
                         sx={{
                           display: 'flex',
@@ -140,6 +140,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                         fontWeight: 'bold',
                         height: 30,
                         justifyContent: 'center',
+                        pointerEvents: 'none',
                         transform: 'translate(-50%, -50%)',
                         width: 30,
                       }}
