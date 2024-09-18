@@ -35,7 +35,11 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
     <TabbedLayout
       baseHref={`/organize/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`}
       defaultTab="/"
-      tabs={[{ href: '/', label: messages.canvassAssignment.tabs.overview() }]}
+      fixedHeight
+      tabs={[
+        { href: '/', label: messages.canvassAssignment.tabs.overview() },
+        { href: '/plan', label: 'Plan' },
+      ]}
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => updateCanvassAssignment({ title: newTitle })}

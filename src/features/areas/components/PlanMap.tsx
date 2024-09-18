@@ -1,0 +1,147 @@
+import { FC, useRef, useState } from 'react';
+import { Map as MapType } from 'leaflet';
+import { MapContainer } from 'react-leaflet';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  ButtonGroup,
+  MenuItem,
+  TextField,
+} from '@mui/material';
+import { Add, Remove } from '@mui/icons-material';
+
+import { ZetkinArea } from '../types';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
+import AreaOverlay from './AreaOverlay';
+import PlanMapRenderer from './PlanMapRenderer';
+
+type PlanMapProps = {
+  areas: ZetkinArea[];
+};
+
+const PlanMap: FC<PlanMapProps> = ({ areas }) => {
+  const messages = useMessages(messageIds);
+
+  const mapRef = useRef<MapType | null>(null);
+
+  const [selectedId, setSelectedId] = useState('');
+  const [filterText, setFilterText] = useState('');
+  const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
+
+  const selectedArea = areas.find((area) => area.id == selectedId);
+
+  function filterAreas(areas: ZetkinArea[], matchString: string) {
+    const inputValue = matchString.trim().toLowerCase();
+    if (inputValue.length == 0) {
+      return areas.concat();
+    }
+
+    return areas.filter((area) => {
+      const areaTitle = area.title || messages.empty.title();
+      const areaDesc = area.description || messages.empty.description();
+
+      return (
+        areaTitle.toLowerCase().includes(inputValue) ||
+        areaDesc.toLowerCase().includes(inputValue)
+      );
+    });
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        sx={{
+          left: '1rem',
+          position: 'absolute',
+          right: '1rem',
+          top: '1rem',
+          zIndex: 999,
+        }}
+      >
+        <Box alignItems="center" display="flex" gap={1}>
+          <ButtonGroup variant="contained">
+            <Button onClick={() => mapRef.current?.zoomIn()}>
+              <Add />
+            </Button>
+            <Button onClick={() => mapRef.current?.zoomOut()}>
+              <Remove />
+            </Button>
+          </ButtonGroup>
+        </Box>
+        <Box>
+          <Autocomplete
+            filterOptions={(options, state) =>
+              filterAreas(options, state.inputValue)
+            }
+            getOptionLabel={(option) => option.id}
+            inputValue={filterText}
+            onChange={(ev, area) => {
+              if (area) {
+                setSelectedId(area.id);
+                setFilterText('');
+              }
+            }}
+            onInputChange={(ev, value, reason) => {
+              if (reason == 'input') {
+                setFilterText(value);
+              }
+            }}
+            options={areas}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                size="small"
+                sx={{ backgroundColor: 'white', width: '16rem' }}
+                variant="outlined"
+              />
+            )}
+            renderOption={(props, area) => (
+              <MenuItem {...props}>
+                {area.title || messages.empty.title()}
+              </MenuItem>
+            )}
+            value={null}
+          />
+        </Box>
+      </Box>
+      <Box flexGrow={1} position="relative">
+        {selectedArea && (
+          <AreaOverlay
+            area={editingArea || selectedArea}
+            editing={!!editingArea}
+            onBeginEdit={() => setEditingArea(selectedArea)}
+            onCancelEdit={() => setEditingArea(null)}
+            onClose={() => setSelectedId('')}
+          />
+        )}
+        <MapContainer
+          ref={mapRef}
+          attributionControl={false}
+          center={[0, 0]}
+          style={{ height: '100%', width: '100%' }}
+          zoom={2}
+          zoomControl={false}
+        >
+          <PlanMapRenderer
+            areas={areas}
+            onSelectedIdChange={(newId) => setSelectedId(newId)}
+            selectedId={selectedId}
+          />
+        </MapContainer>
+      </Box>
+    </Box>
+  );
+};
+
+export default PlanMap;

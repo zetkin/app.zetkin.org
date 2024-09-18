@@ -29,6 +29,7 @@ export default makeMessages('feat.breadcrumbs', {
     organize: m('Organize'),
     participants: m('Participants'),
     people: m('People'),
+    plan: m('Plan'),
     projects: m('Projects'),
     questions: m('Questions'),
     settings: m('Settings'),
