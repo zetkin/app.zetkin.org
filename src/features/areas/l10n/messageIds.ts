@@ -5,6 +5,9 @@ export default makeMessages('feat.areas', {
   canvassAssignment: {
     addAssignee: m('Add assignee'),
     assigneesTitle: m('Assignees'),
+    canvassing: {
+      title: m('Canvassing'),
+    },
     empty: {
       title: m('Untitled canvass assignment'),
     },
