@@ -18,7 +18,6 @@ import { store } from 'core/store';
 import { themeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
-import BackendApiClient from 'core/api/client/BackendApiClient';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -31,7 +30,6 @@ type ClientContextProps = {
     MUIX_LICENSE_KEY: string | null;
     ZETKIN_APP_DOMAIN: string | null;
   };
-  headers: Record<string, string>;
   lang: string;
   messages: MessageList;
   user: ZetkinUser | null;
@@ -40,18 +38,11 @@ type ClientContextProps = {
 const ClientContext: FC<ClientContextProps> = ({
   children,
   envVars,
-  headers,
   lang,
   messages,
   user,
 }) => {
-  const onServer = typeof window == 'undefined';
-
-  const apiClient = onServer
-    ? new BackendApiClient(headers)
-    : new BrowserApiClient();
-
-  const env = new Environment(store, apiClient, envVars);
+  const env = new Environment(new BrowserApiClient(), envVars);
   return (
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>

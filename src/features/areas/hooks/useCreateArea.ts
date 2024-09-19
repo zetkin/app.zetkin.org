@@ -12,5 +12,7 @@ export default function useCreateArea(orgId: number) {
       data
     );
     dispatch(areaCreated(created));
+
+    return created;
   };
 }

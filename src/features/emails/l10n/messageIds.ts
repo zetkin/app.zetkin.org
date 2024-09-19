@@ -123,6 +123,52 @@ export default makeMessages('feat.emails', {
     ),
     goBackButton: m('Go back'),
   },
+  insights: {
+    clicked: {
+      descriptions: {
+        ctor: m(
+          'Click-to-open rate (CTOR) is the share of those who have opened the email that also clicked one of the links. A high rate is an indicator of a well-targeted email with convincing copy.'
+        ),
+        ctr: m(
+          'Clickthrough rate (CTR) is the percentage of recipients who not only opened the email but also clicked one of the links. A high rate is an indicator of a well-targeted email with convincing copy.'
+        ),
+      },
+      gauge: {
+        headers: {
+          ctor: m('CTOR'),
+          ctr: m('CTR'),
+        },
+      },
+      header: m('Clicked'),
+      metrics: {
+        ctor: m('CTOR'),
+        ctr: m('CTR'),
+      },
+    },
+    comparison: {
+      label: m('Compare with'),
+    },
+    opened: {
+      chart: {
+        afterSend: m('After it was sent'),
+        opened: m<{ count: number }>('{count} opened'),
+        spans: {
+          allTime: m('All time'),
+          first24: m('First 24 hours'),
+          first48: m('First 48 hours'),
+          firstMonth: m('First 30 days'),
+          firstWeek: m('First 7 days'),
+        },
+      },
+      description: m(
+        'Open rate is the percentage of recipients who opened the email. A high rate is an indicator of good targeting and a compelling subject line.'
+      ),
+      gauge: {
+        header: m('Open rate'),
+      },
+      header: m('Opened'),
+    },
+  },
   ready: {
     loading: m('Loading...'),
     lockButton: m('Lock for delivery'),
@@ -154,6 +200,7 @@ export default makeMessages('feat.emails', {
   },
   tabs: {
     compose: m('Compose'),
+    insights: m('Insights'),
     overview: m('Overview'),
   },
   targets: {

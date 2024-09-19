@@ -1,11 +1,12 @@
 import { OpenInNew } from '@mui/icons-material';
+import { useMemo } from 'react';
 import { Box, Link, useTheme } from '@mui/material';
 
-import { useEnv } from 'core/hooks';
 import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useSurvey from '../hooks/useSurvey';
 
 interface SurveyURLCardProps {
   isOpen: boolean;
@@ -14,9 +15,16 @@ interface SurveyURLCardProps {
 }
 
 const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
+  const survey = useSurvey(parseInt(orgId), parseInt(surveyId));
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const env = useEnv();
+  const surveyUrl = useMemo(
+    () =>
+      survey.data
+        ? `${location.protocol}//${location.host}/o/${survey.data.organization.id}/surveys/${surveyId}`
+        : '',
+    [survey.data, surveyId]
+  );
 
   return (
     <ZUICard
@@ -38,10 +46,8 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
       }
     >
       <Box display="flex" paddingBottom={2}>
-        <ZUITextfieldToClipboard
-          copyText={`${env.vars.ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
-        >
-          {`${env.vars.ZETKIN_APP_DOMAIN}/o/${orgId}/surveys/${surveyId}`}
+        <ZUITextfieldToClipboard copyText={surveyUrl}>
+          {surveyUrl}
         </ZUITextfieldToClipboard>
       </Box>
       <Link
