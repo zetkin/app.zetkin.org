@@ -224,6 +224,16 @@ const areasSlice = createSlice({
       item.data = assignment;
       item.loaded = new Date().toISOString();
     },
+    canvassAssignmentsLoad: (state) => {
+      state.canvassAssignmentList.isLoading = true;
+    },
+    canvassAssignmentsLoaded: (
+      state,
+      action: PayloadAction<ZetkinCanvassAssignment[]>
+    ) => {
+      state.canvassAssignmentList = remoteList(action.payload);
+      state.canvassAssignmentList.loaded = new Date().toISOString();
+    },
     canvassSessionCreated: (
       state,
       action: PayloadAction<ZetkinCanvassSession>
@@ -326,6 +336,8 @@ export const {
   canvassAssignmentLoad,
   canvassAssignmentLoaded,
   canvassAssignmentUpdated,
+  canvassAssignmentsLoad,
+  canvassAssignmentsLoaded,
   canvassSessionCreated,
   canvassSessionsLoad,
   canvassSessionsLoaded,
