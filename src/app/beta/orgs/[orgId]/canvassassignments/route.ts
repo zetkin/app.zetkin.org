@@ -10,6 +10,34 @@ type RouteMeta = {
   };
 };
 
+export async function GET(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const assignments = CanvassAssignmentModel.find({ orgId: orgId });
+
+      return NextResponse.json({
+        data: (await assignments).map((assignment) => ({
+          campaign: {
+            id: assignment.campId,
+          },
+          id: assignment._id.toString(),
+          organization: {
+            id: orgId,
+          },
+          title: assignment.title,
+        })),
+      });
+    }
+  );
+}
+
 export async function POST(request: NextRequest, { params }: RouteMeta) {
   return asOrgAuthorized(
     {
