@@ -12,6 +12,10 @@ export default makeMessages('feat.areas', {
     empty: {
       title: m('Untitled canvass assignment'),
     },
+    planFilters: {
+      assigned: m('Assigned'),
+      unassigned: m('Unassigned'),
+    },
     tabs: {
       canvassers: m('Canvassers'),
       overview: m('Overview'),

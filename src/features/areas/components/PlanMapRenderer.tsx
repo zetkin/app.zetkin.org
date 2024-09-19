@@ -16,6 +16,8 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 
 type PlanMapRendererProps = {
   areas: ZetkinArea[];
+  filterAssigned: boolean;
+  filterUnassigned: boolean;
   onSelectedIdChange: (newId: string) => void;
   selectedId: string;
   sessions: ZetkinCanvassSession[];
@@ -23,6 +25,8 @@ type PlanMapRendererProps = {
 
 const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   areas,
+  filterAssigned,
+  filterUnassigned,
   selectedId,
   sessions,
   onSelectedIdChange,
@@ -49,6 +53,9 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
       }
     }
   }, [areas, map]);
+
+  const showAll = !filterAssigned && !filterUnassigned;
+
   return (
     <>
       <AttributionControl position="bottomright" prefix={false} />
@@ -90,6 +97,14 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
             .map((session) => session.assignee);
 
           const hasPeople = !!people.length;
+
+          if (!showAll) {
+            if (hasPeople && !filterAssigned) {
+              return null;
+            } else if (!hasPeople && !filterUnassigned) {
+              return null;
+            }
+          }
 
           // The key changes when selected, to force redraw of polygon
           // to reflect new state through visual style

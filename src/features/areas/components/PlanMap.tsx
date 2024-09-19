@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Chip,
   MenuItem,
   TextField,
 } from '@mui/material';
@@ -30,6 +31,8 @@ const PlanMap: FC<PlanMapProps> = ({
   sessions,
 }) => {
   const messages = useMessages(messageIds);
+  const [filterAssigned, setFilterAssigned] = useState(false);
+  const [filterUnassigned, setFilterUnassigned] = useState(false);
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -85,7 +88,17 @@ const PlanMap: FC<PlanMapProps> = ({
             </Button>
           </ButtonGroup>
         </Box>
-        <Box>
+        <Box alignItems="center" display="flex" gap={1}>
+          <Chip
+            color={filterAssigned ? 'primary' : 'secondary'}
+            label={messages.canvassAssignment.planFilters.assigned()}
+            onClick={() => setFilterAssigned(!filterAssigned)}
+          />
+          <Chip
+            color={filterUnassigned ? 'primary' : 'secondary'}
+            label={messages.canvassAssignment.planFilters.unassigned()}
+            onClick={() => setFilterUnassigned(!filterUnassigned)}
+          />
           <Autocomplete
             filterOptions={(options, state) =>
               filterAreas(options, state.inputValue)
@@ -145,6 +158,8 @@ const PlanMap: FC<PlanMapProps> = ({
         >
           <PlanMapRenderer
             areas={areas}
+            filterAssigned={filterAssigned}
+            filterUnassigned={filterUnassigned}
             onSelectedIdChange={(newId) => setSelectedId(newId)}
             selectedId={selectedId}
             sessions={sessions}
