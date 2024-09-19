@@ -1,20 +1,18 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { myAssignmentsLoad, myAssignmentsLoaded } from '../store';
-import { ZetkinCanvassAssignee } from '../types';
+import { ZetkinCanvassSession } from '../types';
 
-export default function useMyCanvassAssignments() {
+export default function useMyCanvassSessions() {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const myAssignments = useAppSelector(
-    (state) => state.areas.myAssignmentsList
-  );
+  const mySessions = useAppSelector((state) => state.areas.mySessionsList);
 
-  return loadListIfNecessary(myAssignments, dispatch, {
+  return loadListIfNecessary(mySessions, dispatch, {
     actionOnLoad: () => myAssignmentsLoad(),
     actionOnSuccess: (data) => myAssignmentsLoaded(data),
     loader: () =>
-      apiClient.get<ZetkinCanvassAssignee[]>(
+      apiClient.get<ZetkinCanvassSession[]>(
         '/beta/users/me/canvassassignments'
       ),
   });

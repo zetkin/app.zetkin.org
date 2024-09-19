@@ -25,7 +25,7 @@ export interface AreasStoreSlice {
     string,
     RemoteList<ZetkinCanvassAssignee>
   >;
-  myAssignmentsList: RemoteList<ZetkinCanvassAssignee>;
+  mySessionsList: RemoteList<ZetkinCanvassSession & { id: string }>;
   placeList: RemoteList<ZetkinPlace>;
 }
 
@@ -33,7 +33,7 @@ const initialState: AreasStoreSlice = {
   areaList: remoteList(),
   assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
-  myAssignmentsList: remoteList(),
+  mySessionsList: remoteList(),
   placeList: remoteList(),
   sessionsByAssignmentId: {},
 };
@@ -272,20 +272,23 @@ const areasSlice = createSlice({
         new Date().toISOString();
     },
     myAssignmentsLoad: (state) => {
-      state.myAssignmentsList.isLoading = true;
+      state.mySessionsList.isLoading = true;
     },
     myAssignmentsLoaded: (
       state,
-      action: PayloadAction<ZetkinCanvassAssignee[]>
+      action: PayloadAction<ZetkinCanvassSession[]>
     ) => {
-      const assignees = action.payload;
+      const sessions = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.myAssignmentsList = remoteList(assignees);
-      state.myAssignmentsList.loaded = timestamp;
-      state.myAssignmentsList.items.forEach(
-        (item) => (item.loaded = timestamp)
+      state.mySessionsList = remoteList(
+        sessions.map((session) => ({
+          ...session,
+          id: `${session.assignment.id} ${session.assignee.id}`,
+        }))
       );
+      state.mySessionsList.loaded = timestamp;
+      state.mySessionsList.items.forEach((item) => (item.loaded = timestamp));
     },
     placeCreated: (state, action: PayloadAction<ZetkinPlace>) => {
       const place = action.payload;

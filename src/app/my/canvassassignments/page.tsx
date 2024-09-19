@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import ProfilePage from 'features/areas/components/ProfilePage';
+import MyCanvassAssignmentsPage from 'features/areas/components/MyCanvassAssignmentsPage';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
 export default async function Page() {
@@ -14,7 +14,7 @@ export default async function Page() {
   try {
     await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <ProfilePage />;
+    return <MyCanvassAssignmentsPage />;
   } catch (err) {
     return notFound();
   }
