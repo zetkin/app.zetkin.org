@@ -1,11 +1,18 @@
-import { Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { Edit } from '@mui/icons-material';
+import { useRouter } from 'next/router';
+import { makeStyles } from '@mui/styles';
 
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import ZUIFuture from 'zui/ZUIFuture';
 import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
+import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
+import ZUIFutures from 'zui/ZUIFutures';
+import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -23,15 +30,94 @@ interface CanvassAssignmentPageProps {
   canvassAssId: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    backgroundColor: theme.palette.statusColors.gray,
+    borderRadius: '1em',
+    color: theme.palette.text.secondary,
+    display: 'flex',
+    fontSize: '1.8em',
+    lineHeight: 'normal',
+    marginRight: '0.1em',
+    overflow: 'hidden',
+    padding: '0.2em 0.7em',
+  },
+}));
+
 const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
 }) => {
   const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
+  const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
+  const classes = useStyles();
+  const router = useRouter();
+
   return (
-    <ZUIFuture future={assignmentFuture}>
-      {(assignment) => <Typography>{assignment.title}</Typography>}
-    </ZUIFuture>
+    <ZUIFutures
+      futures={{ assignment: assignmentFuture, sessions: sessionsFuture }}
+    >
+      {({ data: { assignment, sessions } }) => {
+        const areaIds = new Set(sessions.map((session) => session.area.id));
+        const areaCount = areaIds.size;
+
+        const planUrl = `/organize/${orgId}/projects/${
+          assignment.campaign.id || 'standalone'
+        }/canvassassignments/${assignment.id}/plan`;
+
+        return (
+          <Card>
+            <Box display="flex" justifyContent="space-between" p={2}>
+              <Typography variant="h4">
+                <Msg id={messageIds.canvassAssignment.overview.areas.title} />
+              </Typography>
+              {!!areaCount && (
+                <ZUIAnimatedNumber value={areaCount}>
+                  {(animatedValue) => (
+                    <Box className={classes.chip}>{animatedValue}</Box>
+                  )}
+                </ZUIAnimatedNumber>
+              )}
+            </Box>
+            <Divider />
+            {areaCount > 0 ? (
+              <Box p={2}>
+                <Button
+                  onClick={() => router.push(planUrl)}
+                  startIcon={<Edit />}
+                  variant="text"
+                >
+                  <Msg
+                    id={messageIds.canvassAssignment.overview.areas.editButton}
+                  />
+                </Button>
+              </Box>
+            ) : (
+              <Box p={2}>
+                <Typography>
+                  <Msg
+                    id={messageIds.canvassAssignment.overview.areas.subtitle}
+                  />
+                </Typography>
+                <Box pt={1}>
+                  <Button
+                    onClick={() => router.push(planUrl)}
+                    startIcon={<Edit />}
+                    variant="text"
+                  >
+                    <Msg
+                      id={
+                        messageIds.canvassAssignment.overview.areas.defineButton
+                      }
+                    />
+                  </Button>
+                </Box>
+              </Box>
+            )}
+          </Card>
+        );
+      }}
+    </ZUIFutures>
   );
 };
 

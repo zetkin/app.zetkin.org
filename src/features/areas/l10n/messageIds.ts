@@ -12,6 +12,14 @@ export default makeMessages('feat.areas', {
     empty: {
       title: m('Untitled canvass assignment'),
     },
+    overview: {
+      areas: {
+        defineButton: m('Plan now'),
+        editButton: m('Edit plan'),
+        subtitle: m('This assignment has not been planned yet.'),
+        title: m('Areas'),
+      },
+    },
     planFilters: {
       assigned: m('Assigned'),
       unassigned: m('Unassigned'),
