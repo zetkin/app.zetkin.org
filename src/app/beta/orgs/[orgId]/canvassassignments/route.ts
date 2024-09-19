@@ -23,7 +23,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       const payload = await request.json();
 
       const model = new CanvassAssignmentModel({
-        campId: payload.campId,
+        campId: payload.campaign_id,
         orgId: orgId,
         title: payload.title,
       });
@@ -32,9 +32,9 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       return NextResponse.json({
         data: {
-          campId: model.campId,
+          campaign: { id: model.campId },
           id: model._id.toString(),
-          orgId: orgId,
+          organization: { id: orgId },
           title: model.title,
         },
       });

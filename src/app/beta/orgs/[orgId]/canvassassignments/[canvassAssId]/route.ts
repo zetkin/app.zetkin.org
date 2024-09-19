@@ -32,9 +32,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       }
 
       const canvassAssignment: ZetkinCanvassAssignment = {
-        campId: canvassAssignmentModel.campId,
+        campaign: { id: canvassAssignmentModel.campId },
         id: canvassAssignmentModel._id.toString(),
-        orgId: orgId,
+        organization: { id: orgId },
         title: canvassAssignmentModel.title,
       };
 
@@ -69,9 +69,9 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
       return NextResponse.json({
         data: {
-          campId: model.campId,
+          campaign: { id: model.campId },
           id: model._id.toString(),
-          orgId,
+          organization: { id: orgId },
           title: model.title,
         },
       });

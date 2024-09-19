@@ -109,7 +109,7 @@ listenerMiddleware.startListening({
   effect: (action) => {
     const canvassAssignment = action.payload;
     Router.push(
-      `/organize/${canvassAssignment.orgId}/projects/${canvassAssignment.campId}/canvassassignments/${canvassAssignment.id}`
+      `/organize/${canvassAssignment.organization.id}/projects/${canvassAssignment.campaign.id}/canvassassignments/${canvassAssignment.id}`
     );
   },
 });

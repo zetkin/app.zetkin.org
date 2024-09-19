@@ -29,9 +29,13 @@ export type ZetkinPlace = {
 };
 
 export type ZetkinCanvassAssignment = {
-  campId: number;
+  campaign: {
+    id: number;
+  };
   id: string;
-  orgId: number;
+  organization: {
+    id: number;
+  };
   title: string | null;
 };
 
@@ -55,9 +59,13 @@ export type ZetkinPlacePatchBody = Omit<ZetkinPlacePostBody, 'visits'> & {
   visits?: Omit<Visit, 'id'>[];
 };
 export type ZetkinCanvassAssignmentPostBody = Partial<
+  Omit<ZetkinCanvassAssignment, 'id' | 'campaign' | 'organization'>
+> & {
+  campaign_id: number;
+};
+export type ZetkinCanvassAssignmentPatchbody = Partial<
   Omit<ZetkinCanvassAssignment, 'id'>
 >;
-export type ZetkinCanvassAssignmentPatchbody = ZetkinCanvassAssignmentPostBody;
 
 export type ZetkinCanvassAssignee = {
   canvassAssId: string;

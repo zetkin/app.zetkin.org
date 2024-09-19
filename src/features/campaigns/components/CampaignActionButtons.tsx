@@ -92,7 +92,7 @@ const CampaignActionButtons: React.FunctionComponent<
       label: messages.linkGroup.createCanvassAssignment(),
       onClick: () =>
         createCanvassAssignment({
-          campId: campaign.id,
+          campaign_id: campaign.id,
           title: null,
         }),
     },
