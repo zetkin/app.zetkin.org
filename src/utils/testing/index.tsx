@@ -19,7 +19,7 @@ import IApiClient from 'core/api/client/IApiClient';
 import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLuxemburgUser';
 import theme from 'theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
-import createStore, { Store } from 'core/store';
+import { Store } from 'core/store';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -31,8 +31,7 @@ interface ZetkinAppProvidersProps {
 }
 
 const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
-  const store = createStore();
-  const env = new Environment(store, new BrowserApiClient(), {
+  const env = new Environment(new BrowserApiClient(), {
     MUIX_LICENSE_KEY: null,
     ZETKIN_APP_DOMAIN: 'https://app.zetkin.org',
   });
@@ -109,7 +108,7 @@ export const makeWrapper = (store: Store) =>
       rpc: jest.fn(),
     };
 
-    const env = new Environment(store, apiClient);
+    const env = new Environment(apiClient);
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>

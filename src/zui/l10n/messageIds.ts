@@ -107,6 +107,13 @@ export default makeMessages('zui', {
     }>('{date}'),
     singleDayToday: m('Today'),
   },
+  duration: {
+    days: m<{ n: number }>('{n, plural, =1 {1 day} other {# days}}'),
+    h: m<{ n: number }>('{n}h'),
+    m: m<{ n: number }>('{n}m'),
+    ms: m<{ n: number }>('{n}ms'),
+    s: m<{ n: number }>('{n}s'),
+  },
   editTextInPlace: {
     tooltip: {
       edit: m('Click to edit'),

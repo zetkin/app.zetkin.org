@@ -37,9 +37,10 @@ const Map: FC<MapProps> = ({ areas }) => {
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
 
-  function finishDrawing() {
+  async function finishDrawing() {
     if (drawingPoints && drawingPoints.length > 2) {
-      createArea({ points: drawingPoints });
+      const area = await createArea({ points: drawingPoints });
+      setSelectedId(area.id);
     }
     setDrawingPoints(null);
   }

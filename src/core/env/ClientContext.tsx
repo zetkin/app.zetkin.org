@@ -51,7 +51,8 @@ const ClientContext: FC<ClientContextProps> = ({
     ? new BackendApiClient(headers)
     : new BrowserApiClient();
 
-  const env = new Environment(store, apiClient, envVars);
+  const env = new Environment(apiClient, envVars);
+
   return (
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>

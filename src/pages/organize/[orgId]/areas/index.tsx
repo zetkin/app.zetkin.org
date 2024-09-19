@@ -8,12 +8,23 @@ import { PageWithLayout } from 'utils/types';
 import useAreas from 'features/areas/hooks/useAreas';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
+import hasFeature from 'utils/featureFlags/hasFeature';
+import { AREAS } from 'utils/featureFlags';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
 };
 
-export const getServerSideProps: GetServerSideProps = scaffold(async () => {
+export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
+  const { orgId } = ctx.params!;
+  const hasAreas = hasFeature(AREAS, parseInt(orgId as string), process.env);
+
+  if (!hasAreas) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {},
   };

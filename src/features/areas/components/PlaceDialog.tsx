@@ -4,19 +4,25 @@ import {
   Button,
   Dialog,
   Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from '@mui/material';
 
 import { ZetkinPlace } from '../types';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import usePlaceMutations from '../hooks/usePlaceMutations';
 import ZUIDateTime from 'zui/ZUIDateTime';
 
 type PlaceDialogProps = {
-  dialogStep: 'place' | 'log';
+  dialogStep: 'place' | 'log' | 'edit';
   onClose: () => void;
+  onEdit: () => void;
   onLogCancel: () => void;
   onLogSave: () => void;
   onLogStart: () => void;
@@ -28,6 +34,7 @@ type PlaceDialogProps = {
 const PlaceDialog: FC<PlaceDialogProps> = ({
   dialogStep,
   onClose,
+  onEdit,
   onLogCancel,
   onLogSave,
   onLogStart,
@@ -36,8 +43,18 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   place,
 }) => {
   const updatePlace = usePlaceMutations(orgId, place.id);
-  const [note, setNote] = useState('');
+  const messages = useMessages(messageIds);
   const timestamp = new Date().toISOString();
+  const [note, setNote] = useState('');
+  const [description, setDescription] = useState<string>(
+    place.description ?? ''
+  );
+  const [title, setTitle] = useState<string>(place.title ?? '');
+  const [type, setType] = useState<'address' | 'misc'>(place.type);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setType(event.target.value as 'address' | 'misc');
+  };
 
   const sortedVisits = place.visits.toSorted((a, b) => {
     const dateA = new Date(a.timestamp);
@@ -54,13 +71,77 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   return (
     <Dialog fullWidth maxWidth="xl" onClose={onClose} open={open}>
       <Box display="flex" flexDirection="column" height="90vh" padding={2}>
-        <Box paddingBottom={1}>
-          <Typography variant="h6">
-            {place?.title || <Msg id={messageIds.place.empty.title} />}
-          </Typography>
+        <Box
+          paddingBottom={1}
+          sx={{
+            alignItems: 'baseline',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          {dialogStep !== 'edit' && (
+            <>
+              <Typography variant="h6">
+                {place?.title || <Msg id={messageIds.place.empty.title} />}
+              </Typography>
+              {dialogStep === 'place' && (
+                <Button onClick={onEdit} variant="outlined">
+                  <Msg id={messageIds.place.editButton} />
+                </Button>
+              )}
+            </>
+          )}
+          {dialogStep === 'edit' && (
+            <Typography variant="h6">
+              <Msg id={messageIds.place.editPlace} />
+            </Typography>
+          )}
         </Box>
         <Divider />
         <Box flexGrow={1} overflow="hidden">
+          {dialogStep === 'edit' && (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={2}
+              height="100%"
+              paddingTop={2}
+            >
+              <TextField
+                defaultValue={title}
+                fullWidth
+                label={messages.place.editTitle()}
+                onChange={(ev) => setTitle(ev.target.value)}
+              />
+              <FormControl fullWidth>
+                <InputLabel id="type-of-place-label">
+                  <Msg id={messageIds.place.selectType} />
+                </InputLabel>
+                <Select
+                  fullWidth
+                  label={messages.placeCard.inputLabel()}
+                  labelId="type-of-place-label"
+                  onChange={handleChange}
+                  value={type}
+                >
+                  <MenuItem value="address">
+                    <Msg id={messageIds.placeCard.address} />
+                  </MenuItem>
+                  <MenuItem value="misc">
+                    <Msg id={messageIds.placeCard.misc} />
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                defaultValue={description}
+                fullWidth
+                label={messages.place.editDescription()}
+                multiline
+                onChange={(ev) => setDescription(ev.target.value)}
+                rows={5}
+              />
+            </Box>
+          )}
           {place && dialogStep == 'place' && (
             <Box
               display="flex"
@@ -128,7 +209,15 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         </Box>
         <Box display="flex" gap={1} justifyContent="flex-end" paddingTop={1}>
           <Button
-            onClick={dialogStep == 'place' ? onClose : onLogCancel}
+            onClick={() => {
+              if (dialogStep === 'place') {
+                onClose();
+              } else if (dialogStep === 'log') {
+                onLogCancel();
+              } else if (dialogStep === 'edit') {
+                onLogSave();
+              }
+            }}
             variant="outlined"
           >
             <Msg
@@ -148,6 +237,13 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 updatePlace({
                   ...place,
                   visits: [...place.visits, { note, timestamp }],
+                });
+                onLogSave();
+              } else if (dialogStep == 'edit') {
+                updatePlace({
+                  description,
+                  title,
+                  type,
                 });
                 onLogSave();
               }
