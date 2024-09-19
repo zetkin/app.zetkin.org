@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import messageIds from 'features/duplicates/l10n/messageIds';
@@ -21,18 +21,23 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 const DuplicatesPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const list = useDuplicates(orgId).data ?? [];
+  const duplicates = useDuplicates(orgId);
   const messages = useMessages(messageIds);
 
   if (onServer) {
     return null;
   }
 
-  const filteredList = list.filter((cluster) => !cluster.dismissed);
+  const filteredList = (duplicates.data ?? []).filter(
+    (cluster) => !cluster.dismissed
+  );
 
   return (
     <>
-      {filteredList.length === 0 && (
+      {duplicates.isLoading && (
+        <CircularProgress color="inherit" size="1.5rem" />
+      )}
+      {!duplicates.isLoading && filteredList.length === 0 && (
         <Box m={2}>
           <Typography variant="overline">
             {messages.page.noDuplicates()}
