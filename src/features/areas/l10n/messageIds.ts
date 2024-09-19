@@ -6,6 +6,7 @@ export default makeMessages('feat.areas', {
     addAssignee: m('Add assignee'),
     assigneesTitle: m('Assignees'),
     canvassing: {
+      goToMapButton: m('Go to map'),
       title: m('Canvassing'),
     },
     empty: {
