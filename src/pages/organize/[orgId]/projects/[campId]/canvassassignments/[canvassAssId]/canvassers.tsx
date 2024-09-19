@@ -1,13 +1,16 @@
-import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
-import ZUIPerson from 'zui/ZUIPerson';
 import { ZetkinCanvassSession } from 'features/areas/types';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIAvatar from 'zui/ZUIAvatar';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -25,48 +28,87 @@ type Props = {
   orgId: string;
 };
 
+type CanvasserInfo = {
+  id: number;
+  person: ZetkinPerson;
+  sessions: ZetkinCanvassSession[];
+};
+
 const CanvassAssignmentPage: PageWithLayout<Props> = ({
   orgId,
   canvassAssId,
 }) => {
+  const messages = useMessages(messageIds);
   const allSessions =
     useCanvassSessions(parseInt(orgId), canvassAssId).data || [];
   const sessions = allSessions.filter(
     (session) => session.assignment.id === canvassAssId
   );
-  const sessionByPersonId: Record<
-    number,
-    {
-      person: ZetkinPerson;
-      sessions: ZetkinCanvassSession[];
-    }
-  > = {};
+
+  const sessionsByPersonId: Record<number, CanvasserInfo> = {};
 
   sessions.forEach((session) => {
-    if (!sessionByPersonId[session.assignee.id]) {
-      sessionByPersonId[session.assignee.id] = {
+    if (!sessionsByPersonId[session.assignee.id]) {
+      sessionsByPersonId[session.assignee.id] = {
+        id: session.assignee.id,
         person: session.assignee,
         sessions: [session],
       };
     } else {
-      sessionByPersonId[session.assignee.id].sessions.push(session);
+      sessionsByPersonId[session.assignee.id].sessions.push(session);
     }
   });
 
+  const canvassers = Object.values(sessionsByPersonId);
+
+  const columns: GridColDef<CanvasserInfo>[] = [
+    {
+      disableColumnMenu: true,
+      field: 'id',
+      headerName: ' ',
+      renderCell: (params) => (
+        <ZUIPersonHoverCard personId={params.row.person.id}>
+          <ZUIAvatar
+            size={'md'}
+            url={`/api/orgs/${orgId}/people/${params.row.person.id}/avatar`}
+          />
+        </ZUIPersonHoverCard>
+      ),
+      sortable: false,
+    },
+    {
+      field: 'name',
+      flex: 1,
+      headerName: messages.canvassAssignment.canvassers.nameColumn(),
+      valueGetter: (params) =>
+        `${params.row.person.first_name} ${params.row.person.last_name}`,
+    },
+    {
+      align: 'left',
+      field: 'areas',
+      flex: 1,
+      headerAlign: 'left',
+      headerName: messages.canvassAssignment.canvassers.areasColumn(),
+      type: 'number',
+      valueGetter: (params) => params.row.sessions.length,
+    },
+  ];
+
   return (
-    <Box>
-      {Object.values(sessionByPersonId).map(({ sessions, person }, index) => {
-        return (
-          <Box key={index} alignItems="center" display="flex" gap={1}>
-            <ZUIPerson
-              id={person.id}
-              name={`${person.first_name} ${person.last_name}`}
-            />
-            <Box>{sessions.length}</Box>
-          </Box>
-        );
-      })}
-    </Box>
+    <DataGridPro
+      autoHeight
+      columns={columns}
+      disableColumnFilter
+      disableColumnMenu
+      disableColumnReorder
+      disableColumnResize
+      disableRowSelectionOnClick
+      hideFooter
+      rows={canvassers}
+      style={{
+        border: 'none',
+      }}
+    />
   );
 };
 
