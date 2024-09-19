@@ -180,7 +180,9 @@ const MapRenderer: FC<Props> = ({
                 }
                 eventHandlers={{
                   click: () => {
-                    onSelectArea(area);
+                    if (!isDrawing) {
+                      onSelectArea(area);
+                    }
                   },
                 }}
                 positions={area.points}
