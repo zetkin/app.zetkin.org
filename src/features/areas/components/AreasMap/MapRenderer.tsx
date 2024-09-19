@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/material';
-import { FeatureGroup, Map } from 'leaflet';
-import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { FeatureGroup } from 'leaflet';
+import { FC, useEffect, useRef, useState } from 'react';
 import {
   FeatureGroup as FeatureGroupComponent,
   Polygon,
@@ -16,7 +16,6 @@ type Props = {
   areas: ZetkinArea[];
   drawingPoints: PointData[] | null;
   editingArea: ZetkinArea | null;
-  mapRef: MutableRefObject<Map | null>;
   onChangeArea: (area: ZetkinArea) => void;
   onChangeDrawingPoints: (points: PointData[]) => void;
   onFinishDrawing: () => void;
@@ -28,7 +27,6 @@ const MapRenderer: FC<Props> = ({
   areas,
   drawingPoints,
   editingArea,
-  mapRef,
   onChangeArea,
   onChangeDrawingPoints,
   onFinishDrawing,
@@ -54,10 +52,6 @@ const MapRenderer: FC<Props> = ({
   });
 
   const isDrawing = !!drawingPoints;
-
-  useEffect(() => {
-    mapRef.current = map;
-  }, [map]);
 
   useEffect(() => {
     const ctr = map.getContainer();

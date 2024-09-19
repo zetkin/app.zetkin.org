@@ -5,6 +5,7 @@ export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
     areas: {
       areaList: remoteList(),
+      placeList: remoteList(),
     },
     breadcrumbs: {
       crumbsByPath: {},
