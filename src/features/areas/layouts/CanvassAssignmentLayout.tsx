@@ -39,6 +39,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
       tabs={[
         { href: '/', label: messages.canvassAssignment.tabs.overview() },
         { href: '/plan', label: 'Plan' },
+        { href: '/canvassers', label: 'Canvassers' },
       ]}
       title={
         <ZUIEditTextinPlace

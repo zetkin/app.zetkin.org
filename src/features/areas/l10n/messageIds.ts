@@ -9,7 +9,9 @@ export default makeMessages('feat.areas', {
       title: m('Untitled canvass assignment'),
     },
     tabs: {
+      canvassers: m('Canvassers'),
       overview: m('Overview'),
+      plan: m('Plan'),
     },
   },
   empty: {
