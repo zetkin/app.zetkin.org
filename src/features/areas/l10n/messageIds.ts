@@ -5,6 +5,10 @@ export default makeMessages('feat.areas', {
   canvassAssignment: {
     addAssignee: m('Add assignee'),
     assigneesTitle: m('Assignees'),
+    canvassers: {
+      areasColumn: m('Areas'),
+      nameColumn: m('Name'),
+    },
     canvassing: {
       goToMapButton: m('Go to map'),
       title: m('Canvassing'),
@@ -12,8 +16,22 @@ export default makeMessages('feat.areas', {
     empty: {
       title: m('Untitled canvass assignment'),
     },
+    overview: {
+      areas: {
+        defineButton: m('Plan now'),
+        editButton: m('Edit plan'),
+        subtitle: m('This assignment has not been planned yet.'),
+        title: m('Areas'),
+      },
+    },
+    planFilters: {
+      assigned: m('Assigned'),
+      unassigned: m('Unassigned'),
+    },
     tabs: {
+      canvassers: m('Canvassers'),
       overview: m('Overview'),
+      plan: m('Plan'),
     },
   },
   empty: {

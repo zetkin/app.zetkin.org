@@ -1,19 +1,18 @@
-import { Box, Button } from '@mui/material';
-import { useState } from 'react';
+import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { Edit } from '@mui/icons-material';
+import { useRouter } from 'next/router';
+import { makeStyles } from '@mui/styles';
 
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
-import useAreas from 'features/areas/hooks/useAreas';
-import ZUIFuture from 'zui/ZUIFuture';
-import ZUIDialog from 'zui/ZUIDialog';
-import useCreateCanvassSession from 'features/areas/hooks/useCreateCanvassSession';
+import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
 import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
-import ZUIPerson from 'zui/ZUIPerson';
-import { ZetkinCanvassSession } from 'features/areas/types';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIFutures from 'zui/ZUIFutures';
+import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -31,101 +30,94 @@ interface CanvassAssignmentPageProps {
   canvassAssId: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    backgroundColor: theme.palette.statusColors.gray,
+    borderRadius: '1em',
+    color: theme.palette.text.secondary,
+    display: 'flex',
+    fontSize: '1.8em',
+    lineHeight: 'normal',
+    marginRight: '0.1em',
+    overflow: 'hidden',
+    padding: '0.2em 0.7em',
+  },
+}));
+
 const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
 }) => {
-  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
-  const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
-  const [adding, setAdding] = useState(false);
-
-  const areasFuture = useAreas(parseInt(orgId));
-  const createCanvassSession = useCreateCanvassSession(
-    parseInt(orgId),
-    canvassAssId
-  );
-  const allSessions =
-    useCanvassSessions(parseInt(orgId), canvassAssId).data || [];
-  const sessions = allSessions.filter(
-    (session) => session.assignment.id === canvassAssId
-  );
-  const sessionByPersonId: Record<
-    number,
-    {
-      person: ZetkinPerson;
-      sessions: ZetkinCanvassSession[];
-    }
-  > = {};
-
-  sessions.forEach((session) => {
-    if (!sessionByPersonId[session.assignee.id]) {
-      sessionByPersonId[session.assignee.id] = {
-        person: session.assignee,
-        sessions: [session],
-      };
-    } else {
-      sessionByPersonId[session.assignee.id].sessions.push(session);
-    }
-  });
+  const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
+  const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
+  const classes = useStyles();
+  const router = useRouter();
 
   return (
-    <Box>
-      <Button onClick={() => setAdding(true)}>Add</Button>
-      {Object.values(sessionByPersonId).map(({ sessions, person }, index) => {
-        return (
-          <Box key={index} alignItems="center" display="flex" gap={1}>
-            <ZUIPerson
-              id={person.id}
-              name={`${person.first_name} ${person.last_name}`}
-            />
-            <Box>{sessions.length}</Box>
-          </Box>
-        );
-      })}
-      <ZUIDialog onClose={() => setAdding(false)} open={adding}>
-        <ZUIFuture future={areasFuture}>
-          {(areas) => (
-            <>
-              <Box height={100} width={300}>
-                <ZUIPersonSelect
-                  onChange={(person) => {
-                    setSelectedPersonId(person.id);
-                  }}
-                  selectedPerson={null}
-                />
-              </Box>
-              <Box>
-                <select
-                  onChange={(evt) => {
-                    setSelectedAreaId(evt.target.value);
-                  }}
-                >
-                  {areas.map((area) => (
-                    <option key={area.id} value={area.id}>
-                      {area.title || area.id}
-                    </option>
-                  ))}
-                </select>
-              </Box>
-              <Button
-                onClick={async () => {
-                  if (selectedAreaId && selectedPersonId) {
-                    createCanvassSession({
-                      areaId: selectedAreaId,
-                      personId: selectedPersonId,
-                    });
+    <ZUIFutures
+      futures={{ assignment: assignmentFuture, sessions: sessionsFuture }}
+    >
+      {({ data: { assignment, sessions } }) => {
+        const areaIds = new Set(sessions.map((session) => session.area.id));
+        const areaCount = areaIds.size;
 
-                    setAdding(false);
-                  }
-                }}
-              >
-                Save
-              </Button>
-            </>
-          )}
-        </ZUIFuture>
-      </ZUIDialog>
-    </Box>
+        const planUrl = `/organize/${orgId}/projects/${
+          assignment.campaign.id || 'standalone'
+        }/canvassassignments/${assignment.id}/plan`;
+
+        return (
+          <Card>
+            <Box display="flex" justifyContent="space-between" p={2}>
+              <Typography variant="h4">
+                <Msg id={messageIds.canvassAssignment.overview.areas.title} />
+              </Typography>
+              {!!areaCount && (
+                <ZUIAnimatedNumber value={areaCount}>
+                  {(animatedValue) => (
+                    <Box className={classes.chip}>{animatedValue}</Box>
+                  )}
+                </ZUIAnimatedNumber>
+              )}
+            </Box>
+            <Divider />
+            {areaCount > 0 ? (
+              <Box p={2}>
+                <Button
+                  onClick={() => router.push(planUrl)}
+                  startIcon={<Edit />}
+                  variant="text"
+                >
+                  <Msg
+                    id={messageIds.canvassAssignment.overview.areas.editButton}
+                  />
+                </Button>
+              </Box>
+            ) : (
+              <Box p={2}>
+                <Typography>
+                  <Msg
+                    id={messageIds.canvassAssignment.overview.areas.subtitle}
+                  />
+                </Typography>
+                <Box pt={1}>
+                  <Button
+                    onClick={() => router.push(planUrl)}
+                    startIcon={<Edit />}
+                    variant="text"
+                  >
+                    <Msg
+                      id={
+                        messageIds.canvassAssignment.overview.areas.defineButton
+                      }
+                    />
+                  </Button>
+                </Box>
+              </Box>
+            )}
+          </Card>
+        );
+      }}
+    </ZUIFutures>
   );
 };
 

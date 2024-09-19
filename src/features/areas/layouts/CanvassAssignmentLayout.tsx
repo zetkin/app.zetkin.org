@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+import { useRouter } from 'next/router';
 
 import { useMessages } from 'core/i18n';
 import TabbedLayout from 'utils/layout/TabbedLayout';
@@ -20,12 +21,15 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
   campId,
   canvassAssId,
 }) => {
+  const path = useRouter().pathname;
   const messages = useMessages(messageIds);
   const canvassAssignment = useCanvassAssignment(orgId, canvassAssId).data;
   const updateCanvassAssignment = useCanvassAssignmentMutations(
     orgId,
     canvassAssId
   );
+
+  const isPlanTab = path.endsWith('/plan');
 
   if (!canvassAssignment) {
     return null;
@@ -35,10 +39,11 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
     <TabbedLayout
       baseHref={`/organize/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`}
       defaultTab="/"
-      fixedHeight
+      fixedHeight={isPlanTab}
       tabs={[
         { href: '/', label: messages.canvassAssignment.tabs.overview() },
         { href: '/plan', label: 'Plan' },
+        { href: '/canvassers', label: 'Canvassers' },
       ]}
       title={
         <ZUIEditTextinPlace

@@ -24,7 +24,7 @@ const CanvassAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
       endNumber={''}
       href={`/organize/${orgId}/projects/${
         assignment?.campaign?.id ?? 'standalone'
-      }/callassignments/${caId}`}
+      }/canvassassignments/${caId}`}
       PrimaryIcon={Map}
       SecondaryIcon={Map}
       title={assignment?.title || ''}

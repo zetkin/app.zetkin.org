@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import { FeatureGroup } from 'leaflet';
+import { bounds, FeatureGroup } from 'leaflet';
 import { FC, useEffect, useRef, useState } from 'react';
 import {
   FeatureGroup as FeatureGroupComponent,
@@ -11,6 +11,7 @@ import {
 
 import { PointData, ZetkinArea } from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import objToPoint from 'features/areas/utils/objToPoint';
 
 type Props = {
   areas: ZetkinArea[];
@@ -146,8 +147,21 @@ const MapRenderer: FC<Props> = ({
               return 1;
             } else if (a1.id == selectedId) {
               return -1;
+            } else {
+              // When  none of the two areas are selected, sort them
+              // by size, so that big ones are underneith and the
+              // smaller ones can be clicked.
+              const bounds0 = bounds(a0.points.map(objToPoint));
+              const bounds1 = bounds(a1.points.map(objToPoint));
+
+              const dimensions0 = bounds0.getSize();
+              const dimensions1 = bounds1.getSize();
+
+              const size0 = dimensions0.x * dimensions0.y;
+              const size1 = dimensions1.x * dimensions1.y;
+
+              return size1 - size0;
             }
-            return 0;
           })
           .map((area) => {
             const selected = selectedId == area.id;
@@ -166,7 +180,9 @@ const MapRenderer: FC<Props> = ({
                 }
                 eventHandlers={{
                   click: () => {
-                    onSelectArea(area);
+                    if (!isDrawing) {
+                      onSelectArea(area);
+                    }
                   },
                 }}
                 positions={area.points}
