@@ -49,8 +49,10 @@ import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
+import areasSlice, { AreasStoreSlice } from 'features/areas/store';
 
 export interface RootState {
+  areas: AreasStoreSlice;
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
@@ -74,6 +76,7 @@ export interface RootState {
 }
 
 const reducer = {
+  areas: areasSlice.reducer,
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,

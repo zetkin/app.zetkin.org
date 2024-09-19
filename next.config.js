@@ -1,6 +1,7 @@
 module.exports = {
   experimental: {
-    serverComponentsExternalPackages: ["mjml"],
+    esmExternals: "loose",
+    serverComponentsExternalPackages: ["mjml", "mongoose"],
   },
   images: {
     domains: [
@@ -36,11 +37,6 @@ module.exports = {
       {
         source: '/organize/:orgId(\\d{1,})',
         destination: '/legacy?orgId=:orgId',
-        permanent: false,
-      },
-      {
-        source: '/organize/:orgId(\\d{1,})/areas',
-        destination: '/legacy?path=/maps&orgId=:orgId',
         permanent: false,
       },
       {

@@ -3,6 +3,9 @@ import { remoteItem, remoteList } from 'utils/storeUtils';
 
 export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
+    areas: {
+      areaList: remoteList(),
+    },
     breadcrumbs: {
       crumbsByPath: {},
     },
