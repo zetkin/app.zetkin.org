@@ -1,5 +1,3 @@
-import Router from 'next/router';
-
 import { PromiseFuture } from 'core/caching/futures';
 import { ZetkinView } from '../components/types';
 import {
@@ -31,7 +29,6 @@ export default function useViewMutations(
 
   const deleteView = async (viewId: number): Promise<void> => {
     await apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
-    Router.push(`/organize/${orgId}/people`);
     dispatch(viewDeleted(viewId));
   };
 
