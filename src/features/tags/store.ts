@@ -35,16 +35,17 @@ const tagsSlice = createSlice({
       const [personId, tag] = action.payload;
       if (!state.tagsByPersonId[personId]) {
         state.tagsByPersonId[personId] = remoteList();
+      }
+      const item = state.tagsByPersonId[personId].items.find(
+        (item) => item.id == tag.id
+      );
+
+      if (item) {
+        item.data = tag;
+      } else {
         state.tagsByPersonId[personId].items.push(
           remoteItem(tag.id, { data: tag })
         );
-      } else {
-        const item = state.tagsByPersonId[personId].items.find(
-          (item) => item.id == tag.id
-        );
-        if (item) {
-          item.data = tag;
-        }
       }
     },
     tagCreate: (state) => {
