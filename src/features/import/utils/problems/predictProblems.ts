@@ -63,7 +63,7 @@ export function predictProblems(
   customFields.forEach((field) => {
     customFieldsBySlug[field.slug] = field;
   });
-  let isMissingValue = false;
+  let missingValueInName = false;
 
   sheet.rows.forEach((row, index) => {
     const rowIndex = sheet.firstRowIsHeaders ? index - 1 : index;
@@ -123,7 +123,12 @@ export function predictProblems(
           }
           hadImpact = true;
         } else {
-          isMissingValue = true;
+          if (
+            column.kind == ColumnKind.FIELD &&
+            (column.field == 'first_name' || column.field == 'last_name')
+          ) {
+            missingValueInName = true;
+          }
         }
       }
     });
@@ -144,7 +149,7 @@ export function predictProblems(
     }
   });
 
-  if (!sheetHasId && !isMissingValue) {
+  if (!sheetHasId && !missingValueInName) {
     if (sheetHasFirstName && sheetHasLastName) {
       problems.push({
         kind: ImportProblemKind.UNCONFIGURED_ID,
