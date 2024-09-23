@@ -42,10 +42,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   orgId,
   place,
 }) => {
-  const { addHousehold, addVisit, updatePlace } = usePlaceMutations(
-    orgId,
-    place.id
-  );
+  const { addHousehold, addVisit, updateHousehold, updatePlace } =
+    usePlaceMutations(orgId, place.id);
   const messages = useMessages(messageIds);
   const timestamp = new Date().toISOString();
 
@@ -59,6 +57,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [title, setTitle] = useState<string>(place.title ?? '');
   const [type, setType] = useState<'address' | 'misc'>(place.type);
   const [newHouseholdTitle, setNewHouseholdTitle] = useState('');
+  const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
+  const [householdTitle, setHousholdTitle] = useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as 'address' | 'misc');
@@ -236,8 +236,41 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               paddingTop={1}
             >
               <Box>
-                {selectedHousehold.title || (
-                  <Msg id={messageIds.place.household.empty.title} />
+                {!editingHouseholdTitle && (
+                  <Box alignItems="center" display="flex">
+                    <Typography>
+                      {selectedHousehold.title || (
+                        <Msg id={messageIds.place.household.empty.title} />
+                      )}
+                    </Typography>
+                    <Button
+                      onClick={() => {
+                        setHousholdTitle(selectedHousehold.title);
+                        setEditingHouseholdTitle(true);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  </Box>
+                )}
+                {editingHouseholdTitle && (
+                  <Box alignItems="center" display="flex">
+                    <TextField
+                      onChange={(ev) => setHousholdTitle(ev.target.value)}
+                      value={householdTitle}
+                    />
+                    <Button
+                      onClick={() => {
+                        updateHousehold(selectedHousehold.id, {
+                          title: householdTitle,
+                        });
+                        setEditingHouseholdTitle(false);
+                        setHousholdTitle('');
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Box>
                 )}
               </Box>
               <Box

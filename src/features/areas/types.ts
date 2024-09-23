@@ -84,3 +84,6 @@ export type ZetkinCanvassAssignee = {
   id: number;
 };
 export type ZetkinCanvassAssigneePatchBody = Partial<ZetkinCanvassAssignee>;
+
+export type HouseholdPatchBody = Partial<Omit<Household, 'id'>>;
+export type HouseholdPostBody = HouseholdPatchBody;
