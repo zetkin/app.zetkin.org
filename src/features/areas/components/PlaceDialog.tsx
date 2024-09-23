@@ -42,7 +42,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   orgId,
   place,
 }) => {
-  const { addHousehold, updatePlace } = usePlaceMutations(orgId, place.id);
+  const { addHousehold, addVisit, updatePlace } = usePlaceMutations(
+    orgId,
+    place.id
+  );
   const messages = useMessages(messageIds);
   const timestamp = new Date().toISOString();
 
@@ -247,7 +250,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     <Msg id={messageIds.place.noActivity} />
                   )}
                   {sortedVisits.map((visit) => (
-                    <Box key={visit.timestamp} paddingTop={1}>
+                    <Box key={visit.id} paddingTop={1}>
                       <Typography color="secondary">
                         <ZUIDateTime datetime={visit.timestamp} />
                       </Typography>
@@ -287,23 +290,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               onClick={() => {
                 setNote('');
                 if (selectedHousehold && dialogStep == 'household') {
-                  const newVisit = {
+                  addVisit(selectedHousehold.id, {
                     note,
                     timestamp: new Date().toISOString(),
-                  };
-
-                  const updatedHousehold = {
-                    ...selectedHousehold,
-                    visits: [...selectedHousehold.visits, newVisit],
-                  };
-
-                  updatePlace({
-                    ...place,
-                    households: place.households.map((household) =>
-                      household.id == selectedHousehold.id
-                        ? updatedHousehold
-                        : household
-                    ),
                   });
                 } else if (dialogStep == 'edit') {
                   updatePlace({

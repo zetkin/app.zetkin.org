@@ -3,6 +3,7 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 export type PointData = [number, number];
 
 export type Visit = {
+  id: string;
   note: string;
   timestamp: string;
 };
