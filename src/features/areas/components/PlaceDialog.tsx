@@ -42,7 +42,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   orgId,
   place,
 }) => {
-  const updatePlace = usePlaceMutations(orgId, place.id);
+  const { addHousehold, updatePlace } = usePlaceMutations(orgId, place.id);
   const messages = useMessages(messageIds);
   const timestamp = new Date().toISOString();
 
@@ -182,6 +182,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 <Typography variant="h6">
                   <Msg id={messageIds.place.householdsHeader} />
                 </Typography>
+                <Button onClick={() => addHousehold()}>Add household</Button>
                 <Box
                   display="flex"
                   flexDirection="column"
