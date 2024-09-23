@@ -1,5 +1,5 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { Visit, ZetkinPlace, ZetkinPlacePatchBody } from '../types';
+import { Household, Visit, ZetkinPlace, ZetkinPlacePatchBody } from '../types';
 import { placeUpdated } from '../store';
 
 export default function usePlaceMutations(orgId: number, placeId: string) {
@@ -7,10 +7,10 @@ export default function usePlaceMutations(orgId: number, placeId: string) {
   const dispatch = useAppDispatch();
 
   return {
-    addHousehold: async () => {
+    addHousehold: async (data: { title: Household['title'] }) => {
       const place = await apiClient.post<ZetkinPlace>(
         `/beta/orgs/${orgId}/places/${placeId}/households`,
-        {}
+        data
       );
       dispatch(placeUpdated(place));
     },

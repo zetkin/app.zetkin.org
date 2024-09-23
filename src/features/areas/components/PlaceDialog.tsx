@@ -58,6 +58,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   );
   const [title, setTitle] = useState<string>(place.title ?? '');
   const [type, setType] = useState<'address' | 'misc'>(place.type);
+  const [newHouseholdTitle, setNewHouseholdTitle] = useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as 'address' | 'misc');
@@ -185,14 +186,23 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 <Typography variant="h6">
                   <Msg id={messageIds.place.householdsHeader} />
                 </Typography>
-                <Button onClick={() => addHousehold()}>Add household</Button>
+                <TextField
+                  onChange={(ev) => setNewHouseholdTitle(ev.target.value)}
+                  placeholder="Name of new household"
+                  value={newHouseholdTitle}
+                />
+                <Button
+                  onClick={() => addHousehold({ title: newHouseholdTitle })}
+                >
+                  Add household
+                </Button>
                 <Box
                   display="flex"
                   flexDirection="column"
                   sx={{ overflowY: 'auto' }}
                 >
                   {place.households.length == 0 && 'No households'}
-                  {place.households.map((household, index) => (
+                  {place.households.map((household) => (
                     <Box
                       key={household.id}
                       alignItems="center"
@@ -200,7 +210,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       justifyContent="space-between"
                       width="100%"
                     >
-                      {household.id || `Household nr ${index + 1}`}
+                      {household.title || (
+                        <Msg id={messageIds.place.household.empty.title} />
+                      )}
                       <IconButton
                         onClick={() => {
                           setSelectedHouseholdId(household.id);
@@ -223,7 +235,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               height="100%"
               paddingTop={1}
             >
-              <Box>{selectedHousehold.id}</Box>
+              <Box>
+                {selectedHousehold.title || (
+                  <Msg id={messageIds.place.household.empty.title} />
+                )}
+              </Box>
               <Box
                 display="flex"
                 flexDirection="column"

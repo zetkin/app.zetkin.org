@@ -59,6 +59,11 @@ export default makeMessages('feat.areas', {
       description: m('Empty description'),
       title: m('Untitled place'),
     },
+    household: {
+      empty: {
+        title: m('Untitled household'),
+      },
+    },
     householdsHeader: m('Households'),
     logActivityButton: m('Log activity'),
     logActivityHeader: m<{ title: string }>('Log activity at {title}'),

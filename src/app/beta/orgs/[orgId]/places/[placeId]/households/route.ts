@@ -21,6 +21,8 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
+      const payload = await request.json();
+
       const model = await PlaceModel.findOneAndUpdate(
         { _id: params.placeId, orgId },
         {
@@ -29,7 +31,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
               $each: [
                 {
                   id: new mongoose.Types.ObjectId().toString(),
-                  title: '',
+                  title: payload.title,
                   visits: [],
                 },
               ],
