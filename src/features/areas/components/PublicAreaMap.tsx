@@ -17,7 +17,7 @@ import {
   TileLayer,
 } from 'react-leaflet';
 
-import { ZetkinArea, ZetkinPlace } from '../types';
+import { ZetkinArea } from '../types';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { CreatePlaceCard } from './CreatePlaceCard';
@@ -97,12 +97,11 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const places = usePlaces(area.organization.id).data || [];
   const createPlace = useCreatePlace(area.organization.id);
 
-  const [selectedPlace, setSelectedPlace] = useState<ZetkinPlace | null>(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [dialogStep, setDialogStep] = useState<'place' | 'log' | 'edit'>(
+  const [dialogStep, setDialogStep] = useState<'place' | 'edit' | 'household'>(
     'place'
   );
-  const [returnToMap, setReturnToMap] = useState(false);
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -110,10 +109,11 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const standingStillTimerRef = useRef(0);
 
+  const selectedPlace = places.find((place) => place.id == selectedPlaceId);
   const showViewPlaceButton = !!selectedPlace && !anchorEl;
 
   const updateSelection = useCallback(() => {
-    let nearestPlace: ZetkinPlace | null = null;
+    let nearestPlace: string | null = null;
     let nearestDistance = Infinity;
 
     const crosshair = crosshairRef.current;
@@ -129,19 +129,19 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
 
         if (dist < nearestDistance) {
           nearestDistance = dist;
-          nearestPlace = place;
+          nearestPlace = place.id;
         }
       });
 
       if (nearestDistance < 20) {
         if (nearestPlace != selectedPlace) {
-          setSelectedPlace(nearestPlace);
+          setSelectedPlaceId(nearestPlace);
         }
       } else {
-        setSelectedPlace(null);
+        setSelectedPlaceId(null);
       }
     }
-  }, [map, selectedPlace, places]);
+  }, [map, selectedPlaceId, places]);
 
   const panTo = useCallback(
     (pos: LatLng) => {
@@ -199,7 +199,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         map.off('movestart');
       };
     }
-  }, [map, selectedPlace, places, panTo, updateSelection]);
+  }, [map, selectedPlaceId, places, panTo, updateSelection]);
 
   useEffect(() => {
     updateSelection();
@@ -221,10 +221,10 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           ref={crosshairRef}
           className={classes.crosshair}
           sx={{
-            opacity: !selectedPlace ? 1 : 0.3,
+            opacity: !selectedPlaceId ? 1 : 0.3,
           }}
         >
-          {!selectedPlace && !isCreating && (
+          {!selectedPlaceId && !isCreating && (
             <Box
               className={classes.ghostMarker}
               sx={{
@@ -235,7 +235,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
               <MarkerIcon selected={true} />
             </Box>
           )}
-          {!selectedPlace && isCreating && (
+          {!selectedPlaceId && isCreating && (
             <Box
               className={classes.ghostMarker}
               sx={{
@@ -255,29 +255,16 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
             <Typography sx={{ paddingBottom: 1 }}>
               {selectedPlace.title || <Msg id={messageIds.place.empty.title} />}
             </Typography>
-            <Box display="flex" gap={1}>
-              <Button
-                fullWidth
-                onClick={(ev) => {
-                  setAnchorEl(ev.currentTarget);
-                  setDialogStep('place');
-                }}
-                variant="outlined"
-              >
-                <Msg id={messageIds.viewPlaceButton} />
-              </Button>
-              <Button
-                fullWidth
-                onClick={(ev) => {
-                  setAnchorEl(ev.currentTarget);
-                  setDialogStep('log');
-                  setReturnToMap(true);
-                }}
-                variant="contained"
-              >
-                <Msg id={messageIds.place.logActivityButton} />
-              </Button>
-            </Box>
+            <Button
+              fullWidth
+              onClick={(ev) => {
+                setAnchorEl(ev.currentTarget);
+                setDialogStep('place');
+              }}
+              variant="outlined"
+            >
+              <Msg id={messageIds.viewPlaceButton} />
+            </Button>
           </Box>
         )}
         {!selectedPlace && !isCreating && (
@@ -302,7 +289,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
         <Polygon color={theme.palette.primary.main} positions={area.points} />
         <>
           {places.map((place) => {
-            const selected = place.id == selectedPlace?.id;
+            const selected = place.id == selectedPlaceId;
             const key = `marker-${place.id}-${selected.toString()}`;
 
             return (
@@ -330,23 +317,11 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           dialogStep={dialogStep}
           onClose={() => {
             setAnchorEl(null);
-            setSelectedPlace(null);
+            setSelectedPlaceId(null);
           }}
-          onEdit={() => {
-            setDialogStep('edit');
-          }}
-          onLogCancel={() => {
-            if (returnToMap) {
-              setAnchorEl(null);
-            } else {
-              setDialogStep('place');
-            }
-          }}
-          onLogSave={() => setDialogStep('place')}
-          onLogStart={() => {
-            setDialogStep('log');
-            setReturnToMap(false);
-          }}
+          onEdit={() => setDialogStep('edit')}
+          onSelectHousehold={() => setDialogStep('household')}
+          onUpdateDone={() => setDialogStep('place')}
           open={!!anchorEl}
           orgId={area.organization.id}
           place={selectedPlace}
@@ -357,8 +332,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           onClose={() => {
             setIsCreating(false);
           }}
-          onCreate={(title, type) => {
+          onCreate={(title, type, numberOfHouseholds) => {
             const crosshair = crosshairRef.current;
+
             if (crosshair && map) {
               const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
@@ -368,6 +344,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
               ]);
               if (point) {
                 createPlace({
+                  numberOfHouseholds,
                   position: point,
                   title,
                   type: type === 'address' ? 'address' : 'misc',

@@ -7,10 +7,10 @@ export default function usePlaceMutations(orgId: number, placeId: string) {
   const dispatch = useAppDispatch();
 
   return async (data: ZetkinPlacePatchBody) => {
-    const area = await apiClient.patch<ZetkinPlace, ZetkinPlacePatchBody>(
+    const place = await apiClient.patch<ZetkinPlace, ZetkinPlacePatchBody>(
       `/beta/orgs/${orgId}/places/${placeId}`,
       data
     );
-    dispatch(placeUpdated(area));
+    dispatch(placeUpdated(place));
   };
 }

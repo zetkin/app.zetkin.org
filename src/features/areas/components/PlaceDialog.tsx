@@ -1,3 +1,4 @@
+import { Forward } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
   Box,
@@ -5,6 +6,7 @@ import {
   Dialog,
   Divider,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -20,12 +22,11 @@ import usePlaceMutations from '../hooks/usePlaceMutations';
 import ZUIDateTime from 'zui/ZUIDateTime';
 
 type PlaceDialogProps = {
-  dialogStep: 'place' | 'log' | 'edit';
+  dialogStep: 'place' | 'edit' | 'household';
   onClose: () => void;
   onEdit: () => void;
-  onLogCancel: () => void;
-  onLogSave: () => void;
-  onLogStart: () => void;
+  onSelectHousehold: () => void;
+  onUpdateDone: () => void;
   open: boolean;
   orgId: number;
   place: ZetkinPlace;
@@ -35,9 +36,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   dialogStep,
   onClose,
   onEdit,
-  onLogCancel,
-  onLogSave,
-  onLogStart,
+  onUpdateDone,
+  onSelectHousehold,
   open,
   orgId,
   place,
@@ -45,6 +45,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const updatePlace = usePlaceMutations(orgId, place.id);
   const messages = useMessages(messageIds);
   const timestamp = new Date().toISOString();
+
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
+    null
+  );
   const [note, setNote] = useState('');
   const [description, setDescription] = useState<string>(
     place.description ?? ''
@@ -56,17 +60,22 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     setType(event.target.value as 'address' | 'misc');
   };
 
-  const sortedVisits = place.visits.toSorted((a, b) => {
-    const dateA = new Date(a.timestamp);
-    const dateB = new Date(b.timestamp);
-    if (dateA > dateB) {
-      return -1;
-    } else if (dateB > dateA) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+  const selectedHousehold = place.households.find(
+    (household) => household.id == selectedHouseholdId
+  );
+
+  const sortedVisits =
+    selectedHousehold?.visits.toSorted((a, b) => {
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      if (dateA > dateB) {
+        return -1;
+      } else if (dateB > dateA) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }) || [];
 
   return (
     <Dialog fullWidth maxWidth="xl" onClose={onClose} open={open}>
@@ -93,7 +102,12 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           )}
           {dialogStep === 'edit' && (
             <Typography variant="h6">
-              <Msg id={messageIds.place.editPlace} />
+              <Msg
+                id={messageIds.place.editPlace}
+                values={{
+                  placeName: place.title || messages.place.empty.title(),
+                }}
+              />
             </Typography>
           )}
         </Box>
@@ -166,8 +180,63 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 overflow="hidden"
               >
                 <Typography variant="h6">
-                  <Msg id={messageIds.place.activityHeader} />
+                  <Msg id={messageIds.place.householdsHeader} />
                 </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  sx={{ overflowY: 'auto' }}
+                >
+                  {place.households.length == 0 && 'No households'}
+                  {place.households.map((household, index) => (
+                    <Box
+                      key={household.id}
+                      alignItems="center"
+                      display="flex"
+                      justifyContent="space-between"
+                      width="100%"
+                    >
+                      {household.id || `Household nr ${index + 1}`}
+                      <IconButton
+                        onClick={() => {
+                          setSelectedHouseholdId(household.id);
+                          onSelectHousehold();
+                        }}
+                      >
+                        <Forward />
+                      </IconButton>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Box>
+          )}
+          {selectedHousehold && dialogStep == 'household' && (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              height="100%"
+              paddingTop={1}
+            >
+              <Box>{selectedHousehold.id}</Box>
+              <Box
+                display="flex"
+                flexDirection="column"
+                flexGrow={1}
+                overflow="hidden"
+              >
+                <Box paddingTop={1}>
+                  <ZUIDateTime datetime={timestamp} />
+                  <TextField
+                    fullWidth
+                    multiline
+                    onChange={(ev) => setNote(ev.target.value)}
+                    placeholder={messages.place.notePlaceholder()}
+                    sx={{ paddingTop: 1 }}
+                    value={note}
+                  />
+                </Box>
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -177,7 +246,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     <Msg id={messageIds.place.noActivity} />
                   )}
                   {sortedVisits.map((visit) => (
-                    <Box key={visit.id} paddingTop={1}>
+                    <Box key={visit.timestamp} paddingTop={1}>
                       <Typography color="secondary">
                         <ZUIDateTime datetime={visit.timestamp} />
                       </Typography>
@@ -188,34 +257,17 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               </Box>
             </Box>
           )}
-          {place && dialogStep == 'log' && (
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="space-between"
-            >
-              <Box paddingTop={1}>
-                <ZUIDateTime datetime={timestamp} />
-                <TextField
-                  fullWidth
-                  multiline
-                  onChange={(ev) => setNote(ev.target.value)}
-                  placeholder="Note"
-                  sx={{ paddingTop: 1 }}
-                />
-              </Box>
-            </Box>
-          )}
         </Box>
         <Box display="flex" gap={1} justifyContent="flex-end" paddingTop={1}>
           <Button
             onClick={() => {
               if (dialogStep === 'place') {
                 onClose();
-              } else if (dialogStep === 'log') {
-                onLogCancel();
               } else if (dialogStep === 'edit') {
-                onLogSave();
+                onUpdateDone();
+              } else if (dialogStep == 'household') {
+                onUpdateDone();
+                setNote('');
               }
             }}
             variant="outlined"
@@ -228,36 +280,43 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               }
             />
           </Button>
-          <Button
-            disabled={dialogStep == 'log' && !note}
-            onClick={() => {
-              if (dialogStep == 'place') {
-                onLogStart();
-              } else if (dialogStep == 'log') {
-                updatePlace({
-                  ...place,
-                  visits: [...place.visits, { note, timestamp }],
-                });
-                onLogSave();
-              } else if (dialogStep == 'edit') {
-                updatePlace({
-                  description,
-                  title,
-                  type,
-                });
-                onLogSave();
-              }
-            }}
-            variant="contained"
-          >
-            <Msg
-              id={
-                dialogStep == 'place'
-                  ? messageIds.place.logActivityButton
-                  : messageIds.place.saveButton
-              }
-            />
-          </Button>
+          {dialogStep != 'place' && (
+            <Button
+              disabled={dialogStep == 'household' && !note}
+              onClick={() => {
+                setNote('');
+                if (selectedHousehold && dialogStep == 'household') {
+                  const newVisit = {
+                    note,
+                    timestamp: new Date().toISOString(),
+                  };
+
+                  const updatedHousehold = {
+                    ...selectedHousehold,
+                    visits: [...selectedHousehold.visits, newVisit],
+                  };
+
+                  updatePlace({
+                    ...place,
+                    households: place.households.map((household) =>
+                      household.id == selectedHousehold.id
+                        ? updatedHousehold
+                        : household
+                    ),
+                  });
+                } else if (dialogStep == 'edit') {
+                  updatePlace({
+                    description,
+                    title,
+                    type,
+                  });
+                }
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.place.saveButton} />
+            </Button>
+          )}
         </Box>
       </Box>
     </Dialog>

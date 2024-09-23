@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { PlaceModel } from 'features/areas/models';
-import { ZetkinPlace } from 'features/areas/types';
+import { Household, ZetkinPlace } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
@@ -24,12 +24,12 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const placeModels = await PlaceModel.find({ orgId });
       const places: ZetkinPlace[] = placeModels.map((model) => ({
         description: model.description,
+        households: model.households,
         id: model._id.toString(),
         orgId: orgId,
         position: model.position,
         title: model.title,
         type: model.type,
-        visits: model.visits,
       }));
 
       return Response.json({ data: places });
@@ -49,13 +49,23 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
+      const households: Household[] = [];
+
+      for (let i = 0; i < payload.numberOfHouseholds; i++) {
+        households.push({
+          id: new mongoose.Types.ObjectId().toString(),
+          title: '',
+          visits: [],
+        });
+      }
+
       const model = new PlaceModel({
         description: payload.description,
+        households: households,
         orgId: orgId,
         position: payload.position,
         title: payload.title,
         type: payload.type,
-        visits: payload.visits,
       });
 
       await model.save();
@@ -63,12 +73,12 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           description: model.description,
+          households: model.households,
           id: model._id.toString(),
           orgId: orgId,
           position: model.position,
           title: model.title,
           type: model.type,
-          visits: model.visits,
         },
       });
     }
