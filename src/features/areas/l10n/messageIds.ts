@@ -48,6 +48,7 @@ export default makeMessages('feat.areas', {
   },
   place: {
     activityHeader: m('Activity'),
+    backButton: m('Back'),
     cancelButton: m('Cancel'),
     closeButton: m('Close'),
     description: m('Description'),

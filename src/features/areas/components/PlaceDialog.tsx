@@ -81,6 +81,29 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
       }
     }) || [];
 
+  const nothingHasBeenEdited =
+    dialogStep == 'edit' &&
+    title == place.title &&
+    type == place.type &&
+    (description == place.description || (!description && !place.description));
+
+  const saveButtonDisabled =
+    (dialogStep == 'household' && !note) || nothingHasBeenEdited;
+
+  const getBackButtonMessage = () => {
+    if (dialogStep == 'edit') {
+      if (nothingHasBeenEdited) {
+        return messageIds.place.backButton;
+      } else {
+        return messageIds.place.cancelButton;
+      }
+    } else if (dialogStep == 'household') {
+      return messageIds.place.backButton;
+    } else {
+      return messageIds.place.closeButton;
+    }
+  };
+
   return (
     <Dialog fullWidth maxWidth="xl" onClose={onClose} open={open}>
       <Box display="flex" flexDirection="column" height="90vh" padding={2}>
@@ -192,7 +215,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   value={newHouseholdTitle}
                 />
                 <Button
-                  onClick={() => addHousehold({ title: newHouseholdTitle })}
+                  onClick={() => {
+                    addHousehold({ title: newHouseholdTitle });
+                    setNewHouseholdTitle('');
+                  }}
                 >
                   Add household
                 </Button>
@@ -318,6 +344,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 onClose();
               } else if (dialogStep === 'edit') {
                 onUpdateDone();
+                setTitle(place.title ?? '');
+                setDescription(place.description ?? '');
+                setType(place.type);
               } else if (dialogStep == 'household') {
                 onUpdateDone();
                 setNote('');
@@ -325,17 +354,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             }}
             variant="outlined"
           >
-            <Msg
-              id={
-                dialogStep == 'place'
-                  ? messageIds.place.closeButton
-                  : messageIds.place.cancelButton
-              }
-            />
+            <Msg id={getBackButtonMessage()} />
           </Button>
           {dialogStep != 'place' && (
             <Button
-              disabled={dialogStep == 'household' && !note}
+              disabled={saveButtonDisabled}
               onClick={() => {
                 setNote('');
                 if (selectedHousehold && dialogStep == 'household') {
