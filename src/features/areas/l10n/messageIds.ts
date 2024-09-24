@@ -48,6 +48,7 @@ export default makeMessages('feat.areas', {
   },
   place: {
     activityHeader: m('Activity'),
+    addHouseholdButton: m('Add household'),
     backButton: m('Back'),
     cancelButton: m('Cancel'),
     closeButton: m('Close'),
@@ -65,7 +66,9 @@ export default makeMessages('feat.areas', {
         title: m('Untitled household'),
       },
     },
-    householdsHeader: m('Households'),
+    householdsHeader: m<{ numberOfHouseholds: number }>(
+      '{numberOfHouseholds, plural, =0 {No households} =1 {1 household} other {# households}}'
+    ),
     logActivityButton: m('Log activity'),
     logActivityHeader: m<{ title: string }>('Log activity at {title}'),
     noActivity: m('No visits have been recorded at this place.'),

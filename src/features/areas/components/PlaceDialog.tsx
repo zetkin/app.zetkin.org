@@ -56,7 +56,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   );
   const [title, setTitle] = useState<string>(place.title ?? '');
   const [type, setType] = useState<'address' | 'misc'>(place.type);
-  const [newHouseholdTitle, setNewHouseholdTitle] = useState('');
   const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
   const [householdTitle, setHousholdTitle] = useState('');
 
@@ -207,27 +206,26 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 overflow="hidden"
               >
                 <Typography variant="h6">
-                  <Msg id={messageIds.place.householdsHeader} />
+                  <Msg
+                    id={messageIds.place.householdsHeader}
+                    values={{ numberOfHouseholds: place.households.length }}
+                  />
                 </Typography>
-                <TextField
-                  onChange={(ev) => setNewHouseholdTitle(ev.target.value)}
-                  placeholder="Name of new household"
-                  value={newHouseholdTitle}
-                />
                 <Button
-                  onClick={() => {
-                    addHousehold({ title: newHouseholdTitle });
-                    setNewHouseholdTitle('');
+                  onClick={async () => {
+                    const newlyAddedHousehold = await addHousehold();
+                    setSelectedHouseholdId(newlyAddedHousehold.id);
+                    onSelectHousehold();
+                    setEditingHouseholdTitle(true);
                   }}
                 >
-                  Add household
+                  <Msg id={messageIds.place.addHouseholdButton} />
                 </Button>
                 <Box
                   display="flex"
                   flexDirection="column"
                   sx={{ overflowY: 'auto' }}
                 >
-                  {place.households.length == 0 && 'No households'}
                   {place.households.map((household) => (
                     <Box
                       key={household.id}
@@ -283,6 +281,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   <Box alignItems="center" display="flex">
                     <TextField
                       onChange={(ev) => setHousholdTitle(ev.target.value)}
+                      placeholder="Household title"
                       value={householdTitle}
                     />
                     <Button

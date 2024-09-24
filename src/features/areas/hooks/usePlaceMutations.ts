@@ -1,7 +1,6 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   HouseholdPatchBody,
-  HouseholdPostBody,
   Visit,
   ZetkinPlace,
   ZetkinPlacePatchBody,
@@ -13,12 +12,13 @@ export default function usePlaceMutations(orgId: number, placeId: string) {
   const dispatch = useAppDispatch();
 
   return {
-    addHousehold: async (data: HouseholdPostBody) => {
+    addHousehold: async () => {
       const place = await apiClient.post<ZetkinPlace>(
         `/beta/orgs/${orgId}/places/${placeId}/households`,
-        data
+        {}
       );
       dispatch(placeUpdated(place));
+      return place.households[0];
     },
     addVisit: async (householdId: string, data: Omit<Visit, 'id'>) => {
       const place = await apiClient.post<ZetkinPlace, Omit<Visit, 'id'>>(
