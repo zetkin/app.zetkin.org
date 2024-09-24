@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 // Type definitions for the new experimental stuff like useFormState in
 // react-dom are lagging behind the implementation so it's necessary to silence
 // the TypeScript error about the lack of type definitions here in order to
@@ -34,6 +34,19 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
   // with react-intl (and perhaps other libraries). So this workaround
   // allows us to pass the action to the form by pretending it's a string.
   const actionWhileTrickingTypescript = action as unknown as string;
+
+  useEffect(() => {
+    if (status == 'submitted') {
+      const url = new URL(location.toString());
+      const query = url.searchParams;
+      const redirectUrl = query.get('redirect');
+
+      if (redirectUrl) {
+        const win = window.parent || window;
+        win.location.href = redirectUrl;
+      }
+    }
+  }, [status]);
 
   return (
     <div>
