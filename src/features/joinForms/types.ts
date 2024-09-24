@@ -1,4 +1,8 @@
-import { ZetkinPerson } from 'utils/types/zetkin';
+import {
+  CUSTOM_FIELD_TYPE,
+  ZetkinPerson,
+  ZetkinPersonNativeFields,
+} from 'utils/types/zetkin';
 
 export type ZetkinJoinForm = {
   description: string;
@@ -41,3 +45,14 @@ export type ZetkinJoinSubmission = {
 };
 
 export type ZetkinJoinSubmissionPatchBody = Pick<ZetkinJoinSubmission, 'state'>;
+
+type EmbeddedJoinFormDataField =
+  | {
+      s: keyof ZetkinPersonNativeFields;
+    }
+  | { l: string; s: string; t: CUSTOM_FIELD_TYPE };
+
+export type EmbeddedJoinFormData = {
+  fields: EmbeddedJoinFormDataField[];
+  token: string;
+};
