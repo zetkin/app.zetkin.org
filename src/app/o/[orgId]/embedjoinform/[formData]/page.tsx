@@ -10,7 +10,7 @@ type PageProps = {
     orgId: string;
   };
   searchParams: {
-    css?: string;
+    stylesheet?: string;
   };
 };
 
@@ -28,8 +28,8 @@ export default async function Page({ params, searchParams }: PageProps) {
     return (
       <div>
         <EmbeddedJoinForm encrypted={formDataStr} fields={formDataObj.fields} />
-        {searchParams.css && (
-          <style>{`@import url(${searchParams.css})`}</style>
+        {searchParams.stylesheet && (
+          <style>{`@import url(${searchParams.stylesheet})`}</style>
         )}
       </div>
     );
