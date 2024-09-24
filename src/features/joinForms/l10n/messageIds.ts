@@ -2,6 +2,11 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.joinForms', {
   defaultTitle: m('Untitled form'),
+  embedding: {
+    copyLink: m('Copy embed URL'),
+    linkCopied: m('Embed URL copied.'),
+    openLink: m('Visit now'),
+  },
   formPane: {
     labels: {
       addField: m('Add field'),
