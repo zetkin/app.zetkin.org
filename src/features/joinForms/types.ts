@@ -54,5 +54,9 @@ type EmbeddedJoinFormDataField =
 
 export type EmbeddedJoinFormData = {
   fields: EmbeddedJoinFormDataField[];
+  formId: number;
+  orgId: number;
   token: string;
 };
+
+export type EmbeddedJoinFormStatus = 'editing' | 'submitted';
