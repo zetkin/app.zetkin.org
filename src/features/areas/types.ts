@@ -62,7 +62,7 @@ export type ZetkinCanvassSessionPostBody = {
 export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;
 export type ZetkinPlacePostBody = Partial<
   Omit<ZetkinPlace, 'id' | 'households'>
-> & { numberOfHouseholds: number };
+>;
 
 export type ZetkinPlacePatchBody = Partial<
   Omit<ZetkinPlace, 'id' | 'households'>

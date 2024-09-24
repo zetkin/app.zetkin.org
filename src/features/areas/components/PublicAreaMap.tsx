@@ -332,7 +332,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
           onClose={() => {
             setIsCreating(false);
           }}
-          onCreate={(title, type, numberOfHouseholds) => {
+          onCreate={(title, type) => {
             const crosshair = crosshairRef.current;
 
             if (crosshair && map) {
@@ -344,7 +344,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
               ]);
               if (point) {
                 createPlace({
-                  numberOfHouseholds,
                   position: point,
                   title,
                   type: type === 'address' ? 'address' : 'misc',

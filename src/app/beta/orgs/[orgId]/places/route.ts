@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { PlaceModel } from 'features/areas/models';
-import { Household, ZetkinPlace } from 'features/areas/types';
+import { ZetkinPlace } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
@@ -49,19 +49,9 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const households: Household[] = [];
-
-      for (let i = 0; i < payload.numberOfHouseholds; i++) {
-        households.push({
-          id: new mongoose.Types.ObjectId().toString(),
-          title: '',
-          visits: [],
-        });
-      }
-
       const model = new PlaceModel({
         description: payload.description,
-        households: households,
+        households: [],
         orgId: orgId,
         position: payload.position,
         title: payload.title,

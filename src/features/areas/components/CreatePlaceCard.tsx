@@ -5,7 +5,6 @@ import {
   CardActions,
   CardContent,
   FormControl,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -33,7 +32,7 @@ export const useStyles = makeStyles(() => ({
 
 type AddPlaceDialogProps = {
   onClose: () => void;
-  onCreate: (title: string, type: string, numberOfHouseholds: number) => void;
+  onCreate: (title: string, type: string) => void;
 };
 
 export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
@@ -45,7 +44,6 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
 
   const [title, setTitle] = useState<string>('');
   const [type, setType] = useState<string>('');
-  const [numberOfHouseholds, setNumberOfHouseholds] = useState(1);
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value);
@@ -83,21 +81,6 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
               }
               sx={{ paddingTop: 1 }}
             />
-            {type == 'address' && (
-              <>
-                How many households
-                <Input
-                  onChange={(ev) => {
-                    const value = ev.target.value;
-                    if (!isNaN(parseInt(value))) {
-                      setNumberOfHouseholds(parseInt(value));
-                    }
-                  }}
-                  type="number"
-                  value={numberOfHouseholds}
-                />
-              </>
-            )}
           </FormControl>
         </CardContent>
         <CardActions sx={{ justifyContent: 'center' }}>
@@ -106,7 +89,7 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
           </Button>
           <Button
             onClick={() => {
-              onCreate(title, type, numberOfHouseholds);
+              onCreate(title, type);
               onClose();
             }}
             size="small"
