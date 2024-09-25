@@ -1,7 +1,7 @@
 ---
 name: ZUI design system
 about: Components for the ZUI design system library
-title: ''
+title: '🧱 ZUI: '
 labels: '🧱 ZUI'
 assignees: ''
 ---
@@ -11,6 +11,8 @@ assignees: ''
 ## Screenshots
 
 ## Figma link
+
+You need to be logged into a Figma account to properly view the Figma content.
 
 ## Requirements
 
@@ -26,4 +28,4 @@ For reference, you can look at the already existing ZUI components created on th
 
 The main git branch for the work on the new design system is `undocumented/new-design-system`. Unless otherwise instructed, do your work on a new branch branched off from this branch.
 
-Name your branch `undocumented/zui-name`, ex: `undocumented/zui-button` for a branch where a button component is being made.
+Name your branch `issue-number/zui-name`, ex: `issue-928/zui-button` for a branch where work is done that is documented in the issue with number 928, where a button component is being made.
