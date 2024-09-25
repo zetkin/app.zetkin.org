@@ -73,27 +73,8 @@ const Map: FC<MapProps> = ({ areas }) => {
         width: '100%',
       }}
     >
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        sx={{
-          left: '1rem',
-          position: 'absolute',
-          right: '1rem',
-          top: '1rem',
-          zIndex: 999,
-        }}
-      >
+      <Box display="flex" justifyContent="space-between" px={2} py={1}>
         <Box alignItems="center" display="flex" gap={1}>
-          <ButtonGroup variant="contained">
-            <Button onClick={() => mapRef.current?.zoomIn()}>
-              <Add />
-            </Button>
-            <Button onClick={() => mapRef.current?.zoomOut()}>
-              <Remove />
-            </Button>
-          </ButtonGroup>
-
           <ButtonGroup variant="contained">
             {!drawingPoints && (
               <Button
@@ -166,6 +147,23 @@ const Map: FC<MapProps> = ({ areas }) => {
       </Box>
 
       <Box flexGrow={1} position="relative">
+        <Box
+          sx={{
+            left: 16,
+            position: 'absolute',
+            top: 16,
+            zIndex: 999,
+          }}
+        >
+          <ButtonGroup orientation="vertical" variant="contained">
+            <Button onClick={() => mapRef.current?.zoomIn()}>
+              <Add />
+            </Button>
+            <Button onClick={() => mapRef.current?.zoomOut()}>
+              <Remove />
+            </Button>
+          </ButtonGroup>
+        </Box>
         {selectedArea && (
           <AreaOverlay
             area={editingArea || selectedArea}
