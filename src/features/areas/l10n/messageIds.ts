@@ -45,6 +45,9 @@ export default makeMessages('feat.areas', {
       edit: m('Edit'),
       save: m('Save'),
     },
+    tags: {
+      header: m('Tags'),
+    },
   },
   place: {
     activityHeader: m('Activity'),
