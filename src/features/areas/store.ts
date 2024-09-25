@@ -322,9 +322,14 @@ const areasSlice = createSlice({
     tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
       const [areaId, tag] = action.payload;
       state.tagsByAreaId[areaId] ||= remoteList();
-      const item = findOrAddItem(state.tagsByAreaId[areaId], tag.id);
-      item.data = tag;
-      item.loaded = new Date().toISOString();
+      const tagItem = findOrAddItem(state.tagsByAreaId[areaId], tag.id);
+      tagItem.data = tag;
+      tagItem.loaded = new Date().toISOString();
+
+      const areaItem = state.areaList.items.find((item) => item.id == areaId);
+      if (areaItem?.data) {
+        areaItem.data.tags.push(tag);
+      }
     },
     tagUnassigned: (state, action: PayloadAction<[string, number]>) => {
       const [areaId, tagId] = action.payload;
@@ -332,6 +337,13 @@ const areasSlice = createSlice({
       state.tagsByAreaId[areaId].items = state.tagsByAreaId[
         areaId
       ].items.filter((item) => item.id != tagId);
+
+      const areaItem = state.areaList.items.find((item) => item.id == areaId);
+      if (areaItem?.data) {
+        areaItem.data.tags = areaItem.data.tags.filter(
+          (tag) => tag.id != tagId
+        );
+      }
     },
     tagsLoad: (state, action: PayloadAction<string>) => {
       const areaId = action.payload;
