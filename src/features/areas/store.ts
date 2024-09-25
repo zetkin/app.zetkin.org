@@ -319,6 +319,20 @@ const areasSlice = createSlice({
       state.placeList.loaded = timestamp;
       state.placeList.items.forEach((item) => (item.loaded = timestamp));
     },
+    tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
+      const [areaId, tag] = action.payload;
+      state.tagsByAreaId[areaId] ||= remoteList();
+      const item = findOrAddItem(state.tagsByAreaId[areaId], tag.id);
+      item.data = tag;
+      item.loaded = new Date().toISOString();
+    },
+    tagUnassigned: (state, action: PayloadAction<[string, number]>) => {
+      const [areaId, tagId] = action.payload;
+      state.tagsByAreaId[areaId] ||= remoteList();
+      state.tagsByAreaId[areaId].items = state.tagsByAreaId[
+        areaId
+      ].items.filter((item) => item.id != tagId);
+    },
     tagsLoad: (state, action: PayloadAction<string>) => {
       const areaId = action.payload;
       state.tagsByAreaId[areaId] ||= remoteList();
@@ -361,6 +375,8 @@ export const {
   placesLoad,
   placesLoaded,
   placeUpdated,
+  tagAssigned,
+  tagUnassigned,
   tagsLoad,
   tagsLoaded,
 } = areasSlice.actions;
