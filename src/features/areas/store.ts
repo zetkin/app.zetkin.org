@@ -13,6 +13,7 @@ import {
   ZetkinCanvassSession,
   ZetkinPlace,
 } from './types';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
@@ -27,6 +28,7 @@ export interface AreasStoreSlice {
   >;
   mySessionsList: RemoteList<ZetkinCanvassSession & { id: string }>;
   placeList: RemoteList<ZetkinPlace>;
+  tagsByAreaId: Record<string, RemoteList<ZetkinTag>>;
 }
 
 const initialState: AreasStoreSlice = {
@@ -36,6 +38,7 @@ const initialState: AreasStoreSlice = {
   mySessionsList: remoteList(),
   placeList: remoteList(),
   sessionsByAssignmentId: {},
+  tagsByAreaId: {},
 };
 
 const areasSlice = createSlice({
@@ -316,6 +319,16 @@ const areasSlice = createSlice({
       state.placeList.loaded = timestamp;
       state.placeList.items.forEach((item) => (item.loaded = timestamp));
     },
+    tagsLoad: (state, action: PayloadAction<string>) => {
+      const areaId = action.payload;
+      state.tagsByAreaId[areaId] ||= remoteList();
+      state.tagsByAreaId[areaId].isLoading = true;
+    },
+    tagsLoaded: (state, action: PayloadAction<[string, ZetkinTag[]]>) => {
+      const [areaId, tags] = action.payload;
+      state.tagsByAreaId[areaId] = remoteList(tags);
+      state.tagsByAreaId[areaId].loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -348,4 +361,6 @@ export const {
   placesLoad,
   placesLoaded,
   placeUpdated,
+  tagsLoad,
+  tagsLoaded,
 } = areasSlice.actions;
