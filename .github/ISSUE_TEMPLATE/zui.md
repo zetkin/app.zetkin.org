@@ -22,6 +22,8 @@ You need to be logged into a Figma account to properly view the Figma content.
 
 ## Possible implementations
 
+Develop this using Storybook. We want all the design system components to be documented through their own Storybook stories.
+
 For reference, you can look at the already existing ZUI components created on the `undocumented/new-design-system` branch (not ZUI components that exist on `main`, as they are not part of the new design system.)
 
 ## Git
