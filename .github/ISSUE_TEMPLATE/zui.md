@@ -2,7 +2,7 @@
 name: ZUI design system
 about: Components for the ZUI design system library
 title: ''
-labels: 'ZUI'
+labels: '🧱 ZUI'
 assignees: ''
 ---
 
