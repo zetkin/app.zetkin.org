@@ -19,6 +19,7 @@ import AreaOverlay from '../AreaOverlay';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
 import MapRenderer from './MapRenderer';
+import AreaFilters from '../AreaFilters';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -31,6 +32,7 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
+  const [filteredAreaIds, setFilteredAreaIds] = useState<string[]>([]);
 
   const selectedArea = areas.find((area) => area.id == selectedId);
 
@@ -47,19 +49,26 @@ const Map: FC<MapProps> = ({ areas }) => {
 
   function filterAreas(areas: ZetkinArea[], matchString: string) {
     const inputValue = matchString.trim().toLowerCase();
-    if (inputValue.length == 0) {
-      return areas.concat();
-    }
 
-    return areas.filter((area) => {
-      const areaTitle = area.title || messages.empty.title();
-      const areaDesc = area.description || messages.empty.description();
+    const afterTextFilter =
+      inputValue.length == 0
+        ? areas.concat()
+        : areas.filter((area) => {
+            const areaTitle = area.title || messages.empty.title();
+            const areaDesc = area.description || messages.empty.description();
 
-      return (
-        areaTitle.toLowerCase().includes(inputValue) ||
-        areaDesc.toLowerCase().includes(inputValue)
-      );
-    });
+            return (
+              areaTitle.toLowerCase().includes(inputValue) ||
+              areaDesc.toLowerCase().includes(inputValue)
+            );
+          });
+
+    const afterComplexFilter =
+      filteredAreaIds.length == 0
+        ? afterTextFilter
+        : afterTextFilter.filter((area) => filteredAreaIds.includes(area.id));
+
+    return afterComplexFilter;
   }
 
   const filteredAreas = filterAreas(areas, filterText);
@@ -109,7 +118,13 @@ const Map: FC<MapProps> = ({ areas }) => {
           </ButtonGroup>
         </Box>
 
-        <Box>
+        <Box alignItems="center" display="flex" gap={1}>
+          <AreaFilters
+            areas={areas}
+            onFilteredIdsChange={(areaIds) => {
+              setFilteredAreaIds(areaIds);
+            }}
+          />
           <Autocomplete
             filterOptions={(options, state) =>
               filterAreas(options, state.inputValue)
