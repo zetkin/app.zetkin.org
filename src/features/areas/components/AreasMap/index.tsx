@@ -1,14 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import { FC, useEffect, useRef, useState } from 'react';
 import { MapContainer } from 'react-leaflet';
-import {
-  Add,
-  Close,
-  Create,
-  FilterList,
-  Remove,
-  Save,
-} from '@mui/icons-material';
+import { Add, Close, Create, Remove, Save } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -30,6 +23,8 @@ import { PointData, ZetkinArea } from '../../types';
 import AreaFilters from '../AreaFilters';
 import AreaOverlay from '../AreaOverlay';
 import MapRenderer from './MapRenderer';
+import AreaFilterProvider from '../AreaFilters/AreaFilterContext';
+import AreaFilterButton from '../AreaFilters/AreaFilterButton';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -110,153 +105,152 @@ const Map: FC<MapProps> = ({ areas }) => {
   const filteredAreas = filterAreas(areas, filterText);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        width: '100%',
-      }}
-    >
-      <Box display="flex" justifyContent="space-between" px={2} py={1}>
-        <Box alignItems="center" display="flex" gap={1}>
-          <ButtonGroup variant="contained">
-            {!drawingPoints && (
-              <Button
-                onClick={() => {
-                  setDrawingPoints([]);
-                }}
-                startIcon={<Create />}
-              >
-                <Msg id={messageIds.tools.draw} />
-              </Button>
-            )}
-            {drawingPoints && (
-              <Button
-                onClick={() => {
-                  setDrawingPoints(null);
-                }}
-                startIcon={<Close />}
-              >
-                <Msg id={messageIds.tools.cancel} />
-              </Button>
-            )}
-            {drawingPoints && drawingPoints.length > 2 && (
-              <Button
-                onClick={() => {
-                  finishDrawing();
-                }}
-                startIcon={<Save />}
-              >
-                <Msg id={messageIds.tools.save} />
-              </Button>
-            )}
-          </ButtonGroup>
-        </Box>
+    <AreaFilterProvider>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <Box display="flex" justifyContent="space-between" px={2} py={1}>
+          <Box alignItems="center" display="flex" gap={1}>
+            <ButtonGroup variant="contained">
+              {!drawingPoints && (
+                <Button
+                  onClick={() => {
+                    setDrawingPoints([]);
+                  }}
+                  startIcon={<Create />}
+                >
+                  <Msg id={messageIds.tools.draw} />
+                </Button>
+              )}
+              {drawingPoints && (
+                <Button
+                  onClick={() => {
+                    setDrawingPoints(null);
+                  }}
+                  startIcon={<Close />}
+                >
+                  <Msg id={messageIds.tools.cancel} />
+                </Button>
+              )}
+              {drawingPoints && drawingPoints.length > 2 && (
+                <Button
+                  onClick={() => {
+                    finishDrawing();
+                  }}
+                  startIcon={<Save />}
+                >
+                  <Msg id={messageIds.tools.save} />
+                </Button>
+              )}
+            </ButtonGroup>
+          </Box>
 
-        <Box alignItems="center" display="flex" gap={1}>
-          <Button
-            onClick={() => setFiltersOpen((current) => !current)}
-            startIcon={<FilterList />}
-          >
-            Filter
-          </Button>
-          <Autocomplete
-            filterOptions={(options, state) =>
-              filterAreas(options, state.inputValue)
-            }
-            getOptionLabel={(option) => option.id}
-            inputValue={filterText}
-            onChange={(ev, area) => {
-              if (area) {
-                setSelectedId(area.id);
-                setFilterText('');
+          <Box alignItems="center" display="flex" gap={1}>
+            <AreaFilterButton
+              onToggle={() => setFiltersOpen((current) => !current)}
+            />
+            <Autocomplete
+              filterOptions={(options, state) =>
+                filterAreas(options, state.inputValue)
               }
-            }}
-            onInputChange={(ev, value, reason) => {
-              if (reason == 'input') {
-                setFilterText(value);
-              }
-            }}
-            options={areas}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                size="small"
-                sx={{ backgroundColor: 'white', width: '16rem' }}
-                variant="outlined"
-              />
-            )}
-            renderOption={(props, area) => (
-              <MenuItem {...props}>
-                {area.title || messages.empty.title()}
-              </MenuItem>
-            )}
-            value={null}
-          />
-        </Box>
-      </Box>
-      {filtersOpen && (
-        <Box>
-          <Divider />
-          <Box display="flex" gap={1} justifyContent="start" px={2} py={1}>
-            <AreaFilters
-              areas={areas}
-              onFilteredIdsChange={(areaIds) => {
-                setFilteredAreaIds(areaIds.length > 0 ? areaIds : null);
+              getOptionLabel={(option) => option.id}
+              inputValue={filterText}
+              onChange={(ev, area) => {
+                if (area) {
+                  setSelectedId(area.id);
+                  setFilterText('');
+                }
               }}
+              onInputChange={(ev, value, reason) => {
+                if (reason == 'input') {
+                  setFilterText(value);
+                }
+              }}
+              options={areas}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  size="small"
+                  sx={{ backgroundColor: 'white', width: '16rem' }}
+                  variant="outlined"
+                />
+              )}
+              renderOption={(props, area) => (
+                <MenuItem {...props}>
+                  {area.title || messages.empty.title()}
+                </MenuItem>
+              )}
+              value={null}
             />
           </Box>
         </Box>
-      )}
-
-      <Box flexGrow={1} position="relative">
-        <Box
-          sx={{
-            left: 16,
-            position: 'absolute',
-            top: 16,
-            zIndex: 999,
-          }}
-        >
-          <ButtonGroup orientation="vertical" variant="contained">
-            <Button onClick={() => mapRef.current?.zoomIn()}>
-              <Add />
-            </Button>
-            <Button onClick={() => mapRef.current?.zoomOut()}>
-              <Remove />
-            </Button>
-          </ButtonGroup>
-        </Box>
-        {selectedArea && (
-          <AreaOverlay
-            area={editingArea || selectedArea}
-            editing={!!editingArea}
-            onBeginEdit={() => setEditingArea(selectedArea)}
-            onCancelEdit={() => setEditingArea(null)}
-            onClose={() => setSelectedId('')}
-          />
+        {filtersOpen && (
+          <Box>
+            <Divider />
+            <Box display="flex" gap={1} justifyContent="start" px={2} py={1}>
+              <AreaFilters
+                areas={areas}
+                onFilteredIdsChange={(areaIds) => {
+                  setFilteredAreaIds(areaIds.length > 0 ? areaIds : null);
+                }}
+              />
+            </Box>
+          </Box>
         )}
-        <MapContainer
-          ref={mapRef}
-          center={[0, 0]}
-          style={{ height: '100%', width: '100%' }}
-          zoom={2}
-          zoomControl={false}
-        >
-          <MapRenderer
-            areas={filteredAreas}
-            drawingPoints={drawingPoints}
-            editingArea={editingArea}
-            onChangeArea={(area) => setEditingArea(area)}
-            onChangeDrawingPoints={(points) => setDrawingPoints(points)}
-            onFinishDrawing={() => finishDrawing()}
-            onSelectArea={(area) => setSelectedId(area?.id ?? '')}
-            selectedArea={selectedArea}
-          />
-        </MapContainer>
+
+        <Box flexGrow={1} position="relative">
+          <Box
+            sx={{
+              left: 16,
+              position: 'absolute',
+              top: 16,
+              zIndex: 999,
+            }}
+          >
+            <ButtonGroup orientation="vertical" variant="contained">
+              <Button onClick={() => mapRef.current?.zoomIn()}>
+                <Add />
+              </Button>
+              <Button onClick={() => mapRef.current?.zoomOut()}>
+                <Remove />
+              </Button>
+            </ButtonGroup>
+          </Box>
+          {selectedArea && (
+            <AreaOverlay
+              area={editingArea || selectedArea}
+              editing={!!editingArea}
+              onBeginEdit={() => setEditingArea(selectedArea)}
+              onCancelEdit={() => setEditingArea(null)}
+              onClose={() => setSelectedId('')}
+            />
+          )}
+          <MapContainer
+            ref={mapRef}
+            center={[0, 0]}
+            style={{ height: '100%', width: '100%' }}
+            zoom={2}
+            zoomControl={false}
+          >
+            <MapRenderer
+              areas={filteredAreas}
+              drawingPoints={drawingPoints}
+              editingArea={editingArea}
+              onChangeArea={(area) => setEditingArea(area)}
+              onChangeDrawingPoints={(points) => setDrawingPoints(points)}
+              onFinishDrawing={() => finishDrawing()}
+              onSelectArea={(area) => setSelectedId(area?.id ?? '')}
+              selectedArea={selectedArea}
+            />
+          </MapContainer>
+        </Box>
       </Box>
-    </Box>
+    </AreaFilterProvider>
   );
 };
 

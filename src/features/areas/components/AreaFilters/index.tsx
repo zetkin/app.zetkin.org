@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useContext, useEffect, useMemo } from 'react';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
@@ -7,6 +7,7 @@ import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import FilterDropDown from '../FilterDropDown';
+import { areaFilterContext } from './AreaFilterContext';
 
 type Props = {
   areas: ZetkinArea[];
@@ -15,11 +16,14 @@ type Props = {
 
 const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
   const theme = useTheme();
-  const [activeGroupIds, setActiveGroupIds] = useState<number[]>([]);
-  const [activeTagIdsByGroup, setActiveTagIdsByGroup] = useState<
-    Record<number, number[]>
-  >({});
+  const {
+    activeGroupIds,
+    setActiveGroupIds,
+    activeTagIdsByGroup,
+    setActiveTagIdsByGroup,
+  } = useContext(areaFilterContext);
   const messages = useMessages(messageIds);
+
   const groupsById = useMemo(() => {
     const groupsById: Record<
       number,
@@ -141,10 +145,9 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
             onClick: () => {
               if (selected) {
                 setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));
-                setActiveTagIdsByGroup({
-                  ...activeTagIdsByGroup,
-                  [groupId]: [],
-                });
+                const newValue = { ...activeTagIdsByGroup };
+                delete newValue[groupId];
+                setActiveTagIdsByGroup(newValue);
               } else {
                 setActiveGroupIds([...activeGroupIds, groupId]);
               }
