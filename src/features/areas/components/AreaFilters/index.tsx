@@ -100,11 +100,14 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                   <Box
                     sx={{
                       // TODO: Use ZUI for this
+                      alignItems: 'center',
+                      aspectRatio: '1/1',
                       backgroundColor: theme.palette.primary.light,
                       borderRadius: '50%',
                       color: theme.palette.primary.contrastText,
-                      px: 1,
-                      py: 0.3,
+                      display: 'flex',
+                      height: '1.2em',
+                      justifyContent: 'center',
                     }}
                   >
                     <Typography
