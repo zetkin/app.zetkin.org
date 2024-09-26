@@ -32,7 +32,7 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
-  const [filteredAreaIds, setFilteredAreaIds] = useState<string[]>([]);
+  const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
 
   const selectedArea = areas.find((area) => area.id == selectedId);
 
@@ -64,7 +64,7 @@ const Map: FC<MapProps> = ({ areas }) => {
           });
 
     const afterComplexFilter =
-      filteredAreaIds.length == 0
+      filteredAreaIds == null
         ? afterTextFilter
         : afterTextFilter.filter((area) => filteredAreaIds.includes(area.id));
 
