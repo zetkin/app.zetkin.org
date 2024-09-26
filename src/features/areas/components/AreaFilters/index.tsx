@@ -150,7 +150,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           };
         })}
         label={messages.filters.filterButton()}
-        variant="outlined"
+        variant="text"
       />
     </>
   );

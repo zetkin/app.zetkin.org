@@ -2,25 +2,34 @@ import 'leaflet/dist/leaflet.css';
 import { FC, useEffect, useRef, useState } from 'react';
 import { MapContainer } from 'react-leaflet';
 import {
+  Add,
+  Close,
+  Create,
+  FilterList,
+  Remove,
+  Save,
+} from '@mui/icons-material';
+import {
   Autocomplete,
   Box,
   Button,
   ButtonGroup,
+  Divider,
   MenuItem,
   TextField,
 } from '@mui/material';
-import { Add, Close, Create, Remove, Save } from '@mui/icons-material';
 import { bounds, Map as MapType } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-import { PointData, ZetkinArea } from '../../types';
-import useCreateArea from '../../hooks/useCreateArea';
 import { useNumericRouteParams } from 'core/hooks';
-import AreaOverlay from '../AreaOverlay';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../../l10n/messageIds';
-import MapRenderer from './MapRenderer';
-import AreaFilters from '../AreaFilters';
 import objToPoint from 'features/areas/utils/objToPoint';
+import useCreateArea from '../../hooks/useCreateArea';
+import messageIds from '../../l10n/messageIds';
+import { PointData, ZetkinArea } from '../../types';
+import AreaFilters from '../AreaFilters';
+import AreaOverlay from '../AreaOverlay';
+import MapRenderer from './MapRenderer';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -34,6 +43,7 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [filterText, setFilterText] = useState('');
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const selectedArea = areas.find((area) => area.id == selectedId) || null;
 
@@ -145,12 +155,12 @@ const Map: FC<MapProps> = ({ areas }) => {
         </Box>
 
         <Box alignItems="center" display="flex" gap={1}>
-          <AreaFilters
-            areas={areas}
-            onFilteredIdsChange={(areaIds) => {
-              setFilteredAreaIds(areaIds.length > 0 ? areaIds : null);
-            }}
-          />
+          <Button
+            onClick={() => setFiltersOpen((current) => !current)}
+            startIcon={<FilterList />}
+          >
+            Filter
+          </Button>
           <Autocomplete
             filterOptions={(options, state) =>
               filterAreas(options, state.inputValue)
@@ -186,6 +196,19 @@ const Map: FC<MapProps> = ({ areas }) => {
           />
         </Box>
       </Box>
+      {filtersOpen && (
+        <Box>
+          <Divider />
+          <Box display="flex" gap={1} justifyContent="start" px={2} py={1}>
+            <AreaFilters
+              areas={areas}
+              onFilteredIdsChange={(areaIds) => {
+                setFilteredAreaIds(areaIds.length > 0 ? areaIds : null);
+              }}
+            />
+          </Box>
+        </Box>
+      )}
 
       <Box flexGrow={1} position="relative">
         <Box
