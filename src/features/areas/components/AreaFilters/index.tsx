@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useMemo } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
@@ -16,6 +16,7 @@ type Props = {
 
 const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
   const theme = useTheme();
+  const [openDropdown, setOpenDropdown] = useState<'add' | number | null>(null);
   const {
     activeGroupIds,
     setActiveGroupIds,
@@ -78,7 +79,6 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         if (info) {
           return (
             <FilterDropDown
-              initiallyOpen={true}
               items={info.tags.map((tag) => {
                 const selected = currentIds.includes(tag.id) ?? false;
 
@@ -100,6 +100,8 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                   ? info.group.title
                   : messages.filters.tagsWithoutGroup()
               }
+              onToggle={(open) => setOpenDropdown(open ? groupId : null)}
+              open={openDropdown == groupId}
               startIcon={
                 currentIds.length > 0 ? (
                   <Box
@@ -132,7 +134,6 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         }
       })}
       <FilterDropDown
-        closeOnClick
         items={Object.values(groupsById).map((item) => {
           const groupId = item.group?.id ?? 0;
           const selected = activeGroupIds.includes(groupId);
@@ -150,11 +151,14 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                 setActiveTagIdsByGroup(newValue);
               } else {
                 setActiveGroupIds([...activeGroupIds, groupId]);
+                setOpenDropdown(groupId);
               }
             },
           };
         })}
         label={messages.filters.filterButton()}
+        onToggle={(open) => setOpenDropdown(open ? 'add' : null)}
+        open={openDropdown == 'add'}
         variant="text"
       />
     </>

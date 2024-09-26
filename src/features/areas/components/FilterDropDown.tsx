@@ -8,8 +8,6 @@ import { FC, ReactNode, useState } from 'react';
 import theme from 'theme';
 
 type Props = {
-  closeOnClick?: boolean;
-  initiallyOpen?: boolean;
   items: {
     disabled?: boolean;
     icon?: JSX.Element;
@@ -17,35 +15,28 @@ type Props = {
     onClick: () => void;
   }[];
   label: string;
+  onToggle: (open: boolean) => void;
+  open: boolean;
   startIcon?: ReactNode;
   variant?: 'text' | 'outlined' | 'contained';
 };
 
 const FilterDropDown: FC<Props> = ({
-  closeOnClick,
-  initiallyOpen,
   items,
   label,
+  open,
+  onToggle,
   startIcon,
   variant = 'contained',
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [open, setOpen] = useState(!!initiallyOpen);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <div>
       <Button
         ref={(elem) => setAnchorEl(elem)}
         endIcon={<ArrowDropDown />}
-        onClick={handleClick}
+        onClick={() => onToggle(!open)}
         startIcon={startIcon}
         variant={variant}
       >
@@ -57,7 +48,7 @@ const FilterDropDown: FC<Props> = ({
           horizontal: 'left',
           vertical: 'bottom',
         }}
-        onClose={handleClose}
+        onClose={() => onToggle(false)}
         open={open}
         sx={{
           '& .MuiPaper-root': {
@@ -86,10 +77,6 @@ const FilterDropDown: FC<Props> = ({
               disabled={item.disabled}
               disableRipple
               onClick={() => {
-                if (closeOnClick) {
-                  handleClose();
-                }
-
                 item.onClick();
               }}
             >
