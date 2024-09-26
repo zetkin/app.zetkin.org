@@ -1,5 +1,5 @@
 import 'leaflet/dist/leaflet.css';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { MapContainer } from 'react-leaflet';
 import {
   Autocomplete,
@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import { Add, Close, Create, Remove, Save } from '@mui/icons-material';
-import { Map as MapType } from 'leaflet';
+import { bounds, Map as MapType } from 'leaflet';
 
 import { PointData, ZetkinArea } from '../../types';
 import useCreateArea from '../../hooks/useCreateArea';
@@ -20,6 +20,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
 import MapRenderer from './MapRenderer';
 import AreaFilters from '../AreaFilters';
+import objToPoint from 'features/areas/utils/objToPoint';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -38,6 +39,31 @@ const Map: FC<MapProps> = ({ areas }) => {
 
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
+
+  useEffect(() => {
+    const map = mapRef.current;
+
+    if (selectedArea && map) {
+      const points = selectedArea.points.map((p) => objToPoint(p));
+      const areaBounds = bounds(points);
+      const topRightOnMap = areaBounds.getTopRight();
+      const container = map.getContainer();
+
+      if (container && topRightOnMap) {
+        const topRightInContainer = map.latLngToContainerPoint({
+          lat: topRightOnMap.x,
+          lng: topRightOnMap.y,
+        });
+
+        const containerRect = container.getBoundingClientRect();
+        const distanceFromRight = containerRect.width - topRightInContainer.x;
+        if (distanceFromRight < 420) {
+          const center = areaBounds.getCenter();
+          map.panTo({ lat: center.x, lng: center.y }, { animate: true });
+        }
+      }
+    }
+  }, [selectedArea]);
 
   async function finishDrawing() {
     if (drawingPoints && drawingPoints.length > 2) {
