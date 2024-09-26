@@ -8,6 +8,7 @@ volunteers at [Zetkin Foundation](https://zetkin.org) and used by organizations
 within the international left.
 
 ## Contributing
+
 Do you want to contribute to this project and become part of a community of people
 that use their coding skills to help the international left? We try to make the
 process as easy and transparent as possible. Read all about it in the separate
@@ -17,57 +18,64 @@ Also see [TESTING.md](./TESTING.md) for details about automated testing.
 
 ## Instructions
 
-### Windows
+### Getting the code
 
-1. Fork zetkin/app.zetking.org into your personal GitHub account.
-1. Install Git for Windows from https://git-scm.com/download/win
-2. Generate an SSH key, for example with
-   Git Gui / Help / Show SSH Key / Generate Key
-3. Add your key to GitHub by copying the public part of it to
-   your GitHub settings at https://github.com/settings/keys
-4. Install Visual Studio Code.
-5. In Visual Studio Code use Clone Repository and from GitHub, connect your
-   installation of Visual Studio Code to your GitHub account, and then clone
-   your fork from GitHub. Note that you will be prompted for the passphrase of
-   your private key if you chose to use one when you created your SSH Key.
+The code is [hosted on GitHub](https://github.com/zetkin/app.zetkin.org) (likely
+where you are currently reading this information). If you are unfamiliar with
+Git and/or GitHub, here's some recommended reading from the GitHub Docs:
 
-### Common
+- [About GitHub and Git](https://docs.github.com/en/get-started/start-your-journey/about-github-and-git)
+- [Set up Git](https://docs.github.com/en/get-started/getting-started-with-git/set-up-git)
+  (We recommend either the Git command-line interface or a plugin for your IDE)
+- [Contributing to a project](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project)
+  explains how you can submit your first PR to a project like Zetkin
 
-Install all the dependencies using [`yarn` (Classic)](https://classic.yarnpkg.com):
+You can use any editor or IDE to edit the code, but most of us use [VSCode](https://code.visualstudio.com/).
+
+### Running the code (normal)
+
+The Zetkin web app is a NEXT.js app that runs in the Node.js JavaScript runtime.
+If you don't have it already, you must [install Node.js](https://nodejs.org/)
+first.
+
+We use [`yarn` (Classic)](https://classic.yarnpkg.com) to manage our code
+dependencies. Once you have installed `yarn` you can install all other
+dependencies like so:
 
 ```
 $ yarn install
 ```
 
-Then start the devserver:
+With dependencies installed, you can start the development server:
 
 ```
 $ yarn devserver
 ```
 
 You should now be able to access the app on http://localhost:3000. It will
-communicate with the Zetkin API running on our public development server.
+communicate with the Zetkin API running on our public development server. See
+below for login credentials.
 
-### Docker
+### Running the code (Docker)
 
-As **an alternative to the normal development setup**,
-you can also run the provided Docker Compose setup.
+As **an alternative to the normal development setup**, you can also run the provided
+Docker Compose setup.
 
-* Requires Docker Compose v2+
-* Backend development: Run local production (after building, it starts very fast)
+- Requires Docker Compose v2+
+- Backend development: Run local production (after building, it starts very fast)
   and access the organizations directly on http://localhost:3000/organizations/.
 
   ```
   $ docker compose -f dev.yml --profile static up
   ```
 
-* Frontend development: Similar to the normal yarn setup documented here.
+- Frontend development: Similar to the normal yarn setup documented here.
 
   ```
   $ docker compose -f dev.yml --profile dev up
   ```
 
-* Linting: You can run lint commands from within a container, too:
+- Linting: You can run lint commands from within a container, too:
 
   ```
   $ # Default: Run .githooks/precommit
