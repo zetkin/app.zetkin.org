@@ -1,12 +1,11 @@
-# Zetkin
+# Zetkin Web App
 
-This is the new Zetkin front-end application, currently under development. It
-will run at app.zetkin.org and replace the current www.zetk.in, call.zetk.in and
-organize.zetk.in applications.
+This is the current-generation (Gen3) web interface for the Zetkin Platform. It
+is gradually replacing the older (Gen2) web apps that can be found elsewhere.
 
-## Technology
-
-The new Zetkin app is built on [NEXT.js](https://nextjs.org) with TypeScript.
+The Zetkin Platform is software for organizing activism, developed by staff and
+volunteers at [Zetkin Foundation](https://zetkin.org) and used by organizations
+within the international left.
 
 ## Contributing
 Do you want to contribute to this project and become part of a community of people
