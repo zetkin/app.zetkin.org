@@ -20,7 +20,7 @@ type Props = {
   onChangeArea: (area: ZetkinArea) => void;
   onChangeDrawingPoints: (points: PointData[]) => void;
   onFinishDrawing: () => void;
-  onSelectArea: (area: ZetkinArea) => void;
+  onSelectArea: (area: ZetkinArea | null) => void;
   selectedArea: ZetkinArea | null;
 };
 
@@ -180,6 +180,11 @@ const MapRenderer: FC<Props> = ({
           <Polygon
             key={`${selectedArea.id}-selected`}
             color={theme.palette.primary.main}
+            eventHandlers={{
+              click: () => {
+                onSelectArea(null);
+              },
+            }}
             positions={selectedArea.points}
             weight={5}
           />

@@ -228,7 +228,7 @@ const Map: FC<MapProps> = ({ areas }) => {
             onChangeArea={(area) => setEditingArea(area)}
             onChangeDrawingPoints={(points) => setDrawingPoints(points)}
             onFinishDrawing={() => finishDrawing()}
-            onSelectArea={(area) => setSelectedId(area.id)}
+            onSelectArea={(area) => setSelectedId(area?.id ?? '')}
             selectedArea={selectedArea}
           />
         </MapContainer>
