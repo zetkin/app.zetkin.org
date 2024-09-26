@@ -3,10 +3,10 @@ import { Box, Checkbox, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
 import { ZetkinArea } from 'features/areas/types';
-import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import FilterDropDown from '../FilterDropDown';
 
 type Props = {
   areas: ZetkinArea[];
@@ -73,7 +73,8 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         const currentIds = activeTagIdsByGroup[groupId] || [];
         if (info) {
           return (
-            <ZUIButtonMenu
+            <FilterDropDown
+              initiallyOpen={true}
               items={info.tags.map((tag) => {
                 const selected = currentIds.includes(tag.id) ?? false;
 
@@ -126,7 +127,8 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           );
         }
       })}
-      <ZUIButtonMenu
+      <FilterDropDown
+        closeOnClick
         items={Object.values(groupsById).map((item) => {
           const groupId = item.group?.id ?? 0;
           const selected = activeGroupIds.includes(groupId);
