@@ -21,7 +21,7 @@ type Props = {
   onChangeDrawingPoints: (points: PointData[]) => void;
   onFinishDrawing: () => void;
   onSelectArea: (area: ZetkinArea) => void;
-  selectedId: string | null;
+  selectedArea: ZetkinArea | null;
 };
 
 const MapRenderer: FC<Props> = ({
@@ -32,7 +32,7 @@ const MapRenderer: FC<Props> = ({
   onChangeDrawingPoints,
   onFinishDrawing,
   onSelectArea,
-  selectedId,
+  selectedArea,
 }) => {
   const [zoomed, setZoomed] = useState(false);
   const reactFGref = useRef<FeatureGroup | null>(null);
@@ -138,46 +138,32 @@ const MapRenderer: FC<Props> = ({
           );
         })}
         {areas
-          .filter((area) => area.id != editingArea?.id)
+          .filter(
+            (area) => area.id != editingArea?.id && area.id != selectedArea?.id
+          )
           .sort((a0, a1) => {
-            // Always render selected last, so that it gets
-            // rendered on top of the unselected ones in case
-            // there are overlaps.
-            if (a0.id == selectedId) {
-              return 1;
-            } else if (a1.id == selectedId) {
-              return -1;
-            } else {
-              // When  none of the two areas are selected, sort them
-              // by size, so that big ones are underneith and the
-              // smaller ones can be clicked.
-              const bounds0 = bounds(a0.points.map(objToPoint));
-              const bounds1 = bounds(a1.points.map(objToPoint));
+            // Sort areas by size, so that big ones are underneith and the
+            // smaller ones can more easily be clicked.
+            const bounds0 = bounds(a0.points.map(objToPoint));
+            const bounds1 = bounds(a1.points.map(objToPoint));
 
-              const dimensions0 = bounds0.getSize();
-              const dimensions1 = bounds1.getSize();
+            const dimensions0 = bounds0.getSize();
+            const dimensions1 = bounds1.getSize();
 
-              const size0 = dimensions0.x * dimensions0.y;
-              const size1 = dimensions1.x * dimensions1.y;
+            const size0 = dimensions0.x * dimensions0.y;
+            const size1 = dimensions1.x * dimensions1.y;
 
-              return size1 - size0;
-            }
+            return size1 - size0;
           })
           .map((area) => {
-            const selected = selectedId == area.id;
-
             // The key changes when selected, to force redraw of polygon
             // to reflect new state through visual style
-            const key = area.id + (selected ? '-selected' : '-default');
+            const key = area.id + '-default';
 
             return (
               <Polygon
                 key={key}
-                color={
-                  selected
-                    ? theme.palette.primary.main
-                    : theme.palette.secondary.main
-                }
+                color={theme.palette.secondary.main}
                 eventHandlers={{
                   click: () => {
                     if (!isDrawing) {
@@ -186,10 +172,18 @@ const MapRenderer: FC<Props> = ({
                   },
                 }}
                 positions={area.points}
-                weight={selected ? 5 : 2}
+                weight={2}
               />
             );
           })}
+        {selectedArea && (
+          <Polygon
+            key={`${selectedArea.id}-selected`}
+            color={theme.palette.primary.main}
+            positions={selectedArea.points}
+            weight={5}
+          />
+        )}
       </FeatureGroupComponent>
     </>
   );

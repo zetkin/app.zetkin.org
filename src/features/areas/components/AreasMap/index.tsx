@@ -34,7 +34,7 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
 
-  const selectedArea = areas.find((area) => area.id == selectedId);
+  const selectedArea = areas.find((area) => area.id == selectedId) || null;
 
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
@@ -203,7 +203,7 @@ const Map: FC<MapProps> = ({ areas }) => {
             onChangeDrawingPoints={(points) => setDrawingPoints(points)}
             onFinishDrawing={() => finishDrawing()}
             onSelectArea={(area) => setSelectedId(area.id)}
-            selectedId={selectedId}
+            selectedArea={selectedArea}
           />
         </MapContainer>
       </Box>
