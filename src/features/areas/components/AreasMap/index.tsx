@@ -196,7 +196,7 @@ const Map: FC<MapProps> = ({ areas }) => {
               <AreaFilters
                 areas={areas}
                 onFilteredIdsChange={(areaIds) => {
-                  setFilteredAreaIds(areaIds.length > 0 ? areaIds : null);
+                  setFilteredAreaIds(areaIds);
                 }}
               />
             </Box>
