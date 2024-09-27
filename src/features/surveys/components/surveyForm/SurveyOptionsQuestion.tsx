@@ -18,6 +18,7 @@ import SurveyOption from './SurveyOption';
 import SurveyQuestionDescription from './SurveyQuestionDescription';
 import SurveySubheading from './SurveySubheading';
 import { useMessages } from 'core/i18n';
+import useServerSide from 'core/useServerSide';
 import {
   ZetkinSurveyOption,
   ZetkinSurveyOptionsQuestionElement,
@@ -33,6 +34,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
   const handleDropdownChange = useCallback((event: SelectChangeEvent) => {
     setDropdownValue(event.target.value);
   }, []);
+  const isServer = useServerSide();
 
   const question = element.question;
   return (
@@ -62,14 +64,16 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 )}
               </Box>
               <Box display="flex" flexDirection="column" rowGap={1}>
-                {question.options!.map((option: ZetkinSurveyOption) => (
-                  <SurveyOption
-                    key={option.id}
-                    control={<Checkbox name={`${element.id}.options`} />}
-                    label={option.text}
-                    value={option.id}
-                  />
-                ))}
+                {isServer
+                  ? '...'
+                  : question.options!.map((option: ZetkinSurveyOption) => (
+                      <SurveyOption
+                        key={option.id}
+                        control={<Checkbox name={`${element.id}.options`} />}
+                        label={option.text}
+                        value={option.id}
+                      />
+                    ))}
               </Box>
             </Box>
           </FormGroup>
@@ -108,14 +112,16 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 </Box>
               </Box>
               <Box display="flex" flexDirection="column" rowGap={1}>
-                {question.options!.map((option: ZetkinSurveyOption) => (
-                  <SurveyOption
-                    key={option.id}
-                    control={<Radio required={question.required} />}
-                    label={option.text}
-                    value={option.id}
-                  />
-                ))}
+                {isServer
+                  ? '...'
+                  : question.options!.map((option: ZetkinSurveyOption) => (
+                      <SurveyOption
+                        key={option.id}
+                        control={<Radio required={question.required} />}
+                        label={option.text}
+                        value={option.id}
+                      />
+                    ))}
               </Box>
             </Box>
           </RadioGroup>

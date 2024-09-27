@@ -17,6 +17,7 @@ import SurveyPrivacyPolicy from './SurveyPrivacyPolicy';
 import SurveySignature from './SurveySignature';
 import SurveySubmitButton from './SurveySubmitButton';
 import SurveySuccess from './SurveySuccess';
+import useServerSide from 'core/useServerSide';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyFormStatus,
@@ -33,6 +34,7 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey, user }) => {
     submit,
     'editing'
   );
+  const isServer = useServerSide();
 
   if (!survey) {
     return null;
@@ -52,10 +54,14 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey, user }) => {
           <input name="surveyId" type="hidden" value={survey.id} />
           <Box display="flex" flexDirection="column" gap={4}>
             <SurveyElements survey={survey as ZetkinSurveyExtended} />
-            <SurveySignature
-              survey={survey as ZetkinSurveyExtended}
-              user={user}
-            />
+            {isServer ? (
+              '...'
+            ) : (
+              <SurveySignature
+                survey={survey as ZetkinSurveyExtended}
+                user={user}
+              />
+            )}
             <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
             <SurveySubmitButton />
           </Box>
