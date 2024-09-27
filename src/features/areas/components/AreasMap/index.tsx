@@ -11,12 +11,12 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { bounds, Map as MapType } from 'leaflet';
+import { latLngBounds, Map as MapType } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
-import objToPoint from 'features/areas/utils/objToPoint';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 import useCreateArea from '../../hooks/useCreateArea';
 import messageIds from '../../l10n/messageIds';
 import { PointData, ZetkinArea } from '../../types';
@@ -49,22 +49,19 @@ const Map: FC<MapProps> = ({ areas }) => {
     const map = mapRef.current;
 
     if (selectedArea && map) {
-      const points = selectedArea.points.map((p) => objToPoint(p));
-      const areaBounds = bounds(points);
-      const topRightOnMap = areaBounds.getTopRight();
+      const points = selectedArea.points.map((p) => objToLatLng(p));
+      const areaBounds = latLngBounds(points);
+      const topRightOnMap = areaBounds.getNorthEast();
       const container = map.getContainer();
 
       if (container && topRightOnMap) {
-        const topRightInContainer = map.latLngToContainerPoint({
-          lat: topRightOnMap.x,
-          lng: topRightOnMap.y,
-        });
+        const topRightInContainer = map.latLngToContainerPoint(topRightOnMap);
 
         const containerRect = container.getBoundingClientRect();
         const distanceFromRight = containerRect.width - topRightInContainer.x;
         if (distanceFromRight < 420) {
           const center = areaBounds.getCenter();
-          map.panTo({ lat: center.x, lng: center.y }, { animate: true });
+          map.panTo(center, { animate: true });
         }
       }
     }

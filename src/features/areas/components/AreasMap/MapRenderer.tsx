@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import { bounds, FeatureGroup } from 'leaflet';
+import { FeatureGroup, latLngBounds } from 'leaflet';
 import { FC, useEffect, useRef, useState } from 'react';
 import {
   FeatureGroup as FeatureGroupComponent,
@@ -11,7 +11,7 @@ import {
 
 import { PointData, ZetkinArea } from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import objToPoint from 'features/areas/utils/objToPoint';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 
 type Props = {
   areas: ZetkinArea[];
@@ -144,11 +144,17 @@ const MapRenderer: FC<Props> = ({
           .sort((a0, a1) => {
             // Sort areas by size, so that big ones are underneith and the
             // smaller ones can more easily be clicked.
-            const bounds0 = bounds(a0.points.map(objToPoint));
-            const bounds1 = bounds(a1.points.map(objToPoint));
+            const bounds0 = latLngBounds(a0.points.map(objToLatLng));
+            const bounds1 = latLngBounds(a1.points.map(objToLatLng));
 
-            const dimensions0 = bounds0.getSize();
-            const dimensions1 = bounds1.getSize();
+            const dimensions0 = {
+              x: bounds0.getEast() - bounds0.getWest(),
+              y: bounds0.getNorth() - bounds0.getSouth(),
+            };
+            const dimensions1 = {
+              x: bounds1.getEast() - bounds1.getWest(),
+              y: bounds1.getNorth() - bounds1.getSouth(),
+            };
 
             const size0 = dimensions0.x * dimensions0.y;
             const size1 = dimensions1.x * dimensions1.y;
