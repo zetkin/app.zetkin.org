@@ -1,7 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import { FC, useEffect, useRef, useState } from 'react';
 import { MapContainer } from 'react-leaflet';
-import { Add, Close, Create, Remove, Save } from '@mui/icons-material';
+import { Add, Close, Create, Home, Remove, Save } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -215,6 +215,33 @@ const Map: FC<MapProps> = ({ areas }) => {
               </Button>
               <Button onClick={() => mapRef.current?.zoomOut()}>
                 <Remove />
+              </Button>
+              <Button
+                onClick={() => {
+                  const map = mapRef.current;
+                  if (map) {
+                    if (areas.length) {
+                      // Start with first area
+                      const totalBounds = latLngBounds(
+                        areas[0].points.map((p) => objToLatLng(p))
+                      );
+
+                      // Extend with all areas
+                      areas.forEach((area) => {
+                        const areaBounds = latLngBounds(
+                          area.points.map((p) => objToLatLng(p))
+                        );
+                        totalBounds.extend(areaBounds);
+                      });
+
+                      if (totalBounds) {
+                        map.fitBounds(totalBounds, { animate: true });
+                      }
+                    }
+                  }
+                }}
+              >
+                <Home />
               </Button>
             </ButtonGroup>
           </Box>
