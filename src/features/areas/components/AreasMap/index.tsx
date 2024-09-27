@@ -1,12 +1,21 @@
 import 'leaflet/dist/leaflet.css';
 import { FC, useEffect, useRef, useState } from 'react';
 import { MapContainer } from 'react-leaflet';
-import { Add, Close, Create, Home, Remove, Save } from '@mui/icons-material';
+import {
+  Add,
+  Close,
+  Create,
+  GpsFixed,
+  Home,
+  Remove,
+  Save,
+} from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
   Button,
   ButtonGroup,
+  CircularProgress,
   Divider,
   MenuItem,
   TextField,
@@ -39,6 +48,7 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [locating, setLocating] = useState(false);
 
   const selectedArea = areas.find((area) => area.id == selectedId) || null;
 
@@ -242,6 +252,38 @@ const Map: FC<MapProps> = ({ areas }) => {
                 }}
               >
                 <Home />
+              </Button>
+              <Button
+                onClick={() => {
+                  setLocating(true);
+                  navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                      setLocating(false);
+
+                      const zoom = 16;
+                      const latLng = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude,
+                      };
+
+                      mapRef.current?.flyTo(latLng, zoom, {
+                        animate: true,
+                        duration: 0.8,
+                      });
+                    },
+                    () => {
+                      // When an error occurs just stop the loading indicator
+                      setLocating(false);
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                  );
+                }}
+              >
+                {locating ? (
+                  <CircularProgress color="inherit" size={24} />
+                ) : (
+                  <GpsFixed />
+                )}
               </Button>
             </ButtonGroup>
           </Box>
