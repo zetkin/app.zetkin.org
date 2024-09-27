@@ -34,10 +34,11 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
     setDropdownValue(event.target.value);
   }, []);
 
+  const question = element.question;
   return (
     <FormControl fullWidth>
       <SurveyContainer>
-        {element.question.response_config.widget_type === 'checkbox' && (
+        {question.response_config.widget_type === 'checkbox' && (
           <FormGroup
             aria-describedby={`description-${element.id}`}
             aria-labelledby={`label-${element.id}`}
@@ -52,18 +53,16 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
             >
               <Box>
                 <FormLabel id={`label-${element.id}`}>
-                  <SurveySubheading>
-                    {element.question.question}
-                  </SurveySubheading>
+                  <SurveySubheading>{question.question}</SurveySubheading>
                 </FormLabel>
-                {element.question.description && (
+                {question.description && (
                   <SurveyQuestionDescription id={`description-${element.id}`}>
-                    {element.question.description}
+                    {question.description}
                   </SurveyQuestionDescription>
                 )}
               </Box>
               <Box display="flex" flexDirection="column" rowGap={1}>
-                {element.question.options!.map((option: ZetkinSurveyOption) => (
+                {question.options!.map((option: ZetkinSurveyOption) => (
                   <SurveyOption
                     key={option.id}
                     control={<Checkbox name={`${element.id}.options`} />}
@@ -75,9 +74,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
             </Box>
           </FormGroup>
         )}
-        {(element.question.response_config.widget_type === 'radio' ||
-          typeof element.question.response_config.widget_type ===
-            'undefined') && (
+        {(question.response_config.widget_type === 'radio' ||
+          typeof question.response_config.widget_type === 'undefined') && (
           <RadioGroup
             aria-describedby={`description-${element.id}`}
             aria-labelledby={`label-${element.id}`}
@@ -96,24 +94,24 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                   <FormLabel id={`label-${element.id}`}>
                     <SurveySubheading>
                       <>
-                        {element.question.question}
-                        {element.question.required &&
+                        {question.question}
+                        {question.required &&
                           ` (${messages.surveyForm.required()})`}
                       </>
                     </SurveySubheading>
                   </FormLabel>
-                  {element.question.description && (
+                  {question.description && (
                     <SurveyQuestionDescription id={`description-${element.id}`}>
-                      {element.question.description}
+                      {question.description}
                     </SurveyQuestionDescription>
                   )}
                 </Box>
               </Box>
               <Box display="flex" flexDirection="column" rowGap={1}>
-                {element.question.options!.map((option: ZetkinSurveyOption) => (
+                {question.options!.map((option: ZetkinSurveyOption) => (
                   <SurveyOption
                     key={option.id}
-                    control={<Radio required={element.question.required} />}
+                    control={<Radio required={question.required} />}
                     label={option.text}
                     value={option.id}
                   />
@@ -122,7 +120,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
             </Box>
           </RadioGroup>
         )}
-        {element.question.response_config.widget_type === 'select' && (
+        {question.response_config.widget_type === 'select' && (
           <FormGroup
             aria-describedby={`description-${element.id}`}
             aria-labelledby={`label-${element.id}`}
@@ -132,15 +130,15 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 <FormLabel id={`label-${element.id}`}>
                   <SurveySubheading>
                     <>
-                      {element.question.question}
-                      {element.question.required &&
+                      {question.question}
+                      {question.required &&
                         ` (${messages.surveyForm.required()})`}
                     </>
                   </SurveySubheading>
                 </FormLabel>
-                {element.question.description && (
+                {question.description && (
                   <SurveyQuestionDescription id={`description-${element.id}`}>
-                    {element.question.description}
+                    {question.description}
                   </SurveyQuestionDescription>
                 )}
               </Box>
@@ -149,10 +147,10 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
                 aria-labelledby={`label-${element.id}`}
                 name={`${element.id}.options`}
                 onChange={handleDropdownChange}
-                required={element.question.required}
+                required={question.required}
                 value={dropdownValue}
               >
-                {element.question.options!.map((option: ZetkinSurveyOption) => (
+                {question.options!.map((option: ZetkinSurveyOption) => (
                   <MenuItem key={option.id} value={option.id}>
                     {option.text}
                   </MenuItem>
