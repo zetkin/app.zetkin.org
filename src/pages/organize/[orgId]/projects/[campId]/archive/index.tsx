@@ -37,6 +37,7 @@ const CampaignArchivePage: PageWithLayout = () => {
 
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
+    ACTIVITIES.CANVASS_ASSIGNMENT,
     ACTIVITIES.SURVEY,
     ACTIVITIES.TASK,
     ACTIVITIES.EMAIL,

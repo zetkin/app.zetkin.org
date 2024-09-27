@@ -1,3 +1,4 @@
+import useCanvassAssignmentActivities from 'features/areas/hooks/useCanvassAssignmentActivities';
 import { CampaignActivity } from '../types';
 import useCallAssignmentActivities from './useCallAssignmentActivities';
 import useEmailActivities from './useEmailActivities';
@@ -20,12 +21,17 @@ export default function useActivityList(
     orgId,
     campId
   );
+  const canvassAssignmentActivitiesFuture = useCanvassAssignmentActivities(
+    orgId,
+    campId
+  );
   const taskActivitiesFuture = useTaskActivities(orgId, campId);
   const eventActivitiesFuture = useEventActivities(orgId, campId);
   const emailActivitiesFuture = useEmailActivities(orgId, campId);
 
   if (
     callAssignmentActivitiesFuture.isLoading ||
+    canvassAssignmentActivitiesFuture.isLoading ||
     surveyActivitiesFuture.isLoading ||
     taskActivitiesFuture.isLoading ||
     eventActivitiesFuture.isLoading ||
@@ -34,6 +40,7 @@ export default function useActivityList(
     return new LoadingFuture();
   } else if (
     callAssignmentActivitiesFuture.error ||
+    canvassAssignmentActivitiesFuture.error ||
     surveyActivitiesFuture.error ||
     taskActivitiesFuture.error ||
     eventActivitiesFuture.error ||
@@ -46,6 +53,7 @@ export default function useActivityList(
   activities.push(
     ...(surveyActivitiesFuture.data || []),
     ...(callAssignmentActivitiesFuture.data || []),
+    ...(canvassAssignmentActivitiesFuture.data || []),
     ...(taskActivitiesFuture.data || []),
     ...(eventActivitiesFuture.data || []),
     ...(emailActivitiesFuture.data || [])
