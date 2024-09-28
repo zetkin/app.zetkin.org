@@ -72,7 +72,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     <ZUIDialog
       onClose={closeAndClear}
       open={open}
-      title={editingTag ? messages.dialog.editTitle() : submitLabel}
+      title={
+        editingTag ? messages.dialog.editTitle() : messages.dialog.createTitle()
+      }
     >
       <form
         onSubmit={(e) => {
