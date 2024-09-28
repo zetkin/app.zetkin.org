@@ -103,6 +103,8 @@ const EmailClick = ({
     });
   };
 
+  const selectedEmail = emails.find((email) => email.id == filter.config.email);
+
   return (
     <FilterForm
       disableSubmit={
@@ -220,7 +222,17 @@ const EmailClick = ({
                     getOptionDisabled={(link) =>
                       filter.config.links?.includes(link.id) || false
                     }
-                    noOptionsText={<Msg id={messageIds.misc.noOptionsLinks} />}
+                    noOptionsText={
+                      selectedEmail ? (
+                        selectedEmail.processed ? (
+                          <Msg id={messageIds.misc.noOptionsLinks} />
+                        ) : (
+                          <Msg id={messageIds.misc.noOptionsEmailNotSent} />
+                        )
+                      ) : (
+                        <Msg id={messageIds.misc.noOptionsInvalidEmail} />
+                      )
+                    }
                     onChange={(_, value) =>
                       setValueToKey(
                         'links',
@@ -265,7 +277,7 @@ const EmailClick = ({
                   value={filter.config.campaign || ''}
                 >
                   {projectsFuture?.map((project) => (
-                    <MenuItem key={`proejct-${project.id}`} value={project.id}>
+                    <MenuItem key={`project-${project.id}`} value={project.id}>
                       {`"${project.title}"`}
                     </MenuItem>
                   ))}

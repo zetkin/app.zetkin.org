@@ -129,6 +129,7 @@ export default makeMessages('feat.campaigns', {
   linkGroup: {
     createActivity: m('Create activity'),
     createCallAssignment: m('Create call assignment'),
+    createCanvassAssignment: m('Create canvass assignment'),
     createEmail: m('Create email'),
     createEvent: m('Create event'),
     createSurvey: m('Create survey'),

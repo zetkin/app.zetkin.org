@@ -12,14 +12,19 @@ import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import { Msg, useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIAvatar from 'zui/ZUIAvatar';
 
 interface FieldSettingsRowProps {
+  duplicates: ZetkinPerson[];
   field: NATIVE_PERSON_FIELDS;
   onChange: (selectedValue: string) => void;
   values: string[];
 }
 
 const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
+  duplicates,
   field,
   onChange,
   values,
@@ -27,6 +32,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const [selectedValue, setSelectedValue] = useState(values[0]);
+  const { orgId } = useNumericRouteParams();
 
   const getLabel = (value: string) => {
     if (field === NATIVE_PERSON_FIELDS.GENDER) {
@@ -48,6 +54,26 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
     }
 
     return value;
+  };
+
+  const getAvatars = (value: string) => {
+    const peopleWithMatchingValues = duplicates.filter(
+      (person) => person[field] == value
+    );
+
+    return (
+      <Box display="flex" gap="2px">
+        {peopleWithMatchingValues.map((person, index) => {
+          return (
+            <ZUIAvatar
+              key={index}
+              size={'xs'}
+              url={`/api/orgs/${orgId}/people/${person.id}/avatar`}
+            />
+          );
+        })}
+      </Box>
+    );
   };
 
   return (
@@ -89,11 +115,21 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
                 setSelectedValue(event.target.value);
                 onChange(event.target.value);
               }}
+              renderValue={() => getLabel(selectedValue)}
               value={selectedValue}
             >
               {values.map((value, index) => (
-                <MenuItem key={index} value={value}>
+                <MenuItem
+                  key={index}
+                  sx={{
+                    display: 'flex',
+                    gap: 1,
+                    justifyContent: 'space-between',
+                  }}
+                  value={value}
+                >
                   {getLabel(value)}
+                  {getAvatars(value)}
                 </MenuItem>
               ))}
             </Select>

@@ -89,6 +89,7 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
           width="50%"
         >
           <FieldSettings
+            duplicates={peopleToMerge}
             fieldValues={fieldValues}
             onChange={(field, value) => {
               setOverrides({ ...overrides, [`${field}`]: value });

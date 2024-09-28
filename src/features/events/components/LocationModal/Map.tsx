@@ -103,8 +103,8 @@ const Map: FC<MapProps> = ({
           return (
             <>
               <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               {filteredLocations.map((location) => {
                 const isSelectedMarker = selectedLocation?.id == location.id;

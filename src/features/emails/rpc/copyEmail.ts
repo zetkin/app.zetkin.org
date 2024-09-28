@@ -36,6 +36,7 @@ async function handle(params: Params, apiClient: IApiClient) {
       campaign_id: email.campaign?.id || null,
       content: email.content,
       subject: email.subject,
+      theme_id: email.theme?.id || null,
       title: email.title,
     }
   );

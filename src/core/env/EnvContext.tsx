@@ -1,13 +1,12 @@
-import { createContext, FC, ReactNode } from 'react';
+import { createContext, FC, PropsWithChildren } from 'react';
 
 import Environment from './Environment';
 
 const EnvContext = createContext<Environment | null>(null);
 
-interface EnvProviderProps {
-  children: ReactNode;
+type EnvProviderProps = PropsWithChildren & {
   env: Environment;
-}
+};
 
 const EnvProvider: FC<EnvProviderProps> = ({ children, env }) => {
   return <EnvContext.Provider value={env}>{children}</EnvContext.Provider>;

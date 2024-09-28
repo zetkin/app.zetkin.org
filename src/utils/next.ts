@@ -190,6 +190,7 @@ export const scaffold =
       result.props = {
         ...result.props,
         envVars: {
+          FEAT_AREAS: process.env.FEAT_AREAS || null,
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
           ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
         },
