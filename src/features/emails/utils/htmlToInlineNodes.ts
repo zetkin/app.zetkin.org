@@ -29,7 +29,7 @@ function childNodesToInlineNodes(childNodes: ChildNode[]) {
         content: childNodesToInlineNodes(Array.from(node.childNodes)),
         href: anchor.href,
         kind: InlineNodeKind.LINK,
-        tag: anchor.dataset.tag || '',
+        tag: Math.random().toString(36).substring(2, 10),
       });
     } else if (node.nodeName === 'SPAN') {
       const span = node as HTMLSpanElement;

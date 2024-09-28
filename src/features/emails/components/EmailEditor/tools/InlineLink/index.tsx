@@ -196,7 +196,6 @@ export function linkToolFactory(title: string) {
       } else {
         const anchor = document.createElement('a');
         anchor.classList.add('inlineLink');
-        anchor.dataset.tag = Math.random().toString(36).substring(2, 10);
         anchor.style.cursor = 'text';
 
         const content = range.extractContents();
