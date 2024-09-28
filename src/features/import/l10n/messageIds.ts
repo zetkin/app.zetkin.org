@@ -240,7 +240,7 @@ export default makeMessages('feat.import', {
         '{number} new {numPeople, plural, =1 {person} other {people}} were created'
       ),
       defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
-        '{numPeople} recieved changes to their {field}'
+        '{numPeople} received changes to their {field}'
       ),
       organization: m('Organization'),
       orgs: m<{ numPeople: ReactElement; org: ReactElement }>(

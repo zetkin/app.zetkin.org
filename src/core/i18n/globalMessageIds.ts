@@ -18,6 +18,7 @@ export default makeMessages('glob', {
     id: m('ID'),
     is_user: m('Is user'),
     last_name: m('Last Name'),
+    member_id: m('External ID'),
     phone: m('Phone Number'),
     street_address: m('Address'),
     zip_code: m('Post Code'),
