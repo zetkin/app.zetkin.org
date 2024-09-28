@@ -86,6 +86,11 @@ const PersonDetailsCard: React.FunctionComponent<{
         value = (
           <PersonDetailLink href={value as string}>{value}</PersonDetailLink>
         );
+      } else if (value && field.type == 'enum_text') {
+        const enumItem = field.enum_choices.find((c) => c.key == value);
+        if (enumItem) {
+          value = enumItem.label;
+        }
       }
 
       return {
