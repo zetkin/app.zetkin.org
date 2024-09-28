@@ -46,27 +46,25 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
         <title>{messages.layout.eventList()}</title>
       </Head>
 
-      <Table>
+      <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell />
-            <TableCell>Date</TableCell>
+            <TableCell sx={{ maxWidth: '10px' }} />
+            <TableCell sx={{ maxWidth: '15px' }}>Date</TableCell>
             <TableCell>Title</TableCell>
-            <TableCell>Coordinates</TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
           {filteredEvents.map((event) => (
             <TableRow key={event.data.id}>
-              <TableCell />
-              <TableCell>
+              <TableCell sx={{ maxWidth: '10px' }}>
+                <Checkbox />
+              </TableCell>
+              <TableCell sx={{ maxWidth: '15px' }}>
                 {new Date(event.data.end_time).toLocaleDateString()}
               </TableCell>
               <TableCell>{event.data.title}</TableCell>
-              <TableCell>
-                {event.data.location?.lat} {event.data.location?.lng}
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
