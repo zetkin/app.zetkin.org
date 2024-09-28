@@ -33,8 +33,8 @@ const SelectionBar = () => {
       )
       .map((x) => x.data);
 
-    const endDates = filteredEvents.map((x) => x?.end_time);
-    const startDates = filteredEvents.map((x) => x?.start_time);
+    const endDates = filteredEvents.map((x) => x?.end_time.slice(0, 10));
+    const startDates = filteredEvents.map((x) => x?.start_time.slice(0, 10));
 
     const minDate = startDates.reduce((min, current) => {
       const currentDate = new Date(current || '');
@@ -42,17 +42,18 @@ const SelectionBar = () => {
       return currentDate < minDate ? current : min;
     });
 
-    const maxDate = endDates.reduce((min, current) => {
+    const maxDate = endDates.reduce((max, current) => {
       const currentDate = new Date(current || '');
-      const minDate = new Date(min || '');
-      return currentDate < minDate ? current : min;
+      const maxDate = new Date(max || '');
+
+      return maxDate > currentDate ? max : current;
     });
 
     window
       .open(
-        `/organize/${orgId}/projects/eventlist?minDate=${minDate}&maxDate=${maxDate}&ids=${selectedEventIds.join(
-          ','
-        )}`,
+        `/organize/${orgId}/projects/eventlist?minDate=${
+          minDate || ''
+        }&maxDate=${maxDate || ''}&ids=${selectedEventIds.join(',')}`,
         '_blank'
       )
       ?.focus();

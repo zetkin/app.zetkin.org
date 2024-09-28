@@ -1,44 +1,37 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { FC, useEffect, useState } from 'react';
+import { FC, useMemo } from 'react';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import { useNumericRouteParams } from 'core/hooks';
+import useDateRouterParam from 'features/events/hooks/useDateRouterParam';
 
 const EventList: FC<{ orgId: number }> = ({ orgId }) => {
   const router = useRouter();
   const messages = useMessages(messageIds);
 
-  const [selectedEventIds, setSelectedEventIds] = useState<number[]>([]);
-
-  // const endDate = new Date(
-  //   typeof router.query.maxDate === 'string' ? router.query.maxDate : ''
-  // );
-  // const startDate = new Date(
-  //   typeof router.query.minDate === 'string' ? router.query.minDate : ''
-  // );
-
-  const endDate = new Date('2024-12-31');
-  const startDate = new Date('2020-12-31');
-
-  useEffect(() => {
+  const selectedEventIds = useMemo(() => {
     const { ids } = router.query;
     if (typeof ids !== 'string') {
-      return;
+      return [];
     }
 
     const parsedIds = ids.split(',').map((x) => Number(x));
 
-    setSelectedEventIds(parsedIds);
+    return parsedIds;
   }, [router.query]);
 
-  const stuff = useEventsFromDateRange(startDate, endDate, orgId);
+  // TODO: Date parsing is not correct
+  const endDate = useDateRouterParam('minDate') || new Date();
+  const startDate = useDateRouterParam('maxDate') || new Date();
 
-  const filteredEvents = stuff.filter((x) =>
-    selectedEventIds.includes(x.data.id)
-  );
+  const filteredEvents = useEventsFromDateRange(
+    startDate,
+    endDate,
+    orgId
+  ).filter((x) => selectedEventIds.includes(x.data.id));
 
   return (
     <>
