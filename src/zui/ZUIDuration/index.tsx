@@ -5,6 +5,11 @@ import { Msg } from 'core/i18n';
 
 type Props = {
   /**
+   * The lower range unit of time to display the duration in.
+   */
+  lowerTimeUnit?: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days';
+
+  /**
    * The duration in seconds that should be visualized. Only positive durations
    * are supported and negative values will result in no rendered output.
    */
@@ -14,11 +19,6 @@ type Props = {
    * The upper range unit of time to display the duration in.
    */
   upperTimeUnit?: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days';
-
-  /**
-   * The lower range unit of time to display the duration in.
-   */
-  lowerTimeUnit?: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days';
 };
 
 type DurField = {
@@ -40,14 +40,14 @@ const ZUIDuration: FC<Props> = ({
   lowerTimeUnit = 'minutes',
   seconds,
 }) => {
-  var upper = timeUnitMap.get(upperTimeUnit) ?? 4;
-  var lower = timeUnitMap.get(lowerTimeUnit) ?? 2;
+  let upper = timeUnitMap.get(upperTimeUnit) ?? 4;
+  const lower = timeUnitMap.get(lowerTimeUnit) ?? 2;
 
   if (upper < lower) {
     upper = lower;
   }
 
-  var timeUnits = [...timeUnitMap.keys()].filter(
+  const timeUnits = [...timeUnitMap.keys()].filter(
     (timeUnit) =>
       (timeUnitMap.get(timeUnit) ?? 0) <= upper &&
       (timeUnitMap.get(timeUnit) ?? 0) >= lower
