@@ -49,7 +49,7 @@ const ZUIDuration: FC<Props> = ({
       {fields
         .filter((field) => field.visible)
         .filter((field) => field.n > 0)
-        .map((field, index, array) => (
+        .map((field) => (
           <span key={field.msgId}>
             <Msg
               id={messageIds.duration[field.msgId]}
