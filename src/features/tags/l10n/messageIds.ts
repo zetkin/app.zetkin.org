@@ -6,6 +6,7 @@ export default makeMessages('feat.tags', {
   dialog: {
     colorErrorText: m('Please enter a valid hex code'),
     colorLabel: m('Color'),
+    createAndApplyTagButton: m('Create and apply'),
     createTagButton: m('Create'),
     createTitle: m('Create tag'),
     deleteButtonLabel: m('Delete'),
@@ -23,6 +24,7 @@ export default makeMessages('feat.tags', {
       none: m('Basic (no values)'),
       text: m('Text values'),
     },
+    updateTagButton: m('Update'),
   },
   manager: {
     addTag: m('Add tag'),
