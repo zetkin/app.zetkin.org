@@ -20,9 +20,9 @@ export const Vertical: Story = {
     orientation: 'vertical',
   },
   decorators: [
-    (Story) => (
+    () => (
       <Box sx={{ display: 'flex', height: '100px' }}>
-        <ZUIDivider orientation="vertical" flexItem />
+        <ZUIDivider orientation="vertical" />
       </Box>
     ),
   ],
