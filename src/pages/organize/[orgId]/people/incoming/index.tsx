@@ -60,16 +60,19 @@ const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
           ignoreDataWhileLoading
           skeleton={<JoinFormSelect />}
         >
-          {(submissions) => (
-            <JoinFormSelect
-              formId={filterByForm}
-              forms={uniqBy(
-                submissions.map((s) => s.form),
-                'id'
-              )}
-              onFormSelect={(form) => setFilterByForm(form?.id)}
-            />
-          )}
+          {(submissions) => {
+            const uniqueForms = uniqBy(
+              submissions.map((s) => s.form),
+              'id'
+            );
+            return (
+              <JoinFormSelect
+                formId={filterByForm}
+                forms={uniqueForms}
+                onFormSelect={(form) => setFilterByForm(form?.id)}
+              />
+            );
+          }}
         </ZUIFuture>
 
         {/* filter by form submission status */}
