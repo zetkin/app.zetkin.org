@@ -14,7 +14,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
-import { Link, useTheme } from '@mui/material';
+import { Box, CircularProgress, Link, useTheme } from '@mui/material';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
@@ -163,7 +163,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     orgId,
     view.id
   );
-  const createView = useCreateView(orgId);
+  const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
 
@@ -466,85 +466,108 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   return (
     <>
-      <DataGridPro
-        apiRef={gridApiRef}
-        autoHeight={empty}
-        checkboxSelection={!disableBulkActions}
-        columns={gridColumns}
-        disableRowSelectionOnClick={true}
-        getRowClassName={(params) =>
-          params.id == addedId ? classes.addedRow : ''
-        }
-        hideFooter={empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC}
-        localeText={{
-          ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
-          noRowsLabel: messages.empty.notice[contentSource](),
-        }}
-        onCellEditStart={(params, event) => {
-          if (params.reason == GridCellEditStartReasons.printableKeyDown) {
-            // Don't enter edit mode when the user just presses a printable character.
-            // Doing so is the default DataGrid behaviour (as in spreadsheets) but it
-            // means the user will overwrite the original value, which is rarely what
-            // you want with the precious data that exists in views (when there is no
-            // undo feature).
-            event.defaultMuiPrevented = true;
+      {!isLoading && (
+        <DataGridPro
+          apiRef={gridApiRef}
+          autoHeight={empty}
+          checkboxSelection={!disableBulkActions}
+          columns={gridColumns}
+          disableRowSelectionOnClick={true}
+          getRowClassName={(params) =>
+            params.id == addedId ? classes.addedRow : ''
           }
-        }}
-        onCellKeyDown={(params: GridCellParams<ZetkinViewRow, unknown>, ev) => {
-          if (!params.isEditable) {
-            const col = colFromFieldName(params.field, columns);
-            if (col) {
-              const handleKeyDown = columnTypes[col.type].handleKeyDown;
-              if (handleKeyDown) {
-                handleKeyDown(
-                  viewGrid,
-                  col,
-                  params.row.id,
-                  params.value,
-                  ev,
-                  accessLevel
-                );
+          hideFooter={empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC}
+          localeText={{
+            ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
+            noRowsLabel: messages.empty.notice[contentSource](),
+          }}
+          onCellEditStart={(params, event) => {
+            if (params.reason == GridCellEditStartReasons.printableKeyDown) {
+              // Don't enter edit mode when the user just presses a printable character.
+              // Doing so is the default DataGrid behaviour (as in spreadsheets) but it
+              // means the user will overwrite the original value, which is rarely what
+              // you want with the precious data that exists in views (when there is no
+              // undo feature).
+              event.defaultMuiPrevented = true;
+            }
+          }}
+          onCellKeyDown={(
+            params: GridCellParams<ZetkinViewRow, unknown>,
+            ev
+          ) => {
+            if (!params.isEditable) {
+              const col = colFromFieldName(params.field, columns);
+              if (col) {
+                const handleKeyDown = columnTypes[col.type].handleKeyDown;
+                if (handleKeyDown) {
+                  handleKeyDown(
+                    viewGrid,
+                    col,
+                    params.row.id,
+                    params.value,
+                    ev,
+                    accessLevel
+                  );
+                }
               }
             }
-          }
-        }}
-        onColumnOrderChange={(params) => {
-          moveColumn(params.column.field, params.targetIndex);
-        }}
-        onColumnResize={(params) => {
-          setColumnWidth(params.colDef.field, params.width);
-        }}
-        onRowSelectionModelChange={(model) => setSelection(model as number[])}
-        pinnedColumns={{
-          left: ['id', GRID_CHECKBOX_SELECTION_COL_DEF.field],
-        }}
-        processRowUpdate={(after, before) => {
-          const changedField = Object.keys(after).find(
-            (key) => after[key] != before[key]
-          );
-          if (changedField) {
-            const col = colFromFieldName(changedField, columns);
-            if (col) {
-              const processRowUpdate = columnTypes[col.type].processRowUpdate;
-              if (processRowUpdate) {
-                processRowUpdate(viewGrid, col, after.id, after[changedField]);
+          }}
+          onColumnOrderChange={(params) => {
+            moveColumn(params.column.field, params.targetIndex);
+          }}
+          onColumnResize={(params) => {
+            setColumnWidth(params.colDef.field, params.width);
+          }}
+          onRowSelectionModelChange={(model) => setSelection(model as number[])}
+          pinnedColumns={{
+            left: ['id', GRID_CHECKBOX_SELECTION_COL_DEF.field],
+          }}
+          processRowUpdate={(after, before) => {
+            const changedField = Object.keys(after).find(
+              (key) => after[key] != before[key]
+            );
+            if (changedField) {
+              const col = colFromFieldName(changedField, columns);
+              if (col) {
+                const processRowUpdate = columnTypes[col.type].processRowUpdate;
+                if (processRowUpdate) {
+                  processRowUpdate(
+                    viewGrid,
+                    col,
+                    after.id,
+                    after[changedField]
+                  );
+                }
               }
             }
-          }
-          return after;
-        }}
-        rows={gridRows}
-        slotProps={componentsProps}
-        slots={{
-          columnMenu: ViewDataTableColumnMenu,
-          footer: ViewDataTableFooter,
-          toolbar: ViewDataTableToolbar,
-        }}
-        style={{
-          border: 'none',
-        }}
-        {...modelGridProps}
-      />
+            return after;
+          }}
+          rows={gridRows}
+          slotProps={componentsProps}
+          slots={{
+            columnMenu: ViewDataTableColumnMenu,
+            footer: ViewDataTableFooter,
+            toolbar: ViewDataTableToolbar,
+          }}
+          style={{
+            border: 'none',
+          }}
+          {...modelGridProps}
+        />
+      )}
+      {isLoading && (
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            height: '50%',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
       {empty && <EmptyView orgId={orgId} view={view} />}
       {columnToRename && (
         <ViewRenameColumnDialog
