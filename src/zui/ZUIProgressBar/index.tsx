@@ -19,14 +19,17 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
     throw new Error('Progress > 100');
   }
 
+  const height = sizes[size];
+
   return (
-    <Box display="flex" width="100%">
-      <Box bgcolor={'#7800dc'} height={sizes[size]} width={`${progress}%`} />
+    <Box display="flex" gap={1} width="100%">
       <Box
-        bgcolor={'#e4ccf8'}
-        height={sizes[size]}
-        width={`${100 - progress}%`}
+        borderRadius={`${height / 2}px 0 0 ${height / 2}px`}
+        bgcolor={'#7800dc'}
+        height={height}
+        width={`${progress}%`}
       />
+      <Box bgcolor={'#e4ccf8'} height={height} width={`${100 - progress}%`} />
     </Box>
   );
 };
