@@ -1,13 +1,14 @@
 import { Box } from '@mui/system';
 
-type Sizes = 'small' | 'medium' | 'large';
+type Sizes = 'extraSmall' | 'small' | 'medium' | 'large';
 
 interface ZUIProgressBarProps {
-  progress: number; // Number < 100
+  progress: number; // Number <= 100
   size: Sizes;
 }
 
 const sizes: Record<Sizes, number> = {
+  extraSmall: 5,
   large: 40,
   medium: 20,
   small: 10,
