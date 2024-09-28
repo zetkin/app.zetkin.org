@@ -11,6 +11,7 @@ type Story = StoryObj<typeof ZUIProgressBar>;
 
 export const Primary: Story = {
   args: {
+    progress: 25,
     size: 'medium',
   },
 };
