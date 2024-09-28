@@ -28,6 +28,7 @@ import useViewBrowserItems, {
   ViewBrowserItem,
 } from 'features/views/hooks/useViewBrowserItems';
 import messageIds from 'features/views/l10n/messageIds';
+import MoveViewDialog from '../MoveViewDialog';
 
 interface ViewBrowserProps {
   basePath: string;
@@ -59,6 +60,10 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
   const { renameItem } = useViewBrowserMutations(orgId);
   const itemsFuture = useViewBrowserItems(orgId, folderId);
   const { deleteFolder, recentlyCreatedFolder } = useFolder(orgId);
+
+  const [itemToBeMoved, setItemToBeMoved] = useState<ViewBrowserItem | null>(
+    null
+  );
 
   // If a folder was created, go into rename state
   useEffect(() => {
@@ -175,6 +180,14 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
                   });
                 },
               },
+              {
+                id: 'move-item',
+                label: messages.browser.menu.move(),
+                onSelect: (e) => {
+                  e.stopPropagation();
+                  setItemToBeMoved(item);
+                },
+              },
             ]}
           />
         );
@@ -242,6 +255,12 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
               sortingMode="server"
               sx={{ borderWidth: 0 }}
             />
+            {itemToBeMoved && (
+              <MoveViewDialog
+                close={() => setItemToBeMoved(null)}
+                itemToMove={itemToBeMoved}
+              />
+            )}
           </>
         );
       }}

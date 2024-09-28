@@ -30,6 +30,7 @@ export default makeMessages('feat.views', {
     },
     menu: {
       delete: m('Delete'),
+      move: m('Move'),
       rename: m('Rename'),
     },
     moveToFolder: m<{ folder: ReactElement }>('Move to {folder}'),
@@ -337,6 +338,13 @@ export default makeMessages('feat.views', {
   footer: {
     addPlaceholder: m('Start typing to add person to list'),
     alreadyInView: m('Already in list'),
+  },
+  moveViewDialog: {
+    alreadyInThisFolder: m('Already in this folder'),
+    cannotMoveHere: m('Cannot move here'),
+    moveHere: m('Move'),
+    moveToRoot: m('Move to root'),
+    title: m<{ itemName: string }>('Move {itemName}'),
   },
   newFolderTitle: m('New Folder'),
   newViewFields: {
