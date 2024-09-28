@@ -2,14 +2,6 @@ import { Box } from '@mui/material';
 
 type Sizes = 'extraSmall' | 'small' | 'medium' | 'large';
 
-interface ZUIProgressBarProps {
-  /**
-   * Progress as a number < 100, or an array of numbers whose total is < 100.
-   */
-  progress: number | [number, number] | [number, number, number];
-  size: Sizes;
-}
-
 const sizes: Record<Sizes, number> = {
   extraSmall: 5,
   large: 40,
@@ -18,6 +10,14 @@ const sizes: Record<Sizes, number> = {
 };
 
 const colors = ['#7800dc', '#9d46e6', '#c189ef', '#e4ccf8'];
+
+interface ZUIProgressBarProps {
+  /**
+   * Progress as a number < 100, or an array of numbers whose total is < 100.
+   */
+  progress: number | [number, number] | [number, number, number];
+  size: Sizes;
+}
 
 const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
   const progressArray = typeof progress === 'number' ? [progress] : progress;
@@ -37,18 +37,19 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
       {progressArray.map((segmentWidth, index) => {
         return (
           <Box
+            key={index}
+            bgcolor={colors[index]}
             borderRadius={
               index === 0 ? `${height / 2}px 0 0 ${height / 2}px` : undefined
             }
-            bgcolor={colors[index]}
             height={height}
             width={`${segmentWidth}%`}
           />
         );
       })}
       <Box
-        borderRadius={`0 ${height / 2}px ${height / 2}px 0`}
         bgcolor={colors[3]}
+        borderRadius={`0 ${height / 2}px ${height / 2}px 0`}
         height={height}
         width={`${100 - progressSum}%`}
       />
