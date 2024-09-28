@@ -1,59 +1,58 @@
 import { Meta, StoryObj } from '@storybook/react';
-
-import ZUITooltip from './index';
 import { Button } from '@mui/material';
 
+import ZUITooltip from './index';
+
 const meta: Meta<typeof ZUITooltip> = {
-    component: ZUITooltip,
+  component: ZUITooltip,
 };
 export default meta;
 
 type Story = StoryObj<typeof ZUITooltip>;
 
-
 export const Default: Story = {
   args: {
-    label: 'A tiny tooltip default',
     children: <Button>Hover me</Button>,
+    label: 'A tiny tooltip default',
   },
 };
 
 export const None: Story = {
   args: {
-    label: 'A tiny tooltip with no arrow',
-    children: <Button>Hover me</Button>,
     arrow: 'None',
+    children: <Button>Hover me</Button>,
+    label: 'A tiny tooltip with no arrow',
   },
 };
 
 export const Down: Story = {
   args: {
-    label: 'A tiny tooltip with down arrow',
-    children: <Button>Hover me</Button>,
     arrow: 'Down',
+    children: <Button>Hover me</Button>,
+    label: 'A tiny tooltip with down arrow',
   },
 };
 
 export const Up: Story = {
   args: {
-    label: 'A tiny tooltip with up arrow',
-    children: <Button>Hover me</Button>,
     arrow: 'Up',
+    children: <Button>Hover me</Button>,
+    label: 'A tiny tooltip with up arrow',
   },
 };
 
 export const Left: Story = {
   args: {
-    label: 'A tiny tooltip with left arrow',
-    children: <Button>Hover me</Button>,
     arrow: 'Left',
+    children: <Button>Hover me</Button>,
+    label: 'A tiny tooltip with left arrow',
   },
 };
 
 export const Right: Story = {
   args: {
-    label: 'A tiny tooltip with left arrow',
-    children: <Button>Hover me</Button>,
     arrow: 'Right',
+    children: <Button>Hover me</Button>,
+    label: 'A tiny tooltip with left arrow',
   },
 };
