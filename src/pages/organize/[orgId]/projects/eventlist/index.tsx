@@ -23,9 +23,8 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
     return parsedIds;
   }, [router.query]);
 
-  // TODO: Date parsing is not correct
-  const endDate = useDateRouterParam('minDate') || new Date();
-  const startDate = useDateRouterParam('maxDate') || new Date();
+  const endDate = useDateRouterParam('maxDate') || new Date();
+  const startDate = useDateRouterParam('minDate') || new Date();
 
   const filteredEvents = useEventsFromDateRange(
     startDate,
