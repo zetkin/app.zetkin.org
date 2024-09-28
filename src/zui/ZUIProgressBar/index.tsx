@@ -21,7 +21,6 @@ interface ZUIProgressBarProps {
 
 const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
   const progressArray = typeof progress === 'number' ? [progress] : progress;
-
   const progressSum = progressArray.reduce((sum, val) => {
     return sum + val;
   });
@@ -29,21 +28,26 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
   if (progressSum > 100) {
     throw new Error('Progress > 100');
   }
+  if (progressArray.some((value) => value < 0)) {
+    throw new Error('Values can not be negative');
+  }
 
   const height = sizes[size];
-  const borderRadius = height / 2;
 
   return (
-    <Box display="flex" gap={1} width="100%">
+    <Box
+      display="flex"
+      gap={1}
+      borderRadius={height / 2}
+      overflow="hidden"
+      width="100%"
+    >
       {progressArray.map((segmentWidth, index) => {
+        if (segmentWidth === 0) return null;
         return (
           <Box
             key={index}
             bgcolor={colors[index]}
-            style={{
-              borderTopLeftRadius: index === 0 ? borderRadius : 0,
-              borderBottomLeftRadius: index === 0 ? borderRadius : 0,
-            }}
             height={height}
             width={`${segmentWidth}%`}
           />
@@ -51,13 +55,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
       })}
       <Box
         bgcolor={colors[3]}
-        borderRadius={`0 ${height / 2}px ${height / 2}px 0`}
         height={height}
-        style={{
-          borderRadius: borderRadius,
-          borderTopLeftRadius: progressSum === 0 ? borderRadius : 0,
-          borderBottomLeftRadius: progressSum === 0 ? borderRadius : 0,
-        }}
         width={`${100 - progressSum}%`}
       />
     </Box>

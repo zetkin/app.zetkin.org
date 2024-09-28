@@ -57,3 +57,10 @@ export const NoProgress: Story = {
     size: 'medium',
   },
 };
+
+export const NoStartProgress: Story = {
+  args: {
+    progress: [0, 10, 10],
+    size: 'medium',
+  },
+};
