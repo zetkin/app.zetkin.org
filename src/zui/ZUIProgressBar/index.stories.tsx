@@ -50,3 +50,10 @@ export const Large: Story = {
     size: 'large',
   },
 };
+
+export const NoProgress: Story = {
+  args: {
+    progress: 0,
+    size: 'medium',
+  },
+};

@@ -31,6 +31,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
   }
 
   const height = sizes[size];
+  const borderRadius = height / 2;
 
   return (
     <Box display="flex" gap={1} width="100%">
@@ -39,9 +40,10 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
           <Box
             key={index}
             bgcolor={colors[index]}
-            borderRadius={
-              index === 0 ? `${height / 2}px 0 0 ${height / 2}px` : undefined
-            }
+            style={{
+              borderTopLeftRadius: index === 0 ? borderRadius : 0,
+              borderBottomLeftRadius: index === 0 ? borderRadius : 0,
+            }}
             height={height}
             width={`${segmentWidth}%`}
           />
@@ -51,6 +53,11 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
         bgcolor={colors[3]}
         borderRadius={`0 ${height / 2}px ${height / 2}px 0`}
         height={height}
+        style={{
+          borderRadius: borderRadius,
+          borderTopLeftRadius: progressSum === 0 ? borderRadius : 0,
+          borderBottomLeftRadius: progressSum === 0 ? borderRadius : 0,
+        }}
         width={`${100 - progressSum}%`}
       />
     </Box>
