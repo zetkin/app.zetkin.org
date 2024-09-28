@@ -1,3 +1,11 @@
+import {
+  Checkbox,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FC, useMemo } from 'react';
@@ -38,27 +46,31 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
         <title>{messages.layout.eventList()}</title>
       </Head>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Activity</th>
-            <th>Place</th>
-          </tr>
-        </thead>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Date</TableCell>
+            <TableCell>Title</TableCell>
+            <TableCell>Coordinates</TableCell>
+          </TableRow>
+        </TableHead>
 
-        <tbody>
-          {filteredEvents.map((item) => (
-            <tr key={item.data.id}>
-              <td>{new Date(item.data.end_time).toLocaleDateString()}</td>
-              <td>{item.data.activity?.title}</td>
-              <td>
-                {item.data.location?.lat} {item.data.location?.lng}
-              </td>
-            </tr>
+        <TableBody>
+          {filteredEvents.map((event) => (
+            <TableRow key={event.data.id}>
+              <TableCell />
+              <TableCell>
+                {new Date(event.data.end_time).toLocaleDateString()}
+              </TableCell>
+              <TableCell>{event.data.title}</TableCell>
+              <TableCell>
+                {event.data.location?.lat} {event.data.location?.lng}
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
 
       {selectedEventIds.length === 0 && <p>No events selected.</p>}
     </>
