@@ -1,13 +1,13 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import ZUIProgressBar from './index';
+import ZUIBarDiagram from './index';
 
-const meta: Meta<typeof ZUIProgressBar> = {
-  component: ZUIProgressBar,
+const meta: Meta<typeof ZUIBarDiagram> = {
+  component: ZUIBarDiagram,
 };
 export default meta;
 
-type Story = StoryObj<typeof ZUIProgressBar>;
+type Story = StoryObj<typeof ZUIBarDiagram>;
 
 export const Primary: Story = {
   args: {
@@ -48,19 +48,5 @@ export const Large: Story = {
   args: {
     progress: [33, 33, 10],
     size: 'large',
-  },
-};
-
-export const NoProgress: Story = {
-  args: {
-    progress: 0,
-    size: 'medium',
-  },
-};
-
-export const NoStartProgress: Story = {
-  args: {
-    progress: [0, 10, 10],
-    size: 'medium',
   },
 };

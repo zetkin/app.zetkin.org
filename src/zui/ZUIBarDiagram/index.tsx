@@ -4,14 +4,14 @@ type Sizes = 'extraSmall' | 'small' | 'medium' | 'large';
 
 const sizes: Record<Sizes, number> = {
   extraSmall: 5,
-  large: 40,
+  large: 30,
   medium: 20,
   small: 10,
 };
 
 const colors = ['#7800dc', '#9d46e6', '#c189ef', '#e4ccf8'];
 
-interface ZUIProgressBarProps {
+interface ZUIBarDiagramProps {
   /**
    * Progress as a number < 100, or an array of numbers whose total is < 100.
    */
@@ -19,7 +19,7 @@ interface ZUIProgressBarProps {
   size: Sizes;
 }
 
-const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
+const ZUIBarDiagram = ({ progress, size }: ZUIBarDiagramProps) => {
   const progressArray = typeof progress === 'number' ? [progress] : progress;
   const progressSum = progressArray.reduce((sum, val) => {
     return sum + val;
@@ -38,7 +38,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
     <Box
       borderRadius={height / 2}
       display="flex"
-      gap={0.75}
+      gap={size === 'large' ? 0.75 : 0.5}
       overflow="hidden"
       width="100%"
     >
@@ -62,4 +62,4 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
   );
 };
 
-export default ZUIProgressBar;
+export default ZUIBarDiagram;
