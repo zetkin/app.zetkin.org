@@ -7,16 +7,16 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
+import { Box } from '@mui/system';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FC, useMemo } from 'react';
 
+import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
-import { useNumericRouteParams } from 'core/hooks';
 import useDateRouterParam from 'features/events/hooks/useDateRouterParam';
-import { Box } from '@mui/system';
 
 const EventList: FC<{ orgId: number }> = ({ orgId }) => {
   const router = useRouter();
@@ -48,7 +48,7 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
         <title>{messages.layout.eventList()}</title>
       </Head>
 
-      <Box sx={{ display: 'flex', p: 2, justifyContent: 'flex-end' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
         <TextField
           disabled
           InputLabelProps={{ shrink: true }}
@@ -58,11 +58,19 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
         />
       </Box>
 
-      <Table size="small">
+      <Table
+        size="small"
+        sx={{
+          // Remove borders for all cells
+          '& .MuiTableCell-root': {
+            borderBottom: 'none',
+          },
+        }}
+      >
         <TableHead>
           <TableRow>
-            <TableCell sx={{ maxWidth: '10px' }} />
-            <TableCell sx={{ maxWidth: '15px' }}>Date</TableCell>
+            <TableCell sx={{ maxWidth: '15px' }} />
+            <TableCell sx={{ maxWidth: '35px' }}>Date</TableCell>
             <TableCell>Title</TableCell>
           </TableRow>
         </TableHead>
@@ -70,10 +78,10 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
         <TableBody>
           {filteredEvents.map((event) => (
             <TableRow key={event.data.id}>
-              <TableCell sx={{ maxWidth: '10px' }}>
+              <TableCell sx={{ maxWidth: '15px' }}>
                 <Checkbox />
               </TableCell>
-              <TableCell sx={{ maxWidth: '15px' }}>
+              <TableCell sx={{ maxWidth: '35px' }}>
                 {new Date(event.data.end_time).toLocaleDateString()}
               </TableCell>
               <TableCell>{event.data.title}</TableCell>
