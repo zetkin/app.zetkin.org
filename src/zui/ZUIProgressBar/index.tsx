@@ -37,7 +37,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
   return (
     <Box
       display="flex"
-      gap={1}
+      gap={0.75}
       borderRadius={height / 2}
       overflow="hidden"
       width="100%"
