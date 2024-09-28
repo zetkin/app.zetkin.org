@@ -5,6 +5,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag } from 'utils/types/zetkin';
 import {
+  CONDITION_OPERATOR,
   OPERATION,
   PersonTagsFilterConfig,
   SmartSearchFilterWithId,
@@ -41,16 +42,17 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        condition: min_matching ? (
-          <UnderlinedMsg
-            id={localMessageIds.condition.preview.minMatching}
-            values={{
-              minMatching: min_matching,
-            }}
-          />
-        ) : (
-          <UnderlinedMsg id={localMessageIds.condition.preview[condition]} />
-        ),
+        condition:
+          condition === CONDITION_OPERATOR.SOME ? (
+            <UnderlinedMsg
+              id={localMessageIds.condition.preview.some}
+              values={{
+                minMatching: min_matching ?? 0,
+              }}
+            />
+          ) : (
+            <UnderlinedMsg id={localMessageIds.condition.preview[condition]} />
+          ),
         tags: (
           <Box
             alignItems="start"

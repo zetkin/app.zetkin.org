@@ -28,6 +28,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     numOpened,
     numSent,
     isLoading: statsLoading,
+    numLockedTargets,
     numBlocked,
   } = useEmailStats(orgId, emailId);
   const endNumber = numTargetMatches - numBlocked.any ?? 0;
@@ -43,7 +44,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     <ActivityListItemWithStats
       blueChipValue={numOpened}
       color={statusColors[state]}
-      endNumber={endNumber}
+      endNumber={numLockedTargets || 0}
       greenChipValue={numClicked}
       href={`/organize/${orgId}/projects/${
         email.campaign?.id ?? 'standalone'

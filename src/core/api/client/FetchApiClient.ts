@@ -1,10 +1,11 @@
 import { ApiFetch } from 'utils/apiFetch';
 import IApiClient from './IApiClient';
 import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
+import { ApiClientError } from '../errors';
 
 function assertOk(res: Response) {
   if (!res.ok) {
-    throw new Error(`Error during request: ${res.status}, ${res.url}`);
+    throw ApiClientError.fromResponse(res);
   }
 }
 

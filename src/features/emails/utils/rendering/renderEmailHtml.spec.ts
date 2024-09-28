@@ -126,11 +126,12 @@ describe('renderEmailHtml', () => {
                       tagName: 'mj-text',
                       attributes: {},
                       content:
-                        '<p>We want to invite you to <a href="https://zetkin.org">our <b>PARTY</b></a>, friend</p>',
+                        '<p>We want to invite you to <a class="email-link-thelink" href="https://zetkin.org">our <b>PARTY</b></a>, friend</p>',
                     },
                     {
                       tagName: 'mj-button',
                       attributes: {
+                        'css-class': 'email-link-thebutton',
                         href: 'https://zetkin.org',
                       },
                       content: 'I want to come',
@@ -288,6 +289,7 @@ describe('renderEmailHtml', () => {
                           tagName: 'mj-button',
                           attributes: {
                             'background-color': 'green',
+                            'css-class': 'email-link-thebutton',
                             'font-size': '22px',
                             href: 'https://zetkin.org',
                             padding: '20px',
@@ -323,6 +325,7 @@ export default function mockEmail(
       title: 'Organization',
     },
     published: null,
+    processed: null,
     subject: 'This is the subject',
     target: {
       id: 1,

@@ -435,23 +435,23 @@ export default makeMessages('feat.smartSearch', {
         conditionSelect: {
           all: m('all'),
           any: m('any'),
-          minMatching: m('at least'),
           none: m('none'),
+          some: m('at least'),
         },
         edit: {
           all: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
           any: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-          minMatching: m<{
+          none: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          some: m<{
             conditionSelect: ReactElement;
             minMatchingInput: ReactElement;
           }>('{conditionSelect} {minMatchingInput}'),
-          none: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
         },
         preview: {
           all: m('all'),
           any: m('any'),
-          minMatching: m<{ minMatching: number }>('at least {minMatching}'),
           none: m('none'),
+          some: m<{ minMatching: number }>('at least {minMatching}'),
         },
       },
       examples: {
@@ -573,6 +573,7 @@ export default makeMessages('feat.smartSearch', {
         all: m('all'),
         any: m('any'),
         none: m('none'),
+        some: m('some'),
       },
       examples: {
         one: m(
@@ -775,6 +776,10 @@ export default makeMessages('feat.smartSearch', {
   },
   misc: {
     noOptions: m('No matching tags'),
+    noOptionsEmailNotSent: m(
+      'Email not sent. Links included in the email are added after it has been sent.'
+    ),
+    noOptionsInvalidEmail: m('Invalid email. Select an email first.'),
     noOptionsLinks: m('No matching links'),
   },
   operators: {
