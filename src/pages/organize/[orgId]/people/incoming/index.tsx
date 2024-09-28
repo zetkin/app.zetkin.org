@@ -1,7 +1,14 @@
 import { GetServerSideProps } from 'next';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useState } from 'react';
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@mui/material';
 import uniqBy from 'lodash/uniqBy';
 
 import JoinFormSelect from 'features/joinForms/components/JoinFormSelect';
@@ -87,7 +94,17 @@ const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
       <ZUIFuture
         future={joinSubmissions}
         ignoreDataWhileLoading
-        skeleton={<Box />}
+        skeleton={
+          <Box
+            alignItems="center"
+            display="flex"
+            flexDirection="column"
+            height="100%"
+            justifyContent="center"
+          >
+            <CircularProgress />
+          </Box>
+        }
       >
         {(submissions) => {
           const filteredSubmissions = submissions.filter((submission) => {
