@@ -112,9 +112,15 @@ const tagsSlice = createSlice({
     },
     tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
       const [personId, tagId] = action.payload;
-      state.tagsByPersonId[personId].items = state.tagsByPersonId[
-        personId
-      ].items.filter((item) => item.id != tagId);
+      const tagsByPersonId = state.tagsByPersonId[personId];
+
+      if (!tagsByPersonId) {
+        return;
+      }
+
+      tagsByPersonId.items = state.tagsByPersonId[personId].items.filter(
+        (item) => item.id != tagId
+      );
     },
     tagUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [tagId, mutating] = action.payload;
