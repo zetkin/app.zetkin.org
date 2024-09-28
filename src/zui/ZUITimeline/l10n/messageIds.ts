@@ -12,6 +12,9 @@ export default makeMessages('zui.timeline', {
     },
   },
   expand: m('show full timeline'),
+  fileUploadErrorMessage: m(
+    "Unable to add note. Possible reason is that it's too long."
+  ),
   filter: {
     byType: {
       all: m('All'),

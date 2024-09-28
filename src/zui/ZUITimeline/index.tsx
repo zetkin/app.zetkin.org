@@ -22,6 +22,7 @@ import { ZetkinNote, ZetkinNoteBody } from 'utils/types/zetkin';
 import messageIds from './l10n/messageIds';
 
 export interface ZUITimelineProps {
+  showPostRequestError?: boolean;
   disabled?: boolean;
   onAddNote: (note: ZetkinNoteBody) => void;
   onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
@@ -29,6 +30,7 @@ export interface ZUITimelineProps {
 }
 
 const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
+  showPostRequestError,
   disabled,
   onAddNote,
   onEditNote,
@@ -46,7 +48,11 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={5}>
         <Grid item>
-          <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
+          <TimelineAddNote
+            disabled={disabled}
+            onSubmit={onAddNote}
+            showPostRequestError={showPostRequestError}
+          />
         </Grid>
         <Grid item sm={6} xl={4} xs={12}>
           {/* Filter timeline select */}
