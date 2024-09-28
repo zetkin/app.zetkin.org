@@ -49,12 +49,14 @@ const ZUIDuration: FC<Props> = ({
       {fields
         .filter((field) => field.visible)
         .filter((field) => field.n > 0)
-        .map((field) => (
-          <span key={field.msgId} style={{ marginRight: 4 }}>
+        .map((field, index, array) => (
+          <span key={field.msgId}>
             <Msg
               id={messageIds.duration[field.msgId]}
               values={{ n: field.n }}
             />
+            {/* Add a space after the hours field */}
+            {field.msgId === 'h' && index < array.length - 1 && ' '}
           </span>
         ))}
     </>
