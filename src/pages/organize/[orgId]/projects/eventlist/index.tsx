@@ -5,6 +5,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TextField,
 } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -15,6 +16,7 @@ import messageIds from 'features/campaigns/l10n/messageIds';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import { useNumericRouteParams } from 'core/hooks';
 import useDateRouterParam from 'features/events/hooks/useDateRouterParam';
+import { Box } from '@mui/system';
 
 const EventList: FC<{ orgId: number }> = ({ orgId }) => {
   const router = useRouter();
@@ -45,6 +47,16 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
       <Head>
         <title>{messages.layout.eventList()}</title>
       </Head>
+
+      <Box sx={{ display: 'flex', p: 2, justifyContent: 'flex-end' }}>
+        <TextField
+          disabled
+          InputLabelProps={{ shrink: true }}
+          label="Name"
+          value=""
+          variant="standard"
+        />
+      </Box>
 
       <Table size="small">
         <TableHead>
