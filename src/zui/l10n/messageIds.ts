@@ -164,6 +164,9 @@ export default makeMessages('zui', {
     search: m('Type to start searching'),
     searching: m('Searching...'),
   },
+  radioGroup: {
+    label: m('Label'),
+  },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),
