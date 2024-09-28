@@ -53,11 +53,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
           />
         );
       })}
-      <Box
-        bgcolor={colors[3]}
-        height={height}
-        width={`${100 - progressSum}%`}
-      />
+      <Box bgcolor={colors.at(-1)} height={height} flexGrow={1} />
     </Box>
   );
 };
