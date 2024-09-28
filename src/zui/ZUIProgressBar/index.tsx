@@ -3,7 +3,10 @@ import { Box } from '@mui/material';
 type Sizes = 'extraSmall' | 'small' | 'medium' | 'large';
 
 interface ZUIProgressBarProps {
-  progress: number | [number, number]; // Number <= 100
+  /**
+   * Progress as a number < 100, or an array of numbers whose total is < 100.
+   */
+  progress: number | [number, number] | [number, number, number];
   size: Sizes;
 }
 
