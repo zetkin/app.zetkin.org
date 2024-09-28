@@ -1,11 +1,13 @@
-import { Divider } from '@mui/material';
+import { Divider, DividerProps } from '@mui/material';
 
-interface ZUIDividerProps {
-  orientation: 'horizontal' | 'vertical';
-}
+interface ZUIDividerProps extends DividerProps {}
 
-const ZUIDivider: React.FC<ZUIDividerProps> = ({ orientation }) => {
-  return <Divider orientation={orientation} sx={{ color: '#E0E0E0' }} />;
+const ZUIDivider: React.FC<ZUIDividerProps> = ({ sx, ...props }) => {
+  const _sx = {
+    color: '#E0E0E0',
+    ...sx,
+  };
+  return <Divider sx={_sx} {...props} />;
 };
 
 export default ZUIDivider;
