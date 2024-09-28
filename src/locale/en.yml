@@ -1919,7 +1919,6 @@ feat:
     dialog:
       colorErrorText: Please enter a valid hex code
       colorLabel: Color
-      createAndApplyTagButton: Create and apply
       createTagButton: Create
       createTitle: Create tag
       deleteButtonLabel: Delete
