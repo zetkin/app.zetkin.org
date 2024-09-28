@@ -54,9 +54,7 @@ const ZUIDuration: FC<Props> = ({
             <Msg
               id={messageIds.duration[field.msgId]}
               values={{ n: field.n }}
-            />
-            {/* Add a space after the hours field */}
-            {field.msgId === 'h' && index < array.length - 1 && ' '}
+            />{' '}
           </span>
         ))}
     </>
