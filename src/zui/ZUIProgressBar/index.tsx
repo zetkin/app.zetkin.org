@@ -36,14 +36,16 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
 
   return (
     <Box
+      borderRadius={height / 2}
       display="flex"
       gap={0.75}
-      borderRadius={height / 2}
       overflow="hidden"
       width="100%"
     >
       {progressArray.map((segmentWidth, index) => {
-        if (segmentWidth === 0) return null;
+        if (segmentWidth === 0) {
+          return null;
+        }
         return (
           <Box
             key={index}
@@ -54,7 +56,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
         );
       })}
       {progressSum < 100 && (
-        <Box bgcolor={colors.at(-1)} height={height} flexGrow={1} />
+        <Box bgcolor={colors.at(-1)} flexGrow={1} height={height} />
       )}
     </Box>
   );
