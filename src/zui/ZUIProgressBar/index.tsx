@@ -1,4 +1,4 @@
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 
 type Sizes = 'extraSmall' | 'small' | 'medium' | 'large';
 
@@ -13,6 +13,8 @@ const sizes: Record<Sizes, number> = {
   medium: 20,
   small: 10,
 };
+
+const colors = ['#7800dc', '#9d46e6', '#c189ef', '#e4ccf8'];
 
 const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
   const progressArray = typeof progress === 'number' ? [progress] : progress;
@@ -35,7 +37,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
             borderRadius={
               index === 0 ? `${height / 2}px 0 0 ${height / 2}px` : undefined
             }
-            bgcolor={'#7800dc'}
+            bgcolor={colors[index]}
             height={height}
             width={`${segmentWidth}%`}
           />
@@ -43,7 +45,7 @@ const ZUIProgressBar = ({ progress, size }: ZUIProgressBarProps) => {
       })}
       <Box
         borderRadius={`0 ${height / 2}px ${height / 2}px 0`}
-        bgcolor={'#e4ccf8'}
+        bgcolor={colors[3]}
         height={height}
         width={`${100 - progressSum}%`}
       />

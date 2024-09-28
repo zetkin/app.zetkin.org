@@ -15,3 +15,10 @@ export const Primary: Story = {
     size: 'medium',
   },
 };
+
+export const ThreeSegments: Story = {
+  args: {
+    progress: [25, 25],
+    size: 'medium',
+  },
+};
