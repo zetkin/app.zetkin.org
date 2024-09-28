@@ -1,11 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react';
+import Box from '@mui/material/Box';
 
 import ZUIDivider from '.';
 
-export default {
+const meta: Meta<typeof ZUIDivider> = {
   component: ZUIDivider,
-} as Meta<typeof ZUIDivider>;
-
+};
+export default meta;
 type Story = StoryObj<typeof ZUIDivider>;
 
 export const Horizontal: Story = {
@@ -18,4 +19,11 @@ export const Vertical: Story = {
   args: {
     orientation: 'vertical',
   },
+  decorators: [
+    (Story) => (
+      <Box sx={{ display: 'flex', height: '100px' }}>
+        <ZUIDivider orientation="vertical" flexItem />
+      </Box>
+    ),
+  ],
 };
