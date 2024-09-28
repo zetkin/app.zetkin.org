@@ -1,12 +1,15 @@
 import { Tooltip, TooltipProps, Button } from '@mui/material';
-import { FC } from 'react';
+import { Box } from '@mui/system';
+import { FC, ReactComponentElement, ReactElement, ReactNode } from 'react';
 
 export interface ZUITooltipProps {
+    children: ReactElement;
     arrow?: 'None' | 'Up' | 'Down' | 'Left' | 'Right';
     label: string;
 }
 
 const ZUITooltip: FC<ZUITooltipProps> = ({
+    children,
     arrow,
     label
   }) => {
@@ -27,9 +30,7 @@ const ZUITooltip: FC<ZUITooltipProps> = ({
 
     return (
         <Tooltip title={label} placement={placement} arrow={showArrow}>
-            <Button>
-                {label}
-            </Button>
+          {children}
         </Tooltip>
     );
   };
