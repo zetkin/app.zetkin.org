@@ -39,7 +39,8 @@ export default makeMessages('feat.areas', {
     title: m('Untitled area'),
   },
   filters: {
-    filterButton: m('Add filter'),
+    addFilterButton: m('Add filter'),
+    filterButton: m('Filters'),
     tagGroup: m<{ label: string }>('{label} (tag group)'),
     tagsWithoutGroup: m('Tags without group'),
   },

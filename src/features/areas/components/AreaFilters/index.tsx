@@ -8,6 +8,7 @@ import { useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import FilterDropDown from '../FilterDropDown';
 import { areaFilterContext } from './AreaFilterContext';
+import AddFilterButton from './AddFilterButton';
 
 type Props = {
   areas: ZetkinArea[];
@@ -133,7 +134,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           );
         }
       })}
-      <FilterDropDown
+      <AddFilterButton
         items={Object.values(groupsById).map((item) => {
           const groupId = item.group?.id ?? 0;
           const selected = activeGroupIds.includes(groupId);
@@ -156,10 +157,8 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
             },
           };
         })}
-        label={messages.filters.filterButton()}
         onToggle={(open) => setOpenDropdown(open ? 'add' : null)}
         open={openDropdown == 'add'}
-        variant="text"
       />
     </>
   );
