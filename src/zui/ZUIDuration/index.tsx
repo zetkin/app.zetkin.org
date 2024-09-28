@@ -9,11 +9,16 @@ type Props = {
    * are supported and negative values will result in no rendered output.
    */
   seconds: number;
-  withDays?: boolean;
-  withHours?: boolean;
-  withMinutes?: boolean;
-  withSeconds?: boolean;
-  withThousands?: boolean;
+
+  /**
+   * The upper range unit of time to display the duration in.
+   */
+  upperTimeUnit?: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days';
+
+  /**
+   * The lower range unit of time to display the duration in.
+   */
+  lowerTimeUnit?: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days';
 };
 
 type DurField = {
@@ -22,26 +27,100 @@ type DurField = {
   visible: boolean;
 };
 
+const timeUnitMap = new Map([
+  ['milliseconds', 0],
+  ['seconds', 1],
+  ['minutes', 2],
+  ['hours', 3],
+  ['days', 4],
+] as const);
+
 const ZUIDuration: FC<Props> = ({
-  withDays = true,
-  withHours = true,
-  withThousands = false,
-  withMinutes = true,
-  withSeconds = false,
+  upperTimeUnit = 'days',
+  lowerTimeUnit = 'minutes',
   seconds,
 }) => {
-  const ms = (seconds * 1000) % 1000;
-  const s = Math.floor(seconds) % 60;
-  const m = Math.floor(seconds / 60) % 60;
-  const h = Math.floor(seconds / 60 / 60) % 24;
-  const days = Math.floor(seconds / 60 / 60 / 24);
+  var upper = timeUnitMap.get(upperTimeUnit) ?? 4;
+  var lower = timeUnitMap.get(lowerTimeUnit) ?? 2;
+
+  if (upper < lower) {
+    upper = lower;
+  }
+
+  var timeUnits = [...timeUnitMap.keys()].filter(
+    (timeUnit) =>
+      (timeUnitMap.get(timeUnit) ?? 0) <= upper &&
+      (timeUnitMap.get(timeUnit) ?? 0) >= lower
+  );
+
+  const minutesToSecondsFactor = 60;
+  const hoursToSecondsFactor = 60 * minutesToSecondsFactor;
+  const daysToSecondsFactor = 24 * hoursToSecondsFactor;
+
+  const days = timeUnits.includes('days')
+    ? Math.floor(Math.floor(seconds) / daysToSecondsFactor)
+    : 0;
+
+  const h = timeUnits.includes('hours')
+    ? Math.floor(
+        (Math.floor(seconds) - days * daysToSecondsFactor) /
+          hoursToSecondsFactor
+      )
+    : 0;
+
+  const m = timeUnits.includes('minutes')
+    ? Math.floor(
+        (Math.floor(seconds) -
+          days * daysToSecondsFactor -
+          h * hoursToSecondsFactor) /
+          minutesToSecondsFactor
+      )
+    : 0;
+
+  const s = timeUnits.includes('seconds')
+    ? Math.floor(
+        Math.floor(seconds) -
+          days * daysToSecondsFactor -
+          h * hoursToSecondsFactor -
+          m * minutesToSecondsFactor
+      )
+    : 0;
+
+  const ms = Math.round(
+    (seconds -
+      days * daysToSecondsFactor -
+      h * hoursToSecondsFactor -
+      m * minutesToSecondsFactor -
+      s) *
+      1000
+  );
 
   const fields: DurField[] = [
-    { msgId: 'days', n: days, visible: withDays },
-    { msgId: 'h', n: h, visible: withHours },
-    { msgId: 'm', n: m, visible: withMinutes },
-    { msgId: 's', n: s, visible: withSeconds },
-    { msgId: 'ms', n: ms, visible: withThousands },
+    {
+      msgId: 'days',
+      n: days,
+      visible: timeUnits.includes('days'),
+    },
+    {
+      msgId: 'h',
+      n: h,
+      visible: timeUnits.includes('hours'),
+    },
+    {
+      msgId: 'm',
+      n: m,
+      visible: timeUnits.includes('minutes'),
+    },
+    {
+      msgId: 's',
+      n: s,
+      visible: timeUnits.includes('seconds'),
+    },
+    {
+      msgId: 'ms',
+      n: ms,
+      visible: timeUnits.includes('milliseconds'),
+    },
   ];
 
   return (
