@@ -10,13 +10,15 @@ import {
 import { Box } from '@mui/system';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
+import { BrowserQRCodeReader } from '@zxing/browser';
 
 import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useDateRouterParam from 'features/events/hooks/useDateRouterParam';
+import QRCode from './QRCode';
 
 function batchArray<T>(items: T[], batchSize: number): T[][] {
   const batches: T[][] = [];
@@ -59,6 +61,19 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
 
   const batches = batchArray(filteredEvents, 30);
 
+  useEffect(() => {
+    async function doStuff() {
+      const codeReader = new BrowserQRCodeReader();
+      const resultImage = await codeReader.decodeFromImageUrl(
+        'http://localhost:3000/qr.jpg'
+      );
+      /* eslint-disable-next-line no-console */
+      console.log({ resultImage });
+    }
+
+    doStuff();
+  }, []);
+
   return (
     <>
       <Head>
@@ -67,7 +82,7 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
 
       {batches.map((batch, index) => (
         <Box key={index} sx={{ height: '100vh' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
             <TextField
               disabled
               InputLabelProps={{ shrink: true }}
@@ -75,6 +90,8 @@ const EventList: FC<{ orgId: number }> = ({ orgId }) => {
               value=""
               variant="standard"
             />
+
+            <QRCode ids={selectedEventIds} />
           </Box>
 
           <Table
