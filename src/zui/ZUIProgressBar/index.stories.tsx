@@ -11,7 +11,6 @@ type Story = StoryObj<typeof ZUIProgressBar>;
 
 export const Primary: Story = {
   args: {
-    label: 'Primary',
-    variant: 'primary',
+    size: 'medium',
   },
 };
