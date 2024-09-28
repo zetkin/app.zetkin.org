@@ -171,26 +171,27 @@ const CallHistory = ({
                 ))}
               </StyledSelect>
             ),
-            minTimes: (
-              <Msg
-                id={localMessageIds.minTimesInput}
-                values={{
-                  input: (
-                    <StyledNumberInput
-                      defaultValue={filter.config.minTimes || 1}
-                      inputProps={{ min: '1' }}
-                      onChange={(e) => {
-                        setConfig({
-                          ...filter.config,
-                          minTimes: +e.target.value,
-                        });
-                      }}
-                    />
-                  ),
-                  minTimes: filter.config.minTimes || 1,
-                }}
-              />
-            ),
+            minTimes:
+              filter.config.operator != CALL_OPERATOR.NOTREACHED ? (
+                <Msg
+                  id={localMessageIds.minTimesInput}
+                  values={{
+                    input: (
+                      <StyledNumberInput
+                        defaultValue={filter.config.minTimes || 1}
+                        inputProps={{ min: '1' }}
+                        onChange={(e) => {
+                          setConfig({
+                            ...filter.config,
+                            minTimes: +e.target.value,
+                          });
+                        }}
+                      />
+                    ),
+                    minTimes: filter.config.minTimes || 1,
+                  }}
+                />
+              ) : null,
             timeFrame: (
               <TimeFrame
                 filterConfig={{

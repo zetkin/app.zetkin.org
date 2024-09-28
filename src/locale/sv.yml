@@ -1398,17 +1398,13 @@ feat:
           none: Den här organisationen har inga ringuppdrag än
         callSelect:
           called: har blivit uppringda
-          notreached: har fått ett samtalsförsök
           reached: har blivit nådda
         examples:
           one: Lägg till personer som blivit nådda åtminstone 2 gånger i något uppdrag
             närsomhelst.
           two: Ta bort personer som blivit ringda åtminstone 1 gång i uppdraget 'Aktivera
             gamla medlemmar' under de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som {callSelect} minst {minTimes}
-          i {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
-        minTimesInput: '{input} {minTimes, plural, one {gång} other {gånger}}'
       campaignParticipation:
         activitySelect:
           activity: typen "{activity}"

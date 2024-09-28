@@ -1379,17 +1379,13 @@ feat:
           none: This organization doesn't have any call assignments yet
         callSelect:
           called: have been called
-          notreached: have been unsuccessfully tried
           reached: have been successfully reached
         examples:
           one: Add people who have been successfully reached at least 2 times in any
             assignment at any point in time.
           two: Remove people who have been called at least 1 time in assignment 'Activate
             old members' during the last 30 days.
-        inputString: "{addRemoveSelect} people who {callSelect} at least {minTimes} in
-          {assignmentSelect} {timeFrame}."
         minTimes: "{minTimes, plural, one {once} other {# times}}"
-        minTimesInput: "{input} {minTimes, plural, one {time} other {times}}"
       campaignParticipation:
         activitySelect:
           activity: type "{activity}"
