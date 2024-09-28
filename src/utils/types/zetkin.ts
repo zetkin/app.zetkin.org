@@ -170,7 +170,7 @@ export interface ZetkinPersonNativeFields {
   street_address: string | null;
   co_address: string | null;
   ext_id: string | null;
-  member_id: string | null;
+  member_id?: string|null;
   email: string | null;
   country: string | null;
   id: number;
