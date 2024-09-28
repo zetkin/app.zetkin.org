@@ -9,7 +9,7 @@ export default {
 
 export const Basic: StoryObj<typeof ZUIDuration> = {
   args: {
-    seconds: 123456789.5,
+    seconds: 12345,
     withDays: true,
     withHours: true,
     withMinutes: true,
