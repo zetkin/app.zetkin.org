@@ -16,6 +16,7 @@ import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import useClusteredActivities, {
   CLUSTER_TYPE,
 } from 'features/campaigns/hooks/useClusteredActivities';
+import CanvassAssignmentListItem from './items/CanvassAssignmentListItem';
 
 interface ActivitiesProps {
   activities: CampaignActivity[];
@@ -33,6 +34,16 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <CallAssignmentListItem caId={activity.data.id} orgId={orgId} />
+            </Box>
+          );
+        } else if (activity.kind == ACTIVITIES.CANVASS_ASSIGNMENT) {
+          return (
+            <Box key={`canvassassignment-${activity.data.id}`}>
+              {index > 0 && <Divider />}
+              <CanvassAssignmentListItem
+                caId={activity.data.id}
+                orgId={orgId}
+              />
             </Box>
           );
         } else if (isEventCluster(activity)) {

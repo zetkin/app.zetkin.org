@@ -78,6 +78,17 @@ const FilterActivities = ({
           <FormControlLabel
             control={
               <Checkbox
+                checked={filters.includes(ACTIVITIES.CANVASS_ASSIGNMENT)}
+                disabled={!filterTypes.includes(ACTIVITIES.CANVASS_ASSIGNMENT)}
+                onChange={onFiltersChange}
+                value={ACTIVITIES.CANVASS_ASSIGNMENT}
+              />
+            }
+            label={messages.all.filter.canvasses()}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
                 checked={filters.includes(ACTIVITIES.TASK)}
                 disabled={!filterTypes.includes(ACTIVITIES.TASK)}
                 onChange={onFiltersChange}

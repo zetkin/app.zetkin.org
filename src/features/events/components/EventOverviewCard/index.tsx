@@ -149,7 +149,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                               newStartDate.utc().toDate()
                             );
                             setStartDate(startDateString);
-                            if (newStartDate > dayjs(endDate)) {
+                            if (newStartDate > dayjs(endDate) || !showEndDate) {
                               setEndDate(startDateString);
                             }
                           }

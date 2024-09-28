@@ -1,3 +1,4 @@
+import { ZetkinCanvassAssignment } from 'features/areas/types';
 import {
   ZetkinCallAssignment,
   ZetkinEmail,
@@ -8,6 +9,7 @@ import {
 
 export enum ACTIVITIES {
   CALL_ASSIGNMENT = 'callAssignment',
+  CANVASS_ASSIGNMENT = 'canvassAssignment',
   EMAIL = 'email',
   EVENT = 'event',
   SURVEY = 'survey',
@@ -22,6 +24,11 @@ type CampaignActivityBase = {
 export type CallAssignmentActivity = CampaignActivityBase & {
   data: ZetkinCallAssignment;
   kind: ACTIVITIES.CALL_ASSIGNMENT;
+};
+
+export type CanvassAssignmentActivity = CampaignActivityBase & {
+  data: ZetkinCanvassAssignment;
+  kind: ACTIVITIES.CANVASS_ASSIGNMENT;
 };
 
 export type SurveyActivity = CampaignActivityBase & {
@@ -46,6 +53,7 @@ export type EmailActivity = CampaignActivityBase & {
 
 export type CampaignActivity =
   | CallAssignmentActivity
+  | CanvassAssignmentActivity
   | EmailActivity
   | EventActivity
   | SurveyActivity

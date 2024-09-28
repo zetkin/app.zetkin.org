@@ -7,6 +7,7 @@ import {
   EmailOutlined,
   Event,
   HeadsetMic,
+  Map,
   OpenInNew,
   Settings,
 } from '@mui/icons-material';
@@ -28,6 +29,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
+import useCreateCanvassAssignment from 'features/areas/hooks/useCreateCanvassAssignment';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -51,6 +53,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
+  const createCanvassAssignment = useCreateCanvassAssignment(orgId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -84,6 +87,15 @@ const CampaignActionButtons: React.FunctionComponent<
   };
 
   const menuItems = [
+    {
+      icon: <Map />,
+      label: messages.linkGroup.createCanvassAssignment(),
+      onClick: () =>
+        createCanvassAssignment({
+          campaign_id: campaign.id,
+          title: null,
+        }),
+    },
     {
       icon: <Event />,
       label: messages.linkGroup.createEvent(),

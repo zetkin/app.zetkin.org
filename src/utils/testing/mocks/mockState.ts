@@ -3,6 +3,14 @@ import { remoteItem, remoteList } from 'utils/storeUtils';
 
 export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
+    areas: {
+      areaList: remoteList(),
+      assigneesByCanvassAssignmentId: {},
+      canvassAssignmentList: remoteList(),
+      mySessionsList: remoteList(),
+      placeList: remoteList(),
+      sessionsByAssignmentId: {},
+    },
     breadcrumbs: {
       crumbsByPath: {},
     },
@@ -23,6 +31,7 @@ export default function mockState(overrides?: RootState) {
     },
     emails: {
       emailList: remoteList(),
+      insightsByEmailId: {},
       linksByEmailId: {},
       statsById: {},
       themeList: remoteList(),

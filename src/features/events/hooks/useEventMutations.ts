@@ -22,13 +22,14 @@ export type ZetkinEventPostBody = ZetkinEventPatchBody;
 
 type useEventMutationsReturn = {
   cancelEvent: () => void;
+  changeEventCampaign: (campaignId: number) => Promise<void>;
   deleteEvent: () => void;
   publishEvent: () => void;
   restoreEvent: () => void;
   setPublished: (published: string | null) => void;
   setTitle: (title: string) => void;
   setType: (id: number | null) => void;
-  updateEvent: (data: ZetkinEventPatchBody) => void;
+  updateEvent: (data: ZetkinEventPatchBody) => Promise<void>;
 };
 
 export default function useEventMutations(
@@ -62,6 +63,12 @@ export default function useEventMutations(
     });
   };
 
+  const changeEventCampaign = (campaignId: number) => {
+    return updateEvent({
+      campaign_id: campaignId,
+    });
+  };
+
   const setPublished = (published: string | null) => {
     updateEvent({
       cancelled: null,
@@ -81,7 +88,7 @@ export default function useEventMutations(
 
   const updateEvent = (data: ZetkinEventPatchBody) => {
     dispatch(eventUpdate([eventId, Object.keys(data)]));
-    apiClient
+    return apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
       .then((event) => {
         dispatch(eventUpdated(event));
@@ -90,6 +97,7 @@ export default function useEventMutations(
 
   return {
     cancelEvent,
+    changeEventCampaign,
     deleteEvent,
     publishEvent,
     restoreEvent,

@@ -35,6 +35,7 @@ export default async function RootLayout({
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
               ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
             }}
+            headers={headersObject}
             lang={lang}
             messages={messages}
             user={user}
