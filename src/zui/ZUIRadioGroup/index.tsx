@@ -1,9 +1,13 @@
-import { Msg } from 'core/i18n';
-import messageIds from 'zui/l10n/messageIds';
-import { CSSProperties } from 'react';
-import { Typography } from '@mui/material';
+import {
+  Typography,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+} from '@mui/material';
 
-type button = {
+type TButton = {
   name: string;
   value: string;
   disabled?: boolean;
@@ -11,69 +15,64 @@ type button = {
 
 type TLabelPlacement = 'start' | 'end' | 'top' | 'bottom';
 type TRadioGroupDirection = 'row' | 'column';
+type TButtonSize = 'small' | 'medium' | 'large';
+
+const sizes: Record<TButtonSize, number> = {
+  large: 40,
+  medium: 32,
+  small: 24,
+};
 
 interface ZUIRadioButtonProps {
   name: string;
-  options: button[];
+  formLabel: string;
+  options: TButton[];
   labelPlacement: TLabelPlacement;
   disabled: boolean;
   direction: TRadioGroupDirection;
+  defaultValue: string;
+  size: TButtonSize;
 }
 
 const ZUIRadioGroup = ({
   name,
+  formLabel,
   options,
   labelPlacement,
   disabled,
   direction,
+  defaultValue,
+  size,
 }: ZUIRadioButtonProps) => {
-  const fieldsetStyle: CSSProperties = {
-    display: 'flex',
-    flexDirection: direction === 'column' ? 'column' : 'row',
-    gap: '1.5rem',
-  };
-
-  const wrapperStyle: CSSProperties = {
-    fontFamily: '', //TODO: get the font to work
-    display: 'flex',
-    gap: '1.5rem',
-    alignItems: 'center',
-    fontSize: '24px',
-    width: 'fit-content',
-    justifyItems: 'center',
-    justifyContent: 'center',
-    ...(labelPlacement === 'start' && { flexDirection: 'row-reverse' }),
-    ...(labelPlacement === 'end' && { flexDirection: 'row' }),
-    ...(labelPlacement === 'top' && { flexDirection: 'column-reverse' }),
-    ...(labelPlacement === 'bottom' && { flexDirection: 'column' }),
-  };
-
-  const radioStyle: CSSProperties = {
-    width: '32px',
-    height: '32px',
-  };
-
   return (
-    <>
-      <fieldset style={fieldsetStyle} disabled={disabled}>
-        {options.map((button) => {
-          return (
-            <div style={wrapperStyle}>
-              <input
-                style={radioStyle}
-                type="radio"
-                name={name}
-                id={button.name}
+    <Typography variant="bodyMdSemiBold">
+      <FormControl disabled={disabled}>
+        <FormLabel>{formLabel}</FormLabel>
+        <RadioGroup
+          row={direction === 'row'}
+          aria-labelledby={name}
+          defaultValue={defaultValue}
+          name={name}
+        >
+          {options.map((button: TButton) => {
+            return (
+              <FormControlLabel
                 disabled={button.disabled}
+                value={button.value}
+                control={<Radio />}
+                label={button.name}
+                labelPlacement={labelPlacement}
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: sizes[size],
+                  },
+                }} //https://mui.com/material-ui/react-radio-button/#size
               />
-              <Typography>
-                <Msg id={messageIds.radioGroup.label} />
-              </Typography>
-            </div>
-          );
-        })}
-      </fieldset>
-    </>
+            );
+          })}
+        </RadioGroup>
+      </FormControl>
+    </Typography>
   );
 };
 
