@@ -25,11 +25,10 @@ export default class Button {
     this._readOnly = readOnly;
     this._data = {
       buttonText: data.buttonText,
-      tag: data.tag ? data.tag : Math.random().toString(36).substring(2, 10),
+      tag: data.tag || Math.random().toString(36).substring(2, 10),
       url: data.url,
     };
   }
-
   static get isReadOnlySupported() {
     return true;
   }

@@ -8,17 +8,25 @@ export default function zetkinBlocksToEditorjsBlocks(
 ) {
   const editorjsBlocks: OutputBlockData[] = [];
 
+  const buttonTagIds: string[] = [];
+
   zetkinBlocks.forEach((block) => {
     if (block.kind === BlockKind.BUTTON) {
-      editorjsBlocks.push({
-        data: {
-          buttonText: block.data.text,
-          tag: block.data.tag,
-          url: block.data.href,
-        },
-        id: Math.random().toString(36).substring(2, 10),
-        type: BLOCK_TYPES.BUTTON,
-      });
+      const tag = buttonTagIds.includes(block.data.tag)
+        ? Math.random().toString(36).substring(2, 10)
+        : block.data.tag;
+      buttonTagIds.push(tag);
+      {
+        editorjsBlocks.push({
+          data: {
+            buttonText: block.data.text,
+            tag,
+            url: block.data.href,
+          },
+          id: Math.random().toString(36).substring(2, 10),
+          type: BLOCK_TYPES.BUTTON,
+        });
+      }
     } else if (block.kind === BlockKind.HEADER) {
       editorjsBlocks.push({
         data: {
