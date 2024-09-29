@@ -1934,6 +1934,7 @@ feat:
       types:
         none: Basic (no values)
         text: Text values
+      updateTagButton: Update
     manager:
       addTag: Add tag
       addValue: Add value for "{tag}"
