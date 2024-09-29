@@ -8,18 +8,13 @@ interface ZUICheckboxProps {
   size: TSize;
 }
 
-type TSize = 'small' | 'medium' | 'large';
+// TODO: fix that MUI checkbox does not allow large out of the box
+type TSize = 'small' | 'medium';
 
-// enum Size {
-//   small,
-//   medium,
-//   large,
-// }
-
-const ZUICheckbox: React.FunctionComponent<ZUICheckboxProps> = (
-  { checked },
-  { size }
-) => {
+const ZUICheckbox: React.FunctionComponent<ZUICheckboxProps> = ({
+  checked,
+  size,
+}) => {
   if (checked) {
     return (
       <div>

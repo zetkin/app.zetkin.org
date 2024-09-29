@@ -12,5 +12,6 @@ type Story = StoryObj<typeof ZUICheckbox>;
 export const basic: Story = {
   args: {
     checked: true,
+    size: 'small',
   },
 };
