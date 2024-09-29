@@ -144,6 +144,12 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
       maxWidth={'sm'}
       onClose={close}
       open={true}
+      PaperProps={{
+        sx: {
+          height: '80vh',
+          maxHeight: '600px',
+        },
+      }}
       scroll="paper"
     >
       <DialogTitle>
@@ -154,7 +160,7 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
         />
       </DialogTitle>
 
-      <DialogContent sx={{ height: '100%' }}>
+      <DialogContent>
         <ZUIFuture future={itemsFuture}>
           {(data) => {
             const relevantItems = data.filter(
