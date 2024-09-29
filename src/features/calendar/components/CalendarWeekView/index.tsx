@@ -11,7 +11,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import DayHeader from './DayHeader';
 import EventCluster from '../EventCluster';
@@ -24,6 +24,7 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
+import { getDSTOffset } from '../utils';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
@@ -56,6 +57,15 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     return focusWeekStartDay.day(weekday + 1).toDate();
   });
 
+  const dstChangeAmount: number = useMemo(
+    () =>
+      getDSTOffset(dayjs(focusWeekStartDay).startOf('day').toDate()) -
+      getDSTOffset(
+        dayjs(focusWeekStartDay.add(6, 'days')).endOf('day').toDate()
+      ),
+    [focusWeekStartDay]
+  );
+
   const eventsByDate = useWeekCalendarEvents({
     campaignId: campId,
     dates: dayDates,
@@ -77,10 +87,12 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     <>
       {/* Headers across the top */}
       <Box
+        alignItems={'flex-start'}
         columnGap={1}
         display="grid"
         gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
         gridTemplateRows={'1fr'}
+        marginBottom={dstChangeAmount === 0 ? 2 : 0}
       >
         {/* Empty */}
         <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
@@ -103,7 +115,6 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
         gridTemplateRows={'1fr'}
         height="100%"
-        marginTop={2}
         overflow="auto"
       >
         {/* Hours column */}

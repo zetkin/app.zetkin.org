@@ -30,9 +30,3 @@ export function scrollToEarliestEvent(
 
   weekElement.scrollTo({ behavior: 'smooth', top: heightInPixels });
 }
-
-export function getDSTOffset(date: Date): number {
-  const jan = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
-  const jul = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
-  return (date.getTimezoneOffset() - Math.max(jan, jul)) / 60;
-}

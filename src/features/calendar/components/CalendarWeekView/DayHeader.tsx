@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import theme from 'theme';
-import { getDSTOffset } from './utils';
+import { getDSTOffset } from '../utils';
 import { Msg } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
 
