@@ -19,6 +19,11 @@ interface ZUIBarDiagramProps {
   size: Sizes;
 }
 
+/**
+ * Renders a horizontal stacked bar. Define the percentage width of
+ * different segments, up to 100. The final segment width is the
+ * remainder of 100 minus the previous segment widths.
+ */
 const ZUIBarDiagram = ({ progress, size }: ZUIBarDiagramProps) => {
   const progressArray = typeof progress === 'number' ? [progress] : progress;
   const progressSum = progressArray.reduce((sum, val) => {
