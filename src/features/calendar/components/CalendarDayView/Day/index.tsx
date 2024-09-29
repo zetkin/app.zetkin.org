@@ -53,8 +53,8 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
               new Date(a.data.start_time).getTime() -
               new Date(b.data.start_time).getTime()
           )
-          .map((event, index) => {
-            return <Event key={index} event={event.data} />;
+          .map((event) => {
+            return <Event key={event.data.id} event={event.data} />;
           })}
       </Box>
     </Box>
