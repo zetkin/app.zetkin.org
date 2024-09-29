@@ -15,6 +15,27 @@ interface ZUIToggleButtonProps {
 }
 
 const ZUIToggleButton: React.FC<ZUIToggleButtonProps> = ({
+  /****
+     *Example usecase:
+
+    *   <ZUIToggleButton
+          buttons={[
+            { label: 'Day', value: 'day' },
+            { label: 'Week', value: 'week' },
+            { label: 'Month', value: 'month' },
+          ]}
+          onChange={(event, newTimeScale) => {
+            // Check if the newTimeScale is valid before calling the function
+            if (newTimeScale) {
+              onChangeTimeScale(newTimeScale as TimeScale); // Type assertion to TimeScale
+            }
+          }}
+          orientation="horizontal"
+          size="medium"
+          value={timeScale}
+        />
+     *  
+    ***/
   buttons,
   onChange,
   value,
