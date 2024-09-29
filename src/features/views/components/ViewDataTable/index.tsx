@@ -163,7 +163,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     orgId,
     view.id
   );
-  const createView = useCreateView(orgId);
+  const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
 
@@ -445,6 +445,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       disableConfigure,
       disabled: waiting,
       gridColumns,
+      isLoading,
       isSmartSearch: !!view.content_query,
       onColumnCreate,
       onRowsRemove,
@@ -545,6 +546,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }}
         {...modelGridProps}
       />
+
       {empty && <EmptyView orgId={orgId} view={view} />}
       {columnToRename && (
         <ViewRenameColumnDialog
