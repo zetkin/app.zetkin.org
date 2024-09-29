@@ -14,9 +14,9 @@ const ZUITooltip: FC<ZUITooltipProps> = ({ children, arrow, label }) => {
     showArrow = false;
     placement = 'top';
   } else if (arrow == 'Up') {
-    placement = 'top';
-  } else if (arrow == 'Down') {
     placement = 'bottom';
+  } else if (arrow == 'Down') {
+    placement = 'top';
   } else if (arrow == 'Left') {
     placement = 'right';
   } else if (arrow == 'Right') {
