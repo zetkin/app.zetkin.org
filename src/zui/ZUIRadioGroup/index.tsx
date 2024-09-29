@@ -10,7 +10,7 @@ import {
 type TButton = {
   disabled?: boolean;
   name: string;
-  value: string;
+  value: string | number | boolean;
 };
 
 type TLabelPlacement = 'start' | 'end' | 'top' | 'bottom';
