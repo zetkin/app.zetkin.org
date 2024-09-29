@@ -6,54 +6,60 @@ import {
   FormControl,
   FormLabel,
 } from '@mui/material';
+import { useId } from 'react';
 
-type TButton = {
+// Infers type of value
+type Option = {
   disabled?: boolean;
-  name: string;
-  value: string | number | boolean;
+  label: string;
+  value: string;
 };
 
-type TLabelPlacement = 'start' | 'end' | 'top' | 'bottom';
-type TRadioGroupDirection = 'row' | 'column';
-type TButtonSize = 'small' | 'medium' | 'large';
+type LabelPlacement = 'start' | 'end' | 'top' | 'bottom';
+type Direction = 'row' | 'column';
+type Sizes = 'small' | 'medium' | 'large';
 
-const sizes: Record<TButtonSize, number> = {
+const sizes: Record<Sizes, number> = {
   large: 40,
   medium: 32,
   small: 24,
 };
 
 interface ZUIRadioButtonProps {
-  defaultValue: TButton['value'];
-  direction: TRadioGroupDirection;
-  disabled: boolean;
-  formLabel: string;
-  helperText: string;
-  labelPlacement: TLabelPlacement;
-  onChange?: (newValue: TButton['value']) => void;
-  options: TButton[];
-  name: string;
-  size: TButtonSize;
+  defaultValue?: Option['value'];
+  direction?: Direction;
+  disabled?: boolean;
+  label: string;
+  helperText?: string;
+  labelPlacement?: LabelPlacement;
+  onChange?: (newValue: Option['value']) => void;
+  options: Option[];
+  name?: string;
+  size?: Sizes;
 }
 
 const ZUIRadioGroup = ({
   defaultValue,
-  direction,
+  direction = 'column',
   disabled,
-  formLabel,
+  label,
   helperText,
-  labelPlacement,
+  labelPlacement = 'end',
   name,
   onChange,
   options,
-  size,
+  size = 'medium',
 }: ZUIRadioButtonProps) => {
+  const labelId = useId();
+  const helperTextId = useId();
+
   return (
     <Typography variant="bodyMdSemiBold">
       <FormControl disabled={disabled}>
-        <FormLabel>{formLabel}</FormLabel>
+        <FormLabel id={labelId}>{label}</FormLabel>
         <RadioGroup
-          aria-labelledby={name}
+          aria-describedby={helperTextId}
+          aria-labelledby={labelId}
           defaultValue={defaultValue}
           name={name}
           onChange={(e) => {
@@ -61,25 +67,27 @@ const ZUIRadioGroup = ({
           }}
           row={direction === 'row'}
         >
-          {options.map((button: TButton) => {
+          {options.map((option) => {
             return (
               <FormControlLabel
-                key={button.name}
+                key={option.label}
                 control={<Radio />}
-                disabled={button.disabled}
-                label={button.name}
+                disabled={option.disabled}
+                label={option.label}
                 labelPlacement={labelPlacement}
                 sx={{
                   '& .MuiSvgIcon-root': {
                     fontSize: sizes[size],
                   },
                 }} //https://mui.com/material-ui/react-radio-button/#size
-                value={button.value}
+                value={option.value}
               />
             );
           })}
         </RadioGroup>
-        <FormLabel>{helperText}</FormLabel>
+        <Typography color="GrayText" variant="labelSmMedium">
+          {helperText}
+        </Typography>
       </FormControl>
     </Typography>
   );
