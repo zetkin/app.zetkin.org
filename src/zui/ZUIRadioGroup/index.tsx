@@ -8,9 +8,9 @@ import {
 } from '@mui/material';
 
 type TButton = {
+  disabled?: boolean;
   name: string;
   value: string;
-  disabled?: boolean;
 };
 
 type TLabelPlacement = 'start' | 'end' | 'top' | 'bottom';
@@ -24,26 +24,26 @@ const sizes: Record<TButtonSize, number> = {
 };
 
 interface ZUIRadioButtonProps {
-  name: string;
-  formLabel: string;
-  options: TButton[];
-  labelPlacement: TLabelPlacement;
-  disabled: boolean;
-  helperText: string;
-  direction: TRadioGroupDirection;
   defaultValue: string;
+  direction: TRadioGroupDirection;
+  disabled: boolean;
+  formLabel: string;
+  helperText: string;
+  labelPlacement: TLabelPlacement;
+  options: TButton[];
+  name: string;
   size: TButtonSize;
 }
 
 const ZUIRadioGroup = ({
-  name,
-  formLabel,
-  options,
-  labelPlacement,
-  helperText,
-  disabled,
-  direction,
   defaultValue,
+  direction,
+  disabled,
+  formLabel,
+  helperText,
+  labelPlacement,
+  name,
+  options,
   size,
 }: ZUIRadioButtonProps) => {
   return (
@@ -59,6 +59,7 @@ const ZUIRadioGroup = ({
           {options.map((button: TButton) => {
             return (
               <FormControlLabel
+                key={button.name}
                 disabled={button.disabled}
                 value={button.value}
                 control={<Radio />}

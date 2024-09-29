@@ -23,5 +23,39 @@ export const Primary: Story = {
     size: 'small',
     formLabel: 'Example Form',
     defaultValue: 'swe',
+    helperText: 'Helper text',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    options: [
+      { name: 'Sweden', value: 'swe' },
+      { name: 'Finland', value: 'fin' },
+      { name: 'Norway', value: 'nor' },
+      { name: 'Denmark', value: 'den' },
+    ],
+    labelPlacement: 'end',
+    name: 'group',
+    direction: 'column',
+    size: 'small',
+    formLabel: 'Example Form',
+    defaultValue: 'swe',
+    disabled: true,
+  },
+};
+
+export const OneDisabledOption: Story = {
+  args: {
+    options: [
+      { name: 'Sweden', value: 'swe' },
+      { name: 'Finland', value: 'fin', disabled: true },
+    ],
+    labelPlacement: 'end',
+    name: 'group',
+    direction: 'column',
+    size: 'small',
+    formLabel: 'Example Form',
+    defaultValue: 'swe',
   },
 };
