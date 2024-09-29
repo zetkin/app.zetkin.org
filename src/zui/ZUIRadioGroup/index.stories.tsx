@@ -11,51 +11,51 @@ type Story = StoryObj<typeof ZUIRadioGroup>;
 
 export const Primary: Story = {
   args: {
+    defaultValue: 'swe',
+    direction: 'column',
+    formLabel: 'Example Form',
+    helperText: 'Helper text',
+    labelPlacement: 'end',
+    name: 'group',
     options: [
       { name: 'Sweden', value: 'swe' },
       { name: 'Finland', value: 'fin' },
       { name: 'Norway', value: 'nor' },
       { name: 'Denmark', value: 'den' },
     ],
-    labelPlacement: 'end',
-    name: 'group',
-    direction: 'column',
     size: 'small',
-    formLabel: 'Example Form',
-    defaultValue: 'swe',
-    helperText: 'Helper text',
   },
 };
 
 export const Disabled: Story = {
   args: {
+    defaultValue: 'swe',
+    direction: 'column',
+    disabled: true,
+    formLabel: 'Example Form',
+    labelPlacement: 'end',
+    name: 'group',
     options: [
       { name: 'Sweden', value: 'swe' },
       { name: 'Finland', value: 'fin' },
       { name: 'Norway', value: 'nor' },
       { name: 'Denmark', value: 'den' },
     ],
-    labelPlacement: 'end',
-    name: 'group',
-    direction: 'column',
     size: 'small',
-    formLabel: 'Example Form',
-    defaultValue: 'swe',
-    disabled: true,
   },
 };
 
 export const OneDisabledOption: Story = {
   args: {
-    options: [
-      { name: 'Sweden', value: 'swe' },
-      { name: 'Finland', value: 'fin', disabled: true },
-    ],
+    defaultValue: 'swe',
+    direction: 'column',
+    formLabel: 'Example Form',
     labelPlacement: 'end',
     name: 'group',
-    direction: 'column',
+    options: [
+      { name: 'Sweden', value: 'swe' },
+      { disabled: true, name: 'Finland', value: 'fin' },
+    ],
     size: 'small',
-    formLabel: 'Example Form',
-    defaultValue: 'swe',
   },
 };

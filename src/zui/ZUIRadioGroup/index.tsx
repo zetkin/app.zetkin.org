@@ -46,23 +46,24 @@ const ZUIRadioGroup = ({
   options,
   size,
 }: ZUIRadioButtonProps) => {
+  use;
+
   return (
     <Typography variant="bodyMdSemiBold">
       <FormControl disabled={disabled}>
         <FormLabel>{formLabel}</FormLabel>
         <RadioGroup
-          row={direction === 'row'}
           aria-labelledby={name}
           defaultValue={defaultValue}
           name={name}
+          row={direction === 'row'}
         >
           {options.map((button: TButton) => {
             return (
               <FormControlLabel
                 key={button.name}
-                disabled={button.disabled}
-                value={button.value}
                 control={<Radio />}
+                disabled={button.disabled}
                 label={button.name}
                 labelPlacement={labelPlacement}
                 sx={{
@@ -70,6 +71,7 @@ const ZUIRadioGroup = ({
                     fontSize: sizes[size],
                   },
                 }} //https://mui.com/material-ui/react-radio-button/#size
+                value={button.value}
               />
             );
           })}
