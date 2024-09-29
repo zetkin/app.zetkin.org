@@ -27,8 +27,8 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
         gap={1}
         justifyItems="flex-start"
       >
-        {dayInfo.events.map((event, index) => {
-          return <Event key={index} event={event.data} />;
+        {dayInfo.events.map((event) => {
+          return <Event key={event.data.id} event={event.data} />;
         })}
       </Box>
     </Box>
