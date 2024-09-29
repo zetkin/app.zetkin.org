@@ -22,16 +22,21 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
 
+  const nativePersonFields = Object.values(NATIVE_PERSON_FIELDS).filter(
+    (field) =>
+      field !== NATIVE_PERSON_FIELDS.EXT_ID && field !== NATIVE_PERSON_FIELDS.ID
+  );
+
   if (!joinForm) {
     return null;
   }
 
   function slugToLabel(slug: string): string {
-    const isNativeField = Object.values(NATIVE_PERSON_FIELDS).some(
+    const isNativeField = nativePersonFields.some(
       (nativeSlug) => nativeSlug == slug
     );
     if (isNativeField) {
-      const typedSlug = slug as NATIVE_PERSON_FIELDS;
+      const typedSlug = slug as typeof nativePersonFields[number];
       return globalMessages.personFields[typedSlug]();
     } else {
       const field = customFields.data?.find((field) => field.slug == slug);
@@ -74,7 +79,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
             }
           }}
           options={[
-            ...Object.values(NATIVE_PERSON_FIELDS),
+            ...nativePersonFields,
             ...(customFields.data?.map((field) => field.slug) ?? []),
           ]}
           renderInput={(params) => (
