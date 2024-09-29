@@ -29,6 +29,7 @@ interface ZUIRadioButtonProps {
   options: TButton[];
   labelPlacement: TLabelPlacement;
   disabled: boolean;
+  helperText: string;
   direction: TRadioGroupDirection;
   defaultValue: string;
   size: TButtonSize;
@@ -39,6 +40,7 @@ const ZUIRadioGroup = ({
   formLabel,
   options,
   labelPlacement,
+  helperText,
   disabled,
   direction,
   defaultValue,
@@ -71,6 +73,7 @@ const ZUIRadioGroup = ({
             );
           })}
         </RadioGroup>
+        <FormLabel>{helperText}</FormLabel>
       </FormControl>
     </Typography>
   );
