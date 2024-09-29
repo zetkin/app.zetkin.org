@@ -340,11 +340,9 @@ export default makeMessages('feat.views', {
     alreadyInView: m('Already in list'),
   },
   moveViewDialog: {
-    alreadyInThisFolder: m('Already in this folder'),
-    cannotMoveHere: m('Cannot move here'),
-    moveHere: m('Move'),
-    moveToRoot: m('Move to root'),
-    title: m<{ itemName: string }>('Move {itemName}'),
+    cancel: m('Cancel'),
+    emptyFolder: m('Empty folder'),
+    moveHere: m('Move here'),
   },
   newFolderTitle: m('New Folder'),
   newViewFields: {

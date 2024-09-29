@@ -1,79 +1,111 @@
-import { range } from 'lodash';
-import { FunctionComponent } from 'react';
-import { Close, Folder, SubdirectoryArrowRight } from '@mui/icons-material';
+import { FunctionComponent, useState } from 'react';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
+  Breadcrumbs,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
-  Icon,
-  IconButton,
+  Link,
   List,
   ListItem,
   useMediaQuery,
 } from '@mui/material';
 import { Box } from '@mui/system';
+import { useTheme } from '@mui/styles';
 
 import { useNumericRouteParams } from 'core/hooks';
-import theme from 'theme';
 import ZUIFuture from 'zui/ZUIFuture';
 import { ZetkinViewFolder } from './types';
-import { ViewBrowserItem } from '../hooks/useViewBrowserItems';
+import useViewBrowserItems, {
+  ViewBrowserFolderItem,
+  ViewBrowserItem,
+  ViewBrowserViewItem,
+} from '../hooks/useViewBrowserItems';
 import useViewBrowserMutations from '../hooks/useViewBrowserMutations';
 import useViewTree from '../hooks/useViewTree';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import BrowserItemIcon from './ViewBrowser/BrowserItemIcon';
+import { ViewTreeData } from 'pages/api/views/tree';
 
-type FolderInsideTreeStructure = {
-  folder: ZetkinViewFolder;
-  insideMovedItem: boolean;
-  nestingLevel: number;
+const folderById = (id: number | null, viewTree: ViewTreeData) => {
+  if (id == null) {
+    return null;
+  }
+  return viewTree.folders.find((f) => f.id == id) ?? null;
 };
 
-/** For each subfolder of `id`, add it to the list, followed by its subfolders (and their subfolders, recursively), creating a tree-like structure */
-const sortFoldersByTreeStructureRecursive = (
-  id: number | null,
-  nestingLevel: number,
-  folderToMove: number | null,
-  alreadyInsideMovedItem: boolean,
-  allFolders: ZetkinViewFolder[]
-): FolderInsideTreeStructure[] => {
-  // Find all subfolders and sort them alphabetically
-  const subfolders = allFolders
-    .filter((f) => f.parent?.id == id)
-    .sort((a, b) => a.title.localeCompare(b.title));
+const getAllParentFolderIds = (
+  folderId: number | null,
+  viewTree: ViewTreeData
+) => {
+  let parentFolderIds: number[] = [];
 
-  return subfolders.flatMap((folder) => {
-    // We cannot move a folder inside itself, or inside one of its children (or their children, recursively)
-    // This condition makes it so that once we have encountered the folder-to-be-moved, we keep passing `true` all the way down the recursive tree
-    const insideMovedItem = alreadyInsideMovedItem || folder.id == folderToMove;
-    return [
-      {
-        folder,
-        insideMovedItem,
-        nestingLevel,
-      },
-      ...sortFoldersByTreeStructureRecursive(
-        folder.id,
-        nestingLevel + 1,
-        folderToMove,
-        insideMovedItem,
-        allFolders
-      ),
-    ];
-  });
+  while (folderId != null) {
+    parentFolderIds = [folderId, ...parentFolderIds];
+
+    const folder = folderById(folderId, viewTree);
+    folderId = folder?.parent?.id ?? null;
+  }
+  return parentFolderIds;
 };
 
-const sortFoldersByTreeStructure = (
-  itemToMove: number | null,
-  allFolders: ZetkinViewFolder[]
-): FolderInsideTreeStructure[] => {
-  return sortFoldersByTreeStructureRecursive(
-    null,
-    0,
-    itemToMove,
-    false,
-    allFolders
+const MoveItemBreadcrumbs = ({
+  onClickFolder,
+  orgId,
+  viewedFolder,
+}: {
+  onClickFolder: (folderId: number | null) => void;
+  orgId: number;
+  viewedFolder: number | null;
+}) => {
+  const messages = useMessages(messageIds);
+  const viewTreeFuture = useViewTree(orgId);
+
+  return (
+    <ZUIFuture future={viewTreeFuture}>
+      {(viewTree) => {
+        const folders = getAllParentFolderIds(viewedFolder, viewTree)
+          .map((id) => folderById(id, viewTree))
+          .filter((folder): folder is ZetkinViewFolder => !!folder);
+
+        // Add the root folder to the beginning
+        const breadcrumbItems = [
+          {
+            id: null,
+            title: messages.browserLayout.title(),
+          },
+          ...folders,
+        ];
+        return (
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            itemsAfterCollapse={2}
+            itemsBeforeCollapse={1}
+            maxItems={3}
+            separator={<NavigateNextIcon fontSize="small" />}
+          >
+            {breadcrumbItems.map(({ title, id }) =>
+              id == viewedFolder ? (
+                <Box key={id ?? 'root'}>{title}</Box>
+              ) : (
+                <Link
+                  key={id ?? 'root'}
+                  color="inherit"
+                  onClick={() => onClickFolder(id)}
+                  sx={{ cursor: 'pointer' }}
+                  underline="hover"
+                >
+                  {title}
+                </Link>
+              )
+            )}
+          </Breadcrumbs>
+        );
+      }}
+    </ZUIFuture>
   );
 };
 
@@ -85,13 +117,16 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
   close,
   itemToMove,
 }) => {
-  const messages = useMessages(messageIds);
+  const [viewedFolder, setViewedFolder] = useState(itemToMove.folderId);
+
   const { orgId } = useNumericRouteParams();
-
-  const itemsFuture = useViewTree(orgId);
-
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const itemsFuture = useViewBrowserItems(orgId, viewedFolder);
+  const viewTreeFuture = useViewTree(orgId);
   const { moveItem } = useViewBrowserMutations(orgId);
+
+  const messages = useMessages(messageIds);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   if (itemToMove.type == 'back') {
     throw new Error('Should not be possible to move a back button');
@@ -109,98 +144,115 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
       maxWidth={'sm'}
       onClose={close}
       open={true}
+      scroll="paper"
     >
-      <DialogContent>
-        <Box display="flex" justifyContent="space-between">
-          <DialogTitle variant="h5">
-            {messages.moveViewDialog.title({ itemName: itemToMove.title })}
-          </DialogTitle>
+      <DialogTitle>
+        <MoveItemBreadcrumbs
+          onClickFolder={setViewedFolder}
+          orgId={orgId}
+          viewedFolder={viewedFolder}
+        />
+      </DialogTitle>
 
-          <IconButton onClick={close}>
-            <Close color="secondary" />
-          </IconButton>
-        </Box>
-
-        <Box display="flex" flexDirection="column" rowGap={1}>
-          <ZUIFuture future={itemsFuture}>
-            {(data) => {
-              const treeified = sortFoldersByTreeStructure(
-                itemToMove.type == 'folder' ? itemToMove.data.id : null,
-                data.folders
-              );
-
+      <DialogContent sx={{ height: '100%' }}>
+        <ZUIFuture future={itemsFuture}>
+          {(data) => {
+            const relevantItems = data.filter(
+              // This explicit typing should not be necessary, but it is. Don't know why.
+              (item): item is ViewBrowserFolderItem | ViewBrowserViewItem =>
+                item.type != 'back'
+            );
+            if (relevantItems.length == 0) {
               return (
-                <>
-                  <Button onClick={() => doMove(null)} variant="outlined">
-                    {messages.moveViewDialog.moveToRoot()}
-                  </Button>
-                  <Box>
-                    <List>
-                      {treeified.map(
-                        ({ nestingLevel, folder, insideMovedItem }) => {
-                          return (
-                            <ListItem key={folder.id}>
-                              <Box
-                                alignItems="center"
-                                display="flex"
-                                width="100%"
-                              >
-                                <Box
-                                  alignItems="flex-start"
-                                  display="flex"
-                                  marginRight={2}
-                                >
-                                  {nestingLevel > 0 && (
-                                    <>
-                                      {range(nestingLevel - 1).map((idx) => (
-                                        <Icon key={idx} />
-                                      ))}
-                                      <SubdirectoryArrowRight />
-                                    </>
-                                  )}
-                                  <Folder />
-                                </Box>
-
-                                <Box
-                                  alignItems="center"
-                                  display="flex"
-                                  flexGrow={1}
-                                  marginRight={2}
-                                >
-                                  {folder.title}
-                                </Box>
-
-                                <Box alignItems="center" display="flex">
-                                  {folder.id == itemToMove.folderId ? (
-                                    <Button disabled variant="outlined">
-                                      {messages.moveViewDialog.alreadyInThisFolder()}
-                                    </Button>
-                                  ) : insideMovedItem ? (
-                                    <Button disabled variant="outlined">
-                                      {messages.moveViewDialog.cannotMoveHere()}
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      onClick={() => doMove(folder.id)}
-                                      variant="outlined"
-                                    >
-                                      {messages.moveViewDialog.moveHere()}
-                                    </Button>
-                                  )}
-                                </Box>
-                              </Box>
-                            </ListItem>
-                          );
-                        }
-                      )}
-                    </List>
-                  </Box>
-                </>
+                <List>
+                  <ListItem
+                    sx={{
+                      color: theme.palette.onSurface.disabled,
+                    }}
+                  >
+                    {messages.moveViewDialog.emptyFolder()}
+                  </ListItem>
+                </List>
               );
-            }}
-          </ZUIFuture>
-        </Box>
+            }
+            return (
+              <List>
+                {relevantItems.map((item) => {
+                  const {
+                    data: { id },
+                    title,
+                    type,
+                  } = item;
+
+                  return (
+                    <ListItem
+                      key={`${type}-${id}`}
+                      onClick={
+                        type == 'folder' ? () => setViewedFolder(id) : undefined
+                      }
+                      sx={
+                        type == 'folder'
+                          ? { cursor: 'pointer' }
+                          : {
+                              color: theme.palette.onSurface.disabled,
+                            }
+                      }
+                    >
+                      <Box alignItems="center" display="flex" width="100%">
+                        <Box
+                          alignItems="flex-start"
+                          display="flex"
+                          marginRight={2}
+                        >
+                          <BrowserItemIcon item={item} />
+                        </Box>
+
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                          flexGrow={1}
+                          marginRight={2}
+                        >
+                          {type == 'folder' ? (
+                            <Link color="inherit" underline="hover">
+                              {title}
+                            </Link>
+                          ) : (
+                            title
+                          )}
+                        </Box>
+                      </Box>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            );
+          }}
+        </ZUIFuture>
       </DialogContent>
+      <ZUIFuture future={viewTreeFuture}>
+        {(viewTree) => {
+          const tryingToMoveFolderIntoItself =
+            itemToMove.type == 'folder' &&
+            getAllParentFolderIds(viewedFolder, viewTree).some(
+              (id) => id == itemToMove.data.id
+            );
+          return (
+            <DialogActions>
+              <Button onClick={close} variant="outlined">
+                {messages.moveViewDialog.cancel()}
+              </Button>
+              <Button
+                disabled={tryingToMoveFolderIntoItself}
+                onClick={() => doMove(viewedFolder)}
+                variant="contained"
+              >
+                {messages.moveViewDialog.moveHere()}
+              </Button>
+            </DialogActions>
+          );
+        }}
+      </ZUIFuture>
     </Dialog>
   );
 };
