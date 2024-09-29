@@ -1,5 +1,5 @@
 import { Switch } from '@mui/material';
-import { ChangeEvent, FC, ReactElement } from 'react';
+import { FC } from 'react';
 
 export interface ZUISwitchProps {
   checked: boolean;
@@ -15,8 +15,8 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   return (
     <Switch
       checked={checked}
-      onChange={(event, checked) => onChange(checked)}
       inputProps={{ 'aria-label': 'controlled' }}
+      onChange={(event, checked) => onChange(checked)}
       size={size}
     />
   );

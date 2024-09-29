@@ -1,8 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Box, Button } from '@mui/material';
+import { useState } from 'react';
 
 import ZUISwitch from './index';
-import { useState } from 'react';
 
 const meta: Meta<typeof ZUISwitch> = {
   component: ZUISwitch,
@@ -20,9 +19,9 @@ export const Default: Story = {
     const [checked, setChecked] = useState(args.checked);
     return (
       <ZUISwitch
-        size={args.size}
         checked={checked}
         onChange={() => setChecked(!checked)}
+        size={args.size}
       />
     );
   },
