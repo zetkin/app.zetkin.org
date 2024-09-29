@@ -156,12 +156,21 @@ const CallHistory = ({
             ),
             callSelect: (
               <StyledSelect
-                onChange={(e) =>
-                  setConfig({
-                    ...filter.config,
-                    operator: e.target.value as CALL_OPERATOR,
-                  })
-                }
+                onChange={(e) => {
+                  const callOperator = e.target.value as CALL_OPERATOR;
+                  if (callOperator == CALL_OPERATOR.NOTREACHED) {
+                    setConfig({
+                      ...filter.config,
+                      minTimes: undefined,
+                      operator: callOperator,
+                    });
+                  } else {
+                    setConfig({
+                      ...filter.config,
+                      operator: callOperator,
+                    });
+                  }
+                }}
                 value={filter.config.operator}
               >
                 {Object.values(CALL_OPERATOR).map((o) => (
@@ -172,7 +181,7 @@ const CallHistory = ({
               </StyledSelect>
             ),
             minTimes:
-              filter.config.operator != CALL_OPERATOR.NOTREACHED ? (
+              filter.config.operator == CALL_OPERATOR.NOTREACHED ? null : (
                 <Msg
                   id={localMessageIds.minTimesInput}
                   values={{
@@ -191,7 +200,7 @@ const CallHistory = ({
                     minTimes: filter.config.minTimes || 1,
                   }}
                 />
-              ) : null,
+              ),
             timeFrame: (
               <TimeFrame
                 filterConfig={{
