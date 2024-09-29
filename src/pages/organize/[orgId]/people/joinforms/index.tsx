@@ -65,7 +65,7 @@ const JoinFormsPage: PageWithLayout<PageProps> = ({ orgId }) => {
       onItemClick={(form) => {
         openPane({
           render: () => (
-            <JoinFormPane formId={form.id} orgId={form.organization.id} /> // behavior to replicate
+            <JoinFormPane formId={form.id} orgId={form.organization.id} />
           ),
           width: 500,
         });
