@@ -1399,10 +1399,7 @@ feat:
             für irgendeine Aufgabe zu irgendeinem Zeitpunkt.
           two: Entferne Personen, die in den letzten 30 Tagen mindestens 1mal angerufen
             wurden für die Aufgabe "langjährige Mitglieder aktivieren".
-        inputString: '{addRemoveSelect} Personen, die {callSelect} mindestens {minTimesInput}
-          {minTimes} in {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {mal} other {mal}}'
-        minTimesInput: '{input} {minTimes, plural, one {mal} other {mal}}'
       campaignParticipation:
         activitySelect:
           activity: Typ "{activity}"
