@@ -3,20 +3,14 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import DateLabel from './DateLabel';
-import { DaySummary, getDSTOffset } from '../../utils';
+import { DaySummary, getDstChangeAtDate } from '../../utils';
 import Event from './Event';
 import messageIds from 'features/calendar/l10n/messageIds';
 import theme from 'theme';
 import { Msg } from 'core/i18n';
 
 const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
-  const dstOffset = useMemo(
-    () =>
-      getDSTOffset(dayjs(date).startOf('day').toDate()) -
-      getDSTOffset(dayjs(date).endOf('day').toDate()),
-    [date]
-  );
-
+  const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
   return (
     <Box
       alignItems="flex-start"
@@ -30,11 +24,16 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
     >
       <Box display="flex" flexDirection="column" width={'200px'}>
         <DateLabel date={date} />
-        {dstOffset !== 0 && (
+        {dstChange !== undefined && (
           <Box padding="8px 12px">
             <Typography color={theme.palette.grey[600]} variant="body2">
-              {dstOffset > 0 && <Msg id={messageIds.dstStarts} />}
-              {dstOffset < 0 && <Msg id={messageIds.dstEnds} />}
+              <Msg
+                id={
+                  dstChange === 'summertime'
+                    ? messageIds.dstStarts
+                    : messageIds.dstEnds
+                }
+              />
             </Typography>
           </Box>
         )}

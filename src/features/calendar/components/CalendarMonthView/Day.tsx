@@ -7,7 +7,7 @@ import messageIds from '../../l10n/messageIds';
 import theme from 'theme';
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import EventCluster from '../EventCluster';
-import { getDSTOffset } from '../utils';
+import { getDstChangeAtDate } from '../utils';
 import { Msg } from 'core/i18n';
 
 type DayProps = {
@@ -26,13 +26,7 @@ const Day = ({
   onClick,
 }: DayProps) => {
   const isToday = dayjs(date).isSame(new Date(), 'day');
-
-  const dstOffset = useMemo(
-    () =>
-      getDSTOffset(dayjs(date).startOf('day').toDate()) -
-      getDSTOffset(dayjs(date).endOf('day').toDate()),
-    [date]
-  );
+  const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
 
   let textColor = theme.palette.text.secondary;
   if (isToday) {
@@ -67,11 +61,15 @@ const Day = ({
           <FormattedDate day="numeric" value={date} />
         </Typography>
       </Box>
-      {dstOffset !== 0 && (
+      {dstChange !== undefined && (
         <Box paddingLeft="4px">
           <Typography color={theme.palette.grey[500]} variant="body2">
             <Msg
-              id={dstOffset > 0 ? messageIds.dstStarts : messageIds.dstEnds}
+              id={
+                dstChange === 'summertime'
+                  ? messageIds.dstStarts
+                  : messageIds.dstEnds
+              }
             />
           </Typography>
         </Box>
