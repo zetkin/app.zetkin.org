@@ -12,7 +12,6 @@ export default function usePersonPreview(
   const allTags = useTags(orgId).data ?? [];
   const organizations = useSubOrganizations(orgId).data ?? [];
   const previewRow = createPreviewData(sheet, personIndex);
-
   const fields = previewRow?.data;
   const tags =
     previewRow?.tags?.reduce((acc: ZetkinTag[], mappedTag) => {
@@ -23,13 +22,23 @@ export default function usePersonPreview(
       return acc;
     }, []) ?? [];
 
-  const org = organizations.find(
-    (org) => org.id === (previewRow?.organizations?.[0] || [])
-  );
+  const orgs =
+    previewRow?.organizations?.reduce(
+      (acc: ZetkinOrganization[], mappedOrgId) => {
+        const org = organizations.find((o) => {
+          return o.id === mappedOrgId;
+        });
+        if (org) {
+          return acc.concat(org);
+        }
+        return acc;
+      },
+      []
+    ) ?? [];
 
   return {
     fields,
-    org,
+    orgs,
     tags,
   };
 }
