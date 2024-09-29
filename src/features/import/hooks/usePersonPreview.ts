@@ -2,7 +2,7 @@ import createPreviewData from '../utils/createPreviewData';
 import { Sheet } from '../utils/types';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinTag, ZetkinOrganization } from 'utils/types/zetkin';
 
 export default function usePersonPreview(
   sheet: Sheet,
