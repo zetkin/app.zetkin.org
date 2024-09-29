@@ -1,5 +1,5 @@
 import { FC, HTMLAttributes } from 'react';
-import { Autocomplete, Box, Checkbox, TextField } from '@mui/material';
+import { Autocomplete, Box, Checkbox, Chip, TextField } from '@mui/material';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
@@ -62,16 +62,14 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
         <Autocomplete
           disableCloseOnSelect
           fullWidth
-          getOptionDisabled={(option) =>
-            option === 'first_name' || option === 'last_name'
-          }
+          getOptionDisabled={(option) => joinForm.fields.includes(option)}
           // This gets the label for selected options.
           getOptionLabel={slugToLabel}
           multiple
-          onChange={(ev, value) => {
-            if (value.length) {
+          onChange={(ev, values) => {
+            if (values.length) {
               updateForm({
-                fields: [...joinForm.fields, value[0]],
+                fields: values,
               });
             }
           }}
@@ -99,8 +97,23 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
               </li>
             );
           }}
-          // This breaks the site for some reason. do we need it?
-          // value={[]}
+          renderTags={(tagValue, getTagProps) =>
+            tagValue.map((option, index) => {
+              const { key, ...tagProps } = getTagProps({ index });
+              return (
+                <Chip
+                  key={key}
+                  label={slugToLabel(option)}
+                  {...tagProps}
+                  disabled={
+                    option === NATIVE_PERSON_FIELDS.FIRST_NAME ||
+                    option === NATIVE_PERSON_FIELDS.LAST_NAME
+                  }
+                />
+              );
+            })
+          }
+          value={joinForm.fields}
         />
       </Box>
     </>
