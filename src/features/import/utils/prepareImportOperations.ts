@@ -107,9 +107,10 @@ export default function prepareImportOperations(
               if (!personImportOps[rowIndex].organizations) {
                 personImportOps[rowIndex].organizations = [];
               }
-              const allOrgs = personImportOps[rowIndex].organizations.concat(
-                mappedColumn.orgId
-              );
+              const allOrgs =
+                personImportOps[rowIndex]?.organizations?.concat(
+                  mappedColumn.orgId
+                ) ?? [];
               personImportOps[rowIndex].organizations = Array.from(
                 new Set<number>(allOrgs)
               );
