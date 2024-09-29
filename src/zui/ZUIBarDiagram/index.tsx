@@ -13,9 +13,10 @@ const colors = ['#7800dc', '#9d46e6', '#c189ef', '#e4ccf8'];
 
 interface ZUIBarDiagramProps {
   /**
-   * Progress as a number < 100, or an array of numbers whose total is < 100.
+   * Width of segments as an array of numbers whose total is < 100.
+   * The final segment width is the remainder.
    */
-  progress: number | [number, number] | [number, number, number];
+  values: [number] | [number, number] | [number, number, number];
   size: Sizes;
 }
 
@@ -24,16 +25,15 @@ interface ZUIBarDiagramProps {
  * different segments, up to 100. The final segment width is the
  * remainder of 100 minus the previous segment widths.
  */
-const ZUIBarDiagram = ({ progress, size }: ZUIBarDiagramProps) => {
-  const progressArray = typeof progress === 'number' ? [progress] : progress;
-  const progressSum = progressArray.reduce((sum, val) => {
+const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
+  const progressSum = values.reduce((sum, val) => {
     return sum + val;
   });
 
   if (progressSum > 100) {
     throw new Error('Progress > 100');
   }
-  if (progressArray.some((value) => value < 0)) {
+  if (values.some((value) => value < 0)) {
     throw new Error('Values can not be negative');
   }
 
@@ -47,8 +47,8 @@ const ZUIBarDiagram = ({ progress, size }: ZUIBarDiagramProps) => {
       overflow="hidden"
       width="100%"
     >
-      {progressArray.map((segmentWidth, index) => {
-        if (segmentWidth === 0) {
+      {values.map((segmentWidth, index) => {
+        if (!segmentWidth) {
           return null;
         }
         return (

@@ -11,42 +11,42 @@ type Story = StoryObj<typeof ZUIBarDiagram>;
 
 export const Primary: Story = {
   args: {
-    progress: 25,
     size: 'medium',
+    values: [25],
   },
 };
 
 export const ThreeSegments: Story = {
   args: {
-    progress: [25, 25],
     size: 'medium',
+    values: [25, 25],
   },
 };
 
 export const FourSegments: Story = {
   args: {
-    progress: [33, 33, 10],
     size: 'medium',
+    values: [33, 33, 10],
   },
 };
 
 export const ExtraSmall: Story = {
   args: {
-    progress: [33, 33, 10],
     size: 'extraSmall',
+    values: [33, 33, 10],
   },
 };
 
 export const Small: Story = {
   args: {
-    progress: [33, 33, 10],
     size: 'small',
+    values: [33, 33, 10],
   },
 };
 
 export const Large: Story = {
   args: {
-    progress: [33, 33, 10],
     size: 'large',
+    values: [33, 33, 10],
   },
 };
