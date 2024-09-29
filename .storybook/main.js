@@ -4,7 +4,8 @@ module.exports = {
   staticDirs: ['../src'],
   stories: [
     '../src/**/*.mdx',
-    '../src/zui/!(ZUITimeline|ZUITextEditor|ZUIRelativeTime|ZUIReorderable|ZUISection|ZUIUserAvatar|ZUIDialog|ZUIEllipsisMenu|ZUIFileChip|ZUIJourneyInstanceItem|ZUIList|ZUILogo|ZUIPerson|ZUIPersonAvatar|ZUIPersonLink|ZUIPreviewableInput|ZUIAccessList|ZUIEmptyState|ZUIStackedStatusBar|ZUISuffixedNumber|ZUITimeSpan|ZUIAccessList|ZUIJourneyInstanceCard|ZUIAnimatedNumber|ZUIConfirmDialog|ZUIAutoTextArea|ZUICollapse|ZUIDate)/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/zui/!(ZUIAccessList|ZUIJourneyInstanceCard|ZUIAnimatedNumber|ZUIConfirmDialog|ZUIAutoTextArea|ZUICollapse|ZUIDate)/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/zui/!(ZUITimeline|ZUITextEditor|ZUIRelativeTime|ZUIReorderable|ZUISection|ZUIUserAvatar|ZUIDialog|ZUIEllipsisMenu|ZUIFileChip|ZUIJourneyInstanceItem|ZUIList|ZUILogo|ZUIPerson|ZUIPersonAvatar|ZUIPersonLink|ZUIPreviewableInput)/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',
