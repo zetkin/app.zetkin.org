@@ -19,9 +19,8 @@ import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
 import { ZetkinViewFolder } from './types';
 import useViewBrowserItems, {
-  ViewBrowserFolderItem,
+  ViewBrowserBackItem,
   ViewBrowserItem,
-  ViewBrowserViewItem,
 } from '../hooks/useViewBrowserItems';
 import useViewBrowserMutations from '../hooks/useViewBrowserMutations';
 import useViewTree from '../hooks/useViewTree';
@@ -109,7 +108,7 @@ const MoveItemBreadcrumbs = ({
   );
 };
 
-export type MoveViewDialogProps = {
+type MoveViewDialogProps = {
   close: () => void;
   itemToMove: ViewBrowserItem;
 };
@@ -164,8 +163,7 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
         <ZUIFuture future={itemsFuture}>
           {(data) => {
             const relevantItems = data.filter(
-              // This explicit typing should not be necessary, but it is. Don't know why.
-              (item): item is ViewBrowserFolderItem | ViewBrowserViewItem =>
+              (item): item is Exclude<typeof item, ViewBrowserBackItem> =>
                 item.type != 'back'
             );
             if (relevantItems.length == 0) {
