@@ -57,23 +57,16 @@ const ViewDataTableToolbar: React.FunctionComponent<
   };
   return (
     <Box role="toolbar">
-      {!isLoading && (
-        <Slide direction="left" in={!!selection.length} timeout={150}>
-          <Button
-            data-testid="ViewDataTableToolbar-createFromSelection"
-            disabled={disabled}
-            onClick={onViewCreate}
-            startIcon={<Launch />}
-          >
-            <Msg id={messageIds.toolbar.createFromSelection} />
-          </Button>
-        </Slide>
-      )}
-      {isLoading && (
-        <Button disabled={disabled} startIcon={<Launch />}>
-          <CircularProgress size={25} />
+      <Slide direction="left" in={!!selection.length} timeout={150}>
+        <Button
+          data-testid="ViewDataTableToolbar-createFromSelection"
+          disabled={disabled || isLoading}
+          onClick={onViewCreate}
+          startIcon={isLoading ? <CircularProgress size={25} /> : <Launch />}
+        >
+          <Msg id={messageIds.toolbar.createFromSelection} />
         </Button>
-      )}
+      </Slide>
       <Slide direction="left" in={!!selection.length} timeout={100}>
         <Tooltip title={isSmartSearch ? messages.toolbar.removeTooltip() : ''}>
           <span>
