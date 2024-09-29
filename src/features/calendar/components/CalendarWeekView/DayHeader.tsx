@@ -1,7 +1,12 @@
 import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import dayjs from 'dayjs';
 
 import theme from 'theme';
+import { getDSTOffset } from '../utils';
+import { Msg } from 'core/i18n';
+import messageIds from '../../l10n/messageIds';
 
 export interface DayHeaderProps {
   date: Date;
@@ -10,11 +15,18 @@ export interface DayHeaderProps {
 }
 
 const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
+  const dstChangeAmount: number = useMemo(
+    () =>
+      getDSTOffset(dayjs(date).startOf('day').toDate()) -
+      getDSTOffset(dayjs(date).endOf('day').toDate()),
+    [date]
+  );
+
   return (
     <Box
       display="grid"
       gridTemplateColumns="repeat(3, 1fr)"
-      gridTemplateRows="1fr"
+      gridTemplateRows="1fr auto"
       onClick={() => onClick()}
       sx={{
         cursor: 'pointer',
@@ -49,6 +61,14 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       </Box>
       {/* Empty */}
       <Box />
+      {dstChangeAmount !== 0 && (
+        <Box gridColumn={'1 / span 3'} gridRow={2}>
+          <Typography color={theme.palette.grey[500]} variant="body2">
+            {dstChangeAmount > 0 && <Msg id={messageIds.dstStarts} />}
+            {dstChangeAmount < 0 && <Msg id={messageIds.dstEnds} />}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

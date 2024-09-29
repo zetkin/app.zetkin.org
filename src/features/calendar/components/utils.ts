@@ -278,3 +278,9 @@ export const getActivitiesByDay = (
 
   return dateHashmap;
 };
+
+export function getDSTOffset(date: Date): number {
+  const jan = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
+  const jul = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
+  return (date.getTimezoneOffset() - Math.max(jan, jul)) / 60;
+}
