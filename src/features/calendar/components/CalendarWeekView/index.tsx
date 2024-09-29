@@ -24,7 +24,7 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
-import { getDSTOffset } from '../utils';
+import { getDstChangeAtDate } from '../utils';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
@@ -57,13 +57,10 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     return focusWeekStartDay.day(weekday + 1).toDate();
   });
 
-  const dstChangeAmount: number = useMemo(
+  const dstChange = useMemo(
     () =>
-      getDSTOffset(dayjs(focusWeekStartDay).startOf('day').toDate()) -
-      getDSTOffset(
-        dayjs(focusWeekStartDay.add(6, 'days')).endOf('day').toDate()
-      ),
-    [focusWeekStartDay]
+      dayDates.map((d) => dayjs(d)).find((date) => getDstChangeAtDate(date)),
+    [dayDates]
   );
 
   const eventsByDate = useWeekCalendarEvents({
@@ -92,7 +89,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         display="grid"
         gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
         gridTemplateRows={'1fr'}
-        marginBottom={dstChangeAmount === 0 ? 2 : 0}
+        marginBottom={dstChange === undefined ? 2 : 0}
       >
         {/* Empty */}
         <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
