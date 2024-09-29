@@ -72,10 +72,17 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
           getOptionLabel={slugToLabel}
           multiple
           onChange={(ev, values) => {
-            if (values.length) {
+            if (values.length > 0) {
               updateForm({
                 fields: values,
               });
+            }
+            if (values.length === 0) {
+              updateForm({
+                fields: ['first_name', 'last_name'],
+              });
+            } else {
+              return;
             }
           }}
           options={[
