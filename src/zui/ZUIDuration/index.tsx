@@ -50,11 +50,11 @@ const ZUIDuration: FC<Props> = ({
         .filter((field) => field.visible)
         .filter((field) => field.n > 0)
         .map((field) => (
-          <span key={field.msgId} style={{ marginRight: 4 }}>
+          <span key={field.msgId}>
             <Msg
               id={messageIds.duration[field.msgId]}
               values={{ n: field.n }}
-            />
+            />{' '}
           </span>
         ))}
     </>
