@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import ZUICheckbox from '.';
 
@@ -7,12 +7,10 @@ export default {
   title: 'Atoms/ZUICheckbox',
 } as Meta<typeof ZUICheckbox>;
 
-const Template: StoryFn<typeof ZUICheckbox> = (args) => (
-  <ZUICheckbox checked={args.checked} size={args.size} />
-);
+type Story = StoryObj<typeof ZUICheckbox>;
 
-export const basic = Template.bind({});
-basic.args = {
-  checked: true,
-  size: 1,
+export const basic: Story = {
+  args: {
+    checked: true,
+  },
 };

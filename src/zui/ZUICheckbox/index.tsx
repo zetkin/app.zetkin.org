@@ -5,14 +5,16 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 interface ZUICheckboxProps {
   checked: boolean;
-  size: Size;
+  size: TSize;
 }
 
-enum Size {
-  small,
-  medium,
-  large,
-}
+type TSize = 'small' | 'medium' | 'large';
+
+// enum Size {
+//   small,
+//   medium,
+//   large,
+// }
 
 const ZUICheckbox: React.FunctionComponent<ZUICheckboxProps> = (
   { checked },
@@ -36,19 +38,3 @@ const ZUICheckbox: React.FunctionComponent<ZUICheckboxProps> = (
 };
 
 export default ZUICheckbox;
-
-/*
-import { FormattedDate } from 'react-intl';
-
-interface ZUIDateProps {
-  datetime: string; // iso datetime string
-}
-
-const ZUIDate: React.FunctionComponent<ZUIDateProps> = ({ datetime }) => {
-  return (
-    <FormattedDate day="numeric" month="long" value={datetime} year="numeric" />
-  );
-};
-
-export default ZUIDate;
-*/
