@@ -24,12 +24,13 @@ const sizes: Record<TButtonSize, number> = {
 };
 
 interface ZUIRadioButtonProps {
-  defaultValue: string;
+  defaultValue: TButton['value'];
   direction: TRadioGroupDirection;
   disabled: boolean;
   formLabel: string;
   helperText: string;
   labelPlacement: TLabelPlacement;
+  onChange?: (newValue: TButton['value']) => void;
   options: TButton[];
   name: string;
   size: TButtonSize;
@@ -43,11 +44,10 @@ const ZUIRadioGroup = ({
   helperText,
   labelPlacement,
   name,
+  onChange,
   options,
   size,
 }: ZUIRadioButtonProps) => {
-  use;
-
   return (
     <Typography variant="bodyMdSemiBold">
       <FormControl disabled={disabled}>
@@ -56,6 +56,9 @@ const ZUIRadioGroup = ({
           aria-labelledby={name}
           defaultValue={defaultValue}
           name={name}
+          onChange={(e) => {
+            onChange && onChange(e.target.value);
+          }}
           row={direction === 'row'}
         >
           {options.map((button: TButton) => {

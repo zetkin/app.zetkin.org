@@ -17,6 +17,7 @@ export const Primary: Story = {
     helperText: 'Helper text',
     labelPlacement: 'end',
     name: 'group',
+    onChange: (newValue) => console.log(newValue),
     options: [
       { name: 'Sweden', value: 'swe' },
       { name: 'Finland', value: 'fin' },
