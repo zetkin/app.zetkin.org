@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Add, Launch, RemoveCircleOutline } from '@mui/icons-material';
-import { Box, Button, Slide, Tooltip } from '@mui/material';
+import { Box, Button, CircularProgress, Slide, Tooltip } from '@mui/material';
 import {
   DataGridProProps,
   GridColDef,
@@ -18,6 +18,7 @@ export interface ViewDataTableToolbarProps {
   disableConfigure?: boolean;
   disabled: boolean;
   gridColumns: GridColDef[];
+  isLoading: boolean;
   isSmartSearch: boolean;
   onColumnCreate: () => void;
   onRowsRemove: () => void;
@@ -34,6 +35,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   disableConfigure,
   disabled,
   gridColumns,
+  isLoading,
   isSmartSearch,
   onColumnCreate,
   onRowsRemove,
@@ -55,16 +57,23 @@ const ViewDataTableToolbar: React.FunctionComponent<
   };
   return (
     <Box role="toolbar">
-      <Slide direction="left" in={!!selection.length} timeout={150}>
-        <Button
-          data-testid="ViewDataTableToolbar-createFromSelection"
-          disabled={disabled}
-          onClick={onViewCreate}
-          startIcon={<Launch />}
-        >
-          <Msg id={messageIds.toolbar.createFromSelection} />
+      {!isLoading && (
+        <Slide direction="left" in={!!selection.length} timeout={150}>
+          <Button
+            data-testid="ViewDataTableToolbar-createFromSelection"
+            disabled={disabled}
+            onClick={onViewCreate}
+            startIcon={<Launch />}
+          >
+            <Msg id={messageIds.toolbar.createFromSelection} />
+          </Button>
+        </Slide>
+      )}
+      {isLoading && (
+        <Button disabled={disabled} startIcon={<Launch />}>
+          <CircularProgress size={25} />
         </Button>
-      </Slide>
+      )}
       <Slide direction="left" in={!!selection.length} timeout={100}>
         <Tooltip title={isSmartSearch ? messages.toolbar.removeTooltip() : ''}>
           <span>
