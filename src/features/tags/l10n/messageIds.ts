@@ -23,6 +23,7 @@ export default makeMessages('feat.tags', {
       none: m('Basic (no values)'),
       text: m('Text values'),
     },
+    updateTagButton: m('Update'),
   },
   manager: {
     addTag: m('Add tag'),

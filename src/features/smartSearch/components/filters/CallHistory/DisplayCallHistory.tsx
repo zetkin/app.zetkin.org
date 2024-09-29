@@ -6,6 +6,7 @@ import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import { useNumericRouteParams } from 'core/hooks';
 import {
+  CALL_OPERATOR,
   CallHistoryFilterConfig,
   OPERATION,
   SmartSearchFilterWithId,
@@ -43,12 +44,13 @@ const DisplayCallHistory = ({
           <UnderlinedMsg id={localMessageIds.assignmentSelect.any} />
         ),
         callSelect: <UnderlinedMsg id={localMessageIds.callSelect[operator]} />,
-        minTimes: (
-          <UnderlinedMsg
-            id={localMessageIds.minTimes}
-            values={{ minTimes: minTimes || 1 }}
-          />
-        ),
+        minTimes:
+          operator == CALL_OPERATOR.NOTREACHED ? null : (
+            <UnderlinedMsg
+              id={localMessageIds.minTimes}
+              values={{ minTimes: minTimes || 1 }}
+            />
+          ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />

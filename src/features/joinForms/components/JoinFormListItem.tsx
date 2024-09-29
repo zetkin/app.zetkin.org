@@ -1,9 +1,16 @@
-import { FormatListBulleted } from '@mui/icons-material';
+import { useContext } from 'react';
+import { FormatListBulleted, OpenInNew } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
-import { Box, Theme, Typography } from '@mui/material';
+import { Box, Button, Theme, Typography } from '@mui/material';
 
 import theme from 'theme';
 import { ZetkinJoinForm } from '../types';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import { useApiClient } from 'core/hooks';
+import getJoinFormEmbedData from '../rpc/getJoinFormEmbedData';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   container: {
@@ -50,6 +57,9 @@ type Props = {
 
 const JoinFormListItem = ({ form, onClick }: Props) => {
   const classes = useStyles();
+  const apiClient = useApiClient();
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+  const messages = useMessages(messageIds);
 
   return (
     <Box
@@ -75,6 +85,43 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
             />
           */}
         </Box>
+      </Box>
+      <Box>
+        <ZUIEllipsisMenu
+          items={[
+            {
+              label: messages.embedding.copyLink(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+                const data = await apiClient.rpc(getJoinFormEmbedData, {
+                  formId: form.id,
+                  orgId: form.organization.id,
+                });
+
+                const url = `${location.protocol}//${location.host}/o/${form.organization.id}/embedjoinform/${data.data}`;
+                navigator.clipboard.writeText(url);
+
+                showSnackbar(
+                  'success',
+                  <>
+                    <Msg id={messageIds.embedding.linkCopied} />
+                    <Button
+                      endIcon={<OpenInNew />}
+                      href={url}
+                      size="small"
+                      sx={{
+                        mx: 1,
+                      }}
+                      target="_blank"
+                    >
+                      <Msg id={messageIds.embedding.openLink} />
+                    </Button>
+                  </>
+                );
+              },
+            },
+          ]}
+        />
       </Box>
     </Box>
   );

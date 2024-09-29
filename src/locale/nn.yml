@@ -1406,17 +1406,13 @@ feat:
           none: Denne organisasjonen har ingen ringeoppdrag, ennå!
         callSelect:
           called: har blitt ringt
-          notreached: har blitt forsøkt ringt
           reached: har blitt nådd
         examples:
           one: Legg til folk som har blitt nådd minst 2 ganger i et hvilket som helst
             ringeoppdrag når som helst.
           two: Fjern folk som har blitt ringt minst en gang i ringeoppdraget "Valgkamp
             2023" de siste 30 dagene.
-        inputString: '{addRemoveSelect} folk som {callSelect} minst {minTimes} i {assignmentSelect}
-          {timeFrame}.'
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {ganger}}'
-        minTimesInput: '{input} {minTimes, plural, one {gang} other {ganger}}'
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
