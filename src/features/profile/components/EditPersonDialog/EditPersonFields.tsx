@@ -7,6 +7,7 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  NativeSelect,
   Select,
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
@@ -220,6 +221,31 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               onReset={() => onReset(field.slug)}
               value={fieldValues[field.slug]?.toString() ?? ''}
             />
+          );
+        } else if (field.type === CUSTOM_FIELD_TYPE.ENUM_TEXT) {
+          return (
+            <Box alignItems="flex-start" display="flex" flex={1}>
+              <FormControl fullWidth>
+                <InputLabel>{field.title}</InputLabel>
+                <Select
+                  fullWidth
+                  value={fieldValues[field.slug]?.toString() ?? ''}
+                  onChange={(ev) => {
+                    onChange(field.slug, ev.target.value);
+                  }}
+                  label={field.title}
+                >
+                  <MenuItem key="" value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {field.enum_choices.map((c) => (
+                    <MenuItem key={c.key} value={c.key}>
+                      {c.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
           );
         } else {
           return (
