@@ -1,13 +1,10 @@
-import dayjs from 'dayjs';
 import { FC } from 'react';
 import { EmailOutlined, Person } from '@mui/icons-material';
 
 import { EmailActivity } from 'features/campaigns/types';
-import messageIds from 'features/campaigns/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import useEmailStats from 'features/emails/hooks/useEmailStats';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
+import { getEmailSubtitle } from '../../../utils/subtitles';
 
 interface EmailOverviewListItemProps {
   activity: EmailActivity;
@@ -23,25 +20,6 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
     email.organization.id,
     email.id
   );
-
-  function getSubtitle(published: string | null) {
-    if (published === null) {
-      return undefined;
-    }
-    const now = new Date();
-    const publishedDate = dayjs(published);
-    const id = publishedDate.isBefore(now)
-      ? messageIds.activitiesOverview.subtitles.sentEarlier
-      : messageIds.activitiesOverview.subtitles.sentLater;
-    return (
-      <Msg
-        id={id}
-        values={{
-          relative: <ZUIRelativeTime datetime={publishedDate.toISOString()} />,
-        }}
-      />
-    );
-  }
 
   function getColor() {
     const now = new Date();
@@ -73,7 +51,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
       startDate={activity.visibleFrom}
-      subtitle={getSubtitle(activity.data.published)}
+      subtitle={getEmailSubtitle(activity.data.published)}
       title={email.title || ''}
     />
   );

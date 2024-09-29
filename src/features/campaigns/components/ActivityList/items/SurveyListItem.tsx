@@ -51,12 +51,14 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
   return (
     <ActivityListItemWithStats
       color={color}
+      endDate={data.expires}
       endNumber={submissionCount.toString()}
       greenChipValue={linkedSubmissionCount}
       href={getSurveyUrl(data, orgId)}
       orangeChipValue={unlinkedSubmissionCount}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
+      startDate={data.published}
       statsLoading={statsFuture.isLoading}
       title={data.title}
     />

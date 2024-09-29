@@ -9,9 +9,16 @@ import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 interface TaskListItemProps {
   orgId: number;
   taskId: number;
+  visibleFrom?: string;
+  visibleUntil?: string;
 }
 
-const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
+const TaskListItem = ({
+  orgId,
+  taskId,
+  visibleFrom,
+  visibleUntil,
+}: TaskListItemProps) => {
   const task = useTask(orgId, taskId);
   const { data: stats, isLoading: statsLoading } = useTaskStats(orgId, taskId);
 
@@ -34,6 +41,7 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
     <ActivityListItemWithStats
       blueChipValue={stats?.assigned}
       color={color}
+      endDate={visibleUntil ? visibleUntil.toString() : null}
       endNumber={stats?.individuals ?? 0}
       greenChipValue={stats?.completed}
       href={`/organize/${orgId}/projects/${
@@ -42,6 +50,7 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
       orangeChipValue={stats?.ignored}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
+      startDate={visibleFrom ? visibleFrom.toString() : null}
       statsLoading={statsLoading}
       title={task.title}
     />

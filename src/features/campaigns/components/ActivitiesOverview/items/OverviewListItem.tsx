@@ -6,12 +6,10 @@ import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
 import { CampaignActivity } from 'features/campaigns/types';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import { isSameDate } from 'utils/dateUtils';
-import messageIds from 'features/campaigns/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import theme from 'theme';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
+import { getEndsLabel, getStartsLabel } from '../../../utils/subtitles';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -102,9 +100,7 @@ const OverviewListItem = ({
   //const color = getStatusColor(startDate, endDate);
   const classes = useStyles({ color });
 
-  const now = new Date();
   let label: JSX.Element | null = null;
-
   if (subtitle) {
     label = subtitle;
   } else if (!focusDate) {
@@ -117,40 +113,6 @@ const OverviewListItem = ({
     label = getStartsLabel(startDate);
   } else if (endDate && isSameDate(focusDate, endDate)) {
     label = getEndsLabel(endDate);
-  }
-
-  function getEndsLabel(endDate: Date) {
-    if (endDate && isSameDate(endDate, now)) {
-      return <Msg id={messageIds.activitiesOverview.subtitles.endsToday} />;
-    } else if (endDate && endDate > now) {
-      return (
-        <Msg
-          id={messageIds.activitiesOverview.subtitles.endsLater}
-          values={{
-            relative: <ZUIRelativeTime datetime={endDate.toISOString()} />,
-          }}
-        />
-      );
-    }
-
-    return null;
-  }
-
-  function getStartsLabel(startDate: Date) {
-    if (startDate && isSameDate(startDate, now)) {
-      return <Msg id={messageIds.activitiesOverview.subtitles.startsToday} />;
-    } else if (startDate && startDate > now) {
-      return (
-        <Msg
-          id={messageIds.activitiesOverview.subtitles.startsLater}
-          values={{
-            relative: <ZUIRelativeTime datetime={startDate.toISOString()} />,
-          }}
-        />
-      );
-    }
-
-    return null;
   }
 
   return (
