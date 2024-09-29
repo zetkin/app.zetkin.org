@@ -74,7 +74,6 @@ const JourneyDetailsPage: PageWithLayout = () => {
   const { orgId, instanceId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPostRequestError, setShowPostRequestError] = useState(false);
 
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const timelineUpdatesFuture = useTimelineUpdates(orgId, instanceId);
@@ -117,17 +116,11 @@ const JourneyDetailsPage: PageWithLayout = () => {
                 <ZUITimeline
                   disabled={isLoading}
                   onAddNote={async (note) => {
-                    setShowPostRequestError(false);
                     setIsLoading(true);
-                    try {
-                      await addNote(note);
-                    } catch (e) {
-                      setShowPostRequestError(true);
-                    }
+                    await addNote(note);
                     setIsLoading(false);
                   }}
                   onEditNote={editNote}
-                  showPostRequestError={showPostRequestError}
                   updates={updates}
                 />
               )}

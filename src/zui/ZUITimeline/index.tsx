@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   CardActionArea,
@@ -22,7 +22,6 @@ import { ZetkinNote, ZetkinNoteBody } from 'utils/types/zetkin';
 import messageIds from './l10n/messageIds';
 
 export interface ZUITimelineProps {
-  showPostRequestError?: boolean;
   disabled?: boolean;
   onAddNote: (note: ZetkinNoteBody) => void;
   onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
@@ -30,7 +29,6 @@ export interface ZUITimelineProps {
 }
 
 const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
-  showPostRequestError,
   disabled,
   onAddNote,
   onEditNote,
@@ -44,13 +42,23 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
     typeFilterOptions,
   } = useFilterUpdates(updates);
 
+  const [showPostRequestError, setShowPostRequestError] = useState(false);
+
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={5}>
         <Grid item>
           <TimelineAddNote
             disabled={disabled}
-            onSubmit={onAddNote}
+            onSubmit={async (note) => {
+              setShowPostRequestError(false);
+              try {
+                // Await is needed here to catch the exception if the request fails
+                await onAddNote(note);
+              } catch (e) {
+                setShowPostRequestError(true);
+              }
+            }}
             showPostRequestError={showPostRequestError}
           />
         </Grid>
