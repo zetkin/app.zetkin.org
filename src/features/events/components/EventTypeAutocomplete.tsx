@@ -9,6 +9,7 @@ import messageIds from '../l10n/messageIds';
 import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
+import useDeleteType from '../hooks/useDeleteType';
 
 interface StyleProps {
   showBorder: boolean | undefined;
@@ -74,6 +75,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   value,
 }) => {
   const createType = useCreateType(orgId);
+  const deleteType = useDeleteType(orgId);
   const messages = useMessages(messageIds);
   const uncategorizedMsg = messages.type.uncategorized();
   const [createdType, setCreatedType] = useState<string>('');
@@ -89,8 +91,10 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
       const newEventType = types.find((item) => item.title === createdType);
-      setText(newEventType!.title);
-      onChangeNewOption(newEventType!.id);
+      setText(newEventType ? newEventType!.title : uncategorizedMsg);
+      if (newEventType) {
+        onChangeNewOption(newEventType!.id);
+      }
     }
   }, [types.length]);
 
@@ -224,7 +228,16 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           return (
             <Box key={option.id}>
               {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
-                <li {...props}>{option.title}</li>
+                <li {...props} style={{ justifyContent: 'space-between' }}>
+                  {option.title}
+                  <Clear
+                    onClick={() => {
+                      if (typeof option.id === 'number') {
+                        deleteType(option.id);
+                      }
+                    }}
+                  />
+                </li>
               )}
               {option.id == 'UNCATEGORIZED' && (
                 <li {...props}>
