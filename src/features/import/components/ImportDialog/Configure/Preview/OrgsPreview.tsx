@@ -13,14 +13,12 @@ interface OrgsPreviewProps {
   orgs: Pick<ZetkinOrganization, 'title' | 'id'>[] | [];
 }
 
-
 const OrgsPreview = ({ currentSheet, orgs }: OrgsPreviewProps) => {
   const messages = useMessages(messageIds);
   const hasMapped = currentSheet.columns.some(
     (column) =>
       column.kind === ColumnKind.ORGANIZATION && column.mapping.length > 0
   );
-
 
   return (
     <PreviewGrid
@@ -34,11 +32,11 @@ const OrgsPreview = ({ currentSheet, orgs }: OrgsPreviewProps) => {
         orgs.length > 0 ? (
           <Stack direction="row" maxWidth={'300px'} mt="5px" spacing={1}>
             {orgs?.map((org) => (
-                <Tooltip key={org.id} title={org.title}>
-                  <Box>
-                    <ProceduralColorIcon id={org.id} />
-                  </Box>
-                </Tooltip>
+              <Tooltip key={org.id} title={org.title}>
+                <Box>
+                  <ProceduralColorIcon id={org.id} />
+                </Box>
+              </Tooltip>
             ))}
           </Stack>
         ) : null

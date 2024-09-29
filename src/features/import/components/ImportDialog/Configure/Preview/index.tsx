@@ -146,16 +146,10 @@ const Preview = () => {
               }
             })}
             {orgColumnSelected && (
-              <OrgsPreview
-                  currentSheet={currentSheet}
-                  orgs={orgs}
-              />
+              <OrgsPreview currentSheet={currentSheet} orgs={orgs} />
             )}
             {tagColumnSelected && (
-              <TagsPreview 
-                currentSheet={currentSheet} 
-                tags={tags} 
-              />
+              <TagsPreview currentSheet={currentSheet} tags={tags} />
             )}
           </>
         )}
