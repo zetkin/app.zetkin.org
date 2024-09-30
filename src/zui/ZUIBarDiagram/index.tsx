@@ -1,12 +1,11 @@
 import { Box } from '@mui/material';
 
-type Sizes = 'extraSmall' | 'small' | 'medium' | 'large';
+type Sizes = 'small' | 'medium' | 'large';
 
-const sizes: Record<Sizes, number> = {
-  extraSmall: 5,
-  large: 30,
-  medium: 20,
-  small: 10,
+const sizes: Record<Sizes, string> = {
+  large: '1rem',
+  medium: '0.5rem',
+  small: '0.25rem',
 };
 
 const colors = ['#7800dc', '#9d46e6', '#c189ef', '#e4ccf8'];
@@ -41,9 +40,9 @@ const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
 
   return (
     <Box
-      borderRadius={height / 2}
+      borderRadius="2rem"
       display="flex"
-      gap={size === 'large' ? 0.75 : 0.5}
+      gap={size === 'large' ? '0.25rem' : '0.125rem'}
       overflow="hidden"
       width="100%"
     >
