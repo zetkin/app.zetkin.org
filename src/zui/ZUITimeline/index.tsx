@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   CardActionArea,
@@ -42,11 +42,25 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
     typeFilterOptions,
   } = useFilterUpdates(updates);
 
+  const [showPostRequestError, setShowPostRequestError] = useState(false);
+
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={5}>
         <Grid item>
-          <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
+          <TimelineAddNote
+            disabled={disabled}
+            onSubmit={async (note) => {
+              setShowPostRequestError(false);
+              try {
+                // Await is needed here to catch the exception if the request fails
+                await onAddNote(note);
+              } catch (e) {
+                setShowPostRequestError(true);
+              }
+            }}
+            showPostRequestError={showPostRequestError}
+          />
         </Grid>
         <Grid item sm={6} xl={4} xs={12}>
           {/* Filter timeline select */}
