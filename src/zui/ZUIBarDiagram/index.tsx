@@ -38,16 +38,19 @@ const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
 
   const height = sizes[size];
 
-  const colors = [
-    theme.palette.data[900],
-    theme.palette.data[300],
-    theme.palette.data[100],
-  ];
-  colors.splice(
-    1,
-    0,
-    values.length == 3 ? theme.palette.data[700] : theme.palette.data[500]
-  );
+  const colors =
+    values.length == 3
+      ? [
+          theme.palette.data[900],
+          theme.palette.data[700],
+          theme.palette.data[300],
+          theme.palette.data[100],
+        ]
+      : [
+          theme.palette.data[900],
+          theme.palette.data[500],
+          theme.palette.data[100],
+        ];
 
   return (
     <Box
