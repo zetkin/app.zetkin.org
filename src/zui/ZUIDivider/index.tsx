@@ -1,13 +1,29 @@
+import { FC } from 'react';
 import { Divider, DividerProps } from '@mui/material';
+import { useTheme } from '@mui/styles';
 
-interface ZUIDividerProps extends DividerProps {}
+type ZUIDividerProps = Partial<
+  Pick<DividerProps, 'flexItem' | 'orientation'>
+> & {
+  /** The variant of the divider. Defaults to 'fullWidth' */
+  variant?: 'middle' | 'fullWidth';
+};
 
-const ZUIDivider: React.FC<ZUIDividerProps> = ({ sx, ...props }) => {
-  const _sx = {
-    borderColor: '#E0E0E0',
-    ...sx,
-  };
-  return <Divider sx={_sx} {...props} />;
+const ZUIDivider: FC<ZUIDividerProps> = ({
+  flexItem,
+  orientation = 'horizontal',
+  variant = 'fullWidth',
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Divider
+      flexItem={flexItem}
+      orientation={orientation}
+      sx={{ color: theme.palette.dividers.main }}
+      variant={variant}
+    />
+  );
 };
 
 export default ZUIDivider;
