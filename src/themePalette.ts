@@ -18,7 +18,7 @@ export const palette = {
     [900]: '#2C417C',
     [950]: '#1F294C',
   },
-  divider: {
+  dividers: {
     lighter: '#F0F0F0',
     main: '#E0E0E0',
   },
@@ -476,8 +476,10 @@ export const themePalette = {
     [700]: palette.purple[700],
     [900]: palette.purple[900],
   },
-  divider: palette.divider.main,
-  dividerLighter: palette.divider.lighter,
+  dividers: {
+    lighter: palette.dividers.lighter,
+    main: palette.dividers.main,
+  },
   error: {
     contrastText: palette.basic.white,
     dark: palette.red[800],

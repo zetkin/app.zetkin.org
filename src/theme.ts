@@ -185,8 +185,10 @@ declare module '@mui/material/styles/createPalette' {
       yellow: FilterCategoryColors;
     };
     data: DataColor;
-    divider: string;
-    dividerLighter: string;
+    dividers: {
+      lighter: string;
+      main: string;
+    };
     activityStatusColors: {
       cancelled: string;
       closed: string;
@@ -216,7 +218,6 @@ declare module '@mui/material/styles/createPalette' {
   }
   interface PaletteOptions {
     data?: DataColor;
-    dividerLighter?: string;
     //TO-DO remove property
     onSurface: PaletteIntensityOptions;
     //TO-DO remove property
