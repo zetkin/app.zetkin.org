@@ -10,12 +10,7 @@ export default meta;
 
 type Story = StoryObj<typeof ZUITooltip>;
 
-export const Basic: Story = {
-  args: {
-    arrow: 'Down',
-    children: <Button>Hover me</Button>,
-    label: 'A tiny tooltip',
-  },
+const Base: Story = {
   render: function Render(args) {
     return (
       <Box
@@ -33,47 +28,52 @@ export const Basic: Story = {
   },
 };
 
-export const None: Story = {
+export const Top: Story = {
   args: {
-    arrow: 'None',
+    arrow: true,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
+    placement: 'top',
   },
-  render: Basic.render,
+  render: Base.render,
 };
 
-export const Down: Story = {
+export const NoArrow: Story = {
   args: {
-    arrow: 'Down',
+    arrow: false,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
+    placement: 'top',
   },
-  render: Basic.render,
+  render: Base.render,
 };
 
-export const Up: Story = {
+export const Bottom: Story = {
   args: {
-    arrow: 'Up',
+    arrow: true,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
+    placement: 'bottom',
   },
-  render: Basic.render,
+  render: Base.render,
 };
 
 export const Left: Story = {
   args: {
-    arrow: 'Left',
+    arrow: true,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
+    placement: 'left',
   },
-  render: Basic.render,
+  render: Base.render,
 };
 
 export const Right: Story = {
   args: {
-    arrow: 'Right',
+    arrow: true,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
+    placement: 'right',
   },
-  render: Basic.render,
+  render: Base.render,
 };
