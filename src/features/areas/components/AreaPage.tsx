@@ -3,6 +3,7 @@
 import { Avatar, Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 
 import useArea from '../hooks/useArea';
 import useOrganization from 'features/organizations/hooks/useOrganization';
@@ -21,6 +22,9 @@ type AreaPageProps = {
 const AreaPage: FC<AreaPageProps> = ({ areaId, orgId }) => {
   const orgFuture = useOrganization(orgId);
   const areaFuture = useArea(orgId, areaId);
+  const searchParams = useSearchParams();
+
+  const canvassAssId = searchParams?.get('canvassAssId') || null;
 
   const isServer = useServerSide();
   if (isServer) {
@@ -51,7 +55,7 @@ const AreaPage: FC<AreaPageProps> = ({ areaId, orgId }) => {
             </Box>
           </Box>
           <Box height="90vh">
-            <PublicAreaMap area={area} />
+            <PublicAreaMap area={area} canvassAssId={canvassAssId} />
           </Box>
         </>
       )}

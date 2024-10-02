@@ -22,6 +22,7 @@ import usePlaceMutations from '../hooks/usePlaceMutations';
 import ZUIDateTime from 'zui/ZUIDateTime';
 
 type PlaceDialogProps = {
+  canvassAssId: string | null;
   dialogStep: 'place' | 'edit' | 'household';
   onClose: () => void;
   onEdit: () => void;
@@ -33,6 +34,7 @@ type PlaceDialogProps = {
 };
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
+  canvassAssId,
   dialogStep,
   onClose,
   onEdit,
@@ -362,6 +364,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 setNote('');
                 if (selectedHousehold && dialogStep == 'household') {
                   addVisit(selectedHousehold.id, {
+                    canvassAssId,
                     note,
                     timestamp: new Date().toISOString(),
                   });

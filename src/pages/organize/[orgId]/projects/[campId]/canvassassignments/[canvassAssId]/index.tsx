@@ -58,8 +58,8 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
       futures={{ assignment: assignmentFuture, sessions: sessionsFuture }}
     >
       {({ data: { assignment, sessions } }) => {
-        const areaIds = new Set(sessions.map((session) => session.area.id));
-        const areaCount = areaIds.size;
+        const areas = new Set(sessions.map((session) => session.area));
+        const areaCount = areas.size;
 
         const planUrl = `/organize/${orgId}/projects/${
           assignment.campaign.id || 'standalone'
@@ -114,6 +114,9 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 </Box>
               </Box>
             )}
+            <Box display="flex" flexDirection="column">
+              {`Number of areas: ${areaCount}`}
+            </Box>
           </Card>
         );
       }}
