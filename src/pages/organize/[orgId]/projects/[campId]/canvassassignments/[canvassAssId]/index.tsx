@@ -13,6 +13,7 @@ import messageIds from 'features/areas/l10n/messageIds';
 import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
+import useCanvassAssignmentStats from 'features/areas/hooks/useCanvassAssignmentStats';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -50,14 +51,19 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
 }) => {
   const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
   const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
+  const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
   const classes = useStyles();
   const router = useRouter();
 
   return (
     <ZUIFutures
-      futures={{ assignment: assignmentFuture, sessions: sessionsFuture }}
+      futures={{
+        assignment: assignmentFuture,
+        sessions: sessionsFuture,
+        stats: statsFuture,
+      }}
     >
-      {({ data: { assignment, sessions } }) => {
+      {({ data: { assignment, sessions, stats } }) => {
         const areas = new Set(sessions.map((session) => session.area));
         const areaCount = areas.size;
 
@@ -115,7 +121,8 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               </Box>
             )}
             <Box display="flex" flexDirection="column">
-              {`Number of areas: ${areaCount}`}
+              <Box>{`Number of places: ${stats.numPlaces}`}</Box>
+              <Box>{`Number of households: ${stats.numHouseholds}`}</Box>
             </Box>
           </Card>
         );

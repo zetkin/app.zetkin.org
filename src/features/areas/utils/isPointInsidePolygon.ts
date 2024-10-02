@@ -1,7 +1,12 @@
-import { LatLng } from 'leaflet';
-
+type LatLngData = {
+  lat: number;
+  lng: number;
+};
 /*** Stolen from comment on https://stackoverflow.com/questions/31790344/determine-if-a-point-reside-inside-a-leaflet-polygon */
-export default function isPointInsidePolygon(point: LatLng, polygon: LatLng[]) {
+export default function isPointInsidePolygon(
+  point: LatLngData,
+  polygon: LatLngData[]
+) {
   const x = point.lat;
   const y = point.lng;
 
