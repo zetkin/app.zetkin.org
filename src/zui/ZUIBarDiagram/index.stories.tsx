@@ -9,7 +9,7 @@ export default meta;
 
 type Story = StoryObj<typeof ZUIBarDiagram>;
 
-export const Primary: Story = {
+export const TwoSegments: Story = {
   args: {
     size: 'medium',
     values: [25],
@@ -30,16 +30,16 @@ export const FourSegments: Story = {
   },
 };
 
-export const ExtraSmall: Story = {
+export const Small: Story = {
   args: {
-    size: 'extraSmall',
+    size: 'small',
     values: [33, 33, 10],
   },
 };
 
-export const Small: Story = {
+export const Medium: Story = {
   args: {
-    size: 'small',
+    size: 'medium',
     values: [33, 33, 10],
   },
 };

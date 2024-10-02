@@ -1,15 +1,13 @@
 import { Box } from '@mui/material';
+import { useTheme } from '@mui/styles';
 
-type Sizes = 'extraSmall' | 'small' | 'medium' | 'large';
+type Sizes = 'small' | 'medium' | 'large';
 
-const sizes: Record<Sizes, number> = {
-  extraSmall: 5,
-  large: 30,
-  medium: 20,
-  small: 10,
+const sizes: Record<Sizes, string> = {
+  large: '1rem',
+  medium: '0.5rem',
+  small: '0.25rem',
 };
-
-const colors = ['#7800dc', '#9d46e6', '#c189ef', '#e4ccf8'];
 
 interface ZUIBarDiagramProps {
   /**
@@ -26,6 +24,7 @@ interface ZUIBarDiagramProps {
  * remainder of 100 minus the previous segment widths.
  */
 const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
+  const theme = useTheme();
   const progressSum = values.reduce((sum, val) => {
     return sum + val;
   });
@@ -39,11 +38,25 @@ const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
 
   const height = sizes[size];
 
+  const colors =
+    values.length == 3
+      ? [
+          theme.palette.data[900],
+          theme.palette.data[700],
+          theme.palette.data[300],
+          theme.palette.data[100],
+        ]
+      : [
+          theme.palette.data[900],
+          theme.palette.data[500],
+          theme.palette.data[100],
+        ];
+
   return (
     <Box
-      borderRadius={height / 2}
+      borderRadius="2rem"
       display="flex"
-      gap={size === 'large' ? 0.75 : 0.5}
+      gap={size === 'large' ? '0.25rem' : '0.125rem'}
       overflow="hidden"
       width="100%"
     >
