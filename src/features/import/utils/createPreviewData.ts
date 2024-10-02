@@ -54,6 +54,17 @@ export default function createPreviewData(
         });
       }
 
+      if (column.kind === ColumnKind.ENUM) {
+        column.mapping.forEach((mappedColumn) => {
+          if (mappedColumn.value === row[colIdx]) {
+            personPreviewOp.data = {
+              ...personPreviewOp.data,
+              [`${column.field}`]: row[colIdx],
+            };
+          }
+        });
+      }
+
       if (column.kind === ColumnKind.DATE) {
         if (row[colIdx] && column.dateFormat) {
           const date = parseDate(row[colIdx], column.dateFormat);

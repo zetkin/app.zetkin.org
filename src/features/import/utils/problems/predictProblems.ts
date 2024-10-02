@@ -20,6 +20,7 @@ const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
       return false;
     }
   },
+  enum_text: () => true,
   json: () => true,
   text: () => true,
   url: (value) => isURL(value),

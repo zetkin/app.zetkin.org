@@ -26,6 +26,16 @@ function makeFullField(
     slug: 'field',
     title: 'Field',
     type: CUSTOM_FIELD_TYPE.TEXT,
+    enum_choices: [
+      {
+        key: 'first',
+        label: 'First',
+      },
+      {
+        key: 'second',
+        label: 'Second',
+      },
+    ],
     ...overrides,
   };
 }

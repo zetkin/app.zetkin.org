@@ -3,6 +3,7 @@ import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import getUniqueTags from './getUniqueTags';
 import parseDate from './parseDate';
 import { CellData, ColumnKind, Sheet } from './types';
+import { valueToPercent } from '@mui/base';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
@@ -105,6 +106,17 @@ export default function prepareImportOperations(
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx] && mappedColumn.orgId) {
               personImportOps[rowIndex].organizations = [mappedColumn.orgId];
+            }
+          });
+        }
+
+        if (column.kind === ColumnKind.ENUM) {
+          column.mapping.forEach((mappedColumn) => {
+            if (mappedColumn.value === row.data[colIdx] && mappedColumn.key) {
+              personImportOps[rowIndex].data = {
+                ...personImportOps[rowIndex].data,
+                [`${column.field}`]: mappedColumn.key,
+              };
             }
           });
         }

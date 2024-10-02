@@ -55,6 +55,11 @@ export default makeMessages('feat.import', {
           'Some of the values in this column can not be parsed into dates using this format.'
         ),
       },
+      enum: {
+        option: m('Option'),
+        header: m('Map values to options'),
+        value: m('Value'),
+      },
       ids: {
         configExplanation: m(
           'Importing with IDs allows Zetkin (now or in the future) to update existing people in the database instead of creating duplicates.'
@@ -178,6 +183,7 @@ export default makeMessages('feat.import', {
         id: m('You need to configure the IDs'),
         org: m('You need to map values'),
         tag: m('You need to map values'),
+        enum: m('You need to map values'),
       },
       zetkinFieldGroups: {
         fields: m('Fields'),
