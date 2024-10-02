@@ -1,9 +1,8 @@
 import { FC } from 'react';
-import { Box, Button, Divider, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { EnumColumn } from 'features/import/utils/types';
-import OrgConfigRow from './OrgConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';

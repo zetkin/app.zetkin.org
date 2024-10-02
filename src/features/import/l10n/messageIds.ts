@@ -56,8 +56,8 @@ export default makeMessages('feat.import', {
         ),
       },
       enum: {
-        option: m('Option'),
         header: m('Map values to options'),
+        none: m('None'),
         value: m('Value'),
       },
       ids: {
@@ -180,10 +180,10 @@ export default makeMessages('feat.import', {
       tags: m('Tags'),
       unfinished: {
         date: m('You need to configure date format'),
+        enum: m('You need to map values'),
         id: m('You need to configure the IDs'),
         org: m('You need to map values'),
         tag: m('You need to map values'),
-        enum: m('You need to map values'),
       },
       zetkinFieldGroups: {
         fields: m('Fields'),

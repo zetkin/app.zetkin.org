@@ -7,7 +7,6 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  NativeSelect,
   Select,
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
@@ -229,11 +228,11 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                 <InputLabel>{field.title}</InputLabel>
                 <Select
                   fullWidth
-                  value={fieldValues[field.slug]?.toString() ?? ''}
+                  label={field.title}
                   onChange={(ev) => {
                     onChange(field.slug, ev.target.value);
                   }}
-                  label={field.title}
+                  value={fieldValues[field.slug]?.toString() ?? ''}
                 >
                   <MenuItem key="" value="">
                     <em>None</em>

@@ -155,9 +155,9 @@ const Preview = () => {
                   return (
                     <EnumPreview
                       key={columnIdx}
+                      currentSheet={currentSheet}
                       fieldKey={column.field}
                       fields={fields}
-                      currentSheet={currentSheet}
                     />
                   );
                 }

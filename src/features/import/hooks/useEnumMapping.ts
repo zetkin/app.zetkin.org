@@ -1,7 +1,6 @@
 import { columnUpdate } from '../store';
 import { useAppDispatch } from 'core/hooks';
 import { CellData, Column, ColumnKind } from '../utils/types';
-import { EnumChoice } from 'utils/types/zetkin';
 
 export default function useEnumMapping(column: Column, columnIndex: number) {
   const dispatch = useAppDispatch();

@@ -1,7 +1,7 @@
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import { useMessages } from 'core/i18n';
-import { EnumChoice, ZetkinOrganization } from 'utils/types/zetkin';
+import { EnumChoice } from 'utils/types/zetkin';
 import { CellData, ColumnKind, Sheet } from 'features/import/utils/types';
 import useColumn from 'features/import/hooks/useColumn';
 import { useNumericRouteParams } from 'core/hooks';

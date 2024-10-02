@@ -3,7 +3,6 @@ import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import getUniqueTags from './getUniqueTags';
 import parseDate from './parseDate';
 import { CellData, ColumnKind, Sheet } from './types';
-import { valueToPercent } from '@mui/base';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;

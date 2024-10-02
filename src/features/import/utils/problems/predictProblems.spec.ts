@@ -18,14 +18,6 @@ function makeFullField(
 ): ZetkinCustomField {
   return {
     description: '',
-    id: 1001,
-    organization: {
-      id: 1,
-      title: 'KPD',
-    },
-    slug: 'field',
-    title: 'Field',
-    type: CUSTOM_FIELD_TYPE.TEXT,
     enum_choices: [
       {
         key: 'first',
@@ -36,6 +28,14 @@ function makeFullField(
         label: 'Second',
       },
     ],
+    id: 1001,
+    organization: {
+      id: 1,
+      title: 'KPD',
+    },
+    slug: 'field',
+    title: 'Field',
+    type: CUSTOM_FIELD_TYPE.TEXT,
     ...overrides,
   };
 }

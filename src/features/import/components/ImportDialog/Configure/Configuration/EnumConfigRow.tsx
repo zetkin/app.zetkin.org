@@ -1,7 +1,6 @@
 import { ArrowForward, Delete } from '@mui/icons-material';
 import {
   Box,
-  Button,
   FormControl,
   IconButton,
   InputLabel,
@@ -9,7 +8,7 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { EnumChoice } from 'utils/types/zetkin';
@@ -35,7 +34,6 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
   title,
 }) => {
   const messages = useMessages(messageIds);
-  const [mapping, setMapping] = useState(false);
 
   return (
     <Box display="flex" flexDirection="column">
@@ -60,10 +58,10 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
         >
           <FormControl fullWidth size="small">
             <InputLabel>
-              <Msg id={messageIds.configuration.configure.enum.option} />
+              <Msg id={messageIds.configuration.configure.enum.none} />
             </InputLabel>
             <Select
-              label={messages.configuration.configure.enum.option()}
+              label={messages.configuration.configure.enum.none()}
               onChange={(event) => {
                 if (typeof event.target.value == 'string') {
                   onSelectOption(event.target.value);
@@ -81,7 +79,6 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
           <IconButton
             onClick={() => {
               onDeselectOption();
-              setMapping(false);
             }}
           >
             <Delete color="secondary" />
