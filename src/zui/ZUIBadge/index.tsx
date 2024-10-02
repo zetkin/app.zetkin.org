@@ -55,7 +55,7 @@ const useStyles = makeStyles<
 const ZUIBadge: FC<ZUIBadgeProps> = ({
   number,
   status,
-  truncateLargeNumber: hideLargeNumber = false,
+  truncateLargeNumber = false,
 }) => {
   const classes = useStyles({ number, status });
 
@@ -65,8 +65,8 @@ const ZUIBadge: FC<ZUIBadgeProps> = ({
   return (
     <Box className={classes[style]}>
       <Typography className={classes.text}>
-        {showValue && !hideLargeNumber && number.toString()}
-        {showValue && hideLargeNumber && number > 99 && '99+'}
+        {showValue && !truncateLargeNumber && number.toString()}
+        {showValue && truncateLargeNumber && number > 99 && '99+'}
       </Typography>
     </Box>
   );
