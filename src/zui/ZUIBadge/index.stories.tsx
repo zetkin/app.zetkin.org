@@ -27,6 +27,7 @@ export const Scheduled: Story = {
   args: {
     number: 1000,
     status: 'scheduled',
+    truncateLargeNumber: true,
   },
 };
 
