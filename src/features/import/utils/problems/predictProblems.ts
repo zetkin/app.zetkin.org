@@ -46,18 +46,6 @@ export function predictProblems(
     (col) => col.kind == ColumnKind.FIELD && col.field == 'last_name'
   );
 
-  if (!sheetHasId) {
-    if (sheetHasFirstName && sheetHasLastName) {
-      problems.push({
-        kind: ImportProblemKind.UNCONFIGURED_ID,
-      });
-    } else {
-      problems.push({
-        kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
-      });
-    }
-  }
-
   function accumulateFieldProblem(field: string, row: number) {
     const existing = problemByField[field];
     if (existing) {
@@ -75,6 +63,7 @@ export function predictProblems(
   customFields.forEach((field) => {
     customFieldsBySlug[field.slug] = field;
   });
+  let missingValueInName = false;
 
   sheet.rows.forEach((row, index) => {
     const rowIndex = sheet.firstRowIsHeaders ? index - 1 : index;
@@ -133,11 +122,18 @@ export function predictProblems(
             }
           }
           hadImpact = true;
+        } else {
+          if (
+            column.kind == ColumnKind.FIELD &&
+            (column.field == 'first_name' || column.field == 'last_name')
+          ) {
+            missingValueInName = true;
+          }
         }
       }
     });
 
-    if (sheetHasId && sheetHasFirstName && sheetHasLastName) {
+    if (sheetHasFirstName && sheetHasLastName) {
       if (!rowHasId && (!rowHasFirstName || !rowHasLastName)) {
         if (!rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME]) {
           rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME] = {
@@ -152,6 +148,18 @@ export function predictProblems(
       }
     }
   });
+
+  if (!sheetHasId && !missingValueInName) {
+    if (sheetHasFirstName && sheetHasLastName) {
+      problems.push({
+        kind: ImportProblemKind.UNCONFIGURED_ID,
+      });
+    } else {
+      problems.push({
+        kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
+      });
+    }
+  }
 
   if (!hadImpact) {
     problems.push({

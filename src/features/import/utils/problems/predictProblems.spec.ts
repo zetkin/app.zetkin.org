@@ -446,6 +446,40 @@ describe('predictProblem()', () => {
     ]);
   });
 
+  it('returns problem when either the first name or last name value is missing', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'email',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+      ],
+      rows: [
+        { data: ['Clara', 'Zetkin', 'zetkin@example.com'] },
+        { data: ['John', '', 'john@example.com'] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        indices: [1],
+        kind: ImportProblemKind.MISSING_ID_AND_NAME,
+      },
+    ]);
+  });
+
   it('returns no problems when date column is configured and all cells have a value', () => {
     const sheet = makeFullSheet({
       columns: [
