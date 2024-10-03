@@ -82,7 +82,9 @@ const ZUIRadioGroup = ({
   return (
     <FormControl disabled={disabled}>
       <FormLabel id={labelId}>
-        <Typography variant="labelXlMedium">{label}</Typography>
+        <Typography color="primary" variant="labelXlMedium">
+          {label}
+        </Typography>
       </FormLabel>
       <RadioGroup
         aria-describedby={helperTextId}
@@ -100,7 +102,14 @@ const ZUIRadioGroup = ({
               control={<Radio />}
               disabled={option.disabled}
               label={
-                <Typography variant="labelXlMedium">{option.label}</Typography>
+                <Typography
+                  sx={(theme) => ({
+                    color: option.disabled ? theme.palette.text.disabled : '',
+                  })}
+                  variant="labelXlMedium"
+                >
+                  {option.label}
+                </Typography>
               }
               labelPlacement={labelPlacement}
               sx={{
