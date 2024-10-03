@@ -5,7 +5,7 @@ export interface ZUISwitchProps {
   checked: boolean;
   disabled?: boolean;
   label: string;
-  onChange: (checked: boolean) => void;
+  onChange: (newCheckedState: boolean) => void;
 
   /**
    * The size of the switch.
@@ -27,7 +27,7 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
       control={
         <Switch
           checked={checked}
-          onChange={(event, checked) => onChange(checked)}
+          onChange={(event, newCheckedState) => onChange(newCheckedState)}
           size={size}
         />
       }

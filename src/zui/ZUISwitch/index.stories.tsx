@@ -22,7 +22,7 @@ const Base: Story = {
         checked={checked}
         disabled={args.disabled}
         label={args.label}
-        onChange={() => setChecked(!checked)}
+        onChange={(newCheckedState) => setChecked(newCheckedState)}
         size={args.size}
       />
     );
