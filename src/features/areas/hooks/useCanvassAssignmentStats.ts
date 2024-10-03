@@ -1,6 +1,6 @@
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { CanvassAssignmentStats } from '../types';
+import { ZetkinCanvassAssignmentStats } from '../types';
 import { statsLoad, statsLoaded } from '../store';
 
 export default function useCanvassAssignmentStats(
@@ -17,7 +17,7 @@ export default function useCanvassAssignmentStats(
     actionOnLoad: () => statsLoad(canvassAssId),
     actionOnSuccess: (data) => statsLoaded([canvassAssId, data]),
     loader: () =>
-      apiClient.get<CanvassAssignmentStats>(
+      apiClient.get<ZetkinCanvassAssignmentStats>(
         `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/stats`
       ),
   });

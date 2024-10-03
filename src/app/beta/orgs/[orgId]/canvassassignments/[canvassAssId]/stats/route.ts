@@ -130,11 +130,11 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       return Response.json({
         data: {
-          numHouseholds: households.length,
-          numPlaces: uniquePlaces.length,
-          numVisitedAreas: Array.from(new Set(visitedAreas)).length,
-          numVisitedHouseholds: visits.length,
-          numVisitedPlaces: visitedPlaces.length,
+          num_households: households.length,
+          num_places: uniquePlaces.length,
+          num_visited_areas: Array.from(new Set(visitedAreas)).length,
+          num_visited_households: visits.length,
+          num_visited_places: visitedPlaces.length,
         },
       });
     }

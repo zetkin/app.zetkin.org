@@ -162,16 +162,16 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     values={[
                       {
                         color: theme.palette.statusColors.green,
-                        value: stats.numVisitedAreas,
+                        value: stats.num_visited_areas,
                       },
                       {
                         color: theme.palette.statusColors.orange,
-                        value: areaCount - stats.numVisitedAreas,
+                        value: areaCount - stats.num_visited_areas,
                       },
                     ]}
                   />
                   <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.numVisitedAreas} logged`}</Typography>
+                    <Typography>{`${stats.num_visited_areas} logged`}</Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -183,7 +183,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     width="100%"
                   >
                     <Typography variant="h5">Places</Typography>
-                    <ZUIAnimatedNumber value={stats.numPlaces}>
+                    <ZUIAnimatedNumber value={stats.num_places}>
                       {(animatedValue) => (
                         <Box className={classes.statsChip}>{animatedValue}</Box>
                       )}
@@ -193,16 +193,16 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     values={[
                       {
                         color: theme.palette.statusColors.green,
-                        value: stats.numVisitedPlaces,
+                        value: stats.num_visited_places,
                       },
                       {
                         color: theme.palette.statusColors.orange,
-                        value: stats.numPlaces - stats.numVisitedPlaces,
+                        value: stats.num_places - stats.num_visited_places,
                       },
                     ]}
                   />
                   <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.numVisitedPlaces} logged`}</Typography>
+                    <Typography>{`${stats.num_visited_places} logged`}</Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -214,7 +214,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     width="100%"
                   >
                     <Typography variant="h5">Households</Typography>
-                    <ZUIAnimatedNumber value={stats.numHouseholds}>
+                    <ZUIAnimatedNumber value={stats.num_households}>
                       {(animatedValue) => (
                         <Box className={classes.statsChip}>{animatedValue}</Box>
                       )}
@@ -224,16 +224,17 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     values={[
                       {
                         color: theme.palette.statusColors.green,
-                        value: stats.numVisitedHouseholds,
+                        value: stats.num_visited_households,
                       },
                       {
                         color: theme.palette.statusColors.orange,
-                        value: stats.numHouseholds - stats.numVisitedHouseholds,
+                        value:
+                          stats.num_households - stats.num_visited_households,
                       },
                     ]}
                   />
                   <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.numVisitedHouseholds} logged`}</Typography>
+                    <Typography>{`${stats.num_visited_households} logged`}</Typography>
                   </Box>
                 </Box>
               </Box>

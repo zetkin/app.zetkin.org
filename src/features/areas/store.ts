@@ -8,7 +8,7 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import {
-  CanvassAssignmentStats,
+  ZetkinCanvassAssignmentStats,
   ZetkinArea,
   ZetkinCanvassAssignee,
   ZetkinCanvassAssignment,
@@ -31,7 +31,7 @@ export interface AreasStoreSlice {
   placeList: RemoteList<ZetkinPlace>;
   statsByCanvassAssId: Record<
     string,
-    RemoteItem<CanvassAssignmentStats & { id: string }>
+    RemoteItem<ZetkinCanvassAssignmentStats & { id: string }>
   >;
 }
 
@@ -330,18 +330,18 @@ const areasSlice = createSlice({
       state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
         data: statsItem?.data || {
           id: canvassAssId,
-          numHouseholds: 0,
-          numPlaces: 0,
-          numVisitedAreas: 0,
-          numVisitedHouseholds: 0,
-          numVisitedPlaces: 0,
+          num_households: 0,
+          num_places: 0,
+          num_visited_areas: 0,
+          num_visited_households: 0,
+          num_visited_places: 0,
         },
         isLoading: true,
       });
     },
     statsLoaded: (
       state,
-      action: PayloadAction<[string, CanvassAssignmentStats]>
+      action: PayloadAction<[string, ZetkinCanvassAssignmentStats]>
     ) => {
       const [canvassAssId, stats] = action.payload;
 
