@@ -56,7 +56,7 @@ const EnumConfig: FC<EnumConfigProps> = ({ uiDataColumn }) => {
         </Box>
         <Box width="50%">
           <Typography variant="body2">
-            {messages.configuration.configure.enum.option().toLocaleUpperCase()}
+            {messages.configuration.configure.enum.none().toLocaleUpperCase()}
           </Typography>
         </Box>
       </Box>

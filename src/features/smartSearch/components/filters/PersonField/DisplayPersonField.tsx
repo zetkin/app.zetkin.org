@@ -34,34 +34,64 @@ const DisplayPersonField = ({
   const field = getField(slug);
 
   const fieldType = field?.type || '';
-  if (fieldType != 'date' && fieldType != 'text' && fieldType != 'url') {
+  if (
+    fieldType != 'date' &&
+    fieldType != 'text' &&
+    fieldType != 'url' &&
+    fieldType != 'enum_text'
+  ) {
     // TODO:
     return null;
   }
-
+  let fieldMessage;
+  if (fieldType == 'date') {
+    fieldMessage = (
+      <Msg
+        id={localMessageIds.preview.date}
+        values={{
+          fieldName: <UnderlinedText text={field?.title ?? ''} />,
+          timeFrame: <DisplayTimeFrame config={timeFrame} />,
+        }}
+      />
+    );
+  } else if (
+    fieldType == 'enum_text' &&
+    field?.enum_choices &&
+    search !== undefined
+  ) {
+    fieldMessage = (
+      <Msg
+        id={localMessageIds.preview[fieldType]}
+        values={{
+          fieldName: <UnderlinedText text={field?.title ?? ''} />,
+          searchTerm: (
+            <UnderlinedText
+              text={
+                field?.enum_choices.find((c) => c.key == search)?.label ||
+                search
+              }
+            />
+          ),
+        }}
+      />
+    );
+  } else {
+    fieldMessage = (
+      <Msg
+        id={localMessageIds.preview[fieldType]}
+        values={{
+          fieldName: <UnderlinedText text={field?.title ?? ''} />,
+          searchTerm: <UnderlinedText text={search || ''} />,
+        }}
+      />
+    );
+  }
   return (
     <Msg
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        field:
-          fieldType == 'date' ? (
-            <Msg
-              id={localMessageIds.preview.date}
-              values={{
-                fieldName: <UnderlinedText text={field?.title ?? ''} />,
-                timeFrame: <DisplayTimeFrame config={timeFrame} />,
-              }}
-            />
-          ) : (
-            <Msg
-              id={localMessageIds.preview[fieldType]}
-              values={{
-                fieldName: <UnderlinedText text={field?.title ?? ''} />,
-                searchTerm: <UnderlinedText text={search || ''} />,
-              }}
-            />
-          ),
+        field: fieldMessage,
       }}
     />
   );

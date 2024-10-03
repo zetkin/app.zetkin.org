@@ -77,7 +77,7 @@ export default function useColumn(orgId: number) {
       };
     } else if (field.type == CUSTOM_FIELD_TYPE.ENUM_TEXT) {
       return {
-        enumChoices: field.enum_choices,
+        enumChoices: field.enum_choices || null,
         label: field.title,
         value: `enum:${field.slug}`,
       };

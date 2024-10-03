@@ -191,7 +191,7 @@ export interface ZetkinCustomField {
   description: string | null;
   type: CUSTOM_FIELD_TYPE;
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
-  enum_choices: EnumChoice[];
+  enum_choices?: EnumChoice[] | null;
 }
 
 export interface ZetkinSession {

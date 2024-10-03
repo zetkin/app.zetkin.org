@@ -1,4 +1,4 @@
-import { MenuItem } from '@mui/material';
+import { MenuItem, Select } from '@mui/material';
 import { FormEvent, useEffect } from 'react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
@@ -177,6 +177,32 @@ const PersonField = ({
                   onChange={(e) => handleValueChange(e.target.value)}
                   value={filter.config.search || ''}
                 />
+              ),
+            }}
+          />
+        );
+      } else if (
+        type == CUSTOM_FIELD_TYPE.ENUM_TEXT &&
+        selectedField?.enum_choices
+      ) {
+        return (
+          <Msg
+            id={localMessageIds.edit.enum_text}
+            values={{
+              fieldSelect,
+              selectInput: (
+                <StyledSelect
+                  onChange={(e) => {
+                    handleValueChange(e.target.value);
+                  }}
+                  value={filter.config.search || ''}
+                >
+                  {selectedField.enum_choices.map((c) => (
+                    <MenuItem key={c.key} value={c.key}>
+                      {c.label}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
               ),
             }}
           />

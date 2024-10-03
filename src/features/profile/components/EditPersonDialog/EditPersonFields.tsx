@@ -221,7 +221,10 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               value={fieldValues[field.slug]?.toString() ?? ''}
             />
           );
-        } else if (field.type === CUSTOM_FIELD_TYPE.ENUM_TEXT) {
+        } else if (
+          field.type === CUSTOM_FIELD_TYPE.ENUM_TEXT &&
+          field.enum_choices
+        ) {
           return (
             <Box alignItems="flex-start" display="flex" flex={1}>
               <FormControl fullWidth>
