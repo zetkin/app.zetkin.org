@@ -1,12 +1,5 @@
-import { Delete } from '@mui/icons-material';
-import { FC } from 'react';
-import {
-  Autocomplete,
-  Box,
-  IconButton,
-  TextField,
-  useTheme,
-} from '@mui/material';
+import { FC, HTMLAttributes } from 'react';
+import { Autocomplete, Box, Checkbox, Chip, TextField } from '@mui/material';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
@@ -28,18 +21,22 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
-  const theme = useTheme();
+
+  const nativePersonFields = Object.values(NATIVE_PERSON_FIELDS).filter(
+    (field) =>
+      field !== NATIVE_PERSON_FIELDS.EXT_ID && field !== NATIVE_PERSON_FIELDS.ID
+  );
 
   if (!joinForm) {
     return null;
   }
 
   function slugToLabel(slug: string): string {
-    const isNativeField = Object.values(NATIVE_PERSON_FIELDS).some(
+    const isNativeField = nativePersonFields.some(
       (nativeSlug) => nativeSlug == slug
     );
     if (isNativeField) {
-      const typedSlug = slug as NATIVE_PERSON_FIELDS;
+      const typedSlug = slug as typeof nativePersonFields[number];
       return globalMessages.personFields[typedSlug]();
     } else {
       const field = customFields.data?.find((field) => field.slug == slug);
@@ -68,16 +65,28 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       </Box>
       <Box mb={1}>
         <Autocomplete
+          disableCloseOnSelect
           fullWidth
           getOptionDisabled={(option) => joinForm.fields.includes(option)}
+          // This gets the label for selected options.
           getOptionLabel={slugToLabel}
-          onChange={(ev, value) => {
-            if (value) {
-              updateForm({ fields: [...joinForm.fields, value] });
+          multiple
+          onChange={(ev, values) => {
+            if (values.length > 0) {
+              updateForm({
+                fields: values,
+              });
+            }
+            if (values.length === 0) {
+              updateForm({
+                fields: ['first_name', 'last_name'],
+              });
+            } else {
+              return;
             }
           }}
           options={[
-            ...Object.values(NATIVE_PERSON_FIELDS),
+            ...nativePersonFields,
             ...(customFields.data?.map((field) => field.slug) ?? []),
           ]}
           renderInput={(params) => (
@@ -86,44 +95,38 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
               placeholder={messages.formPane.labels.addField()}
             />
           )}
-          value={null}
-        />
-      </Box>
-      <Box>
-        {joinForm.fields.map((slug) => {
-          return (
-            <Box
-              key={slug}
-              display="flex"
-              justifyContent="space-between"
-              my={1}
-            >
-              <Box
-                sx={{
-                  backgroundColor: theme.palette.grey[200],
-                  borderRadius: 1,
-                  px: 2,
-                  py: 1,
-                }}
-              >
-                {slugToLabel(slug)}
-              </Box>
-              {slug != 'first_name' && slug != 'last_name' && (
-                <IconButton
-                  onClick={() =>
-                    updateForm({
-                      fields: joinForm.fields.filter(
-                        (existingSlug) => existingSlug != slug
-                      ),
-                    })
+          renderOption={(props, option, { selected }) => {
+            // Type assertion needed due to currently used version of mui/material missing key prop in renderOption.
+            // This is fixed in later versions.
+            // https://github.com/mui/material-ui/issues/39833
+            const { key, ...optionProps } =
+              props as HTMLAttributes<HTMLLIElement> & { key: string };
+            return (
+              <li key={key} {...optionProps}>
+                <Checkbox checked={selected} />
+                {/* This gets the label for options. */}
+                {slugToLabel(option)}
+              </li>
+            );
+          }}
+          renderTags={(tagValue, getTagProps) =>
+            tagValue.map((option, index) => {
+              const { key, ...tagProps } = getTagProps({ index });
+              return (
+                <Chip
+                  key={key}
+                  label={slugToLabel(option)}
+                  {...tagProps}
+                  disabled={
+                    option === NATIVE_PERSON_FIELDS.FIRST_NAME ||
+                    option === NATIVE_PERSON_FIELDS.LAST_NAME
                   }
-                >
-                  <Delete />
-                </IconButton>
-              )}
-            </Box>
-          );
-        })}
+                />
+              );
+            })
+          }
+          value={joinForm.fields}
+        />
       </Box>
     </>
   );
