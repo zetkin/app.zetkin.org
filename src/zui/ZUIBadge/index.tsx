@@ -70,6 +70,7 @@ const ZUIBadge: FC<ZUIBadgeProps> = ({
     <Box className={classes[style]}>
       <Typography className={classes.text}>
         {showValue && !truncateLargeNumber && number.toString()}
+        {showValue && truncateLargeNumber && number <= 99 && number.toString()}
         {showValue && truncateLargeNumber && number > 99 && '99+'}
       </Typography>
     </Box>
