@@ -6,7 +6,9 @@ import { getContrastColor } from 'utils/colorUtils';
 import { ActivityStatus } from 'zui/types';
 
 export interface ZUIBadgeProps {
-  /** Number to be displayed inside the badge */
+  /**
+   * Number to be displayed inside the badge
+   */
   number?: number;
 
   /** If true, a number over 99 will be displayed in the badge as '99+'.
@@ -14,7 +16,9 @@ export interface ZUIBadgeProps {
    */
   truncateLargeNumber?: boolean;
 
-  /** Activity status to determine the color of the badge. */
+  /**
+   * Activity status to determine the color of the badge.
+   */
   status: ActivityStatus;
 }
 
