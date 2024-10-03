@@ -28,7 +28,7 @@ const DuplicatesPage: PageWithLayout = () => {
     return null;
   }
 
-  const filteredList = list.filter((cluster) => !cluster.dismissed);
+  const filteredList = list.filter((cluster) => cluster.status == 'pending');
 
   return (
     <>
