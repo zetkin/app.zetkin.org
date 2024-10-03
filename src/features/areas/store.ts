@@ -332,6 +332,7 @@ const areasSlice = createSlice({
           id: canvassAssId,
           numHouseholds: 0,
           numPlaces: 0,
+          numVisitedHouseholds: 0,
         },
         isLoading: true,
       });

@@ -8,6 +8,7 @@ import {
 } from 'features/areas/models';
 import {
   Household,
+  Visit,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from 'features/areas/types';
@@ -106,10 +107,20 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const households: Household[] = [];
       uniquePlaces.forEach((place) => households.push(...place.households));
 
+      const visits: Visit[] = [];
+      households.forEach((household) => {
+        household.visits.forEach((visit) => {
+          if (visit.canvassAssId == params.canvassAssId) {
+            visits.push(visit);
+          }
+        });
+      });
+
       return Response.json({
         data: {
           numHouseholds: households.length,
           numPlaces: uniquePlaces.length,
+          numVisitedHouseholds: visits.length,
         },
       });
     }

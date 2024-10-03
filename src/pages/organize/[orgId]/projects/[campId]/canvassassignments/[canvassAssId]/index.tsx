@@ -121,8 +121,10 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               </Box>
             )}
             <Box display="flex" flexDirection="column">
+              <Box>{`Number of areas: ${areaCount}`}</Box>
               <Box>{`Number of places: ${stats.numPlaces}`}</Box>
               <Box>{`Number of households: ${stats.numHouseholds}`}</Box>
+              <Box>{`Number of households with visits in this assignment: ${stats.numVisitedHouseholds}`}</Box>
             </Box>
           </Card>
         );
