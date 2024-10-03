@@ -5,7 +5,9 @@ import { useTheme } from '@mui/styles';
 type ZUIDividerProps = Partial<
   Pick<DividerProps, 'flexItem' | 'orientation'>
 > & {
-  /** The variant of the divider. Defaults to 'fullWidth' */
+  /**
+   * The variant of the divider. Defaults to 'fullWidth'
+   */
   variant?: 'middle' | 'fullWidth';
 };
 
