@@ -11,7 +11,6 @@ type Story = StoryObj<typeof ZUIRadioGroup>;
 
 export const Primary: Story = {
   args: {
-    defaultValue: 'swe',
     direction: 'column',
     helperText: 'Helper text',
     label: 'Example Form',
@@ -28,7 +27,6 @@ export const Primary: Story = {
 
 export const Disabled: Story = {
   args: {
-    defaultValue: 'swe',
     direction: 'column',
     disabled: true,
     label: 'Example Form',
@@ -45,7 +43,6 @@ export const Disabled: Story = {
 
 export const OneDisabledOption: Story = {
   args: {
-    defaultValue: 'swe',
     direction: 'column',
     label: 'Example Form',
     labelPlacement: 'end',

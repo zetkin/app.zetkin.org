@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { useId } from 'react';
 
-// Infers type of value
 type Option = {
   disabled?: boolean;
   label: string;
@@ -19,26 +18,54 @@ type LabelPlacement = 'start' | 'end' | 'top' | 'bottom';
 type Direction = 'row' | 'column';
 type Sizes = 'small' | 'medium' | 'large';
 
-const sizes: Record<Sizes, number> = {
-  large: 40,
-  medium: 32,
-  small: 24,
+const sizes: Record<Sizes, string> = {
+  large: '1.75rem',
+  medium: '1.5rem',
+  small: '1.25rem',
 };
 
 interface ZUIRadioButtonProps {
-  defaultValue?: Option['value'];
   direction?: Direction;
+
+  /**
+   * Set this to true if you want to disable the whole
+   * radio group.
+   *
+   * If you want to disable a single radio, you do that in the options array.
+   */
   disabled?: boolean;
+
   label: string;
+
   helperText?: string;
+
   labelPlacement?: LabelPlacement;
-  onChange?: (newValue: Option['value']) => void;
+
+  /**
+   * Fires when a radio is selected.
+   */
+  onChange: (newValue: Option['value']) => void;
+
+  /**
+   * The options to select from.
+   * Should be an array of objects with a label and a value,
+   * and an optional boolean for if it is disabled (defaults to false).
+   */
   options: Option[];
+
+  /**
+   * Small, medium or large. Only affects the size of the radios.
+   */
   size?: Sizes;
+
+  /**
+   * The selected radio option.
+   * To have no radio selected as default, initiate to a falsy value.
+   */
+  value: Option['value'];
 }
 
 const ZUIRadioGroup = ({
-  defaultValue,
   direction = 'column',
   disabled,
   label,
@@ -47,46 +74,51 @@ const ZUIRadioGroup = ({
   onChange,
   options,
   size = 'medium',
+  value,
 }: ZUIRadioButtonProps) => {
   const labelId = useId();
   const helperTextId = useId();
 
   return (
-    <Typography variant="bodyMdSemiBold">
-      <FormControl disabled={disabled}>
-        <FormLabel id={labelId}>{label}</FormLabel>
-        <RadioGroup
-          aria-describedby={helperTextId}
-          aria-labelledby={labelId}
-          defaultValue={defaultValue}
-          onChange={(e) => {
-            onChange && onChange(e.target.value);
-          }}
-          row={direction === 'row'}
-        >
-          {options.map((option) => {
-            return (
-              <FormControlLabel
-                key={option.label}
-                control={<Radio />}
-                disabled={option.disabled}
-                label={option.label}
-                labelPlacement={labelPlacement}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    fontSize: sizes[size],
-                  },
-                }} //https://mui.com/material-ui/react-radio-button/#size
-                value={option.value}
-              />
-            );
-          })}
-        </RadioGroup>
-        <Typography color="GrayText" variant="labelSmMedium">
+    <FormControl disabled={disabled}>
+      <FormLabel id={labelId}>
+        <Typography variant="labelXlMedium">{label}</Typography>
+      </FormLabel>
+      <RadioGroup
+        aria-describedby={helperTextId}
+        aria-labelledby={labelId}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+        row={direction === 'row'}
+        value={value}
+      >
+        {options.map((option) => {
+          return (
+            <FormControlLabel
+              key={option.value}
+              control={<Radio />}
+              disabled={option.disabled}
+              label={
+                <Typography variant="labelXlMedium">{option.label}</Typography>
+              }
+              labelPlacement={labelPlacement}
+              sx={{
+                '& .MuiSvgIcon-root': {
+                  fontSize: sizes[size],
+                },
+              }}
+              value={option.value}
+            />
+          );
+        })}
+      </RadioGroup>
+      {helperText && (
+        <Typography color="secondary" id={helperTextId} variant="labelSmMedium">
           {helperText}
         </Typography>
-      </FormControl>
-    </Typography>
+      )}
+    </FormControl>
   );
 };
 
