@@ -468,6 +468,15 @@ export const newTheme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: '0.625rem',
+          fontWeight: 600,
+          lineHeight: '0.875rem',
+        },
+      },
+    },
   },
   elevation: {
     bottom: {
