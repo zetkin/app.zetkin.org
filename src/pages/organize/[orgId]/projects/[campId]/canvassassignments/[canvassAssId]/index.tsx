@@ -239,6 +239,17 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 </Box>
               </Box>
             </Card>
+            <Card>
+              <Box display="flex" flexDirection="column" padding={2}>
+                <Typography variant="h5">Rogue visits</Typography>
+                <Typography>
+                  {`Number of visited places outside the assigned areas: ${stats.num_visited_places_outside_areas}`}
+                </Typography>
+                <Typography>
+                  {`Number of visited households outside the assigned areas: ${stats.num_visited_households_outside_areas}`}
+                </Typography>
+              </Box>
+            </Card>
           </Box>
         );
       }}

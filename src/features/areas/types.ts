@@ -5,7 +5,9 @@ export type ZetkinCanvassAssignmentStats = {
   num_places: number;
   num_visited_areas: number;
   num_visited_households: number;
+  num_visited_households_outside_areas: number;
   num_visited_places: number;
+  num_visited_places_outside_areas: number;
 };
 
 export type PointData = [number, number];

@@ -334,7 +334,9 @@ const areasSlice = createSlice({
           num_places: 0,
           num_visited_areas: 0,
           num_visited_households: 0,
+          num_visited_households_outside_areas: 0,
           num_visited_places: 0,
+          num_visited_places_outside_areas: 0,
         },
         isLoading: true,
       });

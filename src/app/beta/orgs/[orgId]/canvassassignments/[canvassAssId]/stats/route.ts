@@ -77,8 +77,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const areas = sessions.map((session) => session.area);
 
       //Get all places
-      const placeModels = await PlaceModel.find({ orgId });
-      const places: ZetkinPlace[] = placeModels.map((model) => ({
+      const allPlaceModels = await PlaceModel.find({ orgId });
+
+      const allPlaces: ZetkinPlace[] = allPlaceModels.map((model) => ({
         description: model.description,
         households: model.households,
         id: model._id.toString(),
@@ -93,7 +94,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       //Find places in the given areas
       const placesInAreas: PlaceWithAreaId[] = [];
       areas.forEach((area) => {
-        places.forEach((place) => {
+        allPlaces.forEach((place) => {
           const placeIsInArea = isPointInsidePolygon(
             { lat: place.position.lat, lng: place.position.lng },
             area.points.map((point) => ({ lat: point[0], lng: point[1] }))
@@ -106,23 +107,44 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       });
 
       /**https://yagisanatode.com/get-a-unique-list-of-objects-in-an-array-of-object-in-javascript/ */
-      const uniquePlaces = [
+      const uniquePlacesInAreas = [
         ...new Map(placesInAreas.map((place) => [place['id'], place])).values(),
       ];
 
-      const visits: Visit[] = [];
-      const visitedPlaces: ZetkinPlace[] = [];
+      const visitsInAreas: Visit[] = [];
+      const visitedPlacesInAreas: string[] = [];
       const visitedAreas: string[] = [];
-      const households: Household[] = [];
+      const householdsInAreas: Household[] = [];
 
-      uniquePlaces.forEach((place) => {
-        households.push(...place.households);
+      uniquePlacesInAreas.forEach((place) => {
+        householdsInAreas.push(...place.households);
         place.households.forEach((household) => {
           household.visits.forEach((visit) => {
             if (visit.canvassAssId == params.canvassAssId) {
               visitedAreas.push(place.areaId);
-              visitedPlaces.push(place);
-              visits.push(visit);
+              visitedPlacesInAreas.push(place.id);
+              visitsInAreas.push(visit);
+            }
+          });
+        });
+      });
+
+      //Find places outside the areas that have visits in this assignment
+      const idsOfPlacesInAreas = new Set(
+        placesInAreas.map((place) => place.id)
+      );
+      const placesOutsideAreas = allPlaces.filter(
+        (place) => !idsOfPlacesInAreas.has(place.id)
+      );
+
+      const visitsOutsideAreas: Visit[] = [];
+      const visitedPlacesOutsideAreas: string[] = [];
+      placesOutsideAreas.forEach((place) => {
+        place.households.forEach((household) => {
+          household.visits.forEach((visit) => {
+            if (visit.canvassAssId == params.canvassAssId) {
+              visitedPlacesOutsideAreas.push(place.id);
+              visitsOutsideAreas.push(visit);
             }
           });
         });
@@ -130,11 +152,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       return Response.json({
         data: {
-          num_households: households.length,
-          num_places: uniquePlaces.length,
+          num_households: householdsInAreas.length,
+          num_places: uniquePlacesInAreas.length,
           num_visited_areas: Array.from(new Set(visitedAreas)).length,
-          num_visited_households: visits.length,
-          num_visited_places: visitedPlaces.length,
+          num_visited_households: visitsInAreas.length,
+          num_visited_households_outside_areas: visitsOutsideAreas.length,
+          num_visited_places: Array.from(new Set(visitedPlacesInAreas)).length,
+          num_visited_places_outside_areas: Array.from(
+            new Set(visitedPlacesOutsideAreas)
+          ).length,
         },
       });
     }
