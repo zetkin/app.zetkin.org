@@ -2,15 +2,20 @@ import { Tooltip } from '@mui/material';
 import { FC, ReactElement } from 'react';
 
 type ZUITooltipProps = {
-  /** If the tooltip should have a small arrow or not. Defaults to 'true' */
+  /**
+   * If the tooltip should have a small arrow or not. Defaults to 'true'
+   */
   arrow?: boolean;
 
   children: ReactElement;
 
-  /** The text content of the tooltip */
+  /**
+   * The text content of the tooltip
+   */
   label: string;
 
-  /** Where the tooltip should attach in relation to its children.
+  /**
+   * Where the tooltip should attach in relation to its children.
    *
    * If the available space is not enough to show the tooltip at the given placement
    * it will automatically change to show at the opposite side on the same axis.
