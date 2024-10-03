@@ -3,21 +3,29 @@ import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
 
 import { getContrastColor } from 'utils/colorUtils';
+import { ActivityStatus } from 'zui/types';
 
 export interface ZUIBadgeProps {
+  /**
+   * Number to be displayed inside the badge
+   */
   number?: number;
+
+  /** If true, a number over 99 will be displayed in the badge as '99+'.
+   * Defaults to false.
+   */
+  truncateLargeNumber?: boolean;
+
+  /**
+   * Activity status to determine the color of the badge.
+   */
   status: ActivityStatus;
 }
 
-type ActivityStatus =
-  | 'cancelled'
-  | 'closed'
-  | 'draft'
-  | 'ended'
-  | 'published'
-  | 'scheduled';
-
-const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
+const useStyles = makeStyles<
+  Theme,
+  { number: number | undefined; status: ActivityStatus }
+>((theme) => ({
   badge: {
     alignItems: 'center',
     backgroundColor: ({ status }) => theme.palette.activityStatusColors[status],
@@ -25,9 +33,13 @@ const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
     color: ({ status }) =>
       getContrastColor(theme.palette.activityStatusColors[status]),
     display: 'inline-flex',
-    height: '1.875rem',
+    height: '1.375rem',
     justifyContent: 'center',
-    width: '1.875rem',
+    minWidth: '1.375rem',
+    paddingLeft: ({ number }) =>
+      number && (number > 99 || number < 0) ? '0.375rem' : '',
+    paddingRight: ({ number }) =>
+      number && (number > 99 || number < 0) ? '0.375rem' : '',
   },
   dot: {
     alignItems: 'center',
@@ -36,20 +48,31 @@ const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
     height: '1rem',
     width: '1rem',
   },
+  text: {
+    fontFamily: theme.typography.fontFamily,
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    lineHeight: '0.9rem',
+  },
 }));
 
-const ZUIBadge: FC<ZUIBadgeProps> = ({ number = undefined, status }) => {
-  const classes = useStyles({ status });
-  const style = number != undefined ? 'badge' : 'dot';
-  let displayValue = '';
+const ZUIBadge: FC<ZUIBadgeProps> = ({
+  number,
+  status,
+  truncateLargeNumber = false,
+}) => {
+  const classes = useStyles({ number, status });
 
-  if (number != undefined) {
-    displayValue = number <= 99 ? number.toString() : '99+';
-  }
+  const showValue = number != undefined;
+  const style = showValue ? 'badge' : 'dot';
 
   return (
     <Box className={classes[style]}>
-      <Typography variant="labelSmMedium">{displayValue}</Typography>
+      <Typography className={classes.text}>
+        {showValue && !truncateLargeNumber && number.toString()}
+        {showValue && truncateLargeNumber && number <= 99 && number.toString()}
+        {showValue && truncateLargeNumber && number > 99 && '99+'}
+      </Typography>
     </Box>
   );
 };

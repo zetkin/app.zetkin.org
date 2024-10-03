@@ -5,6 +5,7 @@ import { Box, Theme, Typography } from '@mui/material';
 import { getContrastColor } from 'utils/colorUtils';
 import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import { ActivityStatus } from 'zui/types';
 
 const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
   chip: {
@@ -17,14 +18,6 @@ const useStyles = makeStyles<Theme, { status: ActivityStatus }>((theme) => ({
     padding: '0.438rem 0.625rem',
   },
 }));
-
-type ActivityStatus =
-  | 'cancelled'
-  | 'closed'
-  | 'draft'
-  | 'ended'
-  | 'published'
-  | 'scheduled';
 
 interface ZUIStatusChipProps {
   status: ActivityStatus;
