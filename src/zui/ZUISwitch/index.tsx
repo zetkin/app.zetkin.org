@@ -3,8 +3,19 @@ import { FC } from 'react';
 
 export interface ZUISwitchProps {
   checked: boolean;
+
+  /**
+   * Defaults to 'false'.
+   */
   disabled?: boolean;
+
   label: string;
+
+  /**
+   * Placement of the label. Defaults to 'end'.
+   */
+  labelPlacement?: 'bottom' | 'end' | 'start' | 'top';
+
   onChange: (newCheckedState: boolean) => void;
 
   /**
@@ -19,6 +30,7 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   checked,
   disabled = false,
   label,
+  labelPlacement = 'end',
   onChange,
   size = 'medium',
 }) => {
@@ -42,6 +54,7 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
           {label}
         </Typography>
       }
+      labelPlacement={labelPlacement}
     />
   );
 };
