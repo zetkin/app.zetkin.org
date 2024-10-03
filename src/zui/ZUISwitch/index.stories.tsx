@@ -21,6 +21,7 @@ const Base: Story = {
       <ZUISwitch
         checked={checked}
         disabled={args.disabled}
+        label={args.label}
         onChange={() => setChecked(!checked)}
         size={args.size}
       />
@@ -31,6 +32,7 @@ const Base: Story = {
 export const Medium: Story = {
   args: {
     checked: true,
+    label: 'Confetti rain',
     size: 'medium',
   },
   render: Base.render,
@@ -39,6 +41,7 @@ export const Medium: Story = {
 export const Small: Story = {
   args: {
     checked: false,
+    label: 'Subtitles',
     size: 'small',
   },
   render: Base.render,
@@ -48,6 +51,7 @@ export const Disabled: Story = {
   args: {
     checked: false,
     disabled: true,
+    label: "Party like it's 1999",
     size: 'small',
   },
   render: Base.render,
