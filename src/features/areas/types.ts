@@ -2,6 +2,12 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 
 export type PointData = [number, number];
 
+export type Rating = {
+  id: string;
+  rate: 'good' | 'bad';
+  timestamp: string;
+};
+
 export type Visit = {
   id: string;
   note: string;
@@ -10,6 +16,7 @@ export type Visit = {
 
 export type Household = {
   id: string;
+  ratings: Rating[];
   title: string;
   visits: Visit[];
 };
