@@ -2,7 +2,7 @@ import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { makeStyles } from '@mui/styles';
+import { makeStyles, useTheme } from '@mui/styles';
 
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
@@ -14,6 +14,8 @@ import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import useCanvassAssignmentStats from 'features/areas/hooks/useCanvassAssignmentStats';
+import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
+import { getContrastColor } from 'utils/colorUtils';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -43,12 +45,24 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     padding: '0.2em 0.7em',
   },
+  statsChip: {
+    backgroundColor: theme.palette.statusColors.blue,
+    borderRadius: '1em',
+    color: getContrastColor(theme.palette.statusColors.blue),
+    display: 'flex',
+    fontSize: '1rem',
+    lineHeight: 'normal',
+    marginRight: '0.1em',
+    overflow: 'hidden',
+    padding: '0.2em 0.7em',
+  },
 }));
 
 const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
 }) => {
+  const theme = useTheme();
   const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
   const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
   const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
@@ -72,40 +86,23 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
         }/canvassassignments/${assignment.id}/plan`;
 
         return (
-          <Card>
-            <Box display="flex" justifyContent="space-between" p={2}>
-              <Typography variant="h4">
-                <Msg id={messageIds.canvassAssignment.overview.areas.title} />
-              </Typography>
-              {!!areaCount && (
-                <ZUIAnimatedNumber value={areaCount}>
-                  {(animatedValue) => (
-                    <Box className={classes.chip}>{animatedValue}</Box>
-                  )}
-                </ZUIAnimatedNumber>
-              )}
-            </Box>
-            <Divider />
-            {areaCount > 0 ? (
-              <Box p={2}>
-                <Button
-                  onClick={() => router.push(planUrl)}
-                  startIcon={<Edit />}
-                  variant="text"
-                >
-                  <Msg
-                    id={messageIds.canvassAssignment.overview.areas.editButton}
-                  />
-                </Button>
-              </Box>
-            ) : (
-              <Box p={2}>
-                <Typography>
-                  <Msg
-                    id={messageIds.canvassAssignment.overview.areas.subtitle}
-                  />
+          <Box display="flex" flexDirection="column" gap={2}>
+            <Card>
+              <Box display="flex" justifyContent="space-between" p={2}>
+                <Typography variant="h4">
+                  <Msg id={messageIds.canvassAssignment.overview.areas.title} />
                 </Typography>
-                <Box pt={1}>
+                {!!areaCount && (
+                  <ZUIAnimatedNumber value={areaCount}>
+                    {(animatedValue) => (
+                      <Box className={classes.chip}>{animatedValue}</Box>
+                    )}
+                  </ZUIAnimatedNumber>
+                )}
+              </Box>
+              <Divider />
+              {areaCount > 0 ? (
+                <Box p={2}>
                   <Button
                     onClick={() => router.push(planUrl)}
                     startIcon={<Edit />}
@@ -113,22 +110,135 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   >
                     <Msg
                       id={
-                        messageIds.canvassAssignment.overview.areas.defineButton
+                        messageIds.canvassAssignment.overview.areas.editButton
                       }
                     />
                   </Button>
                 </Box>
+              ) : (
+                <Box p={2}>
+                  <Typography>
+                    <Msg
+                      id={messageIds.canvassAssignment.overview.areas.subtitle}
+                    />
+                  </Typography>
+                  <Box pt={1}>
+                    <Button
+                      onClick={() => router.push(planUrl)}
+                      startIcon={<Edit />}
+                      variant="text"
+                    >
+                      <Msg
+                        id={
+                          messageIds.canvassAssignment.overview.areas
+                            .defineButton
+                        }
+                      />
+                    </Button>
+                  </Box>
+                </Box>
+              )}
+            </Card>
+            <Card>
+              <Box padding={2}>
+                <Typography variant="h4">Progress</Typography>
               </Box>
-            )}
-            <Box display="flex" flexDirection="column">
-              <Box>{`Number of areas: ${areaCount}`}</Box>
-              <Box>{`Number of areas with visits in this assignment: ${stats.numVisitedAreas}`}</Box>
-              <Box>{`Number of places: ${stats.numPlaces}`}</Box>
-              <Box>{`Number of places with visits in this assignment: ${stats.numVisitedPlaces}`}</Box>
-              <Box>{`Number of households: ${stats.numHouseholds}`}</Box>
-              <Box>{`Number of households with visits in this assignment: ${stats.numVisitedHouseholds}`}</Box>
-            </Box>
-          </Card>
+              <Box display="flex" flexDirection="column">
+                <Box display="flex" flexDirection="column" gap={1} padding={2}>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    <Typography variant="h5">Areas</Typography>
+                    <ZUIAnimatedNumber value={areaCount}>
+                      {(animatedValue) => (
+                        <Box className={classes.statsChip}>{animatedValue}</Box>
+                      )}
+                    </ZUIAnimatedNumber>
+                  </Box>
+                  <ZUIStackedStatusBar
+                    values={[
+                      {
+                        color: theme.palette.statusColors.green,
+                        value: stats.numVisitedAreas,
+                      },
+                      {
+                        color: theme.palette.statusColors.orange,
+                        value: areaCount - stats.numVisitedAreas,
+                      },
+                    ]}
+                  />
+                  <Box display="flex" justifyContent="center" width="100%">
+                    <Typography>{`${stats.numVisitedAreas} logged`}</Typography>
+                  </Box>
+                </Box>
+                <Divider />
+                <Box display="flex" flexDirection="column" gap={1} padding={2}>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    <Typography variant="h5">Places</Typography>
+                    <ZUIAnimatedNumber value={stats.numPlaces}>
+                      {(animatedValue) => (
+                        <Box className={classes.statsChip}>{animatedValue}</Box>
+                      )}
+                    </ZUIAnimatedNumber>
+                  </Box>
+                  <ZUIStackedStatusBar
+                    values={[
+                      {
+                        color: theme.palette.statusColors.green,
+                        value: stats.numVisitedPlaces,
+                      },
+                      {
+                        color: theme.palette.statusColors.orange,
+                        value: stats.numPlaces - stats.numVisitedPlaces,
+                      },
+                    ]}
+                  />
+                  <Box display="flex" justifyContent="center" width="100%">
+                    <Typography>{`${stats.numVisitedPlaces} logged`}</Typography>
+                  </Box>
+                </Box>
+                <Divider />
+                <Box display="flex" flexDirection="column" gap={1} padding={2}>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    <Typography variant="h5">Households</Typography>
+                    <ZUIAnimatedNumber value={stats.numHouseholds}>
+                      {(animatedValue) => (
+                        <Box className={classes.statsChip}>{animatedValue}</Box>
+                      )}
+                    </ZUIAnimatedNumber>
+                  </Box>
+                  <ZUIStackedStatusBar
+                    values={[
+                      {
+                        color: theme.palette.statusColors.green,
+                        value: stats.numVisitedHouseholds,
+                      },
+                      {
+                        color: theme.palette.statusColors.orange,
+                        value: stats.numHouseholds - stats.numVisitedHouseholds,
+                      },
+                    ]}
+                  />
+                  <Box display="flex" justifyContent="center" width="100%">
+                    <Typography>{`${stats.numVisitedHouseholds} logged`}</Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Card>
+          </Box>
         );
       }}
     </ZUIFutures>
