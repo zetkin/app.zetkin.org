@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Dialog,
+  Divider,
   Typography,
   useMediaQuery,
   useTheme,
@@ -17,7 +18,6 @@ import useCreatePerson from 'features/profile/hooks/useCreatePerson';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
-import Divider from 'zui/ZUIDivider';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
@@ -93,7 +93,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
           />
         )}
         <Box sx={{ pr: 5 }}>
-          <Divider orientation="horizontal" />
+          <Divider />
           <Box
             alignItems="center"
             display="flex"
