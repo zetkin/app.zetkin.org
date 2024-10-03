@@ -3,6 +3,7 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 export type CanvassAssignmentStats = {
   numHouseholds: number;
   numPlaces: number;
+  numVisitedAreas: number;
   numVisitedHouseholds: number;
   numVisitedPlaces: number;
 };

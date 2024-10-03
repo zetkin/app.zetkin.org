@@ -9,6 +9,7 @@ import {
 import {
   Household,
   Visit,
+  ZetkinArea,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from 'features/areas/types';
@@ -87,8 +88,10 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         type: model.type,
       }));
 
+      type PlaceWithAreaId = ZetkinPlace & { areaId: ZetkinArea['id'] };
+
       //Find places in the given areas
-      const placesInAreas: ZetkinPlace[] = [];
+      const placesInAreas: PlaceWithAreaId[] = [];
       areas.forEach((area) => {
         places.forEach((place) => {
           const placeIsInArea = isPointInsidePolygon(
@@ -97,22 +100,27 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           );
 
           if (placeIsInArea) {
-            placesInAreas.push(place);
+            placesInAreas.push({ ...place, areaId: area.id });
           }
         });
       });
 
-      const uniquePlaces = Array.from(new Set(placesInAreas));
-
-      const households: Household[] = [];
-      uniquePlaces.forEach((place) => households.push(...place.households));
+      /**https://yagisanatode.com/get-a-unique-list-of-objects-in-an-array-of-object-in-javascript/ */
+      const uniquePlaces = [
+        ...new Map(placesInAreas.map((place) => [place['id'], place])).values(),
+      ];
 
       const visits: Visit[] = [];
       const visitedPlaces: ZetkinPlace[] = [];
+      const visitedAreas: string[] = [];
+      const households: Household[] = [];
+
       uniquePlaces.forEach((place) => {
+        households.push(...place.households);
         place.households.forEach((household) => {
           household.visits.forEach((visit) => {
             if (visit.canvassAssId == params.canvassAssId) {
+              visitedAreas.push(place.areaId);
               visitedPlaces.push(place);
               visits.push(visit);
             }
@@ -124,6 +132,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         data: {
           numHouseholds: households.length,
           numPlaces: uniquePlaces.length,
+          numVisitedAreas: Array.from(new Set(visitedAreas)).length,
           numVisitedHouseholds: visits.length,
           numVisitedPlaces: visitedPlaces.length,
         },
