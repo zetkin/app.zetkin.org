@@ -16,7 +16,6 @@ export const Primary: Story = {
     helperText: 'Helper text',
     label: 'Example Form',
     labelPlacement: 'end',
-    name: 'group',
     options: [
       { label: 'Sweden', value: 'swe' },
       { label: 'Finland', value: 'fin' },
@@ -34,7 +33,6 @@ export const Disabled: Story = {
     disabled: true,
     label: 'Example Form',
     labelPlacement: 'end',
-    name: 'group',
     options: [
       { label: 'Sweden', value: 'swe' },
       { label: 'Finland', value: 'fin' },
@@ -51,7 +49,6 @@ export const OneDisabledOption: Story = {
     direction: 'column',
     label: 'Example Form',
     labelPlacement: 'end',
-    name: 'group',
     options: [
       { label: 'Sweden', value: 'swe' },
       { disabled: true, label: 'Finland', value: 'fin' },

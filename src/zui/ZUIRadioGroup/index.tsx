@@ -34,7 +34,6 @@ interface ZUIRadioButtonProps {
   labelPlacement?: LabelPlacement;
   onChange?: (newValue: Option['value']) => void;
   options: Option[];
-  name?: string;
   size?: Sizes;
 }
 
@@ -45,7 +44,6 @@ const ZUIRadioGroup = ({
   label,
   helperText,
   labelPlacement = 'end',
-  name,
   onChange,
   options,
   size = 'medium',
@@ -61,7 +59,6 @@ const ZUIRadioGroup = ({
           aria-describedby={helperTextId}
           aria-labelledby={labelId}
           defaultValue={defaultValue}
-          name={name}
           onChange={(e) => {
             onChange && onChange(e.target.value);
           }}
