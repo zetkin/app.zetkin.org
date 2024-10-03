@@ -25,7 +25,7 @@ const ZUIRelativeTime: React.FunctionComponent<ZUIRelativeTimeProps> = ({
   const difference: number =
     forcePast && absoluteDatetime.unix() - now.unix() > 0
       ? 0
-      : absoluteDatetime.unix() - now.unix();
+      : absoluteDatetime.unix() - now.startOf('day').unix();
 
   if (isNaN(difference)) {
     return null;
