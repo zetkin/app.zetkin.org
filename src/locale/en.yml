@@ -1189,7 +1189,6 @@ feat:
   profile:
     delete:
       button: Remove person
-      confirm: Are you sure you want to delete {name}? This is a permanent action.
       title: Delete account
       warning: This cannot be undone!
     details:

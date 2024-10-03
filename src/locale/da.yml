@@ -530,7 +530,6 @@ feat:
   profile:
     delete:
       button: Fjern person
-      confirm: Er du sikker på, du vil slette {name}? Denne handling er permanent
       title: Slet profil
       warning: Dette kan ikke gøres om!
     details:
