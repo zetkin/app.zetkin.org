@@ -108,11 +108,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       uniquePlaces.forEach((place) => households.push(...place.households));
 
       const visits: Visit[] = [];
-      households.forEach((household) => {
-        household.visits.forEach((visit) => {
-          if (visit.canvassAssId == params.canvassAssId) {
-            visits.push(visit);
-          }
+      const visitedPlaces: ZetkinPlace[] = [];
+      uniquePlaces.forEach((place) => {
+        place.households.forEach((household) => {
+          household.visits.forEach((visit) => {
+            if (visit.canvassAssId == params.canvassAssId) {
+              visitedPlaces.push(place);
+              visits.push(visit);
+            }
+          });
         });
       });
 
@@ -121,6 +125,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           numHouseholds: households.length,
           numPlaces: uniquePlaces.length,
           numVisitedHouseholds: visits.length,
+          numVisitedPlaces: visitedPlaces.length,
         },
       });
     }

@@ -4,6 +4,7 @@ export type CanvassAssignmentStats = {
   numHouseholds: number;
   numPlaces: number;
   numVisitedHouseholds: number;
+  numVisitedPlaces: number;
 };
 
 export type PointData = [number, number];

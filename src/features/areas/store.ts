@@ -333,6 +333,7 @@ const areasSlice = createSlice({
           numHouseholds: 0,
           numPlaces: 0,
           numVisitedHouseholds: 0,
+          numVisitedPlaces: 0,
         },
         isLoading: true,
       });
