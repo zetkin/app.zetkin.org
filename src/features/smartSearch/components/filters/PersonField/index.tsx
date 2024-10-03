@@ -1,4 +1,4 @@
-import { MenuItem, Select } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import { FormEvent, useEffect } from 'react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
