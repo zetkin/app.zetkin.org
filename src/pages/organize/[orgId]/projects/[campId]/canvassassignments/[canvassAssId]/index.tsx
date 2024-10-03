@@ -64,7 +64,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
       }}
     >
       {({ data: { assignment, sessions, stats } }) => {
-        const areas = new Set(sessions.map((session) => session.area));
+        const areas = new Set(sessions.map((session) => session.area.id));
         const areaCount = areas.size;
 
         const planUrl = `/organize/${orgId}/projects/${
