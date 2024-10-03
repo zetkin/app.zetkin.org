@@ -221,6 +221,34 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               value={fieldValues[field.slug]?.toString() ?? ''}
             />
           );
+        } else if (
+          field.type === CUSTOM_FIELD_TYPE.ENUM_TEXT &&
+          field.enum_choices
+        ) {
+          return (
+            <Box alignItems="flex-start" display="flex" flex={1}>
+              <FormControl fullWidth>
+                <InputLabel>{field.title}</InputLabel>
+                <Select
+                  fullWidth
+                  label={field.title}
+                  onChange={(ev) => {
+                    onChange(field.slug, ev.target.value);
+                  }}
+                  value={fieldValues[field.slug]?.toString() ?? ''}
+                >
+                  <MenuItem key="" value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {field.enum_choices.map((c) => (
+                    <MenuItem key={c.key} value={c.key}>
+                      {c.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          );
         } else {
           return (
             <EditPersonField
