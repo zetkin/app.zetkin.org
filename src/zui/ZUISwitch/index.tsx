@@ -18,7 +18,6 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
     <Switch
       checked={checked}
       disabled={disabled}
-      inputProps={{ 'aria-label': 'controlled' }}
       onChange={(event, checked) => onChange(checked)}
       size={size}
     />
