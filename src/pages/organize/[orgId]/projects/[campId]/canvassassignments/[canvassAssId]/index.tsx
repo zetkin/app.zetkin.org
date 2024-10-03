@@ -10,7 +10,6 @@ import { PageWithLayout } from 'utils/types';
 import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
-import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import useCanvassAssignmentStats from 'features/areas/hooks/useCanvassAssignmentStats';
@@ -64,7 +63,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
 }) => {
   const theme = useTheme();
   const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
-  const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
   const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
   const classes = useStyles();
   const router = useRouter();
@@ -73,14 +71,10 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
     <ZUIFutures
       futures={{
         assignment: assignmentFuture,
-        sessions: sessionsFuture,
         stats: statsFuture,
       }}
     >
-      {({ data: { assignment, sessions, stats } }) => {
-        const areas = new Set(sessions.map((session) => session.area.id));
-        const areaCount = areas.size;
-
+      {({ data: { assignment, stats } }) => {
         const planUrl = `/organize/${orgId}/projects/${
           assignment.campaign.id || 'standalone'
         }/canvassassignments/${assignment.id}/plan`;
@@ -92,8 +86,8 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 <Typography variant="h4">
                   <Msg id={messageIds.canvassAssignment.overview.areas.title} />
                 </Typography>
-                {!!areaCount && (
-                  <ZUIAnimatedNumber value={areaCount}>
+                {!!stats.num_areas && (
+                  <ZUIAnimatedNumber value={stats.num_areas}>
                     {(animatedValue) => (
                       <Box className={classes.chip}>{animatedValue}</Box>
                     )}
@@ -101,7 +95,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 )}
               </Box>
               <Divider />
-              {areaCount > 0 ? (
+              {stats.num_areas > 0 ? (
                 <Box p={2}>
                   <Button
                     onClick={() => router.push(planUrl)}
@@ -152,7 +146,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     width="100%"
                   >
                     <Typography variant="h5">Areas</Typography>
-                    <ZUIAnimatedNumber value={areaCount}>
+                    <ZUIAnimatedNumber value={stats.num_areas}>
                       {(animatedValue) => (
                         <Box className={classes.statsChip}>{animatedValue}</Box>
                       )}
@@ -166,7 +160,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                       },
                       {
                         color: theme.palette.statusColors.orange,
-                        value: areaCount - stats.num_visited_areas,
+                        value: stats.num_areas - stats.num_visited_areas,
                       },
                     ]}
                   />

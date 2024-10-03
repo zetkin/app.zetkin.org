@@ -330,6 +330,7 @@ const areasSlice = createSlice({
       state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
         data: statsItem?.data || {
           id: canvassAssId,
+          num_areas: 0,
           num_households: 0,
           num_places: 0,
           num_visited_areas: 0,

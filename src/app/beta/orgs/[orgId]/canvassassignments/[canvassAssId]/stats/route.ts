@@ -75,6 +75,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       //Areas that are parts of the sessions
       const areas = sessions.map((session) => session.area);
+      const uniqueAreas = [
+        ...new Map(areas.map((area) => [area['id'], area])).values(),
+      ];
 
       //Get all places
       const allPlaceModels = await PlaceModel.find({ orgId });
@@ -93,7 +96,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       //Find places in the given areas
       const placesInAreas: PlaceWithAreaId[] = [];
-      areas.forEach((area) => {
+      uniqueAreas.forEach((area) => {
         allPlaces.forEach((place) => {
           const placeIsInArea = isPointInsidePolygon(
             { lat: place.position.lat, lng: place.position.lng },
@@ -152,6 +155,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       return Response.json({
         data: {
+          num_areas: uniqueAreas.length,
           num_households: householdsInAreas.length,
           num_places: uniquePlacesInAreas.length,
           num_visited_areas: Array.from(new Set(visitedAreas)).length,
