@@ -47,6 +47,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     <ActivityListItemWithStats
       blueChipValue={ready}
       color={color}
+      endDate={callAssignment.end_date}
       endNumber={callsMade}
       greenChipValue={done}
       href={`/organize/${orgId}/projects/${
@@ -55,6 +56,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
+      startDate={callAssignment.start_date}
       statsLoading={statsFuture.isLoading}
       title={callAssignment?.title}
     />
