@@ -22,7 +22,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import theme from 'theme';
 import { isWithinLast24Hours } from '../utils/isWithinLast24Hours';
 import messageIds from '../l10n/messageIds';
 import usePlaceMutations from '../hooks/usePlaceMutations';
@@ -263,12 +262,25 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     const visitedRecently = isWithinLast24Hours(
                       household.visits.map((t) => t.timestamp)
                     );
+                    const mostRecentVisit = household.visits.toSorted(
+                      (a, b) => {
+                        const dateA = new Date(a.timestamp);
+                        const dateB = new Date(b.timestamp);
+                        if (dateA > dateB) {
+                          return -1;
+                        } else if (dateB > dateA) {
+                          return 1;
+                        } else {
+                          return 0;
+                        }
+                      }
+                    )[0];
+
                     return (
                       <Box
                         key={household.id}
                         alignItems="center"
                         display="flex"
-                        justifyContent="space-between"
                         mb={1}
                         mt={1}
                         onClick={() => {
@@ -277,11 +289,27 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                         }}
                         width="100%"
                       >
-                        {household.title || (
-                          <Msg id={messageIds.place.household.empty.title} />
+                        <Box flexGrow={1}>
+                          {household.title || (
+                            <Msg id={messageIds.place.household.empty.title} />
+                          )}
+                        </Box>
+                        {visitedRecently ? (
+                          <Box display="flex" gap={1}>
+                            {mostRecentVisit.rating && (
+                              <Box>
+                                {mostRecentVisit.rating == 'good' ? (
+                                  <ThumbUp color="secondary" />
+                                ) : (
+                                  <ThumbDown color="secondary" />
+                                )}
+                              </Box>
+                            )}
+                            <Check color="secondary" />
+                          </Box>
+                        ) : (
+                          ''
                         )}
-
-                        {visitedRecently ? <Check /> : ''}
                       </Box>
                     );
                   })}
@@ -335,48 +363,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   padding={6}
                   width="100%"
                 >
-                  <Button
-                    disabled={isWithinLast24Hours(
-                      selectedHousehold.visits.map((t) => t.timestamp)
-                    )}
-                    endIcon={
-                      isWithinLast24Hours(
-                        selectedHousehold.visits.map((t) => t.timestamp)
-                      ) ? (
-                        <Check />
-                      ) : (
-                        ''
-                      )
-                    }
-                    onClick={() => {
-                      addVisit(selectedHousehold.id, {
-                        canvassAssId,
-                        timestamp: new Date().toISOString(),
-                      });
-                    }}
-                    startIcon={
-                      isAddVisitLoading ? (
-                        <CircularProgress
-                          size={20}
-                          sx={{ color: theme.palette.common.white }}
-                        />
-                      ) : (
-                        ''
-                      )
-                    }
-                    sx={{ marginBottom: 2 }}
-                    variant="contained"
-                  >
-                    <Msg
-                      id={
-                        isWithinLast24Hours(
-                          selectedHousehold.visits.map((t) => t.timestamp)
-                        )
-                          ? messageIds.place.visitedButton
-                          : messageIds.place.visitButton
-                      }
-                    />
-                  </Button>
                   <ButtonGroup
                     disabled={isWithinLast24Hours(
                       selectedHousehold.visits.map((t) => t.timestamp)
@@ -457,7 +443,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                             )}
                           </Box>
                         )}
-                        <Check />
                       </Typography>
                     </Box>
                   ))}
