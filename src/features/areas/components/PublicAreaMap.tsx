@@ -89,9 +89,10 @@ const useStyles = makeStyles((theme) => ({
 
 type PublicAreaMapProps = {
   area: ZetkinArea;
+  canvassAssId: string | null;
 };
 
-const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
+const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
   const theme = useTheme();
   const classes = useStyles();
   const places = usePlaces(area.organization.id).data || [];
@@ -314,6 +315,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
       </MapContainer>
       {selectedPlace && (
         <PlaceDialog
+          canvassAssId={canvassAssId}
           dialogStep={dialogStep}
           onClose={() => {
             setAnchorEl(null);
