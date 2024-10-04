@@ -6,6 +6,7 @@ import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {
   params: {
+    householdId: string;
     orgId: string;
     placeId: string;
   };
@@ -27,20 +28,17 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         { _id: params.placeId, orgId },
         {
           $push: {
-            households: {
-              $each: [
-                {
-                  id: new mongoose.Types.ObjectId().toString(),
-                  ratings: [],
-                  title: payload.title,
-                  visits: [],
-                },
-              ],
-              $position: 0,
+            'households.$[elem].ratings': {
+              id: new mongoose.Types.ObjectId().toString(),
+              rate: payload.rate,
+              timestamp: payload.timestamp,
             },
           },
         },
-        { new: true }
+        {
+          arrayFilters: [{ 'elem.id': { $eq: params.householdId } }],
+          new: true,
+        }
       );
 
       if (!model) {

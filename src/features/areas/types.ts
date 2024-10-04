@@ -13,6 +13,12 @@ export type ZetkinCanvassAssignmentStats = {
 
 export type PointData = [number, number];
 
+export type Rating = {
+  id: string;
+  rate: 'good' | 'bad';
+  timestamp: string;
+};
+
 export type Visit = {
   canvassAssId: string | null;
   id: string;
@@ -22,6 +28,7 @@ export type Visit = {
 
 export type Household = {
   id: string;
+  ratings: Rating[];
   title: string;
   visits: Visit[];
 };
