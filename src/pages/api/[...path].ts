@@ -82,7 +82,11 @@ export default async function handle(
     zetkinDomain: process.env.ZETKIN_API_DOMAIN,
   });
 
-  const resource = z.resource(pathStr + (queryParams ? '?' + queryParams : ''));
+  const resource = z.resource(
+    queryParams && !queryParams.includes('filter=')
+      ? `${pathStr}?${queryParams}`
+      : pathStr
+  );
 
   try {
     const session = await getIronSession<AppSession>(req, res, {
