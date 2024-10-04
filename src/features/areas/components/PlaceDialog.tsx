@@ -31,6 +31,7 @@ import ZUIDateTime from 'zui/ZUIDateTime';
 import { Msg, useMessages } from 'core/i18n';
 
 type PlaceDialogProps = {
+  canvassAssId: string | null;
   dialogStep: 'place' | 'edit' | 'household';
   onClose: () => void;
   onEdit: () => void;
@@ -42,6 +43,7 @@ type PlaceDialogProps = {
 };
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
+  canvassAssId,
   dialogStep,
   onClose,
   onEdit,
@@ -356,6 +358,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     }
                     onClick={() => {
                       addVisit(selectedHousehold.id, {
+                        canvassAssId,
                         note,
                         timestamp: new Date().toISOString(),
                       });
@@ -518,12 +521,18 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           >
             <Msg id={getBackButtonMessage()} />
           </Button>
-          {dialogStep != 'place' && dialogStep != 'household' && (
+          {dialogStep != 'place' && (
             <Button
               disabled={saveButtonDisabled}
               onClick={() => {
                 setNote('');
-                if (dialogStep == 'edit') {
+                if (selectedHousehold && dialogStep == 'household') {
+                  addVisit(selectedHousehold.id, {
+                    canvassAssId,
+                    note,
+                    timestamp: new Date().toISOString(),
+                  });
+                } else if (dialogStep == 'edit') {
                   updatePlace({
                     description,
                     title,

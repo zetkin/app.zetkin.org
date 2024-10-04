@@ -2,11 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
   findOrAddItem,
+  RemoteItem,
   remoteItem,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
 import {
+  ZetkinCanvassAssignmentStats,
   ZetkinArea,
   ZetkinCanvassAssignee,
   ZetkinCanvassAssignment,
@@ -27,6 +29,10 @@ export interface AreasStoreSlice {
   >;
   mySessionsList: RemoteList<ZetkinCanvassSession & { id: string }>;
   placeList: RemoteList<ZetkinPlace>;
+  statsByCanvassAssId: Record<
+    string,
+    RemoteItem<ZetkinCanvassAssignmentStats & { id: string }>
+  >;
 }
 
 const initialState: AreasStoreSlice = {
@@ -36,6 +42,7 @@ const initialState: AreasStoreSlice = {
   mySessionsList: remoteList(),
   placeList: remoteList(),
   sessionsByAssignmentId: {},
+  statsByCanvassAssId: {},
 };
 
 const areasSlice = createSlice({
@@ -316,6 +323,38 @@ const areasSlice = createSlice({
       state.placeList.loaded = timestamp;
       state.placeList.items.forEach((item) => (item.loaded = timestamp));
     },
+    statsLoad: (state, action: PayloadAction<string>) => {
+      const canvassAssId = action.payload;
+      const statsItem = state.statsByCanvassAssId[canvassAssId];
+
+      state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
+        data: statsItem?.data || {
+          id: canvassAssId,
+          num_areas: 0,
+          num_households: 0,
+          num_places: 0,
+          num_visited_areas: 0,
+          num_visited_households: 0,
+          num_visited_households_outside_areas: 0,
+          num_visited_places: 0,
+          num_visited_places_outside_areas: 0,
+        },
+        isLoading: true,
+      });
+    },
+    statsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignmentStats]>
+    ) => {
+      const [canvassAssId, stats] = action.payload;
+
+      state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
+        data: { id: canvassAssId, ...stats },
+        isLoading: false,
+        isStale: false,
+        loaded: new Date().toISOString(),
+      });
+    },
   },
 });
 
@@ -348,4 +387,6 @@ export const {
   placesLoad,
   placesLoaded,
   placeUpdated,
+  statsLoad,
+  statsLoaded,
 } = areasSlice.actions;
