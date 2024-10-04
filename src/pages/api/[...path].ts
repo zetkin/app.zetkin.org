@@ -27,8 +27,8 @@ interface HttpVerbMethod {
 const HTTP_VERBS_TO_ZETKIN_METHODS: Record<string, HttpVerbMethod> = {
   DELETE: (resource: ZetkinZResource) => resource.del(),
   GET: (resource: ZetkinZResource, req: NextApiRequest) => {
-    const filters = getFilters(req);
-    return resource.get(null, null, filters);
+    getFilters(req); // will throw an error if the filter is not valid
+    return resource.get();
   },
   PATCH: (resource: ZetkinZResource, req: NextApiRequest) =>
     resource.patch(req.body),
@@ -83,9 +83,7 @@ export default async function handle(
   });
 
   const resource = z.resource(
-    queryParams && !queryParams.includes('filter=')
-      ? `${pathStr}?${queryParams}`
-      : pathStr
+    queryParams ? `${pathStr}?${queryParams}` : pathStr
   );
 
   try {
