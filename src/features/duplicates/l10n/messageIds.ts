@@ -29,7 +29,9 @@ export default makeMessages('feat.duplicates', {
       phone: m('Phone'),
     },
     title: m('Merge duplicates'),
-    warningMessage: m('Related activity data will transfer to the merged person, but conflicting fields must be resolved. Any unmerged data will be lost.'),
+    warningMessage: m(
+      'Related activity data will transfer to the merged person, but conflicting fields must be resolved. Any unmerged data will be lost.'
+    ),
     warningTitle: m('Risk of data loss'),
   },
   page: {
