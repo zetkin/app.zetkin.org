@@ -56,7 +56,6 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
           _id: false,
           canvassAssId: String,
           id: String,
-          note: String,
           timestamp: String,
         },
       ],

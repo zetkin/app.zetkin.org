@@ -22,7 +22,6 @@ export type Rating = {
 export type Visit = {
   canvassAssId: string | null;
   id: string;
-  note: string;
   timestamp: string;
 };
 

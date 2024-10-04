@@ -67,7 +67,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
     null
   );
-  const [note, setNote] = useState('');
   const [description, setDescription] = useState<string>(
     place.description ?? ''
   );
@@ -359,7 +358,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     onClick={() => {
                       addVisit(selectedHousehold.id, {
                         canvassAssId,
-                        note,
                         timestamp: new Date().toISOString(),
                       });
                     }}
@@ -521,18 +519,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           >
             <Msg id={getBackButtonMessage()} />
           </Button>
-          {dialogStep != 'place' && (
+          {dialogStep != 'place' && dialogStep != 'household' && (
             <Button
               disabled={saveButtonDisabled}
               onClick={() => {
-                setNote('');
-                if (selectedHousehold && dialogStep == 'household') {
-                  addVisit(selectedHousehold.id, {
-                    canvassAssId,
-                    note,
-                    timestamp: new Date().toISOString(),
-                  });
-                } else if (dialogStep == 'edit') {
+                if (dialogStep == 'edit') {
                   updatePlace({
                     description,
                     title,
