@@ -55,12 +55,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
 }) => {
   const {
     addHousehold,
-    addRating,
     addVisit,
     updateHousehold,
     updatePlace,
     isAddVisitLoading,
-    isRatingLoading,
   } = usePlaceMutations(orgId, place.id);
   const messages = useMessages(messageIds);
 
@@ -261,33 +259,32 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   flexDirection="column"
                   sx={{ overflowY: 'auto' }}
                 >
-                  {place.households.map((household) => (
-                    <Box
-                      key={household.id}
-                      alignItems="center"
-                      display="flex"
-                      justifyContent="space-between"
-                      mb={1}
-                      mt={1}
-                      onClick={() => {
-                        setSelectedHouseholdId(household.id);
-                        onSelectHousehold();
-                      }}
-                      width="100%"
-                    >
-                      {household.title || (
-                        <Msg id={messageIds.place.household.empty.title} />
-                      )}
+                  {place.households.map((household) => {
+                    const visitedRecently = isWithinLast24Hours(
+                      household.visits.map((t) => t.timestamp)
+                    );
+                    return (
+                      <Box
+                        key={household.id}
+                        alignItems="center"
+                        display="flex"
+                        justifyContent="space-between"
+                        mb={1}
+                        mt={1}
+                        onClick={() => {
+                          setSelectedHouseholdId(household.id);
+                          onSelectHousehold();
+                        }}
+                        width="100%"
+                      >
+                        {household.title || (
+                          <Msg id={messageIds.place.household.empty.title} />
+                        )}
 
-                      {isWithinLast24Hours(
-                        household.visits.map((t) => t.timestamp)
-                      ) ? (
-                        <Check />
-                      ) : (
-                        ''
-                      )}
-                    </Box>
-                  ))}
+                        {visitedRecently ? <Check /> : ''}
+                      </Box>
+                    );
+                  })}
                 </Box>
               </Box>
             </Box>
@@ -339,13 +336,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   width="100%"
                 >
                   <Button
-                    disabled={
-                      isWithinLast24Hours(
-                        selectedHousehold.visits.map((t) => t.timestamp)
-                      )
-                        ? true
-                        : false
-                    }
+                    disabled={isWithinLast24Hours(
+                      selectedHousehold.visits.map((t) => t.timestamp)
+                    )}
                     endIcon={
                       isWithinLast24Hours(
                         selectedHousehold.visits.map((t) => t.timestamp)
@@ -385,16 +378,20 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     />
                   </Button>
                   <ButtonGroup
+                    disabled={isWithinLast24Hours(
+                      selectedHousehold.visits.map((t) => t.timestamp)
+                    )}
                     fullWidth
                     sx={{ alignSelf: 'center', display: 'flex' }}
                     variant="outlined"
                   >
-                    {!isRatingLoading && (
+                    {!isAddVisitLoading && (
                       <>
                         <Button
                           onClick={() =>
-                            addRating(selectedHousehold.id, {
-                              rate: 'good',
+                            addVisit(selectedHousehold.id, {
+                              canvassAssId,
+                              rating: 'good',
                               timestamp: new Date().toISOString(),
                             })
                           }
@@ -403,8 +400,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                         </Button>
                         <Button
                           onClick={() =>
-                            addRating(selectedHousehold.id, {
-                              rate: 'bad',
+                            addVisit(selectedHousehold.id, {
+                              canvassAssId,
+                              rating: 'bad',
                               timestamp: new Date().toISOString(),
                             })
                           }
@@ -413,7 +411,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                         </Button>
                       </>
                     )}
-                    {isRatingLoading && (
+                    {isAddVisitLoading && (
                       <Button variant="outlined">
                         <CircularProgress size={25} />
                       </Button>
@@ -432,14 +430,13 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   >
                     <Msg id={messageIds.place.logList} />
                     <Typography sx={{ marginLeft: 1 }}>
-                      {sortedVisits.length + selectedHousehold.ratings.length}
+                      {sortedVisits.length}
                     </Typography>
                   </Typography>
                   <Divider />
-                  {sortedVisits.length == 0 &&
-                    selectedHousehold.ratings.length == 0 && (
-                      <Msg id={messageIds.place.noActivity} />
-                    )}
+                  {sortedVisits.length == 0 && (
+                    <Msg id={messageIds.place.noActivity} />
+                  )}
                   {sortedVisits.map((visit) => (
                     <Box key={visit.id} paddingTop={1}>
                       <Typography>{messages.place.visitLog()}</Typography>
@@ -451,32 +448,16 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                         }}
                       >
                         <ZUIDateTime datetime={visit.timestamp} />
+                        {visit.rating && (
+                          <Box>
+                            {visit.rating === 'good' ? (
+                              <ThumbUp sx={{ fontSize: 20 }} />
+                            ) : (
+                              <ThumbDown sx={{ fontSize: 20 }} />
+                            )}
+                          </Box>
+                        )}
                         <Check />
-                      </Typography>
-                    </Box>
-                  ))}
-                  {selectedHousehold.ratings?.map((rating) => (
-                    <Box key={rating.id} paddingTop={1}>
-                      <Typography>
-                        {rating.rate === 'good' ? (
-                          <Msg id={messageIds.place.goodRatingLog} />
-                        ) : (
-                          <Msg id={messageIds.place.badRatingLog} />
-                        )}
-                      </Typography>
-                      <Typography
-                        color="secondary"
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <ZUIDateTime datetime={rating.timestamp} />
-                        {rating.rate === 'good' ? (
-                          <ThumbUp sx={{ fontSize: 20 }} />
-                        ) : (
-                          <ThumbDown sx={{ fontSize: 20 }} />
-                        )}
                       </Typography>
                     </Box>
                   ))}

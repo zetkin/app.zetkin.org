@@ -49,13 +49,13 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
     {
       _id: false,
       id: String,
-      ratings: [{ _id: false, id: String, rate: String, timestamp: String }],
       title: String,
       visits: [
         {
           _id: false,
           canvassAssId: String,
           id: String,
+          rating: String,
           timestamp: String,
         },
       ],

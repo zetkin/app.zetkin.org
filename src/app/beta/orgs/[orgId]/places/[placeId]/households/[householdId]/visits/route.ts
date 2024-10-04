@@ -31,6 +31,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
             'households.$[elem].visits': {
               canvassAssId: payload.canvassAssId,
               id: new mongoose.Types.ObjectId().toString(),
+              rating: payload.rating,
               timestamp: payload.timestamp,
             },
           },
