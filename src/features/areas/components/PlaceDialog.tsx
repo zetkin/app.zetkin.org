@@ -494,7 +494,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 onSelectHousehold();
                 setEditingHouseholdTitle(true);
               }}
-              sx={{ margin: 2 }}
               variant="contained"
             >
               <Msg id={messageIds.place.addHouseholdButton} />
@@ -514,12 +513,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 onClose();
               }
             }}
-            sx={{ margin: 2 }}
             variant="outlined"
           >
             <Msg id={getBackButtonMessage()} />
           </Button>
-          {dialogStep != 'place' && dialogStep != 'household' && (
+          {dialogStep == 'edit' && (
             <Button
               disabled={saveButtonDisabled}
               onClick={() => {
@@ -531,7 +529,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   });
                 }
               }}
-              sx={{ margin: 2 }}
               variant="contained"
             >
               <Msg id={messageIds.place.saveButton} />
