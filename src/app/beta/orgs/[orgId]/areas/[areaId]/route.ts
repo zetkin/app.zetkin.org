@@ -18,30 +18,34 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin', 'organizer'],
     },
     async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const areaModel = await AreaModel.findOne({ _id: params.areaId, orgId });
-      const allTags = await apiClient.get<ZetkinTag[]>(
-        `/api/orgs/${orgId}/people/tags`
-      );
 
       if (!areaModel) {
         return new NextResponse(null, { status: 404 });
       }
 
       const tags: ZetkinTag[] = [];
-      (areaModel.tags || []).forEach((item) => {
-        const tag = allTags.find((tag) => tag.id == item.id);
-        if (tag) {
-          tags.push({
-            ...tag,
-            value: item.value,
-          });
-        }
-      });
+      try {
+        const allTags = await apiClient.get<ZetkinTag[]>(
+          `/api/orgs/${orgId}/people/tags`
+        );
+
+        (areaModel.tags || []).forEach((item) => {
+          const tag = allTags.find((tag) => tag.id == item.id);
+          if (tag) {
+            tags.push({
+              ...tag,
+              value: item.value,
+            });
+          }
+        });
+      } catch (err) {
+        // Tags can be empty
+      }
 
       const area: ZetkinArea = {
         description: areaModel.description,
