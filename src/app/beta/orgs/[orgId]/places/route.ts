@@ -16,7 +16,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin', 'organizer'],
     },
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
@@ -42,7 +41,6 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin'],
     },
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
