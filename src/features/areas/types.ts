@@ -11,6 +11,14 @@ export type ZetkinCanvassAssignmentStats = {
   num_visited_places_outside_areas: number;
 };
 
+export type ZetkinCanvassAssignmentAreaStats = {
+  id: string;
+  num_households: number;
+  num_places: number;
+  num_visited_households: number;
+  num_visited_places: number;
+};
+
 export type PointData = [number, number];
 
 export type Visit = {
