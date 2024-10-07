@@ -1,12 +1,12 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { LatLng, latLngBounds, Map } from 'leaflet';
 import { makeStyles } from '@mui/styles';
-import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
+import { Add, GpsFixed, GpsNotFixed, Home, Remove } from '@mui/icons-material';
 import {
   Box,
   Button,
-  Divider,
-  IconButton,
+  ButtonGroup,
+  CircularProgress,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -27,6 +27,7 @@ import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import MarkerIcon from '../utils/markerIcon';
+import objToLatLng from '../utils/objToLatLng';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -105,6 +106,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
   );
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [locating, setLocating] = useState(false);
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -209,13 +211,59 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
   return (
     <>
       <Box className={classes.zoomControls}>
-        <IconButton onClick={() => map?.zoomIn()}>
-          <Add />
-        </IconButton>
-        <Divider flexItem variant="fullWidth" />
-        <IconButton onClick={() => map?.zoomOut()}>
-          <Remove />
-        </IconButton>
+        <ButtonGroup orientation="vertical" variant="contained">
+          <Button onClick={() => map?.zoomIn()}>
+            <Add />
+          </Button>
+          <Button onClick={() => map?.zoomOut()}>
+            <Remove />
+          </Button>
+          <Button
+            onClick={() => {
+              if (map) {
+                const totalBounds = latLngBounds(
+                  area.points.map((p) => objToLatLng(p))
+                );
+
+                map.fitBounds(totalBounds, { animate: true });
+              }
+            }}
+          >
+            <Home />
+          </Button>
+          <Button
+            onClick={() => {
+              setLocating(true);
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  setLocating(false);
+
+                  const zoom = 16;
+                  const latLng = {
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                  };
+
+                  map?.flyTo(latLng, zoom, {
+                    animate: true,
+                    duration: 0.8,
+                  });
+                },
+                () => {
+                  // When an error occurs just stop the loading indicator
+                  setLocating(false);
+                },
+                { enableHighAccuracy: true, timeout: 5000 }
+              );
+            }}
+          >
+            {locating ? (
+              <CircularProgress color="inherit" size={24} />
+            ) : (
+              <GpsFixed />
+            )}
+          </Button>
+        </ButtonGroup>
       </Box>
       <Box position="relative">
         <Box
