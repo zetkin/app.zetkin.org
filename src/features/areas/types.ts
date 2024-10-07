@@ -17,6 +17,7 @@ export type ZetkinCanvassAssignmentAreaStats = {
   num_places: number;
   num_visited_households: number;
   num_visited_places: number;
+  title: string | null;
 };
 
 export type PointData = [number, number];

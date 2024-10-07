@@ -74,7 +74,10 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         type: model.type,
       }));
 
-      type PlacesWithAreaId = ZetkinPlace & { areaId: ZetkinArea['id'] };
+      type PlacesWithAreaId = ZetkinPlace & {
+        areaId: ZetkinArea['id'];
+        areaTitle: ZetkinArea['title'];
+      };
 
       const placesInArea: PlacesWithAreaId[] = [];
       uniqueAreas.forEach((area) => {
@@ -85,7 +88,11 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           );
 
           if (placeIsInArea) {
-            placesInArea.push({ ...place, areaId: area.id });
+            placesInArea.push({
+              ...place,
+              areaId: area.id,
+              areaTitle: area.title,
+            });
           }
         });
       });
@@ -104,6 +111,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         // First, process the areas that have places
         places.forEach((place) => {
           const areaId = place.areaId;
+          const title = place.areaTitle;
 
           let areaStats = results.find((stat) => stat.id === areaId);
 
@@ -114,6 +122,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               num_places: 0,
               num_visited_households: 0,
               num_visited_places: 0,
+              title: title || null,
             };
             results.push(areaStats);
           }
@@ -154,6 +163,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               num_places: 0,
               num_visited_households: 0,
               num_visited_places: 0,
+              title: area.title,
             });
           }
         });
