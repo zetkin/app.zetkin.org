@@ -11,12 +11,10 @@ type Story = StoryObj<typeof ZUIRadioGroup>;
 
 export const Primary: Story = {
   args: {
-    defaultValue: 'swe',
     direction: 'column',
     helperText: 'Helper text',
     label: 'Example Form',
     labelPlacement: 'end',
-    name: 'group',
     options: [
       { label: 'Sweden', value: 'swe' },
       { label: 'Finland', value: 'fin' },
@@ -29,12 +27,10 @@ export const Primary: Story = {
 
 export const Disabled: Story = {
   args: {
-    defaultValue: 'swe',
     direction: 'column',
     disabled: true,
     label: 'Example Form',
     labelPlacement: 'end',
-    name: 'group',
     options: [
       { label: 'Sweden', value: 'swe' },
       { label: 'Finland', value: 'fin' },
@@ -47,11 +43,9 @@ export const Disabled: Story = {
 
 export const OneDisabledOption: Story = {
   args: {
-    defaultValue: 'swe',
     direction: 'column',
     label: 'Example Form',
     labelPlacement: 'end',
-    name: 'group',
     options: [
       { label: 'Sweden', value: 'swe' },
       { disabled: true, label: 'Finland', value: 'fin' },
