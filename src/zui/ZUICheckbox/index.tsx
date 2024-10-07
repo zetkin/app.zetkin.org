@@ -12,10 +12,26 @@ const sizes: Record<Sizes, string> = {
 
 interface ZUICheckboxProps {
   checked: boolean;
+
+  /**
+   * Controls if the checkbox is disabled or not.
+   * Defaults to 'false'.
+   */
   disabled?: boolean;
+
   label: string;
+
+  /**
+   * The placement of the label. Defaults to 'end'.
+   */
   labelPlacement?: 'bottom' | 'end' | 'start' | 'top';
+
   onChange: (newCheckedState: boolean) => void;
+
+  /**
+   * The size of the checkbox. Defaults to 'medium'.
+   * This does not affect the size of the label text.
+   */
   size?: Sizes;
 }
 
