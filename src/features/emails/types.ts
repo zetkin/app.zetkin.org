@@ -171,3 +171,59 @@ export type EmailTheme = {
   frame_mjml: MJMLJsonObject | null;
   id: number;
 };
+
+export type ZetkinEmailRecipient = {
+  delivered: string | null;
+  email: {
+    id: number;
+    title: string;
+  };
+  email_address: null;
+  error: null;
+  id: number;
+  opened: string | null;
+  person: {
+    first_name: string;
+    id: number;
+    last_name: string;
+  };
+  sent: string | null;
+  status: 'pending' | 'sent' | 'opened';
+};
+
+export type ZetkinEmailLink = {
+  email: {
+    id: number;
+    title: string;
+  };
+  id: number;
+  tag: string;
+  url: string;
+};
+
+type EmailLinkWithMeta = ZetkinEmailLink & { clicks: number; text: string };
+
+export type EmailInsights = {
+  id: number;
+  links: EmailLinkWithMeta[];
+  opensByDate: {
+    accumulatedOpens: number;
+    date: string;
+  }[];
+};
+
+export type ZetkinEmailStats = {
+  id: number;
+  num_blocked: {
+    any: number;
+    blacklisted: number;
+    no_email: number;
+    unsubscribed: number;
+  };
+  num_clicks: number;
+  num_clicks_by_link: Record<number, number | undefined>;
+  num_locked_targets: number | null;
+  num_opened: number;
+  num_sent: number;
+  num_target_matches: number;
+};

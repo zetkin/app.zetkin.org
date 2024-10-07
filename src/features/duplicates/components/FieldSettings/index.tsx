@@ -5,13 +5,19 @@ import FieldSettingsRow from './FieldSettingsRow';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import { useMessages } from 'core/i18n';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface FieldSettingsProps {
+  duplicates: ZetkinPerson[];
   fieldValues: Record<string, string[]>;
   onChange: (field: NATIVE_PERSON_FIELDS, selectedValue: string) => void;
 }
 
-const FieldSettings: FC<FieldSettingsProps> = ({ fieldValues, onChange }) => {
+const FieldSettings: FC<FieldSettingsProps> = ({
+  duplicates,
+  fieldValues,
+  onChange,
+}) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
 
@@ -48,6 +54,7 @@ const FieldSettings: FC<FieldSettingsProps> = ({ fieldValues, onChange }) => {
               {field !== NATIVE_PERSON_FIELDS.FIRST_NAME && <Divider />}
               <FieldSettingsRow
                 key={field}
+                duplicates={duplicates}
                 field={field as NATIVE_PERSON_FIELDS}
                 onChange={(selectedValue: string) =>
                   onChange(field as NATIVE_PERSON_FIELDS, selectedValue)

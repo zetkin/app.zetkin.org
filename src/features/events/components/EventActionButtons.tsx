@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
 import {
+  ArrowForward,
   CancelOutlined,
   ContentCopy,
   Delete,
   RestoreOutlined,
 } from '@mui/icons-material';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import dayjs from 'dayjs';
 
 import messageIds from '../l10n/messageIds';
@@ -17,6 +18,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDatePicker from 'zui/ZUIDatePicker';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import EventChangeCampaignDialog from './EventChangeCampaignDialog';
 
 interface EventActionButtonsProps {
   event: ZetkinEvent;
@@ -32,6 +34,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const { cancelEvent, deleteEvent, restoreEvent, setPublished } =
     useEventMutations(orgId, event.id);
   const duplicateEvent = useDuplicateEvent(orgId, event.id);
+  const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
 
   const published =
     !!event.published && new Date(event.published) <= new Date();
@@ -62,6 +65,10 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
 
   const handleCancel = () => {
     event.cancelled ? restoreEvent() : cancelEvent();
+  };
+
+  const handleMove = () => {
+    setIsMoveDialogOpen(true);
   };
 
   return (
@@ -116,6 +123,11 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
               startIcon: <ContentCopy />,
             },
             {
+              label: <>{messages.eventActionButtons.move()}</>,
+              onSelect: handleMove,
+              startIcon: <ArrowForward />,
+            },
+            {
               label: <>{messages.eventActionButtons.delete()}</>,
               onSelect: () => {
                 showConfirmDialog({
@@ -137,6 +149,12 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
       <Box>
         <ZUIDatePicker date={event.published} onChange={handleChangeDate} />
       </Box>
+
+      <EventChangeCampaignDialog
+        close={() => setIsMoveDialogOpen(false)}
+        event={event}
+        isOpen={isMoveDialogOpen}
+      />
     </Box>
   );
 };

@@ -19,6 +19,7 @@ export default makeMessages('feat.events', {
     cancel: m('Cancel'),
     delete: m('Delete'),
     duplicate: m('Duplicate'),
+    move: m('Move'),
     publish: m('Publish'),
     restore: m('Restore'),
     unpublish: m('Unpublish'),
@@ -29,6 +30,12 @@ export default makeMessages('feat.events', {
     warningRestore: m<{ eventTitle: string }>(
       '"{eventTitle}" will be restored.'
     ),
+  },
+  eventChangeCampaignDialog: {
+    dialogTitle: m('Move event'),
+    error: m('Error: Could not move the event to the selected project'),
+    moveButtonLabel: m('Move'),
+    success: m<{ campaignTitle: string }>('Event moved to "{campaignTitle}"'),
   },
   eventContactCard: {
     header: m('Contact'),

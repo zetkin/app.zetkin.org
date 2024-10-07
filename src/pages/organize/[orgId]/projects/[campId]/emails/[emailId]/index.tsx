@@ -72,7 +72,7 @@ const EmailPage: PageWithLayout = () => {
             </Box>
             <Box flex={1}>
               <EmailTargetsReady
-                isLoading={mutating.includes('lock')}
+                isLoading={mutating.includes('locked')}
                 isLocked={isLocked}
                 isTargeted={isTargeted}
                 lockedReadyTargets={lockedReadyTargets}

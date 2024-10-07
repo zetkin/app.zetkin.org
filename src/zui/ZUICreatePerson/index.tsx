@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { FC, MouseEvent, useState } from 'react';
+import { CountryCode } from 'libphonenumber-js';
 
 import checkInvalidFields from './checkInvalidFields';
 import messageIds from 'zui/l10n/messageIds';
@@ -18,6 +19,7 @@ import useCreatePerson from 'features/profile/hooks/useCreatePerson';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
+import useOrganization from '../../features/organizations/hooks/useOrganization';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
@@ -39,7 +41,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data;
   const createPerson = useCreatePerson(orgId);
-
+  const organization = useOrganization(orgId).data;
+  const countryCode = organization?.country as CountryCode;
   const [tags, setTags] = useState<number[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
@@ -116,8 +119,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 disabled={
                   personalInfo.first_name === undefined ||
                   personalInfo.last_name === undefined ||
-                  checkInvalidFields(customFields || [], personalInfo)
-                    .length !== 0
+                  checkInvalidFields(
+                    customFields || [],
+                    personalInfo,
+                    countryCode
+                  ).length !== 0
                 }
                 onClick={async (e) => {
                   const person = await createPerson(personalInfo, tags);

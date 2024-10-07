@@ -76,7 +76,7 @@ export default function makeSankeySegments(
           kind: SEGMENT_KIND.PSEUDO_ADD,
           main: null,
           side: {
-            style: SEGMENT_STYLE.FILL,
+            style: change == 0 ? SEGMENT_STYLE.STROKE : SEGMENT_STYLE.FILL,
             width: change / maxPeople,
           },
           stats,

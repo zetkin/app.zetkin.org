@@ -156,7 +156,11 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           <ZUISubmitCancelButtons
             onCancel={closeAndClear}
             submitDisabled={!title || !color.valid}
-            submitText={submitLabel ?? messages.dialog.createTagButton()}
+            submitText={
+              editingTag
+                ? messages.dialog.updateTagButton()
+                : submitLabel || messages.dialog.createTagButton()
+            }
           />
         </Box>
       </form>

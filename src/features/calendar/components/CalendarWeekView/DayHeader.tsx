@@ -1,7 +1,12 @@
 import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import dayjs from 'dayjs';
 
 import theme from 'theme';
+import { getDstChangeAtDate } from '../utils';
+import { Msg } from 'core/i18n';
+import messageIds from '../../l10n/messageIds';
 
 export interface DayHeaderProps {
   date: Date;
@@ -10,11 +15,13 @@ export interface DayHeaderProps {
 }
 
 const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
+  const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
+
   return (
     <Box
       display="grid"
       gridTemplateColumns="repeat(3, 1fr)"
-      gridTemplateRows="1fr"
+      gridTemplateRows="1fr auto"
       onClick={() => onClick()}
       sx={{
         cursor: 'pointer',
@@ -49,6 +56,19 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       </Box>
       {/* Empty */}
       <Box />
+      {dstChange !== undefined && (
+        <Box gridColumn={'1 / span 3'} gridRow={2}>
+          <Typography color={theme.palette.grey[500]} variant="body2">
+            <Msg
+              id={
+                dstChange === 'summertime'
+                  ? messageIds.dstStarts
+                  : messageIds.dstEnds
+              }
+            />
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

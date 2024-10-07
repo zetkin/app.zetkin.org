@@ -20,7 +20,7 @@ export interface ViewBrowserViewItem {
   folderId: number | null;
 }
 
-type ViewBrowserBackItem = {
+export type ViewBrowserBackItem = {
   folderId: number | null;
   id: string;
   title: string | null;

@@ -61,7 +61,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%">
       {readOnly && (
-        <Alert severity="info" sx={{ marginBottom: 2 }}>
+        <Alert severity="info">
           <Msg id={messageIds.editor.readOnlyModeInfo} />
         </Alert>
       )}
