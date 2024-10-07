@@ -16,7 +16,7 @@ interface ZUICheckboxProps {
   label: string;
   labelPlacement?: 'bottom' | 'end' | 'start' | 'top';
   onChange: (newCheckedState: boolean) => void;
-  size: Sizes;
+  size?: Sizes;
 }
 
 const ZUICheckbox: FC<ZUICheckboxProps> = ({
