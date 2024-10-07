@@ -1,6 +1,9 @@
 import { GetServerSideProps } from 'next';
+import { getIronSession } from 'iron-session';
 
 import { stringToBool } from '../utils/stringUtils';
+import { AppSession } from 'utils/types';
+import requiredEnvVar from 'utils/requiredEnvVar';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -19,11 +22,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     context.req.headers.host || process.env.ZETKIN_APP_HOST || 'localhost:3000';
 
   let scopes;
-  const { level } = context.query;
+  const { level, redirect } = context.query;
   if (level && typeof level === 'string') {
     if (parseInt(level) > 1) {
       scopes = [`level${level}`];
     }
+  }
+
+  if (typeof redirect == 'string') {
+    const session = await getIronSession<AppSession>(context.req, context.res, {
+      cookieName: 'zsid',
+      password: requiredEnvVar('SESSION_PASSWORD'),
+    });
+
+    // Store the URL that the user tried to access, so that they
+    // can be redirected back here after logging in
+    session.redirAfterLogin = redirect;
+
+    await session.save();
   }
 
   return {
