@@ -36,12 +36,6 @@ export default function useColumn(orgId: number) {
       return false;
     }
 
-    if (value == 'org') {
-      return !!selectedColumns.find(
-        (column) => column.kind == ColumnKind.ORGANIZATION
-      );
-    }
-
     if (value == 'id') {
       return !!allSelectedColumns.find(
         (column) => column.kind == ColumnKind.ID_FIELD

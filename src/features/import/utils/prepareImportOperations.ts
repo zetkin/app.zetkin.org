@@ -104,7 +104,16 @@ export default function prepareImportOperations(
         if (column.kind === ColumnKind.ORGANIZATION) {
           column.mapping.forEach((mappedColumn) => {
             if (mappedColumn.value === row.data[colIdx] && mappedColumn.orgId) {
-              personImportOps[rowIndex].organizations = [mappedColumn.orgId];
+              if (!personImportOps[rowIndex].organizations) {
+                personImportOps[rowIndex].organizations = [];
+              }
+              const allOrgs =
+                personImportOps[rowIndex]?.organizations?.concat(
+                  mappedColumn.orgId
+                ) ?? [];
+              personImportOps[rowIndex].organizations = Array.from(
+                new Set<number>(allOrgs)
+              );
             }
           });
         }
