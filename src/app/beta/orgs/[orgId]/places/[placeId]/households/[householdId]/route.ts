@@ -6,6 +6,7 @@ import { PlaceModel } from 'features/areas/models';
 
 type RouteMeta = {
   params: {
+    householdId: string;
     orgId: string;
     placeId: string;
   };
@@ -26,13 +27,12 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       const model = await PlaceModel.findOneAndUpdate(
         { _id: params.placeId, orgId },
         {
-          description: payload.description,
-          households: payload.households,
-          position: payload.position,
-          title: payload.title,
-          type: payload.type,
+          $set: { 'households.$[elem].title': payload.title },
         },
-        { new: true }
+        {
+          arrayFilters: [{ 'elem.id': { $eq: params.householdId } }],
+          new: true,
+        }
       );
 
       if (!model) {

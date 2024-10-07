@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { PlaceModel } from 'features/areas/models';
+import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {
   params: {
@@ -11,7 +11,7 @@ type RouteMeta = {
   };
 };
 
-export async function PATCH(request: NextRequest, { params }: RouteMeta) {
+export async function POST(request: NextRequest, { params }: RouteMeta) {
   return asOrgAuthorized(
     {
       orgId: params.orgId,
@@ -26,11 +26,19 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       const model = await PlaceModel.findOneAndUpdate(
         { _id: params.placeId, orgId },
         {
-          description: payload.description,
-          households: payload.households,
-          position: payload.position,
-          title: payload.title,
-          type: payload.type,
+          $push: {
+            households: {
+              $each: [
+                {
+                  id: new mongoose.Types.ObjectId().toString(),
+                  ratings: [],
+                  title: payload.title,
+                  visits: [],
+                },
+              ],
+              $position: 0,
+            },
+          },
         },
         { new: true }
       );
@@ -38,6 +46,8 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       if (!model) {
         return new NextResponse(null, { status: 404 });
       }
+
+      await model.save();
 
       return NextResponse.json({
         data: {
