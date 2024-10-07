@@ -1,4 +1,11 @@
-import { Box, Button, Card, Divider, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Typography,
+} from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
@@ -15,6 +22,7 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import useCanvassAssignmentStats from 'features/areas/hooks/useCanvassAssignmentStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 import { getContrastColor } from 'utils/colorUtils';
+import useAreasStatsByCanvassAssignment from 'features/areas/hooks/useAreasStatsByCanvassAssignment';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -64,17 +72,22 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   const theme = useTheme();
   const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
   const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
+  const areasListFuture = useAreasStatsByCanvassAssignment(
+    parseInt(orgId),
+    canvassAssId
+  );
   const classes = useStyles();
   const router = useRouter();
 
   return (
     <ZUIFutures
       futures={{
+        areas: areasListFuture,
         assignment: assignmentFuture,
         stats: statsFuture,
       }}
     >
-      {({ data: { assignment, stats } }) => {
+      {({ data: { areas, assignment, stats } }) => {
         const planUrl = `/organize/${orgId}/projects/${
           assignment.campaign.id || 'standalone'
         }/canvassassignments/${assignment.id}/plan`;
@@ -133,6 +146,112 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 </Box>
               )}
             </Card>
+            <Box display="flex" justifyContent="space-evenly">
+              {areas.map((area) => {
+                return (
+                  <Card key={area.id}>
+                    <Box
+                      alignItems="baseline"
+                      display="flex"
+                      justifyContent="space-between"
+                      p={2}
+                    >
+                      <Typography mb={1} variant="h5">
+                        {area.title || 'Untitle area'}
+                      </Typography>
+                      <Button variant="outlined">
+                        <Msg
+                          id={
+                            messageIds.canvassAssignment.overview.areaStats
+                              .closeButton
+                          }
+                        />
+                      </Button>
+                    </Box>
+                    <Divider />
+                    <CardContent>
+                      <Typography
+                        alignItems="baseline"
+                        display="flex"
+                        mb={1}
+                        variant="h5"
+                      >
+                        <Msg
+                          id={
+                            messageIds.canvassAssignment.overview.areaStats
+                              .places
+                          }
+                        />
+                        <Divider orientation="vertical" />
+                        <Typography ml={1}>{area.num_places}</Typography>
+                      </Typography>
+                      <ZUIStackedStatusBar
+                        values={[
+                          {
+                            color: theme.palette.statusColors.green,
+                            value: area.num_visited_places,
+                          },
+                          {
+                            color: theme.palette.statusColors.orange,
+                            value: area.num_places - area.num_visited_places,
+                          },
+                        ]}
+                      />
+                      <Typography mb={1} mt={1}>
+                        {area.num_visited_places + ' '}
+                        <Msg
+                          id={
+                            messageIds.canvassAssignment.overview.areaStats
+                              .placesLog
+                          }
+                        />
+                      </Typography>
+
+                      <Typography
+                        alignItems="baseline"
+                        display="flex"
+                        mb={1}
+                        variant="h5"
+                      >
+                        <Msg
+                          id={
+                            messageIds.canvassAssignment.overview.areaStats
+                              .households
+                          }
+                        />
+                        <Divider
+                          orientation="vertical"
+                          sx={{ color: theme.palette.secondary.dark }}
+                        />
+                        <Typography ml={1}>{area.num_households}</Typography>
+                      </Typography>
+                      <ZUIStackedStatusBar
+                        values={[
+                          {
+                            color: theme.palette.statusColors.green,
+                            value: area.num_visited_households,
+                          },
+                          {
+                            color: theme.palette.statusColors.orange,
+                            value:
+                              area.num_households - area.num_visited_households,
+                          },
+                        ]}
+                      />
+                      <Typography mb={1} mt={1}>
+                        {area.num_visited_households + ' '}
+                        <Msg
+                          id={
+                            messageIds.canvassAssignment.overview.areaStats
+                              .householdsLog
+                          }
+                        />
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </Box>
             <Card>
               <Box padding={2}>
                 <Typography variant="h4">Progress</Typography>

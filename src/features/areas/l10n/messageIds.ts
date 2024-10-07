@@ -17,6 +17,13 @@ export default makeMessages('feat.areas', {
       title: m('Untitled canvass assignment'),
     },
     overview: {
+      areaStats: {
+        closeButton: m('Close'),
+        households: m('Households'),
+        householdsLog: m(' Households have log visits'),
+        places: m('Places'),
+        placesLog: m('Places have log visits'),
+      },
       areas: {
         defineButton: m('Plan now'),
         editButton: m('Edit plan'),
