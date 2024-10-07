@@ -14,6 +14,7 @@ import {
   ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
+  ZetkinCanvassAssignmentAreaStats,
 } from './types';
 
 export interface AreasStoreSlice {
@@ -23,6 +24,11 @@ export interface AreasStoreSlice {
     string,
     RemoteList<ZetkinCanvassSession & { id: number }>
   >;
+  areasStatsByCanvassAssignmentId: Record<
+    string,
+    RemoteList<ZetkinCanvassAssignmentAreaStats>
+  >;
+
   assigneesByCanvassAssignmentId: Record<
     string,
     RemoteList<ZetkinCanvassAssignee>
@@ -37,6 +43,7 @@ export interface AreasStoreSlice {
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  areasStatsByCanvassAssignmentId: {},
   assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
   mySessionsList: remoteList(),
@@ -94,6 +101,27 @@ const areasSlice = createSlice({
 
       item.data = area;
       item.loaded = new Date().toISOString();
+    },
+    areasByCanvassAssignmentLoad: (state, action: PayloadAction<string>) => {
+      const assignmentId = action.payload;
+
+      if (!state.areasStatsByCanvassAssignmentId[assignmentId]) {
+        state.areasStatsByCanvassAssignmentId[assignmentId] = remoteList();
+      }
+
+      state.areasStatsByCanvassAssignmentId[assignmentId].isLoading = true;
+    },
+    areasByCanvassAssignmentLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignmentAreaStats[]]>
+    ) => {
+      const [canvassAssId, areasStats] = action.payload;
+
+      state.areasStatsByCanvassAssignmentId[canvassAssId] =
+        remoteList(areasStats);
+
+      state.areasStatsByCanvassAssignmentId[canvassAssId].loaded =
+        new Date().toISOString();
     },
     areasLoad: (state) => {
       state.areaList.isLoading = true;
@@ -364,6 +392,8 @@ export const {
   areaDeleted,
   areaLoad,
   areaLoaded,
+  areasByCanvassAssignmentLoad,
+  areasByCanvassAssignmentLoaded,
   areasLoad,
   areasLoaded,
   areaUpdated,
