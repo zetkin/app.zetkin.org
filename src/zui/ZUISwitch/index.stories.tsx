@@ -19,11 +19,9 @@ const Base: Story = {
     const [checked, setChecked] = useState(args.checked);
     return (
       <ZUISwitch
+        {...args}
         checked={checked}
-        disabled={args.disabled}
-        label={args.label}
         onChange={(newCheckedState) => setChecked(newCheckedState)}
-        size={args.size}
       />
     );
   },
