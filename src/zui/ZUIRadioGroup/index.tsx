@@ -82,7 +82,14 @@ const ZUIRadioGroup = ({
   return (
     <FormControl disabled={disabled}>
       <FormLabel id={labelId}>
-        <Typography color="primary" variant="labelXlMedium">
+        <Typography
+          sx={(theme) => ({
+            color: disabled
+              ? theme.palette.text.disabled
+              : theme.palette.text.primary,
+          })}
+          variant="labelXlMedium"
+        >
           {label}
         </Typography>
       </FormLabel>
@@ -96,15 +103,16 @@ const ZUIRadioGroup = ({
         value={value}
       >
         {options.map((option) => {
+          const isDisabled = disabled || option.disabled;
           return (
             <FormControlLabel
               key={option.value}
               control={<Radio />}
-              disabled={option.disabled}
+              disabled={isDisabled}
               label={
                 <Typography
                   sx={(theme) => ({
-                    color: option.disabled ? theme.palette.text.disabled : '',
+                    color: isDisabled ? theme.palette.text.disabled : '',
                   })}
                   variant="labelXlMedium"
                 >
@@ -123,7 +131,15 @@ const ZUIRadioGroup = ({
         })}
       </RadioGroup>
       {helperText && (
-        <Typography color="secondary" id={helperTextId} variant="labelSmMedium">
+        <Typography
+          id={helperTextId}
+          sx={(theme) => ({
+            color: disabled
+              ? theme.palette.text.disabled
+              : theme.palette.text.secondary,
+          })}
+          variant="labelSmMedium"
+        >
           {helperText}
         </Typography>
       )}
