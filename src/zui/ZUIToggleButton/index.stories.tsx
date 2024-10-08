@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import {
+  CalendarToday,
+  CalendarViewMonth,
+  CalendarViewWeek,
+} from '@mui/icons-material';
 import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIToggleButton from './index';
@@ -19,22 +24,28 @@ export const Basic: Story = {
     ],
   },
   render: function Render(args) {
-    const [timeScale, setTimeScale] = useState<'day' | 'week' | 'month'>(
-      'week'
-    );
+    const [value, setValue] = useState(args.options[0].value);
     return (
       <ZUIToggleButton
         {...args}
         onChange={(newValue) => {
-          if (
-            newValue &&
-            (newValue == 'day' || newValue == 'week' || newValue == 'month')
-          ) {
-            setTimeScale(newValue);
+          if (newValue) {
+            setValue(newValue);
           }
         }}
-        value={timeScale}
+        value={value}
       />
     );
   },
+};
+
+export const WithIcons: Story = {
+  args: {
+    options: [
+      { label: <CalendarToday />, value: 'day' },
+      { label: <CalendarViewWeek />, value: 'week' },
+      { label: <CalendarViewMonth />, value: 'month' },
+    ],
+  },
+  render: Basic.render,
 };

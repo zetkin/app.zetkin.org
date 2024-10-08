@@ -1,16 +1,37 @@
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { FC } from 'react';
 
-interface Option {
-  value: string;
+type TextOption = {
   label: string;
-}
+  value: string;
+};
+
+type IconOption = {
+  label: JSX.Element;
+  value: string;
+};
 
 interface ZUIToggleButtonProps {
-  options: Option[];
-  onChange: (value: string) => void;
+  /**
+   * One option for each button.
+   * The labels can be either strings or elements, for icon buttons.
+   */
+  options: TextOption[] | IconOption[];
+
+  onChange: (newValue: string) => void;
+
   value: string;
+
+  /**
+   * The orientation of the row of buttons.
+   * Defaults to 'horizontal'.
+   */
   orientation?: 'vertical' | 'horizontal';
+
+  /**
+   * The size of the buttons.
+   * Defaults to 'medium'.
+   */
   size?: 'small' | 'medium' | 'large';
 }
 
