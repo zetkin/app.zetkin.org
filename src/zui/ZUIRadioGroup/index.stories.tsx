@@ -29,6 +29,7 @@ export const Disabled: Story = {
   args: {
     direction: 'column',
     disabled: true,
+    helperText: 'Helper text',
     label: 'Example Form',
     labelPlacement: 'end',
     options: [

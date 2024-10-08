@@ -10,7 +10,7 @@ const sizes: Record<Sizes, string> = {
   small: '1.25rem',
 };
 
-interface ZUICheckboxProps {
+export type ZUICheckboxProps = {
   checked: boolean;
 
   /**
@@ -33,7 +33,7 @@ interface ZUICheckboxProps {
    * This does not affect the size of the label text.
    */
   size?: Sizes;
-}
+};
 
 const ZUICheckbox: FC<ZUICheckboxProps> = ({
   checked,

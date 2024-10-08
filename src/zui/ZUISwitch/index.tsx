@@ -1,7 +1,7 @@
 import { FormControlLabel, Switch, Typography } from '@mui/material';
 import { FC } from 'react';
 
-export interface ZUISwitchProps {
+export type ZUISwitchProps = {
   checked: boolean;
 
   /**
@@ -24,7 +24,7 @@ export interface ZUISwitchProps {
    * This does not affect the label size.
    */
   size?: 'small' | 'medium';
-}
+};
 
 const ZUISwitch: FC<ZUISwitchProps> = ({
   checked,
