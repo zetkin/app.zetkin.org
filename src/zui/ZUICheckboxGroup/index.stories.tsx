@@ -52,7 +52,18 @@ export const Basic: Story = {
       },
     ];
 
-    return <ZUICheckboxGroup {...args} options={options} />;
+    return (
+      <ZUICheckboxGroup
+        {...args}
+        error={
+          args.error &&
+          !selectedGroups.kitchen &&
+          !selectedGroups.party &&
+          !selectedGroups.protest
+        }
+        options={options}
+      />
+    );
   },
 };
 
