@@ -10,14 +10,14 @@ const sizes: Record<Sizes, string> = {
   small: '1.25rem',
 };
 
-interface ZUICheckboxProps {
+export type ZUICheckboxProps = {
   checked: boolean;
   disabled?: boolean;
   label: string;
   labelPlacement?: 'bottom' | 'end' | 'start' | 'top';
   onChange: (newCheckedState: boolean) => void;
   size?: Sizes;
-}
+};
 
 const ZUICheckbox: FC<ZUICheckboxProps> = ({
   checked,
