@@ -1,10 +1,14 @@
 import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
+import { useMemo } from 'react';
 
+import messageIds from '../../l10n/messageIds';
 import theme from 'theme';
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import EventCluster from '../EventCluster';
+import { getDstChangeAtDate } from '../utils';
+import { Msg } from 'core/i18n';
 
 type DayProps = {
   clusters: AnyClusteredEvent[];
@@ -22,6 +26,7 @@ const Day = ({
   onClick,
 }: DayProps) => {
   const isToday = dayjs(date).isSame(new Date(), 'day');
+  const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
 
   let textColor = theme.palette.text.secondary;
   if (isToday) {
@@ -56,6 +61,19 @@ const Day = ({
           <FormattedDate day="numeric" value={date} />
         </Typography>
       </Box>
+      {dstChange !== undefined && (
+        <Box paddingLeft="4px">
+          <Typography color={theme.palette.grey[500]} variant="body2">
+            <Msg
+              id={
+                dstChange === 'summertime'
+                  ? messageIds.dstStarts
+                  : messageIds.dstEnds
+              }
+            />
+          </Typography>
+        </Box>
+      )}
       {clusters.map((cluster, index) => {
         return (
           <Box

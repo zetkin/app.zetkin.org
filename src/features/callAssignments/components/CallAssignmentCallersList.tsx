@@ -8,6 +8,7 @@ import { CallAssignmentCaller } from '../apiTypes';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -77,7 +78,9 @@ const CallAssignmentCallersList = ({
       field: 'id',
       headerName: ' ',
       renderCell: (params) => (
-        <Avatar src={`/api/orgs/${orgId}/people/${params.id}/avatar`} />
+        <ZUIPersonHoverCard personId={params.row.id}>
+          <Avatar src={`/api/orgs/${orgId}/people/${params.id}/avatar`} />
+        </ZUIPersonHoverCard>
       ),
       sortable: false,
     },

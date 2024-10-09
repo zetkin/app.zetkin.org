@@ -15,9 +15,11 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import useCanvassAssignmentStats from 'features/areas/hooks/useCanvassAssignmentStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 import { getContrastColor } from 'utils/colorUtils';
+import { AREAS } from 'utils/featureFlags';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  featuresRequired: [AREAS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

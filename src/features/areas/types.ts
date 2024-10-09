@@ -1,4 +1,4 @@
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 export type ZetkinCanvassAssignmentStats = {
   num_areas: number;
@@ -33,6 +33,7 @@ export type ZetkinArea = {
     id: number;
   };
   points: PointData[];
+  tags: ZetkinTag[];
   title: string | null;
 };
 

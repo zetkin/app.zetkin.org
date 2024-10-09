@@ -11,6 +11,7 @@ type ZetkinAreaModelType = {
   description: string | null;
   orgId: number;
   points: ZetkinArea['points'];
+  tags: { id: number; value?: string }[];
   title: string | null;
 };
 
@@ -40,6 +41,7 @@ const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
   description: String,
   orgId: { required: true, type: Number },
   points: Array,
+  tags: Array,
   title: String,
 });
 

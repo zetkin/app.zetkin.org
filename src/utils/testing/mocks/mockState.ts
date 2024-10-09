@@ -11,6 +11,7 @@ export default function mockState(overrides?: RootState) {
       placeList: remoteList(),
       sessionsByAssignmentId: {},
       statsByCanvassAssId: {},
+      tagsByAreaId: {},
     },
     breadcrumbs: {
       crumbsByPath: {},

@@ -38,12 +38,21 @@ export default makeMessages('feat.areas', {
     description: m('Empty description'),
     title: m('Untitled area'),
   },
+  filters: {
+    addFilterButton: m('Add filter'),
+    filterButton: m('Filters'),
+    tagGroup: m<{ label: string }>('{label} (tag group)'),
+    tagsWithoutGroup: m('Tags without group'),
+  },
   overlay: {
     buttons: {
       cancel: m('Cancel'),
       delete: m('Delete'),
       edit: m('Edit'),
       save: m('Save'),
+    },
+    tags: {
+      header: m('Tags'),
     },
   },
   place: {
