@@ -25,7 +25,7 @@ const ZUIRelativeTime: React.FunctionComponent<ZUIRelativeTimeProps> = ({
   const difference: number =
     forcePast && absoluteDatetime.unix() - now.unix() > 0
       ? 0
-      : absoluteDatetime.$d.getHours() === 0 && absoluteDatetime.$d.getMinutes() === 0 // "Midnight check"
+      : absoluteDatetime.hour() === 0 && absoluteDatetime.minute() === 0 // "Midnight check"
         ? absoluteDatetime.unix() - now.startOf("day").unix() // Patch for midnight case (00:00). See issue #2199
         : absoluteDatetime.unix() - now.unix();
 
