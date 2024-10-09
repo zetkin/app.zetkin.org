@@ -89,9 +89,10 @@ const useStyles = makeStyles((theme) => ({
 
 type PublicAreaMapProps = {
   area: ZetkinArea;
+  canvassAssId: string | null;
 };
 
-const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
+const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
   const theme = useTheme();
   const classes = useStyles();
   const places = usePlaces(area.organization.id).data || [];

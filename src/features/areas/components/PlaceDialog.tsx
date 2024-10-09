@@ -3,7 +3,6 @@ import { FC, useState } from 'react';
 import {
   Box,
   Button,
-  ButtonGroup,
   Dialog,
   Divider,
   FormControl,
@@ -20,9 +19,11 @@ import messageIds from '../l10n/messageIds';
 import usePlaceMutations from '../hooks/usePlaceMutations';
 import { ZetkinPlace } from '../types';
 import { Msg, useMessages } from 'core/i18n';
+import VisitWizard, { WizardStep } from './VisitWizard';
 
 type PlaceDialogProps = {
-  dialogStep: 'place' | 'edit' | 'household';
+  canvassAssId: string | null;
+  dialogStep: 'place' | 'edit' | 'household' | 'wizard';
   onClose: () => void;
   onEdit: () => void;
   onSelectHousehold: () => void;
@@ -34,6 +35,7 @@ type PlaceDialogProps = {
 };
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
+  canvassAssId,
   dialogStep,
   onClose,
   onEdit,
@@ -44,10 +46,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   orgId,
   place,
 }) => {
-  const { addHousehold, updateHousehold, updatePlace } = usePlaceMutations(
-    orgId,
-    place.id
-  );
+  const { addVisit, addHousehold, updateHousehold, updatePlace } =
+    usePlaceMutations(orgId, place.id);
+
   const messages = useMessages(messageIds);
 
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
@@ -61,7 +62,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
   const [householdTitle, setHousholdTitle] = useState('');
 
-  const [wizardStep, setWizardStep] = useState<1 | 2 | 3>(1);
+  const [wizardStep, setWizardStep] = useState<WizardStep | null>(null);
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as 'address' | 'misc');
@@ -105,6 +106,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
       return messageIds.place.closeButton;
     }
   };
+
+  const showWizard =
+    selectedHousehold && dialogStep == 'wizard' && !!wizardStep;
 
   return (
     <Dialog fullWidth maxWidth="xl" onClose={onClose} open={open}>
@@ -168,6 +172,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               )}
             </>
           )}
+          {dialogStep == 'wizard' && (
+            <Button onClick={onUpdateDone}>
+              <Close />
+            </Button>
+          )}
           {dialogStep === 'edit' && (
             <Typography variant="h6">
               <Msg
@@ -178,20 +187,12 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               />
             </Typography>
           )}
-          {dialogStep === 'wizard' && (
-            <Button
-              onClick={() => {
-                if (dialogStep == 'wizard') {
-                  onUpdateDone();
-                }
-              }}
-              variant="outlined"
-            >
-              <Close />
-            </Button>
-          )}
         </Box>
+
         <Divider />
+
+        {/** BODY BEGINS HERE  */}
+
         <Box flexGrow={1} overflow="hidden">
           {dialogStep === 'edit' && (
             <Box
@@ -317,16 +318,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               </Box>
             </Box>
           )}
-          {wizardStep === 1 && dialogStep === 'wizard' && (
-            <Box>
-              <Typography>Did they open the door?</Typography>
-              <ButtonGroup>
-                <Button>YES</Button>
-                <Button>NO</Button>
-              </ButtonGroup>
-            </Box>
-          )}
-
           {selectedHousehold && dialogStep == 'household' && (
             <Box
               display="flex"
@@ -363,7 +354,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               <Box
                 display="flex"
                 flexDirection="column"
-                flexGrow={1}
+                height="100%"
+                justifyContent="flex-end"
                 overflow="hidden"
               >
                 <Button
@@ -412,7 +404,24 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               </Box>
             </Box>
           )}
+          {showWizard && (
+            <VisitWizard
+              onExit={onUpdateDone}
+              onRecordVisit={(report) =>
+                addVisit(selectedHousehold.id, {
+                  ...report,
+                  canvassAssId,
+                  timestamp: new Date().toISOString(),
+                })
+              }
+              onStepChange={setWizardStep}
+              step={wizardStep}
+            />
+          )}
         </Box>
+
+        {/**FOOTER BEGINS HERE  */}
+
         <Box display="flex" gap={1} justifyContent="flex-end" paddingTop={1}>
           {dialogStep === 'place' && (
             <Button
