@@ -15,8 +15,10 @@ export type PointData = [number, number];
 
 export type Visit = {
   canvassAssId: string | null;
+  doorWasOpened: boolean;
   id: string;
-  rating?: 'good' | 'bad';
+  missionAccomplished: boolean;
+  noteToOfficial: string | null;
   timestamp: string;
 };
 

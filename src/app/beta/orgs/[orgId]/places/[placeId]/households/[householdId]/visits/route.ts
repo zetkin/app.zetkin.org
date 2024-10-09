@@ -30,8 +30,10 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           $push: {
             'households.$[elem].visits': {
               canvassAssId: payload.canvassAssId,
+              doorWasOpened: payload.doorWasOpened,
               id: new mongoose.Types.ObjectId().toString(),
-              rating: payload.rating,
+              missionAccomplished: payload.missionAccomplished,
+              noteToOfficial: payload.noteToOfficial,
               timestamp: payload.timestamp,
             },
           },
