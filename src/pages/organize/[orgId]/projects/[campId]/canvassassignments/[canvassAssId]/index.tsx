@@ -13,9 +13,11 @@ import messageIds from 'features/areas/l10n/messageIds';
 import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
+import { AREAS } from 'utils/featureFlags';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  featuresRequired: [AREAS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

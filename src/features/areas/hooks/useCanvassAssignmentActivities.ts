@@ -9,6 +9,8 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { canvassAssignmentsLoad, canvassAssignmentsLoaded } from '../store';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
+import useFeature from 'utils/featureFlags/useFeature';
+import { AREAS } from 'utils/featureFlags';
 
 export default function useCanvassAssignmentActivities(
   orgId: number,
@@ -17,6 +19,11 @@ export default function useCanvassAssignmentActivities(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const list = useAppSelector((state) => state.areas.canvassAssignmentList);
+
+  const hasCanvassing = useFeature(AREAS);
+  if (!hasCanvassing) {
+    return new ResolvedFuture([]);
+  }
 
   const future = loadListIfNecessary(list, dispatch, {
     actionOnLoad: () => canvassAssignmentsLoad(),
