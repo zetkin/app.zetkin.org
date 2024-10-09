@@ -1,7 +1,16 @@
+import {
+  ArrowBackIos,
+  Check,
+  Edit,
+  ThumbDown,
+  ThumbUp,
+} from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
   Box,
   Button,
+  ButtonGroup,
+  CircularProgress,
   Dialog,
   Divider,
   FormControl,
@@ -13,60 +22,98 @@ import {
   Typography,
 } from '@mui/material';
 
-import { ZetkinPlace } from '../types';
-import { Msg, useMessages } from 'core/i18n';
+import { isWithinLast24Hours } from '../utils/isWithinLast24Hours';
 import messageIds from '../l10n/messageIds';
 import usePlaceMutations from '../hooks/usePlaceMutations';
+import { ZetkinPlace } from '../types';
 import ZUIDateTime from 'zui/ZUIDateTime';
+import { Msg, useMessages } from 'core/i18n';
 
 type PlaceDialogProps = {
-  dialogStep: 'place' | 'log' | 'edit';
+  canvassAssId: string | null;
+  dialogStep: 'place' | 'edit' | 'household';
   onClose: () => void;
   onEdit: () => void;
-  onLogCancel: () => void;
-  onLogSave: () => void;
-  onLogStart: () => void;
+  onSelectHousehold: () => void;
+  onUpdateDone: () => void;
   open: boolean;
   orgId: number;
   place: ZetkinPlace;
 };
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
+  canvassAssId,
   dialogStep,
   onClose,
   onEdit,
-  onLogCancel,
-  onLogSave,
-  onLogStart,
+  onUpdateDone,
+  onSelectHousehold,
   open,
   orgId,
   place,
 }) => {
-  const updatePlace = usePlaceMutations(orgId, place.id);
+  const {
+    addHousehold,
+    addVisit,
+    updateHousehold,
+    updatePlace,
+    isAddVisitLoading,
+  } = usePlaceMutations(orgId, place.id);
   const messages = useMessages(messageIds);
-  const timestamp = new Date().toISOString();
-  const [note, setNote] = useState('');
+
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
+    null
+  );
   const [description, setDescription] = useState<string>(
     place.description ?? ''
   );
   const [title, setTitle] = useState<string>(place.title ?? '');
   const [type, setType] = useState<'address' | 'misc'>(place.type);
+  const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
+  const [householdTitle, setHousholdTitle] = useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as 'address' | 'misc');
   };
 
-  const sortedVisits = place.visits.toSorted((a, b) => {
-    const dateA = new Date(a.timestamp);
-    const dateB = new Date(b.timestamp);
-    if (dateA > dateB) {
-      return -1;
-    } else if (dateB > dateA) {
-      return 1;
+  const selectedHousehold = place.households.find(
+    (household) => household.id == selectedHouseholdId
+  );
+
+  const sortedVisits =
+    selectedHousehold?.visits.toSorted((a, b) => {
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      if (dateA > dateB) {
+        return -1;
+      } else if (dateB > dateA) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }) || [];
+
+  const nothingHasBeenEdited =
+    dialogStep == 'edit' &&
+    title == place.title &&
+    type == place.type &&
+    (description == place.description || (!description && !place.description));
+
+  const saveButtonDisabled = nothingHasBeenEdited;
+
+  const getBackButtonMessage = () => {
+    if (dialogStep == 'edit') {
+      if (nothingHasBeenEdited) {
+        return messageIds.place.backButton;
+      } else {
+        return messageIds.place.cancelButton;
+      }
+    } else if (dialogStep == 'household') {
+      return messageIds.place.closeButton;
     } else {
-      return 0;
+      return messageIds.place.closeButton;
     }
-  });
+  };
 
   return (
     <Dialog fullWidth maxWidth="xl" onClose={onClose} open={open}>
@@ -74,26 +121,58 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         <Box
           paddingBottom={1}
           sx={{
-            alignItems: 'baseline',
+            alignItems: 'center',
             display: 'flex',
             justifyContent: 'space-between',
           }}
         >
           {dialogStep !== 'edit' && (
             <>
-              <Typography variant="h6">
-                {place?.title || <Msg id={messageIds.place.empty.title} />}
-              </Typography>
+              {dialogStep !== 'household' && (
+                <Typography alignItems="center" display="flex" variant="h6">
+                  {place?.title || <Msg id={messageIds.place.empty.title} />}
+                </Typography>
+              )}
+              {selectedHousehold && dialogStep == 'household' && (
+                <Typography alignItems="center" display="flex" variant="h6">
+                  <ArrowBackIos
+                    onClick={() => {
+                      onUpdateDone();
+                    }}
+                    sx={{ marginRight: 2 }}
+                  />
+                  {selectedHousehold.title || (
+                    <Msg id={messageIds.place.household.empty.title} />
+                  )}
+                </Typography>
+              )}
+
+              {selectedHousehold && dialogStep == 'household' && (
+                <Button
+                  onClick={() => {
+                    setHousholdTitle(selectedHousehold.title);
+                    setEditingHouseholdTitle(true);
+                  }}
+                  variant="outlined"
+                >
+                  <Edit />
+                </Button>
+              )}
               {dialogStep === 'place' && (
                 <Button onClick={onEdit} variant="outlined">
-                  <Msg id={messageIds.place.editButton} />
+                  <Edit />
                 </Button>
               )}
             </>
           )}
           {dialogStep === 'edit' && (
             <Typography variant="h6">
-              <Msg id={messageIds.place.editPlace} />
+              <Msg
+                id={messageIds.place.editPlace}
+                values={{
+                  placeName: place.title || messages.place.empty.title(),
+                }}
+              />
             </Typography>
           )}
         </Box>
@@ -154,7 +233,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               <Typography variant="h6">
                 <Msg id={messageIds.place.description} />
               </Typography>
-              <Typography>
+              <Divider />
+              <Typography color="secondary">
                 {place.description || (
                   <Msg id={messageIds.place.empty.description} />
                 )}
@@ -162,102 +242,264 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               <Box
                 display="flex"
                 flexDirection="column"
-                flexGrow={1}
+                flexGrow={2}
+                gap={1}
                 overflow="hidden"
               >
                 <Typography variant="h6">
-                  <Msg id={messageIds.place.activityHeader} />
+                  <Msg
+                    id={messageIds.place.householdsHeader}
+                    values={{ numberOfHouseholds: place.households.length }}
+                  />
                 </Typography>
+                <Divider />
                 <Box
                   display="flex"
                   flexDirection="column"
                   sx={{ overflowY: 'auto' }}
                 >
+                  {place.households.map((household) => {
+                    const visitedRecently = isWithinLast24Hours(
+                      household.visits.map((t) => t.timestamp)
+                    );
+                    const mostRecentVisit = household.visits.toSorted(
+                      (a, b) => {
+                        const dateA = new Date(a.timestamp);
+                        const dateB = new Date(b.timestamp);
+                        if (dateA > dateB) {
+                          return -1;
+                        } else if (dateB > dateA) {
+                          return 1;
+                        } else {
+                          return 0;
+                        }
+                      }
+                    )[0];
+
+                    return (
+                      <Box
+                        key={household.id}
+                        alignItems="center"
+                        display="flex"
+                        mb={1}
+                        mt={1}
+                        onClick={() => {
+                          setSelectedHouseholdId(household.id);
+                          onSelectHousehold();
+                        }}
+                        width="100%"
+                      >
+                        <Box flexGrow={1}>
+                          {household.title || (
+                            <Msg id={messageIds.place.household.empty.title} />
+                          )}
+                        </Box>
+                        {visitedRecently ? (
+                          <Box display="flex" gap={1}>
+                            {mostRecentVisit.rating && (
+                              <Box>
+                                {mostRecentVisit.rating == 'good' ? (
+                                  <ThumbUp color="secondary" />
+                                ) : (
+                                  <ThumbDown color="secondary" />
+                                )}
+                              </Box>
+                            )}
+                            <Check color="secondary" />
+                          </Box>
+                        ) : (
+                          ''
+                        )}
+                      </Box>
+                    );
+                  })}
+                </Box>
+              </Box>
+            </Box>
+          )}
+          {selectedHousehold && dialogStep == 'household' && (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              height="100%"
+              paddingTop={1}
+            >
+              <Box>
+                {editingHouseholdTitle && (
+                  <Box alignItems="center" display="flex">
+                    <TextField
+                      onChange={(ev) => setHousholdTitle(ev.target.value)}
+                      placeholder="Household title"
+                      value={householdTitle}
+                    />
+                    <Button
+                      onClick={() => {
+                        updateHousehold(selectedHousehold.id, {
+                          title: householdTitle,
+                        });
+                        setEditingHouseholdTitle(false);
+                        setHousholdTitle('');
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button onClick={() => setEditingHouseholdTitle(false)}>
+                      Cancel
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="column"
+                flexGrow={1}
+                overflow="hidden"
+              >
+                <Box
+                  alignSelf="center"
+                  display="flex"
+                  flexDirection="column"
+                  padding={6}
+                  width="100%"
+                >
+                  <ButtonGroup
+                    disabled={isWithinLast24Hours(
+                      selectedHousehold.visits.map((t) => t.timestamp)
+                    )}
+                    fullWidth
+                    sx={{ alignSelf: 'center', display: 'flex' }}
+                    variant="outlined"
+                  >
+                    {!isAddVisitLoading && (
+                      <>
+                        <Button
+                          onClick={() =>
+                            addVisit(selectedHousehold.id, {
+                              canvassAssId,
+                              rating: 'good',
+                              timestamp: new Date().toISOString(),
+                            })
+                          }
+                        >
+                          <ThumbUp />
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            addVisit(selectedHousehold.id, {
+                              canvassAssId,
+                              rating: 'bad',
+                              timestamp: new Date().toISOString(),
+                            })
+                          }
+                        >
+                          <ThumbDown />
+                        </Button>
+                      </>
+                    )}
+                    {isAddVisitLoading && (
+                      <Button variant="outlined">
+                        <CircularProgress size={25} />
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  sx={{ marginTop: 2, overflowY: 'auto' }}
+                >
+                  <Typography
+                    marginBottom={2}
+                    sx={{ alignItems: 'baseline', display: 'flex' }}
+                    variant="h6"
+                  >
+                    <Msg id={messageIds.place.logList} />
+                    <Typography sx={{ marginLeft: 1 }}>
+                      {sortedVisits.length}
+                    </Typography>
+                  </Typography>
+                  <Divider />
                   {sortedVisits.length == 0 && (
                     <Msg id={messageIds.place.noActivity} />
                   )}
                   {sortedVisits.map((visit) => (
                     <Box key={visit.id} paddingTop={1}>
-                      <Typography color="secondary">
+                      <Typography>{messages.place.visitLog()}</Typography>
+                      <Typography
+                        color="secondary"
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
                         <ZUIDateTime datetime={visit.timestamp} />
+                        {visit.rating && (
+                          <Box>
+                            {visit.rating === 'good' ? (
+                              <ThumbUp sx={{ fontSize: 20 }} />
+                            ) : (
+                              <ThumbDown sx={{ fontSize: 20 }} />
+                            )}
+                          </Box>
+                        )}
                       </Typography>
-                      <Typography>{visit.note}</Typography>
                     </Box>
                   ))}
                 </Box>
               </Box>
             </Box>
           )}
-          {place && dialogStep == 'log' && (
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="space-between"
-            >
-              <Box paddingTop={1}>
-                <ZUIDateTime datetime={timestamp} />
-                <TextField
-                  fullWidth
-                  multiline
-                  onChange={(ev) => setNote(ev.target.value)}
-                  placeholder="Note"
-                  sx={{ paddingTop: 1 }}
-                />
-              </Box>
-            </Box>
-          )}
         </Box>
         <Box display="flex" gap={1} justifyContent="flex-end" paddingTop={1}>
+          {dialogStep === 'place' && (
+            <Button
+              onClick={async () => {
+                const newlyAddedHousehold = await addHousehold();
+                setSelectedHouseholdId(newlyAddedHousehold.id);
+                onSelectHousehold();
+                setEditingHouseholdTitle(true);
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.place.addHouseholdButton} />
+            </Button>
+          )}
           <Button
             onClick={() => {
               if (dialogStep === 'place') {
                 onClose();
-              } else if (dialogStep === 'log') {
-                onLogCancel();
               } else if (dialogStep === 'edit') {
-                onLogSave();
+                onUpdateDone();
+                setTitle(place.title ?? '');
+                setDescription(place.description ?? '');
+                setType(place.type);
+              } else if (dialogStep == 'household') {
+                onUpdateDone();
+                onClose();
               }
             }}
             variant="outlined"
           >
-            <Msg
-              id={
-                dialogStep == 'place'
-                  ? messageIds.place.closeButton
-                  : messageIds.place.cancelButton
-              }
-            />
+            <Msg id={getBackButtonMessage()} />
           </Button>
-          <Button
-            disabled={dialogStep == 'log' && !note}
-            onClick={() => {
-              if (dialogStep == 'place') {
-                onLogStart();
-              } else if (dialogStep == 'log') {
-                updatePlace({
-                  ...place,
-                  visits: [...place.visits, { note, timestamp }],
-                });
-                onLogSave();
-              } else if (dialogStep == 'edit') {
-                updatePlace({
-                  description,
-                  title,
-                  type,
-                });
-                onLogSave();
-              }
-            }}
-            variant="contained"
-          >
-            <Msg
-              id={
-                dialogStep == 'place'
-                  ? messageIds.place.logActivityButton
-                  : messageIds.place.saveButton
-              }
-            />
-          </Button>
+          {dialogStep == 'edit' && (
+            <Button
+              disabled={saveButtonDisabled}
+              onClick={() => {
+                if (dialogStep == 'edit') {
+                  updatePlace({
+                    description,
+                    title,
+                    type,
+                  });
+                }
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.place.saveButton} />
+            </Button>
+          )}
         </Box>
       </Box>
     </Dialog>

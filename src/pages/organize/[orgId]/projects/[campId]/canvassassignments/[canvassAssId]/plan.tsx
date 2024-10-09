@@ -11,6 +11,7 @@ import useServerSide from 'core/useServerSide';
 import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
 import ZUIFuture from 'zui/ZUIFuture';
 import useCreateCanvassSession from 'features/areas/hooks/useCreateCanvassSession';
+import { AREAS } from 'utils/featureFlags';
 
 const PlanMap = dynamic(
   () => import('../../../../../../../features/areas/components/PlanMap'),
@@ -19,6 +20,7 @@ const PlanMap = dynamic(
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  featuresRequired: [AREAS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

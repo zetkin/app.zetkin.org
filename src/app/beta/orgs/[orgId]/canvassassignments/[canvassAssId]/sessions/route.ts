@@ -50,6 +50,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                 id: orgId,
               },
               points: area.points,
+              tags: [], // TODO: is this necessary here?
               title: area.title,
             },
             assignee: person,

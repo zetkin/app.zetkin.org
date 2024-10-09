@@ -1,16 +1,51 @@
+import { useState } from 'react';
+
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinPlace, ZetkinPlacePatchBody } from '../types';
+import {
+  HouseholdPatchBody,
+  Visit,
+  ZetkinPlace,
+  ZetkinPlacePatchBody,
+} from '../types';
 import { placeUpdated } from '../store';
 
 export default function usePlaceMutations(orgId: number, placeId: string) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const [isAddVisitLoading, setIsAddVisitLoading] = useState<boolean>(false);
 
-  return async (data: ZetkinPlacePatchBody) => {
-    const area = await apiClient.patch<ZetkinPlace, ZetkinPlacePatchBody>(
-      `/beta/orgs/${orgId}/places/${placeId}`,
-      data
-    );
-    dispatch(placeUpdated(area));
+  return {
+    addHousehold: async () => {
+      const place = await apiClient.post<ZetkinPlace>(
+        `/beta/orgs/${orgId}/places/${placeId}/households`,
+        {}
+      );
+      dispatch(placeUpdated(place));
+      return place.households[0];
+    },
+    addVisit: async (householdId: string, data: Omit<Visit, 'id'>) => {
+      setIsAddVisitLoading(true);
+      const place = await apiClient.post<ZetkinPlace, Omit<Visit, 'id'>>(
+        `/beta/orgs/${orgId}/places/${placeId}/households/${householdId}/visits`,
+        data
+      );
+      dispatch(placeUpdated(place));
+      setIsAddVisitLoading(false);
+    },
+    isAddVisitLoading,
+    updateHousehold: async (householdId: string, data: HouseholdPatchBody) => {
+      const place = await apiClient.patch<ZetkinPlace, HouseholdPatchBody>(
+        `/beta/orgs/${orgId}/places/${placeId}/households/${householdId}`,
+        data
+      );
+      dispatch(placeUpdated(place));
+    },
+    updatePlace: async (data: ZetkinPlacePatchBody) => {
+      const place = await apiClient.patch<ZetkinPlace, ZetkinPlacePatchBody>(
+        `/beta/orgs/${orgId}/places/${placeId}`,
+        data
+      );
+      dispatch(placeUpdated(place));
+    },
   };
 }

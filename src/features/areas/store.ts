@@ -2,17 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
   findOrAddItem,
+  RemoteItem,
   remoteItem,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
 import {
+  ZetkinCanvassAssignmentStats,
   ZetkinArea,
   ZetkinCanvassAssignee,
   ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from './types';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
@@ -27,6 +30,11 @@ export interface AreasStoreSlice {
   >;
   mySessionsList: RemoteList<ZetkinCanvassSession & { id: string }>;
   placeList: RemoteList<ZetkinPlace>;
+  statsByCanvassAssId: Record<
+    string,
+    RemoteItem<ZetkinCanvassAssignmentStats & { id: string }>
+  >;
+  tagsByAreaId: Record<string, RemoteList<ZetkinTag>>;
 }
 
 const initialState: AreasStoreSlice = {
@@ -36,6 +44,8 @@ const initialState: AreasStoreSlice = {
   mySessionsList: remoteList(),
   placeList: remoteList(),
   sessionsByAssignmentId: {},
+  statsByCanvassAssId: {},
+  tagsByAreaId: {},
 };
 
 const areasSlice = createSlice({
@@ -316,6 +326,74 @@ const areasSlice = createSlice({
       state.placeList.loaded = timestamp;
       state.placeList.items.forEach((item) => (item.loaded = timestamp));
     },
+    statsLoad: (state, action: PayloadAction<string>) => {
+      const canvassAssId = action.payload;
+      const statsItem = state.statsByCanvassAssId[canvassAssId];
+
+      state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
+        data: statsItem?.data || {
+          id: canvassAssId,
+          num_areas: 0,
+          num_households: 0,
+          num_places: 0,
+          num_visited_areas: 0,
+          num_visited_households: 0,
+          num_visited_households_outside_areas: 0,
+          num_visited_places: 0,
+          num_visited_places_outside_areas: 0,
+        },
+        isLoading: true,
+      });
+    },
+    statsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinCanvassAssignmentStats]>
+    ) => {
+      const [canvassAssId, stats] = action.payload;
+
+      state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
+        data: { id: canvassAssId, ...stats },
+        isLoading: false,
+        isStale: false,
+        loaded: new Date().toISOString(),
+      });
+    },
+    tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
+      const [areaId, tag] = action.payload;
+      state.tagsByAreaId[areaId] ||= remoteList();
+      const tagItem = findOrAddItem(state.tagsByAreaId[areaId], tag.id);
+      tagItem.data = tag;
+      tagItem.loaded = new Date().toISOString();
+
+      const areaItem = state.areaList.items.find((item) => item.id == areaId);
+      if (areaItem?.data) {
+        areaItem.data.tags.push(tag);
+      }
+    },
+    tagUnassigned: (state, action: PayloadAction<[string, number]>) => {
+      const [areaId, tagId] = action.payload;
+      state.tagsByAreaId[areaId] ||= remoteList();
+      state.tagsByAreaId[areaId].items = state.tagsByAreaId[
+        areaId
+      ].items.filter((item) => item.id != tagId);
+
+      const areaItem = state.areaList.items.find((item) => item.id == areaId);
+      if (areaItem?.data) {
+        areaItem.data.tags = areaItem.data.tags.filter(
+          (tag) => tag.id != tagId
+        );
+      }
+    },
+    tagsLoad: (state, action: PayloadAction<string>) => {
+      const areaId = action.payload;
+      state.tagsByAreaId[areaId] ||= remoteList();
+      state.tagsByAreaId[areaId].isLoading = true;
+    },
+    tagsLoaded: (state, action: PayloadAction<[string, ZetkinTag[]]>) => {
+      const [areaId, tags] = action.payload;
+      state.tagsByAreaId[areaId] = remoteList(tags);
+      state.tagsByAreaId[areaId].loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -348,4 +426,10 @@ export const {
   placesLoad,
   placesLoaded,
   placeUpdated,
+  statsLoad,
+  statsLoaded,
+  tagAssigned,
+  tagUnassigned,
+  tagsLoad,
+  tagsLoaded,
 } = areasSlice.actions;

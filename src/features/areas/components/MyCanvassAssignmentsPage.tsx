@@ -47,7 +47,11 @@ const CanvassAssignmentCard: FC<{
           </CardContent>
           <CardActions>
             <Button
-              onClick={() => router.push(`/o/${orgId}/areas/${areaId}`)}
+              onClick={() =>
+                router.push(
+                  `/o/${orgId}/areas/${areaId}?canvassAssId=${assignment.id}`
+                )
+              }
               variant="outlined"
             >
               <Msg id={messageIds.canvassAssignment.canvassing.goToMapButton} />

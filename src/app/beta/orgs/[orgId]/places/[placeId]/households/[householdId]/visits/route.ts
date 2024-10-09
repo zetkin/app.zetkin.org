@@ -1,17 +1,18 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { PlaceModel } from 'features/areas/models';
+import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {
   params: {
+    householdId: string;
     orgId: string;
     placeId: string;
   };
 };
 
-export async function PATCH(request: NextRequest, { params }: RouteMeta) {
+export async function POST(request: NextRequest, { params }: RouteMeta) {
   return asOrgAuthorized(
     {
       orgId: params.orgId,
@@ -26,18 +27,26 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       const model = await PlaceModel.findOneAndUpdate(
         { _id: params.placeId, orgId },
         {
-          description: payload.description,
-          households: payload.households,
-          position: payload.position,
-          title: payload.title,
-          type: payload.type,
+          $push: {
+            'households.$[elem].visits': {
+              canvassAssId: payload.canvassAssId,
+              id: new mongoose.Types.ObjectId().toString(),
+              rating: payload.rating,
+              timestamp: payload.timestamp,
+            },
+          },
         },
-        { new: true }
+        {
+          arrayFilters: [{ 'elem.id': { $eq: params.householdId } }],
+          new: true,
+        }
       );
 
       if (!model) {
         return new NextResponse(null, { status: 404 });
       }
+
+      await model.save();
 
       return NextResponse.json({
         data: {
