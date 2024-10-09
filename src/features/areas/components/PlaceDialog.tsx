@@ -1,16 +1,9 @@
-import {
-  ArrowBackIos,
-  Check,
-  Edit,
-  ThumbDown,
-  ThumbUp,
-} from '@mui/icons-material';
+import { ArrowBackIos, Check, Close, Edit } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
   Box,
   Button,
   ButtonGroup,
-  CircularProgress,
   Dialog,
   Divider,
   FormControl,
@@ -26,39 +19,35 @@ import { isWithinLast24Hours } from '../utils/isWithinLast24Hours';
 import messageIds from '../l10n/messageIds';
 import usePlaceMutations from '../hooks/usePlaceMutations';
 import { ZetkinPlace } from '../types';
-import ZUIDateTime from 'zui/ZUIDateTime';
 import { Msg, useMessages } from 'core/i18n';
 
 type PlaceDialogProps = {
-  canvassAssId: string | null;
   dialogStep: 'place' | 'edit' | 'household';
   onClose: () => void;
   onEdit: () => void;
   onSelectHousehold: () => void;
   onUpdateDone: () => void;
+  onWizard: () => void;
   open: boolean;
   orgId: number;
   place: ZetkinPlace;
 };
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
-  canvassAssId,
   dialogStep,
   onClose,
   onEdit,
   onUpdateDone,
   onSelectHousehold,
+  onWizard,
   open,
   orgId,
   place,
 }) => {
-  const {
-    addHousehold,
-    addVisit,
-    updateHousehold,
-    updatePlace,
-    isAddVisitLoading,
-  } = usePlaceMutations(orgId, place.id);
+  const { addHousehold, updateHousehold, updatePlace } = usePlaceMutations(
+    orgId,
+    place.id
+  );
   const messages = useMessages(messageIds);
 
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
@@ -72,6 +61,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
   const [householdTitle, setHousholdTitle] = useState('');
 
+  const [wizardStep, setWizardStep] = useState<1 | 2 | 3>(1);
+
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as 'address' | 'misc');
   };
@@ -80,7 +71,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     (household) => household.id == selectedHouseholdId
   );
 
-  const sortedVisits =
+  /*const sortedVisits =
     selectedHousehold?.visits.toSorted((a, b) => {
       const dateA = new Date(a.timestamp);
       const dateB = new Date(b.timestamp);
@@ -91,7 +82,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
       } else {
         return 0;
       }
-    }) || [];
+    }) || [];*/
 
   const nothingHasBeenEdited =
     dialogStep == 'edit' &&
@@ -134,29 +125,41 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 </Typography>
               )}
               {selectedHousehold && dialogStep == 'household' && (
-                <Typography alignItems="center" display="flex" variant="h6">
-                  <ArrowBackIos
-                    onClick={() => {
-                      onUpdateDone();
-                    }}
-                    sx={{ marginRight: 2 }}
-                  />
-                  {selectedHousehold.title || (
-                    <Msg id={messageIds.place.household.empty.title} />
-                  )}
-                </Typography>
-              )}
+                <>
+                  <Typography alignItems="center" display="flex" variant="h6">
+                    <ArrowBackIos
+                      onClick={() => {
+                        onUpdateDone();
+                      }}
+                      sx={{ marginRight: 2 }}
+                    />
+                    {selectedHousehold.title || (
+                      <Msg id={messageIds.place.household.empty.title} />
+                    )}
+                  </Typography>
 
-              {selectedHousehold && dialogStep == 'household' && (
-                <Button
-                  onClick={() => {
-                    setHousholdTitle(selectedHousehold.title);
-                    setEditingHouseholdTitle(true);
-                  }}
-                  variant="outlined"
-                >
-                  <Edit />
-                </Button>
+                  <Button
+                    onClick={() => {
+                      setHousholdTitle(selectedHousehold.title);
+                      setEditingHouseholdTitle(true);
+                    }}
+                    sx={{ marginRight: 1 }}
+                    variant="outlined"
+                  >
+                    <Edit />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (dialogStep == 'household') {
+                        onUpdateDone();
+                        onClose();
+                      }
+                    }}
+                    variant="outlined"
+                  >
+                    <Close />
+                  </Button>
+                </>
               )}
               {dialogStep === 'place' && (
                 <Button onClick={onEdit} variant="outlined">
@@ -174,6 +177,18 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 }}
               />
             </Typography>
+          )}
+          {dialogStep === 'wizard' && (
+            <Button
+              onClick={() => {
+                if (dialogStep == 'wizard') {
+                  onUpdateDone();
+                }
+              }}
+              variant="outlined"
+            >
+              <Close />
+            </Button>
           )}
         </Box>
         <Divider />
@@ -262,7 +277,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     const visitedRecently = isWithinLast24Hours(
                       household.visits.map((t) => t.timestamp)
                     );
-                    const mostRecentVisit = household.visits.toSorted(
+                    /*const mostRecentVisit = household.visits.toSorted(
                       (a, b) => {
                         const dateA = new Date(a.timestamp);
                         const dateB = new Date(b.timestamp);
@@ -274,7 +289,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                           return 0;
                         }
                       }
-                    )[0];
+                    )[0];*/
 
                     return (
                       <Box
@@ -294,22 +309,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                             <Msg id={messageIds.place.household.empty.title} />
                           )}
                         </Box>
-                        {visitedRecently ? (
-                          <Box display="flex" gap={1}>
-                            {mostRecentVisit.rating && (
-                              <Box>
-                                {mostRecentVisit.rating == 'good' ? (
-                                  <ThumbUp color="secondary" />
-                                ) : (
-                                  <ThumbDown color="secondary" />
-                                )}
-                              </Box>
-                            )}
-                            <Check color="secondary" />
-                          </Box>
-                        ) : (
-                          ''
-                        )}
+                        {visitedRecently ? <Check color="secondary" /> : ''}
                       </Box>
                     );
                   })}
@@ -317,6 +317,16 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               </Box>
             </Box>
           )}
+          {wizardStep === 1 && dialogStep === 'wizard' && (
+            <Box>
+              <Typography>Did they open the door?</Typography>
+              <ButtonGroup>
+                <Button>YES</Button>
+                <Button>NO</Button>
+              </ButtonGroup>
+            </Box>
+          )}
+
           {selectedHousehold && dialogStep == 'household' && (
             <Box
               display="flex"
@@ -356,55 +366,16 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 flexGrow={1}
                 overflow="hidden"
               >
-                <Box
-                  alignSelf="center"
-                  display="flex"
-                  flexDirection="column"
-                  padding={6}
-                  width="100%"
+                <Button
+                  onClick={() => {
+                    onWizard(), setWizardStep(1);
+                  }}
+                  variant="contained"
                 >
-                  <ButtonGroup
-                    disabled={isWithinLast24Hours(
-                      selectedHousehold.visits.map((t) => t.timestamp)
-                    )}
-                    fullWidth
-                    sx={{ alignSelf: 'center', display: 'flex' }}
-                    variant="outlined"
-                  >
-                    {!isAddVisitLoading && (
-                      <>
-                        <Button
-                          onClick={() =>
-                            addVisit(selectedHousehold.id, {
-                              canvassAssId,
-                              rating: 'good',
-                              timestamp: new Date().toISOString(),
-                            })
-                          }
-                        >
-                          <ThumbUp />
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            addVisit(selectedHousehold.id, {
-                              canvassAssId,
-                              rating: 'bad',
-                              timestamp: new Date().toISOString(),
-                            })
-                          }
-                        >
-                          <ThumbDown />
-                        </Button>
-                      </>
-                    )}
-                    {isAddVisitLoading && (
-                      <Button variant="outlined">
-                        <CircularProgress size={25} />
-                      </Button>
-                    )}
-                  </ButtonGroup>
-                </Box>
-                <Box
+                  Record visit
+                </Button>
+
+                {/*                 <Box
                   display="flex"
                   flexDirection="column"
                   sx={{ marginTop: 2, overflowY: 'auto' }}
@@ -434,19 +405,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                         }}
                       >
                         <ZUIDateTime datetime={visit.timestamp} />
-                        {visit.rating && (
-                          <Box>
-                            {visit.rating === 'good' ? (
-                              <ThumbUp sx={{ fontSize: 20 }} />
-                            ) : (
-                              <ThumbDown sx={{ fontSize: 20 }} />
-                            )}
-                          </Box>
-                        )}
                       </Typography>
                     </Box>
                   ))}
-                </Box>
+                </Box> */}
               </Box>
             </Box>
           )}
@@ -465,24 +427,23 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               <Msg id={messageIds.place.addHouseholdButton} />
             </Button>
           )}
-          <Button
-            onClick={() => {
-              if (dialogStep === 'place') {
-                onClose();
-              } else if (dialogStep === 'edit') {
-                onUpdateDone();
-                setTitle(place.title ?? '');
-                setDescription(place.description ?? '');
-                setType(place.type);
-              } else if (dialogStep == 'household') {
-                onUpdateDone();
-                onClose();
-              }
-            }}
-            variant="outlined"
-          >
-            <Msg id={getBackButtonMessage()} />
-          </Button>
+          {dialogStep !== 'household' && dialogStep !== 'wizard' && (
+            <Button
+              onClick={() => {
+                if (dialogStep === 'place') {
+                  onClose();
+                } else if (dialogStep === 'edit') {
+                  onUpdateDone();
+                  setTitle(place.title ?? '');
+                  setDescription(place.description ?? '');
+                  setType(place.type);
+                }
+              }}
+              variant="outlined"
+            >
+              <Msg id={getBackButtonMessage()} />
+            </Button>
+          )}
           {dialogStep == 'edit' && (
             <Button
               disabled={saveButtonDisabled}

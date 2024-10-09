@@ -89,10 +89,9 @@ const useStyles = makeStyles((theme) => ({
 
 type PublicAreaMapProps = {
   area: ZetkinArea;
-  canvassAssId: string | null;
 };
 
-const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
+const PublicAreaMap: FC<PublicAreaMapProps> = ({ area }) => {
   const theme = useTheme();
   const classes = useStyles();
   const places = usePlaces(area.organization.id).data || [];
@@ -100,9 +99,9 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [dialogStep, setDialogStep] = useState<'place' | 'edit' | 'household'>(
-    'place'
-  );
+  const [dialogStep, setDialogStep] = useState<
+    'place' | 'edit' | 'household' | 'wizard'
+  >('place');
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -324,6 +323,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
           onEdit={() => setDialogStep('edit')}
           onSelectHousehold={() => setDialogStep('household')}
           onUpdateDone={() => setDialogStep('place')}
+          onWizard={() => setDialogStep('wizard')}
           open={!!anchorEl}
           orgId={area.organization.id}
           place={selectedPlace}
