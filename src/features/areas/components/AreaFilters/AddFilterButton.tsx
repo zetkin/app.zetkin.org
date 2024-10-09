@@ -1,56 +1,45 @@
 import { alpha } from '@mui/material/styles';
-import { ArrowDropDown } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
-import { FC, MouseEvent, ReactNode, useState } from 'react';
+import { FC, useState } from 'react';
 
 import theme from 'theme';
+import messageIds from 'features/areas/l10n/messageIds';
+import { Msg } from 'core/i18n';
 
-type ZUIButtonMenuProps = {
+type Props = {
   items: {
     disabled?: boolean;
     icon?: JSX.Element;
     label: string;
     onClick: () => void;
   }[];
-  label: string;
-  startIcon?: ReactNode;
-  variant?: 'text' | 'outlined' | 'contained';
+  onToggle: (open: boolean) => void;
+  open: boolean;
 };
 
-const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
-  items,
-  label,
-  startIcon,
-  variant = 'contained',
-}) => {
+const AddFilterButton: FC<Props> = ({ items, open, onToggle }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <div>
       <Button
-        endIcon={<ArrowDropDown />}
-        onClick={handleClick}
-        startIcon={startIcon}
-        variant={variant}
+        ref={(elem) => setAnchorEl(elem)}
+        onClick={() => onToggle(!open)}
+        startIcon={<Add />}
+        variant="text"
       >
-        {label}
+        <Msg id={messageIds.filters.addFilterButton} />
       </Button>
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{
-          horizontal: 'right',
+          horizontal: 'left',
           vertical: 'bottom',
         }}
-        onClose={handleClose}
+        onClose={() => onToggle(false)}
         open={open}
         sx={{
           '& .MuiPaper-root': {
@@ -65,11 +54,10 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
                 ),
               },
             },
-            marginTop: theme.spacing(1),
           },
         }}
         transformOrigin={{
-          horizontal: 'right',
+          horizontal: 'left',
           vertical: 'top',
         }}
       >
@@ -80,7 +68,6 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
               disabled={item.disabled}
               disableRipple
               onClick={() => {
-                handleClose();
                 item.onClick();
               }}
             >
@@ -94,4 +81,4 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   );
 };
 
-export default ZUIButtonMenu;
+export default AddFilterButton;

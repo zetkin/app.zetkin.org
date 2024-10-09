@@ -5,21 +5,21 @@ import {
   Button,
   ClickAwayListener,
   Divider,
-  Link,
   Paper,
   TextField,
   Typography,
 } from '@mui/material';
 
-import { ZetkinArea } from '../types';
-import useAreaMutations from '../hooks/useAreaMutations';
+import { ZetkinArea } from '../../types';
+import useAreaMutations from '../../hooks/useAreaMutations';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from '../../l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import TagsSection from './TagsSection';
 
 type Props = {
   area: ZetkinArea;
@@ -66,9 +66,6 @@ const AreaOverlay: FC<Props> = ({
     setDescription(area.description);
   }, [area]);
 
-  const hostAndPath = `${window?.location.host}/o/${area.organization.id}/areas/${area.id}`;
-  const href = `${window?.location.protocol}//${hostAndPath}`;
-
   return (
     <Paper
       sx={{
@@ -95,7 +92,7 @@ const AreaOverlay: FC<Props> = ({
           }
         }}
       >
-        <Box padding={2}>
+        <Box mb={2}>
           <Box display="flex" justifyContent="space-between">
             <ZUIPreviewableInput
               mode={
@@ -177,12 +174,8 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
-      <Box flexGrow={1}>
-        <Typography>
-          <Link href={href} target="_blank">
-            {hostAndPath}
-          </Link>
-        </Typography>
+      <Box flexGrow={1} my={2}>
+        <TagsSection area={area} />
       </Box>
       <Box display="flex" gap={1}>
         {editing && (
