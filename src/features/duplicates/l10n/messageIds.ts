@@ -30,7 +30,7 @@ export default makeMessages('feat.duplicates', {
     },
     title: m('Merge duplicates'),
     warningMessage: m(
-      'Related activity data will transfer to the merged person, but conflicting fields must be resolved. Any unmerged data will be lost.'
+      'All data related to any of the person records will transfer to the merged person. This includes event participation, survey submissions, tags etc. But the values you discard in the fields above will be lost.'
     ),
     warningTitle: m('Risk of data loss'),
   },
