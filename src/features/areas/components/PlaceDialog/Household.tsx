@@ -67,7 +67,7 @@ const Household: FC<HouseholdProps> = ({
           onClick={onWizardStart}
           variant="contained"
         >
-          Record visit
+          Log visit
         </Button>
 
         {/*                 <Box

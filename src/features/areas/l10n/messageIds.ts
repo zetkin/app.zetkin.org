@@ -88,8 +88,6 @@ export default makeMessages('feat.areas', {
     notePlaceholder: m('Note'),
     saveButton: m('Save'),
     selectType: m('Place type'),
-    visitButton: m('Log visit'),
-    visitLog: m('Visited'),
     visitedButton: m('Visited'),
   },
   placeCard: {
