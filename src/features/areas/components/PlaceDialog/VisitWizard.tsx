@@ -24,7 +24,15 @@ type PreviousMessageProps = {
 
 const PreviousMessage: FC<PreviousMessageProps> = ({ message, onClick }) => {
   return (
-    <Box alignItems="center" display="flex" justifyContent="space-between">
+    <Box
+      alignItems="center"
+      display="flex"
+      justifyContent="space-between"
+      sx={{
+        borderBottom: '1px solid lightGrey',
+        padding: 1,
+      }}
+    >
       <Typography>{message}</Typography>
       <Button onClick={onClick}>Change</Button>
     </Box>
