@@ -17,6 +17,7 @@ import VisitWizard, { WizardStep } from './VisitWizard';
 import EditPlace from './EditPlace';
 import Place from './Place';
 import Household from './Household';
+import { isWithinLast24Hours } from 'features/areas/utils/isWithinLast24Hours';
 
 export type PlaceType = 'address' | 'misc';
 
@@ -135,12 +136,12 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           {dialogStep == 'household' && selectedHousehold && (
             <Box display="flex" justifyContent="space-between" width="100%">
               <Box alignItems="center" display="flex">
-                <IconButton>
-                  <ArrowBackIos
-                    onClick={() => {
-                      onUpdateDone();
-                    }}
-                  />
+                <IconButton
+                  onClick={() => {
+                    onUpdateDone();
+                  }}
+                >
+                  <ArrowBackIos />
                 </IconButton>
                 <Typography alignItems="center" display="flex" variant="h6">
                   {selectedHousehold.title || (
@@ -215,6 +216,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 onWizard();
                 setWizardStep(1);
               }}
+              visitedRecently={isWithinLast24Hours(
+                selectedHousehold.visits.map((t) => t.timestamp)
+              )}
             />
           )}
           {showWizard && (
