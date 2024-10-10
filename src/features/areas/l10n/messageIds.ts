@@ -83,6 +83,7 @@ export default makeMessages('feat.areas', {
     logActivityButton: m('Log activity'),
     logActivityHeader: m<{ title: string }>('Log activity at {title}'),
     logList: m('Log'),
+    logVisit: m('Log visit'),
     noActivity: m('No visits have been recorded at this place.'),
     notePlaceholder: m('Note'),
     saveButton: m('Save'),

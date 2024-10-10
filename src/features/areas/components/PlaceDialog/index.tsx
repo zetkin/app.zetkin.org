@@ -1,4 +1,4 @@
-import { ArrowBackIos, Close, Edit } from '@mui/icons-material';
+import { ArrowBackIos, Check, Close, Edit } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
   Box,
@@ -18,14 +18,16 @@ import EditPlace from './EditPlace';
 import Place from './Place';
 import Household from './Household';
 import { isWithinLast24Hours } from 'features/areas/utils/isWithinLast24Hours';
+import { PlaceDialogStep } from '../PublicAreaMap';
 
 export type PlaceType = 'address' | 'misc';
 
 type PlaceDialogProps = {
   canvassAssId: string | null;
-  dialogStep: 'place' | 'edit' | 'household' | 'wizard';
+  dialogStep: PlaceDialogStep;
   onClose: () => void;
   onEdit: () => void;
+  onPickHousehold: () => void;
   onSelectHousehold: () => void;
   onUpdateDone: () => void;
   onWizard: () => void;
@@ -39,6 +41,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   dialogStep,
   onClose,
   onEdit,
+  onPickHousehold,
   onUpdateDone,
   onSelectHousehold,
   onWizard,
@@ -118,6 +121,23 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               </Box>
             </>
           )}
+          {dialogStep == 'pickHousehold' && (
+            <Box display="flex" justifyContent="space-between" width="100%">
+              <Box alignItems="center" display="flex">
+                <IconButton
+                  onClick={() => {
+                    onUpdateDone();
+                  }}
+                >
+                  <ArrowBackIos />
+                </IconButton>
+                <Typography variant="h6">Log visit</Typography>
+              </Box>
+              <IconButton onClick={onClose}>
+                <Close />
+              </IconButton>
+            </Box>
+          )}
           {dialogStep == 'edit' && (
             <>
               <Typography variant="h6">
@@ -191,6 +211,42 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               place={place}
             />
           )}
+          {dialogStep == 'pickHousehold' && (
+            <Box>
+              <Typography variant="h6">Choose household</Typography>
+              {place.households.map((household) => {
+                const visitedRecently = isWithinLast24Hours(
+                  household.visits.map((t) => t.timestamp)
+                );
+                return (
+                  <Box
+                    key={household.id}
+                    alignItems="center"
+                    display="flex"
+                    mb={1}
+                    mt={1}
+                    onClick={() => {
+                      if (!visitedRecently) {
+                        setSelectedHouseholdId(household.id);
+                        setWizardStep(1);
+                        onWizard();
+                      }
+                    }}
+                    width="100%"
+                  >
+                    <Box flexGrow={1}>
+                      <Typography color={visitedRecently ? 'secondary' : ''}>
+                        {household.title || (
+                          <Msg id={messageIds.place.household.empty.title} />
+                        )}
+                      </Typography>
+                    </Box>
+                    {visitedRecently ? <Check color="secondary" /> : ''}
+                  </Box>
+                );
+              })}
+            </Box>
+          )}
           {dialogStep === 'edit' && (
             <EditPlace
               description={description}
@@ -237,8 +293,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           )}
         </Box>
         <Box display="flex" gap={1} justifyContent="flex-end" paddingTop={1}>
-          {dialogStep === 'place' && (
+          {dialogStep === 'place' && place.households.length == 0 && (
             <Button
+              fullWidth
               onClick={async () => {
                 const newlyAddedHousehold = await addHousehold();
                 setSelectedHouseholdId(newlyAddedHousehold.id);
@@ -250,6 +307,31 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               <Msg id={messageIds.place.addHouseholdButton} />
             </Button>
           )}
+          {dialogStep == 'place' && place.households.length == 1 && (
+            <Button
+              fullWidth
+              onClick={() => {
+                setSelectedHouseholdId(place.households[0].id);
+                setWizardStep(1);
+                onWizard();
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.place.logVisit} />
+            </Button>
+          )}
+          {dialogStep == 'place' && place.households.length > 1 && (
+            <Button
+              fullWidth
+              onClick={() => {
+                onPickHousehold();
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.place.logVisit} />
+            </Button>
+          )}
+
           {dialogStep == 'edit' && (
             <Button
               disabled={saveButtonDisabled}
