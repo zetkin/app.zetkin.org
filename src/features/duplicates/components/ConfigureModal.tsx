@@ -96,9 +96,9 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
             }}
           />
           <Box marginBottom={2} />
-          <Alert severity="info">
-            <AlertTitle>{messages.modal.infoTitle()}</AlertTitle>
-            {messages.modal.infoMessage()}
+          <Alert severity="warning">
+            <AlertTitle>{messages.modal.warningTitle()}</AlertTitle>
+            {messages.modal.warningMessage()}
           </Alert>
         </Box>
       </Box>
