@@ -14,6 +14,7 @@ import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useIDConfig from 'features/import/hooks/useIDConfig';
+import useIdColumns from 'features/import/hooks/useIdColumns';
 
 interface IdConfigProps {
   uiDataColumn: UIDataColumn<IDFieldColumn>;
@@ -25,6 +26,17 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex
   );
+  const idColumns = useIdColumns();
+
+  const canChooseZId =
+    idColumns.filter(
+      (col, index) => index !== uiDataColumn.columnIndex && col.idField === 'id'
+    ).length === 0;
+  const canChooseExtId =
+    idColumns.filter(
+      (col, index) =>
+        index !== uiDataColumn.columnIndex && col.idField === 'ext_id'
+    ).length === 0;
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
@@ -53,6 +65,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           <Box alignItems="center" display="flex" padding={1}>
             <Radio
               checked={uiDataColumn.originalColumn.idField == 'ext_id'}
+              disabled={!canChooseExtId}
               onChange={(event) => {
                 if (
                   event.target.value == 'ext_id' ||
@@ -89,6 +102,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           <Box alignItems="center" display="flex" padding={1}>
             <Radio
               checked={uiDataColumn.originalColumn.idField == 'id'}
+              disabled={!canChooseZId}
               onChange={(event) => {
                 if (
                   event.target.value == 'ext_id' ||
