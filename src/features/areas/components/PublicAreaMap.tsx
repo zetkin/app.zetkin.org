@@ -22,11 +22,11 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { CreatePlaceCard } from './CreatePlaceCard';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import PlaceDialog from './PlaceDialog';
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import MarkerIcon from '../utils/markerIcon';
+import PlaceDialog from './PlaceDialog';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {

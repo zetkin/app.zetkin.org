@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import { Visit } from '../types';
+import { Visit } from '../../types';
 
 export type WizardStep = 1 | 2 | 3;
 
