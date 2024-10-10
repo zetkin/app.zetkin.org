@@ -10,7 +10,7 @@ export default meta;
 
 type Story = StoryObj<typeof ZUISwitch>;
 
-export const Default: Story = {
+const Base: Story = {
   args: {
     checked: false,
     size: 'medium',
@@ -19,34 +19,38 @@ export const Default: Story = {
     const [checked, setChecked] = useState(args.checked);
     return (
       <ZUISwitch
+        {...args}
         checked={checked}
-        onChange={() => setChecked(!checked)}
-        size={args.size}
+        onChange={(newCheckedState) => setChecked(newCheckedState)}
       />
     );
   },
 };
 
-export const UncheckedSmall: Story = {
-  args: {
-    checked: false,
-    size: 'small',
-  },
-  render: Default.render,
-};
-
-export const CheckedMedium: Story = {
+export const Medium: Story = {
   args: {
     checked: true,
+    label: 'Confetti rain',
     size: 'medium',
   },
-  render: Default.render,
+  render: Base.render,
 };
 
-export const CheckedSmall: Story = {
+export const Small: Story = {
   args: {
-    checked: true,
+    checked: false,
+    label: 'Subtitles',
     size: 'small',
   },
-  render: Default.render,
+  render: Base.render,
+};
+
+export const Disabled: Story = {
+  args: {
+    checked: false,
+    disabled: true,
+    label: "Party like it's 1999",
+    size: 'small',
+  },
+  render: Base.render,
 };
