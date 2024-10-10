@@ -1,11 +1,20 @@
-import { ArrowBackIos, Check, Close, Edit } from '@mui/icons-material';
+import {
+  ArrowBackIos,
+  Check,
+  Close,
+  Edit,
+  MoreVert,
+} from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   Divider,
   IconButton,
+  Menu,
+  MenuItem,
   Typography,
 } from '@mui/material';
 
@@ -64,6 +73,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [type, setType] = useState<PlaceType>(place.type);
   const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
   const [householdTitle, setHousholdTitle] = useState('');
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const [wizardStep, setWizardStep] = useState<WizardStep | null>(null);
 
@@ -292,7 +302,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             />
           )}
         </Box>
-        <Box display="flex" gap={1} justifyContent="flex-end" paddingTop={1}>
+        <Box display="flex" gap={1} justifyContent="center" paddingTop={1}>
           {dialogStep === 'place' && place.households.length == 0 && (
             <Button
               fullWidth
@@ -308,28 +318,42 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             </Button>
           )}
           {dialogStep == 'place' && place.households.length == 1 && (
-            <Button
-              fullWidth
-              onClick={() => {
-                setSelectedHouseholdId(place.households[0].id);
-                setWizardStep(1);
-                onWizard();
-              }}
-              variant="contained"
-            >
-              <Msg id={messageIds.place.logVisit} />
-            </Button>
+            <ButtonGroup variant="contained">
+              <Button
+                fullWidth
+                onClick={() => {
+                  setSelectedHouseholdId(place.households[0].id);
+                  setWizardStep(1);
+                  onWizard();
+                }}
+              >
+                <Msg id={messageIds.place.logVisit} />
+              </Button>
+              <Button
+                onClick={(ev) => setAnchorEl(ev.currentTarget)}
+                size="small"
+              >
+                <MoreVert />
+              </Button>
+            </ButtonGroup>
           )}
           {dialogStep == 'place' && place.households.length > 1 && (
-            <Button
-              fullWidth
-              onClick={() => {
-                onPickHousehold();
-              }}
-              variant="contained"
-            >
-              <Msg id={messageIds.place.logVisit} />
-            </Button>
+            <ButtonGroup variant="contained">
+              <Button
+                fullWidth
+                onClick={() => {
+                  onPickHousehold();
+                }}
+              >
+                <Msg id={messageIds.place.logVisit} />
+              </Button>
+              <Button
+                onClick={(ev) => setAnchorEl(ev.currentTarget)}
+                size="small"
+              >
+                <MoreVert />
+              </Button>
+            </ButtonGroup>
           )}
 
           {dialogStep == 'edit' && (
@@ -349,6 +373,31 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               <Msg id={messageIds.place.saveButton} />
             </Button>
           )}
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              horizontal: 'left',
+              vertical: 'top',
+            }}
+            onClose={() => setAnchorEl(null)}
+            open={!!anchorEl}
+            transformOrigin={{
+              horizontal: 'center',
+              vertical: 'bottom',
+            }}
+          >
+            <MenuItem
+              onClick={async () => {
+                const newlyAddedHousehold = await addHousehold();
+                setSelectedHouseholdId(newlyAddedHousehold.id);
+                onSelectHousehold();
+                setEditingHouseholdTitle(true);
+                setAnchorEl(null);
+              }}
+            >
+              Add household
+            </MenuItem>
+          </Menu>
         </Box>
       </Box>
     </Dialog>
