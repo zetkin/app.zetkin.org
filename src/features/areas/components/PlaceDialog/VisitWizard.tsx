@@ -47,26 +47,103 @@ const VisitWizard: FC<VisitWizardProps> = ({
       justifyContent="center"
     >
       {showPreviousButton && (
-        <Button
-          onClick={() => {
-            if (step == 2) {
-              onStepChange(1);
-              setMissionAccomplished(null);
-            } else if (
-              step == 3 &&
-              (doorWasOpened == true || doorWasOpened == null)
-            ) {
-              onStepChange(2);
-              setNoteToOfficial(null);
-            } else {
-              //User is on step 3 because the door was not opened
-              onStepChange(1);
-              setNoteToOfficial(null);
-            }
-          }}
-        >
-          Previous
-        </Button>
+        <Box display="flex" flexDirection="column" width="100%">
+          {(step == 2 || step == 3) && doorWasOpened && (
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Typography>the door was opened</Typography>
+              <Button
+                onClick={() => {
+                  if (step == 2) {
+                    onStepChange(1);
+                    setMissionAccomplished(null);
+                  } else if (
+                    step == 3 &&
+                    (doorWasOpened == true || doorWasOpened == null)
+                  ) {
+                    onStepChange(1);
+                    setMissionAccomplished(null);
+                    setNoteToOfficial(null);
+                  }
+                }}
+              >
+                Change
+              </Button>
+            </Box>
+          )}
+          {step == 3 && doorWasOpened && missionAccomplished && (
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Typography>mission was accomplished!</Typography>
+              <Button
+                onClick={() => {
+                  if (
+                    step == 3 &&
+                    (doorWasOpened == true || doorWasOpened == null)
+                  ) {
+                    onStepChange(2);
+                    setNoteToOfficial(null);
+                  } else {
+                    //User is on step 3 because the door was not opened
+                    onStepChange(1);
+                    setNoteToOfficial(null);
+                  }
+                }}
+              >
+                Change
+              </Button>
+            </Box>
+          )}
+          {step == 3 && doorWasOpened && !missionAccomplished && (
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Typography>mission was not accomplished</Typography>
+              <Button
+                onClick={() => {
+                  if (
+                    step == 3 &&
+                    (doorWasOpened == true || doorWasOpened == null)
+                  ) {
+                    onStepChange(2);
+                    setNoteToOfficial(null);
+                  } else {
+                    //User is on step 3 because the door was not opened
+                    onStepChange(1);
+                    setNoteToOfficial(null);
+                  }
+                }}
+              >
+                Change
+              </Button>
+            </Box>
+          )}
+          {step == 3 && !doorWasOpened && (
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Typography>the door was not opened</Typography>
+              <Button
+                onClick={() => {
+                  onStepChange(1);
+                  setNoteToOfficial(null);
+                }}
+              >
+                Change
+              </Button>
+            </Box>
+          )}
+        </Box>
       )}
       <>
         <Box
