@@ -27,6 +27,13 @@ type ZetkinPlaceModelType = {
 type ZetkinCanvassAssignmentModelType = {
   campId: number;
   id: number;
+  metrics: {
+    definesDone: boolean;
+    description: string;
+    id: string;
+    kind: 'boolean' | 'scale5';
+    question: string;
+  }[];
   orgId: number;
   sessions: {
     areaId: string;
@@ -56,10 +63,14 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
         {
           _id: false,
           canvassAssId: String,
-          doorWasOpened: Boolean,
           id: String,
-          missionAccomplished: Boolean,
           noteToOfficial: String,
+          responses: [
+            {
+              metricId: String,
+              response: String,
+            },
+          ],
           timestamp: String,
         },
       ],
@@ -74,6 +85,15 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
 const canvassAssignmentSchema =
   new mongoose.Schema<ZetkinCanvassAssignmentModelType>({
     campId: Number,
+    metrics: [
+      {
+        definesDone: Boolean,
+        description: String,
+        id: String,
+        kind: String,
+        question: String,
+      },
+    ],
     orgId: { required: true, type: Number },
     sessions: [
       {

@@ -294,6 +294,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 addVisit(selectedHousehold.id, {
                   ...report,
                   canvassAssId,
+                  responses: [],
                   timestamp: new Date().toISOString(),
                 })
               }

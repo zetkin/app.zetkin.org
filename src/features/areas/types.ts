@@ -19,6 +19,10 @@ export type Visit = {
   id: string;
   missionAccomplished: boolean;
   noteToOfficial: string | null;
+  responses: {
+    metricId: string;
+    response: string;
+  }[];
   timestamp: string;
 };
 
