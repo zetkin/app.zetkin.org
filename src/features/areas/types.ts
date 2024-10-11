@@ -1,6 +1,10 @@
 import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 export type ZetkinCanvassAssignmentStats = {
+  metrics: {
+    metric: ZetkinCanvassAssignment['metrics'][0];
+    values: number[];
+  }[];
   num_areas: number;
   num_households: number;
   num_places: number;

@@ -10,6 +10,7 @@ import {
   Household,
   Visit,
   ZetkinArea,
+  ZetkinCanvassAssignmentStats,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from 'features/areas/types';
@@ -120,6 +121,47 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const visitedAreas: string[] = [];
       const householdsInAreas: Household[] = [];
 
+      const configuredMetrics = model.metrics;
+      const accumulatedMetrics: ZetkinCanvassAssignmentStats['metrics'] =
+        configuredMetrics.map((metric) => ({
+          metric: {
+            definesDone: metric.definesDone,
+            description: metric.description,
+            id: metric._id,
+            kind: metric.kind,
+            question: metric.question,
+          },
+          values: metric.kind == 'boolean' ? [0] : [0, 0, 0, 0, 0],
+        }));
+
+      allPlaces.forEach((place) => {
+        place.households.forEach((household) => {
+          household.visits.forEach((visit) => {
+            if (visit.canvassAssId == params.canvassAssId) {
+              visit.responses.forEach((response) => {
+                const configuredMetric = configuredMetrics.find(
+                  (candidate) => candidate._id == response.metricId
+                );
+
+                const accumulatedMetric = accumulatedMetrics.find(
+                  (accum) => accum.metric.id == response.metricId
+                );
+
+                if (accumulatedMetric && configuredMetric) {
+                  if (response.response == 'true') {
+                    accumulatedMetric.values[0]++;
+                  } else if (configuredMetric.kind == 'scale5') {
+                    const rating = parseInt(response.response);
+                    const index = rating - 1;
+                    accumulatedMetric.values[index]++;
+                  }
+                }
+              });
+            }
+          });
+        });
+      });
+
       uniquePlacesInAreas.forEach((place) => {
         householdsInAreas.push(...place.households);
         place.households.forEach((household) => {
@@ -156,6 +198,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       return Response.json({
         data: {
+          metrics: accumulatedMetrics,
           num_areas: uniqueAreas.length,
           num_households: householdsInAreas.length,
           num_places: uniquePlacesInAreas.length,

@@ -331,17 +331,7 @@ const areasSlice = createSlice({
       const statsItem = state.statsByCanvassAssId[canvassAssId];
 
       state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
-        data: statsItem?.data || {
-          id: canvassAssId,
-          num_areas: 0,
-          num_households: 0,
-          num_places: 0,
-          num_visited_areas: 0,
-          num_visited_households: 0,
-          num_visited_households_outside_areas: 0,
-          num_visited_places: 0,
-          num_visited_places_outside_areas: 0,
-        },
+        data: statsItem?.data || null,
         isLoading: true,
       });
     },
