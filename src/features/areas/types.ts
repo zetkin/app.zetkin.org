@@ -15,9 +15,7 @@ export type PointData = [number, number];
 
 export type Visit = {
   canvassAssId: string | null;
-  doorWasOpened: boolean;
   id: string;
-  missionAccomplished: boolean;
   noteToOfficial: string | null;
   responses: {
     metricId: string;
