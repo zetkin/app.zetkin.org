@@ -34,6 +34,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const canvassAssignment: ZetkinCanvassAssignment = {
         campaign: { id: canvassAssignmentModel.campId },
         id: canvassAssignmentModel._id.toString(),
+        metrics: [],
         organization: { id: orgId },
         title: canvassAssignmentModel.title,
       };

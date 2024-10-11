@@ -58,6 +58,13 @@ export type ZetkinCanvassAssignment = {
     id: number;
   };
   id: string;
+  metrics: {
+    definesDone: boolean;
+    description: string;
+    id: string;
+    kind: 'boolean' | 'scale5';
+    question: string;
+  }[];
   organization: {
     id: number;
   };
