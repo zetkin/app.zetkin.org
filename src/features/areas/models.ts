@@ -28,9 +28,9 @@ type ZetkinCanvassAssignmentModelType = {
   campId: number;
   id: number;
   metrics: {
+    _id: string;
     definesDone: boolean;
     description: string;
-    id: string;
     kind: 'boolean' | 'scale5';
     question: string;
   }[];
