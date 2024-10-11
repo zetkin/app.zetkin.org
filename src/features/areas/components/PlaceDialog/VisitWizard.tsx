@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -9,12 +8,14 @@ import {
 import { FC, useState } from 'react';
 
 import { Visit, ZetkinCanvassAssignment } from 'features/areas/types';
+import { stringToBool } from 'utils/stringUtils';
 
 const BooleanQuestion: FC<{
   description: string;
   onChange: (newValue: boolean) => void;
   question: string;
-}> = ({ description, onChange, question }) => {
+  value?: string;
+}> = ({ description, onChange, question, value }) => {
   return (
     <>
       <Box
@@ -32,10 +33,9 @@ const BooleanQuestion: FC<{
         exclusive
         fullWidth
         onChange={(ev, newValue) => {
-          if (typeof newValue == 'boolean') {
-            onChange(newValue);
-          }
+          onChange(newValue);
         }}
+        value={value ? stringToBool(value) : null}
       >
         <ToggleButton value={true}>Yes</ToggleButton>
         <ToggleButton value={false}>No</ToggleButton>
@@ -73,81 +73,93 @@ const PreviousMessage: FC<PreviousMessageProps> = ({
 
 type VisitWizardProps = {
   metrics: ZetkinCanvassAssignment['metrics'];
-  onLogVisit: (noteToOfficial: string, responses: Visit['responses']) => void;
+  onLogVisit: (responses: Visit['responses']) => void;
 };
 
 const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
   const [responses, setResponses] = useState<Visit['responses']>([]);
   const [step, setStep] = useState(0);
-  const [noteToOfficial, setNoteToOfficial] = useState('');
 
-  const currentMetric = metrics[step] ? metrics[step] : null;
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box>
-        {responses.map((response, index) => {
-          const metric = metrics.find(
-            (metric) => metric.id == response.metricId
-          );
-
-          if (metric) {
-            return (
+      {metrics.map((metric, index) => {
+        if (index < step) {
+          return (
+            <>
               <PreviousMessage
-                key={response.metricId}
+                key={metric.id}
                 onClick={() => {
                   setStep(index);
-                  setResponses(responses.slice(0, index));
+                  setResponses(responses.slice(0, index + 1));
                 }}
                 question={metric.question}
-                response={response.response}
+                response={responses[index].response}
               />
-            );
-          }
-        })}
-      </Box>
-      {currentMetric && (
-        <Box display="flex" flexDirection="column" flexGrow={1}>
-          <BooleanQuestion
-            description={currentMetric.description}
-            onChange={(newValue) => {
-              setResponses([
-                ...responses,
-                { metricId: currentMetric.id, response: newValue.toString() },
-              ]);
-              setStep(step + 1);
-            }}
-            question={currentMetric.question}
-          />
-        </Box>
-      )}
-      {!currentMetric && (
-        <Box display="flex" flexDirection="column" flexGrow={1}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            flexGrow={1}
-            justifyContent="center"
-          >
-            <Typography>
-              Did something happen that you need an official to know?
-            </Typography>
-            <TextField
-              onChange={(ev) => setNoteToOfficial(ev.target.value)}
-              value={noteToOfficial}
-            />
-          </Box>
-          <Button
-            fullWidth
-            onClick={() => {
-              onLogVisit(noteToOfficial, responses);
-              setNoteToOfficial('');
-            }}
-            variant="contained"
-          >
-            {noteToOfficial ? 'Save with note' : 'Save without note'}
-          </Button>
-        </Box>
-      )}
+              {index == metrics.length - 1 && (
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flexGrow={1}
+                  justifyContent="flex-end"
+                >
+                  <Button
+                    fullWidth
+                    onClick={() => {
+                      onLogVisit(responses);
+                    }}
+                    variant="contained"
+                  >
+                    Save
+                  </Button>
+                </Box>
+              )}
+            </>
+          );
+        }
+
+        if (index == step) {
+          return (
+            <Box display="flex" flexDirection="column" flexGrow={1}>
+              <BooleanQuestion
+                description={metric.description}
+                onChange={(newValue) => {
+                  if (newValue == null) {
+                    //User is returning and selects the same response
+                    setStep(step + 1);
+                  } else {
+                    if (responses[index]) {
+                      //User is returning and selects new response
+                      setResponses([
+                        ...responses.slice(
+                          0,
+                          responses.indexOf(responses[index])
+                        ),
+                        { ...responses[index], response: newValue.toString() },
+                      ]);
+                    } else {
+                      //User is responding to this question for the first time
+                      setResponses([
+                        ...responses,
+                        {
+                          metricId: metric.id,
+                          response: newValue.toString(),
+                        },
+                      ]);
+                    }
+                    setStep(step + 1);
+                  }
+                }}
+                question={metric.question}
+                value={responses[index]?.response}
+              />
+            </Box>
+          );
+        }
+
+        if (index > step) {
+          return null;
+        }
+      })}
     </Box>
   );
 };
