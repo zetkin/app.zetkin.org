@@ -16,6 +16,7 @@ import useCanvassAssignmentStats from 'features/areas/hooks/useCanvassAssignment
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 import { getContrastColor } from 'utils/colorUtils';
 import { AREAS } from 'utils/featureFlags';
+import AssignmentMetricsChart from 'features/areas/components/AssignmentMetricsChart';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -134,6 +135,9 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   </Box>
                 </Box>
               )}
+            </Card>
+            <Card>
+              {stats.metrics && <AssignmentMetricsChart stats={stats} />}
             </Card>
             <Card>
               <Box padding={2}>
