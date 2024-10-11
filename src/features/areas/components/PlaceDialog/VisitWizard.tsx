@@ -16,7 +16,7 @@ const BooleanQuestion: FC<{
   question: string;
 }> = ({ description, onChange, question }) => {
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <>
       <Box
         alignItems="center"
         display="flex"
@@ -40,21 +40,27 @@ const BooleanQuestion: FC<{
         <ToggleButton value={true}>Yes</ToggleButton>
         <ToggleButton value={false}>No</ToggleButton>
       </ToggleButtonGroup>
-    </Box>
+    </>
   );
 };
 
 type PreviousMessageProps = {
+  onClick: () => void;
   question: string;
   response: string;
 };
 
-const PreviousMessage: FC<PreviousMessageProps> = ({ question, response }) => {
+const PreviousMessage: FC<PreviousMessageProps> = ({
+  onClick,
+  question,
+  response,
+}) => {
   return (
     <Box
       alignItems="center"
       display="flex"
       justifyContent="space-between"
+      onClick={onClick}
       sx={{
         borderBottom: '1px solid lightGrey',
         padding: 1,
@@ -77,17 +83,21 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
 
   const currentMetric = metrics[step] ? metrics[step] : null;
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" height="100%">
       <Box>
-        {metrics.map((metric) => {
-          const response = responses.find(
-            (response) => response.metricId == metric.id
+        {responses.map((response, index) => {
+          const metric = metrics.find(
+            (metric) => metric.id == response.metricId
           );
 
-          if (response) {
+          if (metric) {
             return (
               <PreviousMessage
-                key={metric.id}
+                key={response.metricId}
+                onClick={() => {
+                  setStep(index);
+                  setResponses(responses.slice(0, index));
+                }}
                 question={metric.question}
                 response={response.response}
               />
@@ -96,33 +106,43 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
         })}
       </Box>
       {currentMetric && (
-        <BooleanQuestion
-          description={currentMetric.description}
-          onChange={(newValue) => {
-            setResponses([
-              ...responses,
-              { metricId: currentMetric.id, response: newValue.toString() },
-            ]);
-            setStep(step + 1);
-          }}
-          question={currentMetric.question}
-        />
+        <Box display="flex" flexDirection="column" flexGrow={1}>
+          <BooleanQuestion
+            description={currentMetric.description}
+            onChange={(newValue) => {
+              setResponses([
+                ...responses,
+                { metricId: currentMetric.id, response: newValue.toString() },
+              ]);
+              setStep(step + 1);
+            }}
+            question={currentMetric.question}
+          />
+        </Box>
       )}
       {!currentMetric && (
-        <Box>
-          <Typography>
-            Did something happen that you need an official to know?
-          </Typography>
-          <TextField
-            onChange={(ev) => setNoteToOfficial(ev.target.value)}
-            value={noteToOfficial}
-          />
+        <Box display="flex" flexDirection="column" flexGrow={1}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            flexGrow={1}
+            justifyContent="center"
+          >
+            <Typography>
+              Did something happen that you need an official to know?
+            </Typography>
+            <TextField
+              onChange={(ev) => setNoteToOfficial(ev.target.value)}
+              value={noteToOfficial}
+            />
+          </Box>
           <Button
             fullWidth
             onClick={() => {
               onLogVisit(noteToOfficial, responses);
               setNoteToOfficial('');
             }}
+            variant="contained"
           >
             {noteToOfficial ? 'Save with note' : 'Save without note'}
           </Button>
