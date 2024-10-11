@@ -44,6 +44,27 @@ const BooleanQuestion: FC<{
   );
 };
 
+type PreviousMessageProps = {
+  question: string;
+  response: string;
+};
+
+const PreviousMessage: FC<PreviousMessageProps> = ({ question, response }) => {
+  return (
+    <Box
+      alignItems="center"
+      display="flex"
+      justifyContent="space-between"
+      sx={{
+        borderBottom: '1px solid lightGrey',
+        padding: 1,
+      }}
+    >
+      <Typography variant="body2">{`${question}: ${response}`}</Typography>
+    </Box>
+  );
+};
+
 type VisitWizardProps = {
   metrics: ZetkinCanvassAssignment['metrics'];
   onLogVisit: (noteToOfficial: string, responses: Visit['responses']) => void;
@@ -57,6 +78,23 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
   const currentMetric = metrics[step] ? metrics[step] : null;
   return (
     <Box>
+      <Box>
+        {metrics.map((metric) => {
+          const response = responses.find(
+            (response) => response.metricId == metric.id
+          );
+
+          if (response) {
+            return (
+              <PreviousMessage
+                key={metric.id}
+                question={metric.question}
+                response={response.response}
+              />
+            );
+          }
+        })}
+      </Box>
       {currentMetric && (
         <BooleanQuestion
           description={currentMetric.description}
