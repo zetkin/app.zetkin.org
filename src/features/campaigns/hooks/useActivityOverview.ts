@@ -1,5 +1,6 @@
 import { isSameDate } from 'utils/dateUtils';
 import useCallAssignmentActivities from './useCallAssignmentActivities';
+import useCanvassAssignmentActivities from 'features/areas/hooks/useCanvassAssignmentActivities';
 import useEmailActivities from './useEmailActivities';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useSurveyActivities from './useSurveyActivities';
@@ -33,9 +34,12 @@ export default function useActivitiyOverview(
     campId
   );
   const emailActivitiesFuture = useEmailActivities(orgId, campId);
+  const canvassAssignmentAcitivitiesFuture =
+    useCanvassAssignmentActivities(orgId);
 
   if (
     callAssignmentActivitiesFuture.isLoading ||
+    canvassAssignmentAcitivitiesFuture.isLoading ||
     surveyActivitiesFuture.isLoading ||
     taskActivitiesFuture.isLoading ||
     emailActivitiesFuture.isLoading
@@ -43,6 +47,7 @@ export default function useActivitiyOverview(
     return new LoadingFuture();
   } else if (
     callAssignmentActivitiesFuture.error ||
+    canvassAssignmentAcitivitiesFuture.error ||
     surveyActivitiesFuture.error ||
     taskActivitiesFuture.error ||
     emailActivitiesFuture.error
@@ -56,6 +61,7 @@ export default function useActivitiyOverview(
     ...(taskActivitiesFuture.data || []),
     ...(surveyActivitiesFuture.data || []),
     ...(callAssignmentActivitiesFuture.data || []),
+    ...(canvassAssignmentAcitivitiesFuture.data || []),
     ...(emailActivitiesFuture.data || [])
   );
 

@@ -3,21 +3,28 @@ import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
-import { FC, MouseEvent, useState } from 'react';
+import { FC, MouseEvent, ReactNode, useState } from 'react';
 
 import theme from 'theme';
 
 type ZUIButtonMenuProps = {
   items: {
     disabled?: boolean;
-    icon: JSX.Element;
+    icon?: JSX.Element;
     label: string;
     onClick: () => void;
   }[];
   label: string;
+  startIcon?: ReactNode;
+  variant?: 'text' | 'outlined' | 'contained';
 };
 
-const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({ items, label }) => {
+const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
+  items,
+  label,
+  startIcon,
+  variant = 'contained',
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLElement>) => {
@@ -32,7 +39,8 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({ items, label }) => {
       <Button
         endIcon={<ArrowDropDown />}
         onClick={handleClick}
-        variant="contained"
+        startIcon={startIcon}
+        variant={variant}
       >
         {label}
       </Button>

@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     window.__reactRendered = true;
   }
 
-  const env = new Environment(store, new BrowserApiClient(), envVars || {});
+  const env = new Environment(new BrowserApiClient(), envVars || {});
 
   // MUI-X license
   if (env.vars.MUIX_LICENSE_KEY) {

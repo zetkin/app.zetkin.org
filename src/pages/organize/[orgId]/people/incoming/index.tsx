@@ -1,8 +1,17 @@
 import { GetServerSideProps } from 'next';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useState } from 'react';
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@mui/material';
+import uniqBy from 'lodash/uniqBy';
 
+import JoinFormSelect from 'features/joinForms/components/JoinFormSelect';
 import JoinSubmissionPane from 'features/joinForms/panes/JoinSubmissionPane';
 import JoinSubmissionTable from 'features/joinForms/components/JoinSubmissionTable';
 import messageIds from '../../../../../features/joinForms/l10n/messageIds';
@@ -13,6 +22,7 @@ import useJoinSubmissions from 'features/joinForms/hooks/useJoinSubmissions';
 import { useMessages } from 'core/i18n';
 import { usePanes } from 'utils/panes';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
+import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
@@ -26,67 +36,15 @@ type Props = {
 };
 
 const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
-  const { data: submissions } = useJoinSubmissions(parseInt(orgId));
+  const joinSubmissions = useJoinSubmissions(parseInt(orgId));
 
   type FilterByStatusType = 'all' | 'pending' | 'accepted';
 
   const [filterByStatus, setFilterByStatus] =
     useState<FilterByStatusType>('all');
-  const [filterByForm, setFilterByForm] = useState('all');
+  const [filterByForm, setFilterByForm] = useState<number | undefined>();
   const messages = useMessages(messageIds);
   const { openPane } = usePanes();
-
-  if (!submissions) {
-    return null;
-  }
-
-  const formTitles = submissions.map((submission) => submission.form.title);
-  const uniqueFormTitles = [...new Set(formTitles)];
-
-  const filteredSubmissions = submissions.filter((submission) => {
-    const hasFormMatches =
-      filterByForm === 'all' || submission.form.title === filterByForm;
-    const hasStatusMatches =
-      filterByStatus === 'all' || submission.state === filterByStatus;
-    return hasFormMatches && hasStatusMatches;
-  });
-
-  const RenderSubmissions = () => {
-    if (filteredSubmissions.length > 0) {
-      return (
-        <JoinSubmissionTable
-          onSelect={(submission) => {
-            openPane({
-              render: () => (
-                <JoinSubmissionPane
-                  orgId={parseInt(orgId)}
-                  submissionId={submission.id}
-                />
-              ),
-              width: 500,
-            });
-          }}
-          orgId={parseInt(orgId)}
-          submissions={filteredSubmissions}
-        />
-      );
-    } else {
-      return (
-        <Box
-          alignItems="center"
-          display="flex"
-          flexDirection="column"
-          height="100%"
-          justifyContent="center"
-        >
-          <ZUIEmptyState
-            message={messages.submissionList.noFilteringResults()}
-            renderIcon={(props) => <InfoOutlinedIcon {...props} />}
-          />
-        </Box>
-      );
-    }
-  };
 
   return (
     <>
@@ -97,25 +55,25 @@ const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
         justifyContent="flex-end"
         sx={{ mr: 2, my: 2 }}
       >
-        {/* filter by form name */}
-        <FormControl sx={{ minWidth: 200 }}>
-          <InputLabel>{messages.forms()}</InputLabel>
-          <Select
-            label={messages.forms()}
-            onChange={(event) => setFilterByForm(event.target.value)}
-            placeholder={messages.forms()}
-            value={filterByForm}
-          >
-            <MenuItem selected value={'all'}>
-              {messages.submissionPane.allForms()}
-            </MenuItem>
-            {uniqueFormTitles.map((title, index) => (
-              <MenuItem key={index} value={title}>
-                {title}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <ZUIFuture
+          future={joinSubmissions}
+          ignoreDataWhileLoading
+          skeleton={<JoinFormSelect />}
+        >
+          {(submissions) => {
+            const uniqueForms = uniqBy(
+              submissions.map((s) => s.form),
+              'id'
+            );
+            return (
+              <JoinFormSelect
+                formId={filterByForm}
+                forms={uniqueForms}
+                onFormSelect={(form) => setFilterByForm(form?.id)}
+              />
+            );
+          }}
+        </ZUIFuture>
 
         {/* filter by form submission status */}
         <FormControl sx={{ minWidth: 150 }}>
@@ -136,7 +94,66 @@ const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
           </Select>
         </FormControl>
       </Box>
-      <RenderSubmissions />
+      <ZUIFuture
+        future={joinSubmissions}
+        ignoreDataWhileLoading
+        skeleton={
+          <Box
+            alignItems="center"
+            display="flex"
+            flexDirection="column"
+            height="100%"
+            justifyContent="center"
+          >
+            <CircularProgress />
+          </Box>
+        }
+      >
+        {(submissions) => {
+          const filteredSubmissions = submissions.filter((submission) => {
+            const hasFormMatches =
+              filterByForm === undefined || submission.form.id === filterByForm;
+            const hasStatusMatches =
+              filterByStatus === 'all' || submission.state === filterByStatus;
+            return hasFormMatches && hasStatusMatches;
+          });
+
+          if (filteredSubmissions.length > 0) {
+            return (
+              <JoinSubmissionTable
+                onSelect={(submission) => {
+                  openPane({
+                    render: () => (
+                      <JoinSubmissionPane
+                        orgId={parseInt(orgId)}
+                        submissionId={submission.id}
+                      />
+                    ),
+                    width: 500,
+                  });
+                }}
+                orgId={parseInt(orgId)}
+                submissions={filteredSubmissions}
+              />
+            );
+          } else {
+            return (
+              <Box
+                alignItems="center"
+                display="flex"
+                flexDirection="column"
+                height="100%"
+                justifyContent="center"
+              >
+                <ZUIEmptyState
+                  message={messages.submissionList.noFilteringResults()}
+                  renderIcon={(props) => <InfoOutlinedIcon {...props} />}
+                />
+              </Box>
+            );
+          }
+        }}
+      </ZUIFuture>
     </>
   );
 };

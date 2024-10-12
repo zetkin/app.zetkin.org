@@ -537,4 +537,82 @@ describe('makeSankeySegments()', () => {
       },
     ]);
   });
+
+  it('handles adding nothing to empty stream', () => {
+    const result = makeSankeySegments([
+      {
+        change: 0,
+        filter: {
+          config: {
+            fields: {
+              first_name: 'aaaaaaaaaaa',
+            },
+            organizations: [1],
+          },
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.PERSON_DATA,
+        },
+        matches: 0,
+        result: 0,
+      },
+      {
+        change: 100,
+        filter: {
+          config: {
+            fields: {
+              first_name: 'a',
+            },
+            organizations: [1],
+          },
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.PERSON_DATA,
+        },
+        matches: 100,
+        result: 100,
+      },
+    ]);
+
+    expect(result).toEqual(<SankeySegment[]>[
+      {
+        kind: SEGMENT_KIND.EMPTY,
+      },
+      {
+        kind: SEGMENT_KIND.PSEUDO_ADD,
+        main: null,
+        side: {
+          style: SEGMENT_STYLE.STROKE,
+          width: 0,
+        },
+        stats: {
+          change: 0,
+          input: 0,
+          matches: 0,
+          output: 0,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.ADD,
+        main: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.05,
+        },
+        side: {
+          style: SEGMENT_STYLE.FILL,
+          width: 0.95,
+        },
+        stats: {
+          change: 100,
+          input: 0,
+          matches: 100,
+          output: 100,
+        },
+      },
+      {
+        kind: SEGMENT_KIND.EXIT,
+        output: 100,
+        style: SEGMENT_STYLE.FILL,
+        width: 1,
+      },
+    ]);
+  });
 });

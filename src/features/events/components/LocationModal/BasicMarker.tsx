@@ -8,17 +8,18 @@ interface StyleProps {
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   number: {
-    bottom: 3,
+    bottom: 11,
     color: ({ color }) => color,
-    left: 2,
+    left: '50%',
     position: 'absolute',
-    right: 5,
     textAlign: 'center',
+    transform: 'translate(-50%)',
+    zIndex: 2000,
   },
   parent: {
-    height: 41,
+    height: 4,
     position: 'relative',
-    width: 28,
+    width: 4,
   },
 }));
 
@@ -40,9 +41,9 @@ const BasicMarker: FC<BasicMarkerProps> = ({ color, events }) => {
         fill="none"
         height="40"
         style={{
-          transform: 'translate(-7.5px, -34px)',
+          transform: 'translate(-11px, -37px)',
         }}
-        viewBox="0 0 31 40"
+        viewBox="0 0 28 40"
         width="27"
       >
         <path

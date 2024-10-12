@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
+import { CountryCode } from 'libphonenumber-js';
 
 import checkInvalidFields from './checkInvalidFields';
 import formatUrl from 'utils/formatUrl';
@@ -24,6 +25,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
+import useOrganization from '../../features/organizations/hooks/useOrganization';
 
 dayjs.extend(utc);
 
@@ -35,6 +37,7 @@ interface PersonalInfoFormProps {
   personalInfo: ZetkinCreatePerson;
   tags: number[];
 }
+
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   onChange,
   personalInfo,
@@ -44,6 +47,8 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
+  const organization = useOrganization(orgId).data;
+  const countryCode = organization?.country as CountryCode;
   const [showAllClickedType, setShowAllClickedType] =
     useState<ShowAllTriggeredType>(null);
 
@@ -66,7 +71,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       inputRef.current?.focus();
     }
   }, [showAllClickedType]);
-  const invalidFields = checkInvalidFields(customFields, personalInfo);
+  const invalidFields = checkInvalidFields(
+    customFields,
+    personalInfo,
+    countryCode
+  );
 
   return (
     <Box

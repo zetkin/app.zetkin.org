@@ -39,6 +39,7 @@ export enum CONDITION_OPERATOR {
   ALL = 'all',
   ANY = 'any',
   NONE = 'none',
+  SOME = 'some',
 }
 
 export enum JOURNEY_CONDITION_OP {

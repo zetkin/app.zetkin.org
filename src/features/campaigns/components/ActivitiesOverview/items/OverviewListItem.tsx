@@ -68,7 +68,7 @@ interface OverviewListItemProps {
   >;
   SecondaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
-  >;
+  > | null;
   color: STATUS_COLORS;
   endDate: CampaignActivity['visibleUntil'];
   startDate: CampaignActivity['visibleFrom'];
@@ -197,17 +197,19 @@ const OverviewListItem = ({
           </Box>
           {meta && <Box flex="0 0">{meta}</Box>}
           <Box flex="1 0 80px">
-            <ZUIIconLabel
-              color={endNumberColor}
-              icon={<SecondaryIcon color={endNumberColor} />}
-              label={
-                typeof endNumber === 'number' ? (
-                  <ZUISuffixedNumber number={endNumber} />
-                ) : (
-                  endNumber
-                )
-              }
-            />
+            {SecondaryIcon && (
+              <ZUIIconLabel
+                color={endNumberColor}
+                icon={<SecondaryIcon color={endNumberColor} />}
+                label={
+                  typeof endNumber === 'number' ? (
+                    <ZUISuffixedNumber number={endNumber} />
+                  ) : (
+                    endNumber
+                  )
+                }
+              />
+            )}
           </Box>
         </Box>
         <Box alignItems="center" display="flex" justifyContent="space-between">
