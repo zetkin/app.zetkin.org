@@ -318,7 +318,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
           })}
         </>
       </MapContainer>
-      {selectedPlace && (
+      {selectedPlace && canvassAssId && (
         <PlaceDialog
           canvassAssId={canvassAssId}
           dialogStep={dialogStep}
