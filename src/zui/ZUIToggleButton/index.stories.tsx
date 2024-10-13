@@ -42,9 +42,9 @@ export const Basic: Story = {
 export const WithIcons: Story = {
   args: {
     options: [
-      { label: <CalendarToday />, value: 'day' },
-      { label: <CalendarViewWeek />, value: 'week' },
-      { label: <CalendarViewMonth />, value: 'month' },
+      { label: CalendarToday, value: 'day' },
+      { label: CalendarViewWeek, value: 'week' },
+      { label: CalendarViewMonth, value: 'month' },
     ],
   },
   render: Basic.render,
