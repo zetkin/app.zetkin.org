@@ -40,6 +40,24 @@ const EmailLayout: FC<EmailLayoutProps> = ({
     return null;
   }
 
+  const tabs = [
+    {
+      href: '/',
+      label: messages.tabs.overview(),
+    },
+    {
+      href: '/compose',
+      label: messages.tabs.compose(),
+    },
+  ];
+
+  if (email.processed) {
+    tabs.push({
+      href: '/insights',
+      label: messages.tabs.insights(),
+    });
+  }
+
   return (
     <>
       <TabbedLayout
@@ -79,7 +97,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
                           id={messageIds.stats.lockedTargets}
                           values={{
                             numLocked:
-                              emailStats.num_locked_targets -
+                              emailStats.num_target_matches -
                               emailStats.num_blocked.any,
                           }}
                         />
@@ -91,16 +109,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
             </Box>
           </Box>
         }
-        tabs={[
-          {
-            href: '/',
-            label: messages.tabs.overview(),
-          },
-          {
-            href: '/compose',
-            label: messages.tabs.compose(),
-          },
-        ]}
+        tabs={tabs}
         title={
           <ZUIEditTextinPlace
             onChange={(newTitle) => {

@@ -1,36 +1,75 @@
-import * as React from 'react';
+import { FormControlLabel, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import { FC } from 'react';
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+type Sizes = 'small' | 'medium' | 'large';
 
-interface ZUICheckboxProps {
+const sizes: Record<Sizes, string> = {
+  large: '1.75rem',
+  medium: '1.5rem',
+  small: '1.25rem',
+};
+
+export type ZUICheckboxProps = {
   checked: boolean;
-  size: TSize;
-}
 
-// Todo: MUI checkbox doesn't allow size large. Use fontsize pixels instead
-// see https://mui.com/material-ui/react-checkbox/#size
-type TSize = 'small' | 'medium' | 'large';
+  /**
+   * Controls if the checkbox is disabled or not.
+   * Defaults to 'false'.
+   */
+  disabled?: boolean;
 
-const ZUICheckbox: React.FunctionComponent<ZUICheckboxProps> = ({
+  label: string;
+
+  /**
+   * The placement of the label. Defaults to 'end'.
+   */
+  labelPlacement?: 'bottom' | 'end' | 'start' | 'top';
+
+  onChange: (newCheckedState: boolean) => void;
+
+  /**
+   * The size of the checkbox. Defaults to 'medium'.
+   * This does not affect the size of the label text.
+   */
+  size?: Sizes;
+};
+
+const ZUICheckbox: FC<ZUICheckboxProps> = ({
   checked,
-  size,
+  disabled = false,
+  onChange,
+  label,
+  labelPlacement = 'end',
+  size = 'medium',
 }) => {
-  if (checked) {
-    return (
-      <div>
-        <Checkbox {...label} checked={checked} size={size} />
-        <Checkbox {...label} checked disabled size={size} />
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <Checkbox {...label} checked={checked} size={size} />
-        <Checkbox {...label} disabled size={size} />
-      </div>
-    );
-  }
+  return (
+    <FormControlLabel
+      control={
+        <Checkbox
+          checked={checked}
+          onChange={(ev, newCheckedState) => onChange(newCheckedState)}
+        />
+      }
+      disabled={disabled}
+      label={
+        <Typography
+          sx={(theme) => ({
+            color: disabled ? theme.palette.text.disabled : '',
+          })}
+          variant="labelXlMedium"
+        >
+          {label}
+        </Typography>
+      }
+      labelPlacement={labelPlacement}
+      sx={{
+        '& .MuiSvgIcon-root': {
+          fontSize: sizes[size],
+        },
+      }}
+    />
+  );
 };
 
 export default ZUICheckbox;

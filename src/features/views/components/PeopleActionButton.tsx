@@ -36,7 +36,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
-  const createView = useCreateView(orgId);
+  const { createView } = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
   const { createForm } = useCreateJoinForm(orgId);
 

@@ -7,8 +7,9 @@ export const DivIconMarker: FC<{
   children: ReactNode;
   draggable?: boolean;
   eventHandlers?: LeafletEventHandlerFnMap;
+  iconAnchor?: [number, number];
   position: LatLngExpression;
-}> = ({ children, draggable, eventHandlers, position }) => {
+}> = ({ children, draggable, eventHandlers, iconAnchor, position }) => {
   const iconDiv = useMemo(() => document.createElement('div'), []);
   return (
     <>
@@ -18,6 +19,7 @@ export const DivIconMarker: FC<{
         icon={divIcon({
           className: '',
           html: iconDiv,
+          iconAnchor,
         })}
         position={position}
       />

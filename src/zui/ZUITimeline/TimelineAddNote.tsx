@@ -1,6 +1,7 @@
-import { Box, Collapse } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Collapse, Typography } from '@mui/material';
+import React, { FormEvent, useEffect, useState } from 'react';
 
+import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import { ZetkinNoteBody } from 'utils/types/zetkin';
 import ZUISubmitCancelButtons from '../ZUISubmitCancelButtons';
@@ -12,11 +13,13 @@ import messageIds from './l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 
 interface AddNoteProps {
+  showPostRequestError?: boolean;
   disabled?: boolean;
   onSubmit: (note: ZetkinNoteBody) => void;
 }
 
 const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
+  showPostRequestError,
   disabled,
   onSubmit,
 }) => {
@@ -33,7 +36,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   } = useFileUploads(orgId);
 
   useEffect(() => {
-    if (!disabled) {
+    if (!disabled && !showPostRequestError) {
       onCancel();
     }
   }, [disabled]);
@@ -47,18 +50,17 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     (fileUpload) => fileUpload.state == FileUploadState.UPLOADING
   );
 
+  async function onSubmitHandler(evt: FormEvent<HTMLFormElement>) {
+    evt.preventDefault();
+    if (note?.text) {
+      onSubmit({
+        ...note,
+        file_ids: fileUploads.map((fileUpload) => fileUpload.apiData!.id),
+      });
+    }
+  }
   return (
-    <form
-      onSubmit={(evt) => {
-        evt.preventDefault();
-        if (note?.text) {
-          onSubmit({
-            ...note,
-            file_ids: fileUploads.map((fileUpload) => fileUpload.apiData!.id),
-          });
-        }
-      }}
-    >
+    <form onSubmit={onSubmitHandler}>
       <Box {...getDropZoneProps()}>
         <ZUITextEditor
           clear={clear}
@@ -68,6 +70,13 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
           onClickAttach={() => openFilePicker()}
           placeholder={messages.addNotePlaceholder()}
         />
+        {showPostRequestError && (
+          <Box>
+            <Typography color={theme.palette.error.main}>
+              {messages.fileUploadErrorMessage()}
+            </Typography>
+          </Box>
+        )}
       </Box>
       <Collapse in={!!visibleText || fileUploads.length > 0}>
         <ZUISubmitCancelButtons

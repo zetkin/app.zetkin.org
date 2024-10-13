@@ -2,13 +2,14 @@ import { Avatar } from '@mui/material';
 
 interface ZUIAvatarProps {
   url: string;
-  size: 'sm' | 'md' | 'lg';
+  size: 'xs' | 'sm' | 'md' | 'lg';
 }
 
 const SIZES = {
   lg: 50,
   md: 40,
   sm: 30,
+  xs: 20,
 };
 
 const ZUIAvatar: React.FC<ZUIAvatarProps> = ({ url, size }) => {

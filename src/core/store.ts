@@ -49,8 +49,13 @@ import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
+import areasSlice, {
+  AreasStoreSlice,
+  canvassAssignmentCreated,
+} from 'features/areas/store';
 
 export interface RootState {
+  areas: AreasStoreSlice;
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
@@ -74,6 +79,7 @@ export interface RootState {
 }
 
 const reducer = {
+  areas: areasSlice.reducer,
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
@@ -97,6 +103,16 @@ const reducer = {
 };
 
 const listenerMiddleware = createListenerMiddleware();
+
+listenerMiddleware.startListening({
+  actionCreator: canvassAssignmentCreated,
+  effect: (action) => {
+    const canvassAssignment = action.payload;
+    Router.push(
+      `/organize/${canvassAssignment.organization.id}/projects/${canvassAssignment.campaign.id}/canvassassignments/${canvassAssignment.id}`
+    );
+  },
+});
 
 listenerMiddleware.startListening({
   actionCreator: campaignDeleted,

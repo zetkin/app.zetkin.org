@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Snackbar } from '@mui/material';
 import { Alert, AlertColor } from '@mui/material';
-import { createContext, useState } from 'react';
+import { createContext, ReactNode, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import messageIds from './l10n/messageIds';
@@ -9,7 +9,7 @@ import messageIds from './l10n/messageIds';
 interface ZUISnackbarContextProps {
   isOpen: boolean;
   hideSnackbar: () => void;
-  showSnackbar: (severity: AlertColor, message?: string) => void;
+  showSnackbar: (severity: AlertColor, message?: ReactNode) => void;
 }
 
 const ZUISnackbarContext = createContext<ZUISnackbarContextProps>({
@@ -28,7 +28,7 @@ const ZUISnackbarProvider: React.FunctionComponent<SnackbarProviderProps> = ({
   const messages = useMessages(messageIds);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarState, setSnackbarState] = useState<{
-    message: string;
+    message: ReactNode;
     severity: AlertColor;
   }>();
 

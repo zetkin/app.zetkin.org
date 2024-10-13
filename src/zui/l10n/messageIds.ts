@@ -50,6 +50,9 @@ export default makeMessages('zui', {
         'Create person and add to {journey}'
       ),
       addToList: m<{ list: string }>('Create person and add to {list}'),
+      assignToCanvassAssignment: m<{ canvassAss: string }>(
+        'Create person and assign to {canvassAss}'
+      ),
       assignToJourney: m<{ journey: string }>(
         'Create person and assign to {journey}'
       ),
@@ -106,6 +109,13 @@ export default makeMessages('zui', {
       date: ReactElement;
     }>('{date}'),
     singleDayToday: m('Today'),
+  },
+  duration: {
+    days: m<{ n: number }>('{n, plural, =1 {1 day} other {# days}}'),
+    h: m<{ n: number }>('{n}h'),
+    m: m<{ n: number }>('{n}m'),
+    ms: m<{ n: number }>('{n}ms'),
+    s: m<{ n: number }>('{n}s'),
   },
   editTextInPlace: {
     tooltip: {

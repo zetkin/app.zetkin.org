@@ -15,6 +15,7 @@ import { stringToBool } from './stringUtils';
 import { ZetkinZ } from './types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from './types/zetkin';
+import { hasFeature } from './featureFlags';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -49,6 +50,7 @@ interface ScaffoldOptions {
   // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
   authLevelRequired?: number;
   allowNonOfficials?: boolean;
+  featuresRequired?: string[];
   localeScope?: string[];
 }
 
@@ -144,6 +146,18 @@ export const scaffold =
 
     const orgId = ctx.query.orgId as string;
 
+    if (options?.featuresRequired) {
+      const isMissingFeature = options.featuresRequired.some(
+        (feature) => !hasFeature(feature, parseInt(orgId), process.env)
+      );
+
+      if (isMissingFeature) {
+        return {
+          notFound: true,
+        };
+      }
+    }
+
     //if it's an org page we check if you have access
     if (orgId) {
       //superusers get in everywhere
@@ -190,6 +204,7 @@ export const scaffold =
       result.props = {
         ...result.props,
         envVars: {
+          FEAT_AREAS: process.env.FEAT_AREAS || null,
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
           ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
         },
