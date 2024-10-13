@@ -47,5 +47,5 @@ export default function useFieldSettings(duplicates: ZetkinPerson[]) {
     entryContainsOneValue
   );
 
-  return { hasConflictingValues, fieldValues, initialOverrides };
+  return { fieldValues, hasConflictingValues, initialOverrides };
 }
