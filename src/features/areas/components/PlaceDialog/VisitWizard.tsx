@@ -8,14 +8,14 @@ import {
 import { FC, useState } from 'react';
 
 import { Visit, ZetkinCanvassAssignment } from 'features/areas/types';
-import { stringToBool } from 'utils/stringUtils';
 
-const BooleanQuestion: FC<{
+const Question: FC<{
   description: string;
   onChange: (newValue: boolean) => void;
+  options: { label: string | number; value: string }[];
   question: string;
   value?: string;
-}> = ({ description, onChange, question, value }) => {
+}> = ({ description, onChange, options, question, value }) => {
   return (
     <>
       <Box
@@ -35,10 +35,13 @@ const BooleanQuestion: FC<{
         onChange={(ev, newValue) => {
           onChange(newValue);
         }}
-        value={value ? stringToBool(value) : null}
+        value={value}
       >
-        <ToggleButton value={true}>Yes</ToggleButton>
-        <ToggleButton value={false}>No</ToggleButton>
+        {options.map((option) => (
+          <ToggleButton key={option.value.toString()} value={option.value}>
+            {option.label}
+          </ToggleButton>
+        ))}
       </ToggleButtonGroup>
     </>
   );
@@ -120,7 +123,8 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
         if (index == step) {
           return (
             <Box display="flex" flexDirection="column" flexGrow={1}>
-              <BooleanQuestion
+              <Question
+                key={metric.id}
                 description={metric.description}
                 onChange={(newValue) => {
                   if (newValue == null) {
@@ -134,7 +138,10 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
                           0,
                           responses.indexOf(responses[index])
                         ),
-                        { ...responses[index], response: newValue.toString() },
+                        {
+                          ...responses[index],
+                          response: newValue.toString(),
+                        },
                       ]);
                     } else {
                       //User is responding to this question for the first time
@@ -149,6 +156,20 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
                     setStep(step + 1);
                   }
                 }}
+                options={
+                  metric.kind == 'boolean'
+                    ? [
+                        { label: 'Yes', value: 'yes' },
+                        { label: 'No', value: 'no' },
+                      ]
+                    : [
+                        { label: 1, value: '1' },
+                        { label: 2, value: '2' },
+                        { label: 3, value: '3' },
+                        { label: 4, value: '4' },
+                        { label: 5, value: '5' },
+                      ]
+                }
                 question={metric.question}
                 value={responses[index]?.response}
               />
