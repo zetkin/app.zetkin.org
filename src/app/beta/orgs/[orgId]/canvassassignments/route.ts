@@ -28,6 +28,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             id: assignment.campId,
           },
           id: assignment._id.toString(),
+          metrics: (assignment.metrics || []).map((metric) => ({
+            definesDone: metric.definesDone || false,
+            description: metric.description || '',
+            id: metric._id,
+            kind: metric.kind,
+            question: metric.question,
+          })),
           organization: {
             id: orgId,
           },
@@ -52,6 +59,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const model = new CanvassAssignmentModel({
         campId: payload.campaign_id,
+        metrics: payload.metrics || [],
         orgId: orgId,
         title: payload.title,
       });
@@ -62,6 +70,13 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         data: {
           campaign: { id: model.campId },
           id: model._id.toString(),
+          metrics: model.metrics.map((metric) => ({
+            definesDone: metric.definesDone || false,
+            description: metric.description || '',
+            id: metric._id,
+            kind: metric.kind,
+            question: metric.question,
+          })),
           organization: { id: orgId },
           title: model.title,
         },

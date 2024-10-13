@@ -34,6 +34,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
               id: new mongoose.Types.ObjectId().toString(),
               missionAccomplished: payload.missionAccomplished,
               noteToOfficial: payload.noteToOfficial,
+              responses: payload.responses || [],
               timestamp: payload.timestamp,
             },
           },

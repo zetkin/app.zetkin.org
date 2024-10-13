@@ -34,7 +34,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const canvassAssignment: ZetkinCanvassAssignment = {
         campaign: { id: canvassAssignmentModel.campId },
         id: canvassAssignmentModel._id.toString(),
-        metrics: [],
+        metrics: (canvassAssignmentModel.metrics || []).map((metric) => ({
+          definesDone: metric.definesDone || false,
+          description: metric.description || '',
+          id: metric._id,
+          kind: metric.kind,
+          question: metric.question,
+        })),
         organization: { id: orgId },
         title: canvassAssignmentModel.title,
       };
@@ -59,6 +65,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       const model = await CanvassAssignmentModel.findOneAndUpdate(
         { _id: params.canvassAssId },
         {
+          metrics: payload.metrics,
           title: payload.title,
         },
         { new: true }
@@ -72,6 +79,13 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         data: {
           campaign: { id: model.campId },
           id: model._id.toString(),
+          metrics: (model.metrics || []).map((metric) => ({
+            definesDone: metric.definesDone || false,
+            description: metric.description || '',
+            id: metric._id,
+            kind: metric.kind,
+            question: metric.question,
+          })),
           organization: { id: orgId },
           title: model.title,
         },
