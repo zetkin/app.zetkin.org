@@ -14,10 +14,6 @@ export default makeMessages('feat.duplicates', {
       noValue: m('No value'),
       title: m('Data to merge'),
     },
-    infoMessage: m(
-      'All activity history and tags from all people being merged will carry over and will be visible on the merged person.'
-    ),
-    infoTitle: m('No data will be lost'),
     isDuplicateButton: m('Include'),
     mergeButton: m('Merge'),
     notDuplicateButton: m('Exclude'),
