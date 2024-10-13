@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -76,12 +77,16 @@ const PreviousMessage: FC<PreviousMessageProps> = ({
 
 type VisitWizardProps = {
   metrics: ZetkinCanvassAssignment['metrics'];
-  onLogVisit: (responses: Visit['responses']) => void;
+  onLogVisit: (
+    responses: Visit['responses'],
+    noteToOfficial: Visit['noteToOfficial']
+  ) => void;
 };
 
 const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
   const [responses, setResponses] = useState<Visit['responses']>([]);
   const [step, setStep] = useState(0);
+  const [noteToOfficial, setNoteToOfficial] = useState('');
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
@@ -105,14 +110,28 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
                   flexGrow={1}
                   justifyContent="flex-end"
                 >
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    flexGrow={1}
+                    justifyContent="center"
+                  >
+                    <Typography>
+                      Did anything happen that an official needs to know about?
+                    </Typography>
+                    <TextField
+                      onChange={(ev) => setNoteToOfficial(ev.target.value)}
+                      value={noteToOfficial}
+                    />
+                  </Box>
                   <Button
                     fullWidth
                     onClick={() => {
-                      onLogVisit(responses);
+                      onLogVisit(responses, noteToOfficial);
                     }}
                     variant="contained"
                   >
-                    Save
+                    {noteToOfficial ? 'Save with note' : 'Save without note'}
                   </Button>
                 </Box>
               )}
