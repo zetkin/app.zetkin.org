@@ -1,4 +1,4 @@
-import { Box, Button, Card, Divider, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, lighten, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
@@ -161,11 +161,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   <ZUIStackedStatusBar
                     values={[
                       {
-                        color: theme.palette.statusColors.green,
+                        color: theme.palette.primary.main,
                         value: stats.num_visited_areas,
                       },
                       {
-                        color: theme.palette.statusColors.orange,
+                        color: lighten(theme.palette.primary.main, 0.6),
                         value: stats.num_areas - stats.num_visited_areas,
                       },
                     ]}
@@ -192,11 +192,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   <ZUIStackedStatusBar
                     values={[
                       {
-                        color: theme.palette.statusColors.green,
+                        color: theme.palette.primary.main,
                         value: stats.num_visited_places,
                       },
                       {
-                        color: theme.palette.statusColors.orange,
+                        color: lighten(theme.palette.primary.main, 0.6),
                         value: stats.num_places - stats.num_visited_places,
                       },
                     ]}
@@ -223,11 +223,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   <ZUIStackedStatusBar
                     values={[
                       {
-                        color: theme.palette.statusColors.green,
+                        color: theme.palette.primary.main,
                         value: stats.num_visited_households,
                       },
                       {
-                        color: theme.palette.statusColors.orange,
+                        color: lighten(theme.palette.primary.main, 0.6),
                         value:
                           stats.num_households - stats.num_visited_households,
                       },
