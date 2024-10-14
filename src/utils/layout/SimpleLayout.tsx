@@ -13,7 +13,6 @@ interface StyleProps {
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   main: {
-    marginTop: 40,
     overflowX: 'hidden',
     padding: ({ noPad }) => (noPad ? 0 : undefined),
   },

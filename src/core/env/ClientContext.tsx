@@ -1,6 +1,8 @@
 'use client';
 
 import CssBaseline from '@mui/material/CssBaseline';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode } from 'react';
@@ -52,24 +54,27 @@ const ClientContext: FC<ClientContextProps> = ({
     : new BrowserApiClient();
 
   const env = new Environment(apiClient, envVars);
+  const cache = createCache({ key: 'css', prepend: true });
 
   return (
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={themeWithLocale(lang)}>
-          <EnvProvider env={env}>
-            <UserProvider user={user}>
-              <IntlProvider
-                defaultLocale="en"
-                locale={lang}
-                messages={messages}
-              >
-                <CssBaseline />
-                {children}
-              </IntlProvider>
-            </UserProvider>
-          </EnvProvider>
-        </ThemeProvider>
+        <CacheProvider value={cache}>
+          <ThemeProvider theme={themeWithLocale(lang)}>
+            <EnvProvider env={env}>
+              <UserProvider user={user}>
+                <IntlProvider
+                  defaultLocale="en"
+                  locale={lang}
+                  messages={messages}
+                >
+                  <CssBaseline />
+                  {children}
+                </IntlProvider>
+              </UserProvider>
+            </EnvProvider>
+          </ThemeProvider>
+        </CacheProvider>
       </StyledEngineProvider>
     </ReduxProvider>
   );

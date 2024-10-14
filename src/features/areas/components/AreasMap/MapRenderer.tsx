@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import { FeatureGroup } from 'leaflet';
+import { FeatureGroup, latLngBounds } from 'leaflet';
 import { FC, useEffect, useRef, useState } from 'react';
 import {
   FeatureGroup as FeatureGroupComponent,
@@ -11,6 +11,7 @@ import {
 
 import { PointData, ZetkinArea } from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 
 type Props = {
   areas: ZetkinArea[];
@@ -19,8 +20,8 @@ type Props = {
   onChangeArea: (area: ZetkinArea) => void;
   onChangeDrawingPoints: (points: PointData[]) => void;
   onFinishDrawing: () => void;
-  onSelectArea: (area: ZetkinArea) => void;
-  selectedId: string | null;
+  onSelectArea: (area: ZetkinArea | null) => void;
+  selectedArea: ZetkinArea | null;
 };
 
 const MapRenderer: FC<Props> = ({
@@ -31,7 +32,7 @@ const MapRenderer: FC<Props> = ({
   onChangeDrawingPoints,
   onFinishDrawing,
   onSelectArea,
-  selectedId,
+  selectedArea,
 }) => {
   const [zoomed, setZoomed] = useState(false);
   const reactFGref = useRef<FeatureGroup | null>(null);
@@ -137,43 +138,63 @@ const MapRenderer: FC<Props> = ({
           );
         })}
         {areas
-          .filter((area) => area.id != editingArea?.id)
+          .filter(
+            (area) => area.id != editingArea?.id && area.id != selectedArea?.id
+          )
           .sort((a0, a1) => {
-            // Always render selected last, so that it gets
-            // rendered on top of the unselected ones in case
-            // there are overlaps.
-            if (a0.id == selectedId) {
-              return 1;
-            } else if (a1.id == selectedId) {
-              return -1;
-            }
-            return 0;
+            // Sort areas by size, so that big ones are underneith and the
+            // smaller ones can more easily be clicked.
+            const bounds0 = latLngBounds(a0.points.map(objToLatLng));
+            const bounds1 = latLngBounds(a1.points.map(objToLatLng));
+
+            const dimensions0 = {
+              x: bounds0.getEast() - bounds0.getWest(),
+              y: bounds0.getNorth() - bounds0.getSouth(),
+            };
+            const dimensions1 = {
+              x: bounds1.getEast() - bounds1.getWest(),
+              y: bounds1.getNorth() - bounds1.getSouth(),
+            };
+
+            const size0 = dimensions0.x * dimensions0.y;
+            const size1 = dimensions1.x * dimensions1.y;
+
+            return size1 - size0;
           })
           .map((area) => {
-            const selected = selectedId == area.id;
-
             // The key changes when selected, to force redraw of polygon
             // to reflect new state through visual style
-            const key = area.id + (selected ? '-selected' : '-default');
+            const key = area.id + '-default';
 
             return (
               <Polygon
                 key={key}
-                color={
-                  selected
-                    ? theme.palette.primary.main
-                    : theme.palette.secondary.main
-                }
+                color={theme.palette.secondary.main}
                 eventHandlers={{
                   click: () => {
-                    onSelectArea(area);
+                    if (!isDrawing) {
+                      onSelectArea(area);
+                    }
                   },
                 }}
                 positions={area.points}
-                weight={selected ? 5 : 2}
+                weight={2}
               />
             );
           })}
+        {selectedArea && (
+          <Polygon
+            key={`${selectedArea.id}-selected`}
+            color={theme.palette.primary.main}
+            eventHandlers={{
+              click: () => {
+                onSelectArea(null);
+              },
+            }}
+            positions={selectedArea.points}
+            weight={5}
+          />
+        )}
       </FeatureGroupComponent>
     </>
   );

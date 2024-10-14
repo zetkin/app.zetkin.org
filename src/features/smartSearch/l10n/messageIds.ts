@@ -166,7 +166,7 @@ export default makeMessages('feat.smartSearch', {
       },
       callSelect: {
         called: m('have been called'),
-        notreached: m('have been unsuccessfully tried'),
+        notreached: m('have not been reached'),
         reached: m('have been successfully reached'),
       },
       examples: {
@@ -181,10 +181,10 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         assignmentSelect: ReactElement;
         callSelect: ReactElement;
-        minTimes: ReactElement | number;
+        minTimes: ReactElement | number | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {callSelect} at least {minTimes} in {assignmentSelect} {timeFrame}.'
+        '{addRemoveSelect} people who {callSelect} {minTimes} in {assignmentSelect} {timeFrame}.'
       ),
       minTimes: m<{ minTimes: number }>(
         '{minTimes, plural, one {once} other {# times}}'
@@ -192,7 +192,7 @@ export default makeMessages('feat.smartSearch', {
       minTimesInput: m<{
         input: ReactElement;
         minTimes: number;
-      }>('{input} {minTimes, plural, one {time} other {times}}'),
+      }>('at least {input} {minTimes, plural, one {time} other {times}}'),
     },
     campaignParticipation: {
       activitySelect: {

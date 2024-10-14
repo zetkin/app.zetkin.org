@@ -6,6 +6,7 @@ import {
   GridFilterItem,
   GridFilterOperator,
 } from '@mui/x-data-grid-pro';
+import { FormattedDate } from 'react-intl';
 
 import FilterValueSelect from './FilterValueSelect';
 import JourneyInstanceTitle from 'features/journeys/components/JourneyInstanceTitle';
@@ -260,7 +261,16 @@ export const getStaticColumns = (
       field: 'nextMilestoneDeadline',
       renderCell: (params) =>
         params.value ? (
-          <ZUIRelativeTime datetime={params.value as string} />
+          <>
+            <ZUIRelativeTime datetime={params.value as string} />
+            &nbsp;(
+            <FormattedDate
+              day="numeric"
+              month="short"
+              value={params.value as string}
+            />
+            )
+          </>
         ) : null,
       type: 'date',
       valueFormatter: (params) => new Date(params.value),

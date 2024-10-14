@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AreaModel } from 'features/areas/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinArea } from 'features/areas/types';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 type RouteMeta = {
   params: {
@@ -19,14 +20,28 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       request: request,
       roles: ['admin', 'organizer'],
     },
-    async ({ orgId }) => {
+    async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const areaModel = await AreaModel.findOne({ _id: params.areaId, orgId });
+      const allTags = await apiClient.get<ZetkinTag[]>(
+        `/api/orgs/${orgId}/people/tags`
+      );
 
       if (!areaModel) {
         return new NextResponse(null, { status: 404 });
       }
+
+      const tags: ZetkinTag[] = [];
+      (areaModel.tags || []).forEach((item) => {
+        const tag = allTags.find((tag) => tag.id == item.id);
+        if (tag) {
+          tags.push({
+            ...tag,
+            value: item.value,
+          });
+        }
+      });
 
       const area: ZetkinArea = {
         description: areaModel.description,
@@ -35,6 +50,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           id: orgId,
         },
         points: areaModel.points,
+        tags: tags,
         title: areaModel.title,
       };
 
@@ -50,7 +66,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       request: request,
       roles: ['admin'],
     },
-    async ({ orgId }) => {
+    async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const payload = await request.json();
@@ -69,6 +85,21 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         return new NextResponse(null, { status: 404 });
       }
 
+      const allTags = await apiClient.get<ZetkinTag[]>(
+        `/api/orgs/${orgId}/people/tags`
+      );
+
+      const tags: ZetkinTag[] = [];
+      (model.tags || []).forEach((item) => {
+        const tag = allTags.find((tag) => tag.id == item.id);
+        if (tag) {
+          tags.push({
+            ...tag,
+            value: item.value,
+          });
+        }
+      });
+
       return NextResponse.json({
         data: {
           description: model.description,
@@ -77,6 +108,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
             id: orgId,
           },
           points: model.points,
+          tags: tags,
           title: model.title,
         },
       });

@@ -6,6 +6,7 @@ import { ZetkinMembership } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';
 
 type GuardedFnProps = {
+  apiClient: BackendApiClient;
   orgId: number;
   role: string | null;
 };
@@ -40,6 +41,7 @@ export default async function asOrgAuthorized(
     }
 
     return fn({
+      apiClient: apiClient,
       orgId: membership.organization.id,
       role: membership.role,
     });

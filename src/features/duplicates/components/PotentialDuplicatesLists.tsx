@@ -28,6 +28,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
         buttonLabel={messages.modal.notDuplicateButton()}
         onButtonClick={onDeselect}
         rows={peopleToMerge}
+        showActionButton={peopleNotToMerge.length + peopleToMerge.length > 2}
       />
       {peopleToMerge.length > 0 && <Divider />}
       {peopleNotToMerge.length > 0 && (

@@ -33,6 +33,7 @@
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@hapi/iron": "^7.0.1",
     "@messageformat/parser": "^5.1.0",
     "@mui/base": "^5.0.0-alpha.99",
     "@mui/icons-material": "^5.10.6",
