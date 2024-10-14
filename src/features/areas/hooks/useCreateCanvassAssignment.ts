@@ -10,10 +10,10 @@ export default function useCreateCanvassAssignment(orgId: number) {
   const dispatch = useAppDispatch();
 
   return async (data: ZetkinCanvassAssignmentPostBody) => {
-    const created = await apiClient.post<ZetkinCanvassAssignment>(
-      `/beta/orgs/${orgId}/canvassassignments`,
-      data
-    );
+    const created = await apiClient.post<
+      ZetkinCanvassAssignment,
+      ZetkinCanvassAssignmentPostBody
+    >(`/beta/orgs/${orgId}/canvassassignments`, data);
     dispatch(canvassAssignmentCreated(created));
   };
 }

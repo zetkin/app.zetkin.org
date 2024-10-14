@@ -101,9 +101,10 @@ export type ZetkinPlacePatchBody = Partial<
     { visits?: Partial<Omit<Visit, 'id'>>[] }[];
 };
 export type ZetkinCanvassAssignmentPostBody = Partial<
-  Omit<ZetkinCanvassAssignment, 'id' | 'campaign' | 'organization'>
+  Omit<ZetkinCanvassAssignment, 'id' | 'campaign' | 'organization' | 'metrics'>
 > & {
   campaign_id: number;
+  metrics: Omit<ZetkinMetric, 'id'>[];
 };
 export type ZetkinCanvassAssignmentPatchbody = Partial<
   Omit<ZetkinCanvassAssignment, 'id'>

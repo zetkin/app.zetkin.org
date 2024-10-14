@@ -126,6 +126,14 @@ const CampaignActionButtons: React.FunctionComponent<
       onClick: () =>
         createCanvassAssignment({
           campaign_id: campaign.id,
+          metrics: [
+            {
+              definesDone: true,
+              description: '',
+              kind: 'boolean',
+              question: messages.form.createCanvassAssignment.defaultQuestion(),
+            },
+          ],
           title: null,
         }),
     });
