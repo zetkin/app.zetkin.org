@@ -8,15 +8,31 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import { Visit, ZetkinCanvassAssignment } from 'features/areas/types';
+import {
+  Visit,
+  ZetkinCanvassAssignment,
+  ZetkinMetric,
+} from 'features/areas/types';
 
 const Question: FC<{
-  description: string;
-  onChange: (newValue: boolean) => void;
-  options: { label: string | number; value: string }[];
-  question: string;
+  metric: ZetkinMetric;
+  onChange: (newValue: string | null) => void;
   value?: string;
-}> = ({ description, onChange, options, question, value }) => {
+}> = ({ onChange, metric, value }) => {
+  const options =
+    metric.kind == 'boolean'
+      ? [
+          { label: 'Yes', value: 'yes' },
+          { label: 'No', value: 'no' },
+        ]
+      : [
+          { label: 1, value: '1' },
+          { label: 2, value: '2' },
+          { label: 3, value: '3' },
+          { label: 4, value: '4' },
+          { label: 5, value: '5' },
+        ];
+
   return (
     <>
       <Box
@@ -27,9 +43,12 @@ const Question: FC<{
         gap={1}
         justifyContent="center"
       >
-        <Typography>{question}</Typography>
-        <Typography variant="body2">{description}</Typography>
+        <Typography>{metric.question}</Typography>
+        <Typography variant="body2">{metric.description}</Typography>
       </Box>
+      {metric.kind == 'scale5' && (
+        <Button onClick={() => onChange('')}>Skip this question</Button>
+      )}
       <ToggleButtonGroup
         exclusive
         fullWidth
@@ -70,7 +89,17 @@ const PreviousMessage: FC<PreviousMessageProps> = ({
         padding: 1,
       }}
     >
-      <Typography variant="body2">{`${question}: ${response}`}</Typography>
+      {!response && (
+        <Box display="flex" gap={1}>
+          <Typography variant="body2">{`${question}:`}</Typography>
+          <Typography fontStyle="italic" variant="body2">
+            {'Skipped'}
+          </Typography>
+        </Box>
+      )}
+      {response && (
+        <Typography variant="body2">{`${question}: ${response}`}</Typography>
+      )}
     </Box>
   );
 };
@@ -144,7 +173,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
             <Box display="flex" flexDirection="column" flexGrow={1}>
               <Question
                 key={metric.id}
-                description={metric.description}
+                metric={metric}
                 onChange={(newValue) => {
                   if (newValue == null) {
                     //User is returning and selects the same response
@@ -175,21 +204,6 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
                     setStep(step + 1);
                   }
                 }}
-                options={
-                  metric.kind == 'boolean'
-                    ? [
-                        { label: 'Yes', value: 'yes' },
-                        { label: 'No', value: 'no' },
-                      ]
-                    : [
-                        { label: 1, value: '1' },
-                        { label: 2, value: '2' },
-                        { label: 3, value: '3' },
-                        { label: 4, value: '4' },
-                        { label: 5, value: '5' },
-                      ]
-                }
-                question={metric.question}
                 value={responses[index]?.response}
               />
             </Box>
