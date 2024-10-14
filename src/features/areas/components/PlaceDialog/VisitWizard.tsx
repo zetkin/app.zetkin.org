@@ -46,7 +46,7 @@ const Question: FC<{
         <Typography>{metric.question}</Typography>
         <Typography variant="body2">{metric.description}</Typography>
       </Box>
-      {metric.kind == 'scale5' && (
+      {!metric.definesDone && (
         <Button onClick={() => onChange('')}>Skip this question</Button>
       )}
       <ToggleButtonGroup
