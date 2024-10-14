@@ -52,7 +52,11 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   return (
     <>
       <Head>
-        <title> {eventFuture.data?.title} </title>
+        <title>
+          {eventFuture.data?.title ||
+            eventFuture.data?.activity?.title ||
+            messages.common.noTitle()}
+        </title>
       </Head>
       <TabbedLayout
         actionButtons={
