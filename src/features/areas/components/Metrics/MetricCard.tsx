@@ -15,15 +15,17 @@ import { ZetkinMetric } from 'features/areas/types';
 
 const MetricCard = ({
   hasDefinedDone,
+  isOnlyQuestion,
   metric,
   onClose,
   onDelete,
   onSave,
 }: {
   hasDefinedDone: boolean;
+  isOnlyQuestion: boolean;
   metric: ZetkinMetric;
   onClose: () => void;
-  onDelete: () => void;
+  onDelete: (target: EventTarget & HTMLButtonElement) => void;
   onSave: (metric: ZetkinMetric) => void;
 }) => {
   const [question, setQuestion] = useState<string>(metric.question || '');
@@ -80,6 +82,7 @@ const MetricCard = ({
             <Box alignItems="center" display="flex">
               <Checkbox
                 checked={definesDone}
+                disabled={definesDone && isOnlyQuestion}
                 onChange={(ev) => setDefinesDone(ev.target.checked)}
               />
               <Typography>
@@ -89,8 +92,12 @@ const MetricCard = ({
             </Box>
           )}
           <Box display="flex" gap={1} justifyContent="center" width="100%">
-            {isEditing && (
-              <Button color="error" onClick={onDelete} variant="outlined">
+            {isEditing && !isOnlyQuestion && (
+              <Button
+                color="error"
+                onClick={(ev) => onDelete(ev.currentTarget)}
+                variant="outlined"
+              >
                 Delete
               </Button>
             )}

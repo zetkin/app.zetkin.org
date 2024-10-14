@@ -51,7 +51,8 @@ const CanvassAssignmentEditorPage: PageWithLayout<
     canvassAssId
   );
 
-  const [editingMetric, setEditingMetric] = useState<ZetkinMetric | null>(null);
+  const [metricBeingEdited, setMetricBeingEdited] =
+    useState<ZetkinMetric | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [idOfMetricBeingDeleted, setIdOfQuestionBeingDeleted] = useState<
     string | null
@@ -65,7 +66,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
           .concat(metric.id ? [] : [metric]),
       });
     }
-    setEditingMetric(null);
+    setMetricBeingEdited(null);
   };
 
   const handleDeleteMetric = async (id: string) => {
@@ -76,11 +77,11 @@ const CanvassAssignmentEditorPage: PageWithLayout<
         ),
       });
     }
-    setEditingMetric(null);
+    setMetricBeingEdited(null);
   };
 
   const handleAddNewMetric = (kind: 'boolean' | 'scale5') => {
-    setEditingMetric({
+    setMetricBeingEdited({
       definesDone: false,
       description: '',
       id: '',
@@ -114,14 +115,23 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                 Add scale question
               </Button>
             </Box>
-            {editingMetric && (
+            {metricBeingEdited && (
               <MetricCard
                 hasDefinedDone={assignment.metrics.some(
                   (metric) => metric.definesDone
                 )}
-                metric={editingMetric}
-                onClose={() => setEditingMetric(null)}
-                onDelete={() => handleDeleteMetric(editingMetric.id)}
+                isOnlyQuestion={assignment.metrics.length == 1}
+                metric={metricBeingEdited}
+                onClose={() => setMetricBeingEdited(null)}
+                onDelete={(target: EventTarget & HTMLButtonElement) => {
+                  if (metricBeingEdited.definesDone) {
+                    setIdOfQuestionBeingDeleted(metricBeingEdited.id);
+                    setAnchorEl(target);
+                    setMetricBeingEdited(null);
+                  } else {
+                    handleDeleteMetric(metricBeingEdited.id);
+                  }
+                }}
                 onSave={handleSaveMetric}
               />
             )}
@@ -157,7 +167,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                     </Box>
                   </CardContent>
                   <CardActions>
-                    <Button onClick={() => setEditingMetric(metric)}>
+                    <Button onClick={() => setMetricBeingEdited(metric)}>
                       Edit
                     </Button>
 
