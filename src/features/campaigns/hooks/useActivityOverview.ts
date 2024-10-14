@@ -34,8 +34,10 @@ export default function useActivitiyOverview(
     campId
   );
   const emailActivitiesFuture = useEmailActivities(orgId, campId);
-  const canvassAssignmentAcitivitiesFuture =
-    useCanvassAssignmentActivities(orgId);
+  const canvassAssignmentAcitivitiesFuture = useCanvassAssignmentActivities(
+    orgId,
+    campId
+  );
 
   if (
     callAssignmentActivitiesFuture.isLoading ||
