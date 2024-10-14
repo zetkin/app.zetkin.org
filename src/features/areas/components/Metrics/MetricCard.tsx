@@ -1,5 +1,5 @@
 import { Close } from '@mui/icons-material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -32,6 +32,12 @@ const MetricCard = ({
   );
 
   const isEditing = !!metric?.id;
+
+  useEffect(() => {
+    setQuestion(metric.question || '');
+    setDescription(metric.description || '');
+    setDefinesDone(metric.definesDone || false);
+  }, [metric]);
 
   return (
     <Card sx={{ marginTop: 2 }}>

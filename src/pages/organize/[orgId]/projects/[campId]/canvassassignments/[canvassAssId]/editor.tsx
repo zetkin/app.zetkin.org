@@ -103,7 +103,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
           )}
 
           <Box mt={3}>
-            Your list of questions:
+            {data.metrics.length > 0 ? 'Your list of questions:' : ''}
             {data.metrics.map((metric) => (
               <Card key={metric.id} sx={{ marginTop: 2 }}>
                 <CardContent>
