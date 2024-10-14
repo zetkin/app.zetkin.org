@@ -156,7 +156,10 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
                   <Button
                     fullWidth
                     onClick={() => {
-                      onLogVisit(responses, noteToOfficial);
+                      const filteredResponses = responses.filter(
+                        (response) => !!response.response
+                      );
+                      onLogVisit(filteredResponses, noteToOfficial);
                     }}
                     variant="contained"
                   >
