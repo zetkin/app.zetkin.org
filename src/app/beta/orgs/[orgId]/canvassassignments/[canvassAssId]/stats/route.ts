@@ -148,7 +148,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                 );
 
                 if (accumulatedMetric && configuredMetric) {
-                  if (response.response == 'true') {
+                  if (response.response == 'yes') {
                     accumulatedMetric.values[0]++;
                   } else if (configuredMetric.kind == 'scale5') {
                     const rating = parseInt(response.response);
