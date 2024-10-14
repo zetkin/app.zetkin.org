@@ -1,3 +1,4 @@
+import { Close } from '@mui/icons-material';
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import {
@@ -6,6 +7,8 @@ import {
   Card,
   CardActions,
   CardContent,
+  Dialog,
+  IconButton,
   Typography,
 } from '@mui/material';
 
@@ -49,6 +52,10 @@ const CanvassAssignmentEditorPage: PageWithLayout<
   );
 
   const [editingMetric, setEditingMetric] = useState<ZetkinMetric | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [idOfMetricBeingDeleted, setIdOfQuestionBeingDeleted] = useState<
+    string | null
+  >(null);
 
   const handleSaveMetric = async (metric: ZetkinMetric) => {
     if (canvassAssignmentFuture.data) {
@@ -81,6 +88,8 @@ const CanvassAssignmentEditorPage: PageWithLayout<
       question: '',
     });
   };
+
+  //console.log(canvassAssignmentFuture?.data?.metrics);
 
   return (
     <Box width="50%">
@@ -149,15 +158,109 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                   </CardContent>
                   <CardActions>
                     <Button onClick={() => setEditingMetric(metric)}>
-                      EDIT
+                      Edit
                     </Button>
-                    <Button onClick={() => handleDeleteMetric(metric.id)}>
-                      DELETE
-                    </Button>
+
+                    {assignment.metrics.length > 1 && (
+                      <Button
+                        onClick={(ev) => {
+                          if (metric.definesDone) {
+                            setIdOfQuestionBeingDeleted(metric.id);
+                            setAnchorEl(ev.currentTarget);
+                          } else {
+                            handleDeleteMetric(metric.id);
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    )}
                   </CardActions>
                 </Card>
               ))}
             </Box>
+            <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
+              <Box display="flex" flexDirection="column" gap={1} padding={2}>
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="h6">{`Delete "${
+                    assignment.metrics.find(
+                      (metric) => metric.id == idOfMetricBeingDeleted
+                    )?.question
+                  }"`}</Typography>
+                  <IconButton
+                    onClick={() => {
+                      setIdOfQuestionBeingDeleted(null);
+                      setAnchorEl(null);
+                    }}
+                  >
+                    <Close />
+                  </IconButton>
+                </Box>
+                <Typography>
+                  {`If you want to delete "${
+                    assignment.metrics.find(
+                      (metric) => metric.id == idOfMetricBeingDeleted
+                    )?.question
+                  }" you need to pick another
+                  yes/no-question to be the question that defines if the msision
+                  was successful`}
+                </Typography>
+                <Box display="flex" flexDirection="column" gap={1}>
+                  <Typography>Yes/no questions</Typography>
+                  {assignment.metrics
+                    .filter(
+                      (metric) =>
+                        metric.kind == 'boolean' &&
+                        metric.id != idOfMetricBeingDeleted
+                    )
+                    .map((metric) => (
+                      <Box
+                        key={metric.question}
+                        alignItems="center"
+                        display="flex"
+                        gap={1}
+                        justifyContent="space-between"
+                        width="100%"
+                      >
+                        {metric.question}
+                        <Button
+                          onClick={() => {
+                            if (idOfMetricBeingDeleted) {
+                              const filtered = assignment.metrics.filter(
+                                (metric) => metric.id != idOfMetricBeingDeleted
+                              );
+                              updateCanvassAssignment({
+                                metrics: [
+                                  ...filtered.slice(
+                                    0,
+                                    filtered.indexOf(metric)
+                                  ),
+                                  {
+                                    ...metric,
+                                    definesDone: true,
+                                  },
+                                  ...filtered.slice(
+                                    filtered.indexOf(metric) + 1
+                                  ),
+                                ],
+                              });
+                            }
+                            setAnchorEl(null);
+                            setIdOfQuestionBeingDeleted(null);
+                          }}
+                          variant="outlined"
+                        >
+                          select
+                        </Button>
+                      </Box>
+                    ))}
+                </Box>
+              </Box>
+            </Dialog>
           </>
         )}
       </ZUIFuture>
