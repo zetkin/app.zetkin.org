@@ -63,54 +63,56 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       const payload = await request.json();
       const { metrics: newMetrics, title } = payload;
 
-      // Find existing metrics to remove
-      const existingMetrics = await CanvassAssignmentModel.findById(
-        params.canvassAssId
-      ).select('metrics');
+      if (newMetrics) {
+        // Find existing metrics to remove
+        const assignment = await CanvassAssignmentModel.findById(
+          params.canvassAssId
+        ).select('metrics');
 
-      if (!existingMetrics) {
-        return new NextResponse(null, { status: 404 });
-      }
+        if (!assignment) {
+          return new NextResponse(null, { status: 404 });
+        }
 
-      const existingMetricsIds = existingMetrics.metrics.map((metric) =>
-        metric._id.toString()
-      );
-
-      // Identify metrics to be deleted
-      const metricsToDelete = existingMetricsIds.filter(
-        (id) => !newMetrics.some((metric: ZetkinMetric) => metric.id === id)
-      );
-
-      // Remove metrics that are no longer included
-      if (metricsToDelete.length > 0) {
-        await CanvassAssignmentModel.updateOne(
-          { _id: params.canvassAssId },
-          { $pull: { metrics: { _id: { $in: metricsToDelete } } } }
+        const existingMetricsIds = assignment.metrics.map((metric) =>
+          metric._id.toString()
         );
-      }
 
-      for (const metric of newMetrics) {
-        if (metric.id) {
-          // If the metric has an ID, update it
-          await CanvassAssignmentModel.updateOne(
-            { _id: params.canvassAssId, 'metrics._id': metric.id },
-            {
-              $set: {
-                'metrics.$.definesDone': metric.definesDone,
-                'metrics.$.description': metric.description,
-                'metrics.$.kind': metric.kind,
-                'metrics.$.question': metric.question,
-              },
-            }
-          );
-        } else {
-          // If no ID exists, push it as a new metric
+        // Identify metrics to be deleted
+        const metricsToDelete = existingMetricsIds.filter(
+          (id) => !newMetrics.some((metric: ZetkinMetric) => metric.id === id)
+        );
+
+        // Remove metrics that are no longer included
+        if (metricsToDelete.length > 0) {
           await CanvassAssignmentModel.updateOne(
             { _id: params.canvassAssId },
-            {
-              $push: { metrics: metric },
-            }
+            { $pull: { metrics: { _id: { $in: metricsToDelete } } } }
           );
+        }
+
+        for (const metric of newMetrics) {
+          if (metric.id) {
+            // If the metric has an ID, update it
+            await CanvassAssignmentModel.updateOne(
+              { _id: params.canvassAssId, 'metrics._id': metric.id },
+              {
+                $set: {
+                  'metrics.$.definesDone': metric.definesDone,
+                  'metrics.$.description': metric.description,
+                  'metrics.$.kind': metric.kind,
+                  'metrics.$.question': metric.question,
+                },
+              }
+            );
+          } else {
+            // If no ID exists, push it as a new metric
+            await CanvassAssignmentModel.updateOne(
+              { _id: params.canvassAssId },
+              {
+                $push: { metrics: metric },
+              }
+            );
+          }
         }
       }
 
