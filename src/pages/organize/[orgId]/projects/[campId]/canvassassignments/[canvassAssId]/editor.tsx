@@ -96,6 +96,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
           {editingMetric && (
             <MetricCard
               metric={editingMetric}
+              onClose={() => setEditingMetric(null)}
               onDelete={() => handleDeleteMetric(editingMetric.id)}
               onSave={handleSaveMetric}
             />

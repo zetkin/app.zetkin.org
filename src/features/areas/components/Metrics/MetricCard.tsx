@@ -1,3 +1,4 @@
+import { Close } from '@mui/icons-material';
 import React, { useState } from 'react';
 import {
   Card,
@@ -13,11 +14,12 @@ import { ZetkinMetric } from 'features/areas/types';
 
 const MetricCard = ({
   metric,
+  onClose,
   onDelete,
-
   onSave,
 }: {
   metric: ZetkinMetric;
+  onClose: () => void;
   onDelete: () => void;
   onSave: (metric: ZetkinMetric) => void;
 }) => {
@@ -34,22 +36,26 @@ const MetricCard = ({
   return (
     <Card sx={{ marginTop: 2 }}>
       <CardContent>
-        <Typography gutterBottom variant="h5">
-          {metric.kind === 'boolean' ? 'Yes/No Question' : 'Metric'}{' '}
-        </Typography>
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          <Typography gutterBottom variant="h5">
+            {metric.kind === 'boolean' ? 'Yes/No Question' : 'Rating Question'}
+          </Typography>
+          <Close onClick={onClose} />
+        </Box>
+
         {metric.kind === 'boolean' && (
           <Box display="flex" flexDirection="column">
             <TextField
               label="Title"
               onChange={(ev) => setQuestion(ev.target.value)}
-              sx={{ marginBottom: 1 }}
+              sx={{ marginBottom: 2, marginTop: 2 }}
               value={question}
               variant="outlined"
             />
             <TextField
               label="Description"
               onChange={(ev) => setDescription(ev.target.value)}
-              sx={{ marginBottom: 1 }}
+              sx={{ marginBottom: 2 }}
               value={description}
               variant="outlined"
             />
@@ -82,7 +88,46 @@ const MetricCard = ({
             )}
           </Box>
         )}
-        {metric.kind === 'scale5' && <Typography>SCALE5</Typography>}
+        {metric.kind === 'scale5' && (
+          <Box display="flex" flexDirection="column">
+            <TextField
+              label="Title"
+              onChange={(ev) => setQuestion(ev.target.value)}
+              sx={{ marginBottom: 1, marginTop: 2 }}
+              value={question}
+              variant="outlined"
+            />
+            <TextField
+              label="Description"
+              onChange={(ev) => setDescription(ev.target.value)}
+              sx={{ marginBottom: 4, marginTop: 1 }}
+              value={description}
+              variant="outlined"
+            />
+            <Typography fontStyle="italic" mb={1}>
+              Users will rate using a 1 to 5 scale system
+            </Typography>
+
+            <Button
+              onClick={() => {
+                onSave({
+                  definesDone,
+                  description,
+                  id: metric.id || '',
+                  kind: 'scale5',
+                  question,
+                });
+              }}
+            >
+              {isEditing ? 'Update' : 'Save'}
+            </Button>
+            {isEditing && (
+              <Button color="error" onClick={onDelete}>
+                Delete
+              </Button>
+            )}
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
