@@ -8,6 +8,7 @@ export type ZetkinCanvassAssignmentStats = {
   num_areas: number;
   num_households: number;
   num_places: number;
+  num_successful_visited_households: number;
   num_visited_areas: number;
   num_visited_households: number;
   num_visited_households_outside_areas: number;

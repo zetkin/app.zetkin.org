@@ -117,11 +117,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       ];
 
       const visitsInAreas: Visit[] = [];
+      const successfulVisitsInAreas: Visit[] = [];
       const visitedPlacesInAreas: string[] = [];
       const visitedAreas: string[] = [];
       const householdsInAreas: Household[] = [];
 
       const configuredMetrics = model.metrics;
+      const idOfMetricThatDefinesDone = configuredMetrics.find(
+        (metric) => metric.definesDone
+      )?._id;
       const accumulatedMetrics: ZetkinCanvassAssignmentStats['metrics'] =
         configuredMetrics.map((metric) => ({
           metric: {
@@ -170,6 +174,14 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               visitedAreas.push(place.areaId);
               visitedPlacesInAreas.push(place.id);
               visitsInAreas.push(visit);
+
+              visit.responses.forEach((response) => {
+                if (response.metricId == idOfMetricThatDefinesDone) {
+                  if (response.response == 'yes') {
+                    successfulVisitsInAreas.push(visit);
+                  }
+                }
+              });
             }
           });
         });
@@ -202,6 +214,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           num_areas: uniqueAreas.length,
           num_households: householdsInAreas.length,
           num_places: uniquePlacesInAreas.length,
+          num_successful_visited_households: successfulVisitsInAreas.length,
           num_visited_areas: Array.from(new Set(visitedAreas)).length,
           num_visited_households: visitsInAreas.length,
           num_visited_households_outside_areas: visitsOutsideAreas.length,

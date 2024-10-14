@@ -224,17 +224,23 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     values={[
                       {
                         color: theme.palette.primary.main,
-                        value: stats.num_visited_households,
+                        value: stats.num_successful_visited_households,
                       },
                       {
-                        color: lighten(theme.palette.primary.main, 0.6),
+                        color: lighten(theme.palette.primary.main, 0.5),
+                        value:
+                          stats.num_visited_households -
+                          stats.num_successful_visited_households,
+                      },
+                      {
+                        color: lighten(theme.palette.primary.main, 0.8),
                         value:
                           stats.num_households - stats.num_visited_households,
                       },
                     ]}
                   />
                   <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.num_visited_households} logged`}</Typography>
+                    <Typography>{`${stats.num_successful_visited_households} success of ${stats.num_visited_households} visits`}</Typography>
                   </Box>
                 </Box>
               </Box>
