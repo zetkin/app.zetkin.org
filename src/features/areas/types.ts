@@ -55,18 +55,20 @@ export type ZetkinPlace = {
   type: 'address' | 'misc';
 };
 
+export type ZetkinMetric = {
+  definesDone: boolean;
+  description: string;
+  id: string;
+  kind: 'boolean' | 'scale5';
+  question: string;
+};
+
 export type ZetkinCanvassAssignment = {
   campaign: {
     id: number;
   };
   id: string;
-  metrics: {
-    definesDone: boolean;
-    description: string;
-    id: string;
-    kind: 'boolean' | 'scale5';
-    question: string;
-  }[];
+  metrics: ZetkinMetric[];
   organization: {
     id: number;
   };
