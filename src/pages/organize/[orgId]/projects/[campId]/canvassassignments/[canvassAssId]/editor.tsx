@@ -1,6 +1,13 @@
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from '@mui/material';
 
 import { AREAS } from 'utils/featureFlags';
 import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
@@ -36,14 +43,17 @@ const CanvassAssignmentEditorPage: PageWithLayout<
     parseInt(orgId),
     canvassAssId
   );
-  const canvassFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
+  const canvassAssignmentFuture = useCanvassAssignment(
+    parseInt(orgId),
+    canvassAssId
+  );
 
   const [editingMetric, setEditingMetric] = useState<ZetkinMetric | null>(null);
 
   const handleSaveMetric = async (metric: ZetkinMetric) => {
-    if (canvassFuture.data) {
+    if (canvassAssignmentFuture.data) {
       await updateCanvassAssignment({
-        metrics: canvassFuture.data.metrics
+        metrics: canvassAssignmentFuture.data.metrics
           .map((m) => (m.id === metric.id ? metric : m))
           .concat(metric.id ? [] : [metric]),
       });
@@ -52,9 +62,11 @@ const CanvassAssignmentEditorPage: PageWithLayout<
   };
 
   const handleDeleteMetric = async (id: string) => {
-    if (canvassFuture.data) {
+    if (canvassAssignmentFuture.data) {
       await updateCanvassAssignment({
-        metrics: canvassFuture.data.metrics.filter((m) => m.id !== id),
+        metrics: canvassAssignmentFuture.data.metrics.filter(
+          (m) => m.id !== id
+        ),
       });
     }
     setEditingMetric(null);
@@ -71,61 +83,85 @@ const CanvassAssignmentEditorPage: PageWithLayout<
   };
 
   return (
-    <ZUIFuture future={canvassFuture}>
-      {(data) => (
-        <>
-          <Typography>
-            Here you can configure the questions for your canvass assignment
-          </Typography>
-          <Box alignItems="center" display="flex" mt={2}>
-            <Button
-              onClick={() => handleAddNewMetric('boolean')}
-              sx={{ marginRight: 1 }}
-              variant="contained"
-            >
-              Add new question yes/no type
-            </Button>
-            <Button
-              onClick={() => handleAddNewMetric('scale5')}
-              variant="contained"
-            >
-              Add new question scale type
-            </Button>
-          </Box>
-
-          {editingMetric && (
-            <MetricCard
-              metric={editingMetric}
-              onClose={() => setEditingMetric(null)}
-              onDelete={() => handleDeleteMetric(editingMetric.id)}
-              onSave={handleSaveMetric}
-            />
-          )}
-
-          <Box mt={3}>
-            {data.metrics.length > 0 ? 'Your list of questions:' : ''}
-            {data.metrics.map((metric) => (
-              <Card key={metric.id} sx={{ marginTop: 2 }}>
-                <CardContent>
-                  <Typography gutterBottom variant="h5">
-                    {metric.question || 'Untitled question'}
-                  </Typography>
-                  <Typography>
-                    {metric.description || 'No description'}
-                  </Typography>
-                </CardContent>
-                <Box ml={1}>
-                  <Button onClick={() => setEditingMetric(metric)}>EDIT</Button>
-                  <Button onClick={() => handleDeleteMetric(metric.id)}>
-                    DELETE
-                  </Button>
-                </Box>
-              </Card>
-            ))}
-          </Box>
-        </>
-      )}
-    </ZUIFuture>
+    <Box width="50%">
+      <ZUIFuture future={canvassAssignmentFuture}>
+        {(assignment) => (
+          <>
+            <Typography>
+              Here you can configure the questions for your canvass assignment
+            </Typography>
+            <Box alignItems="center" display="flex" mt={2}>
+              <Button
+                onClick={() => handleAddNewMetric('boolean')}
+                sx={{ marginRight: 1 }}
+                variant="contained"
+              >
+                Add yes/no question
+              </Button>
+              <Button
+                onClick={() => handleAddNewMetric('scale5')}
+                variant="contained"
+              >
+                Add scale question
+              </Button>
+            </Box>
+            {editingMetric && (
+              <MetricCard
+                hasDefinedDone={assignment.metrics.some(
+                  (metric) => metric.definesDone
+                )}
+                metric={editingMetric}
+                onClose={() => setEditingMetric(null)}
+                onDelete={() => handleDeleteMetric(editingMetric.id)}
+                onSave={handleSaveMetric}
+              />
+            )}
+            <Box mt={3}>
+              {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
+              {assignment.metrics.map((metric) => (
+                <Card key={metric.id} sx={{ marginTop: 2 }}>
+                  <CardContent>
+                    <Box display="flex">
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        flexGrow={1}
+                        gap={1}
+                      >
+                        {metric.definesDone && (
+                          <Typography color="error">
+                            This question defines if the mission was successful
+                          </Typography>
+                        )}
+                        <Typography gutterBottom variant="h5">
+                          {metric.question || 'Untitled question'}
+                        </Typography>
+                        <Typography>
+                          {metric.description || 'No description'}
+                        </Typography>
+                      </Box>
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="secondary">
+                          {metric.kind == 'boolean' ? 'Yes/no' : 'Scale'}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={() => setEditingMetric(metric)}>
+                      EDIT
+                    </Button>
+                    <Button onClick={() => handleDeleteMetric(metric.id)}>
+                      DELETE
+                    </Button>
+                  </CardActions>
+                </Card>
+              ))}
+            </Box>
+          </>
+        )}
+      </ZUIFuture>
+    </Box>
   );
 };
 

@@ -8,16 +8,19 @@ import {
   TextField,
   Checkbox,
   Button,
+  IconButton,
 } from '@mui/material';
 
 import { ZetkinMetric } from 'features/areas/types';
 
 const MetricCard = ({
+  hasDefinedDone,
   metric,
   onClose,
   onDelete,
   onSave,
 }: {
+  hasDefinedDone: boolean;
   metric: ZetkinMetric;
   onClose: () => void;
   onDelete: () => void;
@@ -39,101 +42,74 @@ const MetricCard = ({
     setDefinesDone(metric.definesDone || false);
   }, [metric]);
 
+  const showDefinesDoneCheckbox =
+    metric.kind == 'boolean' && (metric.definesDone || !hasDefinedDone);
+
   return (
     <Card sx={{ marginTop: 2 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography gutterBottom variant="h5">
-            {metric.kind === 'boolean' ? 'Yes/No Question' : 'Rating Question'}
+            {metric.kind === 'boolean' ? 'Yes/No Question' : 'Scale Question'}
           </Typography>
-          <Close onClick={onClose} />
+          <IconButton onClick={onClose}>
+            <Close />
+          </IconButton>
         </Box>
-
-        {metric.kind === 'boolean' && (
-          <Box display="flex" flexDirection="column">
-            <TextField
-              label="Title"
-              onChange={(ev) => setQuestion(ev.target.value)}
-              sx={{ marginBottom: 2, marginTop: 2 }}
-              value={question}
-              variant="outlined"
-            />
-            <TextField
-              label="Description"
-              onChange={(ev) => setDescription(ev.target.value)}
-              sx={{ marginBottom: 2 }}
-              value={description}
-              variant="outlined"
-            />
+        <Box display="flex" flexDirection="column" justifyContent="center">
+          {metric.kind == 'scale5' && (
+            <Typography fontStyle="italic" mb={1}>
+              The canvasser will respond by giving a rating from 1 to 5
+            </Typography>
+          )}
+          <TextField
+            label="Question"
+            onChange={(ev) => setQuestion(ev.target.value)}
+            sx={{ marginBottom: 2, marginTop: 2 }}
+            value={question}
+            variant="outlined"
+          />
+          <TextField
+            label="Description"
+            onChange={(ev) => setDescription(ev.target.value)}
+            sx={{ marginBottom: 2 }}
+            value={description}
+            variant="outlined"
+          />
+          {showDefinesDoneCheckbox && (
             <Box alignItems="center" display="flex">
-              <Typography>
-                Answering this question defines the goal of the assignment?
-              </Typography>
               <Checkbox
                 checked={definesDone}
                 onChange={(ev) => setDefinesDone(ev.target.checked)}
               />
+              <Typography>
+                The answer to this question defines if the mission was
+                successful
+              </Typography>
             </Box>
+          )}
+          <Box display="flex" gap={1} justifyContent="center" width="100%">
+            {isEditing && (
+              <Button color="error" onClick={onDelete} variant="outlined">
+                Delete
+              </Button>
+            )}
             <Button
               onClick={() => {
                 onSave({
                   definesDone,
                   description,
                   id: metric.id || '',
-                  kind: 'boolean',
+                  kind: metric.kind,
                   question,
                 });
               }}
+              variant="outlined"
             >
               {isEditing ? 'Update' : 'Save'}
             </Button>
-            {isEditing && (
-              <Button color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            )}
           </Box>
-        )}
-        {metric.kind === 'scale5' && (
-          <Box display="flex" flexDirection="column">
-            <TextField
-              label="Title"
-              onChange={(ev) => setQuestion(ev.target.value)}
-              sx={{ marginBottom: 1, marginTop: 2 }}
-              value={question}
-              variant="outlined"
-            />
-            <TextField
-              label="Description"
-              onChange={(ev) => setDescription(ev.target.value)}
-              sx={{ marginBottom: 4, marginTop: 1 }}
-              value={description}
-              variant="outlined"
-            />
-            <Typography fontStyle="italic" mb={1}>
-              Users will rate using a 1 to 5 scale system
-            </Typography>
-
-            <Button
-              onClick={() => {
-                onSave({
-                  definesDone,
-                  description,
-                  id: metric.id || '',
-                  kind: 'scale5',
-                  question,
-                });
-              }}
-            >
-              {isEditing ? 'Update' : 'Save'}
-            </Button>
-            {isEditing && (
-              <Button color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            )}
-          </Box>
-        )}
+        </Box>
       </CardContent>
     </Card>
   );
