@@ -65,7 +65,9 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       const model = await CanvassAssignmentModel.findOneAndUpdate(
         { _id: params.canvassAssId },
         {
-          metrics: payload.metrics,
+          $push: {
+            metrics: payload.metrics,
+          },
           title: payload.title,
         },
         { new: true }
