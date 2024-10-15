@@ -109,6 +109,17 @@ export default function prepareImportOperations(
           });
         }
 
+        if (column.kind === ColumnKind.ENUM) {
+          column.mapping.forEach((mappedColumn) => {
+            if (mappedColumn.value === row.data[colIdx] && mappedColumn.key) {
+              personImportOps[rowIndex].data = {
+                ...personImportOps[rowIndex].data,
+                [`${column.field}`]: mappedColumn.key,
+              };
+            }
+          });
+        }
+
         if (column.kind === ColumnKind.DATE) {
           if (column.dateFormat) {
             const fieldKey = column.field;
