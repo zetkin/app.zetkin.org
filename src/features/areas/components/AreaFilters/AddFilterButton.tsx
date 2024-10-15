@@ -6,8 +6,6 @@ import { MenuItem } from '@mui/material';
 import { FC, useState } from 'react';
 
 import theme from 'theme';
-import messageIds from 'features/areas/l10n/messageIds';
-import { Msg } from 'core/i18n';
 
 type Props = {
   items: {
@@ -31,7 +29,7 @@ const AddFilterButton: FC<Props> = ({ items, open, onToggle }) => {
         startIcon={<Add />}
         variant="text"
       >
-        <Msg id={messageIds.filters.addFilterButton} />
+        Add filter
       </Button>
       <Menu
         anchorEl={anchorEl}

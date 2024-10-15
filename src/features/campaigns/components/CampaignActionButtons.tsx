@@ -29,7 +29,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
-import useCreateCanvassAssignment from 'features/areas/hooks/useCreateCanvassAssignment';
+import useCreateCanvassAssignment from 'features/canvassAssignments/hooks/useCreateCanvassAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS } from 'utils/featureFlags';
 

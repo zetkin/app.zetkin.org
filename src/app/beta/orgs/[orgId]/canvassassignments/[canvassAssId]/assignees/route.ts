@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { NextRequest } from 'next/server';
 
+import { ZetkinCanvassAssignee } from 'features/canvassAssignments/types';
+import { CanvassAssigneeModel } from 'features/canvassAssignments/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { CanvassAssigneeModel } from 'features/areas/models';
-import { ZetkinCanvassAssignee } from 'features/areas/types';
 
 type RouteMeta = {
   params: {

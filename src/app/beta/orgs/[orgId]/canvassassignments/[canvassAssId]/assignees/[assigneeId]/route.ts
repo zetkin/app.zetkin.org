@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { CanvassAssigneeModel } from 'features/areas/models';
+import { CanvassAssigneeModel } from 'features/canvassAssignments/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {

@@ -17,16 +17,14 @@ import {
   TileLayer,
 } from 'react-leaflet';
 
-import { ZetkinArea } from '../types';
-import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
-import { CreatePlaceCard } from './CreatePlaceCard';
+import { ZetkinArea } from '../../areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import MarkerIcon from '../utils/markerIcon';
 import PlaceDialog from './PlaceDialog';
+import { CreatePlaceCard } from './CreatePlaceCard';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -259,7 +257,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
         {showViewPlaceButton && (
           <Box className={classes.infoButtons}>
             <Typography sx={{ paddingBottom: 1 }}>
-              {selectedPlace.title || <Msg id={messageIds.place.empty.title} />}
+              {selectedPlace.title || 'Untitled place'}
             </Typography>
             <Button
               fullWidth
@@ -269,13 +267,13 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
               }}
               variant="outlined"
             >
-              <Msg id={messageIds.viewPlaceButton} />
+              View place
             </Button>
           </Box>
         )}
         {!selectedPlace && !isCreating && (
           <Button onClick={() => setIsCreating(true)} variant="contained">
-            <Msg id={messageIds.addNewPlaceButton} />
+            Add new place
           </Button>
         )}
       </Box>
@@ -341,7 +339,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
           onClose={() => {
             setIsCreating(false);
           }}
-          onCreate={(title, type) => {
+          onCreate={(title) => {
             const crosshair = crosshairRef.current;
 
             if (crosshair && map) {
@@ -355,7 +353,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
                 createPlace({
                   position: point,
                   title,
-                  type: type === 'address' ? 'address' : 'misc',
                 });
               }
             }

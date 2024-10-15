@@ -4,8 +4,6 @@ import { useTheme } from '@mui/styles';
 
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
-import { useMessages } from 'core/i18n';
-import messageIds from 'features/areas/l10n/messageIds';
 import FilterDropDown from '../FilterDropDown';
 import { areaFilterContext } from './AreaFilterContext';
 import AddFilterButton from './AddFilterButton';
@@ -24,7 +22,6 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     activeTagIdsByGroup,
     setActiveTagIdsByGroup,
   } = useContext(areaFilterContext);
-  const messages = useMessages(messageIds);
 
   const groupsById = useMemo(() => {
     const groupsById: Record<
@@ -96,11 +93,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                   },
                 };
               })}
-              label={
-                info.group
-                  ? info.group.title
-                  : messages.filters.tagsWithoutGroup()
-              }
+              label={info.group ? info.group.title : 'Ungrouped tags'}
               onToggle={(open) => setOpenDropdown(open ? groupId : null)}
               open={openDropdown == groupId}
               startIcon={
@@ -141,9 +134,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
 
           return {
             icon: <Checkbox checked={selected} />,
-            label: item.group
-              ? messages.filters.tagGroup({ label: item.group.title })
-              : messages.filters.tagsWithoutGroup(),
+            label: item.group ? item.group.title : 'Ungrouped tags',
             onClick: () => {
               if (selected) {
                 setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));

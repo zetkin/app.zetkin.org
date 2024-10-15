@@ -12,7 +12,7 @@ import {
   Visit,
   ZetkinCanvassAssignment,
   ZetkinMetric,
-} from 'features/areas/types';
+} from 'features/canvassAssignments/types';
 
 const Question: FC<{
   metric: ZetkinMetric;
@@ -124,7 +124,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
           return (
             <>
               <PreviousMessage
-                key={metric.id}
+                key={metric._id}
                 onClick={() => {
                   setStep(index);
                   setResponses(responses.slice(0, index + 1));
@@ -175,7 +175,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
           return (
             <Box display="flex" flexDirection="column" flexGrow={1}>
               <Question
-                key={metric.id}
+                key={metric._id}
                 metric={metric}
                 onChange={(newValue) => {
                   if (newValue == null) {
@@ -199,7 +199,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
                       setResponses([
                         ...responses,
                         {
-                          metricId: metric.id,
+                          metricId: metric._id,
                           response: newValue.toString(),
                         },
                       ]);

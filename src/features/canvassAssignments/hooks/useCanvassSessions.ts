@@ -10,7 +10,7 @@ export default function useCanvassSessions(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const sessions = useAppSelector(
-    (state) => state.areas.sessionsByAssignmentId[canvassAssId]
+    (state) => state.canvassAssignments.sessionsByAssignmentId[canvassAssId]
   );
 
   return loadListIfNecessary(sessions, dispatch, {

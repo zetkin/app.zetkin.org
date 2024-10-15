@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { AreaModel, CanvassAssignmentModel } from 'features/areas/models';
-import { ZetkinCanvassSession } from 'features/areas/types';
+import { CanvassAssignmentModel } from 'features/canvassAssignments/models';
+import { ZetkinCanvassSession } from 'features/canvassAssignments/types';
 import { ZetkinMembership, ZetkinPerson } from 'utils/types/zetkin';
+import { AreaModel } from 'features/areas/models';
 
 export async function GET(request: NextRequest) {
   const headers: IncomingHttpHeaders = {};

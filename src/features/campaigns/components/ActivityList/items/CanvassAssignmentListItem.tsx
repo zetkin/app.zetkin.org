@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Map } from '@mui/icons-material';
 
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
-import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
+import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 
 type Props = {
   caId: string;

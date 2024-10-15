@@ -10,7 +10,7 @@ export default function useCanvassAssignmentStats(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const statsItem = useAppSelector(
-    (state) => state.areas.statsByCanvassAssId[canvassAssId]
+    (state) => state.canvassAssignments.statsByCanvassAssId[canvassAssId]
   );
 
   return loadItemIfNecessary(statsItem, dispatch, {

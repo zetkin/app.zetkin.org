@@ -1,22 +1,22 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
+import asOrgAuthorized from 'utils/api/asOrgAuthorized';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import isPointInsidePolygon from 'features/canvassAssignments/utils/isPointInsidePolygon';
 import {
-  AreaModel,
   CanvassAssignmentModel,
   PlaceModel,
-} from 'features/areas/models';
+} from 'features/canvassAssignments/models';
 import {
   Household,
   Visit,
-  ZetkinArea,
   ZetkinCanvassAssignmentStats,
   ZetkinCanvassSession,
   ZetkinPlace,
-} from 'features/areas/types';
-import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { ZetkinPerson } from 'utils/types/zetkin';
-import isPointInsidePolygon from 'features/areas/utils/isPointInsidePolygon';
+} from 'features/canvassAssignments/types';
+import { AreaModel } from 'features/areas/models';
+import { ZetkinArea } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
@@ -91,7 +91,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         orgId: orgId,
         position: model.position,
         title: model.title,
-        type: model.type,
       }));
 
       type PlaceWithAreaId = ZetkinPlace & { areaId: ZetkinArea['id'] };
@@ -129,9 +128,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const accumulatedMetrics: ZetkinCanvassAssignmentStats['metrics'] =
         configuredMetrics.map((metric) => ({
           metric: {
+            _id: metric._id,
             definesDone: metric.definesDone,
             description: metric.description,
-            id: metric._id,
             kind: metric.kind,
             question: metric.question,
           },
@@ -148,7 +147,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                 );
 
                 const accumulatedMetric = accumulatedMetrics.find(
-                  (accum) => accum.metric.id == response.metricId
+                  (accum) => accum.metric._id == response.metricId
                 );
 
                 if (accumulatedMetric && configuredMetric) {

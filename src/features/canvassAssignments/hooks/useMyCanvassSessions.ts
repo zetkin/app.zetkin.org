@@ -6,7 +6,9 @@ import { ZetkinCanvassSession } from '../types';
 export default function useMyCanvassSessions() {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const mySessions = useAppSelector((state) => state.areas.mySessionsList);
+  const mySessions = useAppSelector(
+    (state) => state.canvassAssignments.mySessionsList
+  );
 
   return loadListIfNecessary(mySessions, dispatch, {
     actionOnLoad: () => myAssignmentsLoad(),
