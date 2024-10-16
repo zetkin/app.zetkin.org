@@ -25,6 +25,7 @@ import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import MarkerIcon from '../utils/markerIcon';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
+import getVisitState from '../utils/getVisitState';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -293,6 +294,8 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
         <Polygon color={theme.palette.primary.main} positions={area.points} />
         <>
           {places.map((place) => {
+            const visitState = getVisitState(place.households, canvassAssId);
+
             const selected = place.id == selectedPlaceId;
             const key = `marker-${place.id}-${selected.toString()}`;
 
@@ -310,7 +313,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
                   lng: place.position.lng,
                 }}
               >
-                <MarkerIcon selected={selected} />
+                <MarkerIcon selected={selected} visitState={visitState} />
               </DivIconMarker>
             );
           })}

@@ -1,8 +1,20 @@
+import { VisitState } from './getVisitState';
+
 interface MarkerIconProps {
+  visitState?: VisitState;
   selected: boolean;
 }
 
-const MarkerIcon: React.FC<MarkerIconProps> = ({ selected }) => (
+const strokeColors = {
+  done: 'green',
+  pending: 'gray',
+  started: 'blue',
+};
+
+const MarkerIcon: React.FC<MarkerIconProps> = ({
+  visitState = 'pending',
+  selected,
+}) => (
   <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
     <path
       d="M14 38.479C13.6358 38.0533 13.1535 37.4795
@@ -15,7 +27,7 @@ const MarkerIcon: React.FC<MarkerIconProps> = ({ selected }) => (
         35.1826 15.411 36.7839C14.8465 37.4795 14.3642
         38.0533 14 38.479Z"
       fill={selected ? '#ED1C55' : 'white'}
-      stroke={'#ED1C55'}
+      stroke={strokeColors[visitState]}
       strokeWidth="2"
     />
   </svg>
