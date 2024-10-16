@@ -62,8 +62,8 @@ const CanvassAssignmentEditorPage: PageWithLayout<
     if (canvassAssignmentFuture.data) {
       await updateCanvassAssignment({
         metrics: canvassAssignmentFuture.data.metrics
-          .map((m) => (m._id === metric._id ? metric : m))
-          .concat(metric._id ? [] : [metric]),
+          .map((m) => (m.id === metric.id ? metric : m))
+          .concat(metric.id ? [] : [metric]),
       });
     }
     setMetricBeingEdited(null);
@@ -73,7 +73,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
     if (canvassAssignmentFuture.data) {
       await updateCanvassAssignment({
         metrics: canvassAssignmentFuture.data.metrics.filter(
-          (m) => m._id !== id
+          (m) => m.id !== id
         ),
       });
     }
@@ -82,9 +82,9 @@ const CanvassAssignmentEditorPage: PageWithLayout<
 
   const handleAddNewMetric = (kind: 'boolean' | 'scale5') => {
     setMetricBeingEdited({
-      _id: '',
       definesDone: false,
       description: '',
+      id: '',
       kind: kind,
       question: '',
     });
@@ -123,11 +123,11 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                 onClose={() => setMetricBeingEdited(null)}
                 onDelete={(target: EventTarget & HTMLButtonElement) => {
                   if (metricBeingEdited.definesDone) {
-                    setIdOfQuestionBeingDeleted(metricBeingEdited._id);
+                    setIdOfQuestionBeingDeleted(metricBeingEdited.id);
                     setAnchorEl(target);
                     setMetricBeingEdited(null);
                   } else {
-                    handleDeleteMetric(metricBeingEdited._id);
+                    handleDeleteMetric(metricBeingEdited.id);
                   }
                 }}
                 onSave={handleSaveMetric}
@@ -136,7 +136,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
             <Box mt={3}>
               {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
               {assignment.metrics.map((metric) => (
-                <Card key={metric._id} sx={{ marginTop: 2 }}>
+                <Card key={metric.id} sx={{ marginTop: 2 }}>
                   <CardContent>
                     <Box display="flex">
                       <Box
@@ -173,10 +173,10 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                       <Button
                         onClick={(ev) => {
                           if (metric.definesDone) {
-                            setIdOfQuestionBeingDeleted(metric._id);
+                            setIdOfQuestionBeingDeleted(metric.id);
                             setAnchorEl(ev.currentTarget);
                           } else {
-                            handleDeleteMetric(metric._id);
+                            handleDeleteMetric(metric.id);
                           }
                         }}
                       >
@@ -196,7 +196,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                 >
                   <Typography variant="h6">{`Delete "${
                     assignment.metrics.find(
-                      (metric) => metric._id == idOfMetricBeingDeleted
+                      (metric) => metric.id == idOfMetricBeingDeleted
                     )?.question
                   }"`}</Typography>
                   <IconButton
@@ -211,7 +211,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                 <Typography>
                   {`If you want to delete "${
                     assignment.metrics.find(
-                      (metric) => metric._id == idOfMetricBeingDeleted
+                      (metric) => metric.id == idOfMetricBeingDeleted
                     )?.question
                   }" you need to pick another
                   yes/no-question to be the question that defines if the msision
@@ -223,7 +223,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                     .filter(
                       (metric) =>
                         metric.kind == 'boolean' &&
-                        metric._id != idOfMetricBeingDeleted
+                        metric.id != idOfMetricBeingDeleted
                     )
                     .map((metric) => (
                       <Box
@@ -239,7 +239,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                           onClick={() => {
                             if (idOfMetricBeingDeleted) {
                               const filtered = assignment.metrics.filter(
-                                (metric) => metric._id != idOfMetricBeingDeleted
+                                (metric) => metric.id != idOfMetricBeingDeleted
                               );
                               updateCanvassAssignment({
                                 metrics: [

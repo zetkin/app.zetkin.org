@@ -38,9 +38,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         campaign: { id: canvassAssignmentModel.campId },
         id: canvassAssignmentModel._id.toString(),
         metrics: (canvassAssignmentModel.metrics || []).map((metric) => ({
-          _id: metric._id,
           definesDone: metric.definesDone || false,
           description: metric.description || '',
+          id: metric._id,
           kind: metric.kind,
           question: metric.question,
         })),
@@ -82,7 +82,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
         // Identify metrics to be deleted
         const metricsToDelete = existingMetricsIds.filter(
-          (id) => !newMetrics.some((metric: ZetkinMetric) => metric._id === id)
+          (id) => !newMetrics.some((metric: ZetkinMetric) => metric.id === id)
         );
 
         // Remove metrics that are no longer included
@@ -136,9 +136,9 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           campaign: { id: model.campId },
           id: model._id.toString(),
           metrics: (model.metrics || []).map((metric) => ({
-            _id: metric._id,
             definesDone: metric.definesDone || false,
             description: metric.description || '',
+            id: metric._id,
             kind: metric.kind,
             question: metric.question,
           })),

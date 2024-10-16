@@ -36,40 +36,40 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       //Find all sessions of the assignment
-      const model = await CanvassAssignmentModel.findOne({
+      const assignmentModel = await CanvassAssignmentModel.findOne({
         _id: params.canvassAssId,
       });
 
-      if (!model) {
+      if (!assignmentModel) {
         return new NextResponse(null, { status: 404 });
       }
 
       const sessions: ZetkinCanvassSession[] = [];
 
-      for await (const sessionData of model.sessions) {
+      for await (const sessionData of assignmentModel.sessions) {
         const person = await apiClient.get<ZetkinPerson>(
           `/api/orgs/${orgId}/people/${sessionData.personId}`
         );
-        const area = await AreaModel.findOne({
+        const areaModel = await AreaModel.findOne({
           _id: sessionData.areaId,
         });
 
-        if (area && person) {
+        if (areaModel && person) {
           sessions.push({
             area: {
-              description: area.description,
-              id: area._id.toString(),
+              description: areaModel.description,
+              id: areaModel._id.toString(),
               organization: {
                 id: orgId,
               },
-              points: area.points,
+              points: areaModel.points,
               tags: [], //TODO: Is this really neccessary here?
-              title: area.title,
+              title: areaModel.title,
             },
             assignee: person,
             assignment: {
-              id: model._id.toString(),
-              title: model.title,
+              id: assignmentModel._id.toString(),
+              title: assignmentModel.title,
             },
           });
         }
@@ -121,16 +121,16 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const visitedAreas: string[] = [];
       const householdsInAreas: Household[] = [];
 
-      const configuredMetrics = model.metrics;
+      const configuredMetrics = assignmentModel.metrics;
       const idOfMetricThatDefinesDone = configuredMetrics.find(
         (metric) => metric.definesDone
       )?._id;
       const accumulatedMetrics: ZetkinCanvassAssignmentStats['metrics'] =
         configuredMetrics.map((metric) => ({
           metric: {
-            _id: metric._id,
             definesDone: metric.definesDone,
             description: metric.description,
+            id: metric._id,
             kind: metric.kind,
             question: metric.question,
           },
@@ -147,7 +147,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                 );
 
                 const accumulatedMetric = accumulatedMetrics.find(
-                  (accum) => accum.metric._id == response.metricId
+                  (accum) => accum.metric.id == response.metricId
                 );
 
                 if (accumulatedMetric && configuredMetric) {

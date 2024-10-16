@@ -2,9 +2,9 @@ import { ZetkinArea } from 'features/areas/types';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 export type ZetkinMetric = {
-  _id: string;
   definesDone: boolean;
   description: string;
+  id: string;
   kind: 'boolean' | 'scale5';
   question: string;
 };
@@ -25,7 +25,7 @@ export type ZetkinCanvassAssignmentPostBody = Partial<
   Omit<ZetkinCanvassAssignment, 'id' | 'campaign' | 'organization' | 'metrics'>
 > & {
   campaign_id: number;
-  metrics: Omit<ZetkinMetric, '_id'>[];
+  metrics: Omit<ZetkinMetric, 'id'>[];
 };
 export type ZetkinCanvassAssignmentPatchbody = Partial<
   Omit<ZetkinCanvassAssignment, 'id'>

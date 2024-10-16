@@ -38,7 +38,7 @@ const MetricCard: FC<MetricCardProps> = ({
     metric.definesDone || false
   );
 
-  const isEditing = !!metric?._id;
+  const isEditing = !!metric?.id;
 
   useEffect(() => {
     setQuestion(metric.question || '');
@@ -106,9 +106,9 @@ const MetricCard: FC<MetricCardProps> = ({
             <Button
               onClick={() => {
                 onSave({
-                  _id: metric._id || '',
                   definesDone,
                   description,
+                  id: metric.id || '',
                   kind: metric.kind,
                   question,
                 });

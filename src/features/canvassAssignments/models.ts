@@ -5,7 +5,7 @@ import { ZetkinCanvassAssignee, ZetkinMetric, ZetkinPlace } from './types';
 type ZetkinCanvassAssignmentModelType = {
   campId: number;
   id: number;
-  metrics: ZetkinMetric[];
+  metrics: (Omit<ZetkinMetric, 'id'> & { _id: string })[];
   orgId: number;
   sessions: {
     areaId: string;

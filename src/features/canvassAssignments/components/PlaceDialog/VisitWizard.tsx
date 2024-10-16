@@ -124,7 +124,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
           return (
             <>
               <PreviousMessage
-                key={metric._id}
+                key={metric.id}
                 onClick={() => {
                   setStep(index);
                   setResponses(responses.slice(0, index + 1));
@@ -175,7 +175,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
           return (
             <Box display="flex" flexDirection="column" flexGrow={1}>
               <Question
-                key={metric._id}
+                key={metric.id}
                 metric={metric}
                 onChange={(newValue) => {
                   if (newValue == null) {
@@ -199,7 +199,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
                       setResponses([
                         ...responses,
                         {
-                          metricId: metric._id,
+                          metricId: metric.id,
                           response: newValue.toString(),
                         },
                       ]);
