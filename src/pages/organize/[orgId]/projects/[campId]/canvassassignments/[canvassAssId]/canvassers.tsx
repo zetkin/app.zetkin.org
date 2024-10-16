@@ -3,13 +3,13 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { AREAS } from 'utils/featureFlags';
-import { ZetkinCanvassSession } from 'features/canvassAssignments/types';
+import { CanvasserInfo } from 'features/canvassAssignments/types';
 import useCanvassSessions from 'features/canvassAssignments/hooks/useCanvassSessions';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
+import getCanvassers from 'features/canvassAssignments/utils/getCanvassers';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -28,12 +28,6 @@ type Props = {
   orgId: string;
 };
 
-type CanvasserInfo = {
-  id: number;
-  person: ZetkinPerson;
-  sessions: ZetkinCanvassSession[];
-};
-
 const CanvassAssignmentPage: PageWithLayout<Props> = ({
   orgId,
   canvassAssId,
@@ -44,21 +38,7 @@ const CanvassAssignmentPage: PageWithLayout<Props> = ({
     (session) => session.assignment.id === canvassAssId
   );
 
-  const sessionsByPersonId: Record<number, CanvasserInfo> = {};
-
-  sessions.forEach((session) => {
-    if (!sessionsByPersonId[session.assignee.id]) {
-      sessionsByPersonId[session.assignee.id] = {
-        id: session.assignee.id,
-        person: session.assignee,
-        sessions: [session],
-      };
-    } else {
-      sessionsByPersonId[session.assignee.id].sessions.push(session);
-    }
-  });
-
-  const canvassers = Object.values(sessionsByPersonId);
+  const canvassers = getCanvassers(sessions);
 
   const columns: GridColDef<CanvasserInfo>[] = [
     {

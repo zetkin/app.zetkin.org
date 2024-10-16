@@ -1,6 +1,12 @@
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
+export type CanvasserInfo = {
+  id: number;
+  person: ZetkinPerson;
+  sessions: ZetkinCanvassSession[];
+};
+
 export type ZetkinMetric = {
   definesDone: boolean;
   description: string;
