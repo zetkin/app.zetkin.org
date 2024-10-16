@@ -1,9 +1,11 @@
 import { Box } from '@mui/system';
-import { Typography } from '@mui/material';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
+import { Button, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { Pentagon, People } from '@mui/icons-material';
 
+import AssignmentStatusChip from '../components/AssignmentStatusChip';
 import getCanvassers from '../utils/getCanvassers';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useCanvassAssignment from '../hooks/useCanvassAssignment';
@@ -12,9 +14,10 @@ import useCanvassSessions from '../hooks/useCanvassSessions';
 import useCanvassAssignmentStats from '../hooks/useCanvassAssignmentStats';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
-import AssignmentStatusChip from '../components/AssignmentStatusChip';
-import useCanvassAssignmentStatus from '../hooks/useCanvassAssignmentStatus';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
+import useCanvassAssignmentStatus, {
+  CanvassAssignmentState,
+} from '../hooks/useCanvassAssignmentStatus';
 
 type CanvassAssignmentLayoutProps = {
   campId: number;
@@ -54,6 +57,31 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
 
   return (
     <TabbedLayout
+      actionButtons={
+        state == CanvassAssignmentState.OPEN ? (
+          <Button
+            onClick={() =>
+              updateCanvassAssignment({
+                end_date: dayjs().format('YYYY-MM-DD'),
+              })
+            }
+            variant="outlined"
+          >
+            {'End Assignment'}
+          </Button>
+        ) : (
+          <Button
+            onClick={() =>
+              updateCanvassAssignment({
+                start_date: dayjs().format('YYYY-MM-DD'),
+              })
+            }
+            variant="contained"
+          >
+            {'Start Assignment'}
+          </Button>
+        )
+      }
       baseHref={`/organize/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`}
       belowActionButtons={
         <ZUIDateRangePicker
