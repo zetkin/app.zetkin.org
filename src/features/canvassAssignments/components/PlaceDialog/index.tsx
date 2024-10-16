@@ -1,10 +1,4 @@
-import {
-  ArrowBackIos,
-  Check,
-  Close,
-  Edit,
-  MoreVert,
-} from '@mui/icons-material';
+import { ArrowBackIos, Close, Edit, MoreVert } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
   Box,
@@ -27,6 +21,7 @@ import { PlaceDialogStep } from '../PublicAreaMap';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type PlaceDialogProps = {
   canvassAssId: string;
@@ -197,7 +192,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             <Box flexGrow={1} overflow="hidden">
               {place && dialogStep == 'place' && (
                 <Place
-                  canvassAssId={canvassAssId}
                   onSelectHousehold={(householdId: string) => {
                     setSelectedHouseholdId(householdId);
                     onSelectHousehold();
@@ -206,42 +200,63 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 />
               )}
               {dialogStep == 'pickHousehold' && (
-                <Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flexGrow={2}
+                  gap={1}
+                  overflow="hidden"
+                  paddingTop={1}
+                >
                   <Typography variant="h6">Choose household</Typography>
-                  {place.households.map((household) => {
-                    const visitedInThisAssignment = household.visits.some(
-                      (visit) => visit.canvassAssId == canvassAssId
-                    );
-                    return (
-                      <Box
-                        key={household.id}
-                        alignItems="center"
-                        display="flex"
-                        mb={1}
-                        mt={1}
-                        onClick={() => {
-                          if (!visitedInThisAssignment) {
+                  <Divider />
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    gap={2}
+                    sx={{ overflowY: 'auto' }}
+                  >
+                    {place.households.map((household) => {
+                      const sortedVisits = household.visits.toSorted((a, b) => {
+                        const dateA = new Date(a.timestamp);
+                        const dateB = new Date(b.timestamp);
+                        if (dateA > dateB) {
+                          return -1;
+                        } else if (dateB > dateA) {
+                          return 1;
+                        } else {
+                          return 0;
+                        }
+                      });
+
+                      const mostRecentVisit =
+                        sortedVisits.length > 0 ? sortedVisits[0] : null;
+
+                      return (
+                        <Box
+                          key={household.id}
+                          alignItems="center"
+                          display="flex"
+                          onClick={() => {
                             setSelectedHouseholdId(household.id);
                             onWizard();
-                          }
-                        }}
-                        width="100%"
-                      >
-                        <Box flexGrow={1}>
-                          <Typography
-                            color={visitedInThisAssignment ? 'secondary' : ''}
-                          >
-                            {household.title || 'Untitled household'}
-                          </Typography>
+                          }}
+                          width="100%"
+                        >
+                          <Box flexGrow={1}>
+                            <Typography>
+                              {household.title || 'Untitled household'}
+                            </Typography>
+                          </Box>
+                          {mostRecentVisit && (
+                            <ZUIRelativeTime
+                              datetime={mostRecentVisit.timestamp}
+                            />
+                          )}
                         </Box>
-                        {visitedInThisAssignment ? (
-                          <Check color="secondary" />
-                        ) : (
-                          ''
-                        )}
-                      </Box>
-                    );
-                  })}
+                      );
+                    })}
+                  </Box>
                 </Box>
               )}
               {dialogStep === 'edit' && (
