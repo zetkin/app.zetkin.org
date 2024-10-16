@@ -2,15 +2,15 @@ import { Check } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 import { FC } from 'react';
 
-import { isWithinLast24Hours } from 'features/canvassAssignments/utils/isWithinLast24Hours';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
 
 type PlaceProps = {
+  canvassAssId: string | null;
   onSelectHousehold: (householdId: string) => void;
   place: ZetkinPlace;
 };
 
-const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
+const Place: FC<PlaceProps> = ({ canvassAssId, onSelectHousehold, place }) => {
   return (
     <Box
       display="flex"
@@ -38,8 +38,8 @@ const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
         <Divider />
         <Box display="flex" flexDirection="column" sx={{ overflowY: 'auto' }}>
           {place.households.map((household) => {
-            const visitedRecently = isWithinLast24Hours(
-              household.visits.map((t) => t.timestamp)
+            const visitedInThisAssignment = household.visits.some(
+              (visit) => visit.canvassAssId == canvassAssId
             );
             /*const mostRecentVisit = household.visits.toSorted(
           (a, b) => {
@@ -70,7 +70,7 @@ const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
                 <Box flexGrow={1}>
                   {household.title || 'Untitled household'}
                 </Box>
-                {visitedRecently ? <Check color="secondary" /> : ''}
+                {visitedInThisAssignment ? <Check color="secondary" /> : ''}
               </Box>
             );
           })}

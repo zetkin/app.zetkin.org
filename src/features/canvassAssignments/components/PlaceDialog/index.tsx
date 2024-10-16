@@ -22,7 +22,6 @@ import VisitWizard from './VisitWizard';
 import EditPlace from './EditPlace';
 import Place from './Place';
 import Household from './Household';
-import { isWithinLast24Hours } from 'features/canvassAssignments/utils/isWithinLast24Hours';
 import ZUIFuture from 'zui/ZUIFuture';
 import { PlaceDialogStep } from '../PublicAreaMap';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
@@ -198,6 +197,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             <Box flexGrow={1} overflow="hidden">
               {place && dialogStep == 'place' && (
                 <Place
+                  canvassAssId={canvassAssId}
                   onSelectHousehold={(householdId: string) => {
                     setSelectedHouseholdId(householdId);
                     onSelectHousehold();
@@ -209,8 +209,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 <Box>
                   <Typography variant="h6">Choose household</Typography>
                   {place.households.map((household) => {
-                    const visitedRecently = isWithinLast24Hours(
-                      household.visits.map((t) => t.timestamp)
+                    const visitedInThisAssignment = household.visits.some(
+                      (visit) => visit.canvassAssId == canvassAssId
                     );
                     return (
                       <Box
@@ -220,7 +220,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                         mb={1}
                         mt={1}
                         onClick={() => {
-                          if (!visitedRecently) {
+                          if (!visitedInThisAssignment) {
                             setSelectedHouseholdId(household.id);
                             onWizard();
                           }
@@ -229,12 +229,16 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       >
                         <Box flexGrow={1}>
                           <Typography
-                            color={visitedRecently ? 'secondary' : ''}
+                            color={visitedInThisAssignment ? 'secondary' : ''}
                           >
                             {household.title || 'Untitled household'}
                           </Typography>
                         </Box>
-                        {visitedRecently ? <Check color="secondary" /> : ''}
+                        {visitedInThisAssignment ? (
+                          <Check color="secondary" />
+                        ) : (
+                          ''
+                        )}
                       </Box>
                     );
                   })}
@@ -266,8 +270,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   onWizardStart={() => {
                     onWizard();
                   }}
-                  visitedRecently={isWithinLast24Hours(
-                    selectedHousehold.visits.map((t) => t.timestamp)
+                  visitedInThisAssignment={selectedHousehold.visits.some(
+                    (visit) => visit.canvassAssId == canvassAssId
                   )}
                 />
               )}
