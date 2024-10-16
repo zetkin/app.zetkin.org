@@ -1178,7 +1178,6 @@ feat:
   profile:
     delete:
       button: Ta bort person
-      confirm: Är du säker på att du vill radera {name}? Detta kan inte ångras.
       title: Radera konto
       warning: Detta kan inte ångras!
     details:

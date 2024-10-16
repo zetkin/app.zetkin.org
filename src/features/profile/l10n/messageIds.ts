@@ -4,7 +4,7 @@ export default makeMessages('feat.profile', {
   delete: {
     button: m('Remove person'),
     confirm: m<{ name: string }>(
-      'Are you sure you want to delete {name}? This is a permanent action.'
+      'Are you sure you want to delete {name} from all connected organizations? This is a permanent action.'
     ),
     title: m('Delete account'),
     warning: m('This cannot be undone!'),
