@@ -49,9 +49,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
     const newDateIsDifferent =
       date && date != dayjs(event.published).format('YYYY-MM-DD');
 
-    if (newDateIsDifferent) {
-      setPublished(date);
-    }
+    date && newDateIsDifferent ? setPublished(date) : setPublished(null);
   };
 
   const handleDelete = () => {
