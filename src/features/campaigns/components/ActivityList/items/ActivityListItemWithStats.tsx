@@ -2,9 +2,9 @@ import { CircularProgress } from '@mui/material';
 import { FC } from 'react';
 
 import ZUIMultiNumberChip from 'zui/ZUIMultiNumberChip';
-import ActivityListItem, { AcitivityListItemProps } from './ActivityListItem';
+import ActivityListItem, { ActivityListItemProps } from './ActivityListItem';
 
-type ActivityListItemWithStatsProps = AcitivityListItemProps & {
+type ActivityListItemWithStatsProps = ActivityListItemProps & {
   blueChipValue?: string | number;
   greenChipValue: string | number | undefined;
   orangeChipValue: string | number | undefined;

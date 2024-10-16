@@ -6,6 +6,7 @@ import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import theme from 'theme';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
+import { getSubtitles } from '../../../utils/subtitles';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -65,7 +66,7 @@ export enum STATUS_COLORS {
   RED = 'red',
 }
 
-export type AcitivityListItemProps = {
+export type ActivityListItemProps = {
   PrimaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
@@ -73,11 +74,13 @@ export type AcitivityListItemProps = {
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
   color: STATUS_COLORS;
+  endDate?: string | null;
   endNumber: string | number;
   endNumberColor?: ZUIIconLabelProps['color'];
   href: string;
   meta?: JSX.Element;
   onEventItemClick?: (x: number, y: number) => void;
+  startDate?: string | null;
   subtitle?: JSX.Element;
   title: string;
 };
@@ -93,9 +96,10 @@ const ActivityListItem = ({
   title,
   endNumber,
   endNumberColor = 'secondary',
-}: AcitivityListItemProps) => {
+  endDate,
+  startDate,
+}: ActivityListItemProps) => {
   const classes = useStyles({ color });
-
   return (
     <NextLink href={href} passHref style={{ textDecoration: 'none' }}>
       <Box
@@ -107,18 +111,25 @@ const ActivityListItem = ({
           }
         }}
       >
-        <Box className={classes.left}>
-          <Tooltip title={getStatusDotLabel({ color })}>
-            <Box className={classes.dot} />
-          </Tooltip>
-          <PrimaryIcon className={classes.primaryIcon} />
-          <Box>
-            <Typography color={theme.palette.text.primary}>{title}</Typography>
-            {subtitle && (
-              <Box>
-                <Typography variant="body2">{subtitle}</Typography>
-              </Box>
-            )}
+        <Box>
+          <Box className={classes.left}>
+            <PrimaryIcon className={classes.primaryIcon} />
+            <Box>
+              <Typography color={theme.palette.text.primary}>
+                {title}
+              </Typography>
+            </Box>
+          </Box>
+          <Box className={classes.left}>
+            <Tooltip title={getStatusDotLabel({ color })}>
+              <Box className={classes.dot} />
+            </Tooltip>
+            <Box>
+              <Typography color={theme.palette.grey[500]} variant="body2">
+                {getSubtitles(subtitle, startDate, endDate)}
+              </Typography>
+            </Box>
+            <Box />
           </Box>
         </Box>
         <Box className={classes.meta}>{meta}</Box>

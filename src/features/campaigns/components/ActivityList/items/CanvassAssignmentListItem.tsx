@@ -7,9 +7,16 @@ import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
 type Props = {
   caId: string;
   orgId: number;
+  visibleFrom: Date | null;
+  visibleUntil: Date | null;
 };
 
-const CanvassAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
+const CanvassAssignmentListItem: FC<Props> = ({
+  caId,
+  orgId,
+  visibleFrom,
+  visibleUntil,
+}) => {
   const { data: assignment } = useCanvassAssignment(orgId, caId);
 
   if (!assignment) {
@@ -21,12 +28,14 @@ const CanvassAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
   return (
     <ActivityListItem
       color={color}
+      endDate={visibleUntil ? visibleUntil.toString() : null}
       endNumber={''}
       href={`/organize/${orgId}/projects/${
         assignment?.campaign?.id ?? 'standalone'
       }/canvassassignments/${caId}`}
       PrimaryIcon={Map}
       SecondaryIcon={Map}
+      startDate={visibleFrom ? visibleFrom.toString() : null}
       title={assignment?.title || ''}
     />
   );
