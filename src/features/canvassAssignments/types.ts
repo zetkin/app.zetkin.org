@@ -19,11 +19,13 @@ export type ZetkinCanvassAssignment = {
   campaign: {
     id: number;
   };
+  end_date: string | null;
   id: string;
   metrics: ZetkinMetric[];
   organization: {
     id: number;
   };
+  start_date: string | null;
   title: string | null;
 };
 

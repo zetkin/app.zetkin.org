@@ -36,6 +36,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const canvassAssignment: ZetkinCanvassAssignment = {
         campaign: { id: canvassAssignmentModel.campId },
+        end_date: canvassAssignmentModel.end_date,
         id: canvassAssignmentModel._id.toString(),
         metrics: (canvassAssignmentModel.metrics || []).map((metric) => ({
           definesDone: metric.definesDone || false,
@@ -45,6 +46,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           question: metric.question,
         })),
         organization: { id: orgId },
+        start_date: canvassAssignmentModel.start_date,
         title: canvassAssignmentModel.title,
       };
 
@@ -64,7 +66,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const payload = await request.json();
-      const { metrics: newMetrics, title } = payload;
+      const { metrics: newMetrics, title, start_date, end_date } = payload;
 
       if (newMetrics) {
         // Find existing metrics to remove
@@ -118,10 +120,25 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           }
         }
       }
+      type UpdateFieldsType = Partial<
+        Pick<ZetkinCanvassAssignment, 'title' | 'start_date' | 'end_date'>
+      >;
+
+      const updateFields: UpdateFieldsType = {};
+
+      if (title !== null) {
+        updateFields.title = title;
+      }
+      if (start_date !== null) {
+        updateFields.start_date = start_date;
+      }
+      if (end_date !== null) {
+        updateFields.end_date = end_date;
+      }
 
       await CanvassAssignmentModel.updateOne(
         { _id: params.canvassAssId },
-        { title }
+        updateFields
       );
       const model = await CanvassAssignmentModel.findById(
         params.canvassAssId
@@ -134,6 +151,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           campaign: { id: model.campId },
+          end_date: model.end_date,
           id: model._id.toString(),
           metrics: (model.metrics || []).map((metric) => ({
             definesDone: metric.definesDone || false,
@@ -143,6 +161,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
             question: metric.question,
           })),
           organization: { id: orgId },
+          start_date: model.start_date,
           title: model.title,
         },
       });

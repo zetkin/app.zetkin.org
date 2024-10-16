@@ -12,6 +12,9 @@ import useCanvassSessions from '../hooks/useCanvassSessions';
 import useCanvassAssignmentStats from '../hooks/useCanvassAssignmentStats';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
+import AssignmentStatusChip from '../components/AssignmentStatusChip';
+import useCanvassAssignmentStatus from '../hooks/useCanvassAssignmentStatus';
+import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 
 type CanvassAssignmentLayoutProps = {
   campId: number;
@@ -39,6 +42,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
   );
 
   const stats = useCanvassAssignmentStats(orgId, canvassAssId);
+  const state = useCanvassAssignmentStatus(orgId, canvassAssId);
 
   const canvassers = getCanvassers(sessions);
 
@@ -51,10 +55,25 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
   return (
     <TabbedLayout
       baseHref={`/organize/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`}
+      belowActionButtons={
+        <ZUIDateRangePicker
+          endDate={canvassAssignment.end_date || null}
+          onChange={(startDate, endDate) => {
+            updateCanvassAssignment({
+              end_date: endDate,
+              start_date: startDate,
+            });
+          }}
+          startDate={canvassAssignment.start_date || null}
+        />
+      }
       defaultTab="/"
       fixedHeight={isPlanTab}
       subtitle={
         <Box alignItems="center" display="flex">
+          <Box marginRight={1}>
+            <AssignmentStatusChip state={state} />
+          </Box>
           <ZUIFuture future={stats} ignoreDataWhileLoading skeletonWidth={100}>
             {(data) => (
               <Box display="flex" marginX={1}>

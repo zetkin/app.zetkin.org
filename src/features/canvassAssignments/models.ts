@@ -4,6 +4,7 @@ import { ZetkinCanvassAssignee, ZetkinMetric, ZetkinPlace } from './types';
 
 type ZetkinCanvassAssignmentModelType = {
   campId: number;
+  end_date: string | null;
   id: number;
   metrics: (Omit<ZetkinMetric, 'id'> & { _id: string })[];
   orgId: number;
@@ -11,6 +12,7 @@ type ZetkinCanvassAssignmentModelType = {
     areaId: string;
     personId: number;
   }[];
+  start_date: string | null;
   title: string | null;
 };
 
@@ -19,6 +21,10 @@ type ZetkinPlaceModelType = Omit<ZetkinPlace, '_id'>;
 const canvassAssignmentSchema =
   new mongoose.Schema<ZetkinCanvassAssignmentModelType>({
     campId: Number,
+    end_date: {
+      default: null,
+      type: String,
+    },
     metrics: [
       {
         definesDone: Boolean,
@@ -35,6 +41,10 @@ const canvassAssignmentSchema =
         personId: Number,
       },
     ],
+    start_date: {
+      default: null,
+      type: String,
+    },
     title: String,
   });
 
