@@ -59,6 +59,15 @@ export default makeMessages('feat.campaigns', {
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
+  createButton: {
+    createActivity: m('Create'),
+    createCallAssignment: m('Call assignment'),
+    createCanvassAssignment: m('Canvass assignment'),
+    createEmail: m('Email'),
+    createEvent: m('Event'),
+    createSurvey: m('Survey'),
+    createTask: m('Task'),
+  },
   events: m('Events'),
   feedback: {
     copy: m(
