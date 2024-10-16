@@ -22,10 +22,10 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
-import MarkerIcon from '../utils/markerIcon';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
 import getVisitState from '../utils/getVisitState';
+import MarkerIcon from '../utils/MarkerIcon';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
