@@ -129,7 +129,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     >
                       <ArrowBackIos />
                     </IconButton>
-                    <Typography variant="h6">Log visit</Typography>
+                    <Typography variant="h6">Pick household</Typography>
                   </Box>
                   <IconButton onClick={onClose}>
                     <Close />
@@ -208,8 +208,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   overflow="hidden"
                   paddingTop={1}
                 >
-                  <Typography variant="h6">Choose household</Typography>
-                  <Divider />
                   <Box
                     display="flex"
                     flexDirection="column"
