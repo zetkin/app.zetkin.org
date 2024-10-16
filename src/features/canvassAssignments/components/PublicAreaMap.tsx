@@ -7,6 +7,8 @@ import {
   Button,
   Divider,
   IconButton,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -24,7 +26,7 @@ import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
-import getVisitState from '../utils/getVisitState';
+import getVisitState, { VisitState } from '../utils/getVisitState';
 import MarkerIcon from '../utils/MarkerIcon';
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +76,16 @@ const useStyles = makeStyles((theme) => ({
     padding: '8px',
     width: '90%',
   },
+  markerFilterButtons: {
+    backgroundColor: theme.palette.common.white,
+    borderRadius: 4,
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 10,
+    position: 'absolute',
+    right: 10,
+    zIndex: 1000,
+  },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
     borderRadius: 2,
@@ -109,6 +121,11 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [placeFilters, setPlaceFilters] = useState<VisitState[]>([
+    'done',
+    'pending',
+    'started',
+  ]);
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -210,6 +227,11 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
     updateSelection();
   }, [places]);
 
+  const filteredPlaces = places.filter((place) => {
+    const visitState = getVisitState(place.households, canvassAssId);
+    return placeFilters.includes(visitState);
+  });
+
   return (
     <>
       <Box className={classes.zoomControls}>
@@ -220,6 +242,24 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
         <IconButton onClick={() => map?.zoomOut()}>
           <Remove />
         </IconButton>
+      </Box>
+      <Box className={classes.markerFilterButtons}>
+        <ToggleButtonGroup
+          onChange={(ev, newValue: VisitState[]) => {
+            setPlaceFilters(newValue);
+          }}
+          value={placeFilters}
+        >
+          <ToggleButton value="pending">
+            <MarkerIcon selected={false} visitState="pending" />
+          </ToggleButton>
+          <ToggleButton value="started">
+            <MarkerIcon selected={false} visitState="started" />
+          </ToggleButton>
+          <ToggleButton value="done">
+            <MarkerIcon selected={false} visitState="done" />
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Box>
       <Box position="relative">
         <Box
@@ -293,7 +333,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
         />
         <Polygon color={theme.palette.primary.main} positions={area.points} />
         <>
-          {places.map((place) => {
+          {filteredPlaces.map((place) => {
             const visitState = getVisitState(place.households, canvassAssId);
 
             const selected = place.id == selectedPlaceId;
