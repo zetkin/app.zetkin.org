@@ -1,4 +1,4 @@
-import useCanvassAssignmentActivities from 'features/areas/hooks/useCanvassAssignmentActivities';
+import useCanvassAssignmentActivities from 'features/canvassAssignments/hooks/useCanvassAssignmentActivities';
 import { CampaignActivity } from '../types';
 import useCallAssignmentActivities from './useCallAssignmentActivities';
 import useEmailActivities from './useEmailActivities';

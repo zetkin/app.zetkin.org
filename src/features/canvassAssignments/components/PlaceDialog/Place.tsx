@@ -2,10 +2,8 @@ import { Check } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 import { FC } from 'react';
 
-import { Msg } from 'core/i18n';
-import { ZetkinPlace } from 'features/areas/types';
-import messageIds from 'features/areas/l10n/messageIds';
-import { isWithinLast24Hours } from 'features/areas/utils/isWithinLast24Hours';
+import { isWithinLast24Hours } from 'features/canvassAssignments/utils/isWithinLast24Hours';
+import { ZetkinPlace } from 'features/canvassAssignments/types';
 
 type PlaceProps = {
   onSelectHousehold: (householdId: string) => void;
@@ -22,12 +20,10 @@ const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
       justifyContent="space-between"
       paddingTop={1}
     >
-      <Typography variant="h6">
-        <Msg id={messageIds.place.description} />
-      </Typography>
+      <Typography variant="h6">Description</Typography>
       <Divider />
       <Typography color="secondary">
-        {place.description || <Msg id={messageIds.place.empty.description} />}
+        {place.description || 'Empty description'}
       </Typography>
       <Box
         display="flex"
@@ -37,10 +33,7 @@ const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
         overflow="hidden"
       >
         <Typography variant="h6">
-          <Msg
-            id={messageIds.place.householdsHeader}
-            values={{ numberOfHouseholds: place.households.length }}
-          />
+          {`${place.households.length} household/s`}
         </Typography>
         <Divider />
         <Box display="flex" flexDirection="column" sx={{ overflowY: 'auto' }}>
@@ -75,9 +68,7 @@ const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
                 width="100%"
               >
                 <Box flexGrow={1}>
-                  {household.title || (
-                    <Msg id={messageIds.place.household.empty.title} />
-                  )}
+                  {household.title || 'Untitled household'}
                 </Box>
                 {visitedRecently ? <Check color="secondary" /> : ''}
               </Box>

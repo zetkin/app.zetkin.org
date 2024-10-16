@@ -1,5 +1,5 @@
 import { Close } from '@mui/icons-material';
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -11,22 +11,24 @@ import {
   IconButton,
 } from '@mui/material';
 
-import { ZetkinMetric } from 'features/areas/types';
+import { ZetkinMetric } from '../types';
 
-const MetricCard = ({
-  hasDefinedDone,
-  isOnlyQuestion,
-  metric,
-  onClose,
-  onDelete,
-  onSave,
-}: {
+type MetricCardProps = {
   hasDefinedDone: boolean;
   isOnlyQuestion: boolean;
   metric: ZetkinMetric;
   onClose: () => void;
   onDelete: (target: EventTarget & HTMLButtonElement) => void;
   onSave: (metric: ZetkinMetric) => void;
+};
+
+const MetricCard: FC<MetricCardProps> = ({
+  hasDefinedDone,
+  isOnlyQuestion,
+  metric,
+  onClose,
+  onDelete,
+  onSave,
 }) => {
   const [question, setQuestion] = useState<string>(metric.question || '');
   const [description, setDescription] = useState<string>(
@@ -36,7 +38,7 @@ const MetricCard = ({
     metric.definesDone || false
   );
 
-  const isEditing = !!metric?.id;
+  const isEditing = !!metric?._id;
 
   useEffect(() => {
     setQuestion(metric.question || '');
@@ -104,9 +106,9 @@ const MetricCard = ({
             <Button
               onClick={() => {
                 onSave({
+                  _id: metric._id || '',
                   definesDone,
                   description,
-                  id: metric.id || '',
                   kind: metric.kind,
                   question,
                 });

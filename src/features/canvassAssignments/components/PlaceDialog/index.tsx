@@ -18,20 +18,16 @@ import {
   Typography,
 } from '@mui/material';
 
-import messageIds from '../../l10n/messageIds';
-import usePlaceMutations from '../../hooks/usePlaceMutations';
-import { HouseholdPatchBody, ZetkinPlace } from '../../types';
-import { Msg, useMessages } from 'core/i18n';
 import VisitWizard from './VisitWizard';
 import EditPlace from './EditPlace';
 import Place from './Place';
 import Household from './Household';
-import { isWithinLast24Hours } from 'features/areas/utils/isWithinLast24Hours';
-import { PlaceDialogStep } from '../PublicAreaMap';
-import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
+import { isWithinLast24Hours } from 'features/canvassAssignments/utils/isWithinLast24Hours';
 import ZUIFuture from 'zui/ZUIFuture';
-
-export type PlaceType = 'address' | 'misc';
+import { PlaceDialogStep } from '../PublicAreaMap';
+import { ZetkinPlace } from 'features/canvassAssignments/types';
+import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
+import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 
 type PlaceDialogProps = {
   canvassAssId: string;
@@ -60,7 +56,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   orgId,
   place,
 }) => {
-  const messages = useMessages(messageIds);
   const { addVisit, addHousehold, updateHousehold, updatePlace } =
     usePlaceMutations(orgId, place.id);
   const assignmentFuture = useCanvassAssignment(orgId, canvassAssId);
@@ -72,7 +67,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     place.description ?? ''
   );
   const [title, setTitle] = useState<string>(place.title ?? '');
-  const [type, setType] = useState<PlaceType>(place.type);
   const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
   const [householdTitle, setHousholdTitle] = useState('');
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -97,7 +91,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const nothingHasBeenEdited =
     dialogStep == 'edit' &&
     title == place.title &&
-    type == place.type &&
     (description == place.description || (!description && !place.description));
 
   const saveButtonDisabled = nothingHasBeenEdited;
@@ -120,7 +113,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               {dialogStep == 'place' && (
                 <>
                   <Typography alignItems="center" display="flex" variant="h6">
-                    {place?.title || <Msg id={messageIds.place.empty.title} />}
+                    {place?.title || 'Untitled place'}
                   </Typography>
                   <Box>
                     <IconButton onClick={onEdit}>
@@ -152,12 +145,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               {dialogStep == 'edit' && (
                 <>
                   <Typography variant="h6">
-                    <Msg
-                      id={messageIds.place.editPlace}
-                      values={{
-                        placeName: place.title || messages.place.empty.title(),
-                      }}
-                    />
+                    {`Edit ${place.title || 'Untitled place'}`}
                   </Typography>
                   <IconButton onClick={onUpdateDone}>
                     <Close />
@@ -175,9 +163,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       <ArrowBackIos />
                     </IconButton>
                     <Typography alignItems="center" display="flex" variant="h6">
-                      {selectedHousehold.title || (
-                        <Msg id={messageIds.place.household.empty.title} />
-                      )}
+                      {selectedHousehold.title || 'Untitled household'}
                     </Typography>
                   </Box>
                   <Box alignItems="center" display="flex">
@@ -203,9 +189,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     <ArrowBackIos />
                   </IconButton>
                   <Typography alignItems="center" display="flex" variant="h6">
-                    {selectedHousehold.title || (
-                      <Msg id={messageIds.place.household.empty.title} />
-                    )}
+                    {selectedHousehold.title || 'Untitled household'}
                   </Typography>
                 </Box>
               )}
@@ -247,11 +231,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                           <Typography
                             color={visitedRecently ? 'secondary' : ''}
                           >
-                            {household.title || (
-                              <Msg
-                                id={messageIds.place.household.empty.title}
-                              />
-                            )}
+                            {household.title || 'Untitled household'}
                           </Typography>
                         </Box>
                         {visitedRecently ? <Check color="secondary" /> : ''}
@@ -267,9 +247,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     setDescription(newDescription)
                   }
                   onTitleChange={(newTitle) => setTitle(newTitle)}
-                  onTypeChange={(newType) => setType(newType)}
                   title={title}
-                  type={type}
                 />
               )}
               {selectedHousehold && dialogStep == 'household' && (
@@ -282,7 +260,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   onHouseholdTitleChange={(newTitle) =>
                     setHousholdTitle(newTitle)
                   }
-                  onHouseholdUpdate={(data: HouseholdPatchBody) =>
+                  onHouseholdUpdate={(data) =>
                     updateHousehold(selectedHousehold.id, data)
                   }
                   onWizardStart={() => {
@@ -320,7 +298,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   }}
                   variant="contained"
                 >
-                  <Msg id={messageIds.place.addHouseholdButton} />
+                  Add household
                 </Button>
               )}
               {dialogStep == 'place' && place.households.length == 1 && (
@@ -332,7 +310,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       onWizard();
                     }}
                   >
-                    <Msg id={messageIds.place.logVisit} />
+                    Log visit
                   </Button>
                   <Button
                     onClick={(ev) => setAnchorEl(ev.currentTarget)}
@@ -350,7 +328,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       onPickHousehold();
                     }}
                   >
-                    <Msg id={messageIds.place.logVisit} />
+                    Log visit
                   </Button>
                   <Button
                     onClick={(ev) => setAnchorEl(ev.currentTarget)}
@@ -369,13 +347,12 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       updatePlace({
                         description,
                         title,
-                        type,
                       });
                     }
                   }}
                   variant="contained"
                 >
-                  <Msg id={messageIds.place.saveButton} />
+                  Save
                 </Button>
               )}
               <Menu

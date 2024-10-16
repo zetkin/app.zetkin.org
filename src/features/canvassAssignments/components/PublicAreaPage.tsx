@@ -5,21 +5,19 @@ import { FC } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 
-import useArea from '../hooks/useArea';
+import useArea from '../../areas/hooks/useArea';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
-import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
 import useServerSide from 'core/useServerSide';
 
 const PublicAreaMap = dynamic(() => import('./PublicAreaMap'), { ssr: false });
 
-type AreaPageProps = {
+type PublicAreaPageProps = {
   areaId: string;
   orgId: number;
 };
 
-const AreaPage: FC<AreaPageProps> = ({ areaId, orgId }) => {
+const PublicAreaPage: FC<PublicAreaPageProps> = ({ areaId, orgId }) => {
   const orgFuture = useOrganization(orgId);
   const areaFuture = useArea(orgId, areaId);
   const searchParams = useSearchParams();
@@ -48,9 +46,9 @@ const AreaPage: FC<AreaPageProps> = ({ areaId, orgId }) => {
               {org.title}
             </Box>
             <Box alignItems="flex-end" display="flex" flexDirection="column">
-              {area.title ?? <Msg id={messageIds.empty.title} />}
+              {area.title ?? 'Untitled canvassassignment'}
               <Typography color="secondary" variant="body2">
-                {area.description ?? <Msg id={messageIds.empty.description} />}
+                {area.description ?? 'Untitled area'}
               </Typography>
             </Box>
           </Box>
@@ -63,4 +61,4 @@ const AreaPage: FC<AreaPageProps> = ({ areaId, orgId }) => {
   );
 };
 
-export default AreaPage;
+export default PublicAreaPage;

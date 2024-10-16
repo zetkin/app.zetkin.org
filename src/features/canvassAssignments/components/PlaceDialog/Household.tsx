@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from '@mui/material';
 import { FC } from 'react';
 
-import { HouseholdPatchBody } from 'features/areas/types';
+import { HouseholdPatchBody } from 'features/canvassAssignments/types';
 
 type HouseholdProps = {
   editingHouseholdTitle: boolean;

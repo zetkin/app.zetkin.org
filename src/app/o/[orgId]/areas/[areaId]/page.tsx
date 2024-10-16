@@ -1,7 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import { notFound } from 'next/navigation';
 
-import AreaPage from 'features/areas/components/AreaPage';
+import PublicAreaPage from 'features/canvassAssignments/components/PublicAreaPage';
 import { AREAS, hasFeature } from 'utils/featureFlags';
 
 interface PageProps {
@@ -19,5 +19,5 @@ export default function Page({ params }: PageProps) {
     return notFound();
   }
 
-  return <AreaPage areaId={areaId} orgId={parseInt(orgId)} />;
+  return <PublicAreaPage areaId={areaId} orgId={parseInt(orgId)} />;
 }

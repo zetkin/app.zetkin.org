@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { CanvassAssignmentModel } from 'features/areas/models';
+import { CanvassAssignmentModel } from 'features/canvassAssignments/models';
 
 type RouteMeta = {
   params: {
@@ -71,9 +71,9 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           campaign: { id: model.campId },
           id: model._id.toString(),
           metrics: model.metrics.map((metric) => ({
+            _id: metric._id,
             definesDone: metric.definesDone || false,
             description: metric.description || '',
-            id: metric._id,
             kind: metric.kind,
             question: metric.question,
           })),

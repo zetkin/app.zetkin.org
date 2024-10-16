@@ -1,4 +1,4 @@
-import { ZetkinCanvassAssignment } from 'features/areas/types';
+import { ZetkinCanvassAssignment } from 'features/canvassAssignments/types';
 import {
   ZetkinCallAssignment,
   ZetkinEmail,

@@ -12,15 +12,15 @@ import {
   Typography,
 } from '@mui/material';
 
-import { AREAS } from 'utils/featureFlags';
-import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
-import { PageWithLayout } from 'utils/types';
-import { scaffold } from 'utils/next';
-import useCanvassAssignmentMutations from 'features/areas/hooks/useCanvassAssignmentMutations';
-import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ZetkinMetric } from 'features/areas/types';
-import MetricCard from 'features/areas/components/Metrics/MetricCard';
+import MetricCard from 'features/canvassAssignments/components/MetricCard';
+import { AREAS } from 'utils/featureFlags';
+import { scaffold } from 'utils/next';
+import { PageWithLayout } from 'utils/types';
+import useCanvassAssignmentMutations from 'features/canvassAssignments/hooks/useCanvassAssignmentMutations';
+import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
+import { ZetkinMetric } from 'features/canvassAssignments/types';
+import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -62,8 +62,8 @@ const CanvassAssignmentEditorPage: PageWithLayout<
     if (canvassAssignmentFuture.data) {
       await updateCanvassAssignment({
         metrics: canvassAssignmentFuture.data.metrics
-          .map((m) => (m.id === metric.id ? metric : m))
-          .concat(metric.id ? [] : [metric]),
+          .map((m) => (m._id === metric._id ? metric : m))
+          .concat(metric._id ? [] : [metric]),
       });
     }
     setMetricBeingEdited(null);
@@ -73,7 +73,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
     if (canvassAssignmentFuture.data) {
       await updateCanvassAssignment({
         metrics: canvassAssignmentFuture.data.metrics.filter(
-          (m) => m.id !== id
+          (m) => m._id !== id
         ),
       });
     }
@@ -82,15 +82,13 @@ const CanvassAssignmentEditorPage: PageWithLayout<
 
   const handleAddNewMetric = (kind: 'boolean' | 'scale5') => {
     setMetricBeingEdited({
+      _id: '',
       definesDone: false,
       description: '',
-      id: '',
       kind: kind,
       question: '',
     });
   };
-
-  //console.log(canvassAssignmentFuture?.data?.metrics);
 
   return (
     <Box width="50%">
@@ -125,11 +123,11 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                 onClose={() => setMetricBeingEdited(null)}
                 onDelete={(target: EventTarget & HTMLButtonElement) => {
                   if (metricBeingEdited.definesDone) {
-                    setIdOfQuestionBeingDeleted(metricBeingEdited.id);
+                    setIdOfQuestionBeingDeleted(metricBeingEdited._id);
                     setAnchorEl(target);
                     setMetricBeingEdited(null);
                   } else {
-                    handleDeleteMetric(metricBeingEdited.id);
+                    handleDeleteMetric(metricBeingEdited._id);
                   }
                 }}
                 onSave={handleSaveMetric}
@@ -138,7 +136,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
             <Box mt={3}>
               {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
               {assignment.metrics.map((metric) => (
-                <Card key={metric.id} sx={{ marginTop: 2 }}>
+                <Card key={metric._id} sx={{ marginTop: 2 }}>
                   <CardContent>
                     <Box display="flex">
                       <Box
@@ -175,10 +173,10 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                       <Button
                         onClick={(ev) => {
                           if (metric.definesDone) {
-                            setIdOfQuestionBeingDeleted(metric.id);
+                            setIdOfQuestionBeingDeleted(metric._id);
                             setAnchorEl(ev.currentTarget);
                           } else {
-                            handleDeleteMetric(metric.id);
+                            handleDeleteMetric(metric._id);
                           }
                         }}
                       >
@@ -198,7 +196,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                 >
                   <Typography variant="h6">{`Delete "${
                     assignment.metrics.find(
-                      (metric) => metric.id == idOfMetricBeingDeleted
+                      (metric) => metric._id == idOfMetricBeingDeleted
                     )?.question
                   }"`}</Typography>
                   <IconButton
@@ -213,7 +211,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                 <Typography>
                   {`If you want to delete "${
                     assignment.metrics.find(
-                      (metric) => metric.id == idOfMetricBeingDeleted
+                      (metric) => metric._id == idOfMetricBeingDeleted
                     )?.question
                   }" you need to pick another
                   yes/no-question to be the question that defines if the msision
@@ -225,7 +223,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                     .filter(
                       (metric) =>
                         metric.kind == 'boolean' &&
-                        metric.id != idOfMetricBeingDeleted
+                        metric._id != idOfMetricBeingDeleted
                     )
                     .map((metric) => (
                       <Box
@@ -241,7 +239,7 @@ const CanvassAssignmentEditorPage: PageWithLayout<
                           onClick={() => {
                             if (idOfMetricBeingDeleted) {
                               const filtered = assignment.metrics.filter(
-                                (metric) => metric.id != idOfMetricBeingDeleted
+                                (metric) => metric._id != idOfMetricBeingDeleted
                               );
                               updateCanvassAssignment({
                                 metrics: [

@@ -1,9 +1,7 @@
 import { FC, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 
-import { useMessages } from 'core/i18n';
 import TabbedLayout from 'utils/layout/TabbedLayout';
-import messageIds from '../l10n/messageIds';
 import useCanvassAssignment from '../hooks/useCanvassAssignment';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import useCanvassAssignmentMutations from '../hooks/useCanvassAssignmentMutations';
@@ -22,7 +20,6 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
   canvassAssId,
 }) => {
   const path = useRouter().pathname;
-  const messages = useMessages(messageIds);
   const canvassAssignment = useCanvassAssignment(orgId, canvassAssId).data;
   const updateCanvassAssignment = useCanvassAssignmentMutations(
     orgId,
@@ -41,7 +38,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
       defaultTab="/"
       fixedHeight={isPlanTab}
       tabs={[
-        { href: '/', label: messages.canvassAssignment.tabs.overview() },
+        { href: '/', label: 'Overview' },
         { href: '/plan', label: 'Plan' },
         { href: '/canvassers', label: 'Canvassers' },
         { href: '/editor', label: 'Editor' },
@@ -49,9 +46,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => updateCanvassAssignment({ title: newTitle })}
-          value={
-            canvassAssignment.title || messages.canvassAssignment.empty.title()
-          }
+          value={canvassAssignment.title || 'Untitled canvass assignment'}
         />
       }
     >
