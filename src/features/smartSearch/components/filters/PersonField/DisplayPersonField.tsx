@@ -11,6 +11,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -35,16 +36,16 @@ const DisplayPersonField = ({
 
   const fieldType = field?.type || '';
   if (
-    fieldType != 'date' &&
-    fieldType != 'text' &&
-    fieldType != 'url' &&
-    fieldType != 'enum'
+    fieldType != CUSTOM_FIELD_TYPE.DATE &&
+    fieldType != CUSTOM_FIELD_TYPE.TEXT &&
+    fieldType != CUSTOM_FIELD_TYPE.URL &&
+    fieldType != CUSTOM_FIELD_TYPE.ENUM
   ) {
     // TODO:
     return null;
   }
   let fieldMessage;
-  if (fieldType == 'date') {
+  if (fieldType == CUSTOM_FIELD_TYPE.DATE) {
     fieldMessage = (
       <Msg
         id={localMessageIds.preview.date}
@@ -55,7 +56,7 @@ const DisplayPersonField = ({
       />
     );
   } else if (
-    fieldType == 'enum' &&
+    fieldType == CUSTOM_FIELD_TYPE.ENUM &&
     field?.enum_choices &&
     search !== undefined
   ) {
