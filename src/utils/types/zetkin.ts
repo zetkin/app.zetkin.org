@@ -454,7 +454,7 @@ export enum CUSTOM_FIELD_TYPE {
   DATE = 'date',
   TEXT = 'text',
   JSON = 'json',
-  ENUM_TEXT = 'enum_text',
+  ENUM = 'enum',
 }
 
 export interface ZetkinJourney {

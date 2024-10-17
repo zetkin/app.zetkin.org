@@ -38,7 +38,7 @@ const DisplayPersonField = ({
     fieldType != 'date' &&
     fieldType != 'text' &&
     fieldType != 'url' &&
-    fieldType != 'enum_text'
+    fieldType != 'enum'
   ) {
     // TODO:
     return null;
@@ -55,7 +55,7 @@ const DisplayPersonField = ({
       />
     );
   } else if (
-    fieldType == 'enum_text' &&
+    fieldType == 'enum' &&
     field?.enum_choices &&
     search !== undefined
   ) {

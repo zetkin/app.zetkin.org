@@ -182,12 +182,12 @@ const PersonField = ({
           />
         );
       } else if (
-        type == CUSTOM_FIELD_TYPE.ENUM_TEXT &&
+        type == CUSTOM_FIELD_TYPE.ENUM &&
         selectedField?.enum_choices
       ) {
         return (
           <Msg
-            id={localMessageIds.edit.enum_text}
+            id={localMessageIds.edit.enum}
             values={{
               fieldSelect,
               selectInput: (

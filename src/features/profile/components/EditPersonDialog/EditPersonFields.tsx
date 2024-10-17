@@ -222,7 +222,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
             />
           );
         } else if (
-          field.type === CUSTOM_FIELD_TYPE.ENUM_TEXT &&
+          field.type === CUSTOM_FIELD_TYPE.ENUM &&
           field.enum_choices
         ) {
           return (

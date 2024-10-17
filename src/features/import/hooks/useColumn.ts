@@ -76,7 +76,7 @@ export default function useColumn(orgId: number) {
         value: `date:${field.slug}`,
       };
     } else if (
-      field.type == CUSTOM_FIELD_TYPE.ENUM_TEXT &&
+      field.type == CUSTOM_FIELD_TYPE.ENUM &&
       field.enum_choices
     ) {
       return {

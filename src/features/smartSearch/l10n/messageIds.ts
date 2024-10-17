@@ -402,7 +402,7 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
           '{fieldSelect} is {timeFrame}'
         ),
-        enum_text: m<{
+        enum: m<{
           fieldSelect: ReactElement;
           selectInput: ReactElement;
         }>('{fieldSelect} is "{selectInput}"'),
@@ -424,7 +424,7 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldName: ReactElement | string; timeFrame: ReactElement }>(
           '{fieldName} is {timeFrame}'
         ),
-        enum_text: m<{
+        enum: m<{
           fieldName: ReactElement | string;
           searchTerm: ReactElement | string;
         }>('{fieldName} is "{searchTerm}"'),
