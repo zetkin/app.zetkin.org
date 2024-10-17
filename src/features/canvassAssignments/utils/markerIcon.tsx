@@ -2,23 +2,31 @@ import { FC } from 'react';
 import { useTheme } from '@mui/styles';
 import { lighten } from '@mui/system';
 
-import { VisitState } from './getVisitState';
+import { ProgressState } from './getVisitState';
 
 interface MarkerIconProps {
-  visitState?: VisitState;
+  dataToShow?: 'done' | 'visited';
+  state?: ProgressState;
   selected: boolean;
 }
 
 const MarkerIcon: FC<MarkerIconProps> = ({
-  visitState = 'pending',
+  dataToShow = 'visited',
+  state = 'none',
   selected,
 }) => {
   const theme = useTheme();
 
-  const circleColors = {
-    done: theme.palette.primary.main,
-    pending: theme.palette.grey[400],
-    started: lighten(theme.palette.primary.main, 0.5),
+  const circleColors: Record<ProgressState, string> = {
+    all:
+      dataToShow == 'visited'
+        ? theme.palette.primary.main
+        : theme.palette.success.main,
+    none: theme.palette.grey[400],
+    some:
+      dataToShow == 'visited'
+        ? lighten(theme.palette.primary.main, 0.5)
+        : lighten(theme.palette.success.main, 0.5),
   };
 
   return (
@@ -38,7 +46,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
         className="state-dot"
         cx="10.5"
         cy="10.5"
-        fill={circleColors[visitState]}
+        fill={circleColors[state]}
         r="6.5"
       />
     </svg>

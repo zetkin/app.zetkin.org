@@ -1,11 +1,11 @@
 import { Household } from '../types';
 
-export type VisitState = 'pending' | 'started' | 'done';
+export type ProgressState = 'none' | 'some' | 'all';
 
 export default function getVisitState(
   households: Household[],
   canvassAssId: string | null
-): VisitState {
+): ProgressState {
   let numberOfVisitedHouseholds = 0;
   households.forEach((household) => {
     const hasVisitsInCurrentAssignment = household.visits.some((visit) => {
@@ -21,13 +21,13 @@ export default function getVisitState(
     numberOfVisitedHouseholds > 0 &&
     numberOfVisitedHouseholds == households.length
   ) {
-    return 'done';
+    return 'all';
   } else if (
     numberOfVisitedHouseholds > 0 &&
     numberOfVisitedHouseholds < households.length
   ) {
-    return 'started';
+    return 'some';
   } else {
-    return 'pending';
+    return 'none';
   }
 }
