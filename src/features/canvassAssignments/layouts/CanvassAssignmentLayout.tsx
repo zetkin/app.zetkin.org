@@ -112,7 +112,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
         { href: '/', label: 'Overview' },
         { href: '/plan', label: 'Plan' },
         { href: '/canvassers', label: 'Canvassers' },
-        { href: '/editor', label: 'Editor' },
+        { href: '/outcomes', label: 'Outcomes' },
       ]}
       title={
         <ZUIEditTextinPlace
