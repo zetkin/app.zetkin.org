@@ -1,3 +1,4 @@
+import { Card } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
@@ -74,20 +75,22 @@ const CanvassAssignmentPage: PageWithLayout<Props> = ({
   ];
 
   return (
-    <DataGridPro
-      autoHeight
-      columns={columns}
-      disableColumnFilter
-      disableColumnMenu
-      disableColumnReorder
-      disableColumnResize
-      disableRowSelectionOnClick
-      hideFooter
-      rows={canvassers}
-      style={{
-        border: 'none',
-      }}
-    />
+    <Card>
+      <DataGridPro
+        autoHeight
+        columns={columns}
+        disableColumnFilter
+        disableColumnMenu
+        disableColumnReorder
+        disableColumnResize
+        disableRowSelectionOnClick
+        hideFooter
+        rows={canvassers}
+        style={{
+          border: 'none',
+        }}
+      />
+    </Card>
   );
 };
 

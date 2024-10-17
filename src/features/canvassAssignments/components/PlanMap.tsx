@@ -1,22 +1,15 @@
 import { FC, useRef, useState } from 'react';
-import { Map as MapType } from 'leaflet';
+import { Map as MapType, latLngBounds } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  ButtonGroup,
-  Chip,
-  MenuItem,
-  TextField,
-} from '@mui/material';
-import { Add, Remove } from '@mui/icons-material';
+import { Autocomplete, Box, Chip, MenuItem, TextField } from '@mui/material';
 
 import { ZetkinArea } from '../../areas/types';
 import PlanMapRenderer from './PlanMapRenderer';
 import AreaPlanningOverlay from '../../areas/components/AreaPlanningOverlay';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { ZetkinCanvassSession } from '../types';
+import objToLatLng from 'features/areas/utils/objToLatLng';
+import MapControls from './MapControls';
 
 type PlanMapProps = {
   areas: ZetkinArea[];
@@ -31,6 +24,7 @@ const PlanMap: FC<PlanMapProps> = ({
 }) => {
   const [filterAssigned, setFilterAssigned] = useState(false);
   const [filterUnassigned, setFilterUnassigned] = useState(false);
+  const [locating, setLocating] = useState(false);
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -56,6 +50,41 @@ const PlanMap: FC<PlanMapProps> = ({
     });
   }
 
+  const zoomIn = () => {
+    mapRef.current?.zoomIn();
+  };
+
+  const zoomOut = () => {
+    mapRef.current?.zoomOut();
+  };
+
+  const fitBounds = () => {
+    const map = mapRef.current;
+    if (map) {
+      if (areas.length) {
+        const totalBounds = latLngBounds(
+          areas[0].points.map((p) => objToLatLng(p))
+        );
+
+        areas.forEach((area) => {
+          const areaBounds = latLngBounds(
+            area.points.map((p) => objToLatLng(p))
+          );
+          totalBounds.extend(areaBounds);
+        });
+
+        if (totalBounds) {
+          map.fitBounds(totalBounds, { animate: true });
+        }
+      }
+    }
+  };
+
+  const onLocate = () => ({
+    locating,
+    setLocating,
+  });
+
   return (
     <Box
       sx={{
@@ -77,14 +106,13 @@ const PlanMap: FC<PlanMapProps> = ({
         }}
       >
         <Box alignItems="center" display="flex" gap={1}>
-          <ButtonGroup variant="contained">
-            <Button onClick={() => mapRef.current?.zoomIn()}>
-              <Add />
-            </Button>
-            <Button onClick={() => mapRef.current?.zoomOut()}>
-              <Remove />
-            </Button>
-          </ButtonGroup>
+          <MapControls
+            mapRef={mapRef}
+            onFitBounds={fitBounds}
+            onLocate={onLocate}
+            onZoomIn={zoomIn}
+            onZoomOut={zoomOut}
+          />
         </Box>
         <Box alignItems="center" display="flex" gap={1}>
           <Chip
