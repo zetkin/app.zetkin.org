@@ -35,7 +35,7 @@ enum GENDERS {
 interface EditPersonFieldsProps {
   fieldsToUpdate: ZetkinCreatePerson;
   invalidFields: string[];
-  onChange: (field: string, newValue: string) => void;
+  onChange: (field: string, newValue: string | null) => void;
   onReset: (field: string) => void;
   orgId: number;
   fieldValues: ZetkinPerson;
@@ -233,7 +233,11 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                   fullWidth
                   label={field.title}
                   onChange={(ev) => {
-                    onChange(field.slug, ev.target.value);
+                    let value: string | null = ev.target.value;
+                    if (value === '') {
+                      value = null;
+                    }
+                    onChange(field.slug, value);
                   }}
                   value={fieldValues[field.slug]?.toString() ?? ''}
                 >
