@@ -129,17 +129,21 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       if (title !== null) {
         updateFields.title = title;
       }
-      if (start_date !== null) {
+
+      if (Object.prototype.hasOwnProperty.call(payload, 'start_date')) {
         updateFields.start_date = start_date;
       }
-      if (end_date !== null) {
+
+      if (Object.prototype.hasOwnProperty.call(payload, 'end_date')) {
         updateFields.end_date = end_date;
       }
 
-      await CanvassAssignmentModel.updateOne(
-        { _id: params.canvassAssId },
-        updateFields
-      );
+      if (Object.keys(updateFields).length > 0) {
+        await CanvassAssignmentModel.updateOne(
+          { _id: params.canvassAssId },
+          { $set: updateFields }
+        );
+      }
       const model = await CanvassAssignmentModel.findById(
         params.canvassAssId
       ).populate('metrics');

@@ -1,5 +1,4 @@
 import { Box } from '@mui/system';
-import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
@@ -12,6 +11,7 @@ import useCanvassAssignment from '../hooks/useCanvassAssignment';
 import useCanvassAssignmentMutations from '../hooks/useCanvassAssignmentMutations';
 import useCanvassSessions from '../hooks/useCanvassSessions';
 import useCanvassAssignmentStats from '../hooks/useCanvassAssignmentStats';
+import useStartEndAssignment from '../hooks/useStartEndAssignment';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
@@ -46,6 +46,10 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
 
   const stats = useCanvassAssignmentStats(orgId, canvassAssId);
   const state = useCanvassAssignmentStatus(orgId, canvassAssId);
+  const { startAssignment, endAssignment } = useStartEndAssignment(
+    orgId,
+    canvassAssId
+  );
 
   const canvassers = getCanvassers(sessions);
 
@@ -59,25 +63,11 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
     <TabbedLayout
       actionButtons={
         state == CanvassAssignmentState.OPEN ? (
-          <Button
-            onClick={() =>
-              updateCanvassAssignment({
-                end_date: dayjs().format('YYYY-MM-DD'),
-              })
-            }
-            variant="outlined"
-          >
+          <Button onClick={endAssignment} variant="outlined">
             {'End Assignment'}
           </Button>
         ) : (
-          <Button
-            onClick={() =>
-              updateCanvassAssignment({
-                start_date: dayjs().format('YYYY-MM-DD'),
-              })
-            }
-            variant="contained"
-          >
+          <Button onClick={startAssignment} variant="contained">
             {'Start Assignment'}
           </Button>
         )
